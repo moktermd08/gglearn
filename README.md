@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# gglearn — Training Academy
 
-## Getting Started
+A training academy for our brands. Learners pick a track (subject, product, service, tool, technology or process),
+set a goal, and climb 20 levels from **Novice to Titan**. Built from the TrialTest / SkillsTest exam platforms,
+rebuilt as a learning product with onboarding, offboarding and a question bank that improves from real results.
 
-First, run the development server:
+## Run it
 
 ```bash
+npm install
+cp .env.example .env.local        # set SESSION_SECRET (openssl rand -hex 32); ANTHROPIC_API_KEY optional
+npm run db:push                   # create tables in data/gglearn.db
+npm run seed                      # admin user (password printed once), sample brand, TrialTest import
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How it works
+- **Tracks and levels**: `lib/levels.ts` defines the 20 levels. Each attempt draws 10 fresh questions for the level,
+  favouring ones the learner has not yet answered correctly. 80% passes and unlocks the next level.
+- **Questions**: `mcq`, `open`, `scenario`. Open answers are graded by Claude against a reference answer and rubric
+  (`lib/grading.ts`). Without `ANTHROPIC_API_KEY` a coarse keyword fallback is used.
+- **Knowledge first**: authored questions link to a `knowledge_items` row, the single source of truth for a track.
+- **Improvement loop**: `/admin` flags questions that are nearly always failed or never failed, for review or retirement.
+- **People**: `/admin/people` onboards someone (checklist + auto-enrol by job role) and offboards them
+  (access ends immediately, offboarding checklist and handover notes).
+- **Legacy bank**: `npm run seed` imports `../trialtest.ai/database/data` (override with `LEGACY_DIR`) as the
+  "Tech Foundations" brand, mapping each file's level band across the 20 levels.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Known gaps
+- Legacy bank is thin at levels 16–20 and has no brand-specific content. Real brand knowledge must be authored.
+- `git-extreme.json`, `google-cloud-expert.json`, `google-cloud-intermediate.json` are invalid JSON and were skipped.
+- SQLite for local dev. Move to Postgres before multi-user production use.
+- Email/password auth only. No password reset, rate limiting or SSO yet.
