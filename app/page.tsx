@@ -7,7 +7,8 @@ export default function Home() {
   const rows = db
     .select({ track: tracks, brand: brands, n: sql<number>`(select count(*) from ${questions} q where q.track_id = ${tracks.id} and q.status = 'active')` })
     .from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).orderBy(asc(brands.name), asc(tracks.name)).all();
-  const byBrand = Map.groupBy(rows, (r) => r.brand.name);
+  const byBrand = new Map<string, typeof rows>();
+  for (const r of rows) byBrand.set(r.brand.name, [...(byBrand.get(r.brand.name) ?? []), r]);
 
   return (
     <div className="space-y-10">

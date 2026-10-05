@@ -31,3 +31,8 @@ npm run dev
 - `git-extreme.json`, `google-cloud-expert.json`, `google-cloud-intermediate.json` are invalid JSON and were skipped.
 - SQLite for local dev. Move to Postgres before multi-user production use.
 - Email/password auth only. No password reset, rate limiting or SSO yet.
+
+## Deploy
+Production: https://gglearn.gglink.co.uk — Apache (TLS via certbot) reverse-proxies to a PM2 app `gglearn-web` on 127.0.0.1:3400.
+Server uses Node 20, so avoid Node 21+ APIs (e.g. `Map.groupBy`) and keep `better-sqlite3` on a version with a Linux Node 20 prebuild (12.9.0).
+`deploy/deploy.sh` syncs, installs, builds, pushes the schema and reloads PM2. `deploy/*.conf` is the Apache vhost.
