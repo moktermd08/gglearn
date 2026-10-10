@@ -9,7 +9,7 @@ export default async function People() {
   const items = db.select().from(checklistItems).all();
   const notes = db.select().from(handovers).all();
   const allTracks = db.select().from(tracks).orderBy(tracks.name).all();
-  const input = "rounded border border-stone-300 bg-transparent px-2 py-1 dark:border-stone-700";
+  const input = "rounded border border-white/20 bg-black/30 px-2 py-1";
 
   return (
     <div className="space-y-8">
@@ -20,10 +20,10 @@ export default async function People() {
           const mine = items.filter((i) => i.userId === u.id);
           const myNotes = notes.filter((n) => n.userId === u.id);
           return (
-            <li key={u.id} className="rounded-lg border border-stone-200 p-4 dark:border-stone-800">
+            <li key={u.id} className="rounded-lg border border-white/15 p-4">
               <div className="flex items-center gap-3">
                 <div className="flex-1">
-                  <div className="font-medium">{u.name} <span className="text-sm text-stone-500">· {u.email} · {u.jobRole}</span></div>
+                  <div className="font-medium">{u.name} <span className="text-sm text-slate-400">· {u.email} · {u.jobRole}</span></div>
                   <div className={`text-xs ${u.status === "offboarded" ? "text-red-600" : "text-green-600"}`}>{u.status}</div>
                 </div>
                 {u.status === "active" && u.id !== me.id && (
@@ -38,13 +38,13 @@ export default async function People() {
                   {mine.map((c) => (
                     <li key={c.id}>
                       <form action={toggleChecklist.bind(null, c.id)}>
-                        <button className="text-left">{c.done ? "☑" : "☐"} <span className="text-xs text-stone-500">{c.kind}</span> {c.label}</button>
+                        <button className="text-left">{c.done ? "☑" : "☐"} <span className="text-xs text-slate-400">{c.kind}</span> {c.label}</button>
                       </form>
                     </li>
                   ))}
                 </ul>
               )}
-              {myNotes.map((n) => <p key={n.id} className="mt-2 whitespace-pre-wrap rounded bg-stone-100 p-2 text-sm dark:bg-stone-900">{n.notes}</p>)}
+              {myNotes.map((n) => <p key={n.id} className="mt-2 whitespace-pre-wrap rounded bg-white/10 p-2 text-sm">{n.notes}</p>)}
               <form action={addHandover} className="mt-3 flex flex-wrap gap-2 text-sm">
                 <input type="hidden" name="userId" value={u.id} />
                 <select name="trackId" className={input} defaultValue="">

@@ -4,12 +4,15 @@ import { and, eq, like, or, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { answers, checklistItems, db, enrollments, handovers, questions, runs, tracks, users } from "@/lib/db";
+import { randomBytes } from "node:crypto";
+import { answers, certificates, checklistItems, db, enrollments, handovers, questions, runs, tracks, users } from "@/lib/db";
 import { endSession, requireManager, requireUser, startSession } from "@/lib/auth";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import { grade } from "@/lib/grading";
 import { levelsPassed } from "@/lib/progress";
-import { MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
+import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
+import { completeQuest } from "@/lib/stats";
+import { drillQuestion } from "@/lib/drill";
 
 const ONBOARDING = [
   "Read the brand story and values",
@@ -111,8 +114,43 @@ export async function submitRun(runId: number, fd: FormData) {
   const score = possible ? earned / possible : 0;
   db.update(runs).set({ score, passed: score >= PASS_MARK, finishedAt: Math.floor(Date.now() / 1000) })
     .where(eq(runs.id, runId)).run();
+  const passed = score >= PASS_MARK;
+  completeQuest(u.id, run.trackId, "exam");
+  if (passed && (CERT_LEVELS as readonly number[]).includes(run.level)) {
+    db.insert(certificates).values({ userId: u.id, trackId: run.trackId, level: run.level, score, code: randomBytes(5).toString("hex").toUpperCase() })
+      .onConflictDoNothing().run();
+  }
   revalidatePath("/dashboard");
   redirect(`/run/${runId}`);
+}
+
+// ---- daily quests ----
+
+function enrolled(userId: number, trackId: number) {
+  return !!db.select().from(enrollments).where(and(eq(enrollments.userId, userId), eq(enrollments.trackId, trackId))).get();
+}
+
+export async function markStudied(trackId: number) {
+  const u = await requireUser();
+  if (!enrolled(u.id, trackId)) return;
+  completeQuest(u.id, trackId, "study");
+  revalidatePath("/dashboard");
+}
+
+/** Instant feedback for the drill: tells the learner whether a pick was right. */
+export async function drillCheck(questionId: number, key: string) {
+  const u = await requireUser();
+  const q = drillQuestion(u.id, questionId); // only drillable questions, never exam-level ones
+  if (!q) return null;
+  return { correct: q.answer === key, answer: q.answer ?? "", hint: q.hint };
+}
+
+export async function finishDrill(trackId: number) {
+  const u = await requireUser();
+  if (!enrolled(u.id, trackId)) return 0;
+  const xp = completeQuest(u.id, trackId, "drill");
+  revalidatePath("/dashboard");
+  return xp;
 }
 
 // ---- people: onboarding & offboarding (managers/admins) ----

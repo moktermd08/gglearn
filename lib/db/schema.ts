@@ -64,7 +64,7 @@ export const questions = sqliteTable(
     weight: integer("weight").notNull().default(10),
     timeSec: integer("time_sec").notNull().default(60),
     knowledgeItemId: integer("knowledge_item_id").references(() => knowledgeItems.id),
-    source: text("source", { enum: ["legacy-trialtest", "authored", "ai"] }).notNull().default("authored"),
+    source: text("source", { enum: ["legacy-trialtest", "authored", "ai", "questions-repo"] }).notNull().default("authored"),
     status: text("status", { enum: ["active", "review", "retired"] }).notNull().default("active"),
     version: integer("version").notNull().default(1),
     createdAt: integer("created_at").notNull().default(now),
@@ -121,3 +121,45 @@ export const handovers = sqliteTable("handovers", {
   notes: text("notes").notNull(),
   createdAt: integer("created_at").notNull().default(now),
 });
+
+// Study guide for one level of a track: the syllabus bullets shown before the exam.
+export const lessons = sqliteTable(
+  "lessons",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    trackId: integer("track_id").notNull().references(() => tracks.id),
+    level: integer("level").notNull(),
+    title: text("title").notNull(),
+    syllabus: text("syllabus", { mode: "json" }).$type<string[]>().notNull(),
+  },
+  (t) => [uniqueIndex("lessons_unique").on(t.trackId, t.level)],
+);
+
+// Daily quest completions (study / drill / exam). One row per kind per day.
+export const dailyQuests = sqliteTable(
+  "daily_quests",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    trackId: integer("track_id").notNull().references(() => tracks.id),
+    day: text("day").notNull(), // YYYY-MM-DD (UTC)
+    kind: text("kind", { enum: ["study", "drill", "exam"] }).notNull(),
+    xp: integer("xp").notNull().default(0),
+  },
+  (t) => [uniqueIndex("quest_unique").on(t.userId, t.trackId, t.day, t.kind)],
+);
+
+// Issued when a milestone level (5, 10, 15, 20) is passed. `code` is the public verification id.
+export const certificates = sqliteTable(
+  "certificates",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    trackId: integer("track_id").notNull().references(() => tracks.id),
+    level: integer("level").notNull(),
+    code: text("code").notNull().unique(),
+    score: real("score").notNull(),
+    issuedAt: integer("issued_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("cert_unique").on(t.userId, t.trackId, t.level)],
+);

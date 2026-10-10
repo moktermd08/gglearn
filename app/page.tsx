@@ -1,36 +1,70 @@
 import Link from "next/link";
 import { asc, eq, sql } from "drizzle-orm";
 import { brands, db, questions, tracks } from "@/lib/db";
-import { KIND_LABEL, LEVELS } from "@/lib/levels";
+import { KIND_LABEL, LEVELS, TIERS } from "@/lib/levels";
+import { Avatar } from "@/components/Avatar";
+import { rivalFor } from "@/lib/rivals";
 
 export default function Home() {
   const rows = db
     .select({ track: tracks, brand: brands, n: sql<number>`(select count(*) from ${questions} q where q.track_id = ${tracks.id} and q.status = 'active')` })
     .from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).orderBy(asc(brands.name), asc(tracks.name)).all();
+  const featured = rows.find((r) => r.track.slug === "git-titan");
   const byBrand = new Map<string, typeof rows>();
   for (const r of rows) byBrand.set(r.brand.name, [...(byBrand.get(r.brand.name) ?? []), r]);
 
   return (
-    <div className="space-y-10">
-      <section>
-        <h1 className="text-3xl font-bold">Training academy</h1>
-        <p className="mt-2 max-w-2xl text-stone-600 dark:text-stone-400">
-          Pick a track, set a goal, and climb {LEVELS.length} levels from {LEVELS[0]} to {LEVELS[LEVELS.length - 1]}.
-          Each level is a fresh set of questions, so you learn the material instead of memorising a list.
-        </p>
+    <div className="space-y-12">
+      <section className="card relative overflow-hidden p-6 sm:p-10">
+        <div className="relative z-10 max-w-xl">
+          <p className="text-sm font-semibold uppercase tracking-widest text-indigo-300">Learn head-to-head</p>
+          <h1 className="mt-2 text-4xl font-extrabold leading-tight sm:text-5xl">Race a rival to <span className="gradient-text">Titan</span></h1>
+          <p className="mt-4 text-slate-300">
+            Every subject comes with a rival who trains every single day. Do daily quests, pass level exams, earn certificates, and
+            climb {LEVELS.length} levels before they do.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href={featured ? `/tracks/${featured.track.slug}` : "/login"} className="btn">Start with Git →</Link>
+            <Link href="/login" className="btn btn-ghost">Sign in</Link>
+          </div>
+        </div>
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 items-end justify-center gap-2 sm:flex" aria-hidden>
+          <div className="mb-4 bob"><Avatar kind="human" level={1} size={120} /></div>
+          <div className="mb-10 text-3xl font-black text-white/30">VS</div>
+          <div className="mb-4 bob [animation-delay:.6s]"><Avatar kind="rival" level={1} hue={rivalFor("git-titan").hue} size={120} /></div>
+        </div>
       </section>
+
+      <section>
+        <h2 className="mb-4 text-xl font-bold">Five ranks, twenty levels</h2>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {TIERS.map((t, i) => (
+            <div key={t.name} className="card p-3 text-center">
+              <Avatar kind="human" level={t.from} size={72} className="mx-auto" />
+              <div className="mt-1 font-bold" style={{ color: `hsl(${t.hue} 85% 70%)` }}>{t.name}</div>
+              <div className="text-xs text-slate-400">Levels {t.from}–{i === 4 ? 20 : t.from + 3}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {[...byBrand].map(([brand, items]) => (
         <section key={brand}>
-          <h2 className="mb-3 text-xl font-semibold">{brand}</h2>
+          <h2 className="mb-3 text-xl font-bold">{brand}</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map(({ track, n }) => (
-              <Link key={track.id} href={`/tracks/${track.slug}`}
-                className="rounded-lg border border-stone-200 p-4 hover:border-stone-400 dark:border-stone-800 dark:hover:border-stone-600">
-                <div className="text-xs uppercase tracking-wide text-stone-500">{KIND_LABEL[track.kind]}</div>
-                <div className="font-medium">{track.name}</div>
-                <div className="mt-1 text-sm text-stone-500">{n} questions</div>
-              </Link>
-            ))}
+            {items.map(({ track, n }) => {
+              const rv = rivalFor(track.slug);
+              return (
+                <Link key={track.id} href={`/tracks/${track.slug}`} className="card card-hover flex items-center gap-3 p-4">
+                  <Avatar kind="rival" level={1} hue={rv.hue} size={48} />
+                  <div className="min-w-0">
+                    <div className="text-xs uppercase tracking-wide text-slate-400">{KIND_LABEL[track.kind]}</div>
+                    <div className="truncate font-semibold">{track.name}</div>
+                    <div className="text-xs text-slate-400">{n} questions · vs {rv.name}</div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       ))}

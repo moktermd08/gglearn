@@ -30,14 +30,14 @@ export default async function Admin() {
       <h1 className="text-2xl font-bold">Question bank</h1>
       <section>
         <h2 className="mb-2 font-semibold">Needs review ({flagged.length})</h2>
-        <p className="mb-3 text-sm text-stone-500">Questions with {MIN_ATTEMPTS}+ attempts that are almost always failed (possibly unclear or wrong) or never failed (too easy).</p>
-        {flagged.length === 0 && <p className="text-sm text-stone-500">Nothing flagged yet. Flags appear once learners have answered.</p>}
+        <p className="mb-3 text-sm text-slate-400">Questions with {MIN_ATTEMPTS}+ attempts that are almost always failed (possibly unclear or wrong) or never failed (too easy).</p>
+        {flagged.length === 0 && <p className="text-sm text-slate-400">Nothing flagged yet. Flags appear once learners have answered.</p>}
         <ul className="space-y-2">
           {flagged.map(({ q, track, attempts: n, accuracy: acc }) => (
-            <li key={q.id} className="flex items-start gap-3 rounded border border-stone-200 p-3 text-sm dark:border-stone-800">
+            <li key={q.id} className="flex items-start gap-3 rounded border border-white/15 p-3 text-sm">
               <div className="flex-1">
                 <div className="font-medium">{q.prompt}</div>
-                <div className="text-stone-500">{track} · L{q.level} · {n} attempts · {Math.round(acc * 100)}% correct</div>
+                <div className="text-slate-400">{track} · L{q.level} · {n} attempts · {Math.round(acc * 100)}% correct</div>
               </div>
               <form action={retireQuestion}>
                 <input type="hidden" name="id" value={q.id} />
@@ -51,10 +51,10 @@ export default async function Admin() {
       <section>
         <h2 className="mb-2 font-semibold">Coverage by track</h2>
         <table className="w-full text-sm">
-          <thead><tr className="text-left text-stone-500"><th>Track</th><th>Questions</th><th>Brand-authored</th><th>Answers</th></tr></thead>
+          <thead><tr className="text-left text-slate-400"><th>Track</th><th>Questions</th><th>Brand-authored</th><th>Answers</th></tr></thead>
           <tbody>
             {perTrack.map((r) => (
-              <tr key={r.track} className="border-t border-stone-200 dark:border-stone-800">
+              <tr key={r.track} className="border-t border-white/15">
                 <td className="py-1">{r.track}</td><td>{r.total}</td><td>{r.authored ?? 0}</td><td>{r.attempts}</td>
               </tr>
             ))}

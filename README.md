@@ -14,6 +14,14 @@ npm run seed                      # admin user (password printed once), sample b
 npm run dev
 ```
 
+## Race to Titan (gamified layer)
+- **Rival per subject**: `lib/rivals.ts` gives every track a stable named rival who earns XP every day (deterministic, so no jobs needed). Rival level = XP / 150. Your level = levels passed. The head-to-head is drawn on the track page and dashboard.
+- **Visuals**: `components/` holds SVG avatars that evolve through 5 ranks (Initiate, Adept, Expert, Master, Titan), rank shields, race track, score rings and confetti. No image assets.
+- **Daily quests** (study guide +20, 5-question instant-feedback drill +30, finish an exam +40 XP) feed streaks and badges (`lib/stats.ts`).
+- **Study guides** (`lessons` table) show the level syllabus plus flip cards from that level's questions.
+- **Certificates** are issued on passing levels 5, 10, 15 and 20 and verifiable at `/cert/<code>`.
+- **Import from the questions repo**: `npm run import:questions -- git-titan "Git: Novice to Titan" git "GIT & GITHUB"` (repo at `../questions`, override with `QUESTIONS_DIR`). It dedupes, maps numeric/text difficulty onto 20 levels, turns `topics.json` progressions into syllabi, and lists invalid JSON files it skipped. Re-running on a track that already has questions will add duplicates at shifted levels, so clear that track's questions first.
+
 ## How it works
 - **Tracks and levels**: `lib/levels.ts` defines the 20 levels. Each attempt draws 10 fresh questions for the level,
   favouring ones the learner has not yet answered correctly. 80% passes and unlocks the next level.
