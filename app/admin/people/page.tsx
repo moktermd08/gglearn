@@ -26,7 +26,7 @@ export default async function People() {
                   <div className="font-medium">{u.name} <span className="text-sm text-slate-400">· {u.email} · {u.jobRole}</span></div>
                   <div className={`text-xs ${u.status === "offboarded" ? "text-red-600" : "text-green-600"}`}>{u.status}</div>
                 </div>
-                {u.status === "active" && u.id !== me.id && (
+                {u.status === "active" && u.id !== me.id && (me.role === "admin" || u.role === "learner") && (
                   <form action={offboard}>
                     <input type="hidden" name="userId" value={u.id} />
                     <button className="text-sm text-red-600 underline">Offboard (ends access now)</button>

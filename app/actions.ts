@@ -202,6 +202,7 @@ export async function offboard(fd: FormData) {
   if (userId === me.id) return; // cannot lock yourself out
   const u = db.select().from(users).where(eq(users.id, userId)).get();
   if (!u || u.status === "offboarded") return;
+  if (me.role !== "admin" && u.role !== "learner") return; // managers can only offboard learners
   db.update(users).set({ status: "offboarded" }).where(eq(users.id, userId)).run(); // access ends now
   db.insert(checklistItems).values(OFFBOARDING.map((label) => ({ userId, kind: "offboarding" as const, label }))).run();
   revalidatePath("/admin/people");
