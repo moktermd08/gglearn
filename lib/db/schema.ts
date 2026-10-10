@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { blob, index, integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 const now = sql`(unixepoch())`;
 
@@ -13,6 +13,8 @@ export const users = sqliteTable("users", {
   // what the person does at the company (drives their recommended path)
   jobRole: text("job_role").notNull().default("general"),
   status: text("status", { enum: ["active", "offboarded"] }).notNull().default("active"),
+  // bumped to invalidate every session this person has (sign out everywhere, offboarding)
+  sessionVersion: integer("session_version").notNull().default(0),
   createdAt: integer("created_at").notNull().default(now),
 });
 
@@ -80,6 +82,9 @@ export const enrollments = sqliteTable(
     trackId: integer("track_id").notNull().references(() => tracks.id),
     goal: text("goal").notNull().default(""),
     startedAt: integer("started_at").notNull().default(now),
+    // starting point found by the placement check: levels treated as already mastered. Only ever raised.
+    placedLevel: integer("placed_level").notNull().default(0),
+    placedAt: integer("placed_at"),
   },
   (t) => [uniqueIndex("enroll_unique").on(t.userId, t.trackId)],
 );
@@ -175,3 +180,108 @@ export const invites = sqliteTable("invites", {
   expiresAt: integer("expires_at").notNull(),
   usedAt: integer("used_at"),
 });
+
+// A profile photo is optional and opt-in; people without one get a generated face. Kept out of `users` so
+// ordinary user queries never load image bytes.
+export const userAvatars = sqliteTable("user_avatars", {
+  userId: integer("user_id").primaryKey().references(() => users.id),
+  mime: text("mime").notNull(),
+  data: blob("data", { mode: "buffer" }).notNull(),
+  updatedAt: integer("updated_at").notNull().default(now),
+});
+
+// A time-boxed contest on one track: "gain `goalLevels` levels before `endsAt`". Humans and simulated bots compete side by side.
+export const competitions = sqliteTable("competitions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(), // unguessable id used in URLs
+  title: text("title").notNull(),
+  description: text("description").notNull().default(""),
+  trackId: integer("track_id").notNull().references(() => tracks.id),
+  createdBy: integer("created_by").notNull().references(() => users.id),
+  // public: anyone can watch. private: only people who were invited or joined.
+  visibility: text("visibility", { enum: ["public", "private"] }).notNull().default("private"),
+  // open: any signed-in person may join a public contest. invite: only people the creator invited.
+  joinPolicy: text("join_policy", { enum: ["open", "invite"] }).notNull().default("invite"),
+  goalLevels: integer("goal_levels").notNull(),
+  startsAt: integer("starts_at").notNull(),
+  endsAt: integer("ends_at").notNull(),
+  maxHumans: integer("max_humans").notNull().default(20),
+  // Optional cash incentive. gglearn never holds or moves money: the organiser pays winners and records it here.
+  prizeAmount: integer("prize_amount").notNull().default(0), // minor units (cents)
+  prizeCurrency: text("prize_currency").notNull().default("USD"),
+  prizeSplit: text("prize_split", { enum: ["winner", "top3"] }).notNull().default("winner"),
+  prizeNote: text("prize_note").notNull().default(""),
+  prizePaidAt: integer("prize_paid_at"),
+  canceledAt: integer("canceled_at"),
+  createdAt: integer("created_at").notNull().default(now),
+});
+
+export const competitionMembers = sqliteTable(
+  "competition_members",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    competitionId: integer("competition_id").notNull().references(() => competitions.id),
+    kind: text("kind", { enum: ["human", "bot"] }).notNull(),
+    userId: integer("user_id").references(() => users.id), // humans only
+    status: text("status", { enum: ["invited", "joined", "declined", "left"] }).notNull().default("joined"),
+    joinedAt: integer("joined_at"),
+    invitedBy: integer("invited_by").references(() => users.id),
+    // bots only. Stored, not derived, so a finished contest never changes if the persona code does.
+    botName: text("bot_name"),
+    botTagline: text("bot_tagline"),
+    botStyle: text("bot_style"),
+    botPace: integer("bot_pace"), // XP per day
+    botSeed: text("bot_seed"),
+  },
+  (t) => [
+    uniqueIndex("cm_user").on(t.competitionId, t.userId),
+    index("cm_competition").on(t.competitionId),
+    index("cm_user_lookup").on(t.userId),
+  ],
+);
+
+// Emails invited to a contest before they have an account. Turned into real invitations when the account is created.
+export const competitionEmailInvites = sqliteTable(
+  "competition_email_invites",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    competitionId: integer("competition_id").notNull().references(() => competitions.id),
+    email: text("email").notNull(),
+    invitedBy: integer("invited_by").notNull().references(() => users.id),
+  },
+  (t) => [uniqueIndex("cei_unique").on(t.competitionId, t.email), index("cei_email").on(t.email)],
+);
+
+// The guided start: topic -> solo or group -> placement check -> finish line -> contest. One row per attempt.
+export const journeys = sqliteTable("journeys", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  trackId: integer("track_id").notNull().references(() => tracks.id),
+  mode: text("mode", { enum: ["solo", "group"] }).notNull(),
+  emails: text("emails").notNull().default(""), // kept here, never in a URL
+  step: text("step", { enum: ["level", "setup", "launched"] }).notNull().default("level"),
+  // placement search: `lo` = highest level believed mastered, `hi` = highest level it could still be
+  lo: integer("lo").notNull().default(0),
+  hi: integer("hi").notNull().default(15),
+  round: integer("round").notNull().default(0),
+  pending: text("pending", { mode: "json" }).$type<number[]>(), // question ids of the batch being answered
+  placed: integer("placed"), // final starting level once the check (or skip) is done
+  competitionSlug: text("competition_slug"),
+  createdAt: integer("created_at").notNull().default(now),
+});
+
+// Issued on request to a person who finished a contest: "champion" (best human to reach the goal) or "finisher" (reached it).
+export const competitionCerts = sqliteTable(
+  "competition_certs",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    competitionId: integer("competition_id").notNull().references(() => competitions.id),
+    userId: integer("user_id").notNull().references(() => users.id),
+    kind: text("kind", { enum: ["champion", "finisher"] }).notNull(),
+    place: integer("place").notNull(),
+    code: text("code").notNull().unique(),
+    issuedAt: integer("issued_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("ccert_unique").on(t.competitionId, t.userId)],
+);
