@@ -7,7 +7,8 @@ import { z } from "zod";
 import { randomBytes } from "node:crypto";
 import { answers, certificates, checklistItems, db, enrollments, handovers, questions, runs, tracks, users } from "@/lib/db";
 import { endSession, requireManager, requireUser, startSession } from "@/lib/auth";
-import { hashPassword, verifyPassword } from "@/lib/password";
+import { hashPassword, verifyAgainstDummy, verifyPassword } from "@/lib/password";
+import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
 import { grade } from "@/lib/grading";
 import { levelsPassed } from "@/lib/progress";
 import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
@@ -30,7 +31,12 @@ const OFFBOARDING = [
 
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
 
+const TOO_MANY = "Too many attempts. Please wait a few minutes and try again.";
+
 export async function signup(_: string | null, fd: FormData): Promise<string | null> {
+  const ipKey = `signup:${await clientIp()}`;
+  if (!allowed(ipKey, 5)) return TOO_MANY;
+  hit(ipKey, 60 * MINUTE); // every attempt counts: 5 signups per address per hour
   const p = z.object({
     name: z.string().min(1).max(80),
     email: z.string().email().max(120).transform((s) => s.toLowerCase()),
@@ -38,16 +44,27 @@ export async function signup(_: string | null, fd: FormData): Promise<string | n
   }).safeParse({ name: str(fd.get("name")), email: str(fd.get("email")), password: str(fd.get("password")) });
   if (!p.success) return "Enter a name, a valid email and a password of 8+ characters.";
   if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return "That email is already registered.";
-  const u = db.insert(users).values({ ...p.data, passwordHash: hashPassword(p.data.password) }).returning().get();
+  const u = db.insert(users).values({ ...p.data, passwordHash: await hashPassword(p.data.password) }).returning().get();
   await startSession(u.id);
   redirect("/dashboard");
 }
 
 export async function login(_: string | null, fd: FormData): Promise<string | null> {
-  const email = str(fd.get("email")).toLowerCase();
+  const email = str(fd.get("email")).toLowerCase().slice(0, 120);
+  const ip = await clientIp();
+  const pairKey = `login:${ip}:${email}`, ipKey = `login-ip:${ip}`;
+  if (!allowed(pairKey, 5) || !allowed(ipKey, 30)) return TOO_MANY;
+
+  const pw = str(fd.get("password")).slice(0, 200);
   const u = db.select().from(users).where(eq(users.email, email)).get();
-  const ok = u && u.status === "active" && verifyPassword(str(fd.get("password")), u.passwordHash);
-  if (!ok) return "Wrong email or password.";
+  // unknown or offboarded accounts still pay for a hash, so timing does not reveal which emails exist
+  const ok = u && u.status === "active" ? await verifyPassword(pw, u.passwordHash) : (await verifyAgainstDummy(pw), false);
+  if (!u || !ok) {
+    hit(pairKey, 15 * MINUTE);
+    hit(ipKey, 15 * MINUTE);
+    return "Wrong email or password.";
+  }
+  clear(pairKey);
   await startSession(u.id);
   redirect("/dashboard");
 }
@@ -166,7 +183,7 @@ export async function createPerson(_: string | null, fd: FormData): Promise<stri
   if (!p.success) return "Name, valid email, role and a temporary password (8+ chars) are required.";
   if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return "That email already exists.";
 
-  const u = db.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: p.data.jobRole, passwordHash: hashPassword(p.data.password) }).returning().get();
+  const u = db.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: p.data.jobRole, passwordHash: await hashPassword(p.data.password) }).returning().get();
   db.insert(checklistItems).values(ONBOARDING.map((label) => ({ userId: u.id, kind: "onboarding" as const, label }))).run();
 
   // auto-enrol in the tracks recommended for their job role

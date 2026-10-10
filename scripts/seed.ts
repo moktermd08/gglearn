@@ -8,7 +8,7 @@ import path from "node:path";
 import { db, brands, tracks, questions, users, knowledgeItems } from "../lib/db";
 import { eq } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
-import { hashPassword } from "../lib/password";
+import { hashPasswordSync as hashPassword } from "../lib/password";
 
 const LEGACY_DIR = process.env.LEGACY_DIR ?? path.resolve(process.cwd(), "../trialtest.ai/database/data");
 
