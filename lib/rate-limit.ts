@@ -31,12 +31,22 @@ export function clear(key: string) {
 }
 
 /**
- * Apache appends the real client address to X-Forwarded-For, so the LAST entry is the one our own
- * proxy saw; earlier entries are client-supplied and spoofable.
+ * The client address from X-Forwarded-For. Production is Cloudflare -> Apache -> Next, and each hop
+ * appends the address it saw the request come from:
+ *   spoofable entries..., real client (added by Cloudflare), Cloudflare edge (added by Apache)
+ * so the real client is TRUSTED_PROXY_HOPS entries from the end (default 2). Anything a visitor puts in the
+ * header sits to the left of that and is ignored. With fewer entries than hops (a direct request, or local
+ * dev) the first entry is used. Caveat: someone who reaches Apache directly, bypassing Cloudflare, can still
+ * spoof the entry; restrict Apache to Cloudflare's address ranges if that matters.
  */
+export function pickClientIp(xff: string | null | undefined, hops = Number(process.env.TRUSTED_PROXY_HOPS ?? 2)): string {
+  const parts = (xff ?? "").split(",").map((p) => p.trim()).filter(Boolean);
+  if (!parts.length) return "local";
+  return parts[Math.max(parts.length - Math.max(hops, 1), 0)].slice(0, 64);
+}
+
 export async function clientIp(): Promise<string> {
-  const xff = (await headers()).get("x-forwarded-for");
-  return xff?.split(",").pop()?.trim() || "local";
+  return pickClientIp((await headers()).get("x-forwarded-for"));
 }
 
 export const MINUTE = 60_000;
