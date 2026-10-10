@@ -67,4 +67,5 @@ H1, H2, M2, M1, then M3 and M4.
 - M2 manager can offboard admin: fixed.
 - M4 login timing enumeration: fixed (the "already registered" signup message went away with open signup).
 - M1 open signup: fixed. Signup is invite-only (`lib/invites.ts`, `/join/[token]`); the old `signup` action is removed.
-- Open: M3 session revocation and expiry, L1-L3.
+- M3 sessions: fixed. Cookie is `userId.issuedAt.version.mac`; the server enforces a 30-day lifetime and `users.session_version` revokes older sessions ("Sign out everywhere", offboarding). Existing cookies were invalidated once.
+- Open: L1-L3.

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { currentUser } from "@/lib/auth";
-import { logout } from "./actions";
+import { logout, logoutEverywhere } from "./actions";
 
 export const metadata: Metadata = {
   title: "gglearn — Race to Titan",
@@ -26,6 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <form action={logout} className="flex items-center gap-3">
                 <Link href="/profile" className="text-slate-400 hover:text-white">{user.name}</Link>
                 <button className="text-slate-300 underline">Sign out</button>
+                <button formAction={logoutEverywhere} className="text-slate-500 underline" title="Ends your session on every device">Sign out everywhere</button>
               </form>
             ) : (
               <Link href="/login" className="btn !py-1.5">Sign in</Link>

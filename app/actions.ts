@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
 import { answers, certificates, checklistItems, db, enrollments, handovers, invites, questions, runs, tracks, users } from "@/lib/db";
-import { endSession, requireManager, requireUser, startSession } from "@/lib/auth";
+import { endSession, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
 import { hashPassword, verifyAgainstDummy, verifyPassword } from "@/lib/password";
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
 import { grade } from "@/lib/grading";
@@ -99,6 +99,14 @@ export async function login(_: string | null, fd: FormData): Promise<string | nu
 }
 
 export async function logout() {
+  await endSession();
+  redirect("/");
+}
+
+/** Signs this person out on every device, including this one. */
+export async function logoutEverywhere() {
+  const u = await requireUser();
+  revokeSessions(u.id);
   await endSession();
   redirect("/");
 }
@@ -263,7 +271,7 @@ export async function offboard(fd: FormData) {
   const u = db.select().from(users).where(eq(users.id, userId)).get();
   if (!u || u.status === "offboarded") return;
   if (me.role !== "admin" && u.role !== "learner") return; // managers can only offboard learners
-  db.update(users).set({ status: "offboarded" }).where(eq(users.id, userId)).run(); // access ends now
+  db.update(users).set({ status: "offboarded", sessionVersion: sql`${users.sessionVersion} + 1` }).where(eq(users.id, userId)).run(); // access ends now
   db.insert(checklistItems).values(OFFBOARDING.map((label) => ({ userId, kind: "offboarding" as const, label }))).run();
   revalidatePath("/admin/people");
 }
