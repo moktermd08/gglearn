@@ -13,6 +13,7 @@ import { grade } from "@/lib/grading";
 import { levelsPassed } from "@/lib/progress";
 import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import { completeQuest } from "@/lib/stats";
+import { hiddenTrackIds } from "@/lib/tracks";
 import { drillQuestion } from "@/lib/drill";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 
@@ -37,7 +38,8 @@ type Tx = Pick<typeof db, "insert" | "select">;
 /** New-joiner setup: onboarding checklist plus auto-enrolment in the tracks recommended for their job role. */
 function provision(tx: Tx, userId: number, jobRole: string) {
   tx.insert(checklistItems).values(ONBOARDING.map((label) => ({ userId, kind: "onboarding" as const, label }))).run();
-  const rec = tx.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${jobRole}%`))).limit(6).all();
+  const hidden = hiddenTrackIds();
+  const rec = tx.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${jobRole}%`))).all().filter((t) => !hidden.has(t.id)).slice(0, 6);
   if (rec.length) {
     tx.insert(enrollments).values(rec.map((t) => ({ userId, trackId: t.id, goal: `Onboarding path for ${jobRole}` }))).onConflictDoNothing().run();
   }

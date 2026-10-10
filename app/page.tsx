@@ -5,11 +5,14 @@ import { KIND_LABEL, LEVELS, TIERS } from "@/lib/levels";
 import { Avatar } from "@/components/Avatar";
 import { SubjectArt } from "@/components/SubjectArt";
 import { rivalFor } from "@/lib/rivals";
+import { hiddenTrackIds } from "@/lib/tracks";
 
 export default function Home() {
-  const rows = db
+  const all = db
     .select({ track: tracks, brand: brands, n: sql<number>`(select count(*) from ${questions} q where q.track_id = ${tracks.id} and q.status = 'active')` })
     .from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).orderBy(asc(brands.name), asc(tracks.name)).all();
+  const hidden = hiddenTrackIds();
+  const rows = all.filter((r) => !hidden.has(r.track.id));
   const featured = rows.find((r) => r.track.slug === "git-titan");
   const byBrand = new Map<string, typeof rows>();
   for (const r of rows) byBrand.set(r.brand.name, [...(byBrand.get(r.brand.name) ?? []), r]);
