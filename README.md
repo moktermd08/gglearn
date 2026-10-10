@@ -44,3 +44,7 @@ npm run dev
 Production: https://gglearn.gglink.co.uk — Apache (TLS via certbot) reverse-proxies to a PM2 app `gglearn-web` on 127.0.0.1:3400.
 Server uses Node 20, so avoid Node 21+ APIs (e.g. `Map.groupBy`) and keep `better-sqlite3` on a version with a Linux Node 20 prebuild (12.9.0).
 `deploy/deploy.sh` syncs, installs, builds, pushes the schema and reloads PM2. `deploy/*.conf` is the Apache vhost.
+
+### Auto-deploy (GitHub Actions)
+
+`.github/workflows/deploy.yml` runs `deploy/deploy.sh` on every push to `main` (or manually via "Run workflow"). Required repo secrets: `DEPLOY_SSH_KEY` (private key authorised on the server), `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_KNOWN_HOSTS` (output of `ssh-keyscan <host>`), and optionally `DEPLOY_PORT`.
