@@ -163,3 +163,15 @@ export const certificates = sqliteTable(
   },
   (t) => [uniqueIndex("cert_unique").on(t.userId, t.trackId, t.level)],
 );
+
+// Signup is invite-only. A manager issues one; the token itself is shown once and only its hash is stored.
+export const invites = sqliteTable("invites", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  tokenHash: text("token_hash").notNull().unique(),
+  email: text("email").notNull(), // the invite only works for this address
+  jobRole: text("job_role").notNull(),
+  createdBy: integer("created_by").notNull().references(() => users.id),
+  createdAt: integer("created_at").notNull().default(now),
+  expiresAt: integer("expires_at").notNull(),
+  usedAt: integer("used_at"),
+});

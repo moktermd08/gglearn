@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
-import { answers, certificates, checklistItems, db, enrollments, handovers, questions, runs, tracks, users } from "@/lib/db";
+import { answers, certificates, checklistItems, db, enrollments, handovers, invites, questions, runs, tracks, users } from "@/lib/db";
 import { endSession, requireManager, requireUser, startSession } from "@/lib/auth";
 import { hashPassword, verifyAgainstDummy, verifyPassword } from "@/lib/password";
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
@@ -14,6 +14,7 @@ import { levelsPassed } from "@/lib/progress";
 import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import { completeQuest } from "@/lib/stats";
 import { drillQuestion } from "@/lib/drill";
+import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 
 const ONBOARDING = [
   "Read the brand story and values",
@@ -31,21 +32,47 @@ const OFFBOARDING = [
 
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
 
+type Tx = Pick<typeof db, "insert" | "select">;
+
+/** New-joiner setup: onboarding checklist plus auto-enrolment in the tracks recommended for their job role. */
+function provision(tx: Tx, userId: number, jobRole: string) {
+  tx.insert(checklistItems).values(ONBOARDING.map((label) => ({ userId, kind: "onboarding" as const, label }))).run();
+  const rec = tx.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${jobRole}%`))).limit(6).all();
+  if (rec.length) {
+    tx.insert(enrollments).values(rec.map((t) => ({ userId, trackId: t.id, goal: `Onboarding path for ${jobRole}` }))).onConflictDoNothing().run();
+  }
+}
+
 const TOO_MANY = "Too many attempts. Please wait a few minutes and try again.";
 
-export async function signup(_: string | null, fd: FormData): Promise<string | null> {
-  const ipKey = `signup:${await clientIp()}`;
-  if (!allowed(ipKey, 5)) return TOO_MANY;
-  hit(ipKey, 60 * MINUTE); // every attempt counts: 5 signups per address per hour
-  const p = z.object({
-    name: z.string().min(1).max(80),
-    email: z.string().email().max(120).transform((s) => s.toLowerCase()),
-    password: z.string().min(8).max(200),
-  }).safeParse({ name: str(fd.get("name")), email: str(fd.get("email")), password: str(fd.get("password")) });
-  if (!p.success) return "Enter a name, a valid email and a password of 8+ characters.";
-  if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return "That email is already registered.";
-  const u = db.insert(users).values({ ...p.data, passwordHash: await hashPassword(p.data.password) }).returning().get();
-  await startSession(u.id);
+/** Account creation is invite-only: a manager issues a single-use link bound to one email address. */
+export async function joinWithInvite(token: string, _: string | null, fd: FormData): Promise<string | null> {
+  const ipKey = `join:${await clientIp()}`;
+  if (!allowed(ipKey, 10)) return TOO_MANY;
+  hit(ipKey, 60 * MINUTE);
+
+  const inv = findOpenInvite(token);
+  if (!inv) return "This invite link is invalid or has expired. Ask your manager for a new one.";
+  const p = z.object({ name: z.string().min(1).max(80), password: z.string().min(8).max(200) })
+    .safeParse({ name: str(fd.get("name")), password: str(fd.get("password")) });
+  if (!p.success) return "Enter your name and a password of 8+ characters.";
+
+  const passwordHash = await hashPassword(p.data.password);
+  let userId: number;
+  try {
+    // consume the invite and create the account together, so a link can never be used twice
+    userId = db.transaction((tx) => {
+      const used = tx.update(invites).set({ usedAt: Math.floor(Date.now() / 1000) })
+        .where(and(eq(invites.id, inv.id), sql`${invites.usedAt} is null`)).returning().get();
+      if (!used) throw new Error("used");
+      const u = tx.insert(users).values({ name: p.data.name, email: inv.email, jobRole: inv.jobRole, passwordHash }).returning().get();
+      provision(tx, u.id, inv.jobRole);
+      return u.id;
+    });
+  } catch {
+    return "This invite link is invalid or has expired. Ask your manager for a new one.";
+  }
+  await startSession(userId);
   redirect("/dashboard");
 }
 
@@ -184,15 +211,29 @@ export async function createPerson(_: string | null, fd: FormData): Promise<stri
   if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return "That email already exists.";
 
   const u = db.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: p.data.jobRole, passwordHash: await hashPassword(p.data.password) }).returning().get();
-  db.insert(checklistItems).values(ONBOARDING.map((label) => ({ userId: u.id, kind: "onboarding" as const, label }))).run();
-
-  // auto-enrol in the tracks recommended for their job role
-  const rec = db.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${p.data.jobRole}%`))).limit(6).all();
-  if (rec.length) {
-    db.insert(enrollments).values(rec.map((t) => ({ userId: u.id, trackId: t.id, goal: `Onboarding path for ${p.data.jobRole}` }))).onConflictDoNothing().run();
-  }
+  provision(db, u.id, p.data.jobRole);
   revalidatePath("/admin/people");
   return null;
+}
+
+export type InviteState = { error?: string; path?: string } | null;
+
+/** Issues a single-use signup link for one email. The token is shown once; only its hash is stored. */
+export async function createInvite(_: InviteState, fd: FormData): Promise<InviteState> {
+  const me = await requireManager();
+  const p = z.object({
+    email: z.string().email().max(120).transform((s) => s.toLowerCase()),
+    jobRole: z.string().min(1).max(40),
+  }).safeParse({ email: str(fd.get("email")), jobRole: str(fd.get("jobRole")).toLowerCase() });
+  if (!p.success) return { error: "A valid email and a role are required." };
+  if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return { error: "That email already has an account." };
+
+  const token = newToken();
+  db.insert(invites).values({
+    tokenHash: hashToken(token), email: p.data.email, jobRole: p.data.jobRole, createdBy: me.id,
+    expiresAt: Math.floor(Date.now() / 1000) + INVITE_TTL_SEC,
+  }).run();
+  return { path: `/join/${token}` };
 }
 
 export async function toggleChecklist(id: number) {

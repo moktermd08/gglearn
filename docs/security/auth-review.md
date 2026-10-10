@@ -65,5 +65,6 @@ H1, H2, M2, M1, then M3 and M4.
 - H1 `drillCheck` leak: fixed (`lib/drill.ts`). Residual: level 1 answers are readable by a learner who has not yet passed level 1.
 - H2 rate limiting and blocking hashing: fixed (`lib/rate-limit.ts`, async `lib/password.ts`). In-memory, single process.
 - M2 manager can offboard admin: fixed.
-- M4 login timing enumeration: fixed. Signup's "already registered" message remains.
-- Open: M1 open signup, M3 session revocation and expiry, L1-L3.
+- M4 login timing enumeration: fixed (the "already registered" signup message went away with open signup).
+- M1 open signup: fixed. Signup is invite-only (`lib/invites.ts`, `/join/[token]`); the old `signup` action is removed.
+- Open: M3 session revocation and expiry, L1-L3.

@@ -2,6 +2,7 @@ import { checklistItems, db, handovers, tracks, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { addHandover, offboard, toggleChecklist } from "@/app/actions";
 import NewPerson from "./new-person";
+import InvitePerson from "./invite-person";
 
 export default async function People() {
   const me = await requireManager();
@@ -14,7 +15,14 @@ export default async function People() {
   return (
     <div className="space-y-8">
       <h1 className="text-2xl font-bold">People</h1>
-      <NewPerson />
+      <section className="space-y-2">
+        <h2 className="font-semibold">Invite someone</h2>
+        <InvitePerson />
+      </section>
+      <section className="space-y-2">
+        <h2 className="font-semibold">Or create their account yourself</h2>
+        <NewPerson />
+      </section>
       <ul className="space-y-4">
         {all.map((u) => {
           const mine = items.filter((i) => i.userId === u.id);
