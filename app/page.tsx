@@ -3,6 +3,7 @@ import { asc, eq, sql } from "drizzle-orm";
 import { brands, db, questions, tracks } from "@/lib/db";
 import { KIND_LABEL, LEVELS, TIERS } from "@/lib/levels";
 import { Avatar } from "@/components/Avatar";
+import { SubjectArt } from "@/components/SubjectArt";
 import { rivalFor } from "@/lib/rivals";
 
 export default function Home() {
@@ -35,6 +36,14 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="card flex flex-wrap items-center gap-4 p-6">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-xl font-bold">Race a bot, a friend or a whole group</h2>
+          <p className="text-slate-300">Any topic, hard skill or soft skill. Set a goal and a deadline, pick your opponents, and keep the contest public to watch or private to your group.</p>
+        </div>
+        <Link href="/competitions" className="btn">See contests</Link>
+      </section>
+
       <section>
         <h2 className="mb-4 text-xl font-bold">Five ranks, twenty levels</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
@@ -56,7 +65,7 @@ export default function Home() {
               const rv = rivalFor(track.slug);
               return (
                 <Link key={track.id} href={`/tracks/${track.slug}`} className="card card-hover flex items-center gap-3 p-4">
-                  <Avatar kind="rival" level={1} hue={rv.hue} size={48} />
+                  <SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={56} />
                   <div className="min-w-0">
                     <div className="text-xs uppercase tracking-wide text-slate-400">{KIND_LABEL[track.kind]}</div>
                     <div className="truncate font-semibold">{track.name}</div>

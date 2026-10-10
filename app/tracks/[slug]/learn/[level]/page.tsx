@@ -7,6 +7,7 @@ import { LEVELS, MAX_LEVEL } from "@/lib/levels";
 import { markStudied, startRun } from "@/app/actions";
 import { Flashcards } from "@/components/Flashcards";
 import { RankEmblem } from "@/components/RankEmblem";
+import { SubjectArt, TopicChip, artFor } from "@/components/SubjectArt";
 
 export default async function LearnPage({ params }: { params: Promise<{ slug: string; level: string }> }) {
   const { slug, level: lv } = await params;
@@ -28,6 +29,7 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
     <div className="mx-auto max-w-3xl space-y-6">
       <Link href={`/tracks/${slug}`} className="text-sm text-slate-400 underline">← {track.name}</Link>
       <div className="flex items-center gap-4">
+        <SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={64} />
         <RankEmblem level={level} state="current" size={64} />
         <div>
           <div className="text-xs uppercase tracking-widest text-indigo-300">Study guide · level {level}</div>
@@ -47,7 +49,7 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
       {topics.length > 0 && (
         <section>
           <h2 className="mb-2 font-bold">Topics in the exam</h2>
-          <div className="flex flex-wrap gap-2">{topics.map((t) => <span key={t} className="rounded-full bg-indigo-500/20 px-3 py-1 text-sm">{t}</span>)}</div>
+          <div className="flex flex-wrap gap-2">{topics.map((t) => <TopicChip key={t} topic={t} color={artFor(track.slug, track.name, track.kind).color} />)}</div>
         </section>
       )}
 

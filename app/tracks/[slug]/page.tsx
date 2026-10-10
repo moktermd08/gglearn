@@ -8,6 +8,7 @@ import { QUEST_LABEL, QUEST_XP, badgesFor, trackStats } from "@/lib/stats";
 import { rivalFor } from "@/lib/rivals";
 import { enroll, startRun } from "@/app/actions";
 import { Avatar } from "@/components/Avatar";
+import { SubjectArt } from "@/components/SubjectArt";
 import { RaceTrack } from "@/components/RaceTrack";
 import { RankEmblem } from "@/components/RankEmblem";
 
@@ -40,6 +41,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           <span className="mb-8 text-xl font-black text-white/30">VS</span>
           <Avatar kind="rival" level={s?.rival.level ?? 0} hue={rival.hue} size={88} className="bob [animation-delay:.5s]" />
         </div>
+        <SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={96} className="shadow-lg" />
         <div className="min-w-0 flex-1">
           <div className="text-xs uppercase tracking-widest text-indigo-300">{brand.name} · {KIND_LABEL[track.kind]}</div>
           <h1 className="text-3xl font-extrabold">{track.name}</h1>

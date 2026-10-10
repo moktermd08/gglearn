@@ -6,6 +6,9 @@ import { LEVELS, MAX_LEVEL, TIERS, tierOf } from "@/lib/levels";
 import { badgesFor, trackStats } from "@/lib/stats";
 import { rivalFor } from "@/lib/rivals";
 import { Avatar } from "@/components/Avatar";
+import { listFor } from "@/lib/competitions";
+import { CompetitionCard } from "@/components/CompetitionCard";
+import { SubjectArt } from "@/components/SubjectArt";
 
 export default async function Dashboard() {
   const user = await requireUser();
@@ -16,6 +19,7 @@ export default async function Dashboard() {
   const stats = mine.map((m) => ({ ...m, s: trackStats(user.id, m.t, m.e.startedAt) }));
   const totalXp = stats.reduce((a, m) => a + m.s.xp, 0);
   const bestStreak = Math.max(0, ...stats.map((m) => m.s.streak));
+  const contests = listFor(user, { mineOnly: true }).filter((x) => x.state === "live" || x.state === "upcoming" || x.invited).slice(0, 6);
   const badges = stats.length ? badgesFor(stats.sort((a, b) => b.s.xp - a.s.xp)[0].s) : [];
 
   return (
@@ -59,8 +63,10 @@ export default async function Dashboard() {
                     <div className="text-xs text-slate-400">{rv.name} · L{s.rival.level}</div>
                   </div>
                 </div>
-                <div className="mt-3 text-xs text-slate-400">{b.name}</div>
-                <div className="font-semibold">{t.name}</div>
+                <div className="mt-3 flex items-center gap-2">
+                  <SubjectArt slug={t.slug} name={t.name} kind={t.kind} size={36} />
+                  <div><div className="text-xs text-slate-400">{b.name}</div><div className="font-semibold">{t.name}</div></div>
+                </div>
                 <div className="bar mt-2"><i style={{ width: `${(s.passed / MAX_LEVEL) * 100}%` }} /></div>
                 <div className="mt-1 flex justify-between text-xs text-slate-400">
                   <span>{s.passed === 0 ? "Not started" : `Level ${s.passed} · ${LEVELS[s.passed - 1]} · ${tier.name}`}</span>
@@ -71,6 +77,18 @@ export default async function Dashboard() {
             );
           })}
         </div>
+      </section>
+
+      <section>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-lg font-bold">Contests</h2>
+          <Link href="/competitions/new" className="btn !py-1 text-sm">Start a contest</Link>
+        </div>
+        {contests.length === 0 ? (
+          <p className="text-slate-400">Race a bot, a friend or a group on any topic. <Link href="/competitions" className="underline">See what is running</Link>.</p>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{contests.map((x) => <CompetitionCard key={x.c.id} card={x} />)}</div>
+        )}
       </section>
 
       {badges.length > 0 && (
