@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { db, enrollments, questions, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
-import { drillLevelFilter } from "@/lib/drill";
+import { DRILL_SIZE, drillLevelFilter } from "@/lib/drill";
 import { Drill } from "@/components/Drill";
 
 export default async function DrillPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -15,7 +15,7 @@ export default async function DrillPage({ params }: { params: Promise<{ slug: st
 
   const qs = db.select().from(questions)
     .where(and(eq(questions.trackId, track.id), eq(questions.status, "active"), eq(questions.type, "mcq"), drillLevelFilter(user.id, track.id)))
-    .orderBy(sql`random()`).limit(5).all();
+    .orderBy(sql`random()`).limit(DRILL_SIZE).all();
   if (!qs.length) return <p>No drill questions yet. <Link href={`/tracks/${slug}`} className="underline">Back</Link></p>;
 
   return <Drill trackId={track.id} back={`/tracks/${slug}`}

@@ -68,4 +68,8 @@ H1, H2, M2, M1, then M3 and M4.
 - M4 login timing enumeration: fixed (the "already registered" signup message went away with open signup).
 - M1 open signup: fixed. Signup is invite-only (`lib/invites.ts`, `/join/[token]`); the old `signup` action is removed.
 - M3 sessions: fixed. Cookie is `userId.issuedAt.version.mac`; the server enforces a 30-day lifetime and `users.session_version` revokes older sessions ("Sign out everywhere", offboarding). Existing cookies were invalidated once.
-- Open: L1-L3.
+- L1 password storage: fixed. Hashes are `scrypt$N$r$p$salt$hash` (N=32768); old `salt:hash` values still verify and are upgraded on the person next sign-in.
+- L2 drill XP: fixed. `finishDrill` only pays out after the server checked the drill questions (`lib/drill.ts`).
+- L3 submit race: fixed. A run being graded cannot be submitted again, and only the submit that finishes the run awards the quest and certificate.
+- L4 deployment: `.env.example` now says to use 32+ random bytes. Not changed: the `X-Forwarded-Proto "http"` line in the :80 vhost (certbot copies it into the :443 vhost; cookies do not depend on it, but check the generated file on the server).
+- Still open (by choice): no breached-password check, and the limiter, drill tracking and grading lock are in memory, so they assume one PM2 process.

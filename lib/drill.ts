@@ -1,4 +1,4 @@
-import { and, eq, lte } from "drizzle-orm";
+import { and, eq, lte, sql } from "drizzle-orm";
 import { db, enrollments, questions } from "@/lib/db";
 import { levelsPassed } from "@/lib/progress";
 
@@ -24,3 +24,29 @@ export function drillQuestion(userId: number, questionId: number) {
 }
 
 export const drillLevelFilter = (userId: number, trackId: number) => lte(questions.level, drillMaxLevel(userId, trackId));
+
+/** Questions per drill. The drill page draws this many; finishDrill requires that many to have been answered. */
+export const DRILL_SIZE = 5;
+
+// Answers the server has checked, per learner and track (single process, like lib/rate-limit.ts).
+// A drill earns XP only when the questions were actually answered here, not on the client's say-so.
+const answered = new Map<string, { ids: Set<number>; at: number }>();
+const DRILL_WINDOW_MS = 60 * 60 * 1000;
+
+export function noteDrillAnswer(userId: number, trackId: number, questionId: number) {
+  const key = `${userId}:${trackId}`, now = Date.now();
+  let e = answered.get(key);
+  if (!e || now - e.at > DRILL_WINDOW_MS) answered.set(key, (e = { ids: new Set(), at: now }));
+  e.ids.add(questionId);
+}
+
+/** True once enough distinct drill questions were checked (all of them, when the pool is smaller than a full drill). Resets on success. */
+export function drillCompleted(userId: number, trackId: number): boolean {
+  const key = `${userId}:${trackId}`, e = answered.get(key);
+  if (!e || Date.now() - e.at > DRILL_WINDOW_MS) return false;
+  const pool = db.select({ n: sql<number>`count(*)` }).from(questions)
+    .where(and(eq(questions.trackId, trackId), eq(questions.status, "active"), eq(questions.type, "mcq"), drillLevelFilter(userId, trackId))).get()?.n ?? 0;
+  if (e.ids.size < Math.min(DRILL_SIZE, pool)) return false;
+  answered.delete(key);
+  return true;
+}

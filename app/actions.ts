@@ -7,14 +7,14 @@ import { z } from "zod";
 import { randomBytes } from "node:crypto";
 import { answers, certificates, checklistItems, db, enrollments, handovers, invites, questions, runs, tracks, users } from "@/lib/db";
 import { endSession, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
-import { hashPassword, verifyAgainstDummy, verifyPassword } from "@/lib/password";
+import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@/lib/password";
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
 import { grade } from "@/lib/grading";
 import { levelsPassed } from "@/lib/progress";
 import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import { completeQuest } from "@/lib/stats";
 import { hiddenTrackIds } from "@/lib/tracks";
-import { drillQuestion } from "@/lib/drill";
+import { drillCompleted, drillQuestion, noteDrillAnswer } from "@/lib/drill";
 import { claimPendingInvites } from "@/lib/contests";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 
@@ -96,6 +96,9 @@ export async function login(_: string | null, fd: FormData): Promise<string | nu
     return "Wrong email or password.";
   }
   clear(pairKey);
+  if (needsRehash(u.passwordHash)) {
+    db.update(users).set({ passwordHash: await hashPassword(pw) }).where(eq(users.id, u.id)).run(); // legacy or weaker params
+  }
   await startSession(u.id);
   redirect("/dashboard");
 }
@@ -151,10 +154,26 @@ export async function startRun(fd: FormData) {
   redirect(`/run/${run.id}`);
 }
 
+// Runs being graded right now (single process; see lib/rate-limit.ts). Grading awaits the AI, so without this
+// a double-click grades twice, spends twice, and could award the quest and certificate twice.
+const grading = new Set<number>();
+
 export async function submitRun(runId: number, fd: FormData) {
   const u = await requireUser();
   const run = db.select().from(runs).where(and(eq(runs.id, runId), eq(runs.userId, u.id))).get();
-  if (!run || run.finishedAt) redirect(`/run/${runId}`);
+  if (!run || run.finishedAt || grading.has(runId)) redirect(`/run/${runId}`);
+  grading.add(runId);
+  try {
+    await gradeRun(u.id, run, runId, fd);
+  } finally {
+    grading.delete(runId);
+  }
+  revalidatePath("/dashboard");
+  redirect(`/run/${runId}`);
+}
+
+async function gradeRun(userId: number, run: typeof runs.$inferSelect, runId: number, fd: FormData) {
+  const u = { id: userId };
 
   const rows = db.select({ a: answers, q: questions }).from(answers)
     .innerJoin(questions, eq(questions.id, answers.questionId)).where(eq(answers.runId, runId)).all();
@@ -168,16 +187,15 @@ export async function submitRun(runId: number, fd: FormData) {
     possible += q.weight;
   }
   const score = possible ? earned / possible : 0;
-  db.update(runs).set({ score, passed: score >= PASS_MARK, finishedAt: Math.floor(Date.now() / 1000) })
-    .where(eq(runs.id, runId)).run();
+  const done = db.update(runs).set({ score, passed: score >= PASS_MARK, finishedAt: Math.floor(Date.now() / 1000) })
+    .where(and(eq(runs.id, runId), sql`${runs.finishedAt} is null`)).run();
+  if (!done.changes) return; // finished by someone else in the meantime
   const passed = score >= PASS_MARK;
   completeQuest(u.id, run.trackId, "exam");
   if (passed && (CERT_LEVELS as readonly number[]).includes(run.level)) {
     db.insert(certificates).values({ userId: u.id, trackId: run.trackId, level: run.level, score, code: randomBytes(5).toString("hex").toUpperCase() })
       .onConflictDoNothing().run();
   }
-  revalidatePath("/dashboard");
-  redirect(`/run/${runId}`);
 }
 
 // ---- daily quests ----
@@ -198,12 +216,13 @@ export async function drillCheck(questionId: number, key: string) {
   const u = await requireUser();
   const q = drillQuestion(u.id, questionId); // only drillable questions, never exam-level ones
   if (!q) return null;
+  noteDrillAnswer(u.id, q.trackId, q.id);
   return { correct: q.answer === key, answer: q.answer ?? "", hint: q.hint };
 }
 
 export async function finishDrill(trackId: number) {
   const u = await requireUser();
-  if (!enrolled(u.id, trackId)) return 0;
+  if (!enrolled(u.id, trackId) || !drillCompleted(u.id, trackId)) return 0; // XP only for a drill that was really answered
   const xp = completeQuest(u.id, trackId, "drill");
   revalidatePath("/dashboard");
   return xp;
