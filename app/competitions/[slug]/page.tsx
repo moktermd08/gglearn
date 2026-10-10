@@ -1,6 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { Bot, CalendarClock, Check, Clock, Coins, Crown, Flag, Globe, GraduationCap, Lock, Radio, Swords, Target, Trophy, Users } from "lucide-react";
 import type { Metadata } from "next";
 import { competitionCerts, competitionMembers, competitions, db, tracks, users } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
@@ -55,9 +56,9 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
       <header className="card space-y-2 p-6">
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <span className={`rounded-full px-2 py-0.5 font-bold ${state === "live" ? "bg-emerald-500/20 text-emerald-300" : state === "upcoming" ? "bg-sky-500/20 text-sky-300" : state === "canceled" ? "bg-rose-500/20 text-rose-300" : "bg-slate-500/20 text-slate-300"}`}>
-            {state === "live" ? "● Live" : state === "upcoming" ? "Starts soon" : state === "canceled" ? "Canceled" : "Finished"}
+            {state === "live" ? <span className="inline-flex items-center gap-1"><i className="h-1.5 w-1.5 animate-ping rounded-full bg-emerald-400" />Live</span> : state === "upcoming" ? "Starts soon" : state === "canceled" ? "Canceled" : "Finished"}
           </span>
-          <span className="text-slate-400">{c.visibility === "public" ? "🌐 Public: anyone can watch" : "🔒 Private: only people in it can see this"}</span>
+          <span className="inline-flex items-center gap-1 text-slate-400">{c.visibility === "public" ? <><Globe size={13} />Public: anyone can watch</> : <><Lock size={13} />Private: only people in it can see this</>}</span>
           <span className="ml-auto font-semibold text-indigo-300">{modeLabel(humans, bots.length)}</span>
         </div>
         <h1 className="text-3xl font-extrabold">{c.title}</h1>
@@ -67,11 +68,15 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
         </p>
         {c.prizeAmount > 0 && (
           <p className="rounded-lg bg-amber-400/10 px-3 py-2 text-sm text-amber-200">
-            💰 <b>{money(c.prizeAmount, c.prizeCurrency)}</b> prize · {PRIZE_SPLIT_LABEL[c.prizeSplit]} · people only, and only by reaching the goal.
+            <Coins size={15} className="mr-1 inline text-amber-300" /><b>{money(c.prizeAmount, c.prizeCurrency)}</b> prize · {PRIZE_SPLIT_LABEL[c.prizeSplit]} · people only, and only by reaching the goal.
             <span className="block text-xs text-amber-200/70">{c.prizeNote} · gglearn does not hold or send money.</span>
           </p>
         )}
-        <p className="text-sm text-slate-400">
+        {(state === "live" || state === "finished") && (
+          <div className="bar !h-2" title="Time elapsed"><i style={{ width: `${(state === "finished" ? 1 : Math.min(1, Math.max(0, (t - c.startsAt) / Math.max(1, c.endsAt - c.startsAt)))) * 100}%`, background: state === "finished" ? "#64748b" : undefined }} /></div>
+        )}
+        <p className="flex items-center gap-1.5 text-sm text-slate-400">
+          <Clock size={14} className="shrink-0" />
           {state === "upcoming" && `Starts in ${span(c.startsAt - t)} (${utc(c.startsAt)})`}
           {state === "live" && `Ends in ${span(c.endsAt - t)} (${utc(c.endsAt)})`}
           {state === "finished" && `Ended ${utc(c.endsAt)}`}
@@ -79,9 +84,26 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
         </p>
       </header>
 
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {[
+          { Icon: Users, label: "People", value: humans, cls: "text-sky-300" },
+          { Icon: Bot, label: "Bots", value: bots.length, cls: "text-violet-300" },
+          { Icon: Target, label: "Goal (levels)", value: c.goalLevels, cls: "text-pink-300" },
+          state === "live" ? { Icon: CalendarClock, label: "Left", value: span(c.endsAt - t), cls: "text-emerald-300" }
+            : state === "upcoming" ? { Icon: CalendarClock, label: "Starts in", value: span(c.startsAt - t), cls: "text-sky-300" }
+            : { Icon: Flag, label: "Reached goal", value: reached.length, cls: "text-amber-300" },
+        ].map(({ Icon, label, value, cls }, i) => (
+          <div key={label} className="card rise p-3 text-center" style={{ "--i": i } as React.CSSProperties}>
+            <Icon size={20} className={`mx-auto ${cls}`} />
+            <div className="text-xl font-extrabold">{value}</div>
+            <div className="text-[11px] uppercase tracking-wider text-slate-400">{label}</div>
+          </div>
+        ))}
+      </div>
+
       {winners.length > 0 && (
         <div className="card pop border-amber-400/50 p-4 text-center">
-          <div className="text-2xl font-extrabold text-amber-300">🏆 {winners.map((w) => w.name).join(" & ")}</div>
+          <div className="flex items-center justify-center gap-2 text-2xl font-extrabold text-amber-300"><Trophy className="pulse-glow" />{winners.map((w) => w.name).join(" & ")}</div>
           <div className="text-sm text-slate-300">
             {reached.length > 0
               ? `${winners[0].name} reached the goal first, at ${utc(winners[0].reachedAt!)}.`
@@ -92,7 +114,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
 
       {state === "finished" && (
         <section aria-label="Results" className="card space-y-3 p-5">
-          <h2 className="text-lg font-bold">Final results</h2>
+          <h2 className="flex items-center gap-2 text-lg font-bold"><Crown size={20} className="text-amber-300" />Final results</h2>
           {finishers.length === 0 ? (
             <p className="text-slate-300">Nobody reached the goal{c.prizeAmount > 0 ? ", so the prize is not awarded" : ""}.</p>
           ) : (
@@ -101,7 +123,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
                 const won = pay.find((x) => x.place === i + 1);
                 return (
                   <li key={r.member.id} className="flex flex-wrap items-center gap-2">
-                    <span className="w-6 text-center text-lg">{["🥇", "🥈", "🥉"][i] ?? i + 1}</span>
+                    <span className="grid w-6 place-items-center">{i < 3 ? <Trophy size={18} className={["text-yellow-300", "text-slate-300", "text-orange-400"][i]} /> : <span className="font-bold text-slate-400">{i + 1}</span>}</span>
                     <b>{r.name}</b> <span className="text-slate-400">goal reached {utc(r.reachedAt!)}</span>
                     {won && <span className="rounded bg-amber-400/20 px-2 font-bold text-amber-200">wins {money(won.amount, c.prizeCurrency)}</span>}
                   </li>
@@ -112,15 +134,15 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
           {c.prizeAmount > 0 && pay.length > 0 && (
             <div className="text-sm">
               {c.prizePaidAt
-                ? <span className="text-emerald-300">✓ The organiser marked the prize as paid on {utc(c.prizePaidAt)}.</span>
+                ? <span className="text-emerald-300"><Check size={14} className="mr-1 inline" />The organiser marked the prize as paid on {utc(c.prizePaidAt)}.</span>
                 : isOrganiser
                   ? <form action={markPrizePaid.bind(null, c.id)} className="flex flex-wrap items-center gap-3">
                       <span className="text-slate-300">Pay the winners yourself, then record it:</span><button className="btn !py-1">Mark prize as paid</button></form>
                   : <span className="text-slate-400">Awaiting payment by the organiser.</span>}
             </div>
           )}
-          {myCert && <a href={`/cert/c/${myCert.code}`} className="btn">🎓 Your {myCert.kind === "champion" ? "Champion" : "Finisher"} certificate</a>}
-          {canClaim && <form action={claimCertificate.bind(null, c.id)}><button className="btn">🎓 Claim my certificate</button></form>}
+          {myCert && <a href={`/cert/c/${myCert.code}`} className="btn"><GraduationCap size={16} />Your {myCert.kind === "champion" ? "Champion" : "Finisher"} certificate</a>}
+          {canClaim && <form action={claimCertificate.bind(null, c.id)}><button className="btn"><GraduationCap size={16} />Claim my certificate</button></form>}
         </section>
       )}
       {state === "live" && c.prizeAmount > 0 && (
@@ -128,8 +150,8 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
       )}
 
       <section aria-label="Leaderboard" className="space-y-3">
-        <h2 className="text-lg font-bold">Leaderboard</h2>
-        {rows.map((r) => <Lane key={r.member.id} r={r} goal={c.goalLevels} />)}
+        <h2 className="flex items-center gap-2 text-lg font-bold"><Swords size={20} className="text-pink-300" />Leaderboard {state === "live" && <Radio size={14} className="animate-pulse text-emerald-400" />}</h2>
+        {rows.map((r, i) => <Lane key={r.member.id} r={r} goal={c.goalLevels} i={i} />)}
         {rows.length === 0 && <p className="text-slate-400">Nobody has joined yet.</p>}
         <p className="text-xs text-slate-500">
           Ranked by who reaches the goal first, then levels gained, then XP. People: levels newly passed in this topic since they started, from real exams.
@@ -142,7 +164,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
 
         {mine?.status === "joined" && !over && (
           <div className="card flex flex-wrap items-center gap-3 p-4">
-            <Link href={`/tracks/${track.slug}`} className="btn">Train now →</Link>
+            <Link href={`/tracks/${track.slug}`} className="btn">Train now<Swords size={16} /></Link>
             {!isOrganiser && <form action={leaveCompetition.bind(null, c.id)}><button className="text-sm text-slate-400 underline">Leave</button></form>}
           </div>
         )}
@@ -155,7 +177,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
                 <span>I understand my name, photo (if I add one) and progress will be visible to anyone.</span></label>
             )}
             <div className="flex items-center gap-3">
-              <button className="btn">{mine?.status === "invited" ? "Accept ⚔️" : "Join ⚔️"}</button>
+              <button className="btn">{mine?.status === "invited" ? "Accept" : "Join"}<Swords size={16} /></button>
             </div>
           </form>
         )}
@@ -182,7 +204,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
           <h2 className="mb-2 text-lg font-bold">Activity</h2>
           <ul className="card divide-y divide-white/10 text-sm">
             {events.map((e, i) => (
-              <li key={i} className="flex justify-between gap-3 px-4 py-2"><span>{e.bot ? "🤖" : "🎓"} {e.text}</span><span className="shrink-0 text-slate-400">{span(t - e.at)} ago</span></li>
+              <li key={i} className="rise flex justify-between gap-3 px-4 py-2" style={{ "--i": i } as React.CSSProperties}><span className="flex items-center gap-2">{e.bot ? <Bot size={15} className="shrink-0 text-violet-300" /> : <GraduationCap size={15} className="shrink-0 text-sky-300" />}{e.text}</span><span className="shrink-0 text-slate-400">{span(t - e.at)} ago</span></li>
             ))}
           </ul>
         </section>
@@ -207,13 +229,13 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
   );
 }
 
-function Lane({ r, goal }: { r: Standing; goal: number }) {
+function Lane({ r, goal, i }: { r: Standing; goal: number; i: number }) {
   // bots earn XP continuously, so their bar fills smoothly; people advance one passed level at a time
   const pct = r.target > 0 ? Math.min(1, (r.isBot ? r.xp / XP_PER_LEVEL : r.gained) / r.target) : 0;
   const hue = (r.userId ?? 0) * 47 % 360;
   return (
-    <div className={`card flex items-center gap-4 p-3 ${r.rank === 1 && r.gained > 0 ? "border-amber-400/40" : ""}`}>
-      <div className="w-6 text-center text-lg font-black text-slate-400">{r.rank}</div>
+    <div className={`card rise flex items-center gap-4 p-3 ${r.rank === 1 && r.gained > 0 ? "border-amber-400/40" : ""}`} style={{ "--i": i } as React.CSSProperties}>
+      <div className="grid w-6 place-items-center text-lg font-black text-slate-400">{r.rank === 1 && r.gained > 0 ? <Crown size={20} className="text-amber-300" /> : r.rank}</div>
       <Competitor isBot={r.isBot} seed={r.isBot ? (r.member.botSeed ?? r.name) : `u${r.userId}`} name={r.name} size={52}
         photoUrl={r.hasPhoto ? `/api/avatar/${r.userId}?v=${r.photoVersion}` : null} />
       <div className="min-w-0 flex-1">
@@ -222,9 +244,9 @@ function Lane({ r, goal }: { r: Standing; goal: number }) {
           {r.isBot
             ? <span className="rounded bg-violet-500/20 px-1.5 text-[10px] font-bold uppercase text-violet-300">Bot · simulated · {BOT_STYLES[r.botStyle!].label}</span>
             : <span className="rounded bg-sky-500/20 px-1.5 text-[10px] font-bold uppercase text-sky-300">Person</span>}
-          {r.reachedAt !== null && <span className="rounded bg-emerald-500/20 px-1.5 text-[10px] font-bold uppercase text-emerald-300">Goal reached 🏁</span>}
+          {r.reachedAt !== null && <span className="rounded bg-emerald-500/20 px-1.5 text-[10px] font-bold uppercase text-emerald-300"><span className="inline-flex items-center gap-0.5">Goal reached <Flag size={10} /></span></span>}
         </div>
-        <div className="bar mt-1.5"><i style={{ width: `${pct * 100}%`, ...(r.isBot ? { background: `linear-gradient(90deg,#a78bfa,#f472b6)` } : { background: `linear-gradient(90deg,hsl(${hue} 80% 60%),#38bdf8)` }) }} /></div>
+        <div className="bar mt-1.5"><i className="grow" style={{ width: `${pct * 100}%`, ...(r.isBot ? { background: `linear-gradient(90deg,#a78bfa,#f472b6)` } : { background: `linear-gradient(90deg,hsl(${hue} 80% 60%),#38bdf8)` }) }} /></div>
         <div className="mt-1 flex flex-wrap justify-between gap-x-4 text-xs text-slate-400">
           <span>{r.startLevel !== null && `L${r.startLevel} → L${r.startLevel + r.target} · `}+{r.gained} of {r.target === goal ? goal : `${r.target} (max reachable)`} level{r.target === 1 ? "" : "s"}</span>
           <span>

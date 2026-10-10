@@ -19,5 +19,5 @@ export default async function DrillPage({ params }: { params: Promise<{ slug: st
   if (!qs.length) return <p>No drill questions yet. <Link href={`/tracks/${slug}`} className="underline">Back</Link></p>;
 
   return <Drill trackId={track.id} back={`/tracks/${slug}`}
-    questions={qs.map((q) => ({ id: q.id, prompt: q.prompt, code: q.code, type: "mcq" as const, options: q.options }))} />;
+    questions={qs.map((q) => ({ id: q.id, prompt: q.prompt, code: q.code, type: "mcq" as const, options: q.options, topic: q.topic }))} />;
 }

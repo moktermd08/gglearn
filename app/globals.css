@@ -28,6 +28,21 @@ body {
 @keyframes pop { 0% { transform: scale(.6); opacity: 0 } 70% { transform: scale(1.08) } 100% { transform: scale(1); opacity: 1 } }
 @keyframes draw { from { stroke-dashoffset: var(--c) } }
 @keyframes slide { from { transform: translateX(24px); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes shake { 0%,100% { transform: translateX(0) } 20% { transform: translateX(-6px) } 40% { transform: translateX(6px) } 60% { transform: translateX(-4px) } 80% { transform: translateX(4px) } }
+@keyframes rise { from { transform: translateY(12px); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes grow { from { width: 0 } }
+@keyframes spin-in { from { transform: rotate(-90deg) scale(.4); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes ping-once { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,.6) } 100% { box-shadow: 0 0 0 14px rgba(52,211,153,0) } }
+.shake { animation: shake .4s ease-in-out; }
+.rise { animation: rise .45s ease-out both; animation-delay: calc(var(--i, 0) * 70ms); }
+.grow { animation: grow 1s ease-out both; animation-delay: calc(var(--i, 0) * 70ms); }
+.spin-in { animation: spin-in .45s cubic-bezier(.2,1.4,.4,1) both; }
+.ping-once { animation: ping-once .8s ease-out; }
+.flip-card { perspective: 1000px; }
+.flip-inner { position: relative; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.4,.2,.2,1); }
+.flip-inner.flipped { transform: rotateY(180deg); }
+.flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-back { position: absolute; inset: 0; transform: rotateY(180deg); }
 .bob { animation: bob 2.4s ease-in-out infinite; }
 .aura { animation: aura 2.4s ease-in-out infinite; }
 .blink { transform-box: fill-box; transform-origin: center; animation: blink 4s infinite; }
