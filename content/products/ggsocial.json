@@ -1,0 +1,803 @@
+{
+ "trackSlug": "ggsocial-product",
+ "items": [
+  {
+   "title": "What GGSocial is",
+   "source": "README.md",
+   "body": "GGSocial is one desk for every brand you run. Its README describes it as a way to plan, approve, schedule and publish social content for ten companies without ten browser tabs and ten logins. It is built for agency-style work: content is written once per idea, fanned out to the channels that should carry it, tuned per platform, approved by whoever signs it off, and then either published automatically or handed to a person with the copy and files ready to paste. The core unit is the brand, which is one company or project. Each brand has its own channels, media, calendar, team and timezone. A channel is a single account on a single platform, owned by one brand. The app covers 109 platforms in 11 categories. Of these, 45 publish by themselves through the platform API (called live channels), while the other 64 have no write API for organic content. For those manual-only channels GGSocial still composes, validates, schedules and queues the post, and gives a person copy-ready blocks to post themselves. A manual-only channel is described as not a stub: it gets the same composer validation, calendar slot, approval flow and publish-queue checklist, and simply ends with a person clicking publish. The package is named ggsocial, version 0.1.0, and is private.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "According to the README, what problem is GGSocial built to solve?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Running content for many brands from one place instead of many tabs and logins"
+      },
+      {
+       "key": "b",
+       "text": "Tracking customer support tickets across companies"
+      },
+      {
+       "key": "c",
+       "text": "Hosting a public blog network"
+      },
+      {
+       "key": "d",
+       "text": "Buying advertising on social platforms"
+      }
+     ],
+     "answer": "a",
+     "topic": "Purpose"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How many platforms does GGSocial cover, and how many of them publish by themselves?",
+     "options": [
+      {
+       "key": "a",
+       "text": "109 platforms, 64 publish by themselves"
+      },
+      {
+       "key": "b",
+       "text": "109 platforms, 45 publish by themselves"
+      },
+      {
+       "key": "c",
+       "text": "45 platforms, 109 publish by themselves"
+      },
+      {
+       "key": "d",
+       "text": "64 platforms, 45 publish by themselves"
+      }
+     ],
+     "answer": "b",
+     "topic": "Channels"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What happens to a post for a manual-only channel?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is skipped entirely because there is no API"
+      },
+      {
+       "key": "b",
+       "text": "It is published by the scheduler through a hidden browser"
+      },
+      {
+       "key": "c",
+       "text": "It goes through the same composer, calendar, approval and queue flow and ends with a person publishing it"
+      },
+      {
+       "key": "d",
+       "text": "It is converted into an email and sent to the brand owner"
+      }
+     ],
+     "answer": "c",
+     "topic": "Manual channels"
+    },
+    {
+     "level": 5,
+     "type": "open",
+     "prompt": "Explain the difference between a brand and a channel in GGSocial.",
+     "answer": "A brand is one company or project that owns its own channels, media, calendar, team and timezone. A channel is a single account on a single platform, owned by one brand.",
+     "rubric": "Must say a brand is a company/project that owns things, and a channel is one account on one platform belonging to a brand."
+    }
+   ]
+  },
+  {
+   "title": "Main features: composer, calendar, approvals, queue",
+   "source": "README.md; src/lib/db/schema.ts",
+   "body": "The README lists the main features. The Composer lets you write base copy once and override it per channel, with live character counts and per-platform rules: Reddit needs a title and a subreddit, YouTube needs a title, Instagram needs media, and X caps at 280 characters and can thread on blank lines. The Calendar shows every brand on one month grid, colour-coded, and you can drag a post to move it. Approvals move a post from draft to needs approval to approved to scheduled, with comments and change requests. In the database the post statuses are draft, in_review, changes_requested, approved, scheduled, publishing, published, partially_published and failed. Each post has targets (one per channel) with their own statuses: pending, scheduled, publishing, awaiting_manual, published, failed and skipped. The Publish queue holds anything due on a manual channel, with copy buttons, the media to download and platform-specific steps. Ticking it off marks it published. Analytics shows what went out, where, and whatever metrics the platform returns. The Playbook holds master instructions for each format and kind of engagement work, with limits the app checks itself such as title words, hashtag count, copy length, aspect ratio and posting windows. Scheduling and approval refuse a broken playbook rule that is marked as a must. Channels are searchable and grouped by category.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which per-platform rule does the README give for X in the composer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It needs a subreddit"
+      },
+      {
+       "key": "b",
+       "text": "It must have a video"
+      },
+      {
+       "key": "c",
+       "text": "It requires a title"
+      },
+      {
+       "key": "d",
+       "text": "It caps at 280 characters and can thread on blank lines"
+      }
+     ],
+     "answer": "d",
+     "topic": "Composer"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does the Publish queue contain?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only failed posts"
+      },
+      {
+       "key": "b",
+       "text": "Anything due on a manual channel, with copy buttons, media and platform steps"
+      },
+      {
+       "key": "c",
+       "text": "Every post from every channel, already sent"
+      },
+      {
+       "key": "d",
+       "text": "Draft ideas waiting for approval"
+      }
+     ],
+     "answer": "a",
+     "topic": "Queue"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which of these is a real post-level status in the schema?",
+     "options": [
+      {
+       "key": "a",
+       "text": "awaiting_manual"
+      },
+      {
+       "key": "b",
+       "text": "changes_requested"
+      },
+      {
+       "key": "c",
+       "text": "pending"
+      },
+      {
+       "key": "d",
+       "text": "skipped"
+      }
+     ],
+     "answer": "b",
+     "topic": "Post statuses",
+     "hint": "Target statuses and post statuses are different lists."
+    },
+    {
+     "level": 6,
+     "type": "open",
+     "prompt": "Describe how a post with a Reddit target and an Instagram target is validated and moves toward publishing, based on the composer, approvals and playbook features.",
+     "answer": "Base copy is written once and can be overridden per channel. The composer checks per-platform rules: Reddit needs a title and a subreddit, Instagram needs media. Playbook limits are checked as you type, and scheduling and approval refuse a broken must rule. The post then goes draft, needs approval (in_review), approved, scheduled.",
+     "rubric": "Must mention per-platform rules (Reddit title and subreddit, Instagram media), the playbook must-rule block, and the approval progression."
+    }
+   ]
+  },
+  {
+   "title": "Data model",
+   "source": "src/lib/db/schema.ts; src/lib/db/roles.ts",
+   "body": "GGSocial stores its data in Postgres through the Drizzle ORM, with the schema in src/lib/db/schema.ts. Ids are generated with nanoid (16 characters). The people tables are users and memberships. A user has an email (unique), name, password hash, optional avatar and an is_super_admin flag that defaults to false. A membership links one user to one brand with a role, and there is a unique index so a user has at most one membership per brand. Brands are the central table, and channels belong to a brand. Channel mode is manual or live, and channel status is one of disconnected, connected, error or expired. Posts belong to a brand and hold a title, base copy, status and a scheduled time; the time is an absolute instant rendered in the brand's timezone. Each post has post targets, one per channel, each of which may override the copy. Other tables cover media, attachments, interactions (engagement), content ideas, campaigns, post templates, links and link clicks, goals and metric snapshots, playbook rules, brand agents and agent runs, workflow runs and steps, AI usage, comments, an activity log, and invites. Foreign keys from memberships to users and brands cascade on delete.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which database does GGSocial use, and through what library?",
+     "options": [
+      {
+       "key": "a",
+       "text": "MySQL with Prisma"
+      },
+      {
+       "key": "b",
+       "text": "SQLite with TypeORM"
+      },
+      {
+       "key": "c",
+       "text": "Postgres with Drizzle ORM"
+      },
+      {
+       "key": "d",
+       "text": "MongoDB with Mongoose"
+      }
+     ],
+     "answer": "c",
+     "topic": "Database"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What stops a user from having two memberships on the same brand?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A password rule"
+      },
+      {
+       "key": "b",
+       "text": "The UI hides the button"
+      },
+      {
+       "key": "c",
+       "text": "A cron job cleans duplicates"
+      },
+      {
+       "key": "d",
+       "text": "A unique index on user and brand"
+      }
+     ],
+     "answer": "d",
+     "topic": "Memberships"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What are the possible channel modes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "manual and live"
+      },
+      {
+       "key": "b",
+       "text": "draft and live"
+      },
+      {
+       "key": "c",
+       "text": "connected and error"
+      },
+      {
+       "key": "d",
+       "text": "owner and viewer"
+      }
+     ],
+     "answer": "a",
+     "topic": "Channels",
+     "hint": "Status and mode are separate fields."
+    },
+    {
+     "level": 7,
+     "type": "scenario",
+     "prompt": "A user is a member of two brands: an editor on one and a viewer on the other. Which table holds that, and how does it work?",
+     "answer": "The memberships table holds one row per user and brand with a role, so the same user can be editor on one brand and viewer on the other. A unique index on user and brand ensures only one role per brand.",
+     "rubric": "Must name memberships, per-brand role, and the unique user-brand pairing."
+    }
+   ]
+  },
+  {
+   "title": "Accounts, sessions and roles",
+   "source": "README.md; src/lib/auth/index.ts; src/lib/auth/session.ts; src/lib/auth/password.ts; src/lib/auth/invite.ts; src/lib/db/roles.ts",
+   "body": "Users sign up with an email and password. Passwords are hashed with bcrypt (bcryptjs) at cost 12. A sign-in creates a session: a signed JWT (HS256, via the jose library) stored in an httpOnly cookie named ggs_session, with SameSite lax, secure in production, and a 30-day lifetime. The token is signed with APP_SECRET, which must be set. Sign-up links can be tied to an invite: an invite is looked up by token and counts only if it has not yet been accepted. Roles are per brand, not global: owner (everything, can archive the brand), admin (channels, team, content), editor (write, schedule, publish), approver (review only, cannot edit) and viewer (read-only). Internally the roles are ranked viewer, approver, editor, admin, owner, and a helper checks whether a role is at least a minimum. In code, editing and publishing need editor or above, managing channels, team and the brand need admin or above, and approving is allowed for the approver role or admin and above. Every server action re-checks the role, because the README states that hiding a button in the UI is not the security boundary. requireBrandRole throws an error if the user lacks the needed role on that brand. A separate is_super_admin flag on users exists for a few global tasks, such as editing the master playbook.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "How are passwords stored?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Plain text"
+      },
+      {
+       "key": "b",
+       "text": "Hashed with bcrypt at cost 12"
+      },
+      {
+       "key": "c",
+       "text": "Encrypted with APP_SECRET and reversible"
+      },
+      {
+       "key": "d",
+       "text": "Hashed with MD5"
+      }
+     ],
+     "answer": "b",
+     "topic": "Passwords"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is the session cookie called, and what is it?",
+     "options": [
+      {
+       "key": "a",
+       "text": "token, a bearer API key"
+      },
+      {
+       "key": "b",
+       "text": "session_id, a database row id"
+      },
+      {
+       "key": "c",
+       "text": "ggs_session, a signed JWT"
+      },
+      {
+       "key": "d",
+       "text": "ggs_cookie, a base64 email"
+      }
+     ],
+     "answer": "c",
+     "topic": "Sessions"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which role can sign off a post but cannot edit it?",
+     "options": [
+      {
+       "key": "a",
+       "text": "viewer"
+      },
+      {
+       "key": "b",
+       "text": "editor"
+      },
+      {
+       "key": "c",
+       "text": "owner"
+      },
+      {
+       "key": "d",
+       "text": "approver"
+      }
+     ],
+     "answer": "d",
+     "topic": "Roles"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does the README say every server action re-checks the role?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because sessions expire every minute"
+      },
+      {
+       "key": "b",
+       "text": "Because hiding a button in the UI is not the security boundary"
+      },
+      {
+       "key": "c",
+       "text": "Because roles change every hour"
+      },
+      {
+       "key": "d",
+       "text": "Because the database is slow"
+      }
+     ],
+     "answer": "a",
+     "topic": "Security"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "An editor on Brand A tries to add a team member by calling the server action directly, bypassing the hidden button. What should happen and why?",
+     "answer": "The action should be refused. Managing the team needs admin or above, and every server action re-checks the role (for example via requireBrandRole), which throws a permission error. Roles are per brand and the UI is not the security boundary.",
+     "rubric": "Must say the call is rejected, that team management needs admin, and that server-side role checks do not rely on the UI."
+    }
+   ]
+  },
+  {
+   "title": "Brand agents, workflows and the Review inbox",
+   "source": "README.md; src/app/(app)/review; src/server/reviewer.ts",
+   "body": "Each brand can switch on a crew of agents that do hourly work so people only set guidelines and review. The README names four: the content strategist (keeps the content plan ahead of the calendar), the content writer (keeps the calendar full from the plan, books posts into open slots and revises work sent back), the community manager (drafts replies to comments, messages, mentions and reviews and flags anything a person must decide) and the performance analyst (reads yesterday's posts each morning and writes weekly and monthly reports). Agents need ANTHROPIC_API_KEY and run from /api/cron/agents every five minutes. Work runs as workflows of steps, each done by an agent, a tool or a person: publish a planned post, answer a comment or message, and plan new ideas. Review is on for every step until the brand owner switches it off, with a reason kept in the log. A reviewer, Claude Haiku, scores agent output out of 100 and flags risks; weak but safe work goes back to the agent once with fixes. Safety stops pause a run whatever the setting: a flagged risk such as prices, refunds, legal or health matters, a score under the pass mark, a broken playbook must, the reviewer being unable to run, the daily AI budget being spent, or a step that keeps failing. Everything waiting on a person lands in one Review inbox, where you can approve, send back with a note, or stop the run. Every Claude call is logged with its cost.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which agent drafts replies to new comments, messages, mentions and reviews?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Content strategist"
+      },
+      {
+       "key": "b",
+       "text": "Community manager"
+      },
+      {
+       "key": "c",
+       "text": "Performance analyst"
+      },
+      {
+       "key": "d",
+       "text": "Content writer"
+      }
+     ],
+     "answer": "b",
+     "topic": "Agents"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which model does the README say acts as the reviewer by default?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A human only"
+      },
+      {
+       "key": "b",
+       "text": "Claude Opus"
+      },
+      {
+       "key": "c",
+       "text": "Claude Haiku"
+      },
+      {
+       "key": "d",
+       "text": "GPT"
+      }
+     ],
+     "answer": "c",
+     "topic": "Reviewer",
+     "hint": "The README says the reviewer defaults to claude-haiku-4-5."
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which of these is a safety stop that pauses a run regardless of review settings?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The post has an emoji"
+      },
+      {
+       "key": "b",
+       "text": "The channel is manual"
+      },
+      {
+       "key": "c",
+       "text": "The post is scheduled on a Monday"
+      },
+      {
+       "key": "d",
+       "text": "The brand's daily AI budget is spent"
+      }
+     ],
+     "answer": "d",
+     "topic": "Safety stops"
+    },
+    {
+     "level": 6,
+     "type": "open",
+     "prompt": "What can a person do with an item in the Review inbox?",
+     "answer": "Approve it, send it back with a note (the agent then redoes it), or stop the run.",
+     "rubric": "Must list approve, send back with a note, and stop the run."
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A comment reply drafted by the community manager mentions a refund. The brand owner turned review off for that step. What happens and why?",
+     "answer": "The run still pauses because a risk the reviewer flags (refunds are named) is a safety stop that applies whatever the review setting. It lands in the Review inbox for a person to approve, send back with a note, or stop.",
+     "rubric": "Must identify refunds as a flagged risk, that safety stops override a disabled review, and that the item goes to the Review inbox."
+    }
+   ]
+  },
+  {
+   "title": "Tech stack",
+   "source": "package.json; README.md; vitest.config.mts",
+   "body": "GGSocial is a TypeScript web app built on Next.js 16.3.5 with React 19.2.8 (both pinned exactly in package.json) and Tailwind 4. The project's AGENTS.md notes this Next.js version has breaking changes, so check the bundled docs before assuming behaviour. Data access uses drizzle-orm with the postgres driver and drizzle-kit for pushing and generating schema. Validation uses zod, sessions use jose, passwords use bcryptjs, and ids use nanoid. Media can go to local disk or S3 through the AWS S3 client. Drafting and the agents call Claude through the Anthropic SDK; the writing and analysis models default to claude-sonnet-5 and the reviewer to claude-haiku-4-5, and each can be overridden with environment variables. Icons come from lucide-react. The UI uses the GG UI kit in src/gg-ui, a copy of the kit shared with the GGLeads app. It is stamped with its source commit and must not be edited in ggsocial; changes are made in GGLeads and copied across with node scripts/sync-ui.mjs. Optional integrations include Canva and Google Photos for importing media, and Facebook and Google sign-ins for connecting channels. The source folders are src/app (routes, including app pages and api/cron), src/components, src/lib (db, platforms, auth), and src/server (queries, publish engine, server actions). Adding a new platform means one adapter file in src/lib/platforms/adapters plus one registry line.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which ORM and database driver does GGSocial use?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Drizzle ORM and postgres"
+      },
+      {
+       "key": "b",
+       "text": "Sequelize and mysql2"
+      },
+      {
+       "key": "c",
+       "text": "Prisma and pg"
+      },
+      {
+       "key": "d",
+       "text": "TypeORM and sqlite3"
+      }
+     ],
+     "answer": "a",
+     "topic": "Data layer"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Where should the GG UI kit in src/gg-ui be edited?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Directly in ggsocial"
+      },
+      {
+       "key": "b",
+       "text": "In GGLeads, then copied across with the sync script"
+      },
+      {
+       "key": "c",
+       "text": "In node_modules"
+      },
+      {
+       "key": "d",
+       "text": "In vercel.json"
+      }
+     ],
+     "answer": "b",
+     "topic": "GG UI"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What is needed to add a new auto-publishing platform, per the README?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Rewrite the composer"
+      },
+      {
+       "key": "b",
+       "text": "A new database table"
+      },
+      {
+       "key": "c",
+       "text": "One adapter file in src/lib/platforms/adapters and one registry line"
+      },
+      {
+       "key": "d",
+       "text": "A new cron endpoint"
+      }
+     ],
+     "answer": "c",
+     "topic": "Adapters"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Which models does GGSocial use by default and how can they be changed?",
+     "answer": "Writing and analysis default to claude-sonnet-5 and the reviewer to claude-haiku-4-5. They are overridden by the CLAUDE_WRITING_MODEL, CLAUDE_ANALYSIS_MODEL and CLAUDE_REVIEW_MODEL environment variables.",
+     "rubric": "Must name sonnet-5 for writing and analysis, haiku-4-5 for review, and that env variables override them."
+    }
+   ]
+  },
+  {
+   "title": "Running locally and deploying",
+   "source": "README.md; DEPLOY.md; vercel.json; package.json",
+   "body": "To run locally, copy .env.example to .env.local and fill in DATABASE_URL and APP_SECRET, then run npm install, npm run db:push to create tables, optionally npm run seed for demo data, and npm run dev. The app opens at http://localhost:3000. Scheduled posts are dispatched by a scheduler tick rather than by the web request, so in development you run npm run scheduler in a second terminal. Key environment variables: APP_SECRET (32+ random characters; signs sessions and encrypts stored platform tokens, and changing it logs everyone out and invalidates saved credentials), CRON_SECRET (a bearer token the /api/cron/publish endpoint requires), and APP_URL (must be reachable from the internet in production because platform APIs fetch media from it). MEDIA_DRIVER is local or s3. The README says Vercel plus hosted Postgres works, with MEDIA_DRIVER=s3, and vercel.json registers crons for publish, goals, pages, playbook and agents. The live deployment in DEPLOY.md runs on a gglink server at ggsocial.gglink.co.uk: pm2 runs ggsocial-web on port 3200 and a ggsocial-scheduler, with Postgres 16 in Docker and Apache in front. Deploy with npm run deploy, which type-checks, lints and runs tests (SKIP_TESTS=1 skips them), rsyncs, backs up the database, runs npm ci, pushes the schema before restart, builds into .next-new, restarts pm2 and polls /login. A noted trap: rsync --delete would destroy the production .env unless it is excluded.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Why must you run npm run scheduler in development?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To compile Tailwind"
+      },
+      {
+       "key": "b",
+       "text": "To start Postgres"
+      },
+      {
+       "key": "c",
+       "text": "To seed the database"
+      },
+      {
+       "key": "d",
+       "text": "Scheduled posts are dispatched by a scheduler tick, not the web request"
+      }
+     ],
+     "answer": "d",
+     "topic": "Scheduler"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What happens if APP_SECRET is changed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing"
+      },
+      {
+       "key": "b",
+       "text": "Everyone is logged out and saved platform credentials become invalid"
+      },
+      {
+       "key": "c",
+       "text": "Only new users are affected"
+      },
+      {
+       "key": "d",
+       "text": "The database is wiped"
+      }
+     ],
+     "answer": "a",
+     "topic": "Secrets"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the order of key steps in the server half of the deploy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Build, then push schema, then restart"
+      },
+      {
+       "key": "b",
+       "text": "Push schema before the restart, then restart both pm2 processes and poll /login"
+      },
+      {
+       "key": "c",
+       "text": "Restart first, then back up"
+      },
+      {
+       "key": "d",
+       "text": "Skip the backup and rsync only"
+      }
+     ],
+     "answer": "b",
+     "topic": "Deploy",
+     "hint": "The schema must exist before the new build serves pages."
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which command deploys to production per DEPLOY.md?",
+     "options": [
+      {
+       "key": "a",
+       "text": "npm run build"
+      },
+      {
+       "key": "b",
+       "text": "npm run start"
+      },
+      {
+       "key": "c",
+       "text": "npm run deploy"
+      },
+      {
+       "key": "d",
+       "text": "npm run seed"
+      }
+     ],
+     "answer": "c",
+     "topic": "Deploy"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A teammate suggests running rsync --delete for the deploy without excluding .env. What is the risk?",
+     "answer": "The production .env lives only on the server and is not in the repo, so rsync would delete it. Losing APP_SECRET logs everyone out and makes stored platform tokens undecryptable, so all channels would need reconnecting.",
+     "rubric": "Must say .env would be deleted, and name the consequences: logout and undecryptable tokens requiring reconnection."
+    }
+   ]
+  },
+  {
+   "title": "Testing",
+   "source": "package.json; vitest.config.mts; tests/; tests/stubs/test-db.ts; DEPLOY.md",
+   "body": "GGSocial's tests run with Vitest: npm test runs vitest run, and the config includes any file matching tests/**/*.test.ts in a node environment with a 30-second test timeout. The config aliases @/ to src and replaces the server-only package with a stub, because server-only throws outside a Next server build and tests exercise server code. Test files in tests/ cover publishing (publishTarget, post status rollup, runDuePublishes and failInterruptedPublishes), registration packs, Bluesky and Mastodon behaviour, research signals, writing tells (detecting AI-sounding phrases) and alerts. Database tests do not need a running Postgres: tests/stubs/test-db.ts builds an in-memory PGlite database, pushes the real schema into it through drizzle-kit's API, and returns it for use in place of the real db. Registration tests show the style: pure functions are given small hand-built brand and channel objects and the results are asserted, for example that only live channels count as registered and an archived channel is treated as removed. Tests also matter for deployment: scripts/deploy.sh type-checks, lints and runs npm test, and a failure in any stops the deploy. SKIP_TESTS=1 is only meant for an emergency fix. Lint runs with eslint through npm run lint.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which test runner does GGSocial use?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Jest"
+      },
+      {
+       "key": "b",
+       "text": "Mocha"
+      },
+      {
+       "key": "c",
+       "text": "Playwright Test"
+      },
+      {
+       "key": "d",
+       "text": "Vitest"
+      }
+     ],
+     "answer": "d",
+     "topic": "Test runner"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How do database tests avoid needing a real Postgres server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They use an in-memory PGlite database built from the real schema"
+      },
+      {
+       "key": "b",
+       "text": "They mock every query with strings"
+      },
+      {
+       "key": "c",
+       "text": "They connect to production"
+      },
+      {
+       "key": "d",
+       "text": "They skip database tests"
+      }
+     ],
+     "answer": "a",
+     "topic": "Test DB"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does the vitest config alias server-only to a stub?",
+     "options": [
+      {
+       "key": "a",
+       "text": "server-only throws outside a Next server build and tests are server code"
+      },
+      {
+       "key": "b",
+       "text": "It makes tests faster"
+      },
+      {
+       "key": "c",
+       "text": "It hides secrets"
+      },
+      {
+       "key": "d",
+       "text": "It is required by Tailwind"
+      }
+     ],
+     "answer": "b",
+     "topic": "Config"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does a failing npm test do during npm run deploy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing, the deploy continues"
+      },
+      {
+       "key": "b",
+       "text": "It stops the deploy unless SKIP_TESTS=1 is set"
+      },
+      {
+       "key": "c",
+       "text": "It emails the owner"
+      },
+      {
+       "key": "d",
+       "text": "It rolls back the database"
+      }
+     ],
+     "answer": "c",
+     "topic": "Deploy gate"
+    },
+    {
+     "level": 7,
+     "type": "scenario",
+     "prompt": "You change how post status is rolled up from target statuses. Which existing test area should you check and how do you run it?",
+     "answer": "Check tests/publish.test.ts, which has a post status rollup group. Run the suite with npm test (vitest run), and expect it to also run as a gate in npm run deploy.",
+     "rubric": "Must name the publish tests/status rollup and npm test, and may mention the deploy gate."
+    }
+   ]
+  }
+ ]
+}

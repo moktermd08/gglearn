@@ -9,6 +9,8 @@
     "lint": "eslint",
     "db:push": "drizzle-kit push",
     "seed": "tsx --env-file=.env.local scripts/seed.ts",
+    "import:knowledge": "tsx --env-file=.env.local scripts/import-knowledge.ts",
+    "seed:curriculum": "tsx --env-file=.env.local scripts/seed-curriculum.ts",
     "merge:legacy": "tsx --env-file=.env.local scripts/merge-legacy.ts",
     "import:questions": "tsx --env-file=.env.local scripts/import-questions.ts",
     "typecheck": "tsc --noEmit"

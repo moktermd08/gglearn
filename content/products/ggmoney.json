@@ -1,0 +1,799 @@
+{
+ "trackSlug": "ggmoney-product",
+ "items": [
+  {
+   "title": "What GGMoney is and who it is for",
+   "source": "README.md; DEPLOY.md",
+   "body": "GG Money is an in-house bookkeeping, VAT and payroll application for two limited companies, Gurugraphics Limited and Moksy Limited, filing directly to HMRC. It was built to replace a QuickBooks subscription. It is live at ggmoney.gglink.co.uk on an existing Apache VPS. The application uses no Composer, no npm and no third-party packages: it is plain PHP 8.1 or later plus a database. It can run on SQLite, which is the default for local development and the test suite, or on MySQL, which the live server uses because MySQL 8 and a PHP 8.1 driver were already installed. The schema is kept separately for each database driver under db/migrations rather than being translated at run time, because a silent translation bug in a finance app is considered worse than some duplication. The live server runs mod_php 7.4 for other sites, so GG Money alone runs through PHP 8.1 FPM, set per virtual host. The README lists what is working, what needs provider or HMRC credentials, and what is not built. Corporation Tax, the CT600 and iXBRL accounts are marked not built and left to a later phase. Staff should remember that the live install is still in sandbox mode, so nothing has yet been filed for real through it.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which companies is GG Money built for, according to the README?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Gurugraphics Limited and Moksy Limited"
+      },
+      {
+       "key": "b",
+       "text": "Any UK limited company that signs up"
+      },
+      {
+       "key": "c",
+       "text": "Only sole traders and landlords"
+      },
+      {
+       "key": "d",
+       "text": "Banks and building societies"
+      }
+     ],
+     "answer": "a",
+     "topic": "Purpose"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What commercial product was GG Money built to replace?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Xero"
+      },
+      {
+       "key": "b",
+       "text": "QuickBooks"
+      },
+      {
+       "key": "c",
+       "text": "Sage"
+      },
+      {
+       "key": "d",
+       "text": "FreeAgent"
+      }
+     ],
+     "answer": "b",
+     "topic": "Purpose"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which database does the live server use, and why?",
+     "options": [
+      {
+       "key": "a",
+       "text": "SQLite, because it needs no setup"
+      },
+      {
+       "key": "b",
+       "text": "Postgres, because it is the fastest"
+      },
+      {
+       "key": "c",
+       "text": "MySQL, because MySQL 8 and a PHP 8.1 driver were already on the box"
+      },
+      {
+       "key": "d",
+       "text": "MongoDB, because it stores documents"
+      }
+     ],
+     "answer": "c",
+     "topic": "Stack"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Why does GG Money keep a separate schema per database driver instead of translating one schema at run time?",
+     "answer": "A silent translation bug in a finance app is worse than a little duplication, so each driver (SQLite, MySQL) has its own migrations under db/migrations/<driver>/.",
+     "rubric": "Must mention avoiding silent translation bugs in finance data and separate per-driver migration folders."
+    }
+   ]
+  },
+  {
+   "title": "Main features and what is still unbuilt",
+   "source": "README.md; docs/qc/compliance-roadmap.md",
+   "body": "The README lists the working areas. These are a double-entry ledger with a chart of accounts and journals; sales invoices, purchase bills and contacts; bank statement CSV import and export; Open Banking feeds from GoCardless, TrueLayer and Plaid; email through SendGrid for payslips, invoices and deadline alerts; VAT return calculation under standard, cash accounting and flat rate schemes; VAT submission to HMRC under Making Tax Digital; payroll covering PAYE, National Insurance, student loans, pensions and statutory pay; payslips with full workings; RTI FPS generation with an IRmark; trial balance, profit and loss and balance sheet; a compliance calendar; and brand performance, which measures each brand against a plan. Self Assessment under MTD ITSA has a personal profile, HMRC-box costs, quarterly update preparation and a tax calculator, but the HMRC API submission is not yet connected. Corporation Tax, CT600 and iXBRL accounts are not built and are marked Phase 3. The 5 October 2026 roadmap adds caveats: it says nothing in the web layer calls the FPS and EPS builders, there is no EPS builder, credit notes are missing, and the live install is sandbox only. Several items marked working therefore still need credentials, wiring or fixes.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which of these is documented as NOT built?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Trial balance"
+      },
+      {
+       "key": "b",
+       "text": "Bank CSV import"
+      },
+      {
+       "key": "c",
+       "text": "Payslips"
+      },
+      {
+       "key": "d",
+       "text": "Corporation Tax CT600 and iXBRL accounts"
+      }
+     ],
+     "answer": "d",
+     "topic": "Unbuilt"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which VAT schemes can the VAT return calculation handle?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Standard, cash accounting and flat rate"
+      },
+      {
+       "key": "b",
+       "text": "Standard only"
+      },
+      {
+       "key": "c",
+       "text": "Annual and margin schemes"
+      },
+      {
+       "key": "d",
+       "text": "Flat rate only"
+      }
+     ],
+     "answer": "a",
+     "topic": "VAT"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the documented state of MTD ITSA submission to HMRC?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Fully live in production"
+      },
+      {
+       "key": "b",
+       "text": "The HMRC API submission is not yet connected"
+      },
+      {
+       "key": "c",
+       "text": "Working, tested, and submitting quarterly"
+      },
+      {
+       "key": "d",
+       "text": "Removed from the plan"
+      }
+     ],
+     "answer": "b",
+     "topic": "ITSA"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A colleague says GG Money already files payroll to HMRC for both companies. Using the documents, how would you respond?",
+     "answer": "The README says RTI FPS generation works but needs HMRC recognition and credentials. The roadmap says no web route calls the FPS or EPS builders, there is no EPS builder, and the install is sandbox only. So it cannot be said to file payroll yet.",
+     "rubric": "Must note the need for credentials/recognition, that FPS/EPS are not wired into the web layer, EPS missing, and sandbox only."
+    }
+   ]
+  },
+  {
+   "title": "Bank connections and the data flow",
+   "source": "docs/banking/connectors.md; DEPLOY.md",
+   "body": "GG Money reads bank transactions in two ways that write to the same place: Open Banking feeds for day-to-day use, and CSV import for banks no provider covers, closed accounts or older history. A transaction that arrives by both routes is recognised as one. Nothing can move money: providers are asked for read-only scopes and the app never sees a banking password. Three providers sit behind one BankConnector interface: GoCardless Bank Account Data (free to 50 accounts a month, recommended start), TrueLayer and Plaid. Credentials go in config.local.php and every provider needs the redirect URI https://ggmoney.gglink.co.uk/banking/callback registered exactly. Sandbox or live hosts follow APP_ENV. After connecting, each feed must be pointed at one of your bank accounts; nothing syncs until then, and two feeds cannot write to one account. The first sync takes everything the bank allows, later syncs re-read the last week, and anything dated before the account opening date is skipped. A sync will not change reconciled rows, because they may sit inside a filed VAT return, and will only merge two transactions when account, date and amount match with exactly one candidate. UK Open Banking consent lasts at most 90 days; GoCardless agreements up to 180. The app warns from 14 days out. Requests are logged in bank_api_log with tokens redacted.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What access do the bank providers get?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Full payment initiation"
+      },
+      {
+       "key": "b",
+       "text": "Read and write on statements"
+      },
+      {
+       "key": "c",
+       "text": "Read-only scopes; they cannot move money"
+      },
+      {
+       "key": "d",
+       "text": "Access to the banking password"
+      }
+     ],
+     "answer": "c",
+     "topic": "Safety"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which provider does the document recommend starting with?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Plaid"
+      },
+      {
+       "key": "b",
+       "text": "TrueLayer"
+      },
+      {
+       "key": "c",
+       "text": "A custom one"
+      },
+      {
+       "key": "d",
+       "text": "GoCardless"
+      }
+     ],
+     "answer": "d",
+     "topic": "Providers"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Maximum length of UK Open Banking consent, as documented?",
+     "options": [
+      {
+       "key": "a",
+       "text": "90 days"
+      },
+      {
+       "key": "b",
+       "text": "30 days"
+      },
+      {
+       "key": "c",
+       "text": "365 days"
+      },
+      {
+       "key": "d",
+       "text": "It never expires"
+      }
+     ],
+     "answer": "a",
+     "topic": "Consent"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A sync finds that the bank has corrected a transaction you already reconciled. What does GG Money do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Silently overwrites it"
+      },
+      {
+       "key": "b",
+       "text": "Leaves it unchanged and lists it on screen for manual handling"
+      },
+      {
+       "key": "c",
+       "text": "Deletes it"
+      },
+      {
+       "key": "d",
+       "text": "Reconciles it again automatically"
+      }
+     ],
+     "answer": "b",
+     "topic": "Sync rules"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Why will the sync not merge three identical 4.20 coffee transactions in one week?",
+     "answer": "Matching requires same account, date, amount and exactly one candidate. A visible duplicate can be deleted, but two real transactions merged into one are lost.",
+     "rubric": "Must cover the one-candidate rule and the reasoning that wrongly merging is unrecoverable."
+    }
+   ]
+  },
+  {
+   "title": "Compliance and HMRC as documented",
+   "source": "README.md; DEPLOY.md; docs/compliance/calendar.md; docs/mtd-itsa/PLAN.md; docs/qc/compliance-roadmap.md",
+   "body": "The compliance calendar treats duties as first-class records. db/compliance/tasks.php is the master list, and the calendar, reminder emails and docs/compliance/calendar.md are all generated from it (php bin/compliance.php --doc). VAT tasks use HMRC obligation dates, payroll tasks follow pay runs, and the rest follow the accounting reference date. Filings need a second person to approve and the app refuses self-approval; routine tasks need one person. Automatic checks report first but never sign anything off. The generated calendar says dates are reminders, not advice. The README says the app refuses two things. It will not file payroll for a tax year whose rates are not verified: rates live in db/taxyears/<year>.php and a year is fileable only once listed in TAX_YEARS_VERIFIED. It also separates freezing from sending: a VAT return goes draft, finalised, submitted, and submitting is a separate act with its own declaration because HMRC has no way to withdraw a return. VAT uses OAuth and fraud prevention headers. Payroll RTI uses GovTalk XML to the Transaction Engine with Government Gateway credentials and a vendor ID. The MTD ITSA plan is a plan: it lists rules to VERIFY on gov.uk, and the roadmap states the ITSA API client is missing. Corporation Tax is not built. Production approval from HMRC has not been granted.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does the app do when a person tries to approve a filing task they did the work on?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Allows it"
+      },
+      {
+       "key": "b",
+       "text": "Emails HMRC"
+      },
+      {
+       "key": "c",
+       "text": "Refuses self-approval"
+      },
+      {
+       "key": "d",
+       "text": "Skips it automatically"
+      }
+     ],
+     "answer": "c",
+     "topic": "Sign-off"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What must happen before payroll for a tax year can be filed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing, it files automatically"
+      },
+      {
+       "key": "b",
+       "text": "An accountant emails HMRC"
+      },
+      {
+       "key": "c",
+       "text": "The ledger is exported to CSV"
+      },
+      {
+       "key": "d",
+       "text": "The year is verified against HMRC tables and listed in TAX_YEARS_VERIFIED"
+      }
+     ],
+     "answer": "d",
+     "topic": "Tax years"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the VAT return lifecycle?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Draft, finalised, submitted"
+      },
+      {
+       "key": "b",
+       "text": "Draft, submitted, finalised"
+      },
+      {
+       "key": "c",
+       "text": "Open, closed"
+      },
+      {
+       "key": "d",
+       "text": "Submitted, withdrawn"
+      }
+     ],
+     "answer": "a",
+     "topic": "VAT flow"
+    },
+    {
+     "level": 6,
+     "type": "open",
+     "prompt": "Explain what the automatic checks in the compliance calendar do and what they never do.",
+     "answer": "They run for tasks where the answer is in the data (return filed, FPS accepted, bank reconciled, feed alive) and report before a person approves. They never sign anything off because they cannot tell whether figures were right.",
+     "rubric": "Must say checks report/advise, a person approves, and checks cannot judge correctness of figures."
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "Mokter asks whether GG Money can file his quarterly MTD ITSA update next month. What do the docs let you say, and what should you not claim?",
+     "answer": "The plan and README say quarter preparation and a tax calculator exist, but the HMRC API submission is not connected and the ITSA API client is missing. Do not claim it can file; an HMRC-recognised bridge or accountant is the plan for 2026-27. Rules marked VERIFY must be rechecked on gov.uk; this is not tax advice.",
+     "rubric": "Must say preparation exists but submission is not connected, avoid claiming filing, mention bridge/VERIFY, no tax advice."
+    }
+   ]
+  },
+  {
+   "title": "Data model, money and rounding",
+   "source": "README.md; db/migrations/sqlite/0001_core.sql; db/migrations/sqlite/0010_itsa.sql; docs/mtd-itsa/PLAN.md",
+   "body": "The core schema contains users, companies, user_companies (which carries a role of owner, accountant or viewer), accounts, journals, journal_lines, contacts, documents, document_lines, bank_accounts, bank_transactions, payments, payment_allocations and audit_log. Later migrations add VAT and HMRC tables, payroll, bank feeds, email, compliance, invitations, performance, plan items, ITSA tables such as itsa_inputs, itsa_updates and itsa_mileage, and employment allowance. Companies and individuals are separate entity types. Every monetary value is stored as an integer number of pence, with no floats. Percentages are basis points, so 20 percent is 2000. Core\\Money is the only place conversion happens. On MySQL money columns are BIGINT because INT overflows at 21.5 million pounds. Rounding differs by tax on purpose: PAYE tax rounds down to the penny; NI rounds to the nearest penny with an exact half going down; student loan figures truncate to whole pounds; VAT boxes 6 to 9 are whole pounds rounded down. Using one rule for all would put a penny wrong on roughly one payslip in two hundred. Posted journals are never edited or deleted; a correction is a reversal, so both error and fix stay visible.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "How are monetary values stored?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Floating point pounds"
+      },
+      {
+       "key": "b",
+       "text": "Integer pence"
+      },
+      {
+       "key": "c",
+       "text": "Decimal strings"
+      },
+      {
+       "key": "d",
+       "text": "Integer pounds"
+      }
+     ],
+     "answer": "b",
+     "topic": "Money"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How is a 20 percent rate represented?",
+     "options": [
+      {
+       "key": "a",
+       "text": "0.2"
+      },
+      {
+       "key": "b",
+       "text": "20"
+      },
+      {
+       "key": "c",
+       "text": "2000 basis points"
+      },
+      {
+       "key": "d",
+       "text": "200"
+      }
+     ],
+     "answer": "c",
+     "topic": "Money"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What happens when a posted journal contains a mistake?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is edited in place"
+      },
+      {
+       "key": "b",
+       "text": "It is deleted"
+      },
+      {
+       "key": "c",
+       "text": "It is hidden"
+      },
+      {
+       "key": "d",
+       "text": "It is corrected by a reversal, leaving both visible"
+      }
+     ],
+     "answer": "d",
+     "topic": "Immutability"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A developer proposes one shared rounding helper for PAYE, NI, student loans and VAT boxes. How do you respond?",
+     "answer": "Reject it: HMRC rules differ. PAYE tax rounds down to the penny; NI rounds nearest with half-penny down; student loan truncates to whole pounds; VAT boxes 6-9 are whole pounds rounded down. A single rule would be wrong on about one payslip in 200, which is why NiCalculator::niRound exists.",
+     "rubric": "Must show different rules per tax, name at least two, and the roughly 1 in 200 payslip error."
+    }
+   ]
+  },
+  {
+   "title": "Security design and known gaps",
+   "source": "src/Core/Csrf.php; src/Core/Tenant.php; src/Core/Session.php; src/Core/Auth.php; .htaccess; docs/performance/api.md; docs/qc/compliance-roadmap.md; DEPLOY.md",
+   "body": "Security is built into the plain-PHP core. Csrf protection issues a random token per session and rejects POSTs whose token, sent as a form field or an X-CSRF-Token header, does not match using a constant-time comparison; the code notes that a forged POST could file a VAT return that cannot be withdrawn. Sessions use HttpOnly cookies with SameSite Lax (Lax because of the HMRC OAuth callback), and session ids are regenerated. Auth uses password_verify and rehashes if needed. Tenant helpers check that account, contact and pension scheme ids belong to the company before use. The .htaccess blocks the storage, src, db, views, bin, tests and docs directories and config files, and forces HTTPS, so AllowOverride All is mandatory; if config.local.php downloads, secrets are public. Cloudflare must be Full (strict) so HMRC tokens are not sent in clear between Cloudflare and the origin. API tokens for the performance API are shown once and only a SHA-256 is stored. As of the 5 October 2026 audit and roadmap (re-check before relying on this), the known gaps were: no MFA, no login throttling, no password reset, no encryption at rest, OAuth tokens stored and logged in clear text (audit item 83), tenant-id bypass issues (#1, #5), and deploy-check.php unauthenticated. Only a few audit items had been fixed at that date.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Why does the session cookie use SameSite Lax rather than Strict?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The HMRC OAuth callback needs it"
+      },
+      {
+       "key": "b",
+       "text": "Strict is unsupported"
+      },
+      {
+       "key": "c",
+       "text": "Lax is faster"
+      },
+      {
+       "key": "d",
+       "text": "Cloudflare requires it"
+      }
+     ],
+     "answer": "a",
+     "topic": "Sessions"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How are performance API tokens stored?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In clear text"
+      },
+      {
+       "key": "b",
+       "text": "Only a SHA-256 of the token is stored; shown once"
+      },
+      {
+       "key": "c",
+       "text": "Encrypted with a key in the URL"
+      },
+      {
+       "key": "d",
+       "text": "Not stored"
+      }
+     ],
+     "answer": "b",
+     "topic": "API tokens"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What must be true of Apache for the security rules to work?",
+     "options": [
+      {
+       "key": "a",
+       "text": "mod_php 7.4 is enabled"
+      },
+      {
+       "key": "b",
+       "text": "Directory listing is on"
+      },
+      {
+       "key": "c",
+       "text": "AllowOverride All is on, since the rules live in .htaccess"
+      },
+      {
+       "key": "d",
+       "text": "The firewall is off"
+      }
+     ],
+     "answer": "c",
+     "topic": "Apache"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which Cloudflare SSL mode does DEPLOY.md require?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Flexible"
+      },
+      {
+       "key": "b",
+       "text": "Off"
+      },
+      {
+       "key": "c",
+       "text": "Automatic"
+      },
+      {
+       "key": "d",
+       "text": "Full (strict)"
+      }
+     ],
+     "answer": "d",
+     "topic": "TLS"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "After a deploy, https://ggmoney.gglink.co.uk/config.local.php downloads instead of returning 403. What does that mean and what do you do?",
+     "answer": "AllowOverride is off so .htaccess rules are not applied; database password and HMRC secret are public. Fix it before anything else (enable AllowOverride All) and treat secrets as exposed.",
+     "rubric": "Must link to AllowOverride off, exposed secrets, priority fix, and secrets considered exposed."
+    }
+   ]
+  },
+  {
+   "title": "Running locally and deploying",
+   "source": "README.md; DEPLOY.md",
+   "body": "To run locally: copy config.local.php.example to config.local.php, run php bin/migrate.php, start the built-in server with php -S 127.0.0.1:8765 -t . bin/dev-server.php, then visit /setup to create the first account; that page disappears once an account exists. Deployment uses ./bin/deploy.sh, with --dry-run to preview. The script syntax-checks, tests, syncs, migrates and verifies, refuses to upload if a file fails to parse or a test fails, and never touches config.local.php, storage or the database. Run php deploy-check.php before and after; it reports only and refuses to run over plain HTTP. Before a migration deploy run ./bin/migration-check.sh, which applies MySQL migrations to a scratch database, because tests run on SQLite and MySQL may still refuse a migration. APP_ENV stays sandbox until production credentials exist and a parallel run has matched; APP_DEBUG must be false in production. Email is guarded: with no key nothing sends, MAIL_REDIRECT sends everything to you, and a sandbox install without it sends nothing. Cron runs bin/compliance.php, bin/alerts.php and a daily bin/backup.php (mysqldump single-transaction, 30 gzipped dailies; copy them off the server). Going live order: enter opening balances, export from QuickBooks, run one VAT quarter in parallel, run two payroll months in parallel, then cancel. Rollback means redeploying the previous commit; the database is left alone.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does the /setup page do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Creates the first user and companies, then disappears"
+      },
+      {
+       "key": "b",
+       "text": "Resets the password"
+      },
+      {
+       "key": "c",
+       "text": "Runs migrations"
+      },
+      {
+       "key": "d",
+       "text": "Shows server logs"
+      }
+     ],
+     "answer": "a",
+     "topic": "Setup"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does bin/deploy.sh never touch?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The PHP files"
+      },
+      {
+       "key": "b",
+       "text": "config.local.php, storage and the database"
+      },
+      {
+       "key": "c",
+       "text": "The views"
+      },
+      {
+       "key": "d",
+       "text": "The tests"
+      }
+     ],
+     "answer": "b",
+     "topic": "Deploy"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why run bin/migration-check.sh?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To back up the database"
+      },
+      {
+       "key": "b",
+       "text": "To verify HMRC rates"
+      },
+      {
+       "key": "c",
+       "text": "Tests run on SQLite so MySQL could still refuse a migration"
+      },
+      {
+       "key": "d",
+       "text": "To send alerts"
+      }
+     ],
+     "answer": "c",
+     "topic": "Migrations"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Describe the documented order for going live and why QuickBooks is not cancelled early.",
+     "answer": "Opening balances; export everything from QuickBooks; run one VAT quarter in parallel with matching boxes then switch APP_ENV to production and reconnect; run two payroll months in parallel; then cancel. Saving is about 30 pounds a month while a late FPS is 100 pounds a month per company.",
+     "rubric": "Must give the order and the risk-versus-saving reasoning."
+    }
+   ]
+  },
+  {
+   "title": "Quality control and testing",
+   "source": "README.md; tests/; docs/qc/ggmoney-audit-2026-10-04.md; docs/qc/compliance-roadmap.md; DEPLOY.md",
+   "body": "The tests directory holds plain PHP scripts such as vat_test.php, payroll_test.php, banking_test.php, compliance_test.php, csrf_test.php, tenant_test.php, itsa_test.php and performance_test.php, run directly with php. They run on SQLite by default. The VAT suite can also run against MySQL using GGMONEY_TEST_DRIVER=mysql and related variables, which proves the two schemas behave alike. The VAT tests cover all three schemes, reverse charge, part payments under cash accounting, the flat-rate capital goods exception and late entries; payroll was checked against hand-computed figures and reconciles to the annual liability. A stress harness lives in tests/stress. The 4 October 2026 stress run used 192,602 cases across 124 activities and produced 138 proposed issues (7 critical, 23 high, 64 medium, 44 low), run on throwaway databases only. It did not cover MySQL, live channels or bank providers, and nothing had been fixed when it was written. The 5 October roadmap says only items 139, 140 and 143 are fixed, that its own tests were not run, and sets Phase 0 as trust: fix tenant isolation, bank CSV import bugs, VAT finalise and payroll finalise issues, then re-run all tests on MySQL too. deploy-check.php asserts STRICT mode, InnoDB tables and applied migrations on MySQL.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "How are the test files run?",
+     "options": [
+      {
+       "key": "a",
+       "text": "With Composer scripts"
+      },
+      {
+       "key": "b",
+       "text": "Through npm test"
+      },
+      {
+       "key": "c",
+       "text": "Through Apache"
+      },
+      {
+       "key": "d",
+       "text": "Directly with php, for example php tests/vat_test.php"
+      }
+     ],
+     "answer": "d",
+     "topic": "Tests"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does running the VAT suite on MySQL prove?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That the SQLite and MySQL schemas behave identically"
+      },
+      {
+       "key": "b",
+       "text": "That the UI works"
+      },
+      {
+       "key": "c",
+       "text": "That HMRC accepts it"
+      },
+      {
+       "key": "d",
+       "text": "That emails send"
+      }
+     ],
+     "answer": "a",
+     "topic": "Tests"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How many proposed issues did the 4 October stress run produce?",
+     "options": [
+      {
+       "key": "a",
+       "text": "12"
+      },
+      {
+       "key": "b",
+       "text": "138"
+      },
+      {
+       "key": "c",
+       "text": "52"
+      },
+      {
+       "key": "d",
+       "text": "1,000"
+      }
+     ],
+     "answer": "b",
+     "topic": "Audit"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What did the stress run NOT cover?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ledger"
+      },
+      {
+       "key": "b",
+       "text": "Payroll"
+      },
+      {
+       "key": "c",
+       "text": "MySQL, live channels and bank providers"
+      },
+      {
+       "key": "d",
+       "text": "VAT"
+      }
+     ],
+     "answer": "c",
+     "topic": "Audit"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A manager wants to cancel QuickBooks because the README marks most features Working. Using the QC documents, what would you advise?",
+     "answer": "Point to the roadmap: 138 audit issues, 7 critical, only a few fixed; sandbox only and no HMRC production approval; the parallel-run rule says not to cancel until Phase 0 and Phase 1 are done and a full quarter matches. Recommend waiting. This is process guidance, not tax advice.",
+     "rubric": "Must cite open critical issues, sandbox/no production approval, and the parallel-run rule."
+    }
+   ]
+  }
+ ]
+}

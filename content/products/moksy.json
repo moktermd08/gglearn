@@ -1,0 +1,918 @@
+{
+ "trackSlug": "moksy-product",
+ "items": [
+  {
+   "title": "What Moksy is: idea in, build-ready plan out",
+   "body": "Moksy's tagline is to turn an idea into a build-ready plan. A customer types in their idea, and an AI asks a series of questions in what the product calls the interview. The answers become the input to an output document, which the Moksy lexicon says is currently called by six different names in the customer interface: report, plan, spec, solution plan, document and blueprint. After that comes an expert review of the document, and then the build stage, which covers downloads, exports and hiring. One idea and its document live inside a project. Under the hood Moksy is a Docker-first microservice platform, not a single application. Its public surfaces are an API gateway, a dashboard (the web app people log into) and a documentation site. The lexicon notes that Moksy already owns two coined words well, MOX and MXP, and that most other words were chosen by whoever built each screen, which is why a shared vocabulary is being defined. An earlier standalone prototype, moksy-mvp, proved the idea as a pipeline: load a sample project, interrogate it with 42 questions, extract keywords and tech stack, generate a 10-phase solution document, then score its quality and produce learning signals. It shipped with three sample datasets: school management, e-commerce and a healthcare portal.",
+   "source": "wt-earning-gaps/docs/brand/MOKSY_LEXICON.md; wt-earning-gaps/README.md; moksy-mvp/README.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does Moksy's tagline promise to turn an idea into?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A build-ready plan"
+      },
+      {
+       "key": "b",
+       "text": "A finished, deployed application"
+      },
+      {
+       "key": "c",
+       "text": "A funded start-up"
+      },
+      {
+       "key": "d",
+       "text": "A trained AI model"
+      }
+     ],
+     "answer": "a",
+     "topic": "tagline"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "In the customer journey, what comes immediately after the AI interview gathers the customer's answers?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The customer is charged for hosting"
+      },
+      {
+       "key": "b",
+       "text": "An expert hires a developer"
+      },
+      {
+       "key": "c",
+       "text": "The project is deleted"
+      },
+      {
+       "key": "d",
+       "text": "An output document is generated from the answers"
+      }
+     ],
+     "answer": "d",
+     "topic": "journey"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How is Moksy built at the highest level?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As one monolithic desktop program"
+      },
+      {
+       "key": "b",
+       "text": "As a single serverless function"
+      },
+      {
+       "key": "c",
+       "text": "As a Docker-first microservice platform"
+      },
+      {
+       "key": "d",
+       "text": "As a browser plug-in only"
+      }
+     ],
+     "answer": "c",
+     "topic": "architecture"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "In the moksy-mvp prototype, what did the Generate step produce?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A trained neural network"
+      },
+      {
+       "key": "b",
+       "text": "A 10-phase solution document"
+      },
+      {
+       "key": "c",
+       "text": "A billing invoice"
+      },
+      {
+       "key": "d",
+       "text": "A list of reviewer payouts"
+      }
+     ],
+     "answer": "b",
+     "topic": "mvp"
+    },
+    {
+     "level": 6,
+     "type": "open",
+     "prompt": "Name the stages a customer's idea passes through in Moksy, from typing it in to taking the result away.",
+     "answer": "Idea typed in, AI interview, set of answers, output document (report/plan/blueprint), expert review, then the build stage (downloads, exports, hire).",
+     "rubric": "Must list in order: idea, AI interview, answers, output document, expert review, build/downloads. Should note the document has several names today."
+    }
+   ]
+  },
+  {
+   "title": "Roles and journeys: who uses Moksy",
+   "body": "Moksy is used by several kinds of people, and a role decides what a person can do. The README describes seeded test accounts with three fixtures per role, and groups platform-management owner roles separately. The real-jobs learning brief says each test run walks one real job post end to end as the customer, the reviewer, staff and the account manager, going both in and out. It holds two thousand real job posts as a training pool. Customers create projects and receive documents. Reviewers check documents and earn from it. Staff use an operator console, and the lexicon describes the customer home as Home, the reviewer home as a separate area and the staff home as the Console. An account manager is a person assigned to look after accounts, though the fact base says no account-manager field exists yet in code, so the promise that everyone has a personal account manager is a plan, not a stored row. For workforce planning, the role-values document counts 33 roles: 24 trades and 9 platform roles. The fact base separately refers to 24 role keys in its catalogue. The README stresses that role and level are independent: role is the security ceiling, level is what someone has earned.",
+   "source": "wt-earning-gaps/README.md; docs/MOKSY_REAL_JOBS_LEARNING_BRIEF.md; docs/MOKSY_ROLE_VALUES.md; docs/MOKSY_AI_FACT_BASE.md; docs/brand/MOKSY_LEXICON.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which of these is the name the lexicon gives to the staff home?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Desk"
+      },
+      {
+       "key": "b",
+       "text": "The Console"
+      },
+      {
+       "key": "c",
+       "text": "The Wallet"
+      },
+      {
+       "key": "d",
+       "text": "The Ladder"
+      }
+     ],
+     "answer": "b",
+     "topic": "roles"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "In the real-jobs learning brief, what does one test run take and walk end to end?",
+     "options": [
+      {
+       "key": "a",
+       "text": "One real job post, played through every role involved"
+      },
+      {
+       "key": "b",
+       "text": "One database table, row by row"
+      },
+      {
+       "key": "c",
+       "text": "One microservice, health check by health check"
+      },
+      {
+       "key": "d",
+       "text": "One Stripe payment, refund by refund"
+      }
+     ],
+     "answer": "a",
+     "topic": "runs"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What do the README's role and level mean relative to each other?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Role is derived automatically from level"
+      },
+      {
+       "key": "b",
+       "text": "Level is only for customers and role only for staff"
+      },
+      {
+       "key": "c",
+       "text": "They are the same number shown twice"
+      },
+      {
+       "key": "d",
+       "text": "Role is the security ceiling and level is earned quality; they are independent"
+      }
+     ],
+     "answer": "d",
+     "topic": "role vs level"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "According to the fact base, what is the status of the idea that everyone has a personal account manager?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Fully built and shown on every dashboard"
+      },
+      {
+       "key": "b",
+       "text": "Removed from the product"
+      },
+      {
+       "key": "c",
+       "text": "A plan, because no account-manager assignment exists in code yet"
+      },
+      {
+       "key": "d",
+       "text": "Handled by the payments service"
+      }
+     ],
+     "answer": "c",
+     "topic": "account manager"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A new teammate promoted a user from developer to cto and expects their reviewer level to change as well. Explain what will actually happen and why.",
+     "answer": "Nothing happens to the level. Role and level are independent: changing role changes what the user can do, while level is earned from signals or pinned by an admin, so each moves separately.",
+     "rubric": "Must state that role and level are independent, role = what you can do (security ceiling), level = what you have earned."
+    }
+   ]
+  },
+  {
+   "title": "Levels and ladders",
+   "body": "Moksy has more than one ladder, and the documents are open about naming being unsettled. The README documents a 20-rung reviewer level system from Novice (score floor 5) up to Titan (score floor 100), with Expert at rung 5 and floor 25. Expert is the default threshold for claiming review jobs, and the threshold is configurable by admins. A user's score is a weighted sum of seven signals added to a base of 5, clamped between 5 and 100: earnings in MOX, completed reviews, peer endorsements, admin endorsements, customer reviews, network connections and platform activities. A super admin can pin a user to a level, which freezes automatic computation. A second, separate ladder classifies customers: guest, free, paid, premium, vip and vvip, driven by lifetime spend and an admin tag. The lexicon proposes replacing the fantasy titles with six plain rungs: Candidate, Contributor, Reviewer, Senior, Principal and Fellow, shown like Senior · Level 9. It says the stored level numbers and MXP thresholds do not change, only the words people read. Treat the six-rung names as the brand direction in the lexicon, and the 20 titles as what the README documents today.",
+   "source": "wt-earning-gaps/README.md; docs/brand/MOKSY_LEXICON.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "At what level is a user first allowed, by default, to claim review jobs?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Novice (rung 1)"
+      },
+      {
+       "key": "b",
+       "text": "Legend (rung 10)"
+      },
+      {
+       "key": "c",
+       "text": "Expert (rung 5)"
+      },
+      {
+       "key": "d",
+       "text": "Titan (rung 20)"
+      }
+     ],
+     "answer": "c",
+     "topic": "threshold"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How many rungs does the README's reviewer level system have?",
+     "options": [
+      {
+       "key": "a",
+       "text": "6"
+      },
+      {
+       "key": "b",
+       "text": "20"
+      },
+      {
+       "key": "c",
+       "text": "10"
+      },
+      {
+       "key": "d",
+       "text": "5"
+      }
+     ],
+     "answer": "b",
+     "topic": "rungs"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which of these is NOT one of the seven signals in the level score?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Lifetime spend in dollars"
+      },
+      {
+       "key": "b",
+       "text": "Completed reviews"
+      },
+      {
+       "key": "c",
+       "text": "Peer endorsements"
+      },
+      {
+       "key": "d",
+       "text": "Network connections"
+      }
+     ],
+     "answer": "a",
+     "topic": "score signals",
+     "hint": "Lifetime spend belongs to the customer ladder."
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What happens when a super admin pins a user to a level?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The user's role changes to match"
+      },
+      {
+       "key": "b",
+       "text": "The user's MOX balance is reset"
+      },
+      {
+       "key": "c",
+       "text": "The pin is shown only to the user"
+      },
+      {
+       "key": "d",
+       "text": "Automatic computation is frozen while signals keep accumulating"
+      }
+     ],
+     "answer": "d",
+     "topic": "pin"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Describe the customer level ladder and what moves a person up it.",
+     "answer": "Six levels: guest, free, paid, premium, vip, vvip. Driven by lifetime spend and an admin tag; a super admin can pin.",
+     "rubric": "Must list the levels and mention lifetime spend and/or admin tag as the drivers."
+    }
+   ]
+  },
+  {
+   "title": "The platform services",
+   "body": "Moksy runs as 25 backend services in the foundation folder, plus two frontends and three shared packages. Examples of services include gateway, auth, users, permissions, projects, requirements, ai-llm, ai-policy, orchestrator, preview, storage, payments, subscriptions, notifications, communications, jobs, events, audit, dictionary and progression. The gateway is the only public API entry, on port 5001, and everything else sits on an internal Docker network with no route to the host. Each service owns its own logical database, and the architecture review found 23 distinct databases with no service reading another's collections. Every service exposes a health endpoint. Service-to-service calls use a handshake of a gateway key plus a short-lived internal token, but the review rates this amber: one shared secret, several divergent copies of the client, plain http between services, and no message broker, with the events service fanning out inline over HTTP. It also flags that the gateway controller holds business logic of nearly ten thousand lines. The review's own verdict is that the platform is roughly 60 percent of the way to a proper microservice architecture.",
+   "source": "wt-earning-gaps/docs/architecture/MICROSERVICES_ARCHITECTURE.md; wt-earning-gaps/README.md; foundation/ directory listing",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which service is the only public API entry point?",
+     "options": [
+      {
+       "key": "a",
+       "text": "auth"
+      },
+      {
+       "key": "b",
+       "text": "storage"
+      },
+      {
+       "key": "c",
+       "text": "events"
+      },
+      {
+       "key": "d",
+       "text": "gateway"
+      }
+     ],
+     "answer": "d",
+     "topic": "gateway"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "On which port does the gateway listen locally, per the README port map?",
+     "options": [
+      {
+       "key": "a",
+       "text": "3000"
+      },
+      {
+       "key": "b",
+       "text": "5008"
+      },
+      {
+       "key": "c",
+       "text": "5001"
+      },
+      {
+       "key": "d",
+       "text": "5040"
+      }
+     ],
+     "answer": "c",
+     "topic": "ports"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does 'database per service' mean in Moksy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "All services share one big table"
+      },
+      {
+       "key": "b",
+       "text": "Each service owns its own logical database and others do not read it"
+      },
+      {
+       "key": "c",
+       "text": "Each customer gets a separate server"
+      },
+      {
+       "key": "d",
+       "text": "Databases are only used by the gateway"
+      }
+     ],
+     "answer": "b",
+     "topic": "data ownership"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why can internal service containers not be reached from the host machine?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They sit on an internal Docker network and only the gateway touches both networks"
+      },
+      {
+       "key": "b",
+       "text": "They are switched off in development"
+      },
+      {
+       "key": "c",
+       "text": "They use TLS client certificates"
+      },
+      {
+       "key": "d",
+       "text": "They run on a different physical machine"
+      }
+     ],
+     "answer": "a",
+     "topic": "network"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A security reviewer asks why one compromised service is a bigger risk in Moksy than in an ideal microservice platform. Explain using the architecture review.",
+     "answer": "Services authenticate with one shared secret, so a single compromised service can impersonate any caller to any other; traffic between services is also plain http, without encryption.",
+     "rubric": "Must mention the single shared secret and impersonation; may add plain http between services."
+    }
+   ]
+  },
+  {
+   "title": "Patterns and the 1:99 goal",
+   "body": "The pattern architecture brief states the founder's goal as 1:99: 99 percent of the work done by machine and 1 percent by a human. Its core idea is that every smart decision in Moksy is a pattern, with an id, typed inputs and outputs, bounded parameters and versioned revisions. A flow is a set of patterns and flows with named exports, and since a flow is itself a step, patterns combine into bigger patterns. The registry declares 110 patterns, 18 of them implemented, plus 12 flows such as project profile, scope, solution, delivery, document and blueprint. Seven selection shapes describe how a pattern decides: classify, cover, configure, retrieve, derive, trigger and attach. Every shape returns a because alongside its answer, so a person can see and correct a decision. Reuse is a rule: each implementation should name the published algorithm it stands on. The 1:99 share is measured, not guessed, since every dispatch is stamped decidedBy as machine or human. The brief is honest that, as written on 2026-09-14, the live customer path decides inline in a large service file and does not go through the dispatcher, so measured coverage was 0 percent. Its status is a brief for founder review; the live interview had not been migrated.",
+   "source": "wt-earning-gaps/docs/MOKSY_PATTERN_ARCHITECTURE.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does the 1:99 goal mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "99% of work by machine and 1% by a human"
+      },
+      {
+       "key": "b",
+       "text": "1 report for every 99 customers"
+      },
+      {
+       "key": "c",
+       "text": "1 reviewer for every 99 projects"
+      },
+      {
+       "key": "d",
+       "text": "A 1 to 99 price ratio between plans"
+      }
+     ],
+     "answer": "a",
+     "topic": "1:99"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "In the brief, what is a pattern?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A UI colour palette"
+      },
+      {
+       "key": "b",
+       "text": "A database backup"
+      },
+      {
+       "key": "c",
+       "text": "A deployment script"
+      },
+      {
+       "key": "d",
+       "text": "One decision with an id, typed inputs and outputs, bounded parameters and versioned revisions"
+      }
+     ],
+     "answer": "d",
+     "topic": "pattern"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How is the 1:99 share supposed to be measured?",
+     "options": [
+      {
+       "key": "a",
+       "text": "By surveying staff each quarter"
+      },
+      {
+       "key": "b",
+       "text": "By counting lines of code"
+      },
+      {
+       "key": "c",
+       "text": "By stamping each dispatch decidedBy machine or human and summing the rows"
+      },
+      {
+       "key": "d",
+       "text": "By estimating from customer support tickets"
+      }
+     ],
+     "answer": "c",
+     "topic": "measurement"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What is a flow in the pattern architecture?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A network route between services"
+      },
+      {
+       "key": "b",
+       "text": "A set of patterns and flows with named exports that can itself be used as a step"
+      },
+      {
+       "key": "c",
+       "text": "A payment cycle"
+      },
+      {
+       "key": "d",
+       "text": "A report layout"
+      }
+     ],
+     "answer": "b",
+     "topic": "flow"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "The founder asks whether Moksy has reached 1:99. Using the brief, what is the honest answer and why?",
+     "answer": "No. The brief says the achievable form is a measured number, and since the live customer path still decides inline rather than through the dispatcher, no human share can be computed; coverage reads 0% as of 2026-09-14. The kernel is built, the migration is planned.",
+     "rubric": "Must say not yet / 0% coverage, because live decisions are not dispatched or counted; mention the measured nature and migration plan."
+    }
+   ]
+  },
+  {
+   "title": "MXP versus MOX",
+   "body": "Moksy owns two coined marks that are one letter transposition apart. MOX stands for Moksy credit, and 1 MOX equals one cent. MXP stands for Moksy Experience Points, and it is what you climb the Ladder with. The lexicon says never to let the unit alone tell them apart; always pair with a noun such as Wallet with MOX and Ladder with MXP. MOX lives in the Wallet, can be bought in packs, is granted as Starter MOX on joining, and is held in escrow while a review is open. Reviewers see Earnings (MOX earned) and Payouts (money sent to a bank) as two separate states. The ledger has three classes of MOX, named P, R and E, and only the earned class E is withdrawable; the rest can only be spent in the platform. An operator grant goes to R, or to P against a purchase, so no path creates withdrawable MOX, and whether to open one is a pending founder decision. The real-jobs brief says experiment runs earn MXP only, and MOX moves only when real money does. A proposal, not yet built, would give levels 1 to 4 MXP for review time, with MOX payout shares from Expert upward.",
+   "source": "wt-earning-gaps/docs/brand/MOKSY_LEXICON.md; docs/MOKSY_AI_FACT_BASE.md; docs/MOKSY_REAL_JOBS_LEARNING_BRIEF.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does 1 MOX equal?",
+     "options": [
+      {
+       "key": "a",
+       "text": "$1.00"
+      },
+      {
+       "key": "b",
+       "text": "$0.01"
+      },
+      {
+       "key": "c",
+       "text": "$0.10"
+      },
+      {
+       "key": "d",
+       "text": "$100"
+      }
+     ],
+     "answer": "b",
+     "topic": "MOX value"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does MXP stand for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Moksy Experience Points"
+      },
+      {
+       "key": "b",
+       "text": "Moksy Express Payment"
+      },
+      {
+       "key": "c",
+       "text": "Maximum Exchange Price"
+      },
+      {
+       "key": "d",
+       "text": "Managed Expert Pool"
+      }
+     ],
+     "answer": "a",
+     "topic": "MXP"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which statement about MOX classes is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "All MOX can be withdrawn after 30 days"
+      },
+      {
+       "key": "b",
+       "text": "Operator grants go straight to the earned class"
+      },
+      {
+       "key": "c",
+       "text": "Purchased MOX is the only withdrawable class"
+      },
+      {
+       "key": "d",
+       "text": "Only the earned class E is withdrawable"
+      }
+     ],
+     "answer": "d",
+     "topic": "classes"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does an experiment run earn?",
+     "options": [
+      {
+       "key": "a",
+       "text": "MOX only"
+      },
+      {
+       "key": "b",
+       "text": "Both MOX and cash"
+      },
+      {
+       "key": "c",
+       "text": "MXP only"
+      },
+      {
+       "key": "d",
+       "text": "Nothing at all"
+      }
+     ],
+     "answer": "c",
+     "topic": "experiment earning"
+    },
+    {
+     "level": 6,
+     "type": "open",
+     "prompt": "Explain the difference between MOX and MXP in one short answer a new hire could repeat.",
+     "answer": "MOX is Moksy credit worth $0.01, held in the Wallet and spent or (if earned) withdrawn; MXP is Moksy Experience Points used to climb the Ladder. Experiments earn MXP only; MOX moves with real money.",
+     "rubric": "Must define both, state MOX = money-like credit and MXP = progression points, and link to real money vs experiments."
+    }
+   ]
+  },
+  {
+   "title": "Reports and where their numbers come from",
+   "body": "The report is the product's centre. The lexicon records 58 kinds of output document as a customer-facing count, while the real-jobs brief, after a founder answer, says there are 57 report types and that the code catalogue of 37 is to be amended. The two counts disagree in the sources. Reports cover 22 analysis areas, which internal documents call pillars; the lexicon bans that jargon from customer-facing copy in favour of plain wording. The real-jobs brief describes the target report: for a named organisation or person, their real problem, the challenges each actor faces, solution options (from scratch, rebuild, open source, closed source, a corporate suite or a hybrid), the automated version, who builds it at which level, how long it takes and what it costs in their currency. Every number should be traceable to a row in Moksy's own data. The fact base states the rule: every number, name, date and judgement shown to a customer must resolve to a locally held row with a pinned version and a source. A model may phrase a figure but may never originate one. If a fact is missing, the system refuses, asks, derives or gives a band rather than inventing a number.",
+   "source": "wt-earning-gaps/docs/brand/MOKSY_LEXICON.md; docs/MOKSY_REAL_JOBS_LEARNING_BRIEF.md; docs/MOKSY_AI_FACT_BASE.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does the fact base say a model may do with a figure in a report?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Invent it when data is missing"
+      },
+      {
+       "key": "b",
+       "text": "Round it to the nearest hundred"
+      },
+      {
+       "key": "c",
+       "text": "Phrase it, but never originate it"
+      },
+      {
+       "key": "d",
+       "text": "Override it from memory"
+      }
+     ],
+     "answer": "c",
+     "topic": "model role"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What are 'pillars' in the lexicon?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The names of the reviewer ladder rungs"
+      },
+      {
+       "key": "b",
+       "text": "Internal jargon for the 22 analysis areas a document covers"
+      },
+      {
+       "key": "c",
+       "text": "The payment plans"
+      },
+      {
+       "key": "d",
+       "text": "The microservices on the gateway"
+      }
+     ],
+     "answer": "b",
+     "topic": "pillars"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which item is listed among the solution options a report should compare?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Open source versus closed source versus a corporate suite"
+      },
+      {
+       "key": "b",
+       "text": "Only building from scratch"
+      },
+      {
+       "key": "c",
+       "text": "Only buying a licence"
+      },
+      {
+       "key": "d",
+       "text": "Only hiring a freelancer"
+      }
+     ],
+     "answer": "a",
+     "topic": "options"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "When a needed fact is absent, which of these does the fact base rule out?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Refusing to continue"
+      },
+      {
+       "key": "b",
+       "text": "Asking the customer"
+      },
+      {
+       "key": "c",
+       "text": "Showing a stated band"
+      },
+      {
+       "key": "d",
+       "text": "Filling the gap with a plausible number"
+      }
+     ],
+     "answer": "d",
+     "topic": "absence"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A salesperson wants the report to say the project will take 'about 12 weeks' because it sounds right. How should Moksy respond, per its own rules?",
+     "answer": "It must not appear unless it resolves to a held row (task hours, rate, scope) or a computation naming its inputs, at a pinned version with a source. If the fact is absent, the report should refuse, ask, derive or show a stated band, not a plausible guess.",
+     "rubric": "Must cite the traceability rule (row + version + source), reject the invented number, and name the absence behaviours."
+    }
+   ]
+  },
+  {
+   "title": "How Moksy is run locally and deployed",
+   "body": "Moksy's README says everything runs in Docker and tells developers not to run npm install on the host, because host installs leave platform-specific binaries that crash in containers. The quick start is to copy .env.example to .env, fill the required secrets, then run npm run dev, followed by npm run seed and npm run seed:personas. The local stack gives the gateway on port 5001, the Docusaurus developer documentation on port 3000 and the Vite dashboard on port 3001. Seven secrets are mandatory, among them the JWT secrets, the internal gateway key and the Mongo app credentials, and services will not boot without them. Billing has two local modes: mock, where subscriptions and MOX top-ups simulate instantly, and Stripe test mode with test keys, where no real money is charged. AI defaults to a local Ollama model, with the OPENAI_API_KEY variable set to ollama on purpose. Deployment is manual: pushing to GitHub deploys nothing. On the server you git pull and run npm run deploy:prod, which rebuilds only changed services, health-checks, and records the commit; a plan-only preview exists too.",
+   "source": "wt-earning-gaps/README.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does the README say NOT to do on the host machine?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Run docker compose"
+      },
+      {
+       "key": "b",
+       "text": "Open the dashboard"
+      },
+      {
+       "key": "c",
+       "text": "Use Ollama"
+      },
+      {
+       "key": "d",
+       "text": "Run npm install"
+      }
+     ],
+     "answer": "d",
+     "topic": "local setup"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which local URL serves the dashboard?",
+     "options": [
+      {
+       "key": "a",
+       "text": "http://localhost:3000"
+      },
+      {
+       "key": "b",
+       "text": "http://localhost:5001"
+      },
+      {
+       "key": "c",
+       "text": "http://localhost:3001"
+      },
+      {
+       "key": "d",
+       "text": "http://localhost:5008"
+      }
+     ],
+     "answer": "c",
+     "topic": "ports"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does STRIPE_MODE=mock do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Charges real cards in a sandbox"
+      },
+      {
+       "key": "b",
+       "text": "Simulates subscriptions and MOX top-ups instantly with no card charged"
+      },
+      {
+       "key": "c",
+       "text": "Disables the payments service"
+      },
+      {
+       "key": "d",
+       "text": "Opens Stripe Checkout with live keys"
+      }
+     ],
+     "answer": "b",
+     "topic": "billing"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What happens when you push to GitHub?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing is deployed; deployment is a manual step on the server"
+      },
+      {
+       "key": "b",
+       "text": "The server rebuilds automatically"
+      },
+      {
+       "key": "c",
+       "text": "All services restart"
+      },
+      {
+       "key": "d",
+       "text": "A registry image is released to production"
+      }
+     ],
+     "answer": "a",
+     "topic": "deploy"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Describe how a production deploy works and how you can preview it first.",
+     "answer": "On the server: git pull, then npm run deploy:prod, which rebuilds only changed services, restarts them, runs a health check and records the commit. A plan-only preview exists.",
+     "rubric": "Must cover manual pull + deploy:prod, only-changed-services, health check; mention the plan-only preview."
+    }
+   ]
+  }
+ ]
+}
