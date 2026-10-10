@@ -18,6 +18,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <nav className="mx-auto flex max-w-6xl items-center gap-5 px-4 py-3 text-sm">
             <Link href="/" className="text-lg font-extrabold"><span className="gradient-text">gglearn</span> <span aria-hidden>⚔️</span></Link>
             {user && <Link href="/dashboard" className="text-slate-300 hover:text-white">My quest</Link>}
+            {user && <Link href="/start" className="text-slate-300 hover:text-white">Start a journey</Link>}
             <Link href="/competitions" className="text-slate-300 hover:text-white">Compete</Link>
             {user && user.role !== "learner" && <Link href="/admin" className="text-slate-300 hover:text-white">Question bank</Link>}
             {user && user.role !== "learner" && <Link href="/admin/people" className="text-slate-300 hover:text-white">People</Link>}

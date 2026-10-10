@@ -15,6 +15,7 @@ import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/leve
 import { completeQuest } from "@/lib/stats";
 import { hiddenTrackIds } from "@/lib/tracks";
 import { drillQuestion } from "@/lib/drill";
+import { claimPendingInvites } from "@/lib/contests";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 
 const ONBOARDING = [
@@ -33,10 +34,11 @@ const OFFBOARDING = [
 
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
 
-type Tx = Pick<typeof db, "insert" | "select">;
+type Tx = Pick<typeof db, "insert" | "select" | "update" | "delete">;
 
 /** New-joiner setup: onboarding checklist plus auto-enrolment in the tracks recommended for their job role. */
-function provision(tx: Tx, userId: number, jobRole: string) {
+function provision(tx: Tx, userId: number, email: string, jobRole: string) {
+  claimPendingInvites(tx, userId, email); // contests this address was invited to before it had an account
   tx.insert(checklistItems).values(ONBOARDING.map((label) => ({ userId, kind: "onboarding" as const, label }))).run();
   const hidden = hiddenTrackIds();
   const rec = tx.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${jobRole}%`))).all().filter((t) => !hidden.has(t.id)).slice(0, 6);
@@ -68,7 +70,7 @@ export async function joinWithInvite(token: string, _: string | null, fd: FormDa
         .where(and(eq(invites.id, inv.id), sql`${invites.usedAt} is null`)).returning().get();
       if (!used) throw new Error("used");
       const u = tx.insert(users).values({ name: p.data.name, email: inv.email, jobRole: inv.jobRole, passwordHash }).returning().get();
-      provision(tx, u.id, inv.jobRole);
+      provision(tx, u.id, u.email, inv.jobRole);
       return u.id;
     });
   } catch {
@@ -221,7 +223,7 @@ export async function createPerson(_: string | null, fd: FormData): Promise<stri
   if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return "That email already exists.";
 
   const u = db.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: p.data.jobRole, passwordHash: await hashPassword(p.data.password) }).returning().get();
-  provision(db, u.id, p.data.jobRole);
+  provision(db, u.id, u.email, p.data.jobRole);
   revalidatePath("/admin/people");
   return null;
 }

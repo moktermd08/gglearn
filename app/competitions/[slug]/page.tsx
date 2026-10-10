@@ -68,7 +68,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
         {c.prizeAmount > 0 && (
           <p className="rounded-lg bg-amber-400/10 px-3 py-2 text-sm text-amber-200">
             💰 <b>{money(c.prizeAmount, c.prizeCurrency)}</b> prize · {PRIZE_SPLIT_LABEL[c.prizeSplit]} · people only, and only by reaching the goal.
-            <span className="block text-xs text-amber-200/70">{c.prizeNote} gglearn does not hold or send money.</span>
+            <span className="block text-xs text-amber-200/70">{c.prizeNote} · gglearn does not hold or send money.</span>
           </p>
         )}
         <p className="text-sm text-slate-400">

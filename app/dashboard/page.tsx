@@ -82,7 +82,7 @@ export default async function Dashboard() {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-bold">Contests</h2>
-          <Link href="/competitions/new" className="btn !py-1 text-sm">Start a contest</Link>
+          <Link href="/start" className="btn !py-1 text-sm">Start a journey</Link>
         </div>
         {contests.length === 0 ? (
           <p className="text-slate-400">Race a bot, a friend or a group on any topic. <Link href="/competitions" className="underline">See what is running</Link>.</p>

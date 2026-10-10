@@ -2,6 +2,7 @@
 import { useActionState, useState } from "react";
 import { createCompetition, type CreateState } from "../actions";
 import { BOT_TIERS } from "@/lib/bots";
+import { CURRENCIES, PRIZE_SPLIT_LABEL } from "@/lib/competitions-shared";
 
 type Group = [string, { id: number; name: string }[]];
 
@@ -74,6 +75,19 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
               <span>I understand that names, photos and progress of everyone in this contest are visible to anyone. You can make it private later, but not the other way round.</span></label>
           </div>
         )}
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="font-bold">4. Reward</h2>
+        <p className="text-sm text-slate-300">Everyone who reaches the goal can claim a certificate. Optionally add a cash prize for the first to get there. gglearn does not hold or send money: you pay winners yourself and record it. Only people, not bots, can win.</p>
+        <div className="grid gap-3 sm:grid-cols-4">
+          <div><label className={label} htmlFor="prizeAmount">Prize pool (optional)</label><input id="prizeAmount" name="prizeAmount" inputMode="decimal" placeholder="0" className={input} /></div>
+          <div><label className={label} htmlFor="prizeCurrency">Currency</label>
+            <select id="prizeCurrency" name="prizeCurrency" className={input}>{Object.entries(CURRENCIES).map(([k, sym]) => <option key={k} value={k}>{k} {sym}</option>)}</select></div>
+          <div className="sm:col-span-2"><label className={label} htmlFor="prizeSplit">Split</label>
+            <select id="prizeSplit" name="prizeSplit" className={input}>{Object.entries(PRIZE_SPLIT_LABEL).map(([k, t]) => <option key={k} value={k}>{t}</option>)}</select></div>
+        </div>
+        <div><label className={label} htmlFor="prizeNote">Who pays, and when? (required with a prize)</label><input id="prizeNote" name="prizeNote" maxLength={200} className={input} /></div>
       </section>
 
       {state?.error && <p role="alert" className="text-sm text-rose-400">{state.error}</p>}
