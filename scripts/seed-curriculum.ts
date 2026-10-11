@@ -20,6 +20,7 @@ const BRANDS: [slug: string, name: string, tagline: string][] = [
 const TRACKS: Record<string, T[]> = {
   "moksy-ai": [
     ["moksy-product", "Moksy", "product", "", "Journeys, reviewer/customer/staff roles, MXP/MOX, patterns, reports, the 1:99 goal."],
+    ["moksy-meta-marketing", "Moksy on Meta", "process", "social media manager,marketing", "Using Facebook and Instagram ads in line with Moksy's documented economics, positioning, content motion, brand rules and claims."],
     ["moksy-brand-voice", "Moksy brand & voice", "process", "social media manager,content writer,marketing,designer", "How Moksy names things, looks and sounds: tagline, vocabulary, colour, type, tone and spelling."],
     ["moksy-platform-services", "Moksy platform services", "subject", "developer", "The foundation services: gateway, auth, permissions, projects, requirements, payments, events, jobs, audit."],
     ["moksy-patterns-automation", "Patterns and automation", "process", "developer", "Decisions as patterns, flows, and measuring the machine share."],
