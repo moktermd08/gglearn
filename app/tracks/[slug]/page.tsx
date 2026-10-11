@@ -1,7 +1,9 @@
 import { and, eq, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { brands, db, enrollments, questions, tracks } from "@/lib/db";
+import { brands, db, enrollments, lessons, questions, tracks } from "@/lib/db";
+import { LevelDetail, type LevelDetailData } from "@/components/LevelDetail";
+import { LEVEL_INFO } from "@/lib/levelInfo";
 import { currentUser } from "@/lib/auth";
 import { openTo } from "@/lib/paths";
 import { CERT_LEVELS, KIND_LABEL, LEVELS, PASS_MARK, QUESTIONS_PER_RUN, TIERS, certTitle, tierOf } from "@/lib/levels";
@@ -15,7 +17,7 @@ import { AvatarPicker } from "@/components/AvatarPicker";
 import { avatarLooks } from "@/lib/avatars";
 import { RankEmblem } from "@/components/RankEmblem";
 import { Ring } from "@/components/Ring";
-import { ArrowRight, BookOpen, Check, CheckCircle2, Crown, Flame, GraduationCap, ListChecks, Lock, LogIn, Medal, Mountain, Sparkles, Swords, Target, Trophy, Zap } from "lucide-react";
+import { ArrowRight, Info, BookOpen, Check, CheckCircle2, Crown, Flame, GraduationCap, ListChecks, Lock, LogIn, Medal, Mountain, Sparkles, Swords, Target, Trophy, Zap } from "lucide-react";
 
 const QUEST_ICON = { study: BookOpen, drill: Zap, exam: Trophy } as const;
 
@@ -32,6 +34,26 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
       .where(and(eq(questions.trackId, track.id), eq(questions.status, "active"))).groupBy(questions.level).all()
       .map((r) => [r.level, r.n]),
   );
+  // per level: how the pool splits by question type and how long a question takes, the commonest topics, and the study guide outline
+  const byType = db.select({ level: questions.level, type: questions.type, n: sql<number>`count(*)`, t: sql<number>`avg(${questions.timeSec})` }).from(questions)
+    .where(and(eq(questions.trackId, track.id), eq(questions.status, "active"))).groupBy(questions.level, questions.type).all();
+  const topicRows = db.select({ level: questions.level, topic: questions.topic, n: sql<number>`count(*)` }).from(questions)
+    .where(and(eq(questions.trackId, track.id), eq(questions.status, "active"), sql`${questions.topic} is not null and ${questions.topic} != ''`)).groupBy(questions.level, questions.topic).orderBy(sql`count(*) desc`).all();
+  const lessonByLevel = new Map(db.select().from(lessons).where(eq(lessons.trackId, track.id)).all().map((l) => [l.level, l]));
+  const detailFor = (level: number, state: LevelDetailData["state"]): LevelDetailData => {
+    const rows = byType.filter((r) => r.level === level), total = rows.reduce((a, r) => a + r.n, 0);
+    const avgSec = total ? rows.reduce((a, r) => a + r.t * r.n, 0) / total : 60;
+    const get = (t: string) => rows.find((r) => r.type === t)?.n ?? 0;
+    const tier = TIERS[tierOf(level)], info = LEVEL_INFO[level - 1], nxt = LEVEL_INFO[level];
+    const lesson = lessonByLevel.get(level);
+    return {
+      level, name: LEVELS[level - 1], tier: tier.name, hue: tier.hue, state, meaning: info.meaning, expect: info.expect,
+      questions: total, perExam: Math.min(QUESTIONS_PER_RUN, total) || QUESTIONS_PER_RUN, minutes: Math.max(1, Math.round((QUESTIONS_PER_RUN * avgSec) / 60)), passPct: PASS_MARK * 100,
+      topics: topicRows.filter((r) => r.level === level).slice(0, 6).map((r) => r.topic as string), syllabus: lesson?.syllabus.slice(0, 6) ?? [], lessonTitle: lesson?.title ?? null,
+      cert: (CERT_LEVELS as readonly number[]).includes(level) ? certTitle(level) : null, prev: level > 1 ? LEVELS[level - 2] : null, next: level < 20 ? LEVELS[level] : null,
+      types: { mcq: get("mcq"), open: get("open"), scenario: get("scenario") }, nextMeaning: nxt?.meaning ?? null, nextExpect: nxt?.expect ?? null,
+    };
+  };
   const user = await currentUser();
   if (user && !openTo(user.audience, track.audience)) notFound(); // customers never see staff-only tracks
   const enrolment = user
@@ -146,7 +168,12 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
                   const mine = s?.certs.find((c) => c.level === level);
                   return (
                     <li key={level} style={{ "--i": j, borderTop: `3px solid hsl(${tier.hue} 80% 55% / ${done || open || !enrolment ? 1 : 0.35})`, boxShadow: open ? `0 0 34px -8px hsl(${tier.hue} 85% 55%)` : undefined } as React.CSSProperties}
-                      className={`card rise relative flex flex-col items-center gap-2 p-4 text-center ${enrolment && !done && !open ? "bg-[#fbfaf6]" : ""}`}>
+                      className={`card card-hover rise relative flex flex-col items-center gap-2 p-4 text-center [&>*]:pointer-events-none [&>button]:pointer-events-auto [&_a]:pointer-events-auto [&_a]:relative [&_a]:z-10 [&_form]:pointer-events-auto [&_form]:relative [&_form]:z-10 ${enrolment && !done && !open ? "bg-[#fbfaf6]" : ""}`}>
+                      <LevelDetail d={detailFor(level, done ? "done" : open ? "current" : enrolment ? "locked" : "preview")} actions={open && n > 0 ? (<>
+                        <Link href={`/tracks/${track.slug}/learn/${level}`} className="btn btn-ghost !px-3 !py-1 text-sm"><BookOpen size={14} />Study</Link>
+                        <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} /><button className="btn !px-3 !py-1 text-sm">Take the exam<ArrowRight size={14} /></button></form>
+                      </>) : undefined} />
+                      <span className="absolute right-2 top-2 text-slate-500" aria-hidden><Info size={14} /></span>
                       {j < 3 && <span className="pointer-events-none absolute -right-3 top-12 hidden w-3 border-t-2 border-dashed border-black/15 lg:block" aria-hidden />}
                       {open && <span className="absolute -top-3 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#fff] shadow" style={{ background: col }}>You are here</span>}
                       <RankEmblem level={level} state={done ? "done" : open ? "current" : enrolment ? "locked" : "preview"} size={64} />
