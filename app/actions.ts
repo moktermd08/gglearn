@@ -23,7 +23,7 @@ import { DYNAMIC_PER_RUN, drawDynamic } from "@/lib/dynamic/store";
 import { claimPendingInvites } from "@/lib/contests";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
-import { createRoleExam, gradeRoleExam, latestRoleExam } from "@/lib/roleExam";
+import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
 import { type Audience, formatScopes, openTo, parseScopes, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
@@ -213,8 +213,10 @@ export async function submitRun(runId: number, fd: FormData) {
 export async function startRoleExam() {
   const u = await requireUser();
   if (u.audience !== "staff") return;
-  const open = latestRoleExam(u.id);
-  if (open && !open.finishedAt) redirect(`/role-exam/${open.id}`); // finish the one already started
+  const plan = roleExamPlan(u);
+  if (!plan) redirect("/journey?roleExam=unavailable");
+  const open = openRoleExam(u.id, plan); // only one aimed at where they are now; an older one is left behind
+  if (open) redirect(`/role-exam/${open.id}`);
   const id = createRoleExam(u);
   if (!id) redirect("/journey?roleExam=unavailable");
   redirect(`/role-exam/${id}`);

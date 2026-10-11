@@ -29,11 +29,11 @@ export function roleExamsAvailable(): boolean {
   }
 }
 
-/** When the person's latest passing role check for this role, aimed at `minRung` or higher, stops counting. Null if there is none in date. */
-export function roleCheckValidUntil(userId: number, role: string, minRung: number, at: number): number | null {
+/** When the person's latest passing role check for this role, aimed at level `minLevel` or higher, stops counting. Null if there is none in date. (`role_exams.rung` holds the target level's number.) */
+export function roleCheckValidUntil(userId: number, role: string, minLevel: number, at: number): number | null {
   const rows = db.select().from(roleExams)
     .where(and(eq(roleExams.userId, userId), eq(roleExams.role, role), eq(roleExams.passed, true), gte(roleExams.finishedAt, at - ROLE_CHECK_VALID_DAYS * DAY))).all()
-    .filter((r) => r.rung >= minRung && r.finishedAt != null);
+    .filter((r) => r.rung >= minLevel && r.finishedAt != null);
   if (!rows.length) return null;
   return Math.max(...rows.map((r) => r.finishedAt!)) + ROLE_CHECK_VALID_DAYS * DAY;
 }

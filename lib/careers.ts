@@ -76,7 +76,7 @@ function roleCheckFor(person: Person, role: string, ladder: Rung[], nextLevel: n
     }
   }
   const rungNo = ladder.findIndex((r) => r.level === nextLevel) + 1;
-  return { needed: roleCheckDrawable(role, rungNo, ladder.length, [...tracks.values()]), validUntil: roleCheckValidUntil(person.id, role, rungNo, now()) };
+  return { needed: roleCheckDrawable(role, rungNo, ladder.length, [...tracks.values()]), validUntil: roleCheckValidUntil(person.id, role, nextLevel, now()) };
 }
 
 /** Where this person stands on their role's ladder. Null when their role has no ladder or they are not staff. */

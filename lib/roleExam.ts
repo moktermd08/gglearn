@@ -18,7 +18,10 @@ const FRESH_SHARE = 0.7;
 export type Source = { track: CatalogTrack; level: number; domain: Domain };
 export type RoleExamPlan = {
   role: string;
+  /** position of the target level in the ladder (1-based): what the question mix is computed from */
   rung: number;
+  /** the target level's own number: what a role check is stored and matched by, so editing the ladder cannot shift it */
+  level: number;
   rungs: number;
   title: string;
   /** what the role's blueprint asks for at this rung, out of ROLE_EXAM_SIZE */
@@ -52,7 +55,7 @@ export function roleExamPlan(person: Person, cat = catalog()): RoleExamPlan | nu
   if (!sources.length) return null;
 
   const { wanted, planned } = planDomains(c.role, rung, c.ladder.length, sources.map((s) => ({ trackId: s.track.id, slug: s.track.slug, domain: s.domain, level: s.level })));
-  return { role: c.role, rung, rungs: c.ladder.length, title: target.title, wanted, planned, sources };
+  return { role: c.role, rung, level: target.level, rungs: c.ladder.length, title: target.title, wanted, planned, sources };
 }
 
 /** `k` question ids from one track around one level: mostly freshly generated where the track has generators, the rest stored. */
@@ -100,7 +103,7 @@ export function createRoleExam(person: Person): number | null {
   const drawn = drawRoleExam(person.id, plan);
   if (drawn.length < ROLE_EXAM_MIN) return null;
   const actual = Object.fromEntries(DOMAIN_KEYS.map((d) => [d, drawn.filter((x) => x.domain === d).length]));
-  const exam = db.insert(roleExams).values({ userId: person.id, role: plan.role, rung: plan.rung, plan: JSON.stringify(actual) }).returning().get();
+  const exam = db.insert(roleExams).values({ userId: person.id, role: plan.role, rung: plan.level, plan: JSON.stringify(actual) }).returning().get();
   db.insert(roleExamAnswers).values(drawn.sort(() => Math.random() - 0.5).map((x) => ({ examId: exam.id, questionId: x.id, domain: x.domain }))).run();
   return exam.id;
 }
@@ -134,6 +137,16 @@ export function domainResults(examId: number): DomainResult[] {
     return mine.length ? [{ domain, asked: mine.length, score: w ? mine.reduce((a, r) => a + r.a.score * r.w, 0) / w : 0 }] : [];
   });
 }
+
+/** The person's unfinished role check that still matches where they are (same role, same target level), if any. An older one is left behind. */
+export function openRoleExam(userId: number, plan: Pick<RoleExamPlan, "role" | "level">) {
+  return db.select().from(roleExams)
+    .where(and(eq(roleExams.userId, userId), eq(roleExams.role, plan.role), eq(roleExams.rung, plan.level), sql`${roleExams.finishedAt} is null`))
+    .orderBy(sql`${roleExams.id} desc`).get();
+}
+
+export const latestFinishedRoleExam = (userId: number) =>
+  db.select().from(roleExams).where(and(eq(roleExams.userId, userId), sql`${roleExams.finishedAt} is not null`)).orderBy(sql`${roleExams.id} desc`).get();
 
 export const latestRoleExam = (userId: number) =>
   db.select().from(roleExams).where(eq(roleExams.userId, userId)).orderBy(sql`${roleExams.id} desc`).get();
