@@ -4,13 +4,14 @@ import Link from "next/link";
 import { brands, checklistItems, db, enrollments, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { LEVELS, MAX_LEVEL, TIERS, tierOf } from "@/lib/levels";
-import { activityFor, badgesFor, trackStats } from "@/lib/stats";
+import { QUEST_XP, activityFor, badgesFor, trackStats } from "@/lib/stats";
+import { RankEmblem } from "@/components/RankEmblem";
 import { AreaChart, EmptyState, Heatmap, PALETTE, Radar, StatTile } from "@/components/charts";
 import { rivalFor } from "@/lib/rivals";
 import { Avatar } from "@/components/Avatar";
 import { avatarLooks } from "@/lib/avatars";
 import { AvatarPicker } from "@/components/AvatarPicker";
-import { listFor } from "@/lib/competitions";
+import { listFor, now } from "@/lib/competitions";
 import { CompetitionCard } from "@/components/CompetitionCard";
 import { SubjectArt } from "@/components/SubjectArt";
 import { Ring } from "@/components/Ring";
@@ -20,7 +21,7 @@ import { goalOf, roleLabel } from "@/lib/journey";
 import { pendingFor } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath } from "@/lib/roles";
 import { enroll, toggleChecklist } from "@/app/actions";
-import { AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, Plus, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain, Activity, Radar as RadarIcon, Rocket } from "lucide-react";
+import { BookOpen, CircleCheck, Zap, AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain, Activity, Radar as RadarIcon, Rocket } from "lucide-react";
 
 export default async function Dashboard() {
   const user = await requireUser();
@@ -33,7 +34,7 @@ export default async function Dashboard() {
   const totalXp = stats.reduce((a, m) => a + m.s.xp, 0);
   const bestStreak = Math.max(0, ...stats.map((m) => m.s.streak));
   const contests = listFor(user, { mineOnly: true }).filter((x) => x.state === "live" || x.state === "upcoming" || x.invited).slice(0, 6);
-  const questsDone = stats.reduce((a, m) => a + m.s.doneToday.size, 0), questsTotal = stats.length * 3;
+  const questsDone = stats.reduce((a, m) => a + m.s.doneToday.size, 0), questsTotal = stats.length ? 3 : 0; // the daily goal is three quests, on any subjects
   const levelsPassed = stats.reduce((a, m) => a + m.s.passed, 0);
   const checkDone = todo.filter((c) => c.done).length;
   const required = requirementsFor(user, scopesOf(user.id));
@@ -50,15 +51,34 @@ export default async function Dashboard() {
   const radarAxes = [...stats].sort((a, b) => b.s.passed - a.s.passed).slice(0, 6).map((m) => ({ label: m.t.name.replace(/^\d+\.\s*/, "").replace(/:.*$/, ""), value: m.s.passed / MAX_LEVEL }));
   const badges = stats.length ? badgesFor(stats.sort((a, b) => b.s.xp - a.s.xp)[0].s) : [];
 
+  const daysLeft = (sec: number) => Math.ceil((sec - now()) / 86400);
+  const statByTrack = new Map(stats.map((m) => [m.t.id, m]));
+  // the one thing to do next: the most urgent required subject, otherwise the subject you have earned the most XP in
+  const focusReq = [...requiredOpen].sort((x, y) => Number(y.overdue) - Number(x.overdue) || x.dueAt - y.dueAt)[0];
+  const focusStat = (focusReq && statByTrack.get(focusReq.track.id)) ?? stats.find((m) => m.s.passed < MAX_LEVEL);
+  const focusTrack = focusReq?.track ?? focusStat?.t;
+  const focusPassed = focusStat?.s.passed ?? focusReq?.passed ?? 0;
+  const focusNext = Math.min(MAX_LEVEL, focusPassed + 1);
+  const bestLevel = Math.max(0, ...stats.map((m) => m.s.passed));
+  const bestTier = TIERS[tierOf(bestLevel)];
+
+  const dueChip = (r: (typeof required)[number]) => {
+    if (r.done) return <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-bold text-emerald-300">Passed</span>;
+    const d = daysLeft(r.dueAt);
+    return <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${r.overdue ? "bg-rose-500/15 text-rose-300" : d <= 7 ? "bg-amber-500/15 text-amber-300" : "bg-black/5 text-slate-400"}`}>{r.overdue ? `${Math.abs(d)} day${Math.abs(d) === 1 ? "" : "s"} overdue` : d <= 0 ? "Due today" : `${d} day${d === 1 ? "" : "s"} left`}</span>;
+  };
   const reqRow = (r: (typeof required)[number]) => (
     <li key={r.track.id}>
-      <Link href={`/tracks/${r.track.slug}`} className="flex flex-wrap items-center gap-2 transition hover:text-white">
-        {r.done ? <CheckCircle2 size={16} className="text-emerald-400" /> : <Square size={16} className={r.overdue ? "text-rose-400" : "text-slate-500"} />}
-        <span className={r.done ? "text-slate-500" : r.overdue ? "text-rose-300" : "text-slate-200"}>{r.track.name}</span>
-        <span className="text-xs text-slate-500">
-          {r.done ? "passed" : `level ${r.passed}/${r.track.requiredLevel} · due ${new Date(r.dueAt * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}${r.overdue ? " · overdue" : ""}`}
-          {" · "}{r.why === "mandatory" ? "mandatory" : "for your role"}
-        </span>
+      <Link href={`/tracks/${r.track.slug}`} className="group flex items-center gap-3 rounded-xl p-1.5 transition hover:bg-black/[.03]">
+        <SubjectArt slug={r.track.slug} name={r.track.name} kind={r.track.kind} size={34} />
+        <div className="min-w-0 flex-1">
+          <div className={`truncate text-sm font-semibold ${r.done ? "text-slate-500" : ""}`}>{r.track.name}</div>
+          <div className="mt-1 flex items-center gap-2">
+            <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-black/10"><i className="block h-full rounded-full" style={{ width: `${Math.min(100, (r.passed / r.track.requiredLevel) * 100)}%`, background: r.done ? "#10b981" : r.overdue ? "#f43f5e" : "#6366f1" }} /></span>
+            <span className="shrink-0 text-[11px] text-slate-400">L{Math.min(r.passed, r.track.requiredLevel)}/{r.track.requiredLevel}</span>
+          </div>
+        </div>
+        <div className="flex shrink-0 flex-col items-end gap-1">{dueChip(r)}<span className="text-[10px] uppercase tracking-wide text-slate-500">{r.why === "mandatory" ? "mandatory" : "your role"}</span></div>
       </Link>
     </li>
   );
@@ -101,171 +121,219 @@ export default async function Dashboard() {
     );
   };
 
+  const heading = (Icon: typeof Swords, tone: string, title: string, aside?: React.ReactNode) => (
+    <div className="mb-3 flex items-center justify-between gap-2">
+      <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className={`grid h-8 w-8 place-items-center rounded-xl ${tone}`}><Icon size={17} /></span>{title}</h2>
+      {aside}
+    </div>
+  );
+  const goalDone = Math.min(3, questsDone);
+
   return (
-    <div className="space-y-8">
-      <div className="card pop relative flex flex-wrap items-center gap-6 overflow-hidden p-6" style={{ background: "linear-gradient(120deg,#4f46e51f,#ffffff 60%)" }}>
+    <div className="space-y-6">
+      {/* hero: who you are, your rank, and today's goal */}
+      <header className="card pop relative flex flex-wrap items-center justify-between gap-x-5 gap-y-3 overflow-hidden p-6" style={{ background: `linear-gradient(120deg, hsl(${bestTier.hue} 85% 55% / .2), #4f46e514 50%, #ffffff 80%)` }}>
         <svg className="pointer-events-none absolute -right-8 -top-12 h-64 w-64" viewBox="0 0 200 200" aria-hidden><circle cx="120" cy="80" r="90" fill="none" stroke="#4f46e5" strokeOpacity=".12" /><circle cx="120" cy="80" r="60" fill="none" stroke="#9333ea" strokeOpacity=".18" strokeDasharray="4 6" className="march" /></svg>
-        <Avatar kind="human" level={Math.max(0, ...stats.map((m) => m.s.passed))} size={96} className="bob" look={looks.me} photoUrl={looks.photoUrl} />
-        <div className="flex-1">
-          <h1 className="text-2xl font-extrabold">Welcome back, {user.name}</h1>
-          <p className="text-slate-400">Your quest log: finish today&apos;s quests to keep the streak and stay ahead of your rivals.</p>
-          <AvatarPicker me={looks.me} rival={looks.rival} photoUrl={looks.photoUrl} signedIn level={Math.max(0, ...stats.map((m) => m.s.passed))} className="mt-2" />
+        <Avatar kind="human" level={bestLevel} size={92} className="bob" look={looks.me} photoUrl={looks.photoUrl} />
+        <div className="relative order-last min-w-0 basis-full sm:order-none sm:flex-1 sm:basis-0">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold uppercase tracking-widest" style={{ color: `hsl(${bestTier.hue} 70% 42%)` }}>
+            <span>{bestTier.name} rank</span>
+            {bestStreak > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 px-2 py-0.5 text-[11px] normal-case tracking-normal text-orange-500"><Flame size={12} fill="#f97316" />{bestStreak}-day streak</span>}
+          </div>
+          <h1 className="text-2xl font-extrabold sm:text-3xl">Welcome back, {user.name}</h1>
+          <p className="text-sm text-slate-400">{goalDone >= questsTotal && questsTotal > 0 ? "Today's goal is done. Anything more is a bonus." : "Finish today's quests to keep the streak and stay ahead of your rivals."}</p>
+          <AvatarPicker me={looks.me} rival={looks.rival} photoUrl={looks.photoUrl} signedIn level={bestLevel} className="mt-2" />
         </div>
-        {questsTotal > 0 && <Ring pct={questsDone / questsTotal} label={`${questsDone}/${questsTotal}`} sub="quests today" size={104} color={questsDone === questsTotal ? "#34d399" : "#38bdf8"} />}
-      </div>
+        {questsTotal > 0 && <div className="relative text-center"><Ring pct={goalDone / questsTotal} label={`${goalDone}/${questsTotal}`} sub="daily goal" size={104} color={goalDone === questsTotal ? "#34d399" : "#38bdf8"} /></div>}
+      </header>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatTile i={0} Icon={Sparkles} label="Total XP" value={totalXp} color={PALETTE.sky} spark={activity.slice(-14).map((d) => d.value)} />
+        <StatTile i={0} Icon={Sparkles} label="Total XP" value={totalXp.toLocaleString("en-GB")} color={PALETTE.sky} spark={activity.slice(-14).map((d) => d.value)} />
         <StatTile i={1} Icon={Flame} label="Day streak" value={bestStreak} color="#ea580c" spark={activity.slice(-14).map((d) => (d.value ? 1 : 0))} />
         <StatTile i={2} Icon={Mountain} label="Levels passed" value={levelsPassed} color={PALETTE.violet} />
         <StatTile i={3} Icon={Swords} label="Live contests" value={contests.filter((x) => x.state === "live").length} color={PALETTE.pink} />
       </div>
 
-      <section className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-        <div className="card p-5">
-          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-            <h2 className="flex items-center gap-2 font-bold"><Activity size={18} className="text-indigo-300" />XP, last 30 days</h2>
-            <span className="text-xs text-slate-400"><b className="text-slate-200">{weekXp}</b> XP this week · <b className="text-slate-200">{activeDays}</b> active days of 168</span>
-          </div>
-          <AreaChart data={last30} />
-          <div className="mt-3"><div className="mb-1 text-[11px] uppercase tracking-wider text-slate-400">Last 24 weeks</div><Heatmap days={activity} /></div>
-        </div>
-        <div className="card flex flex-col items-center p-5">
-          <h2 className="flex items-center gap-2 self-start font-bold"><RadarIcon size={18} className="text-violet-300" />Skill map</h2>
-          {radarAxes.length >= 3 ? <Radar axes={radarAxes} color={PALETTE.violet} /> : (
-            <div className="my-auto w-full py-4"><EmptyState Icon={Rocket} title="Your skill map grows here">Enrol in three or more subjects and your level in each is plotted as a shape.</EmptyState></div>
-          )}
-        </div>
-      </section>
-
-      {unread.length > 0 && (
-        <Link href="/updates" className={`card flex items-center gap-3 p-4 transition hover:border-amber-300/60 ${unread.some((u) => u.overdue) ? "border-rose-400/40" : "border-amber-300/40"}`}>
-          <BellRing size={20} className="text-amber-300" />
-          <span className="flex-1 text-sm"><b>{unread.length} update{unread.length === 1 ? "" : "s"} to read:</b> {unread.slice(0, 2).map((u) => u.change.title).join(", ")}{unread.length > 2 && ` and ${unread.length - 2} more`}</span>
-          <ArrowUpRight size={16} className="text-slate-400" />
-        </Link>
-      )}
-
-      {noRolePath && (
-        <section role="status" className="card flex items-start gap-3 border-amber-300/40 p-4 text-sm">
-          <Compass size={20} className="mt-0.5 shrink-0 text-amber-300" />
-          <div>
-            <b>Nothing is set up for your role yet.</b> Your role is “{user.jobRole}”, and the academy has no learning or promotion path for it, so you only see company-wide courses. Ask your manager to check your role, or pick something to learn from <Link href="/start" className="underline">Start a journey</Link>.
-          </div>
-        </section>
-      )}
-
-      {required.length > 0 && (
-        <section className={`card p-4 ${overdue.length ? "border-rose-400/40" : ""}`}>
-          <div className="mb-2 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 font-semibold"><ShieldCheck size={18} className={overdue.length ? "text-rose-300" : "text-emerald-300"} />Required for you</h2>
-            <span className="text-xs text-slate-400">{required.length - requiredOpen.length}/{required.length} passed</span>
-          </div>
-          <div className="bar mb-3"><i style={{ width: `${((required.length - requiredOpen.length) / required.length) * 100}%`, background: overdue.length ? "#fb7185" : undefined }} /></div>
-          {overdue.length > 0 && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-rose-300"><AlertTriangle size={15} />{overdue.length} overdue. Please finish {overdue.length === 1 ? "it" : "these"} first.</p>}
-          <ul className="space-y-1.5 text-sm">
-            {required.slice(0, 6).map(reqRow)}
-          </ul>
-          {required.length > 6 && (
-            <details className="mt-2 text-sm"><summary className="cursor-pointer text-xs font-semibold text-sky-300">Show the other {required.length - 6}</summary>
-              <ul className="mt-2 space-y-1.5">{required.slice(6).map(reqRow)}</ul></details>
-          )}
-        </section>
-      )}
-
-      {career && (
-        <section className="card p-4">
-          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-            <h2 className="flex items-center gap-2 font-semibold"><Climb size={18} className="text-violet-300" />Your career</h2>
-            <span className="flex items-center gap-3 text-xs text-slate-400">
-              <span>{career.current.title}{career.next && <> <ArrowUpRight size={12} className="inline" /> {career.next.title}</>}</span>
-              <Link href="/journey" className="text-sky-300 underline">{goal ? `Goal: ${goal.targetRole === career.role ? "" : roleLabel(goal.targetRole) + ", "}${new Date(goal.targetDate * 1000).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}` : "Set a career goal"}</Link>
-            </span>
-          </div>
-          {!career.next ? (
-            <p className="text-sm text-slate-300">You are at the top of the {career.role} path: {career.current.title}. Keep sharpening, and help others climb.</p>
-          ) : (
-            <>
-              <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
-                <span>{career.total ? `${career.done}/${career.total} steps to ${career.next.title}` : `Steps to ${career.next.title} are still being written`}</span>
-                {career.ready && <span className="font-semibold text-emerald-300">Ready for promotion review</span>}
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
+        {/* main column: what to do next */}
+        <div className="min-w-0 space-y-6">
+          {focusTrack && (
+            <section aria-label="Continue" className="card relative overflow-hidden p-5" style={{ background: `linear-gradient(125deg, hsl(${TIERS[tierOf(focusNext)].hue} 85% 55% / .16), #fff 60%)` }}>
+              <div className="flex flex-wrap items-center gap-4">
+                <SubjectArt slug={focusTrack.slug} name={focusTrack.name} kind={focusTrack.kind} size={64} className="shadow-lg" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-indigo-300">
+                    {focusReq?.overdue ? <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/15 px-2 py-0.5 normal-case tracking-normal text-rose-300"><AlertTriangle size={12} />Overdue</span> : focusReq ? <span>Required next</span> : <span>Pick up where you left off</span>}
+                    {focusReq && !focusReq.overdue && dueChip(focusReq)}
+                  </div>
+                  <h2 className="truncate text-xl font-extrabold">{focusTrack.name}</h2>
+                  <p className="text-sm text-slate-400">{focusPassed === 0 ? "You have not passed a level yet" : `Level ${focusPassed} · ${LEVELS[focusPassed - 1]} passed`}{focusPassed < MAX_LEVEL && <> · next up <b className="text-slate-300">{LEVELS[focusNext - 1]}</b></>}</p>
+                </div>
+                <RankEmblem level={focusNext} state="current" size={56} />
               </div>
-              {career.total > 0 && <div className="bar mb-3"><i style={{ width: `${(career.done / career.total) * 100}%`, background: career.ready ? "#34d399" : undefined }} /></div>}
-              {career.hold === "role-check" && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-amber-300"><AlertTriangle size={15} />You have met every step. Pass a <Link href="/journey" className="underline">role check</Link> (valid for {ROLE_CHECK_VALID_DAYS} days) to be considered.</p>}
-              {career.hold === "overdue" && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-amber-300"><AlertTriangle size={15} />You have met every step, but required learning is overdue. Finish it to be considered.</p>}
-              <ul className="space-y-1.5 text-sm">
-                {career.next.steps.map((st) => (
-                  <li key={st.reqId} className="flex flex-wrap items-center gap-2">
-                    {st.met ? <CheckCircle2 size={16} className="text-emerald-400" /> : st.countable ? <Square size={16} className="text-slate-500" /> : <CircleDashed size={16} className="text-slate-600" />}
-                    <span className={st.met ? "text-slate-500" : st.countable ? "text-slate-200" : "text-slate-500"}>{st.track.name}</span>
-                    <span className="text-xs text-slate-500">{st.countable ? `level ${Math.min(st.passed, st.need)}/${st.need}` : "coming soon"}</span>
-                    {st.countable && !st.met && (enrolledIds.has(st.track.id)
-                      ? <Link href={`/tracks/${st.track.slug}`} className="text-xs text-sky-300 underline">Continue</Link>
-                      : <form action={enroll}><input type="hidden" name="trackId" value={st.track.id} /><input type="hidden" name="goal" value={`Towards ${career.next!.title}`} /><button className="text-xs text-sky-300 underline">Start</button></form>)}
-                  </li>
+              {focusStat ? (
+                <div className="mt-4 grid gap-2 sm:grid-cols-3">
+                  {([
+                    { k: "study", Icon: BookOpen, label: "Study guide", href: `/tracks/${focusTrack.slug}/learn/${focusNext}` },
+                    { k: "drill", Icon: Zap, label: "Quick drill", href: `/tracks/${focusTrack.slug}/drill` },
+                    { k: "exam", Icon: Trophy, label: "Take an exam", href: `/tracks/${focusTrack.slug}#levels` },
+                  ] as const).map(({ k, Icon, label, href }) => {
+                    const done = focusStat.s.doneToday.has(k);
+                    return (
+                      <Link key={k} href={href} className={`flex items-center gap-2.5 rounded-xl border p-3 text-sm font-semibold transition hover:-translate-y-0.5 hover:shadow-md ${done ? "border-emerald-400/50 bg-emerald-500/10" : "border-black/10 bg-[#fff]"}`}>
+                        <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${done ? "bg-emerald-500/20 text-emerald-300" : "bg-indigo-500/12 text-indigo-300"}`}>{done ? <CircleCheck size={17} /> : <Icon size={17} />}</span>
+                        <span className="min-w-0 flex-1 truncate">{label}</span>
+                        <span className="flex items-center gap-0.5 text-xs text-sky-300"><Sparkles size={11} />+{QUEST_XP[k]}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="mt-4"><Link href={`/tracks/${focusTrack.slug}`} className="btn">Start this subject<ArrowUpRight size={16} /></Link></div>
+              )}
+            </section>
+          )}
+
+          {unread.length > 0 && (
+            <Link href="/updates" className={`card flex items-center gap-3 p-4 transition hover:border-amber-300/60 ${unread.some((u) => u.overdue) ? "border-rose-400/40" : "border-amber-300/40"}`}>
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-amber-500/15"><BellRing size={18} className="text-amber-300" /></span>
+              <span className="flex-1 text-sm"><b>{unread.length} update{unread.length === 1 ? "" : "s"} to read:</b> {unread.slice(0, 2).map((u) => u.change.title).join(", ")}{unread.length > 2 && ` and ${unread.length - 2} more`}</span>
+              <ArrowUpRight size={16} className="text-slate-400" />
+            </Link>
+          )}
+
+          {noRolePath && (
+            <section role="status" className="card flex items-start gap-3 border-amber-300/40 p-4 text-sm">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-amber-500/15"><Compass size={18} className="text-amber-300" /></span>
+              <div>
+                <b>Nothing is set up for your role yet.</b> Your role is “{user.jobRole}”, and the academy has no learning or promotion path for it, so you only see company-wide courses. Ask your manager to check your role, or pick something to learn from <Link href="/start" className="underline">Start a journey</Link>.
+              </div>
+            </section>
+          )}
+
+          {required.length > 0 && (
+            <section className={`card p-5 ${overdue.length ? "border-rose-400/40" : ""}`}>
+              {heading(ShieldCheck, overdue.length ? "bg-rose-500/15 text-rose-300" : "bg-emerald-500/15 text-emerald-300", "Required for you", <span className="text-xs text-slate-400">{required.length - requiredOpen.length}/{required.length} passed</span>)}
+              <div className="bar mb-3"><i style={{ width: `${((required.length - requiredOpen.length) / required.length) * 100}%`, background: overdue.length ? "#fb7185" : undefined }} /></div>
+              {overdue.length > 0 && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-rose-300"><AlertTriangle size={15} />{overdue.length} overdue. Please finish {overdue.length === 1 ? "it" : "these"} first.</p>}
+              <ul className="space-y-0.5">{required.slice(0, 6).map(reqRow)}</ul>
+              {required.length > 6 && (
+                <details className="mt-2 text-sm"><summary className="cursor-pointer text-xs font-semibold text-sky-300">Show the other {required.length - 6}</summary>
+                  <ul className="mt-2 space-y-0.5">{required.slice(6).map(reqRow)}</ul></details>
+              )}
+            </section>
+          )}
+
+          {career && (
+            <section className="card p-5">
+              {heading(Climb, "bg-violet-500/15 text-violet-300", "Your career", <Link href="/journey" className="text-xs text-sky-300 underline">{goal ? `Goal: ${goal.targetRole === career.role ? "" : roleLabel(goal.targetRole) + ", "}${new Date(goal.targetDate * 1000).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}` : "Set a career goal"}</Link>)}
+              {!career.next ? (
+                <p className="text-sm text-slate-300">You are at the top of the {career.role} path: {career.current.title}. Keep sharpening, and help others climb.</p>
+              ) : (
+                <>
+                  <div className="mb-3 flex items-center gap-4">
+                    {career.total > 0 && <Ring pct={career.done / career.total} label={`${career.done}/${career.total}`} sub="steps" size={84} color={career.ready ? "#34d399" : "#8b5cf6"} />}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2 text-sm font-bold"><span>{career.current.title}</span><ArrowUpRight size={14} className="text-slate-400" /><span className="text-violet-300">{career.next.title}</span></div>
+                      <p className="text-xs text-slate-400">{career.total ? `${career.done} of ${career.total} steps done towards ${career.next.title}` : `Steps to ${career.next.title} are still being written`}</p>
+                      {career.ready && <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-bold text-emerald-300"><CheckCircle2 size={12} />Ready for promotion review</span>}
+                    </div>
+                  </div>
+                  {career.hold === "role-check" && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-amber-300"><AlertTriangle size={15} />You have met every step. Pass a <Link href="/journey" className="underline">role check</Link> (valid for {ROLE_CHECK_VALID_DAYS} days) to be considered.</p>}
+                  {career.hold === "overdue" && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-amber-300"><AlertTriangle size={15} />You have met every step, but required learning is overdue. Finish it to be considered.</p>}
+                  <ul className="space-y-1.5 text-sm">
+                    {career.next.steps.map((st) => (
+                      <li key={st.reqId} className="flex items-center gap-2">
+                        {st.met ? <CheckCircle2 size={16} className="shrink-0 text-emerald-400" /> : st.countable ? <Square size={16} className="shrink-0 text-slate-500" /> : <CircleDashed size={16} className="shrink-0 text-slate-600" />}
+                        <span className={`min-w-0 flex-1 truncate ${st.met ? "text-slate-500" : st.countable ? "" : "text-slate-500"}`}>{st.track.name}</span>
+                        {st.countable && <span className="h-1.5 w-14 shrink-0 overflow-hidden rounded-full bg-black/10" aria-hidden><i className="block h-full rounded-full bg-violet-400" style={{ width: `${(Math.min(st.passed, st.need) / st.need) * 100}%` }} /></span>}
+                        <span className="w-12 shrink-0 text-right text-xs text-slate-500">{st.countable ? `${Math.min(st.passed, st.need)}/${st.need}` : "soon"}</span>
+                        {st.countable && !st.met && (enrolledIds.has(st.track.id)
+                          ? <Link href={`/tracks/${st.track.slug}`} className="shrink-0 text-xs text-sky-300 underline">Continue</Link>
+                          : <form action={enroll} className="shrink-0"><input type="hidden" name="trackId" value={st.track.id} /><input type="hidden" name="goal" value={`Towards ${career.next!.title}`} /><button className="text-xs text-sky-300 underline">Start</button></form>)}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </section>
+          )}
+
+          {todo.length > 0 && (
+            <section className="card p-5">
+              {heading(ClipboardList, "bg-indigo-500/15 text-indigo-300", "Onboarding checklist", <span className="text-xs text-slate-400">{checkDone}/{todo.length} done</span>)}
+              <div className="bar mb-3"><i style={{ width: `${(checkDone / todo.length) * 100}%` }} /></div>
+              <ul className="space-y-1.5 text-sm text-slate-300">{todo.map((c) => (
+                <li key={c.id}>
+                  <form action={toggleChecklist.bind(null, c.id)}>
+                    <button aria-pressed={c.done} className={`flex items-center gap-2 text-left transition hover:text-white ${c.done ? "text-slate-500 line-through" : ""}`}>
+                      {c.done ? <CheckSquare size={16} className="text-emerald-400" /> : <Square size={16} className="text-slate-500" />}{c.label}
+                    </button>
+                  </form>
+                </li>
+              ))}</ul>
+            </section>
+          )}
+
+          <section>
+            {heading(Swords, "bg-pink-500/15 text-pink-300", "My races")}
+            {mine.length === 0 && <EmptyState Icon={Swords} title="No rival yet" tone="pink">Pick a subject and meet the rival who trains it every day. <Link href="/" className="underline">Browse subjects</Link>.</EmptyState>}
+            <div className="grid gap-4 sm:grid-cols-2">
+              {stats.slice(0, 6).map(raceCard)}
+            </div>
+            {stats.length > 6 && (
+              <details className="mt-4"><summary className="cursor-pointer text-sm font-semibold text-sky-300">Show the other {stats.length - 6} races</summary>
+                <div className="mt-3 grid gap-4 sm:grid-cols-2">{stats.slice(6).map((x, i) => raceCard(x, i + 6))}</div></details>
+            )}
+          </section>
+        </div>
+
+        {/* side column: how you are doing */}
+        <aside className="min-w-0 space-y-6">
+          <section className="card p-5">
+            {heading(Activity, "bg-indigo-500/15 text-indigo-300", "Your activity")}
+            <div className="mb-2 grid grid-cols-2 gap-2 text-center">
+              <div className="rounded-xl bg-black/[.03] p-2"><div className="text-xl font-extrabold">{weekXp}</div><div className="text-[10px] uppercase tracking-wider text-slate-400">XP this week</div></div>
+              <div className="rounded-xl bg-black/[.03] p-2"><div className="text-xl font-extrabold">{activeDays}</div><div className="text-[10px] uppercase tracking-wider text-slate-400">active days</div></div>
+            </div>
+            <AreaChart data={last30} height={120} />
+            <div className="mt-3"><div className="mb-1 text-[11px] uppercase tracking-wider text-slate-400">Last 24 weeks</div><Heatmap days={activity} /></div>
+          </section>
+
+          <section className="card p-5">
+            {heading(RadarIcon, "bg-violet-500/15 text-violet-300", "Skill map")}
+            <div className="flex justify-center">
+              {radarAxes.length >= 3 ? <Radar axes={radarAxes} color={PALETTE.violet} size={230} /> : (
+                <EmptyState Icon={Rocket} title="Your skill map grows here">Enrol in three or more subjects and your level in each is plotted as a shape.</EmptyState>
+              )}
+            </div>
+          </section>
+
+          <section className="card p-5">
+            {heading(Trophy, "bg-amber-500/15 text-amber-300", "Contests", <Link href="/competitions" className="text-xs text-sky-300 underline">See all</Link>)}
+            {contests.length === 0 ? (
+              <p className="text-sm text-slate-400">Race a bot, a friend or a group on any topic. <Link href="/start" className="underline">Start a journey</Link>.</p>
+            ) : (
+              <div className="space-y-3">{contests.slice(0, 3).map((x) => <CompetitionCard key={x.c.id} card={x} />)}</div>
+            )}
+          </section>
+
+          {badges.length > 0 && (
+            <section className="card p-5">
+              {heading(Medal, "bg-yellow-500/15 text-yellow-500", "Badges", <span className="text-xs text-slate-400">{badges.filter((x) => x.earned).length}/{badges.length} earned</span>)}
+              <div className="grid grid-cols-4 gap-2">
+                {badges.map((x, i) => (
+                  <div key={x.key} title={`${x.name}: ${x.desc}`} style={{ "--i": i } as React.CSSProperties} className={`rise relative flex aspect-square flex-col items-center justify-center rounded-2xl text-center ${x.earned ? "pop bg-yellow-400/15 ring-1 ring-yellow-400/50" : "bg-black/[.04] opacity-50 grayscale"}`}>
+                    {!x.earned && <Lock size={10} className="absolute right-1.5 top-1.5 text-slate-400" />}
+                    <div className="text-2xl">{x.icon}</div><div className="mt-0.5 px-1 text-[9px] font-bold leading-tight">{x.name}</div>
+                  </div>
                 ))}
-              </ul>
-            </>
-          )}
-        </section>
-      )}
-
-      {todo.length > 0 && (
-        <section className="card p-4">
-          <div className="mb-2 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 font-semibold"><ClipboardList size={18} className="text-indigo-300" />Onboarding checklist</h2>
-            <span className="text-xs text-slate-400">{checkDone}/{todo.length} done</span>
-          </div>
-          <div className="bar mb-3"><i style={{ width: `${(checkDone / todo.length) * 100}%` }} /></div>
-          <ul className="space-y-1.5 text-sm text-slate-300">{todo.map((c) => (
-            <li key={c.id}>
-              <form action={toggleChecklist.bind(null, c.id)}>
-                <button aria-pressed={c.done} className={`flex items-center gap-2 text-left transition hover:text-white ${c.done ? "text-slate-500 line-through" : ""}`}>
-                  {c.done ? <CheckSquare size={16} className="text-emerald-400" /> : <Square size={16} className="text-slate-500" />}{c.label}
-                </button>
-              </form>
-            </li>
-          ))}</ul>
-        </section>
-      )}
-
-      <section>
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-bold"><Swords size={20} className="text-pink-300" />My races</h2>
-        {mine.length === 0 && <EmptyState Icon={Swords} title="No rival yet" tone="pink">Pick a subject and meet the rival who trains it every day. <Link href="/" className="underline">Browse subjects</Link>.</EmptyState>}
-        <div className="grid gap-4 sm:grid-cols-2">
-          {stats.slice(0, 6).map(raceCard)}
-        </div>
-        {stats.length > 6 && (
-          <details className="mt-4"><summary className="cursor-pointer text-sm font-semibold text-sky-300">Show the other {stats.length - 6} races</summary>
-            <div className="mt-3 grid gap-4 sm:grid-cols-2">{stats.slice(6).map((x, i) => raceCard(x, i + 6))}</div></details>
-        )}
-      </section>
-
-      <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-lg font-bold"><Trophy size={20} className="text-amber-300" />Contests</h2>
-          <Link href="/start" className="btn !py-1 text-sm"><Plus size={15} />Start a journey</Link>
-        </div>
-        {contests.length === 0 ? (
-          <p className="text-slate-400">Race a bot, a friend or a group on any topic. <Link href="/competitions" className="underline">See what is running</Link>.</p>
-        ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{contests.map((x) => <CompetitionCard key={x.c.id} card={x} />)}</div>
-        )}
-      </section>
-
-      {badges.length > 0 && (
-        <section>
-          <h2 className="mb-3 flex items-center gap-2 text-lg font-bold"><Medal size={20} className="text-yellow-300" />Badges <span className="text-xs font-normal text-slate-400">{badges.filter((x) => x.earned).length}/{badges.length} earned</span></h2>
-          <div className="flex flex-wrap gap-3">
-            {badges.map((x, i) => (
-              <div key={x.key} title={x.desc} style={{ "--i": i } as React.CSSProperties} className={`card rise relative w-28 p-3 text-center ${x.earned ? "pop border-yellow-400/40" : "opacity-40 grayscale"}`}>
-                {!x.earned && <Lock size={12} className="absolute right-2 top-2 text-slate-400" />}
-                <div className="text-3xl">{x.icon}</div><div className="text-xs font-semibold">{x.name}</div><div className="text-[10px] text-slate-400">{x.desc}</div>
               </div>
-            ))}
-          </div>
-        </section>
-      )}
+              <p className="mt-3 text-[11px] text-slate-400">Next: {badges.find((x) => !x.earned)?.desc ?? "you have them all"}</p>
+            </section>
+          )}
+        </aside>
+      </div>
     </div>
   );
 }
