@@ -6,6 +6,8 @@
  *   npm run seed:ai -- <slug> ...      only these tracks
  * With --cards a track that already exists keeps its own name, brand, kind, roles and policy (the card file only adds questions
  * and a study guide for levels that have none). A new card track is created from the card file's kind, brand, audience and tier.
+ * Questions for a customer-audience card track are saved as "review": customers see them only after an admin approves the track
+ * at /admin/review/<track>. Add --publish-customer to publish them at once.
  * Generation is deterministic (seeded by slug), so the same data always yields the same bank.
  */
 import { and, eq, inArray, sql } from "drizzle-orm";
@@ -17,6 +19,7 @@ import { loadSpecs, minPerLevelFor } from "./ai/specs";
 
 const cards = process.argv.includes("--cards");
 const reset = process.argv.includes("--reset");
+const publishCustomer = process.argv.includes("--publish-customer");
 const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 
 (async () => {
@@ -42,6 +45,8 @@ const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
       db.update(tracks).set({ name: spec.name, roles: spec.roles, description: spec.description }).where(eq(tracks.id, track.id)).run();
     }
     const trackId = track.id;
+    // what customers read goes live only after an admin has looked at it
+    const status = cards && !publishCustomer && track.audience === "customer" ? ("review" as const) : ("active" as const);
 
     const mine = and(eq(questions.trackId, trackId), eq(questions.source, "ai"));
     const existing = db.select({ n: sql<number>`count(*)` }).from(questions).where(mine).get()!.n;
@@ -60,7 +65,7 @@ const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
       const rows = qs.map((q, i) => {
         const { options, answer } = shuffled(q, rng);
         return { trackId, level: levelOf(i, qs.length), type: "mcq" as const, prompt: q.prompt, code: q.code ?? null, options, answer, hint: q.hint ?? null,
-          topic: q.topic, weight: 10, timeSec: q.timeSec, source: "ai" as const };
+          topic: q.topic, weight: 10, timeSec: q.timeSec, source: "ai" as const, status };
       });
       for (let i = 0; i < rows.length; i += 400) tx.insert(questions).values(rows.slice(i, i + 400)).onConflictDoNothing().run();
 
@@ -76,6 +81,6 @@ const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
         else row.onConflictDoUpdate({ target: [lessons.trackId, lessons.level], set: { title: LEVELS[level - 1], syllabus } }).run();
       }
     });
-    console.log(`${slug}: ${qs.length} questions (${Math.min(...per)}-${Math.max(...per)} per level)`);
+    console.log(`${slug}: ${qs.length} questions (${Math.min(...per)}-${Math.max(...per)} per level)${status === "review" ? ", held for review" : ""}`);
   }
 })();
