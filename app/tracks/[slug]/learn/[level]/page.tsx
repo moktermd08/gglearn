@@ -3,10 +3,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { db, enrollments, lessons, questions, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
-import { LEVELS, MAX_LEVEL } from "@/lib/levels";
+import { LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN, TIERS, tierOf } from "@/lib/levels";
+import { LEVEL_INFO } from "@/lib/levelInfo";
+import { levelsPassed } from "@/lib/progress";
 import { markStudied, startRun } from "@/app/actions";
-import { Donut, StatTile, PALETTE } from "@/components/charts";
-import { ArrowRight, BookOpenCheck, GraduationCap, BookOpen, Clock, Layers, ListChecks, Target } from "lucide-react";
+import { Donut, LevelScale, PALETTE } from "@/components/charts";
+import { ArrowLeft, ArrowRight, BookOpen, BookOpenCheck, Clock, GraduationCap, Layers, ListChecks, Quote, Sparkles, Target } from "lucide-react";
 import { Flashcards } from "@/components/Flashcards";
 import { RankEmblem } from "@/components/RankEmblem";
 import { SubjectArt, TopicChip, artFor } from "@/components/SubjectArt";
@@ -26,69 +28,116 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
     .orderBy(sql`random()`).limit(6).all();
   const mix = db.select({ topic: questions.topic, n: sql<number>`count(*)` }).from(questions)
     .where(and(eq(questions.trackId, track.id), eq(questions.level, level), eq(questions.status, "active"))).groupBy(questions.topic).orderBy(sql`count(*) desc`).limit(6).all().filter((m) => m.topic);
-  const accent = artFor(track.slug, track.name, track.kind).color;
+  const pool = db.select({ n: sql<number>`count(*)` }).from(questions).where(and(eq(questions.trackId, track.id), eq(questions.level, level), eq(questions.status, "active"))).get()?.n ?? 0;
+  const art = artFor(track.slug, track.name, track.kind), accent = art.color;
+  const tier = TIERS[tierOf(level)], info = LEVEL_INFO[level - 1], passed = levelsPassed(user.id, track.id);
+  const state = level <= passed ? "done" : level === passed + 1 ? "current" : "preview";
   const SLICE = [PALETTE.indigo, PALETTE.sky, PALETTE.emerald, PALETTE.amber, PALETTE.pink, PALETTE.violet];
-  const topics = [...new Set(qs.map((q) => q.topic).filter(Boolean))];
+  const topics = [...new Set(qs.map((q) => q.topic).filter(Boolean))] as string[];
   const mins = qs.reduce((n, q) => n + q.timeSec, 0) / 60 + (lesson?.syllabus.length ?? 0);
-  const cards = qs.map((q) => ({ q: q.prompt, code: q.code, a: q.options?.find((o) => o.key === q.answer)?.text ?? q.answer ?? "" }));
+  const cards = qs.map((q) => ({ q: q.prompt, code: q.code, a: q.options?.find((o) => o.key === q.answer)?.text ?? q.answer ?? "", topic: q.topic }));
+  const steps = [
+    { Icon: BookOpen, t: "Read the guide", href: "#guide" },
+    { Icon: Layers, t: "Flip the cards", href: "#cards" },
+    { Icon: GraduationCap, t: `Pass level ${level}`, href: "#exam" },
+  ];
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <Link href={`/tracks/${slug}`} className="text-sm text-slate-400 underline">← {track.name}</Link>
-      <div className="card pop relative flex flex-wrap items-center gap-4 overflow-hidden p-6" style={{ background: `linear-gradient(120deg, ${accent}26, #ffffff 60%)` }}>
+    <div className="mx-auto max-w-3xl space-y-8">
+      <Link href={`/tracks/${slug}`} className="inline-flex items-center gap-1 text-sm text-slate-400 transition hover:text-white"><ArrowLeft size={14} />{track.name}</Link>
+
+      <header className="card pop relative overflow-hidden p-6" style={{ background: `linear-gradient(125deg, hsl(${tier.hue} 85% 55% / .2), ${accent}14 45%, #ffffff 80%)` }}>
         <svg className="pointer-events-none absolute -right-10 -top-14 h-64 w-64" viewBox="0 0 200 200" aria-hidden><circle cx="120" cy="80" r="90" fill="none" stroke={accent} strokeOpacity=".18" /><circle cx="120" cy="80" r="58" fill="none" stroke={accent} strokeOpacity=".25" strokeDasharray="4 6" className="march" /></svg>
-        <SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={64} />
-        <RankEmblem level={level} state="current" size={64} />
-        <div>
-          <div className="text-xs uppercase tracking-widest text-indigo-300">Study guide · level {level}</div>
-          <h1 className="text-3xl font-extrabold">{lesson?.title ?? LEVELS[level - 1]}</h1>
+        <div className="relative flex flex-wrap items-center gap-5">
+          <div className="bob"><RankEmblem level={level} state={state === "preview" ? "preview" : state} size={96} /></div>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold uppercase tracking-widest" style={{ color: `hsl(${tier.hue} 70% 42%)` }}>
+              <span>{tier.name} rank</span><span className="text-slate-500">·</span><span>Level {level} of {MAX_LEVEL}</span>
+              <span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] normal-case tracking-normal text-slate-300">Study guide</span>
+            </div>
+            <h1 className="mt-1 text-3xl font-extrabold">{lesson?.title ?? LEVELS[level - 1]}</h1>
+            <div className="mt-1 flex items-center gap-2 text-sm text-slate-400"><SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={22} />{track.name}</div>
+          </div>
         </div>
-      </div>
+        <p className="relative mt-4 flex items-start gap-2 text-lg font-semibold leading-snug"><Quote size={18} className="mt-1 shrink-0" style={{ color: accent }} />{info.meaning}</p>
+        <div className="relative mt-4"><LevelScale lo={level - 1} hi={level} you={level} /></div>
+      </header>
 
-      <ol className="grid grid-cols-3 gap-2 text-center text-xs font-semibold" aria-label="Study path">
-        {[{ Icon: BookOpen, t: "Read the guide" }, { Icon: Layers, t: "Flip the cards" }, { Icon: GraduationCap, t: `Pass level ${level}` }].map(({ Icon, t }, i) => (
-          <li key={t} className="rise relative flex flex-col items-center gap-1.5" style={{ "--i": i } as React.CSSProperties}>
-            {i < 2 && <span className="absolute left-[calc(50%+22px)] right-[calc(-50%+22px)] top-5 border-t-2 border-dashed border-black/15" aria-hidden />}
-            <span className="relative grid h-10 w-10 place-items-center rounded-full text-[#fff] shadow" style={{ background: accent }}><Icon size={18} /></span>
-            <span className="text-slate-300">{i + 1}. {t}</span>
-          </li>
+      <nav aria-label="Study path" className="sticky top-14 z-30 -mx-1 rounded-2xl border border-black/10 bg-[#f7f5ef]/90 p-1.5 shadow-sm backdrop-blur">
+        <ol className="grid grid-cols-3 gap-1 text-center text-xs font-semibold">
+          {steps.map(({ Icon, t, href }, i) => (
+            <li key={t}><a href={href} className="flex items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-slate-300 transition hover:bg-black/5">
+              <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-[11px] font-extrabold text-[#fff]" style={{ background: accent }}>{i + 1}</span><span className="hidden sm:inline"><Icon size={14} className="mr-1 inline" /></span>{t}
+            </a></li>
+          ))}
+        </ol>
+      </nav>
+
+      <section className="grid grid-cols-3 gap-3" aria-label="At a glance">
+        {[
+          { Icon: Layers, v: cards.length, l: "Flashcards", col: PALETTE.sky },
+          { Icon: Clock, v: `~${Math.max(5, Math.round(mins))} min`, l: "To study", col: PALETTE.amber },
+          { Icon: Target, v: `${PASS_MARK * 100}%`, l: "To pass the exam", col: PALETTE.pink },
+        ].map(({ Icon, v, l, col }, i) => (
+          <div key={l} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
+            <span className="mx-auto grid h-10 w-10 place-items-center rounded-xl" style={{ background: `${col}1a`, color: col }}><Icon size={20} /></span>
+            <div className="mt-2 text-xl font-extrabold">{v}</div><div className="text-[11px] uppercase tracking-wider text-slate-400">{l}</div>
+          </div>
         ))}
-      </ol>
+      </section>
 
-      <div className="grid grid-cols-3 gap-3">
-        <StatTile i={0} Icon={Layers} label="Flashcards" value={cards.length} color={PALETTE.sky} />
-        <StatTile i={1} Icon={Target} label="Topics" value={topics.length} color={PALETTE.pink} />
-        <StatTile i={2} Icon={Clock} label="Minutes" value={Math.max(5, Math.round(mins))} color={PALETTE.amber} />
-      </div>
-
-      {lesson && (
-        <section className="card p-5">
-          <h2 className="mb-3 flex items-center gap-2 font-bold"><BookOpenCheck size={18} className="text-emerald-400" />What you will master</h2>
-          <ul className="space-y-2">
-            {lesson.syllabus.map((t, i) => <li key={t} className="rise flex items-start gap-3" style={{ "--i": i } as React.CSSProperties}><span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-500/15 text-xs font-extrabold text-emerald-300">{i + 1}</span><span className="pt-0.5">{t}</span></li>)}
-          </ul>
-        </section>
-      )}
+      <section id="guide" className="scroll-mt-28 space-y-3">
+        <h2 className="flex items-center gap-2 text-lg font-bold"><BookOpenCheck size={20} className="text-emerald-400" />What you will master</h2>
+        <p className="rounded-2xl border-l-4 bg-black/[.03] px-4 py-3 text-sm text-slate-300" style={{ borderColor: accent }}><b>What to expect:</b> {info.expect}</p>
+        {lesson ? (
+          <ol className="grid gap-3 sm:grid-cols-2">
+            {lesson.syllabus.map((t, i) => (
+              <li key={t} className="card rise flex items-start gap-3 p-4" style={{ "--i": i, borderLeft: `4px solid hsl(${tier.hue} 75% 55%)` } as React.CSSProperties}>
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl text-sm font-extrabold text-[#fff]" style={{ background: `linear-gradient(135deg, hsl(${tier.hue} 80% 58%), hsl(${tier.hue} 75% 40%))` }}>{i + 1}</span>
+                <span className="pt-0.5 text-sm font-medium">{t}</span>
+              </li>
+            ))}
+          </ol>
+        ) : <p className="card p-4 text-sm text-slate-400">The outline for this level is still being written. The flashcards below come from the real exam pool.</p>}
+      </section>
 
       {topics.length > 0 && (
-        <section>
-          <h2 className="mb-2 flex items-center gap-2 font-bold"><Target size={18} className="text-pink-300" />Topics in the exam</h2>
-          {mix.length > 1 && <div className="card mb-3 p-4"><Donut size={120} sub="questions" parts={mix.map((m, i) => ({ label: m.topic as string, value: m.n, color: SLICE[i % SLICE.length] }))} /></div>}
-          <div className="flex flex-wrap gap-2">{topics.map((t) => <TopicChip key={t} topic={t} color={artFor(track.slug, track.name, track.kind).color} />)}</div>
+        <section className="space-y-3">
+          <h2 className="flex items-center gap-2 text-lg font-bold"><Target size={20} className="text-pink-300" />Topics in the exam</h2>
+          <div className={`card grid items-center gap-5 p-5 ${mix.length > 1 ? "sm:grid-cols-[auto_1fr]" : ""}`}>
+            {mix.length > 1 && <Donut size={130} sub="questions" center={pool} parts={mix.map((m, i) => ({ label: m.topic as string, value: m.n, color: SLICE[i % SLICE.length] }))} />}
+            <div>
+              <p className="mb-2 text-xs text-slate-400">Each attempt draws {Math.min(QUESTIONS_PER_RUN, pool) || QUESTIONS_PER_RUN} fresh questions from this pool.</p>
+              <div className="flex flex-wrap gap-2">{topics.map((t) => <TopicChip key={t} topic={t} color={accent} />)}</div>
+            </div>
+          </div>
         </section>
       )}
 
       {cards.length > 0 && (
-        <section><h2 className="mb-2 flex items-center gap-2 font-bold"><Layers size={18} className="text-sky-300" />Flashcards</h2><Flashcards cards={cards} /></section>
+        <section id="cards" className="scroll-mt-28 space-y-3">
+          <h2 className="flex items-center gap-2 text-lg font-bold"><Layers size={20} className="text-sky-300" />Flashcards</h2>
+          <Flashcards cards={cards} accent={accent} />
+        </section>
       )}
 
-      <div className="flex flex-wrap gap-3">
-        <form action={markStudied.bind(null, track.id)}><button className="btn btn-ghost"><ListChecks size={16} />I have studied this (+20 XP)</button></form>
-        <form action={startRun}>
-          <input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} />
-          <button className="btn">Take the level {level} exam<ArrowRight size={16} /></button>
-        </form>
-      </div>
+      <section id="exam" className="card scroll-mt-28 relative overflow-hidden p-6 text-center" style={{ background: `linear-gradient(135deg, hsl(${tier.hue} 85% 55% / .18), #fff 65%)` }}>
+        <h2 className="text-xl font-extrabold">Ready for level {level}?</h2>
+        <p className="mx-auto mt-1 max-w-md text-sm text-slate-400">{QUESTIONS_PER_RUN} questions, {PASS_MARK * 100}% to pass. Passing earns bonus XP{level < MAX_LEVEL ? <> and opens <b>{LEVELS[level]}</b></> : " and the Titan crown"}.</p>
+        <div className="mt-4 flex flex-wrap justify-center gap-3">
+          <form action={markStudied.bind(null, track.id)}><button className="btn btn-ghost"><ListChecks size={16} />I have studied this (+20 XP)</button></form>
+          <form action={startRun}>
+            <input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} />
+            <button className="btn !px-6 !py-3 text-base">Take the level {level} exam<ArrowRight size={16} /></button>
+          </form>
+        </div>
+        {level < MAX_LEVEL && (
+          <div className="mt-5 flex items-center justify-center gap-3 border-t border-black/5 pt-4 text-left">
+            <RankEmblem level={level + 1} state="preview" size={40} />
+            <div className="text-sm"><div className="flex items-center gap-1 font-bold"><Sparkles size={13} style={{ color: accent }} />Up next: {LEVELS[level]}</div><div className="text-xs text-slate-400">{LEVEL_INFO[level].meaning}</div></div>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

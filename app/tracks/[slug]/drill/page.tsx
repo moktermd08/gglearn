@@ -5,6 +5,9 @@ import { db, enrollments, questions, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { DRILL_SIZE, drillLevelFilter } from "@/lib/drill";
 import { Drill } from "@/components/Drill";
+import { SubjectArt, artFor } from "@/components/SubjectArt";
+import { MAX_LEVEL } from "@/lib/levels";
+import { levelsPassed } from "@/lib/progress";
 
 export default async function DrillPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -18,6 +21,8 @@ export default async function DrillPage({ params }: { params: Promise<{ slug: st
     .orderBy(sql`random()`).limit(DRILL_SIZE).all();
   if (!qs.length) return <p>No drill questions yet. <Link href={`/tracks/${slug}`} className="underline">Back</Link></p>;
 
-  return <Drill trackId={track.id} back={`/tracks/${slug}`}
+  const next = Math.min(MAX_LEVEL, levelsPassed(user.id, track.id) + 1);
+  return <Drill trackId={track.id} back={`/tracks/${slug}`} again={`/tracks/${slug}/drill`} studyHref={`/tracks/${slug}/learn/${next}`} trackName={track.name} accent={artFor(track.slug, track.name, track.kind).color}
+    art={<SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={48} />}
     questions={qs.map((q) => ({ id: q.id, prompt: q.prompt, code: q.code, type: "mcq" as const, options: q.options, topic: q.topic }))} />;
 }
