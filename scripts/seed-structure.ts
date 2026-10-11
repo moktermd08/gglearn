@@ -37,6 +37,7 @@ const TRACK_PROJECT: Record<string, string> = {
   "moksy-brand-voice": "moksy-ai-site",
   "moksy-meta-marketing": "moksy-ai-site",
   "moksy-support": "moksy-ai-site",
+  "moksy-reviewer-onboarding": "moksy-ai-site",
   "moksy-platform-services": "moksy-ai-site",
   "moksy-patterns-automation": "moksy-ai-site",
   "ggsocial-product": "ggsocial",
@@ -45,6 +46,9 @@ const TRACK_PROJECT: Record<string, string> = {
   "mhossain-content": "mhossain-uk",
 };
 
+// tracks that people outside the company also take (reviewers invited as customers) as well as staff
+const TRACK_AUDIENCE: Record<string, "both"> = { "moksy-reviewer-onboarding": "both" };
+
 // track slug -> pillar slug
 const TRACK_PILLAR: Record<string, string> = {
   "sdlc-discovery": "strategy", "sdlc-requirements": "strategy", "sdlc-architecture": "architecture",
@@ -52,7 +56,7 @@ const TRACK_PILLAR: Record<string, string> = {
   "sdlc-testing": "testing", "sdlc-devops": "deployment", "sdlc-launch": "deployment",
   "governance-compliance": "compliance", "security-operations": "security", "servers-infrastructure": "hardware",
   "ai-llm-practice": "pattern", "data-analytics": "database", "payments-billing": "finance",
-  "communications-email": "content", "moksy-brand-voice": "content", "moksy-meta-marketing": "marketing", "moksy-support": "support", "delivery-management": "strategy", "people-operations": "actors",
+  "communications-email": "content", "moksy-brand-voice": "content", "moksy-meta-marketing": "marketing", "moksy-support": "support", "moksy-reviewer-onboarding": "actors", "delivery-management": "strategy", "people-operations": "actors",
   "guru-brand-identity": "experience", "guru-design-system": "experience", "guru-design-tools": "experience",
   "gglink-web-delivery": "implementation", "gglink-hosting-maintenance": "maintenance", "gglink-server-operations": "maintenance", "gglink-seo-content": "content",
   "gglink-ai-automation": "integration", "gglink-sales-support": "sales", "guru-graphics-sales": "sales", "mhossain-content": "marketing",
@@ -137,7 +141,9 @@ for (const t of db.select().from(tracks).all()) {
   const tier = t.policySource === "admin" || t.audience === "customer" ? t.tier
     : MANDATORY.has(t.slug) ? "mandatory"
     : t.roles && brand && ROLE_REQUIRED_BRANDS.has(brand.slug) ? "role" : "growth";
-  db.update(tracks).set({ scope, projectId: proj?.id ?? null, pillarId: pillar?.id ?? t.pillarId, tier }).where(eq(tracks.id, t.id)).run();
+  // who may take it: staff by default; a few tracks are also open to people the company works with (never overrides an admin's choice)
+  const audience = t.policySource !== "admin" && TRACK_AUDIENCE[t.slug] ? TRACK_AUDIENCE[t.slug] : t.audience;
+  db.update(tracks).set({ scope, projectId: proj?.id ?? null, pillarId: pillar?.id ?? t.pillarId, tier, audience }).where(eq(tracks.id, t.id)).run();
   counts.tracks++;
 }
 
