@@ -128,7 +128,7 @@ export default async function Home() {
             {items.map(({ track, n }, i) => {
               const rv = rivalFor(track.slug);
               return (
-                <Link key={track.id} href={`/tracks/${track.slug}`} className="card card-hover rise flex items-center gap-3 p-4" style={{ "--i": Math.min(i, 8) } as React.CSSProperties}>
+                <Link key={track.id} href={`/tracks/${track.slug}`} className="card card-hover rise flex min-w-0 items-center gap-3 p-4" style={{ "--i": Math.min(i, 8) } as React.CSSProperties}>
                   <SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={56} />
                   <div className="min-w-0 flex-1">
                     <div className="text-xs uppercase tracking-wide text-slate-400">{KIND_LABEL[track.kind]}</div>

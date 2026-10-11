@@ -51,7 +51,7 @@ export function EmptyState({ Icon, title, children, tone = "indigo" }: { Icon: I
 export function StatTile({ Icon, label, value, color = PALETTE.sky, spark, i = 0 }: { Icon: Icon; label: string; value: ReactNode; color?: string; spark?: number[]; i?: number }) {
   return (
     <div className="card rise relative overflow-hidden p-4" style={{ "--i": i } as React.CSSProperties}>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col items-start gap-2 min-[420px]:flex-row min-[420px]:items-center min-[420px]:gap-3">
         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl" style={{ background: `${color}1a`, color }}><Icon size={20} /></div>
         <div className="min-w-0">
           <div className="text-2xl font-extrabold leading-none">{value}</div>
