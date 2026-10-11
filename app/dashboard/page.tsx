@@ -10,7 +10,10 @@ import { listFor } from "@/lib/competitions";
 import { CompetitionCard } from "@/components/CompetitionCard";
 import { SubjectArt } from "@/components/SubjectArt";
 import { Ring } from "@/components/Ring";
-import { CheckSquare, ClipboardList, Flame, Lock, Plus, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain } from "lucide-react";
+import { requirementsFor, scopesOf } from "@/lib/paths";
+import { careerFor } from "@/lib/careers";
+import { enroll } from "@/app/actions";
+import { AlertTriangle, ArrowUpRight, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, Plus, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain } from "lucide-react";
 
 export default async function Dashboard() {
   const user = await requireUser();
@@ -25,6 +28,10 @@ export default async function Dashboard() {
   const questsDone = stats.reduce((a, m) => a + m.s.doneToday.size, 0), questsTotal = stats.length * 3;
   const levelsPassed = stats.reduce((a, m) => a + m.s.passed, 0);
   const checkDone = todo.filter((c) => c.done).length;
+  const required = requirementsFor(user, scopesOf(user.id));
+  const requiredOpen = required.filter((r) => !r.done), overdue = requiredOpen.filter((r) => r.overdue);
+  const career = careerFor(user);
+  const enrolledIds = new Set(mine.map((m) => m.t.id));
   const badges = stats.length ? badgesFor(stats.sort((a, b) => b.s.xp - a.s.xp)[0].s) : [];
 
   return (
@@ -52,6 +59,63 @@ export default async function Dashboard() {
           </div>
         ))}
       </div>
+
+      {required.length > 0 && (
+        <section className={`card p-4 ${overdue.length ? "border-rose-400/40" : ""}`}>
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 font-semibold"><ShieldCheck size={18} className={overdue.length ? "text-rose-300" : "text-emerald-300"} />Required for you</h2>
+            <span className="text-xs text-slate-400">{required.length - requiredOpen.length}/{required.length} passed</span>
+          </div>
+          {overdue.length > 0 && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-rose-300"><AlertTriangle size={15} />{overdue.length} overdue. Please finish {overdue.length === 1 ? "it" : "these"} first.</p>}
+          <ul className="space-y-1.5 text-sm">
+            {required.map((r) => (
+              <li key={r.track.id}>
+                <Link href={`/tracks/${r.track.slug}`} className="flex flex-wrap items-center gap-2 transition hover:text-white">
+                  {r.done ? <CheckCircle2 size={16} className="text-emerald-400" /> : <Square size={16} className={r.overdue ? "text-rose-400" : "text-slate-500"} />}
+                  <span className={r.done ? "text-slate-500" : r.overdue ? "text-rose-300" : "text-slate-200"}>{r.track.name}</span>
+                  <span className="text-xs text-slate-500">
+                    {r.done ? "passed" : `level ${r.passed}/${r.track.requiredLevel} · due ${new Date(r.dueAt * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}${r.overdue ? " · overdue" : ""}`}
+                    {" · "}{r.why === "mandatory" ? "mandatory" : "for your role"}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {career && (
+        <section className="card p-4">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="flex items-center gap-2 font-semibold"><Climb size={18} className="text-violet-300" />Your career</h2>
+            <span className="text-xs text-slate-400">{career.current.title}{career.next && <> <ArrowUpRight size={12} className="inline" /> {career.next.title}</>}</span>
+          </div>
+          {!career.next ? (
+            <p className="text-sm text-slate-300">You are at the top of the {career.role} path: {career.current.title}. Keep sharpening, and help others climb.</p>
+          ) : (
+            <>
+              <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
+                <span>{career.total ? `${career.done}/${career.total} steps to ${career.next.title}` : `Steps to ${career.next.title} are still being written`}</span>
+                {career.ready && <span className="font-semibold text-emerald-300">Ready for promotion review</span>}
+              </div>
+              {career.total > 0 && <div className="bar mb-3"><i style={{ width: `${(career.done / career.total) * 100}%`, background: career.ready ? "#34d399" : undefined }} /></div>}
+              {career.hold === "overdue" && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-amber-300"><AlertTriangle size={15} />You have met every step, but required learning is overdue. Finish it to be considered.</p>}
+              <ul className="space-y-1.5 text-sm">
+                {career.next.steps.map((st) => (
+                  <li key={st.reqId} className="flex flex-wrap items-center gap-2">
+                    {st.met ? <CheckCircle2 size={16} className="text-emerald-400" /> : st.countable ? <Square size={16} className="text-slate-500" /> : <CircleDashed size={16} className="text-slate-600" />}
+                    <span className={st.met ? "text-slate-500" : st.countable ? "text-slate-200" : "text-slate-500"}>{st.track.name}</span>
+                    <span className="text-xs text-slate-500">{st.countable ? `level ${Math.min(st.passed, st.need)}/${st.need}` : "coming soon"}</span>
+                    {st.countable && !st.met && (enrolledIds.has(st.track.id)
+                      ? <Link href={`/tracks/${st.track.slug}`} className="text-xs text-sky-300 underline">Continue</Link>
+                      : <form action={enroll}><input type="hidden" name="trackId" value={st.track.id} /><input type="hidden" name="goal" value={`Towards ${career.next!.title}`} /><button className="text-xs text-sky-300 underline">Start</button></form>)}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </section>
+      )}
 
       {todo.length > 0 && (
         <section className="card p-4">

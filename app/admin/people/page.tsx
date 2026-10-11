@@ -1,7 +1,10 @@
+import Link from "next/link";
 import { checklistItems, db, handovers, tracks, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
-import { addHandover, offboard, toggleChecklist } from "@/app/actions";
-import { CheckSquare, ClipboardList, NotebookPen, Plus, Shield, Square, UserCheck, UserMinus, UserPlus, Users, UserCog, Mail } from "lucide-react";
+import { addHandover, offboard, toggleChecklist, updateScopes } from "@/app/actions";
+import { scopeLabels, scopeOptions, scopesOf } from "@/lib/paths";
+import { ScopePicker } from "@/components/ScopePicker";
+import { CheckSquare, ClipboardList, NotebookPen, Plus, Save, Shield, ShieldCheck, Square, UserCheck, UserMinus, UserPlus, Users, UserCog, Mail } from "lucide-react";
 import NewPerson from "./new-person";
 import InvitePerson from "./invite-person";
 
@@ -11,6 +14,7 @@ export default async function People() {
   const items = db.select().from(checklistItems).all();
   const notes = db.select().from(handovers).all();
   const allTracks = db.select().from(tracks).orderBy(tracks.name).all();
+  const options = scopeOptions();
   const active = all.filter((u) => u.status === "active").length;
   const openTasks = items.filter((i) => !i.done).length;
   const tiles = [
@@ -19,11 +23,14 @@ export default async function People() {
     { Icon: ClipboardList, label: "Open tasks", value: openTasks, cls: "text-amber-300" },
     { Icon: NotebookPen, label: "Handover notes", value: notes.length, cls: "text-sky-300" },
   ];
-  const input = "rounded border border-white/20 bg-black/30 px-2 py-1";
+  const input = "rounded border border-white/20 bg-[#fff] px-2 py-1";
 
   return (
     <div className="space-y-8">
-      <h1 className="flex items-center gap-2 text-2xl font-bold"><Users className="text-indigo-300" />People</h1>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold"><Users className="text-indigo-300" />People</h1>
+        <Link href="/admin/compliance" className="btn btn-ghost !py-1 text-sm"><ShieldCheck size={15} />Who is up to date</Link>
+      </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map(({ Icon, label, value, cls }, i) => (
           <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
@@ -35,11 +42,11 @@ export default async function People() {
       </div>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2 font-semibold"><Mail size={18} className="text-sky-300" />Invite someone</h2>
-        <InvitePerson />
+        <InvitePerson options={options} />
       </section>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2 font-semibold"><UserPlus size={18} className="text-emerald-300" />Or create their account yourself</h2>
-        <NewPerson />
+        <NewPerson options={options} />
       </section>
       <ul className="space-y-4">
         {all.map((u, ui) => {
@@ -47,16 +54,20 @@ export default async function People() {
           const myNotes = notes.filter((n) => n.userId === u.id);
           const done = mine.filter((c) => c.done).length;
           const off = u.status === "offboarded";
+          const myScopes = scopesOf(u.id);
+          const labels = scopeLabels(myScopes, options);
           return (
             <li key={u.id} className={`card rise p-4 ${off ? "opacity-70" : ""}`} style={{ "--i": Math.min(ui, 10) } as React.CSSProperties}>
               <div className="flex items-center gap-3">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-lg font-extrabold text-white" style={{ background: `hsl(${(u.id * 47) % 360} 55% 40%)` }} aria-hidden>{u.name.trim().charAt(0).toUpperCase()}</div>
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-lg font-extrabold text-[#fff]" style={{ background: `hsl(${(u.id * 47) % 360} 55% 40%)` }} aria-hidden>{u.name.trim().charAt(0).toUpperCase()}</div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2 font-medium">{u.name}
+                    {u.audience === "customer" && <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">customer</span>}
                     {u.role !== "learner" && <span className="inline-flex items-center gap-1 rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-violet-300">{u.role === "admin" ? <Shield size={10} /> : <UserCog size={10} />}{u.role}</span>}
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${off ? "bg-rose-500/20 text-rose-300" : "bg-emerald-500/20 text-emerald-300"}`}>{off ? <UserMinus size={10} /> : <UserCheck size={10} />}{u.status}</span>
                   </div>
                   <div className="truncate text-sm text-slate-400">{u.email} · {u.jobRole}</div>
+                  <div className="truncate text-xs text-slate-500">{labels.length ? labels.join(" · ") : "Not assigned to any company, brand or project yet"}</div>
                 </div>
                 {u.status === "active" && u.id !== me.id && (me.role === "admin" || u.role === "learner") && (
                   <form action={offboard}>
@@ -65,6 +76,16 @@ export default async function People() {
                   </form>
                 )}
               </div>
+              {!off && (
+                <details className="mt-3 text-sm">
+                  <summary className="cursor-pointer text-slate-400 hover:text-white">Change where {u.name.split(" ")[0]} belongs</summary>
+                  <form action={updateScopes} className="mt-2 space-y-2">
+                    <input type="hidden" name="userId" value={u.id} />
+                    <ScopePicker options={options} selected={myScopes} />
+                    <button className="btn btn-ghost !px-3 !py-1"><Save size={14} />Save and enrol in what is required</button>
+                  </form>
+                </details>
+              )}
               {mine.length > 0 && (
                 <div className="mt-3">
                   <div className="mb-1 flex items-center justify-between text-xs text-slate-400"><span className="flex items-center gap-1"><ClipboardList size={13} />Checklist</span><span>{done}/{mine.length}</span></div>

@@ -13,9 +13,19 @@ export const users = sqliteTable("users", {
   // what the person does at the company (drives their recommended path)
   jobRole: text("job_role").notNull().default("general"),
   status: text("status", { enum: ["active", "offboarded"] }).notNull().default("active"),
+  // staff work for a company; customers use its products and only see customer-facing tracks
+  audience: text("audience", { enum: ["staff", "customer"] }).notNull().default("staff"),
   // bumped to invalidate every session this person has (sign out everywhere, offboarding)
   sessionVersion: integer("session_version").notNull().default(0),
   createdAt: integer("created_at").notNull().default(now),
+});
+
+// A legal company. Owns brands. Learning scope: company -> brand -> project.
+export const companies = sqliteTable("companies", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  tagline: text("tagline").notNull().default(""),
 });
 
 export const brands = sqliteTable("brands", {
@@ -23,7 +33,46 @@ export const brands = sqliteTable("brands", {
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
   tagline: text("tagline").notNull().default(""),
+  // null = not owned by one company (shared academy content, or a personal brand)
+  companyId: integer("company_id"), // -> companies.id; no inline FK, see the note above `tracks.scope`
+  // company: belongs to its company. shared: academy content (Tech Foundations, Titan Academy, Software Lifecycle) that applies
+  // to every staff member. personal: one person's brand outside any company. (Not a boolean: drizzle-kit drops falsy defaults.)
+  kind: text("kind", { enum: ["company", "shared", "personal"] }).notNull().default("company"),
 });
+
+// A website or product that belongs to a brand (or straight to a company). Some knowledge is specific to one project.
+// No brand and no company = a shared product that serves every company and brand (GGSocial, GGMoney, GGLearn).
+export const projects = sqliteTable("projects", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  kind: text("kind", { enum: ["website", "product", "internal"] }).notNull().default("website"),
+  url: text("url").notNull().default(""),
+  description: text("description").notNull().default(""),
+  brandId: integer("brand_id").references(() => brands.id),
+  companyId: integer("company_id").references(() => companies.id),
+});
+
+// The capability map every company needs. Pillars group topics; tracks are tagged with the pillar they teach.
+export const pillars = sqliteTable("pillars", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  sort: integer("sort").notNull(),
+  description: text("description").notNull().default(""),
+});
+
+export const topics = sqliteTable(
+  "topics",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    pillarId: integer("pillar_id").notNull().references(() => pillars.id),
+    slug: text("slug").notNull().unique(),
+    name: text("name").notNull(),
+    sort: integer("sort").notNull(),
+  },
+  (t) => [index("topics_pillar").on(t.pillarId)],
+);
 
 // A track is one question-bank domain: subject, product, service, tool, technology or process.
 export const tracks = sqliteTable("tracks", {
@@ -37,7 +86,35 @@ export const tracks = sqliteTable("tracks", {
   description: text("description").notNull().default(""),
   // which job roles this track is recommended for, comma separated; "" = everyone
   roles: text("roles").notNull().default(""),
+  // who the knowledge applies to: everyone in the company, one brand's people, or one project's team
+  scope: text("scope", { enum: ["company", "brand", "project"] }).notNull().default("brand"),
+  // -> projects.id and pillars.id. Columns added to an existing SQLite table by drizzle-kit get no inline FK, and
+  // declaring one here would make every later `drizzle-kit push` try to rebuild the whole table. Checked in code.
+  projectId: integer("project_id"),
+  pillarId: integer("pillar_id"),
+  // mandatory: everyone in scope must pass. role: required for the matching job roles. growth: optional, feeds promotion.
+  tier: text("tier", { enum: ["mandatory", "role", "growth"] }).notNull().default("growth"),
+  // who may take it. Customers only ever see "customer" and "both"; the default keeps staff material internal.
+  audience: text("audience", { enum: ["staff", "customer", "both"] }).notNull().default("staff"),
+  // a required track counts as done once this level is passed; the deadline runs from the day it was assigned
+  requiredLevel: integer("required_level").notNull().default(5),
+  dueDays: integer("due_days").notNull().default(30),
+  // "admin" once an admin edits the policy, so re-seeding never overwrites it
+  policySource: text("policy_source", { enum: ["seed", "admin"] }).notNull().default("seed"),
 });
+
+// Where a person belongs: which companies, brands and projects they work on (staff) or bought (customers).
+// A company implies its brands for staff. Projects are always explicit.
+export const userScopes = sqliteTable(
+  "user_scopes",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    kind: text("kind", { enum: ["company", "brand", "project"] }).notNull(),
+    refId: integer("ref_id").notNull(),
+  },
+  (t) => [uniqueIndex("user_scope_unique").on(t.userId, t.kind, t.refId)],
+);
 
 // Source of truth. Authored questions point back to one of these.
 export const knowledgeItems = sqliteTable("knowledge_items", {
@@ -176,6 +253,8 @@ export const invites = sqliteTable("invites", {
   tokenHash: text("token_hash").notNull().unique(),
   email: text("email").notNull(), // the invite only works for this address
   jobRole: text("job_role").notNull(),
+  audience: text("audience", { enum: ["staff", "customer"] }).notNull().default("staff"),
+  scopes: text("scopes").notNull().default(""), // "company:1,brand:2,project:3"
   createdBy: integer("created_by").notNull().references(() => users.id),
   createdAt: integer("created_at").notNull().default(now),
   expiresAt: integer("expires_at").notNull(),
@@ -285,4 +364,44 @@ export const competitionCerts = sqliteTable(
     issuedAt: integer("issued_at").notNull().default(now),
   },
   (t) => [uniqueIndex("ccert_unique").on(t.competitionId, t.userId)],
+);
+
+// A promotion ladder per job role. Level 1 is where people start; each higher level lists what must be passed to reach it.
+export const careerLevels = sqliteTable(
+  "career_levels",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    jobRole: text("job_role").notNull(), // matches users.job_role, lower case
+    level: integer("level").notNull(),
+    title: text("title").notNull(),
+    summary: text("summary").notNull().default(""),
+  },
+  (t) => [uniqueIndex("career_level_unique").on(t.jobRole, t.level)],
+);
+
+export const careerRequirements = sqliteTable(
+  "career_requirements",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    careerLevelId: integer("career_level_id").notNull().references(() => careerLevels.id),
+    trackId: integer("track_id").notNull().references(() => tracks.id),
+    requiredLevel: integer("required_level").notNull(), // pass this level of the track
+  },
+  (t) => [uniqueIndex("career_req_unique").on(t.careerLevelId, t.trackId)],
+);
+
+// A manager's decision. A person's level in their role is the latest promotion for it (or 1 if none).
+export const promotions = sqliteTable(
+  "promotions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    jobRole: text("job_role").notNull(),
+    level: integer("level").notNull(),
+    decidedBy: integer("decided_by").notNull().references(() => users.id),
+    note: text("note").notNull().default(""),
+    overridden: integer("overridden").notNull().default(0), // 1 = promoted without meeting every requirement
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [index("promotions_user").on(t.userId)],
 );

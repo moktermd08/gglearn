@@ -119,7 +119,12 @@ Technologies, Skills, Cost, Time, Tools, Prompts, Research, Tips, Risk score, In
 4. Fill technology gaps from section 5.
 5. Write knowledge items first, then generate questions from them (the `knowledge_items` to `questions` link already exists).
 
-## Open decisions
+## Structure (decided)
 
-- Should GGLink be the parent brand of GGSocial, GGMoney and GGLearn, or should each product be its own brand? The schema has no parent brand, so the first option means tagging in the track names.
-- Is "M Hossain" an internal staff brand or public content? That decides whether its tracks are visible to every learner.
+Learning scope runs **company -> brand -> project** (`npm run seed:structure`, `scripts/seed-structure.ts`).
+
+- Guru Graphics Limited owns GGLink and Guru Graphics. Moksy Limited owns Moksy AI.
+- M Hossain is a personal brand with no company. Shared academy brands (Tech Foundations, Titan Academy, Software Lifecycle) also have none.
+- Projects: gglink.co.uk, gurugraphics.co.uk, moksy.ai, mhossain.uk, plus GGSocial, GGMoney and GGLearn. Those three have no brand or company: they serve every company and brand.
+- `pillars` and `topics` hold the 28-pillar capability map (`content/structure/pillars.json`). Documentation, Supply Chain Security and MLOps were merged into their parent pillars.
+- Tracks carry `scope`, `projectId`, `pillarId` and `tier` (mandatory, role, growth). Tiers, deadlines and per-person paths come in step 2.

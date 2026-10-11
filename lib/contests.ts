@@ -2,6 +2,7 @@ import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { competitionEmailInvites, competitionMembers, competitions, db, enrollments, tracks, users } from "@/lib/db";
+import { openTo } from "@/lib/paths";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import { type BotTier, makeBots } from "@/lib/bots";
 import { baselineLevel, now } from "@/lib/competitions";
@@ -12,6 +13,10 @@ export const MAX_BOTS = 5, MAX_INVITES = 30, MAX_ACTIVE_PER_USER = 10, MAX_PRIZE
 type Tx = Pick<typeof db, "insert" | "select" | "update" | "delete">;
 
 export function enrol(tx: Tx, userId: number, trackId: number, goal: string) {
+  // customers never get staff-only tracks, whichever door they come in by
+  const who = tx.select({ a: users.audience }).from(users).where(eq(users.id, userId)).get();
+  const track = tx.select({ a: tracks.audience }).from(tracks).where(eq(tracks.id, trackId)).get();
+  if (!who || !track || !openTo(who.a, track.a)) return;
   tx.insert(enrollments).values({ userId, trackId, goal: goal.slice(0, 300) }).onConflictDoNothing().run();
 }
 
@@ -86,7 +91,9 @@ export function createContest(me: { id: number }, v: NewContest): { slug: string
   const isPublic = v.visibility === "public";
   if (isPublic && !v.consent) return { error: "Confirm that participants' names, photos and progress will be visible to anyone." };
   if (v.prizeAmount > 0 && v.prizeNote.trim() === "") return { error: "Say who pays the prize and how (for example: \"Paid by the L&D budget in the week after the contest\")." };
-  if (!db.select().from(tracks).where(eq(tracks.id, v.trackId)).get()) return { error: "Pick a topic from the list." };
+  const topic = db.select().from(tracks).where(eq(tracks.id, v.trackId)).get();
+  const who = db.select({ a: users.audience }).from(users).where(eq(users.id, me.id)).get();
+  if (!topic || !who || !openTo(who.a, topic.audience)) return { error: "Pick a topic from the list." };
   const active = db.select({ n: sql<number>`count(*)` }).from(competitions)
     .where(and(eq(competitions.createdBy, me.id), isNull(competitions.canceledAt), sql`${competitions.endsAt} > ${now()}`)).get()?.n ?? 0;
   if (active >= MAX_ACTIVE_PER_USER) return { error: `You already run ${MAX_ACTIVE_PER_USER} contests. Wait for one to finish or cancel one.` };

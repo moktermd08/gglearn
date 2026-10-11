@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { brands, db, enrollments, questions, tracks } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
+import { openTo } from "@/lib/paths";
 import { CERT_LEVELS, KIND_LABEL, LEVELS, PASS_MARK, QUESTIONS_PER_RUN, TIERS, certTitle, tierOf } from "@/lib/levels";
 import { QUEST_LABEL, QUEST_XP, badgesFor, trackStats } from "@/lib/stats";
 import { rivalFor } from "@/lib/rivals";
@@ -30,6 +31,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
       .map((r) => [r.level, r.n]),
   );
   const user = await currentUser();
+  if (user && !openTo(user.audience, track.audience)) notFound(); // customers never see staff-only tracks
   const enrolment = user
     ? db.select().from(enrollments).where(and(eq(enrollments.userId, user.id), eq(enrollments.trackId, track.id))).get()
     : undefined;
@@ -80,7 +82,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           <input type="hidden" name="trackId" value={track.id} />
           <label className="flex items-center gap-2 font-semibold" htmlFor="goal"><Target size={18} className="text-pink-300" />Set your goal. {rival.name} already has one.</label>
           <input id="goal" name="goal" maxLength={300} placeholder="e.g. Reach Titan in Git by the end of the quarter"
-            className="rounded-lg border border-white/15 bg-black/30 px-3 py-2" />
+            className="rounded-lg border border-white/15 bg-[#fff] px-3 py-2" />
           <button className="btn self-start">Accept the challenge<Swords size={16} /></button>
         </form>
       ) : (

@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
-import { answers, certificates, checklistItems, db, enrollments, handovers, invites, questions, runs, tracks, users } from "@/lib/db";
+import { answers, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, promotions, questions, runs, tracks, users } from "@/lib/db";
+import { careerFor, roleKey } from "@/lib/careers";
 import { endSession, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
 import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@/lib/password";
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
@@ -18,6 +19,7 @@ import { drillCompleted, drillQuestion, noteDrillAnswer } from "@/lib/drill";
 import { DYNAMIC_PER_RUN, drawDynamic } from "@/lib/dynamic/store";
 import { claimPendingInvites } from "@/lib/contests";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
+import { type Audience, formatScopes, openTo, parseScopes, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
   "Read the brand story and values",
@@ -25,6 +27,11 @@ const ONBOARDING = [
   "Get access to the tools for your role",
   "Pass level 3 in your first recommended track",
   "Shadow a teammate on a real task",
+];
+const CUSTOMER_ONBOARDING = [
+  "Read the welcome guide for your product",
+  "Complete your getting-started path",
+  "Tell us what you want to achieve in your first 30 days",
 ];
 const OFFBOARDING = [
   "Write handover notes for each area you own",
@@ -37,14 +44,26 @@ const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() 
 
 type Tx = Pick<typeof db, "insert" | "select" | "update" | "delete">;
 
-/** New-joiner setup: onboarding checklist plus auto-enrolment in the tracks recommended for their job role. */
-function provision(tx: Tx, userId: number, email: string, jobRole: string) {
+/** Scope checkboxes in a form are all named "scope" with values like "company:1". */
+const formScopes = (fd: FormData) => parseScopes(fd.getAll("scope").filter((v): v is string => typeof v === "string").join(","));
+
+/**
+ * New-joiner setup: where they belong (companies, brands, projects), an onboarding checklist, and enrolment in everything
+ * they are required to pass. Staff with nothing required yet fall back to the tracks recommended for their job role.
+ */
+function provision(tx: Tx, userId: number, email: string, jobRole: string, audience: Audience, scopes: ReturnType<typeof parseScopes>) {
   claimPendingInvites(tx, userId, email); // contests this address was invited to before it had an account
-  tx.insert(checklistItems).values(ONBOARDING.map((label) => ({ userId, kind: "onboarding" as const, label }))).run();
-  const hidden = hiddenTrackIds();
-  const rec = tx.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${jobRole}%`))).all().filter((t) => !hidden.has(t.id)).slice(0, 6);
-  if (rec.length) {
-    tx.insert(enrollments).values(rec.map((t) => ({ userId, trackId: t.id, goal: `Onboarding path for ${jobRole}` }))).onConflictDoNothing().run();
+  setScopes(tx, userId, validScopes(tx, scopes));
+  const steps = audience === "customer" ? CUSTOMER_ONBOARDING : ONBOARDING;
+  tx.insert(checklistItems).values(steps.map((label) => ({ userId, kind: "onboarding" as const, label }))).run();
+  const required = syncRequired({ id: userId, jobRole, audience }, tx);
+  if (!required && audience === "staff") {
+    const hidden = hiddenTrackIds();
+    const rec = tx.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${jobRole}%`))).all()
+      .filter((t) => !hidden.has(t.id) && openTo(audience, t.audience)).slice(0, 6);
+    if (rec.length) {
+      tx.insert(enrollments).values(rec.map((t) => ({ userId, trackId: t.id, goal: `Onboarding path for ${jobRole}` }))).onConflictDoNothing().run();
+    }
   }
 }
 
@@ -70,8 +89,8 @@ export async function joinWithInvite(token: string, _: string | null, fd: FormDa
       const used = tx.update(invites).set({ usedAt: Math.floor(Date.now() / 1000) })
         .where(and(eq(invites.id, inv.id), sql`${invites.usedAt} is null`)).returning().get();
       if (!used) throw new Error("used");
-      const u = tx.insert(users).values({ name: p.data.name, email: inv.email, jobRole: inv.jobRole, passwordHash }).returning().get();
-      provision(tx, u.id, u.email, inv.jobRole);
+      const u = tx.insert(users).values({ name: p.data.name, email: inv.email, jobRole: inv.jobRole, audience: inv.audience, passwordHash }).returning().get();
+      provision(tx, u.id, u.email, inv.jobRole, inv.audience, parseScopes(inv.scopes));
       return u.id;
     });
   } catch {
@@ -100,6 +119,7 @@ export async function login(_: string | null, fd: FormData): Promise<string | nu
   if (needsRehash(u.passwordHash)) {
     db.update(users).set({ passwordHash: await hashPassword(pw) }).where(eq(users.id, u.id)).run(); // legacy or weaker params
   }
+  syncRequired(u); // picks up tracks that became required since their last visit
   await startSession(u.id);
   redirect("/dashboard");
 }
@@ -122,7 +142,7 @@ export async function enroll(fd: FormData) {
   const trackId = Number(fd.get("trackId"));
   const goal = str(fd.get("goal")).slice(0, 300);
   const track = db.select().from(tracks).where(eq(tracks.id, trackId)).get();
-  if (!track) return;
+  if (!track || !openTo(u.audience, track.audience)) return;
   db.insert(enrollments).values({ userId: u.id, trackId, goal })
     .onConflictDoUpdate({ target: [enrollments.userId, enrollments.trackId], set: { goal } }).run();
   revalidatePath("/dashboard");
@@ -243,12 +263,15 @@ export async function createPerson(_: string | null, fd: FormData): Promise<stri
     email: z.string().email().transform((s) => s.toLowerCase()),
     jobRole: z.string().min(1).max(40),
     password: z.string().min(8).max(200),
-  }).safeParse({ name: str(fd.get("name")), email: str(fd.get("email")), jobRole: str(fd.get("jobRole")).toLowerCase(), password: str(fd.get("password")) });
+    audience: z.enum(["staff", "customer"]),
+  }).safeParse({ name: str(fd.get("name")), email: str(fd.get("email")), jobRole: str(fd.get("jobRole")).toLowerCase(), password: str(fd.get("password")), audience: str(fd.get("audience")) || "staff" });
   if (!p.success) return "Name, valid email, role and a temporary password (8+ chars) are required.";
+  const scopes = validScopes(db, formScopes(fd));
+  if (!scopes.length) return "Pick at least one company, brand or project they belong to.";
   if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return "That email already exists.";
 
-  const u = db.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: p.data.jobRole, passwordHash: await hashPassword(p.data.password) }).returning().get();
-  provision(db, u.id, u.email, p.data.jobRole);
+  const u = db.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: p.data.jobRole, audience: p.data.audience, passwordHash: await hashPassword(p.data.password) }).returning().get();
+  provision(db, u.id, u.email, p.data.jobRole, p.data.audience, scopes);
   revalidatePath("/admin/people");
   return null;
 }
@@ -261,16 +284,117 @@ export async function createInvite(_: InviteState, fd: FormData): Promise<Invite
   const p = z.object({
     email: z.string().email().max(120).transform((s) => s.toLowerCase()),
     jobRole: z.string().min(1).max(40),
-  }).safeParse({ email: str(fd.get("email")), jobRole: str(fd.get("jobRole")).toLowerCase() });
+    audience: z.enum(["staff", "customer"]),
+  }).safeParse({ email: str(fd.get("email")), jobRole: str(fd.get("jobRole")).toLowerCase(), audience: str(fd.get("audience")) || "staff" });
   if (!p.success) return { error: "A valid email and a role are required." };
+  const scopes = validScopes(db, formScopes(fd));
+  if (!scopes.length) return { error: "Pick at least one company, brand or project they belong to." };
   if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return { error: "That email already has an account." };
 
   const token = newToken();
   db.insert(invites).values({
-    tokenHash: hashToken(token), email: p.data.email, jobRole: p.data.jobRole, createdBy: me.id,
+    tokenHash: hashToken(token), email: p.data.email, jobRole: p.data.jobRole, audience: p.data.audience, scopes: formatScopes(scopes), createdBy: me.id,
     expiresAt: Math.floor(Date.now() / 1000) + INVITE_TTL_SEC,
   }).run();
   return { path: `/join/${token}` };
+}
+
+/** Moves someone to a different set of companies, brands and projects, then enrols them in whatever that now requires. */
+export async function updateScopes(fd: FormData) {
+  await requireManager();
+  const u = db.select().from(users).where(eq(users.id, Number(fd.get("userId")))).get();
+  if (!u || u.status !== "active") return;
+  db.transaction((tx) => {
+    setScopes(tx, u.id, validScopes(tx, formScopes(fd)));
+    syncRequired(u, tx);
+  });
+  revalidatePath("/admin/people");
+  revalidatePath("/admin/compliance");
+}
+
+/** Admin only: decides what a track is for. Applies to everyone straight away. */
+export async function updateTrackPolicy(fd: FormData) {
+  const me = await requireManager();
+  if (me.role !== "admin") return;
+  const p = z.object({
+    trackId: z.coerce.number().int().positive(),
+    tier: z.enum(["mandatory", "role", "growth"]),
+    audience: z.enum(["staff", "customer", "both"]),
+    requiredLevel: z.coerce.number().int().min(1).max(MAX_LEVEL),
+    dueDays: z.coerce.number().int().min(1).max(365),
+  }).safeParse(Object.fromEntries(fd));
+  if (!p.success) return;
+  const { trackId, ...policy } = p.data;
+  db.update(tracks).set({ ...policy, policySource: "admin" }).where(eq(tracks.id, trackId)).run();
+  syncEveryone();
+  revalidatePath("/admin/paths");
+  revalidatePath("/admin/compliance");
+}
+
+// ---- careers: promotion ladders ----
+
+/**
+ * Records a promotion. A manager can promote someone who has met every step of the next level (and is not overdue on
+ * required learning). Only an admin can promote without that, and must say why. Nobody can promote themselves.
+ */
+export async function promote(fd: FormData) {
+  const me = await requireManager();
+  const userId = Number(fd.get("userId")), note = str(fd.get("note")).slice(0, 1000);
+  if (userId === me.id) return;
+  const person = db.select().from(users).where(eq(users.id, userId)).get();
+  if (!person || person.status !== "active") return;
+  const career = careerFor(person);
+  if (!career?.next) return;
+  const overridden = !career.ready;
+  if (overridden && (me.role !== "admin" || !note)) return;
+  db.insert(promotions).values({ userId, jobRole: career.role, level: career.next.level, decidedBy: me.id, note, overridden: overridden ? 1 : 0 }).run();
+  revalidatePath("/admin/careers");
+  revalidatePath("/dashboard");
+}
+
+const adminOnly = async () => {
+  const me = await requireManager();
+  return me.role === "admin";
+};
+
+export async function saveCareerLevel(fd: FormData) {
+  if (!(await adminOnly())) return;
+  const p = z.object({ id: z.coerce.number().int().positive(), title: z.string().trim().min(1).max(80), summary: z.string().trim().max(300) })
+    .safeParse({ id: fd.get("id"), title: fd.get("title"), summary: fd.get("summary") ?? "" });
+  if (!p.success) return;
+  db.update(careerLevels).set({ title: p.data.title, summary: p.data.summary }).where(eq(careerLevels.id, p.data.id)).run();
+  revalidatePath("/admin/careers");
+}
+
+/** Adds the next level to a role's ladder, or starts a new ladder when the role has none. */
+export async function addCareerLevel(fd: FormData) {
+  if (!(await adminOnly())) return;
+  const p = z.object({ role: z.string().trim().min(1).max(40), title: z.string().trim().min(1).max(80) })
+    .safeParse({ role: fd.get("role"), title: fd.get("title") });
+  if (!p.success) return;
+  const role = roleKey(p.data.role);
+  const top = db.select({ m: sql<number>`max(${careerLevels.level})` }).from(careerLevels).where(eq(careerLevels.jobRole, role)).get()?.m ?? 0;
+  if (top >= 10) return;
+  db.insert(careerLevels).values({ jobRole: role, level: top + 1, title: p.data.title }).run();
+  revalidatePath("/admin/careers");
+}
+
+export async function addCareerStep(fd: FormData) {
+  if (!(await adminOnly())) return;
+  const p = z.object({ levelId: z.coerce.number().int().positive(), trackId: z.coerce.number().int().positive(), requiredLevel: z.coerce.number().int().min(1).max(MAX_LEVEL) })
+    .safeParse(Object.fromEntries(fd));
+  if (!p.success) return;
+  const lvl = db.select().from(careerLevels).where(eq(careerLevels.id, p.data.levelId)).get();
+  if (!lvl || lvl.level === 1 || !db.select().from(tracks).where(eq(tracks.id, p.data.trackId)).get()) return; // level 1 is the starting point
+  db.insert(careerRequirements).values({ careerLevelId: p.data.levelId, trackId: p.data.trackId, requiredLevel: p.data.requiredLevel })
+    .onConflictDoUpdate({ target: [careerRequirements.careerLevelId, careerRequirements.trackId], set: { requiredLevel: p.data.requiredLevel } }).run();
+  revalidatePath("/admin/careers");
+}
+
+export async function removeCareerStep(id: number) {
+  if (!(await adminOnly())) return;
+  db.delete(careerRequirements).where(eq(careerRequirements.id, id)).run();
+  revalidatePath("/admin/careers");
 }
 
 export async function toggleChecklist(id: number) {
@@ -307,7 +431,25 @@ export async function retireQuestion(fd: FormData) {
   await requireManager();
   const id = Number(fd.get("id")), status = str(fd.get("status"));
   if (status !== "retired" && status !== "active" && status !== "review") return;
-  db.update(questions).set({ status }).where(eq(questions.id, id)).run();
+  const q = db.update(questions).set({ status }).where(eq(questions.id, id)).returning().get();
   revalidatePath("/admin");
+  if (q) {
+    const t = db.select({ slug: tracks.slug }).from(tracks).where(eq(tracks.id, q.trackId)).get();
+    if (t) revalidatePath(`/admin/review/${t.slug}`);
+    syncEveryone(); // a track may have just gained enough questions to become required
+  }
+}
+
+/** Admin only: publishes every question of a track that is waiting for review, then enrols whoever it now applies to. */
+export async function activateTrackQuestions(trackId: number) {
+  const me = await requireManager();
+  if (me.role !== "admin") return;
+  const t = db.select().from(tracks).where(eq(tracks.id, trackId)).get();
+  if (!t) return;
+  db.update(questions).set({ status: "active" }).where(and(eq(questions.trackId, trackId), eq(questions.status, "review"))).run();
+  syncEveryone();
+  revalidatePath(`/admin/review/${t.slug}`);
+  revalidatePath("/admin/paths");
+  revalidatePath("/admin/compliance");
 }
 

@@ -1,0 +1,1226 @@
+{
+ "trackSlug": "ggsocial-customer-start",
+ "status": "review",
+ "lessons": [
+  {
+   "level": 1,
+   "title": "Meet GGSocial",
+   "syllabus": [
+    "One desk to plan, approve, schedule and publish content for every brand",
+    "A brand is one company or project with its own channels, calendar and team",
+    "A channel is one account on one platform",
+    "The Composer writes copy once for many channels"
+   ]
+  },
+  {
+   "level": 2,
+   "title": "Posts, roles and channels",
+   "syllabus": [
+    "A post moves from draft to approval to scheduled",
+    "Roles belong to a brand: owner, admin, editor, approver, viewer",
+    "Live channels publish by themselves; manual-only channels end with a person posting",
+    "Platforms have their own rules, such as 280 characters on X"
+   ]
+  },
+  {
+   "level": 3,
+   "title": "Composer, queue and playbook",
+   "syllabus": [
+    "Override the base copy for any one channel",
+    "The Publish queue holds posts for manual channels, with copy and media ready",
+    "Playbook rules marked as must stop a post being scheduled",
+    "Scheduled times show in the brand's own timezone"
+   ]
+  },
+  {
+   "level": 4,
+   "title": "Working as a team",
+   "syllabus": [
+    "Approvers review and comment but cannot edit",
+    "Editors write, schedule and publish; admins manage channels and team",
+    "Manual and live channels share the same approval flow",
+    "Hiding a button is not security: the role is checked every time"
+   ]
+  },
+  {
+   "level": 5,
+   "title": "Agents and the Review inbox",
+   "syllabus": [
+    "Brands can switch on agents: strategist, writer, community manager, analyst",
+    "Everything waiting for a person lands in the Review inbox",
+    "Risky content such as prices, refunds, legal or health matters always stops for a person",
+    "Every AI call is logged with its cost"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "title": "What GGSocial is: brands, channels and the desk",
+   "body": "GGSocial is one desk for every brand you run. It lets a team plan, approve, schedule and publish social content for many companies without a separate login for each. The core unit is the brand: one company or project, with its own channels, media, calendar, team and timezone. A channel is one account on one platform, owned by one brand. Some channels are live: GGSocial publishes to them itself through the platform's API. Others are manual-only, because the platform has no write API for organic content. For those, GGSocial still composes, validates, schedules and queues the post and gives a person copy-ready blocks to post themselves. A manual-only channel gets the same validation, calendar slot and approval flow as a live one and simply ends with a person clicking publish. People sign in with an email and a password.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is GGSocial for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Planning, approving, scheduling and publishing social content for many brands from one place"
+      },
+      {
+       "key": "b",
+       "text": "Hosting websites"
+      },
+      {
+       "key": "c",
+       "text": "Sending marketing email only"
+      },
+      {
+       "key": "d",
+       "text": "Doing company accounts"
+      }
+     ],
+     "answer": "a",
+     "hint": "It is one desk for every brand you run.",
+     "topic": "Overview"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is a brand in GGSocial?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A social media platform"
+      },
+      {
+       "key": "b",
+       "text": "A single post"
+      },
+      {
+       "key": "c",
+       "text": "A logo file"
+      },
+      {
+       "key": "d",
+       "text": "One company or project, with its own channels, media, calendar, team and timezone"
+      }
+     ],
+     "answer": "d",
+     "hint": "The brand is the core unit.",
+     "topic": "Brands"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is a channel in GGSocial?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A calendar view"
+      },
+      {
+       "key": "b",
+       "text": "A folder of images"
+      },
+      {
+       "key": "c",
+       "text": "One account on one platform, owned by one brand"
+      },
+      {
+       "key": "d",
+       "text": "A team of people"
+      }
+     ],
+     "answer": "c",
+     "hint": "A channel belongs to exactly one brand.",
+     "topic": "Channels"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "How do people sign in to GGSocial?",
+     "options": [
+      {
+       "key": "a",
+       "text": "With a phone number only"
+      },
+      {
+       "key": "b",
+       "text": "With an email address and a password"
+      },
+      {
+       "key": "c",
+       "text": "With a hardware key only"
+      },
+      {
+       "key": "d",
+       "text": "They do not sign in"
+      }
+     ],
+     "answer": "b",
+     "hint": "Accounts use email and password.",
+     "topic": "Accounts"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Roughly how many platforms does GGSocial cover?",
+     "options": [
+      {
+       "key": "a",
+       "text": "More than a hundred, grouped into categories"
+      },
+      {
+       "key": "b",
+       "text": "About five"
+      },
+      {
+       "key": "c",
+       "text": "About twenty"
+      },
+      {
+       "key": "d",
+       "text": "Only one"
+      }
+     ],
+     "answer": "a",
+     "hint": "GGSocial covers over a hundred platforms; some publish live and some are manual-only.",
+     "topic": "Channels"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does the Playbook hold?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Your passwords"
+      },
+      {
+       "key": "b",
+       "text": "Posts that have failed"
+      },
+      {
+       "key": "c",
+       "text": "Master instructions and limits for each format and kind of engagement"
+      },
+      {
+       "key": "d",
+       "text": "The list of team members"
+      }
+     ],
+     "answer": "c",
+     "hint": "The Playbook also checks limits such as hashtag count and copy length.",
+     "topic": "Playbook"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is the difference between a live channel and a manual-only channel?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A live channel is published to by GGSocial itself; a manual-only channel ends with a person posting"
+      },
+      {
+       "key": "b",
+       "text": "There is no difference"
+      },
+      {
+       "key": "c",
+       "text": "Manual channels cannot be scheduled"
+      },
+      {
+       "key": "d",
+       "text": "Live channels are free, manual ones are paid"
+      }
+     ],
+     "answer": "a",
+     "hint": "Manual-only channels exist because some platforms offer no write API for organic posts.",
+     "topic": "Channels"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "For a manual-only channel, who does the final posting?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nobody, it is not posted"
+      },
+      {
+       "key": "b",
+       "text": "The platform"
+      },
+      {
+       "key": "c",
+       "text": "GGSocial, automatically"
+      },
+      {
+       "key": "d",
+       "text": "A person, using the copy-ready blocks GGSocial prepares"
+      }
+     ],
+     "answer": "d",
+     "hint": "The post is composed, checked and queued, then a person publishes.",
+     "topic": "Channels"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Are roles in GGSocial global or per brand?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Per post"
+      },
+      {
+       "key": "b",
+       "text": "Per platform"
+      },
+      {
+       "key": "c",
+       "text": "Per brand"
+      },
+      {
+       "key": "d",
+       "text": "Global for the whole account"
+      }
+     ],
+     "answer": "c",
+     "hint": "A person can hold a different role in each brand.",
+     "topic": "Roles"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Does a manual-only channel go through the same approval flow as a live channel?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No, it needs a manager's phone call"
+      },
+      {
+       "key": "b",
+       "text": "No, it skips approval"
+      },
+      {
+       "key": "c",
+       "text": "Yes, but only on weekdays"
+      },
+      {
+       "key": "d",
+       "text": "Yes, it ends with a person clicking publish"
+      }
+     ],
+     "answer": "d",
+     "hint": "Same validation, calendar slot and approval flow.",
+     "topic": "Channels"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which view in GGSocial shows every brand on a single month grid?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Review inbox"
+      },
+      {
+       "key": "b",
+       "text": "Analytics"
+      },
+      {
+       "key": "c",
+       "text": "The Playbook"
+      },
+      {
+       "key": "d",
+       "text": "The Calendar"
+      }
+     ],
+     "answer": "d",
+     "hint": "The Calendar is colour-coded by brand and posts can be dragged to move them.",
+     "topic": "Calendar"
+    }
+   ]
+  },
+  {
+   "title": "Writing and planning: composer, calendar, playbook",
+   "body": "The Composer lets you write base copy once and override it per channel, with live character counts and per-platform rules: Reddit needs a title and a subreddit, YouTube needs a title, Instagram needs media, and X caps at 280 characters and can thread on blank lines. The Calendar shows every brand on one month grid, colour-coded, and a post can be dragged to move it. A post's scheduled time is an absolute instant shown in the brand's timezone. The Playbook holds master instructions for each format and kind of engagement, with limits the app checks itself such as title words, hashtag count, copy length, aspect ratio and posting windows; scheduling and approval refuse a post that breaks a rule marked as a must. Analytics shows what went out, where, and whatever metrics the platform returns.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is the maximum length of a post on X in the Composer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "100 characters"
+      },
+      {
+       "key": "b",
+       "text": "280 characters"
+      },
+      {
+       "key": "c",
+       "text": "There is no limit"
+      },
+      {
+       "key": "d",
+       "text": "1,000 characters"
+      }
+     ],
+     "answer": "b",
+     "hint": "X caps at 280 characters, and the Composer shows a live count.",
+     "topic": "Composer"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Where do you write one piece of copy for several channels?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Calendar"
+      },
+      {
+       "key": "b",
+       "text": "The Composer"
+      },
+      {
+       "key": "c",
+       "text": "The Review inbox"
+      },
+      {
+       "key": "d",
+       "text": "Analytics"
+      }
+     ],
+     "answer": "b",
+     "hint": "Write base copy once and override it per channel.",
+     "topic": "Composer"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does an Instagram post need?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Media (an image or video)"
+      },
+      {
+       "key": "b",
+       "text": "A thread"
+      },
+      {
+       "key": "c",
+       "text": "A title only"
+      },
+      {
+       "key": "d",
+       "text": "A subreddit"
+      }
+     ],
+     "answer": "a",
+     "hint": "Instagram needs media; Reddit needs a title and a subreddit.",
+     "topic": "Composer"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does a Reddit post need?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A hashtag"
+      },
+      {
+       "key": "b",
+       "text": "Media only"
+      },
+      {
+       "key": "c",
+       "text": "A title and a subreddit"
+      },
+      {
+       "key": "d",
+       "text": "A video"
+      }
+     ],
+     "answer": "c",
+     "hint": "Per-platform rules are checked in the Composer.",
+     "topic": "Composer"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How do you move a post to another day on the Calendar?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Email the support team"
+      },
+      {
+       "key": "b",
+       "text": "Delete it and start again"
+      },
+      {
+       "key": "c",
+       "text": "You cannot move posts"
+      },
+      {
+       "key": "d",
+       "text": "Drag it to the new day"
+      }
+     ],
+     "answer": "d",
+     "hint": "The Calendar supports drag to move.",
+     "topic": "Calendar"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How do you tune the wording of a post for one platform only?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Change the calendar colour"
+      },
+      {
+       "key": "b",
+       "text": "Edit the brand's name"
+      },
+      {
+       "key": "c",
+       "text": "Override the base copy on that channel"
+      },
+      {
+       "key": "d",
+       "text": "Write a new post for every platform from scratch"
+      }
+     ],
+     "answer": "c",
+     "hint": "Base copy plus per-channel overrides.",
+     "topic": "Composer"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What do Playbook rules marked as must do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing, they are suggestions"
+      },
+      {
+       "key": "b",
+       "text": "Scheduling and approval refuse a post that breaks them"
+      },
+      {
+       "key": "c",
+       "text": "Delete the post"
+      },
+      {
+       "key": "d",
+       "text": "Email the owner"
+      }
+     ],
+     "answer": "b",
+     "hint": "Must rules block scheduling and approval.",
+     "topic": "Playbook"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "In which timezone is a post's scheduled time shown?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The viewer's phone only"
+      },
+      {
+       "key": "b",
+       "text": "The brand's own timezone"
+      },
+      {
+       "key": "c",
+       "text": "Always UTC"
+      },
+      {
+       "key": "d",
+       "text": "New York time"
+      }
+     ],
+     "answer": "b",
+     "hint": "The time is an absolute instant shown in the brand's timezone.",
+     "topic": "Calendar"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Your draft for X is 400 characters. What can you do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Shorten it, or split it into a thread by separating parts with blank lines"
+      },
+      {
+       "key": "b",
+       "text": "Publish it anyway, X will accept it"
+      },
+      {
+       "key": "c",
+       "text": "Nothing, it is blocked forever"
+      },
+      {
+       "key": "d",
+       "text": "Switch to Instagram"
+      }
+     ],
+     "answer": "a",
+     "hint": "X caps at 280 characters and can thread on blank lines.",
+     "topic": "Composer"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does Analytics show?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Your password history"
+      },
+      {
+       "key": "b",
+       "text": "Only the team list"
+      },
+      {
+       "key": "c",
+       "text": "Nothing, it is a placeholder"
+      },
+      {
+       "key": "d",
+       "text": "What went out, where, and the metrics the platform returns"
+      }
+     ],
+     "answer": "d",
+     "hint": "Analytics reports on published posts.",
+     "topic": "Analytics"
+    }
+   ]
+  },
+  {
+   "title": "Approvals, roles and the publish queue",
+   "body": "A post moves from draft to needs approval to approved to scheduled, with comments and change requests along the way. Roles are per brand: owner (everything, including archiving the brand), admin (channels, team and content), editor (write, schedule and publish), approver (review only, cannot edit) and viewer (read-only). Editing and publishing need editor or above; managing channels, team and the brand needs admin or above; approving is for the approver role or admin and above. Every server action re-checks the role, because hiding a button in the screen is not the security boundary. The Publish queue holds anything due on a manual-only channel, with copy buttons, the media to download and platform-specific steps. Ticking a queue item off marks it published.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "In what order does a post normally move through approval?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Draft, published, approved"
+      },
+      {
+       "key": "b",
+       "text": "Scheduled, draft, approved"
+      },
+      {
+       "key": "c",
+       "text": "Draft, needs approval, approved, scheduled"
+      },
+      {
+       "key": "d",
+       "text": "Approved, draft, scheduled"
+      }
+     ],
+     "answer": "c",
+     "hint": "Posts are approved before they are scheduled.",
+     "topic": "Approvals"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which role can approve posts but cannot edit them?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Editor"
+      },
+      {
+       "key": "b",
+       "text": "Approver"
+      },
+      {
+       "key": "c",
+       "text": "Viewer"
+      },
+      {
+       "key": "d",
+       "text": "Owner"
+      }
+     ],
+     "answer": "b",
+     "hint": "An approver reviews only.",
+     "topic": "Roles"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which role is read-only?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Admin"
+      },
+      {
+       "key": "b",
+       "text": "Editor"
+      },
+      {
+       "key": "c",
+       "text": "Approver"
+      },
+      {
+       "key": "d",
+       "text": "Viewer"
+      }
+     ],
+     "answer": "d",
+     "hint": "A viewer can look but not change anything.",
+     "topic": "Roles"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does the Publish queue hold?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Anything due on a manual-only channel, with copy buttons, media and steps"
+      },
+      {
+       "key": "b",
+       "text": "Passwords"
+      },
+      {
+       "key": "c",
+       "text": "Only failed posts"
+      },
+      {
+       "key": "d",
+       "text": "Every post ever written"
+      }
+     ],
+     "answer": "a",
+     "hint": "The queue is where a person finishes manual posts.",
+     "topic": "Queue"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "You have posted a queued item by hand. What do you do in GGSocial?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Tick it off in the queue, which marks it published"
+      },
+      {
+       "key": "b",
+       "text": "Nothing, it updates itself"
+      },
+      {
+       "key": "c",
+       "text": "Delete the brand"
+      },
+      {
+       "key": "d",
+       "text": "Email the platform"
+      }
+     ],
+     "answer": "a",
+     "hint": "Ticking the item off marks it published.",
+     "topic": "Queue"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the minimum role needed to schedule and publish posts?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Owner only"
+      },
+      {
+       "key": "b",
+       "text": "Viewer"
+      },
+      {
+       "key": "c",
+       "text": "Approver"
+      },
+      {
+       "key": "d",
+       "text": "Editor"
+      }
+     ],
+     "answer": "d",
+     "hint": "Editing and publishing need editor or above.",
+     "topic": "Roles"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which role can manage channels and the team?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Admin or above"
+      },
+      {
+       "key": "b",
+       "text": "Editor"
+      },
+      {
+       "key": "c",
+       "text": "Approver"
+      },
+      {
+       "key": "d",
+       "text": "Viewer"
+      }
+     ],
+     "answer": "a",
+     "hint": "Managing channels, team and the brand needs admin or above.",
+     "topic": "Roles"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What can only a brand's owner do that others cannot?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Read the calendar"
+      },
+      {
+       "key": "b",
+       "text": "Approve a post"
+      },
+      {
+       "key": "c",
+       "text": "Write a post"
+      },
+      {
+       "key": "d",
+       "text": "Archive the brand"
+      }
+     ],
+     "answer": "d",
+     "hint": "The owner can do everything, including archiving the brand.",
+     "topic": "Roles"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "You are an approver and spot a typo in a draft. What is the right move?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Comment or request changes so an editor fixes it"
+      },
+      {
+       "key": "b",
+       "text": "Ask the viewer to fix it"
+      },
+      {
+       "key": "c",
+       "text": "Delete the post"
+      },
+      {
+       "key": "d",
+       "text": "Edit the post yourself"
+      }
+     ],
+     "answer": "a",
+     "hint": "Approvers can comment and request changes but cannot edit.",
+     "topic": "Approvals"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which post status means a reviewer has sent it back for edits?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Approved"
+      },
+      {
+       "key": "b",
+       "text": "Changes requested"
+      },
+      {
+       "key": "c",
+       "text": "Scheduled"
+      },
+      {
+       "key": "d",
+       "text": "Published"
+      }
+     ],
+     "answer": "b",
+     "hint": "A change request returns the post to the author.",
+     "topic": "Approvals"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Who adds a new teammate to a brand?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A viewer"
+      },
+      {
+       "key": "b",
+       "text": "An approver"
+      },
+      {
+       "key": "c",
+       "text": "Any visitor"
+      },
+      {
+       "key": "d",
+       "text": "An admin or the owner"
+      }
+     ],
+     "answer": "d",
+     "hint": "Managing the team needs admin or above.",
+     "topic": "Roles"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A post is published on two channels but fails on a third. Which overall status fits?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Partially published"
+      },
+      {
+       "key": "b",
+       "text": "Published"
+      },
+      {
+       "key": "c",
+       "text": "Draft"
+      },
+      {
+       "key": "d",
+       "text": "Approved"
+      }
+     ],
+     "answer": "a",
+     "hint": "A post has one target per channel, each with its own status.",
+     "topic": "Approvals"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does a post for a manual-only channel go to the Publish queue instead of being sent?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It has been rejected"
+      },
+      {
+       "key": "b",
+       "text": "GGSocial forgot to send it"
+      },
+      {
+       "key": "c",
+       "text": "The platform has no write API for organic posts, so a person publishes it"
+      },
+      {
+       "key": "d",
+       "text": "Queues are only for failed posts"
+      }
+     ],
+     "answer": "c",
+     "hint": "Manual-only channels end with a person publishing.",
+     "topic": "Queue"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A viewer opens a direct link to an edit action. What happens?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Their role is upgraded"
+      },
+      {
+       "key": "b",
+       "text": "The page deletes itself"
+      },
+      {
+       "key": "c",
+       "text": "GGSocial checks their role again and refuses"
+      },
+      {
+       "key": "d",
+       "text": "The edit goes through"
+      }
+     ],
+     "answer": "c",
+     "hint": "Hiding a button is not the security boundary; roles are re-checked.",
+     "topic": "Roles"
+    }
+   ]
+  },
+  {
+   "title": "Agents and the Review inbox",
+   "body": "Each brand can switch on a crew of agents that do hourly work so people only set guidelines and review. There are four: the content strategist (keeps the content plan ahead of the calendar), the content writer (keeps the calendar full from the plan, books posts into open slots and revises work sent back), the community manager (drafts replies to comments, messages, mentions and reviews and flags anything a person must decide) and the performance analyst (reads yesterday's posts each morning and writes weekly and monthly reports). Review is on for every step until the brand owner switches it off, and the reason is kept in the log. A reviewer scores agent output out of 100 and flags risks; weak but safe work goes back to the agent once with fixes. Safety stops pause a run whatever the setting: a flagged risk such as prices, refunds, legal or health matters, a score under the pass mark, a broken playbook rule marked as a must, the reviewer being unable to run, the daily AI budget being spent, or a step that keeps failing. Everything waiting on a person lands in one Review inbox, where you can approve, send back with a note, or stop the run. Every Claude call is logged with its cost.",
+   "questions": [
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which agent keeps the calendar full from the content plan?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The performance analyst"
+      },
+      {
+       "key": "b",
+       "text": "The community manager"
+      },
+      {
+       "key": "c",
+       "text": "The reviewer"
+      },
+      {
+       "key": "d",
+       "text": "The content writer"
+      }
+     ],
+     "answer": "d",
+     "hint": "The writer books posts into open slots.",
+     "topic": "Agents"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which agent reads yesterday's posts each morning and writes weekly and monthly reports?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The content writer"
+      },
+      {
+       "key": "b",
+       "text": "The community manager"
+      },
+      {
+       "key": "c",
+       "text": "The content strategist"
+      },
+      {
+       "key": "d",
+       "text": "The performance analyst"
+      }
+     ],
+     "answer": "d",
+     "hint": "The analyst turns results into reports.",
+     "topic": "Agents"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which agent drafts replies to comments, messages, mentions and reviews?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The content strategist"
+      },
+      {
+       "key": "b",
+       "text": "The performance analyst"
+      },
+      {
+       "key": "c",
+       "text": "The community manager"
+      },
+      {
+       "key": "d",
+       "text": "The content writer"
+      }
+     ],
+     "answer": "c",
+     "hint": "It also flags anything a person must decide.",
+     "topic": "Agents"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Where does everything waiting for a person land?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Playbook"
+      },
+      {
+       "key": "b",
+       "text": "The Calendar"
+      },
+      {
+       "key": "c",
+       "text": "Analytics"
+      },
+      {
+       "key": "d",
+       "text": "The Review inbox"
+      }
+     ],
+     "answer": "d",
+     "hint": "In the Review inbox you can approve, send back with a note, or stop the run.",
+     "topic": "Review"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Who can switch off review for a brand's agent steps?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The brand owner, with the reason kept in the log"
+      },
+      {
+       "key": "b",
+       "text": "Any viewer"
+      },
+      {
+       "key": "c",
+       "text": "The agents themselves"
+      },
+      {
+       "key": "d",
+       "text": "Nobody, it is permanent"
+      }
+     ],
+     "answer": "a",
+     "hint": "Review is on until the owner switches it off.",
+     "topic": "Review"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "An agent drafts a reply promising a customer a refund. What happens?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The run pauses for a person, whatever the review setting"
+      },
+      {
+       "key": "b",
+       "text": "The platform decides"
+      },
+      {
+       "key": "c",
+       "text": "It is deleted silently"
+      },
+      {
+       "key": "d",
+       "text": "It is sent immediately"
+      }
+     ],
+     "answer": "a",
+     "hint": "Prices, refunds, legal and health matters always stop for a person.",
+     "topic": "Review"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "An agent's work scores weak but safe. What happens?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It goes back to the agent once with fixes"
+      },
+      {
+       "key": "b",
+       "text": "It is deleted"
+      },
+      {
+       "key": "c",
+       "text": "It is published at once"
+      },
+      {
+       "key": "d",
+       "text": "The owner is locked out"
+      }
+     ],
+     "answer": "a",
+     "hint": "Weak but safe work gets one chance to improve.",
+     "topic": "Review"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What is logged for every Claude call GGSocial makes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Your location"
+      },
+      {
+       "key": "b",
+       "text": "Nothing"
+      },
+      {
+       "key": "c",
+       "text": "Its cost"
+      },
+      {
+       "key": "d",
+       "text": "Your password"
+      }
+     ],
+     "answer": "c",
+     "hint": "AI usage and cost are logged.",
+     "topic": "Review"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What happens to a run if the daily AI budget has been spent?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It spends more anyway"
+      },
+      {
+       "key": "b",
+       "text": "It deletes the brand"
+      },
+      {
+       "key": "c",
+       "text": "It pauses for a person"
+      },
+      {
+       "key": "d",
+       "text": "It is published as is"
+      }
+     ],
+     "answer": "c",
+     "hint": "A spent budget is one of the safety stops.",
+     "topic": "Review"
+    }
+   ]
+  }
+ ]
+}

@@ -1,12 +1,14 @@
 /**
  * Imports authored knowledge items and their questions from JSON files.
  *   npm run import:knowledge -- path/to/moksy.json [more.json ...]
- * File shape: { trackSlug, items: [{ title, body, questions: [{ level, type, prompt, options?, answer, ... }] }] }
+ * File shape: { trackSlug, status?, lessons?, items: [{ title, body, questions: [{ level, type, prompt, options?, answer, ... }] }] }
+ * "status": "review" saves the questions as unpublished until an admin activates them (default "active").
+ * "lessons": [{ level, title, syllabus: string[] }] sets the study guide for those levels (updated in place).
  * Idempotent: an item is matched by (track, title) and a question by the (track, level, prompt) unique index.
  * Changing an existing item's body bumps its version; existing questions are left alone.
  */
 import fs from "node:fs";
-import { db, tracks, knowledgeItems, questions } from "../lib/db";
+import { db, tracks, knowledgeItems, lessons, questions } from "../lib/db";
 import { and, eq } from "drizzle-orm";
 
 type Q = {
@@ -14,10 +16,12 @@ type Q = {
   options?: { key: string; text: string }[]; answer: string;
   rubric?: string; hint?: string; topic?: string;
 };
-type File = { trackSlug: string; items: { title: string; body: string; questions: Q[] }[] };
+type File = { trackSlug: string; status?: "active" | "review"; lessons?: { level: number; title: string; syllabus: string[] }[]; items: { title: string; body: string; questions: Q[] }[] };
 
 function validate(f: File, name: string): string[] {
   const errs: string[] = [];
+  if (f.status && f.status !== "active" && f.status !== "review") errs.push(`${name}: status must be "active" or "review"`);
+  for (const l of f.lessons ?? []) if (!Number.isInteger(l.level) || l.level < 1 || l.level > 20 || !l.title || !Array.isArray(l.syllabus) || !l.syllabus.length) errs.push(`${name}: bad lesson for level ${l.level}`);
   const seen = new Set<string>();
   for (const it of f.items) {
     if (!it.title || !it.body) errs.push(`${name}: item missing title/body`);
@@ -63,10 +67,14 @@ for (const { p, f } of parsed) {
       const r = db.insert(questions).values({
         trackId: track.id, knowledgeItemId: item.id, source: "authored",
         level: q.level, type: q.type, prompt: q.prompt, options: q.options ?? null,
-        answer: q.answer, rubric: q.rubric ?? null, hint: q.hint ?? null, topic: q.topic ?? it.title,
+        answer: q.answer, rubric: q.rubric ?? null, hint: q.hint ?? null, topic: q.topic ?? it.title, status: f.status ?? "active",
       }).onConflictDoNothing().run();
       if (r.changes) nQ++; else nSkipped++;
     }
   }
-  console.log(`${f.trackSlug}: ${nItems} new items, ${nQ} new questions, ${nSkipped} already present`);
+  for (const l of f.lessons ?? []) {
+    db.insert(lessons).values({ trackId: track.id, level: l.level, title: l.title, syllabus: l.syllabus })
+      .onConflictDoUpdate({ target: [lessons.trackId, lessons.level], set: { title: l.title, syllabus: l.syllabus } }).run();
+  }
+  console.log(`${f.trackSlug}: ${nItems} new items, ${nQ} new questions, ${nSkipped} already present, ${f.lessons?.length ?? 0} lessons`);
 }

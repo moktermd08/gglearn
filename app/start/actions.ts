@@ -14,6 +14,8 @@ import { levelsPassed } from "@/lib/progress";
 import { MAX_LEVEL } from "@/lib/levels";
 import { PLACEMENT_CAP, PLACEMENT_PASS, canPlace, nextProbe, scoreBatch } from "@/lib/placement";
 
+import { openTo } from "@/lib/paths";
+
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
 export type StartState = { error?: string } | null;
 
@@ -27,7 +29,7 @@ export async function beginJourney(_: StartState, fd: FormData): Promise<StartSt
     .safeParse({ trackId: Number(str(fd.get("trackId"))), mode: str(fd.get("mode")) });
   if (!p.success) return { error: "Pick what you want to learn and whether you are going alone or with a group." };
   const track = db.select().from(tracks).where(eq(tracks.id, p.data.trackId)).get();
-  if (!track) return { error: "Pick a topic from the list." };
+  if (!track || !openTo(me.audience, track.audience)) return { error: "Pick a topic from the list." };
   const emails = p.data.mode === "group" ? str(fd.get("emails")).slice(0, 4000) : "";
   if (p.data.mode === "group" && !emails) return { error: "Add at least one email so your group can join." };
   if (!allowed(`journey:${me.id}`, 12)) return { error: "You are starting journeys too quickly. Try again later." };
