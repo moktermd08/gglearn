@@ -56,7 +56,7 @@ export function examPlan(role: string, rung: number, rungs: number, n: number): 
 
 export type Stance = "required" | "recommended" | "optional";
 type Stances = { required: string[]; recommended: string[] };
-type MatrixFile = { everyone: Stances; roles: Record<string, Stances> };
+type MatrixFile = { libraryBrands: string[]; everyone: Stances; roles: Record<string, Stances> };
 
 let matrixCache: MatrixFile | null = null;
 const matrix = () => (matrixCache ??= read<MatrixFile>("pillars.json"));
@@ -69,6 +69,9 @@ export function pillarStance(role: string, pillar: string | null | undefined): S
   if (m.everyone.recommended.includes(pillar) || own?.recommended.includes(pillar)) return "recommended";
   return "optional";
 }
+
+/** Skill-library brands (Titan Academy, Foundations): their tracks are advised by the matrix, never required by it. */
+export const isLibraryBrand = (brandSlug: string) => matrix().libraryBrands.includes(brandSlug);
 
 /** Every pillar a role is required or advised to learn, for admin views. */
 export function pillarsFor(role: string): { required: string[]; recommended: string[] } {
