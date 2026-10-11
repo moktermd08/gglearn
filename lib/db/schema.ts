@@ -477,3 +477,35 @@ export const topicRequests = sqliteTable(
   },
   (t) => [uniqueIndex("tr_unique").on(t.userId, t.text)],
 );
+
+// A role check: one exam drawn across the tracks of a person's ladder in the proportions of the role's question mix
+// (content/blueprints). Kept apart from `runs` so it can never count as passing a single track.
+export const roleExams = sqliteTable(
+  "role_exams",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    role: text("role").notNull(),
+    rung: integer("rung").notNull(), // the career level the check is aimed at
+    plan: text("plan").notNull().default("{}"), // JSON: domain -> number of questions drawn
+    score: real("score"), // 0..1, null until finished
+    passed: integer("passed", { mode: "boolean" }),
+    startedAt: integer("started_at").notNull().default(now),
+    finishedAt: integer("finished_at"),
+  },
+  (t) => [index("role_exams_user").on(t.userId)],
+);
+
+export const roleExamAnswers = sqliteTable(
+  "role_exam_answers",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    examId: integer("exam_id").notNull().references(() => roleExams.id),
+    questionId: integer("question_id").notNull().references(() => questions.id),
+    domain: text("domain").notNull(),
+    response: text("response").notNull().default(""),
+    score: real("score").notNull().default(0), // 0..1
+    feedback: text("feedback"),
+  },
+  (t) => [index("role_exam_answers_exam").on(t.examId)],
+);

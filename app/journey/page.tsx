@@ -5,7 +5,8 @@ import { requireUser } from "@/lib/auth";
 import { DOMAIN_KEYS, domainLabel, mixFor } from "@/lib/blueprint";
 import { ladderFor } from "@/lib/careers";
 import { dateBounds, journeyFor, levelCode, roleLabel, targetsFor, type Leg } from "@/lib/journey";
-import { clearCareerGoal, enroll, setCareerGoal } from "@/app/actions";
+import { clearCareerGoal, enroll, setCareerGoal, startRoleExam } from "@/app/actions";
+import { ROLE_EXAM_MIN, ROLE_EXAM_SIZE, latestRoleExam, roleExamPlan } from "@/lib/roleExam";
 import { AlertTriangle, ArrowRight, CalendarClock, CheckCircle2, CircleDashed, Flag, MapPin, Mountain, Repeat, Square, Target } from "lucide-react";
 
 export const metadata = { title: "My career journey — gglearn" };
@@ -35,9 +36,28 @@ function QuestionMix({ leg }: { leg: Leg }) {
   );
 }
 
-export default async function Journey() {
+
+/** The role check: one exam across the tracks of the person's ladder in the proportions of their role's question mix. */
+function RoleCheck({ user, unavailable }: { user: Awaited<ReturnType<typeof requireUser>>; unavailable: boolean }) {
+  const plan = roleExamPlan(user);
+  if (!plan) return null;
+  const last = latestRoleExam(user.id);
+  const open = last && !last.finishedAt;
+  return (
+    <section className="card space-y-3 p-5">
+      <h2 className="flex items-center gap-2 font-semibold"><Target size={18} className="text-violet-300" />Role check</h2>
+      <p className="text-sm text-slate-300">One exam across everything your path to <b>{plan.title}</b> covers, weighted like your role (questions out of {ROLE_EXAM_SIZE}): {DOMAIN_KEYS.filter((d) => plan.planned[d] > 0).sort((a, b) => plan.planned[b] - plan.planned[a]).map((d) => `${domainLabel(d)} ${plan.planned[d]}`).join(", ")}. It shows where you are strong and where to focus; it does not change your track results or promotion.</p>
+      {unavailable && <p role="alert" className="text-sm text-amber-300">There are not enough questions in your path yet to make a fair check (at least {ROLE_EXAM_MIN} needed).</p>}
+      {last?.finishedAt && <p className="text-sm text-slate-400">Last check: {Math.round((last.score ?? 0) * 100)}% on {date(last.finishedAt)}. <Link href={`/role-exam/${last.id}`} className="underline">See the breakdown</Link></p>}
+      <form action={startRoleExam}><button className="btn">{open ? "Continue your role check" : last?.finishedAt ? "Take it again" : "Start the role check"}<ArrowRight size={15} /></button></form>
+    </section>
+  );
+}
+
+export default async function Journey({ searchParams }: { searchParams: Promise<{ roleExam?: string }> }) {
   const user = await requireUser();
   const j = journeyFor(user);
+  const unavailable = (await searchParams).roleExam === "unavailable";
   const mine = new Set(db.select({ t: enrollments.trackId }).from(enrollments).where(eq(enrollments.userId, user.id)).all().map((e) => e.t));
 
   if (j.state === "no-ladder") {
@@ -104,6 +124,8 @@ export default async function Journey() {
         {here.sub !== null && <span className="text-xs text-slate-400" title="Computed from how many of the next level's steps you have met: .0 new, .1 established, .2 pushing for the next level">{here.code} = {["new to the level", "established", "pushing for the next level"][here.sub]}</span>}
       </section>
 
+
+      <RoleCheck user={user} unavailable={unavailable} />
       {!goal ? (
         <section className="card space-y-3 p-5">
           <h2 className="flex items-center gap-2 font-semibold"><Target size={18} className="text-pink-300" />Set your goal</h2>
