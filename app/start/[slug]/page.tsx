@@ -30,7 +30,7 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
           {placed > 0 ? <RankEmblem level={placed} size={72} /> : <Sprout size={56} className="bob text-emerald-400" aria-hidden />}
           <div>
             <div className="text-xs uppercase tracking-widest text-slate-400">Your starting point in {track.name}</div>
-            <div className="text-2xl font-extrabold" style={{ color: `hsl(${hue} 85% 70%)` }}>
+            <div className="text-2xl font-extrabold" style={{ color: `hsl(${hue} 70% 35%)` }}>
               {placed > 0 ? `Level ${placed} · ${LEVELS[placed - 1]}` : "Level 0 · Fresh start"}
             </div>
             <div className="bar my-1.5 w-56 max-w-full"><i style={{ width: `${(placed / MAX_LEVEL) * 100}%` }} /></div>

@@ -221,6 +221,77 @@ export const CALC: Record<string, Gen> = {
       right: `$${n(paid)}`, wrong: near(r, paid, [reqs * (hit / 100) * cost, reqs * cost, reqs * cost * (1 - hit / 100) / 2], (x) => `$${n(Math.round(x))}`), diff: 2,
       why: `misses = ${n(reqs)} × ${100 - hit}% = ${n(reqs * (1 - hit / 100))}; × $${cost} = $${n(paid)}.` };
   },
+  // ---- paid social metrics (facebook-marketing-titan) ----
+  ad_ctr(r) {
+    const imp = r.pick([8000, 12000, 25000, 40000, 100000]), pct = r.pick([0.8, 1, 1.2, 1.5, 2, 2.5]);
+    const clicks = Math.round(imp * pct / 100), ctr = clicks / imp * 100;
+    return { prompt: `An ad was shown ${n(imp)} times (impressions) and received ${n(clicks)} link clicks. What is the click-through rate (CTR)?`,
+      right: `${f(ctr)}%`, wrong: near(r, ctr, [imp / clicks, clicks / imp, clicks / imp * 1000], (x) => `${f(x)}%`), diff: 1,
+      why: `CTR = clicks / impressions × 100 = ${n(clicks)} / ${n(imp)} × 100 = ${f(ctr)}%.` };
+  },
+  ad_cpm(r) {
+    const imp = r.pick([20000, 50000, 80000, 125000, 400000]), cost = r.pick([120, 250, 400, 600, 1000]);
+    const cpm = cost / imp * 1000;
+    return { prompt: `A campaign spent ${n(cost)} and delivered ${n(imp)} impressions. What is its CPM (cost per 1,000 impressions)?`,
+      right: `${f(cpm)}`, wrong: near(r, cpm, [cost / imp, cost / imp * 100, imp / cost], (x) => `${f(x)}`), diff: 1,
+      why: `CPM = spend / impressions × 1,000 = ${n(cost)} / ${n(imp)} × 1,000 = ${f(cpm)}.` };
+  },
+  ad_cpc(r) {
+    const clicks = r.pick([150, 320, 480, 900, 1500]), cost = r.pick([90, 200, 350, 640, 1200]);
+    const cpc = cost / clicks;
+    return { prompt: `An ad set spent ${n(cost)} and earned ${n(clicks)} link clicks. What is the cost per click (CPC)?`,
+      right: `${f(cpc)}`, wrong: near(r, cpc, [clicks / cost, cpc * 10, cpc * 100], (x) => `${f(x)}`), diff: 1,
+      why: `CPC = spend / clicks = ${n(cost)} / ${n(clicks)} = ${f(cpc)}.` };
+  },
+  ad_cpa(r) {
+    const conv = r.pick([12, 25, 40, 64, 90]), cost = r.pick([300, 600, 900, 1500, 2400]);
+    const cpa = cost / conv;
+    return { prompt: `A lead-generation campaign spent ${n(cost)} and produced ${n(conv)} leads. What is the cost per lead (cost per result)?`,
+      right: `${f(cpa)}`, wrong: near(r, cpa, [conv / cost, cost * conv / 100, cpa * 10], (x) => `${f(x)}`), diff: 1,
+      why: `Cost per result = spend / results = ${n(cost)} / ${n(conv)} = ${f(cpa)}.` };
+  },
+  ad_roas(r) {
+    const cost = r.pick([500, 800, 1200, 2000, 3500]), mult = r.pick([1.5, 2, 2.5, 3, 4, 5]);
+    const rev = Math.round(cost * mult), roas = rev / cost;
+    return { prompt: `A sales campaign spent ${n(cost)} and the ads were credited with ${n(rev)} of purchase conversion value. What is the ROAS (return on ad spend)?`,
+      right: `${f(roas)}x`, wrong: near(r, roas, [cost / rev, (rev - cost) / cost, rev / cost * 100], (x) => `${f(x)}x`), diff: 2,
+      why: `ROAS = conversion value / ad spend = ${n(rev)} / ${n(cost)} = ${f(roas)}x. It is revenue per unit of spend, not profit.` };
+  },
+  ad_frequency(r) {
+    const reach = r.pick([5000, 8000, 12000, 20000, 45000]), freq = r.pick([1.5, 2, 2.5, 3, 4]);
+    const imp = Math.round(reach * freq);
+    return { prompt: `An ad set delivered ${n(imp)} impressions to ${n(reach)} unique accounts (reach). What is its average frequency?`,
+      right: f(imp / reach), wrong: near(r, imp / reach, [reach / imp, imp - reach, imp / reach * 10], (x) => f(x)), diff: 1,
+      why: `Frequency = impressions / reach = ${n(imp)} / ${n(reach)} = ${f(imp / reach)} views per person on average.` };
+  },
+  ad_conv_rate(r) {
+    const clicks = r.pick([400, 800, 1250, 2000, 5000]), pct = r.pick([1, 2, 2.5, 3, 4, 5]);
+    const conv = Math.round(clicks * pct / 100);
+    return { prompt: `${n(clicks)} people clicked an ad and landed on a page, and ${n(conv)} of them bought. What is the landing-page conversion rate?`,
+      right: `${f(conv / clicks * 100)}%`, wrong: near(r, conv / clicks * 100, [clicks / conv, conv / clicks, conv / (clicks * 1000) * 100], (x) => `${f(x)}%`), diff: 2,
+      why: `Conversion rate = conversions / clicks × 100 = ${n(conv)} / ${n(clicks)} × 100 = ${f(conv / clicks * 100)}%.` };
+  },
+  ad_break_even(r) {
+    const margin = r.pick([20, 25, 30, 40, 50]);
+    const be = 100 / margin;
+    return { prompt: `A shop earns a ${margin}% gross margin on each sale before ad costs. What is its break-even ROAS?`,
+      right: `${f(be)}x`, wrong: near(r, be, [margin / 100, margin, be * 2], (x) => `${f(x)}x`), diff: 3,
+      why: `Break-even ROAS = 1 / margin = 100 / ${margin} = ${f(be)}x. Below it, every sale loses money once ad spend is counted.` };
+  },
+  ad_daily(r) {
+    const days = r.pick([5, 7, 10, 14, 21, 30]), daily = r.pick([10, 15, 20, 25, 40, 50]);
+    const life = days * daily;
+    return { prompt: `A campaign is planned to spend about ${n(daily)} a day for ${days} days. What lifetime budget matches that plan?`,
+      right: `${n(life)}`, wrong: near(r, life, [daily + days, life * 7, daily * 7], (x) => `${n(Math.round(x))}`), diff: 1,
+      why: `${n(daily)} × ${days} = ${n(life)}.` };
+  },
+  ad_reach_from_budget(r) {
+    const budget = r.pick([200, 500, 800, 1500]), cpm = r.pick([5, 8, 10, 12, 20]);
+    const imp = budget / cpm * 1000;
+    return { prompt: `A campaign has a ${n(budget)} budget and an average CPM of ${cpm}. About how many impressions can it buy?`,
+      right: n(Math.round(imp)), wrong: near(r, imp, [budget / cpm, budget * cpm, budget / cpm * 100], (x) => n(Math.round(x))), diff: 2,
+      why: `impressions = budget / CPM × 1,000 = ${n(budget)} / ${cpm} × 1,000 = ${n(Math.round(imp))}.` };
+  },
 };
 
 /** which generators suit which subject; matched by slug prefix in the engine. Specs may also list their own. */

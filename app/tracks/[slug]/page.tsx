@@ -64,7 +64,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           {[
             { Icon: Sparkles, label: "XP", value: s.xp, cls: "text-sky-300" },
             { Icon: Flame, label: "Day streak", value: s.streak, cls: "text-orange-400" },
-            { Icon: Medal, label: "Rank", value: TIERS[tierOf(passed)].name, color: `hsl(${TIERS[tierOf(passed)].hue} 85% 70%)` },
+            { Icon: Medal, label: "Rank", value: TIERS[tierOf(passed)].name, color: `hsl(${TIERS[tierOf(passed)].hue} 70% 35%)` },
           ].map(({ Icon, label, value, cls, color }, i) => (
             <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
               <Icon size={22} className={`mx-auto ${cls ?? ""} ${label === "Day streak" && s.streak > 0 ? "pulse-glow" : ""}`} style={color ? { color } : undefined} />
@@ -116,7 +116,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
         <div className="space-y-6">
           {TIERS.map((tier, ti) => (
             <div key={tier.name}>
-              <div className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-widest" style={{ color: `hsl(${tier.hue} 85% 70%)` }}>
+              <div className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-widest" style={{ color: `hsl(${tier.hue} 70% 35%)` }}>
                 <Medal size={16} />{tier.name} rank
                 {enrolment && <span className="ml-auto flex items-center gap-2 text-xs normal-case tracking-normal text-slate-400">
                   {Math.max(0, Math.min(4, passed - ti * 4))}/4
