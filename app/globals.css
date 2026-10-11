@@ -55,8 +55,11 @@ input, textarea, select { color: #14161f; }
 @keyframes shake { 0%,100% { transform: translateX(0) } 20% { transform: translateX(-6px) } 40% { transform: translateX(6px) } 60% { transform: translateX(-4px) } 80% { transform: translateX(4px) } }
 @keyframes rise { from { transform: translateY(12px); opacity: 0 } to { transform: none; opacity: 1 } }
 @keyframes grow { from { width: 0 } }
+@keyframes marquee { to { transform: translateX(-50%) } }
 @keyframes spin-in { from { transform: rotate(-90deg) scale(.4); opacity: 0 } to { transform: none; opacity: 1 } }
 @keyframes ping-once { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,.6) } 100% { box-shadow: 0 0 0 14px rgba(52,211,153,0) } }
+.marquee { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+.marquee:hover { animation-play-state: paused; }
 .shake { animation: shake .4s ease-in-out; }
 .rise { animation: rise .45s ease-out both; animation-delay: calc(var(--i, 0) * 70ms); }
 .grow { animation: grow 1s ease-out both; animation-delay: calc(var(--i, 0) * 70ms); }

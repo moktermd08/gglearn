@@ -14,6 +14,7 @@ import { Competitor } from "@/components/Competitor";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import InviteForm from "./invite-form";
 import { PALETTE, StatTile } from "@/components/charts";
+import { Podium } from "@/components/Podium";
 import { Ring } from "@/components/Ring";
 import { SubjectArt, artFor } from "@/components/SubjectArt";
 
@@ -77,10 +78,20 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
           Topic <Link href={`/tracks/${track.slug}`} className="underline">{track.name}</Link> · goal: gain <b>{c.goalLevels}</b> level{c.goalLevels === 1 ? "" : "s"} · organised by {creator?.name ?? "someone"}
         </p>
         {c.prizeAmount > 0 && (
-          <p className="rounded-lg bg-amber-400/10 px-3 py-2 text-sm text-amber-200">
-            <Coins size={15} className="mr-1 inline text-amber-300" /><b>{money(c.prizeAmount, c.prizeCurrency)}</b> prize · {PRIZE_SPLIT_LABEL[c.prizeSplit]} · people only, and only by reaching the goal.
-            <span className="block text-xs text-amber-200/70">{c.prizeNote} · gglearn does not hold or send money.</span>
-          </p>
+          <div className="flex items-center gap-3 rounded-2xl border border-amber-400/40 px-3 py-2.5 text-sm" style={{ background: "linear-gradient(120deg, rgba(251,191,36,.22), rgba(251,191,36,.06))" }}>
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-400 text-amber-950"><Coins size={20} /></span>
+            <div><div className="text-base font-extrabold text-amber-300">{money(c.prizeAmount, c.prizeCurrency)} prize</div>
+              <div className="text-xs text-slate-300">{PRIZE_SPLIT_LABEL[c.prizeSplit]} · people only, and only by reaching the goal.</div>
+              <div className="text-[11px] text-slate-400">{c.prizeNote} · gglearn does not hold or send money.</div></div>
+          </div>
+        )}
+        {(state === "live" || state === "upcoming") && (
+          <div className="flex flex-wrap items-center gap-2" aria-label={state === "live" ? "Time left" : "Time until it starts"}>
+            <span className="mr-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">{state === "live" ? "Ends in" : "Starts in"}</span>
+            {(() => { const left = Math.max(0, (state === "live" ? c.endsAt : c.startsAt) - t); return [["d", Math.floor(left / 86400)], ["h", Math.floor((left % 86400) / 3600)], ["m", Math.floor((left % 3600) / 60)]] as const; })().map(([u, v]) => (
+              <span key={u} className="min-w-14 rounded-xl border border-black/10 bg-[#fff] px-2.5 py-1.5 text-center"><span className="text-xl font-extrabold tabular-nums">{String(v).padStart(2, "0")}</span><span className="ml-0.5 text-xs font-semibold text-slate-400">{u}</span></span>
+            ))}
+          </div>
         )}
         {(state === "live" || state === "finished") && (
           <div className="bar !h-2" title="Time elapsed"><i style={{ width: `${(state === "finished" ? 1 : Math.min(1, Math.max(0, (t - c.startsAt) / Math.max(1, c.endsAt - c.startsAt)))) * 100}%`, background: state === "finished" ? "#64748b" : undefined }} /></div>
@@ -153,6 +164,14 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
 
       <section aria-label="Leaderboard" className="space-y-3">
         <h2 className="flex items-center gap-2 text-lg font-bold"><Swords size={20} className="text-pink-300" />Leaderboard {state === "live" && <Radio size={14} className="animate-pulse text-emerald-400" />}</h2>
+        {rows.length >= 2 && rows.some((r) => r.gained > 0) && (
+          <div className="card px-4 pb-0 pt-8" style={{ background: "linear-gradient(180deg, rgba(251,191,36,.1), #fff 70%)" }}>
+            <Podium places={rows.filter((r) => r.rank <= 3).sort((a, b) => a.rank - b.rank).slice(0, 3).map((r) => ({
+              rank: r.rank, name: r.name, gained: r.gained, target: r.target, xp: r.xp, reached: r.reachedAt !== null, isBot: r.isBot,
+              avatar: <Competitor isBot={r.isBot} seed={r.isBot ? (r.member.botSeed ?? r.name) : `u${r.userId}`} name={r.name} size={56} photoUrl={r.hasPhoto ? `/api/avatar/${r.userId}?v=${r.photoVersion}` : null} />,
+            }))} />
+          </div>
+        )}
         {rows.map((r, i) => <Lane key={r.member.id} r={r} goal={c.goalLevels} i={i} />)}
         {rows.length === 0 && <p className="text-slate-400">Nobody has joined yet.</p>}
         <p className="text-xs text-slate-500">
@@ -257,7 +276,7 @@ function Lane({ r, goal, i }: { r: Standing; goal: number; i: number }) {
             : <span className="rounded bg-sky-500/20 px-1.5 text-[10px] font-bold uppercase text-sky-300">Person</span>}
           {r.reachedAt !== null && <span className="rounded bg-emerald-500/20 px-1.5 text-[10px] font-bold uppercase text-emerald-300"><span className="inline-flex items-center gap-0.5">Goal reached <Flag size={10} /></span></span>}
         </div>
-        <div className="bar relative mt-1.5"><span className="absolute inset-y-0 right-0 w-1 bg-black/20" aria-hidden /><i className="grow" style={{ width: `${pct * 100}%`, ...(r.isBot ? { background: `linear-gradient(90deg,#a78bfa,#f472b6)` } : { background: `linear-gradient(90deg,hsl(${hue} 80% 60%),#38bdf8)` }) }} /></div>
+        <div className="bar relative mt-1.5 !overflow-visible"><Flag size={13} className="absolute -right-1 -top-3.5 text-slate-400" aria-hidden /><i className="grow" style={{ width: `${pct * 100}%`, ...(r.isBot ? { background: `linear-gradient(90deg,#a78bfa,#f472b6)` } : { background: `linear-gradient(90deg,hsl(${hue} 80% 60%),#38bdf8)` }) }} /></div>
         <div className="mt-1 flex flex-wrap justify-between gap-x-4 text-xs text-slate-400">
           <span>{r.startLevel !== null && `L${r.startLevel} → L${r.startLevel + r.target} · `}+{r.gained} of {r.target === goal ? goal : `${r.target} (max reachable)`} level{r.target === 1 ? "" : "s"}</span>
           <span>

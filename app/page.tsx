@@ -11,7 +11,11 @@ import { openTo } from "@/lib/paths";
 import { avatarLooks } from "@/lib/avatars";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { StatTile, PALETTE } from "@/components/charts";
-import { ArrowRight, BookOpen, Building2, GraduationCap, Layers, ShieldCheck, Swords, Target, Trophy, Users } from "lucide-react";
+import { ArrowRight, BadgeCheck, BookOpen, Building2, Flame, GraduationCap, Layers, ShieldCheck, Sparkles, Swords, Target, Trophy, Users } from "lucide-react";
+import { listFor } from "@/lib/competitions";
+import { CompetitionCard } from "@/components/CompetitionCard";
+import { CertFrame } from "@/components/CertFrame";
+import { RankEmblem } from "@/components/RankEmblem";
 
 const STEPS = [
   { Icon: Target, title: "Get your path", text: "Sign in and see the subjects your role, brand and project require, each with a deadline.", cls: "text-indigo-300 bg-indigo-500/10" },
@@ -37,6 +41,24 @@ export default async function Home() {
     const totalQ = rows.reduce((a, r) => a + r.n, 0), maxN = Math.max(1, ...rows.map((r) => r.n));
   const byBrand = new Map<string, typeof rows>();
   for (const r of rows) byBrand.set(r.brand.name, [...(byBrand.get(r.brand.name) ?? []), r]);
+  const brandSlug = (name: string) => `brand-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  const contests = listFor(viewer).filter((x) => x.c.visibility === "public" && (x.state === "live" || x.state === "upcoming")).slice(0, 3);
+  const logos = rows.filter((r) => artFor(r.track.slug, r.track.name, r.track.kind).glyph.kind === "brand").slice(0, 18);
+
+  const subjectCard = ({ track, n }: (typeof rows)[number], i: number) => {
+    const rv = rivalFor(track.slug);
+    return (
+      <Link key={track.id} href={`/tracks/${track.slug}`} className="card card-hover rise flex min-w-0 items-center gap-3 p-4" style={{ "--i": Math.min(i, 8) } as React.CSSProperties}>
+        <SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={56} />
+        <div className="min-w-0 flex-1">
+          <div className="text-xs uppercase tracking-wide text-slate-400">{KIND_LABEL[track.kind]}</div>
+          <div className="truncate font-semibold">{track.name}</div>
+          <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-black/10" title={`${n} questions`}><i className="grow block h-full rounded-full bg-sky-400/70" style={{ width: `${(n / maxN) * 100}%` }} /></div>
+          <div className="mt-1 flex items-center gap-1 text-xs text-slate-400"><Swords size={11} className="text-pink-300" />{n} questions · vs {rv.name}</div>
+        </div>
+      </Link>
+    );
+  };
 
   return (
     <div className="space-y-16">
@@ -56,7 +78,10 @@ export default async function Home() {
           </div>
           <p className="mt-3 text-sm text-slate-400">{rows.length} subjects · {totalQ.toLocaleString("en-GB")} questions · accounts are created by your admin</p>
         </div>
-        <div className="card-soft p-5">
+        <div className="card-soft relative p-5">
+          <span className="bob pointer-events-none absolute -right-2 -top-4 z-10 hidden items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1.5 text-xs font-bold shadow-lg sm:inline-flex" aria-hidden><Flame size={14} className="text-orange-500" fill="#f97316" />5-day streak</span>
+          <span className="bob pointer-events-none absolute -bottom-3 -left-4 z-10 hidden items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1.5 text-xs font-bold shadow-lg [animation-delay:.8s] sm:inline-flex" aria-hidden><Sparkles size={14} className="text-sky-500" />+120 XP</span>
+          <span className="bob pointer-events-none absolute -bottom-3 -right-3 z-10 hidden items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1.5 text-xs font-bold shadow-lg [animation-delay:1.4s] sm:inline-flex" aria-hidden><GraduationCap size={14} className="text-amber-500" />Certificate earned</span>
           <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-400">A learner&apos;s path</div>
           {[{ n: "Git and GitHub", l: 8, d: "Required · due in 14 days" }, { n: "Company security basics", l: 5, d: "Required · done" }, { n: "Client communication", l: 3, d: "Next promotion step" }].map((p, i) => (
             <div key={p.n} className="mb-2 flex items-center gap-3 rounded-xl border border-black/10 bg-[#fff] p-3">
@@ -81,10 +106,16 @@ export default async function Home() {
         <StatTile i={3} Icon={Trophy} label="Levels to Titan" value={LEVELS.length} color={PALETTE.amber} />
       </section>
 
-      <section aria-label="Subjects you can learn" className="space-y-3">
+      <section aria-label="Subjects you can learn" className="space-y-4">
         <p className="text-center text-xs font-semibold uppercase tracking-[.3em] text-slate-400">Learn anything your work needs</p>
-        <div className="flex flex-wrap justify-center gap-3">
-          {rows.filter((r) => artFor(r.track.slug, r.track.name, r.track.kind).glyph.kind === "brand").slice(0, 16).map(({ track }) => <Link key={track.id} href={`/tracks/${track.slug}`} title={track.name} className="transition hover:-translate-y-1"><SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={52} className="shadow-md" /></Link>)}
+        <div className="relative overflow-hidden py-2 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+          <div className="marquee gap-4">
+            {[0, 1].map((copy) => (
+              <div key={copy} className="flex shrink-0 gap-4 pr-4" aria-hidden={copy === 1 || undefined}>
+                {logos.map(({ track }) => <Link key={track.id} href={`/tracks/${track.slug}`} title={track.name} tabIndex={copy === 1 ? -1 : undefined} className="transition hover:-translate-y-1"><SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={60} className="shadow-md" /></Link>)}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -94,13 +125,35 @@ export default async function Home() {
         <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map(({ Icon, title, text, cls }, i) => (
             <li key={title} className="card rise relative p-5" style={{ "--i": i } as React.CSSProperties}>
-              <span className="absolute right-4 top-3 text-sm font-black text-slate-600">{i + 1}</span>
+              {i < 3 && <span className="pointer-events-none absolute -right-3.5 top-9 z-10 hidden h-7 w-7 place-items-center rounded-full border border-black/10 bg-[#fff] text-slate-400 shadow-sm lg:grid" aria-hidden><ArrowRight size={14} /></span>}
+              <span className="absolute right-4 top-3 grid h-6 w-6 place-items-center rounded-full text-xs font-black text-[#fff]" style={{ background: "linear-gradient(135deg,#4f46e5,#9333ea)" }}>{i + 1}</span>
               <div className={`mb-3 grid h-11 w-11 place-items-center rounded-xl ${cls}`}><Icon size={22} /></div>
               <div className="font-semibold">{title}</div>
               <p className="mt-1 text-sm text-slate-400">{text}</p>
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]" aria-label="Certificates">
+        <div>
+          <p className="inline-flex items-center gap-2 rounded-full bg-amber-500/15 px-3 py-1 text-xs font-bold uppercase tracking-widest text-amber-300"><BadgeCheck size={14} />Proof you can share</p>
+          <h2 className="mt-3 text-3xl font-extrabold">Certificates anyone can verify</h2>
+          <p className="mt-2 text-slate-300">Pass level 5, 10, 15 or 20 and earn a certificate with its own verification code. Share the link, print it as a PDF, and anyone can confirm it is real.</p>
+          <ul className="mt-4 space-y-2 text-sm text-slate-300">
+            {["Earned by real level exams, never by clicking through", "A public page with the score, level and date", "Contest winners get a Champion certificate too"].map((t) => <li key={t} className="flex items-start gap-2"><BadgeCheck size={16} className="mt-0.5 shrink-0 text-emerald-400" />{t}</li>)}
+          </ul>
+        </div>
+        <div className="relative mx-auto w-full max-w-lg">
+          <span className="absolute -right-2 -top-3 z-10 rounded-full bg-slate-800 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-[#fff] shadow-lg">Sample</span>
+          <CertFrame hue={TIERS[2].hue} code="SAMPLE-0001" seal={<RankEmblem level={10} size={60} />}>
+            <p className="mt-4 text-xs uppercase tracking-[.4em] text-slate-400">Certificate of achievement</p>
+            <h3 className="mt-2 text-2xl font-extrabold gradient-text">Practitioner · Your subject</h3>
+            <p className="mt-4 text-slate-400">This certifies that</p>
+            <p className="mt-1 border-b border-slate-200 pb-2 font-serif text-3xl font-bold italic">Your Name</p>
+            <p className="mt-3 text-sm text-slate-300">passed level 10 (Proficient) with a score of 92%</p>
+          </CertFrame>
+        </div>
       </section>
 
       <section>
@@ -138,27 +191,31 @@ export default async function Home() {
         </div>
       </section>
 
-      <div id="subjects" className="scroll-mt-20 space-y-8">
-        <div><h2 className="text-2xl font-bold">Subjects</h2><p className="text-slate-400">Everything currently available, grouped by brand.</p></div>
-      {[...byBrand].map(([brand, items]) => (
-        <section key={brand}>
-          <h2 className="mb-3 flex items-center gap-2 text-xl font-bold"><Layers size={20} className="text-sky-300" />{brand} <span className="text-sm font-normal text-slate-400">· {items.length}</span></h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map(({ track, n }, i) => {
-              const rv = rivalFor(track.slug);
-              return (
-                <Link key={track.id} href={`/tracks/${track.slug}`} className="card card-hover rise flex min-w-0 items-center gap-3 p-4" style={{ "--i": Math.min(i, 8) } as React.CSSProperties}>
-                  <SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={56} />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-xs uppercase tracking-wide text-slate-400">{KIND_LABEL[track.kind]}</div>
-                    <div className="truncate font-semibold">{track.name}</div>
-                    <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-black/10" title={`${n} questions`}><i className="grow block h-full rounded-full bg-sky-400/70" style={{ width: `${(n / maxN) * 100}%` }} /></div>
-                    <div className="mt-1 flex items-center gap-1 text-xs text-slate-400"><Swords size={11} className="text-pink-300" />{n} questions · vs {rv.name}</div>
-                  </div>
-                </Link>
-              );
-            })}
+      {contests.length > 0 && (
+        <section aria-label="Contests">
+          <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+            <div><h2 className="flex items-center gap-2.5 text-2xl font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-amber-500/15 text-amber-300"><Trophy size={19} /></span>Contests you can watch</h2><p className="text-slate-400">Public races, live right now or starting soon.</p></div>
+            <Link href="/competitions" className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-300 hover:underline">All contests<ArrowRight size={14} /></Link>
           </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{contests.map((x) => <CompetitionCard key={x.c.id} card={x} />)}</div>
+        </section>
+      )}
+
+      <div id="subjects" className="scroll-mt-20 space-y-8">
+        <div>
+          <h2 className="text-2xl font-bold">Subjects</h2><p className="text-slate-400">Everything currently available, grouped by brand.</p>
+          <nav aria-label="Jump to a brand" className="mt-3 flex flex-wrap gap-2">{[...byBrand].map(([name, items]) => <a key={name} href={`#${brandSlug(name)}`} className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1 text-sm font-semibold transition hover:border-indigo-400 hover:text-indigo-300">{name}<span className="text-xs font-normal text-slate-400">{items.length}</span></a>)}</nav>
+        </div>
+      {[...byBrand].map(([brand, items]) => (
+        <section key={brand} id={brandSlug(brand)} className="scroll-mt-24">
+          <h2 className="mb-3 flex items-center gap-2.5 text-xl font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl text-sm font-extrabold text-[#fff]" style={{ background: "linear-gradient(135deg,#0ea5e9,#6366f1)" }}>{brand.slice(0, 1).toUpperCase()}</span>{brand} <span className="text-sm font-normal text-slate-400">· {items.length}</span></h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {items.slice(0, 9).map(subjectCard)}
+          </div>
+          {items.length > 9 && (
+            <details className="mt-3"><summary className="cursor-pointer text-sm font-semibold text-sky-300">Show the other {items.length - 9}</summary>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{items.slice(9).map((x, i) => subjectCard(x, i + 9))}</div></details>
+          )}
         </section>
       ))}
       </div>
