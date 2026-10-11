@@ -5,18 +5,20 @@
  * "status": "review" saves the questions as unpublished until an admin activates them (default "active").
  * "lessons": [{ level, title, syllabus: string[] }] sets the study guide for those levels (updated in place).
  * Idempotent: an item is matched by (track, title) and a question by the (track, level, prompt) unique index.
- * Changing an existing item's body bumps its version; existing questions are left alone.
+ * Changing an existing item's body bumps its version and records the change (lib/freshness.ts); existing questions are left alone.
+ * Add "changeNote": "what changed" to an item to make it a material change that enrolled learners are asked to read.
  */
 import fs from "node:fs";
 import { db, tracks, knowledgeItems, lessons, questions } from "../lib/db";
 import { and, eq } from "drizzle-orm";
+import { recordChange } from "../lib/freshness";
 
 type Q = {
   level: number; type: "mcq" | "open" | "scenario"; prompt: string;
   options?: { key: string; text: string }[]; answer: string;
   rubric?: string; hint?: string; topic?: string;
 };
-type File = { trackSlug: string; status?: "active" | "review"; lessons?: { level: number; title: string; syllabus: string[] }[]; items: { title: string; body: string; questions: Q[] }[] };
+type File = { trackSlug: string; status?: "active" | "review"; lessons?: { level: number; title: string; syllabus: string[] }[]; items: { title: string; body: string; changeNote?: string; questions: Q[] }[] };
 
 function validate(f: File, name: string): string[] {
   const errs: string[] = [];
@@ -59,9 +61,9 @@ for (const { p, f } of parsed) {
       item = db.insert(knowledgeItems).values({ trackId: track.id, title: it.title, body: it.body }).returning().get();
       nItems++;
     } else if (item.body !== it.body) {
-      item = db.update(knowledgeItems)
-        .set({ body: it.body, version: item.version + 1, updatedAt: Math.floor(Date.now() / 1000) })
-        .where(eq(knowledgeItems.id, item.id)).returning().get();
+      // "changeNote" marks a real change people must read; without it the edit is recorded as a wording fix
+      recordChange(db, item, it.body, { note: it.changeNote, material: !!it.changeNote });
+      item = db.select().from(knowledgeItems).where(eq(knowledgeItems.id, item.id)).get()!;
     }
     for (const q of it.questions) {
       const r = db.insert(questions).values({

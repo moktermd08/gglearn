@@ -405,3 +405,35 @@ export const promotions = sqliteTable(
   },
   (t) => [index("promotions_user").on(t.userId)],
 );
+
+// A recorded change to a knowledge item (brand moto, tone, policy...). `material` changes ask enrolled learners to review
+// them; the before/after text is kept so people see what changed, not just that something did.
+export const knowledgeChanges = sqliteTable(
+  "knowledge_changes",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    itemId: integer("item_id").notNull().references(() => knowledgeItems.id),
+    trackId: integer("track_id").notNull().references(() => tracks.id),
+    version: integer("version").notNull(), // the item's version after this change
+    title: text("title").notNull(),
+    note: text("note").notNull().default(""), // plain-language "what changed and why"
+    before: text("before").notNull().default(""),
+    after: text("after").notNull(),
+    material: integer("material").notNull().default(1), // 0 = typo or wording fix, nobody is asked to review it
+    createdBy: integer("created_by").references(() => users.id), // null = imported from a file
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [index("kc_track").on(t.trackId)],
+);
+
+// A learner confirming they have read a change.
+export const knowledgeAcks = sqliteTable(
+  "knowledge_acks",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    changeId: integer("change_id").notNull().references(() => knowledgeChanges.id),
+    at: integer("at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("ka_unique").on(t.userId, t.changeId)],
+);

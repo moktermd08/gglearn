@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
-import { answers, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, promotions, questions, runs, tracks, users } from "@/lib/db";
+import { answers, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, runs, tracks, users } from "@/lib/db";
+import { acknowledge, recordChange } from "@/lib/freshness";
 import { careerFor, roleKey } from "@/lib/careers";
 import { endSession, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
 import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@/lib/password";
@@ -453,3 +454,37 @@ export async function activateTrackQuestions(trackId: number) {
   revalidatePath("/admin/compliance");
 }
 
+
+// ---- freshness: keeping everyone current when company knowledge changes ----
+
+/** Admin only: saves new text for a knowledge item (a brand moto, tone, policy) and, if material, asks enrolled learners to read it. */
+export async function recordKnowledgeChange(_: string | null, fd: FormData): Promise<string | null> {
+  const me = await requireManager();
+  if (me.role !== "admin") return "Only an admin can change company knowledge.";
+  const p = z.object({
+    itemId: z.coerce.number().int().positive(),
+    body: z.string().trim().min(1).max(20000),
+    note: z.string().trim().max(500),
+  }).safeParse({ itemId: fd.get("itemId"), body: str(fd.get("body")), note: str(fd.get("note")) });
+  if (!p.success) return "Enter the new text (up to 20,000 characters) and a note of up to 500.";
+  const material = fd.get("material") === "on";
+  if (material && !p.data.note) return "Say in a sentence what changed, so people know what to look for.";
+  const done = db.transaction((tx) => {
+    const item = tx.select().from(knowledgeItems).where(eq(knowledgeItems.id, p.data.itemId)).get();
+    if (!item) return "That item no longer exists.";
+    return recordChange(tx, item, p.data.body, { note: p.data.note, material, by: me.id }) ? null : "That is the same text as before.";
+  });
+  if (done) return done;
+  revalidatePath("/admin/freshness");
+  revalidatePath("/dashboard");
+  revalidatePath("/updates");
+  redirect("/admin/freshness");
+}
+
+export async function acknowledgeChange(changeId: number) {
+  const u = await requireUser();
+  acknowledge(u.id, changeId);
+  revalidatePath("/updates");
+  revalidatePath("/dashboard");
+  revalidatePath("/admin/freshness");
+}

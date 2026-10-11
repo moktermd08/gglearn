@@ -1,0 +1,109 @@
+# B. Adding staff: invites, joining, accounts (B-001 to B-100)
+
+## Issuing an invite
+- B-001 ✅ Invite for an email that already has an account is refused ("already has an account").
+- B-002 ✅ Invite with no company/brand/project scope is refused.
+- B-003 ✅ Scope ids that do not exist are dropped (`validScopes`); duplicates removed.
+- B-004 ✅ Email is lower-cased, so `Sam@X.com` and `sam@x.com` are the same.
+- B-005 ⚠️ Same email invited twice before use: two live links exist; the first used wins, the second then fails at join since the email is taken, but it stays "open" in the table.
+- B-006 ❌ Revoke an unused invite. No revoke action.
+- B-007 ❌ Resend/extend an expired invite. A new one must be issued.
+- B-008 ❌ List pending invites with age. Not shown.
+- B-009 ❌ Invite is emailed. Admin copies `/join/<token>` manually.
+- B-010 ⚠️ Invite link forwarded or leaked. The link fixes the account email, so whoever opens it first creates the account for that address without proving they own the mailbox. Mitigation today: single use, 7 days.
+- B-011 ❌ Verify the person owns the email before the account is active. Not verified.
+- B-012 ⚠️ Typo in invited email: the account is created for a mailbox nobody owns; no way to correct except offboard + new invite.
+- B-013 ❌ Edit an invite's role/scope before use. None.
+- B-014 ✅ Invite expiry is 7 days, enforced on open and on join.
+- B-015 ✅ Token format is validated (20-64 url-safe chars) before any DB lookup.
+- B-016 ✅ Join is rate limited to 10 attempts per hour per IP.
+- B-017 ⚠️ Rate limit is by IP: a whole office behind one NAT onboarding 12 people at once hits the limit.
+- B-018 ❌ Bulk invite 50 people. None.
+- B-019 ❌ Invite with a start date in the future (joins Monday). Invite works immediately; clock for deadlines starts at join, which is good, but no "pre-boarding" before day one.
+- B-020 ❌ Invite carries a manager/buddy. No manager relation stored.
+- B-021 ❌ Invite carries a custom welcome message. None.
+- B-022 ⚠️ Job role free text: `Sales`, `sales`, `Sales Exec` → lower-cased only; `sales exec` would match no ladder and no role-tracks.
+- B-023 ❌ Job role chosen from a list. Free text.
+- B-024 ❌ Job role with multiple hats (sales + support). One role string only.
+- B-025 ⚠️ Role containing a comma could confuse `roles` matching; max 40 chars, not sanitised for commas.
+- B-026 ❌ Customer invites carrying the products they bought. Scope covers it, but no purchase record or expiry of access.
+- B-027 ❌ Customer invite from a webhook after purchase. None.
+- B-028 ✅ Customers are only enrolled in customer/both tracks (enforced at enrolment).
+- B-029 ⚠️ A person is both staff of Company A and customer of Company B. One account has one audience.
+- B-030 ❌ Same person invited as staff after being a customer. Email already exists, so refused.
+
+## Joining
+- B-031 ✅ Name 1-80 chars and password 8-200 chars enforced.
+- B-032 ⚠️ No password strength check beyond length (`Password1` allowed).
+- B-033 ❌ Password breach check. None.
+- B-034 ✅ Invite use and account creation are one transaction; a link cannot be used twice.
+- B-035 ✅ Two people clicking join at the same instant: only one wins.
+- B-036 ✅ After join the person is signed in and sent to `/dashboard`.
+- B-037 ❌ Terms/privacy acceptance at join. None recorded.
+- B-038 ❌ Profile photo prompt at join. Optional at `/profile` only.
+- B-039 ❌ Timezone/language captured. No fields.
+- B-040 ❌ Pronouns/preferred name. Single `name` field.
+- B-041 ❌ Name too long or with emoji/RTL characters. Allowed up to 80 chars; not otherwise normalised.
+- B-042 ✅ Join page for a used/expired/invalid link shows a generic message that does not reveal which.
+- B-043 ⚠️ Browser autofills a saved password for a different site into the join form. No hint to use a manager.
+- B-044 ❌ Person closes the tab after the join error and loses the link. They need the original link; fine if still valid.
+- B-045 ❌ Join on mobile with a very slow network, double-submit. Transaction guard protects the invite, but the user may see "invalid" on the second click even though the first succeeded.
+- B-046 ✅ Offboarded or unknown login attempts still spend a hash, preventing email enumeration by timing.
+- B-047 ✅ Login limited to 5 per IP+email and 30 per IP per 15 minutes.
+- B-048 ⚠️ Lockout is in memory; a restart resets it.
+- B-049 ❌ Locked-out legitimate user gets no email or unlock path.
+- B-050 ❌ Password reset. None ("No password reset" in README).
+- B-051 ❌ Change password while signed in. No UI (`/profile` has photo only).
+- B-052 ✅ "Sign out everywhere" bumps `sessionVersion`.
+- B-053 ❌ Forced password change when an admin created the account with a temporary password (`createPerson`). Temp password stays valid until changed, and there is no way to change it.
+- B-054 ⚠️ `createPerson` makes accounts with an admin-known password; the admin could sign in as them.
+- B-055 ❌ MFA/2FA. None.
+- B-056 ❌ SSO (Google/Microsoft). None.
+- B-057 ❌ Magic-link login. None.
+- B-058 ❌ Passkeys. None.
+- B-059 ✅ Session cookie is httpOnly, sameSite lax, secure in production, HMAC-signed.
+- B-060 ❌ Device list/"where am I signed in". None.
+
+## Account data hygiene
+- B-061 ❌ Change own email. No UI; the invite email is the identity.
+- B-062 ❌ Admin changes someone's email. DB only.
+- B-063 ❌ Two accounts for one human (personal email then work email). No merge.
+- B-064 ❌ Name change after marriage/legal change; certificates already issued show the old name.
+- B-065 ❌ Re-issue a certificate after a name change. None.
+- B-066 ❌ Change job role after promotion/transfer. `jobRole` has no edit UI (see F-category).
+- B-067 ⚠️ Change scopes via `updateScopes`; works for managers, re-syncs required tracks.
+- B-068 ❌ Scope change that *removes* access: old enrolments stay, so the person still sees Company A's tracks they can open by link.
+- B-069 ❌ Make a learner a manager. DB only.
+- B-070 ❌ Temporary elevated access (cover a manager's leave). None.
+- B-071 ❌ Disable an account without offboarding (suspended during investigation). Only `offboarded`.
+- B-072 ❌ Reactivate an offboarded account (returning contractor). No action; DB edit only.
+- B-073 ❌ Re-hire with the same email: invite refused ("already has an account"), account is offboarded, so re-hire is blocked.
+- B-074 ❌ Anonymise instead of keep. None.
+- B-075 ❌ Delete my data (GDPR erasure). None.
+- B-076 ❌ Export my data (GDPR portability). None.
+- B-077 ❌ Consent record for processing training results. None.
+- B-078 ❌ Under-18 learner handling. None.
+- B-079 ❌ Display name vs legal name on certificates. One field.
+- B-080 ✅ Avatar upload is optional; people without one get a generated face. Stored outside `users`.
+
+## Specific "who is joining" cases
+- B-081 ⚠️ Junior with no tech experience joins as developer: placement quiz and level-1 start work; the required path is long.
+- B-082 ⚠️ Senior hire who already knows everything: placement lets them skip up to level 15 on a track; mandatory still requires passing level 5, but placed levels count as passed? Placement sets `placedLevel` ("treated as already mastered"), so likely satisfied.
+- B-083 ❌ Prior-certificate recognition (AWS cert counts as cloud track). None.
+- B-084 ❌ Waive a requirement for one person with reason. None.
+- B-085 ❌ Part-time person with half the time. Same deadline.
+- B-086 ❌ Person on notice period joins nothing new. N/A but no flag.
+- B-087 ❌ Neurodivergent learner needs more time per question. `timeSec` is per question, no accommodation setting.
+- B-088 ❌ Non-native English speaker. English only.
+- B-089 ❌ Screen-reader use. Not audited.
+- B-090 ❌ Low bandwidth. Not audited.
+- B-091 ⚠️ Learner on a shared computer forgets to sign out. 30-day session.
+- B-092 ❌ Idle timeout. None.
+- B-093 ✅ Revoked session after offboarding is rejected on the next request.
+- B-094 ⚠️ Person has the app open mid-exam when offboarded: next submit fails auth and answers are lost; no recovery.
+- B-095 ❌ Invite for someone who must not see another brand's customers. Scoping covers tracks, not data of other people.
+- B-096 ❌ Guest viewer for an auditor. None.
+- B-097 ✅ Invite creator is recorded (`createdBy`).
+- B-098 ❌ Audit log of who invited whom, when used, from which IP. Only createdBy/usedAt.
+- B-099 ❌ Notification to the manager when the invitee has joined. None.
+- B-100 ❌ Notification to the invitee 3 days before expiry. None.

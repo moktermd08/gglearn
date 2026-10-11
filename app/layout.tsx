@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { currentUser } from "@/lib/auth";
-import { BookMarked, Database, LayoutDashboard, LogIn, LogOut, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users } from "lucide-react";
+import { BookMarked, Database, LayoutDashboard, LogIn, LogOut, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users } from "lucide-react";
 import { logout, logoutEverywhere } from "./actions";
 
 export const metadata: Metadata = {
@@ -24,6 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {user && user.role !== "learner" && <Link href="/admin" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><Database size={15} />Question bank</Link>}
             {user && user.role !== "learner" && <Link href="/admin/people" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><Users size={15} />People</Link>}
             {user && user.role !== "learner" && <Link href="/admin/compliance" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><ShieldCheck size={15} />Compliance</Link>}
+            {user && user.role !== "learner" && <Link href="/admin/freshness" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><Newspaper size={15} />Freshness</Link>}
             {user && user.role !== "learner" && <Link href="/admin/careers" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><TrendingUp size={15} />Careers</Link>}
             <span className="ml-auto" />
             {user ? (

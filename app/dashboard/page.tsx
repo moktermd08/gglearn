@@ -12,8 +12,9 @@ import { SubjectArt } from "@/components/SubjectArt";
 import { Ring } from "@/components/Ring";
 import { requirementsFor, scopesOf } from "@/lib/paths";
 import { careerFor } from "@/lib/careers";
+import { pendingFor } from "@/lib/freshness";
 import { enroll } from "@/app/actions";
-import { AlertTriangle, ArrowUpRight, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, Plus, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, BellRing, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, Plus, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain } from "lucide-react";
 
 export default async function Dashboard() {
   const user = await requireUser();
@@ -31,6 +32,7 @@ export default async function Dashboard() {
   const required = requirementsFor(user, scopesOf(user.id));
   const requiredOpen = required.filter((r) => !r.done), overdue = requiredOpen.filter((r) => r.overdue);
   const career = careerFor(user);
+  const unread = pendingFor(user.id);
   const enrolledIds = new Set(mine.map((m) => m.t.id));
   const badges = stats.length ? badgesFor(stats.sort((a, b) => b.s.xp - a.s.xp)[0].s) : [];
 
@@ -59,6 +61,14 @@ export default async function Dashboard() {
           </div>
         ))}
       </div>
+
+      {unread.length > 0 && (
+        <Link href="/updates" className={`card flex items-center gap-3 p-4 transition hover:border-amber-300/60 ${unread.some((u) => u.overdue) ? "border-rose-400/40" : "border-amber-300/40"}`}>
+          <BellRing size={20} className="text-amber-300" />
+          <span className="flex-1 text-sm"><b>{unread.length} update{unread.length === 1 ? "" : "s"} to read:</b> {unread.slice(0, 2).map((u) => u.change.title).join(", ")}{unread.length > 2 && ` and ${unread.length - 2} more`}</span>
+          <ArrowUpRight size={16} className="text-slate-400" />
+        </Link>
+      )}
 
       {required.length > 0 && (
         <section className={`card p-4 ${overdue.length ? "border-rose-400/40" : ""}`}>

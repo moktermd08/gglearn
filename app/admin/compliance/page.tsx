@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireManager } from "@/lib/auth";
+import { pendingCounts } from "@/lib/freshness";
 import { catalog, complianceReport, requirementsFor, scopeLabels, scopeOptions } from "@/lib/paths";
 import { AlertTriangle, CheckCircle2, Clock, FileQuestion, ShieldCheck, UserX } from "lucide-react";
 
@@ -19,6 +20,7 @@ export default async function Compliance() {
   const rows = complianceReport();
   const options = scopeOptions();
   const cat = catalog();
+  const behind = pendingCounts();
   const count = (s: keyof typeof STATE) => rows.filter((r) => r.state === s).length;
   // required by policy but with no questions yet: nobody can be held to it
   const empty = cat.filter((t) => (t.tier === "mandatory" || t.tier === "role") && t.reach < t.requiredLevel);
@@ -57,6 +59,7 @@ export default async function Compliance() {
                   <div className="flex flex-wrap items-center gap-2 font-medium">{r.person.name}
                     {r.person.audience === "customer" && <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">customer</span>}
                     <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${st.cls}`}>{st.label}</span>
+                    {behind.get(r.person.id) ? <Link href="/admin/freshness" className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">{behind.get(r.person.id)} update{behind.get(r.person.id) === 1 ? "" : "s"} unread</Link> : null}
                   </div>
                   <div className="truncate text-xs text-slate-500">{r.person.jobRole} · {labels.length ? labels.join(" · ") : "no company, brand or project"}</div>
                 </div>
