@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bot, Clock, Flag, Globe, Lock, Mail, Target, Users } from "lucide-react";
+import { Bot, Clock, Coins, Flag, Globe, Lock, Mail, Target, Users } from "lucide-react";
 import { SubjectArt } from "@/components/SubjectArt";
 import { modeLabel, span, now, type Card } from "@/lib/competitions";
 
@@ -25,6 +25,7 @@ export function CompetitionCard({ card }: { card: Card }) {
         {invited && <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 font-bold text-amber-300"><Mail size={11} />You are invited</span>}
         <span className="inline-flex items-center gap-1 text-slate-400">{c.visibility === "public" ? <><Globe size={12} />Public</> : <><Lock size={12} />Private</>}</span>
         <span className="ml-auto text-slate-400">{modeLabel(humans, bots)}</span>
+        {c.prizeAmount > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-2 py-0.5 font-bold text-amber-300"><Coins size={11} />Prize</span>}
       </div>
       <div className="mt-3 flex items-center gap-3">
         <SubjectArt slug={track.slug} name={trackName} kind={track.kind} size={44} />
