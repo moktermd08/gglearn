@@ -3,7 +3,8 @@ import Link from "next/link";
 import { brands, checklistItems, db, enrollments, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { LEVELS, MAX_LEVEL, TIERS, tierOf } from "@/lib/levels";
-import { badgesFor, trackStats } from "@/lib/stats";
+import { activityFor, badgesFor, trackStats } from "@/lib/stats";
+import { AreaChart, EmptyState, Heatmap, PALETTE, Radar, StatTile } from "@/components/charts";
 import { rivalFor } from "@/lib/rivals";
 import { Avatar } from "@/components/Avatar";
 import { listFor } from "@/lib/competitions";
@@ -16,7 +17,7 @@ import { goalOf, roleLabel } from "@/lib/journey";
 import { pendingFor } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath } from "@/lib/roles";
 import { enroll, toggleChecklist } from "@/app/actions";
-import { AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, Plus, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, Plus, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain, Activity, Radar as RadarIcon, Rocket } from "lucide-react";
 
 export default async function Dashboard() {
   const user = await requireUser();
@@ -38,11 +39,17 @@ export default async function Dashboard() {
   const unread = pendingFor(user.id);
   const noRolePath = user.audience === "staff" && hasNoRolePath(coverageFor(user.jobRole));
   const enrolledIds = new Set(mine.map((m) => m.t.id));
+  const activity = activityFor(user.id, 24);
+  const last30 = activity.slice(-30).map((d) => ({ label: d.day.slice(5), value: d.value }));
+  const weekXp = activity.slice(-7).reduce((a, d) => a + d.value, 0);
+  const activeDays = activity.filter((d) => d.value > 0).length;
+  const radarAxes = [...stats].sort((a, b) => b.s.passed - a.s.passed).slice(0, 6).map((m) => ({ label: m.t.name.replace(/:.*$/, ""), value: m.s.passed / MAX_LEVEL }));
   const badges = stats.length ? badgesFor(stats.sort((a, b) => b.s.xp - a.s.xp)[0].s) : [];
 
   return (
     <div className="space-y-8">
-      <div className="card flex flex-wrap items-center gap-6 p-6">
+      <div className="card pop relative flex flex-wrap items-center gap-6 overflow-hidden p-6" style={{ background: "linear-gradient(120deg,#4f46e51f,#ffffff 60%)" }}>
+        <svg className="pointer-events-none absolute -right-8 -top-12 h-64 w-64" viewBox="0 0 200 200" aria-hidden><circle cx="120" cy="80" r="90" fill="none" stroke="#4f46e5" strokeOpacity=".12" /><circle cx="120" cy="80" r="60" fill="none" stroke="#9333ea" strokeOpacity=".18" strokeDasharray="4 6" className="march" /></svg>
         <Avatar kind="human" level={Math.max(0, ...stats.map((m) => m.s.passed))} size={96} className="bob" />
         <div className="flex-1">
           <h1 className="text-2xl font-extrabold">Welcome back, {user.name}</h1>
@@ -52,19 +59,28 @@ export default async function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[
-          { Icon: Sparkles, label: "Total XP", value: totalXp, cls: "text-sky-300" },
-          { Icon: Flame, label: "Day streak", value: bestStreak, cls: "text-orange-400" },
-          { Icon: Mountain, label: "Levels passed", value: levelsPassed, cls: "text-violet-300" },
-          { Icon: Swords, label: "Live contests", value: contests.filter((x) => x.state === "live").length, cls: "text-pink-300" },
-        ].map(({ Icon, label, value, cls }, i) => (
-          <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
-            <Icon size={22} className={`mx-auto ${cls} ${label === "Day streak" && value > 0 ? "pulse-glow" : ""}`} />
-            <div className="mt-1 text-3xl font-extrabold">{value}</div>
-            <div className="text-xs uppercase tracking-wider text-slate-400">{label}</div>
-          </div>
-        ))}
+        <StatTile i={0} Icon={Sparkles} label="Total XP" value={totalXp} color={PALETTE.sky} spark={activity.slice(-14).map((d) => d.value)} />
+        <StatTile i={1} Icon={Flame} label="Day streak" value={bestStreak} color="#ea580c" spark={activity.slice(-14).map((d) => (d.value ? 1 : 0))} />
+        <StatTile i={2} Icon={Mountain} label="Levels passed" value={levelsPassed} color={PALETTE.violet} />
+        <StatTile i={3} Icon={Swords} label="Live contests" value={contests.filter((x) => x.state === "live").length} color={PALETTE.pink} />
       </div>
+
+      <section className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
+        <div className="card p-5">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="flex items-center gap-2 font-bold"><Activity size={18} className="text-indigo-300" />XP, last 30 days</h2>
+            <span className="text-xs text-slate-400"><b className="text-slate-200">{weekXp}</b> XP this week · <b className="text-slate-200">{activeDays}</b> active days of 168</span>
+          </div>
+          <AreaChart data={last30} />
+          <div className="mt-3"><div className="mb-1 text-[11px] uppercase tracking-wider text-slate-400">Last 24 weeks</div><Heatmap days={activity} /></div>
+        </div>
+        <div className="card flex flex-col items-center p-5">
+          <h2 className="flex items-center gap-2 self-start font-bold"><RadarIcon size={18} className="text-violet-300" />Skill map</h2>
+          {radarAxes.length >= 3 ? <Radar axes={radarAxes} color={PALETTE.violet} /> : (
+            <div className="my-auto w-full py-4"><EmptyState Icon={Rocket} title="Your skill map grows here">Enrol in three or more subjects and your level in each is plotted as a shape.</EmptyState></div>
+          )}
+        </div>
+      </section>
 
       {unread.length > 0 && (
         <Link href="/updates" className={`card flex items-center gap-3 p-4 transition hover:border-amber-300/60 ${unread.some((u) => u.overdue) ? "border-rose-400/40" : "border-amber-300/40"}`}>
@@ -164,7 +180,7 @@ export default async function Dashboard() {
 
       <section>
         <h2 className="mb-3 flex items-center gap-2 text-lg font-bold"><Swords size={20} className="text-pink-300" />My races</h2>
-        {mine.length === 0 && <p className="text-slate-400">Nothing yet. <Link href="/" className="underline">Pick a subject and meet your rival</Link>.</p>}
+        {mine.length === 0 && <EmptyState Icon={Swords} title="No rival yet" tone="pink">Pick a subject and meet the rival who trains it every day. <Link href="/" className="underline">Browse subjects</Link>.</EmptyState>}
         <div className="grid gap-4 sm:grid-cols-2">
           {stats.map(({ e, t, b, s }, idx) => {
             const rv = rivalFor(t.slug), tier = TIERS[tierOf(s.passed)];

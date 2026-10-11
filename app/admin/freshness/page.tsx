@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/charts";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { brands, db, knowledgeItems, tracks } from "@/lib/db";
@@ -24,13 +25,10 @@ export default async function Freshness({ searchParams }: { searchParams: Promis
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="flex items-center gap-2 text-2xl font-bold"><Newspaper className="text-amber-300" />Is everyone current</h1>
-        <p className="mt-1 text-sm text-slate-400">
+      <PageHero Icon={Newspaper} tone="amber" title="Is everyone current" sub={<>
           When company knowledge changes (a brand moto, tone, policy), people enrolled in that track are asked to read it within {REVIEW_DAYS} days.
           People who joined after the change are not asked.
-        </p>
-      </div>
+        </>} />
 
       {me.role === "admin" && (
         <section className="card space-y-3 p-4">

@@ -1,3 +1,4 @@
+import { EmptyState, PageHero } from "@/components/charts";
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { pendingFor } from "@/lib/freshness";
@@ -14,12 +15,9 @@ export default async function Updates() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <div>
-        <h1 className="flex items-center gap-2 text-2xl font-bold"><BellRing className="text-amber-300" />What changed</h1>
-        <p className="mt-1 text-sm text-slate-400">Company knowledge you have studied has been updated. Read each change, then confirm so your team knows you are current.</p>
-      </div>
+      <PageHero Icon={BellRing} tone="amber" title="What changed" sub={<>Company knowledge you have studied has been updated. Read each change, then confirm so your team knows you are current.</>} />
       {pending.length === 0 && (
-        <div className="card flex items-center gap-3 p-6 text-emerald-300"><CheckCircle2 />You are up to date. Nothing new to read.</div>
+        <EmptyState Icon={CheckCircle2} tone="emerald" title="You are up to date">Nothing new to read. Company updates you need to confirm will show up here.</EmptyState>
       )}
       {pending.map(({ change, track, dueAt, overdue }) => (
         <section key={change.id} className="card space-y-3 p-5">

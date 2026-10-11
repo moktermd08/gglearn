@@ -1,7 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { ArrowRight, Check, Flame, Lightbulb, Sparkles, Tag, X, Zap } from "lucide-react";
+import { ArrowRight, Check, CircleX, Flame, Lightbulb, Sparkles, Tag, X, Zap } from "lucide-react";
 import { drillCheck, finishDrill } from "@/app/actions";
 import { Confetti } from "@/components/Confetti";
 import { Ring } from "@/components/Ring";
@@ -10,7 +10,7 @@ import type { QuizQ } from "@/components/Quiz";
 /** Five instant-feedback questions: pick, see right/wrong at once, move on. */
 export function Drill({ trackId, back, questions }: { trackId: number; back: string; questions: QuizQ[] }) {
   const [i, setI] = useState(0), [results, setResults] = useState<boolean[]>([]), [res, setRes] = useState<{ key: string; correct: boolean; answer: string; hint: string | null } | null>(null);
-  const [xp, setXp] = useState<number | null>(null), [pending, start] = useTransition();
+  const [missed, setMissed] = useState<{ prompt: string; answer: string }[]>([]), [xp, setXp] = useState<number | null>(null), [pending, start] = useTransition();
   const score = results.filter(Boolean).length;
   const streak = (() => { let s = 0; for (let n = results.length - 1; n >= 0 && results[n]; n--) s++; return s; })();
   const dots = (
@@ -34,20 +34,26 @@ export function Drill({ trackId, back, questions }: { trackId: number; back: str
         {dots}
         <h1 className="flex items-center justify-center gap-2 text-2xl font-extrabold">{score >= 4 ? <><Flame className="text-orange-400" />On fire!</> : <><Zap className="text-amber-300" />Keep climbing</>}</h1>
         <p className="flex items-center justify-center gap-1.5 text-slate-300"><Sparkles size={16} className="text-amber-300" />{xp ? `+${xp} XP added to your quest log.` : "Drill quest already done today."}</p>
+        {missed.length > 0 && (
+          <div className="rounded-xl bg-rose-500/5 p-3 text-left">
+            <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-300"><CircleX size={14} />Worth another look</div>
+            <ul className="space-y-2 text-sm">{missed.map((m) => <li key={m.prompt}><div className="font-medium">{m.prompt}</div><div className="flex items-start gap-1 text-slate-400"><Check size={14} className="mt-0.5 shrink-0 text-emerald-400" />{m.answer}</div></li>)}</ul>
+          </div>
+        )}
         <Link href={back} className="btn">Back to the climb<ArrowRight size={16} /></Link>
       </div>
     );
   }
   const q = questions[i];
-  const pick = (key: string) => { if (res || pending) return; start(async () => { const r = await drillCheck(q.id, key); if (!r) return; setRes({ key, ...r }); setResults((x) => [...x, r.correct]); }); };
+  const pick = (key: string) => { if (res || pending) return; start(async () => { const r = await drillCheck(q.id, key); if (!r) return; setRes({ key, ...r }); setResults((x) => [...x, r.correct]); if (!r.correct) setMissed((m) => [...m, { prompt: q.prompt, answer: q.options?.find((o) => o.key === r.answer)?.text ?? r.answer }]); }); };
   const next = () => {
     if (i === questions.length - 1) start(async () => { setXp(await finishDrill(trackId)); });
     else { setRes(null); setI(i + 1); }
   };
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <div className="flex items-center justify-between text-sm text-slate-400">
-        <span className="flex items-center gap-1.5 font-semibold text-amber-300"><Zap size={16} />Quick drill</span>
+      <div className="card flex items-center justify-between p-4 text-sm text-slate-400" style={{ background: "linear-gradient(120deg,#f59e0b26,#ffffff 60%)" }}>
+        <span className="flex items-center gap-2 text-base font-extrabold text-amber-300"><span className="grid h-9 w-9 place-items-center rounded-xl bg-amber-500 text-white"><Zap size={18} /></span>Quick drill</span>
         <span className="flex items-center gap-3">
           {streak >= 2 && <span className="pop flex items-center gap-1 font-bold text-orange-400"><Flame size={15} />{streak} streak</span>}
           <span>{i + 1}/{questions.length} · {score} correct</span>

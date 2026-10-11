@@ -9,7 +9,7 @@ import { QUEST_LABEL, QUEST_XP, badgesFor, trackStats } from "@/lib/stats";
 import { rivalFor } from "@/lib/rivals";
 import { enroll, startRun } from "@/app/actions";
 import { Avatar } from "@/components/Avatar";
-import { SubjectArt } from "@/components/SubjectArt";
+import { SubjectArt, artFor } from "@/components/SubjectArt";
 import { RaceTrack } from "@/components/RaceTrack";
 import { RankEmblem } from "@/components/RankEmblem";
 import { Ring } from "@/components/Ring";
@@ -40,10 +40,13 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
   const next = Math.min(20, passed + 1);
   const maxN = Math.max(1, ...counts.values());
   const questsDone = s?.doneToday.size ?? 0;
+  const accent = artFor(track.slug, track.name, track.kind).color;
+  const totalQs = [...counts.values()].reduce((a, b) => a + b, 0);
 
   return (
     <div className="space-y-8">
-      <div className="card flex flex-wrap items-center gap-6 p-6">
+      <div className="card pop relative flex flex-wrap items-center gap-6 overflow-hidden p-6" style={{ background: `linear-gradient(120deg, ${accent}26, #ffffff 60%)` }}>
+        <svg className="pointer-events-none absolute -right-10 -top-14 h-72 w-72" viewBox="0 0 200 200" aria-hidden><circle cx="120" cy="80" r="90" fill="none" stroke={accent} strokeOpacity=".18" /><circle cx="120" cy="80" r="58" fill="none" stroke={accent} strokeOpacity=".25" strokeDasharray="4 6" className="march" /></svg>
         <div className="flex items-end gap-1">
           <Avatar kind="human" level={passed} size={88} className="bob" />
           <span className="mb-8 text-xl font-black text-white/30">VS</span>
@@ -54,6 +57,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           <div className="text-xs uppercase tracking-widest text-indigo-300">{brand.name} · {KIND_LABEL[track.kind]}</div>
           <h1 className="text-3xl font-extrabold">{track.name}</h1>
           <p className="mt-1 text-slate-300">{track.description}</p>
+          <p className="mt-1 flex flex-wrap items-center gap-x-3 text-xs text-slate-400"><span className="inline-flex items-center gap-1"><ListChecks size={12} />{totalQs.toLocaleString("en-GB")} questions</span><span className="inline-flex items-center gap-1"><Mountain size={12} />20 levels</span><span className="inline-flex items-center gap-1"><Target size={12} />{PASS_MARK * 100}% to pass</span></p>
           <p className="mt-1 text-sm text-slate-400">Your rival: <b className="text-white">{rival.name}</b>, {rival.tagline}.</p>
         </div>
         {s && <Ring pct={passed / 20} label={`${passed}/20`} sub="levels" size={108} color={`hsl(${TIERS[tierOf(passed)].hue} 85% 65%)`} />}

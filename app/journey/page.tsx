@@ -1,3 +1,4 @@
+import { EmptyState, PageHero } from "@/components/charts";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { db, enrollments } from "@/lib/db";
@@ -62,12 +63,12 @@ export default async function Journey({ searchParams }: { searchParams: Promise<
 
   if (j.state === "no-ladder") {
     return (
-      <div className="mx-auto max-w-2xl space-y-3">
-        <h1 className="flex items-center gap-2 text-2xl font-extrabold"><Mountain className="text-violet-300" />My career journey</h1>
-        <p className="card p-4 text-slate-300">
+      <div className="mx-auto max-w-2xl space-y-4">
+        <PageHero Icon={Mountain} tone="violet" title="My career journey" sub="Where you are, where you are heading, and what stands in between." />
+        <EmptyState Icon={Mountain} tone="violet" title="No path to climb yet">
           There is no career path for {user.audience === "customer" ? "customer accounts" : <>the role <b>{user.jobRole}</b></>} yet.
           {user.audience === "staff" && " Ask an admin to add one at Careers, or to check that your job role matches a ladder."}
-        </p>
+        </EmptyState>
       </div>
     );
   }

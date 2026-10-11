@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/charts";
 import { eq } from "drizzle-orm";
 import { db, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
@@ -25,7 +26,7 @@ export default async function Careers() {
 
   return (
     <div className="space-y-8">
-      <h1 className="flex items-center gap-2 text-2xl font-bold"><TrendingUp className="text-violet-300" />Careers</h1>
+      <PageHero Icon={TrendingUp} tone="violet" title="Careers" sub="Promotion ladders for every role, and who is ready to move up." />
 
       <section className="space-y-3">
         <h2 className="font-semibold">People <span className="text-xs font-normal text-slate-500">{ready.length} ready for promotion review</span></h2>

@@ -8,6 +8,7 @@ import { rivalFor } from "@/lib/rivals";
 import { hiddenTrackIds } from "@/lib/tracks";
 import { currentUser } from "@/lib/auth";
 import { openTo } from "@/lib/paths";
+import { StatTile, PALETTE } from "@/components/charts";
 import { ArrowRight, BookOpen, Building2, GraduationCap, Layers, ShieldCheck, Swords, Target, Trophy, Users } from "lucide-react";
 
 const STEPS = [
@@ -65,6 +66,13 @@ export default async function Home() {
             <div className="bob [animation-delay:.6s]"><Avatar kind="rival" level={9} hue={rivalFor("git-titan").hue} size={56} /></div>
           </div>
         </div>
+      </section>
+
+      <section className="grid grid-cols-2 gap-3 md:grid-cols-4" aria-label="The academy in numbers">
+        <StatTile i={0} Icon={BookOpen} label="Subjects" value={rows.length} color={PALETTE.indigo} />
+        <StatTile i={1} Icon={Target} label="Questions" value={totalQ.toLocaleString("en-GB")} color={PALETTE.sky} />
+        <StatTile i={2} Icon={Layers} label="Brands" value={byBrand.size} color={PALETTE.violet} />
+        <StatTile i={3} Icon={Trophy} label="Levels to Titan" value={LEVELS.length} color={PALETTE.amber} />
       </section>
 
       <section>

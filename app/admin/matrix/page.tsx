@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/charts";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { requireManager } from "@/lib/auth";
@@ -25,14 +26,11 @@ export default async function Matrix() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="flex items-center gap-2 text-2xl font-bold"><Grid3x3 className="text-indigo-300" />Role and pillar matrix</h1>
-        <p className="mt-1 text-sm text-slate-400">
+      <PageHero Icon={Grid3x3} title="Role and pillar matrix" sub={<>
           <span className={CELL.required.cls}>● required</span> becomes mandatory learning for that role (only for tracks with enough questions; a track you set by hand on{" "}
           <Link href="/admin/paths" className="underline">What is required</Link> is left alone). <span className={CELL.recommended.cls}>○ recommended</span> shapes a new joiner&apos;s starter plan.
           The number under each pillar is how many of its tracks can be examined today. Edit <code>content/blueprints/pillars.json</code>.
-        </p>
-      </div>
+        </>} />
       <div className="card overflow-x-auto p-3">
         <table className="w-full text-sm">
           <thead>

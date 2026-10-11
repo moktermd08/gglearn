@@ -1,3 +1,4 @@
+import { EmptyState, PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
 import { CalendarClock, Flag, LogIn, Radio, Swords, Trophy, Plus, Users } from "lucide-react";
 import { currentUser } from "@/lib/auth";
@@ -27,23 +28,14 @@ export default async function Competitions() {
 
   return (
     <div className="space-y-8">
-      <div className="card flex flex-wrap items-center gap-4 p-6">
-        <Trophy size={44} className="pulse-glow text-yellow-300" />
-        <div className="flex-1">
-          <h1 className="text-2xl font-extrabold">Compete</h1>
-          <p className="text-slate-300">Pick any topic, set a goal and a deadline, then race a bot, a friend or a whole group. Public contests can be watched by anyone; private ones only by the people in them.</p>
-        </div>
+      <PageHero Icon={Trophy} tone="amber" title="Compete" sub="Pick any topic, set a goal and a deadline, then race a bot, a friend or a whole group. Public contests can be watched by anyone; private ones only by the people in them.">
         {user ? <Link href="/competitions/new" className="btn"><Plus size={16} />Start a contest</Link> : <Link href="/login" className="btn"><LogIn size={16} />Sign in to compete</Link>}
-      </div>
+      </PageHero>
 
       <div className="grid grid-cols-3 gap-3">
-        {stats.map(({ Icon, label, value, cls }, i) => (
-          <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
-            <Icon size={22} className={`mx-auto ${cls}`} />
-            <div className="mt-1 text-3xl font-extrabold">{value}</div>
-            <div className="text-xs uppercase tracking-wider text-slate-400">{label}</div>
-          </div>
-        ))}
+        <StatTile i={0} Icon={Radio} label="Live now" value={stats[0].value} color={PALETTE.emerald} />
+        <StatTile i={1} Icon={CalendarClock} label="Starting soon" value={stats[1].value} color={PALETTE.sky} />
+        <StatTile i={2} Icon={Users} label="Your contests" value={stats[2].value} color={PALETTE.pink} />
       </div>
 
       {mine.length > 0 && (
@@ -60,7 +52,7 @@ export default async function Competitions() {
         </section>
       ))}
 
-      {open.length === 0 && mine.length === 0 && <p className="text-slate-400">No public contests yet. Be the first to start one.</p>}
+      {open.length === 0 && mine.length === 0 && <EmptyState Icon={Trophy} tone="amber" title="No public contests yet">Be the first: pick a topic, set a goal and challenge a bot or a friend.</EmptyState>}
     </div>
   );
 }

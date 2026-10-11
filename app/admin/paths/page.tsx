@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/charts";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { eq, sql } from "drizzle-orm";
@@ -23,13 +24,10 @@ export default async function Paths() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="flex items-center gap-2 text-2xl font-bold"><Route className="text-indigo-300" />What is required</h1>
-        <p className="mt-1 text-sm text-slate-400">
+      <PageHero Icon={Route} title="What is required" sub={<>
           <b>Mandatory</b>: everyone it applies to must pass. <b>Role</b>: required for the job roles listed on the track. <b>Growth</b>: optional, counts toward promotion.
           Saving enrols everyone affected straight away; the deadline runs from the day they are enrolled.
-        </p>
-      </div>
+        </>} />
       {groups.map((g) => (
         <details key={g.name} open={g.kind !== "shared"} className="card p-4">
           <summary className="cursor-pointer font-semibold">{g.name} <span className="text-xs font-normal text-slate-500">{g.list.length} tracks{g.kind === "shared" ? " · shared academy" : ""}</span></summary>
