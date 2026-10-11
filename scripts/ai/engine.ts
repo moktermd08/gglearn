@@ -24,7 +24,7 @@ const jac = (a: Set<string>, b: Set<string>) => {
   return i / (a.size + b.size - i);
 };
 // keep code identifiers (tf.cast, fit_transform, nn.Module) exactly as written
-const cap = (s: string) => (/^[a-z]+[._(\d]|^[a-z]+[A-Z]|^[a-z]+_/.test(s) ? s : s.charAt(0).toUpperCase() + s.slice(1));
+const cap = (s: string) => (/^(nn|np|pd|tf)\b|^[a-z]+[._(\d]|^[a-z]+[A-Z]|^[a-z]+_/.test(s) ? s : s.charAt(0).toUpperCase() + s.slice(1));
 const clean = (s: string) => s.trim().replace(/[.\s]+$/, "");
 const sentence = (subject: string, pred: string) => `${cap(subject)} ${clean(pred)}.`;
 
@@ -39,6 +39,12 @@ const numberOf = (pred: string): "s" | "p" | "any" => {
   if (PLURAL.has(w)) return "p";
   return w.endsWith("s") && !w.endsWith("ss") ? "s" : "p";
 };
+/**
+ * A negative predicate ("does not turn off gradient tracking") is true of almost any unrelated subject, so it can never be
+ * borrowed as a wrong statement, and "Which X does not ...?" has no single answer.
+ */
+const NEG = /^(does not|do not|doesn't|don't|cannot|can't|can not|is not|are not|isn't|aren't|never|must not|should not|will not|won't|has no|have no|lacks?|without|not)\b|\b(not|never|no longer|cannot)\b/i;
+const isNeg = (pred: string) => NEG.test(pred.trim());
 const fits = (a: "s" | "p" | "any", b: "s" | "p" | "any") => a === "any" || b === "any" || a === b;
 
 type Prep = Card & { id: number; says: string[]; tk: Set<string>[]; label: string; subjectStems: Set<string>; useStems: Set<string> };
@@ -81,7 +87,7 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
   /** `near` of the n wrong statements come from sibling cards (plausible, so harder) under a strict overlap filter; the rest from other groups */
   function falsePreds(c: Prep, n: number, avoid: string[] = [], num: "s" | "p" | "any" = "any", near = 0): { pred: string; from: Prep }[] | null {
     const out: { pred: string; from: Prep }[] = [];
-    const ok = (p: string, strict: boolean) => fits(numberOf(p), num) && !clash(c, p, strict) && !avoid.includes(p) && out.every((o) => jac(toks(o.pred), toks(p)) < 0.5);
+    const ok = (p: string, strict: boolean) => !isNeg(p) && fits(numberOf(p), num) && !clash(c, p, strict) && !avoid.includes(p) && out.every((o) => jac(toks(o.pred), toks(p)) < 0.5);
     for (const d of pool(c).filter((x) => x.group === c.group)) {
       if (out.length >= Math.min(near, n)) break;
       const cand = r.shuffle(d.says).find((p) => ok(p, true));
@@ -153,14 +159,14 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
           options: [p, ...d2.map((x) => x.pred)], correct: 0, topic, hint: why, form: "defn", score: base(c) + 1.4 + j(), timeSec: 40 });
       }
       // which <group> ...? (two stems)
-      const subs = numberOf(p) === "p" ? null : otherSubjects(c, p, 3);
+      const subs = numberOf(p) === "p" || isNeg(p) ? null : otherSubjects(c, p, 3);
       if (subs) {
         add({ prompt: `Which ${c.label} ${p}?`, options: [S, ...subs.map((d) => d.subject)], correct: 0, topic, hint: why, form: "term", score: base(c) + 2 + j(), timeSec: 45 });
         const subs2 = otherSubjects(c, p, 6)?.slice(3);
         if (subs2 && subs2.length === 3) add({ prompt: `Name the ${c.label} that ${p}.`, options: [S, ...subs2.map((d) => d.subject)], correct: 0, topic, hint: why, form: "term", score: base(c) + 2.3 + j(), timeSec: 45 });
       }
       // two-way contrast
-      const partner = numberOf(p) === "p" ? undefined : pool(c).find((d) => d.group === c.group && !clash(d, p));
+      const partner = numberOf(p) === "p" || isNeg(p) ? undefined : pool(c).find((d) => d.group === c.group && !clash(d, p));
       if (partner) {
         const pair = r.shuffle([S, partner.subject]);
         add({ prompt: `Between ${S} and ${partner.subject}, which ${p}?`, options: [...pair, "Both", "Neither"], correct: pair.indexOf(S), topic, hint: why, form: "contrast", score: base(c) + 3.5 + j(), timeSec: 50, fixedOrder: true });
