@@ -16,7 +16,7 @@ export function CompetitionCard({ card }: { card: Card }) {
   const [label, cls] = CHIP[state];
   const elapsed = state === "finished" ? 1 : state === "live" ? Math.min(1, Math.max(0, (t - c.startsAt) / Math.max(1, c.endsAt - c.startsAt))) : 0;
   return (
-    <Link href={`/competitions/${c.slug}`} className="card card-hover rise block p-4">
+    <Link href={`/competitions/${c.slug}`} className="card card-hover rise block min-w-0 p-4">
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-bold ${cls}`}>
           {state === "live" && <i className="h-1.5 w-1.5 animate-ping rounded-full bg-emerald-400" />}

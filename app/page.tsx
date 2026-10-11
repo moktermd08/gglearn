@@ -37,7 +37,7 @@ export default async function Home() {
 
   return (
     <div className="space-y-16">
-      <section className="relative grid items-center gap-8 pt-4 lg:grid-cols-[1.15fr_1fr]">
+      <section className="relative grid items-center gap-8 overflow-x-clip pt-4 lg:grid-cols-[1.15fr_1fr]">
         <div className="pointer-events-none absolute -left-24 -top-16 -z-10 h-80 w-80 rounded-full bg-indigo-500/15 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -right-16 top-10 -z-10 h-72 w-72 rounded-full bg-pink-500/15 blur-3xl" aria-hidden />
         <div>
@@ -51,7 +51,7 @@ export default async function Home() {
             <Link href={viewer ? "/dashboard" : "/login"} className="btn">{viewer ? "Go to my path" : "Sign in to see your path"}<ArrowRight size={16} /></Link>
             <a href="#subjects" className="btn btn-ghost">Browse subjects</a>
           </div>
-          <p className="mt-3 text-sm text-slate-400">{rows.length} subjects · {totalQ} questions · accounts are created by your admin</p>
+          <p className="mt-3 text-sm text-slate-400">{rows.length} subjects · {totalQ.toLocaleString("en-GB")} questions · accounts are created by your admin</p>
         </div>
         <div className="card-soft p-5" aria-hidden>
           <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-400">A learner&apos;s path</div>
