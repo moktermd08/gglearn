@@ -68,7 +68,11 @@ async function fill(track: typeof tracks.$inferSelect) {
     for (let tries = 0; need > 0 && tries < 25; tries++) {
       const existing = db.select({ p: questions.prompt }).from(questions).where(and(eq(questions.trackId, track.id), eq(questions.level, level))).all().map((r) => r.p);
       let kept: Draft[] = [];
-      try { kept = await audit(await author(track, facts, level, existing)); } catch (e) { console.error("  batch failed:", (e as Error).message); continue; }
+      try { kept = await audit(await author(track, facts, level, existing)); } catch (e) {
+        // a rejected key or exhausted quota will fail every later batch too, so stop instead of retrying
+        if (e instanceof Anthropic.APIError && [401, 403, 429].includes(e.status ?? 0) && e.status !== 429) { console.error(`  stopping: ${e.status} ${e.message}`); process.exit(1); }
+        console.error("  batch failed:", (e as Error).message); continue;
+      }
       for (const d of kept) {
         const r = db.insert(questions).values({
           trackId: track.id, level, type: "mcq", prompt: d.prompt.trim(), code: d.code || null, options: d.options.map((text, i) => ({ key: "abcd"[i], text: text.trim() })),
