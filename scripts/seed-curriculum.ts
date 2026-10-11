@@ -35,6 +35,7 @@ const TRACKS: Record<string, T[]> = {
     ["gglink-sales-support", "Sales and support", "process", "sales", "Discovery calls, quoting, support runbooks."],
   ],
   "guru-graphics": [
+    ["guru-graphics-sales", "Selling Guru Graphics", "process", "sales", "Who Guru Graphics serves, what it sells and how: brand identity engagements for enterprise and the public sector, scoped and quoted by proposal."],
     ["guru-brand-identity", "Brand identity", "service", "designer", "Logo, voice, palette, guidelines."],
     ["guru-design-system", "Design systems and UI/UX", "process", "designer", "Components, accessibility, responsive design."],
     ["guru-design-tools", "Design and prototyping tools", "tool", "designer", "Figma, Canva, diagrams and presentations."],
