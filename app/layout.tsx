@@ -16,7 +16,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en">
       <body className="min-h-screen antialiased">
         <header className="sticky top-0 z-40 border-b border-black/10 bg-[#f7f5ef]/85 backdrop-blur">
-          <nav className="mx-auto flex max-w-6xl items-center gap-5 px-4 py-3 text-sm">
+          <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3 text-sm [&_a]:whitespace-nowrap [&_button]:whitespace-nowrap">
             <Link href="/" className="flex items-center gap-1.5 text-lg font-extrabold"><span className="gradient-text">gglearn</span> <Swords size={18} className="text-pink-300" aria-hidden /></Link>
             {user && <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><LayoutDashboard size={15} />My quest</Link>}
             {user && <Link href="/start" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><Rocket size={15} />Start a journey</Link>}

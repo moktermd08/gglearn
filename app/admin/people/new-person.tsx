@@ -2,17 +2,18 @@
 import { useActionState } from "react";
 import { TriangleAlert, UserPlus } from "lucide-react";
 import { createPerson } from "@/app/actions";
+import { RoleInput } from "@/components/RoleInput";
 import { ScopePicker } from "@/components/ScopePicker";
 import type { ScopeOptions } from "@/lib/paths";
 
-export default function NewPerson({ options }: { options: ScopeOptions }) {
+export default function NewPerson({ options, roles }: { options: ScopeOptions; roles: string[] }) {
   const [error, run, pending] = useActionState(createPerson, null);
   const input = "rounded border border-white/20 bg-[#fff] px-2 py-1";
   return (
     <form action={run} className="card flex flex-wrap items-end gap-2 p-4 text-sm">
       <input name="name" placeholder="Name" required className={input} />
       <input name="email" type="email" placeholder="Email" required className={input} />
-      <input name="jobRole" placeholder="Role (sales, marketing, developer…)" required className={input} />
+      <RoleInput roles={roles} id="new-roles" className={input} />
       <select name="audience" className={input} defaultValue="staff" aria-label="Staff or customer">
         <option value="staff">Staff</option>
         <option value="customer">Customer</option>

@@ -1,6 +1,6 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { brands, companies, db, enrollments, projects, questions, tracks, userScopes, users } from "@/lib/db";
-import { levelsPassed } from "@/lib/progress";
+import { levelsEarned } from "@/lib/progress";
 import { MAX_LEVEL } from "@/lib/levels";
 import { tagsFor } from "@/lib/dynamic/tags";
 import { hiddenTrackIds } from "@/lib/tracks";
@@ -95,9 +95,23 @@ export type Requirement = {
   overdue: boolean;
 };
 
+/**
+ * Does this person work for a company? A staff member whose only scope is a personal brand (an individual learning on their
+ * own) is not covered by company policy, so the academy's company-wide courses are optional for them.
+ */
+export function worksForCompany(scopes: Scope[]): boolean {
+  if (scopes.some((s) => s.kind === "company")) return true;
+  const brandIds = scopes.filter((s) => s.kind === "brand").map((s) => s.id), projectIds = scopes.filter((s) => s.kind === "project").map((s) => s.id);
+  if (brandIds.length && db.select({ id: brands.id }).from(brands).where(and(inArray(brands.id, brandIds), eq(brands.kind, "company"))).get()) return true;
+  return projectIds.length > 0 && !!db.select({ id: projects.id }).from(projects).where(and(inArray(projects.id, projectIds), sql`(${projects.companyId} is not null or ${projects.brandId} is not null)`)).get();
+}
+
 /** Tracks this person must pass. Tracks without enough questions to reach the required level are left out: nobody can be required to pass what cannot be taken. */
 export function requirementsFor(person: Person, scopes: Scope[], cat = catalog(), at = now()): Requirement[] {
-  const mine = cat.filter((t) => t.reach >= t.requiredLevel && inScope(t, person.audience, scopes)).filter((t) => {
+  // accounts with no scope at all predate scoping; they keep the company-wide courses they always had
+  const company = person.audience === "customer" || scopes.length === 0 || worksForCompany(scopes);
+  const mine = cat.filter((t) => t.reach >= t.requiredLevel && inScope(t, person.audience, scopes))
+    .filter((t) => company || t.brand.kind !== "shared").filter((t) => {
     if (t.tier === "mandatory") return true;
     const roles = rolesOf(t);
     return person.audience === "staff" && t.tier === "role" && (!roles.length || roles.includes(person.jobRole.toLowerCase()));
@@ -108,7 +122,7 @@ export function requirementsFor(person: Person, scopes: Scope[], cat = catalog()
       .where(and(eq(enrollments.userId, person.id), inArray(enrollments.trackId, mine.map((t) => t.id)))).all().map((r) => [r.t, r.at]),
   );
   return mine.map((t) => {
-    const passed = levelsPassed(person.id, t.id);
+    const passed = levelsEarned(person.id, t.id); // real exams only: a placement guess never counts as compliance
     const assignedAt = started.get(t.id) ?? null;
     const dueAt = (assignedAt ?? at) + t.dueDays * DAY;
     const done = passed >= t.requiredLevel;

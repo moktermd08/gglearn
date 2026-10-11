@@ -1,8 +1,8 @@
 import { desc, eq, sql } from "drizzle-orm";
-import { answers, db, questions, tracks } from "@/lib/db";
+import { answers, db, questions, topicRequests, tracks } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { retireQuestion } from "@/app/actions";
-import { AlertTriangle, BarChart3, Database, MessageSquareText, PenLine, Archive, TrendingDown, TrendingUp, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, BarChart3, Lightbulb, Database, MessageSquareText, PenLine, Archive, TrendingDown, TrendingUp, CheckCircle2 } from "lucide-react";
 
 const MIN_ATTEMPTS = 5;
 
@@ -37,9 +37,21 @@ export default async function Admin() {
     { Icon: AlertTriangle, label: "Need review", value: flagged.length, cls: flagged.length ? "text-amber-300" : "text-slate-400" },
   ];
 
+  // what people searched for and did not find: the best guide to which track to write next
+  const wanted = db.select({ text: topicRequests.text, people: sql<number>`count(*)` }).from(topicRequests).groupBy(topicRequests.text).orderBy(desc(sql`count(*)`), topicRequests.text).limit(15).all();
+
   return (
     <div className="space-y-8">
       <h1 className="flex items-center gap-2 text-2xl font-bold"><Database className="text-indigo-300" />Question bank</h1>
+      {wanted.length > 0 && (
+        <section className="card p-4">
+          <h2 className="mb-2 flex items-center gap-2 font-semibold"><Lightbulb size={18} className="text-amber-300" />Topics people asked for</h2>
+          <p className="mb-2 text-xs text-slate-400">Searches on Start a journey that found nothing. Most asked first.</p>
+          <ul className="flex flex-wrap gap-2 text-sm">
+            {wanted.map((w) => <li key={w.text} className="rounded-full bg-amber-500/15 px-3 py-1 text-amber-200">{w.text} <span className="text-xs text-amber-300/70">· {w.people}</span></li>)}
+          </ul>
+        </section>
+      )}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map(({ Icon, label, value, cls }, i) => (
           <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>

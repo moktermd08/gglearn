@@ -2,7 +2,7 @@ import { asc } from "drizzle-orm";
 import { db, tracks } from "@/lib/db";
 import { hiddenTrackIds } from "@/lib/tracks";
 import { requireUser } from "@/lib/auth";
-import { openTo } from "@/lib/paths";
+import { openTo, requirementsFor, scopesOf } from "@/lib/paths";
 import { KIND_LABEL } from "@/lib/levels";
 import { JourneySteps } from "@/components/JourneySteps";
 import { Sparkles } from "lucide-react";
@@ -13,9 +13,13 @@ export const metadata = { title: "Start your journey — gglearn" };
 export default async function Start() {
   const me = await requireUser();
   const hidden = hiddenTrackIds();
-  const all = db.select({ id: tracks.id, name: tracks.name, kind: tracks.kind, description: tracks.description, audience: tracks.audience }).from(tracks).orderBy(asc(tracks.name)).all()
+  // what this person most likely wants first: what they are required to pass, then tracks made for their job role
+  const required = new Set(requirementsFor(me, scopesOf(me.id)).map((r) => r.track.id));
+  const role = me.jobRole.trim().toLowerCase();
+  const all = db.select({ id: tracks.id, name: tracks.name, kind: tracks.kind, description: tracks.description, audience: tracks.audience, roles: tracks.roles }).from(tracks).orderBy(asc(tracks.name)).all()
     .filter((t) => !hidden.has(t.id) && openTo(me.audience, t.audience))
-    .map(({ audience: _a, ...t }) => ({ ...t, kindLabel: KIND_LABEL[t.kind] ?? t.kind }));
+    .map(({ audience: _a, roles, ...t }) => ({ ...t, kindLabel: KIND_LABEL[t.kind] ?? t.kind, suggested: required.has(t.id) || roles.split(",").some((r) => r.trim().toLowerCase() === role) }))
+    .sort((a, b) => Number(b.suggested) - Number(a.suggested));
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <JourneySteps at={1} />

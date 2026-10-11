@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Bot, CalendarClock, Check, Clock, Coins, Crown, Flag, Globe, GraduationCap, Lock, Radio, Swords, Target, Trophy, Users } from "lucide-react";
 import type { Metadata } from "next";
-import { competitionCerts, competitionMembers, competitions, db, tracks, users } from "@/lib/db";
+import { competitionCerts, competitionEmailInvites, competitionMembers, competitions, db, tracks, users } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { canView, finishersOf, modeLabel, now, payouts, span, standings, stateOf, type Standing } from "@/lib/competitions";
 import { PRIZE_SPLIT_LABEL, money } from "@/lib/competitions-shared";
@@ -36,6 +36,10 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
 
   const mine = user ? members.find((m) => m.userId === user.id) : undefined;
   const isOrganiser = !!user && user.id === c.createdBy;
+  // the organiser asked these people, so they may see who has not answered yet (everyone else only sees who joined)
+  const invitedUsers = isOrganiser ? new Map(db.select({ id: users.id, name: users.name }).from(users).all().map((u) => [u.id, u.name])) : new Map<number, string>();
+  const asked = isOrganiser ? members.filter((m) => m.kind === "human" && m.userId && m.userId !== c.createdBy && m.status !== "joined") : [];
+  const waitingEmails = isOrganiser ? db.select({ e: competitionEmailInvites.email }).from(competitionEmailInvites).where(eq(competitionEmailInvites.competitionId, c.id)).all().map((r) => r.e) : [];
   const humans = rows.filter((r) => !r.isBot).length, bots = rows.filter((r) => r.isBot);
   const over = state === "finished" || state === "canceled";
   const full = humans >= c.maxHumans;
@@ -213,6 +217,15 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
       {isOrganiser && !over && (
         <section className="card space-y-4 p-4">
           <h2 className="font-bold">Organiser tools</h2>
+          {(asked.length > 0 || waitingEmails.length > 0) && (
+            <div className="text-sm">
+              <h3 className="mb-1 font-semibold">Invited, not in the race yet</h3>
+              <ul className="space-y-0.5 text-slate-300">
+                {asked.map((m) => <li key={m.id}>{invitedUsers.get(m.userId!) ?? "Someone"} <span className="text-xs text-slate-500">{m.status === "invited" ? "has not answered" : m.status}</span></li>)}
+                {waitingEmails.map((e) => <li key={e}>{e} <span className="text-xs text-slate-500">no account yet; invited when one is created</span></li>)}
+              </ul>
+            </div>
+          )}
           <InviteForm competitionId={c.id} />
           <div className="flex flex-wrap gap-4 text-sm">
             {c.visibility === "public" && <form action={makePrivate.bind(null, c.id)}><button className="underline">Make private</button></form>}

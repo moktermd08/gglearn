@@ -2,7 +2,9 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import { db, journeys, questions } from "@/lib/db";
 
 export const PLACEMENT_BATCH = 3; // questions per probed level
-export const PLACEMENT_PASS = 2; // correct answers needed to count the level as mastered
+// Every question must be right to count a level as mastered. With four options a guesser clears 2 of 3 about 16% of the time
+// but 3 of 3 under 2%, and a wrong call here sets the floor for the whole search, so the check leans cautious.
+export const PLACEMENT_PASS = 3;
 export const PLACEMENT_CAP = 15; // higher levels have to be earned by exam; the check never skips past Master
 
 type Journey = typeof journeys.$inferSelect;

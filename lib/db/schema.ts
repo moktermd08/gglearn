@@ -437,3 +437,15 @@ export const knowledgeAcks = sqliteTable(
   },
   (t) => [uniqueIndex("ka_unique").on(t.userId, t.changeId)],
 );
+
+// "I searched for X and found nothing": what people wish the academy taught, so authoring follows demand.
+export const topicRequests = sqliteTable(
+  "topic_requests",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    text: text("text").notNull(), // lower case, trimmed
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("tr_unique").on(t.userId, t.text)],
+);

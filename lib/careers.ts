@@ -1,6 +1,6 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { careerLevels, careerRequirements, db, promotions, users } from "@/lib/db";
-import { levelsPassed } from "@/lib/progress";
+import { levelsEarned } from "@/lib/progress";
 import { catalog, requirementsFor, scopesOf } from "@/lib/paths";
 
 type Person = typeof users.$inferSelect;
@@ -66,7 +66,7 @@ export function careerFor(person: Person, catalogRows = catalog()): Career | nul
   const next = nextRung && {
     ...nextRung,
     steps: nextRung.steps.map((s) => {
-      const passed = levelsPassed(person.id, s.track.id);
+      const passed = levelsEarned(person.id, s.track.id); // promotions need real exams, not a placement
       return { ...s, passed, met: passed >= s.need };
     }),
   };

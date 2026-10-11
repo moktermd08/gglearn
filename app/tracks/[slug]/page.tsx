@@ -111,7 +111,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
       )}
 
       <section id="levels">
-        <h2 className="mb-2 flex flex-wrap items-center gap-2 text-lg font-bold"><Mountain size={20} className="text-violet-300" />The climb <span className="text-sm font-normal text-slate-400">· pass mark {PASS_MARK * 100}% · {QUESTIONS_PER_RUN} questions per exam</span></h2>
+        <h2 className="mb-2 flex flex-wrap items-center gap-2 text-lg font-bold"><Mountain size={20} className="text-violet-300" />The climb <span className="text-sm font-normal text-slate-400">· pass mark {PASS_MARK * 100}% · up to {QUESTIONS_PER_RUN} questions per exam</span></h2>
         {enrolment && <div className="mb-4 flex items-center gap-3 text-xs text-slate-400"><div className="bar flex-1"><i style={{ width: `${(passed / 20) * 100}%` }} /></div><span className="flex items-center gap-1"><Crown size={13} className="text-amber-300" />{passed}/20</span></div>}
         <div className="space-y-6">
           {TIERS.map((tier, ti) => (

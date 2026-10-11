@@ -1,12 +1,13 @@
 "use server";
 
-import { and, eq, like, or, sql } from "drizzle-orm";
+import { and, eq, inArray, like, or, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
 import { answers, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, runs, tracks, users } from "@/lib/db";
 import { acknowledge, recordChange } from "@/lib/freshness";
+import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
 import { endSession, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
 import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@/lib/password";
@@ -277,27 +278,45 @@ export async function createPerson(_: string | null, fd: FormData): Promise<stri
   return null;
 }
 
-export type InviteState = { error?: string; path?: string } | null;
+export type InviteState = {
+  error?: string;
+  invites?: { email: string; path: string }[];
+  /** addresses that already have an account, so no link was made */
+  skipped?: string[];
+  /** worth knowing before the link goes out, e.g. nothing is set up for this role yet */
+  notice?: string;
+} | null;
 
-/** Issues a single-use signup link for one email. The token is shown once; only its hash is stored. */
+const MAX_INVITES_AT_ONCE = 25;
+
+/** Issues a single-use signup link for each email, all with the same role and scope. Tokens are shown once; only hashes are stored. */
 export async function createInvite(_: InviteState, fd: FormData): Promise<InviteState> {
   const me = await requireManager();
+  const emails = [...new Set(str(fd.get("emails")).toLowerCase().split(/[\s,;]+/).filter(Boolean))];
   const p = z.object({
-    email: z.string().email().max(120).transform((s) => s.toLowerCase()),
+    emails: z.array(z.string().email().max(120)).min(1).max(MAX_INVITES_AT_ONCE),
     jobRole: z.string().min(1).max(40),
     audience: z.enum(["staff", "customer"]),
-  }).safeParse({ email: str(fd.get("email")), jobRole: str(fd.get("jobRole")).toLowerCase(), audience: str(fd.get("audience")) || "staff" });
-  if (!p.success) return { error: "A valid email and a role are required." };
+  }).safeParse({ emails, jobRole: str(fd.get("jobRole")).toLowerCase(), audience: str(fd.get("audience")) || "staff" });
+  if (!p.success) return { error: `Enter one to ${MAX_INVITES_AT_ONCE} valid email addresses and a role.` };
   const scopes = validScopes(db, formScopes(fd));
   if (!scopes.length) return { error: "Pick at least one company, brand or project they belong to." };
-  if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return { error: "That email already has an account." };
 
-  const token = newToken();
-  db.insert(invites).values({
-    tokenHash: hashToken(token), email: p.data.email, jobRole: p.data.jobRole, audience: p.data.audience, scopes: formatScopes(scopes), createdBy: me.id,
-    expiresAt: Math.floor(Date.now() / 1000) + INVITE_TTL_SEC,
-  }).run();
-  return { path: `/join/${token}` };
+  const taken = new Set(db.select({ e: users.email }).from(users).where(inArray(users.email, p.data.emails)).all().map((r) => r.e));
+  const fresh = p.data.emails.filter((e) => !taken.has(e));
+  if (!fresh.length) return { error: p.data.emails.length === 1 ? "That email already has an account." : "Every one of those emails already has an account." };
+
+  const expiresAt = Math.floor(Date.now() / 1000) + INVITE_TTL_SEC;
+  const invites_ = fresh.map((email) => {
+    const token = newToken();
+    db.insert(invites).values({ tokenHash: hashToken(token), email, jobRole: p.data.jobRole, audience: p.data.audience, scopes: formatScopes(scopes), createdBy: me.id, expiresAt }).run();
+    return { email, path: `/join/${token}` };
+  });
+  const cov = p.data.audience === "staff" ? coverageFor(p.data.jobRole) : null;
+  const notice = cov && hasNoRolePath(cov)
+    ? `Nothing is set up for the role "${p.data.jobRole}" yet, so they will only get company-wide learning. Roles with learning: ${knownRoles().join(", ") || "none"}. You can change their role later on People.`
+    : undefined;
+  return { invites: invites_, skipped: taken.size ? [...taken] : undefined, notice };
 }
 
 /** Moves someone to a different set of companies, brands and projects, then enrols them in whatever that now requires. */
@@ -398,13 +417,16 @@ export async function removeCareerStep(id: number) {
   revalidatePath("/admin/careers");
 }
 
+/** A person ticks their own onboarding items; managers can tick anyone's (including offboarding items). */
 export async function toggleChecklist(id: number) {
-  const me = await requireManager();
+  const me = await requireUser();
   const item = db.select().from(checklistItems).where(eq(checklistItems.id, id)).get();
   if (!item) return;
-  void me;
+  const own = item.userId === me.id && item.kind === "onboarding";
+  if (!own && me.role === "learner") return;
   db.update(checklistItems).set({ done: !item.done }).where(eq(checklistItems.id, id)).run();
   revalidatePath("/admin/people");
+  revalidatePath("/dashboard");
 }
 
 export async function addHandover(fd: FormData) {
@@ -487,4 +509,23 @@ export async function acknowledgeChange(changeId: number) {
   revalidatePath("/updates");
   revalidatePath("/dashboard");
   revalidatePath("/admin/freshness");
+}
+
+/** Changes what someone does at the company, then enrols them in what that role requires. Managers can only change learners. */
+export async function updateRole(_: string | null, fd: FormData): Promise<string | null> {
+  const me = await requireManager();
+  const p = z.object({ userId: z.coerce.number().int().positive(), jobRole: z.string().trim().toLowerCase().min(1).max(40) })
+    .safeParse({ userId: fd.get("userId"), jobRole: str(fd.get("jobRole")) });
+  if (!p.success) return "Enter a role of up to 40 characters.";
+  const u = db.select().from(users).where(eq(users.id, p.data.userId)).get();
+  if (!u || u.status !== "active") return "That person is not active.";
+  if (me.role !== "admin" && u.role !== "learner") return "Only an admin can change a manager's role.";
+  db.transaction((tx) => {
+    tx.update(users).set({ jobRole: p.data.jobRole }).where(eq(users.id, u.id)).run();
+    syncRequired({ id: u.id, jobRole: p.data.jobRole, audience: u.audience }, tx);
+  });
+  revalidatePath("/admin/people");
+  revalidatePath("/admin/compliance");
+  revalidatePath("/admin/careers");
+  return null;
 }

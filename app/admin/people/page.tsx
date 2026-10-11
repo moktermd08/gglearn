@@ -1,20 +1,26 @@
 import Link from "next/link";
-import { checklistItems, db, handovers, tracks, users } from "@/lib/db";
+import { checklistItems, db, enrollments, handovers, tracks, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { addHandover, offboard, toggleChecklist, updateScopes } from "@/app/actions";
-import { scopeLabels, scopeOptions, scopesOf } from "@/lib/paths";
+import { catalog, scopeLabels, scopeOptions, scopesOf } from "@/lib/paths";
+import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { ScopePicker } from "@/components/ScopePicker";
 import { CheckSquare, ClipboardList, NotebookPen, Plus, Save, Shield, ShieldCheck, Square, UserCheck, UserMinus, UserPlus, Users, UserCog, Mail } from "lucide-react";
 import NewPerson from "./new-person";
 import InvitePerson from "./invite-person";
+import RoleForm from "./role-form";
 
 export default async function People() {
   const me = await requireManager();
   const all = db.select().from(users).orderBy(users.name).all();
   const items = db.select().from(checklistItems).all();
   const notes = db.select().from(handovers).all();
-  const allTracks = db.select().from(tracks).orderBy(tracks.name).all();
+  const trackName = new Map(db.select({ id: tracks.id, name: tracks.name }).from(tracks).all().map((t) => [t.id, t.name]));
+  const enrolledIn = new Map<number, number[]>();
+  for (const e of db.select({ u: enrollments.userId, t: enrollments.trackId }).from(enrollments).all()) enrolledIn.set(e.u, [...(enrolledIn.get(e.u) ?? []), e.t]);
   const options = scopeOptions();
+  const cat = catalog();
+  const roles = knownRoles(cat);
   const active = all.filter((u) => u.status === "active").length;
   const openTasks = items.filter((i) => !i.done).length;
   const tiles = [
@@ -42,11 +48,11 @@ export default async function People() {
       </div>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2 font-semibold"><Mail size={18} className="text-sky-300" />Invite someone</h2>
-        <InvitePerson options={options} />
+        <InvitePerson options={options} roles={roles} />
       </section>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2 font-semibold"><UserPlus size={18} className="text-emerald-300" />Or create their account yourself</h2>
-        <NewPerson options={options} />
+        <NewPerson options={options} roles={roles} />
       </section>
       <ul className="space-y-4">
         {all.map((u, ui) => {
@@ -66,7 +72,7 @@ export default async function People() {
                     {u.role !== "learner" && <span className="inline-flex items-center gap-1 rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-violet-300">{u.role === "admin" ? <Shield size={10} /> : <UserCog size={10} />}{u.role}</span>}
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${off ? "bg-rose-500/20 text-rose-300" : "bg-emerald-500/20 text-emerald-300"}`}>{off ? <UserMinus size={10} /> : <UserCheck size={10} />}{u.status}</span>
                   </div>
-                  <div className="truncate text-sm text-slate-400">{u.email} · {u.jobRole}</div>
+                  <div className="truncate text-sm text-slate-400">{u.email} · {u.jobRole}{u.audience === "staff" && u.status === "active" && hasNoRolePath(coverageFor(u.jobRole, cat)) && <span title={`Nothing is set up for the role "${u.jobRole}", so they only get company-wide learning. Change their role, or add learning for it.`} className="ml-2 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">no role learning</span>}</div>
                   <div className="truncate text-xs text-slate-500">{labels.length ? labels.join(" · ") : "Not assigned to any company, brand or project yet"}</div>
                 </div>
                 {u.status === "active" && u.id !== me.id && (me.role === "admin" || u.role === "learner") && (
@@ -78,7 +84,8 @@ export default async function People() {
               </div>
               {!off && (
                 <details className="mt-3 text-sm">
-                  <summary className="cursor-pointer text-slate-400 hover:text-white">Change where {u.name.split(" ")[0]} belongs</summary>
+                  <summary className="cursor-pointer text-slate-400 hover:text-white">Change role or where {u.name.split(" ")[0]} belongs</summary>
+                  <RoleForm userId={u.id} jobRole={u.jobRole} roles={roles} />
                   <form action={updateScopes} className="mt-2 space-y-2">
                     <input type="hidden" name="userId" value={u.id} />
                     <ScopePicker options={options} selected={myScopes} />
@@ -109,7 +116,7 @@ export default async function People() {
                 <input type="hidden" name="userId" value={u.id} />
                 <select name="trackId" className={input} defaultValue="">
                   <option value="">General</option>
-                  {allTracks.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+                  {(enrolledIn.get(u.id) ?? []).map((id) => <option key={id} value={id}>{trackName.get(id)}</option>)}
                 </select>
                 <input name="notes" required placeholder="Handover note: what only this person knows" className={`${input} min-w-64 flex-1`} />
                 <button className="btn btn-ghost !px-3 !py-1"><Plus size={14} />Add note</button>

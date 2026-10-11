@@ -1,15 +1,16 @@
 "use client";
 import { startTransition, useActionState, useMemo, useState } from "react";
 import { ArrowRight, BookOpen, Check, Mail, Mountain, Search, Swords, Users } from "lucide-react";
-import { beginJourney, type StartState } from "./actions";
+import { beginJourney, requestTopic, type StartState } from "./actions";
 
-type Topic = { id: number; name: string; kindLabel: string; description: string };
+type Topic = { id: number; name: string; kindLabel: string; description: string; suggested: boolean };
 
 export default function Begin({ topics }: { topics: Topic[] }) {
   const [state, run, pending] = useActionState<StartState, FormData>(beginJourney, null);
   const [q, setQ] = useState("");
   const [trackId, setTrackId] = useState<number | null>(null);
   const [mode, setMode] = useState<"solo" | "group">("solo");
+  const [asked, setAsked] = useState<string | null>(null);
   const shown = useMemo(() => {
     const n = q.trim().toLowerCase();
     return (n ? topics.filter((t) => `${t.name} ${t.kindLabel} ${t.description}`.toLowerCase().includes(n)) : topics).slice(0, 24);
@@ -28,12 +29,20 @@ export default function Begin({ topics }: { topics: Topic[] }) {
             <button type="button" key={t.id} role="radio" aria-checked={t.id === trackId} onClick={() => setTrackId(t.id)}
               style={{ "--i": Math.min(i, 8) } as React.CSSProperties} className={`rise flex items-start gap-2 rounded-lg border p-3 text-left transition ${t.id === trackId ? "border-indigo-400 bg-indigo-500/20" : "border-white/10 hover:border-white/30"}`}>
               <BookOpen size={16} className={`mt-1 shrink-0 ${t.id === trackId ? "text-indigo-300" : "text-slate-500"}`} />
-              <span className="min-w-0 flex-1"><span className="block font-semibold">{t.name}</span><span className="block text-xs text-slate-400">{t.kindLabel}</span></span>
+              <span className="min-w-0 flex-1"><span className="block font-semibold">{t.name}</span><span className="block text-xs text-slate-400">{t.kindLabel}{t.suggested && <span className="ml-2 rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase text-emerald-300">for you</span>}</span></span>
               {t.id === trackId && <Check size={18} className="spin-in mt-0.5 shrink-0 text-indigo-300" />}
             </button>
           ))}
-          {shown.length === 0 && <p className="text-sm text-slate-400">No topic matches “{q}”. Try a shorter word, or ask a manager to add it to the question bank.</p>}
+          {shown.length === 0 && (
+            <div className="col-span-full text-sm text-slate-400">
+              <p>No topic matches “{q}”. Try a shorter word.</p>
+              {asked === q.trim().toLowerCase()
+                ? <p className="mt-1 text-emerald-300">Thanks, your manager will see that you asked for “{q.trim()}”.</p>
+                : q.trim().length >= 2 && <button type="button" onClick={async () => { const r = await requestTopic(q); if (r.ok) setAsked(q.trim().toLowerCase()); }} className="mt-1 underline">Ask for “{q.trim()}” to be added</button>}
+            </div>
+          )}
         </div>
+        {!q.trim() && topics.length > shown.length && <p className="text-xs text-slate-400">Showing {shown.length} of {topics.length} topics{topics.some((t) => t.suggested) ? ", starting with the ones for you" : ""}. Type above to search all of them.</p>}
         {picked && <p className="pop flex items-center gap-1.5 text-sm text-emerald-300"><Check size={15} />Selected: <b>{picked.name}</b></p>}
       </section>
 

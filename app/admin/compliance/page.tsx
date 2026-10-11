@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireManager } from "@/lib/auth";
 import { pendingCounts } from "@/lib/freshness";
+import { coverageFor, hasNoRolePath } from "@/lib/roles";
 import { catalog, complianceReport, requirementsFor, scopeLabels, scopeOptions } from "@/lib/paths";
 import { AlertTriangle, CheckCircle2, Clock, FileQuestion, ShieldCheck, UserX } from "lucide-react";
 
@@ -59,6 +60,7 @@ export default async function Compliance() {
                   <div className="flex flex-wrap items-center gap-2 font-medium">{r.person.name}
                     {r.person.audience === "customer" && <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">customer</span>}
                     <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${st.cls}`}>{st.label}</span>
+                    {r.person.audience === "staff" && hasNoRolePath(coverageFor(r.person.jobRole, cat)) && <Link href="/admin/people" title={`Nothing is set up for the role "${r.person.jobRole}". Change their role or add learning for it.`} className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">no role learning</Link>}
                     {behind.get(r.person.id) ? <Link href="/admin/freshness" className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">{behind.get(r.person.id)} update{behind.get(r.person.id) === 1 ? "" : "s"} unread</Link> : null}
                   </div>
                   <div className="truncate text-xs text-slate-500">{r.person.jobRole} · {labels.length ? labels.join(" · ") : "no company, brand or project"}</div>

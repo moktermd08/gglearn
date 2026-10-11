@@ -4,7 +4,7 @@ import { and, eq, gt, isNull } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
-import { competitionMembers, competitions, db, enrollments, journeys, tracks } from "@/lib/db";
+import { competitionMembers, competitions, db, enrollments, journeys, topicRequests, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import type { BotTier } from "@/lib/bots";
@@ -130,4 +130,14 @@ export async function launchJourney(slug: string, _: StartState, fd: FormData): 
   if ("error" in r) return { error: r.error };
   db.update(journeys).set({ step: "launched", competitionSlug: r.slug, emails: "" }).where(eq(journeys.id, j.id)).run();
   redirect(`/competitions/${r.slug}`);
+}
+
+/** Records that someone looked for a topic the academy does not have, so a manager can see what to write next. */
+export async function requestTopic(text: string): Promise<{ ok: boolean }> {
+  const me = await requireUser();
+  const t = text.trim().toLowerCase().replace(/\s+/g, " ").slice(0, 80);
+  if (t.length < 2 || !allowed(`topic-request:${me.id}`, 20)) return { ok: false };
+  hit(`topic-request:${me.id}`, 24 * 60 * MINUTE);
+  db.insert(topicRequests).values({ userId: me.id, text: t }).onConflictDoNothing().run();
+  return { ok: true };
 }

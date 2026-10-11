@@ -55,7 +55,7 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
           </p>
           <ul className="space-y-2 text-sm text-slate-400">
             {["Skip a question you do not know rather than guessing. A blank counts as wrong, but guessing can place you too high.",
-              "The check only ever raises your starting point. It never removes a level you earned, and certificates still need real exams."].map((t, i) => (
+              "The check only ever raises your starting point. It never removes a level you earned. Required courses, promotions and certificates still need real exams."].map((t, i) => (
               <li key={i} className="rise flex gap-2" style={{ "--i": i } as React.CSSProperties}><Lightbulb size={15} className="mt-0.5 shrink-0 text-amber-300" />{t}</li>
             ))}
           </ul>

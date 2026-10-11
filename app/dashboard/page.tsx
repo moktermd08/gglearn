@@ -13,8 +13,9 @@ import { Ring } from "@/components/Ring";
 import { requirementsFor, scopesOf } from "@/lib/paths";
 import { careerFor } from "@/lib/careers";
 import { pendingFor } from "@/lib/freshness";
-import { enroll } from "@/app/actions";
-import { AlertTriangle, ArrowUpRight, BellRing, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, Plus, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain } from "lucide-react";
+import { coverageFor, hasNoRolePath } from "@/lib/roles";
+import { enroll, toggleChecklist } from "@/app/actions";
+import { AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, Plus, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain } from "lucide-react";
 
 export default async function Dashboard() {
   const user = await requireUser();
@@ -33,6 +34,7 @@ export default async function Dashboard() {
   const requiredOpen = required.filter((r) => !r.done), overdue = requiredOpen.filter((r) => r.overdue);
   const career = careerFor(user);
   const unread = pendingFor(user.id);
+  const noRolePath = user.audience === "staff" && hasNoRolePath(coverageFor(user.jobRole));
   const enrolledIds = new Set(mine.map((m) => m.t.id));
   const badges = stats.length ? badgesFor(stats.sort((a, b) => b.s.xp - a.s.xp)[0].s) : [];
 
@@ -68,6 +70,15 @@ export default async function Dashboard() {
           <span className="flex-1 text-sm"><b>{unread.length} update{unread.length === 1 ? "" : "s"} to read:</b> {unread.slice(0, 2).map((u) => u.change.title).join(", ")}{unread.length > 2 && ` and ${unread.length - 2} more`}</span>
           <ArrowUpRight size={16} className="text-slate-400" />
         </Link>
+      )}
+
+      {noRolePath && (
+        <section role="status" className="card flex items-start gap-3 border-amber-300/40 p-4 text-sm">
+          <Compass size={20} className="mt-0.5 shrink-0 text-amber-300" />
+          <div>
+            <b>Nothing is set up for your role yet.</b> Your role is “{user.jobRole}”, and the academy has no learning or promotion path for it, so you only see company-wide courses. Ask your manager to check your role, or pick something to learn from <Link href="/start" className="underline">Start a journey</Link>.
+          </div>
+        </section>
       )}
 
       {required.length > 0 && (
@@ -135,8 +146,12 @@ export default async function Dashboard() {
           </div>
           <div className="bar mb-3"><i style={{ width: `${(checkDone / todo.length) * 100}%` }} /></div>
           <ul className="space-y-1.5 text-sm text-slate-300">{todo.map((c) => (
-            <li key={c.id} className={`flex items-center gap-2 ${c.done ? "text-slate-500 line-through" : ""}`}>
-              {c.done ? <CheckSquare size={16} className="text-emerald-400" /> : <Square size={16} className="text-slate-500" />}{c.label}
+            <li key={c.id}>
+              <form action={toggleChecklist.bind(null, c.id)}>
+                <button aria-pressed={c.done} className={`flex items-center gap-2 text-left transition hover:text-white ${c.done ? "text-slate-500 line-through" : ""}`}>
+                  {c.done ? <CheckSquare size={16} className="text-emerald-400" /> : <Square size={16} className="text-slate-500" />}{c.label}
+                </button>
+              </form>
             </li>
           ))}</ul>
         </section>
