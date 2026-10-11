@@ -292,6 +292,70 @@ export const CALC: Record<string, Gen> = {
       right: n(Math.round(imp)), wrong: near(r, imp, [budget / cpm, budget * cpm, budget / cpm * 100], (x) => n(Math.round(x))), diff: 2,
       why: `impressions = budget / CPM × 1,000 = ${n(budget)} / ${cpm} × 1,000 = ${n(Math.round(imp))}.` };
   },
+  // ---- lead generation and sales maths (lead-generation-titan) ----
+  lead_funnel(r) {
+    const leads = r.pick([400, 500, 800, 1000, 2000]), a = r.pick([10, 20, 25, 30]), b = r.pick([20, 25, 40, 50]), c = r.pick([10, 20, 25, 30]);
+    const mql = leads * a / 100, sql = mql * b / 100, won = sql * c / 100;
+    return { prompt: `A funnel has ${n(leads)} leads. ${a}% become marketing-qualified, ${b}% of those become sales-qualified, and ${c}% of those become customers. How many customers is that?`,
+      right: String(+won.toFixed(1)), wrong: near(r, won, [leads * a / 100 * b / 100, leads * c / 100, sql], (x) => String(+x.toFixed(1))), diff: 2,
+      why: `${n(leads)} × ${a}% = ${n(mql)}; × ${b}% = ${n(sql)}; × ${c}% = ${+won.toFixed(1)}. Multiply the stage rates in order.` };
+  },
+  lead_cac(r) {
+    const spend = r.pick([3000, 5000, 8000, 12000, 20000]), cust = r.pick([4, 5, 8, 10, 16, 20]);
+    const cac = spend / cust;
+    return { prompt: `A business spent ${n(spend)} on sales and marketing in a quarter and won ${cust} new customers. What is its customer acquisition cost (CAC)?`,
+      right: `${n(Math.round(cac))}`, wrong: near(r, cac, [spend * cust, cust / spend, cac * 10], (x) => `${n(Math.round(x))}`), diff: 1,
+      why: `CAC = total acquisition spend / new customers = ${n(spend)} / ${cust} = ${n(Math.round(cac))}.` };
+  },
+  lead_win_rate(r) {
+    const won = r.pick([6, 8, 12, 15, 20]), lost = r.pick([14, 22, 28, 35, 60]);
+    const wr = won / (won + lost) * 100;
+    return { prompt: `In a quarter a team closed ${won} deals as won and ${lost} as lost. What is its win rate?`,
+      right: `${f(wr, 1)}%`, wrong: near(r, wr, [won / lost * 100, lost / (won + lost) * 100, won], (x) => `${f(x, 1)}%`), diff: 2,
+      why: `Win rate = won / (won + lost) = ${won} / ${won + lost} = ${f(wr, 1)}%. Open deals are not counted.` };
+  },
+  lead_coverage(r) {
+    const target = r.pick([100000, 150000, 250000, 400000]), mult = r.pick([2, 2.5, 3, 4]);
+    const pipe = target * mult;
+    return { prompt: `A team has a ${n(target)} quarterly target and ${n(pipe)} of open pipeline. What is its pipeline coverage?`,
+      right: `${f(mult)}x`, wrong: near(r, mult, [target / pipe, pipe - target, 1], (x) => `${f(x)}x`), diff: 2,
+      why: `Coverage = pipeline / target = ${n(pipe)} / ${n(target)} = ${f(mult)}x.` };
+  },
+  lead_weighted(r) {
+    const d1 = r.pick([10000, 20000, 30000]), p1 = r.pick([20, 25, 50]), d2 = r.pick([8000, 15000, 40000]), p2 = r.pick([60, 75, 80]);
+    const w = d1 * p1 / 100 + d2 * p2 / 100;
+    return { prompt: `Two open deals: ${n(d1)} at ${p1}% likely to close, and ${n(d2)} at ${p2}%. What is the weighted pipeline value?`,
+      right: `${n(Math.round(w))}`, wrong: near(r, w, [d1 + d2, (d1 + d2) * (p1 + p2) / 200, d1 * p1 / 100], (x) => `${n(Math.round(x))}`), diff: 3,
+      why: `Weighted = Σ value × probability = ${n(d1)}×${p1}% + ${n(d2)}×${p2}% = ${n(Math.round(w))}.` };
+  },
+  lead_reverse(r) {
+    const goal = r.pick([4, 6, 8, 10, 12]), close = r.pick([20, 25, 40]), meet = r.pick([10, 20, 25]);
+    const opps = goal / (close / 100), leads = opps / (meet / 100);
+    return { prompt: `To win ${goal} deals a team closes ${close}% of opportunities, and ${meet}% of leads become opportunities. About how many leads does it need?`,
+      right: n(Math.round(leads)), wrong: near(r, leads, [opps, goal / (meet / 100), goal * close], (x) => n(Math.round(x))), diff: 3,
+      why: `Work backwards: ${goal} / ${close}% = ${n(Math.round(opps))} opportunities; / ${meet}% = ${n(Math.round(leads))} leads.` };
+  },
+  lead_ltv_cac(r) {
+    const arpa = r.pick([200, 300, 500, 800]), months = r.pick([12, 18, 24, 36]), cac = r.pick([800, 1200, 2000, 3000]);
+    const ltv = arpa * months, ratio = ltv / cac;
+    return { prompt: `A customer pays ${n(arpa)} a month and stays ${months} months on average (ignore margin). Acquiring one costs ${n(cac)}. What is the LTV to CAC ratio?`,
+      right: `${f(ratio, 1)} : 1`, wrong: near(r, ratio, [cac / ltv, arpa / cac, months / cac], (x) => `${f(x, 1)} : 1`), diff: 3,
+      why: `LTV = ${n(arpa)} × ${months} = ${n(ltv)}; ratio = ${n(ltv)} / ${n(cac)} = ${f(ratio, 1)}.` };
+  },
+  lead_reply_rate(r) {
+    const sent = r.pick([200, 300, 500, 800]), pct = r.pick([2, 4, 5, 8, 10]);
+    const replies = Math.round(sent * pct / 100);
+    return { prompt: `A sequence sent ${n(sent)} emails and received ${replies} replies. What is the reply rate?`,
+      right: `${f(replies / sent * 100, 1)}%`, wrong: near(r, replies / sent * 100, [sent / replies, replies / sent, replies], (x) => `${f(x, 1)}%`), diff: 1,
+      why: `Reply rate = replies / emails sent × 100 = ${replies} / ${n(sent)} × 100 = ${f(replies / sent * 100, 1)}%.` };
+  },
+  lead_bounce(r) {
+    const sent = r.pick([500, 1000, 2000, 5000]), pct = r.pick([1, 2, 4, 8]);
+    const bounced = Math.round(sent * pct / 100);
+    return { prompt: `${n(sent)} cold emails were sent and ${n(bounced)} bounced because the address did not exist. What is the bounce rate?`,
+      right: `${f(bounced / sent * 100, 1)}%`, wrong: near(r, bounced / sent * 100, [sent / bounced, bounced / sent, (sent - bounced) / sent * 100], (x) => `${f(x, 1)}%`), diff: 1,
+      why: `Bounce rate = bounced / sent × 100 = ${n(bounced)} / ${n(sent)} × 100 = ${f(bounced / sent * 100, 1)}%. A high rate hurts sender reputation.` };
+  },
 };
 
 /** which generators suit which subject; matched by slug prefix in the engine. Specs may also list their own. */
