@@ -6,7 +6,9 @@ import { DOMAIN_KEYS, domainLabel, mixFor } from "@/lib/blueprint";
 import { ladderFor } from "@/lib/careers";
 import { dateBounds, journeyFor, levelCode, roleLabel, targetsFor, type Leg } from "@/lib/journey";
 import { clearCareerGoal, enroll, setCareerGoal, startRoleExam } from "@/app/actions";
-import { ROLE_EXAM_MIN, ROLE_EXAM_SIZE, latestRoleExam, roleExamPlan } from "@/lib/roleExam";
+import { ROLE_EXAM_MIN, ROLE_EXAM_SIZE, latestFinishedRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
+import { ROLE_CHECK_VALID_DAYS, roleExamsAvailable } from "@/lib/roleCheck";
+import { careerFor } from "@/lib/careers";
 import { AlertTriangle, ArrowRight, CalendarClock, CheckCircle2, CircleDashed, Flag, MapPin, Mountain, Repeat, Square, Target } from "lucide-react";
 
 export const metadata = { title: "My career journey — gglearn" };
@@ -39,17 +41,20 @@ function QuestionMix({ leg }: { leg: Leg }) {
 
 /** The role check: one exam across the tracks of the person's ladder in the proportions of their role's question mix. */
 function RoleCheck({ user, unavailable }: { user: Awaited<ReturnType<typeof requireUser>>; unavailable: boolean }) {
+  if (!roleExamsAvailable()) return null; // the role check tables are not in this database yet (npm run db:push)
   const plan = roleExamPlan(user);
   if (!plan) return null;
-  const last = latestRoleExam(user.id);
-  const open = last && !last.finishedAt;
+  const last = latestFinishedRoleExam(user.id);
+  const open = openRoleExam(user.id, plan);
+  const gate = careerFor(user)?.check;
   return (
     <section className="card space-y-3 p-5">
       <h2 className="flex items-center gap-2 font-semibold"><Target size={18} className="text-violet-300" />Role check</h2>
-      <p className="text-sm text-slate-300">One exam across everything your path to <b>{plan.title}</b> covers, weighted like your role (questions out of {ROLE_EXAM_SIZE}): {DOMAIN_KEYS.filter((d) => plan.planned[d] > 0).sort((a, b) => plan.planned[b] - plan.planned[a]).map((d) => `${domainLabel(d)} ${plan.planned[d]}`).join(", ")}. It shows where you are strong and where to focus; it does not change your track results or promotion.</p>
+      <p className="text-sm text-slate-300">One exam across everything your path to <b>{plan.title}</b> covers, weighted like your role (questions out of {ROLE_EXAM_SIZE}): {DOMAIN_KEYS.filter((d) => plan.planned[d] > 0).sort((a, b) => plan.planned[b] - plan.planned[a]).map((d) => `${domainLabel(d)} ${plan.planned[d]}`).join(", ")}. It shows where you are strong and where to focus, and does not change your track results.</p>
+      {gate?.needed && <p className="text-sm">{gate.validUntil ? <span className="text-emerald-300">Promotion asks for a passing role check from the last {ROLE_CHECK_VALID_DAYS} days. Yours counts until {date(gate.validUntil)}.</span> : <span className="text-amber-300">Promotion asks for a passing role check from the last {ROLE_CHECK_VALID_DAYS} days. You do not have one yet.</span>}</p>}
       {unavailable && <p role="alert" className="text-sm text-amber-300">There are not enough questions in your path yet to make a fair check (at least {ROLE_EXAM_MIN} needed).</p>}
-      {last?.finishedAt && <p className="text-sm text-slate-400">Last check: {Math.round((last.score ?? 0) * 100)}% on {date(last.finishedAt)}. <Link href={`/role-exam/${last.id}`} className="underline">See the breakdown</Link></p>}
-      <form action={startRoleExam}><button className="btn">{open ? "Continue your role check" : last?.finishedAt ? "Take it again" : "Start the role check"}<ArrowRight size={15} /></button></form>
+      {last && <p className="text-sm text-slate-400">Last check: {Math.round((last.score ?? 0) * 100)}% on {date(last.finishedAt!)}. <Link href={`/role-exam/${last.id}`} className="underline">See the breakdown</Link></p>}
+      <form action={startRoleExam}><button className="btn">{open ? "Continue your role check" : last ? "Take it again" : "Start the role check"}<ArrowRight size={15} /></button></form>
     </section>
   );
 }

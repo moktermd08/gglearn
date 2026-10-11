@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { ROLE_CHECK_VALID_DAYS } from "@/lib/roleCheck";
 import { db, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { addCareerLevel, addCareerStep, promote, removeCareerStep, saveCareerLevel } from "@/app/actions";
@@ -44,6 +45,7 @@ export default async function Careers() {
                 )}
                 {!c.next && <span className="text-xs text-slate-500">Top of the path</span>}
               </div>
+              {c.hold === "role-check" && <p className="mt-2 text-sm text-amber-300">Every step is met, but there is no passing role check from the last {ROLE_CHECK_VALID_DAYS} days.</p>}
               {c.hold === "overdue" && <p className="mt-2 text-sm text-amber-300">Every step is met, but required learning is overdue.</p>}
               {c.hold === "nothing-to-measure" && c.next && <p className="mt-2 text-sm text-slate-400">No passable steps for {c.next.title} yet, so this needs a manager decision.</p>}
               {c.next && p.id !== me.id && (c.ready || isAdmin) && (

@@ -1,7 +1,9 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { careerLevels, careerRequirements, db, promotions, users } from "@/lib/db";
 import { levelsEarned } from "@/lib/progress";
-import { catalog, requirementsFor, scopesOf } from "@/lib/paths";
+import { catalog, inScope, requirementsFor, scopesOf } from "@/lib/paths";
+import { domainOf } from "@/lib/blueprint";
+import { roleCheckDrawable, roleCheckValidUntil, roleExamsAvailable, type CheckSource } from "@/lib/roleCheck";
 
 type Person = typeof users.$inferSelect;
 type CatalogTrack = ReturnType<typeof catalog>[number];
@@ -31,12 +33,16 @@ export type Career = {
   /** how many of the next level's countable steps are met */
   done: number;
   total: number;
-  /** every countable step is met, there is at least one, and mandatory learning is not overdue */
+  /** every countable step is met, there is at least one, mandatory learning is not overdue and a role check is passed where one can be taken */
   ready: boolean;
   /** why a person with all steps met is still held back */
-  hold: "overdue" | "nothing-to-measure" | null;
+  hold: "overdue" | "nothing-to-measure" | "role-check" | null;
+  /** the role check promotion asks for: needed when one can be drawn for the next level; validUntil is when a passing one stops counting */
+  check: { needed: boolean; validUntil: number | null } | null;
   history: { level: number; title: string; at: number; overridden: boolean }[];
 };
+
+const now = () => Math.floor(Date.now() / 1000);
 
 export const roleKey = (jobRole: string) => jobRole.trim().toLowerCase();
 
@@ -55,6 +61,22 @@ export function ladderFor(role: string, catalogRows = catalog()): Rung[] {
       return track ? [{ reqId: r.id, track, need: r.requiredLevel, passed: 0, met: false, countable: track.reach >= r.requiredLevel }] : [];
     }),
   }));
+}
+
+/** Promotion needs a recent passing role check aimed at the next level, unless no fair check can be drawn from the path (then it cannot block). */
+function roleCheckFor(person: Person, role: string, ladder: Rung[], nextLevel: number, scopes: ReturnType<typeof scopesOf>): NonNullable<Career["check"]> {
+  if (!roleExamsAvailable()) return { needed: false, validUntil: null }; // tables not pushed yet: nobody can take a check, so none is asked for
+  const tracks = new Map<number, CheckSource>();
+  for (const r of ladder) {
+    if (r.level > nextLevel) break;
+    for (const s of r.steps) {
+      if (!s.countable || !inScope(s.track, person.audience, scopes)) continue;
+      const t = tracks.get(s.track.id);
+      if (!t || s.need > t.level) tracks.set(s.track.id, { trackId: s.track.id, slug: s.track.slug, domain: domainOf(s.track.slug, s.track.kind), level: s.need });
+    }
+  }
+  const rungNo = ladder.findIndex((r) => r.level === nextLevel) + 1;
+  return { needed: roleCheckDrawable(role, rungNo, ladder.length, [...tracks.values()]), validUntil: roleCheckValidUntil(person.id, role, nextLevel, now()) };
 }
 
 /** Where this person stands on their role's ladder. Null when their role has no ladder or they are not staff. */
@@ -79,11 +101,14 @@ export function careerFor(person: Person, catalogRows = catalog()): Career | nul
   const counted = next?.steps.filter((s) => s.countable) ?? [];
   const done = counted.filter((s) => s.met).length;
   const allMet = !!next && counted.length > 0 && done === counted.length;
-  const overdue = allMet && requirementsFor(person, scopesOf(person.id), catalogRows).some((r) => r.overdue);
+  const scopes = scopesOf(person.id);
+  const overdue = allMet && requirementsFor(person, scopes, catalogRows).some((r) => r.overdue);
+  const check = next ? roleCheckFor(person, role, ladder, next.level, scopes) : null;
+  const checkOk = !check?.needed || check.validUntil !== null;
   return {
-    role, ladder, current, next, done, total: counted.length,
-    ready: allMet && !overdue,
-    hold: !next ? null : counted.length === 0 ? "nothing-to-measure" : overdue ? "overdue" : null,
+    role, ladder, current, next, done, total: counted.length, check,
+    ready: allMet && !overdue && checkOk,
+    hold: !next ? null : counted.length === 0 ? "nothing-to-measure" : overdue ? "overdue" : allMet && !checkOk ? "role-check" : null,
     history: history.map((h) => ({ level: h.level, title: ladder.find((r) => r.level === h.level)?.title ?? `Level ${h.level}`, at: h.createdAt, overridden: !!h.overridden })),
   };
 }
