@@ -12,8 +12,8 @@ const KIND = {
 } as const;
 
 /** One question at a time with a progress bar. Answers are posted together; grading stays on the server. */
-export function Quiz({ questions, action, level, rivalHue, rivalName }: {
-  questions: QuizQ[]; action: (fd: FormData) => void | Promise<void>; level: number; rivalHue: number; rivalName: string;
+export function Quiz({ questions, action, level, rivalHue, rivalName, meLook, rivalLook, photoUrl }: {
+  questions: QuizQ[]; action: (fd: FormData) => void | Promise<void>; level: number; rivalHue: number; rivalName: string; meLook?: string; rivalLook?: string; photoUrl?: string | null;
 }) {
   const [i, setI] = useState(0);
   const [ans, setAns] = useState<Record<number, string>>({});
@@ -25,12 +25,12 @@ export function Quiz({ questions, action, level, rivalHue, rivalName }: {
     <form action={action} className="mx-auto max-w-2xl space-y-5">
       {questions.map((x) => <input key={x.id} type="hidden" name={`q${x.id}`} value={ans[x.id] ?? ""} />)}
       <div className="flex items-center gap-3">
-        <Avatar kind="human" level={level} size={44} />
+        <Avatar kind="human" level={level} size={44} look={meLook} photoUrl={photoUrl} />
         <div className="flex-1">
           <div className="flex justify-between text-xs text-slate-400"><span>Question {i + 1} of {questions.length}</span><span className="flex items-center gap-1"><Check size={12} className="text-emerald-400" />{answered} answered</span></div>
           <div className="bar mt-1"><i style={{ width: `${(answered / questions.length) * 100}%` }} /></div>
         </div>
-        <Avatar kind="rival" level={level} hue={rivalHue} size={44} className="opacity-70" />
+        <Avatar kind="rival" level={level} hue={rivalHue} size={44} className="opacity-70" look={rivalLook} />
       </div>
 
       <nav aria-label="Question navigator" className="flex flex-wrap justify-center gap-1.5">

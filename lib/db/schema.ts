@@ -17,6 +17,9 @@ export const users = sqliteTable("users", {
   audience: text("audience", { enum: ["staff", "customer"] }).notNull().default("staff"),
   // bumped to invalidate every session this person has (sign out everywhere, offboarding)
   sessionVersion: integer("session_version").notNull().default(0),
+  // the look this person picked for themselves and for their rival (see lib/avatars.ts); null = the default fighter / robot
+  avatarMe: text("avatar_me"),
+  avatarRival: text("avatar_rival"),
   createdAt: integer("created_at").notNull().default(now),
 });
 

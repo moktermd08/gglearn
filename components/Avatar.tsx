@@ -1,9 +1,39 @@
+import { Bird, Bot, Cat, Crown, Dog, Fish, Flame, Gem, Ghost, Mountain, Rabbit, Rocket, Shield, Skull, Sparkles, Sun, Swords, Turtle, Zap } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
 import { TIERS, tierOf } from "@/lib/levels";
 
-type Props = { kind: "human" | "rival"; level: number; hue?: number; size?: number; className?: string };
+type Props = { kind: "human" | "rival"; level: number; hue?: number; size?: number; className?: string; look?: string | null; photoUrl?: string | null };
+
+type LucideIcon = ComponentType<SVGProps<SVGSVGElement> & { size?: number | string; strokeWidth?: number | string }>;
+export const LOOK_ICON: Record<string, { Icon: LucideIcon; label: string }> = {
+  cat: { Icon: Cat, label: "Cat" }, dog: { Icon: Dog, label: "Dog" }, rabbit: { Icon: Rabbit, label: "Rabbit" }, bird: { Icon: Bird, label: "Bird" },
+  fish: { Icon: Fish, label: "Fish" }, turtle: { Icon: Turtle, label: "Turtle" }, bot: { Icon: Bot, label: "Robot" }, ghost: { Icon: Ghost, label: "Ghost" },
+  rocket: { Icon: Rocket, label: "Rocket" }, flame: { Icon: Flame, label: "Flame" }, zap: { Icon: Zap, label: "Bolt" }, crown: { Icon: Crown, label: "Crown" },
+  gem: { Icon: Gem, label: "Gem" }, skull: { Icon: Skull, label: "Skull" }, sparkles: { Icon: Sparkles, label: "Sparkles" }, swords: { Icon: Swords, label: "Swords" },
+  shield: { Icon: Shield, label: "Shield" }, mountain: { Icon: Mountain, label: "Peak" }, sun: { Icon: Sun, label: "Sun" },
+};
+
+/** A chosen icon (or photo) in a rank-coloured badge: the ring, glow and crown grow with the rank just like the fighter does. */
+function BadgeLook({ look, photoUrl, level, hue, size, className }: { look: string; photoUrl?: string | null; level: number; hue?: number; size: number; className: string }) {
+  const tier = tierOf(level), c = hue ?? TIERS[tier].hue, d = size * 0.78;
+  const Icon = LOOK_ICON[look]?.Icon;
+  return (
+    <span className={`relative inline-grid place-items-center ${className}`} style={{ width: size, height: size * 140 / 120 }} role="img" aria-label={`${LOOK_ICON[look]?.label ?? "Photo"} at ${TIERS[tier].name} rank`}>
+      {tier >= 2 && <span className="aura absolute inset-0 rounded-full" style={{ background: `radial-gradient(circle, hsl(${c} 90% 78% / .55), transparent 68%)` }} />}
+      <span className="relative grid place-items-center overflow-hidden rounded-full text-[#fff] shadow-lg" style={{ width: d, height: d, background: `linear-gradient(145deg, hsl(${c} 80% 62%), hsl(${c} 70% 36%))`, boxShadow: `0 0 0 ${Math.max(2, size / 24)}px hsl(${c} 90% 78%), 0 8px 18px -8px hsl(${c} 80% 30%)` }}>
+        {look === "photo" && photoUrl
+          // eslint-disable-next-line @next/next/no-img-element -- served by our own guarded route; sizes are small
+          ? <img src={photoUrl} alt="" width={d} height={d} className="h-full w-full object-cover" />
+          : Icon ? <Icon size={d * 0.52} strokeWidth={2} /> : null}
+      </span>
+      {tier >= 4 && <Crown size={size * 0.3} className="absolute -top-0.5 left-1/2 -translate-x-1/2 text-amber-300 drop-shadow" fill="#fbbf24" />}
+    </span>
+  );
+}
 
 /** Hand-drawn SVG fighter. The same body evolves through five ranks: scarf, armour, cape, crown + aura. */
-export function Avatar({ kind, level, hue, size = 96, className = "" }: Props) {
+export function Avatar({ kind, level, hue, size = 96, className = "", look, photoUrl }: Props) {
+  if (look && look !== "default" && (LOOK_ICON[look] || (look === "photo" && photoUrl))) return <BadgeLook look={look} photoUrl={photoUrl} level={level} hue={hue} size={size} className={className} />;
   const tier = tierOf(level);
   const c = hue ?? TIERS[tier].hue;
   const main = `hsl(${c} 80% 58%)`, dark = `hsl(${c} 70% 32%)`, light = `hsl(${c} 90% 78%)`;

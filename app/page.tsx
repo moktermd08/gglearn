@@ -8,6 +8,8 @@ import { rivalFor } from "@/lib/rivals";
 import { hiddenTrackIds } from "@/lib/tracks";
 import { currentUser } from "@/lib/auth";
 import { openTo } from "@/lib/paths";
+import { avatarLooks } from "@/lib/avatars";
+import { AvatarPicker } from "@/components/AvatarPicker";
 import { StatTile, PALETTE } from "@/components/charts";
 import { ArrowRight, BookOpen, Building2, GraduationCap, Layers, ShieldCheck, Swords, Target, Trophy, Users } from "lucide-react";
 
@@ -26,6 +28,7 @@ const AUDIENCES = [
 
 export default async function Home() {
   const viewer = await currentUser();
+  const looks = await avatarLooks();
   const all = db
     .select({ track: tracks, brand: brands, n: sql<number>`(select count(*) from ${questions} q where q.track_id = ${tracks.id} and q.status = 'active')` })
     .from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).orderBy(asc(brands.name), asc(tracks.name)).all();
@@ -53,7 +56,7 @@ export default async function Home() {
           </div>
           <p className="mt-3 text-sm text-slate-400">{rows.length} subjects · {totalQ.toLocaleString("en-GB")} questions · accounts are created by your admin</p>
         </div>
-        <div className="card-soft p-5" aria-hidden>
+        <div className="card-soft p-5">
           <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-400">A learner&apos;s path</div>
           {[{ n: "Git and GitHub", l: 8, d: "Required · due in 14 days" }, { n: "Company security basics", l: 5, d: "Required · done" }, { n: "Client communication", l: 3, d: "Next promotion step" }].map((p, i) => (
             <div key={p.n} className="mb-2 flex items-center gap-3 rounded-xl border border-black/10 bg-[#fff] p-3">
@@ -62,11 +65,12 @@ export default async function Home() {
                 <div className="bar mt-1.5 !h-1.5"><i style={{ width: `${[40, 100, 15][i]}%` }} /></div></div>
             </div>
           ))}
-          <div className="mt-3 flex items-center justify-between rounded-xl bg-[#fff] p-3 ring-1 ring-black/10">
-            <div className="bob"><Avatar kind="human" level={8} size={56} /></div>
+          <div className="mt-3 flex items-center justify-between rounded-xl bg-[#fff] p-3 ring-1 ring-black/10" aria-hidden>
+            <div className="bob"><Avatar kind="human" level={8} size={56} look={looks.me} photoUrl={looks.photoUrl} /></div>
             <div className="text-center text-xs font-black text-slate-500">VS</div>
-            <div className="bob [animation-delay:.6s]"><Avatar kind="rival" level={9} hue={rivalFor("git-titan").hue} size={56} /></div>
+            <div className="bob [animation-delay:.6s]"><Avatar kind="rival" level={9} hue={rivalFor("git-titan").hue} size={56} look={looks.rival} /></div>
           </div>
+          <div className="mt-2 text-center"><AvatarPicker me={looks.me} rival={looks.rival} photoUrl={looks.photoUrl} signedIn={looks.signedIn} level={8} rivalLevel={9} rivalHue={rivalFor("git-titan").hue} /></div>
         </div>
       </section>
 
