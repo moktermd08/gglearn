@@ -52,7 +52,7 @@ const TRACK_PILLAR: Record<string, string> = {
   "ai-llm-practice": "pattern", "data-analytics": "database", "payments-billing": "finance",
   "communications-email": "content", "moksy-brand-voice": "content", "delivery-management": "strategy", "people-operations": "actors",
   "guru-brand-identity": "experience", "guru-design-system": "experience", "guru-design-tools": "experience",
-  "gglink-web-delivery": "implementation", "gglink-hosting-maintenance": "maintenance", "gglink-seo-content": "content",
+  "gglink-web-delivery": "implementation", "gglink-hosting-maintenance": "maintenance", "gglink-server-operations": "maintenance", "gglink-seo-content": "content",
   "gglink-ai-automation": "integration", "gglink-sales-support": "sales", "guru-graphics-sales": "sales", "mhossain-content": "marketing",
   "tech-data-stores": "database", "tech-cloud-devops": "deployment", "tech-testing": "testing",
 };

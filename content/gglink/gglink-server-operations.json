@@ -1,0 +1,2550 @@
+{
+ "trackSlug": "gglink-server-operations",
+ "status": "review",
+ "lessons": [
+  {
+   "level": 1,
+   "title": "The GGLink server at a glance",
+   "syllabus": [
+    "One shared Apache VPS behind Cloudflare, one vhost per app",
+    "Node apps run under pm2 on 127.0.0.1, behind Apache",
+    "GGMoney uses PHP 8.1 FPM and MySQL; GGSocial uses PostgreSQL in Docker",
+    "Secrets live in a .env on the server, never in the repo"
+   ]
+  },
+  {
+   "level": 2,
+   "title": "Web server, TLS and deploys",
+   "syllabus": [
+    "Let's Encrypt certificates renew automatically",
+    "GGLearn deploys on push to main over SSH with rsync",
+    "Exclude node_modules, .next, .git, the database and .env from rsync",
+    "pm2 startOrRestart, then a health check"
+   ]
+  },
+  {
+   "level": 3,
+   "title": "Deploy safely",
+   "syllabus": [
+    "A lock stops two deploys at once",
+    "Schema push has no --force: a destructive change must fail the deploy",
+    "Check configtest before reloading Apache",
+    "Use curl to 127.0.0.1 and pm2 logs to check health"
+   ]
+  },
+  {
+   "level": 4,
+   "title": "Know the traps",
+   "syllabus": [
+    "rsync --delete deletes server-only files such as .env",
+    "A login shell can pick the wrong Node; npm ci can skip the Linux Tailwind binary",
+    "Edit the live vhost in sites-enabled, not sites-available",
+    "Fish shell: stream the script with bash -s"
+   ]
+  },
+  {
+   "level": 5,
+   "title": "Backups, secrets and exceptions",
+   "syllabus": [
+    "Back up the database and uploads; the GGSocial backup is manual and not scheduled",
+    "A WAL database needs a consistent snapshot, not a file copy",
+    "/api/agent/ and /api/media/file/ are open on purpose, with their own protections",
+    "GGMoney: sandbox, APP_DEBUG false, and the right Government Gateway login per company"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "title": "How GGLink hosts its apps",
+   "body": "GGLink's apps run on a shared Apache VPS (the \"gglink server\") behind Cloudflare. The server runs mod_php 7.4 globally for its older PHP sites; GGMoney needs PHP 8.1, so it alone runs through PHP 8.1 FPM, set per virtual host with a SetHandler to the php8.1-fpm socket, and it uses MySQL 8, which was already installed. Node apps run as pm2 processes bound to 127.0.0.1 and are reached through Apache as a reverse proxy: GGSocial's web process is ggsocial-web (next start on port 3200) with a ggsocial-scheduler process that ticks its cron endpoints (publishing every 60 seconds); GGLearn is gglearn-web on 127.0.0.1:3400. GGSocial's database is PostgreSQL 16 in Docker, bound to localhost with a named volume; GGLearn uses a SQLite file (data/gglearn.db). pm2 survives reboots because the pm2-root service is enabled and the process list is saved. Public addresses follow the pattern <app>.gglink.co.uk (gglearn, ggsocial, ggmoney). Source: gglearn/README.md and deploy/, ggsocial/DEPLOY.md and ecosystem.config.cjs, ggmoney/DEPLOY.md.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which web server fronts GGLink's apps?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Apache"
+      },
+      {
+       "key": "b",
+       "text": "IIS"
+      },
+      {
+       "key": "c",
+       "text": "nginx"
+      },
+      {
+       "key": "d",
+       "text": "Caddy"
+      }
+     ],
+     "answer": "a",
+     "hint": "Apache vhosts, with certbot.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which service sits in front of the GGLink sites?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No proxy"
+      },
+      {
+       "key": "b",
+       "text": "Akamai"
+      },
+      {
+       "key": "c",
+       "text": "Cloudflare"
+      },
+      {
+       "key": "d",
+       "text": "Fastly"
+      }
+     ],
+     "answer": "c",
+     "hint": "Its SSL mode matters.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which tool keeps the Node apps running?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Kubernetes"
+      },
+      {
+       "key": "b",
+       "text": "cron"
+      },
+      {
+       "key": "c",
+       "text": "systemd timers only"
+      },
+      {
+       "key": "d",
+       "text": "pm2"
+      }
+     ],
+     "answer": "d",
+     "hint": "pm2 processes such as ggsocial-web and gglearn-web.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "On which address do the Node apps listen?",
+     "options": [
+      {
+       "key": "a",
+       "text": "127.0.0.1 only, behind Apache"
+      },
+      {
+       "key": "b",
+       "text": "A public IP"
+      },
+      {
+       "key": "c",
+       "text": "A Cloudflare tunnel only"
+      },
+      {
+       "key": "d",
+       "text": "0.0.0.0, open to the internet"
+      }
+     ],
+     "answer": "a",
+     "hint": "Apache reverse-proxies to them.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is GGSocial's production address?",
+     "options": [
+      {
+       "key": "a",
+       "text": "social.gglink.uk"
+      },
+      {
+       "key": "b",
+       "text": "ggsocial.com"
+      },
+      {
+       "key": "c",
+       "text": "ggsocial.gglink.co.uk"
+      },
+      {
+       "key": "d",
+       "text": "app.ggsocial.io"
+      }
+     ],
+     "answer": "c",
+     "hint": "<app>.gglink.co.uk.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which web address pattern do GGLink's apps follow?",
+     "options": [
+      {
+       "key": "a",
+       "text": "<app>.gglink.co.uk"
+      },
+      {
+       "key": "b",
+       "text": "<app>.cloudflare.com"
+      },
+      {
+       "key": "c",
+       "text": "<app>.local"
+      },
+      {
+       "key": "d",
+       "text": "gglink.co.uk/<app>"
+      }
+     ],
+     "answer": "a",
+     "hint": "gglearn, ggsocial and ggmoney.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is GGLearn's production address?",
+     "options": [
+      {
+       "key": "a",
+       "text": "gglearn.com"
+      },
+      {
+       "key": "b",
+       "text": "gglearn.gglink.co.uk"
+      },
+      {
+       "key": "c",
+       "text": "app.gglearn.io"
+      },
+      {
+       "key": "d",
+       "text": "learn.gglink.uk"
+      }
+     ],
+     "answer": "b",
+     "hint": "<app>.gglink.co.uk.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which PHP setup does the server use globally for its older sites?",
+     "options": [
+      {
+       "key": "a",
+       "text": "mod_php 7.4"
+      },
+      {
+       "key": "b",
+       "text": "PHP 5.6 CGI"
+      },
+      {
+       "key": "c",
+       "text": "PHP 8.1 FPM"
+      },
+      {
+       "key": "d",
+       "text": "No PHP"
+      }
+     ],
+     "answer": "a",
+     "hint": "GGMoney is the exception.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How does GGMoney run PHP 8.1 without affecting the other sites?",
+     "options": [
+      {
+       "key": "a",
+       "text": "By running on a different server"
+      },
+      {
+       "key": "b",
+       "text": "By using Docker for PHP"
+      },
+      {
+       "key": "c",
+       "text": "PHP 8.1 FPM, selected per virtual host"
+      },
+      {
+       "key": "d",
+       "text": "By upgrading mod_php for everyone"
+      }
+     ],
+     "answer": "c",
+     "hint": "A SetHandler to the php8.1-fpm socket in its vhost.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which database does GGMoney use?",
+     "options": [
+      {
+       "key": "a",
+       "text": "MySQL 8"
+      },
+      {
+       "key": "b",
+       "text": "MongoDB"
+      },
+      {
+       "key": "c",
+       "text": "SQLite"
+      },
+      {
+       "key": "d",
+       "text": "PostgreSQL"
+      }
+     ],
+     "answer": "a",
+     "hint": "Already installed with a PHP 8.1 driver.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How is GGSocial's PostgreSQL database run?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As a managed cloud service"
+      },
+      {
+       "key": "b",
+       "text": "In Docker, bound to localhost, with a named volume"
+      },
+      {
+       "key": "c",
+       "text": "Inside the Node process"
+      },
+      {
+       "key": "d",
+       "text": "On a separate paid server"
+      }
+     ],
+     "answer": "b",
+     "hint": "ggsocial-pg (postgres:16).",
+     "topic": "Hosting"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which database file does GGLearn use in production?",
+     "options": [
+      {
+       "key": "a",
+       "text": "PostgreSQL in Docker"
+      },
+      {
+       "key": "b",
+       "text": "Redis"
+      },
+      {
+       "key": "c",
+       "text": "SQLite at data/gglearn.db"
+      },
+      {
+       "key": "d",
+       "text": "MySQL 8"
+      }
+     ],
+     "answer": "c",
+     "hint": "It is excluded from deploys so it is never overwritten.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "On which port does GGSocial's web process listen?",
+     "options": [
+      {
+       "key": "a",
+       "text": "3200"
+      },
+      {
+       "key": "b",
+       "text": "3400"
+      },
+      {
+       "key": "c",
+       "text": "5432"
+      },
+      {
+       "key": "d",
+       "text": "80"
+      }
+     ],
+     "answer": "a",
+     "hint": "next start -p 3200.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "On which local port does GGLearn's app listen?",
+     "options": [
+      {
+       "key": "a",
+       "text": "8080"
+      },
+      {
+       "key": "b",
+       "text": "3400"
+      },
+      {
+       "key": "c",
+       "text": "3200"
+      },
+      {
+       "key": "d",
+       "text": "443"
+      }
+     ],
+     "answer": "b",
+     "hint": "127.0.0.1:3400.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why do the Node apps bind to 127.0.0.1 only?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To save memory"
+      },
+      {
+       "key": "b",
+       "text": "Because pm2 needs it"
+      },
+      {
+       "key": "c",
+       "text": "Because Cloudflare requires it"
+      },
+      {
+       "key": "d",
+       "text": "So only Apache on the same machine can reach them"
+      }
+     ],
+     "answer": "d",
+     "hint": "The public entry point is Apache.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which GGSocial process ticks the publishing endpoint every 60 seconds?",
+     "options": [
+      {
+       "key": "a",
+       "text": "pm2-root"
+      },
+      {
+       "key": "b",
+       "text": "ggsocial-scheduler"
+      },
+      {
+       "key": "c",
+       "text": "ggsocial-web"
+      },
+      {
+       "key": "d",
+       "text": "ggsocial-pg"
+      }
+     ],
+     "answer": "b",
+     "hint": "It also runs the agents and goals endpoints.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A new PHP 8 app must be added to a server running mod_php 7.4 for other sites. What is the safe approach?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Run only that app through PHP-FPM 8, selected in its own vhost"
+      },
+      {
+       "key": "b",
+       "text": "Move all sites to the new app's server"
+      },
+      {
+       "key": "c",
+       "text": "Upgrade PHP globally and hope"
+      },
+      {
+       "key": "d",
+       "text": "Disable the old sites"
+      }
+     ],
+     "answer": "a",
+     "hint": "That is how GGMoney was done.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does pm2 keep apps running after a reboot?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cloudflare restarts them"
+      },
+      {
+       "key": "b",
+       "text": "They are run by cron every minute"
+      },
+      {
+       "key": "c",
+       "text": "Apache restarts them"
+      },
+      {
+       "key": "d",
+       "text": "The pm2-root service is enabled and the process list has been saved"
+      }
+     ],
+     "answer": "d",
+     "hint": "pm2 save plus the startup service.",
+     "topic": "Hosting"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "GGMoney's deploy notes describe the server it runs on as what?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The existing Apache VPS that already serves gglink.co.uk and other sites"
+      },
+      {
+       "key": "b",
+       "text": "A dedicated server only for GGMoney"
+      },
+      {
+       "key": "c",
+       "text": "A Cloudflare Workers project"
+      },
+      {
+       "key": "d",
+       "text": "A container platform"
+      }
+     ],
+     "answer": "a",
+     "hint": "A shared box, with per-app isolation by vhost and process.",
+     "topic": "Hosting"
+    }
+   ]
+  },
+  {
+   "title": "Apache, TLS and Cloudflare",
+   "body": "TLS certificates come from Let's Encrypt via certbot and renew automatically (a certbot timer and the webroot method); nobody renews them by hand. Cloudflare's SSL mode matters: GGMoney must be set to Full (strict), because HMRC OAuth tokens travel on the Cloudflare-to-origin hop and Flexible mode would send them in the clear. GGMoney's vhosts set AllowOverride All, which is not optional: every security rule lives in .htaccess, and without it source and config are downloadable. GGLearn's app is reachable only through Cloudflare: deploy/apache-cloudflare-only.conf allows Cloudflare's published IP ranges plus localhost, so the client address the app derives from X-Forwarded-For cannot be spoofed by bypassing Cloudflare. It is pulled in with a plain Include, not IncludeOptional, so if the file is missing Apache refuses to load the config instead of silently serving the site to everyone. deploy/update-cloudflare-ips.sh regenerates it from Cloudflare's published ranges, and refuses to write a list that looks wrong, so a bad fetch can never produce an empty (lock-everyone-out) allow-list; afterwards you review the diff, commit, deploy and reload Apache. certbot copies the :80 vhost into the :443 one, so the copy must carry the same Include line. For GGSocial the live :443 vhost is a regular file in /etc/apache2/sites-enabled/ (not a symlink) and has drifted from sites-available; editing the sites-available copy passes apachectl configtest, reloads cleanly and changes nothing. Edit the sites-enabled copy, check which file each vhost comes from with apachectl -S, back it up first, then apachectl configtest && systemctl reload apache2. Source: ggmoney/DEPLOY.md, gglearn/deploy/, ggsocial/DEPLOY.md.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which service issues the TLS certificates?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Let's Encrypt, through certbot"
+      },
+      {
+       "key": "b",
+       "text": "A paid certificate authority renewed manually"
+      },
+      {
+       "key": "c",
+       "text": "A self-signed certificate"
+      },
+      {
+       "key": "d",
+       "text": "Cloudflare only, with no origin certificate"
+      }
+     ],
+     "answer": "a",
+     "hint": "They renew automatically.",
+     "topic": "Apache"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Do the certificates need to be renewed by hand?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only on Mondays"
+      },
+      {
+       "key": "b",
+       "text": "Yes, every year by email request"
+      },
+      {
+       "key": "c",
+       "text": "No: they renew automatically"
+      },
+      {
+       "key": "d",
+       "text": "Yes, every month"
+      }
+     ],
+     "answer": "c",
+     "hint": "A certbot timer handles renewal.",
+     "topic": "Apache"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which command checks Apache's configuration before you reload it?",
+     "options": [
+      {
+       "key": "a",
+       "text": "systemctl status ssl"
+      },
+      {
+       "key": "b",
+       "text": "apachectl purge"
+      },
+      {
+       "key": "c",
+       "text": "apache2 --restart"
+      },
+      {
+       "key": "d",
+       "text": "apachectl configtest"
+      }
+     ],
+     "answer": "d",
+     "hint": "Then systemctl reload apache2.",
+     "topic": "Apache"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which command shows which file each virtual host is loaded from?",
+     "options": [
+      {
+       "key": "a",
+       "text": "apachectl logs"
+      },
+      {
+       "key": "b",
+       "text": "apachectl -v"
+      },
+      {
+       "key": "c",
+       "text": "ls /var/www"
+      },
+      {
+       "key": "d",
+       "text": "apachectl -S"
+      }
+     ],
+     "answer": "d",
+     "hint": "Useful when two copies of a vhost exist.",
+     "topic": "Apache"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which Cloudflare SSL mode does GGMoney need, and why?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Full, because strict breaks OAuth"
+      },
+      {
+       "key": "b",
+       "text": "Full (strict), because tokens travel on the Cloudflare-to-origin hop and Flexible would send them in the clear"
+      },
+      {
+       "key": "c",
+       "text": "Off, because HMRC handles security"
+      },
+      {
+       "key": "d",
+       "text": "Flexible, because it is faster"
+      }
+     ],
+     "answer": "b",
+     "hint": "HMRC OAuth tokens.",
+     "topic": "Apache"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why is AllowOverride All required for GGMoney?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because Cloudflare reads it"
+      },
+      {
+       "key": "b",
+       "text": "Because PHP needs it to start"
+      },
+      {
+       "key": "c",
+       "text": "Every security rule lives in .htaccess, and without it source and config are downloadable"
+      },
+      {
+       "key": "d",
+       "text": "Because certbot needs it"
+      }
+     ],
+     "answer": "c",
+     "hint": "Not optional.",
+     "topic": "Apache"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does the Cloudflare-only allow-list do for GGLearn?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Hides the app from search engines"
+      },
+      {
+       "key": "b",
+       "text": "Blocks all traffic from the UK"
+      },
+      {
+       "key": "c",
+       "text": "Forces HTTPS"
+      },
+      {
+       "key": "d",
+       "text": "Lets only Cloudflare's IP ranges and localhost reach the app"
+      }
+     ],
+     "answer": "d",
+     "hint": "Stops direct access that bypasses Cloudflare.",
+     "topic": "Apache"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does the Cloudflare-only conf stop clients spoofing their address?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because the header is encrypted"
+      },
+      {
+       "key": "b",
+       "text": "The app trusts X-Forwarded-For, so only requests that really came through Cloudflare must be allowed"
+      },
+      {
+       "key": "c",
+       "text": "Because Apache strips the header"
+      },
+      {
+       "key": "d",
+       "text": "Because the app ignores it"
+      }
+     ],
+     "answer": "b",
+     "hint": "Bypassing Cloudflare would let anyone set the header.",
+     "topic": "Apache"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why is the allow-list pulled in with Include rather than IncludeOptional?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Include is faster"
+      },
+      {
+       "key": "b",
+       "text": "If the file is missing Apache refuses to load, instead of silently serving the site to everyone"
+      },
+      {
+       "key": "c",
+       "text": "Include supports wildcards"
+      },
+      {
+       "key": "d",
+       "text": "IncludeOptional is deprecated"
+      }
+     ],
+     "answer": "b",
+     "hint": "Fail closed, not open.",
+     "topic": "Apache"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "update-cloudflare-ips.sh refuses to write when the fetched list looks wrong. Why?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because Cloudflare blocks the script"
+      },
+      {
+       "key": "b",
+       "text": "A bad fetch must never produce an empty allow-list that locks everyone out"
+      },
+      {
+       "key": "c",
+       "text": "To save disk space"
+      },
+      {
+       "key": "d",
+       "text": "To keep the file small"
+      }
+     ],
+     "answer": "b",
+     "hint": "It checks counts of IPv4 and IPv6 ranges.",
+     "topic": "Apache"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "After regenerating the Cloudflare allow-list, what must be done?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Delete the old file first"
+      },
+      {
+       "key": "b",
+       "text": "Restart the whole server"
+      },
+      {
+       "key": "c",
+       "text": "Review the diff, commit, deploy, and reload Apache on the server"
+      },
+      {
+       "key": "d",
+       "text": "Nothing: Apache picks it up instantly"
+      }
+     ],
+     "answer": "c",
+     "hint": "The script's own usage note.",
+     "topic": "Apache"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "GGSocial's live :443 vhost is a regular file in sites-enabled, not a symlink. What is the trap?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cloudflare will cache the old vhost"
+      },
+      {
+       "key": "b",
+       "text": "Certbot will delete the file"
+      },
+      {
+       "key": "c",
+       "text": "Apache will refuse to start"
+      },
+      {
+       "key": "d",
+       "text": "Editing sites-available passes configtest and reloads cleanly but changes nothing"
+      }
+     ],
+     "answer": "d",
+     "hint": "Edit the sites-enabled copy.",
+     "topic": "Apache"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What is the correct order for changing GGSocial's live vhost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Back up the sites-enabled copy, edit it, run configtest, then reload Apache"
+      },
+      {
+       "key": "b",
+       "text": "Edit sites-available, then restart the server"
+      },
+      {
+       "key": "c",
+       "text": "Delete the vhost and recreate it"
+      },
+      {
+       "key": "d",
+       "text": "Edit and reload, then test"
+      }
+     ],
+     "answer": "a",
+     "hint": "Back up to /root/ggsocial-backups first.",
+     "topic": "Apache"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "certbot copies the :80 vhost into the :443 one. What must you check?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That the copy has the same Include line for the Cloudflare allow-list"
+      },
+      {
+       "key": "b",
+       "text": "That the copy has no ServerName"
+      },
+      {
+       "key": "c",
+       "text": "That the copy is a symlink"
+      },
+      {
+       "key": "d",
+       "text": "That the copy uses PHP 7.4"
+      }
+     ],
+     "answer": "a",
+     "hint": "Otherwise HTTPS traffic is not restricted.",
+     "topic": "Apache"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What drifted between the two GGSocial vhost copies?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only sites-available has logging"
+      },
+      {
+       "key": "b",
+       "text": "Nothing drifted"
+      },
+      {
+       "key": "c",
+       "text": "Only the live copy sets the HSTS, X-Content-Type-Options and Referrer-Policy headers"
+      },
+      {
+       "key": "d",
+       "text": "Only the live copy has a certificate"
+      }
+     ],
+     "answer": "c",
+     "hint": "Another reason to edit the live file.",
+     "topic": "Apache"
+    },
+    {
+     "level": 7,
+     "type": "scenario",
+     "prompt": "Someone edits GGSocial's sites-available vhost to add a security header, runs apachectl configtest and reloads Apache. The header does not appear. Explain why, and what the correct process is.",
+     "answer": "On this server the live :443 vhost is a regular file in /etc/apache2/sites-enabled/, not a symlink to sites-available, and it has already drifted from the sites-available copy. Editing sites-available passes configtest and reloads cleanly but changes nothing, because Apache serves the sites-enabled file. The correct process: run apachectl -S to see which file each vhost is loaded from; back up the sites-enabled copy to /root/ggsocial-backups first; edit the sites-enabled copy; run apachectl configtest; then systemctl reload apache2. Remember that for 'both vhosts' changes the :80 and :443 files are different (sites-available/ggsocial.gglink.co.uk.conf and sites-enabled/ggsocial.gglink.co.uk-le-ssl.conf).",
+     "rubric": "A good answer: identifies that the live :443 vhost is a regular file in sites-enabled that has drifted, so the sites-available edit has no effect; uses apachectl -S to confirm; backs up before editing; edits the sites-enabled copy; configtest then reload. Credit for noting that both vhosts need the change. Penalise advice to symlink or delete files without a backup.",
+     "topic": "Troubleshooting"
+    }
+   ]
+  },
+  {
+   "title": "Deploying a Node app (GGLearn)",
+   "body": "GGLearn deploys on every push to main through GitHub Actions, which runs deploy/deploy.sh over SSH (it uses the host alias gglink-live). The script rsyncs the repo to /var/www/gglearn.gglink.co.uk excluding node_modules, .next, .git, data/*.db* and .env*, so the production database and secrets are never overwritten. The server's login shell is fish, which cannot parse bash grouping or &&/|| chains, so the remote steps are piped into bash. A flock on /tmp/gglearn-deploy.lock stops two deploys running at once. The remote steps are npm ci, npx drizzle-kit push, npm run build, pm2 startOrRestart ecosystem.config.cjs and pm2 save. There is deliberately no --force on drizzle-kit push: when a schema change would delete rows (for example a NOT NULL column added to a table that has data) it must stop and fail the deploy instead of running a delete. Finally the script polls http://127.0.0.1:3400/ up to ten times, three seconds apart, and fails the deploy unless it gets HTTP 200, printing the last pm2 error logs. The server uses Node 20, so Node 21+ APIs must be avoided, and better-sqlite3 is kept on a version with a Linux Node 20 prebuild. Source: gglearn/deploy/deploy.sh and README.md.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What starts a GGLearn deploy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A push to main, through GitHub Actions"
+      },
+      {
+       "key": "b",
+       "text": "A Cloudflare rule"
+      },
+      {
+       "key": "c",
+       "text": "A cron job each night"
+      },
+      {
+       "key": "d",
+       "text": "A manual FTP upload"
+      }
+     ],
+     "answer": "a",
+     "hint": "Or a manual workflow run.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which tool copies GGLearn's files to the server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "rsync over SSH"
+      },
+      {
+       "key": "b",
+       "text": "git pull on the server"
+      },
+      {
+       "key": "c",
+       "text": "scp of a zip"
+      },
+      {
+       "key": "d",
+       "text": "FTP"
+      }
+     ],
+     "answer": "a",
+     "hint": "deploy/deploy.sh.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which paths does the GGLearn deploy exclude?",
+     "options": [
+      {
+       "key": "a",
+       "text": "app/ and lib/"
+      },
+      {
+       "key": "b",
+       "text": "package.json and the lockfile"
+      },
+      {
+       "key": "c",
+       "text": "deploy/ and docs/"
+      },
+      {
+       "key": "d",
+       "text": "node_modules, .next, .git, data/*.db* and .env*"
+      }
+     ],
+     "answer": "d",
+     "hint": "Dependencies, build output, history, the live database and secrets.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which remote command applies schema changes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "npx drizzle-kit push"
+      },
+      {
+       "key": "b",
+       "text": "drizzle-kit drop"
+      },
+      {
+       "key": "c",
+       "text": "npm run migrate"
+      },
+      {
+       "key": "d",
+       "text": "psql -f schema.sql"
+      }
+     ],
+     "answer": "a",
+     "hint": "Without --force.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why are data/*.db* files excluded from the rsync?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are regenerated at build"
+      },
+      {
+       "key": "b",
+       "text": "The production database lives on the server and must never be overwritten"
+      },
+      {
+       "key": "c",
+       "text": "SQLite cannot be copied"
+      },
+      {
+       "key": "d",
+       "text": "They are too large to copy"
+      }
+     ],
+     "answer": "b",
+     "hint": "A local copy would replace live data.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What stops two GGLearn deploys running at once?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A flock on a lock file on the server"
+      },
+      {
+       "key": "b",
+       "text": "pm2"
+      },
+      {
+       "key": "c",
+       "text": "An SSH timeout"
+      },
+      {
+       "key": "d",
+       "text": "GitHub's concurrency setting only"
+      }
+     ],
+     "answer": "a",
+     "hint": "The script exits if the lock is held.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why are the remote steps piped into bash -s?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To hide the commands from logs"
+      },
+      {
+       "key": "b",
+       "text": "Because SSH forbids scripts"
+      },
+      {
+       "key": "c",
+       "text": "Because bash is faster"
+      },
+      {
+       "key": "d",
+       "text": "The server's login shell is fish, which cannot parse bash grouping or &&/|| chains"
+      }
+     ],
+     "answer": "d",
+     "hint": "Stream the script over stdin.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which process manager command starts or restarts the app?",
+     "options": [
+      {
+       "key": "a",
+       "text": "node server.js"
+      },
+      {
+       "key": "b",
+       "text": "systemctl restart gglearn"
+      },
+      {
+       "key": "c",
+       "text": "pm2 startOrRestart ecosystem.config.cjs"
+      },
+      {
+       "key": "d",
+       "text": "npm start &"
+      }
+     ],
+     "answer": "c",
+     "hint": "Followed by pm2 save.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why is there no --force on drizzle-kit push?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because it prints too much"
+      },
+      {
+       "key": "b",
+       "text": "A schema change that would delete rows must stop and fail the deploy rather than run"
+      },
+      {
+       "key": "c",
+       "text": "Because it is slower"
+      },
+      {
+       "key": "d",
+       "text": "Because --force is not supported"
+      }
+     ],
+     "answer": "b",
+     "hint": "Safer to fail than to lose data.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How does the script confirm the app is healthy after restarting?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It asks pm2 for a green status only"
+      },
+      {
+       "key": "b",
+       "text": "It polls http://127.0.0.1:3400/ up to ten times and fails unless it gets HTTP 200"
+      },
+      {
+       "key": "c",
+       "text": "It waits 60 seconds and assumes success"
+      },
+      {
+       "key": "d",
+       "text": "It emails the admin"
+      }
+     ],
+     "answer": "b",
+     "hint": "It also prints pm2 error logs on failure.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What happens if the health check never returns 200?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The server is rebooted"
+      },
+      {
+       "key": "b",
+       "text": "The deploy is treated as successful"
+      },
+      {
+       "key": "c",
+       "text": "The previous release is restored automatically"
+      },
+      {
+       "key": "d",
+       "text": "The deploy fails and the last pm2 error logs are printed"
+      }
+     ],
+     "answer": "d",
+     "hint": "A failing deploy is visible in Actions.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which Node constraint applies on the GGLearn server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Any Node version works"
+      },
+      {
+       "key": "b",
+       "text": "Node 22 or newer is required"
+      },
+      {
+       "key": "c",
+       "text": "Node 20: avoid Node 21+ APIs, and keep better-sqlite3 on a version with a Linux Node 20 prebuild"
+      },
+      {
+       "key": "d",
+       "text": "Node 14 only"
+      }
+     ],
+     "answer": "c",
+     "hint": "A library upgrade can break the build on the server.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What could `drizzle-kit push --force` do when a NOT NULL column is added to a table that has data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Skip the change silently"
+      },
+      {
+       "key": "b",
+       "text": "Run a delete from the table and lose its rows"
+      },
+      {
+       "key": "c",
+       "text": "Roll the whole database back"
+      },
+      {
+       "key": "d",
+       "text": "Add the column with an automatic default"
+      }
+     ],
+     "answer": "b",
+     "hint": "The reason --force is not used.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A deploy is blocked by `another deploy is already running`. What does it mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The SSH key expired"
+      },
+      {
+       "key": "b",
+       "text": "GitHub is down"
+      },
+      {
+       "key": "c",
+       "text": "pm2 has crashed"
+      },
+      {
+       "key": "d",
+       "text": "The flock on the server is held by an earlier deploy that has not finished"
+      }
+     ],
+     "answer": "d",
+     "hint": "The lock is held by a running process and frees itself when that process exits.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 6,
+     "type": "scenario",
+     "prompt": "You need to host a new small Node app at newapp.gglink.co.uk on the existing server. Describe the steps and settings, following how GGLearn and GGSocial are hosted.",
+     "answer": "Create an Apache vhost for newapp.gglink.co.uk that reverse-proxies to the app on 127.0.0.1 and a chosen free port (the app listens only on localhost); get a Let's Encrypt certificate with certbot (renews automatically) and check the :443 copy carries any Include lines; keep Cloudflare in front, set to Full (strict), and consider the Cloudflare-only allow-list used for GGLearn; run the app under pm2 with an ecosystem file, enable pm2 startup and pm2 save; keep secrets in a .env on the server with chmod 600 and exclude .env and the database from rsync; deploy with a script that uses a lock, npm ci, a schema push without --force, a build, pm2 startOrRestart and a health check that fails the deploy unless the app returns 200; run configtest before reloading Apache; and arrange backups of the database and any uploads, since nothing is scheduled by default.",
+     "rubric": "A good answer includes most of: Apache vhost with reverse proxy to 127.0.0.1:PORT; certbot/Let's Encrypt; Cloudflare Full (strict) and optionally the Cloudflare-only allow-list; pm2 with startup and save; .env on the server (chmod 600) excluded from rsync; deploy script with flock, npm ci, schema push without --force, build, pm2 restart and a health check; apachectl configtest before reload; backups of database and uploads. Credit each correct element; mark down anything that exposes the app on a public port, overwrites .env or the database, or skips backups.",
+     "topic": "Hosting a new app"
+    }
+   ]
+  },
+  {
+   "title": "Traps learned the hard way (GGSocial)",
+   "body": "GGSocial's deploy notes record several traps. rsync --delete destroys production secrets: .env exists only on the server, so without --exclude .env rsync deletes it as not in source (and .env.local, a symlink to it, goes too). Losing APP_SECRET logs everyone out and makes stored platform tokens undecryptable, so channels must be reconnected; copies of .env live in /root/ggsocial-backups/env-*. npm ci silently skips the Linux Tailwind binary because the lockfile is generated on macOS, so the build dies with a missing module; the deploy pins it with an explicit npm install --no-save at the same version as @tailwindcss/oxide, keeping it out of the committed lockfile. Turbopack caches a failed build, so the deploy builds into a fresh .next-new and swaps it in, which also keeps the old build serving until the new one is ready. A login shell sources nvm and puts an old Node first, so Next 16 refuses to build (it needs Node >= 20.9.0) while pm2 runs /usr/bin/node; the script puts /usr/bin first so install, build and runtime agree. A failed build that happens after rm -rf .next leaves a running server without a build directory, so check /login immediately. The login shell is fish: anything with $(...) passed straight to ssh fails to parse (the backup step once silently produced no backup), so the server half is streamed over stdin with bash -s. The schema is pushed without --force, with < /dev/null so a stop fails fast instead of hanging on a prompt. A browser tab left open across a deploy holds the old build's Server Action ids; deploymentId and a pinned NEXT_SERVER_ACTIONS_ENCRYPTION_KEY in .env fix it. Source: ggsocial/DEPLOY.md.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does rsync --delete do to a server-only .env file if it is not excluded?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Keeps it"
+      },
+      {
+       "key": "b",
+       "text": "Deletes it, because it is not in the source"
+      },
+      {
+       "key": "c",
+       "text": "Encrypts it"
+      },
+      {
+       "key": "d",
+       "text": "Moves it to a backup folder"
+      }
+     ],
+     "answer": "b",
+     "hint": "Always --exclude .env.",
+     "topic": "Traps"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What happens if GGSocial's APP_SECRET is lost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only the admin is logged out"
+      },
+      {
+       "key": "b",
+       "text": "Nothing: it is regenerated"
+      },
+      {
+       "key": "c",
+       "text": "Everyone is logged out and stored platform tokens become undecryptable, so channels must be reconnected"
+      },
+      {
+       "key": "d",
+       "text": "The database is deleted"
+      }
+     ],
+     "answer": "c",
+     "hint": "It also protects stored tokens.",
+     "topic": "Traps"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Where are copies of GGSocial's .env kept?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the git repository"
+      },
+      {
+       "key": "b",
+       "text": "Only in the developer's laptop"
+      },
+      {
+       "key": "c",
+       "text": "In /root/ggsocial-backups/env-* directories"
+      },
+      {
+       "key": "d",
+       "text": "In /var/www/public"
+      }
+     ],
+     "answer": "c",
+     "hint": "Backed up by the deploy script.",
+     "topic": "Traps"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does npm ci silently skip on the Linux server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "All dev dependencies"
+      },
+      {
+       "key": "b",
+       "text": "The Linux Tailwind binary, because the lockfile was generated on macOS"
+      },
+      {
+       "key": "c",
+       "text": "The postinstall script of pm2"
+      },
+      {
+       "key": "d",
+       "text": "The main Next.js package"
+      }
+     ],
+     "answer": "b",
+     "hint": "A platform optional dependency.",
+     "topic": "Traps"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How does the deploy fix the missing Tailwind binary?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It downloads it on every request"
+      },
+      {
+       "key": "b",
+       "text": "It switches to a different CSS tool"
+      },
+      {
+       "key": "c",
+       "text": "An explicit npm install --no-save pinned to the installed @tailwindcss/oxide version"
+      },
+      {
+       "key": "d",
+       "text": "It commits the binary to git"
+      }
+     ],
+     "answer": "c",
+     "hint": "--no-save keeps it out of the lockfile.",
+     "topic": "Traps"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does the deploy build into .next-new and swap it in?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Turbopack caches a failed build, and the old build keeps serving until the new one is ready"
+      },
+      {
+       "key": "b",
+       "text": "To make builds faster"
+      },
+      {
+       "key": "c",
+       "text": "To save disk space"
+      },
+      {
+       "key": "d",
+       "text": "Because Next cannot build in .next"
+      }
+     ],
+     "answer": "a",
+     "hint": "A failed build no longer takes the site down.",
+     "topic": "Traps"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A login shell puts an old Node first via nvm. What goes wrong?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The site loses its certificate"
+      },
+      {
+       "key": "b",
+       "text": "Apache fails to start"
+      },
+      {
+       "key": "c",
+       "text": "The database is wiped"
+      },
+      {
+       "key": "d",
+       "text": "Next 16 refuses to build because it needs Node 20.9 or newer, while pm2 runs /usr/bin/node"
+      }
+     ],
+     "answer": "d",
+     "hint": "The script puts /usr/bin first.",
+     "topic": "Traps"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why is `< /dev/null` used on drizzle-kit push?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To speed it up"
+      },
+      {
+       "key": "b",
+       "text": "To hide its output"
+      },
+      {
+       "key": "c",
+       "text": "So a prompt makes it fail fast instead of hanging"
+      },
+      {
+       "key": "d",
+       "text": "To force approval"
+      }
+     ],
+     "answer": "c",
+     "hint": "Combined with no --force.",
+     "topic": "Traps"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A tab left open across a deploy breaks on its next click. Why, and what fixes it?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It holds the old build's Server Action ids; a deploymentId and a pinned NEXT_SERVER_ACTIONS_ENCRYPTION_KEY make Next reload and keep unchanged actions working"
+      },
+      {
+       "key": "b",
+       "text": "The database changed; restore it"
+      },
+      {
+       "key": "c",
+       "text": "The browser cache is corrupt; clear it"
+      },
+      {
+       "key": "d",
+       "text": "Apache dropped the session; restart it"
+      }
+     ],
+     "answer": "a",
+     "hint": "Both are set by the deploy.",
+     "topic": "Traps"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "The server's login shell is fish and `$(...)` passed straight to ssh failed. What was the damaging effect, and the lesson?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The deploy ran twice; add a lock"
+      },
+      {
+       "key": "b",
+       "text": "The build used the wrong Node; install nvm"
+      },
+      {
+       "key": "c",
+       "text": "The backup step silently produced no backup; stream the script with bash -s and check a backup was actually written"
+      },
+      {
+       "key": "d",
+       "text": "The key was rejected; use a password"
+      }
+     ],
+     "answer": "c",
+     "hint": "A silent failure.",
+     "topic": "Traps"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A build fails after `rm -rf .next` on the live app. What should you check immediately?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing: the old build is kept"
+      },
+      {
+       "key": "b",
+       "text": "The size of node_modules"
+      },
+      {
+       "key": "c",
+       "text": "That /login (the app) still returns 200, because the server may have no build directory"
+      },
+      {
+       "key": "d",
+       "text": "Only the Cloudflare dashboard"
+      }
+     ],
+     "answer": "c",
+     "hint": "The new-build-dir approach avoids this.",
+     "topic": "Traps"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does the deploy script refuse to run if .env is missing on the server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To avoid a long build"
+      },
+      {
+       "key": "b",
+       "text": "Because rsync needs it"
+      },
+      {
+       "key": "c",
+       "text": "Because Docker requires it"
+      },
+      {
+       "key": "d",
+       "text": "Without it the app cannot start safely and secrets such as APP_SECRET would be lost or regenerated"
+      }
+     ],
+     "answer": "d",
+     "hint": "A guard against a destructive deploy.",
+     "topic": "Traps"
+    },
+    {
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A GGSocial deploy fails during the build, part-way through. List what you check and do immediately, and what the deploy script does to limit the damage.",
+     "answer": "Check immediately that the site still answers: curl http://127.0.0.1:3200/login should return 200 and pm2 list should show both processes running. The script builds into a fresh .next-new and only swaps it in on success, so the old build should still be serving, but a build that fails after rm -rf .next would leave no build directory, so verify at once. Read the build error: common causes are the missing Linux Tailwind binary (the script pins it with npm install --no-save), the wrong Node on the PATH (Next needs 20.9 or newer, and the script puts /usr/bin first), or a cached failed build (Turbopack caches failures, hence the fresh directory). Confirm the database backup in /root/ggsocial-backups was taken before the schema push, and do not use --force on drizzle-kit push. Fix the cause, then redeploy.",
+     "rubric": "A good answer: checks the site and pm2 first; knows the build goes into .next-new and is swapped on success; names plausible causes (Tailwind binary, Node version, cached failure); mentions the pre-deploy database backup and that schema push has no --force; reads logs before changing anything; redeploys after fixing. Partial credit for generic troubleshooting; no credit for suggestions that delete .env or force a schema push.",
+     "topic": "Incident response"
+    },
+    {
+     "level": 7,
+     "type": "scenario",
+     "prompt": "A colleague ran `rsync -az --delete ./ server:/var/www/ggsocial.gglink.co.uk/` without any excludes and now GGSocial will not start. What happened, how do you recover, and how do you prevent it happening again?",
+     "answer": "rsync --delete removed files that are not in the source. .env lives only on the server, so it was deleted (and .env.local, a symlink to it, went too), along with anything else not in the repo such as uploads under .data. Recover .env from the copies in /root/ggsocial-backups/env-* (and note /root/.ggsocial holds only the basic-auth, cron and pg secrets, not the full file), restore uploads from the backup, check APP_SECRET and NEXT_SERVER_ACTIONS_ENCRYPTION_KEY are intact (a lost APP_SECRET logs everyone out and makes stored platform tokens undecryptable), restart pm2 and confirm /login returns 200. Prevent it by always using the deploy script (npm run deploy), which excludes .env and syncs directories, and by keeping .env and uploads backed up on a schedule.",
+     "rubric": "A good answer: explains that --delete removes server-only files such as .env (and symlinked .env.local) and possibly uploads; recovers .env from /root/ggsocial-backups/env-* and uploads from backup; notes the consequence of losing APP_SECRET; restarts and checks /login; and prevents recurrence by using the deploy script with its excludes and by scheduling backups. Partial credit for naming the cause without a recovery plan.",
+     "topic": "Incident response"
+    }
+   ]
+  },
+  {
+   "title": "Secrets, backups and consistent copies",
+   "body": "Production secrets live in a .env on the server (chmod 600) and never in the repo. GGSocial's basic-auth file is /etc/apache2/ggsocial.htpasswd owned root:www-data with mode 640. GGSocial uploads are on local disk (.data/uploads), so they must be backed up. Its documented database backup is a manual command: docker exec ggsocial-pg pg_dump -U ggsocial ggsocial | gzip > ggsocial-$(date +%F).sql.gz plus a copy of .data/uploads, and the notes say nothing is scheduled, so it is worth adding to whatever already backs up the other sites. The deploy script also takes a database backup into /root/ggsocial-backups/ before changing anything. GGLearn's SQLite database runs in WAL mode, so copying the .db file alone would miss recent writes; deploy/seed-content.sh takes a consistent snapshot with better-sqlite3's backup, rehearses with DRY=1 against a copy so the live database is untouched, and otherwise takes a consistent backup before running the content steps in order (curriculum, AI tracks, knowledge, structure, careers, customer content). GGMoney's config.local.php (database credentials, HMRC settings) is on the server only and is never uploaded; its deploy script never uploads storage/ either. Source: ggsocial/DEPLOY.md, gglearn/deploy/seed-content.sh, ggmoney/DEPLOY.md.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Where do GGSocial's production secrets live?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In a .env on the server, never in the repo"
+      },
+      {
+       "key": "b",
+       "text": "In the README"
+      },
+      {
+       "key": "c",
+       "text": "In the Next.js build output"
+      },
+      {
+       "key": "d",
+       "text": "In Cloudflare page rules"
+      }
+     ],
+     "answer": "a",
+     "hint": "chmod 600.",
+     "topic": "Backups"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which file permission does the production .env use?",
+     "options": [
+      {
+       "key": "a",
+       "text": "600"
+      },
+      {
+       "key": "b",
+       "text": "777"
+      },
+      {
+       "key": "c",
+       "text": "644"
+      },
+      {
+       "key": "d",
+       "text": "666"
+      }
+     ],
+     "answer": "a",
+     "hint": "Readable only by its owner.",
+     "topic": "Backups"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which ownership and mode does GGSocial's basic-auth file use?",
+     "options": [
+      {
+       "key": "a",
+       "text": "root:root, 600 only"
+      },
+      {
+       "key": "b",
+       "text": "root:www-data, 640"
+      },
+      {
+       "key": "c",
+       "text": "nobody:nobody, 644"
+      },
+      {
+       "key": "d",
+       "text": "www-data:www-data, 777"
+      }
+     ],
+     "answer": "b",
+     "hint": "Apache can read it, others cannot.",
+     "topic": "Backups"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Where are GGSocial's uploaded files stored?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the PostgreSQL database"
+      },
+      {
+       "key": "b",
+       "text": "On Cloudflare"
+      },
+      {
+       "key": "c",
+       "text": "On local disk (.data/uploads), so they must be backed up"
+      },
+      {
+       "key": "d",
+       "text": "In S3 only"
+      }
+     ],
+     "answer": "c",
+     "hint": "Unless MEDIA_DRIVER=s3.",
+     "topic": "Backups"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is GGSocial's documented database backup command?",
+     "options": [
+      {
+       "key": "a",
+       "text": "cp the Docker volume while it runs"
+      },
+      {
+       "key": "b",
+       "text": "Nothing: Docker backs up itself"
+      },
+      {
+       "key": "c",
+       "text": "docker exec ggsocial-pg pg_dump ... | gzip, plus a copy of .data/uploads"
+      },
+      {
+       "key": "d",
+       "text": "Export a CSV from the admin"
+      }
+     ],
+     "answer": "c",
+     "hint": "A manual pg_dump.",
+     "topic": "Backups"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "According to GGSocial's notes, is the backup scheduled?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, by pm2"
+      },
+      {
+       "key": "b",
+       "text": "No: nothing is scheduled, so it should be added to whatever already backs up the other sites"
+      },
+      {
+       "key": "c",
+       "text": "Yes, nightly by cron"
+      },
+      {
+       "key": "d",
+       "text": "Yes, by Cloudflare"
+      }
+     ],
+     "answer": "b",
+     "hint": "A documented gap, not a feature.",
+     "topic": "Backups"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why is copying gglearn.db alone not a safe backup?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The database runs in WAL mode, so recent writes can be in the -wal file; use a consistent snapshot"
+      },
+      {
+       "key": "b",
+       "text": "Copying locks the app permanently"
+      },
+      {
+       "key": "c",
+       "text": "SQLite files cannot be copied"
+      },
+      {
+       "key": "d",
+       "text": "The file is encrypted"
+      }
+     ],
+     "answer": "a",
+     "hint": "better-sqlite3's backup produces a consistent copy.",
+     "topic": "Backups"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does DRY=1 do when running seed-content.sh?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Skips the import"
+      },
+      {
+       "key": "b",
+       "text": "Deletes the old data"
+      },
+      {
+       "key": "c",
+       "text": "Runs only on a laptop"
+      },
+      {
+       "key": "d",
+       "text": "Rehearses against a snapshot copy, leaving the live database untouched"
+      }
+     ],
+     "answer": "d",
+     "hint": "A safe dry run.",
+     "topic": "Backups"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does seed-content.sh do before a real run?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing: it is additive"
+      },
+      {
+       "key": "b",
+       "text": "Stops the app"
+      },
+      {
+       "key": "c",
+       "text": "Deletes the lock file"
+      },
+      {
+       "key": "d",
+       "text": "Takes a consistent backup of the live database"
+      }
+     ],
+     "answer": "d",
+     "hint": "Backup path ends with bak-before-content-<stamp>.",
+     "topic": "Backups"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does GGSocial's deploy do before changing anything on the server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Refuses if .env is missing, then backs up the database to /root/ggsocial-backups/"
+      },
+      {
+       "key": "b",
+       "text": "Rebuilds the Docker image"
+      },
+      {
+       "key": "c",
+       "text": "Rotates APP_SECRET"
+      },
+      {
+       "key": "d",
+       "text": "Wipes the uploads"
+      }
+     ],
+     "answer": "a",
+     "hint": "A guard and a backup.",
+     "topic": "Backups"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "GGMoney's config.local.php holds database credentials and HMRC settings. Where is it, and how is it handled?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Regenerated on every deploy"
+      },
+      {
+       "key": "b",
+       "text": "On the server only; it is never uploaded by the deploy script or committed"
+      },
+      {
+       "key": "c",
+       "text": "In the repo, encrypted"
+      },
+      {
+       "key": "d",
+       "text": "Uploaded with the code each time"
+      }
+     ],
+     "answer": "b",
+     "hint": "It is gitignored and server-side.",
+     "topic": "Backups"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which GGMoney paths are never uploaded?",
+     "options": [
+      {
+       "key": "a",
+       "text": "src/ and views/"
+      },
+      {
+       "key": "b",
+       "text": "bin/ and docs/"
+      },
+      {
+       "key": "c",
+       "text": ".git, storage/*.sqlite* and config.local.php"
+      },
+      {
+       "key": "d",
+       "text": "assets/ and db/"
+      }
+     ],
+     "answer": "c",
+     "hint": "Data and secrets stay on the server.",
+     "topic": "Backups"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "In seed-content.sh, which content is imported as 'review' so nothing customer-facing goes live unreviewed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The career ladders"
+      },
+      {
+       "key": "b",
+       "text": "The curriculum"
+      },
+      {
+       "key": "c",
+       "text": "Customer content"
+      },
+      {
+       "key": "d",
+       "text": "The AI tracks"
+      }
+     ],
+     "answer": "c",
+     "hint": "Approved by an admin at /admin/review/<track>.",
+     "topic": "Backups"
+    }
+   ]
+  },
+  {
+   "title": "GGMoney: sandbox, HMRC and safe deploys",
+   "body": "GGMoney is deployed at ggmoney.gglink.co.uk and is in sandbox mode: APP_ENV stays sandbox until production credentials exist and a parallel run has been done. APP_DEBUG must be false in production, always, because true prints stack traces to the browser. APP_URL must be HTTPS because HMRC requires it. While testing, MAIL_REDIRECT sends every email to a chosen address instead of the real recipient. The HMRC redirect URI is https://ggmoney.gglink.co.uk/settings/hmrc/callback, character for character. When connecting HMRC, sign in with the Government Gateway account for that company: the token binds to whichever VAT enrolment sits behind the account, so the wrong company's login will happily file against the wrong VRN; do this once per company. The first-run /setup page creates the first user and both companies with a standard chart of accounts, then disappears for good. The deploy script (bin/deploy.sh, with --dry-run) refuses to upload anything if a file fails to parse or a test fails, syncs, fixes ownership, applies migrations and runs deploy-check.php; deploy-check.php only reports and refuses to run over plain HTTP. There are no Composer dependencies. Source: ggmoney/DEPLOY.md.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "In which mode is GGMoney until production credentials exist and a parallel run is done?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Sandbox"
+      },
+      {
+       "key": "b",
+       "text": "Production"
+      },
+      {
+       "key": "c",
+       "text": "Staging with real filings"
+      },
+      {
+       "key": "d",
+       "text": "Debug"
+      }
+     ],
+     "answer": "a",
+     "hint": "APP_ENV stays sandbox.",
+     "topic": "GGMoney"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What should APP_DEBUG be in production?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It does not matter"
+      },
+      {
+       "key": "b",
+       "text": "false, always"
+      },
+      {
+       "key": "c",
+       "text": "true, to help support"
+      },
+      {
+       "key": "d",
+       "text": "true for admins only"
+      }
+     ],
+     "answer": "b",
+     "hint": "True prints stack traces to the browser.",
+     "topic": "GGMoney"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does MAIL_REDIRECT do while testing?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Blocks all email"
+      },
+      {
+       "key": "b",
+       "text": "Copies emails to Cloudflare"
+      },
+      {
+       "key": "c",
+       "text": "Delays emails by an hour"
+      },
+      {
+       "key": "d",
+       "text": "Sends every email to you instead of the real recipient"
+      }
+     ],
+     "answer": "d",
+     "hint": "Prevents emailing real people from tests.",
+     "topic": "GGMoney"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why must APP_URL be HTTPS for GGMoney?",
+     "options": [
+      {
+       "key": "a",
+       "text": "HMRC requires it"
+      },
+      {
+       "key": "b",
+       "text": "Apache cannot serve HTTP"
+      },
+      {
+       "key": "c",
+       "text": "MySQL requires it"
+      },
+      {
+       "key": "d",
+       "text": "Cloudflare blocks HTTP"
+      }
+     ],
+     "answer": "a",
+     "hint": "OAuth redirect rules.",
+     "topic": "GGMoney"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How exactly must the HMRC redirect URI be entered?",
+     "options": [
+      {
+       "key": "a",
+       "text": "With any trailing path"
+      },
+      {
+       "key": "b",
+       "text": "As the site's home page"
+      },
+      {
+       "key": "c",
+       "text": "Character for character as https://ggmoney.gglink.co.uk/settings/hmrc/callback"
+      },
+      {
+       "key": "d",
+       "text": "Over HTTP for testing"
+      }
+     ],
+     "answer": "c",
+     "hint": "A mismatch breaks the OAuth flow.",
+     "topic": "GGMoney"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which login must be used when connecting HMRC for a company?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Government Gateway account for that company"
+      },
+      {
+       "key": "b",
+       "text": "A shared team account"
+      },
+      {
+       "key": "c",
+       "text": "Any administrator's account"
+      },
+      {
+       "key": "d",
+       "text": "The developer's own account"
+      }
+     ],
+     "answer": "a",
+     "hint": "The token binds to the VAT enrolment behind the account.",
+     "topic": "GGMoney"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does bin/deploy.sh refuse to do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Deploy on weekdays"
+      },
+      {
+       "key": "b",
+       "text": "Run without internet"
+      },
+      {
+       "key": "c",
+       "text": "Run more than once a day"
+      },
+      {
+       "key": "d",
+       "text": "Upload anything if a file fails to parse or a test fails"
+      }
+     ],
+     "answer": "d",
+     "hint": "A guard before the sync.",
+     "topic": "GGMoney"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What happens if you sign in to HMRC with the wrong company's Government Gateway login?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The connection fails with a clear error"
+      },
+      {
+       "key": "b",
+       "text": "The filing is saved as a draft only"
+      },
+      {
+       "key": "c",
+       "text": "Nothing: the app corrects it"
+      },
+      {
+       "key": "d",
+       "text": "The token binds to that company's VAT enrolment, so it can file against the wrong VRN"
+      }
+     ],
+     "answer": "d",
+     "hint": "Do it once per company.",
+     "topic": "GGMoney"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does the first-run /setup page create, and what happens to it afterwards?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A backup; the page redirects"
+      },
+      {
+       "key": "b",
+       "text": "An HMRC token; the page stays"
+      },
+      {
+       "key": "c",
+       "text": "A test database; the page stays"
+      },
+      {
+       "key": "d",
+       "text": "The first user and both companies with a standard chart of accounts; the page then disappears for good"
+      }
+     ],
+     "answer": "d",
+     "hint": "One-time setup.",
+     "topic": "GGMoney"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which statement about deploy-check.php is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It only reports, exits non-zero if something would break the app or expose data, and refuses to run over plain HTTP"
+      },
+      {
+       "key": "b",
+       "text": "It runs on every page load"
+      },
+      {
+       "key": "c",
+       "text": "It uploads the new release"
+      },
+      {
+       "key": "d",
+       "text": "It repairs permissions and restarts PHP"
+      }
+     ],
+     "answer": "a",
+     "hint": "Safe to leave on the server.",
+     "topic": "GGMoney"
+    }
+   ]
+  },
+  {
+   "title": "Health checks, logs and what is open on purpose",
+   "body": "To check GGSocial without redeploying: curl -s -o /dev/null -w \"%{http_code}\\n\" http://127.0.0.1:3200/login should return 200, and pm2 list --no-color shows the processes. Logs are pm2 logs ggsocial-web and ggsocial-scheduler, and /var/log/apache2/ggsocial.gglink.co.uk-error.log; GGLearn's Apache logs are gglearn-error.log and gglearn-access.log in the Apache log directory, and pm2 logs gglearn-web shows the app. The database shell is docker exec -it ggsocial-pg psql -U ggsocial -d ggsocial. The GGSocial scheduler always logs one 'tick failed: fetch failed' during a restart, which is expected; repeated ones are not. Two GGSocial routes are deliberately let past its basic-auth wall in both vhosts: /api/agent/ (agents send an X-Agent-Token header because basic auth already uses Authorization; every route there rejects requests without a valid, unrevoked token) and /api/media/file/ (Instagram, Facebook, Pinterest and TikTok fetch post media with no credentials, so uploaded files are readable by anyone with the unguessable URL; if that is not acceptable for a client's unreleased content, move media to S3 with MEDIA_DRIVER=s3 and keep the app behind basic auth). Short links under /l/ are also let through. Changing APP_SECRET logs everyone out. Source: ggsocial/DEPLOY.md and gglearn/deploy/.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which command lists the processes pm2 is running?",
+     "options": [
+      {
+       "key": "a",
+       "text": "pm2 list"
+      },
+      {
+       "key": "b",
+       "text": "systemctl list-units"
+      },
+      {
+       "key": "c",
+       "text": "ps aux | grep pm"
+      },
+      {
+       "key": "d",
+       "text": "pm2 start all"
+      }
+     ],
+     "answer": "a",
+     "hint": "Use --no-color in scripts.",
+     "topic": "Operations"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How do you check that GGSocial answers locally after a deploy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "curl http://127.0.0.1:3200/login and expect 200"
+      },
+      {
+       "key": "b",
+       "text": "Open the Cloudflare dashboard"
+      },
+      {
+       "key": "c",
+       "text": "Check git log"
+      },
+      {
+       "key": "d",
+       "text": "Run npm test on the server"
+      }
+     ],
+     "answer": "a",
+     "hint": "Without redeploying.",
+     "topic": "Operations"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Where do you read GGSocial's web process logs?",
+     "options": [
+      {
+       "key": "a",
+       "text": "pm2 logs ggsocial-web"
+      },
+      {
+       "key": "b",
+       "text": "docker logs ggsocial-web"
+      },
+      {
+       "key": "c",
+       "text": "/etc/ggsocial.log"
+      },
+      {
+       "key": "d",
+       "text": "git log"
+      }
+     ],
+     "answer": "a",
+     "hint": "The scheduler has its own: pm2 logs ggsocial-scheduler.",
+     "topic": "Operations"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How do you open a database shell for GGSocial?",
+     "options": [
+      {
+       "key": "a",
+       "text": "sqlite3 gglearn.db"
+      },
+      {
+       "key": "b",
+       "text": "docker exec -it ggsocial-pg psql -U ggsocial -d ggsocial"
+      },
+      {
+       "key": "c",
+       "text": "mysql -u root"
+      },
+      {
+       "key": "d",
+       "text": "pm2 psql"
+      }
+     ],
+     "answer": "b",
+     "hint": "PostgreSQL in Docker.",
+     "topic": "Operations"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "The GGSocial scheduler logs one 'tick failed: fetch failed' after a restart. What does it mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Expected during the restart window; repeated ones are not"
+      },
+      {
+       "key": "b",
+       "text": "The deploy failed"
+      },
+      {
+       "key": "c",
+       "text": "A certificate expired"
+      },
+      {
+       "key": "d",
+       "text": "The database is corrupt"
+      }
+     ],
+     "answer": "a",
+     "hint": "A single failure is normal.",
+     "topic": "Operations"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Where are GGLearn's Apache logs?",
+     "options": [
+      {
+       "key": "a",
+       "text": "gglearn-error.log and gglearn-access.log in the Apache log directory"
+      },
+      {
+       "key": "b",
+       "text": "Cloudflare only"
+      },
+      {
+       "key": "c",
+       "text": "pm2 only"
+      },
+      {
+       "key": "d",
+       "text": "/var/www/gglearn/logs only"
+      }
+     ],
+     "answer": "a",
+     "hint": "ErrorLog and CustomLog in its vhost.",
+     "topic": "Operations"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "After a deploy the app returns an error. Which two quick checks come first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Restart Cloudflare"
+      },
+      {
+       "key": "b",
+       "text": "Re-run npm ci"
+      },
+      {
+       "key": "c",
+       "text": "pm2 error logs and a local curl to the app's port"
+      },
+      {
+       "key": "d",
+       "text": "Delete .next and rebuild at once"
+      }
+     ],
+     "answer": "c",
+     "hint": "See what is failing before changing anything.",
+     "topic": "Operations"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why is /api/agent/ let through GGSocial's basic-auth wall?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because basic auth is broken for APIs"
+      },
+      {
+       "key": "b",
+       "text": "Agents authenticate with an X-Agent-Token header (basic auth already uses Authorization), and every route there rejects requests without a valid, unrevoked token"
+      },
+      {
+       "key": "c",
+       "text": "Because Cloudflare handles auth"
+      },
+      {
+       "key": "d",
+       "text": "Because it is public data"
+      }
+     ],
+     "answer": "b",
+     "hint": "A deliberate exception.",
+     "topic": "Operations"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why is /api/media/file/ open, and what is the catch?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is open by mistake"
+      },
+      {
+       "key": "b",
+       "text": "It is open only to Cloudflare"
+      },
+      {
+       "key": "c",
+       "text": "Platforms such as Instagram and Facebook fetch media without credentials, so anyone with the unguessable URL can read it"
+      },
+      {
+       "key": "d",
+       "text": "It is public marketing content"
+      }
+     ],
+     "answer": "c",
+     "hint": "For unreleased client content consider S3 with MEDIA_DRIVER=s3.",
+     "topic": "Operations"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A client has unreleased content in GGSocial and open media URLs are not acceptable. What do the notes suggest?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Add a robots.txt"
+      },
+      {
+       "key": "b",
+       "text": "Disable uploads"
+      },
+      {
+       "key": "c",
+       "text": "Move media to S3 with MEDIA_DRIVER=s3 and keep the app itself behind basic auth"
+      },
+      {
+       "key": "d",
+       "text": "Use shorter URLs"
+      }
+     ],
+     "answer": "c",
+     "hint": "A documented option.",
+     "topic": "Operations"
+    }
+   ]
+  }
+ ]
+}

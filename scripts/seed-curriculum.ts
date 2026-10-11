@@ -30,6 +30,7 @@ const TRACKS: Record<string, T[]> = {
     ["gglearn-product", "GGLearn", "product", "", "Tracks, levels, competitions, certificates, admin and deploy."],
     ["gglink-web-delivery", "Web design and build", "service", "", "Scoping, pricing tiers, delivery steps, QA checklist, handover."],
     ["gglink-hosting-maintenance", "Hosting and maintenance", "service", "developer", "Hosting, backups, SSL, updates, uptime and support."],
+    ["gglink-server-operations", "GGLink server operations", "process", "developer", "How GGLink's own apps are hosted, deployed, backed up and kept healthy: Apache, Cloudflare, pm2, Docker, deploy scripts and their traps."],
     ["gglink-seo-content", "SEO and content", "service", "", "Content operations, SEO, localisation."],
     ["gglink-ai-automation", "AI automation and integrations", "service", "developer", "Automating client workflows and connecting their tools."],
     ["gglink-sales-support", "Sales and support", "process", "sales", "Discovery calls, quoting, support runbooks."],
