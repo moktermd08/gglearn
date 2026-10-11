@@ -34,6 +34,7 @@ const PROJECTS: [slug: string, name: string, kind: "website" | "product" | "inte
 // track slug -> project slug (these tracks teach one project, so scope = project)
 const TRACK_PROJECT: Record<string, string> = {
   "moksy-product": "moksy-ai-site",
+  "moksy-brand-voice": "moksy-ai-site",
   "moksy-platform-services": "moksy-ai-site",
   "moksy-patterns-automation": "moksy-ai-site",
   "ggsocial-product": "ggsocial",
@@ -49,7 +50,7 @@ const TRACK_PILLAR: Record<string, string> = {
   "sdlc-testing": "testing", "sdlc-devops": "deployment", "sdlc-launch": "deployment",
   "governance-compliance": "compliance", "security-operations": "security", "servers-infrastructure": "hardware",
   "ai-llm-practice": "pattern", "data-analytics": "database", "payments-billing": "finance",
-  "communications-email": "content", "delivery-management": "strategy", "people-operations": "actors",
+  "communications-email": "content", "moksy-brand-voice": "content", "delivery-management": "strategy", "people-operations": "actors",
   "guru-brand-identity": "experience", "guru-design-system": "experience", "guru-design-tools": "experience",
   "gglink-web-delivery": "implementation", "gglink-hosting-maintenance": "maintenance", "gglink-seo-content": "content",
   "gglink-ai-automation": "integration", "gglink-sales-support": "sales", "mhossain-content": "marketing",
