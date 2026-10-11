@@ -1,5 +1,6 @@
 "use client";
 import { useActionState, useState } from "react";
+import { Bot, Coins, Eye, Flag, GraduationCap, Globe, Lock, Swords, Timer, Trophy } from "lucide-react";
 import { launchJourney, type StartState } from "../actions";
 import { BOT_TIERS } from "@/lib/bots";
 import { CURRENCIES, PRIZE_SPLIT_LABEL } from "@/lib/competitions-shared";
@@ -20,7 +21,12 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
   return (
     <form action={run} className="space-y-6">
       <section className="card space-y-3 p-5">
-        <h2 className="font-bold">Your finish line</h2>
+        <h2 className="flex items-center gap-2 font-bold"><Flag size={18} className="text-emerald-300" />Your finish line</h2>
+        <div className="relative" aria-hidden>
+          <div className="bar"><i style={{ width: `${(placed / MAX_LEVEL) * 100}%`, background: "#64748b" }} /></div>
+          <div className="bar absolute inset-0 !bg-transparent"><i className="!transition-all" style={{ width: `${(finish / MAX_LEVEL) * 100}%`, opacity: 0.55 }} /></div>
+          <div className="mt-1 flex justify-between text-[10px] text-slate-500"><span>0</span><span>start L{placed}</span><span>finish L{finish}</span><span>{MAX_LEVEL}</span></div>
+        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={label} htmlFor="goalLevels">Levels to climb: <b>{goal}</b></label>
@@ -31,7 +37,7 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
           <div>
             <label className={label} htmlFor="days">Time to do it: <b>{days} days</b></label>
             <input id="days" name="days" type="range" min={3} max={90} value={days} onChange={(e) => setDays(Number(e.target.value))} className="w-full" />
-            <p className="text-sm text-slate-300">About {(goal / days).toFixed(2)} levels a day. Spread-out practice beats cramming.</p>
+            <p className="flex items-center gap-1 text-sm text-slate-300"><Timer size={14} className="shrink-0 text-amber-300" />About {(goal / days).toFixed(2)} levels a day. Spread-out practice beats cramming.</p>
           </div>
         </div>
         <div><label className={label} htmlFor="title">Name it (optional)</label>
@@ -39,7 +45,7 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
       </section>
 
       <section className="card space-y-3 p-5">
-        <h2 className="font-bold">{group ? "Add some simulated rivals?" : "Want someone to chase?"}</h2>
+        <h2 className="flex items-center gap-2 font-bold"><Bot size={18} className="text-violet-300" />{group ? "Add some simulated rivals?" : "Want someone to chase?"}</h2>
         <p className="text-sm text-slate-300">Bots are <b>simulated</b>: they follow a published daily schedule and never really study, so you can see exactly what pace beats them.</p>
         <div className="grid gap-3 sm:grid-cols-3">
           {(Object.keys(BOT_TIERS) as (keyof typeof BOT_TIERS)[]).map((k) => (
@@ -51,11 +57,11 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
       </section>
 
       <section className="card space-y-3 p-5">
-        <h2 className="font-bold">What is the reward?</h2>
+        <h2 className="flex items-center gap-2 font-bold"><Trophy size={18} className="text-amber-300" />What is the reward?</h2>
         <label className="flex items-start gap-2"><input type="radio" name="incentive" value="cert" checked={incentive === "cert"} onChange={() => setIncentive("cert")} className="mt-1" />
-          <span><b>🎓 Certificate and glory</b> · everyone who reaches the finish line can claim a verifiable certificate; the first to get there is named Champion.</span></label>
+          <span><b className="inline-flex items-center gap-1"><GraduationCap size={15} className="text-sky-300" />Certificate and glory</b> · everyone who reaches the finish line can claim a verifiable certificate; the first to get there is named Champion.</span></label>
         <label className="flex items-start gap-2"><input type="radio" name="incentive" value="cash" checked={incentive === "cash"} onChange={() => setIncentive("cash")} className="mt-1" />
-          <span><b>💰 Add a cash prize</b> · certificates too, plus money for the first to finish{group ? "" : " (a reward you set yourself)"}.</span></label>
+          <span><b className="inline-flex items-center gap-1"><Coins size={15} className="text-amber-300" />Add a cash prize</b> · certificates too, plus money for the first to finish{group ? "" : " (a reward you set yourself)"}.</span></label>
         {incentive === "cash" && (
           <div className="ml-6 space-y-3">
             <div className="grid gap-3 sm:grid-cols-3">
@@ -75,11 +81,11 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
 
       {group && (
         <section className="card space-y-2 p-5">
-          <h2 className="font-bold">Who can watch?</h2>
+          <h2 className="flex items-center gap-2 font-bold"><Eye size={18} className="text-sky-300" />Who can watch?</h2>
           <label className="flex items-start gap-2"><input type="radio" name="visibility" value="private" checked={visibility === "private"} onChange={() => setVisibility("private")} className="mt-1" />
-            <span><b>🔒 Private</b> · only your group.</span></label>
+            <span><b className="inline-flex items-center gap-1"><Lock size={14} />Private</b> · only your group.</span></label>
           <label className="flex items-start gap-2"><input type="radio" name="visibility" value="public" checked={visibility === "public"} onChange={() => setVisibility("public")} className="mt-1" />
-            <span><b>🌐 Public</b> · anyone with the link can watch the live leaderboard.</span></label>
+            <span><b className="inline-flex items-center gap-1"><Globe size={14} />Public</b> · anyone with the link can watch the live leaderboard.</span></label>
           {visibility === "public" && (
             <label className="ml-6 flex items-start gap-2 text-sm"><input type="checkbox" name="consent" required className="mt-1" />
               <span>I understand names, photos and progress of everyone in this race are visible to anyone. It can be made private later, but not the other way round.</span></label>
@@ -88,7 +94,7 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
       )}
 
       {state?.error && <p role="alert" className="text-sm text-rose-400">{state.error}</p>}
-      <button disabled={pending} className="btn disabled:opacity-50">{pending ? "Opening the race…" : "Start the race ⚔️"}</button>
+      <button disabled={pending} className="btn disabled:opacity-50">{pending ? "Opening the race…" : <>Start the race<Swords size={16} /></>}</button>
     </form>
   );
 }
