@@ -61,6 +61,25 @@ const TRACK_PILLAR: Record<string, string> = {
   "gglink-web-delivery": "implementation", "gglink-hosting-maintenance": "maintenance", "gglink-server-operations": "maintenance", "gglink-seo-content": "content",
   "gglink-ai-automation": "integration", "gglink-sales-support": "sales", "guru-graphics-sales": "sales", "mhossain-content": "marketing",
   "tech-data-stores": "database", "tech-cloud-devops": "deployment", "tech-testing": "testing",
+  // skill libraries, products and leadership subjects (tagged so the role x pillar matrix and starter plans can rank them)
+  "foundations-expressjs": "code", "foundations-jquery": "code", "foundations-json": "code", "foundations-nextjs": "code", "foundations-npm": "code", "foundations-oop": "code", "foundations-restapi": "code", "foundations-typeacript": "code", "foundations-typescript": "code", "foundations-vue": "code", "foundations-xml": "code", "tech-graphql": "code", "tech-tailwind": "code", "tech-drupal": "code", "angular-titan": "code", "bootstrap-titan": "code", "css-titan": "code", "html-titan": "code", "javascript-titan": "code", "laravel-titan": "code", "nodejs-titan": "code", "php-titan": "code", "python-titan": "code", "react-titan": "code", "wordpress-titan": "code", "agent-claudecode-titan": "code", "agent-cursor-titan": "code",
+  "foundations-aws": "hardware", "foundations-google": "hardware", "foundations-linux": "hardware", "foundations-apache": "hardware", "lambda-titan": "hardware",
+  "foundations-mongodb": "database", "mysql-titan": "database", "vec-databases-titan": "database",
+  "foundations-docker": "deployment", "foundations-github": "deployment", "git-titan": "deployment", "tools-build-ship": "deployment",
+  "foundations-analytics": "marketing", "linkedin-titan": "marketing", "facebook-marketing-titan": "marketing", "tools-business": "marketing",
+  "dynamics-titan": "sales", "lead-generation-titan": "sales", "service-design-pricing": "sales",
+  "docusaurus-titan": "documentation",
+  "agent-mcp-titan": "integration",
+  "eval-safety-titan": "ai-governance",
+  "agent-automation-titan": "pattern", "agent-design-titan": "pattern", "agent-langchain-titan": "pattern", "api-claude-titan": "pattern", "api-copilot-titan": "pattern", "api-gemini-titan": "pattern", "api-openai-platform-titan": "pattern", "eval-llm-titan": "pattern", "image-diffusion-titan": "pattern", "image-midjourney-titan": "pattern", "llm-aisearch-titan": "pattern", "llm-fundamentals-titan": "pattern", "llm-local-titan": "pattern", "llm-prompting-titan": "pattern", "ml-huggingface-titan": "pattern", "ml-pytorch-titan": "pattern", "ml-sklearn-titan": "pattern", "ml-tensorflow-titan": "pattern", "rag-llamaindex-titan": "pattern", "rag-pipelines-titan": "pattern", "tune-finetuning-titan": "pattern", "claude-chatgpt-everyday-titan": "pattern", "moksy-patterns-automation": "pattern",
+  "product-management-core": "strategy", "executive-communication": "strategy", "tech-strategy-roadmap": "strategy",
+  "brand-positioning-voice": "content",
+  "engineering-leadership": "actors",
+  "finance-for-leaders": "finance",
+  "risk-resilience-leadership": "risk",
+  "ggsocial-product": "implementation", "ggmoney-product": "implementation", "gglearn-product": "implementation", "moksy-product": "implementation",
+  "moksy-platform-services": "architecture",
+  "tools-plan-design": "experience",
 };
 
 // company-wide policy that everyone in scope must pass

@@ -4,7 +4,7 @@ import { levelsEarned } from "@/lib/progress";
 import { MAX_LEVEL } from "@/lib/levels";
 import { tagsFor } from "@/lib/dynamic/tags";
 import { hiddenTrackIds } from "@/lib/tracks";
-import { pillarStance } from "@/lib/blueprint";
+import { isLibraryBrand, pillarStance } from "@/lib/blueprint";
 
 export type Audience = "staff" | "customer";
 export type ScopeKind = "company" | "brand" | "project";
@@ -122,7 +122,7 @@ export function requirementsFor(person: Person, scopes: Scope[], cat = catalog()
     const roles = rolesOf(t);
     if (t.tier === "role" && (!roles.length || roles.includes(person.jobRole.toLowerCase()))) return true;
     // the role x pillar matrix (content/blueprints/pillars.json) adds requirements, unless an admin has set this track's policy by hand
-    return t.policySource !== "admin" && pillarStance(person.jobRole, t.pillar) === "required";
+    return t.policySource !== "admin" && !isLibraryBrand(t.brand.slug) && pillarStance(person.jobRole, t.pillar) === "required";
   });
   if (!mine.length) return [];
   const started = new Map(
