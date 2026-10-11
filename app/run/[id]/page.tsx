@@ -10,6 +10,7 @@ import { Quiz } from "@/components/Quiz";
 import { Ring } from "@/components/Ring";
 import { Confetti } from "@/components/Confetti";
 import { Avatar } from "@/components/Avatar";
+import { avatarLooks } from "@/lib/avatars";
 import { ArrowLeft, BarChart3, Check, CircleCheck, CircleMinus, CircleX, GraduationCap, Lightbulb, Medal, MessageSquareText, Sparkles, Tag, Target, Trophy } from "lucide-react";
 
 const OK = 0.8; // same bar the review has always used for a correct answer
@@ -31,6 +32,7 @@ function Stat({ Icon, label, value, cls, i }: { Icon: typeof Check; label: strin
 
 export default async function RunPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requireUser();
+  const looks = await avatarLooks();
   const runId = Number((await params).id);
   const run = db.select().from(runs).where(and(eq(runs.id, runId), eq(runs.userId, user.id))).get();
   if (!run) notFound();
@@ -44,7 +46,7 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
     return (
       <div className="space-y-4">
         <h1 className="text-center text-xl font-extrabold">{title}</h1>
-        <Quiz action={submitRun.bind(null, runId)} level={run.level} rivalHue={rival.hue} rivalName={rival.name}
+        <Quiz action={submitRun.bind(null, runId)} level={run.level} rivalHue={rival.hue} rivalName={rival.name} meLook={looks.me} rivalLook={looks.rival} photoUrl={looks.photoUrl}
           questions={rows.map(({ q }) => ({ id: q.id, prompt: q.prompt, code: q.code, type: q.type, options: q.options, topic: q.topic }))} />
       </div>
     );
@@ -67,9 +69,9 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
       <div className="card pop space-y-4 p-6 text-center">
         <h1 className="text-xl font-extrabold">{title}</h1>
         <div className="flex items-center justify-center gap-6">
-          <Avatar kind="human" level={passed ? run.level : run.level - 1} size={96} className="bob" />
+          <Avatar kind="human" level={passed ? run.level : run.level - 1} size={96} className="bob" look={looks.me} photoUrl={looks.photoUrl} />
           <Ring pct={score} label={`${pct}%`} sub={`pass ${PASS_MARK * 100}%`} size={140} color={passed ? "#34d399" : "#fbbf24"} />
-          <Avatar kind="rival" level={rv.level} hue={rival.hue} size={96} className="bob [animation-delay:.5s]" />
+          <Avatar kind="rival" level={rv.level} hue={rival.hue} size={96} className="bob [animation-delay:.5s]" look={looks.rival} />
         </div>
         <p className={`text-2xl font-extrabold ${passed ? "text-emerald-300" : "text-amber-300"}`}>
           <span className="inline-flex items-center justify-center gap-2">{passed ? <Trophy className="pulse-glow text-yellow-300" /> : <Target />}{passed ? (run.level === MAX_LEVEL ? "You are a Titan." : `Level ${run.level} conquered!`) : "So close. Review and go again."}</span>

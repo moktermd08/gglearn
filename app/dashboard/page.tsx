@@ -8,6 +8,8 @@ import { activityFor, badgesFor, trackStats } from "@/lib/stats";
 import { AreaChart, EmptyState, Heatmap, PALETTE, Radar, StatTile } from "@/components/charts";
 import { rivalFor } from "@/lib/rivals";
 import { Avatar } from "@/components/Avatar";
+import { avatarLooks } from "@/lib/avatars";
+import { AvatarPicker } from "@/components/AvatarPicker";
 import { listFor } from "@/lib/competitions";
 import { CompetitionCard } from "@/components/CompetitionCard";
 import { SubjectArt } from "@/components/SubjectArt";
@@ -22,6 +24,7 @@ import { AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDas
 
 export default async function Dashboard() {
   const user = await requireUser();
+  const looks = await avatarLooks();
   const mine = db.select({ e: enrollments, t: tracks, b: brands }).from(enrollments)
     .innerJoin(tracks, eq(tracks.id, enrollments.trackId)).innerJoin(brands, eq(brands.id, tracks.brandId))
     .where(eq(enrollments.userId, user.id)).all();
@@ -66,9 +69,9 @@ export default async function Dashboard() {
     return (
       <Link key={e.id} href={`/tracks/${t.slug}`} className="card card-hover rise p-4" style={{ "--i": idx } as React.CSSProperties}>
         <div className="flex items-center gap-3">
-          <Avatar kind="human" level={s.passed} size={56} />
+          <Avatar kind="human" level={s.passed} size={56} look={looks.me} photoUrl={looks.photoUrl} />
           <span className="text-xs font-black text-slate-500">VS</span>
-          <Avatar kind="rival" level={s.rival.level} hue={rv.hue} size={56} />
+          <Avatar kind="rival" level={s.rival.level} hue={rv.hue} size={56} look={looks.rival} />
           <div className="ml-auto text-right">
             <div className={`flex items-center justify-end gap-1 text-sm font-bold ${lead > 0 ? "text-emerald-300" : lead === 0 ? "text-amber-300" : "text-rose-300"}`}>
               {lead > 0 ? <TrendingUp size={15} /> : lead === 0 ? <Equal size={15} /> : <TrendingDown size={15} />}
@@ -102,10 +105,11 @@ export default async function Dashboard() {
     <div className="space-y-8">
       <div className="card pop relative flex flex-wrap items-center gap-6 overflow-hidden p-6" style={{ background: "linear-gradient(120deg,#4f46e51f,#ffffff 60%)" }}>
         <svg className="pointer-events-none absolute -right-8 -top-12 h-64 w-64" viewBox="0 0 200 200" aria-hidden><circle cx="120" cy="80" r="90" fill="none" stroke="#4f46e5" strokeOpacity=".12" /><circle cx="120" cy="80" r="60" fill="none" stroke="#9333ea" strokeOpacity=".18" strokeDasharray="4 6" className="march" /></svg>
-        <Avatar kind="human" level={Math.max(0, ...stats.map((m) => m.s.passed))} size={96} className="bob" />
+        <Avatar kind="human" level={Math.max(0, ...stats.map((m) => m.s.passed))} size={96} className="bob" look={looks.me} photoUrl={looks.photoUrl} />
         <div className="flex-1">
           <h1 className="text-2xl font-extrabold">Welcome back, {user.name}</h1>
           <p className="text-slate-400">Your quest log: finish today&apos;s quests to keep the streak and stay ahead of your rivals.</p>
+          <AvatarPicker me={looks.me} rival={looks.rival} photoUrl={looks.photoUrl} signedIn level={Math.max(0, ...stats.map((m) => m.s.passed))} className="mt-2" />
         </div>
         {questsTotal > 0 && <Ring pct={questsDone / questsTotal} label={`${questsDone}/${questsTotal}`} sub="quests today" size={104} color={questsDone === questsTotal ? "#34d399" : "#38bdf8"} />}
       </div>

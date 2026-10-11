@@ -3,14 +3,15 @@
 import { and, eq, inArray, like, or, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
-import { answers, careerGoals, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
+import { userAvatars, answers, careerGoals, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
 import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
 import { canReach } from "@/lib/journey";
-import { endSession, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
+import { currentUser, endSession, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
 import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@/lib/password";
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
 import { grade } from "@/lib/grading";
@@ -24,6 +25,7 @@ import { claimPendingInvites } from "@/lib/contests";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
 import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
+import { isLook } from "@/lib/avatars";
 import { type Audience, formatScopes, openTo, parseScopes, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
@@ -591,4 +593,25 @@ export async function updateRole(_: string | null, fd: FormData): Promise<string
   revalidatePath("/admin/compliance");
   revalidatePath("/admin/careers");
   return null;
+}
+
+/**
+ * Pick the look for yourself ("me") or for your rival ("rival"). Signed-in people keep it on their account, and may use their
+ * uploaded photo for themselves; guests keep it in a cookie on this device.
+ */
+export async function setAvatarLook(who: "me" | "rival", look: string) {
+  if (who !== "me" && who !== "rival") return;
+  const user = await currentUser();
+  const photo = user && who === "me" && look === "photo" ? db.select({ id: userAvatars.userId }).from(userAvatars).where(eq(userAvatars.userId, user.id)).get() : undefined;
+  if (!isLook(look) && !photo) return;
+  const value = look === "default" ? null : look;
+  if (user) {
+    db.update(users).set(who === "me" ? { avatarMe: value } : { avatarRival: value }).where(eq(users.id, user.id)).run();
+  } else {
+    const jar = await cookies();
+    const name = who === "me" ? "gg_av_me" : "gg_av_rival";
+    if (value) jar.set(name, value, { maxAge: 60 * 60 * 24 * 365, path: "/", sameSite: "lax", httpOnly: true, secure: process.env.NODE_ENV === "production" });
+    else jar.delete(name);
+  }
+  revalidatePath("/", "layout");
 }
