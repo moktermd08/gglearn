@@ -1,26 +1,27 @@
 import { and, between, eq, sql } from "drizzle-orm";
 import { answers, db, questions, roleExamAnswers, roleExams, runs, users } from "@/lib/db";
-import { DOMAIN_KEYS, apportion, domainOf, examPlan, type Domain, type Mix } from "@/lib/blueprint";
+import { DOMAIN_KEYS, apportion, domainOf, type Domain, type Mix } from "@/lib/blueprint";
 import { careerFor } from "@/lib/careers";
 import { catalog, inScope, scopesOf } from "@/lib/paths";
 import { drawDynamic } from "@/lib/dynamic/store";
 import { grade } from "@/lib/grading";
 import { PASS_MARK } from "@/lib/levels";
+import { LEVEL_SPREAD, ROLE_EXAM_MIN, ROLE_EXAM_SIZE, planDomains } from "@/lib/roleCheck";
+
+export { ROLE_EXAM_MIN, ROLE_EXAM_SIZE };
 
 type Person = typeof users.$inferSelect;
 type CatalogTrack = ReturnType<typeof catalog>[number];
 
-export const ROLE_EXAM_SIZE = 20;
-/** A role check below this many drawable questions is not offered: it would not be a fair sample of the mix. */
-export const ROLE_EXAM_MIN = 10;
-/** How far below a step's level a question may come from, so the check is not only the hardest material. */
-const LEVEL_SPREAD = 2;
 const FRESH_SHARE = 0.7;
 
 export type Source = { track: CatalogTrack; level: number; domain: Domain };
 export type RoleExamPlan = {
   role: string;
+  /** position of the target level in the ladder (1-based): what the question mix is computed from */
   rung: number;
+  /** the target level's own number: what a role check is stored and matched by, so editing the ladder cannot shift it */
+  level: number;
   rungs: number;
   title: string;
   /** what the role's blueprint asks for at this rung, out of ROLE_EXAM_SIZE */
@@ -53,13 +54,8 @@ export function roleExamPlan(person: Person, cat = catalog()): RoleExamPlan | nu
   const sources = [...need.values()];
   if (!sources.length) return null;
 
-  const wanted = examPlan(c.role, rung, c.ladder.length, ROLE_EXAM_SIZE);
-  const have = DOMAIN_KEYS.filter((d) => sources.some((s) => s.domain === d));
-  // domains with nothing to draw from hand their share to the rest, in proportion to what those were asked for
-  const lost = DOMAIN_KEYS.filter((d) => !have.includes(d)).reduce((a, d) => a + wanted[d], 0);
-  const extra = apportion(lost, have.map((d) => wanted[d] || 1));
-  const planned = Object.fromEntries(DOMAIN_KEYS.map((d) => [d, have.includes(d) ? wanted[d] + extra[have.indexOf(d)] : 0])) as Mix;
-  return { role: c.role, rung, rungs: c.ladder.length, title: target.title, wanted, planned, sources };
+  const { wanted, planned } = planDomains(c.role, rung, c.ladder.length, sources.map((s) => ({ trackId: s.track.id, slug: s.track.slug, domain: s.domain, level: s.level })));
+  return { role: c.role, rung, level: target.level, rungs: c.ladder.length, title: target.title, wanted, planned, sources };
 }
 
 /** `k` question ids from one track around one level: mostly freshly generated where the track has generators, the rest stored. */
@@ -90,6 +86,12 @@ export function drawRoleExam(userId: number, plan: RoleExamPlan): { id: number; 
       short = share[i] + short - ids.length; // what this track could not give, the next one tries to
       for (const id of ids) { taken.add(id); out.push({ id, domain: d }); }
     });
+    // a shortfall only carries forward, so a short last track leaves a gap: let every track in the domain try again for what is missing
+    let missing = plan.planned[d] - out.filter((x) => x.domain === d).length;
+    for (const s of src) {
+      if (missing <= 0) break;
+      for (const id of drawFrom(userId, s, missing, taken)) { taken.add(id); out.push({ id, domain: d }); missing--; }
+    }
   }
   return out;
 }
@@ -101,7 +103,7 @@ export function createRoleExam(person: Person): number | null {
   const drawn = drawRoleExam(person.id, plan);
   if (drawn.length < ROLE_EXAM_MIN) return null;
   const actual = Object.fromEntries(DOMAIN_KEYS.map((d) => [d, drawn.filter((x) => x.domain === d).length]));
-  const exam = db.insert(roleExams).values({ userId: person.id, role: plan.role, rung: plan.rung, plan: JSON.stringify(actual) }).returning().get();
+  const exam = db.insert(roleExams).values({ userId: person.id, role: plan.role, rung: plan.level, plan: JSON.stringify(actual) }).returning().get();
   db.insert(roleExamAnswers).values(drawn.sort(() => Math.random() - 0.5).map((x) => ({ examId: exam.id, questionId: x.id, domain: x.domain }))).run();
   return exam.id;
 }
@@ -135,6 +137,16 @@ export function domainResults(examId: number): DomainResult[] {
     return mine.length ? [{ domain, asked: mine.length, score: w ? mine.reduce((a, r) => a + r.a.score * r.w, 0) / w : 0 }] : [];
   });
 }
+
+/** The person's unfinished role check that still matches where they are (same role, same target level), if any. An older one is left behind. */
+export function openRoleExam(userId: number, plan: Pick<RoleExamPlan, "role" | "level">) {
+  return db.select().from(roleExams)
+    .where(and(eq(roleExams.userId, userId), eq(roleExams.role, plan.role), eq(roleExams.rung, plan.level), sql`${roleExams.finishedAt} is null`))
+    .orderBy(sql`${roleExams.id} desc`).get();
+}
+
+export const latestFinishedRoleExam = (userId: number) =>
+  db.select().from(roleExams).where(and(eq(roleExams.userId, userId), sql`${roleExams.finishedAt} is not null`)).orderBy(sql`${roleExams.id} desc`).get();
 
 export const latestRoleExam = (userId: number) =>
   db.select().from(roleExams).where(eq(roleExams.userId, userId)).orderBy(sql`${roleExams.id} desc`).get();

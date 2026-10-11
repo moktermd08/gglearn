@@ -5,7 +5,7 @@ import { db, roleExamAnswers, roleExams, questions } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { PASS_MARK } from "@/lib/levels";
 import { DOMAIN_KEYS, domainLabel } from "@/lib/blueprint";
-import { domainResults } from "@/lib/roleExam";
+import { domainResults, roleExamPlan } from "@/lib/roleExam";
 import { roleLabel } from "@/lib/journey";
 import { submitRoleExam } from "@/app/actions";
 import { Quiz } from "@/components/Quiz";
@@ -25,9 +25,13 @@ export default async function RoleExamPage({ params }: { params: Promise<{ id: s
   const title = `${roleLabel(exam.role)} role check`;
 
   if (!exam.finishedAt) {
+    const now = roleExamPlan(user);
+    const stale = !now || now.role !== exam.role || now.level !== exam.rung;
     return (
       <div className="space-y-4">
-        <PageHero Icon={Target} tone="violet" title={title} sub={`${rows.length} questions across the areas your role is examined on.`} />
+        <h1 className="text-center text-xl font-extrabold">{title}</h1>
+        {stale && <p role="alert" className="text-center text-sm text-amber-300">This check was started for an earlier level or role, so passing it will not count towards your next promotion. <Link href="/journey" className="underline">Start a current one from your journey</Link>.</p>}
+        <p className="text-center text-sm text-slate-400">{rows.length} questions across the areas your role is examined on.</p>
         <Quiz action={submitRoleExam.bind(null, examId)} level={exam.rung} rivalHue={260} rivalName="The panel"
           questions={rows.map(({ q }) => ({ id: q.id, prompt: q.prompt, code: q.code, type: q.type, options: q.options, topic: q.topic }))} />
       </div>

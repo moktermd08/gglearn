@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { ROLE_CHECK_VALID_DAYS } from "@/lib/roleCheck";
 import Link from "next/link";
 import { brands, checklistItems, db, enrollments, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
@@ -186,6 +187,7 @@ export default async function Dashboard() {
                 {career.ready && <span className="font-semibold text-emerald-300">Ready for promotion review</span>}
               </div>
               {career.total > 0 && <div className="bar mb-3"><i style={{ width: `${(career.done / career.total) * 100}%`, background: career.ready ? "#34d399" : undefined }} /></div>}
+              {career.hold === "role-check" && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-amber-300"><AlertTriangle size={15} />You have met every step. Pass a <Link href="/journey" className="underline">role check</Link> (valid for {ROLE_CHECK_VALID_DAYS} days) to be considered.</p>}
               {career.hold === "overdue" && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-amber-300"><AlertTriangle size={15} />You have met every step, but required learning is overdue. Finish it to be considered.</p>}
               <ul className="space-y-1.5 text-sm">
                 {career.next.steps.map((st) => (

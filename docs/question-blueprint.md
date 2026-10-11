@@ -37,3 +37,7 @@ Example (top rung): CTO is 29% leadership, 20% process, 15% product, 12% technol
 ## Role check
 
 `/journey` offers a **role check**: one exam drawn across the tracks of the person's path in the proportions of their role's mix (`lib/roleExam.ts`, `/role-exam/[id]`). It is stored apart from track runs (`role_exams`, `role_exam_answers`) so it never counts as passing a single track, and the result is broken down by domain. Run `npm run db:push` to create the tables.
+
+**Promotion needs a recent pass.** A person is only "ready" for promotion when, besides every step being met and nothing being overdue, they have a passing role check from the last 90 days (`ROLE_CHECK_VALID_DAYS` in `lib/roleCheck.ts`) that was aimed at the level they are going for or higher. A pass for an earlier level does not carry over. If no fair check can be drawn from the path (fewer than 10 questions and no generated ones) the requirement does not apply, so nobody is held back by a check that cannot be offered. An admin can still promote without it, with a note, the same as any other unmet step.
+
+A role check is stored and matched by the **number of the level it is aimed at** (`role_exams.rung` holds that number), not by its position in the ladder, so editing or re-seeding a ladder does not change which passes count. Only a check aimed at the person's current role and next level can be resumed; an unfinished one from an earlier level or role is left behind, and opening it shows a notice that passing it will not count.
