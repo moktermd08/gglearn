@@ -11,6 +11,10 @@ import { Avatar } from "@/components/Avatar";
 import { SubjectArt } from "@/components/SubjectArt";
 import { RaceTrack } from "@/components/RaceTrack";
 import { RankEmblem } from "@/components/RankEmblem";
+import { Ring } from "@/components/Ring";
+import { ArrowRight, BookOpen, Check, CheckCircle2, Crown, Flame, GraduationCap, ListChecks, Lock, LogIn, Medal, Mountain, Sparkles, Swords, Target, Trophy, Zap } from "lucide-react";
+
+const QUEST_ICON = { study: BookOpen, drill: Zap, exam: Trophy } as const;
 
 export default async function TrackPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -32,6 +36,8 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
   const s = user && enrolment ? trackStats(user.id, track, enrolment.startedAt) : null;
   const passed = s?.passed ?? 0;
   const next = Math.min(20, passed + 1);
+  const maxN = Math.max(1, ...counts.values());
+  const questsDone = s?.doneToday.size ?? 0;
 
   return (
     <div className="space-y-8">
@@ -48,40 +54,52 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           <p className="mt-1 text-slate-300">{track.description}</p>
           <p className="mt-1 text-sm text-slate-400">Your rival: <b className="text-white">{rival.name}</b>, {rival.tagline}.</p>
         </div>
-        {s && (
-          <div className="flex gap-5 text-center">
-            <div><div className="text-2xl font-extrabold text-sky-300">{s.xp}</div><div className="text-xs text-slate-400">XP</div></div>
-            <div><div className="text-2xl font-extrabold text-orange-400">🔥 {s.streak}</div><div className="text-xs text-slate-400">streak</div></div>
-            <div><div className="text-2xl font-extrabold" style={{ color: `hsl(${TIERS[tierOf(passed)].hue} 85% 70%)` }}>{TIERS[tierOf(passed)].name}</div><div className="text-xs text-slate-400">rank</div></div>
-          </div>
-        )}
+        {s && <Ring pct={passed / 20} label={`${passed}/20`} sub="levels" size={108} color={`hsl(${TIERS[tierOf(passed)].hue} 85% 65%)`} />}
       </div>
 
+      {s && (
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { Icon: Sparkles, label: "XP", value: s.xp, cls: "text-sky-300" },
+            { Icon: Flame, label: "Day streak", value: s.streak, cls: "text-orange-400" },
+            { Icon: Medal, label: "Rank", value: TIERS[tierOf(passed)].name, color: `hsl(${TIERS[tierOf(passed)].hue} 85% 70%)` },
+          ].map(({ Icon, label, value, cls, color }, i) => (
+            <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
+              <Icon size={22} className={`mx-auto ${cls ?? ""} ${label === "Day streak" && s.streak > 0 ? "pulse-glow" : ""}`} style={color ? { color } : undefined} />
+              <div className="mt-1 text-2xl font-extrabold" style={color ? { color } : undefined}>{value}</div>
+              <div className="text-xs uppercase tracking-wider text-slate-400">{label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {!user ? (
-        <p className="card p-4"><Link href="/login" className="underline">Sign in</Link> to take on {rival.name}.</p>
+        <p className="card flex items-center gap-2 p-4"><LogIn size={18} className="text-indigo-300" /><span><Link href="/login" className="underline">Sign in</Link> to take on {rival.name}.</span></p>
       ) : !enrolment ? (
         <form action={enroll} className="card flex max-w-xl flex-col gap-2 p-5">
           <input type="hidden" name="trackId" value={track.id} />
-          <label className="font-semibold" htmlFor="goal">Set your goal. {rival.name} already has one.</label>
+          <label className="flex items-center gap-2 font-semibold" htmlFor="goal"><Target size={18} className="text-pink-300" />Set your goal. {rival.name} already has one.</label>
           <input id="goal" name="goal" maxLength={300} placeholder="e.g. Reach Titan in Git by the end of the quarter"
             className="rounded-lg border border-white/15 bg-black/30 px-3 py-2" />
-          <button className="btn self-start">Accept the challenge ⚔️</button>
+          <button className="btn self-start">Accept the challenge<Swords size={16} /></button>
         </form>
       ) : (
         <>
           <RaceTrack you={user.name.split(" ")[0]} rival={rival} youLevel={passed} rivalLevel={s!.rival.level} />
 
           <section>
-            <h2 className="mb-3 text-lg font-bold">Daily quests <span className="text-sm font-normal text-slate-400">· {enrolment.goal && `🎯 ${enrolment.goal}`}</span></h2>
+            <h2 className="mb-2 flex flex-wrap items-center gap-2 text-lg font-bold"><ListChecks size={20} className="text-emerald-300" />Daily quests <span className="text-sm font-normal text-slate-400">· {questsDone}/3 done</span>{enrolment.goal && <span className="flex items-center gap-1 text-sm font-normal text-slate-400">· <Target size={13} className="text-pink-300" />{enrolment.goal}</span>}</h2>
+            <div className="bar mb-3"><i style={{ width: `${(questsDone / 3) * 100}%`, background: questsDone === 3 ? "#34d399" : undefined }} /></div>
             <div className="grid gap-3 sm:grid-cols-3">
-              {(["study", "drill", "exam"] as const).map((k) => {
+              {(["study", "drill", "exam"] as const).map((k, qi) => {
+                const QIcon = QUEST_ICON[k];
                 const done = s!.doneToday.has(k);
                 const href = k === "study" ? `/tracks/${track.slug}/learn/${next}` : k === "drill" ? `/tracks/${track.slug}/drill` : "#levels";
                 return (
-                  <Link key={k} href={href} className={`card card-hover flex items-center gap-3 p-4 ${done ? "border-emerald-400/50" : ""}`}>
-                    <div className="grid h-12 w-12 place-items-center rounded-full bg-indigo-500/20 text-2xl">{done ? "✅" : k === "study" ? "📖" : k === "drill" ? "⚡" : "🏆"}</div>
+                  <Link key={k} href={href} className={`card card-hover rise flex items-center gap-3 p-4 ${done ? "border-emerald-400/50" : ""}`} style={{ "--i": qi } as React.CSSProperties}>
+                    <div className={`grid h-12 w-12 place-items-center rounded-full ${done ? "bg-emerald-500/25 text-emerald-300" : "bg-indigo-500/20 text-indigo-200"}`}>{done ? <CheckCircle2 size={26} className="spin-in" /> : <QIcon size={24} />}</div>
                     <div className="flex-1"><div className="font-semibold">{QUEST_LABEL[k][0]}</div><div className="text-xs text-slate-400">{QUEST_LABEL[k][1]}</div></div>
-                    <div className="text-sm font-bold text-sky-300">+{QUEST_XP[k]}</div>
+                    <div className="flex items-center gap-1 text-sm font-bold text-sky-300"><Sparkles size={13} />+{QUEST_XP[k]}</div>
                   </Link>
                 );
               })}
@@ -91,11 +109,18 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
       )}
 
       <section id="levels">
-        <h2 className="mb-3 text-lg font-bold">The climb · pass mark {PASS_MARK * 100}% · {QUESTIONS_PER_RUN} questions per exam</h2>
+        <h2 className="mb-2 flex flex-wrap items-center gap-2 text-lg font-bold"><Mountain size={20} className="text-violet-300" />The climb <span className="text-sm font-normal text-slate-400">· pass mark {PASS_MARK * 100}% · {QUESTIONS_PER_RUN} questions per exam</span></h2>
+        {enrolment && <div className="mb-4 flex items-center gap-3 text-xs text-slate-400"><div className="bar flex-1"><i style={{ width: `${(passed / 20) * 100}%` }} /></div><span className="flex items-center gap-1"><Crown size={13} className="text-amber-300" />{passed}/20</span></div>}
         <div className="space-y-6">
           {TIERS.map((tier, ti) => (
             <div key={tier.name}>
-              <div className="mb-2 text-sm font-bold uppercase tracking-widest" style={{ color: `hsl(${tier.hue} 85% 70%)` }}>{tier.name} rank</div>
+              <div className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-widest" style={{ color: `hsl(${tier.hue} 85% 70%)` }}>
+                <Medal size={16} />{tier.name} rank
+                {enrolment && <span className="ml-auto flex items-center gap-2 text-xs normal-case tracking-normal text-slate-400">
+                  {Math.max(0, Math.min(4, passed - ti * 4))}/4
+                  <span className="flex gap-0.5">{[0, 1, 2, 3].map((n) => <i key={n} className="h-2 w-5 rounded-full" style={{ background: ti * 4 + n < passed ? `hsl(${tier.hue} 85% 65%)` : "rgba(148,163,184,.25)" }} />)}</span>
+                </span>}
+              </div>
               <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {LEVELS.slice(ti * 4, ti * 4 + 4).map((name, j) => {
                   const level = ti * 4 + j + 1, n = counts.get(level) ?? 0;
@@ -103,17 +128,21 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
                   const cert = (CERT_LEVELS as readonly number[]).includes(level);
                   const mine = s?.certs.find((c) => c.level === level);
                   return (
-                    <li key={level} className={`card flex flex-col items-center gap-2 p-4 text-center ${open ? "border-indigo-400 shadow-[0_0_30px_-8px_rgba(129,140,248,.8)]" : ""}`}>
+                    <li key={level} style={{ "--i": j } as React.CSSProperties} className={`card rise flex flex-col items-center gap-2 p-4 text-center ${!done && !open ? "opacity-70" : ""} ${open ? "border-indigo-400 shadow-[0_0_30px_-8px_rgba(129,140,248,.8)]" : ""}`}>
                       <RankEmblem level={level} state={done ? "done" : open ? "current" : "locked"} />
-                      <div className="font-semibold">{name}{done && " ✓"}</div>
-                      <div className="text-xs text-slate-400">{n} questions{cert && ` · 🎓 ${certTitle(level)} certificate`}</div>
-                      {mine && <Link href={`/cert/${mine.code}`} className="text-xs text-amber-300 underline">View certificate</Link>}
+                      <div className="flex items-center gap-1 font-semibold">{name}{done && <Check size={15} className="text-emerald-400" />}{!done && !open && enrolment && <Lock size={12} className="text-slate-500" />}</div>
+                      <div className="flex w-full items-center gap-2 text-xs text-slate-400" title={`${n} questions`}>
+                        <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"><i className="grow block h-full rounded-full bg-sky-400/70" style={{ width: `${(n / maxN) * 100}%`, "--i": j } as React.CSSProperties} /></span>
+                        <span className="shrink-0">{n} Qs</span>
+                      </div>
+                      {cert && <div className="flex items-center gap-1 text-xs text-amber-300"><GraduationCap size={13} />{certTitle(level)} certificate</div>}
+                      {mine && <Link href={`/cert/${mine.code}`} className="inline-flex items-center gap-1 text-xs text-amber-300 underline"><GraduationCap size={13} />View certificate</Link>}
                       {open && n > 0 && (
                         <div className="flex gap-2">
-                          <Link href={`/tracks/${track.slug}/learn/${level}`} className="btn btn-ghost !px-3 !py-1 text-sm">Study</Link>
+                          <Link href={`/tracks/${track.slug}/learn/${level}`} className="btn btn-ghost !px-3 !py-1 text-sm"><BookOpen size={14} />Study</Link>
                           <form action={startRun}>
                             <input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} />
-                            <button className="btn !px-3 !py-1 text-sm">Exam</button>
+                            <button className="btn !px-3 !py-1 text-sm">Exam<ArrowRight size={14} /></button>
                           </form>
                         </div>
                       )}
@@ -129,10 +158,11 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
 
       {s && (
         <section>
-          <h2 className="mb-3 text-lg font-bold">Badges</h2>
+          <h2 className="mb-3 flex items-center gap-2 text-lg font-bold"><Medal size={20} className="text-yellow-300" />Badges <span className="text-xs font-normal text-slate-400">{badgesFor(s).filter((b) => b.earned).length}/{badgesFor(s).length} earned</span></h2>
           <div className="flex flex-wrap gap-3">
-            {badgesFor(s).map((b) => (
-              <div key={b.key} title={b.desc} className={`card w-28 p-3 text-center ${b.earned ? "" : "opacity-40 grayscale"}`}>
+            {badgesFor(s).map((b, i) => (
+              <div key={b.key} title={b.desc} style={{ "--i": i } as React.CSSProperties} className={`card rise relative w-28 p-3 text-center ${b.earned ? "pop border-yellow-400/40" : "opacity-40 grayscale"}`}>
+                {!b.earned && <Lock size={12} className="absolute right-2 top-2 text-slate-400" />}
                 <div className="text-3xl">{b.icon}</div><div className="text-xs font-semibold">{b.name}</div><div className="text-[10px] text-slate-400">{b.desc}</div>
               </div>
             ))}

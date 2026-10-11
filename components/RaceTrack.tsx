@@ -1,3 +1,4 @@
+import { Equal, Swords, TrendingDown, TrendingUp } from "lucide-react";
 import { Avatar } from "@/components/Avatar";
 import { MAX_LEVEL } from "@/lib/levels";
 import type { Rival } from "@/lib/rivals";
@@ -9,8 +10,9 @@ export function RaceTrack({ you, rival, rivalLevel, youLevel, hue }: { you: stri
   return (
     <div className="card overflow-hidden p-4 sm:p-6">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm">
-        <span className="font-semibold">⚔️ Head to head</span>
-        <span className={`rounded-full px-3 py-1 text-xs font-bold ${ahead ? "bg-emerald-500/20 text-emerald-300" : tied ? "bg-amber-500/20 text-amber-300" : "bg-rose-500/20 text-rose-300"}`}>
+        <span className="flex items-center gap-1.5 font-semibold"><Swords size={16} className="text-pink-300" />Head to head</span>
+        <span className={`pop inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${ahead ? "bg-emerald-500/20 text-emerald-300" : tied ? "bg-amber-500/20 text-amber-300" : "bg-rose-500/20 text-rose-300"}`}>
+          {ahead ? <TrendingUp size={13} /> : tied ? <Equal size={13} /> : <TrendingDown size={13} />}
           {ahead ? `You lead by ${youLevel - rivalLevel}` : tied ? "Neck and neck" : `${rival.name} leads by ${rivalLevel - youLevel}`}
         </span>
       </div>
