@@ -2,6 +2,7 @@ import { asc } from "drizzle-orm";
 import { db, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { KIND_LABEL } from "@/lib/levels";
+import { Trophy } from "lucide-react";
 import NewCompetitionForm from "./form";
 
 export const metadata = { title: "Start a contest — gglearn" };
@@ -17,7 +18,7 @@ export default async function NewCompetition() {
   const groups = [...byKind];
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-2xl font-extrabold">Start a contest</h1>
+      <h1 className="flex items-center gap-2 text-2xl font-extrabold"><Trophy className="pulse-glow text-yellow-300" />Start a contest</h1>
       <NewCompetitionForm groups={groups} />
     </div>
   );

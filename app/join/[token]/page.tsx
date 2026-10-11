@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight, LinkIcon } from "lucide-react";
 import { findOpenInvite } from "@/lib/invites";
 import JoinForm from "./join-form";
 
@@ -7,10 +8,10 @@ export default async function JoinPage({ params }: { params: Promise<{ token: st
   const inv = findOpenInvite(token);
   if (!inv) {
     return (
-      <div className="card mx-auto max-w-sm space-y-3 p-6">
-        <h2 className="text-lg font-semibold">Invite not valid</h2>
+      <div className="card pop mx-auto max-w-sm space-y-3 p-6">
+        <h2 className="flex items-center gap-2 text-lg font-semibold"><LinkIcon className="text-rose-300" />Invite not valid</h2>
         <p className="text-sm text-slate-300">This link has expired or was already used. Ask your manager for a new one.</p>
-        <Link href="/login" className="underline">Go to sign in</Link>
+        <Link href="/login" className="btn btn-ghost">Go to sign in<ArrowRight size={16} /></Link>
       </div>
     );
   }

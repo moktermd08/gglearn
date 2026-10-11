@@ -1,5 +1,6 @@
 "use client";
 import { useActionState, useState } from "react";
+import { Bot, Coins, Eye, Globe, Lock, Swords, Target, Timer, TriangleAlert } from "lucide-react";
 import { createCompetition, type CreateState } from "../actions";
 import { BOT_TIERS } from "@/lib/bots";
 import { CURRENCIES, PRIZE_SPLIT_LABEL } from "@/lib/competitions-shared";
@@ -18,7 +19,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
   return (
     <form action={run} className="card space-y-6 p-6">
       <section className="space-y-3">
-        <h2 className="font-bold">1. Topic and goal</h2>
+        <h2 className="flex items-center gap-2 font-bold"><Target size={18} className="text-pink-300" />1. Topic and goal</h2>
         <div><label className={label} htmlFor="title">Name your contest</label>
           <input id="title" name="title" required minLength={3} maxLength={80} placeholder="e.g. Python sprint: team vs the bots" className={input} /></div>
         <div><label className={label} htmlFor="trackId">Topic (hard skill or soft skill)</label>
@@ -38,6 +39,11 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
               {[3, 7, 14, 30, 60, 90].map((d) => <option key={d} value={d}>{d} days</option>)}
             </select></div>
         </div>
+        <div className="flex items-center gap-3 text-xs text-slate-400" aria-hidden>
+          <Timer size={16} className="shrink-0 text-amber-300" />
+          <div className="bar flex-1"><i style={{ width: `${Math.min(100, (Number(perDay) / 1) * 100)}%` }} /></div>
+          <span>{perDay} levels / day</span>
+        </div>
         <p className="text-xs text-slate-400">
           Progress is measured as levels <i>newly passed</i> after you start, so beginners and experts can race fairly. Your goal works out to {perDay} levels a day.
           Spreading practice over several days beats cramming, so a longer contest usually teaches more.
@@ -47,7 +53,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-bold">2. Opponents</h2>
+        <h2 className="flex items-center gap-2 font-bold"><Bot size={18} className="text-violet-300" />2. Opponents</h2>
         <p className="text-sm text-slate-300">Race people, bots, or both. Bots are <b>simulated</b>: they follow a published daily schedule and do not really study. Each gets its own look and style.</p>
         <div className="grid gap-3 sm:grid-cols-3">
           {(Object.keys(BOT_TIERS) as (keyof typeof BOT_TIERS)[]).map((k) => (
@@ -63,11 +69,11 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-bold">3. Who can watch</h2>
+        <h2 className="flex items-center gap-2 font-bold"><Eye size={18} className="text-sky-300" />3. Who can watch</h2>
         <label className="flex items-start gap-2"><input type="radio" name="visibility" value="private" checked={visibility === "private"} onChange={() => setVisibility("private")} className="mt-1" />
-          <span><b>🔒 Private</b> · only people you invite can see or join it.</span></label>
+          <span><b className="inline-flex items-center gap-1"><Lock size={14} />Private</b> · only people you invite can see or join it.</span></label>
         <label className="flex items-start gap-2"><input type="radio" name="visibility" value="public" checked={visibility === "public"} onChange={() => setVisibility("public")} className="mt-1" />
-          <span><b>🌐 Public</b> · anyone with the link can watch the live leaderboard, without signing in.</span></label>
+          <span><b className="inline-flex items-center gap-1"><Globe size={14} />Public</b> · anyone with the link can watch the live leaderboard, without signing in.</span></label>
         {visibility === "public" && (
           <div className="ml-6 space-y-2 text-sm">
             <label className="flex items-center gap-2"><input type="checkbox" name="openJoin" /> Let any signed-in learner join (otherwise invited people only)</label>
@@ -78,7 +84,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-bold">4. Reward</h2>
+        <h2 className="flex items-center gap-2 font-bold"><Coins size={18} className="text-amber-300" />4. Reward</h2>
         <p className="text-sm text-slate-300">Everyone who reaches the goal can claim a certificate. Optionally add a cash prize for the first to get there. gglearn does not hold or send money: you pay winners yourself and record it. Only people, not bots, can win.</p>
         <div className="grid gap-3 sm:grid-cols-4">
           <div><label className={label} htmlFor="prizeAmount">Prize pool (optional)</label><input id="prizeAmount" name="prizeAmount" inputMode="decimal" placeholder="0" className={input} /></div>
@@ -90,8 +96,8 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
         <div><label className={label} htmlFor="prizeNote">Who pays, and when? (required with a prize)</label><input id="prizeNote" name="prizeNote" maxLength={200} className={input} /></div>
       </section>
 
-      {state?.error && <p role="alert" className="text-sm text-rose-400">{state.error}</p>}
-      <button disabled={pending} className="btn disabled:opacity-50">{pending ? "Creating…" : "Create contest ⚔️"}</button>
+      {state?.error && <p role="alert" className="slide-in flex items-center gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} />{state.error}</p>}
+      <button disabled={pending} className="btn disabled:opacity-50">{pending ? "Creating…" : <>Create contest<Swords size={16} /></>}</button>
     </form>
   );
 }
