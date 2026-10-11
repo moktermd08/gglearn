@@ -80,6 +80,11 @@ const TRACK_PILLAR: Record<string, string> = {
   "ggsocial-product": "implementation", "ggmoney-product": "implementation", "gglearn-product": "implementation", "moksy-product": "implementation",
   "moksy-platform-services": "architecture",
   "tools-plan-design": "experience",
+  // the Foundations twins of the Titan courses tagged above, the two OpenAI/ChatGPT Titan courses, and the sample brand
+  "foundations-angular": "code", "foundations-bootstrap": "code", "foundations-css": "code", "foundations-html": "code", "foundations-javascript": "code", "foundations-laravel": "code", "foundations-nodejs": "code", "foundations-php": "code", "foundations-python": "code", "foundations-react": "code", "foundations-wordpress": "code",
+  "foundations-mysql": "database", "foundations-git": "deployment", "foundations-lambda": "hardware", "foundations-linkedin": "marketing", "foundations-docusaurus": "documentation",
+  "foundations-chatgpt": "pattern", "foundations-openai": "pattern", "chatgpt-titan": "pattern", "openai-titan": "pattern",
+  "sample-brand-sales-basics": "sales",
 };
 
 // company-wide policy that everyone in scope must pass
