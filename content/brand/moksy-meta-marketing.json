@@ -47,8 +47,8 @@
    "title": "Claims and tests",
    "syllabus": [
     "Advertise only features that exist: no Facebook Page import",
-    "Do not quote review values or unsourced prices",
-    "Dated cautions: check whether guest-quota and price-table issues still hold",
+    "Do not quote review values (they can change and memberships already include reviews) or unsourced prices",
+    "Dated cautions: check whether the guest-quota issue still holds",
     "Keep unit economics in view: cost per Pro subscriber versus what a subscriber pays"
    ]
   }
@@ -1748,7 +1748,7 @@
   },
   {
    "title": "Claims and guardrails: what you may promise",
-   "body": "Ads are claims, so they may only describe what exists and can be evidenced. Moksy's integrations plan lists Facebook sign-in as existing but gated by environment settings, and a Facebook Page import as absent: it would use the Graph API with pages_show_list and pages_read_engagement and needs Meta's App Review, and no ad should promise it unless that has changed. Figures in ads must come from a source, as the editorial rules say. Two dated cautions come from the launch promo proposal of 13 August 2026 (a proposal, not a decision, so check whether they still hold): guest AI quotas reset when a new session is minted, so inference spend is uncapped and a public free tier gets farmed, so a guest or free offer should not be pushed with paid traffic until that is fixed; and you cannot state what a free review is worth until one price table is chosen, because two disagreed, so ads should not quote review values. Source: docs/MOKSY_INTEGRATIONS_MASTER_PLAN.md and docs/promo/LAUNCH_PROMO_SPEC.md.",
+   "body": "Ads are claims, so they may only describe what exists and can be evidenced. Moksy's integrations plan lists Facebook sign-in as existing but gated by environment settings, and a Facebook Page import as absent: it would use the Graph API with pages_show_list and pages_read_engagement and needs Meta's App Review, and no ad should promise it unless that has changed. Figures in ads must come from a source, as the editorial rules say. Two dated cautions come from the launch promo proposal of 13 August 2026 (a proposal, not a decision, so check whether they still hold): guest AI quotas reset when a new session is minted, so inference spend is uncapped and a public free tier gets farmed, so a guest or free offer should not be pushed with paid traffic until that is fixed; and the proposal said you cannot state what a review is worth until one price table is chosen, because two disagreed; the reviewer payouts page has since published values in MOX, but they are reviewer-facing job values that can change, and Pro and Max already include Expert Reviews, so an ad should not quote them: its promise is the free Blueprint. Source: docs/MOKSY_INTEGRATIONS_MASTER_PLAN.md and docs/promo/LAUNCH_PROMO_SPEC.md.",
    "questions": [
     {
      "level": 2,
@@ -1883,27 +1883,27 @@
     {
      "level": 4,
      "type": "mcq",
-     "prompt": "May an ad say a Moksy free review is worth a specific amount?",
+     "prompt": "May an ad quote what a Moksy review is worth in MOX, as published on the reviewer payouts page?",
      "options": [
       {
        "key": "a",
-       "text": "Yes: quote the higher one"
+       "text": "Not as a headline claim: it is a reviewer-facing job value that can change, memberships already include Expert Reviews from Pro, and the ad's promise is the free Blueprint"
       },
       {
        "key": "b",
-       "text": "Not while the repository's two review price tables disagree; do not quote review values"
+       "text": "Yes: quote the lowest figure"
       },
       {
        "key": "c",
-       "text": "Yes: quote an average"
+       "text": "Yes: quote 490 MOX as a guaranteed price"
       },
       {
        "key": "d",
-       "text": "Yes: quote the lower one"
+       "text": "Yes: but round it up"
       }
      ],
-     "answer": "b",
-     "hint": "A dated caution from the promo proposal.",
+     "answer": "a",
+     "hint": "The proposal's caution has been overtaken, but the conclusion holds.",
      "topic": "Claims"
     },
     {

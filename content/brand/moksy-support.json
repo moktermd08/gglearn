@@ -48,7 +48,7 @@
    "syllabus": [
     "Published pages disagree on data deletion (30 versus 90 days): confirm and route to privacy@moksy.ai",
     "Confirm the route for security questionnaires before promising one",
-    "Do not quote review prices in MOX: they are unsettled",
+    "Quote review values only as published and dated, and never a refund amount: no refund rule for reviews is published",
     "Report discrepancies so the pages can be corrected"
    ]
   }
@@ -2704,7 +2704,7 @@
   },
   {
    "title": "Where the published pages disagree: confirm before quoting",
-   "body": "Support should quote published pages, and the pages are the company's statements. As read on 11 October 2026, a few of them disagree or look out of date, and a support person should know where, so that they do not repeat a figure as settled. (1) Data deletion: the trust page says customer data is hard-deleted within 30 days of termination, while the privacy policy says personal data is deleted or anonymised within 90 days of account closure, except where retention is required by law (financial records: 7 years). Do not quote either as definitive; say you will confirm and route to privacy@moksy.ai. (2) Security questionnaires: the contact-support page says Sales handles them, while the trust page says to send the questionnaire to privacy@moksy.ai. Confirm the current route before promising one, and never answer security claims you cannot evidence. (3) Sector wording: the Terms and privacy policy describe Moksy as for the education sector, while the help, pricing and trust pages describe founders, teams, agencies, enterprises and the public sector; do not tell a founder Moksy is only for schools, and flag the outdated legal wording. (4) Review arbitration: the contact page says disputed reviews are arbitrated by a senior reviewer; the internal lexicon names a rung for it, so say \"a senior reviewer\" as published without naming a rung. Prices of reviews in MOX are also unsettled in the repository, so avoid quoting a review price. This item is dated; re-check the pages. Source: trust.json, legal-privacy.json, contact-support.json, legal-terms.json, help.json.",
+   "body": "Support should quote published pages, and the pages are the company's statements. As read on 11 October 2026, a few of them disagree or look out of date, and a support person should know where, so that they do not repeat a figure as settled. (1) Data deletion: the trust page says customer data is hard-deleted within 30 days of termination, while the privacy policy says personal data is deleted or anonymised within 90 days of account closure, except where retention is required by law (financial records: 7 years). Do not quote either as definitive; say you will confirm and route to privacy@moksy.ai. (2) Security questionnaires: the contact-support page says Sales handles them, while the trust page says to send the questionnaire to privacy@moksy.ai. Confirm the current route before promising one, and never answer security claims you cannot evidence. (3) Sector wording: the Terms and privacy policy describe Moksy as for the education sector, while the help, pricing and trust pages describe founders, teams, agencies, enterprises and the public sector; do not tell a founder Moksy is only for schools, and flag the outdated legal wording. (4) Review arbitration: the contact page says disputed reviews are arbitrated by a senior reviewer; the internal lexicon names a rung for it, so say \"a senior reviewer\" as published without naming a rung. Review values in MOX: the reviewer payouts page now publishes them (a Section Review from 75 MOX, a whole Blueprint from 250, an Expert Review 490, a Priority Review 1,990, at a published conversion of 125 MOX to £1 that operators can change), but an August 2026 proposal reported that internal price tables disagreed. Quote the published figures only as published and dated, never as a promise, and do not confuse them with what a membership includes (Pro and Max include Expert Reviews). No refund rule for reviews is published, so never quote a refund amount. This item is dated; re-check the pages. Source: trust.json, legal-privacy.json, contact-support.json, legal-terms.json, help.json.",
    "questions": [
     {
      "level": 3,
@@ -2837,29 +2837,55 @@
      "topic": "Conflicts"
     },
     {
-     "level": 5,
+     "level": 4,
      "type": "mcq",
-     "prompt": "A customer asks what Moksy will refund a failed review for in MOX. What is the sound response?",
+     "prompt": "A customer asks what an Expert Review is worth in MOX. What is the sound response?",
      "options": [
       {
        "key": "a",
-       "text": "Promise a refund of 100%"
+       "text": "Promise that figure will never change"
       },
       {
        "key": "b",
-       "text": "Quote an average"
-      },
-      {
-       "key": "c",
        "text": "Quote the lowest price you have seen"
       },
       {
+       "key": "c",
+       "text": "Quote the figure only as published on the reviewer payouts page and dated, say the rate can change, and remind them Pro and Max include Expert Reviews"
+      },
+      {
        "key": "d",
-       "text": "Avoid quoting a price or refund amount, since review prices in MOX are unsettled; take the details and escalate"
+       "text": "Say it cannot be known"
       }
      ],
-     "answer": "d",
-     "hint": "The repository's price tables disagree.",
+     "answer": "c",
+     "hint": "Published: 490 MOX, about £3.90 at 125 MOX to £1, as read on 11 October 2026.",
+     "topic": "Conflicts"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer asks what Moksy will refund them for a failed review in MOX. What is the sound response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Refund 490 MOX"
+      },
+      {
+       "key": "b",
+       "text": "Promise a refund of 100%"
+      },
+      {
+       "key": "c",
+       "text": "Do not quote a refund amount: no refund rule for reviews is published, so take the details and escalate"
+      },
+      {
+       "key": "d",
+       "text": "Refuse and close the case"
+      }
+     ],
+     "answer": "c",
+     "hint": "A published price is not a published refund rule.",
      "topic": "Conflicts"
     },
     {
