@@ -14,8 +14,9 @@
 # Customer and company questions are imported as "review"; nothing goes live until an admin approves it at
 # /admin/review/<track>. Approving a role track enrols everyone it applies to, so check the facts first.
 # The card tracks have to exist before the career ladders are seeded: a ladder step on a track that does not exist yet is
-# skipped, and the ladder is then created without it. Like seed:ai, seed:cards publishes its questions immediately (they are
-# generated from the card files in content/cards, not held for review: nobody has reviewed them by hand) and leaves an existing track's name, brand and policy alone.
+# skipped, and the ladder is then created without it. seed:cards publishes the questions of staff tracks immediately (they are
+# generated from the card files in content/cards; nobody has reviewed them by hand) but holds those of customer-audience
+# tracks as "review" until an admin approves them at /admin/review/<track>. It leaves an existing track's name, brand and policy alone.
 # Note that "seed:ai" publishes the AI technology tracks (including facebook-marketing-titan, lead-generation-titan and
 # claude-chatgpt-everyday-titan) immediately: those questions are generated, not held for review.
 # The legacy TrialTest and questions-repo imports are NOT part of this: they need folders that only exist on the

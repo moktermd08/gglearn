@@ -20,6 +20,10 @@ Every role is examined across seven domains, in different proportions, and the p
 
 Example (top rung): CTO is 29% leadership, 20% process, 15% product, 12% technology, 10% service, 10% brand. Full stack developer is 42% technology, 22% process, 12% tools, 10% product, 6% leadership.
 
+## Customer tracks are held for review
+
+`npm run seed:cards` publishes the questions of staff tracks at once, but saves those of customer-audience tracks (the `*-customer-start` tracks) as `review`: customers see them only after an admin approves the track at `/admin/review/<track>`. Add `-- --publish-customer` to publish them directly.
+
 ## Fitting a ladder
 
 `npm run fit:blueprint` (dry run) shows how far each ladder is from its blueprint; `-- --write` rewrites `content/careers/roles/*.json` and `-- --write --apply` updates the database too, only for roles whose database steps still equal the file (nothing edited in the app is overwritten; overlay steps are untouched). It chooses from the tracks in `content/blueprints/pools.json`, keeps levels at 20 or below, and makes every rung ask for something new. After adding tracks or changing a mix, run it again.
