@@ -67,6 +67,9 @@ const TRACKS: Record<string, T[]> = {
     ["tech-data-stores", "Technologies: data stores", "technology", "developer", "PostgreSQL, Redis, SQLite and Drizzle, vector databases."],
     ["tech-cloud-devops", "Technologies: cloud and DevOps", "technology", "developer", "Kubernetes, Terraform, Nginx, GitHub Actions."],
     ["tech-testing", "Technologies: testing", "technology", "developer", "Playwright, Jest, test strategy."],
+    ["tech-graphql", "Technologies: GraphQL", "technology", "developer", "GraphQL schemas, queries, mutations, and when to choose it over REST."],
+    ["tech-tailwind", "Technologies: Tailwind CSS", "technology", "developer", "Utility-first styling as used in GGLearn and GGSocial."],
+    ["tech-drupal", "Technologies: Drupal", "technology", "developer", "Drupal as a CMS option for client builds."],
   ],
 };
 

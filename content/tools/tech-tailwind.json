@@ -1,0 +1,361 @@
+{
+ "trackSlug": "tech-tailwind",
+ "items": [
+  {
+   "title": "Tailwind CSS: utility-first styling and how it is wired in our apps",
+   "body": "Tailwind CSS is a utility-first styling tool. Instead of writing a class like .nav-link in a stylesheet, you compose small single-purpose classes directly in the markup: flex, items-center, gap-5, px-4, text-sm. The build scans your source files, finds the class names you used, and generates only that CSS, so the shipped stylesheet stays small. States and breakpoints are prefixes: hover:text-white, md:grid-cols-2.\n\nBoth gglearn and ggsocial list tailwindcss and @tailwindcss/postcss in package.json with a caret range of 4 (the major version is 4; we do not pin the minor here). Each has a postcss.config.mjs that registers the @tailwindcss/postcss plugin, and neither has a tailwind.config file. Configuration is CSS-first: app/globals.css starts with @import \"tailwindcss\" and customises the theme inside the CSS itself. For example gglearn's layout writes the header as one string of utilities such as sticky top-0 z-40 border-b border-white/10 backdrop-blur, and links as text-slate-300 transition hover:text-white. The trade-off is long class strings in components, which is why repeated patterns get extracted into components or a few named classes.",
+   "source": "gglearn/package.json; gglearn/postcss.config.mjs; gglearn/app/globals.css; gglearn/app/layout.tsx; ggsocial/package.json; ggsocial/postcss.config.mjs",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does 'utility-first' mean in Tailwind?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Small single-purpose classes are combined directly in the markup"
+      },
+      {
+       "key": "b",
+       "text": "Components cannot use CSS at all"
+      },
+      {
+       "key": "c",
+       "text": "All styling is done in JavaScript objects"
+      },
+      {
+       "key": "d",
+       "text": "Styles are written as one large global stylesheet"
+      }
+     ],
+     "answer": "a",
+     "topic": "concept"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Where does the Tailwind setup in gglearn and ggsocial register its build plugin?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the PM2 ecosystem file"
+      },
+      {
+       "key": "b",
+       "text": "In postcss.config.mjs using @tailwindcss/postcss"
+      },
+      {
+       "key": "c",
+       "text": "In the SQLite schema"
+      },
+      {
+       "key": "d",
+       "text": "In a tailwind.config.js file"
+      }
+     ],
+     "answer": "b",
+     "topic": "setup"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How does the Tailwind build keep the generated CSS small?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It removes the browser's default styles"
+      },
+      {
+       "key": "b",
+       "text": "It loads classes from a CDN at runtime"
+      },
+      {
+       "key": "c",
+       "text": "It generates CSS only for class names it finds in the source files"
+      },
+      {
+       "key": "d",
+       "text": "It minifies images"
+      }
+     ],
+     "answer": "c",
+     "topic": "build"
+    },
+    {
+     "level": 6,
+     "type": "open",
+     "prompt": "Describe how Tailwind is configured in gglearn: what is the entry point, and what is notably absent?",
+     "answer": "globals.css begins with @import \"tailwindcss\", and the PostCSS plugin @tailwindcss/postcss is registered in postcss.config.mjs. Theme customisation is done in CSS (an @theme block), and there is no tailwind.config file in the repo. The package.json uses a caret range on major version 4.",
+     "rubric": "Must mention @import \"tailwindcss\" in globals.css, the postcss plugin, no tailwind.config file, CSS-first theme."
+    }
+   ]
+  },
+  {
+   "title": "Theme tokens: CSS variables mapped into Tailwind with @theme",
+   "body": "Hard-coding colours in every component makes restyling painful. Our apps instead define design tokens as CSS variables and expose them to Tailwind with an @theme block. In ggsocial's globals.css, :root defines --bg, --surface, --border, --text, --muted, --accent, --ok, --warn, --danger and three chart colours. A later @theme inline block maps them: --color-surface: var(--surface), and so on. Because of that mapping, utilities such as bg-surface-2, text-muted, border-border and text-accent-fg exist, and components in the layout use them.\n\nThe inline keyword tells Tailwind to reference the variable itself rather than copy its value, so changing the variable at runtime changes every utility that uses it. That is what makes theming cheap.\n\ngglearn does the same on a smaller scale: :root sets --background and --foreground, and @theme inline maps them to color-background and color-foreground. It also uses some one-off values in classes, such as bg-[#070b1a]/80 and text-[11px]. Arbitrary values in square brackets are fine occasionally, but if a value repeats, promote it to a token so it has one place to change.",
+   "source": "ggsocial/src/app/globals.css; ggsocial/src/app/(app)/layout.tsx; gglearn/app/globals.css; gglearn/app/layout.tsx",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In ggsocial, how does a token like --surface-2 become a usable class such as bg-surface-2?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is copied into package.json"
+      },
+      {
+       "key": "b",
+       "text": "A PM2 setting generates it"
+      },
+      {
+       "key": "c",
+       "text": "Tailwind guesses it from the variable name"
+      },
+      {
+       "key": "d",
+       "text": "An @theme inline block maps --color-surface-2 to var(--surface-2)"
+      }
+     ],
+     "answer": "d",
+     "topic": "theme"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the benefit of defining colours as CSS variables behind the utilities?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Changing the variable at runtime restyles every utility that uses it"
+      },
+      {
+       "key": "b",
+       "text": "Browsers refuse to cache the stylesheet"
+      },
+      {
+       "key": "c",
+       "text": "It removes the need for PostCSS"
+      },
+      {
+       "key": "d",
+       "text": "The HTML becomes smaller than any other option"
+      }
+     ],
+     "answer": "a",
+     "topic": "tokens"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A gglearn class uses bg-[#070b1a]/80. What is this called, and when is it a smell?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A breakpoint; when it is used on mobile"
+      },
+      {
+       "key": "b",
+       "text": "An arbitrary value; when the same value repeats and should be a token"
+      },
+      {
+       "key": "c",
+       "text": "A plugin; when it is not installed"
+      },
+      {
+       "key": "d",
+       "text": "A layer; when it is unlayered"
+      }
+     ],
+     "answer": "b",
+     "topic": "arbitrary"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "Your team wants a new 'info' colour used in 30 places in ggsocial. Describe step by step how to add it so that dark mode keeps working.",
+     "answer": "Define --info in :root, give a dark-adjusted value in the prefers-color-scheme dark block (the :root:not([data-theme=\"light\"]) rule), then add --color-info: var(--info) in the @theme inline block. Use text-info or bg-info in components. Check contrast against --surface in both themes. Do not hard-code a hex in the 30 places.",
+     "rubric": "Must cover :root var, dark override, @theme inline mapping, using utility, contrast check."
+    }
+   ]
+  },
+  {
+   "title": "Dark mode and component patterns: two different approaches",
+   "body": "The two apps handle dark mode differently, which is a useful comparison. gglearn is dark-only: its :root background is a deep navy, the body uses layered gradients, and we found no dark: variant classes in its components. There is no light theme to switch to, so no toggle is needed.\n\nggsocial follows the user's system. Its light token values sit in :root, and a media query for prefers-color-scheme: dark overrides them inside :root:not([data-theme=\"light\"]). The data-theme attribute lets a user force light even when the OS is dark. Dark values are stepped on purpose, not just inverted: a comment explains the dark accent is a light violet, so text on it switches to a dark colour for contrast. Components never mention dark: because they use token utilities that change with the variables.\n\nFor component patterns, gglearn keeps repeated looks as named classes in globals.css (.card, .btn, .gradient-text) and keeps layout as utilities. ggsocial keeps its own Card, Button and Field in components/ui.tsx, built from utilities, and uses a shared gg-ui kit copied from another repo. Prefer React components over copying long class strings.",
+   "source": "gglearn/app/globals.css; ggsocial/src/app/globals.css; ggsocial/README.md; ggsocial/src/components (ui.tsx referenced in README)",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How does ggsocial decide between light and dark values?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Separate stylesheets chosen by Cloudflare"
+      },
+      {
+       "key": "b",
+       "text": "It is always dark"
+      },
+      {
+       "key": "c",
+       "text": "A prefers-color-scheme media query, with a data-theme=\"light\" attribute able to override it"
+      },
+      {
+       "key": "d",
+       "text": "A cookie read by the PM2 process"
+      }
+     ],
+     "answer": "c",
+     "topic": "dark mode"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does ggsocial avoid writing dark: variants in most components?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Dark mode is not supported"
+      },
+      {
+       "key": "b",
+       "text": "Components are rendered only on the server"
+      },
+      {
+       "key": "c",
+       "text": "Tailwind forbids them"
+      },
+      {
+       "key": "d",
+       "text": "Token utilities like bg-surface already change when the CSS variables change"
+      }
+     ],
+     "answer": "d",
+     "topic": "tokens"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Compare how gglearn and ggsocial approach dark mode, and say why dark values should be stepped rather than just inverted.",
+     "answer": "gglearn is dark-only: dark navy background and gradients set in globals.css, with no dark: variants and no toggle. ggsocial defines light tokens in :root and overrides them in a prefers-color-scheme dark block guarded by :root:not([data-theme=\"light\"]), so the OS preference applies unless the user forces light. Dark values must be chosen for contrast on dark surfaces; for example the dark accent is a light violet, so text on it is made dark, because simply inverting would give poor contrast (white on it was only about 3:1 per the comment).",
+     "rubric": "Must contrast dark-only vs system-following with override attribute; explain contrast reasoning for stepped values."
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "You are adding a settings page to gglearn that needs a repeated card-with-button look. Where would you put the styling and why?",
+     "answer": "Reuse the existing .card and .btn classes from globals.css where they fit, and use utilities only for layout (flex, gap, padding). If the page needs a new repeated look, create a small React component or a named class rather than pasting long utility strings into many files. Keep colours on tokens or existing classes so a later restyle touches one place.",
+     "rubric": "Must favour reuse of existing classes/components, utilities for layout, avoid duplicated strings, tokens."
+    }
+   ]
+  },
+  {
+   "title": "Tailwind pitfalls we have actually hit",
+   "body": "Our repos record concrete Tailwind traps. First, CSS layering. ggsocial's globals.css warns that everything below a point must stay inside @layer base. Unlayered rules beat every Tailwind utility regardless of specificity, so an unlayered rule like button { color: inherit } silently overrides text-accent-fg and leaves dark text on an accent fill. Note gglearn's named classes (.card, .btn) are written outside any layer in its globals.css as we saw it, so they would override a utility on the same property; keep that in mind when mixing them.\n\nSecond, preflight, Tailwind's reset of browser defaults. ggsocial's README says to import the shared kit's styles.css only and never base.css, which would fight preflight.\n\nThird, deployment. ggsocial's DEPLOY.md says npm ci silently skips the Linux native Tailwind binary (@tailwindcss/oxide-linux-x64-gnu) because the lockfile was generated on macOS, so the server build fails with a cannot-find-module error. The fix is an explicit npm install with --no-save pinned to the installed oxide version, keeping the platform artefact out of the lockfile. It also notes that Turbopack can cache a failed build.\n\nFinally, dynamically built class names like text-${color}-500 are not found by the scanner; use full class names.",
+   "source": "ggsocial/src/app/globals.css (layer comment); ggsocial/README.md; ggsocial/DEPLOY.md; gglearn/app/globals.css; general practice",
+   "questions": [
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why can an unlayered CSS rule like button { color: inherit } break a Tailwind utility such as text-accent-fg?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Unlayered rules beat layered utilities regardless of specificity"
+      },
+      {
+       "key": "b",
+       "text": "Tailwind disables utilities on buttons"
+      },
+      {
+       "key": "c",
+       "text": "Browsers ignore classes on buttons"
+      },
+      {
+       "key": "d",
+       "text": "Utilities only apply to divs"
+      }
+     ],
+     "answer": "a",
+     "topic": "layers"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A ggsocial server build fails with a missing tailwindcss-oxide linux binary after npm ci. What does DEPLOY.md say is the cause?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Cloudflare cache is stale"
+      },
+      {
+       "key": "b",
+       "text": "The lockfile was generated on macOS and npm omits the Linux optional binary"
+      },
+      {
+       "key": "c",
+       "text": "SQLite is locked"
+      },
+      {
+       "key": "d",
+       "text": "PM2 is out of memory"
+      }
+     ],
+     "answer": "b",
+     "topic": "deploy"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why is building a class name like text-${color}-500 from a variable a problem?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It breaks TypeScript"
+      },
+      {
+       "key": "b",
+       "text": "It is slower to render"
+      },
+      {
+       "key": "c",
+       "text": "The scanner looks for complete class names in source, so the class may never be generated"
+      },
+      {
+       "key": "d",
+       "text": "Tailwind only supports red"
+      }
+     ],
+     "answer": "c",
+     "topic": "dynamic classes"
+    },
+    {
+     "level": 8,
+     "type": "mcq",
+     "prompt": "Why does ggsocial's README tell you to import the kit's styles.css only, never base.css?",
+     "options": [
+      {
+       "key": "a",
+       "text": "base.css contains secrets"
+      },
+      {
+       "key": "b",
+       "text": "styles.css is the only file that exists"
+      },
+      {
+       "key": "c",
+       "text": "base.css is larger than 1 MB"
+      },
+      {
+       "key": "d",
+       "text": "base.css would fight Tailwind's preflight reset"
+      }
+     ],
+     "answer": "d",
+     "topic": "preflight"
+    }
+   ]
+  }
+ ]
+}

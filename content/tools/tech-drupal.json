@@ -1,0 +1,361 @@
+{
+ "trackSlug": "tech-drupal",
+ "items": [
+  {
+   "title": "What Drupal is, and what we do and do not have",
+   "body": "Drupal is an open-source content management system written in PHP. It lets non-developers publish and manage structured content through an admin interface, while developers extend it with modules and themes. The GGLink site presents Drupal as one of the technologies it works with: the *-technologies.php snippets show a Drupal logo link next to WordPress, CodeIgniter, Cloudflare and cPanel, and the language file's alt text describes it as a free and open-source web content management system written in PHP under the GNU General Public License. The link itself is a placeholder (a hash), so GGLink shows it as a capability, not as a case study.\n\nIn Moksy's early notes (rouh-draft.md) Drupal appears as one option in a list of solution families: free, semi-free, paid, custom and enterprise cost levels, and WordPress-based, Drupal-based, Laravel-based, AWS, IBM and Microsoft solutions. The same notes ask whether the catalogue has ready-made systems like WordPress, Drupal and Moodle.\n\nPlain statement: none of gglearn, ggsocial, ggmoney or the Moksy platform runs Drupal. It is a catalogue and sales-conversation topic for us, not something we operate.",
+   "source": "gglink/snippets/project/gglink/*-technologies.php; gglink/assets/language/lan-GB/language.php (alt text); moksy-mvp/rouh-draft.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What kind of software is Drupal?",
+     "options": [
+      {
+       "key": "a",
+       "text": "An open-source content management system written in PHP"
+      },
+      {
+       "key": "b",
+       "text": "A container orchestrator"
+      },
+      {
+       "key": "c",
+       "text": "A relational database engine"
+      },
+      {
+       "key": "d",
+       "text": "A JavaScript test runner"
+      }
+     ],
+     "answer": "a",
+     "topic": "definition"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How does the GGLink site present Drupal?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As a live case study with client results"
+      },
+      {
+       "key": "b",
+       "text": "As a technology logo link beside WordPress and others, with a placeholder link"
+      },
+      {
+       "key": "c",
+       "text": "As its only supported platform"
+      },
+      {
+       "key": "d",
+       "text": "It does not mention Drupal"
+      }
+     ],
+     "answer": "b",
+     "topic": "evidence"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which of our own products runs on Drupal?",
+     "options": [
+      {
+       "key": "a",
+       "text": "ggsocial"
+      },
+      {
+       "key": "b",
+       "text": "ggmoney"
+      },
+      {
+       "key": "c",
+       "text": "None of them"
+      },
+      {
+       "key": "d",
+       "text": "gglearn"
+      }
+     ],
+     "answer": "c",
+     "topic": "evidence"
+    },
+    {
+     "level": 5,
+     "type": "open",
+     "prompt": "In moksy-mvp's early notes, where does Drupal appear, and what does that tell you about its status for us?",
+     "answer": "It appears in a list of solution families (WordPress-based, Drupal-based, Laravel-based, AWS, IBM, Microsoft) alongside cost levels from free to enterprise, and in a question about ready-made systems like WordPress, Drupal and Moodle. That means it is a catalogue and option for client recommendations, not a system we run; it is an early draft, not a delivered product.",
+     "rubric": "Must say it is an option/catalogue entry in a draft list; must say we do not run it."
+    }
+   ]
+  },
+  {
+   "title": "Drupal concepts: nodes, content types, taxonomy, views, modules and themes",
+   "body": "Drupal's strength is structured content. A node is one piece of content, such as an article or an event. A content type is the template for nodes: it defines the fields, for example title, body, date, image and a relationship to another item. Editors create nodes through forms generated from those fields. Taxonomy is the system for classifying content: vocabularies hold terms (like categories or tags), and nodes can reference them, which gives filtering and navigation.\n\nViews is the tool for building lists and reports from your content without writing SQL: you choose what to show, filter, sort and format as a page, block or feed. Blocks are placed regions of output, and menus define navigation.\n\nA module adds behaviour: core ships some, the community supplies many, and a developer can write custom ones in PHP. A theme controls presentation using templates and styles and is separate from content, so the same content can be restyled. Roles and permissions control who can create, edit or publish each content type.\n\nThis is conceptual, and the exact screens differ between Drupal releases. The mindset is to model content first, then present it.",
+   "source": "general practice; gglink technologies snippets (Drupal listed as a CMS option)",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In Drupal, what is a node?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A database backup"
+      },
+      {
+       "key": "b",
+       "text": "A theme file"
+      },
+      {
+       "key": "c",
+       "text": "A server process"
+      },
+      {
+       "key": "d",
+       "text": "A single piece of content, such as an article"
+      }
+     ],
+     "answer": "d",
+     "topic": "node"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does a content type define?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The fields and structure of a kind of node"
+      },
+      {
+       "key": "b",
+       "text": "The server's firewall rules"
+      },
+      {
+       "key": "c",
+       "text": "The hosting plan"
+      },
+      {
+       "key": "d",
+       "text": "The colour palette only"
+      }
+     ],
+     "answer": "a",
+     "topic": "content type"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which Drupal feature classifies content using vocabularies and terms?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Views"
+      },
+      {
+       "key": "b",
+       "text": "Taxonomy"
+      },
+      {
+       "key": "c",
+       "text": "Blocks"
+      },
+      {
+       "key": "d",
+       "text": "Themes"
+      }
+     ],
+     "answer": "b",
+     "topic": "taxonomy"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A client wants a site with events, speakers and sessions, where visitors can filter events by topic and see speakers' sessions. Outline how you would model it in Drupal terms.",
+     "answer": "Create content types for Event, Speaker and Session with fields (date, venue, bio, photo, time). Use reference fields so a Session points to its Speaker and Event. Create a Topic vocabulary in taxonomy and tag events and sessions. Build Views for the event listing with a topic filter and a speaker page that lists their sessions. Set roles/permissions for editors. Use a theme for presentation and modules only for gaps.",
+     "rubric": "Must mention content types, reference fields, taxonomy vocabulary, Views with filter, roles; theme separate."
+    }
+   ]
+  },
+  {
+   "title": "Hosting, security updates and the maintenance model",
+   "body": "A CMS is not a one-time build. Drupal, like WordPress, is a public, widely used PHP application, so its security issues are published and attackers scan for sites that have not patched. Operating it means a standing routine: apply core and contributed module updates promptly, remove modules you do not use, keep PHP and the database supported, back up the database and uploaded files, and test restores. Updates are done in a staging copy first because modules and themes can conflict.\n\nHosting choices range from shared hosting with a control panel (GGLink's technology snippets list cPanel) to a managed host or your own server. The right choice depends on who handles patching. Put a CDN or proxy such as Cloudflare in front for caching and some protection, but that does not replace updates. Use least-privilege roles, strong admin authentication, and keep configuration and secrets out of the public web root.\n\nCompare with our own apps: we deploy Next.js with PM2 on a server and patch dependencies ourselves. A Drupal client site adds a second patch stream, the CMS and its modules, and someone must own it contractually. Maintenance is therefore part of the quote, not an optional extra.",
+   "source": "gglink technologies snippets (cPanel, Cloudflare listed); ggsocial/DEPLOY.md (our own deploy model for contrast); general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why do CMS sites need prompt update routines?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Hosting providers delete old sites"
+      },
+      {
+       "key": "b",
+       "text": "Updates make pages larger"
+      },
+      {
+       "key": "c",
+       "text": "Security issues are published and attackers scan for unpatched sites"
+      },
+      {
+       "key": "d",
+       "text": "Updates are required to change the logo"
+      }
+     ],
+     "answer": "c",
+     "topic": "security"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Where should core and module updates be tried first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only on the editor's laptop without a database"
+      },
+      {
+       "key": "b",
+       "text": "Nowhere, updates are optional"
+      },
+      {
+       "key": "c",
+       "text": "Directly on the live site"
+      },
+      {
+       "key": "d",
+       "text": "On a staging copy"
+      }
+     ],
+     "answer": "d",
+     "topic": "staging"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Does putting Cloudflare in front of a Drupal site remove the need to patch it?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No, it helps with caching and some protection but updates are still needed"
+      },
+      {
+       "key": "b",
+       "text": "Yes, if the site is small"
+      },
+      {
+       "key": "c",
+       "text": "Only on weekends"
+      },
+      {
+       "key": "d",
+       "text": "Yes, the proxy patches the CMS"
+      }
+     ],
+     "answer": "a",
+     "topic": "cdn"
+    },
+    {
+     "level": 9,
+     "type": "open",
+     "prompt": "A client asks you to build a Drupal site and says they do not want a maintenance contract. What do you tell them?",
+     "answer": "Explain that the CMS and its modules receive security updates that someone must apply, so an unmaintained site becomes a risk; the options are a maintenance plan with us, a managed host that patches, or the client assigning a trained owner. Cover backups and restore testing, staging updates, removing unused modules, and that this ongoing cost should be quoted. Be honest rather than just selling more work.",
+     "rubric": "Must cover published vulnerabilities, who patches, backups/staging, offering alternatives, cost transparency."
+    }
+   ]
+  },
+  {
+   "title": "Choosing Drupal vs WordPress vs Laravel for a client",
+   "body": "The choice depends on the client's needs, team and budget, not on which platform is fashionable. Moksy's early notes list WordPress-based, Drupal-based and Laravel-based solutions as separate options, so this is a real selection question.\n\nWordPress suits brochure sites, blogs and shops where editors want a familiar interface, a large ecosystem of themes and plugins, and quick delivery. The risk is plugin sprawl and quality variance.\n\nDrupal suits content-heavy sites with complex structure: many content types, taxonomies, multilingual needs, fine-grained roles and workflows, such as universities or government-style portals. It has a steeper learning curve and typically needs more developer skill to build and maintain, so the build cost can be higher.\n\nLaravel is a PHP framework, not a CMS. It suits custom applications with business logic, such as portals, booking or accounting tools, where you want full control. You build the admin and content features yourself, or pair it with a headless CMS.\n\nAsk: Who edits content? How complex is the content model? Is it mostly content or mostly application logic? Who maintains it? What is the budget and timeline? Our own apps (Next.js and plain PHP) fall in the custom-application camp, which is why we know that side best.",
+   "source": "moksy-mvp/rouh-draft.md (WordPress/Drupal/Laravel option list); gglink technologies snippets; general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which option is a PHP framework for custom applications rather than a CMS?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Drupal"
+      },
+      {
+       "key": "b",
+       "text": "Laravel"
+      },
+      {
+       "key": "c",
+       "text": "cPanel"
+      },
+      {
+       "key": "d",
+       "text": "WordPress"
+      }
+     ],
+     "answer": "b",
+     "topic": "categories"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A university wants many content types, taxonomies, multiple languages and detailed editor workflows. Which fits best on content-model grounds?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A hosted chat tool"
+      },
+      {
+       "key": "b",
+       "text": "A single static HTML page"
+      },
+      {
+       "key": "c",
+       "text": "Drupal"
+      },
+      {
+       "key": "d",
+       "text": "A spreadsheet"
+      }
+     ],
+     "answer": "c",
+     "topic": "fit"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What is a typical risk of WordPress sites mentioned above?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It cannot show blog posts"
+      },
+      {
+       "key": "b",
+       "text": "It cannot run PHP"
+      },
+      {
+       "key": "c",
+       "text": "It has no editor interface"
+      },
+      {
+       "key": "d",
+       "text": "Plugin sprawl and uneven plugin quality"
+      }
+     ],
+     "answer": "d",
+     "topic": "risk"
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "A local clinic wants a simple site with five pages and a blog, a small budget, and a receptionist who will edit text. A second client wants a booking and invoicing portal with custom rules. Recommend platforms for each and justify.",
+     "answer": "Clinic: WordPress, because editors need an easy familiar interface, the content model is simple, delivery is fast and the cost is low; plan for updates and limit plugins. Portal: Laravel (or another custom stack), because the need is application logic, bookings and invoicing, not content publishing; build with proper access control and tests. Drupal would be over-built for the clinic and not the natural fit for the portal unless the content model is rich. Include maintenance for both.",
+     "rubric": "Must match WordPress to simple editor site, Laravel/custom to app logic, explain Drupal not chosen, mention maintenance."
+    }
+   ]
+  }
+ ]
+}

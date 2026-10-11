@@ -1,0 +1,343 @@
+{
+ "trackSlug": "tech-graphql",
+ "items": [
+  {
+   "title": "What GraphQL is, and where we stand: consumed, not served",
+   "body": "GraphQL is a query language and runtime for APIs. Instead of many fixed URLs that each return a fixed shape, a GraphQL server usually exposes one endpoint, normally called with HTTP POST. The client sends a query describing exactly which fields it wants, plus optional variables, and gets back JSON with that same shape. A typed schema defines every object, field and operation the server supports. Operations come in three kinds: queries read data, mutations change data, and subscriptions push updates.\n\nEvidence check across our repos: none of gglearn, ggsocial, ggmoney, gglink or the Moksy platform runs a GraphQL server. Our apps expose REST-style route handlers (for example the ggsocial agent API under src/app/api/agent/*). GraphQL appears in our work in three ways only. ggsocial consumes GitHub's GraphQL endpoint to create Discussions. Moksy docs list GraphQL as a catalogue entry and note that some third-party products, such as monday.com and Upwork, offer GraphQL APIs. The Moksy testing journeys also list 'REST/GraphQL/gRPC' as an API-style question. So this is a choose-and-integrate topic: we are GraphQL clients, not GraphQL providers. Not used by us as a server.",
+   "source": "ggsocial/src/lib/platforms/adapters/github.ts; ggsocial/src/app/api/agent/*/route.ts; moksy.ai/wt-earning-gaps/docs/MOKSY_INTEGRATIONS_MASTER_PLAN.md; docs/MOKSY_1000_INTEGRATIONS.md (catalogue); general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In a typical GraphQL API, how many HTTP endpoints does the server expose for its operations?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Usually a single endpoint that receives the query in the request"
+      },
+      {
+       "key": "b",
+       "text": "One endpoint per field in the schema"
+      },
+      {
+       "key": "c",
+       "text": "A separate endpoint for every client app"
+      },
+      {
+       "key": "d",
+       "text": "One endpoint per database table"
+      }
+     ],
+     "answer": "a",
+     "topic": "endpoint"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which GraphQL operation kind is meant for changing data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "query"
+      },
+      {
+       "key": "b",
+       "text": "mutation"
+      },
+      {
+       "key": "c",
+       "text": "fragment"
+      },
+      {
+       "key": "d",
+       "text": "schema"
+      }
+     ],
+     "answer": "b",
+     "topic": "operations"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "According to our repo evidence, which statement about GraphQL at our company is accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "gglearn serves a GraphQL API to its browser"
+      },
+      {
+       "key": "b",
+       "text": "ggmoney exposes GraphQL for HMRC submissions"
+      },
+      {
+       "key": "c",
+       "text": "ggsocial consumes GitHub's GraphQL endpoint but none of our apps serve GraphQL"
+      },
+      {
+       "key": "d",
+       "text": "The Moksy platform runs an Apollo server in production"
+      }
+     ],
+     "answer": "c",
+     "topic": "evidence"
+    },
+    {
+     "level": 5,
+     "type": "open",
+     "prompt": "Explain in your own words the difference between our ggsocial agent API and a GraphQL API, and say which we run.",
+     "answer": "Our agent API is REST-style: several route handlers (posts, goals, brands) each with a fixed URL and response shape, with input validated per route. A GraphQL API would have one endpoint where the client names the fields it wants against a typed schema. We run the REST-style route handlers; we do not serve GraphQL, we only consume GitHub's GraphQL.",
+     "rubric": "Must say we run route handlers/REST-style; GraphQL = one endpoint, client chooses fields, typed schema; must state we do not serve GraphQL."
+    }
+   ]
+  },
+  {
+   "title": "Reading a GraphQL schema, queries, variables and mutations",
+   "body": "A schema is written in a type language. Object types list fields and their types, for example a Discussion with an id and a url. An exclamation mark after a type means non-null: the server promises a value. Square brackets mean a list. Two special root types matter: Query holds the read entry points and Mutation holds the write entry points. Input types describe the shape of arguments, such as CreateDiscussionInput.\n\nA query names the fields wanted and the server returns only those. Variables keep values out of the query text: the document declares them with a dollar sign, and the client sends them in a separate JSON object. Always use variables instead of string-gluing user input into the query, for the same injection reasons as SQL parameters.\n\nOur ggsocial GitHub adapter shows a real mutation. It sends a POST to GitHub's graphql URL with a JSON body holding a query (a createDiscussion mutation taking a CreateDiscussionInput) and variables (repositoryId, categoryId, title, body). It asks back only the new discussion's id and url. Note that GitHub requires node IDs for the repository and category, which is why the adapter's form asks the operator for them.",
+   "source": "ggsocial/src/lib/platforms/adapters/github.ts; general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In a GraphQL schema, what does an exclamation mark after a type (for example String!) mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The value is a list"
+      },
+      {
+       "key": "b",
+       "text": "The field is read-only"
+      },
+      {
+       "key": "c",
+       "text": "The field is deprecated"
+      },
+      {
+       "key": "d",
+       "text": "The value is non-null"
+      }
+     ],
+     "answer": "d",
+     "topic": "schema"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why should a client send values through GraphQL variables rather than building them into the query string?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Variables make queries run in parallel"
+      },
+      {
+       "key": "b",
+       "text": "It avoids injection problems and keeps the query text reusable"
+      },
+      {
+       "key": "c",
+       "text": "Variables are required for queries but not for mutations"
+      },
+      {
+       "key": "d",
+       "text": "It removes the need for a schema"
+      }
+     ],
+     "answer": "a",
+     "topic": "variables"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "In the ggsocial GitHub adapter, what does the createDiscussion mutation ask GitHub to return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Every discussion in the category"
+      },
+      {
+       "key": "b",
+       "text": "The new discussion's id and url"
+      },
+      {
+       "key": "c",
+       "text": "Only an HTTP status code"
+      },
+      {
+       "key": "d",
+       "text": "The whole repository object"
+      }
+     ],
+     "answer": "b",
+     "topic": "selection"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "An operator in ggsocial wants to post a GitHub Discussion but gets a validation error about the repository and category. Explain what is missing and why GitHub's GraphQL API needs it.",
+     "answer": "The Discussion mutation needs the GraphQL node IDs of the repository (R_...) and the discussion category (DIC_...), not the owner/repo name. The adapter validates that both are filled in for kind=discussion. The operator must look the IDs up (for example via a GraphQL query on the repository) and enter them. Issues and releases go through the REST endpoints, which accept owner/repo.",
+     "rubric": "Must name repositoryId and categoryId node IDs; explain GraphQL uses opaque node IDs; mention issues/releases use REST with owner/repo."
+    }
+   ]
+  },
+  {
+   "title": "Resolvers, N+1 and caching: what a provider has to worry about",
+   "body": "We do not run a GraphQL server, but anyone integrating needs to know how the other side behaves. A resolver is the function that produces the value of one field. A query is resolved field by field down the tree. That design causes the N+1 problem: a query for 50 posts, each with its author, can run one query for the posts and then 50 separate lookups for authors. The usual fix is batching, such as a DataLoader pattern that collects the author IDs and fetches them in one query.\n\nCaching is harder than with REST. Most calls are POST to one URL, so ordinary HTTP and CDN caching by URL does not help much. Providers use persisted queries, response caching keyed on the query, or per-field caches.\n\nCost control matters because a client can ask for deeply nested data. Providers limit query depth, assign a cost to each field, and rate-limit by that cost rather than by request count. As a consumer you should request only the fields you need, paginate, and expect rate-limit errors.\n\nGraphQL can return HTTP 200 with an errors array in the body. Our GitHub adapter checks the errors array explicitly and throws, instead of trusting the status code.",
+   "source": "ggsocial/src/lib/platforms/adapters/github.ts (errors array check); general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is a resolver in GraphQL?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A proxy that caches responses"
+      },
+      {
+       "key": "b",
+       "text": "A client library that retries failed calls"
+      },
+      {
+       "key": "c",
+       "text": "A function that produces the value of one field"
+      },
+      {
+       "key": "d",
+       "text": "A type that describes mutation arguments"
+      }
+     ],
+     "answer": "c",
+     "topic": "resolver"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A query lists 50 posts and, for each, fetches its author with a separate database query. What is this problem called?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cache stampede"
+      },
+      {
+       "key": "b",
+       "text": "Over-fetching"
+      },
+      {
+       "key": "c",
+       "text": "Schema drift"
+      },
+      {
+       "key": "d",
+       "text": "The N+1 problem"
+      }
+     ],
+     "answer": "d",
+     "topic": "n+1"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "A GraphQL call returns HTTP 200 but the integration still failed. Explain how that can happen and how our GitHub adapter guards against it.",
+     "answer": "GraphQL servers commonly return 200 with a JSON body that contains an errors array (and possibly partial or null data) because the HTTP transport worked while the operation did not. The ggsocial adapter reads res.errors after the call, and if any exist it throws an Error with the joined messages (truncated), rather than treating 200 as success.",
+     "rubric": "Must explain errors array alongside 200; must say the adapter checks errors and throws; bonus for partial data."
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "You must consume a third-party GraphQL API that rate-limits by query cost, and a nightly job pulls 10,000 records with nested relations. Describe how you would design the calls.",
+     "answer": "Request only the needed fields, paginate with cursors in modest page sizes, avoid deep nesting by splitting into several queries if cost is high, honour rate-limit headers or error messages with backoff and retry, store cursors so a failed job resumes, log the errors array on each call, and run off-peak. Do not assume HTTP status alone signals success.",
+     "rubric": "Must cover field selection, pagination, cost/rate limit and backoff, resumability, checking errors array."
+    }
+   ]
+  },
+  {
+   "title": "Choosing GraphQL vs REST, and integrating safely",
+   "body": "Choose by the problem, not by fashion. GraphQL fits when many different clients (web, mobile, partners) need different slices of connected data, when screens would otherwise need many round trips, or when a typed schema contract is valuable. REST route handlers fit simple resources, easy HTTP caching, file uploads, webhooks, and small teams that want less machinery. Our own stack made that choice: gglearn and ggsocial use Next.js route handlers, such as ggsocial's agent API, validated per route with a schema library, because the clients are our own UI and a few agents.\n\nIf we must integrate with a GraphQL provider, treat it like any third-party API. Authenticate with a scoped token (the GitHub adapter uses a fine-grained personal access token sent as a Bearer header). Keep tokens in credentials, never in the query or logs. Send variables, not interpolated strings. Check the errors array. Wrap the call in a shared fetch helper with a label so failures are traceable. Expect the schema to evolve: avoid selecting deprecated fields and pin tests to the fields you use. Decide up front whether a plain REST endpoint exists for the same job, as GitHub's does for issues and releases; the simpler path is often safer.",
+   "source": "ggsocial/src/lib/platforms/adapters/github.ts; ggsocial/src/app/api/agent/posts/route.ts; Moksy integrations docs (catalogue); general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which situation most strongly favours GraphQL over REST?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A health-check endpoint"
+      },
+      {
+       "key": "b",
+       "text": "A single static file download"
+      },
+      {
+       "key": "c",
+       "text": "Many client types each needing different slices of connected data"
+      },
+      {
+       "key": "d",
+       "text": "A webhook receiver that only accepts one event"
+      }
+     ],
+     "answer": "a",
+     "topic": "choice"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "How does the ggsocial GitHub adapter authenticate its GraphQL call?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No authentication is needed"
+      },
+      {
+       "key": "b",
+       "text": "A fine-grained personal access token as a Bearer header"
+      },
+      {
+       "key": "c",
+       "text": "A password in the query string"
+      },
+      {
+       "key": "d",
+       "text": "Cookies copied from the browser"
+      }
+     ],
+     "answer": "b",
+     "topic": "auth"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why is a plain REST endpoint sometimes the better option even when the provider offers GraphQL?",
+     "options": [
+      {
+       "key": "a",
+       "text": "REST is always faster"
+      },
+      {
+       "key": "b",
+       "text": "GraphQL cannot send JSON"
+      },
+      {
+       "key": "c",
+       "text": "It is simpler and often enough for the job, as with GitHub issues and releases in our adapter"
+      },
+      {
+       "key": "d",
+       "text": "REST needs no token"
+      }
+     ],
+     "answer": "c",
+     "topic": "choice"
+    },
+    {
+     "level": 9,
+     "type": "open",
+     "prompt": "Write a short decision note: should ggsocial's own agent API be rebuilt as GraphQL? Argue from our actual setup.",
+     "answer": "No, not now. The agent API has a small set of resources (posts, goals, brands, media) used by our own UI and agents, each route validated with a schema and returning a fixed shape; there is no pattern of many clients wanting different slices or many round trips. REST route handlers are simple to deploy behind our PM2 and Cloudflare setup and easy to cache and monitor. GraphQL would add a schema layer, resolver and N+1 and cost-limit concerns without a clear gain. Revisit if several external clients need flexible data shapes.",
+     "rubric": "Must argue from current usage (route handlers, own clients), mention costs of adding GraphQL, and name a trigger to revisit."
+    }
+   ]
+  }
+ ]
+}
