@@ -3,13 +3,23 @@
  * so edits made in the app are never overwritten. Requirements point at existing tracks by slug; a step on a track whose
  * questions do not reach that level yet is kept and shown as "coming soon" until they do.
  *   npm run seed:careers
+ *   npm run seed:careers -- --add-steps   also add the steps listed in NEW_STEPS to ladders that already exist
+ *                                        (only steps that are missing; a step already there, at any level, is left alone)
  */
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { careerLevels, careerRequirements, db, tracks } from "../lib/db";
 import { catalog } from "../lib/paths";
 
 type Step = [slug: string, level: number];
 type Rung = { title: string; summary: string; steps: Step[] };
+
+/** Steps added after the first release. Part of LADDERS for fresh installs, and added to existing ladders with --add-steps. */
+const NEW_STEPS: { role: string; rung: string; slug: string; level: number }[] = [
+  { role: "sales", rung: "Sales Executive", slug: "guru-graphics-sales", level: 5 },
+  { role: "sales", rung: "Sales Executive", slug: "lead-generation-titan", level: 5 },
+  { role: "sales", rung: "Senior Sales Executive", slug: "lead-generation-titan", level: 8 },
+  { role: "sales", rung: "Head of Sales", slug: "lead-generation-titan", level: 10 },
+];
 
 const LADDERS: Record<string, Rung[]> = {
   developer: [
@@ -33,11 +43,11 @@ const LADDERS: Record<string, Rung[]> = {
   sales: [
     { title: "Sales Associate", summary: "Learning the products, the pitch and the process.", steps: [] },
     { title: "Sales Executive", summary: "Runs deals from first call to close.", steps: [
-      ["governance-compliance", 5], ["gglink-sales-support", 5], ["moksy-product", 5], ["ggsocial-product", 5], ["ggmoney-product", 5], ["llm-fundamentals-titan", 5]] },
+      ["governance-compliance", 5], ["gglink-sales-support", 5], ["moksy-product", 5], ["ggsocial-product", 5], ["ggmoney-product", 5], ["llm-fundamentals-titan", 5], ["guru-graphics-sales", 5], ["lead-generation-titan", 5]] },
     { title: "Senior Sales Executive", summary: "Wins larger accounts and coaches the team.", steps: [
-      ["gglink-sales-support", 8], ["payments-billing", 5], ["communications-email", 5], ["data-analytics", 8], ["llm-prompting-titan", 8]] },
+      ["gglink-sales-support", 8], ["payments-billing", 5], ["communications-email", 5], ["data-analytics", 8], ["llm-prompting-titan", 8], ["lead-generation-titan", 8]] },
     { title: "Head of Sales", summary: "Owns pipeline, pricing and the sales team.", steps: [
-      ["delivery-management", 8], ["people-operations", 8], ["data-analytics", 10], ["payments-billing", 8]] },
+      ["delivery-management", 8], ["people-operations", 8], ["data-analytics", 10], ["payments-billing", 8], ["lead-generation-titan", 10]] },
   ],
   manager: [
     { title: "Manager", summary: "Leads a team and its delivery.", steps: [] },
@@ -66,5 +76,20 @@ for (const [role, rungs] of Object.entries(LADDERS)) {
       if ((cat.get(slug)?.reach ?? 0) < level) { soon++; console.log(`  coming soon: ${role}/${r.title}: ${slug} level ${level} (questions reach ${cat.get(slug)?.reach ?? 0})`); }
     }
   });
+}
+if (process.argv.includes("--add-steps")) {
+  let added = 0;
+  for (const n of NEW_STEPS) {
+    const lvl = db.select().from(careerLevels).where(eq(careerLevels.jobRole, n.role)).all().find((l) => l.title === n.rung);
+    const t = db.select().from(tracks).where(eq(tracks.slug, n.slug)).get();
+    if (!lvl) { console.warn(`  skipped ${n.role}/${n.rung}: no such level`); continue; }
+    if (!t) { console.warn(`  skipped ${n.role}/${n.rung}: no track "${n.slug}" (seed or import it first)`); continue; }
+    if (db.select().from(careerRequirements).where(and(eq(careerRequirements.careerLevelId, lvl.id), eq(careerRequirements.trackId, t.id))).get()) continue;
+    db.insert(careerRequirements).values({ careerLevelId: lvl.id, trackId: t.id, requiredLevel: n.level }).run();
+    added++;
+    const reach = cat.get(n.slug)?.reach ?? 0;
+    console.log(`  added ${n.role}/${n.rung}: ${n.slug} level ${n.level}${reach < n.level ? ` (coming soon: questions reach ${reach})` : ""}`);
+  }
+  console.log(`new steps added to existing ladders: ${added}`);
 }
 console.log(`careers seeded: ${roles} roles, ${levels} levels, ${steps} steps (${soon} not passable yet)`);
