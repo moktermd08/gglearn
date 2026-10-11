@@ -152,7 +152,7 @@ export function Radar({ axes, color = PALETTE.indigo, size = 240 }: { axes: { la
   const ring = (f: number) => axes.map((_, i) => pt(i, f).map((v) => v.toFixed(1)).join(",")).join(" ");
   const shape = axes.map((a, i) => pt(i, Math.max(0.04, Math.min(1, a.value))).map((v) => v.toFixed(1)).join(",")).join(" ");
   return (
-    <svg viewBox="0 0 220 210" width={size} height={size * 210 / 220} role="img" aria-label="Skill radar">
+    <svg viewBox="-50 0 320 210" width={size * 1.3} height={(size * 1.3 * 210) / 320} className="max-w-full" role="img" aria-label="Skill radar">
       {[0.25, 0.5, 0.75, 1].map((f) => <polygon key={f} points={ring(f)} fill="none" stroke="#14161f" strokeOpacity=".1" />)}
       {axes.map((_, i) => <line key={i} x1={cx} y1={cy} x2={pt(i, 1)[0]} y2={pt(i, 1)[1]} stroke="#14161f" strokeOpacity=".08" />)}
       <polygon points={shape} fill={color} fillOpacity=".22" stroke={color} strokeWidth="2" strokeLinejoin="round" className="rise" />

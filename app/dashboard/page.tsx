@@ -43,8 +43,59 @@ export default async function Dashboard() {
   const last30 = activity.slice(-30).map((d) => ({ label: d.day.slice(5), value: d.value }));
   const weekXp = activity.slice(-7).reduce((a, d) => a + d.value, 0);
   const activeDays = activity.filter((d) => d.value > 0).length;
-  const radarAxes = [...stats].sort((a, b) => b.s.passed - a.s.passed).slice(0, 6).map((m) => ({ label: m.t.name.replace(/:.*$/, ""), value: m.s.passed / MAX_LEVEL }));
+  const radarAxes = [...stats].sort((a, b) => b.s.passed - a.s.passed).slice(0, 6).map((m) => ({ label: m.t.name.replace(/^\d+\.\s*/, "").replace(/:.*$/, ""), value: m.s.passed / MAX_LEVEL }));
   const badges = stats.length ? badgesFor(stats.sort((a, b) => b.s.xp - a.s.xp)[0].s) : [];
+
+  const reqRow = (r: (typeof required)[number]) => (
+    <li key={r.track.id}>
+      <Link href={`/tracks/${r.track.slug}`} className="flex flex-wrap items-center gap-2 transition hover:text-white">
+        {r.done ? <CheckCircle2 size={16} className="text-emerald-400" /> : <Square size={16} className={r.overdue ? "text-rose-400" : "text-slate-500"} />}
+        <span className={r.done ? "text-slate-500" : r.overdue ? "text-rose-300" : "text-slate-200"}>{r.track.name}</span>
+        <span className="text-xs text-slate-500">
+          {r.done ? "passed" : `level ${r.passed}/${r.track.requiredLevel} · due ${new Date(r.dueAt * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}${r.overdue ? " · overdue" : ""}`}
+          {" · "}{r.why === "mandatory" ? "mandatory" : "for your role"}
+        </span>
+      </Link>
+    </li>
+  );
+
+  const raceCard = ({ e, t, b, s }: (typeof stats)[number], idx = 0) => {
+    const rv = rivalFor(t.slug), tier = TIERS[tierOf(s.passed)];
+    const lead = s.passed - s.rival.level;
+    return (
+      <Link key={e.id} href={`/tracks/${t.slug}`} className="card card-hover rise p-4" style={{ "--i": idx } as React.CSSProperties}>
+        <div className="flex items-center gap-3">
+          <Avatar kind="human" level={s.passed} size={56} />
+          <span className="text-xs font-black text-slate-500">VS</span>
+          <Avatar kind="rival" level={s.rival.level} hue={rv.hue} size={56} />
+          <div className="ml-auto text-right">
+            <div className={`flex items-center justify-end gap-1 text-sm font-bold ${lead > 0 ? "text-emerald-300" : lead === 0 ? "text-amber-300" : "text-rose-300"}`}>
+              {lead > 0 ? <TrendingUp size={15} /> : lead === 0 ? <Equal size={15} /> : <TrendingDown size={15} />}
+              {lead > 0 ? `+${lead} ahead` : lead === 0 ? "Tied" : `${-lead} behind`}
+            </div>
+            <div className="text-xs text-slate-400">{rv.name} · L{s.rival.level}</div>
+          </div>
+        </div>
+        <div className="mt-3 flex items-center gap-2">
+          <SubjectArt slug={t.slug} name={t.name} kind={t.kind} size={36} />
+          <div><div className="text-xs text-slate-400">{b.name}</div><div className="font-semibold">{t.name}</div></div>
+        </div>
+        <div className="relative mt-2">
+          <div className="bar"><i style={{ width: `${(s.passed / MAX_LEVEL) * 100}%` }} /></div>
+          <span className="absolute -top-1 h-3.5 w-1 rounded bg-rose-400" title={`${rv.name} · L${s.rival.level}`} style={{ left: `${(s.rival.level / MAX_LEVEL) * 100}%` }} />
+        </div>
+        <div className="mt-1 flex justify-between text-xs text-slate-400">
+          <span>{s.passed === 0 ? "Not started" : `Level ${s.passed} · ${LEVELS[s.passed - 1]} · ${tier.name}`}</span>
+          <span className="flex items-center gap-2">
+            <span className="flex items-center gap-0.5 text-orange-300"><Flame size={12} />{s.streak}</span>
+            <span className="flex items-center gap-0.5"><Sparkles size={12} className="text-sky-300" />{s.xp}</span>
+            <span className="flex gap-0.5" title={`${s.doneToday.size}/3 quests today`}>{[0, 1, 2].map((n) => <i key={n} className={`h-2 w-2 rounded-full ${n < s.doneToday.size ? "bg-emerald-400" : "bg-white/20"}`} />)}</span>
+          </span>
+        </div>
+        {e.goal && <div className="mt-1 flex items-center gap-1 text-xs text-slate-300"><Target size={12} className="text-pink-300" />{e.goal}</div>}
+      </Link>
+    );
+  };
 
   return (
     <div className="space-y-8">
@@ -105,21 +156,15 @@ export default async function Dashboard() {
             <h2 className="flex items-center gap-2 font-semibold"><ShieldCheck size={18} className={overdue.length ? "text-rose-300" : "text-emerald-300"} />Required for you</h2>
             <span className="text-xs text-slate-400">{required.length - requiredOpen.length}/{required.length} passed</span>
           </div>
+          <div className="bar mb-3"><i style={{ width: `${((required.length - requiredOpen.length) / required.length) * 100}%`, background: overdue.length ? "#fb7185" : undefined }} /></div>
           {overdue.length > 0 && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-rose-300"><AlertTriangle size={15} />{overdue.length} overdue. Please finish {overdue.length === 1 ? "it" : "these"} first.</p>}
           <ul className="space-y-1.5 text-sm">
-            {required.map((r) => (
-              <li key={r.track.id}>
-                <Link href={`/tracks/${r.track.slug}`} className="flex flex-wrap items-center gap-2 transition hover:text-white">
-                  {r.done ? <CheckCircle2 size={16} className="text-emerald-400" /> : <Square size={16} className={r.overdue ? "text-rose-400" : "text-slate-500"} />}
-                  <span className={r.done ? "text-slate-500" : r.overdue ? "text-rose-300" : "text-slate-200"}>{r.track.name}</span>
-                  <span className="text-xs text-slate-500">
-                    {r.done ? "passed" : `level ${r.passed}/${r.track.requiredLevel} · due ${new Date(r.dueAt * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}${r.overdue ? " · overdue" : ""}`}
-                    {" · "}{r.why === "mandatory" ? "mandatory" : "for your role"}
-                  </span>
-                </Link>
-              </li>
-            ))}
+            {required.slice(0, 6).map(reqRow)}
           </ul>
+          {required.length > 6 && (
+            <details className="mt-2 text-sm"><summary className="cursor-pointer text-xs font-semibold text-sky-300">Show the other {required.length - 6}</summary>
+              <ul className="mt-2 space-y-1.5">{required.slice(6).map(reqRow)}</ul></details>
+          )}
         </section>
       )}
 
@@ -182,44 +227,12 @@ export default async function Dashboard() {
         <h2 className="mb-3 flex items-center gap-2 text-lg font-bold"><Swords size={20} className="text-pink-300" />My races</h2>
         {mine.length === 0 && <EmptyState Icon={Swords} title="No rival yet" tone="pink">Pick a subject and meet the rival who trains it every day. <Link href="/" className="underline">Browse subjects</Link>.</EmptyState>}
         <div className="grid gap-4 sm:grid-cols-2">
-          {stats.map(({ e, t, b, s }, idx) => {
-            const rv = rivalFor(t.slug), tier = TIERS[tierOf(s.passed)];
-            const lead = s.passed - s.rival.level;
-            return (
-              <Link key={e.id} href={`/tracks/${t.slug}`} className="card card-hover rise p-4" style={{ "--i": idx } as React.CSSProperties}>
-                <div className="flex items-center gap-3">
-                  <Avatar kind="human" level={s.passed} size={56} />
-                  <span className="text-xs font-black text-slate-500">VS</span>
-                  <Avatar kind="rival" level={s.rival.level} hue={rv.hue} size={56} />
-                  <div className="ml-auto text-right">
-                    <div className={`flex items-center justify-end gap-1 text-sm font-bold ${lead > 0 ? "text-emerald-300" : lead === 0 ? "text-amber-300" : "text-rose-300"}`}>
-                      {lead > 0 ? <TrendingUp size={15} /> : lead === 0 ? <Equal size={15} /> : <TrendingDown size={15} />}
-                      {lead > 0 ? `+${lead} ahead` : lead === 0 ? "Tied" : `${-lead} behind`}
-                    </div>
-                    <div className="text-xs text-slate-400">{rv.name} · L{s.rival.level}</div>
-                  </div>
-                </div>
-                <div className="mt-3 flex items-center gap-2">
-                  <SubjectArt slug={t.slug} name={t.name} kind={t.kind} size={36} />
-                  <div><div className="text-xs text-slate-400">{b.name}</div><div className="font-semibold">{t.name}</div></div>
-                </div>
-                <div className="relative mt-2">
-                  <div className="bar"><i style={{ width: `${(s.passed / MAX_LEVEL) * 100}%` }} /></div>
-                  <span className="absolute -top-1 h-3.5 w-1 rounded bg-rose-400" title={`${rv.name} · L${s.rival.level}`} style={{ left: `${(s.rival.level / MAX_LEVEL) * 100}%` }} />
-                </div>
-                <div className="mt-1 flex justify-between text-xs text-slate-400">
-                  <span>{s.passed === 0 ? "Not started" : `Level ${s.passed} · ${LEVELS[s.passed - 1]} · ${tier.name}`}</span>
-                  <span className="flex items-center gap-2">
-                    <span className="flex items-center gap-0.5 text-orange-300"><Flame size={12} />{s.streak}</span>
-                    <span className="flex items-center gap-0.5"><Sparkles size={12} className="text-sky-300" />{s.xp}</span>
-                    <span className="flex gap-0.5" title={`${s.doneToday.size}/3 quests today`}>{[0, 1, 2].map((n) => <i key={n} className={`h-2 w-2 rounded-full ${n < s.doneToday.size ? "bg-emerald-400" : "bg-white/20"}`} />)}</span>
-                  </span>
-                </div>
-                {e.goal && <div className="mt-1 flex items-center gap-1 text-xs text-slate-300"><Target size={12} className="text-pink-300" />{e.goal}</div>}
-              </Link>
-            );
-          })}
+          {stats.slice(0, 6).map(raceCard)}
         </div>
+        {stats.length > 6 && (
+          <details className="mt-4"><summary className="cursor-pointer text-sm font-semibold text-sky-300">Show the other {stats.length - 6} races</summary>
+            <div className="mt-3 grid gap-4 sm:grid-cols-2">{stats.slice(6).map((x, i) => raceCard(x, i + 6))}</div></details>
+        )}
       </section>
 
       <section>

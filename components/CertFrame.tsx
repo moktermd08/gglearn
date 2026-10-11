@@ -11,7 +11,7 @@ export function CertFrame({ hue, seal, children, code }: { hue: number; seal: Re
   );
   return (
     <div className="relative overflow-hidden rounded-2xl border border-black/10 bg-[#fff] p-3 shadow-xl print:shadow-none" style={{ boxShadow: `0 30px 70px -30px ${soft}` }}>
-      <div className="relative rounded-xl border-2 px-6 py-10 text-center sm:px-12" style={{
+      <div className="relative rounded-xl border-2 px-6 pb-16 pt-10 text-center sm:px-12" style={{
         borderColor: c,
         backgroundImage: `radial-gradient(circle at 50% 0%, hsl(${hue} 90% 60% / .12), transparent 55%), repeating-radial-gradient(circle at 50% 120%, transparent 0 14px, hsl(${hue} 60% 50% / .05) 14px 15px)`,
       }}>
@@ -25,7 +25,7 @@ export function CertFrame({ hue, seal, children, code }: { hue: number; seal: Re
           <div className="relative">{seal}</div>
         </div>
         {children}
-        <div className="mt-8 grid grid-cols-[1fr_auto_1fr] items-end gap-4 text-xs text-slate-400">
+        <div className="mt-8 grid grid-cols-[1fr_auto_1fr] items-end gap-4 px-4 text-xs text-slate-400 sm:px-8">
           <div><div className="border-b border-slate-300 pb-1 font-serif text-lg italic text-slate-300">gglearn</div>Issued by the academy</div>
           <BadgeCheck size={34} style={{ color: c }} aria-label="Verified" />
           <div><div className="break-all border-b border-slate-300 pb-1 font-mono text-sm text-slate-300">{code}</div>Verification code</div>
