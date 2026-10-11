@@ -1,0 +1,373 @@
+{
+ "trackSlug": "sdlc-security",
+ "items": [
+  {
+   "title": "Passwords and sessions: storing and proving identity",
+   "body": "Never store a password. Store a salted, slow hash of it. Salted means each password gets its own random value, so two people with the same password have different hashes. Slow means the algorithm is deliberately expensive, so guessing millions of passwords per second is not practical for an attacker. GGLearn uses scrypt. A stored value looks like scrypt$N$r$p$salt$hash, so the cost settings travel with the hash. The cost can be raised later and old hashes still verify, then get upgraded when the person next signs in. Verification compares with timingSafeEqual, so the comparison time does not leak how many characters matched. Hashing runs asynchronously, because a slow synchronous hash would block the whole Node process.\n\nAfter login, the server gives the browser a session token. GGLearn's cookie is userId, issued-at time, a version number and an HMAC signature, set httpOnly (JavaScript cannot read it), sameSite lax, and secure in production. The server enforces a 30-day lifetime itself, rather than trusting the cookie's expiry. A per-user session_version lets the server revoke every older session at once, for \"Sign out everywhere\" or when someone is offboarded.",
+   "source": "gglearn/lib/password.ts, gglearn/docs/security/auth-review.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Why does a password system store a salted hash instead of the password?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A leaked database does not reveal the passwords directly, and salts stop identical passwords sharing a hash"
+      },
+      {
+       "key": "b",
+       "text": "Hashes are faster to compare"
+      },
+      {
+       "key": "c",
+       "text": "Salts are required by browsers"
+      },
+      {
+       "key": "d",
+       "text": "It lets admins read forgotten passwords"
+      }
+     ],
+     "answer": "a",
+     "hint": "Think about a database leak.",
+     "topic": "hashing"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does the GGLearn session_version column allow?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Faster logins"
+      },
+      {
+       "key": "b",
+       "text": "Longer cookie lifetimes"
+      },
+      {
+       "key": "c",
+       "text": "Revoking all of a user's older sessions at once"
+      },
+      {
+       "key": "d",
+       "text": "Storing the password hash"
+      }
+     ],
+     "answer": "c",
+     "hint": "Used for sign out everywhere.",
+     "topic": "session revocation"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does GGLearn enforce the 30-day session limit on the server instead of relying on the cookie's maxAge?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cookies cannot expire"
+      },
+      {
+       "key": "b",
+       "text": "The client controls the cookie, so only a server-side check is trustworthy"
+      },
+      {
+       "key": "c",
+       "text": "The server clock is more accurate"
+      },
+      {
+       "key": "d",
+       "text": "maxAge is not supported"
+      }
+     ],
+     "answer": "b",
+     "hint": "Who controls the cookie?",
+     "topic": "server-side expiry"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Why store scrypt cost parameters inside the stored hash string, and what does that allow?",
+     "answer": "So each hash records how it was made. The app can raise the cost later while old hashes still verify with their own parameters, and upgrade them to the new cost at the person's next sign-in.",
+     "rubric": "Explains parameters travel with the hash, old hashes keep working, and rehash on next login."
+    }
+   ]
+  },
+  {
+   "title": "Authorization and role-based access control",
+   "body": "Authentication asks who you are. Authorization asks what you may do. Role-based access control (RBAC) answers the second by giving each user a role, such as learner, manager or admin, and checking the role on the server before every sensitive action. Hiding a button in the interface is not security; anyone can call the server directly.\n\nGGLearn's guard is requireUser, called by pages and actions, and it re-reads the user from the database on each request. So when someone is offboarded or a role changes, it takes effect immediately, not at the next login. Pages for staff redirect a learner away. Its security review found real gaps that show the common mistakes. A function that returned the answer to any exam question, for any signed-in user, was broken access control: it did not check enrolment or level. A manager could offboard an admin, because only self-offboarding was blocked. The fix was a rule that a caller cannot act on someone of equal or higher rank.\n\nPrinciples: deny by default, check ownership of the record (a run belongs to its user), check on the server, and give people the least privilege they need. Test these rules, because they are easy to break silently.",
+   "source": "gglearn/docs/security/auth-review.md, gglearn/lib/auth.ts",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is the difference between authentication and authorization?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are the same thing"
+      },
+      {
+       "key": "b",
+       "text": "Authentication proves who you are; authorization decides what you may do"
+      },
+      {
+       "key": "c",
+       "text": "Authorization is done in the browser only"
+      },
+      {
+       "key": "d",
+       "text": "Authentication sets roles"
+      }
+     ],
+     "answer": "b",
+     "hint": "Who vs what.",
+     "topic": "authn vs authz"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does GGLearn re-read the user from the database on every request?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To store more cookies"
+      },
+      {
+       "key": "b",
+       "text": "Because sessions are not signed"
+      },
+      {
+       "key": "c",
+       "text": "To slow down attackers"
+      },
+      {
+       "key": "d",
+       "text": "So an offboarded user or changed role takes effect immediately"
+      }
+     ],
+     "answer": "d",
+     "hint": "Think of removing access.",
+     "topic": "fresh authorization"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What was wrong with the original drillCheck function described in the review?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It was too slow"
+      },
+      {
+       "key": "b",
+       "text": "Any signed-in user could get answers for any question because it checked neither enrolment nor level"
+      },
+      {
+       "key": "c",
+       "text": "It used the wrong password hash"
+      },
+      {
+       "key": "d",
+       "text": "It logged users out"
+      }
+     ],
+     "answer": "b",
+     "hint": "Broken access control.",
+     "topic": "broken access control"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A manager account is compromised. List what an attacker could do under the original rule (only self-offboarding blocked), and describe the fix and one test you would add.",
+     "answer": "They could offboard an admin and lock them out. The fix is a server-side rule that rejects when the target's role is equal or higher than the caller's (admin on manager excepted per policy). A test: log in as a manager, attempt to offboard an admin, and assert it is rejected and the admin stays active.",
+     "rubric": "Identifies privilege problem, states the rank rule on the server, and gives a concrete negative test."
+    }
+   ]
+  },
+  {
+   "title": "Rate limiting, network edge and encryption",
+   "body": "Defence in depth means several layers, each assuming the others may fail. Start at the network edge. GGLearn runs Cloudflare, then Apache, then Next.js. Cloudflare terminates public traffic, and Apache can be restricted to Cloudflare's published address ranges (deploy/apache-cloudflare-only.conf, regenerated by update-cloudflare-ips.sh, which refuses to write a suspicious list so a bad fetch cannot lock everyone out). Otherwise someone could reach Apache directly and forge the X-Forwarded-For header, fooling any IP-based limit. The app takes the client address a fixed number of hops from the end of that header (TRUSTED_PROXY_HOPS, default 2), ignoring anything a visitor added.\n\nRate limiting caps attempts, for example on login, to blunt password guessing. GGLearn's limiter lives in process memory, so it assumes one PM2 process and resets on restart. That is a known, documented limit. Security headers such as HSTS, Referrer-Policy, Permissions-Policy and a frame and base-uri CSP add browser-side protection.\n\nEncryption has two parts. In transit: HTTPS, and in ggmoney, Cloudflare SSL mode Full (strict), since Flexible would send tokens unencrypted to the origin. At rest: ggsocial encrypts stored platform tokens with APP_SECRET, so losing that key makes them unreadable.",
+   "source": "gglearn/lib/rate-limit.ts, gglearn/deploy/apache-cloudflare-only.conf, gglearn/deploy/update-cloudflare-ips.sh, ggmoney/DEPLOY.md, ggsocial/DEPLOY.md, gglearn/docs/security/auth-review.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Why is the client IP taken a set number of hops from the end of X-Forwarded-For?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Visitors can write entries on the left, so only entries added by trusted proxies can be believed"
+      },
+      {
+       "key": "b",
+       "text": "The header is encrypted"
+      },
+      {
+       "key": "c",
+       "text": "The first entry is always Cloudflare"
+      },
+      {
+       "key": "d",
+       "text": "It is faster"
+      }
+     ],
+     "answer": "a",
+     "hint": "Who can add entries?",
+     "topic": "forwarded header"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the documented limitation of GGLearn's in-memory rate limiter?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It cannot count login attempts"
+      },
+      {
+       "key": "b",
+       "text": "It blocks all users"
+      },
+      {
+       "key": "c",
+       "text": "It assumes a single process and resets on restart"
+      },
+      {
+       "key": "d",
+       "text": "It needs Redis"
+      }
+     ],
+     "answer": "c",
+     "hint": "Look at where counters live.",
+     "topic": "limiter limits"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why did the ggmoney guide say Cloudflare SSL mode should be Full (strict)?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It speeds up pages"
+      },
+      {
+       "key": "b",
+       "text": "Flexible mode would send tokens in the clear on the hop to the origin"
+      },
+      {
+       "key": "c",
+       "text": "It removes the need for certificates"
+      },
+      {
+       "key": "d",
+       "text": "It disables caching"
+      }
+     ],
+     "answer": "b",
+     "hint": "Which hop is unencrypted?",
+     "topic": "transport encryption"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why does update-cloudflare-ips.sh refuse to write the file if the fetched list looks wrong?",
+     "answer": "An empty or malformed allow-list would make Apache reject everyone, locking the site out. Sanity checks on the counts and format prevent a bad fetch from producing that.",
+     "rubric": "Mentions lock-out risk of empty or bad allow-list and validating input before replacing the file."
+    }
+   ]
+  },
+  {
+   "title": "Audit logging, MFA and privacy",
+   "body": "Audit logging records who did what, to what, and when, for the actions that matter: sign-ins and failures, role changes, offboarding, data exports, deletions. A useful entry has the user, action, target, time and source address, and never contains secrets such as passwords or tokens. Logs should be append-only and kept apart from the data they describe, so an attacker or a mistake cannot quietly rewrite history. Audit logs and ordinary debug logs are different jobs.\n\nMulti-factor authentication (MFA) adds a second proof, such as an authenticator app code, to a password. It greatly reduces the damage of stolen or guessed passwords. GGLearn's security review lists invite-only signup, rate limiting and session revocation, but does not describe MFA or a breached-password check, so treat both as not built and open for future work. A breached-password check is listed as still open by choice.\n\nPrivacy means collect only what you need, tell people what you keep, protect it, and delete it when no longer needed. Personal data such as names and emails needs access limited by role. Regulations such as GDPR set duties around this, but the practical habits come first: minimise, restrict access, retain deliberately, and keep secrets out of logs and URLs. Legal questions belong with a qualified adviser.",
+   "source": "gglearn/docs/security/auth-review.md, general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which item must never appear in an audit log entry?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The user id"
+      },
+      {
+       "key": "b",
+       "text": "The time of the action"
+      },
+      {
+       "key": "c",
+       "text": "The action name"
+      },
+      {
+       "key": "d",
+       "text": "A password or token"
+      }
+     ],
+     "answer": "d",
+     "hint": "Logs are widely readable.",
+     "topic": "log hygiene"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does MFA add to a password login?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A faster login"
+      },
+      {
+       "key": "b",
+       "text": "A second proof of identity, such as an authenticator code"
+      },
+      {
+       "key": "c",
+       "text": "A longer password"
+      },
+      {
+       "key": "d",
+       "text": "Automatic backups"
+      }
+     ],
+     "answer": "b",
+     "hint": "Two factors.",
+     "topic": "MFA"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What is the status of MFA in GGLearn, per its security review?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Fully built"
+      },
+      {
+       "key": "b",
+       "text": "Enforced for admins only"
+      },
+      {
+       "key": "c",
+       "text": "Not described there, so treat it as not built"
+      },
+      {
+       "key": "d",
+       "text": "Replaced by CAPTCHAs"
+      }
+     ],
+     "answer": "c",
+     "hint": "Check what the review lists.",
+     "topic": "MFA status"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "A learner reports that their account made changes they did not make. You have only ordinary application logs with no audit trail. Describe what an audit log would have given you, which fields it needs, and two quick protective steps now.",
+     "answer": "An audit log would show which actions ran on the account, when, and from what address, letting you separate the learner's activity from an attacker's. Fields: user, action, target, timestamp, source address, outcome, never secrets. Now: use sign out everywhere to bump session_version and force a password reset, and add audit logging for sign-ins and sensitive actions going forward.",
+     "rubric": "Names audit value (who/what/when/where), lists fields without secrets, and gives sensible immediate steps such as revoking sessions and resetting the password."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,361 @@
+{
+ "trackSlug": "sdlc-discovery",
+ "items": [
+  {
+   "title": "Defining the problem and the audience",
+   "body": "Discovery starts with a problem, not a solution. A good problem statement says who has the problem, what they are trying to do, what gets in the way, and how they cope today. If you cannot describe the current workaround, you probably do not understand the problem yet. The audience is more than one group: the user touches the product, the buyer pays for it, and sometimes an approver or administrator controls access. These can be different people with different needs, so list each one separately. Evidence beats opinion. Short interviews, a look at support requests, and watching people do the task will tell you more than a meeting of colleagues guessing. Write down what you learned as facts, and keep assumptions in a separate list so you can test them later. Finally, check that the problem is worth solving: how often does it happen, how much does it cost in time or money, and what happens if you do nothing? A project that cannot answer these questions is a guess. Keep the statement short enough to fit in two sentences, because everyone on the team should be able to repeat it.",
+   "source": "general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In discovery, what should a good problem statement describe first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Who has the problem and what they are trying to do"
+      },
+      {
+       "key": "b",
+       "text": "The database and hosting choice"
+      },
+      {
+       "key": "c",
+       "text": "The final screen layouts"
+      },
+      {
+       "key": "d",
+       "text": "The launch date and marketing plan"
+      }
+     ],
+     "answer": "a",
+     "topic": "problem"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which of these can be three different people for the same product?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The server, the database and the cache"
+      },
+      {
+       "key": "b",
+       "text": "The designer, the logo and the font"
+      },
+      {
+       "key": "c",
+       "text": "The user, the buyer and the approver"
+      },
+      {
+       "key": "d",
+       "text": "The sprint, the story and the task"
+      }
+     ],
+     "answer": "c",
+     "topic": "audience"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why keep assumptions in a separate list from facts?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So they can be hidden from the client"
+      },
+      {
+       "key": "b",
+       "text": "So each assumption can be tested later instead of being treated as proven"
+      },
+      {
+       "key": "c",
+       "text": "So the document looks longer"
+      },
+      {
+       "key": "d",
+       "text": "Because assumptions never change"
+      }
+     ],
+     "answer": "b",
+     "topic": "assumptions"
+    },
+    {
+     "level": 6,
+     "type": "open",
+     "prompt": "Explain how you would check that a problem is worth solving before committing to build anything.",
+     "answer": "Ask how often the problem happens, what it costs in time or money, how people cope today, and what happens if nothing is done. Back this with evidence such as interviews, support requests and observing the task, and record assumptions separately to test.",
+     "rubric": "Mentions frequency, cost or impact, current workaround, and cost of doing nothing; uses evidence rather than opinion; separates facts from assumptions."
+    }
+   ]
+  },
+  {
+   "title": "Setting goals and measures of success",
+   "body": "Goals describe the result you want; features describe what you build. Confusing the two is a common planning mistake. A useful goal is an outcome with a measure, a baseline and a target, for example: reduce the time to onboard a new starter from five days to two. Without the baseline you cannot tell whether you improved anything. Separate outputs (we shipped a dashboard) from outcomes (people now spot problems a day earlier). Pick a small number of measures, usually three to five, and decide up front how each will be collected. A measure nobody can collect is decoration. It also helps to write non-goals: things the project will deliberately not do. Non-goals protect the team when someone asks for one more feature. Finally, agree who decides when the goals are met, and when you will look. Reviewing at launch and again a few weeks later shows whether early enthusiasm turned into real use. Goals can change when you learn more, but change them on purpose and write down why, so the team is not chasing a moving target.",
+   "source": "general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which statement is an outcome rather than an output?",
+     "options": [
+      {
+       "key": "a",
+       "text": "We shipped the onboarding dashboard"
+      },
+      {
+       "key": "b",
+       "text": "We added twelve new pages"
+      },
+      {
+       "key": "c",
+       "text": "We wrote the API documentation"
+      },
+      {
+       "key": "d",
+       "text": "New starters become productive in two days instead of five"
+      }
+     ],
+     "answer": "d",
+     "topic": "outcomes"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why record a baseline before the project starts?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Without it you cannot tell whether anything improved"
+      },
+      {
+       "key": "b",
+       "text": "It makes the budget smaller"
+      },
+      {
+       "key": "c",
+       "text": "It is required by every database"
+      },
+      {
+       "key": "d",
+       "text": "It replaces the need for a target"
+      }
+     ],
+     "answer": "a",
+     "topic": "baseline"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What is the purpose of writing non-goals?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To list features for a later release only"
+      },
+      {
+       "key": "b",
+       "text": "To give the team less work"
+      },
+      {
+       "key": "c",
+       "text": "To protect the team from scope creep by stating what will not be done"
+      },
+      {
+       "key": "d",
+       "text": "To satisfy the legal department"
+      }
+     ],
+     "answer": "c",
+     "topic": "non-goals"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A sponsor says the goal is 'a great new training portal'. You have two weeks to turn that into something the team can plan against. Describe what you would produce.",
+     "answer": "Turn it into three to five measurable outcomes with baseline, target and collection method (for example completion rate or time to competence), add explicit non-goals, name who decides success and when it will be reviewed, and separate the portal's features from the outcomes it should achieve.",
+     "rubric": "Converts a vague wish into measurable outcomes; includes baseline and target; mentions how data is collected; lists non-goals; names decision owner and review dates; distinguishes outputs from outcomes."
+    }
+   ]
+  },
+  {
+   "title": "Scope, MVP and being honest about what is built",
+   "body": "Scope is the list of what is in and what is out. A minimum viable product, or MVP, is the smallest version that lets real users do the main job and teaches you something. It is not a half-finished product; it is a complete small one. To find it, list every wanted feature, then ask which ones are needed for the core journey to work from start to finish. The rest go on a later list. The company's own projects show the habit of honest scoping. The ggmoney README has a table of what it does today, with states such as working, needs credentials, and not built. Corporation Tax is marked Not built and planned for a later phase, rather than hinted at. The gglearn README has a Known gaps section that says the legacy question bank is thin at the top levels and that SQLite should be replaced before multi-user production use. Writing limits down early stops stakeholders assuming features exist and gives you a ready answer when someone asks. Mark anything planned as planned, never as done.",
+   "source": "ggmoney/README.md (status table), gglearn/README.md (Known gaps), general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is an MVP?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A prototype that is never shown to users"
+      },
+      {
+       "key": "b",
+       "text": "The smallest complete version that lets real users do the main job"
+      },
+      {
+       "key": "c",
+       "text": "A product with every planned feature"
+      },
+      {
+       "key": "d",
+       "text": "A design mockup only"
+      }
+     ],
+     "answer": "b",
+     "topic": "MVP"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How does the ggmoney README treat Corporation Tax?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As Not built and planned for a later phase"
+      },
+      {
+       "key": "b",
+       "text": "As working and tested"
+      },
+      {
+       "key": "c",
+       "text": "As working but needing credentials"
+      },
+      {
+       "key": "d",
+       "text": "As removed from the roadmap"
+      }
+     ],
+     "answer": "a",
+     "topic": "honest status"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Which way of choosing MVP features does the text recommend?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Include every feature stakeholders mention"
+      },
+      {
+       "key": "b",
+       "text": "Include only features that are cheap to build"
+      },
+      {
+       "key": "c",
+       "text": "Include whatever the competitor has"
+      },
+      {
+       "key": "d",
+       "text": "Keep only what the core journey needs to work end to end"
+      }
+     ],
+     "answer": "d",
+     "topic": "scoping"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why is it useful to keep a 'Known gaps' or status table in a project, and what should it say about planned features?",
+     "answer": "It prevents stakeholders assuming features exist, gives a ready answer about limits and sets honest expectations. Planned features must be labelled as planned or not built, never presented as done.",
+     "rubric": "Mentions avoiding false assumptions or overpromising; honest labelling of planned versus built; gives an example such as a status table."
+    }
+   ]
+  },
+  {
+   "title": "Budget, timeline and estimating under uncertainty",
+   "body": "Early estimates are uncertain, so present them as ranges with assumptions rather than single numbers. A common approach is to break the work into pieces, estimate each as best, likely and worst case, and then add a buffer for the risks you can name. Cost includes more than developer time: hosting, licences, testing, review, documentation, training, and the time of the people who must answer questions. Ongoing cost matters as much as build cost, because every system needs maintenance, security updates and support. Timeline depends on dependencies, such as waiting for an external approval, credentials or a supplier, so list them early and start the slow ones first. A useful trick is to reduce the work rather than the quality when time is short: cut scope, not testing. Deferring a costly choice can also be sensible. The gglearn README keeps SQLite for local development and says to move to Postgres before multi-user production use, which delays a bigger commitment until it is needed. Re-estimate at each milestone, tell stakeholders when numbers move, and explain why.",
+   "source": "gglearn/README.md (SQLite note), general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How should an early project estimate normally be presented?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As a single exact number"
+      },
+      {
+       "key": "b",
+       "text": "As a promise with no assumptions"
+      },
+      {
+       "key": "c",
+       "text": "As a range with the assumptions behind it"
+      },
+      {
+       "key": "d",
+       "text": "As an hourly rate only"
+      }
+     ],
+     "answer": "c",
+     "topic": "estimating"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "When time is short, what does the text suggest cutting first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Scope, not testing"
+      },
+      {
+       "key": "b",
+       "text": "Testing, not scope"
+      },
+      {
+       "key": "c",
+       "text": "Security reviews and backups"
+      },
+      {
+       "key": "d",
+       "text": "The people who answer questions"
+      }
+     ],
+     "answer": "a",
+     "topic": "trade-offs"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "Why start slow dependencies such as credentials or external approvals first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are always the cheapest tasks"
+      },
+      {
+       "key": "b",
+       "text": "They can delay the whole timeline while you wait on someone else"
+      },
+      {
+       "key": "c",
+       "text": "They remove the need for testing"
+      },
+      {
+       "key": "d",
+       "text": "They are required before any design work"
+      }
+     ],
+     "answer": "b",
+     "topic": "dependencies"
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "You are asked to commit to a launch date for a new internal app. Half the integrations need credentials from outside suppliers and the budget covers build only. How would you respond?",
+     "answer": "Give a range rather than a date, list assumptions, and identify the supplier credentials as critical-path dependencies to start immediately. Break work into pieces with best, likely and worst estimates plus a buffer. Point out that ongoing hosting, support and maintenance costs are not funded and ask for them to be included. Offer scope cuts rather than quality cuts if the date is fixed, and agree to re-estimate at milestones.",
+     "rubric": "Provides a range with assumptions; identifies external dependencies and starts them early; includes buffer; raises ongoing costs; proposes scope cuts instead of dropping testing; commits to re-estimating."
+    }
+   ]
+  }
+ ]
+}

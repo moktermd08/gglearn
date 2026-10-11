@@ -1,0 +1,343 @@
+{
+ "trackSlug": "data-analytics",
+ "items": [
+  {
+   "title": "Events: designing data you can trust",
+   "body": "Event data records that something happened: who did it, what, to which thing, when, and in what context. Analysis is only as good as the events, so design them like an API. Give each event a clear name, a stable schema, a timestamp in a single timezone, an actor, and a unique id so a retried delivery can be recognised and counted once. Do not put secrets or unneeded personal data in them. The Moksy billing spec makes an important distinction between kinds of data: the usage service remains product analytics and quota telemetry, while billing truth lives in the subscriptions ledger. The same event can serve several purposes, but the source of truth for money must be the one that is append-only, idempotent and reconciled, not the one tuned for dashboards. Decide each metric's definition up front, such as what counts as an active user, and write it down, or two teams will report different numbers from the same data. Also plan for late and duplicate events, and for schema changes by adding versions instead of silently changing meaning.",
+   "source": "moksy.ai/wt-earning-gaps/docs/moksy-billing-grade-token-metering-spec.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which set of fields best describes a useful event record?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Who did what, to which thing, and when"
+      },
+      {
+       "key": "b",
+       "text": "Only a random number"
+      },
+      {
+       "key": "c",
+       "text": "Only the page colour"
+      },
+      {
+       "key": "d",
+       "text": "Only the user's password"
+      }
+     ],
+     "answer": "a",
+     "topic": "event design"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why give every event a unique id?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So events sort alphabetically"
+      },
+      {
+       "key": "b",
+       "text": "So the id can replace the timestamp"
+      },
+      {
+       "key": "c",
+       "text": "Because databases require ids to be negative"
+      },
+      {
+       "key": "d",
+       "text": "So a retried or duplicated delivery can be recognised and counted once"
+      }
+     ],
+     "answer": "d",
+     "topic": "idempotency"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "In the Moksy billing spec, what is the usage service for compared with the subscriptions ledger?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The legal record used for invoices"
+      },
+      {
+       "key": "b",
+       "text": "Product analytics and quota telemetry, not billing truth"
+      },
+      {
+       "key": "c",
+       "text": "A backup of payment card numbers"
+      },
+      {
+       "key": "d",
+       "text": "A cache of user passwords"
+      }
+     ],
+     "answer": "b",
+     "topic": "source of truth"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Two teams report different 'active users' from the same event data. Explain likely causes and how to prevent it.",
+     "answer": "They likely define active differently (time window, which events count, bots or test users excluded, timezone) or use different data sources or handle duplicates and late events differently. Prevent it by writing one metric definition, naming a single source of truth, documenting filters, and testing the query against known data.",
+     "rubric": "Must identify definition/filter/source differences and propose a documented single definition or source of truth."
+    }
+   ]
+  },
+  {
+   "title": "Usage metering and the token ledger",
+   "body": "Metering counts what each customer uses so limits can be enforced and bills can be correct. The Moksy design keeps a durable token ledger: every AI completion records user, organisation, project, provider, model, prompt, completion and total tokens, estimated cost, billing period and request id. The ledger is append-only, so corrections are new reversing entries rather than edits, and the subscription holds a fast summary snapshot of the current period. Because requests are retried, writes must be idempotent, with a key per request so a retry cannot be counted twice. The spec also moves to reserving quota before the provider call and committing actual usage after, so concurrent requests cannot overspend. Enforcement can block at the limit, downgrade to a cheaper model, or allow overage that is billed. A real bug is described in the usage service comments: a reset that fired mid-month advanced the next reset from the wrong date, so an allowance ran for two months. Note that the architecture document still says token usage is stored in memory only, while the later spec lists durable storage as implemented, so treat the older text as out of date.",
+   "source": "moksy.ai/wt-earning-gaps/docs/moksy-token-subscription-architecture.md, moksy-billing-grade-token-metering-spec.md, foundation/usage/src/services/UsageService.js",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does an append-only ledger mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Entries are edited in place when wrong"
+      },
+      {
+       "key": "b",
+       "text": "Only the newest entry is kept"
+      },
+      {
+       "key": "c",
+       "text": "Entries are only added, and a correction is a new entry"
+      },
+      {
+       "key": "d",
+       "text": "Entries are deleted after a month"
+      }
+     ],
+     "answer": "c",
+     "topic": "ledger"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why do usage writes need an idempotency key?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So a retried request is not counted twice"
+      },
+      {
+       "key": "b",
+       "text": "So requests are encrypted"
+      },
+      {
+       "key": "c",
+       "text": "So the latest request overwrites the older ones"
+      },
+      {
+       "key": "d",
+       "text": "So requests can skip authentication"
+      }
+     ],
+     "answer": "a",
+     "topic": "idempotency"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "In the enforcement modes described, what does 'downgrade' do when the allowance is used up?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Deletes the user's history"
+      },
+      {
+       "key": "b",
+       "text": "Doubles the allowance silently"
+      },
+      {
+       "key": "c",
+       "text": "Charges nothing and stops counting"
+      },
+      {
+       "key": "d",
+       "text": "Routes to a cheaper or local model"
+      }
+     ],
+     "answer": "d",
+     "topic": "enforcement"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A client times out and retries an AI call that actually succeeded, and the customer is billed twice. Explain the cause and a fix that keeps the books reliable.",
+     "answer": "The usage write was not idempotent, so both attempts created ledger rows. Fix by assigning one request id per billing identity and using it as an idempotency key so the second commit is recognised, by reserving before execution and committing against the reservation, and by reconciliation that detects duplicates. Issue a compensating reversal entry for the incorrect charge rather than editing history.",
+     "rubric": "Must name lack of idempotency, propose request-id keys and/or reservation-commit, and a reversal not an edit."
+    }
+   ]
+  },
+  {
+   "title": "Reports, exports and safe data movement",
+   "body": "Reporting lets people take data out and sometimes put it back in, which makes it a security boundary. The Moksy reporting package keeps a code-defined registry of resources: a field that is not declared exportable never leaves the database, and a field that is not importable can never be written. Filters use a whitelisted query language compiled safely, with typed values and escaped patterns, and it never allows raw operators such as where or expr to reach the database. Exports stream in formats like CSV and JSON with options to redact personal data, and imports run a dry-run diff first and can produce rollback operations. A separate lesson comes from GG Money's stress run, which proposed that CSV export wrote bank-supplied text starting with an equals, plus, minus or at sign unescaped, so opening it in a spreadsheet could execute a formula. This is CSV injection; the usual fix is to neutralise such leading characters in exported cells. Before building a report, decide who may see which fields, minimise personal data, keep a log of exports, and make sure totals are reproducible from the source.",
+   "source": "moksy.ai/wt-earning-gaps/packages/reporting/README.md, ggmoney/docs/qc/ggmoney-audit-2026-10-04.md",
+   "questions": [
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "In the Moksy reporting registry, what happens to a field not declared exportable?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is exported only on weekends"
+      },
+      {
+       "key": "b",
+       "text": "It never leaves the database"
+      },
+      {
+       "key": "c",
+       "text": "It is exported but hidden in the header"
+      },
+      {
+       "key": "d",
+       "text": "It is exported with the value replaced by zero"
+      }
+     ],
+     "answer": "b",
+     "topic": "registry"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What is the point of a dry-run diff before a bulk import?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To speed up the import"
+      },
+      {
+       "key": "b",
+       "text": "To delete duplicate rows silently"
+      },
+      {
+       "key": "c",
+       "text": "To preview what will change before anything is written"
+      },
+      {
+       "key": "d",
+       "text": "To convert the file to XML"
+      }
+     ],
+     "answer": "c",
+     "topic": "dry run"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "What is CSV injection?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Exported cell text starting with a formula character that a spreadsheet may execute"
+      },
+      {
+       "key": "b",
+       "text": "A database being filled with too many CSV files"
+      },
+      {
+       "key": "c",
+       "text": "Compressing a CSV file with a password"
+      },
+      {
+       "key": "d",
+       "text": "Importing CSV files with the wrong delimiter"
+      }
+     ],
+     "answer": "a",
+     "topic": "csv injection"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Design guard rails for a 'download all customers' export feature.",
+     "answer": "Restrict it to authorised roles, allow only declared exportable fields and exclude or redact sensitive personal data, require filters or limits, escape formula characters in cells, stream large files, log who exported what and when, and consider expiring download links.",
+     "rubric": "Needs access control, field whitelist/redaction, injection escaping, and logging of exports."
+    }
+   ]
+  },
+  {
+   "title": "Dashboards and performance reporting",
+   "body": "A dashboard is only useful if its numbers are trusted, which means one source of truth, clear definitions and no double counting. GG Money's brand performance report is a good model. Actual figures come straight from the ledger, so reports cannot drift from the books. Each brand is measured against a plan, and the plan keeps its history, because changing an amount ends the old line and starts a new one, so last quarter is still judged against last quarter's plan. Postings that no plan line claims show as unplanned; they are never dropped, so totals still reconcile. A shared cost such as rent can be split across brands without losing pence. The all-companies view leaves out sales between the owner's own companies so they are not counted twice. A review freezes a period with a fingerprint and a second person approves it. Good dashboards also state the period, the time of last refresh and the definition of each measure, and show variance against a plan rather than a bare number. Check any new report by reconciling its total against the source.",
+   "source": "ggmoney/README.md (brand performance), ggmoney/docs/performance/api.md",
+   "questions": [
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does GG Money show postings no plan line claims as 'unplanned' instead of dropping them?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To keep the chart shorter"
+      },
+      {
+       "key": "b",
+       "text": "Because unplanned postings are errors to delete"
+      },
+      {
+       "key": "c",
+       "text": "To hide them from reviewers"
+      },
+      {
+       "key": "d",
+       "text": "So the report total still reconciles to the ledger"
+      }
+     ],
+     "answer": "d",
+     "topic": "reconciliation"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why leave sales between the owner's own companies out of the all-companies view?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because internal sales are illegal"
+      },
+      {
+       "key": "b",
+       "text": "Because they are always zero"
+      },
+      {
+       "key": "c",
+       "text": "To avoid counting the same money twice"
+      },
+      {
+       "key": "d",
+       "text": "To make the chart load faster"
+      }
+     ],
+     "answer": "c",
+     "topic": "double counting"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why does GG Money keep the history of a plan rather than overwriting the amount?",
+     "answer": "Overwriting would change how past periods are measured. Ending the old line and starting a new one means last quarter is still compared with the plan that applied then, so variance reports stay correct and auditable.",
+     "rubric": "Must explain historical comparability and auditability of keeping plan history."
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "Two dashboards show different revenue totals for last month. How do you find out which is right and stop it recurring?",
+     "answer": "Compare definitions (revenue recognised vs invoiced, tax inclusive or not, refunds, intercompany, timezone, date range) and the data sources, then reconcile each total to the ledger or source of truth, and find the rows that differ. Fix by choosing one definition and source, documenting it on the dashboards, deriving both from the same query or view, and adding a reconciliation check that alerts when totals diverge.",
+     "rubric": "Must compare definitions and sources, reconcile to the source of truth, and fix with a single definition and automated check."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,373 @@
+{
+ "trackSlug": "sdlc-launch",
+ "items": [
+  {
+   "title": "The go-live checklist",
+   "body": "Launching is not one event but a checklist that turns 'it works on my machine' into 'it is safe to let real users in'. Write it down, tick it off, and do not skip items under time pressure.\n\nA typical checklist covers: the build passes tests; secrets are set for production and are not in the repository; the database is migrated and a recent backup exists and has been restored at least once; HTTPS works and security headers are present; sign-up is closed or controlled as intended; monitoring and a way to roll back are ready; and the people who will answer questions know the plan.\n\nOur projects show parts of this. ggmoney ships deploy-check.php, a read-only script that fails if anything would break the app or expose data, and it is meant to run before and after every upload, including in a browser, because that tests what Apache actually serves. Its guide notes one thing left to do before filing: set Cloudflare SSL to Full (strict). For HMRC, the repo keeps a production approvals checklist with prepared answers and says where an answer would be untrue until something is done. GGLearn made signup invite-only before wider use, and its security review lists what remains open, for example Apache restriction to Cloudflare ranges only taking effect once the live vhosts include it.\n\nLaunch when the checklist is green, and note known gaps openly.",
+   "source": "ggmoney/deploy-check.php, ggmoney/DEPLOY.md, ggmoney/docs/hmrc/vat-production-checklist.md, gglearn/docs/security/auth-review.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is the purpose of a go-live checklist?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To delay the launch forever"
+      },
+      {
+       "key": "b",
+       "text": "To replace testing"
+      },
+      {
+       "key": "c",
+       "text": "To make sure the system is safe for real users before and during launch"
+      },
+      {
+       "key": "d",
+       "text": "To list new features"
+      }
+     ],
+     "answer": "c",
+     "hint": "Safety first.",
+     "topic": "checklist"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does the ggmoney guide recommend running deploy-check.php in a browser as well as on the server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The browser is faster"
+      },
+      {
+       "key": "b",
+       "text": "It tests what Apache actually serves, not just what the rules say"
+      },
+      {
+       "key": "c",
+       "text": "It deletes old files"
+      },
+      {
+       "key": "d",
+       "text": "It sends emails"
+      }
+     ],
+     "answer": "b",
+     "hint": "Written rules versus rules in force.",
+     "topic": "verification"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does the ggmoney HMRC checklist do where an answer would be untrue until something is done?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It hides the question"
+      },
+      {
+       "key": "b",
+       "text": "It leaves the field blank"
+      },
+      {
+       "key": "c",
+       "text": "It says plainly that action is needed first"
+      },
+      {
+       "key": "d",
+       "text": "It invents an answer"
+      }
+     ],
+     "answer": "c",
+     "hint": "Honesty.",
+     "topic": "honest checklist"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "It is launch day and the checklist shows everything green except that the last backup was never test-restored. The business wants to go live today. What do you recommend, and why?",
+     "answer": "Do a test restore first if it can be done within the day, because an untested backup may fail exactly when needed. If it cannot, go live only with a fresh backup taken just before launch, record the risk openly, and schedule the restore test immediately after. Avoid skipping it silently.",
+     "rubric": "Treats untested backup as a real risk, proposes testing it or documenting and scheduling it, and avoids silent acceptance."
+    }
+   ]
+  },
+  {
+   "title": "Support model and runbooks",
+   "body": "After launch someone has to answer questions and fix problems. A support model says who is contacted, through which channel, how fast they respond, and who fixes what. Keep it proportionate: a two-company internal tool needs a clear named owner and a documented routine, not a call centre.\n\nUse tiers. First line handles how-to questions and known fixes from documentation. Second line investigates faults, reads logs and makes small changes. Final escalation is whoever can change code or infrastructure. Define severity: an outage or wrong figures in a statutory filing is urgent; a typo is not. Agree response targets for each, which is where an SLA (service level agreement) comes in. Do not promise targets you cannot meet.\n\nA runbook is step-by-step instructions for a known task or incident, written so someone tired at night can follow it. ggmoney keeps docs/hmrc/RUNBOOK.md for getting authorised to file with HMRC, and ggsocial's DEPLOY.md lists traps learned the hard way, such as the live Apache vhost being a copy, not a symlink. After each incident, hold a blameless review and update the runbook. Support is also a feedback source: patterns in questions show where the product or documentation is unclear.",
+   "source": "ggmoney/docs/hmrc/RUNBOOK.md, ggsocial/DEPLOY.md, general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is a runbook?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A marketing plan"
+      },
+      {
+       "key": "b",
+       "text": "Step-by-step instructions for a known task or incident"
+      },
+      {
+       "key": "c",
+       "text": "A list of bugs"
+      },
+      {
+       "key": "d",
+       "text": "A type of database"
+      }
+     ],
+     "answer": "b",
+     "hint": "Follow it when stressed.",
+     "topic": "runbook"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why define severity levels for support requests?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To make tickets look tidy"
+      },
+      {
+       "key": "b",
+       "text": "To block users"
+      },
+      {
+       "key": "c",
+       "text": "So urgent problems, such as an outage, are handled before minor ones"
+      },
+      {
+       "key": "d",
+       "text": "To raise prices"
+      }
+     ],
+     "answer": "c",
+     "hint": "Prioritisation.",
+     "topic": "severity"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why should you avoid promising an SLA target you cannot meet?",
+     "options": [
+      {
+       "key": "a",
+       "text": "SLAs are illegal"
+      },
+      {
+       "key": "b",
+       "text": "Support never needs targets"
+      },
+      {
+       "key": "c",
+       "text": "Because you will break a commitment people rely on"
+      },
+      {
+       "key": "d",
+       "text": "Targets are always too strict"
+      }
+     ],
+     "answer": "c",
+     "hint": "Think of trust.",
+     "topic": "SLA"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "After an incident is fixed, what two things should the team do, and why?",
+     "answer": "Hold a blameless review to find root causes and what to change, and update the runbook or documentation so the next person handles it faster. This turns a one-off fix into lasting improvement without blaming individuals.",
+     "rubric": "Mentions a blameless review and updating runbooks/docs, with the purpose of preventing repeat problems."
+    }
+   ]
+  },
+  {
+   "title": "Feedback loops and analytics",
+   "body": "Shipping is the start of learning. A feedback loop collects what users do and say, decides what it means, changes the product, and checks the effect. Without it you are guessing.\n\nTwo kinds of signal matter. Qualitative: support questions, interviews, comments, and bug reports tell you why. Quantitative: analytics events tell you what and how many, such as sign-ups, completed lessons, drop-off points and error rates. Decide the questions first, then track only what answers them. Every extra event is something to maintain and protect.\n\nPrivacy comes with analytics. Collect the minimum, avoid personal data where counts will do, never put emails or secrets in event names or URLs, tell users what you collect, and follow the legal rules that apply to you (take proper advice for those). Your own product data can be a rich source without any third-party tracker. For example, an academy like GGLearn already records runs, scores and progress in its database, so completion and difficulty can be read directly from first-party data, with access limited by role.\n\nClose the loop: review feedback on a schedule, put findings into a backlog, prioritise by value and effort, and tell users when you fixed what they raised. Measure a change before and after, and be careful to separate real effects from noise.",
+   "source": "general practice; gglearn/lib/db/schema.ts (first-party progress data)",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does a feedback loop do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Removes all bugs"
+      },
+      {
+       "key": "b",
+       "text": "Collects signals from users, acts on them, and checks the effect"
+      },
+      {
+       "key": "c",
+       "text": "Stops users complaining"
+      },
+      {
+       "key": "d",
+       "text": "Replaces testing"
+      }
+     ],
+     "answer": "b",
+     "hint": "Learn, change, check.",
+     "topic": "feedback loop"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the best first step before adding analytics events?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Track everything possible"
+      },
+      {
+       "key": "b",
+       "text": "Decide which questions the data should answer"
+      },
+      {
+       "key": "c",
+       "text": "Buy a tool"
+      },
+      {
+       "key": "d",
+       "text": "Add emails to events"
+      }
+     ],
+     "answer": "b",
+     "hint": "Purpose first.",
+     "topic": "analytics purpose"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which practice best protects privacy in analytics?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Putting user emails in URLs for easy filtering"
+      },
+      {
+       "key": "b",
+       "text": "Keeping every event forever"
+      },
+      {
+       "key": "c",
+       "text": "Storing passwords for debugging"
+      },
+      {
+       "key": "d",
+       "text": "Collecting the minimum and avoiding personal data where counts will do"
+      }
+     ],
+     "answer": "d",
+     "hint": "Minimise.",
+     "topic": "analytics privacy"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "Learners complete lesson 1 but few start lesson 2. Describe how you would investigate using both numbers and conversations, and how you would check that a fix worked.",
+     "answer": "Use first-party progress data to measure the drop-off between lessons and see whether it is concentrated in a track, device or time. Talk to or survey learners and read support questions to learn why, for example unclear next steps or difficulty. Form a hypothesis, make a small change, and compare the lesson 1 to 2 rate before and after over a similar period, allowing for noise and other changes.",
+     "rubric": "Combines quantitative drop-off analysis with qualitative research, forms a hypothesis, and measures before and after with caution."
+    }
+   ]
+  },
+  {
+   "title": "Versioning and release communication",
+   "body": "Versioning gives each release a name so people can talk about it, report bugs against it, and go back to it. Semantic versioning uses MAJOR.MINOR.PATCH: increase PATCH for bug fixes, MINOR for backwards-compatible features, and MAJOR for breaking changes. Early software often stays at 0.x to signal that things may still change.\n\nOur projects use versions with different purposes. ggmoney defines APP_VERSION as 0.1.0 in config.php, and that exact value is given to HMRC as the software version in its application, so the number is part of an external record and should be kept consistent. GGLearn's package.json is also 0.1.0 and private. ggsocial goes further: each deploy sets a deployment id (the commit plus a timestamp) so that browsers still running an old build reload instead of failing when they call server actions that no longer exist.\n\nTag releases in Git so you can find exactly what was deployed. Write release notes in user language: what changed, why it matters, anything people must do. Keep a changelog. For data, remember schema changes ship with code: a release that cannot be rolled back because of a destructive migration is a decision that must be made on purpose. Prefer small frequent releases, which are easier to test and to undo.",
+   "source": "ggmoney/config.php, ggmoney/docs/hmrc/RUNBOOK.md, gglearn/package.json, ggsocial/DEPLOY.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "In semantic versioning, which number should increase for a backwards-compatible bug fix?",
+     "options": [
+      {
+       "key": "a",
+       "text": "PATCH"
+      },
+      {
+       "key": "b",
+       "text": "MAJOR"
+      },
+      {
+       "key": "c",
+       "text": "MINOR"
+      },
+      {
+       "key": "d",
+       "text": "None of them"
+      }
+     ],
+     "answer": "a",
+     "hint": "The last number.",
+     "topic": "semver"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why is ggmoney's APP_VERSION kept consistent with what was given to HMRC?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Version numbers are secret"
+      },
+      {
+       "key": "b",
+       "text": "The number is part of an external record, so it should match"
+      },
+      {
+       "key": "c",
+       "text": "It makes pages load faster"
+      },
+      {
+       "key": "d",
+       "text": "PHP requires it"
+      }
+     ],
+     "answer": "b",
+     "hint": "Who else sees the number?",
+     "topic": "external record"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What problem does ggsocial's deployment id solve?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Slow database queries"
+      },
+      {
+       "key": "b",
+       "text": "Weak passwords"
+      },
+      {
+       "key": "c",
+       "text": "Browsers holding an old build failing on server actions that no longer exist"
+      },
+      {
+       "key": "d",
+       "text": "Missing backups"
+      }
+     ],
+     "answer": "c",
+     "hint": "Open tabs across a deploy.",
+     "topic": "deployment id"
+    },
+    {
+     "level": 9,
+     "type": "open",
+     "prompt": "Why are small, frequent releases usually safer than large infrequent ones?",
+     "answer": "Each change is smaller, so it is easier to test, to understand when something breaks, and to roll back. Large releases bundle many changes, making the cause of a failure harder to find and undo.",
+     "rubric": "Mentions easier testing, finding the cause, and rollback."
+    }
+   ]
+  }
+ ]
+}

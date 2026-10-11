@@ -1,0 +1,373 @@
+{
+ "trackSlug": "sdlc-testing",
+ "items": [
+  {
+   "title": "Test strategy and the test pyramid",
+   "body": "A test strategy answers: what do we test, at what level, and what blocks a release? The classic shape is a pyramid. Many fast unit tests check small pieces of logic. Fewer integration tests check that parts work together, such as code and a real database. A small number of end-to-end tests drive the whole app like a user. The lower you test, the faster and cheaper the feedback; the higher you test, the more realistic but slower and more fragile.\n\nSpend effort where mistakes cost most. ggmoney handles VAT, payroll and tax filing, so it has separate test scripts for VAT, payroll, banking, compliance, CSRF and more under tests/. Its bin/deploy.sh runs them all and refuses to upload anything if one fails. ggsocial uses Vitest, and its deploy script type-checks, lints and runs npm test before shipping, with SKIP_TESTS=1 as a documented emergency override.\n\nGGLearn is different. Its own security review, written earlier, noted that the repo had no tests, and package.json still has no test script, so treat automated tests there as a gap. What it does have is content verification: check:dynamic, covered in a later item.\n\nA good strategy also says what is not tested and why, and makes failing tests stop the pipeline rather than just warn.",
+   "source": "ggmoney/bin/deploy.sh, ggmoney/tests, ggsocial/DEPLOY.md, ggsocial/vitest.config.mts, gglearn/package.json, gglearn/docs/security/auth-review.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In a test pyramid, which kind of test should you have the most of?",
+     "options": [
+      {
+       "key": "a",
+       "text": "End-to-end browser tests"
+      },
+      {
+       "key": "b",
+       "text": "Manual tests only"
+      },
+      {
+       "key": "c",
+       "text": "Fast unit tests"
+      },
+      {
+       "key": "d",
+       "text": "Load tests"
+      }
+     ],
+     "answer": "c",
+     "hint": "Cheapest and fastest feedback.",
+     "topic": "pyramid"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does ggmoney's bin/deploy.sh do if a test script fails?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Uploads anyway and logs a warning"
+      },
+      {
+       "key": "b",
+       "text": "Refuses to upload anything"
+      },
+      {
+       "key": "c",
+       "text": "Deletes the failing test"
+      },
+      {
+       "key": "d",
+       "text": "Skips only that area"
+      }
+     ],
+     "answer": "b",
+     "hint": "Tests gate the release.",
+     "topic": "release gate"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why do the highest-risk areas of ggmoney, such as VAT and payroll, get their own test scripts?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Tests are required to be separate files by PHP"
+      },
+      {
+       "key": "b",
+       "text": "They run faster"
+      },
+      {
+       "key": "c",
+       "text": "They are the easiest to test"
+      },
+      {
+       "key": "d",
+       "text": "A mistake there has legal and financial cost, so effort goes where errors hurt most"
+      }
+     ],
+     "answer": "d",
+     "hint": "Risk-based testing.",
+     "topic": "risk-based"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "What is the trade-off between unit tests and end-to-end tests?",
+     "answer": "Unit tests are fast, cheap and pinpoint failures but check small pieces in isolation. End-to-end tests are realistic and cover the full flow but are slower, more fragile and harder to diagnose, so a healthy suite has many unit tests and few e2e tests.",
+     "rubric": "Compares speed, cost and fragility versus realism and gives the many-few shape."
+    }
+   ]
+  },
+  {
+   "title": "Writing unit and regression tests that earn their keep",
+   "body": "A unit test sets up a small situation, runs one piece of code, and asserts the result. Good tests are fast, independent of each other, and named for the behaviour they protect. Test the rules, not the framework: for example, that a session token with a bad signature is rejected, that a manager cannot offboard an admin, or that an expired token fails.\n\nA regression test is born from a bug. When something breaks in production, write a test that fails because of that bug, fix the code, and keep the test forever. ggmoney's tests/csrf_test.php is an example. Its header explains that a JSON endpoint sent its CSRF token in a header, the check read only a form field, so every VAT submission stopped. The tests now hold both halves in place so it cannot return silently.\n\nggsocial's Vitest config runs tests/**/*.test.ts in a node environment, with a stub for the server-only module that otherwise throws outside a Next build, and a test database helper. Stubs and fakes let you test server code without a real browser or network.\n\nAvoid tests that depend on the clock, random values or other tests. When a test is flaky, fix it or delete it, because people stop trusting a suite that fails for no reason.",
+   "source": "ggmoney/tests/csrf_test.php, ggsocial/vitest.config.mts, ggsocial/tests",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is a regression test?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A test written after a bug to make sure the same bug cannot return unnoticed"
+      },
+      {
+       "key": "b",
+       "text": "A test of how fast the app is"
+      },
+      {
+       "key": "c",
+       "text": "A test that only runs in production"
+      },
+      {
+       "key": "d",
+       "text": "A test of the design"
+      }
+     ],
+     "answer": "a",
+     "hint": "Born from a bug.",
+     "topic": "regression"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does ggsocial's Vitest config alias the server-only module to a stub?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To speed up CSS"
+      },
+      {
+       "key": "b",
+       "text": "To disable linting"
+      },
+      {
+       "key": "c",
+       "text": "The real module throws outside a Next server build, but the tests are server code"
+      },
+      {
+       "key": "d",
+       "text": "To hide secrets"
+      }
+     ],
+     "answer": "c",
+     "hint": "Environment difference.",
+     "topic": "test stubs"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Which property makes a test suite untrustworthy over time?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Fast runtime"
+      },
+      {
+       "key": "b",
+       "text": "Descriptive names"
+      },
+      {
+       "key": "c",
+       "text": "Independent tests"
+      },
+      {
+       "key": "d",
+       "text": "Flaky tests that fail for no clear reason"
+      }
+     ],
+     "answer": "d",
+     "hint": "People start ignoring failures.",
+     "topic": "flaky tests"
+    },
+    {
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A production bug shows login fails for users whose session token is older than 30 days but the check passes. Describe the test you would write first, how you would run it, and what you do with it after the fix.",
+     "answer": "Write a unit test that builds a token with an issued-at older than 30 days and asserts the session check rejects it. Run it and confirm it fails against the current code, then fix the code until it passes. Keep it in the suite permanently as a regression test and run it in the pre-deploy gate.",
+     "rubric": "Test-first reproduction that fails before the fix, passes after, and stays in the suite and gate."
+    }
+   ]
+  },
+  {
+   "title": "Coverage and verifying generated content",
+   "body": "Code coverage measures which lines or branches your tests execute. It is useful for finding untested code, but it is not proof of quality: a test can run a line without checking anything. Treat a low number as a warning and a high number as a floor. Aim coverage at the risky code, not a flat percentage everywhere.\n\nGGLearn applies the idea to content, not only code. Its quiz answers are partly generated by dynamic families. The script check:dynamic re-derives each answer by really running node, python, php, sqlite, git, npm semver and the TypeScript compiler, and fails on any mismatch. That is an oracle: an independent source of truth. Families with no executable oracle, such as CSS maths or REST rules, get a structure check only and must be reviewed by hand when changed. The README is honest about this.\n\nA second script, coverage, reports question coverage: for every track and level, how many distinct questions a learner can be asked, counting stored questions plus distinct prompts the generators can produce. It takes --min and --fail options, so it can fail a build when a level is too thin.\n\nThe lesson: decide what \"covered\" means for your product, measure it automatically, and be clear which parts are verified by machine and which only by a human.",
+   "source": "gglearn/README.md, gglearn/scripts/coverage.ts, gglearn/package.json",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does code coverage tell you?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That the code has no bugs"
+      },
+      {
+       "key": "b",
+       "text": "That the code is secure"
+      },
+      {
+       "key": "c",
+       "text": "Which parts of the code your tests executed"
+      },
+      {
+       "key": "d",
+       "text": "How fast the code is"
+      }
+     ],
+     "answer": "c",
+     "hint": "It measures execution, not correctness.",
+     "topic": "coverage"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does GGLearn's check:dynamic do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Deploys the app"
+      },
+      {
+       "key": "b",
+       "text": "Re-derives answers by really running tools like node and python and fails on any mismatch"
+      },
+      {
+       "key": "c",
+       "text": "Formats the code"
+      },
+      {
+       "key": "d",
+       "text": "Backs up the database"
+      }
+     ],
+     "answer": "b",
+     "hint": "An oracle.",
+     "topic": "oracle"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does GGLearn's coverage script count for each track and level?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Lines of code"
+      },
+      {
+       "key": "b",
+       "text": "Page views"
+      },
+      {
+       "key": "c",
+       "text": "Test files"
+      },
+      {
+       "key": "d",
+       "text": "How many distinct questions a learner can be asked, from stored and generated sources"
+      }
+     ],
+     "answer": "d",
+     "hint": "It is content coverage.",
+     "topic": "content coverage"
+    },
+    {
+     "level": 9,
+     "type": "open",
+     "prompt": "Why is a high coverage percentage not proof that the tests are good, and how does check:dynamic show a stronger approach for generated answers?",
+     "answer": "Coverage only shows code was executed, not that results were checked, so a test with no real assertion still counts. check:dynamic compares answers against an independent source of truth by actually running the tools, which verifies correctness. Where no oracle exists, it only checks structure and a human must review.",
+     "rubric": "Distinguishes execution from assertion, explains the oracle idea, and notes the limits where no oracle exists."
+    }
+   ]
+  },
+  {
+   "title": "Performance and accessibility testing",
+   "body": "Functional tests ask whether it works. Performance tests ask whether it works fast enough under load, and accessibility tests ask whether everyone can use it. Both are easiest to fix early.\n\nFor performance, set a budget first, such as a target response time for key pages at the number of users you expect. Then measure: a load test sends many concurrent requests and records response times and errors, and you read the slow percentiles, not only the average. Watch for blocking work. The GGLearn review found synchronous password hashing would stall the whole Node process under a flood of logins, which is why hashing became asynchronous. PM2's max_memory_restart of 400M in ecosystem.config.cjs is a safety net for memory growth, not a fix. ggmoney keeps a tests/stress folder of scenario runs for areas such as VAT, payroll and security.\n\nFor accessibility, test with the keyboard alone, check colour contrast, give images and icon-only buttons text alternatives, label form fields, and use semantic HTML. GGLearn's components, for example, mark decorative SVGs with aria-hidden and give the flashcard button an aria-label. Automated checkers catch only a portion of problems, so add a manual pass with a screen reader on key journeys.",
+   "source": "gglearn/ecosystem.config.cjs, gglearn/docs/security/auth-review.md, gglearn/components, ggmoney/tests/stress, general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why should a load test report slow percentiles and not only the average response time?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Averages are not numbers"
+      },
+      {
+       "key": "b",
+       "text": "Averages can hide the slow experience a minority of users get"
+      },
+      {
+       "key": "c",
+       "text": "Percentiles are faster to compute"
+      },
+      {
+       "key": "d",
+       "text": "Averages are always higher"
+      }
+     ],
+     "answer": "b",
+     "hint": "Think of the worst-off users.",
+     "topic": "percentiles"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does an icon-only button need a text alternative such as an aria-label?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So screen reader users know what the button does"
+      },
+      {
+       "key": "b",
+       "text": "So it loads faster"
+      },
+      {
+       "key": "c",
+       "text": "So it is clickable"
+      },
+      {
+       "key": "d",
+       "text": "It is required by SQLite"
+      }
+     ],
+     "answer": "a",
+     "hint": "What does a screen reader announce?",
+     "topic": "accessibility"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What problem did synchronous password hashing pose in the GGLearn review?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It stored passwords in plain text"
+      },
+      {
+       "key": "b",
+       "text": "It made hashes weaker"
+      },
+      {
+       "key": "c",
+       "text": "It blocked the Node event loop, so a flood of logins could stall the whole app"
+      },
+      {
+       "key": "d",
+       "text": "It prevented sessions"
+      }
+     ],
+     "answer": "c",
+     "hint": "One process, one event loop.",
+     "topic": "blocking work"
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "Before launch you must show that a key page stays usable at 200 simultaneous users and is usable by keyboard and screen reader users. Outline your test plan, the evidence you would produce, and one limit of what you can claim.",
+     "answer": "Set a budget (for example a target 95th percentile response time and an error rate), run a load test at and above 200 concurrent users on a production-like environment, and record percentiles, errors and server memory. For accessibility, run an automated checker, then manually do the key journey keyboard-only and with a screen reader, checking labels, focus order and contrast. Evidence: load test report and accessibility checklist with fixes. Limit: automated tools find only part of the issues and a test environment may not match production, so results are indicative, not a guarantee.",
+     "rubric": "Defines a budget and load method, covers automated and manual accessibility checks, and acknowledges limits of tools and environment."
+    }
+   ]
+  }
+ ]
+}

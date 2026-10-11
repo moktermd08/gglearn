@@ -1,0 +1,343 @@
+{
+ "trackSlug": "people-operations",
+ "items": [
+  {
+   "title": "Roles and least privilege",
+   "body": "A role bundles what a person may do. Least privilege means giving each person the minimum access needed for their job, and checking it on every request. gglearn has three roles: learner, manager and admin. Managers can run people and content areas, admins can do everything, and learners are redirected to their dashboard when they hit manager-only pages. Authorization is re-read from the database on every request, so a role change or offboarding takes effect immediately instead of waiting for a cookie to expire.\n\nThe security review found a real gap that shows why role checks need care: a manager could offboard an admin and lock them out. The fix, now in the code, is that managers can only offboard learners, while admins may offboard others, and nobody can offboard themselves. Related actions that accept any id without an ownership check were flagged as worth stating as acceptable only for a single-tenant app.\n\nMoksy's staff-operations paper makes a larger point: it has four operator roles, but nearly every guard asks only whether someone is staff, so it cannot tell a payouts clerk from a content editor. It proposes named desks with duties, and says nothing is built yet. Roles are coarse; capabilities are finer.",
+   "source": "gglearn/lib/auth.ts; gglearn/app/actions.ts; gglearn/docs/security/auth-review.md; moksy.ai/wt-earning-gaps/docs/MOKSY_STAFF_OPERATIONS.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does least privilege mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Each person gets only the access their job needs"
+      },
+      {
+       "key": "b",
+       "text": "Everyone is admin"
+      },
+      {
+       "key": "c",
+       "text": "Nobody logs in"
+      },
+      {
+       "key": "d",
+       "text": "Roles never change"
+      }
+     ],
+     "answer": "a",
+     "topic": "least privilege"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How does gglearn make role changes and offboarding take effect immediately?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It emails the user"
+      },
+      {
+       "key": "b",
+       "text": "It reads authorization from the database on each request"
+      },
+      {
+       "key": "c",
+       "text": "It waits for the cookie to expire"
+      },
+      {
+       "key": "d",
+       "text": "It restarts the server"
+      }
+     ],
+     "answer": "b",
+     "topic": "fresh checks"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "After the fix, which users may a manager offboard in gglearn?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Anyone"
+      },
+      {
+       "key": "b",
+       "text": "Admins only"
+      },
+      {
+       "key": "c",
+       "text": "Only learners"
+      },
+      {
+       "key": "d",
+       "text": "Only themselves"
+      }
+     ],
+     "answer": "c",
+     "topic": "manager rule"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why is a coarse is-this-person-staff check not enough for a growing operations team? Use Moksy's staff paper as support.",
+     "answer": "It cannot distinguish what a person is allowed to do: a payouts clerk and a content editor both pass the same check. Moksy's paper points out four operator roles and nearly all guards asking only whether someone is staff, and proposes capabilities and named desks instead (planned, not built).",
+     "rubric": "Must explain coarse vs fine-grained permissions, give the example, and note the proposal is planned."
+    }
+   ]
+  },
+  {
+   "title": "Onboarding people quickly and consistently",
+   "body": "Good onboarding gets a new person safe, productive and connected fast. It combines access, learning and people. Access means accounts created with the right role, nothing more. Learning means a clear path of what to study first. People means a named buddy and early real tasks.\n\ngglearn's People page implements the core: a manager creates a person with name, email, job role and an initial password, a checklist is created, and the person is auto-enrolled in the tracks recommended for that job role. Its onboarding checklist includes shadowing a teammate on a real task. Offboarding later reverses all of this, so a checklist for both ends of employment is part of the same design.\n\nMoksy's reviewer-onboarding document shows how far automation can go. A person makes two choices, what they do and at what level, and everything else is worked out and shown for correction: title, setup minutes before the first deciding review, what they may review, who reads their first reviews, and how they can ask for help. It reports 25 roles by 8 levels gives 200 crosses, of which 148 are real and 52 are refused with the nearest real level offered. The principle is easy, fast, automated and accurate: make a person decide only what a machine cannot.",
+   "source": "gglearn/app/actions.ts (createPerson, checklists); gglearn/README.md; moksy.ai/wt-earning-gaps/docs/MOKSY_REVIEWER_ONBOARDING.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does gglearn do when a manager creates a person?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only sends an email"
+      },
+      {
+       "key": "b",
+       "text": "Deletes old users"
+      },
+      {
+       "key": "c",
+       "text": "Closes the app"
+      },
+      {
+       "key": "d",
+       "text": "Creates a checklist and auto-enrols them in tracks for their job role"
+      }
+     ],
+     "answer": "d",
+     "topic": "createPerson"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "In Moksy reviewer onboarding, how many choices does the person make?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Two: role and level"
+      },
+      {
+       "key": "b",
+       "text": "Ten"
+      },
+      {
+       "key": "c",
+       "text": "Zero"
+      },
+      {
+       "key": "d",
+       "text": "One hundred"
+      }
+     ],
+     "answer": "a",
+     "topic": "two choices"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Of the 200 role-and-level crosses in the reviewer onboarding document, how many are real?",
+     "options": [
+      {
+       "key": "a",
+       "text": "200"
+      },
+      {
+       "key": "b",
+       "text": "148"
+      },
+      {
+       "key": "c",
+       "text": "52"
+      },
+      {
+       "key": "d",
+       "text": "25"
+      }
+     ],
+     "answer": "b",
+     "topic": "counts"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "You must onboard a new support hire next Monday. List what you set up for access, learning and people, and what you would automate.",
+     "answer": "Access: account with the correct role and only needed tool access. Learning: auto-enrol in tracks for their job role and give an onboarding checklist. People: a buddy and a real task to shadow in week one. Automate account creation, enrolment and checklist generation, leaving people to decide only exceptions, as gglearn and the Moksy reviewer onboarding do.",
+     "rubric": "Must cover access, learning, people, and identify automatable steps; least privilege is a plus."
+    }
+   ]
+  },
+  {
+   "title": "Offboarding: ending access and keeping knowledge",
+   "body": "Offboarding has two jobs that must both be done: end access safely and keep what the person knew. Access should end the moment employment ends, across every system, and sessions should be invalidated, not merely hidden. The knowledge piece is easy to forget; once someone leaves, undocumented processes leave with them.\n\ngglearn handles both. Its offboard action marks the user as offboarded and bumps a session version so every existing session is signed out immediately. Login also pays the cost of a password hash for unknown or offboarded accounts so timing does not reveal which emails exist. It then creates an offboarding checklist: write handover notes for each area you own, transfer ownership of accounts, files and customers, record answers to the ten questions only you know, and return equipment and revoke tool access. Managers can add handover notes saved against the person and optionally a track.\n\nNotice that the person is marked offboarded, not deleted. Keeping the record preserves history and prevents broken references, while removing the ability to sign in. Do offboarding with a second pair of eyes for privileged roles, take back shared credentials and rotate any secret the person knew, and tell customers who their new contact is.",
+   "source": "gglearn/app/actions.ts (offboard, addHandover, OFFBOARDING); gglearn/lib/db/schema.ts; gglearn/docs/security/auth-review.md",
+   "questions": [
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does gglearn's offboard action do to existing sessions?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Leaves them valid for 30 days"
+      },
+      {
+       "key": "b",
+       "text": "Emails the user"
+      },
+      {
+       "key": "c",
+       "text": "Bumps a session version so they are signed out"
+      },
+      {
+       "key": "d",
+       "text": "Nothing"
+      }
+     ],
+     "answer": "c",
+     "topic": "sessions"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why mark a person as offboarded instead of deleting the row?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It uses less disk"
+      },
+      {
+       "key": "b",
+       "text": "It is required by browsers"
+      },
+      {
+       "key": "c",
+       "text": "It speeds up login"
+      },
+      {
+       "key": "d",
+       "text": "It keeps history and references intact while blocking sign-in"
+      }
+     ],
+     "answer": "d",
+     "topic": "soft removal"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "Which item is on gglearn's offboarding checklist?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Record answers to the 10 questions only you know"
+      },
+      {
+       "key": "b",
+       "text": "Choose a new job title"
+      },
+      {
+       "key": "c",
+       "text": "Order lunch"
+      },
+      {
+       "key": "d",
+       "text": "Open a new bank account"
+      }
+     ],
+     "answer": "a",
+     "topic": "checklist"
+    },
+    {
+     "level": 10,
+     "type": "open",
+     "prompt": "Explain why offboarding a privileged person should include rotating secrets they knew, in addition to disabling their login.",
+     "answer": "Disabling the login stops new access but the person may still hold shared passwords, API keys or tokens that work independently of their account. Rotating them closes that route, and ownership of accounts and customers is transferred so nothing depends on the leaver.",
+     "rubric": "Must say shared credentials/keys remain valid after account disable, rotation closes this, and mention ownership transfer or second reviewer."
+    }
+   ]
+  },
+  {
+   "title": "Desks, rotas and cover",
+   "body": "As operations grow, jobs outlive people. Moksy's staff-operations paper proposes the desk: a named operating function that owns a queue, holds a bounded set of duties, is seated by people at levels, and survives whoever sits at it. A desk is what a capability is granted to, what an unresolvable item is handed to, and what an offboarding hands work back to. If nobody sits at a desk it is reported as unstaffed rather than as an empty queue.\n\nThe paper proposes 32 desks grouped by what they answer for, such as customer-facing, marketplace, money, trust and platform. Each desk is tied to a role from the existing workforce table, so the cost of running the platform uses the same rates as pricing a customer project. Every duty carries a class such as make, decide, review or sign off, a floor level, and risk tags like money, personal data, irreversible and bulk. High-risk duties need senior or second-person approval.\n\nBe clear on status: the document says it is at founder review and nothing is built. The counts in its summary should also be treated cautiously until walked and verified, since most listed cases are stated to be unverified by construction. The useful general lesson is that cover, training and handover all become possible once a job is a named thing instead of a habit.",
+   "source": "moksy.ai/wt-earning-gaps/docs/MOKSY_STAFF_OPERATIONS.md (status: at founder review, nothing built)",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "In the Moksy staff paper, what is a desk?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A physical table"
+      },
+      {
+       "key": "b",
+       "text": "A named operating function that survives the person sitting at it"
+      },
+      {
+       "key": "c",
+       "text": "A login screen"
+      },
+      {
+       "key": "d",
+       "text": "A type of report"
+      }
+     ],
+     "answer": "b",
+     "topic": "desk"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "How should an unmanned desk be reported?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As an empty queue"
+      },
+      {
+       "key": "b",
+       "text": "As deleted"
+      },
+      {
+       "key": "c",
+       "text": "As unstaffed"
+      },
+      {
+       "key": "d",
+       "text": "It should not be reported"
+      }
+     ],
+     "answer": "c",
+     "topic": "unstaffed"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "Your payouts specialist is about to go on leave, and nobody else knows the process. Using the desk idea, how do you arrange cover?",
+     "answer": "Treat payouts as a desk with written duties, a queue and a floor level, then seat a trained backup at an appropriate level and have the specialist write handover notes. High-risk money duties need second-person approval. Make unstaffed status visible so a gap is flagged instead of hidden.",
+     "rubric": "Must define duties/queue, backup seat, handover notes, second-person control for money, and visibility of unstaffed state."
+    },
+    {
+     "level": 12,
+     "type": "scenario",
+     "prompt": "A colleague proposes treating the 5,891 staff cases in the Moksy paper as proven test coverage. How do you respond?",
+     "answer": "Not accepting that claim: the paper says nothing is built, it is at founder review, and most cases are unverified by construction until someone walks them. They are a register to plan from, not evidence of coverage. Prioritise by risk tags and walk the high-risk ones first.",
+     "rubric": "Must challenge by citing the document's own status and unverified-by-construction statement, and propose walking risky cases first."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,362 @@
+{
+ "trackSlug": "payments-billing",
+ "items": [
+  {
+   "title": "A ledger records money as balanced entries",
+   "body": "A ledger is the book of record for money. Modern systems use double entry: every transaction is posted as a journal made of at least two lines, and the total of debits must equal the total of credits. A sale of 100 pounds might debit Accounts Receivable and credit Sales, so nothing is ever created or lost, only moved between accounts. The set of accounts is called the chart of accounts, and reports such as the trial balance, profit and loss and balance sheet are all just different views of the same postings.\n\nThe key habit is that a posted entry is not edited. If something was wrong, you post a correcting or reversing entry, so the history shows what happened and when. This gives auditors and future you a trail. The ggmoney app, a plain-PHP bookkeeping tool built around UK HMRC filing, works this way: it has a double-entry ledger, a chart of accounts and journals, and its invoices and bills post into that ledger. Its performance reports read actuals straight from the ledger rather than from a separate copy, so there is one source of truth. When older lines are moved onto a different brand, only the brand tag changes; the amounts never change.",
+   "source": "ggmoney/README.md; general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In double-entry bookkeeping, what must be true of every posted journal?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Debits equal credits"
+      },
+      {
+       "key": "b",
+       "text": "It has exactly one line"
+      },
+      {
+       "key": "c",
+       "text": "It is always editable later"
+      },
+      {
+       "key": "d",
+       "text": "It only touches the bank account"
+      }
+     ],
+     "answer": "a",
+     "topic": "double entry"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "A mistake is found in a posted ledger entry. What is the normal fix?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Overwrite the original amount"
+      },
+      {
+       "key": "b",
+       "text": "Post a correcting or reversing entry"
+      },
+      {
+       "key": "c",
+       "text": "Delete the entry silently"
+      },
+      {
+       "key": "d",
+       "text": "Restart the ledger"
+      }
+     ],
+     "answer": "b",
+     "topic": "corrections",
+     "hint": "Think about the audit trail."
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "According to the ggmoney notes, what happens to amounts when older ledger lines are moved onto a brand?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are recalculated"
+      },
+      {
+       "key": "b",
+       "text": "They are halved"
+      },
+      {
+       "key": "c",
+       "text": "They never change"
+      },
+      {
+       "key": "d",
+       "text": "They are deleted and re-entered"
+      }
+     ],
+     "answer": "c",
+     "topic": "ggmoney brands"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Explain why financial systems post corrections as new entries instead of editing old ones, and name one benefit.",
+     "answer": "Editing a posted entry destroys the record of what was believed at the time. A reversing or correcting entry keeps the original visible, so the history is complete and auditable, and reports for past periods can be reproduced.",
+     "rubric": "Must say history/audit trail is preserved and that corrections are new entries; a benefit such as reproducible past reports, fraud resistance or traceability."
+    }
+   ]
+  },
+  {
+   "title": "Subscriptions: entitlements, billing periods and metering",
+   "body": "A subscription links a customer to a plan for a repeating billing period. Two things must be kept apart: the entitlement (what the plan lets the customer do) and the money movement (invoices, charges, payouts). When both are stored in two services they drift, so each fact should have one owner.\n\nThe Moksy platform design says this directly. Its subscriptions service is the authoritative owner of plan entitlements, the current billing period, included monthly tokens, consumed tokens and overage posture. The payments service stays the source of truth for money movement, invoices, payouts and checkout transactions, but not plan entitlements. Every AI request produces a durable usage event in a token ledger, and the subscription keeps a fast-read snapshot of the current period. The event log is the ledger; the snapshot is only a summary.\n\nThree enforcement modes are described when the allowance runs out: block requests, downgrade to cheaper models, or allow overage and bill it. The rollout document marks the foundation phase as implemented, while removing duplicate subscription state from payments, enforcement, invoices from the token ledger and reconciliation are later phases, so treat them as planned, not built.",
+   "source": "moksy.ai/wt-earning-gaps/docs/moksy-token-subscription-architecture.md, moksy-token-subscription-rollout.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "In the Moksy design, which service is the authority for plan entitlements?",
+     "options": [
+      {
+       "key": "a",
+       "text": "payments-service"
+      },
+      {
+       "key": "b",
+       "text": "ai-llm-service"
+      },
+      {
+       "key": "c",
+       "text": "gateway"
+      },
+      {
+       "key": "d",
+       "text": "subscriptions-service"
+      }
+     ],
+     "answer": "d",
+     "topic": "ownership"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which enforcement mode keeps serving requests after the allowance is used and bills the extra?",
+     "options": [
+      {
+       "key": "a",
+       "text": "allow_overage"
+      },
+      {
+       "key": "b",
+       "text": "block"
+      },
+      {
+       "key": "c",
+       "text": "downgrade"
+      },
+      {
+       "key": "d",
+       "text": "pause"
+      }
+     ],
+     "answer": "a",
+     "topic": "enforcement modes"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What is the relationship between the usage event log and the subscription snapshot?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The snapshot is the ledger; the log is a summary"
+      },
+      {
+       "key": "b",
+       "text": "The log is the ledger; the snapshot is a fast summary"
+      },
+      {
+       "key": "c",
+       "text": "They are unrelated"
+      },
+      {
+       "key": "d",
+       "text": "The log replaces the plan"
+      }
+     ],
+     "answer": "b",
+     "topic": "ledger vs snapshot"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "Two services each store a subscription status and they now disagree about whether a customer is active. Using the Moksy approach, how do you resolve it and prevent it recurring?",
+     "answer": "Pick the subscriptions service as the single owner of subscription state and entitlement, make payments consume that state rather than hold its own copy, reconcile the existing records once, and add drift checks. This matches the planned Phase 2 billing unification.",
+     "rubric": "Must name a single owner, removal of the duplicate copy, a one-off reconciliation and ongoing detection; mention that payments keeps money movement only."
+    }
+   ]
+  },
+  {
+   "title": "Invoices, credits and refunds",
+   "body": "An invoice is a request for payment that also creates accounting entries: revenue, tax and a receivable. When the customer pays, the receivable is cleared against the bank or payment provider account. Payments can be partial, so an invoice moves through states such as draft, sent, part paid, paid, and void.\n\nRefunds and credits need care because the original invoice must stay intact. The usual practice is a credit note: a separate document that reverses some or all of an invoice, with its own number, linked to the original. Money then goes back to the customer as a refund, or stays as credit to offset the next invoice. Never delete a sent invoice; void it or credit it so the sequence of numbers has no silent gaps.\n\nRefunds must be idempotent. Payment providers retry and staff double-click, so each refund request carries a unique key and the system refuses to refund more than was paid in total. Tax follows the invoice: a credit note reverses the tax it originally charged. In a UK setting such as ggmoney, VAT on a credit note affects the VAT return for the period in which it is issued. Always ask who approved a refund and keep that decision in the audit trail.",
+   "source": "general practice; ggmoney/README.md (invoices, VAT context)",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is the usual document used to reverse part or all of a sent invoice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A reminder"
+      },
+      {
+       "key": "b",
+       "text": "A statement"
+      },
+      {
+       "key": "c",
+       "text": "A credit note"
+      },
+      {
+       "key": "d",
+       "text": "A purchase order"
+      }
+     ],
+     "answer": "c",
+     "topic": "credit notes"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why should a refund request carry a unique idempotency key?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To make it look professional"
+      },
+      {
+       "key": "b",
+       "text": "To speed up the bank"
+      },
+      {
+       "key": "c",
+       "text": "To hide it from audit"
+      },
+      {
+       "key": "d",
+       "text": "To avoid duplicate refunds when retried"
+      }
+     ],
+     "answer": "d",
+     "topic": "idempotency"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "A customer was invoiced 200 and paid 200. Which refund request should the system reject?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Refund of 250 in total"
+      },
+      {
+       "key": "b",
+       "text": "Refund of 50"
+      },
+      {
+       "key": "c",
+       "text": "Refund of 200"
+      },
+      {
+       "key": "d",
+       "text": "Refund of 0.01"
+      }
+     ],
+     "answer": "a",
+     "topic": "limits"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why should a sent invoice be voided or credited rather than deleted? Give two reasons.",
+     "answer": "Deleting breaks the numbering sequence and removes the audit trail; tax records and customer paperwork still refer to it. A void or credit note keeps the history and shows what changed and why.",
+     "rubric": "Needs sequence gaps or audit trail, plus a second reason such as tax records, customer references or reconciliation."
+    }
+   ]
+  },
+  {
+   "title": "Reviews, sign-off and reconciliation",
+   "body": "Money systems are trusted because someone checks them. Two checks matter most. Reconciliation compares your ledger with an outside source, such as a bank statement or payment provider report, and investigates differences. Sign-off means a second person approves figures before they are treated as final.\n\nggmoney shows both. It reads bank transactions through read-only Open Banking feeds or CSV import, and a transaction that arrives by both routes is recognised as one, so imports are duplicate-safe. Nothing in the banking layer can move money. For performance reporting, a review freezes a period's figures with a fingerprint. Someone else approves them, and if the ledger moves first the review goes stale and has to be put up again. A monthly compliance task chases every brand's review.\n\nThe principles carry over to any billing team. Separate the person who prepares from the person who approves. Make the evidence immutable so approval means something. Treat a stale approval as no approval. Reconcile on a schedule, not only when something looks wrong, and log every manual adjustment with a reason. Moksy's own roadmap adds the same idea for AI billing: reconciling provider invoices to the token ledger and detecting missing or duplicated usage events, which is described as planned.",
+   "source": "ggmoney/README.md; ggmoney/docs/banking/connectors.md; moksy-token-subscription-rollout.md (Phase 7, planned)",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does reconciliation compare?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Two copies of the same file"
+      },
+      {
+       "key": "b",
+       "text": "Your ledger against an outside source such as a bank statement"
+      },
+      {
+       "key": "c",
+       "text": "Invoice colours"
+      },
+      {
+       "key": "d",
+       "text": "User passwords"
+      }
+     ],
+     "answer": "b",
+     "topic": "reconciliation"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "In ggmoney, what happens to an approved review if the ledger changes afterwards?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It stays approved"
+      },
+      {
+       "key": "b",
+       "text": "It is deleted"
+      },
+      {
+       "key": "c",
+       "text": "It goes stale and must be put up again"
+      },
+      {
+       "key": "d",
+       "text": "It is auto-approved"
+      }
+     ],
+     "answer": "c",
+     "topic": "staleness"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "Why is the person who prepares figures kept separate from the person who approves them?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To slow things down"
+      },
+      {
+       "key": "b",
+       "text": "Because software requires two logins"
+      },
+      {
+       "key": "c",
+       "text": "To reduce storage"
+      },
+      {
+       "key": "d",
+       "text": "So approval is an independent check"
+      }
+     ],
+     "answer": "d",
+     "topic": "segregation of duties"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "During month-end you find the bank feed shows one transaction twice, once from the feed and once from a CSV you imported earlier. How should the system and the team handle it, and what should you check before approving the period?",
+     "answer": "ggmoney recognises a transaction that arrives by both routes as one, so first confirm the duplicate-safe matching worked and the ledger holds a single posting. Reconcile the bank balance to the statement, record any manual fix with a reason, and only then have a second person approve; if the ledger changed after a review, put it up again.",
+     "rubric": "Must mention duplicate recognition, checking single posting/balance reconciliation, logged adjustment, and second-person approval after the final ledger state."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,361 @@
+{
+ "trackSlug": "communications-email",
+ "items": [
+  {
+   "title": "Reliable delivery with an outbox and retries",
+   "body": "Sending a notification should never depend on everything working at that moment. The outbox pattern stores the message to send in your own database first, then a worker delivers it. If the provider is down, the message waits and is retried with backoff, which means waiting longer between attempts so you do not hammer a struggling service. After a set number of failures the item is marked dead so a person can look at it instead of it retrying forever.\n\nThe Moksy communications service uses this. Its roadmap records a ChatOutbox model: each recipient notification is enqueued, attempted immediately, and retried with backoff by a server-side drain, and goes dead after 6 attempts. The same roadmap persists delivery status so it survives a restart.\n\nWhy not just call the provider inline? Because a slow or failing provider then slows or fails the user's own action, and a crash between saving and sending loses the message. Storing first gives you at-least-once delivery, which in turn means receivers must tolerate duplicates. That is why the outbox is paired with idempotency, covered in the next item. Track the queue depth and the dead count; a growing dead count is an early warning that something upstream is broken.",
+   "source": "moksy.ai/wt-earning-gaps/docs/communication-roadmap.md; general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does an outbox pattern store before sending?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The message to be delivered"
+      },
+      {
+       "key": "b",
+       "text": "The user's password"
+      },
+      {
+       "key": "c",
+       "text": "A screenshot"
+      },
+      {
+       "key": "d",
+       "text": "Nothing"
+      }
+     ],
+     "answer": "a",
+     "topic": "outbox"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the reason for exponential or growing backoff between retries?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To confuse attackers"
+      },
+      {
+       "key": "b",
+       "text": "To avoid overloading a struggling provider"
+      },
+      {
+       "key": "c",
+       "text": "To save disk space"
+      },
+      {
+       "key": "d",
+       "text": "To change the subject line"
+      }
+     ],
+     "answer": "b",
+     "topic": "backoff"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "According to the Moksy roadmap, after how many attempts is an outbox item marked dead?",
+     "options": [
+      {
+       "key": "a",
+       "text": "2"
+      },
+      {
+       "key": "b",
+       "text": "3"
+      },
+      {
+       "key": "c",
+       "text": "6"
+      },
+      {
+       "key": "d",
+       "text": "10"
+      }
+     ],
+     "answer": "c",
+     "topic": "dead letters"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Explain why sending a notification directly inside the user's request is riskier than using an outbox.",
+     "answer": "A slow or failing provider would slow or fail the user's action, and a crash between saving and sending would lose the message. An outbox saves first, retries later, and gives visibility into failures, at the cost of possible duplicates.",
+     "rubric": "Covers coupling to provider failure or latency, loss on crash, and retry/visibility benefit; bonus for noting at-least-once duplicates."
+    }
+   ]
+  },
+  {
+   "title": "Webhooks: signatures, idempotency and rate limits",
+   "body": "Email and SMS providers report events back to you through webhooks: delivered, bounced, replied, and inbound messages. These are public URLs, so anyone can call them. Three defences are standard.\n\nFirst, verify authenticity. Providers sign requests, or you share a secret, and you reject anything that does not match. Second, be idempotent. Providers retry, so the same event can arrive twice; record the provider's message id and process each one once. Third, limit abuse with rate limits on the endpoints that send.\n\nThe Moksy communications roadmap lists all three as done: a shared-secret guard on the inbound webhook routes plus Twilio signature validation, a WebhookEvent model so inbound email and SMS are deduplicated exactly once by provider message id, and per-user limiters on message, attachment and thread-create routes with system and admin senders exempt. It also notes a follow-up: the in-memory limiter is per process, so a Redis-backed limiter is needed across several replicas. Another listed gap is that the reply-to token in the form thread plus an id is enumerable, so it should be signed with an HMAC. Both are marked as not yet done, so they are known risks rather than solved problems.",
+   "source": "moksy.ai/wt-earning-gaps/docs/communication-roadmap.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why must webhook handlers be idempotent?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Webhooks are always encrypted"
+      },
+      {
+       "key": "b",
+       "text": "Idempotency makes emails shorter"
+      },
+      {
+       "key": "c",
+       "text": "It is required by HTML"
+      },
+      {
+       "key": "d",
+       "text": "Providers may deliver the same event more than once"
+      }
+     ],
+     "answer": "d",
+     "topic": "idempotency"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does signature validation on a webhook protect against?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Forged requests from anyone on the internet"
+      },
+      {
+       "key": "b",
+       "text": "Slow networks"
+      },
+      {
+       "key": "c",
+       "text": "Typos in templates"
+      },
+      {
+       "key": "d",
+       "text": "Large attachments"
+      }
+     ],
+     "answer": "a",
+     "topic": "authenticity"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "In the Moksy roadmap, what is used to deduplicate inbound email and SMS?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The sender's name"
+      },
+      {
+       "key": "b",
+       "text": "The provider message id"
+      },
+      {
+       "key": "c",
+       "text": "The subject line"
+      },
+      {
+       "key": "d",
+       "text": "The timestamp"
+      }
+     ],
+     "answer": "b",
+     "topic": "dedupe"
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "Your inbound webhook starts receiving the same reply email five times and users see five copies. What do you check and change, and what extra weakness does the roadmap warn about for reply addresses?",
+     "answer": "Check whether events are recorded by provider message id and skipped when seen before, and make processing safe to repeat. Also verify the signature or secret so nobody can replay forged requests. The roadmap warns the thread-plus-id reply-to token is enumerable, so it should be signed with an HMAC (still a planned item).",
+     "rubric": "Needs message-id dedupe, authenticity check, idempotent processing, and mention of the enumerable reply-to token needing HMAC."
+    }
+   ]
+  },
+  {
+   "title": "Email deliverability basics",
+   "body": "Deliverability is whether your email reaches the inbox instead of spam or a rejection. Receiving servers decide using your reputation and three DNS-based checks. SPF lists which servers may send for your domain. DKIM adds a cryptographic signature to each message so the receiver can confirm it was not altered and came from the domain. DMARC tells receivers what to do when SPF or DKIM fail and where to send reports. Together they stop others pretending to be you and raise trust in real mail.\n\nSending through a provider requires a verified sender: you prove you control the address or domain before the provider will send as you. The ggmoney README says exactly this about its email feature, which covers payslips, invoices and deadline alerts through SendGrid: it works but needs a verified sender.\n\nReputation also depends on behaviour. Send to people who expect it, remove addresses that bounce, honour unsubscribes for marketing, and do not send from a brand new domain at high volume on day one. Keep transactional mail such as receipts and password resets separate from bulk marketing so a marketing complaint does not block critical messages. Watch bounce and complaint rates and act when they rise.",
+   "source": "ggmoney/README.md (email row); general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which DNS record lists the servers allowed to send mail for a domain?",
+     "options": [
+      {
+       "key": "a",
+       "text": "DKIM"
+      },
+      {
+       "key": "b",
+       "text": "MX"
+      },
+      {
+       "key": "c",
+       "text": "SPF"
+      },
+      {
+       "key": "d",
+       "text": "CNAME"
+      }
+     ],
+     "answer": "c",
+     "topic": "SPF"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does DKIM add to an email?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A tracking pixel"
+      },
+      {
+       "key": "b",
+       "text": "An attachment"
+      },
+      {
+       "key": "c",
+       "text": "A reply-to address"
+      },
+      {
+       "key": "d",
+       "text": "A cryptographic signature"
+      }
+     ],
+     "answer": "d",
+     "topic": "DKIM"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why keep transactional email separate from bulk marketing?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So marketing complaints do not damage critical messages"
+      },
+      {
+       "key": "b",
+       "text": "Marketing is illegal"
+      },
+      {
+       "key": "c",
+       "text": "Transactional mail is larger"
+      },
+      {
+       "key": "d",
+       "text": "It is cheaper"
+      }
+     ],
+     "answer": "a",
+     "topic": "reputation"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "What does ggmoney's README say it needs before its email feature fully works, and why do providers ask for it?",
+     "answer": "It needs a verified sender. Providers require you to prove you control the sending address or domain so nobody can send as someone else, which protects reputation and reduces spam.",
+     "rubric": "Must state verified sender requirement and that it proves control/prevents spoofing."
+    }
+   ]
+  },
+  {
+   "title": "Templates, preferences and notification design",
+   "body": "A notification system is more than sending text. Templates keep wording and layout in one place, with placeholders such as a name or invoice number filled at send time. This stops copy drifting between code paths, makes translation possible, and lets non-developers fix wording. Always escape user-supplied values in templates so a name containing markup cannot inject content.\n\nDecide the channel per message. Transactional messages such as receipts, security alerts and deadline alerts must arrive; chatty updates should respect user preferences like mute, pin and digest. The Moksy communications service lists per-thread mute, pin and mark-unread controls, aggregated unread counts and real-time read receipts as done. Use in-app notifications for low urgency and email or SMS for things that cannot wait.\n\nGood design also thinks about volume. Batch related events into a digest, threshold alerts rather than firing on every change (the Moksy token plan describes planned alerts at 80, 90 and 100 percent of allowance), and make every message say what happened, what the person should do and who to contact. Record who was notified and when so support can answer where the message went. Never put secrets or full personal data in an email body.",
+   "source": "moksy.ai/wt-earning-gaps/docs/communication-roadmap.md; moksy-token-subscription-rollout.md (alerts planned)",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is a main benefit of using message templates?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They remove the need for a database"
+      },
+      {
+       "key": "b",
+       "text": "Wording lives in one place and can be fixed centrally"
+      },
+      {
+       "key": "c",
+       "text": "They guarantee inbox delivery"
+      },
+      {
+       "key": "d",
+       "text": "They make emails larger"
+      }
+     ],
+     "answer": "b",
+     "topic": "templates"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why escape user-supplied values inserted into templates?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To make text shorter"
+      },
+      {
+       "key": "b",
+       "text": "To translate it"
+      },
+      {
+       "key": "c",
+       "text": "To stop injected markup altering the message"
+      },
+      {
+       "key": "d",
+       "text": "To speed sending"
+      }
+     ],
+     "answer": "c",
+     "topic": "escaping"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Which approach best reduces notification fatigue?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Send every event immediately"
+      },
+      {
+       "key": "b",
+       "text": "Disable all alerts"
+      },
+      {
+       "key": "c",
+       "text": "Use only SMS"
+      },
+      {
+       "key": "d",
+       "text": "Digest related events and respect user preferences"
+      }
+     ],
+     "answer": "d",
+     "topic": "digest"
+    },
+    {
+     "level": 12,
+     "type": "scenario",
+     "prompt": "Design the notification behaviour for a usage allowance that is approaching its limit: when to alert, which channel, and what the message must contain. Note which part of this is already built in Moksy.",
+     "answer": "Alert at thresholds (the Moksy plan names 80, 90 and 100 percent, which is planned, not built), once per threshold per period so users are not spammed. Use in-app plus email for the higher thresholds since action may be needed. The message states current use, the limit, the reset date, what happens at the limit and how to upgrade or contact support. Log who was notified and when; no sensitive data in the body.",
+     "rubric": "Must cover threshold alerting once per period, channel choice, message content (usage, limit, reset, next step), audit log, and honestly mark the thresholds as planned."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,361 @@
+{
+ "trackSlug": "sdlc-frontend",
+ "items": [
+  {
+   "title": "Choosing a UI framework and structuring components",
+   "body": "A UI framework gives you components, routing and a way to update the screen when data changes. The company's web apps use Next.js, which is built on React. The main idea is composition: build small components that each do one thing, and combine them into pages. Keep presentation separate from data fetching and business rules, so the same component can be reused and tested. In Next.js you decide which components run on the server and which in the browser. Server components render without sending their code to the client, which keeps pages light, while client components handle clicks, forms and local state. A good habit is to keep client components small and near the leaves of the tree. The gglearn README says visuals live in a components folder as SVG avatars, rank shields, a race track, score rings and confetti, with no image assets. Drawing in SVG keeps files tiny, scales to any screen, and can be themed with colours. Because this project says its Next.js version has breaking changes, always read the bundled docs before relying on remembered APIs. Choose a framework for team fit and longevity, not novelty.",
+   "source": "gglearn/README.md (Race to Titan visuals), gglearn/AGENTS.md, general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is the main idea behind component-based UI?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Write one large file per page"
+      },
+      {
+       "key": "b",
+       "text": "Build small single-purpose pieces and compose them into pages"
+      },
+      {
+       "key": "c",
+       "text": "Avoid reusing any code"
+      },
+      {
+       "key": "d",
+       "text": "Put all logic in the database"
+      }
+     ],
+     "answer": "b",
+     "topic": "composition"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What do gglearn's rank shields and avatars use instead of image files?",
+     "options": [
+      {
+       "key": "a",
+       "text": "SVG drawn in components"
+      },
+      {
+       "key": "b",
+       "text": "Animated GIFs"
+      },
+      {
+       "key": "c",
+       "text": "Photographs"
+      },
+      {
+       "key": "d",
+       "text": "Web fonts only"
+      }
+     ],
+     "answer": "a",
+     "topic": "SVG"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Where should client components sit in the tree, as a good habit?",
+     "options": [
+      {
+       "key": "a",
+       "text": "At the very top of every page"
+      },
+      {
+       "key": "b",
+       "text": "Only in the database layer"
+      },
+      {
+       "key": "c",
+       "text": "Small and near the leaves"
+      },
+      {
+       "key": "d",
+       "text": "They should never be used"
+      }
+     ],
+     "answer": "c",
+     "topic": "client components"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "What are the benefits of drawing graphics as SVG components instead of using image files?",
+     "answer": "They are tiny, scale to any screen without blur, can be themed with colours and animated, and need no extra downloads.",
+     "rubric": "Mentions small size, scalability and theming or no extra assets."
+    }
+   ]
+  },
+  {
+   "title": "Design systems, tokens and theming",
+   "body": "A design system is a shared set of rules and parts: colours, type sizes, spacing, components and the guidance for using them. Its value is consistency and speed, because designers and developers stop reinventing buttons. The base layer is design tokens, named values such as a primary colour, a spacing step or a corner radius. Components use tokens rather than raw numbers, so changing a token changes the whole product. This is also how theming works. A dark mode is the same components with a second set of token values, selected by the user's operating system preference or a switch. Name tokens by purpose, such as surface or text-muted, not by appearance such as light-grey, because the grey may need to be dark in another theme. Document each component with its states: default, hover, focus, disabled, loading and error. Keep the set small and let it grow only when a real need appears, and have a rule for when a one-off is allowed. Review the system regularly, remove unused parts, and keep design files and code in step.",
+   "source": "general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What are design tokens?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Login credentials for designers"
+      },
+      {
+       "key": "b",
+       "text": "Payment vouchers"
+      },
+      {
+       "key": "c",
+       "text": "Browser cookies"
+      },
+      {
+       "key": "d",
+       "text": "Named values such as colours and spacing that components reuse"
+      }
+     ],
+     "answer": "d",
+     "topic": "tokens"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why name a token 'text-muted' instead of 'light-grey'?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The colour may change between themes, but the purpose stays"
+      },
+      {
+       "key": "b",
+       "text": "It is shorter"
+      },
+      {
+       "key": "c",
+       "text": "Grey is not allowed"
+      },
+      {
+       "key": "d",
+       "text": "Browsers require it"
+      }
+     ],
+     "answer": "a",
+     "topic": "naming"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "How does dark mode usually work with tokens?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Every component is rewritten"
+      },
+      {
+       "key": "b",
+       "text": "The same components use a second set of token values"
+      },
+      {
+       "key": "c",
+       "text": "Images are inverted by the server"
+      },
+      {
+       "key": "d",
+       "text": "A separate website is built"
+      }
+     ],
+     "answer": "b",
+     "topic": "theming"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A team has copied the same button five times with slightly different colours and padding, and now wants a rebrand. Explain how a design system would change this and how you would migrate.",
+     "answer": "Define tokens for colour, spacing and radius and one button component with documented states, then replace the copies one by one so the rebrand becomes a change of token values. Audit existing variants, keep the component set small, set a rule for exceptions, and keep design files and code aligned.",
+     "rubric": "Proposes tokens and a single documented component; migration by replacing copies; mentions states or governance; rebrand becomes a token change."
+    }
+   ]
+  },
+  {
+   "title": "Responsive layout and accessibility",
+   "body": "Responsive design means a page works on phones, tablets and large screens. Start with the small screen and add layout as space grows, use flexible grids and relative units, and test on real devices, because most visitors may not use a large desktop. Touch targets should be big enough to tap, and nothing should need horizontal scrolling. Accessibility means people with different abilities can use the product, including people using keyboards, screen readers, magnification or reduced motion. Practical basics: use proper HTML elements such as buttons and headings so assistive technology understands them; give every form field a visible label; make everything reachable and usable by keyboard with a visible focus outline; provide text alternatives for meaningful images; keep enough colour contrast; and never use colour alone to carry meaning. The gglearn competitions leaderboard follows the last idea in a small way: bots are labelled in words as Bot, simulated, not just styled differently. Respect the user's reduced motion setting for animations such as confetti. Accessibility is cheaper when built in from the start and should be tested with automated checks plus manual keyboard and screen reader passes.",
+   "source": "gglearn/docs/competitions.md (bot labelling), general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does a mobile-first approach mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Build only for phones"
+      },
+      {
+       "key": "b",
+       "text": "Build desktop first then hide features"
+      },
+      {
+       "key": "c",
+       "text": "Design for the small screen first and add layout as space grows"
+      },
+      {
+       "key": "d",
+       "text": "Use fixed pixel widths"
+      }
+     ],
+     "answer": "c",
+     "topic": "responsive"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why use a real button element instead of a styled div?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Assistive technology and keyboards understand it automatically"
+      },
+      {
+       "key": "b",
+       "text": "It loads faster in every case"
+      },
+      {
+       "key": "c",
+       "text": "It avoids needing CSS"
+      },
+      {
+       "key": "d",
+       "text": "Divs are not allowed in HTML"
+      }
+     ],
+     "answer": "a",
+     "topic": "semantic HTML"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does 'never use colour alone to carry meaning' require?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Use only black and white"
+      },
+      {
+       "key": "b",
+       "text": "Avoid every colour"
+      },
+      {
+       "key": "c",
+       "text": "Colour is only for logos"
+      },
+      {
+       "key": "d",
+       "text": "Add text, icons or patterns as well as colour"
+      }
+     ],
+     "answer": "d",
+     "topic": "colour"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "List four practical accessibility checks you would run on a new form page.",
+     "answer": "Every field has a visible label; the form works fully by keyboard with a visible focus outline; error messages are in text and linked to the field; colour contrast is sufficient and colour is not the only signal; test with a screen reader and reduced motion.",
+     "rubric": "Lists at least four valid checks such as labels, keyboard use, focus, contrast, error text, screen reader testing."
+    }
+   ]
+  },
+  {
+   "title": "Forms, validation and front-end performance",
+   "body": "Forms are where users give data, so make them clear and forgiving. Validate in the browser to give quick, friendly feedback, but remember this is only a convenience: a user can bypass the browser, so the server must validate everything again. The gglearn competitions document shows this for profile photos. People upload JPEG, PNG or WebP up to 300 KB, the type is checked from the file bytes rather than the name, and SVG is rejected, since it can carry scripts. Those checks happen on the server. In the screen, show limits before the person uploads, explain errors in plain words next to the field, keep what they typed after a failure, and disable the submit button while sending to avoid double submits. For performance, send less: compress images, load code only where it is used, avoid blocking the first paint, and measure with real devices and slow networks. Show loading states so users know something is happening. Fast, accessible and honest interfaces build trust, and measuring beats guessing about what is slow.",
+   "source": "gglearn/docs/competitions.md (Faces), general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why must the server validate input even if the browser already did?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Browsers cannot read forms"
+      },
+      {
+       "key": "b",
+       "text": "Users can bypass the browser, so client checks are only a convenience"
+      },
+      {
+       "key": "c",
+       "text": "Server checks are faster"
+      },
+      {
+       "key": "d",
+       "text": "Client checks are illegal"
+      }
+     ],
+     "answer": "b",
+     "topic": "validation"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How does gglearn decide whether an uploaded photo is allowed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It checks the type from the file bytes and limits size, rejecting SVG"
+      },
+      {
+       "key": "b",
+       "text": "It trusts the file extension only"
+      },
+      {
+       "key": "c",
+       "text": "It accepts any image type"
+      },
+      {
+       "key": "d",
+       "text": "It asks the user to confirm"
+      }
+     ],
+     "answer": "a",
+     "topic": "uploads"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What is a sensible way to prevent double submissions of a form?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Hide the form completely"
+      },
+      {
+       "key": "b",
+       "text": "Remove validation"
+      },
+      {
+       "key": "c",
+       "text": "Disable the submit button while the request is sending"
+      },
+      {
+       "key": "d",
+       "text": "Reload the page every second"
+      }
+     ],
+     "answer": "c",
+     "topic": "UX"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "Users on slow mobile connections report that your sign-up page feels broken. They tap submit several times and some accounts are created twice. How do you investigate and fix it from the front end and the server?",
+     "answer": "Reproduce on a throttled network. On the front end show a loading state and disable submit while sending, keep entered values, and reduce page weight with compression and lazy loading. On the server make the request safe to repeat, for example by enforcing a unique constraint so a repeat does not create a second account, and validate input again. Measure afterwards.",
+     "rubric": "Reproduces under slow network; loading state and disabled submit; reduces payload; server-side protection against duplicates; measures results."
+    }
+   ]
+  }
+ ]
+}

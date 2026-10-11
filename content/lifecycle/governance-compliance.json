@@ -1,0 +1,343 @@
+{
+ "trackSlug": "governance-compliance",
+ "items": [
+  {
+   "title": "Policies, approvals and segregation of duties",
+   "body": "A policy states what must happen. A control is the mechanism that makes it hard to skip. Good governance pairs the two: a rule nobody can check is only a wish. One classic control is segregation of duties, which means the person who prepares something is not the person who approves it, so a single mistake or a single bad actor cannot push a change all the way through alone. GG Money applies this to brand performance. A review freezes a period's figures together with a fingerprint of the underlying numbers. A different person then approves it. If the ledger moves before approval, the fingerprint no longer matches, the review goes stale, and it has to be put up again. The lesson is that an approval belongs to one exact version of the thing approved, not to the thing in general. The same app keeps automation in its place: automatic compliance checks only advise and never sign off, and AI agents or other services can leave notes through the API, but only a person approves. Machines gather evidence quickly; a named human takes responsibility. When you design an approval step, record who approved, what exact version, and when, so the decision can be checked later.",
+   "source": "ggmoney/README.md (brand performance and sign-off), ggmoney/docs/compliance/calendar.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does segregation of duties mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Every employee has the same access so work can be shared"
+      },
+      {
+       "key": "b",
+       "text": "The person who prepares a change is not the person who approves it"
+      },
+      {
+       "key": "c",
+       "text": "Approvals are only needed for changes made by new staff"
+      },
+      {
+       "key": "d",
+       "text": "One senior person should do all steps to keep control tidy"
+      }
+     ],
+     "answer": "b",
+     "topic": "segregation of duties"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "In GG Money, what happens to a brand review if the ledger changes after the review was frozen but before it is approved?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is approved automatically because the ledger is the newer record"
+      },
+      {
+       "key": "b",
+       "text": "It keeps its approval but gets a warning banner"
+      },
+      {
+       "key": "c",
+       "text": "The ledger change is blocked until the review is approved"
+      },
+      {
+       "key": "d",
+       "text": "The review goes stale and has to be put up again"
+      }
+     ],
+     "answer": "d",
+     "topic": "stale approvals"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why does a frozen review carry a fingerprint of its figures?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To encrypt the figures so other users cannot read them"
+      },
+      {
+       "key": "b",
+       "text": "To make the page load faster for the approver"
+      },
+      {
+       "key": "c",
+       "text": "So a change to the underlying numbers can be detected and the approval no longer applies to them"
+      },
+      {
+       "key": "d",
+       "text": "To count how many times the review has been viewed"
+      }
+     ],
+     "answer": "c",
+     "topic": "approval versioning"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Explain why GG Money lets automatic checks advise but never sign off, and what the human approval adds.",
+     "answer": "Automatic checks are fast and consistent at gathering evidence (for example, is the bank feed healthy), but they cannot take accountability or judge context. A named person's approval adds responsibility, judgement about things the check cannot see, and a record of who accepted the result and when. Keeping sign-off with a person also preserves segregation of duties.",
+     "rubric": "Must say checks gather evidence/advise; humans add accountability and judgement; should mention a recorded named approver or separation from the preparer."
+    }
+   ]
+  },
+  {
+   "title": "Audit trails, retention and immutability",
+   "body": "An audit trail answers who did what, to which record, when, and with what result. To be useful it must be hard to alter after the fact, which is why GG Money never edits or deletes a posted journal. A mistake is fixed by a reversal, so both the error and the fix stay visible, which is what auditors expect. The Moksy audit service adds retention classes. Records are grouped by kind, and each class has its own keep period in the service's configuration: authentication events one year, payments seven years, AI events two years, with a two-year default. These are the platform's configured values, not legal advice; the right period for a business depends on its own obligations. The service's own comments admit a past gap: callers never passed a class, so every record fell into default and the per-class policy governed nothing. The fix derives the class from the action name prefix, such as auth or payments, while an explicit class still wins. The sweep archives records past retention but never deletes them. Purging stays a deliberate super-admin decision, because destroying history on a timer is a legal choice, not a housekeeping default. A sweep should also report what it did not do.",
+   "source": "moksy.ai/wt-earning-gaps/foundation/audit/src/services/AuditService.js, ggmoney/README.md (immutability)",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does a useful audit trail record?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Who did what, to which record, and when"
+      },
+      {
+       "key": "b",
+       "text": "Only the final balance of each account"
+      },
+      {
+       "key": "c",
+       "text": "Only errors that reached the user"
+      },
+      {
+       "key": "d",
+       "text": "Only actions taken by administrators"
+      }
+     ],
+     "answer": "a",
+     "topic": "audit basics"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "In GG Money, how is a mistake in a posted journal corrected?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The original journal is edited in place"
+      },
+      {
+       "key": "b",
+       "text": "A reversing entry is posted, so the error and the fix both stay visible"
+      },
+      {
+       "key": "c",
+       "text": "The original journal is deleted and re-entered"
+      },
+      {
+       "key": "d",
+       "text": "The journal is hidden from the ledger view"
+      }
+     ],
+     "answer": "b",
+     "topic": "immutability"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "In the Moksy audit service, what does the retention sweep do with records past their keep period?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Deletes them immediately to save storage"
+      },
+      {
+       "key": "b",
+       "text": "Leaves them untouched and silently ignores the policy"
+      },
+      {
+       "key": "c",
+       "text": "Archives them, while purging remains a separate deliberate super-admin action"
+      },
+      {
+       "key": "d",
+       "text": "Emails them to the record owner and then deletes them"
+      }
+     ],
+     "answer": "c",
+     "topic": "retention"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "Every audit record in a system is labelled 'default' retention because callers never pass a class, so the stricter payments rule is never applied. Describe the problem and a safe fix.",
+     "answer": "The per-class policy exists on paper but governs nothing, so payment events could be kept for the shorter default period. A safe fix derives the class from data already written, such as the action prefix (auth, payments, ai), while still letting an explicit class override it, and keeps a default fallback so unknown classes still age out. The sweep should archive rather than delete and report per class what it did and what is still past retention.",
+     "rubric": "Must identify that the class is not being set and the policy is ineffective; propose deriving class from action or requiring it; mention archive-not-delete or reporting; avoid inventing legal periods."
+    }
+   ]
+  },
+  {
+   "title": "Data protection concepts: GDPR, PCI, HIPAA and FERPA",
+   "body": "Compliance frameworks are best understood as families of ideas rather than rulebooks to memorise. GDPR-style data protection law rests on principles such as collecting only what you need (data minimisation), using data only for stated purposes, keeping it no longer than needed, and respecting people's rights over their data. PCI DSS is an industry standard for organisations that handle payment card data; the safest approach is to avoid touching card numbers at all. HIPAA is a United States law about protecting health information held by covered organisations and their suppliers. FERPA is a United States law about student education records. This course teaches concepts only; for any real obligation, ask a qualified adviser. The company's own habits show minimisation in practice. GG Money logs every email send in an email log, recording who, what, when and what the provider said, but deliberately does not store the message body, because a payslip email contains someone's salary and a second copy in a debugging table is a liability. In a sandbox install nothing is sent unless a redirect address is set, so a test can never email a real employee. The Moksy AI policy service can apply scrub rules that mask email addresses and phone numbers in text before it travels onwards.",
+   "source": "ggmoney/DEPLOY.md (email log, mail redirect), moksy.ai/wt-earning-gaps/foundation/ai-policy/src/services/AiPolicyService.js",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does the data minimisation principle ask for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Collect as much data as possible in case it is useful later"
+      },
+      {
+       "key": "b",
+       "text": "Store every copy of personal data in at least two places"
+      },
+      {
+       "key": "c",
+       "text": "Share data freely inside the company"
+      },
+      {
+       "key": "d",
+       "text": "Collect and keep only the personal data you actually need"
+      }
+     ],
+     "answer": "d",
+     "topic": "minimisation"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which framework is an industry standard for organisations that handle payment card data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "PCI DSS"
+      },
+      {
+       "key": "b",
+       "text": "HIPAA"
+      },
+      {
+       "key": "c",
+       "text": "FERPA"
+      },
+      {
+       "key": "d",
+       "text": "GDPR"
+      }
+     ],
+     "answer": "a",
+     "topic": "frameworks"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why does GG Money's email log deliberately not store the message body?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Message bodies are too large for any database"
+      },
+      {
+       "key": "b",
+       "text": "A payslip email contains someone's salary, so a second copy would be an unneeded liability"
+      },
+      {
+       "key": "c",
+       "text": "The email provider forbids storing sent messages"
+      },
+      {
+       "key": "d",
+       "text": "Bodies are only needed when emails fail"
+      }
+     ],
+     "answer": "b",
+     "topic": "privacy by design"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "The Moksy AI policy service can mask email addresses and phone numbers in prompts with regular expressions. What risk does that reduce, and name one limit of this approach.",
+     "answer": "It reduces the chance that personal contact details are sent to an external model provider or stored in logs. A limit is that pattern matching misses data in unusual formats, names, addresses or free-text identifiers, and can occasionally mask harmless text, so it is one layer and not a guarantee.",
+     "rubric": "Must name the risk (personal data leaving to a provider/logs) and a genuine limitation (misses formats, names, false positives); bonus for suggesting layered controls."
+    }
+   ]
+  },
+  {
+   "title": "Risk scoring and the compliance calendar",
+   "body": "Risk scoring turns a worry into something you can compare. The common simple method scores likelihood and impact, then multiplies them, so a rare but severe event can rank alongside a frequent minor one. It is only as good as the evidence behind the scores: a control that has never failed may simply never have been tested. GG Money's compliance calendar is a practical example. Each task names how often it recurs, who signs it off, the rule it comes from, and what goes wrong if it is missed. Writing the consequence down makes the impact visible, so people can rank tasks sensibly. The calendar states plainly that dates are reminders, not advice, and marks some as needing confirmation because facts such as a first accounting period are outside the app. An internal stress run in October 2026 proposed a number of issues, nothing fixed at that time, including that some statutory due dates could be one or two days late for certain year ends, and that a backlog of daily housekeeping tasks could hide statutory deadlines because the list was capped. The takeaway is that a calendar needs testing like any other system, and that noise from low-severity items can bury high-severity ones, so surface by risk rather than only by age.",
+   "source": "ggmoney/docs/compliance/calendar.md, ggmoney/docs/qc/ggmoney-audit-2026-10-04.md",
+   "questions": [
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "A common simple risk score is calculated as:",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cost divided by number of staff"
+      },
+      {
+       "key": "b",
+       "text": "Number of past incidents plus number of controls"
+      },
+      {
+       "key": "c",
+       "text": "Likelihood multiplied by impact"
+      },
+      {
+       "key": "d",
+       "text": "Impact alone, ignoring likelihood"
+      }
+     ],
+     "answer": "c",
+     "topic": "risk scoring"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does each task in the GG Money compliance calendar state what happens if it is missed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes the impact explicit so tasks can be prioritised sensibly"
+      },
+      {
+       "key": "b",
+       "text": "It is required for the page to render"
+      },
+      {
+       "key": "c",
+       "text": "It lets the app skip tasks with mild consequences"
+      },
+      {
+       "key": "d",
+       "text": "It replaces the need for anyone to sign tasks off"
+      }
+     ],
+     "answer": "a",
+     "topic": "impact"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "A control is rated 'low likelihood of failure' only because it has never failed. Why is that weak reasoning, and what better evidence would you gather?",
+     "answer": "Never failing may just mean it has never been exercised or noticed. Better evidence includes testing the control (for example, a dry run or deliberately failing case), reviewing logs for near misses, and checking it against edge cases, as the GG Money stress run did for its calendar dates.",
+     "rubric": "Must challenge absence of failure as evidence and propose testing, sampling or review of logs/edge cases."
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "A compliance dashboard lists the 400 oldest outstanding tasks, and a pile of daily housekeeping items now hides a statutory deadline. How would you redesign the view and the scoring?",
+     "answer": "Rank by risk rather than by age alone: weight statutory or high-impact tasks above routine ones, pin upcoming statutory deadlines at the top, group or collapse routine housekeeping, show counts rather than a hard cap that hides items, and alert on any overdue statutory item. Test the view with a seeded backlog so the failure cannot return, and keep sign-off with a named person.",
+     "rubric": "Must propose risk/impact-based ordering or separate statutory items from routine; avoid hiding items by a cap; mention testing or alerting."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,361 @@
+{
+ "trackSlug": "delivery-management",
+ "items": [
+  {
+   "title": "Estimates: ranges, assumptions and risk",
+   "body": "An estimate is a forecast, not a promise, and it is most useful when it says how sure you are. Break the work into small pieces first, because small pieces are easier to size and mistakes average out. Give each a range, such as best case and worst case, instead of one number, and add the pieces that are commonly forgotten: testing, review rounds, deployment, content from the client, project management and handover.\n\nWrite down assumptions. If the client supplies images by a certain date, or an integration has documented access, say so. When an assumption fails, you have a clear basis for a change request rather than an argument. Use past projects: compare earlier estimates with actuals so your numbers improve. Add a contingency for uncertainty, larger when requirements are vague, and show it openly instead of padding every line.\n\nSeparate effort from duration. Fifty hours of work may take six weeks because of waiting for feedback. Moksy's own materials say discovery should understand the problem before a solution is priced, with confirmation of the problem statement first, which is why a good estimate follows requirements rather than a one-line idea. The gglearn curriculum lists requirements, estimates, handover and client continuity as one delivery-management topic.",
+   "source": "gglearn/docs/curriculum.md; moksy CUSTOMER_CONTINUITY_BRIEF.md; general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is the best way to express an uncertain estimate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A range with assumptions"
+      },
+      {
+       "key": "b",
+       "text": "A single exact number"
+      },
+      {
+       "key": "c",
+       "text": "No number at all"
+      },
+      {
+       "key": "d",
+       "text": "Double the number silently"
+      }
+     ],
+     "answer": "a",
+     "topic": "ranges"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which item is most commonly forgotten in estimates?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Writing code"
+      },
+      {
+       "key": "b",
+       "text": "Testing, review rounds and handover"
+      },
+      {
+       "key": "c",
+       "text": "Choosing a colour"
+      },
+      {
+       "key": "d",
+       "text": "Opening the editor"
+      }
+     ],
+     "answer": "b",
+     "topic": "hidden work"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why record assumptions alongside an estimate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They make the document longer"
+      },
+      {
+       "key": "b",
+       "text": "They are legally required"
+      },
+      {
+       "key": "c",
+       "text": "They give a clear basis for a change request if they prove false"
+      },
+      {
+       "key": "d",
+       "text": "They replace requirements"
+      }
+     ],
+     "answer": "c",
+     "topic": "assumptions"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Distinguish effort from duration and give an example of why they differ.",
+     "answer": "Effort is the amount of working time needed; duration is the calendar time to finish. Fifty hours of effort can span weeks because of waiting for client feedback, content or approvals, or because people work on several projects.",
+     "rubric": "Must define both and give a waiting/dependency or part-time example."
+    }
+   ]
+  },
+  {
+   "title": "Requirements and scope control",
+   "body": "Most delivery trouble starts before building: people agree on a solution without agreeing on the problem. Good requirements say who has the problem, what happens today, what outcome is wanted, and how success will be recognised. They separate must-haves from nice-to-haves and list what is out of scope, because a clear no protects both sides.\n\nMoksy's customer-continuity brief describes the same ordering. It says the ask is never the harm, for example a request for a website may hide the real problem of generating leads, so the read-back plays the problem back field by field before anything is priced. It also records that the nine problem fields, the origin of each, the quote and a confidence exist on the project, so you can see where each statement came from.\n\nScope control then keeps the agreement alive. Every change goes through a short process: describe it, estimate its effect on cost and date, get approval, and update the plan. Do not absorb small changes quietly; a hundred small yeses become a late project. Keep a visible change log, and revisit requirements at milestones because understanding grows as work proceeds. Ask the client to confirm in writing so decisions are traceable.",
+   "source": "moksy.ai/wt-earning-gaps/docs/CUSTOMER_CONTINUITY_BRIEF.md (sections 1 and 3); general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What should a good requirement describe first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The preferred font"
+      },
+      {
+       "key": "b",
+       "text": "The server brand"
+      },
+      {
+       "key": "c",
+       "text": "The invoice date"
+      },
+      {
+       "key": "d",
+       "text": "Who has the problem and the outcome wanted"
+      }
+     ],
+     "answer": "d",
+     "topic": "problem first"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does an out-of-scope list do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Protects both sides by stating what is not included"
+      },
+      {
+       "key": "b",
+       "text": "Hides risks"
+      },
+      {
+       "key": "c",
+       "text": "Adds work"
+      },
+      {
+       "key": "d",
+       "text": "Replaces the contract"
+      }
+     ],
+     "answer": "a",
+     "topic": "scope"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What is the right way to handle a small client change request mid-project?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Absorb it quietly"
+      },
+      {
+       "key": "b",
+       "text": "Describe, estimate impact, get approval and update the plan"
+      },
+      {
+       "key": "c",
+       "text": "Refuse all changes"
+      },
+      {
+       "key": "d",
+       "text": "Wait until the end"
+      }
+     ],
+     "answer": "b",
+     "topic": "change control"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A client asks for 'a website' and you suspect the real need is more enquiries from insurance brokers. How do you proceed before quoting, following the Moksy approach?",
+     "answer": "Do not price the ask. Interview to find the problem: who faces it, what happens today and what outcome matters, then read the problem statement back and get confirmation. Only then scope a solution, which may include a website among other things, and estimate against confirmed requirements.",
+     "rubric": "Must separate the ask from the problem, use a read-back/confirmation step, and estimate only after confirmed requirements."
+    }
+   ]
+  },
+  {
+   "title": "Handover: leaving the client able to run it",
+   "body": "A project is not finished when the code is deployed; it is finished when the client or the next team can operate it. Handover is the planned transfer of knowledge, access and responsibility. A solid package includes: where things live (hosting, domains, repositories), how to deploy and roll back, how backups work, what each account and credential is for, who to contact, and a list of known issues and future ideas. Credentials move through a secure channel and ownership of accounts is transferred to the client, not left under the supplier's personal login.\n\nInclude a walkthrough with the people who will use or maintain the system, and keep a short runbook for the common jobs and failures. State what ongoing support covers and what response times apply, so expectations are clear.\n\nThe gglearn app models the same idea for staff. It has a handovers table holding notes per person, optionally tied to a learning track, and its offboarding checklist starts with: write handover notes for each area you own; transfer ownership of accounts, files and customers; record answers to the ten questions only you know; and return equipment and revoke tool access. Treat project handover and staff handover alike: write it down while the knowledge is still in someone's head.",
+   "source": "gglearn/lib/db/schema.ts (handovers); gglearn/app/actions.ts (OFFBOARDING); gglearn/docs/curriculum.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which is part of a good project handover?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only the invoice"
+      },
+      {
+       "key": "b",
+       "text": "A list of passwords by email"
+      },
+      {
+       "key": "c",
+       "text": "Where hosting and domains live and how to deploy"
+      },
+      {
+       "key": "d",
+       "text": "Nothing, the code is enough"
+      }
+     ],
+     "answer": "c",
+     "topic": "handover contents"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "In gglearn's offboarding checklist, what is the first listed step?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Return equipment"
+      },
+      {
+       "key": "b",
+       "text": "Delete the account"
+      },
+      {
+       "key": "c",
+       "text": "Send a farewell email"
+      },
+      {
+       "key": "d",
+       "text": "Write handover notes for each area you own"
+      }
+     ],
+     "answer": "d",
+     "topic": "gglearn checklist"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "Why transfer ownership of accounts to the client rather than leave them on the supplier's personal login?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So the client is not locked out if the supplier leaves"
+      },
+      {
+       "key": "b",
+       "text": "It saves money"
+      },
+      {
+       "key": "c",
+       "text": "It improves SEO"
+      },
+      {
+       "key": "d",
+       "text": "It is faster to deploy"
+      }
+     ],
+     "answer": "a",
+     "topic": "ownership"
+    },
+    {
+     "level": 10,
+     "type": "open",
+     "prompt": "List the main contents you would put in a handover pack for a website you built, and say why a runbook helps.",
+     "answer": "Hosting, domain and repository locations; how to deploy and roll back; backup arrangements; what each account and credential is for and who owns it; contacts and support terms; known issues. A runbook lets someone handle common jobs and failures without the original developer.",
+     "rubric": "At least four concrete contents including access/ownership and deploy/backup; runbook benefit of reducing dependence on one person."
+    }
+   ]
+  },
+  {
+   "title": "Client continuity: remembering the business, not just the project",
+   "body": "Clients often return with a second or third project, and starting each from zero wastes their time and loses what you already learned. Continuity means keeping a record above the single project: who the client is, what they do, which problems were confirmed, and what was decided.\n\nThe Moksy customer-continuity brief gives three words for this. A holder is the person or organisation above the project. A profile is what is known about the holder, each fact with an origin and an age so you can tell what is stale. A challenge is a confirmed problem lifted off the project, versioned, with the projects joined to it. A second project on the same problem is joined to the same challenge instead of rediscovering it. The brief lists stages including attach, recall and confirm, where the system asks whether it is the same business and challenge as last time.\n\nImportantly, the brief is at founder review and says nothing is built yet, so this is a design, not live behaviour. Its useful principle applies to any team: record where a fact came from and when, recall it before the first question, and confirm rather than assume, because businesses change. Treat access carefully; what one customer shares must not leak to another.",
+   "source": "moksy.ai/wt-earning-gaps/docs/CUSTOMER_CONTINUITY_BRIEF.md (status says nothing built yet)",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "In the continuity brief, what is a holder?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A database index"
+      },
+      {
+       "key": "b",
+       "text": "The person or organisation above the project"
+      },
+      {
+       "key": "c",
+       "text": "A type of invoice"
+      },
+      {
+       "key": "d",
+       "text": "A server"
+      }
+     ],
+     "answer": "b",
+     "topic": "holder"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does each profile fact carry an origin and an age?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To decorate the page"
+      },
+      {
+       "key": "b",
+       "text": "To speed queries"
+      },
+      {
+       "key": "c",
+       "text": "So you can judge whether it is trustworthy or stale"
+      },
+      {
+       "key": "d",
+       "text": "To avoid writing it down"
+      }
+     ],
+     "answer": "c",
+     "topic": "provenance"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "What is the current status of the continuity design in the brief?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Fully deployed"
+      },
+      {
+       "key": "b",
+       "text": "Retired"
+      },
+      {
+       "key": "c",
+       "text": "Handed to customers"
+      },
+      {
+       "key": "d",
+       "text": "At founder review with nothing built"
+      }
+     ],
+     "answer": "d",
+     "topic": "status"
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "A returning client starts a second project, and last year's profile says they have 10 staff, but they now say 40. How should a continuity process behave, and what should it avoid?",
+     "answer": "Recall the profile before the first question, show the old fact with its origin and age, and ask the client to confirm or correct it. A correction updates the profile and marks other open projects stale for that fact. It should avoid silently trusting old data or overwriting without recording where the new value came from, and must not expose another client's data.",
+     "rubric": "Needs recall then confirm with origin/age, update of profile and staleness flag, and no silent assumption or cross-customer leakage."
+    }
+   ]
+  }
+ ]
+}

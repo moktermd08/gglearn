@@ -1,0 +1,373 @@
+{
+ "trackSlug": "sdlc-devops",
+ "items": [
+  {
+   "title": "A deploy pipeline you can trust",
+   "body": "A pipeline turns a code change into a running release the same way every time. Good ones are repeatable, stop at the first failure, and check that the app really came back. Ours are scripts run from a developer's machine rather than a hosted CI service, but the same ideas apply.\n\nGGLearn's deploy/deploy.sh does this. It rsyncs the code to the server, excluding node_modules, .next, .git, the SQLite database files and every .env file. Then it streams the remote steps into bash, because the server's login shell is fish and cannot parse bash syntax. Remote steps: take a lock with flock so two deploys cannot overlap, npm ci for exact dependencies from the lockfile, drizzle-kit push for the schema, next build, and pm2 startOrRestart. The script sets -euo pipefail, so any failing step stops it. Finally it polls the app on 127.0.0.1 port 3400 up to ten times and fails the deploy unless it gets HTTP 200, printing recent PM2 error logs if not.\n\nggsocial adds pre-flight checks (type-check, lint and tests before shipping), a database backup before changes, and builds into a fresh directory then swaps it in, so the old build serves until the new one is ready.\n\nKeep a deploy small, scripted and verifiable.",
+   "source": "gglearn/deploy/deploy.sh, ggsocial/DEPLOY.md",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Why does GGLearn's deploy script take a lock with flock?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To encrypt the code"
+      },
+      {
+       "key": "b",
+       "text": "To speed up rsync"
+      },
+      {
+       "key": "c",
+       "text": "To prevent two deploys running at the same time on the server"
+      },
+      {
+       "key": "d",
+       "text": "To clear the cache"
+      }
+     ],
+     "answer": "c",
+     "hint": "Overlapping deploys would collide.",
+     "topic": "deploy lock"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does the final loop in deploy.sh do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Deletes old builds"
+      },
+      {
+       "key": "b",
+       "text": "Polls the app for HTTP 200 and fails the deploy if it does not come back"
+      },
+      {
+       "key": "c",
+       "text": "Sends an email"
+      },
+      {
+       "key": "d",
+       "text": "Rotates the logs"
+      }
+     ],
+     "answer": "b",
+     "hint": "Verify, do not assume.",
+     "topic": "health check"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why use npm ci rather than npm install on the server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It installs exactly what the lockfile specifies"
+      },
+      {
+       "key": "b",
+       "text": "It is shorter to type"
+      },
+      {
+       "key": "c",
+       "text": "It upgrades all packages"
+      },
+      {
+       "key": "d",
+       "text": "It skips the build"
+      }
+     ],
+     "answer": "a",
+     "hint": "Repeatable installs.",
+     "topic": "npm ci"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "ggsocial builds into a fresh directory and swaps it in. What advantage does this give over building in place?",
+     "answer": "The old build keeps serving traffic while the new one builds, so a failed or slow build does not take the site down; only the restart is a gap. It also avoids a build cache replaying an earlier failure.",
+     "rubric": "Mentions old build keeps serving, failure does not cause downtime, and swap only when ready."
+    }
+   ]
+  },
+  {
+   "title": "Environments and configuration",
+   "body": "An environment is a place the app runs: your laptop (development), a test or sandbox, and production. Each needs its own data and secrets, and production must never share them. Configuration that differs between environments belongs in environment variables or a local config file kept out of the repository, not in code.\n\nOur projects follow this. GGLearn reads its database path from DATABASE_FILE, with a default under data/ for local use, and uses .env.local for scripts. The rsync deploy excludes .env files and the database files so a deploy never overwrites production secrets or data. ggsocial learned this the hard way: rsync --delete without --exclude .env would delete the production secrets, and losing APP_SECRET logs everyone out and makes stored platform tokens unreadable. Its deploy script now stops if .env is missing and keeps backups of it. ggmoney keeps config.local.php out of upload, and has an APP_ENV of sandbox or production; a sandbox install refuses to email real employees, which is deliberate.\n\nRules: secrets never go in git, production values differ from development, scripts that touch data should say which environment they target, and every environment should be as similar as practical so surprises appear early. The GGLearn README itself notes SQLite is for local dev and suggests Postgres before heavier multi-user production use.",
+   "source": "gglearn/lib/db/index.ts, gglearn/deploy/deploy.sh, ggsocial/DEPLOY.md, ggmoney/bin/deploy.sh, gglearn/README.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Where should environment-specific secrets such as API keys live?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the Git repository"
+      },
+      {
+       "key": "b",
+       "text": "In the front-end JavaScript"
+      },
+      {
+       "key": "c",
+       "text": "In the page title"
+      },
+      {
+       "key": "d",
+       "text": "In environment variables or a local config file kept out of the repository"
+      }
+     ],
+     "answer": "d",
+     "hint": "Keep them out of version control.",
+     "topic": "secrets"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why did ggsocial's deploy add a check that .env exists before doing anything?",
+     "options": [
+      {
+       "key": "a",
+       "text": "rsync --delete without an exclude could wipe the production secrets"
+      },
+      {
+       "key": "b",
+       "text": "Because .env speeds up builds"
+      },
+      {
+       "key": "c",
+       "text": "To install Node"
+      },
+      {
+       "key": "d",
+       "text": "Because Git requires it"
+      }
+     ],
+     "answer": "a",
+     "hint": "Remember what rsync --delete does.",
+     "topic": "deploy safety"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does ggmoney's sandbox mode do about emailing real employees?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Sends them twice"
+      },
+      {
+       "key": "b",
+       "text": "Sends only on Mondays"
+      },
+      {
+       "key": "c",
+       "text": "Refuses to email real employees, deliberately"
+      },
+      {
+       "key": "d",
+       "text": "Encrypts the emails"
+      }
+     ],
+     "answer": "c",
+     "hint": "Safety in non-production.",
+     "topic": "sandbox"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A new developer runs the seed script on their laptop with a DATABASE_FILE variable accidentally pointing at the production file path on a shared server. Explain how this kind of accident is prevented in our setup and what extra guard you would add.",
+     "answer": "The deploy excludes database files and .env files, and production config lives only on the server, so a laptop normally has no production path or secrets. Extra guards: have destructive scripts print the target database and require confirmation or an explicit flag, refuse to run when the environment is production, and give production a database user or host that developers cannot reach.",
+     "rubric": "Notes separation of secrets/data from code, and proposes target confirmation, production refusal, and access separation."
+    }
+   ]
+  },
+  {
+   "title": "Processes, containers and resource limits",
+   "body": "A process manager keeps your app running: it starts it, restarts it if it crashes, and survives a reboot. GGLearn and ggsocial use PM2. GGLearn's ecosystem.config.cjs defines one app, gglearn-web, running next start on port 3400 bound to 127.0.0.1, so only Apache on the same machine can reach it. It sets NODE_ENV to production and max_memory_restart to 400M, which restarts the process if memory grows past that, a safety net against leaks. Because the in-memory rate limiter assumes one process, scaling GGLearn to several PM2 instances would break it unless that state moves to the database.\n\nA container packages an app with its dependencies so it runs the same anywhere. ggsocial runs its Postgres database in Docker, on 127.0.0.1 with a named volume for the data. The volume matters: containers are disposable, but volumes hold the data, so back them up. GGLearn and ggsocial's web apps themselves are not containerised; they run directly under PM2 on the host. Do not claim a container where there is none.\n\nGeneral rules: bind internal services to localhost, set resource limits, keep data in volumes, and run one concern per process. The scheduler in ggsocial is its own PM2 process for exactly that reason.",
+   "source": "gglearn/ecosystem.config.cjs, ggsocial/DEPLOY.md, gglearn/lib/rate-limit.ts",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is the job of a process manager such as PM2?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Writing the database schema"
+      },
+      {
+       "key": "b",
+       "text": "Keeping the app running and restarting it after a crash or reboot"
+      },
+      {
+       "key": "c",
+       "text": "Hashing passwords"
+      },
+      {
+       "key": "d",
+       "text": "Designing the interface"
+      }
+     ],
+     "answer": "b",
+     "hint": "Think uptime.",
+     "topic": "process manager"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why is GGLearn's Next.js server started with -H 127.0.0.1?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It runs faster"
+      },
+      {
+       "key": "b",
+       "text": "It is required by SQLite"
+      },
+      {
+       "key": "c",
+       "text": "So the app listens only on localhost and is reached through Apache"
+      },
+      {
+       "key": "d",
+       "text": "It enables HTTPS"
+      }
+     ],
+     "answer": "c",
+     "hint": "Who should reach it directly?",
+     "topic": "bind address"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does max_memory_restart of 400M do in GGLearn's PM2 config?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Limits disk use to 400 MB"
+      },
+      {
+       "key": "b",
+       "text": "Restarts the process if its memory exceeds 400 MB"
+      },
+      {
+       "key": "c",
+       "text": "Limits the database size"
+      },
+      {
+       "key": "d",
+       "text": "Stops the app permanently"
+      }
+     ],
+     "answer": "b",
+     "hint": "A safety net.",
+     "topic": "memory limit"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "The team wants to run three PM2 instances of GGLearn for more capacity. Identify what in the current design breaks and how you would address it.",
+     "answer": "The rate limiter, drill tracking and grading lock are held in process memory and assume a single process, so each instance would have separate counters and could allow more attempts or duplicate grading. Move that shared state into the database (or a shared store), test concurrency, and only then scale; also watch SQLite write contention and consider moving to Postgres as the README suggests.",
+     "rubric": "Identifies in-memory state as the blocker, proposes shared storage, and mentions SQLite limits."
+    }
+   ]
+  },
+  {
+   "title": "Monitoring and alerting",
+   "body": "Monitoring tells you what the system is doing; alerting tells a person when to act. Start with the questions: is it up, is it fast, is it erroring, is it running out of resources? Alert on symptoms users feel, not on every metric, or people learn to ignore the noise. A good alert is rare, actionable, and points to a next step.\n\nOur setups are modest and should be described honestly. GGLearn's deploy ends with a health check, and the team can read PM2 logs and status on the server. ggsocial's guide gives a one-line check of the login page's status code and PM2 list, and its scheduler logs one 'tick failed: fetch failed' during every restart, which is expected, while repeated ones are not; knowing the expected noise is part of monitoring. ggmoney has bin/alerts.php, run from cron on weekday mornings, which emails owners what needs attention such as deadlines, and sends nothing when there is nothing to say. Its deploy-check.php reports whether rules are really in force.\n\nNo hosted monitoring service, uptime pinger or on-call rota is documented in these projects, so treat external uptime monitoring, error tracking and log shipping as planned improvements, not existing features.",
+   "source": "gglearn/deploy/deploy.sh, ggsocial/DEPLOY.md, ggmoney/bin/alerts.php, ggmoney/deploy-check.php",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which is the best example of an actionable alert?",
+     "options": [
+      {
+       "key": "a",
+       "text": "CPU is at 41%"
+      },
+      {
+       "key": "b",
+       "text": "The login page has returned errors for five minutes"
+      },
+      {
+       "key": "c",
+       "text": "A user clicked a button"
+      },
+      {
+       "key": "d",
+       "text": "A log file was rotated"
+      }
+     ],
+     "answer": "b",
+     "hint": "Rare and demands action.",
+     "topic": "alerting"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does ggsocial's guide mention a single 'tick failed' message at restart?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It means the database is corrupt"
+      },
+      {
+       "key": "b",
+       "text": "It should be fixed immediately"
+      },
+      {
+       "key": "c",
+       "text": "It is expected during the restart window, while repeated ones are not"
+      },
+      {
+       "key": "d",
+       "text": "It proves the deploy failed"
+      }
+     ],
+     "answer": "c",
+     "hint": "Know your normal noise.",
+     "topic": "expected noise"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What does ggmoney's bin/alerts.php do when there is nothing to report?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Sends nothing"
+      },
+      {
+       "key": "b",
+       "text": "Sends an empty email daily"
+      },
+      {
+       "key": "c",
+       "text": "Restarts the server"
+      },
+      {
+       "key": "d",
+       "text": "Deletes old alerts"
+      }
+     ],
+     "answer": "a",
+     "hint": "Few, useful messages.",
+     "topic": "alert design"
+    },
+    {
+     "level": 9,
+     "type": "open",
+     "prompt": "The documented projects have health checks and logs but no uptime monitoring or on-call rota. What would you add first and why?",
+     "answer": "An external uptime check on the public URL with an alert to a person (email or chat), because it tells you when real users cannot reach the site, including failures the server cannot see about itself. Then error tracking and a rota so someone is responsible for responding.",
+     "rubric": "Names external uptime monitoring with a routed alert, and justifies it by user-visible symptoms; mentions responsibility for response."
+    }
+   ]
+  }
+ ]
+}

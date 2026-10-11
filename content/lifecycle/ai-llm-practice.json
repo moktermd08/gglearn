@@ -1,0 +1,343 @@
+{
+ "trackSlug": "ai-llm-practice",
+ "items": [
+  {
+   "title": "Prompts, documents as data, and prompt injection",
+   "body": "A prompt is the whole input to a model: instructions, context, and the user's material. Models cannot reliably tell which words are commands and which are content, so anything fetched from outside can try to steer them. This is prompt injection. The Moksy MCP server, which exposes the platform as tools to any MCP client, uses two defences. First, source text and blueprint text come back tagged as the user's material, and the server's instructions tell the model to quote it, not obey it; sources are also screened on the server. Second, actions that change something outside the conversation, such as creating or deleting a webhook, return a proposal first; the model must show it to the user and call again with the proposal id before anything happens. The tools run with the user's own API key and scopes, so the model can do nothing the user could not do with the same key, and missing scopes are named in the error. The wider rules: give a model the least privilege it needs, separate instructions from data, keep a human in the loop for side effects, and treat model output as untrusted input to other systems.",
+   "source": "moksy.ai/wt-earning-gaps/packages/mcp-server/README.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is prompt injection?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Text in the input data that tries to steer the model into following instructions it should not"
+      },
+      {
+       "key": "b",
+       "text": "Making a prompt shorter to save tokens"
+      },
+      {
+       "key": "c",
+       "text": "Sending a prompt over an encrypted connection"
+      },
+      {
+       "key": "d",
+       "text": "Training a model on new data"
+      }
+     ],
+     "answer": "a",
+     "topic": "injection"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How does the Moksy MCP server treat a document the user imports?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As a trusted system instruction"
+      },
+      {
+       "key": "b",
+       "text": "As the user's material that the model should quote, not obey"
+      },
+      {
+       "key": "c",
+       "text": "As a command to run immediately"
+      },
+      {
+       "key": "d",
+       "text": "As a password to be stored"
+      }
+     ],
+     "answer": "b",
+     "topic": "data vs instructions"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why do destructive tools like deleting a webhook return a proposal first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To make the tool slower so users give up"
+      },
+      {
+       "key": "b",
+       "text": "To prevent the model reading the webhook"
+      },
+      {
+       "key": "c",
+       "text": "So the user can see and confirm the change before it happens"
+      },
+      {
+       "key": "d",
+       "text": "Because proposals are cheaper than deletes"
+      }
+     ],
+     "answer": "c",
+     "topic": "human in the loop"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "An AI assistant summarises web pages for a user and can also send emails. Describe two controls that limit prompt injection harm.",
+     "answer": "Examples: give the tool least privilege (only the scopes needed) and require user confirmation, through a proposal step, before sending any email; tag fetched content as untrusted data and instruct the model not to obey it; screen content; and log actions. Any two sound controls with explanation are acceptable.",
+     "rubric": "Must give two distinct, plausible controls (least privilege, human confirmation, data tagging, screening, logging) and tie them to limiting damage from injected instructions."
+    }
+   ]
+  },
+  {
+   "title": "Memory for AI assistants",
+   "body": "Memory lets an assistant carry context beyond one request, and it needs boundaries. The Moksy ai-memory service stores conversation turns per project, returns only the most recent few (capped at a small number), and separates knowledge by scope: user preferences, organisation knowledge and project knowledge. Access is by owner or admin, so one user cannot read another's records; namespaces have write roles. It also supports vector search, where text is converted to numbers so similar meaning can be found. A note on what the code read shows: its current vector helper builds numbers from a hash of the text, which looks like a placeholder, because hashes of similar sentences are unrelated; real retrieval needs embeddings from an embedding model. Treat that as an in-progress detail rather than a feature. Good memory design asks what should be remembered, for whom, for how long, and how it can be corrected or deleted. Memory is also an injection and privacy surface: stored text can carry hostile instructions, and personal data kept in memory needs the same retention thinking as any other store. Keep memory small, scoped and inspectable.",
+   "source": "moksy.ai/wt-earning-gaps/foundation/ai-memory/src/services/AiMemoryService.js",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why does an assistant's memory need ownership and access rules?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So the memory can be larger"
+      },
+      {
+       "key": "b",
+       "text": "So the assistant answers faster"
+      },
+      {
+       "key": "c",
+       "text": "Because the model forgets by default"
+      },
+      {
+       "key": "d",
+       "text": "So one user cannot read or change another user's remembered information"
+      }
+     ],
+     "answer": "d",
+     "topic": "access control"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What is a vector embedding used for in memory search?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Representing text as numbers so texts with similar meaning can be found"
+      },
+      {
+       "key": "b",
+       "text": "Compressing a chat so it uses no storage"
+      },
+      {
+       "key": "c",
+       "text": "Encrypting stored messages"
+      },
+      {
+       "key": "d",
+       "text": "Counting how many turns a user has had"
+      }
+     ],
+     "answer": "a",
+     "topic": "embeddings"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "Why is a hash of the text a poor substitute for a real embedding?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Hashes are always longer than embeddings"
+      },
+      {
+       "key": "b",
+       "text": "Similar sentences produce unrelated hashes, so closeness does not reflect meaning"
+      },
+      {
+       "key": "c",
+       "text": "Hashes cannot be stored in a database"
+      },
+      {
+       "key": "d",
+       "text": "Hashes reveal the text to anyone"
+      }
+     ],
+     "answer": "b",
+     "topic": "hash vs embedding"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "Design a memory policy for an AI helper used by customers: what to remember, scope, retention and user control.",
+     "answer": "Remember only what improves the service, such as stated preferences and project facts, not sensitive details; scope by user, organisation and project with owner-only access; set a retention period and expire or archive old turns; let users view, correct and delete memories; scrub personal data where possible; treat stored text as untrusted when it is put back into prompts; and record who wrote what.",
+     "rubric": "Needs scoping/ownership, minimal content, retention, user control (view/delete), and awareness that memory content is untrusted or sensitive."
+    }
+   ]
+  },
+  {
+   "title": "AI policy: routing, scanning and failing safely",
+   "body": "A policy layer sits between users and models and decides what is allowed, which model, and how much. The Moksy ai-policy service shows the typical parts: routing rules (a short prompt can go to a cheap local model and a longer one to an external model), tier capabilities that list which models and monthly token limits each plan gets, a denylist scan on both input and output, scrub rules that mask emails and phones, a per-request token limit, and a log of each decision. Changes to rules require an admin. Reading its code also shows two things to treat as caution points rather than model answers. Its rules and decision log are held in memory, so they reset when the service restarts; and when the usage check fails, the evaluate function allows the request in a mode named governance bypass. That is fail-open: availability wins over control. Whether to fail open or closed is a deliberate risk choice: fail closed for security or money, and fail open only where blocking users costs more than the exposure, with an alert either way. Record each decision with a reason so it can be audited.",
+   "source": "moksy.ai/wt-earning-gaps/foundation/ai-policy/src/services/AiPolicyService.js",
+   "questions": [
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does a routing rule in an AI policy do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Encrypts the prompt in transit"
+      },
+      {
+       "key": "b",
+       "text": "Translates the prompt into another language"
+      },
+      {
+       "key": "c",
+       "text": "Chooses which model or path handles a request, for example by prompt length"
+      },
+      {
+       "key": "d",
+       "text": "Counts the number of users online"
+      }
+     ],
+     "answer": "c",
+     "topic": "routing"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why scan model output as well as user input?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The model may produce restricted content even from an innocent prompt"
+      },
+      {
+       "key": "b",
+       "text": "Output is always shorter, so scanning is cheaper"
+      },
+      {
+       "key": "c",
+       "text": "Scanning output replaces the need for any input scan"
+      },
+      {
+       "key": "d",
+       "text": "Only output can contain personal data"
+      }
+     ],
+     "answer": "a",
+     "topic": "output scanning"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "What does 'fail open' mean in a policy check?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The service restarts automatically"
+      },
+      {
+       "key": "b",
+       "text": "Errors are shown to the user in full"
+      },
+      {
+       "key": "c",
+       "text": "The request is blocked until an admin responds"
+      },
+      {
+       "key": "d",
+       "text": "If the check cannot run, the request is allowed"
+      }
+     ],
+     "answer": "d",
+     "topic": "fail open"
+    },
+    {
+     "level": 9,
+     "type": "open",
+     "prompt": "The policy service allows requests when its usage check is down. Argue when that is acceptable and when it is not, and what you would add either way.",
+     "answer": "Acceptable when blocking users costs more than the exposure, for low-risk, low-cost requests. Not acceptable where money, safety or sensitive data is at stake, where failing closed or falling back to a cheap local model is better. Either way add alerts, logging with the reason, and a time limit on bypass.",
+     "rubric": "Must discuss the trade-off between availability and control, give a criterion for choosing, and suggest alerting/logging or a safer fallback."
+    }
+   ]
+  },
+  {
+   "title": "Agents, tools and evaluation",
+   "body": "An agent is a model that can call tools in a loop. The safety questions are who it acts as and what it can do. GG Social offers an API for agents with tokens issued in the app, sent in an X-Agent-Token header because the Authorization header is already used by basic auth; the API is let past the web wall, but every route rejects requests without a valid, unrevoked token. GG Money's API likewise lets agents read figures and leave notes: notes advise, only a person approves. The Moksy MCP server has a fixed set of tools, each limited by the user's scopes. Evaluation is how you know a prompt or agent is any good. Build a small set of realistic cases with expected outcomes, run it on each change to catch regressions, and score outputs against a rubric, checking safety cases such as injection attempts and refusals. Measure what matters (correctness, cost, latency), review failures by hand, and keep the set growing from real mistakes. Without evaluation, a prompt tweak that fixes one case may silently break ten others.",
+   "source": "ggsocial/DEPLOY.md (AI agent access), ggmoney/README.md (API notes), moksy.ai/wt-earning-gaps/packages/mcp-server/README.md",
+   "questions": [
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does the GG Social agent API use an X-Agent-Token header?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because tokens cannot be sent in standard headers"
+      },
+      {
+       "key": "b",
+       "text": "Basic auth already occupies the Authorization header"
+      },
+      {
+       "key": "c",
+       "text": "To make requests slower for abusers"
+      },
+      {
+       "key": "d",
+       "text": "Because agents cannot read headers"
+      }
+     ],
+     "answer": "b",
+     "topic": "agent auth"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why should an agent's token be revocable?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So the agent can run faster"
+      },
+      {
+       "key": "b",
+       "text": "So the token can be shared with other teams"
+      },
+      {
+       "key": "c",
+       "text": "So access can be cut off quickly if the token leaks or the agent misbehaves"
+      },
+      {
+       "key": "d",
+       "text": "Because tokens expire automatically on the hour"
+      }
+     ],
+     "answer": "c",
+     "topic": "revocation"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Describe a simple evaluation process for a prompt that classifies support emails.",
+     "answer": "Collect a representative set of real emails with correct labels, include edge and adversarial cases, run the prompt on the set after each change and compare accuracy to a baseline, review failures by hand, track cost and latency, and add new failures to the set.",
+     "rubric": "Needs a labelled test set including edge cases, repeated runs for regression, and review of failures."
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "An agent with a write token starts creating wrong records. What do you do now, and what design changes prevent a repeat?",
+     "answer": "Revoke the token immediately, review logs of what it wrote and fix or reverse the records (corrections, not silent deletes). Then limit scopes to the minimum, make writes advisory or require human approval for important changes, add rate limits and alerts for unusual volume, and add evaluation cases covering the failure.",
+     "rubric": "Must include immediate revocation, impact review/correction, and design fixes: least privilege, approval, limits/alerts, tests."
+    }
+   ]
+  }
+ ]
+}

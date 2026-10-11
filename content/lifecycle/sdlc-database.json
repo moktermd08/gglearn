@@ -1,0 +1,373 @@
+{
+ "trackSlug": "sdlc-database",
+ "items": [
+  {
+   "title": "Modelling data and letting the database enforce the rules",
+   "body": "Data modelling means deciding what things your app stores, how they relate, and which rules must always hold. Do not leave those rules only in application code. A bug, a script, or a second app can bypass code, but it cannot bypass a database constraint. Use primary keys, foreign keys, NOT NULL, defaults and unique constraints so bad data is rejected at the door.\n\nGGLearn shows this. Its schema in lib/db/schema.ts is written with Drizzle for SQLite. A learner can enrol in a track only once, so a unique index on user and track (enroll_unique) makes a duplicate impossible, even if two requests race. A certificate is unique per user, track and level. A question is unique per track, level and prompt (questions_dedupe), so importing the same bank twice does not create copies. The database connection also turns on foreign_keys, because SQLite does not enforce foreign keys unless you ask it to.\n\nGood modelling also means one fact in one place. Store a user's role once on the user row, and read it each time, rather than copying it into sessions. When a fact is copied, the copies drift apart. Model the real world first, then add columns for speed only when you can show a need.",
+   "source": "gglearn/lib/db/schema.ts, gglearn/lib/db/index.ts",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Why add a unique index for a rule such as one enrolment per learner per track?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes the page load faster"
+      },
+      {
+       "key": "b",
+       "text": "It removes the need for primary keys"
+      },
+      {
+       "key": "c",
+       "text": "The database rejects duplicates even when the app code is bypassed or requests race"
+      },
+      {
+       "key": "d",
+       "text": "It lets users enrol in unlimited tracks"
+      }
+     ],
+     "answer": "c",
+     "hint": "Think about what code cannot guarantee.",
+     "topic": "constraints"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "In GGLearn, which setting makes SQLite actually enforce foreign keys?",
+     "options": [
+      {
+       "key": "a",
+       "text": "journal_mode = WAL"
+      },
+      {
+       "key": "b",
+       "text": "foreign_keys = ON on the connection"
+      },
+      {
+       "key": "c",
+       "text": "A unique index"
+      },
+      {
+       "key": "d",
+       "text": "Running drizzle-kit push"
+      }
+     ],
+     "answer": "b",
+     "hint": "SQLite needs to be asked.",
+     "topic": "foreign keys"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does the questions_dedupe unique index achieve when a question bank is imported twice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It deletes the old questions first"
+      },
+      {
+       "key": "b",
+       "text": "It encrypts prompts"
+      },
+      {
+       "key": "c",
+       "text": "It sorts questions by level"
+      },
+      {
+       "key": "d",
+       "text": "It stops the same prompt appearing twice for a track and level"
+      }
+     ],
+     "answer": "d",
+     "hint": "Look at the three columns it covers.",
+     "topic": "unique index"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Why is it better to store a user's role once on the user row than to copy it into other places?",
+     "answer": "One source of truth means a change takes effect everywhere at once. Copies can drift apart and leave stale or wrong values, such as an old role still granting access.",
+     "rubric": "Mentions single source of truth / avoiding drifting copies, and gives a consequence of stale data."
+    }
+   ]
+  },
+  {
+   "title": "Indexing: speed up reads without slowing everything else",
+   "body": "An index is a sorted lookup structure that lets the database find rows without scanning the whole table. Think of the index at the back of a book. Without it, the database reads every row (a full scan), which is fine for 200 rows and painful for 20 million.\n\nIndex the columns you filter, join and sort on. A composite index on several columns helps queries that use its leftmost columns, in order. An index on (competition, user) can serve a search by competition, but not a search by user alone. That is why GGLearn's competition members table has a unique index on competition and user, plus a separate index (cm_user_lookup) on user for the \"which competitions am I in\" page.\n\nIndexes are not free. Every insert and update must also update each index, and indexes use disk and memory. Do not index every column. Index for queries you actually run, and check the plan with EXPLAIN (EXPLAIN QUERY PLAN in SQLite) to see whether an index is used. Low-variety columns, such as a yes/no flag, rarely help on their own.\n\nA unique index does two jobs at once: it enforces a rule and gives fast lookups on those columns.",
+   "source": "gglearn/lib/db/schema.ts (cm_user, cm_competition, cm_user_lookup), general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is the main benefit of adding an index on a column you often filter by?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Rows are stored twice for safety"
+      },
+      {
+       "key": "b",
+       "text": "The database can find matching rows without scanning the whole table"
+      },
+      {
+       "key": "c",
+       "text": "Writes become faster"
+      },
+      {
+       "key": "d",
+       "text": "The column becomes encrypted"
+      }
+     ],
+     "answer": "b",
+     "hint": "Think of a book's index.",
+     "topic": "index basics"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "GGLearn has a unique index on (competition, user) and also a separate index on user. Why is the second one needed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Unique indexes cannot be searched"
+      },
+      {
+       "key": "b",
+       "text": "SQLite requires two indexes per table"
+      },
+      {
+       "key": "c",
+       "text": "A composite index only helps queries that start with its first column, so searching by user alone needs its own"
+      },
+      {
+       "key": "d",
+       "text": "It enforces a second rule"
+      }
+     ],
+     "answer": "c",
+     "hint": "Leftmost columns.",
+     "topic": "composite index"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Which is a real cost of adding many indexes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Selects return wrong data"
+      },
+      {
+       "key": "b",
+       "text": "Every insert and update must also maintain each index"
+      },
+      {
+       "key": "c",
+       "text": "They stop foreign keys working"
+      },
+      {
+       "key": "d",
+       "text": "They disable the query planner"
+      }
+     ],
+     "answer": "b",
+     "hint": "Reads gain, writes pay.",
+     "topic": "index cost"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A leaderboard page is slow. The query filters rows by a competition id and sorts by score, and the table now has millions of rows with no index on those columns. Describe how you would investigate and fix it, and one risk of your fix.",
+     "answer": "Run EXPLAIN (EXPLAIN QUERY PLAN) on the real query to confirm a full scan. Add a composite index starting with competition id then score, so filtering and ordering use it. Re-check the plan and timing. Risk: extra storage and slower writes on every insert/update, so only add indexes for queries that matter.",
+     "rubric": "Uses the query plan to diagnose, proposes a composite index with the filter column first, re-verifies, and names the write/storage cost."
+    }
+   ]
+  },
+  {
+   "title": "Migrations: changing a live schema safely",
+   "body": "A migration is a controlled change to the database structure, applied in order and recorded so it runs once. Treat schema changes like code: reviewed, repeatable and reversible where possible. The safest changes are additive: a new table, or a new nullable column or one with a default. They do not touch existing rows. Risky changes remove or reshape data: dropping a column, adding a NOT NULL column with no default to a table that has rows, or changing a type.\n\nTwo real approaches live in our projects. GGLearn and ggsocial use drizzle-kit push, which compares the schema file to the live database and applies the difference. The deploy script runs it deliberately without --force. If a change would delete rows, push stops and fails the deploy instead of running a delete. ggsocial's guide adds that push runs before the app restarts, otherwise the new build serves pages whose columns do not exist yet. ggmoney uses numbered migration files in db/migrations, applied by bin/migrate.php, which is safe to run repeatedly because it only applies what is pending.\n\nAlways back up before a migration. For destructive changes use steps: add the new column, copy data, switch the code, then remove the old column in a later release.",
+   "source": "gglearn/deploy/deploy.sh, ggsocial/DEPLOY.md, ggmoney/bin/migrate.php",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which schema change is generally the safest to apply to a live table that already has rows?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Dropping a column"
+      },
+      {
+       "key": "b",
+       "text": "Adding a new nullable column"
+      },
+      {
+       "key": "c",
+       "text": "Adding a NOT NULL column with no default"
+      },
+      {
+       "key": "d",
+       "text": "Changing a column type"
+      }
+     ],
+     "answer": "b",
+     "hint": "Existing rows are untouched.",
+     "topic": "additive changes"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does the GGLearn deploy script run drizzle-kit push without --force?",
+     "options": [
+      {
+       "key": "a",
+       "text": "--force is not a valid option"
+      },
+      {
+       "key": "b",
+       "text": "It makes the push slower"
+      },
+      {
+       "key": "c",
+       "text": "So a change that would delete rows stops and fails the deploy instead of running"
+      },
+      {
+       "key": "d",
+       "text": "So the build is skipped"
+      }
+     ],
+     "answer": "c",
+     "hint": "The script's own comment explains.",
+     "topic": "push safety"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What property makes ggmoney's bin/migrate.php safe to run repeatedly?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It applies only pending migrations and does nothing when up to date"
+      },
+      {
+       "key": "b",
+       "text": "It drops and recreates all tables"
+      },
+      {
+       "key": "c",
+       "text": "It restarts the web server"
+      },
+      {
+       "key": "d",
+       "text": "It deletes the migrations folder"
+      }
+     ],
+     "answer": "a",
+     "hint": "Idempotent.",
+     "topic": "idempotent migrate"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why should the schema push happen before the app restarts, and what would go wrong otherwise?",
+     "answer": "The new build expects the new columns. If it starts before the push, it serves pages that query columns that do not exist yet, causing errors until the schema catches up.",
+     "rubric": "States ordering (schema first, then restart) and the consequence of new code against old schema."
+    }
+   ]
+  },
+  {
+   "title": "Backups, restores and archiving old data",
+   "body": "A backup you have never restored is a hope, not a backup. Decide how much data you can afford to lose (recovery point) and how long you can afford to be down (recovery time), then pick a schedule. Keep copies on a different machine, because a backup on the same disk dies with the original.\n\nOur projects show the details. ggmoney keeps statutory accounting records that must be kept for six years, so bin/backup.php runs nightly from cron. For MySQL it uses mysqldump with --single-transaction, which takes a consistent snapshot without blocking writes. For SQLite it uses VACUUM INTO, since a plain file copy of a database in use may be inconsistent. It keeps 30 daily snapshots locally and says plainly that this is not an offsite backup. ggsocial's deploy backs up the database to /root/ggsocial-backups before changing anything. GGLearn's SQLite file is deliberately excluded from the rsync deploy, so a deploy never overwrites live data.\n\nArchival means moving data you rarely need out of hot tables, or marking it retired rather than deleting it, while still honouring retention rules. Delete only when policy allows. Practise a restore on a schedule and write down the steps.",
+   "source": "ggmoney/bin/backup.php, ggsocial/DEPLOY.md, gglearn/deploy/deploy.sh",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why is a backup stored on the same disk as the database not enough?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Disks cannot hold two copies"
+      },
+      {
+       "key": "b",
+       "text": "It fails if that disk or machine is lost, taking the original and the backup together"
+      },
+      {
+       "key": "c",
+       "text": "Backups must be uncompressed"
+      },
+      {
+       "key": "d",
+       "text": "It breaks the cron job"
+      }
+     ],
+     "answer": "b",
+     "hint": "Think about a failed disk.",
+     "topic": "offsite"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does ggmoney's backup use VACUUM INTO for SQLite rather than copying the file?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes the file smaller only"
+      },
+      {
+       "key": "b",
+       "text": "It encrypts the file"
+      },
+      {
+       "key": "c",
+       "text": "It is the only command SQLite has"
+      },
+      {
+       "key": "d",
+       "text": "A plain copy of a database in use may be inconsistent; VACUUM INTO gives a consistent snapshot"
+      }
+     ],
+     "answer": "d",
+     "hint": "Consistency while live.",
+     "topic": "consistent snapshot"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does mysqldump --single-transaction give ggmoney?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A consistent snapshot of InnoDB tables without locking writers"
+      },
+      {
+       "key": "b",
+       "text": "A faster network"
+      },
+      {
+       "key": "c",
+       "text": "Automatic offsite storage"
+      },
+      {
+       "key": "d",
+       "text": "Row-level encryption"
+      }
+     ],
+     "answer": "a",
+     "hint": "Snapshot without blocking.",
+     "topic": "mysqldump"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "You have just run a bad import that corrupted yesterday's data. The nightly backup keeps 30 daily snapshots on the same server. Explain how you would recover, and what weakness in this setup you would fix first.",
+     "answer": "Stop writes to limit damage, restore the last good snapshot into a separate copy first and compare, then restore or copy back the affected data, and note the recovery point is up to a day behind. The weakness is that snapshots live on the same disk, so add an offsite copy; also rehearse restores so the steps are known.",
+     "rubric": "Covers stopping damage, restoring from a known-good snapshot (ideally to a copy first), accepting data loss since the snapshot, and identifying lack of offsite copy / untested restore."
+    }
+   ]
+  }
+ ]
+}

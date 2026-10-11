@@ -1,0 +1,343 @@
+{
+ "trackSlug": "security-operations",
+ "items": [
+  {
+   "title": "Identity, passwords and sessions",
+   "body": "Identity answers who is making a request; authorisation answers what they may do. GGLearn's reviewed design shows several good habits. Passwords are never stored, only a salted scrypt hash in a versioned format, so the cost can be raised later and old hashes upgrade at the next sign-in. A session cookie carries the user id, an issued-at time, a version and a message authentication code, so tampering is detected. Crucially, the 30-day lifetime is enforced on the server from the signed issued-at time, because the cookie's maxAge is controlled by the client and proves nothing. A per-user session version in the database lets the server revoke every older session at once, for example on 'sign out everywhere' or when someone is offboarded. Authorisation is re-read from the database on each request, so role changes take effect immediately. Login also avoids leaking which emails exist: when the user is missing, the code still performs a dummy password verification so response time does not reveal the difference. Signup is invite-only rather than open, and attempts are rate limited. Each of these closes a specific attack, not a generic worry.",
+   "source": "gglearn/docs/security/auth-review.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why does a system store a salted hash of a password instead of the password?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So passwords can be emailed back to forgetful users"
+      },
+      {
+       "key": "b",
+       "text": "Because hashes are faster to compare than text"
+      },
+      {
+       "key": "c",
+       "text": "So the password never needs to be typed"
+      },
+      {
+       "key": "d",
+       "text": "So a database leak does not directly reveal passwords and identical passwords hash differently"
+      }
+     ],
+     "answer": "d",
+     "topic": "password storage"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "In GGLearn, what does bumping a user's session version do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Invalidates all of that user's older sessions"
+      },
+      {
+       "key": "b",
+       "text": "Changes the user's password hash"
+      },
+      {
+       "key": "c",
+       "text": "Extends every session by thirty days"
+      },
+      {
+       "key": "d",
+       "text": "Deletes the user's account"
+      }
+     ],
+     "answer": "a",
+     "topic": "session revocation"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why does the login code run a dummy password check when the email is not found?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To warm the hashing cache for the next real user"
+      },
+      {
+       "key": "b",
+       "text": "So response time does not reveal which emails have accounts"
+      },
+      {
+       "key": "c",
+       "text": "To log the failed attempt in the audit table"
+      },
+      {
+       "key": "d",
+       "text": "Because the hashing library requires one call per request"
+      }
+     ],
+     "answer": "b",
+     "topic": "enumeration"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why is a cookie's maxAge not a trustworthy session lifetime, and what does GGLearn do instead?",
+     "answer": "maxAge is set and held by the client, which can keep or replay the cookie beyond it. GGLearn signs an issued-at time into the cookie and the server rejects tokens older than 30 days, and also checks a per-user session version so sessions can be revoked.",
+     "rubric": "Must explain client control of cookie attributes and describe server-side expiry from a signed timestamp; revocation via version is a plus."
+    }
+   ]
+  },
+  {
+   "title": "Handling secrets safely",
+   "body": "A secret is any value that grants access: passwords, API keys, signing keys, tokens. They should never be committed to the repository or pasted into chat. The company's deployments keep them in an environment file or local config that exists only on the server, restricted to its owner. GG Social's notes warn that rsync with the delete flag will destroy production secrets if the file is not excluded, because the secrets file is not in the source; the app secret was lost once, everyone is logged out and stored platform tokens become undecryptable. Backups of the file were therefore kept on the server. GG Money's deploy never uploads its local config, and its guidance for email is to create a key with restricted access and only the permission needed, since a full-access key could read contacts and rewrite the account. The Moksy AI gateway encrypts stored provider keys with AES-256-GCM using a master key from the environment, stores a version prefix so the cipher can change later, and refuses to save credentials if the key is not set. That is failing closed, which is safer than silently saving plaintext. Principles: least privilege, separate secrets per environment, rotate after exposure, and never echo values in logs.",
+   "source": "ggsocial/DEPLOY.md, ggmoney/DEPLOY.md, moksy.ai/wt-earning-gaps/foundation/ai-llm/src/utils/CredentialCipher.js",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Where should API keys and passwords be kept?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the source code next to the feature that uses them"
+      },
+      {
+       "key": "b",
+       "text": "In a shared chat channel so the team can find them"
+      },
+      {
+       "key": "c",
+       "text": "In server-side environment or local config that is not committed to the repository"
+      },
+      {
+       "key": "d",
+       "text": "In the page's HTML so the browser can send them"
+      }
+     ],
+     "answer": "c",
+     "topic": "secret storage"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does the GG Money email guide say to create a restricted SendGrid key with only Mail Send permission?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A full-access key could read contacts and rewrite the account, and nothing needs that"
+      },
+      {
+       "key": "b",
+       "text": "Restricted keys are cheaper than full-access keys"
+      },
+      {
+       "key": "c",
+       "text": "Full-access keys cannot send email"
+      },
+      {
+       "key": "d",
+       "text": "The permission setting only changes the key's colour in the dashboard"
+      }
+     ],
+     "answer": "a",
+     "topic": "least privilege"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What does the Moksy AI gateway do if its credential master key is not set?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It saves them in plaintext and logs a warning"
+      },
+      {
+       "key": "b",
+       "text": "It derives a default key from the service name"
+      },
+      {
+       "key": "c",
+       "text": "It saves them but marks them as untrusted"
+      },
+      {
+       "key": "d",
+       "text": "It refuses to save provider credentials, failing closed"
+      }
+     ],
+     "answer": "d",
+     "topic": "fail closed"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A deploy used rsync with the delete option and the server's secrets file was removed because it was not in the source. What is the impact and how do you recover?",
+     "answer": "Impact: the app may fail to start; if the app secret is lost, everyone is logged out and stored platform tokens cannot be decrypted, so channels need reconnecting. Recover by restoring the secrets file from the server-side backup copies taken before deploy, restart, verify login and integrations, then fix the deploy script to exclude the file and keep backups. Review whether any secret was exposed and rotate if so.",
+     "rubric": "Must state consequences (logout, undecryptable tokens/app failure), restoration from backup, and preventive fix (exclude from rsync, backup before deploy); rotation if exposure suspected."
+    }
+   ]
+  },
+  {
+   "title": "Threat modelling and broken access control",
+   "body": "Threat modelling means asking, before attackers do, what you are protecting, who might attack, and where trust changes. List assets (accounts, answer keys, ledgers), actors (visitors, learners, managers, other tenants), and trust boundaries (browser to server, server to database). STRIDE is a checklist of threat types: spoofing, tampering, repudiation, information disclosure, denial of service and elevation of privilege. Two real findings illustrate the most common web flaw, broken access control. GGLearn's drill check originally returned the correct answer for any question id to any signed-in user, so a learner could loop through ids and read every answer, making certificates meaningless. GG Money's stress run proposed that a forged account id in a request could read another company's bank lines, an insecure direct object reference, where the server trusts an id from the client without checking ownership. The fix is the same shape every time: the server decides what the caller may access, checks the object belongs to them, and keeps answer keys on the server. Hiding or randomising ids helps a little, but authorisation checks are the real control.",
+   "source": "gglearn/docs/security/auth-review.md (H1), ggmoney/docs/qc/ggmoney-audit-2026-10-04.md (proposed findings)",
+   "questions": [
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does the S in STRIDE stand for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Storage"
+      },
+      {
+       "key": "b",
+       "text": "Spoofing"
+      },
+      {
+       "key": "c",
+       "text": "Scaling"
+      },
+      {
+       "key": "d",
+       "text": "Sandboxing"
+      }
+     ],
+     "answer": "b",
+     "topic": "STRIDE"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "An insecure direct object reference is best described as:",
+     "options": [
+      {
+       "key": "a",
+       "text": "A database that has no indexes on its id column"
+      },
+      {
+       "key": "b",
+       "text": "A browser caching an image under the wrong name"
+      },
+      {
+       "key": "c",
+       "text": "The server trusts an object id from the client without checking the caller may access that object"
+      },
+      {
+       "key": "d",
+       "text": "An encrypted id that is too long to guess"
+      }
+     ],
+     "answer": "c",
+     "topic": "IDOR"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "What is the strongest fix for an endpoint that returns exam answers for any question id?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Authorise on the server and only return answers the caller is allowed to see, keeping the answer key server-side"
+      },
+      {
+       "key": "b",
+       "text": "Make the question ids longer and random"
+      },
+      {
+       "key": "c",
+       "text": "Hide the endpoint URL from the page source"
+      },
+      {
+       "key": "d",
+       "text": "Limit each learner to ten calls per day"
+      }
+     ],
+     "answer": "a",
+     "topic": "access control"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Sketch a short threat model for a login page: name two assets, two threats and one control for each threat.",
+     "answer": "Assets: user credentials and session tokens. Threat 1: password guessing (spoofing) with control of rate limiting plus slow salted hashing. Threat 2: account enumeration or session theft with controls of uniform responses and timing, httpOnly secure cookies and server-side revocation. Other valid answers acceptable if each threat has a matching control.",
+     "rubric": "Needs two assets, two plausible threats mapped to STRIDE-like categories and a sensible control for each."
+    }
+   ]
+  },
+  {
+   "title": "Network edge and incident response",
+   "body": "GGLearn is served Cloudflare to Apache to Next. Each hop adds the address it saw to the X-Forwarded-For header, so the entries furthest left can be written by the visitor and only the entries added by your own proxies can be trusted. The app therefore takes the client address a fixed number of hops from the end, which is the second-to-last entry here. That only holds if requests cannot reach Apache directly, so the repository includes an Apache snippet that allows only Cloudflare's published address ranges, plus a script that regenerates it and refuses to write a list that looks wrong. It was prepared but only takes effect once the live virtual hosts include it. The login rate limiter lives in process memory, which is fine for one PM2 process and resets on restart. Incident response follows a loop: detect, contain, eradicate, recover, learn. Contain first, preserving evidence such as logs, then fix the cause, restore service and write down what changed. Because sessions carry a version and are signed with a secret, a suspected leak has clear levers: bump session versions or rotate the secret to sign everyone out.",
+   "source": "gglearn/lib/rate-limit.ts, gglearn/deploy/apache-cloudflare-only.conf, gglearn/deploy/update-cloudflare-ips.sh, gglearn/docs/security/auth-review.md",
+   "questions": [
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "In an incident response loop, what usually comes immediately after detecting an incident?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Announce the root cause publicly"
+      },
+      {
+       "key": "b",
+       "text": "Delete the logs to tidy up"
+      },
+      {
+       "key": "c",
+       "text": "Write the final report"
+      },
+      {
+       "key": "d",
+       "text": "Contain it, while preserving evidence"
+      }
+     ],
+     "answer": "d",
+     "topic": "incident phases"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why should the app use an entry near the end of X-Forwarded-For rather than the first entry?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The first entry is always empty"
+      },
+      {
+       "key": "b",
+       "text": "Entries on the left can be written by the visitor, while entries near the end were added by your own proxies"
+      },
+      {
+       "key": "c",
+       "text": "The last entries are always shorter and faster to parse"
+      },
+      {
+       "key": "d",
+       "text": "Cloudflare removes all other entries"
+      }
+     ],
+     "answer": "b",
+     "topic": "forwarded headers"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why does restricting Apache to Cloudflare's address ranges matter for rate limiting and logs?",
+     "answer": "If visitors can reach Apache directly they can set their own X-Forwarded-For value and spoof their client address, dodging per-IP limits and polluting logs. Only allowing Cloudflare and localhost means the header chain is built by trusted hops.",
+     "rubric": "Must link direct access to header spoofing and its effect on per-IP controls/logging."
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "You suspect a signed session cookie has leaked, but you do not know whose. Using the controls described, what do you do, in order?",
+     "answer": "Contain: rotate the signing secret or bump session versions so all sessions are invalidated, and offboard any compromised account. Preserve evidence: keep web and app logs. Investigate how the cookie leaked and fix the cause. Recover: have users sign in again, watch for abuse, verify that rate limits and edge restrictions still work. Learn: write down timeline, root cause and follow-ups, such as shorter lifetimes or alerts.",
+     "rubric": "Should include containment via secret rotation/session version bump, evidence preservation, root cause, recovery and post-incident review in a sensible order."
+    }
+   ]
+  }
+ ]
+}

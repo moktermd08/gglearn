@@ -1,0 +1,361 @@
+{
+ "trackSlug": "sdlc-architecture",
+ "items": [
+  {
+   "title": "Choosing a stack for the job",
+   "body": "A stack is the set of languages, frameworks and data stores a system is built with. The right stack fits the team, the problem and the operating budget, not the latest trend. Questions to ask: what does the team already know, what will be easy to hire for and to maintain, what does the hosting environment allow, and how much traffic and data are expected? Boring technology that the team knows is often the safest choice. The company uses more than one stack on purpose. gglearn and ggsocial use Next.js with SQLite through Drizzle, run by PM2 on a server behind Cloudflare. ggmoney is plain PHP 8.1 or newer with no Composer packages at all, on SQLite by default and MySQL on the live server, because that machine already had MySQL 8 and a PHP driver, so no new server packages were needed. Its schema is kept per database driver rather than translated at runtime, since a silent translation bug in a finance app is worse than some duplication. The lesson is to write down the reasons for a choice so it can be revisited when conditions change, and to match the risk of the domain.",
+   "source": "gglearn/README.md, ggmoney/README.md, general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What should drive the choice of a technology stack?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Whatever is newest"
+      },
+      {
+       "key": "b",
+       "text": "Whatever the largest company uses"
+      },
+      {
+       "key": "c",
+       "text": "The team, the problem and the operating constraints"
+      },
+      {
+       "key": "d",
+       "text": "The most expensive option"
+      }
+     ],
+     "answer": "c",
+     "topic": "stack choice"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does ggmoney use MySQL on its live server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The server already had MySQL 8 and a PHP driver, so no new packages were needed"
+      },
+      {
+       "key": "b",
+       "text": "SQLite cannot store money"
+      },
+      {
+       "key": "c",
+       "text": "MySQL is always faster"
+      },
+      {
+       "key": "d",
+       "text": "The tests require it"
+      }
+     ],
+     "answer": "a",
+     "topic": "reasons"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does ggmoney keep a schema per database driver instead of translating at runtime?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Translation is not possible in PHP"
+      },
+      {
+       "key": "b",
+       "text": "It reduces file count"
+      },
+      {
+       "key": "c",
+       "text": "It is required by HMRC"
+      },
+      {
+       "key": "d",
+       "text": "A silent translation bug in a finance app is worse than some duplication"
+      }
+     ],
+     "answer": "d",
+     "topic": "risk"
+    },
+    {
+     "level": 6,
+     "type": "open",
+     "prompt": "Why is it useful to write down the reasons for a technology choice?",
+     "answer": "So the decision can be understood and revisited when conditions change, new team members know the context, and trade-offs such as team skill, hosting and risk are not forgotten.",
+     "rubric": "Mentions revisiting the decision, onboarding or shared understanding, and recorded trade-offs."
+    }
+   ]
+  },
+  {
+   "title": "Components and the path of a request",
+   "body": "Architecture is the set of parts and how they talk. Draw it as boxes and arrows: clients, entry points, application code, data stores and external services, with the direction and kind of data on each arrow. A request path is the easiest way to explain a system. In production, gglearn traffic goes from the visitor to Cloudflare, then to Apache, which handles TLS through certbot and reverse-proxies to a PM2 app named gglearn-web listening on 127.0.0.1:3400, so the app itself is not exposed directly to the internet. Each hop adds the address it saw to the X-Forwarded-For header. The code in rate-limit.ts picks the real client as the entry a fixed number of hops from the end, defaulting to two, so anything a visitor puts at the start of the header is ignored. The file warns that someone who reaches Apache directly, bypassing Cloudflare, could still spoof the value, which is why the repo includes an Apache snippet that can restrict access to Cloudflare ranges (it only takes effect once the live virtual hosts include it). Knowing the path matters for logs, security, caching and debugging, so draw it and keep the diagram current.",
+   "source": "gglearn/README.md (Deploy), gglearn/lib/rate-limit.ts, gglearn/deploy/",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "In production, what sits between Cloudflare and the Next.js app for gglearn?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A mail server"
+      },
+      {
+       "key": "b",
+       "text": "Apache, acting as a reverse proxy"
+      },
+      {
+       "key": "c",
+       "text": "A separate database cluster"
+      },
+      {
+       "key": "d",
+       "text": "A CDN for images only"
+      }
+     ],
+     "answer": "b",
+     "topic": "request path"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "On which address does the gglearn-web PM2 app listen?",
+     "options": [
+      {
+       "key": "a",
+       "text": "127.0.0.1 on port 3400, not the public internet"
+      },
+      {
+       "key": "b",
+       "text": "0.0.0.0 on port 80"
+      },
+      {
+       "key": "c",
+       "text": "A public IP on port 443"
+      },
+      {
+       "key": "d",
+       "text": "A Unix socket only"
+      }
+     ],
+     "answer": "a",
+     "topic": "exposure"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "How does the client IP code choose the real visitor address?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It always takes the first entry"
+      },
+      {
+       "key": "b",
+       "text": "It trusts a header sent by the browser"
+      },
+      {
+       "key": "c",
+       "text": "It takes the entry a set number of hops from the end of X-Forwarded-For"
+      },
+      {
+       "key": "d",
+       "text": "It uses the server's own address"
+      }
+     ],
+     "answer": "c",
+     "topic": "forwarded-for"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "Your logs show every visitor as the same address, and rate limiting is blocking everyone together. Explain the likely cause in a proxied setup and how you would fix it.",
+     "answer": "The app is seeing the address of the proxy, not the visitor. With Cloudflare then Apache then the app, each hop appends the address it saw to X-Forwarded-For. Read the client address from that header at the correct position from the end (the trusted hop count), not the first entry which a visitor can forge, and restrict the origin to the proxy's ranges so the header cannot be bypassed.",
+     "rubric": "Identifies proxy address problem; uses forwarded header with trusted hop count; warns that leftmost entries are spoofable; mentions restricting direct access."
+    }
+   ]
+  },
+  {
+   "title": "Hosting and a safe deploy pipeline",
+   "body": "Hosting decisions cover where the code runs, how it gets there, and how you know it works. The gglearn deploy script is a compact example. It syncs files to the server with rsync, excluding node_modules, build output, databases and environment files, so secrets and data never travel with code. It takes a lock with flock so two deploys cannot run at once. It runs npm ci for repeatable installs, pushes the database schema with drizzle-kit, builds, and reloads PM2. Importantly there is deliberately no force flag on the schema push: if a change would delete rows, the deploy must stop and fail instead of running a delete. The remote steps are piped into bash because the server login shell is fish, which cannot parse some bash syntax. At the end it checks the app answers HTTP 200 several times and fails the deploy, showing PM2 error logs, if it does not. A GitHub Actions workflow runs the script on every push to main. Good deploys are repeatable, fail loudly, protect data and verify the result.",
+   "source": "gglearn/deploy/deploy.sh, gglearn/README.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why does the deploy script exclude databases and .env files from the sync?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To make the upload slower"
+      },
+      {
+       "key": "b",
+       "text": "Because rsync cannot copy them"
+      },
+      {
+       "key": "c",
+       "text": "Because PM2 recreates them"
+      },
+      {
+       "key": "d",
+       "text": "So data and secrets never travel with the code"
+      }
+     ],
+     "answer": "d",
+     "topic": "secrets"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What is the purpose of the flock in the deploy script?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To encrypt the files"
+      },
+      {
+       "key": "b",
+       "text": "To stop two deploys running on the server at once"
+      },
+      {
+       "key": "c",
+       "text": "To restart PM2"
+      },
+      {
+       "key": "d",
+       "text": "To speed up npm ci"
+      }
+     ],
+     "answer": "b",
+     "topic": "locking"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why is there deliberately no --force on the schema push?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A change that would delete rows should stop the deploy instead of deleting data"
+      },
+      {
+       "key": "b",
+       "text": "Force is not supported by drizzle-kit"
+      },
+      {
+       "key": "c",
+       "text": "Force makes builds slower"
+      },
+      {
+       "key": "d",
+       "text": "Force would skip the health check"
+      }
+     ],
+     "answer": "a",
+     "topic": "data safety"
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "A deploy finishes the build but the app returns HTTP 500 afterwards. Describe what a well-designed pipeline should do and what you would check.",
+     "answer": "The pipeline should poll the app after reload, detect the failure to return 200 and fail the deploy rather than reporting success, printing recent process error logs. Then check PM2 logs, environment variables and whether a schema change was applied, and roll back or redeploy the previous version. Keep health checks and loud failure as standard parts of the deploy.",
+     "rubric": "Mentions post-deploy health check failing the pipeline; checking logs, env and schema; rollback or redeploy; loud failure."
+    }
+   ]
+  },
+  {
+   "title": "Scaling, state and API style",
+   "body": "Scaling means handling more load without redesigning. The first question is where state lives. A stateless service keeps nothing important in memory, so you can run more copies. The gglearn rate limiter keeps counters in process memory, which the code comment says is fine while the app runs as a single PM2 process, and that counters reset on restart; if the process count ever changes, it must move to the database. The README also says SQLite is for development and to move to Postgres before multi-user production use. These are honest limits recorded where developers will see them. Other common tactics are caching, background work for slow tasks, database indexes and read replicas, but measure first. An API style is how clients and servers talk. REST models resources with HTTP verbs and status codes, RPC style calls named actions, and GraphQL lets clients choose fields. None is best everywhere: pick the one your clients and team can use consistently, version it, and document errors. In a Next.js app, internal forms often call server-side actions directly, while public integrations get a documented HTTP API.",
+   "source": "gglearn/lib/rate-limit.ts, gglearn/README.md (Known gaps), general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does a stateless service make easier?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Avoiding all databases"
+      },
+      {
+       "key": "b",
+       "text": "Skipping authentication"
+      },
+      {
+       "key": "c",
+       "text": "Running several copies of it"
+      },
+      {
+       "key": "d",
+       "text": "Removing the need for logging"
+      }
+     ],
+     "answer": "c",
+     "topic": "stateless"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does the gglearn rate limiter comment say about its in-memory counters?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They survive restarts"
+      },
+      {
+       "key": "b",
+       "text": "They are fine for one PM2 process and reset on restart"
+      },
+      {
+       "key": "c",
+       "text": "They are shared between servers"
+      },
+      {
+       "key": "d",
+       "text": "They are stored in Cloudflare"
+      }
+     ],
+     "answer": "b",
+     "topic": "state"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What should you do before adding caching or replicas?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Measure where the bottleneck actually is"
+      },
+      {
+       "key": "b",
+       "text": "Add them everywhere"
+      },
+      {
+       "key": "c",
+       "text": "Remove the database"
+      },
+      {
+       "key": "d",
+       "text": "Switch API style"
+      }
+     ],
+     "answer": "a",
+     "topic": "measure first"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Compare REST, RPC and GraphQL briefly, and say how you would choose between them.",
+     "answer": "REST models resources with HTTP verbs and status codes; RPC calls named actions; GraphQL lets the client choose fields. Choose the one the clients and team can use consistently, then version it and document errors; none is best everywhere.",
+     "rubric": "Correctly describes all three; gives a selection criterion; mentions consistency, versioning or documentation."
+    }
+   ]
+  }
+ ]
+}

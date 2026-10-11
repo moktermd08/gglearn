@@ -1,0 +1,343 @@
+{
+ "trackSlug": "servers-infrastructure",
+ "items": [
+  {
+   "title": "A safe deploy script",
+   "body": "GGLearn is deployed from a script that treats the server as something that can fail halfway. It rsyncs the project to /var/www with delete, but excludes node_modules, build output, git data, the SQLite database files and every env file, so the data and secrets that live only on the server are not wiped. The remote steps are streamed into bash and begin with a lock using flock, so two deploys cannot run at once. Then it runs npm ci for a clean install from the lockfile, pushes the Drizzle schema, builds, and restarts the app under PM2. The schema push deliberately has no force flag: if a change would delete rows, the push must stop and fail the deploy rather than quietly running a delete. Finally it checks health: it polls the local port up to ten times and only exits successfully when it gets an HTTP 200, otherwise it prints the recent PM2 error logs and fails. The script uses strict mode so any failing command stops everything. The principles are general: make deploys repeatable, protect state, avoid running in parallel, and prove the new version is serving before calling it done.",
+   "source": "gglearn/deploy/deploy.sh",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is the purpose of the flock lock in the deploy script?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To stop two deploys running on the server at the same time"
+      },
+      {
+       "key": "b",
+       "text": "To encrypt the files while they are copied"
+      },
+      {
+       "key": "c",
+       "text": "To keep the SQLite database read-only"
+      },
+      {
+       "key": "d",
+       "text": "To limit how many users can log in"
+      }
+     ],
+     "answer": "a",
+     "topic": "locking"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does the schema push in the deploy script have no force flag?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because force makes the push slower"
+      },
+      {
+       "key": "b",
+       "text": "Because the schema tool does not support force"
+      },
+      {
+       "key": "c",
+       "text": "So a change that would delete rows stops and fails the deploy instead of running a delete"
+      },
+      {
+       "key": "d",
+       "text": "So the push can run without a database connection"
+      }
+     ],
+     "answer": "c",
+     "topic": "safe migrations"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does the end of the deploy script do after restarting PM2?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Waits a fixed minute and assumes success"
+      },
+      {
+       "key": "b",
+       "text": "Emails the developer a copy of the build"
+      },
+      {
+       "key": "c",
+       "text": "Deletes the old build folder and exits"
+      },
+      {
+       "key": "d",
+       "text": "Polls the local port until it gets HTTP 200, otherwise prints error logs and fails"
+      }
+     ],
+     "answer": "d",
+     "topic": "health check"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Why does the rsync step exclude env files and the data database files even though it uses the delete option?",
+     "answer": "Delete removes anything on the server that is not in the source. The env files and SQLite data exist only on the server, so without excludes a deploy would erase secrets and production data. Excluding them keeps state safe while code is replaced.",
+     "rubric": "Must connect delete semantics with server-only secrets and data being lost; mention protecting state."
+    }
+   ]
+  },
+  {
+   "title": "Apache, reverse proxies and TLS",
+   "body": "The company's sites use Apache as a reverse proxy: the Node app listens only on 127.0.0.1 on a private port, and Apache accepts public traffic and forwards it. Each site has a port 80 virtual host that redirects to HTTPS and a port 443 virtual host created by certbot for Let's Encrypt certificates, which renew automatically on a timer. Cloudflare sits in front, and the SSL mode should be Full (strict) so traffic between Cloudflare and the origin is also encrypted. ProxyPreserveHost matters for GGLearn because Next checks the Origin against the Host on server actions. GG Social records a trap worth remembering: the live 443 file in sites-enabled was a regular copy, not a link to sites-available, so editing the available copy passed configtest, reloaded cleanly, and changed nothing. Check which file Apache is really using with apachectl -S, back up the live file, edit it, run apachectl configtest and then reload. GG Money needs AllowOverride All because its security rules live in .htaccess; without it source and config could be downloaded. Always run the config test before a reload, so a typo does not take down every site on the box.",
+   "source": "gglearn/deploy/gglearn.gglink.co.uk.conf, ggsocial/DEPLOY.md, ggmoney/DEPLOY.md",
+   "questions": [
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does the Node app listen only on 127.0.0.1?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So it uses less memory"
+      },
+      {
+       "key": "b",
+       "text": "So it is only reachable through Apache on the same machine, not directly from the internet"
+      },
+      {
+       "key": "c",
+       "text": "Because Node cannot bind to public addresses"
+      },
+      {
+       "key": "d",
+       "text": "So Let's Encrypt can reach it"
+      }
+     ],
+     "answer": "b",
+     "topic": "reverse proxy"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which command checks the Apache configuration for errors before you reload?",
+     "options": [
+      {
+       "key": "a",
+       "text": "apachectl rotate"
+      },
+      {
+       "key": "b",
+       "text": "pm2 save"
+      },
+      {
+       "key": "c",
+       "text": "apachectl configtest"
+      },
+      {
+       "key": "d",
+       "text": "certbot delete"
+      }
+     ],
+     "answer": "c",
+     "topic": "safe reload"
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "What does apachectl -S help you find out?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Which config file each virtual host is actually served from"
+      },
+      {
+       "key": "b",
+       "text": "How much disk space logs use"
+      },
+      {
+       "key": "c",
+       "text": "Which users are logged in over SSH"
+      },
+      {
+       "key": "d",
+       "text": "Whether the certificate is expired in the browser"
+      }
+     ],
+     "answer": "a",
+     "topic": "vhosts"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "You edited the 443 virtual host in sites-available, configtest passed and Apache reloaded, but nothing changed. Explain the likely cause and the right procedure.",
+     "answer": "The live 443 file in sites-enabled is probably a regular copy rather than a symlink, so edits to sites-available are not used. Run apachectl -S to see which file serves the host, back up that live file, edit it, run configtest, then reload. Also decide whether to make the two files consistent so they cannot drift.",
+     "rubric": "Must identify sites-enabled being a separate copy, use of apachectl -S, backup, configtest before reload."
+    }
+   ]
+  },
+  {
+   "title": "Docker, databases and backups",
+   "body": "GG Social runs PostgreSQL in a Docker container, published only on 127.0.0.1 and backed by a named volume, so data survives container replacement and the database is not exposed to the internet. A containerised database is still just data on a disk: the volume is not a backup. The deploy script copies the database to a backups folder before it pushes any schema change, and the notes give a pg_dump to a compressed file plus a copy of the uploads folder. The same notes honestly say nothing is scheduled yet and that this is worth adding. That is a good lesson: a backup you do by memory is not a backup strategy. GGLearn keeps its data in SQLite files, which the deploy never overwrites. A sound approach follows common rules of thumb: more than one copy, at least one stored away from the server, automated on a schedule, and, most important, restores tested, because an untested backup is only a hope. Also back up uploaded files and secrets copies, since the database alone does not rebuild the whole app. Document how long you keep backups and who may read them, because backups hold the same sensitive data as production.",
+   "source": "ggsocial/DEPLOY.md (database, backups), gglearn/deploy/deploy.sh (database files excluded)",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Why does a Docker volume not count as a backup of the database?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Volumes cannot store databases"
+      },
+      {
+       "key": "b",
+       "text": "Volumes are deleted every night"
+      },
+      {
+       "key": "c",
+       "text": "Volumes are only for images"
+      },
+      {
+       "key": "d",
+       "text": "It lives on the same server, so losing or corrupting that server or data still loses it"
+      }
+     ],
+     "answer": "d",
+     "topic": "volumes"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does GG Social's deploy do before pushing a schema change?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Backs up the database to a backups folder"
+      },
+      {
+       "key": "b",
+       "text": "Drops all tables to start clean"
+      },
+      {
+       "key": "c",
+       "text": "Switches the site to maintenance mode and logs everyone out"
+      },
+      {
+       "key": "d",
+       "text": "Copies the database to the Cloudflare edge"
+      }
+     ],
+     "answer": "a",
+     "topic": "pre-deploy backup"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Which statement about backups is the soundest?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A backup only needs to exist on the same disk"
+      },
+      {
+       "key": "b",
+       "text": "Backups never contain personal data"
+      },
+      {
+       "key": "c",
+       "text": "A backup is only trustworthy once you have tested restoring from it"
+      },
+      {
+       "key": "d",
+       "text": "One manual backup per year is enough"
+      }
+     ],
+     "answer": "c",
+     "topic": "restore testing"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "GG Social's notes say no backup is scheduled. Describe a minimal backup plan for that database and its uploads.",
+     "answer": "Schedule a regular job (for example nightly) running pg_dump compressed, plus a copy of the uploads folder; store copies off the server; keep a defined retention; protect the backups as sensitive data; and test a restore periodically, with a way to be alerted if the job fails.",
+     "rubric": "Should include scheduling, off-server copy, uploads/files, retention/protection and testing restores or alerting."
+    }
+   ]
+  },
+  {
+   "title": "Shell quirks, runtimes and failed builds",
+   "body": "Most deploy trouble comes from the environment, not the code. GG Social's notes list several. The server's login shell is fish, which cannot parse bash syntax such as dollar-parenthesis, so a backup step once silently produced nothing; the cure is to stream the commands into bash with ssh and bash -s so fish only parses that one command. A login bash loaded nvm, which put Node 18 first, while PM2 ran Node 20 from /usr/bin and the framework needed a newer version than 18; the deploy script puts /usr/bin first so install, build and runtime agree. The lockfile made on a Mac skipped the Linux build of a native Tailwind dependency, so the server build died until it was installed explicitly without saving. The worst trap was a build that failed after deleting the build directory, leaving the running site without its files. The fix is to build into a fresh directory, swap it in only when it succeeds, and keep serving the old version meanwhile. GG Money similarly runs PHP 8.1 FPM for its own virtual host while other sites keep their older PHP. Lessons: make environments explicit, verify versions, and never destroy the working version before the new one is proven.",
+   "source": "ggsocial/DEPLOY.md (traps), ggmoney/DEPLOY.md (PHP FPM per vhost)",
+   "questions": [
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does the deploy script run server commands through ssh and bash -s?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because bash is faster than ssh alone"
+      },
+      {
+       "key": "b",
+       "text": "Because the login shell is fish, which cannot parse bash syntax, so only the bash command is passed to it"
+      },
+      {
+       "key": "c",
+       "text": "Because fish blocks all network connections"
+      },
+      {
+       "key": "d",
+       "text": "So that commands run on the developer's laptop"
+      }
+     ],
+     "answer": "b",
+     "topic": "shell differences"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why can building under one Node version and running under another cause trouble?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Node versions share nothing and so cannot be installed together"
+      },
+      {
+       "key": "b",
+       "text": "PM2 only runs on odd-numbered versions"
+      },
+      {
+       "key": "c",
+       "text": "Install, build and runtime can resolve different dependencies and the framework may refuse older versions"
+      },
+      {
+       "key": "d",
+       "text": "It only affects the colour of the logs"
+      }
+     ],
+     "answer": "c",
+     "topic": "runtime versions"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why is it safer to build into a fresh directory and swap it in than to delete the build folder and rebuild in place?",
+     "answer": "Deleting first means that a failed build leaves the running site without its files, causing downtime. Building elsewhere keeps the old version serving, and the swap happens only after success, so a failure changes nothing for users. It also avoids stale cache replays.",
+     "rubric": "Must explain downtime/failure risk of destroying first and benefit of keeping the old version serving until success."
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "A deploy fails halfway and the site now returns errors. Walk through your first checks and a recovery approach.",
+     "answer": "Check the app's local health URL and PM2 status/logs, and the web server error log, to see whether the process is down or the build is missing. If the build directory was removed, restore the previous version (from the old build or by redeploying the last good commit), restart, and confirm HTTP 200. Then check Node versions and the failing step in the deploy output, and fix the script so it builds elsewhere and swaps on success.",
+     "rubric": "Needs ordered checks (health, PM2/logs), a recovery path to a known good version, and a root-cause prevention step."
+    }
+   ]
+  }
+ ]
+}

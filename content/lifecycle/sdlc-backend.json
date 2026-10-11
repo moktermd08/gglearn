@@ -1,0 +1,361 @@
+{
+ "trackSlug": "sdlc-backend",
+ "items": [
+  {
+   "title": "APIs and where business logic lives",
+   "body": "The backend turns requests into results. Keep three layers distinct: the entry point that reads the request and checks who is calling, the business logic that applies the rules, and the data layer that stores facts. Entry points should be thin, because rules buried in handlers are hard to test and reuse. The gglearn repository follows this by putting rules in a lib folder as plain modules: levels.ts defines the 20 levels, grading.ts grades answers, and rate-limit.ts, progress.ts and others each own one concern. A level attempt draws 10 questions, favouring ones the learner has not yet answered correctly, and 80 percent passes. Because the rule is in one place, the page, the admin tools and tests all get the same behaviour. ggsocial applies the same idea with per-platform validation in its composer, such as a title for Reddit or a 280 character cap on X. Good APIs also return consistent errors, validate input at the boundary, check permission on every request, and avoid leaking internal details. Write the rule once, test it directly, and call it from everywhere.",
+   "source": "gglearn/README.md, gglearn/lib/, ggsocial/README.md (composer), general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Why should handlers stay thin?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Rules buried in handlers are hard to test and reuse"
+      },
+      {
+       "key": "b",
+       "text": "Thin handlers use less electricity"
+      },
+      {
+       "key": "c",
+       "text": "Handlers cannot call functions"
+      },
+      {
+       "key": "d",
+       "text": "Business logic must live in the browser"
+      }
+     ],
+     "answer": "a",
+     "topic": "layers"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Where does gglearn keep its level and grading rules?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Inside each page file"
+      },
+      {
+       "key": "b",
+       "text": "In Cloudflare settings"
+      },
+      {
+       "key": "c",
+       "text": "In plain modules in the lib folder"
+      },
+      {
+       "key": "d",
+       "text": "In the browser only"
+      }
+     ],
+     "answer": "c",
+     "topic": "modules"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which input rule applies at the API boundary?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Trust the client's role field"
+      },
+      {
+       "key": "b",
+       "text": "Validate input and check permission on every request"
+      },
+      {
+       "key": "c",
+       "text": "Validate only on the first request"
+      },
+      {
+       "key": "d",
+       "text": "Skip checks for logged-in users"
+      }
+     ],
+     "answer": "b",
+     "topic": "boundary"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Why is it good to have a business rule, such as the pass mark, defined in one place?",
+     "answer": "Every part of the system, pages, admin tools and tests, then behaves the same way. A change is made once, and the rule can be tested directly without going through the interface.",
+     "rubric": "Mentions consistency, single change point and testability."
+    }
+   ]
+  },
+  {
+   "title": "Background jobs, queues and retries",
+   "body": "Some work should not happen inside a web request: sending email, calling slow services, or doing scheduled checks. A background job runs outside the request, often from a queue or a timer. Good jobs are idempotent, meaning running them twice gives the same result as once, because retries and duplicates will happen. They record their status, retry with a limit and a growing delay, and stop clearly when they keep failing, so a person is told. ggsocial is built around this. Agents do hourly work for each brand, a daily job suggests posting times, and the activity checklist catches up every hour from facts. Workflows pause for a person when a safety rule triggers, when a score is low, or when a step keeps failing, and each run logs what it made and what it cost. A check a person recorded is never overwritten by a job. gglearn takes the opposite approach where it can: rival progress is deterministic and calculated when read, and finished contest standings are computed on read, so no scheduler is needed. Choose a job only when the work cannot be done cheaply on demand.",
+   "source": "ggsocial/README.md (agents, workflows), gglearn/README.md (rivals), gglearn/docs/competitions.md, general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does it mean for a job to be idempotent?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It never fails"
+      },
+      {
+       "key": "b",
+       "text": "It runs only at night"
+      },
+      {
+       "key": "c",
+       "text": "It cannot be retried"
+      },
+      {
+       "key": "d",
+       "text": "Running it twice has the same result as running it once"
+      }
+     ],
+     "answer": "d",
+     "topic": "idempotency"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How does gglearn avoid needing a scheduler for rival progress?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The rival XP is deterministic and computed when read"
+      },
+      {
+       "key": "b",
+       "text": "Rivals are updated by hand"
+      },
+      {
+       "key": "c",
+       "text": "A cron job runs every second"
+      },
+      {
+       "key": "d",
+       "text": "Rival data comes from users"
+      }
+     ],
+     "answer": "a",
+     "topic": "compute on read"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "In ggsocial, what happens when a person has recorded a checklist item and the hourly job runs?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The job replaces it"
+      },
+      {
+       "key": "b",
+       "text": "The recorded check is never overwritten"
+      },
+      {
+       "key": "c",
+       "text": "The job deletes it"
+      },
+      {
+       "key": "d",
+       "text": "The job duplicates it"
+      }
+     ],
+     "answer": "b",
+     "topic": "job safety"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "A nightly job that emails reminders sometimes runs twice after a server restart, and customers get duplicate emails. Describe how you would fix it and make the job safe.",
+     "answer": "Make the job idempotent: record each reminder sent with a unique key such as user plus date, and check or insert it before sending so a repeat does nothing. Add a lock or run-state so two copies do not overlap, log status, retry failures with a limit and delay, and alert a person if it keeps failing.",
+     "rubric": "Uses unique key or sent record for idempotency; prevents overlap; retries with limits; logging and alerts."
+    }
+   ]
+  },
+  {
+   "title": "Caching, rate limiting and search",
+   "body": "Three tools help a backend stay fast and safe. Caching stores the result of expensive work so it is not repeated. The hard part is invalidation: a cache that serves stale data causes confusing bugs, so decide how long data may be old and what clears it. Never cache private data in a shared place without keying it by user. Rate limiting restricts how often a caller can do something, which slows password guessing and abuse. The gglearn rate-limit module uses a fixed window: a counter per key that resets after a time. It holds counters in process memory, which is fine for one PM2 process; they reset on restart, and the code says to move them to the database if the process count changes. It can check whether a key is still allowed without counting a hit, and clears a key on success. Search turns text into an index so queries are quick, rather than scanning every row. Start with the database's own features, and add a separate search engine only when needs such as ranking, typo tolerance or scale demand it. For each tool, measure first, set limits, and log decisions.",
+   "source": "gglearn/lib/rate-limit.ts, general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is the hardest part of caching?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Writing the first cache key"
+      },
+      {
+       "key": "b",
+       "text": "Picking a cache colour"
+      },
+      {
+       "key": "c",
+       "text": "Invalidation: clearing or expiring stale data"
+      },
+      {
+       "key": "d",
+       "text": "Starting the cache"
+      }
+     ],
+     "answer": "c",
+     "topic": "caching"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How does the gglearn rate limiter count attempts?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A counter per key in a fixed time window, held in process memory"
+      },
+      {
+       "key": "b",
+       "text": "A per-minute cron job"
+      },
+      {
+       "key": "c",
+       "text": "Cloudflare cookies"
+      },
+      {
+       "key": "d",
+       "text": "A table row per request forever"
+      }
+     ],
+     "answer": "a",
+     "topic": "rate limiting"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What would force the gglearn limiter to move its counters to the database?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Adding a new colour"
+      },
+      {
+       "key": "b",
+       "text": "Having more questions"
+      },
+      {
+       "key": "c",
+       "text": "Changing the logo"
+      },
+      {
+       "key": "d",
+       "text": "Running more than one process"
+      }
+     ],
+     "answer": "d",
+     "topic": "limits"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "When should you add a dedicated search engine instead of using database queries?",
+     "answer": "When needs such as relevance ranking, typo tolerance, large scale or complex text queries outgrow what the database can do, after measuring that the simpler option is insufficient.",
+     "rubric": "Mentions measuring first and valid reasons such as ranking, typo tolerance or scale."
+    }
+   ]
+  },
+  {
+   "title": "Files, external services and cost control",
+   "body": "Backends store files and call outside services, and both need care. For file storage, never trust the name or claimed type from the client. Check the real content type, limit size, store files outside the folder that the web server publishes or serve them through checked routes, and give them generated names. The gglearn photo rules (JPEG, PNG or WebP, 300 KB, type from the bytes, SVG rejected) are an example. For external services, assume failure. Use timeouts, handle errors, and provide a fallback. gglearn grades open answers with Claude against a reference answer and rubric, but if no ANTHROPIC_API_KEY is set it uses a coarse keyword fallback, so the product still works. Keys come from environment variables and are never committed or logged. Paid services need cost control: ggsocial logs every Claude call with its cost, shows each brand's spend today, and pauses a run when the brand's daily AI budget is spent. An AI reviewer scores work, and risky items stop for a person whatever the settings. Treat model output as untrusted input, validate it, and keep a human in the loop where mistakes are costly.",
+   "source": "gglearn/README.md (grading), gglearn/docs/competitions.md (Faces), ggsocial/README.md (workflows), general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which is a safe rule for uploaded files?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Trust the file extension"
+      },
+      {
+       "key": "b",
+       "text": "Check the real content type and size limits on the server"
+      },
+      {
+       "key": "c",
+       "text": "Accept any file"
+      },
+      {
+       "key": "d",
+       "text": "Store them in the public code folder by original name"
+      }
+     ],
+     "answer": "b",
+     "topic": "uploads"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does gglearn do for open-answer grading when no API key is set?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It falls back to a coarse keyword grader"
+      },
+      {
+       "key": "b",
+       "text": "It marks every answer correct"
+      },
+      {
+       "key": "c",
+       "text": "It stops all exams"
+      },
+      {
+       "key": "d",
+       "text": "It asks the learner to grade themselves"
+      }
+     ],
+     "answer": "a",
+     "topic": "fallback"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What does ggsocial do when a brand's daily AI budget is spent?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It continues with no limit"
+      },
+      {
+       "key": "b",
+       "text": "It deletes the brand"
+      },
+      {
+       "key": "c",
+       "text": "The run pauses and waits for a person"
+      },
+      {
+       "key": "d",
+       "text": "It switches to another brand's budget"
+      }
+     ],
+     "answer": "c",
+     "topic": "cost control"
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "Your app calls a paid AI service to draft customer replies, and one day costs spike and a draft promises a refund the company never offered. Describe the controls you would add.",
+     "answer": "Add a per-brand or per-day spend budget that pauses runs when reached, log every call with cost and review the totals. Treat model output as untrusted: validate it, add a reviewer step that scores it and flags risk topics such as refunds, prices and legal matters, and make those stop for a person to approve before sending. Use timeouts and fallbacks, and keep the API key in environment settings.",
+     "rubric": "Budget cap and cost logging; output validation and risk review; human approval for sensitive topics; timeouts or fallback; secrets handled safely."
+    }
+   ]
+  }
+ ]
+}

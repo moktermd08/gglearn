@@ -1,0 +1,361 @@
+{
+ "trackSlug": "sdlc-requirements",
+ "items": [
+  {
+   "title": "Functional requirements and acceptance criteria",
+   "body": "A functional requirement says what the system must do. A user story is a short way to write one: as a role, I want an action, so that I get a benefit. A story is not complete until it has acceptance criteria, which are checks anyone can run to decide whether it is done. Good criteria are specific and testable, with numbers where numbers matter. The gglearn README has several examples written as rules. A level exam draws 10 questions, and a learner needs 80 percent to pass and unlock the next level. Open answers are graded against a reference answer and a rubric, and without the API key a coarser keyword fallback is used. Each of these sentences can be turned directly into a test. Watch for vague words such as fast, easy, or secure, because they cannot be checked. Also capture the unhappy paths: what happens when the input is wrong, the user is not allowed, or a service is down. Keep requirements numbered so they can be traced to design, tests and release notes, and review them with the people who will actually use the product.",
+   "source": "gglearn/README.md (levels, grading), general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does a functional requirement describe?",
+     "options": [
+      {
+       "key": "a",
+       "text": "How fast the system must be"
+      },
+      {
+       "key": "b",
+       "text": "Which servers will host it"
+      },
+      {
+       "key": "c",
+       "text": "Who will pay for it"
+      },
+      {
+       "key": "d",
+       "text": "What the system must do"
+      }
+     ],
+     "answer": "d",
+     "topic": "functional"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "In gglearn, how many questions are drawn for a level exam and what score passes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "20 questions and 60 percent"
+      },
+      {
+       "key": "b",
+       "text": "10 questions and 80 percent"
+      },
+      {
+       "key": "c",
+       "text": "10 questions and 50 percent"
+      },
+      {
+       "key": "d",
+       "text": "5 questions and 100 percent"
+      }
+     ],
+     "answer": "b",
+     "topic": "example"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which acceptance criterion is testable?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A learner who scores 80 percent or more unlocks the next level"
+      },
+      {
+       "key": "b",
+       "text": "The exam should feel fast"
+      },
+      {
+       "key": "c",
+       "text": "The exam should be easy to pass"
+      },
+      {
+       "key": "d",
+       "text": "The exam should be secure"
+      }
+     ],
+     "answer": "a",
+     "topic": "acceptance criteria"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Why should a requirement include unhappy paths, and give two examples.",
+     "answer": "Because real use includes errors and restrictions, and unspecified behaviour becomes bugs. Examples: invalid input, a user without permission, an external service being down, or an expired session. Each needs a defined response.",
+     "rubric": "Explains that failure cases must be specified; gives at least two valid unhappy-path examples; ties to testability."
+    }
+   ]
+  },
+  {
+   "title": "Non-functional requirements: how well the system must work",
+   "body": "Non-functional requirements describe qualities rather than features: performance, availability, security, privacy, usability, accessibility, maintainability and cost. They shape the architecture, so they must be known early. The rule is the same as for functional ones: make them measurable. Instead of the page must load quickly, say that the main page responds within an agreed time for most requests under a stated load. Instead of highly available, state how much downtime the business can accept and what recovery time is needed after a failure. Environment constraints count too. The gglearn README notes that the production server runs Node 20, so code must avoid newer APIs, and the native SQLite package must be a version that has a prebuilt binary for that Node. That is a real non-functional requirement: it came from the platform, not from a user. Constraints like this belong in the requirements document so nobody discovers them on deploy day. Each non-functional item should have an owner and a way to verify it, such as a load test, a security review or an accessibility audit. Where qualities conflict, such as speed against cost, record the trade-off decision.",
+   "source": "gglearn/README.md (Deploy section), general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which is a non-functional requirement?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Users can reset their password"
+      },
+      {
+       "key": "b",
+       "text": "Admins can add a new track"
+      },
+      {
+       "key": "c",
+       "text": "The system must stay available with an agreed maximum downtime"
+      },
+      {
+       "key": "d",
+       "text": "Learners can download a certificate"
+      }
+     ],
+     "answer": "c",
+     "topic": "NFR"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What is wrong with the requirement 'the page must be fast'?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It cannot be measured, so nobody can say whether it was met"
+      },
+      {
+       "key": "b",
+       "text": "It is too specific"
+      },
+      {
+       "key": "c",
+       "text": "It describes a feature instead of a quality"
+      },
+      {
+       "key": "d",
+       "text": "It should be a security requirement"
+      }
+     ],
+     "answer": "a",
+     "topic": "measurable"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "According to the gglearn README, why must developers avoid Node 21+ APIs?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Node 21 is not secure"
+      },
+      {
+       "key": "b",
+       "text": "Next.js does not support newer Node"
+      },
+      {
+       "key": "c",
+       "text": "SQLite requires Node 20 only for development"
+      },
+      {
+       "key": "d",
+       "text": "The production server runs Node 20"
+      }
+     ],
+     "answer": "d",
+     "topic": "constraints"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "A stakeholder says the new service must be 'secure, fast and always on'. Describe how you would turn this into usable non-functional requirements.",
+     "answer": "Ask what each word means in measurable terms: for security, which data classes are protected and which checks apply (access control, encryption, review); for fast, target response times at a stated load; for always on, acceptable downtime and recovery time. Assign owners and verification methods (load test, security review), record cost trade-offs, and add platform constraints such as runtime versions.",
+     "rubric": "Converts each vague word into a measurable target; names verification methods; mentions owners; considers conflicts and cost; includes platform constraints."
+    }
+   ]
+  },
+  {
+   "title": "Roles, permissions and separation of duties",
+   "body": "Requirements should list every role and what each may do. A role is a set of permissions, and it is safer to give the least access that lets someone do their job. Start by listing who touches the system: ordinary users, administrators, reviewers, and external visitors who are not signed in. Then for each action decide who can view, create, edit, approve or delete. The company projects show useful patterns. In ggsocial, an approver role can sign off a post without being able to edit it, so the person who approves is not the person who changed the text. In ggmoney, a filing is not closed by the person who did it: a second person must approve, and the app refuses self-approval. This is separation of duties, and it limits both mistakes and fraud. In gglearn, admins onboard and offboard people, and offboarding ends access immediately. Include the joiner, mover and leaver lifecycle in requirements, because access that outlives a job is a common risk. Write the rules into a permissions table and test each cell, including the denied cases.",
+   "source": "ggsocial/README.md (approvals), ggmoney/README.md (compliance calendar), gglearn/README.md (people), general practice",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does least privilege mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Give every new user admin rights"
+      },
+      {
+       "key": "b",
+       "text": "Give each person only the access needed for their job"
+      },
+      {
+       "key": "c",
+       "text": "Give access only to managers"
+      },
+      {
+       "key": "d",
+       "text": "Remove all roles from the system"
+      }
+     ],
+     "answer": "b",
+     "topic": "least privilege"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "In ggsocial, what can the approver role do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Sign off a post without being able to edit it"
+      },
+      {
+       "key": "b",
+       "text": "Edit and publish without any review"
+      },
+      {
+       "key": "c",
+       "text": "Only comment on posts"
+      },
+      {
+       "key": "d",
+       "text": "Delete channels"
+      }
+     ],
+     "answer": "a",
+     "topic": "approvals"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "In ggmoney, who may close a filing task that needs sign-off?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The person who prepared it"
+      },
+      {
+       "key": "b",
+       "text": "Any visitor"
+      },
+      {
+       "key": "c",
+       "text": "A second person; self-approval is refused"
+      },
+      {
+       "key": "d",
+       "text": "The automatic check"
+      }
+     ],
+     "answer": "c",
+     "topic": "separation of duties"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Explain separation of duties and why the leaver part of the access lifecycle matters.",
+     "answer": "Separation of duties means the person who prepares or changes something is not the one who approves it, reducing errors and fraud. Leaver handling matters because access that outlives a job is a risk, so access should end immediately when someone leaves.",
+     "rubric": "Defines separation of duties with a clear example; says access must be removed promptly for leavers; connects to risk reduction."
+    }
+   ]
+  },
+  {
+   "title": "Compliance, privacy and integrations as requirements",
+   "body": "Compliance and integrations are easy to forget until late, when they are expensive to change. Treat both as requirements from the start. For compliance, identify which rules apply to your data and market, then turn each into concrete behaviour. This is not legal advice, so involve the people responsible for legal matters. The gglearn competitions document gives a practical example of privacy turned into rules. A private contest returns a 404 to outsiders so its existence is not revealed. A public contest needs a consent box before joining, because name, photo and progress become public, and it can go from public to private but never back. Uploaded photos are limited in size and type, and SVG is rejected. For integrations, list each external system, what data flows, who owns the credentials, and what happens when it is down. The ggsocial README shows that platform limits shape the product: of 109 platforms only 45 can publish automatically, while 64 have no write API and so use a manual queue. ggmoney depends on HMRC submission, which needs the company's own credentials. Capture these limits as requirements, not surprises.",
+   "source": "gglearn/docs/competitions.md, ggsocial/README.md (channels), ggmoney/README.md, general practice",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Why should compliance be treated as a requirement from the start?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It only matters after launch"
+      },
+      {
+       "key": "b",
+       "text": "It is the same as performance"
+      },
+      {
+       "key": "c",
+       "text": "It is handled by the hosting provider alone"
+      },
+      {
+       "key": "d",
+       "text": "It is expensive to change late and affects design"
+      }
+     ],
+     "answer": "d",
+     "topic": "compliance"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "In the gglearn competitions design, what must a person do before joining a public contest?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Tick a consent box, since name, photo and progress become public"
+      },
+      {
+       "key": "b",
+       "text": "Pay a fee"
+      },
+      {
+       "key": "c",
+       "text": "Upload a passport"
+      },
+      {
+       "key": "d",
+       "text": "Invite ten friends"
+      }
+     ],
+     "answer": "a",
+     "topic": "consent"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "Your team must integrate with a platform API that has no publishing permission for organic content. How do you capture this in requirements and what does the product do instead?",
+     "answer": "Record the limit as an explicit requirement: list the platform as manual, define data flow, owner of credentials and failure behaviour. The product still composes, validates and schedules the content, then queues it with copy-ready text and media for a person to post, as ggsocial does for its manual platforms. Document the limitation so stakeholders do not assume automation.",
+     "rubric": "Identifies the API limitation as a requirement; describes a manual-queue fallback; mentions credentials, data flow and failure handling; communicates the limit to stakeholders."
+    },
+    {
+     "level": 7,
+     "type": "mcq",
+     "prompt": "How many of ggsocial's 109 platforms publish automatically according to its README?",
+     "options": [
+      {
+       "key": "a",
+       "text": "109"
+      },
+      {
+       "key": "b",
+       "text": "45"
+      },
+      {
+       "key": "c",
+       "text": "64"
+      },
+      {
+       "key": "d",
+       "text": "11"
+      }
+     ],
+     "answer": "b",
+     "topic": "integrations"
+    }
+   ]
+  }
+ ]
+}
