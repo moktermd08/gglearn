@@ -37,7 +37,7 @@ export default async function Matrix() {
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs text-slate-400">
-              <th className="sticky left-0 bg-white py-1 pr-3">Role</th>
+              <th className="sticky left-0 bg-[#fff] py-1 pr-3">Role</th>
               {pillars.map((p) => (
                 <th key={p} className="px-1 text-center font-normal"><div className="[writing-mode:vertical-rl] rotate-180">{p}</div><div className="mt-1 text-slate-500">{ready(p)}</div></th>
               ))}
@@ -46,7 +46,7 @@ export default async function Matrix() {
           <tbody>
             {roles.map((r) => (
               <tr key={r} className="border-t border-white/5">
-                <td className="sticky left-0 whitespace-nowrap bg-white py-1 pr-3">{roleLabel(r)}</td>
+                <td className="sticky left-0 whitespace-nowrap bg-[#fff] py-1 pr-3">{roleLabel(r)}</td>
                 {pillars.map((p) => {
                   const s = pillarStance(r, p);
                   return <td key={p} className={`px-1 text-center ${CELL[s].cls}`} title={`${roleLabel(r)} · ${p}: ${s}`}>{CELL[s].mark}</td>;
