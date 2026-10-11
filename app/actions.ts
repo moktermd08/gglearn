@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
-import { answers, careerGoals, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, runs, tracks, users } from "@/lib/db";
+import { answers, careerGoals, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
 import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
@@ -23,6 +23,7 @@ import { DYNAMIC_PER_RUN, drawDynamic } from "@/lib/dynamic/store";
 import { claimPendingInvites } from "@/lib/contests";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
+import { createRoleExam, gradeRoleExam, latestRoleExam } from "@/lib/roleExam";
 import { type Audience, formatScopes, openTo, parseScopes, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
@@ -205,6 +206,34 @@ export async function submitRun(runId: number, fd: FormData) {
   }
   revalidatePath("/dashboard");
   redirect(`/run/${runId}`);
+}
+
+// ---- role check: one exam across a ladder's tracks in the role's question mix ----
+
+export async function startRoleExam() {
+  const u = await requireUser();
+  if (u.audience !== "staff") return;
+  const open = latestRoleExam(u.id);
+  if (open && !open.finishedAt) redirect(`/role-exam/${open.id}`); // finish the one already started
+  const id = createRoleExam(u);
+  if (!id) redirect("/journey?roleExam=unavailable");
+  redirect(`/role-exam/${id}`);
+}
+
+const gradingRoleExams = new Set<number>(); // same double-submit guard as track runs
+
+export async function submitRoleExam(examId: number, fd: FormData) {
+  const u = await requireUser();
+  const exam = db.select().from(roleExams).where(and(eq(roleExams.id, examId), eq(roleExams.userId, u.id))).get();
+  if (!exam || exam.finishedAt || gradingRoleExams.has(examId)) redirect(`/role-exam/${examId}`);
+  gradingRoleExams.add(examId);
+  try {
+    await gradeRoleExam(examId, (qid) => str(fd.get(`q${qid}`)));
+  } finally {
+    gradingRoleExams.delete(examId);
+  }
+  revalidatePath("/journey");
+  redirect(`/role-exam/${examId}`);
 }
 
 async function gradeRun(userId: number, run: typeof runs.$inferSelect, runId: number, fd: FormData) {

@@ -30,6 +30,6 @@ Example (top rung): CTO is 29% leadership, 20% process, 15% product, 12% technol
 
 `/journey` shows the mix for the next step under "What you will be asked".
 
-## Not done yet
+## Role check
 
-- Exam runs are still one track and one level at a time; the mix is expressed through the ladder's steps and shown to learners, not yet a single mixed exam.
+`/journey` offers a **role check**: one exam drawn across the tracks of the person's path in the proportions of their role's mix (`lib/roleExam.ts`, `/role-exam/[id]`). It is stored apart from track runs (`role_exams`, `role_exam_answers`) so it never counts as passing a single track, and the result is broken down by domain. Run `npm run db:push` to create the tables.
