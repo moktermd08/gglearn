@@ -1,0 +1,2999 @@
+{
+  "slug": "moksy-platform-services",
+  "name": "Moksy platform services",
+  "description": "The foundation services: gateway, auth, permissions, projects, requirements, payments, events, jobs, audit.",
+  "roles": "developer",
+  "kind": "subject",
+  "brand": "moksy-ai",
+  "audience": "staff",
+  "tier": "role",
+  "groups": {
+    "core": "Moksy core service",
+    "flow": "Moksy workflow or messaging item",
+    "money": "Moksy billing concept",
+    "ai": "Moksy AI service or setting",
+    "pkg": "Moksy shared package or folder",
+    "arch": "scorecard row in the Moksy architecture review",
+    "gap": "gap in the Moksy architecture review",
+    "roadmap": "roadmap step in the Moksy architecture review",
+    "ops": "Moksy operations or observability item",
+    "pattern": "microservice design pattern",
+    "secure": "service-to-service security concept",
+    "data": "messaging or data concept",
+    "observe": "observability or release practice",
+    "contract": "API contract practice"
+  },
+  "cards": [
+    {
+      "group": "core",
+      "subject": "The gateway service",
+      "tier": 1,
+      "says": [
+        "is the only public API entry to the Moksy backend",
+        "listens on port 5001 in the local stack",
+        "is the one service attached to both the public and the internal network"
+      ],
+      "use": "need the single door a browser uses to reach the backend",
+      "not": [
+        "sits only on the internal network with no route to the outside"
+      ],
+      "like": [
+        "The auth service",
+        "The users service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The auth service",
+      "tier": 1,
+      "says": [
+        "is described in its package as the token issuer",
+        "applies a rank policy that decides which actor may support-as which target",
+        "is the proposed publisher of the key set other services would verify tokens against"
+      ],
+      "use": "need the service that issues tokens",
+      "not": [
+        "stores the profile record of every user"
+      ],
+      "like": [
+        "The users service",
+        "The permissions service",
+        "The gateway service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The users service",
+      "tier": 1,
+      "says": [
+        "is described in its package as the user data and persistence service",
+        "bumps a tokenVersion when a role or status changes, which invalidates existing JWTs",
+        "holds the settings for the email-verification deadline and the lockout policy"
+      ],
+      "use": "need the service that stores user records",
+      "not": [
+        "issues the JWTs that every other service verifies"
+      ],
+      "like": [
+        "The auth service",
+        "The permissions service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The permissions service",
+      "tier": 2,
+      "says": [
+        "is described in its package as the authoritative policy enforcer and RBAC engine",
+        "supplies the scope checks that every admin route declares with requirePermission",
+        "evaluates the union of scopes carried in the JWT and scopes from assigned roles"
+      ],
+      "use": "need the service that decides which scopes a role holds",
+      "not": [
+        "issues the short-lived internal token used between services"
+      ],
+      "like": [
+        "The auth service",
+        "The users service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The projects service",
+      "tier": 1,
+      "says": [
+        "owns the project record that holds one idea and its document",
+        "listens on port 5014 in the local stack",
+        "has its own dedicated service audit in the docs folder"
+      ],
+      "use": "need the service behind the project container for an idea",
+      "not": [
+        "runs the AI interview questions itself"
+      ],
+      "like": [
+        "The requirements service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The requirements service",
+      "tier": 2,
+      "says": [
+        "runs the interview conversation by generating questions and extracting answers",
+        "listens on port 5015 in the local stack",
+        "is 54,235 lines, larger than the next three services combined"
+      ],
+      "use": "need the service that holds the interview flow",
+      "not": [
+        "synthesises the final document through an OpenAI-compatible endpoint"
+      ],
+      "like": [
+        "The projects service",
+        "The preview service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The preview service",
+      "tier": 3,
+      "says": [
+        "listens on port 5019 in the local stack",
+        "has six per-target client subclasses for calling other services",
+        "is one of the two upstreams the downloads service reads from"
+      ],
+      "use": "need the service that sits upstream of downloads next to the requirements report",
+      "not": [
+        "is the public edge that browsers call directly"
+      ],
+      "like": [
+        "The downloads service",
+        "The storage service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The storage service",
+      "tier": 3,
+      "says": [
+        "listens on port 5022 in the local stack",
+        "builds its internal HTTP client with jwt rather than the shared canonical client",
+        "is grouped by the curriculum draft with dictionary and downloads under content"
+      ],
+      "use": "need the service that holds stored files for the platform",
+      "not": [
+        "keeps the audit trail of owner-group actions"
+      ],
+      "like": [
+        "The dictionary service",
+        "The downloads service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The dictionary service",
+      "tier": 3,
+      "says": [
+        "is described in its package as a hybrid static resource hub",
+        "persists its resources in the database and caches them on disk",
+        "is mapped by the curriculum draft to content and localisation"
+      ],
+      "use": "need the service that serves shared static resources and wording",
+      "not": [
+        "issues invoices for the platform"
+      ],
+      "like": [
+        "The storage service",
+        "The registry service",
+        "The downloads service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The registry service",
+      "tier": 3,
+      "says": [
+        "is only 1,260 lines long",
+        "is the proposed home for every service's published OpenAPI document",
+        "is grouped by the curriculum draft with progression under quality"
+      ],
+      "use": "need the natural place to publish API contracts",
+      "not": [
+        "is the largest service on the platform"
+      ],
+      "like": [
+        "The dictionary service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The progression service",
+      "tier": 3,
+      "says": [
+        "scores multi-track levels from Novice to Sovereign using signals",
+        "carries the MOX currency policy",
+        "runs both the customer ladder and the worker ladder"
+      ],
+      "use": "need the service behind levels and ladders",
+      "not": [
+        "fans events out to notifications and communications"
+      ],
+      "like": [
+        "The users service"
+      ]
+    },
+    {
+      "group": "core",
+      "subject": "The downloads service",
+      "tier": 4,
+      "says": [
+        "hosts the Report Manager engine, whose half the audit calls real",
+        "has a downloads half that the audit calls a convincing stub",
+        "has 27 routes, 21 of which have no caller anywhere in the app"
+      ],
+      "use": "need the service that mixes streaming report exports with stub bundle rows",
+      "not": [
+        "is a thin proxy with no business logic of its own"
+      ],
+      "like": [
+        "The storage service",
+        "The preview service"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The orchestrator service",
+      "tier": 3,
+      "says": [
+        "backs up Mongo and then applies pending migrations in every service container",
+        "listens on port 5018 in the local stack",
+        "uses crypto in its own hand-rolled internal HTTP client"
+      ],
+      "use": "need the component that runs migrations across all services",
+      "not": [
+        "delivers events to notifications over HTTP"
+      ],
+      "like": [
+        "The jobs service",
+        "The events service"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The jobs service",
+      "tier": 2,
+      "says": [
+        "listens on port 5029 in the local stack",
+        "builds its internal HTTP client with jwt rather than the shared client",
+        "is grouped by the curriculum draft with events and the orchestrator under automation"
+      ],
+      "use": "need the service for background work on the platform",
+      "not": [
+        "keeps an in-memory map of webhook subscribers"
+      ],
+      "like": [
+        "The events service",
+        "The orchestrator service"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The events service",
+      "tier": 2,
+      "says": [
+        "listens on port 5028 in the local stack",
+        "keeps its subscriber registry in an in-memory Map",
+        "delivers a signal by awaiting an HTTP POST to notifications and communications"
+      ],
+      "use": "need the service that fans signals out to subscribers",
+      "not": [
+        "publishes to a durable broker with retry and a dead-letter queue"
+      ],
+      "like": [
+        "The jobs service",
+        "The notifications service"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "EVENT_SIGNAL_FAILED",
+      "tier": 4,
+      "says": [
+        "is logged when an inline signal delivery from events fails",
+        "is followed by a return rather than a retry",
+        "leaves no dead-letter entry and no way to replay the signal"
+      ],
+      "use": "see the log line that proves a signal was dropped for good",
+      "not": [
+        "is logged when a queued signal is moved to a dead-letter queue"
+      ],
+      "like": [
+        "HTTP_REQUEST_COMPLETED"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "HTTP_REQUEST_COMPLETED",
+      "tier": 3,
+      "says": [
+        "is the structured JSON log line written for each finished request",
+        "carries the traceId that Loki indexes",
+        "is written by every service through the shared logging contract"
+      ],
+      "use": "need the log line that every service emits per request",
+      "not": [
+        "is written only by the gateway"
+      ],
+      "like": [
+        "EVENT_SIGNAL_FAILED"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The audit service",
+      "tier": 2,
+      "says": [
+        "is reached through the gateway's admin audit-log route",
+        "is listed as internal in the port map instead of with a port",
+        "assigns retention classes to the records it keeps"
+      ],
+      "use": "need the service that keeps the platform audit records",
+      "not": [
+        "publishes OpenAPI documents for every service"
+      ],
+      "like": [
+        "The registry service",
+        "The audit retention classes"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The audit retention classes",
+      "tier": 3,
+      "says": [
+        "keep authentication events for one year",
+        "keep payments records for seven years",
+        "keep AI events for two years and use two years as the default"
+      ],
+      "use": "need how long each kind of audit record is kept",
+      "not": [
+        "keep every record forever with no per-class period"
+      ],
+      "like": [
+        "The audit service"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The notifications service",
+      "tier": 2,
+      "says": [
+        "listens on port 5025 in the local stack",
+        "uses a Redis-backed socket adapter for real-time delivery",
+        "is one of the two services the events service POSTs to"
+      ],
+      "use": "need the service that pushes real-time notices to users",
+      "not": [
+        "owns the inbound email and SMS webhook routes"
+      ],
+      "like": [
+        "The communications service",
+        "The events service"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The communications service",
+      "tier": 2,
+      "says": [
+        "listens on port 5026 in the local stack",
+        "validates Twilio signatures on inbound webhook routes",
+        "deduplicates inbound email and SMS by provider message id"
+      ],
+      "use": "need the service for email, SMS and chat threads",
+      "not": [
+        "pushes socket notices through a Redis adapter"
+      ],
+      "like": [
+        "The notifications service"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The chat outbox",
+      "tier": 4,
+      "says": [
+        "is the ChatOutboxModel inside communications",
+        "is the only outbox pattern that exists in the repository today",
+        "is the proposed model to generalise into the shared common package"
+      ],
+      "use": "need the existing example of an outbox on the platform",
+      "not": [
+        "is the broker that the events service publishes to"
+      ],
+      "like": [
+        "The events service"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The WebhookEvent model",
+      "tier": 4,
+      "says": [
+        "records inbound email and SMS webhooks in communications",
+        "makes a repeated delivery of the same provider message id harmless",
+        "is listed by the communications roadmap as done"
+      ],
+      "use": "need the record that makes inbound provider webhooks exactly-once",
+      "not": [
+        "throttles message sends per user"
+      ],
+      "like": [
+        "The chat outbox"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The usage service",
+      "tier": 2,
+      "says": [
+        "is mapped by the curriculum draft to usage metering",
+        "sits with reporting and the dashboard under data and analytics",
+        "is a platform service that meters what is consumed"
+      ],
+      "use": "need the service tied to usage metering",
+      "not": [
+        "issues JWTs for the gateway"
+      ],
+      "like": [
+        "The token ledger"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "The payments service",
+      "tier": 2,
+      "says": [
+        "listens on port 5008 in the local stack",
+        "is the source of truth for money movement, invoices, payouts and checkout transactions",
+        "increments the lifetimeSpendUsd signal behind the customer level"
+      ],
+      "use": "need the owner of invoices, payouts and checkout transactions",
+      "not": [
+        "is the authoritative owner of plan entitlements"
+      ],
+      "like": [
+        "The subscriptions service"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "The subscriptions service",
+      "tier": 2,
+      "says": [
+        "listens on port 5007 in the local stack",
+        "is the authoritative owner of plan entitlements and the current billing period",
+        "holds included monthly tokens, consumed tokens and the overage posture"
+      ],
+      "use": "need the owner of what a plan lets a customer do",
+      "not": [
+        "is the source of truth for payouts and checkout transactions"
+      ],
+      "like": [
+        "The payments service"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "Plan entitlements",
+      "tier": 3,
+      "says": [
+        "describe what a plan lets the customer do",
+        "are owned by subscriptions rather than payments",
+        "drift when they are stored in two services at once"
+      ],
+      "use": "need to know who owns what a plan allows",
+      "not": [
+        "are the invoices and charges produced by a plan"
+      ],
+      "like": [
+        "The token ledger",
+        "The subscription snapshot"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "The token ledger",
+      "tier": 3,
+      "says": [
+        "receives a durable usage event for every AI request",
+        "is the event log from which the period summary is derived",
+        "is the ledger that the snapshot only summarises"
+      ],
+      "use": "need the durable record of AI usage events",
+      "not": [
+        "is a fast-read summary of the current period"
+      ],
+      "like": [
+        "The subscription snapshot"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "The subscription snapshot",
+      "tier": 3,
+      "says": [
+        "is a fast-read summary of the current period",
+        "is only a summary of the event log",
+        "holds the quick view subscriptions reads instead of replaying every usage event"
+      ],
+      "use": "need the fast view of the current billing period",
+      "not": [
+        "is the durable record written once per AI request"
+      ],
+      "like": [
+        "The token ledger"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "Block mode",
+      "tier": 3,
+      "says": [
+        "refuses AI requests once the allowance has run out",
+        "turns requests away instead of switching models or charging extra"
+      ],
+      "use": "want requests refused when the allowance is used up",
+      "not": [
+        "bills the customer for the extra usage"
+      ],
+      "like": [
+        "Downgrade mode",
+        "Overage mode"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "Downgrade mode",
+      "tier": 3,
+      "says": [
+        "switches to cheaper models once the allowance has run out",
+        "keeps requests flowing on lower-cost models"
+      ],
+      "use": "want the service to continue on a cheaper model after the allowance ends",
+      "not": [
+        "refuses every request after the allowance ends"
+      ],
+      "like": [
+        "Block mode",
+        "Overage mode"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "Overage mode",
+      "tier": 3,
+      "says": [
+        "allows requests beyond the allowance",
+        "bills the extra usage"
+      ],
+      "use": "want to keep serving beyond the allowance and charge for it",
+      "not": [
+        "swaps to cheaper models without billing"
+      ],
+      "like": [
+        "Block mode",
+        "Downgrade mode"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "Mock billing mode",
+      "tier": 2,
+      "says": [
+        "simulates subscriptions and MOX top-ups instantly",
+        "is the local billing mode that needs no Stripe test keys"
+      ],
+      "use": "want to try billing flows locally with nothing external",
+      "not": [
+        "charges a real card through Stripe"
+      ],
+      "like": [
+        "Stripe test mode"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "Stripe test mode",
+      "tier": 2,
+      "says": [
+        "runs billing against Stripe with test keys",
+        "charges no real money"
+      ],
+      "use": "want to exercise real Stripe flows without real charges",
+      "not": [
+        "simulates subscriptions without contacting Stripe"
+      ],
+      "like": [
+        "Mock billing mode"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "The billing rollout status",
+      "tier": 4,
+      "says": [
+        "marks the foundation phase as implemented",
+        "treats removing duplicate subscription state from payments as a later phase",
+        "lists enforcement, invoices from the token ledger and reconciliation as planned, not built"
+      ],
+      "use": "need to know which parts of subscription billing are built today",
+      "not": [
+        "records enforcement and reconciliation as already shipped"
+      ],
+      "like": [
+        "The token ledger"
+      ]
+    },
+    {
+      "group": "ai",
+      "subject": "The ai-llm service",
+      "tier": 2,
+      "says": [
+        "runs the synthesis flow, including the final document on Finalise",
+        "talks to any OpenAI-compatible endpoint",
+        "is configured with LLM_BASE_URL and LLM_PRIMARY_MODEL"
+      ],
+      "use": "need the service that makes the final synthesis call",
+      "not": [
+        "runs the live interview question generation"
+      ],
+      "like": [
+        "The conversation LLM call",
+        "The ai-nlp service",
+        "The ai-memory service"
+      ]
+    },
+    {
+      "group": "ai",
+      "subject": "The conversation LLM call",
+      "tier": 3,
+      "says": [
+        "uses Ollama through its native client",
+        "is configured with OLLAMA_URL, OLLAMA_MODEL and OLLAMA_TIMEOUT_MS",
+        "stays on Ollama even when ai-llm is moved to OpenAI"
+      ],
+      "use": "need the model call that generates interview questions",
+      "not": [
+        "goes through LLM_BASE_URL like the synthesis flow"
+      ],
+      "like": [
+        "The ai-llm service"
+      ]
+    },
+    {
+      "group": "ai",
+      "subject": "The ai-nlp service",
+      "tier": 3,
+      "says": [
+        "is described in its package as the authoritative local NLP engine wrapper",
+        "checks a static key only on internal calls, with no JWT check"
+      ],
+      "use": "need the service that wraps the local NLP engine",
+      "not": [
+        "synthesises the final document"
+      ],
+      "like": [
+        "The ai-memory service",
+        "The ai-llm service",
+        "The ai-policy service"
+      ]
+    },
+    {
+      "group": "ai",
+      "subject": "The ai-memory service",
+      "tier": 4,
+      "says": [
+        "is started by the full compose profile alongside ai-llm and ai-nlp",
+        "accepts any valid internal token",
+        "has no caller allow-list in its guard"
+      ],
+      "use": "need the AI service that holds memory rather than language or NLP",
+      "not": [
+        "wraps the local NLP engine"
+      ],
+      "like": [
+        "The ai-nlp service",
+        "The ai-policy service",
+        "The ai-llm service"
+      ]
+    },
+    {
+      "group": "ai",
+      "subject": "The ai-policy service",
+      "tier": 3,
+      "says": [
+        "listens on port 5017 in the local stack",
+        "accepts any valid internal token",
+        "is cited by the curriculum draft as a source for governance and compliance"
+      ],
+      "use": "need the service that applies policy to AI use",
+      "not": [
+        "generates interview questions with Ollama"
+      ],
+      "like": [
+        "The ai-memory service",
+        "The ai-nlp service"
+      ]
+    },
+    {
+      "group": "ai",
+      "subject": "OPENAI_API_KEY set to ollama",
+      "tier": 3,
+      "says": [
+        "is set that way on purpose",
+        "exists because the ai-llm service expects the variable to be present",
+        "must not be left blank"
+      ],
+      "use": "wonder why a local setup sets an OpenAI key to a word",
+      "not": [
+        "is a real key that Ollama checks"
+      ],
+      "like": [
+        "The conversation LLM call"
+      ]
+    },
+    {
+      "group": "ai",
+      "subject": "The JSON-strict reply format",
+      "tier": 4,
+      "says": [
+        "is expected by the requirements service from its model",
+        "can be broken by very small models under 3 B parameters",
+        "produces a graceful fallback and a no question generated message rather than a crash"
+      ],
+      "use": "need to explain why a tiny local model yields no question",
+      "not": [
+        "makes the gateway crash when the reply is invalid"
+      ],
+      "like": [
+        "The conversation LLM call"
+      ]
+    },
+    {
+      "group": "ai",
+      "subject": "The full compose profile",
+      "tier": 3,
+      "says": [
+        "activates ai-llm, ai-nlp and ai-memory",
+        "also brings up payments, the docs site and tooling sidecars",
+        "is what npm run dev starts, unlike a bare docker compose up"
+      ],
+      "use": "need to know which services only start with the full profile",
+      "not": [
+        "is what a plain docker compose up starts"
+      ],
+      "like": [
+        "The gateway service"
+      ]
+    },
+    {
+      "group": "pkg",
+      "subject": "The common package",
+      "tier": 3,
+      "says": [
+        "publishes the shared error envelope",
+        "carries Sentry support",
+        "holds the canonical internal HTTP client and guard"
+      ],
+      "use": "need the shared library every service is meant to use",
+      "not": [
+        "holds the frontend dashboard code"
+      ],
+      "like": [
+        "The reporting package",
+        "The patterns package",
+        "The mcp-server package",
+        "The canonical internal guard"
+      ]
+    },
+    {
+      "group": "pkg",
+      "subject": "The canonical internal guard",
+      "tier": 4,
+      "says": [
+        "is internalAuth in the common package",
+        "accepts only api-gateway as a caller",
+        "enforces a 30-second replay window",
+        "is used by none of the services"
+      ],
+      "use": "need the shared guard that forced services to write their own looser copies",
+      "not": [
+        "accepts any service name that signs a token"
+      ],
+      "like": [
+        "The canonical HttpClient"
+      ]
+    },
+    {
+      "group": "pkg",
+      "subject": "The canonical HttpClient",
+      "tier": 4,
+      "says": [
+        "carries a failure-threshold circuit breaker",
+        "forwards the x-correlation-id header",
+        "is used by only one service today"
+      ],
+      "use": "need the shared internal client with a circuit breaker",
+      "not": [
+        "is used by every service in place of its own client"
+      ],
+      "like": [
+        "The canonical internal guard"
+      ]
+    },
+    {
+      "group": "pkg",
+      "subject": "The reporting package",
+      "tier": 3,
+      "says": [
+        "powers the Report Manager engine hosted by the downloads service",
+        "lives in the packages directory rather than among the 25 services",
+        "is listed by the curriculum draft under data and analytics"
+      ],
+      "use": "need the package behind report export and import",
+      "not": [
+        "holds the pattern registry"
+      ],
+      "like": [
+        "The patterns package",
+        "The mcp-server package",
+        "The common package"
+      ]
+    },
+    {
+      "group": "pkg",
+      "subject": "The patterns package",
+      "tier": 3,
+      "says": [
+        "lives in the packages directory rather than among the 25 services",
+        "is listed by the curriculum draft under automation with jobs, events and the orchestrator"
+      ],
+      "use": "need the package tied to 1:99 patterns",
+      "not": [
+        "powers the Report Manager"
+      ],
+      "like": [
+        "The reporting package",
+        "The mcp-server package",
+        "The common package"
+      ]
+    },
+    {
+      "group": "pkg",
+      "subject": "The mcp-server package",
+      "tier": 3,
+      "says": [
+        "lives in the packages directory rather than among the 25 services",
+        "is listed by the curriculum draft under the AI area with ai-llm, ai-memory and ai-nlp"
+      ],
+      "use": "need the shared package for the MCP server",
+      "not": [
+        "powers report exports"
+      ],
+      "like": [
+        "The patterns package",
+        "The reporting package",
+        "The common package"
+      ]
+    },
+    {
+      "group": "pkg",
+      "subject": "The packages directory",
+      "tier": 2,
+      "says": [
+        "holds common, knowledge-base, mcp-server, newton-client, patterns, reporting, sdk and zapier-app",
+        "sits beside the foundation folder and the apps folder",
+        "holds code shared by services and apps"
+      ],
+      "use": "need where shared code lives rather than a service",
+      "not": [
+        "holds the 25 backend services"
+      ],
+      "like": [
+        "The foundation folder"
+      ]
+    },
+    {
+      "group": "pkg",
+      "subject": "The foundation folder",
+      "tier": 1,
+      "says": [
+        "holds the backend services",
+        "is where the curriculum draft counted 29 services while the review counts 25",
+        "has a Dockerfile and package.json in each service"
+      ],
+      "use": "need where the backend services live",
+      "not": [
+        "holds the dashboard and docs frontends"
+      ],
+      "like": [
+        "The packages directory"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: independent deployment",
+      "tier": 2,
+      "says": [
+        "is evidenced by 25 services with their own Dockerfile and package.json",
+        "is helped by a deploy script that rebuilds only changed services"
+      ],
+      "use": "need the row about deploying one service without the rest",
+      "not": [
+        "is rated red"
+      ],
+      "like": [
+        "Scorecard row: database per service"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: database per service",
+      "tier": 2,
+      "says": [
+        "is evidenced by 23 distinct logical databases",
+        "has one cross-database exception, a one-off backfill script in progression"
+      ],
+      "use": "need the row that found no service reading another's collections",
+      "not": [
+        "is rated amber"
+      ],
+      "like": [
+        "Scorecard row: independent deployment"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: private network and single edge",
+      "tier": 2,
+      "says": [
+        "depends on moksy-internal being a Docker internal network",
+        "leaves only the gateway publishing a port for the API"
+      ],
+      "use": "need the row about the network layout",
+      "not": [
+        "is rated red"
+      ],
+      "like": [
+        "Scorecard row: encrypted transport"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: health and structured logging",
+      "tier": 2,
+      "says": [
+        "finds /health on all 25 services",
+        "finds a JSON request log line with a propagated traceId"
+      ],
+      "use": "need the row about per-service health endpoints",
+      "not": [
+        "is rated red"
+      ],
+      "like": [
+        "Scorecard row: shared error contract"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: shared error contract",
+      "tier": 3,
+      "says": [
+        "rests on the error envelope in the common package",
+        "adds Sentry and Loki with promtail indexing traceId"
+      ],
+      "use": "need the row about common errors and observability",
+      "not": [
+        "is rated amber"
+      ],
+      "like": [
+        "Scorecard row: health and structured logging"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: authenticated service calls",
+      "tier": 3,
+      "says": [
+        "is the only row rated amber",
+        "has a handshake of a gateway key plus an internal token JWT",
+        "has one shared secret and five divergent implementations"
+      ],
+      "use": "need the only amber row in the scorecard",
+      "not": [
+        "is rated green"
+      ],
+      "like": [
+        "Scorecard row: encrypted transport"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: encrypted transport",
+      "tier": 3,
+      "says": [
+        "finds every hop on plain http",
+        "finds zero TLS, zero mTLS and zero service identity"
+      ],
+      "use": "need the row about traffic between services being plaintext",
+      "not": [
+        "is rated amber"
+      ],
+      "like": [
+        "Scorecard row: authenticated service calls"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: asynchronous communication",
+      "tier": 3,
+      "says": [
+        "finds no broker on the platform",
+        "finds events fanning out inline over HTTP from an in-memory map"
+      ],
+      "use": "need the row about decoupled messaging",
+      "not": [
+        "is rated green"
+      ],
+      "like": [
+        "Scorecard row: services own their logic"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: services own their logic",
+      "tier": 3,
+      "says": [
+        "points to a 9,577-line gateway controller",
+        "finds orchestration and domain rules in the gateway"
+      ],
+      "use": "need the row about the gateway holding business logic",
+      "not": [
+        "is rated green"
+      ],
+      "like": [
+        "Scorecard row: published contracts"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "Scorecard row: published contracts",
+      "tier": 3,
+      "says": [
+        "finds zero OpenAPI or AsyncAPI files in the repo",
+        "leaves every consumer coupled to an undocumented response shape"
+      ],
+      "use": "need the row about versioned API contracts",
+      "not": [
+        "is rated green"
+      ],
+      "like": [
+        "Scorecard row: services own their logic"
+      ]
+    },
+    {
+      "group": "arch",
+      "subject": "The 60 percent verdict",
+      "tier": 2,
+      "says": [
+        "says the decomposition is real but the contract between services is not",
+        "places the platform roughly 60 percent of the way to the goal",
+        "concentrates the remaining 40 percent in four places"
+      ],
+      "use": "need the review's overall summary of the platform",
+      "not": [
+        "says the platform is a finished microservice architecture"
+      ],
+      "like": [
+        "Scorecard row: authenticated service calls"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "Gap 1: one shared secret",
+      "tier": 3,
+      "says": [
+        "makes every service hold every other service's key in practice",
+        "uses symmetric HS256, so a verifier can also forge tokens",
+        "cannot rotate one service's credential without rotating all"
+      ],
+      "use": "see why a compromised service can impersonate any other",
+      "not": [
+        "is solved by replay protection"
+      ],
+      "like": [
+        "Gap 3: the x-user header"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "Gap 2: divergent client and guard copies",
+      "tier": 3,
+      "says": [
+        "has 25 hand-written internalAuth copies",
+        "uses six competing header names",
+        "enforces different rules in different guards"
+      ],
+      "use": "see why 25 copies of the guard exist",
+      "not": [
+        "is about plaintext traffic"
+      ],
+      "like": [
+        "Gap 1: one shared secret"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "Gap 3: the x-user header",
+      "tier": 4,
+      "says": [
+        "carries the actor as unsigned JSON that services parse",
+        "lets anything holding the gateway key assert an admin role",
+        "is read by users in eight separate places"
+      ],
+      "use": "see why one compromised service can mean platform-wide admin",
+      "not": [
+        "is already a signed short-lived assertion"
+      ],
+      "like": [
+        "Gap 1: one shared secret"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "Gap 4: no transport encryption",
+      "tier": 3,
+      "says": [
+        "finds every inter-service URL on plain http",
+        "becomes unsurvivable once services span hosts or a managed cluster",
+        "is answered by mTLS on every hop"
+      ],
+      "use": "see why moving to Kubernetes needs encryption between services",
+      "not": [
+        "is already solved by a service mesh in place"
+      ],
+      "like": [
+        "Gap 1: one shared secret"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "Gap 5: events as inline HTTP fan-out",
+      "tier": 3,
+      "says": [
+        "keeps the subscriber registry in process memory",
+        "has no queue, no retry, no dead-letter and no replay",
+        "is the root cause of a restart killing work in flight"
+      ],
+      "use": "see why a restart mid-report loses the work for good",
+      "not": [
+        "is solved by the outbox in communications"
+      ],
+      "like": [
+        "Gap 6: the gateway as the brain"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "Gap 6: the gateway as the brain",
+      "tier": 3,
+      "says": [
+        "holds about 8,000 lines of orchestration that belong to services",
+        "means any domain flow change needs a gateway deploy",
+        "makes the gateway the highest-blast-radius component"
+      ],
+      "use": "see why a domain change forces a gateway deploy",
+      "not": [
+        "is rated as a small routing layer of about 1,500 lines"
+      ],
+      "like": [
+        "Gap 7: no published contracts"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "Gap 7: no published contracts",
+      "tier": 3,
+      "says": [
+        "finds zero OpenAPI, AsyncAPI or schema-registry files",
+        "couples consumers to undocumented response shapes",
+        "is why return-shape bugs surface that unit tests cannot catch"
+      ],
+      "use": "see why wiring work keeps finding return-shape bugs",
+      "not": [
+        "is about the gateway controller size"
+      ],
+      "like": [
+        "Gap 6: the gateway as the brain"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "Gap 8: four services on the public network",
+      "tier": 4,
+      "says": [
+        "attaches ai-llm, requirements, payments and progression to moksy-public",
+        "publishes a host port for progression",
+        "suggests a separate egress network for services that call third parties"
+      ],
+      "use": "see which services are reachable from outside without needing to be",
+      "not": [
+        "finds the gateway on the internal network only"
+      ],
+      "like": [
+        "Gap 4: no transport encryption"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "The replay window finding",
+      "tier": 4,
+      "says": [
+        "finds 23 of 25 services accept replayable internal requests",
+        "has only auth and users enforcing a replay window",
+        "means one captured internal call can be replayed indefinitely"
+      ],
+      "use": "see why a captured internal call can be replayed",
+      "not": [
+        "finds that every service enforces a 30-second timestamp window"
+      ],
+      "like": [
+        "Gap 1: one shared secret"
+      ]
+    },
+    {
+      "group": "gap",
+      "subject": "The requirements size finding",
+      "tier": 4,
+      "says": [
+        "puts requirements at 54,235 lines, 3.7 times the gateway",
+        "has absorbed the pillar engine, marketplace, experiment harness and catalog",
+        "is called a monolith wearing a service's clothes"
+      ],
+      "use": "see which service the review says should be decomposed along its seams",
+      "not": [
+        "describes the downloads service as a stub"
+      ],
+      "like": [
+        "Gap 6: the gateway as the brain"
+      ]
+    },
+    {
+      "group": "roadmap",
+      "subject": "Phase 1: collapse to one implementation",
+      "tier": 3,
+      "says": [
+        "makes the common guard accept a configurable caller allow-list",
+        "moves all 25 services onto one guard and one client",
+        "deletes the per-service copies of both"
+      ],
+      "use": "want the roadmap step that needs no new infrastructure",
+      "not": [
+        "introduces a broker"
+      ],
+      "like": [
+        "Phase 2: real service identity"
+      ]
+    },
+    {
+      "group": "roadmap",
+      "subject": "Phase 2: real service identity",
+      "tier": 3,
+      "says": [
+        "moves from shared HS256 to per-service RS256 or EdDSA keypairs",
+        "has auth publish JWKS",
+        "replaces the raw x-user header with a signed actor assertion"
+      ],
+      "use": "want the roadmap step about asymmetric service keys",
+      "not": [
+        "installs a service mesh"
+      ],
+      "like": [
+        "Phase 3: encrypted transport"
+      ]
+    },
+    {
+      "group": "roadmap",
+      "subject": "Phase 3: encrypted transport",
+      "tier": 3,
+      "says": [
+        "writes Kubernetes manifests for the other 24 services",
+        "installs Linkerd for automatic mTLS",
+        "adds default-deny NetworkPolicies per service"
+      ],
+      "use": "want the roadmap step about mTLS and manifests",
+      "not": [
+        "moves notifications onto events"
+      ],
+      "like": [
+        "Phase 2: real service identity"
+      ]
+    },
+    {
+      "group": "roadmap",
+      "subject": "Phase 4: genuine decoupling",
+      "tier": 3,
+      "says": [
+        "stands up a broker and generalises the outbox",
+        "rewrites events as a broker-backed registry with persistence, retry and a DLQ",
+        "generates OpenAPI per service and publishes it to registry"
+      ],
+      "use": "want the roadmap step that is largest and can run in parallel",
+      "not": [
+        "only consolidates existing guard copies"
+      ],
+      "like": [
+        "Phase 1: collapse to one implementation"
+      ]
+    },
+    {
+      "group": "roadmap",
+      "subject": "The header vocabulary freeze",
+      "tier": 4,
+      "says": [
+        "cuts six header names down to three",
+        "is part of Phase 1",
+        "deletes the other three names"
+      ],
+      "use": "need the cleanup of x-internal-gateway-key, x-internal-token and their rivals",
+      "not": [
+        "adds a seventh header for service identity"
+      ],
+      "like": [
+        "Phase 2: real service identity"
+      ]
+    },
+    {
+      "group": "roadmap",
+      "subject": "Per-service Mongo users",
+      "tier": 4,
+      "says": [
+        "replace every service connecting as the authSource=admin root",
+        "are scoped to each service's own database",
+        "belong to Phase 2"
+      ],
+      "use": "need the step that limits a compromised service's database reach",
+      "not": [
+        "are installed with the service mesh"
+      ],
+      "like": [
+        "Phase 3: encrypted transport"
+      ]
+    },
+    {
+      "group": "roadmap",
+      "subject": "The broker choice",
+      "tier": 4,
+      "says": [
+        "names Redis Streams as the pragmatic option since Redis is already deployed",
+        "names NATS JetStream or RabbitMQ as alternatives with stronger durability",
+        "notes Redis is used today only for gateway rate-limiting and the notifications socket adapter"
+      ],
+      "use": "need which broker the review suggests",
+      "not": [
+        "recommends Kafka as the only option"
+      ],
+      "like": [
+        "Phase 4: genuine decoupling"
+      ]
+    },
+    {
+      "group": "roadmap",
+      "subject": "The three priorities",
+      "tier": 3,
+      "says": [
+        "lists Phase 1 in full first",
+        "kills the x-user header second",
+        "makes events durable third"
+      ],
+      "use": "need the review's if-you-only-do-three-things list",
+      "not": [
+        "starts with the Kubernetes mesh"
+      ],
+      "like": [
+        "The 60 percent verdict"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The no-auto-deploy rule",
+      "tier": 1,
+      "says": [
+        "means pushing to GitHub does not touch the server",
+        "requires SSH, git pull and a deploy command by hand",
+        "has no CI/CD pipeline deploying on anyone's behalf"
+      ],
+      "use": "want to know what happens after git push",
+      "not": [
+        "deploys the server on every push to main"
+      ],
+      "like": [
+        "npm run deploy:prod"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "npm run deploy:prod",
+      "tier": 2,
+      "says": [
+        "rebuilds only services whose code changed",
+        "runs a post-deploy health check",
+        "records the commit in .last-deploy-sha"
+      ],
+      "use": "need the normal server deploy command",
+      "not": [
+        "rebuilds every service every time"
+      ],
+      "like": [
+        "npm run deploy:prod:plan",
+        "npm run deploy:prod:full"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "npm run deploy:prod:plan",
+      "tier": 3,
+      "says": [
+        "previews a deploy without touching anything",
+        "shows what would be rebuilt",
+        "is the safe look before a deploy"
+      ],
+      "use": "want to see which services a deploy would rebuild",
+      "not": [
+        "performs the rebuild and restart"
+      ],
+      "like": [
+        "npm run deploy:prod",
+        "npm run deploy:prod:full"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "npm run deploy:prod:full",
+      "tier": 3,
+      "says": [
+        "forces a full rebuild of everything",
+        "ignores the changed-services shortcut"
+      ],
+      "use": "need a rebuild of all services",
+      "not": [
+        "rebuilds only changed services"
+      ],
+      "like": [
+        "npm run deploy:prod",
+        "npm run deploy:prod:plan"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "How changed services are detected",
+      "tier": 4,
+      "says": [
+        "is derived from each Dockerfile's COPY paths",
+        "limits a deploy to services whose code changed",
+        "needs no manual list of services"
+      ],
+      "use": "need how deploy:prod picks what to rebuild",
+      "not": [
+        "compares the commit message to a service name"
+      ],
+      "like": [
+        "npm run deploy:prod"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "npm run release",
+      "tier": 3,
+      "says": [
+        "pulls the images for a given git sha and health-gates the start",
+        "is also how you roll back, by releasing an earlier sha",
+        "auto-rolls-back if the new release fails its health check"
+      ],
+      "use": "need a deploy from prebuilt images with a rollback path",
+      "not": [
+        "builds images on the server from source"
+      ],
+      "like": [
+        "npm run deploy:prod"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The build-push workflow",
+      "tier": 4,
+      "says": [
+        "is workflow_dispatch only and never runs on push",
+        "publishes images to ghcr.io/moksy-ai/moksy-<service>:<git-sha>",
+        "never deploys anything"
+      ],
+      "use": "need the workflow that publishes tagged images",
+      "not": [
+        "deploys to the server on every push"
+      ],
+      "like": [
+        "npm run release"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "Backup-gated migrations",
+      "tier": 3,
+      "says": [
+        "have each service own its migrations",
+        "have the orchestrator back up Mongo first",
+        "follow expand then contract discipline"
+      ],
+      "use": "need how migrations are applied safely across services",
+      "not": [
+        "run automatically on every git push"
+      ],
+      "like": [
+        "The orchestrator service"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "bootstrap-vps.sh",
+      "tier": 4,
+      "says": [
+        "stands up or rebuilds the stack on a clean VPS",
+        "can pull pre-built images at a known-good commit with --tag",
+        "is backed by a disaster-recovery runbook for durable volumes"
+      ],
+      "use": "need to rebuild the platform on a fresh server",
+      "not": [
+        "deploys only changed services on a live server"
+      ],
+      "like": [
+        "npm run release"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "Loki and Promtail",
+      "tier": 3,
+      "says": [
+        "ship logs in the staging and production overlays",
+        "index the traceId from the structured log line"
+      ],
+      "use": "need the log shipping stack",
+      "not": [
+        "poll health endpoints and send webhook alerts"
+      ],
+      "like": [
+        "The alerts sidecar"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The alerts sidecar",
+      "tier": 3,
+      "says": [
+        "polls service health endpoints",
+        "can send webhook alerts"
+      ],
+      "use": "need what notifies when a service health check fails",
+      "not": [
+        "ships logs to Loki"
+      ],
+      "like": [
+        "Loki and Promtail"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "Trivy image scanning",
+      "tier": 3,
+      "says": [
+        "scans container images locally and in CI",
+        "is the scanner named in the image scanning guide"
+      ],
+      "use": "need the tool that scans container images",
+      "not": [
+        "rebuilds changed services"
+      ],
+      "like": [
+        "The alerts sidecar"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "A microservice architecture",
+      "tier": 1,
+      "says": [
+        "splits a system into independently deployable services",
+        "gives each service a narrow responsibility",
+        "trades in-process calls for network calls"
+      ],
+      "use": "want teams to deploy parts of a system on their own",
+      "not": [
+        "runs all code in one process"
+      ],
+      "like": [
+        "A monolith",
+        "A distributed monolith"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "A monolith",
+      "tier": 1,
+      "says": [
+        "deploys the whole application as one unit",
+        "keeps calls in process",
+        "is simpler to run than many services"
+      ],
+      "use": "need the single-deployable shape",
+      "not": [
+        "gives each feature its own database by default"
+      ],
+      "like": [
+        "A microservice architecture",
+        "A distributed monolith"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "A distributed monolith",
+      "tier": 3,
+      "says": [
+        "has services that must be changed and deployed together",
+        "couples services through shared data or one fat orchestrator",
+        "pays the network cost of microservices without their independence"
+      ],
+      "use": "suspect services are separate in name only",
+      "not": [
+        "is the intended outcome of decomposition"
+      ],
+      "like": [
+        "A microservice architecture",
+        "A monolith"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The API gateway pattern",
+      "tier": 2,
+      "says": [
+        "gives clients one entry point to many services",
+        "handles authentication, rate limiting and routing at the edge",
+        "hides internal service topology"
+      ],
+      "use": "want a single public door in front of services",
+      "not": [
+        "lets each client call each service directly"
+      ],
+      "like": [
+        "The service mesh"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "Database per service",
+      "tier": 2,
+      "says": [
+        "gives each service private data it alone writes",
+        "forbids reading another service's tables",
+        "forces cross-service data to travel through APIs or events"
+      ],
+      "use": "want services loosely coupled through data",
+      "not": [
+        "lets every service read the shared schema"
+      ],
+      "like": [
+        "The API gateway pattern"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The circuit breaker",
+      "tier": 3,
+      "says": [
+        "stops calling a failing dependency after a failure threshold",
+        "fails fast while the dependency recovers",
+        "probes with a trial call before closing again"
+      ],
+      "use": "need to stop a failing dependency dragging down callers",
+      "not": [
+        "retries each failed call forever"
+      ],
+      "like": [
+        "Retry with backoff",
+        "The bulkhead"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "Retry with exponential backoff",
+      "tier": 2,
+      "says": [
+        "waits longer between each attempt",
+        "is often combined with random jitter",
+        "is safe only when the operation is idempotent"
+      ],
+      "use": "need to retry a flaky call without a stampede",
+      "not": [
+        "retries instantly in a tight loop"
+      ],
+      "like": [
+        "The circuit breaker"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "An idempotency key",
+      "tier": 3,
+      "says": [
+        "lets a client repeat a request without repeating its effect",
+        "is sent by the caller and remembered by the server",
+        "makes payment and webhook retries safe"
+      ],
+      "use": "need a retried request not to charge twice",
+      "not": [
+        "is a signed token proving who the caller is"
+      ],
+      "like": [
+        "The transactional outbox"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The transactional outbox",
+      "tier": 4,
+      "says": [
+        "writes the state change and the event in one database transaction",
+        "has a relay publish the stored events afterwards",
+        "avoids the dual-write problem between a database and a broker"
+      ],
+      "use": "need a state change and its event to succeed or fail together",
+      "not": [
+        "publishes straight to the broker before committing"
+      ],
+      "like": [
+        "An idempotency key",
+        "The saga pattern"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The saga pattern",
+      "tier": 4,
+      "says": [
+        "splits a distributed transaction into local steps",
+        "runs compensating actions when a later step fails",
+        "replaces cross-service two-phase commit"
+      ],
+      "use": "need a multi-service workflow that can be undone step by step",
+      "not": [
+        "holds one lock across every service until commit"
+      ],
+      "like": [
+        "The transactional outbox"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "A dead-letter queue",
+      "tier": 3,
+      "says": [
+        "holds messages that failed after the retry limit",
+        "lets operators inspect and replay failures",
+        "keeps a poison message from blocking the queue"
+      ],
+      "use": "need somewhere for repeatedly failing messages to go",
+      "not": [
+        "deletes failed messages silently"
+      ],
+      "like": [
+        "Retry with backoff"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The bulkhead",
+      "tier": 4,
+      "says": [
+        "isolates resources so one failing part cannot exhaust the rest",
+        "gives each dependency its own pool of threads or connections",
+        "is named after ship compartments"
+      ],
+      "use": "need one slow dependency not to consume every worker",
+      "not": [
+        "stops calls after a failure threshold"
+      ],
+      "like": [
+        "The circuit breaker"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The strangler fig",
+      "tier": 4,
+      "says": [
+        "replaces a legacy system one slice at a time",
+        "routes some traffic to new code behind a facade",
+        "retires the old code gradually"
+      ],
+      "use": "need to migrate a monolith without a big-bang rewrite",
+      "not": [
+        "rewrites the whole system before cutover"
+      ],
+      "like": [
+        "A monolith"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "A shared symmetric secret",
+      "tier": 2,
+      "says": [
+        "lets any holder both sign and verify",
+        "cannot be rotated for one party alone when many share it",
+        "makes a verifying service able to forge tokens"
+      ],
+      "use": "need to explain why one shared key is weak",
+      "not": [
+        "lets a verifier check tokens without being able to forge them"
+      ],
+      "like": [
+        "Asymmetric signing"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "Asymmetric signing",
+      "tier": 3,
+      "says": [
+        "signs with a private key and verifies with a public key",
+        "lets a verifier check tokens without forging them",
+        "underpins RS256 and EdDSA tokens"
+      ],
+      "use": "want verification not to imply the power to forge",
+      "not": [
+        "uses one key for both signing and verifying"
+      ],
+      "like": [
+        "A shared symmetric secret"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "JWKS",
+      "tier": 3,
+      "says": [
+        "is a JSON document publishing public keys",
+        "lets callees fetch the keys used to verify tokens",
+        "supports key rotation by listing several keys"
+      ],
+      "use": "need a standard place to publish token verification keys",
+      "not": [
+        "holds each service's private signing key"
+      ],
+      "like": [
+        "Asymmetric signing"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "Mutual TLS",
+      "tier": 3,
+      "says": [
+        "has both client and server present certificates",
+        "encrypts traffic and authenticates both ends",
+        "gives each workload a verifiable identity"
+      ],
+      "use": "need encrypted service traffic where both sides are authenticated",
+      "not": [
+        "only authenticates the server to the client"
+      ],
+      "like": [
+        "A service mesh"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "A service mesh",
+      "tier": 3,
+      "says": [
+        "moves mTLS and traffic policy into sidecar proxies",
+        "gives service identity without changing application code",
+        "can enforce which callers reach which service"
+      ],
+      "use": "want mTLS added without every team writing it",
+      "not": [
+        "replaces the database per service rule"
+      ],
+      "like": [
+        "Mutual TLS",
+        "The API gateway pattern"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "Replay protection",
+      "tier": 3,
+      "says": [
+        "rejects a captured request that is sent again",
+        "often uses a short timestamp window or a nonce",
+        "closes the gap left by a valid but old signature"
+      ],
+      "use": "need an old captured call not to work again",
+      "not": [
+        "encrypts the request body"
+      ],
+      "like": [
+        "Mutual TLS"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "A signed actor assertion",
+      "tier": 4,
+      "says": [
+        "carries the end user's identity as a signed short-lived claim",
+        "is minted by the edge and verified by callees",
+        "replaces a free-text user header"
+      ],
+      "use": "need services to trust who the original caller was",
+      "not": [
+        "is a JSON header any caller can write"
+      ],
+      "like": [
+        "Replay protection"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "Least privilege",
+      "tier": 2,
+      "says": [
+        "gives each identity only the access its job needs",
+        "limits the damage of a compromised service",
+        "applies to database users as well as roles"
+      ],
+      "use": "want a compromised component to reach as little as possible",
+      "not": [
+        "gives every service the admin database user"
+      ],
+      "like": [
+        "Zero trust"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "Zero trust",
+      "tier": 3,
+      "says": [
+        "does not trust a request because of the network it came from",
+        "verifies identity on every call",
+        "assumes the internal network may be compromised"
+      ],
+      "use": "want security not to rely on being inside the perimeter",
+      "not": [
+        "trusts anything on the private network"
+      ],
+      "like": [
+        "Least privilege"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "Role-based access control",
+      "tier": 2,
+      "says": [
+        "grants permissions through roles",
+        "checks a scope or permission per route",
+        "is paired with ranks when actors may act as others"
+      ],
+      "use": "need permissions grouped by job function",
+      "not": [
+        "grants rights per individual with no roles"
+      ],
+      "like": [
+        "Zero trust"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "Token version revocation",
+      "tier": 4,
+      "says": [
+        "invalidates earlier tokens by bumping a counter on the user",
+        "takes effect without waiting for tokens to expire",
+        "needs each verification to compare the version"
+      ],
+      "use": "need a role change to cancel existing JWTs immediately",
+      "not": [
+        "waits for the token expiry to cancel old tokens"
+      ],
+      "like": [
+        "Replay protection"
+      ]
+    },
+    {
+      "group": "secure",
+      "subject": "Default-deny network policy",
+      "tier": 4,
+      "says": [
+        "blocks all traffic unless a rule allows it",
+        "lists only declared callers per service",
+        "limits lateral movement"
+      ],
+      "use": "want only declared callers to reach a service",
+      "not": [
+        "allows everything unless a rule blocks it"
+      ],
+      "like": [
+        "Zero trust"
+      ]
+    },
+    {
+      "group": "data",
+      "subject": "A message broker",
+      "tier": 2,
+      "says": [
+        "sits between producers and consumers",
+        "stores messages until consumers take them",
+        "decouples sender availability from receiver availability"
+      ],
+      "use": "need sender and receiver not to be up at the same time",
+      "not": [
+        "calls the receiver directly and waits"
+      ],
+      "like": [
+        "A dead-letter queue"
+      ]
+    },
+    {
+      "group": "data",
+      "subject": "Redis Streams",
+      "tier": 3,
+      "says": [
+        "is an append-only log type inside Redis",
+        "supports consumer groups and acknowledgements",
+        "persists entries so they can be replayed"
+      ],
+      "use": "need a lightweight durable stream where Redis already runs",
+      "not": [
+        "is a pub/sub that drops messages with no subscriber"
+      ],
+      "like": [
+        "A message broker"
+      ]
+    },
+    {
+      "group": "data",
+      "subject": "At-least-once delivery",
+      "tier": 3,
+      "says": [
+        "never loses a message but may deliver it twice",
+        "needs consumers to be idempotent",
+        "is the common default guarantee"
+      ],
+      "use": "need to know what retried delivery implies for consumers",
+      "not": [
+        "guarantees exactly one delivery every time"
+      ],
+      "like": [
+        "An idempotent consumer"
+      ]
+    },
+    {
+      "group": "data",
+      "subject": "An idempotent consumer",
+      "tier": 4,
+      "says": [
+        "handles a repeated message without repeating its effect",
+        "often records processed message ids",
+        "makes duplicate deliveries harmless"
+      ],
+      "use": "need duplicate deliveries to be safe",
+      "not": [
+        "assumes every message arrives only once"
+      ],
+      "like": [
+        "At-least-once delivery"
+      ]
+    },
+    {
+      "group": "data",
+      "subject": "Eventual consistency",
+      "tier": 3,
+      "says": [
+        "lets replicas or services agree after a delay",
+        "accepts that reads may briefly be stale",
+        "follows from asynchronous events across services"
+      ],
+      "use": "need to explain stale reads after an async update",
+      "not": [
+        "guarantees every read sees the latest write"
+      ],
+      "like": [
+        "An append-only ledger"
+      ]
+    },
+    {
+      "group": "data",
+      "subject": "An append-only ledger",
+      "tier": 3,
+      "says": [
+        "records changes as new rows rather than editing old ones",
+        "lets a balance be derived by replaying entries",
+        "gives an audit-friendly history"
+      ],
+      "use": "need money or usage history that cannot be silently rewritten",
+      "not": [
+        "overwrites a running total in place"
+      ],
+      "like": [
+        "A materialised snapshot"
+      ]
+    },
+    {
+      "group": "data",
+      "subject": "A materialised snapshot",
+      "tier": 3,
+      "says": [
+        "stores a precomputed summary of an event log",
+        "speeds up reads",
+        "can be rebuilt from the log"
+      ],
+      "use": "need fast reads over a long history",
+      "not": [
+        "is the source of truth, not a derived view"
+      ],
+      "like": [
+        "An append-only ledger"
+      ]
+    },
+    {
+      "group": "data",
+      "subject": "A retention policy",
+      "tier": 2,
+      "says": [
+        "states how long each kind of data is kept",
+        "may differ by class such as payments or logs",
+        "ends with deletion or archiving"
+      ],
+      "use": "need rules for how long records live",
+      "not": [
+        "keeps all data forever by default"
+      ],
+      "like": [
+        "An append-only ledger"
+      ]
+    },
+    {
+      "group": "data",
+      "subject": "Expand then contract migration",
+      "tier": 4,
+      "says": [
+        "adds the new shape alongside the old first",
+        "moves readers and writers across before removing the old shape",
+        "lets old and new code run during a deploy"
+      ],
+      "use": "need a schema change that is safe for rolling deploys",
+      "not": [
+        "drops the old column in the same step as adding the new one"
+      ],
+      "like": [
+        "A retention policy"
+      ]
+    },
+    {
+      "group": "observe",
+      "subject": "A correlation ID",
+      "tier": 2,
+      "says": [
+        "is passed along every hop of a request",
+        "lets logs from many services be joined",
+        "is forwarded in a header"
+      ],
+      "use": "need to follow one request across services",
+      "not": [
+        "identifies a user's account"
+      ],
+      "like": [
+        "Distributed tracing"
+      ]
+    },
+    {
+      "group": "observe",
+      "subject": "Structured logging",
+      "tier": 2,
+      "says": [
+        "writes logs as machine-readable fields such as JSON",
+        "makes logs searchable by field",
+        "pairs with a shipping stack"
+      ],
+      "use": "want logs that a tool can query",
+      "not": [
+        "writes free-form sentences only"
+      ],
+      "like": [
+        "A correlation ID"
+      ]
+    },
+    {
+      "group": "observe",
+      "subject": "A readiness probe",
+      "tier": 3,
+      "says": [
+        "says whether a service is ready to receive traffic",
+        "may fail while dependencies are down",
+        "is separate from a liveness check"
+      ],
+      "use": "need to hold traffic until a service is ready",
+      "not": [
+        "restarts a hung process"
+      ],
+      "like": [
+        "A liveness probe"
+      ]
+    },
+    {
+      "group": "observe",
+      "subject": "A liveness probe",
+      "tier": 3,
+      "says": [
+        "says whether a process is alive",
+        "triggers a restart when it fails",
+        "does not judge whether dependencies are healthy"
+      ],
+      "use": "need a hung process restarted automatically",
+      "not": [
+        "holds traffic while dependencies recover"
+      ],
+      "like": [
+        "A readiness probe"
+      ]
+    },
+    {
+      "group": "observe",
+      "subject": "Distributed tracing",
+      "tier": 3,
+      "says": [
+        "records a tree of timed spans across services",
+        "shows where latency is spent",
+        "uses a trace identifier carried across hops"
+      ],
+      "use": "need to see where one request spent its time",
+      "not": [
+        "counts requests per second only"
+      ],
+      "like": [
+        "A correlation ID"
+      ]
+    },
+    {
+      "group": "observe",
+      "subject": "A health-gated deploy",
+      "tier": 3,
+      "says": [
+        "checks service health after restart before calling the deploy good",
+        "reports a failed deploy rather than recording it",
+        "can roll back when the check fails"
+      ],
+      "use": "want a bad release caught before it is recorded",
+      "not": [
+        "records success as soon as containers start"
+      ],
+      "like": [
+        "A canary release"
+      ]
+    },
+    {
+      "group": "observe",
+      "subject": "A canary release",
+      "tier": 4,
+      "says": [
+        "sends a small share of traffic to the new version first",
+        "compares health before widening",
+        "limits blast radius"
+      ],
+      "use": "want to test a release on a few users",
+      "not": [
+        "switches all traffic at once"
+      ]
+    },
+    {
+      "group": "contract",
+      "subject": "OpenAPI",
+      "tier": 2,
+      "says": [
+        "describes synchronous HTTP APIs in a machine-readable file",
+        "can be generated from route definitions",
+        "supports client generation and contract tests"
+      ],
+      "use": "need a published description of a REST API",
+      "not": [
+        "describes asynchronous event channels"
+      ],
+      "like": [
+        "AsyncAPI"
+      ]
+    },
+    {
+      "group": "contract",
+      "subject": "AsyncAPI",
+      "tier": 3,
+      "says": [
+        "describes event and message channels",
+        "documents message payloads and brokers",
+        "is the event counterpart to OpenAPI"
+      ],
+      "use": "need a published description of events",
+      "not": [
+        "describes synchronous REST routes only"
+      ],
+      "like": [
+        "OpenAPI"
+      ]
+    },
+    {
+      "group": "contract",
+      "subject": "A consumer-driven contract test",
+      "tier": 4,
+      "says": [
+        "records what a consumer expects from a provider",
+        "is run against the provider in CI",
+        "catches return-shape breaks that unit tests miss"
+      ],
+      "use": "need to catch an API shape change before it breaks a caller",
+      "not": [
+        "only tests the provider with its own fixtures"
+      ],
+      "like": [
+        "OpenAPI"
+      ]
+    },
+    {
+      "group": "contract",
+      "subject": "A backward-compatible change",
+      "tier": 3,
+      "says": [
+        "adds optional fields without breaking existing consumers",
+        "avoids removing or renaming fields",
+        "lets old and new clients coexist"
+      ],
+      "use": "need to change an API without breaking callers",
+      "not": [
+        "renames a field that callers read"
+      ],
+      "like": [
+        "Semantic versioning"
+      ]
+    },
+    {
+      "group": "contract",
+      "subject": "Semantic versioning",
+      "tier": 2,
+      "says": [
+        "uses major, minor and patch numbers",
+        "signals a breaking change with a major bump",
+        "applies to packages and APIs"
+      ],
+      "use": "need version numbers that say how risky an upgrade is",
+      "not": [
+        "numbers releases by date only"
+      ],
+      "like": [
+        "A backward-compatible change"
+      ]
+    },
+    {
+      "group": "contract",
+      "subject": "API rate limiting",
+      "tier": 2,
+      "says": [
+        "caps how many requests a caller may make in a window",
+        "protects a service from overload",
+        "is commonly enforced at the gateway"
+      ],
+      "use": "need a caller not to flood an API",
+      "not": [
+        "is the same as authentication"
+      ],
+      "like": [
+        "The API gateway pattern"
+      ]
+    },
+    {
+      "group": "contract",
+      "subject": "A schema registry",
+      "tier": 4,
+      "says": [
+        "stores versioned schemas for messages",
+        "checks new versions for compatibility",
+        "lets producers and consumers agree on a shape"
+      ],
+      "use": "need versioned message shapes in one place",
+      "not": [
+        "stores the messages themselves"
+      ],
+      "like": [
+        "AsyncAPI"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "Which Moksy service is the only public API entry?",
+      "right": "The gateway",
+      "wrong": [
+        "The auth service",
+        "The orchestrator",
+        "The permissions service"
+      ],
+      "tier": 1,
+      "why": "Everything else sits on the internal Docker network; only the gateway is public, on port 5001 locally."
+    },
+    {
+      "q": "What does Moksy's internal Docker network give the backend services?",
+      "right": "No route to or from the host, so they are reached only through the gateway",
+      "wrong": [
+        "A public IP address each",
+        "Automatic TLS between every pair of services",
+        "A shared database with all other services"
+      ],
+      "tier": 1,
+      "why": "moksy-internal is a Docker internal network; only the gateway straddles it and the public network."
+    },
+    {
+      "q": "How many backend services does the architecture review count in the foundation folder?",
+      "right": "25",
+      "wrong": [
+        "10",
+        "50",
+        "110"
+      ],
+      "tier": 1,
+      "why": "The review scopes 25 backend services, 2 frontends and 3 shared packages."
+    },
+    {
+      "q": "What does the Moksy architecture review say about how far the platform is on the way to a proper microservice architecture?",
+      "right": "Roughly 60 percent",
+      "wrong": [
+        "About 10 percent",
+        "About 95 percent",
+        "It does not give a figure"
+      ],
+      "tier": 1,
+      "why": "The decomposition is real, the contract between services is not; the verdict is roughly 60 percent."
+    },
+    {
+      "q": "Which service owns plan entitlements in Moksy?",
+      "right": "Subscriptions",
+      "wrong": [
+        "Payments",
+        "Gateway",
+        "Usage"
+      ],
+      "tier": 1,
+      "why": "Subscriptions is the authoritative owner of entitlements and the billing period; payments owns money movement."
+    },
+    {
+      "q": "Which service is the source of truth for invoices, payouts and checkout transactions?",
+      "right": "Payments",
+      "wrong": [
+        "Subscriptions",
+        "Notifications",
+        "Progression"
+      ],
+      "tier": 1,
+      "why": "Payments owns money movement; it does not own plan entitlements."
+    },
+    {
+      "q": "Does pushing to GitHub deploy Moksy to the server?",
+      "right": "No, deployment is a manual step run on the server",
+      "wrong": [
+        "Yes, a pipeline deploys every push to main",
+        "Yes, but only for the gateway",
+        "Yes, after a manual approval in GitHub"
+      ],
+      "tier": 1,
+      "why": "There is no auto-deploy: SSH in, git pull, then run the deploy command."
+    },
+    {
+      "q": "What must every Moksy service expose so a deploy can tell it came up?",
+      "right": "A health endpoint",
+      "wrong": [
+        "An OpenAPI file",
+        "A message queue",
+        "A public port"
+      ],
+      "tier": 1,
+      "why": "/health is present on all 25 services."
+    },
+    {
+      "q": "What is a microservice architecture?",
+      "right": "A system split into independently deployable services with narrow responsibilities",
+      "wrong": [
+        "One application deployed as a single unit",
+        "A database with several tables",
+        "A set of functions inside one process"
+      ],
+      "tier": 1,
+      "why": "Independent deployment and narrow responsibility are the defining traits."
+    },
+    {
+      "q": "What is the job of an API gateway?",
+      "right": "To give clients a single entry point and handle edge concerns such as routing and authentication",
+      "wrong": [
+        "To store each service's data",
+        "To compile the services",
+        "To replace the message broker"
+      ],
+      "tier": 1,
+      "why": "A gateway hides internal topology behind one door."
+    },
+    {
+      "q": "Which Moksy service is shown in the port map as internal, with its health check reached through the gateway's admin audit-log route?",
+      "right": "Audit",
+      "wrong": [
+        "Jobs",
+        "Events",
+        "Storage"
+      ],
+      "tier": 2,
+      "why": "The port map lists audit as internal and points at the gateway admin audit-log route."
+    },
+    {
+      "q": "What does a role or status change do to a Moksy user's existing JWTs?",
+      "right": "Invalidates them immediately by bumping tokenVersion",
+      "wrong": [
+        "Nothing until they expire",
+        "Re-issues them automatically to the browser",
+        "Deletes the user's sessions table"
+      ],
+      "tier": 2,
+      "why": "The users service bumps tokenVersion so older tokens fail."
+    },
+    {
+      "q": "Which Moksy local billing mode charges no real money and simulates subscriptions instantly, without Stripe keys?",
+      "right": "Mock mode",
+      "wrong": [
+        "Stripe live mode",
+        "Escrow mode",
+        "Overage mode"
+      ],
+      "tier": 2,
+      "why": "Billing has mock mode and Stripe test mode; neither charges real money."
+    },
+    {
+      "q": "Which Moksy service keeps its subscriber registry in an in-memory Map?",
+      "right": "Events",
+      "wrong": [
+        "Notifications",
+        "Communications",
+        "Jobs"
+      ],
+      "tier": 2,
+      "why": "EventsService holds this.webhooks = new Map(), which dies on restart."
+    },
+    {
+      "q": "How does Moksy's events service deliver a signal today?",
+      "right": "By awaiting an HTTP POST to notifications and communications inline",
+      "wrong": [
+        "By writing to a Redis Stream with consumer groups",
+        "By publishing to a RabbitMQ queue",
+        "By emailing each subscriber"
+      ],
+      "tier": 2,
+      "why": "There is no queue, retry, dead-letter or replay."
+    },
+    {
+      "q": "What does the circuit breaker pattern do?",
+      "right": "Stops calling a failing dependency after a failure threshold, then probes before resuming",
+      "wrong": [
+        "Retries every failure forever",
+        "Encrypts traffic between services",
+        "Shards a database"
+      ],
+      "tier": 2,
+      "why": "It fails fast to protect callers while the dependency recovers."
+    },
+    {
+      "q": "What is the idea behind database per service?",
+      "right": "Each service owns private data and others reach it only through APIs or events",
+      "wrong": [
+        "All services share one schema for easy joins",
+        "Every table gets its own server",
+        "Only the gateway has a database"
+      ],
+      "tier": 2,
+      "why": "It keeps services loosely coupled through data."
+    },
+    {
+      "q": "Why do both a liveness probe and a readiness probe exist?",
+      "right": "Liveness says whether to restart a process; readiness says whether to send it traffic",
+      "wrong": [
+        "They are two names for the same check",
+        "Readiness restarts the process",
+        "Liveness blocks traffic while dependencies recover"
+      ],
+      "tier": 2,
+      "why": "A process can be alive but not ready."
+    },
+    {
+      "q": "Why is an idempotency key sent with a payment request?",
+      "right": "So a retried request does not repeat its effect",
+      "wrong": [
+        "To encrypt the card number",
+        "To choose the payment provider",
+        "To rate-limit the caller"
+      ],
+      "tier": 2,
+      "why": "The server remembers the key and returns the original result."
+    },
+    {
+      "q": "Which Moksy shared package holds the canonical internal HTTP client and guard?",
+      "right": "The common package",
+      "wrong": [
+        "The sdk package",
+        "The zapier-app package",
+        "The knowledge-base package"
+      ],
+      "tier": 2,
+      "why": "The common package publishes the HttpClient and the internal request guard."
+    },
+    {
+      "q": "Moksy keeps plan entitlements in subscriptions and money movement in payments. Why does the platform design insist on this split?",
+      "right": "When both are stored in two services they drift, so each fact needs one owner",
+      "wrong": [
+        "Stripe forbids storing entitlements",
+        "Payments cannot read a database",
+        "It lowers the cost of each request"
+      ],
+      "tier": 3,
+      "why": "One owner per fact avoids drift between copies."
+    },
+    {
+      "q": "What does Moksy's token ledger record?",
+      "right": "A durable usage event for every AI request",
+      "wrong": [
+        "Each user's password hash",
+        "The monthly invoice PDF",
+        "Each deploy's commit sha"
+      ],
+      "tier": 3,
+      "why": "The event log is the ledger; the subscription's period snapshot only summarises it."
+    },
+    {
+      "q": "Which statement about the subscription snapshot is true?",
+      "right": "It is a fast-read summary of the current period, not the source of truth",
+      "wrong": [
+        "It is the durable record of every AI request",
+        "It replaces the payments service",
+        "It holds each user's JWT"
+      ],
+      "tier": 3,
+      "why": "The ledger holds events; the snapshot summarises them."
+    },
+    {
+      "q": "How long does the Moksy audit service keep payments records, per its retention classes?",
+      "right": "Seven years",
+      "wrong": [
+        "One year",
+        "Two years",
+        "Thirty days"
+      ],
+      "tier": 3,
+      "why": "Authentication events one year, payments seven, AI events two, two-year default."
+    },
+    {
+      "q": "Which Moksy service is described as the authoritative policy enforcer and RBAC engine?",
+      "right": "Permissions",
+      "wrong": [
+        "Auth",
+        "Users",
+        "Registry"
+      ],
+      "tier": 3,
+      "why": "The auth service issues tokens; permissions enforces policy."
+    },
+    {
+      "q": "What is the Moksy review's rating of authenticated service-to-service calls?",
+      "right": "Amber",
+      "wrong": [
+        "Green",
+        "Red",
+        "Not rated"
+      ],
+      "tier": 3,
+      "why": "A handshake exists, but there is one shared secret and five divergent implementations."
+    },
+    {
+      "q": "Which scorecard rows does the Moksy review rate red?",
+      "right": "Encrypted transport, asynchronous communication, services owning their logic and published contracts",
+      "wrong": [
+        "Independent deployment, database per service and health",
+        "Network topology and health endpoints",
+        "Only encrypted transport"
+      ],
+      "tier": 3,
+      "why": "Four rows are red; five are green and one amber."
+    },
+    {
+      "q": "What does replay protection stop?",
+      "right": "A captured valid request being sent again later",
+      "wrong": [
+        "A service being called by the wrong caller name",
+        "Traffic being read on the wire",
+        "A database being queried by two services"
+      ],
+      "tier": 3,
+      "why": "A short timestamp window or nonce makes old requests fail."
+    },
+    {
+      "q": "What does JWKS provide?",
+      "right": "A published set of public keys callees can use to verify tokens",
+      "wrong": [
+        "A list of each service's private keys",
+        "A database of user roles",
+        "A queue of failed messages"
+      ],
+      "tier": 3,
+      "why": "It supports asymmetric verification and key rotation."
+    },
+    {
+      "q": "What does the transactional outbox solve?",
+      "right": "The dual write between a database and a broker",
+      "wrong": [
+        "Slow database queries",
+        "Browser caching",
+        "TLS certificate renewal"
+      ],
+      "tier": 3,
+      "why": "The state change and the event are stored in one transaction and published afterwards."
+    },
+    {
+      "q": "Why does a local Moksy setup set OPENAI_API_KEY to the word ollama?",
+      "right": "The ai-llm service expects the variable to exist, and Ollama ignores its value",
+      "wrong": [
+        "Ollama requires that exact key to authenticate",
+        "It switches ai-llm to a hosted model",
+        "It is a placeholder that must be replaced before first start"
+      ],
+      "tier": 3,
+      "why": "Leaving it blank is wrong; the value is intentional.",
+      "code": "OPENAI_API_KEY=ollama"
+    },
+    {
+      "q": "A Moksy developer finishes a change to payments only. What should they run on the server after git pull?",
+      "right": "npm run deploy:prod, which rebuilds only changed services",
+      "wrong": [
+        "npm run deploy:prod:full to rebuild everything every time",
+        "Nothing, the push already deployed it",
+        "docker compose down on the whole stack"
+      ],
+      "tier": 3,
+      "why": "deploy:prod builds only the services whose Dockerfile COPY paths changed, then health-checks.",
+      "code": "git pull origin main\nnpm run deploy:prod"
+    },
+    {
+      "q": "A developer wants to see what a deploy would rebuild without touching the server. What should they run?",
+      "right": "npm run deploy:prod:plan",
+      "wrong": [
+        "npm run deploy:prod:full",
+        "npm run migrate",
+        "npm run release"
+      ],
+      "tier": 3,
+      "why": "The plan command previews the deploy without changing anything.",
+      "code": "npm run deploy:prod:plan"
+    },
+    {
+      "q": "A release from the Moksy registry fails its health check. What does the release script do?",
+      "right": "Rolls back automatically to the previously recorded good tag",
+      "wrong": [
+        "Leaves the new version running and sends an email",
+        "Deletes the images from the registry",
+        "Re-runs the migrations"
+      ],
+      "tier": 4,
+      "why": "release.sh records the previous good tag and auto-rolls-back.",
+      "code": "npm run release -- <git-sha>"
+    },
+    {
+      "q": "A Moksy service restarts while the events service is in the middle of delivering a signal. What happens to that signal?",
+      "right": "It is lost, because events has no queue, retry, dead-letter or replay",
+      "wrong": [
+        "It is retried from a Redis Stream",
+        "It is moved to a dead-letter queue",
+        "It is replayed by the orchestrator"
+      ],
+      "tier": 4,
+      "why": "The subscriber map is in memory and delivery is inline."
+    },
+    {
+      "q": "A team adds a service that calls ai-llm. The call returns 403 and silently falls back to env-only config. What does the architecture review say causes this?",
+      "right": "The canonical guard accepts only api-gateway as caller, so true service-to-service calls are rejected",
+      "wrong": [
+        "ai-llm has run out of tokens",
+        "The service lacks a health endpoint",
+        "The gateway rate-limits internal traffic"
+      ],
+      "tier": 4,
+      "why": "That limitation is why services wrote their own looser copies of the guard."
+    },
+    {
+      "q": "A compromised Moksy service sends this header to users. What does it allow?",
+      "right": "Acting as an admin, because the actor header is unsigned",
+      "wrong": [
+        "Nothing, because the header is verified",
+        "Only reading its own database",
+        "Only impersonating other services, not users"
+      ],
+      "tier": 4,
+      "why": "The review's Gap 3: the actor travels as unsigned JSON, so one compromised service can mean platform-wide admin.",
+      "code": "x-user: {\"userId\":\"abc\",\"role\":\"admin\"}"
+    },
+    {
+      "q": "A developer sees this in a service's guard. What does the review say about it?",
+      "right": "It trusts an unsigned header, which the target design replaces with a signed short-TTL actor assertion",
+      "wrong": [
+        "It is the recommended pattern",
+        "It is verified by auth with a JWKS",
+        "It only affects logging"
+      ],
+      "tier": 4,
+      "why": "Never trust a free-text header for identity.",
+      "code": "if (req.headers['x-user']) req.user = JSON.parse(req.headers['x-user']);"
+    },
+    {
+      "q": "A team wants services to verify each other's tokens without being able to forge them. What do they move to?",
+      "right": "Per-service asymmetric keypairs with auth publishing a JWKS",
+      "wrong": [
+        "A longer HS256 secret",
+        "A second shared secret",
+        "Hiding the secret in an environment file"
+      ],
+      "tier": 4,
+      "why": "Verification stops implying forgery capability."
+    },
+    {
+      "q": "A product owner asks why a domain change needs a gateway deploy. What is the structural reason?",
+      "right": "The 9,577-line gateway controller holds business orchestration that belongs to services",
+      "wrong": [
+        "The gateway has the only database",
+        "Services cannot be deployed separately",
+        "The gateway is the only service with Docker"
+      ],
+      "tier": 4,
+      "why": "Gap 6: about 8,000 lines belong in the owning services."
+    },
+    {
+      "q": "Billing must move a customer to cheaper models when the monthly token allowance is used up, without refusing requests. Which enforcement mode is that?",
+      "right": "Downgrade",
+      "wrong": [
+        "Block",
+        "Allow overage and bill",
+        "Escrow"
+      ],
+      "tier": 4,
+      "why": "The three modes are block, downgrade to cheaper models, and allow overage and bill."
+    },
+    {
+      "q": "A team stores plan limits in both payments and subscriptions and they now disagree. What should they do?",
+      "right": "Pick one authoritative owner, subscriptions, for entitlements and remove the copy",
+      "wrong": [
+        "Add a nightly job to overwrite both",
+        "Store a third copy in the gateway",
+        "Allow either to win depending on the request"
+      ],
+      "tier": 4,
+      "why": "One owner per fact is the design rule."
+    },
+    {
+      "q": "A tiny local model leaves Moksy with a no-question-generated message but no crash. What does the README suggest?",
+      "right": "Use a 7 B+ model, because very small models can break the JSON-strict reply format",
+      "wrong": [
+        "Raise the gateway rate limit",
+        "Leave OPENAI_API_KEY blank",
+        "Remove the full compose profile"
+      ],
+      "tier": 5,
+      "why": "The requirements service falls back gracefully when the reply is not strict JSON."
+    },
+    {
+      "q": "Someone proposes Redis Streams as Moksy's first durable broker. Why does the review call it the pragmatic choice?",
+      "right": "Redis is already deployed and used only for gateway rate-limiting and the notifications socket adapter",
+      "wrong": [
+        "It guarantees exactly-once delivery",
+        "It replaces the database per service rule",
+        "It is the only broker that supports retries"
+      ],
+      "tier": 5,
+      "why": "NATS JetStream or RabbitMQ are alternatives if stronger durability is wanted."
+    },
+    {
+      "q": "Why does the review say 23 of 25 services accept replayable internal requests?",
+      "right": "Only auth and users enforce the 30-second timestamp window",
+      "wrong": [
+        "Only the gateway uses TLS",
+        "The shared secret is rotated hourly",
+        "Only 23 services have a health endpoint"
+      ],
+      "tier": 5,
+      "why": "Capturing one internal call lets it be replayed indefinitely elsewhere."
+    },
+    {
+      "q": "After consolidating the guard (Phase 1), why does the review say later fixes get cheaper?",
+      "right": "Every later change becomes a one-package change instead of a 25-service change",
+      "wrong": [
+        "Services stop needing deploys",
+        "The broker removes the need for auth",
+        "The gateway shrinks automatically"
+      ],
+      "tier": 5,
+      "why": "One guard and one client make every later phase a single-place change."
+    },
+    {
+      "q": "A reviewer asks why the downloads service cannot simply be called a stub. What does the audit say?",
+      "right": "It is two products in one process: a real Report Manager half and a stub downloads half",
+      "wrong": [
+        "It is a pure stub",
+        "It has no routes",
+        "It is the gateway under another name"
+      ],
+      "tier": 5,
+      "why": "21 of its 27 routes have no caller."
+    },
+    {
+      "q": "A team wants to follow the review's three-things list. What is the right order?",
+      "right": "Phase 1 in full, then kill the x-user header, then durable events",
+      "wrong": [
+        "Durable events, then Phase 1, then x-user",
+        "Service mesh, then broker, then Phase 1",
+        "x-user only"
+      ],
+      "tier": 5,
+      "why": "The list starts with consolidation."
+    },
+    {
+      "q": "A provider delivers the same inbound SMS webhook to Moksy twice. What prevents a double message?",
+      "right": "A WebhookEvent record in communications deduplicates by provider message id",
+      "wrong": [
+        "The events service in-memory map",
+        "The gateway rate limit",
+        "Stripe test mode"
+      ],
+      "tier": 5,
+      "why": "Inbound email and SMS are deduplicated exactly once by provider message id."
+    },
+    {
+      "q": "A team renames a response field that other services read and calls it a backward-compatible change. What is wrong?",
+      "right": "Renaming breaks existing consumers; compatible changes add optional fields",
+      "wrong": [
+        "Nothing, field names are free",
+        "Only the gateway reads it",
+        "It needs a new database"
+      ],
+      "tier": 5,
+      "why": "Removing or renaming fields breaks callers."
+    },
+    {
+      "q": "A service mesh gives mTLS. Why does the roadmap keep the Phase 2 JWTs on top of it?",
+      "right": "The mesh authenticates workloads while the JWTs remain the authorisation layer",
+      "wrong": [
+        "The mesh cannot encrypt traffic",
+        "The JWTs replace the mesh later",
+        "JWTs are required for health checks"
+      ],
+      "tier": 5,
+      "why": "The mesh handles authentication of the transport; tokens still say who may do what."
+    }
+  ]
+}

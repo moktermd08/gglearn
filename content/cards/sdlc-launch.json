@@ -1,0 +1,2673 @@
+{
+ "slug": "sdlc-launch",
+ "name": "10. Launch and post-launch",
+ "description": "Go-live checklist, support model, feedback loop, analytics, versioning.",
+ "roles": "",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "growth",
+ "groups": {
+  "gold": "go-live checklist item",
+  "rel": "release readiness criterion",
+  "rb": "release or rollback technique",
+  "comm": "launch communication practice",
+  "sup": "support model concept",
+  "mon": "post-launch monitoring concept",
+  "fb": "feedback and analytics concept",
+  "ver": "versioning or changelog concept",
+  "hyp": "hypercare or handover practice",
+  "retro": "retrospective practice",
+  "maint": "maintenance or end-of-life concept",
+  "co": "launch practice in our projects"
+ },
+ "cards": [
+  {
+   "group": "gold",
+   "subject": "The production secrets check",
+   "tier": 1,
+   "says": [
+    "confirms credentials are set for the live environment",
+    "confirms no key or password is committed to the repository"
+   ],
+   "use": "want to be sure keys cannot leak through source control",
+   "not": [
+    "is satisfied when the repository is private, so live passwords may be committed"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The backup restore test",
+   "tier": 2,
+   "says": [
+    "proves a backup can actually be restored",
+    "turns a backup from an assumption into a tested fact"
+   ],
+   "use": "need to trust your backup before a risky change",
+   "not": [
+    "is passed as soon as the nightly backup job reports success"
+   ],
+   "like": [
+    "The migration dry run"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The migration dry run",
+   "tier": 3,
+   "says": [
+    "applies the schema change to a copy of production data first",
+    "reveals locking and duration problems before launch day"
+   ],
+   "use": "need to know how long a database change will take on real volumes",
+   "not": [
+    "proves the backup can be restored"
+   ],
+   "like": [
+    "The backup restore test"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The HTTPS and security headers check",
+   "tier": 2,
+   "says": [
+    "confirms the site is served over TLS with a valid certificate",
+    "confirms headers such as HSTS and a content security policy are present"
+   ],
+   "use": "want to verify transport security on the live domain",
+   "not": [
+    "is unnecessary when the hosting provider advertises security"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The sign-up control check",
+   "tier": 2,
+   "says": [
+    "confirms registration is open, closed or invite-only as intended",
+    "stops unknown people creating accounts on day one"
+   ],
+   "use": "launch to a limited audience first",
+   "not": [
+    "is only needed for public consumer products"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The rollback readiness check",
+   "tier": 2,
+   "says": [
+    "confirms a known way back exists before release",
+    "includes knowing the previous version can still be deployed"
+   ],
+   "use": "want proof that a bad release can be undone quickly",
+   "not": [
+    "is complete once the team agrees to fix forward if anything breaks"
+   ],
+   "like": [
+    "The smoke test on production"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The monitoring and alert check",
+   "tier": 2,
+   "says": [
+    "confirms alerts reach a person before launch",
+    "includes a test alert that is actually received"
+   ],
+   "use": "want to be told about failures before users report them",
+   "not": [
+    "is complete once dashboards exist, even if nobody is paged"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The smoke test on production",
+   "tier": 3,
+   "says": [
+    "runs a few critical user paths against the live system after deployment",
+    "is quick enough to repeat on every release"
+   ],
+   "use": "have just deployed and need fast evidence the core paths work",
+   "not": [
+    "replaces the full regression suite"
+   ],
+   "like": [
+    "The rollback readiness check"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The go/no-go meeting",
+   "tier": 3,
+   "says": [
+    "collects a named yes or no from each accountable owner",
+    "ends with a recorded decision and the gaps accepted"
+   ],
+   "use": "need a deliberate launch decision rather than drift into release",
+   "not": [
+    "is a formality held after the release has already started"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The DNS and certificate lead-time check",
+   "tier": 4,
+   "says": [
+    "confirms DNS changes were made early enough to propagate",
+    "confirms certificates are issued and not close to expiry"
+   ],
+   "use": "plan a cut-over to a new domain or host",
+   "not": [
+    "can be done in the final minutes before launch because changes take effect at once"
+   ]
+  },
+  {
+   "group": "gold",
+   "subject": "The known-gap register",
+   "tier": 3,
+   "says": [
+    "lists open issues accepted for launch with an owner and date",
+    "keeps accepted risk visible instead of hidden"
+   ],
+   "use": "must launch with some problems still open",
+   "not": [
+    "is a list of defects the team hopes nobody will read"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "Exit criteria",
+   "tier": 2,
+   "says": [
+    "state measurable conditions that must be true to release",
+    "are agreed before testing starts"
+   ],
+   "use": "want to avoid arguing about whether the product is ready",
+   "not": [
+    "are written after testing, once the results are known"
+   ],
+   "like": [
+    "The definition of done"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "The definition of done",
+   "tier": 2,
+   "says": [
+    "is a shared checklist a single work item must satisfy",
+    "applies to every item, not just the release"
+   ],
+   "use": "need a consistent bar for finished work in the team",
+   "not": [
+    "describes when the whole release can ship"
+   ],
+   "like": [
+    "Exit criteria"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A release candidate",
+   "tier": 2,
+   "says": [
+    "is a build intended to ship unless a blocking defect is found",
+    "is the exact artefact that was tested"
+   ],
+   "use": "want to promote the same build through environments",
+   "not": [
+    "is rebuilt from source separately for each environment"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A code freeze",
+   "tier": 3,
+   "says": [
+    "stops non-essential changes entering the release branch",
+    "is followed only by agreed fixes for blocking issues"
+   ],
+   "use": "need a stable build for final testing",
+   "not": [
+    "stops all work in the team until release day"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A regression suite pass",
+   "tier": 2,
+   "says": [
+    "shows previously working behaviour still works",
+    "is run against the release candidate"
+   ],
+   "use": "want to catch breakage caused by new changes",
+   "not": [
+    "proves that new features meet their requirements"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A performance baseline",
+   "tier": 3,
+   "says": [
+    "records response times and resource use before the change",
+    "lets a later measurement be judged better or worse"
+   ],
+   "use": "need to know whether the release made the system slower",
+   "not": [
+    "is a fixed target agreed with the customer"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A load test at expected peak",
+   "tier": 4,
+   "says": [
+    "exercises the system at the traffic it is forecast to meet",
+    "exposes bottlenecks that functional tests cannot"
+   ],
+   "use": "expect a launch day traffic spike",
+   "not": [
+    "proves the system will survive any amount of traffic"
+   ],
+   "like": [
+    "A performance baseline"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A security sign-off",
+   "tier": 3,
+   "says": [
+    "records that a named person reviewed the known risks",
+    "is evidence for an auditor of who accepted what"
+   ],
+   "use": "need an accountable approval for launching a system holding personal data",
+   "not": [
+    "guarantees the system has no vulnerabilities"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A readiness review",
+   "tier": 4,
+   "says": [
+    "weighs open defects and risks against agreed exit criteria",
+    "includes operations and support, not just developers"
+   ],
+   "use": "want a cross-functional view before committing to a date",
+   "not": [
+    "is run by developers alone because only they know the code"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "Drafted release notes",
+   "tier": 1,
+   "says": [
+    "describe what changed in language users understand",
+    "are ready before the release, not after"
+   ],
+   "use": "want users and support to know what is new",
+   "not": [
+    "are produced from commit messages without editing"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A rollback",
+   "tier": 1,
+   "says": [
+    "returns the system to the previously released version",
+    "is only quick when it was prepared and rehearsed"
+   ],
+   "use": "need to undo a release within minutes",
+   "not": [
+    "is always possible whatever data migrations ran"
+   ],
+   "like": [
+    "A roll forward"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A roll forward",
+   "tier": 3,
+   "says": [
+    "ships a new fix instead of reverting",
+    "is the usual answer once a destructive migration has run"
+   ],
+   "use": "cannot revert because the data has already changed shape",
+   "not": [
+    "is faster than a rollback in every case"
+   ],
+   "like": [
+    "A rollback"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A blue-green deployment",
+   "tier": 3,
+   "says": [
+    "keeps two full production environments and switches traffic between them",
+    "makes rollback a traffic switch back"
+   ],
+   "use": "want near-instant rollback and can afford duplicate infrastructure",
+   "not": [
+    "releases to a small share of users first"
+   ],
+   "like": [
+    "A canary release",
+    "A rolling deployment"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A canary release",
+   "tier": 3,
+   "says": [
+    "sends a small share of traffic to the new version first",
+    "compares health of the new version against the old before widening"
+   ],
+   "use": "want real traffic evidence before exposing everyone",
+   "not": [
+    "keeps a full idle copy of production waiting"
+   ],
+   "like": [
+    "A blue-green deployment",
+    "A rolling deployment"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A rolling deployment",
+   "tier": 3,
+   "says": [
+    "replaces instances one batch at a time",
+    "keeps old and new versions running together for a while"
+   ],
+   "use": "must update a fleet without downtime and without duplicate infrastructure",
+   "not": [
+    "switches all traffic in a single step"
+   ],
+   "like": [
+    "A blue-green deployment",
+    "A canary release"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A feature flag",
+   "tier": 2,
+   "says": [
+    "turns a feature on or off without a new deployment",
+    "separates deploying code from releasing it"
+   ],
+   "use": "want to release a feature to a chosen group or switch it off quickly",
+   "not": [
+    "is removed automatically once the feature is released"
+   ],
+   "like": [
+    "A kill switch"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A kill switch",
+   "tier": 3,
+   "says": [
+    "disables one risky capability instantly",
+    "is built before launch and tested"
+   ],
+   "use": "expect one dependency or feature may need to be shut off in an emergency",
+   "not": [
+    "is a flag that is added after an incident"
+   ],
+   "like": [
+    "A feature flag"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A dark launch",
+   "tier": 4,
+   "says": [
+    "runs new code on real traffic without showing results to users",
+    "validates behaviour and load before release"
+   ],
+   "use": "want to test a new component under production load invisibly",
+   "not": [
+    "announces the feature only to internal staff"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A big-bang release",
+   "tier": 2,
+   "says": [
+    "switches every user to the new version at once",
+    "concentrates all the risk in one moment"
+   ],
+   "use": "cannot run old and new versions side by side",
+   "not": [
+    "is the lowest-risk release strategy"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "The expand-contract migration pattern",
+   "tier": 4,
+   "says": [
+    "adds new schema alongside the old before removing the old",
+    "lets old and new code run against the same database"
+   ],
+   "use": "need a database change that stays rollback-safe",
+   "not": [
+    "drops the old column in the same release that stops using it"
+   ]
+  },
+  {
+   "group": "rb",
+   "subject": "A point of no return",
+   "tier": 4,
+   "says": [
+    "is the step after which rollback is no longer possible",
+    "should be identified and decided on purpose before release"
+   ],
+   "use": "plan a release containing an irreversible data change",
+   "not": [
+    "exists only in very large projects"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "A launch communication plan",
+   "tier": 2,
+   "says": [
+    "says who is told what, through which channel and when",
+    "covers internal staff as well as users"
+   ],
+   "use": "want a launch with no surprises for stakeholders",
+   "not": [
+    "is written after launch, once outcomes are known"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "A stakeholder update",
+   "tier": 2,
+   "says": [
+    "gives sponsors a short status, risks and next steps",
+    "is sent on an agreed cadence"
+   ],
+   "use": "need to keep sponsors informed without meetings",
+   "not": [
+    "lists every task completed"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "A status page",
+   "tier": 2,
+   "says": [
+    "shows the current health of the service to users",
+    "is hosted separately from the service it reports on"
+   ],
+   "use": "want users to check for an outage without contacting support",
+   "not": [
+    "reports only planned maintenance"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "A maintenance window notice",
+   "tier": 2,
+   "says": [
+    "warns users of planned downtime in advance",
+    "states when it starts, how long it lasts and what is affected"
+   ],
+   "use": "plan a deliberate interruption of the service",
+   "not": [
+    "is sent after the maintenance has started"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "An internal enablement briefing",
+   "tier": 3,
+   "says": [
+    "prepares support and sales staff before users see the change",
+    "gives them answers to the likely questions"
+   ],
+   "use": "want front-line staff to hear about a launch before customers do",
+   "not": [
+    "is sent to users the day of release"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "An incident communication cadence",
+   "tier": 3,
+   "says": [
+    "promises the next update time even when there is nothing new",
+    "reduces the stream of repeat questions during an outage"
+   ],
+   "use": "are in the middle of an incident and users are asking for news",
+   "not": [
+    "sends an update only when the cause is known"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "A holding statement",
+   "tier": 3,
+   "says": [
+    "acknowledges a problem before the cause is known",
+    "avoids guessing or blaming"
+   ],
+   "use": "need to respond quickly to a public problem that is not yet understood",
+   "not": [
+    "waits until the root cause is confirmed"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "A customer migration guide",
+   "tier": 3,
+   "says": [
+    "walks users through the steps needed to move to the new version",
+    "states clearly what they must do and by when"
+   ],
+   "use": "release a change that users must act on",
+   "not": [
+    "only lists new features"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "A deprecation notice",
+   "tier": 3,
+   "says": [
+    "announces that a feature will be removed at a stated date",
+    "gives a replacement and a timetable"
+   ],
+   "use": "plan to retire something users depend on",
+   "not": [
+    "removes the feature immediately but explains why"
+   ],
+   "like": [
+    "A maintenance window notice"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "Staged announcement timing",
+   "tier": 4,
+   "says": [
+    "tells internal teams first, then customers, then the public",
+    "matches the announcement to when the rollout reaches each audience"
+   ],
+   "use": "are rolling out in stages and do not want to promise what users cannot yet use",
+   "not": [
+    "announces to everyone at the start of the rollout"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A support tier",
+   "tier": 1,
+   "says": [
+    "is a level of help with a defined scope and skill",
+    "passes problems up when it cannot solve them"
+   ],
+   "use": "need to decide who handles which questions",
+   "not": [
+    "means a customer pays for a higher grade of service"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "First-line support",
+   "tier": 1,
+   "says": [
+    "answers how-to questions and applies known fixes from documentation",
+    "logs and routes everything it cannot resolve"
+   ],
+   "use": "want routine questions handled without engineers",
+   "not": [
+    "changes code and infrastructure to fix faults"
+   ],
+   "like": [
+    "Second-line support"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "Second-line support",
+   "tier": 2,
+   "says": [
+    "investigates faults by reading logs and reproducing issues",
+    "can make small configuration changes"
+   ],
+   "use": "have a problem the documentation does not cover",
+   "not": [
+    "is limited to reading from a script"
+   ],
+   "like": [
+    "First-line support"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "An escalation path",
+   "tier": 2,
+   "says": [
+    "names who to contact next and after how long",
+    "ends at someone who can change code or infrastructure"
+   ],
+   "use": "want a stuck problem to reach a decision maker",
+   "not": [
+    "is improvised during each incident"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A severity level",
+   "tier": 2,
+   "says": [
+    "classifies an issue by its impact on users and the business",
+    "sets how quickly the response must start"
+   ],
+   "use": "need to decide whether a problem wakes someone at night",
+   "not": [
+    "is chosen by whoever reports the problem"
+   ],
+   "like": [
+    "A service level agreement"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A service level agreement",
+   "tier": 2,
+   "says": [
+    "is a stated commitment on response or availability",
+    "carries consequences if it is missed"
+   ],
+   "use": "are promising users a target for response",
+   "not": [
+    "should be set to the best result ever achieved"
+   ],
+   "like": [
+    "A severity level"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A response target versus a resolution target",
+   "tier": 3,
+   "says": [
+    "measures time to first meaningful reply, not time to fix",
+    "can be met even when the problem takes days to solve"
+   ],
+   "use": "are writing support targets and must not promise a fix time you cannot control",
+   "not": [
+    "are two names for the same measure"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A runbook",
+   "tier": 1,
+   "says": [
+    "gives step-by-step instructions for a known task or incident",
+    "is written so a tired person can follow it at night"
+   ],
+   "use": "want an incident handled the same way by anyone on call",
+   "not": [
+    "describes the design of the system"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A knowledge base article",
+   "tier": 2,
+   "says": [
+    "answers one recurring question in plain language",
+    "lets users solve a problem without contacting support"
+   ],
+   "use": "see the same question arrive repeatedly",
+   "not": [
+    "is private to the engineering team"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "An on-call rotation",
+   "tier": 3,
+   "says": [
+    "shares out-of-hours responsibility among named people",
+    "needs a handover and a fair limit on load"
+   ],
+   "use": "must have somebody reachable for urgent problems outside office hours",
+   "not": [
+    "makes one person permanently responsible"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "Triage",
+   "tier": 2,
+   "says": [
+    "sorts incoming issues by impact and urgency",
+    "assigns an owner before work begins"
+   ],
+   "use": "face a queue of mixed reports after launch",
+   "not": [
+    "fixes issues in the order they arrived"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "Follow-the-sun support",
+   "tier": 4,
+   "says": [
+    "hands support between teams in different time zones",
+    "needs a precise handover note at each shift change"
+   ],
+   "use": "need near round-the-clock cover without night shifts",
+   "not": [
+    "relies on one team working all night"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "An uptime check",
+   "tier": 1,
+   "says": [
+    "tests from outside whether the service responds",
+    "tells you the service is down, not why"
+   ],
+   "use": "want a basic signal that the service is reachable",
+   "not": [
+    "replaces logs and metrics"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A dashboard",
+   "tier": 1,
+   "says": [
+    "shows chosen health measures in one place",
+    "is for looking, not for being woken"
+   ],
+   "use": "need an at-a-glance view during a launch",
+   "not": [
+    "is a substitute for alerts"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "An error rate",
+   "tier": 2,
+   "says": [
+    "measures the share of requests that fail",
+    "rises when something is broken for users"
+   ],
+   "use": "want one number that reflects user-visible failure",
+   "not": [
+    "measures how slow responses are"
+   ],
+   "like": [
+    "A latency percentile"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A latency percentile",
+   "tier": 3,
+   "says": [
+    "reports the response time that a given share of requests beat",
+    "shows slow experiences that an average hides"
+   ],
+   "use": "want to see the worst experiences, not the average",
+   "not": [
+    "is the average response time"
+   ],
+   "like": [
+    "An error rate"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Log aggregation",
+   "tier": 2,
+   "says": [
+    "collects logs from many servers into one searchable place",
+    "speeds up finding the cause of a fault"
+   ],
+   "use": "need to search logs across several machines during an incident",
+   "not": [
+    "stores only the errors"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "The four golden signals",
+   "tier": 3,
+   "says": [
+    "are latency, traffic, errors and saturation",
+    "give a compact first view of any service"
+   ],
+   "use": "need a starting set of measures for a new service",
+   "not": [
+    "are CPU, memory, disk and network"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A service level indicator",
+   "tier": 3,
+   "says": [
+    "is a measured quantity describing service behaviour",
+    "feeds a target such as an objective"
+   ],
+   "use": "need a precise measure of how well the service is working",
+   "not": [
+    "is the promise made to the customer"
+   ],
+   "like": [
+    "A service level objective"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A service level objective",
+   "tier": 3,
+   "says": [
+    "is an internal target for an indicator over a period",
+    "is looser than a contract and tighter than aspiration"
+   ],
+   "use": "want a clear goal for reliability",
+   "not": [
+    "is the contract with penalty clauses"
+   ],
+   "like": [
+    "A service level indicator"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "An error budget",
+   "tier": 4,
+   "says": [
+    "is the amount of unreliability an objective allows",
+    "guides how much risky change the team may ship"
+   ],
+   "use": "must decide whether to pause releases to improve stability",
+   "not": [
+    "is the money allocated to fixing bugs"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Synthetic monitoring",
+   "tier": 3,
+   "says": [
+    "runs scripted user journeys on a schedule",
+    "detects failures even when no real users are present"
+   ],
+   "use": "want to know a key journey works at 3 a.m.",
+   "not": [
+    "measures what real users actually experienced"
+   ],
+   "like": [
+    "Real user monitoring"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Real user monitoring",
+   "tier": 3,
+   "says": [
+    "records the experience of actual visitors in their browsers",
+    "shows differences by device and location"
+   ],
+   "use": "want to see performance as customers really experience it",
+   "not": [
+    "runs scripted journeys on a schedule"
+   ],
+   "like": [
+    "Synthetic monitoring"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Symptom-based alerting",
+   "tier": 4,
+   "says": [
+    "pages on what users experience rather than on internal causes",
+    "reduces noisy alerts that need no action"
+   ],
+   "use": "want alerts that matter",
+   "not": [
+    "pages whenever any resource passes a threshold"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Alert fatigue",
+   "tier": 4,
+   "says": [
+    "builds when too many alerts need no action",
+    "leads people to ignore the one that matters"
+   ],
+   "use": "notice on-call staff are muting notifications",
+   "not": [
+    "is cured by adding more alerts"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Distributed tracing",
+   "tier": 4,
+   "says": [
+    "follows one request across several services",
+    "shows where the time is spent"
+   ],
+   "use": "need to find which service in a chain is slow",
+   "not": [
+    "counts the requests a single service handles"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A feedback loop",
+   "tier": 1,
+   "says": [
+    "collects signals, decides what they mean, makes a change and checks the effect",
+    "is repeated on a schedule"
+   ],
+   "use": "want shipping to lead to learning",
+   "not": [
+    "ends when the product is released"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A qualitative signal",
+   "tier": 2,
+   "says": [
+    "explains why users behave as they do",
+    "comes from interviews, comments and support questions"
+   ],
+   "use": "need the reason behind a number",
+   "not": [
+    "tells you how many users did something"
+   ],
+   "like": [
+    "A quantitative signal"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A quantitative signal",
+   "tier": 2,
+   "says": [
+    "counts what happened and how often",
+    "comes from analytics events and error rates"
+   ],
+   "use": "need to know how many users reached a step",
+   "not": [
+    "explains the motivation behind a decision"
+   ],
+   "like": [
+    "A qualitative signal"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "An analytics event",
+   "tier": 2,
+   "says": [
+    "records one user action with a name and properties",
+    "should answer a question decided in advance"
+   ],
+   "use": "want to measure a specific behaviour",
+   "not": [
+    "should be added for everything just in case"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A funnel",
+   "tier": 3,
+   "says": [
+    "shows how many users drop at each step of a journey",
+    "highlights the step to fix first"
+   ],
+   "use": "want to find where sign-ups are lost",
+   "not": [
+    "groups users by when they joined"
+   ],
+   "like": [
+    "A cohort"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A cohort",
+   "tier": 3,
+   "says": [
+    "groups users who share a starting point such as sign-up week",
+    "lets behaviour be compared over time"
+   ],
+   "use": "want to know whether newer users behave better than older ones",
+   "not": [
+    "shows steps in a journey"
+   ],
+   "like": [
+    "A funnel"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "Retention",
+   "tier": 3,
+   "says": [
+    "measures the share of users who come back after a period",
+    "is a stronger sign of value than sign-ups"
+   ],
+   "use": "want evidence that people keep using the product",
+   "not": [
+    "counts the total number of registrations"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "An activation metric",
+   "tier": 3,
+   "says": [
+    "marks the point where a new user first gets real value",
+    "is a better early signal than registration"
+   ],
+   "use": "need to know whether new users are reaching the point of value",
+   "not": [
+    "counts the people who saw the landing page"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A vanity metric",
+   "tier": 3,
+   "says": [
+    "looks impressive but does not guide a decision",
+    "tends to rise whatever the team does"
+   ],
+   "use": "are shown a large number that no action depends on",
+   "not": [
+    "is always a poor choice in every case"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "An A/B test",
+   "tier": 4,
+   "says": [
+    "compares two variants on randomly split users",
+    "needs enough users and time to separate effect from noise"
+   ],
+   "use": "want to know whether a change caused an improvement",
+   "not": [
+    "compares behaviour before and after release only"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A novelty effect",
+   "tier": 5,
+   "says": [
+    "inflates a metric briefly because a change is new",
+    "fades as users get used to it"
+   ],
+   "use": "see a spike right after a redesign and want to know if it will last",
+   "not": [
+    "means the change was clearly a success"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A guardrail metric",
+   "tier": 4,
+   "says": [
+    "watches for harm while another metric is optimised",
+    "stops a win in one area hiding a loss elsewhere"
+   ],
+   "use": "are running an experiment on conversion and must not hurt speed or errors",
+   "not": [
+    "is the main goal of an experiment"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "Data minimisation",
+   "tier": 3,
+   "says": [
+    "collects only the data needed for the stated purpose",
+    "keeps emails and secrets out of event names and URLs"
+   ],
+   "use": "design analytics for a product holding personal data",
+   "not": [
+    "collects everything now in case it becomes useful"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "First-party data",
+   "tier": 3,
+   "says": [
+    "is data your own product already records",
+    "needs no third-party tracker"
+   ],
+   "use": "want completion or score trends from your own database",
+   "not": [
+    "is bought from an external provider"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "Closing the loop with users",
+   "tier": 2,
+   "says": [
+    "tells users what was fixed after they raised it",
+    "encourages more feedback"
+   ],
+   "use": "want people to keep reporting problems",
+   "not": [
+    "means the feedback request is closed without reply"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "An in-product survey",
+   "tier": 2,
+   "says": [
+    "asks a short question at the moment of use",
+    "has a higher response rate than a long email survey"
+   ],
+   "use": "want fresh opinion about one feature",
+   "not": [
+    "replaces user interviews"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "Semantic versioning",
+   "tier": 1,
+   "says": [
+    "uses a MAJOR.MINOR.PATCH number",
+    "signals the kind of change through which part increases"
+   ],
+   "use": "want users to judge upgrade risk from the number",
+   "not": [
+    "increases by one for every release regardless of change"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "A patch version",
+   "tier": 1,
+   "says": [
+    "increases for backward-compatible bug fixes",
+    "does not add features"
+   ],
+   "use": "ship only a bug fix",
+   "not": [
+    "is for breaking changes"
+   ],
+   "like": [
+    "A minor version",
+    "A major version"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "A minor version",
+   "tier": 2,
+   "says": [
+    "increases for backward-compatible new features",
+    "resets the patch number to zero"
+   ],
+   "use": "add a feature without breaking existing users",
+   "not": [
+    "is for breaking changes"
+   ],
+   "like": [
+    "A patch version",
+    "A major version"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "A major version",
+   "tier": 2,
+   "says": [
+    "increases when a change breaks backward compatibility",
+    "resets the minor and patch numbers to zero"
+   ],
+   "use": "ship a change that existing users must adapt to",
+   "not": [
+    "is raised for every large feature, compatible or not"
+   ],
+   "like": [
+    "A patch version",
+    "A minor version"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "Zero-based versions",
+   "tier": 2,
+   "says": [
+    "signal that the interface may still change",
+    "give no compatibility promise between minors"
+   ],
+   "use": "are building early software with a 0.x number",
+   "not": [
+    "mean the software is unusable"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "A pre-release tag",
+   "tier": 3,
+   "says": [
+    "marks a version as not yet final, such as -rc.1",
+    "sorts before the release it leads to"
+   ],
+   "use": "want to publish a build for testing",
+   "not": [
+    "sorts after the final release"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "Calendar versioning",
+   "tier": 3,
+   "says": [
+    "builds the number from the release date",
+    "suits products where time matters more than compatibility"
+   ],
+   "use": "ship on a schedule and no compatibility promise is needed",
+   "not": [
+    "is another name for semantic versioning"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "A Git tag",
+   "tier": 2,
+   "says": [
+    "names a specific commit permanently",
+    "lets you find exactly what was deployed"
+   ],
+   "use": "need to point at the code of release 1.2.0",
+   "not": [
+    "moves forward automatically with each commit"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "A changelog",
+   "tier": 1,
+   "says": [
+    "lists notable changes per version",
+    "is written for people, not generated from every commit"
+   ],
+   "use": "want users to see what changed between releases",
+   "not": [
+    "is a copy of the commit log"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "A conventional commit",
+   "tier": 3,
+   "says": [
+    "puts a type such as fix or feat at the start of the message",
+    "lets tools derive the version bump and changelog"
+   ],
+   "use": "want release notes and versions generated from history",
+   "not": [
+    "is any commit message that is short"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "A breaking change",
+   "tier": 3,
+   "says": [
+    "forces existing users to change their code or data",
+    "should raise the major version"
+   ],
+   "use": "remove or rename something others rely on",
+   "not": [
+    "is safe to ship in a patch release"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "A lockfile",
+   "tier": 3,
+   "says": [
+    "records the exact versions of dependencies installed",
+    "makes builds repeatable"
+   ],
+   "use": "need the same dependencies on every machine",
+   "not": [
+    "upgrades dependencies automatically on each install"
+   ]
+  },
+  {
+   "group": "ver",
+   "subject": "API versioning",
+   "tier": 4,
+   "says": [
+    "lets old clients keep working while new ones adopt changes",
+    "needs a published period before an old version is retired"
+   ],
+   "use": "must change an interface used by clients you do not control",
+   "not": [
+    "lets you change responses silently as long as the URL stays the same"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "Hypercare",
+   "tier": 2,
+   "says": [
+    "is a period of intensified support right after launch",
+    "has a defined end"
+   ],
+   "use": "expect a rush of issues after go-live",
+   "not": [
+    "continues indefinitely at the same staffing level"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "Hypercare exit criteria",
+   "tier": 3,
+   "says": [
+    "state when normal support can take over",
+    "include stable metrics and few open high-severity issues"
+   ],
+   "use": "need to decide when the extra support can stop",
+   "not": [
+    "are met when the calendar period passes"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "A war room",
+   "tier": 3,
+   "says": [
+    "gathers the people needed to resolve issues quickly during launch",
+    "has a named lead and a log of decisions"
+   ],
+   "use": "expect a complex launch needing fast cross-team decisions",
+   "not": [
+    "replaces the on-call rotation permanently"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "A handover",
+   "tier": 1,
+   "says": [
+    "moves responsibility from one team to another",
+    "is complete only when the receiver accepts it"
+   ],
+   "use": "pass a finished system to the team that will run it",
+   "not": [
+    "is complete when the document is emailed"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "A handover pack",
+   "tier": 2,
+   "says": [
+    "bundles documentation, access, contacts and known issues",
+    "gives the receiver what they need to operate the system"
+   ],
+   "use": "are transferring a system to operations",
+   "not": [
+    "contains only the source code"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "A knowledge transfer session",
+   "tier": 2,
+   "says": [
+    "has the builders explain how the system works and fails",
+    "is best recorded and paired with documents"
+   ],
+   "use": "want operations to learn from the people who built it",
+   "not": [
+    "can replace written documentation"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "Shadowing",
+   "tier": 3,
+   "says": [
+    "lets the receiving team watch the builders operate",
+    "comes before the receiving team takes the lead"
+   ],
+   "use": "start a handover",
+   "not": [
+    "has the receivers lead while builders watch"
+   ],
+   "like": [
+    "Reverse shadowing"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "Reverse shadowing",
+   "tier": 4,
+   "says": [
+    "has the receiving team operate while builders observe",
+    "lets mistakes be caught safely before the final handover"
+   ],
+   "use": "want to confirm the receivers can run it unaided",
+   "not": [
+    "has the builders operate while receivers watch"
+   ],
+   "like": [
+    "Shadowing"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "A named service owner",
+   "tier": 2,
+   "says": [
+    "is one accountable person for a live service",
+    "answers for its availability and roadmap"
+   ],
+   "use": "need clarity on who decides about a service",
+   "not": [
+    "is a team mailbox with no specific person"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "Operational acceptance",
+   "tier": 3,
+   "says": [
+    "confirms the operating team agrees it can support the system",
+    "is based on agreed criteria"
+   ],
+   "use": "want operations to be able to refuse an unready handover",
+   "not": [
+    "is a signature collected after the system is already live"
+   ]
+  },
+  {
+   "group": "hyp",
+   "subject": "A warranty period",
+   "tier": 3,
+   "says": [
+    "is a period when the builder fixes defects at no extra cost",
+    "has an agreed length and scope"
+   ],
+   "use": "hand over a delivered system from a supplier",
+   "not": [
+    "covers all new feature requests"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "A retrospective",
+   "tier": 1,
+   "says": [
+    "is a regular team review of how the work went",
+    "ends with a small number of agreed improvements"
+   ],
+   "use": "want the team to improve how it works",
+   "not": [
+    "is used to assess individuals' performance"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "A blameless post-incident review",
+   "tier": 3,
+   "says": [
+    "focuses on how the system and process allowed the failure",
+    "asks what made the action sensible at the time"
+   ],
+   "use": "want honest accounts after an outage",
+   "not": [
+    "names the person who caused the failure"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "Timeline reconstruction",
+   "tier": 3,
+   "says": [
+    "builds a minute-by-minute record of what happened",
+    "is based on logs and chat history, not memory"
+   ],
+   "use": "start an incident review",
+   "not": [
+    "records only the final root cause"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "Contributing factors",
+   "tier": 4,
+   "says": [
+    "are the several conditions that together allowed an incident",
+    "replace the search for one root cause"
+   ],
+   "use": "find that an incident had no single trigger",
+   "not": [
+    "name the one person to retrain"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "An action item with an owner and date",
+   "tier": 2,
+   "says": [
+    "turns discussion into a task someone is accountable for",
+    "is tracked until finished"
+   ],
+   "use": "want a retrospective to change something",
+   "not": [
+    "is satisfied by agreeing that the team will try harder"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "The five whys",
+   "tier": 3,
+   "says": [
+    "asks why repeatedly to move from symptom towards cause",
+    "can mislead if it follows a single line of reasoning"
+   ],
+   "use": "want a quick way to dig into a problem",
+   "not": [
+    "guarantees one true root cause"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "Start, stop, continue",
+   "tier": 2,
+   "says": [
+    "asks what to begin, end and keep doing",
+    "gives a simple structure for a retrospective"
+   ],
+   "use": "want a lightweight retrospective format",
+   "not": [
+    "is a post-incident report template"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "A launch metrics review",
+   "tier": 3,
+   "says": [
+    "compares results against the targets set before launch",
+    "feeds the next prioritisation"
+   ],
+   "use": "need to know whether the launch achieved its aim",
+   "not": [
+    "lists the tasks that were completed"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "A benefits realisation review",
+   "tier": 4,
+   "says": [
+    "checks months later that expected benefits were delivered",
+    "is held after the project team has moved on"
+   ],
+   "use": "must show whether an investment paid off",
+   "not": [
+    "is performed on launch day"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "Unactioned retrospective items",
+   "tier": 4,
+   "says": [
+    "erode trust in the process",
+    "make people stop contributing"
+   ],
+   "use": "see the same retrospective points raised in several sessions",
+   "not": [
+    "show that the team is improving"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "Corrective maintenance",
+   "tier": 2,
+   "says": [
+    "fixes defects found after release",
+    "responds to problems reported by users"
+   ],
+   "use": "need to repair a fault in live software",
+   "not": [
+    "adds new capability"
+   ],
+   "like": [
+    "Adaptive maintenance",
+    "Perfective maintenance",
+    "Preventive maintenance"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "Adaptive maintenance",
+   "tier": 3,
+   "says": [
+    "changes software to suit a changed environment",
+    "covers new operating system or platform versions"
+   ],
+   "use": "must keep software working after its platform changes",
+   "not": [
+    "fixes a fault found by a user"
+   ],
+   "like": [
+    "Corrective maintenance",
+    "Perfective maintenance",
+    "Preventive maintenance"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "Perfective maintenance",
+   "tier": 3,
+   "says": [
+    "improves performance or usability of working software",
+    "adds enhancements users ask for"
+   ],
+   "use": "want to improve software that is not broken",
+   "not": [
+    "avoids future faults before they appear"
+   ],
+   "like": [
+    "Corrective maintenance",
+    "Adaptive maintenance",
+    "Preventive maintenance"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "Preventive maintenance",
+   "tier": 3,
+   "says": [
+    "restructures code to avoid future faults",
+    "reduces the risk of later problems"
+   ],
+   "use": "want to lower future cost by cleaning up before it breaks",
+   "not": [
+    "repairs faults users have reported"
+   ],
+   "like": [
+    "Corrective maintenance",
+    "Adaptive maintenance",
+    "Perfective maintenance"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "Technical debt",
+   "tier": 2,
+   "says": [
+    "is the extra future cost created by shortcuts taken now",
+    "accrues interest as the shortcuts spread"
+   ],
+   "use": "decided to ship fast knowing the code needed rework",
+   "not": [
+    "is a measure of how much money was borrowed"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "A dependency update",
+   "tier": 2,
+   "says": [
+    "brings in fixes and security patches from third-party code",
+    "is easier in small frequent steps"
+   ],
+   "use": "want to avoid falling far behind upstream",
+   "not": [
+    "should be postponed until forced by a vulnerability"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "Security patching",
+   "tier": 2,
+   "says": [
+    "applies fixes for known vulnerabilities",
+    "has a target time based on severity"
+   ],
+   "use": "learn of a vulnerability in something you run",
+   "not": [
+    "can wait for the next planned feature release"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "Long-term support",
+   "tier": 3,
+   "says": [
+    "promises fixes for a version for an extended period",
+    "is chosen when stability matters more than new features"
+   ],
+   "use": "run production systems that cannot change often",
+   "not": [
+    "gets all the newest features first"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "A sunset period",
+   "tier": 3,
+   "says": [
+    "is the time between announcing retirement and switching off",
+    "gives users time to migrate"
+   ],
+   "use": "retire a service people rely on",
+   "not": [
+    "is the period after the service has been turned off"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "End of life",
+   "tier": 1,
+   "says": [
+    "is the point where a product no longer receives fixes",
+    "means running it carries growing risk"
+   ],
+   "use": "need to plan for the end of a component's support",
+   "not": [
+    "means support continues for security issues only"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "A migration path",
+   "tier": 3,
+   "says": [
+    "gives users a route from the old product to the new one",
+    "includes tools, documentation and a timetable"
+   ],
+   "use": "retire a product with customers who need a replacement",
+   "not": [
+    "is optional when the replacement is better"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "Archival at end of life",
+   "tier": 4,
+   "says": [
+    "decides what data is kept, for how long and where",
+    "is guided by retention duties and privacy law"
+   ],
+   "use": "are decommissioning a system that holds records",
+   "not": [
+    "means deleting everything immediately"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "The bus factor",
+   "tier": 3,
+   "says": [
+    "measures how many people can leave before the project stalls",
+    "is raised by sharing knowledge"
+   ],
+   "use": "worry that one person alone understands the system",
+   "not": [
+    "counts the servers in use"
+   ]
+  },
+  {
+   "group": "maint",
+   "subject": "Unsupported software",
+   "tier": 4,
+   "says": [
+    "receives no security fixes",
+    "becomes a risk that grows over time"
+   ],
+   "use": "find a production system running a product past its support date",
+   "not": [
+    "is safe if nothing has gone wrong yet"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "deploy-check.php",
+   "tier": 2,
+   "says": [
+    "is a read-only script that fails if anything would break the app or expose data",
+    "is run before and after every upload"
+   ],
+   "use": "want a repeatable pre-launch check on ggmoney",
+   "not": [
+    "changes configuration to repair any problem it finds"
+   ],
+   "like": [
+    "The HMRC production approvals checklist"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Running deploy-check.php in a browser",
+   "tier": 3,
+   "says": [
+    "tests what Apache actually serves",
+    "catches problems a command-line run would not"
+   ],
+   "use": "must verify the live web server configuration for ggmoney",
+   "not": [
+    "is unnecessary because the command-line run is identical"
+   ],
+   "like": [
+    "deploy-check.php"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Cloudflare SSL setting for ggmoney",
+   "tier": 3,
+   "says": [
+    "is set to Full (strict) before filing",
+    "is the one item its guide leaves to do before filing"
+   ],
+   "use": "finish the ggmoney launch checklist",
+   "not": [
+    "is left on Flexible because the origin certificate is optional"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The HMRC production approvals checklist",
+   "tier": 3,
+   "says": [
+    "keeps prepared answers for the approval process",
+    "says where an answer would be untrue until something is done"
+   ],
+   "use": "prepare ggmoney for HMRC production access",
+   "not": [
+    "contains answers written once and assumed to be true"
+   ],
+   "like": [
+    "deploy-check.php"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "GGLearn's invite-only sign-up",
+   "tier": 2,
+   "says": [
+    "controls who can create an account before wider use",
+    "was chosen before the product was opened further"
+   ],
+   "use": "launch GGLearn to a limited group",
+   "not": [
+    "lets anyone register with an email address"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The GGLearn security review's open items",
+   "tier": 4,
+   "says": [
+    "list what remains open, such as Apache restriction to Cloudflare ranges",
+    "take effect only once the live vhosts include the restriction"
+   ],
+   "use": "look at what GGLearn accepted at launch",
+   "not": [
+    "are all closed before any user is allowed in"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "ggmoney's docs/hmrc/RUNBOOK.md",
+   "tier": 2,
+   "says": [
+    "gives the steps for getting authorised to file with HMRC",
+    "is an example of a runbook kept beside the code"
+   ],
+   "use": "need instructions for an HMRC authorisation task",
+   "not": [
+    "records the release notes for each version"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "ggsocial's DEPLOY.md",
+   "tier": 3,
+   "says": [
+    "lists traps learned the hard way",
+    "notes that the live Apache vhost is a copy and not a symlink"
+   ],
+   "use": "deploy ggsocial and want to avoid known mistakes",
+   "not": [
+    "describes the product roadmap"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggmoney APP_VERSION value",
+   "tier": 3,
+   "says": [
+    "is defined in config.php as 0.1.0",
+    "is given to HMRC as the software version"
+   ],
+   "use": "need the version that appears in an external record",
+   "not": [
+    "is separate from anything sent to HMRC"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggsocial deployment id",
+   "tier": 3,
+   "says": [
+    "is the commit plus a timestamp",
+    "makes browsers on an old build reload instead of failing on removed server actions"
+   ],
+   "use": "deploy a build that changes server actions",
+   "not": [
+    "is a manually chosen release name"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "GGLearn's analytics from its own database",
+   "tier": 2,
+   "says": [
+    "reads runs, scores and progress already recorded",
+    "limits access by role"
+   ],
+   "use": "want completion and difficulty trends without a third-party tracker",
+   "not": [
+    "needs an external analytics script on every page"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the main purpose of a go-live checklist?",
+   "right": "To confirm it is safe to let real users in",
+   "wrong": [
+    "To list every feature that was built",
+    "To record who worked on the project",
+    "To replace testing"
+   ],
+   "tier": 1,
+   "why": "A checklist turns 'it works on my machine' into 'safe for real users'."
+  },
+  {
+   "q": "Which part of version 1.4.2 increases for a backward-compatible bug fix?",
+   "right": "The patch number, giving 1.4.3",
+   "wrong": [
+    "The major number, giving 2.4.2",
+    "The minor number, giving 1.5.2",
+    "The pre-release tag, giving 1.4.2-fix"
+   ],
+   "tier": 1,
+   "why": "Under semantic versioning, PATCH is for compatible fixes."
+  },
+  {
+   "q": "Which part of version 1.4.2 increases when you add a backward-compatible feature?",
+   "right": "The minor number, giving 1.5.0",
+   "wrong": [
+    "The patch number, giving 1.4.3",
+    "The major number, giving 2.0.0",
+    "The minor number, giving 1.5.2"
+   ],
+   "tier": 1,
+   "why": "A minor bump resets the patch number to zero."
+  },
+  {
+   "q": "What does a rollback do?",
+   "right": "Returns the system to the previously released version",
+   "wrong": [
+    "Deploys a new fix on top of the broken release",
+    "Deletes the production database",
+    "Pauses all support requests"
+   ],
+   "tier": 1,
+   "why": "A rollback reverts to the last known good version."
+  },
+  {
+   "q": "What is a runbook?",
+   "right": "Step-by-step instructions for a known task or incident",
+   "wrong": [
+    "A record of who attended an incident",
+    "A forecast of traffic after launch",
+    "A list of the features in a release"
+   ],
+   "tier": 1,
+   "why": "It is written so someone tired can follow it."
+  },
+  {
+   "q": "What does a changelog contain?",
+   "right": "A list of notable changes per version, written for people",
+   "wrong": [
+    "Every commit message in order",
+    "The source code of each release",
+    "Only the names of contributors"
+   ],
+   "tier": 1,
+   "why": "A changelog is curated, not a raw commit log."
+  },
+  {
+   "q": "Why must a backup be restored at least once before launch?",
+   "right": "Because only a restore proves the backup is usable",
+   "wrong": [
+    "Because restoring deletes old backups",
+    "Because backup tools do not report errors",
+    "Because restoring speeds up the next backup"
+   ],
+   "tier": 2,
+   "why": "An untested backup is an assumption."
+  },
+  {
+   "q": "What is the difference between deploying and releasing when feature flags are used?",
+   "right": "Deploying puts code on production; releasing exposes the feature to users",
+   "wrong": [
+    "They mean the same thing",
+    "Releasing happens before deploying",
+    "Deploying only happens in test environments"
+   ],
+   "tier": 2,
+   "why": "Flags separate shipping code from turning behaviour on."
+  },
+  {
+   "q": "What does a status page do during an outage?",
+   "right": "Shows users the current health of the service so they need not contact support",
+   "wrong": [
+    "Restarts the failed servers",
+    "Collects bug reports for the next release",
+    "Hides the incident until it is resolved"
+   ],
+   "tier": 2,
+   "why": "It should be hosted separately from the service it reports on."
+  },
+  {
+   "q": "Which statement about a severity level is correct?",
+   "right": "It sets how urgently an issue must be handled based on impact",
+   "wrong": [
+    "It is chosen by the customer who reports the issue",
+    "It describes the age of the bug",
+    "It is the same as the priority in the backlog"
+   ],
+   "tier": 2,
+   "why": "Severity is a pre-agreed classification of impact."
+  },
+  {
+   "q": "What is a good use of first-line support?",
+   "right": "Answering how-to questions using documentation",
+   "wrong": [
+    "Changing production database schemas",
+    "Deciding the product roadmap",
+    "Writing the post-incident report"
+   ],
+   "tier": 2,
+   "why": "First line handles known fixes and routes the rest."
+  },
+  {
+   "q": "Why are exit criteria agreed before testing starts?",
+   "right": "So readiness is judged against an agreed bar rather than argued afterwards",
+   "wrong": [
+    "So testing can finish faster",
+    "So defects can be hidden from users",
+    "So the release date never changes"
+   ],
+   "tier": 2,
+   "why": "Criteria fixed up front avoid post-hoc rationalising."
+  },
+  {
+   "q": "What is the aim of hypercare?",
+   "right": "Extra support in the period straight after launch, with a defined end",
+   "wrong": [
+    "Permanent premium support for large customers",
+    "A final round of code review",
+    "Training for new support staff"
+   ],
+   "tier": 2,
+   "why": "Hypercare is time-boxed intensified support."
+  },
+  {
+   "q": "What should a good analytics event answer?",
+   "right": "A question decided in advance",
+   "wrong": [
+    "Anything that might be useful someday",
+    "Who is the least active user",
+    "How many pages the team wrote"
+   ],
+   "tier": 2,
+   "why": "Track only what answers your questions; every event has a cost."
+  },
+  {
+   "q": "A release notes entry should be written in whose language?",
+   "right": "The users'",
+   "wrong": [
+    "The developers'",
+    "The database administrators'",
+    "The auditors'"
+   ],
+   "tier": 2,
+   "why": "Say what changed, why it matters and what people must do."
+  },
+  {
+   "q": "A team ships a release with a migration that drops a column. The release then fails. Why may a rollback not be enough?",
+   "right": "Reverting the code does not restore the dropped data",
+   "wrong": [
+    "Rollbacks always require a new build",
+    "Dropped columns are restored automatically",
+    "The old code never reads that column"
+   ],
+   "tier": 3,
+   "why": "Destructive migrations create a point of no return."
+  },
+  {
+   "q": "Which strategy sends a small share of real traffic to a new version and compares it with the old?",
+   "right": "Canary release",
+   "wrong": [
+    "Blue-green deployment",
+    "Big-bang release",
+    "Code freeze"
+   ],
+   "tier": 3,
+   "why": "A canary checks health on a small audience before widening."
+  },
+  {
+   "q": "Which strategy keeps two full production environments and switches traffic between them?",
+   "right": "Blue-green deployment",
+   "wrong": [
+    "Canary release",
+    "Rolling deployment",
+    "Dark launch"
+   ],
+   "tier": 3,
+   "why": "Rollback becomes switching traffic back."
+  },
+  {
+   "q": "What makes an expand-contract migration rollback-safe?",
+   "right": "The old schema stays until no code uses it",
+   "wrong": [
+    "The old column is dropped first",
+    "Data is copied to a spreadsheet",
+    "The migration runs only on weekends"
+   ],
+   "tier": 3,
+   "why": "Old and new code can run against the same database during the transition."
+  },
+  {
+   "q": "Why is a response target not the same as a resolution target?",
+   "right": "A response target measures time to a first meaningful reply, not time to fix",
+   "wrong": [
+    "A response target only applies to outages",
+    "A resolution target is always shorter",
+    "They are the same measure in different units"
+   ],
+   "tier": 3,
+   "why": "You can meet a response target while a problem takes days."
+  },
+  {
+   "q": "Why does p99 latency matter more than average latency for spotting bad experiences?",
+   "right": "The average hides the slowest requests",
+   "wrong": [
+    "The average is more expensive to compute",
+    "p99 counts only errors",
+    "The average ignores traffic volume"
+   ],
+   "tier": 3,
+   "why": "Percentiles show tail latency users actually feel."
+  },
+  {
+   "q": "What is the difference between an SLI and an SLO?",
+   "right": "The SLI is the measurement; the SLO is the target for it",
+   "wrong": [
+    "The SLI is the contract; the SLO is the dashboard",
+    "They are the same thing",
+    "The SLO is measured by customers; the SLI by engineers"
+   ],
+   "tier": 3,
+   "why": "An indicator is measured and an objective sets the goal."
+  },
+  {
+   "q": "What does synthetic monitoring detect that real user monitoring may not?",
+   "right": "A key journey failing when no real users are present",
+   "wrong": [
+    "How different devices render a page",
+    "Which countries have the most users",
+    "The size of a user's screen"
+   ],
+   "tier": 3,
+   "why": "Scripted checks run on a schedule regardless of traffic."
+  },
+  {
+   "q": "A dashboard shows sign-ups doubling after a campaign, but retention stays flat. What does that suggest?",
+   "right": "Sign-ups alone may be a vanity metric and value is not improving",
+   "wrong": [
+    "The product is performing twice as well",
+    "Retention is not worth measuring",
+    "The campaign should be repeated unchanged"
+   ],
+   "tier": 3,
+   "why": "Retention and activation show whether users find value."
+  },
+  {
+   "q": "Which maintenance type changes software to cope with a new platform version?",
+   "right": "Adaptive",
+   "wrong": [
+    "Corrective",
+    "Perfective",
+    "Preventive"
+   ],
+   "tier": 3,
+   "why": "Adaptive maintenance responds to environment change."
+  },
+  {
+   "q": "Which maintenance type restructures code to lower the risk of future faults?",
+   "right": "Preventive",
+   "wrong": [
+    "Corrective",
+    "Adaptive",
+    "Perfective"
+   ],
+   "tier": 3,
+   "why": "Preventive work reduces future problems before they appear."
+  },
+  {
+   "q": "What is the purpose of a lockfile?",
+   "right": "To record exact dependency versions so builds are repeatable",
+   "wrong": [
+    "To prevent anyone editing the code",
+    "To encrypt the secrets",
+    "To store the changelog"
+   ],
+   "tier": 3,
+   "why": "It makes each install use the same versions."
+  },
+  {
+   "q": "What does a blameless post-incident review ask?",
+   "right": "How the system and process allowed the failure",
+   "wrong": [
+    "Who made the mistake",
+    "Which team should be penalised",
+    "How the incident can be hidden"
+   ],
+   "tier": 3,
+   "why": "Blame discourages honest accounts and hides learning."
+  },
+  {
+   "q": "What is a good outcome of a retrospective?",
+   "right": "A few agreed actions, each with an owner and a date",
+   "wrong": [
+    "A long list of everything that went wrong",
+    "A statement that everyone will try harder",
+    "A ranked list of team members"
+   ],
+   "tier": 3,
+   "why": "Actions without owners rarely happen."
+  },
+  {
+   "q": "Which handover step lets the receiving team operate while the builders watch?",
+   "right": "Reverse shadowing",
+   "wrong": [
+    "Shadowing",
+    "Code freeze",
+    "Canary release"
+   ],
+   "tier": 3,
+   "why": "It confirms the receivers can run the system unaided."
+  },
+  {
+   "q": "A team has a green checklist but one item, rate limiting, is not in place. What is the best approach?",
+   "right": "Record it in the known-gap register with an owner and a date, and decide on purpose whether to launch",
+   "wrong": [
+    "Launch and not mention it",
+    "Cancel the launch permanently",
+    "Mark the item done to keep the checklist green"
+   ],
+   "tier": 4,
+   "why": "Accepted gaps should be visible and owned."
+  },
+  {
+   "q": "An on-call engineer is paged six times a night, mostly by alerts needing no action. What should the team do first?",
+   "right": "Remove or retune alerts that need no action and page on user-visible symptoms",
+   "wrong": [
+    "Add more alerts for coverage",
+    "Rotate on-call less often so people tolerate it",
+    "Silence the pager after midnight"
+   ],
+   "tier": 4,
+   "why": "Alert fatigue hides the alerts that matter."
+  },
+  {
+   "q": "Your error budget for the quarter is spent in week three. What does the policy usually imply?",
+   "right": "Prioritise reliability work and slow risky releases until budget returns",
+   "wrong": [
+    "Release faster to recover the lost time",
+    "Raise the objective to look better",
+    "Ignore the budget until the quarter ends"
+   ],
+   "tier": 4,
+   "why": "The budget guides how much change risk is acceptable."
+  },
+  {
+   "q": "After a redesign, sign-ups jump 30 percent in week one and then settle back. What is the likeliest explanation?",
+   "right": "A novelty effect",
+   "wrong": [
+    "The redesign is clearly permanent success",
+    "A broken analytics tag",
+    "A change of version number"
+   ],
+   "tier": 4,
+   "why": "Early excitement fades; judge a change over a longer period."
+  },
+  {
+   "q": "A team wants to test a new checkout and needs to avoid harming speed or error rates. What should be added?",
+   "right": "Guardrail metrics",
+   "wrong": [
+    "A second conversion metric",
+    "Calendar versioning",
+    "A larger launch announcement"
+   ],
+   "tier": 4,
+   "why": "Guardrails catch harm while another metric is optimised."
+  },
+  {
+   "q": "A feature has been deprecated. What is the minimum that users need?",
+   "right": "A stated removal date, a replacement and a migration route",
+   "wrong": [
+    "A notice on the day it is removed",
+    "A promise that nothing will change",
+    "Only an update to the changelog"
+   ],
+   "tier": 4,
+   "why": "Depending users need time and a path."
+  },
+  {
+   "q": "A team deploys a new server component and wants real load tested without showing users results. Which approach fits?",
+   "right": "Dark launch",
+   "wrong": [
+    "Big-bang release",
+    "Blue-green deployment",
+    "Code freeze"
+   ],
+   "tier": 4,
+   "why": "A dark launch exercises code on live traffic invisibly."
+  },
+  {
+   "q": "The service owner leaves and nobody knows how to restore the system. Which metric was ignored?",
+   "right": "The bus factor",
+   "wrong": [
+    "Latency percentile",
+    "Error budget",
+    "Retention"
+   ],
+   "tier": 4,
+   "why": "Knowledge held by one person is a risk."
+  },
+  {
+   "q": "A product is retired and holds customer records. What should be decided before switching it off?",
+   "right": "What data to keep, for how long and where, based on retention duties",
+   "wrong": [
+    "Nothing, because deleted data cannot cause problems",
+    "Only which servers to power off",
+    "How to announce the shutdown on social media"
+   ],
+   "tier": 4,
+   "why": "Archival and deletion must follow retention and privacy rules."
+  },
+  {
+   "q": "Support receives the same question every week. Which action best uses this as feedback?",
+   "right": "Fix the cause in the product or documentation and add a knowledge base article",
+   "wrong": [
+    "Add more support staff",
+    "Ask users to read more carefully",
+    "Close the tickets with a standard reply"
+   ],
+   "tier": 4,
+   "why": "Patterns in questions point to unclear product or docs."
+  },
+  {
+   "q": "A hypercare period has ended by the calendar, but high-severity issues remain open and metrics are unstable. What should the team do?",
+   "right": "Extend hypercare because exit criteria are not met",
+   "wrong": [
+    "End hypercare as planned",
+    "Move all issues to the backlog without review",
+    "Hide the issues from the status report"
+   ],
+   "tier": 4,
+   "why": "Exit should depend on criteria, not only dates."
+  },
+  {
+   "q": "A team runs a canary at 5 percent and sees the error rate unchanged, but latency for one customer segment doubles. What is the best next step?",
+   "right": "Hold the rollout and investigate that segment before widening",
+   "wrong": [
+    "Widen to 100 percent because errors are flat",
+    "Roll back to the oldest version available",
+    "Delete the segment's data"
+   ],
+   "tier": 5,
+   "why": "Aggregates can hide a harmful segment effect."
+  },
+  {
+   "q": "An incident review concludes the cause was 'human error'. What is the best response?",
+   "right": "Ask what in the system made the error likely and add safeguards",
+   "wrong": [
+    "Retrain the person involved",
+    "Accept the conclusion and close the review",
+    "Remove access for everyone"
+   ],
+   "tier": 5,
+   "why": "Human error is a starting point, not a cause."
+  },
+  {
+   "q": "A release needs a non-reversible database change. What should be decided before go-live?",
+   "right": "Who accepts the point of no return, and what the roll-forward plan is",
+   "wrong": [
+    "Nothing, since rollback will cover it",
+    "Whether to hide the change from support",
+    "Which day of the week it runs"
+   ],
+   "tier": 5,
+   "why": "A point of no return is a deliberate decision."
+  },
+  {
+   "q": "A dependency has gone without updates for two years and now has a known vulnerability. What is the first thing to establish?",
+   "right": "Whether the dependency is still supported and what migration options exist",
+   "wrong": [
+    "Whether the vulnerability is old enough to ignore",
+    "Whether users have noticed",
+    "Which version number it carries"
+   ],
+   "tier": 5,
+   "why": "Unsupported software carries growing risk and needs a migration path."
+  },
+  {
+   "q": "A team has an A/B test running for one day showing a 3 percent lift. What is the main concern?",
+   "right": "Too little time and data to separate the effect from noise",
+   "wrong": [
+    "The lift is too small to matter",
+    "A/B tests cannot measure lifts",
+    "The control group is too large"
+   ],
+   "tier": 5,
+   "why": "Short tests mislead through noise and novelty."
+  },
+  {
+   "q": "A team is in the middle of an outage and users keep asking for news. What helps most?",
+   "right": "Posting updates at a promised cadence even when there is nothing new",
+   "wrong": [
+    "Waiting until the root cause is known",
+    "Closing the status page",
+    "Replying only to the largest customers"
+   ],
+   "tier": 3,
+   "why": "A cadence reduces repeat questions and builds trust."
+  },
+  {
+   "q": "Which item belongs in a handover pack?",
+   "right": "Documentation, access, contacts and known issues",
+   "wrong": [
+    "Only the source code repository",
+    "Only the invoice",
+    "A list of who to blame for defects"
+   ],
+   "tier": 3,
+   "why": "The receiver needs what is required to operate the system."
+  },
+  {
+   "q": "A team wants release notes and versions generated from history. Which practice enables it?",
+   "right": "Conventional commit messages",
+   "wrong": [
+    "Calendar versioning",
+    "Squashing all commits into one",
+    "Dark launches"
+   ],
+   "tier": 3,
+   "why": "Typed commit prefixes drive version bumps and changelog entries."
+  },
+  {
+   "q": "For ggmoney, what does deploy-check.php do?",
+   "right": "Fails if anything would break the app or expose data, without changing anything",
+   "wrong": [
+    "Deploys the code to production",
+    "Repairs configuration errors automatically",
+    "Submits the filing to HMRC"
+   ],
+   "tier": 2,
+   "why": "It is a read-only pre- and post-upload check."
+  },
+  {
+   "q": "Why is deploy-check.php run in a browser as well as on the command line?",
+   "right": "A browser run tests what Apache actually serves",
+   "wrong": [
+    "The command line cannot run PHP",
+    "A browser run is faster",
+    "It hides warnings from users"
+   ],
+   "tier": 2,
+   "why": "Web server behaviour differs from the CLI."
+  },
+  {
+   "q": "What does the ggsocial deployment id (commit plus timestamp) prevent?",
+   "right": "Old browser builds failing when they call server actions that no longer exist",
+   "wrong": [
+    "Duplicate commits being pushed",
+    "Users from signing in twice",
+    "Database migrations from running"
+   ],
+   "tier": 3,
+   "why": "Browsers on an old build reload instead of failing."
+  },
+  {
+   "q": "Why is ggmoney's APP_VERSION of 0.1.0 important to keep consistent?",
+   "right": "The same value is given to HMRC as the software version",
+   "wrong": [
+    "It controls the database schema",
+    "It sets the Cloudflare SSL mode",
+    "It names the Git branch"
+   ],
+   "tier": 3,
+   "why": "It forms part of an external record."
+  },
+  {
+   "q": "What did GGLearn do about sign-up before wider use?",
+   "right": "Made sign-up invite-only",
+   "wrong": [
+    "Opened registration to anyone",
+    "Removed accounts altogether",
+    "Moved sign-up to a third-party service"
+   ],
+   "tier": 3,
+   "why": "Controlled sign-up limits who can enter at launch."
+  },
+  {
+   "q": "The GGLearn security review lists Apache restriction to Cloudflare ranges as open. When does it take effect?",
+   "right": "Once the live vhosts include the restriction",
+   "wrong": [
+    "As soon as the review is written",
+    "When the package version changes",
+    "When Cloudflare is disabled"
+   ],
+   "tier": 4,
+   "why": "The config exists but must be included in the live vhosts."
+  },
+  {
+   "q": "Why does ggsocial's DEPLOY.md note that the live Apache vhost is a copy and not a symlink?",
+   "right": "Edits to the repo file do not change the live vhost until it is copied",
+   "wrong": [
+    "The vhost updates itself",
+    "The symlink breaks HTTPS",
+    "Copies are faster than symlinks"
+   ],
+   "tier": 2,
+   "why": "A known trap listed in the deploy guide."
+  },
+  {
+   "q": "What should the Cloudflare SSL mode for ggmoney be set to before filing?",
+   "right": "Full (strict)",
+   "wrong": [
+    "Off",
+    "Flexible",
+    "Full without validation"
+   ],
+   "tier": 2,
+   "why": "The guide leaves this as the one item to do before filing."
+  },
+  {
+   "q": "The HMRC production approvals checklist 'says where an answer would be untrue until something is done'. Why is that useful?",
+   "right": "It stops anyone submitting an answer that is false at the time of submission",
+   "wrong": [
+    "It lets answers be changed after approval",
+    "It replaces the need to do the work",
+    "It hides unfinished tasks"
+   ],
+   "tier": 3,
+   "why": "Honest answers depend on the underlying work being finished."
+  },
+  {
+   "q": "How can GGLearn read completion and difficulty trends without a third-party tracker?",
+   "right": "From runs, scores and progress already stored in its database, limited by role",
+   "wrong": [
+    "By adding a tracking pixel",
+    "By sending emails to users",
+    "By downloading browser history"
+   ],
+   "tier": 3,
+   "why": "First-party data may suffice."
+  }
+ ]
+}

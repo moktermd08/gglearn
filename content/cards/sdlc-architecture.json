@@ -1,0 +1,2333 @@
+{
+ "slug": "sdlc-architecture",
+ "name": "3. System design and architecture",
+ "description": "Stack, components, data flow, hosting, scaling, API style.",
+ "roles": "developer",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "style": "architectural style",
+  "quality": "quality attribute",
+  "doc": "architecture documentation practice",
+  "integ": "integration pattern",
+  "scale": "scaling or caching technique",
+  "cons": "data consistency concept",
+  "res": "resilience pattern",
+  "api": "API design concept",
+  "cloud": "cloud or deployment concept",
+  "sec": "secure design principle",
+  "evo": "evolutionary architecture concept",
+  "anti": "architecture anti-pattern",
+  "co": "gglearn or ggmoney architecture fact"
+ },
+ "cards": [
+  {
+   "group": "style",
+   "subject": "A monolith",
+   "tier": 1,
+   "says": [
+    "deploys all application code as a single unit",
+    "shares one process and usually one database across all features"
+   ],
+   "use": "want the simplest deployment for a small team",
+   "not": [
+    "cannot have any internal structure"
+   ],
+   "like": [
+    "A modular monolith",
+    "Microservices"
+   ]
+  },
+  {
+   "group": "style",
+   "subject": "Microservices",
+   "tier": 1,
+   "says": [
+    "splits a system into independently deployable services",
+    "lets each service own its own data store",
+    "replaces in-process calls with network calls"
+   ],
+   "use": "need separate teams to release and scale parts independently",
+   "not": [
+    "removes the need to handle partial failure"
+   ],
+   "like": [
+    "A monolith",
+    "A modular monolith"
+   ]
+  },
+  {
+   "group": "style",
+   "subject": "Layered architecture",
+   "tier": 2,
+   "says": [
+    "separates presentation, business logic and data access into tiers",
+    "restricts each layer to calling the layer below it"
+   ],
+   "use": "want a familiar separation of concerns inside one application",
+   "not": [
+    "requires each layer to run on its own server"
+   ],
+   "like": [
+    "Hexagonal architecture"
+   ]
+  },
+  {
+   "group": "style",
+   "subject": "A modular monolith",
+   "tier": 3,
+   "says": [
+    "keeps one deployable unit with strict module boundaries",
+    "allows modules to be split into services later if needed"
+   ],
+   "use": "want clear boundaries without the operational cost of distribution",
+   "not": [
+    "needs a network call between every pair of modules"
+   ],
+   "like": [
+    "A monolith",
+    "Microservices"
+   ]
+  },
+  {
+   "group": "style",
+   "subject": "Hexagonal architecture",
+   "tier": 3,
+   "says": [
+    "isolates the domain from infrastructure behind ports and adapters",
+    "lets a database or UI be swapped without changing core logic"
+   ],
+   "use": "want to test business rules without a database or web server",
+   "not": [
+    "places the database at the centre of the design"
+   ],
+   "like": [
+    "Layered architecture"
+   ]
+  },
+  {
+   "group": "style",
+   "subject": "Event-driven architecture",
+   "tier": 3,
+   "says": [
+    "has components communicate by publishing and reacting to events",
+    "keeps producers unaware of who consumes their events"
+   ],
+   "use": "need several systems to react to something that happened without direct calls",
+   "not": [
+    "requires each caller to wait for a reply"
+   ]
+  },
+  {
+   "group": "style",
+   "subject": "Serverless architecture",
+   "tier": 2,
+   "says": [
+    "runs code as functions managed by the platform",
+    "bills by usage and can scale to zero when idle"
+   ],
+   "use": "have spiky or infrequent workloads and no wish to manage servers",
+   "not": [
+    "runs without any servers at all"
+   ]
+  },
+  {
+   "group": "style",
+   "subject": "CQRS",
+   "tier": 4,
+   "says": [
+    "separates the model that changes data from the model that reads it",
+    "lets read models be shaped and scaled independently of writes"
+   ],
+   "use": "need reads and writes with very different shapes or load",
+   "not": [
+    "requires event sourcing"
+   ],
+   "like": [
+    "Event sourcing"
+   ]
+  },
+  {
+   "group": "style",
+   "subject": "Event sourcing",
+   "tier": 4,
+   "says": [
+    "stores state as an append-only sequence of events",
+    "rebuilds current state by replaying events"
+   ],
+   "use": "need a full audit trail and the ability to reconstruct past state",
+   "not": [
+    "keeps only the latest row for each entity"
+   ],
+   "like": [
+    "CQRS"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Availability",
+   "tier": 1,
+   "says": [
+    "measures the proportion of time a system can serve requests",
+    "is commonly stated as a percentage of uptime"
+   ],
+   "use": "need to state how much downtime is acceptable",
+   "not": [
+    "measures how fast one request completes"
+   ],
+   "like": [
+    "Reliability"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Reliability",
+   "tier": 2,
+   "says": [
+    "measures how consistently a system produces correct results over time",
+    "covers correct behaviour, not just being reachable"
+   ],
+   "like": [
+    "Availability"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Scalability",
+   "tier": 1,
+   "says": [
+    "describes how well a system copes with growing load by adding resources",
+    "is judged by how cost and performance change as load grows"
+   ],
+   "use": "expect usage to grow many times over",
+   "not": [
+    "means the system is fast under today's load"
+   ],
+   "like": [
+    "Elasticity"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Latency",
+   "tier": 1,
+   "says": [
+    "measures the time taken to complete one request",
+    "is usually reported as percentiles such as p99"
+   ],
+   "use": "need to know how long a user waits for a response",
+   "not": [
+    "counts requests completed per second"
+   ],
+   "like": [
+    "Throughput"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Throughput",
+   "tier": 2,
+   "says": [
+    "measures how many requests or units of work complete per unit of time"
+   ],
+   "use": "need to know how much work a system can process in total",
+   "not": [
+    "measures the delay of a single request"
+   ],
+   "like": [
+    "Latency"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Maintainability",
+   "tier": 2,
+   "says": [
+    "describes how easily a system can be understood, changed and fixed"
+   ],
+   "use": "see changes taking longer and breaking unrelated things"
+  },
+  {
+   "group": "quality",
+   "subject": "Testability",
+   "tier": 3,
+   "says": [
+    "describes how easily behaviour can be verified in isolation",
+    "improves when dependencies can be replaced with test doubles"
+   ],
+   "use": "find a component can only be tested with the whole system running"
+  },
+  {
+   "group": "quality",
+   "subject": "Observability",
+   "tier": 3,
+   "says": [
+    "lets you infer internal state from logs, metrics and traces",
+    "helps explain failures nobody predicted"
+   ],
+   "use": "must find out why a rare production failure happened",
+   "not": [
+    "is the same as having a dashboard of known alerts"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Elasticity",
+   "tier": 3,
+   "says": [
+    "adds and removes capacity automatically as demand changes",
+    "avoids paying for idle capacity at quiet times"
+   ],
+   "use": "face demand that rises sharply for a day and then falls",
+   "like": [
+    "Scalability"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Recovery time objective",
+   "tier": 3,
+   "says": [
+    "states the longest acceptable time to restore service after an outage"
+   ],
+   "use": "need to agree how quickly service must return after a disaster",
+   "not": [
+    "states how much data may be lost"
+   ],
+   "like": [
+    "Recovery point objective"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Recovery point objective",
+   "tier": 3,
+   "says": [
+    "states the longest acceptable window of data loss measured in time",
+    "drives how often backups or replication must run"
+   ],
+   "use": "need to agree how much recent data can be lost in a failure",
+   "not": [
+    "states how fast service must return"
+   ],
+   "like": [
+    "Recovery time objective"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "An architecture decision record",
+   "tier": 1,
+   "says": [
+    "captures one significant decision with its context and consequences",
+    "is stored with the code and rarely edited once accepted"
+   ],
+   "use": "want future engineers to know why a choice was made",
+   "not": [
+    "records every code change"
+   ],
+   "like": [
+    "A design document"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "The C4 system context diagram",
+   "tier": 2,
+   "says": [
+    "shows the system as one box among its users and external systems",
+    "leaves out internal technology detail"
+   ],
+   "use": "need to explain the system to a non-technical audience",
+   "like": [
+    "The C4 container diagram",
+    "The C4 component diagram"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "The C4 container diagram",
+   "tier": 2,
+   "says": [
+    "shows separately runnable parts such as web apps, APIs and databases",
+    "labels the technology and protocol between those parts"
+   ],
+   "use": "need to show which deployable pieces exist and how they talk",
+   "like": [
+    "The C4 system context diagram",
+    "The C4 component diagram"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "The C4 component diagram",
+   "tier": 3,
+   "says": [
+    "shows the major building blocks inside a single container"
+   ],
+   "use": "need to explain how one service is organised internally",
+   "like": [
+    "The C4 system context diagram",
+    "The C4 container diagram"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A sequence diagram",
+   "tier": 2,
+   "says": [
+    "shows messages between participants in time order",
+    "suits explaining one request flow end to end"
+   ],
+   "use": "need to show who calls whom, and in what order, for a single scenario",
+   "not": [
+    "shows the static structure of every component"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A design document",
+   "tier": 3,
+   "says": [
+    "proposes a solution to a specific problem before it is built",
+    "lists alternatives considered and why they were rejected"
+   ],
+   "use": "need to review an approach with peers before writing the code",
+   "not": [
+    "is written only after release"
+   ],
+   "like": [
+    "An architecture decision record"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A non-functional requirement",
+   "tier": 2,
+   "says": [
+    "states how well a system must perform rather than what it does",
+    "covers targets such as response time, availability and security"
+   ],
+   "use": "must specify response time or availability targets",
+   "not": [
+    "describes a user-visible feature"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A quality attribute scenario",
+   "tier": 4,
+   "says": [
+    "specifies a stimulus, environment and measurable response",
+    "turns a vague wish such as be fast into a testable statement"
+   ],
+   "use": "hear a stakeholder ask for a system that is fast or secure",
+   "not": [
+    "is a user story for a new feature"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "ATAM",
+   "tier": 5,
+   "says": [
+    "evaluates an architecture against quality attribute scenarios",
+    "exposes trade-off points, sensitivity points and risks"
+   ],
+   "use": "need a structured review of whether an architecture meets competing quality goals",
+   "not": [
+    "is a load-testing tool"
+   ]
+  },
+  {
+   "group": "integ",
+   "subject": "A message queue",
+   "tier": 1,
+   "says": [
+    "holds messages until a consumer processes them",
+    "delivers each message to one consumer in a competing group"
+   ],
+   "use": "need to hand work off for asynchronous processing",
+   "not": [
+    "delivers every message to all consumers"
+   ],
+   "like": [
+    "Publish-subscribe"
+   ]
+  },
+  {
+   "group": "integ",
+   "subject": "Publish-subscribe",
+   "tier": 2,
+   "says": [
+    "delivers a copy of each message to every subscriber",
+    "keeps publishers unaware of their subscribers"
+   ],
+   "use": "need several services to each react to the same event",
+   "not": [
+    "gives each message to a single consumer only"
+   ],
+   "like": [
+    "A message queue"
+   ]
+  },
+  {
+   "group": "integ",
+   "subject": "An API gateway",
+   "tier": 2,
+   "says": [
+    "provides a single entry point that routes requests to backend services",
+    "centralises edge concerns such as authentication and rate limiting"
+   ],
+   "use": "want clients to call one address instead of many services",
+   "like": [
+    "A backend for frontend"
+   ]
+  },
+  {
+   "group": "integ",
+   "subject": "A backend for frontend",
+   "tier": 3,
+   "says": [
+    "provides a separate API tailored to each client type"
+   ],
+   "use": "need mobile and web clients to receive differently shaped responses",
+   "not": [
+    "is a single shared API for all client types"
+   ],
+   "like": [
+    "An API gateway"
+   ]
+  },
+  {
+   "group": "integ",
+   "subject": "A dead letter queue",
+   "tier": 3,
+   "says": [
+    "collects messages that repeatedly fail processing",
+    "lets failures be inspected without blocking the main queue"
+   ],
+   "use": "find one poison message keeps blocking a consumer"
+  },
+  {
+   "group": "integ",
+   "subject": "An idempotency key",
+   "tier": 3,
+   "says": [
+    "lets a repeated request be recognised and applied only once",
+    "is sent by the client with a request that may be retried"
+   ],
+   "use": "need to retry payment-style requests without double effects"
+  },
+  {
+   "group": "integ",
+   "subject": "A webhook",
+   "tier": 2,
+   "says": [
+    "lets a server call a client URL when an event occurs",
+    "avoids the client polling for changes"
+   ],
+   "use": "want to be told when something happens instead of asking repeatedly"
+  },
+  {
+   "group": "integ",
+   "subject": "The transactional outbox",
+   "tier": 4,
+   "says": [
+    "writes an event to a table in the same database transaction as the data change",
+    "lets a separate relay publish the event afterwards"
+   ],
+   "use": "must not lose or invent events when updating a database and publishing a message",
+   "not": [
+    "publishes the message before the database commit"
+   ]
+  },
+  {
+   "group": "integ",
+   "subject": "A saga",
+   "tier": 4,
+   "says": [
+    "coordinates a multi-service business transaction as local transactions",
+    "undoes earlier steps with compensating actions when a later one fails"
+   ],
+   "use": "need an order flow across payment, stock and shipping services without a distributed lock",
+   "not": [
+    "holds one database lock across all services"
+   ]
+  },
+  {
+   "group": "integ",
+   "subject": "An anti-corruption layer",
+   "tier": 4,
+   "says": [
+    "translates between a legacy model and a new domain model",
+    "stops legacy concepts leaking into new code"
+   ],
+   "use": "must integrate a new service with a legacy system whose model is messy"
+  },
+  {
+   "group": "integ",
+   "subject": "The strangler fig pattern",
+   "tier": 4,
+   "says": [
+    "replaces a legacy system gradually by routing slices of traffic to new code",
+    "lets old and new run side by side until the old is retired"
+   ],
+   "use": "need to migrate a large legacy system without a big-bang rewrite",
+   "not": [
+    "requires freezing all features during a rewrite"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Horizontal scaling",
+   "tier": 1,
+   "says": [
+    "adds more machines or instances to share the load",
+    "needs the service to be stateless or to keep its state outside the instance"
+   ],
+   "use": "want to add capacity by running more copies",
+   "not": [
+    "adds more CPU and memory to one machine"
+   ],
+   "like": [
+    "Vertical scaling"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Vertical scaling",
+   "tier": 1,
+   "says": [
+    "adds more CPU or memory to an existing machine",
+    "hits a hardware ceiling and keeps a single point of failure"
+   ],
+   "use": "want a quick capacity boost without changing the application",
+   "not": [
+    "adds more instances behind a load balancer"
+   ],
+   "like": [
+    "Horizontal scaling"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "A load balancer",
+   "tier": 1,
+   "says": [
+    "spreads incoming requests across several instances",
+    "removes failed instances from rotation using health checks"
+   ],
+   "use": "need requests shared across several identical servers"
+  },
+  {
+   "group": "scale",
+   "subject": "A content delivery network",
+   "tier": 2,
+   "says": [
+    "serves static content from locations near users",
+    "reduces load on the origin server"
+   ],
+   "use": "want images and scripts delivered quickly worldwide"
+  },
+  {
+   "group": "scale",
+   "subject": "The cache-aside pattern",
+   "tier": 3,
+   "says": [
+    "has the application check the cache first and load from the database on a miss",
+    "fills the cache only with data that was actually requested"
+   ],
+   "use": "want a simple cache where the application controls what is stored",
+   "not": [
+    "writes to the cache and database together on every update"
+   ],
+   "like": [
+    "A write-through cache"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "A write-through cache",
+   "tier": 4,
+   "says": [
+    "writes to the cache and the underlying store together on each update",
+    "keeps cache and store consistent at the cost of slower writes"
+   ],
+   "use": "need reads always to find fresh data in the cache",
+   "not": [
+    "acknowledges a write before it reaches the store"
+   ],
+   "like": [
+    "The cache-aside pattern"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Cache invalidation",
+   "tier": 3,
+   "says": [
+    "removes or refreshes cached data when the source changes",
+    "is hard because stale reads can persist if an update is missed"
+   ],
+   "use": "see users getting out-of-date data after an update"
+  },
+  {
+   "group": "scale",
+   "subject": "A read replica",
+   "tier": 3,
+   "says": [
+    "serves read queries from a copy of the primary database",
+    "can return slightly stale data because of replication lag"
+   ],
+   "use": "have a read-heavy workload on a single database",
+   "not": [
+    "accepts writes independently of the primary"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Sharding",
+   "tier": 4,
+   "says": [
+    "splits data across databases by a key",
+    "makes queries that span shards harder"
+   ],
+   "use": "have more data or write load than one database server can handle",
+   "not": [
+    "copies the same data to every server"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Back pressure",
+   "tier": 4,
+   "says": [
+    "slows or rejects incoming work when a consumer cannot keep up",
+    "prevents unbounded queues"
+   ],
+   "use": "find a fast producer keeps overwhelming a slow consumer",
+   "like": [
+    "Load shedding"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Rate limiting",
+   "tier": 2,
+   "says": [
+    "caps the number of requests a client may make in a period",
+    "protects a service from abuse and overload"
+   ],
+   "use": "need to stop one client using all the capacity"
+  },
+  {
+   "group": "scale",
+   "subject": "A cache stampede",
+   "tier": 5,
+   "says": [
+    "happens when many requests miss an expired entry at once and hit the origin",
+    "is reduced by request coalescing or staggered expiry"
+   ],
+   "use": "see the database fall over whenever a popular cache entry expires",
+   "not": [
+    "happens when the cache is too small to hold anything"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "A hot key",
+   "tier": 5,
+   "says": [
+    "overloads one shard because traffic concentrates on a single key",
+    "is not fixed by adding more shards alone"
+   ],
+   "use": "see one shard saturated while the others sit idle"
+  },
+  {
+   "group": "cons",
+   "subject": "ACID",
+   "tier": 2,
+   "says": [
+    "guarantees atomic, consistent, isolated and durable transactions",
+    "is the traditional transaction model of relational databases"
+   ],
+   "use": "need a multi-row update to either fully happen or not at all"
+  },
+  {
+   "group": "cons",
+   "subject": "Eventual consistency",
+   "tier": 2,
+   "says": [
+    "lets replicas differ temporarily but converge once updates stop",
+    "accepts that a read may return stale data for a while"
+   ],
+   "use": "can tolerate briefly stale reads in return for availability",
+   "not": [
+    "guarantees every read sees the latest write"
+   ],
+   "like": [
+    "Strong consistency"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Strong consistency",
+   "tier": 3,
+   "says": [
+    "ensures a read returns the most recent completed write",
+    "costs latency or availability across replicas"
+   ],
+   "use": "must never show a user an outdated account balance",
+   "like": [
+    "Eventual consistency"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "The CAP theorem",
+   "tier": 3,
+   "says": [
+    "states that during a network partition a system must choose between consistency and availability",
+    "applies to the behaviour of a distributed system when a partition occurs"
+   ],
+   "use": "need to explain what a distributed store gives up during a network split",
+   "not": [
+    "lets a system keep all three guarantees during a partition"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Two-phase commit",
+   "tier": 4,
+   "says": [
+    "has a coordinator ask all participants to prepare and then commit",
+    "can block participants if the coordinator fails"
+   ],
+   "use": "need an atomic commit across several databases",
+   "like": [
+    "A saga"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Optimistic locking",
+   "tier": 3,
+   "says": [
+    "detects conflicting updates with a version check at write time",
+    "fits data that is rarely updated by two users at once"
+   ],
+   "use": "expect conflicts to be rare and want to avoid holding locks",
+   "not": [
+    "locks the record for the whole time a user edits it"
+   ],
+   "like": [
+    "Pessimistic locking"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Pessimistic locking",
+   "tier": 3,
+   "says": [
+    "locks a record while one transaction works on it",
+    "reduces concurrency but suits high-contention data"
+   ],
+   "use": "expect frequent competing updates to the same row",
+   "not": [
+    "only checks for conflicts when the write happens"
+   ],
+   "like": [
+    "Optimistic locking"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "A quorum",
+   "tier": 4,
+   "says": [
+    "requires a majority of replicas to agree on a read or write",
+    "lets a system tolerate the failure of a minority of nodes"
+   ],
+   "use": "need replicated writes to survive node failures while staying consistent"
+  },
+  {
+   "group": "cons",
+   "subject": "Split brain",
+   "tier": 5,
+   "says": [
+    "happens when partitioned nodes each believe they are the leader",
+    "is prevented by requiring a quorum to elect a leader"
+   ],
+   "use": "see two nodes accepting conflicting writes after a network partition"
+  },
+  {
+   "group": "res",
+   "subject": "A timeout",
+   "tier": 1,
+   "says": [
+    "bounds how long a caller waits for a response",
+    "stops a slow dependency from holding resources forever"
+   ],
+   "use": "want a caller to give up instead of waiting indefinitely",
+   "not": [
+    "makes the slow dependency faster"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Retry with exponential backoff",
+   "tier": 2,
+   "says": [
+    "repeats a failed call after increasing delays",
+    "avoids hammering a recovering service"
+   ],
+   "use": "face brief, transient failures when calling a dependency",
+   "not": [
+    "retries immediately in a tight loop"
+   ],
+   "like": [
+    "Jitter"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Jitter",
+   "tier": 4,
+   "says": [
+    "adds randomness to retry delays",
+    "stops many clients retrying at the same instant"
+   ],
+   "use": "see clients that failed together all retry together",
+   "like": [
+    "Retry with exponential backoff"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A circuit breaker",
+   "tier": 3,
+   "says": [
+    "stops calls to a failing dependency after repeated errors",
+    "probes now and then to see if the dependency has recovered"
+   ],
+   "use": "want to fail fast when a downstream service is clearly down",
+   "not": [
+    "retries every failed call indefinitely"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A bulkhead",
+   "tier": 4,
+   "says": [
+    "isolates resources such as thread pools per dependency",
+    "stops one failing dependency from exhausting capacity for everything"
+   ],
+   "use": "find one slow dependency can starve unrelated features of threads"
+  },
+  {
+   "group": "res",
+   "subject": "Load shedding",
+   "tier": 4,
+   "says": [
+    "drops low-priority work when overloaded to protect core functions",
+    "rejects excess requests rather than letting all of them time out"
+   ],
+   "use": "face overload and want the critical requests to keep succeeding",
+   "like": [
+    "Back pressure"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A health check",
+   "tier": 2,
+   "says": [
+    "lets a load balancer or orchestrator test whether an instance is working"
+   ],
+   "use": "need unhealthy instances to be taken out of rotation automatically"
+  },
+  {
+   "group": "res",
+   "subject": "Graceful degradation",
+   "tier": 3,
+   "says": [
+    "keeps core features working while non-essential ones are switched off"
+   ],
+   "use": "want checkout to keep working when recommendations are down"
+  },
+  {
+   "group": "res",
+   "subject": "Chaos engineering",
+   "tier": 4,
+   "says": [
+    "injects controlled failures to test how a system copes",
+    "is run to find weaknesses before real outages do"
+   ],
+   "use": "want evidence that failover really works before a real outage"
+  },
+  {
+   "group": "res",
+   "subject": "A retry storm",
+   "tier": 5,
+   "says": [
+    "happens when many clients retry a failing service and multiply its load",
+    "can turn a brief fault into a prolonged outage"
+   ],
+   "use": "see a recovering service knocked over again by returning clients"
+  },
+  {
+   "group": "api",
+   "subject": "REST",
+   "tier": 1,
+   "says": [
+    "models resources identified by URLs and handled with HTTP verbs",
+    "keeps each request independent so servers hold no client session state"
+   ],
+   "use": "want a widely understood API built on plain HTTP"
+  },
+  {
+   "group": "api",
+   "subject": "GraphQL",
+   "tier": 2,
+   "says": [
+    "lets the client request exactly the fields it needs from a single endpoint",
+    "can allow very expensive queries unless depth or cost is limited"
+   ],
+   "use": "have clients that need differently shaped data from the same backend"
+  },
+  {
+   "group": "api",
+   "subject": "gRPC",
+   "tier": 3,
+   "says": [
+    "uses Protocol Buffers over HTTP/2 for typed service-to-service calls",
+    "supports streaming in both directions"
+   ],
+   "use": "need efficient, strongly typed calls between internal services"
+  },
+  {
+   "group": "api",
+   "subject": "OpenAPI",
+   "tier": 2,
+   "says": [
+    "describes a REST API in a machine-readable specification",
+    "is used to generate documentation and client code"
+   ],
+   "use": "want documentation and client libraries generated from one API contract"
+  },
+  {
+   "group": "api",
+   "subject": "Cursor pagination",
+   "tier": 3,
+   "says": [
+    "returns a token pointing to the last item seen",
+    "stays stable when rows are inserted while paging"
+   ],
+   "use": "page through a feed that changes while users scroll",
+   "not": [
+    "jumps to a page by skipping a number of rows"
+   ],
+   "like": [
+    "Offset pagination"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "Offset pagination",
+   "tier": 2,
+   "says": [
+    "skips a number of rows and returns the next page",
+    "can repeat or miss items when data changes between requests"
+   ],
+   "not": [
+    "stays stable under concurrent inserts"
+   ],
+   "like": [
+    "Cursor pagination"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "API versioning",
+   "tier": 3,
+   "says": [
+    "lets a breaking change be released without breaking existing clients",
+    "runs old and new contract versions side by side for a time"
+   ],
+   "use": "must make a breaking change to a public API",
+   "like": [
+    "An additive change"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "An idempotent HTTP method",
+   "tier": 3,
+   "says": [
+    "can be repeated with the same effect as a single call",
+    "includes PUT and DELETE"
+   ],
+   "use": "want a client to be able to retry a request safely",
+   "not": [
+    "is the same thing as a safe method"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "The 429 status code",
+   "tier": 3,
+   "says": [
+    "tells a client it has sent too many requests",
+    "is often accompanied by a Retry-After header"
+   ],
+   "use": "must tell a client to slow down"
+  },
+  {
+   "group": "api",
+   "subject": "An additive change",
+   "tier": 4,
+   "says": [
+    "adds optional fields or endpoints without breaking existing consumers",
+    "is the safe default for evolving a public API"
+   ],
+   "use": "need to extend an API without forcing every client to update",
+   "not": [
+    "removes a field that clients still read"
+   ],
+   "like": [
+    "API versioning"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "Infrastructure as code",
+   "tier": 2,
+   "says": [
+    "defines servers and networks in version-controlled files",
+    "makes environments reproducible and reviewable"
+   ],
+   "use": "want the same environment recreated reliably and changes reviewed",
+   "not": [
+    "relies on engineers clicking through a console"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "IaaS",
+   "tier": 1,
+   "says": [
+    "rents virtual machines, storage and networks",
+    "leaves operating system patching to the customer"
+   ],
+   "like": [
+    "PaaS"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "PaaS",
+   "tier": 1,
+   "says": [
+    "runs customer code on a managed platform",
+    "hides operating system management from the customer"
+   ],
+   "use": "want to deploy code without managing servers' operating systems",
+   "like": [
+    "IaaS"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A container",
+   "tier": 2,
+   "says": [
+    "packages an application with its dependencies and shares the host kernel",
+    "starts faster than a full virtual machine"
+   ],
+   "use": "need the same package to run identically on a laptop and a server",
+   "not": [
+    "includes a complete guest operating system kernel"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "Kubernetes",
+   "tier": 3,
+   "says": [
+    "orchestrates containers across a cluster",
+    "restarts failed containers and keeps replicas at a declared desired state"
+   ],
+   "use": "need to run and heal many containers across many machines"
+  },
+  {
+   "group": "cloud",
+   "subject": "An availability zone",
+   "tier": 3,
+   "says": [
+    "is an isolated location within a cloud region",
+    "lets a service survive a data centre failure when spread across several"
+   ],
+   "use": "want a service to survive the loss of one data centre"
+  },
+  {
+   "group": "cloud",
+   "subject": "Blue-green deployment",
+   "tier": 3,
+   "says": [
+    "keeps two identical environments and switches traffic between them",
+    "allows instant rollback by switching traffic back"
+   ],
+   "use": "need to roll back a release within minutes",
+   "not": [
+    "sends a small percentage of traffic to the new version first"
+   ],
+   "like": [
+    "A canary release"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A canary release",
+   "tier": 3,
+   "says": [
+    "sends a small share of traffic to the new version first",
+    "limits the blast radius of a bad release"
+   ],
+   "use": "want a risky change tried on a few users before everyone",
+   "not": [
+    "switches all traffic at once"
+   ],
+   "like": [
+    "Blue-green deployment"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A feature flag",
+   "tier": 3,
+   "says": [
+    "decouples deploying code from releasing a feature",
+    "lets a feature be switched off without a redeploy"
+   ],
+   "use": "want to ship code dark and turn it on later"
+  },
+  {
+   "group": "cloud",
+   "subject": "The twelve-factor app",
+   "tier": 4,
+   "says": [
+    "keeps configuration in the environment instead of in code",
+    "treats logs as event streams and processes as stateless"
+   ],
+   "use": "want an application that is portable and easy to scale out"
+  },
+  {
+   "group": "cloud",
+   "subject": "A multi-region deployment",
+   "tier": 5,
+   "says": [
+    "runs in more than one region for disaster recovery or latency",
+    "adds data replication and consistency complexity"
+   ],
+   "use": "must survive the loss of an entire region",
+   "not": [
+    "is achieved simply by adding availability zones"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Least privilege",
+   "tier": 1,
+   "says": [
+    "grants only the access needed for the task",
+    "limits the damage a compromised account can do"
+   ],
+   "use": "are setting permissions for a service account"
+  },
+  {
+   "group": "sec",
+   "subject": "Defence in depth",
+   "tier": 2,
+   "says": [
+    "layers several independent controls so one failure is not fatal"
+   ],
+   "use": "want no single control failure to expose the system",
+   "not": [
+    "relies on one strong perimeter"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Secure by default",
+   "tier": 2,
+   "says": [
+    "ships with the safest configuration so insecurity needs an explicit choice"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Attack surface",
+   "tier": 2,
+   "says": [
+    "is the sum of points where an attacker can try to enter or extract data",
+    "shrinks when unused features and ports are removed"
+   ],
+   "use": "want to reduce the ways a system can be attacked"
+  },
+  {
+   "group": "sec",
+   "subject": "Zero trust",
+   "tier": 3,
+   "says": [
+    "does not trust a request just because it comes from inside the network",
+    "verifies identity and authorisation on every request"
+   ],
+   "use": "cannot rely on the office network as a security boundary",
+   "not": [
+    "trusts everything inside the firewall"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Threat modelling",
+   "tier": 3,
+   "says": [
+    "identifies what could go wrong with a design before it is built",
+    "asks what we are building, what can go wrong and what we will do about it"
+   ],
+   "use": "want to find design flaws before writing code"
+  },
+  {
+   "group": "sec",
+   "subject": "Fail closed",
+   "tier": 3,
+   "says": [
+    "denies access when a security check cannot be completed"
+   ],
+   "use": "want an outage of the auth service not to open the door",
+   "not": [
+    "allows access when the check is unavailable"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Secrets management",
+   "tier": 3,
+   "says": [
+    "stores credentials in a dedicated store instead of code or images",
+    "supports rotation and audit"
+   ],
+   "use": "find credentials committed in a repository"
+  },
+  {
+   "group": "sec",
+   "subject": "STRIDE",
+   "tier": 4,
+   "says": [
+    "categorises threats as spoofing, tampering, repudiation, disclosure, denial of service and elevation of privilege"
+   ],
+   "use": "want a checklist of threat categories for a threat model"
+  },
+  {
+   "group": "sec",
+   "subject": "A trust boundary",
+   "tier": 4,
+   "says": [
+    "marks where data moves between components with different trust levels",
+    "is where validation and authentication checks belong"
+   ],
+   "use": "need to decide where to validate untrusted input"
+  },
+  {
+   "group": "evo",
+   "subject": "A fitness function",
+   "tier": 4,
+   "says": [
+    "automatically checks that an architectural characteristic is preserved",
+    "runs in the build pipeline to guard against drift"
+   ],
+   "use": "want an architecture rule enforced automatically rather than by review"
+  },
+  {
+   "group": "evo",
+   "subject": "Conway's law",
+   "tier": 3,
+   "says": [
+    "observes that system design mirrors the communication structure of the organisation",
+    "is applied in reverse by shaping teams to get the desired architecture"
+   ],
+   "use": "find service boundaries always follow the org chart"
+  },
+  {
+   "group": "evo",
+   "subject": "A bounded context",
+   "tier": 4,
+   "says": [
+    "defines the boundary within which a domain model and its terms are consistent",
+    "lets the same word mean different things in different contexts"
+   ],
+   "use": "find one shared model is forcing every team into the same definitions"
+  },
+  {
+   "group": "evo",
+   "subject": "Coupling",
+   "tier": 2,
+   "says": [
+    "measures how much one component depends on another",
+    "is reduced by depending on interfaces instead of implementations"
+   ],
+   "like": [
+    "Cohesion"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Cohesion",
+   "tier": 2,
+   "says": [
+    "measures how closely the responsibilities inside a module belong together"
+   ],
+   "like": [
+    "Coupling"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Technical debt",
+   "tier": 2,
+   "says": [
+    "is the future cost incurred by choosing a quick solution now",
+    "grows interest in the form of slower changes if left unpaid"
+   ],
+   "use": "must explain why shortcuts make later work slower"
+  },
+  {
+   "group": "evo",
+   "subject": "Domain-driven design",
+   "tier": 3,
+   "says": [
+    "models software around the business domain using a shared language"
+   ],
+   "use": "find developers and domain experts misunderstand each other"
+  },
+  {
+   "group": "evo",
+   "subject": "Dependency inversion",
+   "tier": 3,
+   "says": [
+    "makes high-level code depend on abstractions rather than concrete details"
+   ],
+   "use": "want business logic not to depend on a specific database library"
+  },
+  {
+   "group": "evo",
+   "subject": "A walking skeleton",
+   "tier": 4,
+   "says": [
+    "is a thin end-to-end implementation of the main components",
+    "proves the architecture early by running through every layer"
+   ],
+   "use": "want to prove the main parts connect before building features"
+  },
+  {
+   "group": "evo",
+   "subject": "A reversible decision",
+   "tier": 4,
+   "says": [
+    "can be undone cheaply so it can be made quickly",
+    "needs less analysis than a hard-to-reverse one"
+   ],
+   "use": "are deciding how much deliberation a choice deserves"
+  },
+  {
+   "group": "anti",
+   "subject": "A distributed monolith",
+   "tier": 4,
+   "says": [
+    "has services that must be deployed together because of tight coupling",
+    "combines microservice network costs with monolith coupling"
+   ],
+   "use": "find every release needs five services deployed in lockstep"
+  },
+  {
+   "group": "anti",
+   "subject": "A big ball of mud",
+   "tier": 3,
+   "says": [
+    "has no discernible structure, with everything depending on everything"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "The golden hammer",
+   "tier": 2,
+   "says": [
+    "applies a favourite tool to every problem whether it fits or not"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Premature optimisation",
+   "tier": 2,
+   "says": [
+    "tunes performance before measuring where the bottleneck is"
+   ],
+   "use": "are tempted to rewrite code for speed with no profiling data"
+  },
+  {
+   "group": "anti",
+   "subject": "A single point of failure",
+   "tier": 2,
+   "says": [
+    "is one component whose failure stops the whole system"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Shared-database integration",
+   "tier": 4,
+   "says": [
+    "couples services through the same tables so a schema change breaks several",
+    "bypasses any service API as the contract between services"
+   ],
+   "use": "find a column rename in one service broke another"
+  },
+  {
+   "group": "anti",
+   "subject": "A cascading failure",
+   "tier": 4,
+   "says": [
+    "spreads from one failing component to the components that depend on it"
+   ],
+   "use": "see one slow service bring down callers several hops away"
+  },
+  {
+   "group": "anti",
+   "subject": "Resume-driven design",
+   "tier": 3,
+   "says": [
+    "picks technology for career benefit rather than project fit"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn stack",
+   "tier": 2,
+   "says": [
+    "uses Next.js with SQLite through Drizzle",
+    "is run by PM2 on a server behind Cloudflare"
+   ],
+   "use": "need to know what gglearn is built on",
+   "not": [
+    "uses plain PHP with MySQL"
+   ],
+   "like": [
+    "The ggmoney stack"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggmoney stack",
+   "tier": 3,
+   "says": [
+    "is plain PHP 8.1 or newer with no Composer packages",
+    "uses SQLite by default and MySQL on the live server"
+   ],
+   "use": "need to know what ggmoney is built on",
+   "not": [
+    "is built on Next.js"
+   ],
+   "like": [
+    "The gglearn stack"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggmoney per-driver schema",
+   "tier": 4,
+   "says": [
+    "keeps one schema per database driver instead of translating at runtime",
+    "accepts some duplication to avoid silent translation bugs in a finance app"
+   ],
+   "use": "wonder why a finance app duplicates schema files",
+   "not": [
+    "is generated at runtime from a single schema"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn request path",
+   "tier": 3,
+   "says": [
+    "runs from the visitor through Cloudflare and Apache to the PM2 app",
+    "has Apache terminate TLS through certbot and reverse-proxy to the app"
+   ],
+   "use": "need to trace a production request for logging or debugging",
+   "not": [
+    "lets visitors reach the app directly on a public port"
+   ],
+   "like": [
+    "The gglearn-web app"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn-web app",
+   "tier": 3,
+   "says": [
+    "is a PM2 process listening on 127.0.0.1 port 3400",
+    "is not exposed directly to the internet"
+   ],
+   "use": "wonder why the app cannot be reached directly from outside the server",
+   "like": [
+    "The gglearn request path"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The X-Forwarded-For hop rule",
+   "tier": 4,
+   "says": [
+    "picks the client address a fixed number of hops from the end of the header, defaulting to two",
+    "ignores whatever a visitor puts at the start of the header"
+   ],
+   "use": "need to know how the rate limiter finds the real client address",
+   "not": [
+    "trusts the first address in the header"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Apache Cloudflare snippet",
+   "tier": 5,
+   "says": [
+    "can restrict access to Cloudflare ranges so the proxy cannot be bypassed",
+    "takes effect only once the live virtual hosts include it"
+   ],
+   "use": "worry that someone reaching Apache directly could spoof the client address"
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn deploy script",
+   "tier": 3,
+   "says": [
+    "syncs files with rsync while excluding node_modules, build output, databases and environment files",
+    "takes a flock lock so two deploys cannot run at once",
+    "runs npm ci for repeatable installs"
+   ],
+   "use": "need to know what the deploy script does before touching the server"
+  },
+  {
+   "group": "co",
+   "subject": "The deploy schema push",
+   "tier": 4,
+   "says": [
+    "runs drizzle-kit with no force flag",
+    "stops the deploy instead of deleting rows when a change is destructive"
+   ],
+   "use": "worry that a deploy could silently delete data",
+   "not": [
+    "forces destructive changes through automatically"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The deploy health check",
+   "tier": 3,
+   "says": [
+    "requires the app to answer HTTP 200 several times",
+    "fails the deploy and shows PM2 error logs if it does not"
+   ],
+   "use": "want to know how the deploy verifies the app came up"
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn GitHub Actions workflow",
+   "tier": 2,
+   "says": [
+    "runs the deploy script on every push to main"
+   ],
+   "use": "wonder what triggers a production deploy"
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn rate limiter",
+   "tier": 4,
+   "says": [
+    "keeps its counters in process memory",
+    "must move its counters to the database if the process count changes"
+   ],
+   "use": "plan to run more than one gglearn process",
+   "not": [
+    "shares counters across processes automatically"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn README database warning",
+   "tier": 3,
+   "says": [
+    "says SQLite is for development and to move to Postgres before multi-user production use"
+   ],
+   "use": "are judging how far the current gglearn database setup scales"
+  },
+  {
+   "group": "co",
+   "subject": "The deploy remote shell step",
+   "tier": 5,
+   "says": [
+    "pipes remote steps into bash because the server login shell is fish",
+    "avoids fish failing on bash-only syntax"
+   ],
+   "use": "wonder why remote deploy commands are piped into bash"
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does an architecture decision record capture?",
+   "right": "One significant decision, its context and its consequences",
+   "wrong": [
+    "Every commit made to the codebase",
+    "The test results of the last release",
+    "The names of everyone on the team"
+   ],
+   "tier": 1,
+   "why": "An ADR records why a significant choice was made so later readers can revisit it."
+  },
+  {
+   "q": "What is the difference between latency and throughput?",
+   "right": "Latency is the time one request takes; throughput is how much work completes per unit of time",
+   "wrong": [
+    "Latency is work completed per second; throughput is the time one request takes",
+    "Latency applies only to databases and throughput only to networks",
+    "They are two names for the same measurement"
+   ],
+   "tier": 1,
+   "why": "They measure different things and can move independently."
+  },
+  {
+   "q": "Which approach adds capacity by running more copies of a service behind a load balancer?",
+   "right": "Horizontal scaling",
+   "wrong": [
+    "Vertical scaling",
+    "Cache warming",
+    "Schema normalisation"
+   ],
+   "tier": 1,
+   "why": "Horizontal scaling adds instances; vertical scaling enlarges one machine."
+  },
+  {
+   "q": "A service must be available 99.9% of the time over a 30-day month. Roughly how much downtime does that allow?",
+   "right": "About 43 minutes",
+   "wrong": [
+    "About 4 minutes",
+    "About 7 hours",
+    "About 2 minutes"
+   ],
+   "tier": 2,
+   "why": "0.1% of 43,200 minutes is about 43 minutes."
+  },
+  {
+   "q": "Which HTTP method is both safe and idempotent?",
+   "right": "GET",
+   "wrong": [
+    "POST",
+    "PUT",
+    "DELETE"
+   ],
+   "tier": 2,
+   "why": "GET does not change state; PUT and DELETE are idempotent but not safe."
+  },
+  {
+   "q": "Which C4 diagram shows the web app, API and database as separate boxes with their technologies?",
+   "right": "The container diagram",
+   "wrong": [
+    "The system context diagram",
+    "The component diagram",
+    "The code diagram"
+   ],
+   "tier": 2,
+   "why": "Containers are the separately runnable parts of a system."
+  },
+  {
+   "q": "Which caching pattern does this code show?",
+   "right": "Cache-aside",
+   "wrong": [
+    "Write-through",
+    "Write-behind",
+    "Read replica routing"
+   ],
+   "tier": 2,
+   "why": "The application checks the cache, loads from the database on a miss and fills the cache itself.",
+   "code": "async function getUser(id) {\n  const hit = await cache.get(id);\n  if (hit) return hit;\n  const user = await db.find(id);\n  await cache.set(id, user, 60);\n  return user;\n}"
+  },
+  {
+   "q": "What does an HTTP 429 response mean?",
+   "right": "The client has sent too many requests",
+   "wrong": [
+    "The server is down for maintenance",
+    "The request took too long to arrive",
+    "The request body was too large"
+   ],
+   "tier": 2,
+   "why": "429 is the rate-limiting status; Retry-After may say when to try again."
+  },
+  {
+   "q": "What problem does the random factor in this retry delay solve?",
+   "right": "Clients that failed together do not all retry at the same instant",
+   "wrong": [
+    "It makes every retry succeed",
+    "It removes the need for a timeout",
+    "It guarantees the delay never exceeds the cap"
+   ],
+   "tier": 3,
+   "why": "Jitter spreads retries so they do not arrive as a synchronized wave.",
+   "code": "delay = Math.min(cap, base * 2 ** attempt) * Math.random();"
+  },
+  {
+   "q": "Which is a real cost of moving from a monolith to microservices?",
+   "right": "Calls become network calls that can fail or be slow, so partial failure must be handled",
+   "wrong": [
+    "Code can no longer be tested",
+    "Teams can no longer deploy independently",
+    "Data can no longer be stored in a database"
+   ],
+   "tier": 3,
+   "why": "Distribution adds latency, partial failure and operational overhead."
+  },
+  {
+   "q": "During a network partition, what does a CP system do?",
+   "right": "Rejects or delays some requests to keep data consistent",
+   "wrong": [
+    "Accepts writes on both sides and merges them later",
+    "Shuts down permanently",
+    "Silently serves stale data from every node"
+   ],
+   "tier": 3,
+   "why": "CP systems give up availability for consistency during a partition."
+  },
+  {
+   "q": "What does this statement do if another transaction already changed the row?",
+   "right": "It updates zero rows, so the caller knows there was a conflict",
+   "wrong": [
+    "It overwrites the other change silently",
+    "It blocks until the other transaction commits",
+    "It always raises a deadlock error"
+   ],
+   "tier": 3,
+   "why": "The version check in WHERE makes the write fail to match, which is optimistic locking.",
+   "code": "UPDATE accounts\nSET balance = ?, version = version + 1\nWHERE id = ? AND version = ?;"
+  },
+  {
+   "q": "Which API style lets the client choose the exact fields returned from a single endpoint?",
+   "right": "GraphQL",
+   "wrong": [
+    "REST with one URL per resource",
+    "Webhooks",
+    "gRPC with fixed message definitions"
+   ],
+   "tier": 3,
+   "why": "GraphQL queries name the fields wanted."
+  },
+  {
+   "q": "Why does offset pagination misbehave on a feed with frequent inserts?",
+   "right": "Rows shift between requests, so items can repeat or be skipped",
+   "wrong": [
+    "Offsets are limited to 100 rows",
+    "It cannot be sorted",
+    "It requires a POST request"
+   ],
+   "tier": 3,
+   "why": "Cursor pagination anchors to an item instead of a position."
+  },
+  {
+   "q": "What does a circuit breaker do while it is open?",
+   "right": "Fails calls immediately without contacting the dependency",
+   "wrong": [
+    "Retries every call three times",
+    "Sends all traffic to the database",
+    "Queues calls forever"
+   ],
+   "tier": 3,
+   "why": "Open means calls are short-circuited until a probe suggests recovery."
+  },
+  {
+   "q": "Why is rollback fast in a blue-green deployment?",
+   "right": "The previous environment is still running and traffic is switched back",
+   "wrong": [
+    "The database is restored from backup automatically",
+    "The new code is recompiled",
+    "Users are asked to refresh"
+   ],
+   "tier": 3,
+   "why": "Keeping the old environment warm makes rollback a traffic switch."
+  },
+  {
+   "q": "What does a feature flag separate?",
+   "right": "Deploying code from releasing the feature to users",
+   "wrong": [
+    "Code from tests",
+    "The frontend from the backend",
+    "Reads from writes"
+   ],
+   "tier": 3,
+   "why": "Flags let code ship dark and be enabled or disabled without a deploy."
+  },
+  {
+   "q": "Three services each need to react to every order-placed event. Which fits best?",
+   "right": "Publish-subscribe, so each service receives its own copy",
+   "wrong": [
+    "A single queue with three competing consumers",
+    "Each service guessing from the order count",
+    "One shared in-memory variable"
+   ],
+   "tier": 3,
+   "why": "Competing consumers split messages; pub/sub copies them to every subscriber."
+  },
+  {
+   "q": "What is the first question in a basic threat model?",
+   "right": "What are we building?",
+   "wrong": [
+    "Which scanner should we buy?",
+    "Who will be blamed for a breach?",
+    "How many tests exist?"
+   ],
+   "tier": 3,
+   "why": "Threat modelling starts by understanding the system, then asking what can go wrong."
+  },
+  {
+   "q": "A reporting service only reads orders, but its database account can drop tables. Which principle does this break?",
+   "right": "Least privilege",
+   "wrong": [
+    "Separation of concerns",
+    "Single responsibility",
+    "Loose coupling"
+   ],
+   "tier": 3,
+   "why": "The account holds more access than its task needs."
+  },
+  {
+   "q": "A team of five with one product and no scaling problems wants to start with twelve microservices. What should you do first?",
+   "right": "Start with a modular monolith with clear module boundaries and split later if a real need appears",
+   "wrong": [
+    "Build all twelve so the design is future-proof",
+    "Give every service the same shared database and call it micro",
+    "Skip boundaries because a monolith needs no structure"
+   ],
+   "tier": 3,
+   "why": "Distribution has a cost; boundaries keep the option to split open."
+  },
+  {
+   "q": "Users see old product prices for minutes after an update. Prices are cached with a 10 minute TTL. What is the most direct fix if prices must refresh quickly?",
+   "right": "Invalidate or update the cache entry when the price changes, keeping a short TTL as a backstop",
+   "wrong": [
+    "Increase the TTL so fewer misses occur",
+    "Remove the database index",
+    "Add more web servers"
+   ],
+   "tier": 3,
+   "why": "Event-driven invalidation bounds staleness; TTL alone does not."
+  },
+  {
+   "q": "A new engineer asks why the team chose a document database two years ago and nobody remembers. What practice would have prevented this?",
+   "right": "Writing an architecture decision record",
+   "wrong": [
+    "Using longer sprints",
+    "Adding more unit tests",
+    "Enforcing a stricter code style"
+   ],
+   "tier": 3,
+   "why": "ADRs preserve context and consequences next to the code."
+  },
+  {
+   "q": "A service is slow under load but the load balancer keeps sending it traffic. What helps?",
+   "right": "Health checks that remove unhealthy instances from rotation",
+   "wrong": [
+    "A longer DNS TTL",
+    "Vertical scaling only",
+    "Sticky sessions"
+   ],
+   "tier": 3,
+   "why": "Health checks let the balancer stop routing to failing instances."
+  },
+  {
+   "q": "A one-day marketing event will cause a large spike, then traffic falls. Which approach fits cost best?",
+   "right": "Elastic scaling that adds capacity for the event and removes it afterwards",
+   "wrong": [
+    "Permanently buying peak capacity",
+    "Vertically scaling a single server",
+    "Turning off rate limiting"
+   ],
+   "tier": 3,
+   "why": "Elasticity avoids paying for idle capacity."
+  },
+  {
+   "q": "A payment API client times out and retries, and some customers were charged twice. What should the design add?",
+   "right": "An idempotency key so the server applies a repeated request only once",
+   "wrong": [
+    "Sticky sessions on the load balancer",
+    "A faster database",
+    "A switch from POST to GET"
+   ],
+   "tier": 4,
+   "why": "The key lets the server recognise a retry of the same operation."
+  },
+  {
+   "q": "An order service updates its database and then publishes an event, but a crash between the two sometimes loses the event. Which pattern fixes this?",
+   "right": "The transactional outbox",
+   "wrong": [
+    "Publishing first and updating the database afterwards",
+    "Increasing the message broker's memory",
+    "Adding a retry around the publish only"
+   ],
+   "tier": 4,
+   "why": "Writing the event in the same transaction makes the update and the event atomic."
+  },
+  {
+   "q": "Checkout calls a recommendations service that has become slow and checkout threads are all waiting. What should you add first?",
+   "right": "A timeout and circuit breaker around the call, with a fallback such as showing no recommendations",
+   "wrong": [
+    "More checkout servers",
+    "Immediate retries with no delay",
+    "A larger unlimited thread pool"
+   ],
+   "tier": 4,
+   "why": "Fail fast and degrade gracefully so a non-critical dependency cannot block checkout."
+  },
+  {
+   "q": "After a bad release you want the next one to expose problems to as few users as possible. Which approach fits?",
+   "right": "A canary release",
+   "wrong": [
+    "A big-bang replacement during off hours",
+    "Deploying to everyone and watching the logs",
+    "Asking users to opt in to bug reports"
+   ],
+   "tier": 4,
+   "why": "A canary limits the blast radius of a defect."
+  },
+  {
+   "q": "Two services read and write the same tables and a column rename broke the other service. What is the underlying problem and fix?",
+   "right": "Shared-database integration; give each service ownership of its data and expose it through an API or events",
+   "wrong": [
+    "Missing indexes; add them",
+    "Too few replicas; add read replicas",
+    "A wrong column type; use a larger type"
+   ],
+   "tier": 4,
+   "why": "A shared schema is a hidden contract that couples services."
+  },
+  {
+   "q": "Users in two regions edit the same shopping cart and the link between regions fails for a while. The business wants carts to always accept items. What should you choose?",
+   "right": "Favour availability with eventual consistency and merge carts when the link returns",
+   "wrong": [
+    "Reject all cart updates until the regions reconnect",
+    "Use two-phase commit across regions for every add",
+    "Lock the cart in one region permanently"
+   ],
+   "tier": 4,
+   "why": "Carts tolerate merging; blocking adds loses sales."
+  },
+  {
+   "q": "Architecture rules forbid the UI layer calling the database, but violations keep appearing in pull requests. What fits evolutionary architecture?",
+   "right": "Add an automated fitness function to the build that fails on such dependencies",
+   "wrong": [
+    "Write a stricter wiki page",
+    "Review every pull request manually forever",
+    "Merge the layers"
+   ],
+   "tier": 4,
+   "why": "Automated checks keep an architectural rule from eroding."
+  },
+  {
+   "q": "A mobile app and a web app need very different payloads from one backend, and the shared API grows many flags. What helps?",
+   "right": "A backend for frontend per client type",
+   "wrong": [
+    "A larger load balancer",
+    "A write-behind cache",
+    "Sharding the API"
+   ],
+   "tier": 4,
+   "why": "A tailored API per client avoids one overloaded general API."
+  },
+  {
+   "q": "A rate limiter behind a proxy is bypassed by attackers sending a forged X-Forwarded-For header. What is the right fix?",
+   "right": "Trust only the entries added by your own proxies, counting a fixed number of hops from the end of the header",
+   "wrong": [
+    "Trust the first address in the header",
+    "Block every request carrying the header",
+    "Rate-limit by user agent instead"
+   ],
+   "tier": 4,
+   "why": "Each hop appends the address it saw, so only the tail is trustworthy."
+  },
+  {
+   "q": "A deploy's schema push would drop a column holding data. How should a safe pipeline behave?",
+   "right": "Stop and fail so a person can plan a safe migration",
+   "wrong": [
+    "Force the push automatically",
+    "Skip schema changes and continue the deploy",
+    "Silently rename the column"
+   ],
+   "tier": 4,
+   "why": "Destructive changes need a deliberate, reviewed migration."
+  },
+  {
+   "q": "Sessions live in each instance's memory and users are logged out as the load balancer moves them between three instances. What is the fix?",
+   "right": "Move session state to a shared store or use signed tokens so any instance can serve the user",
+   "wrong": [
+    "Add more instances",
+    "Raise the session timeout",
+    "Disable the health checks"
+   ],
+   "tier": 4,
+   "why": "Horizontal scaling needs state outside the instance."
+  },
+  {
+   "q": "A cache entry for a popular page expires and thousands of requests hit the database at once, which falls over. What mitigates this?",
+   "right": "Request coalescing so one request refreshes the entry, with staggered expiry",
+   "wrong": [
+    "Shortening every TTL to one second",
+    "Removing the cache",
+    "Adding indexes only"
+   ],
+   "tier": 5,
+   "why": "A stampede is many simultaneous misses on one key."
+  },
+  {
+   "q": "A sharded user table uses user id modulo shard count, and one celebrity account saturates its shard. What is the best next step?",
+   "right": "Treat the hot key specifically, for example by caching or splitting its load, because adding shards will not spread one key",
+   "wrong": [
+    "Double the number of shards",
+    "Enlarge hardware on every shard",
+    "Change to offset pagination"
+   ],
+   "tier": 5,
+   "why": "A single key always maps to one shard."
+  },
+  {
+   "q": "A legacy monolith must be replaced over two years while features keep shipping. Which approach fits?",
+   "right": "The strangler fig pattern, routing slices of traffic to new code over time",
+   "wrong": [
+    "Freezing features and rewriting in parallel before a cut-over",
+    "Rewriting the least important parts first and hiding it",
+    "Running two copies and letting users choose"
+   ],
+   "tier": 5,
+   "why": "Incremental replacement keeps delivering value and limits risk."
+  },
+  {
+   "q": "Teams are split by layer (frontend, backend, database) and every feature needs three teams. What does Conway's law suggest leaders consider?",
+   "right": "Reorganising into cross-functional teams aligned to the desired service boundaries",
+   "wrong": [
+    "Adding a weekly coordination meeting",
+    "Merging services in code to match the teams",
+    "Nothing, since organisation does not affect architecture"
+   ],
+   "tier": 5,
+   "why": "System structure follows communication structure, so shape the teams to get the design."
+  },
+  {
+   "q": "Management wants 99.99% availability for an internal tool used only in office hours. What should the architect do first?",
+   "right": "Ask what an hour of downtime costs and derive the target from the business need",
+   "wrong": [
+    "Commit to active-active multi-region",
+    "Accept the number and buy more servers",
+    "Promise it for the database only"
+   ],
+   "tier": 5,
+   "why": "Targets should come from business impact; each nine adds cost."
+  },
+  {
+   "q": "A saga spans payment, stock and shipping. Shipping fails after payment succeeded and stock was reserved. What should happen?",
+   "right": "Run compensating actions such as refunding the payment and releasing the stock",
+   "wrong": [
+    "Issue a single database ROLLBACK across all three",
+    "Retry shipping forever",
+    "Delete the order records"
+   ],
+   "tier": 5,
+   "why": "Sagas undo completed local steps with compensations."
+  },
+  {
+   "q": "The only argument for adopting microservices is that a famous company uses them. What is the sound response?",
+   "right": "Evaluate team size, change rate, scaling needs and operational maturity, and record the decision with its trade-offs",
+   "wrong": [
+    "Adopt them because they are proven at scale",
+    "Reject them because the company is larger",
+    "Decide by a team vote"
+   ],
+   "tier": 5,
+   "why": "Decisions should rest on your own constraints, written down so they can be revisited."
+  },
+  {
+   "q": "A user posts a comment but does not see it on reload because reads go to a lagging replica. What is the lowest-cost fix?",
+   "right": "Route that user's reads to the primary for a short time after a write",
+   "wrong": [
+    "Make every read use global consensus",
+    "Add more replicas",
+    "Increase the cache TTL"
+   ],
+   "tier": 5,
+   "why": "Read-your-writes can be provided selectively without giving up replicas."
+  },
+  {
+   "q": "Two nodes both accept writes after a network split because each believes it is the leader. What would have prevented it?",
+   "right": "Requiring a quorum to elect and keep a leader",
+   "wrong": [
+    "Adding a longer timeout",
+    "Adding another cache layer",
+    "Using a faster network"
+   ],
+   "tier": 5,
+   "why": "Only the side holding a majority may act as leader."
+  },
+  {
+   "q": "Which process manager runs the gglearn Next.js app in production?",
+   "right": "PM2",
+   "wrong": [
+    "Kubernetes",
+    "Docker Swarm",
+    "Supervisor"
+   ],
+   "tier": 2,
+   "why": "The gglearn-web app is run by PM2 behind Apache and Cloudflare."
+  },
+  {
+   "q": "What triggers a gglearn production deploy?",
+   "right": "A push to main runs a GitHub Actions workflow that calls the deploy script",
+   "wrong": [
+    "A manual upload through FTP",
+    "A nightly cron job on the database",
+    "Any pull request being opened"
+   ],
+   "tier": 2,
+   "why": "The workflow runs the deploy script on every push to main."
+  },
+  {
+   "q": "Why does the gglearn deploy script take a flock lock?",
+   "right": "So two deploys cannot run at the same time",
+   "wrong": [
+    "To encrypt the database",
+    "To lock user accounts during a release",
+    "To speed up rsync"
+   ],
+   "tier": 3,
+   "why": "The lock serialises deploys."
+  },
+  {
+   "q": "Why does the live ggmoney server use MySQL?",
+   "right": "The machine already had MySQL 8 and a PHP driver, so no new server packages were needed",
+   "wrong": [
+    "SQLite cannot be used from PHP",
+    "The framework requires it",
+    "MySQL is faster at money arithmetic"
+   ],
+   "tier": 3,
+   "why": "The choice followed what the server already had."
+  },
+  {
+   "q": "Which files does the gglearn deploy keep out of the rsync so secrets and data never travel with code?",
+   "right": "node_modules, build output, databases and environment files",
+   "wrong": [
+    "Source files and package.json",
+    "Only the README",
+    "Nothing; the whole folder is copied"
+   ],
+   "tier": 3,
+   "why": "Excluding databases and environment files protects data and secrets."
+  },
+  {
+   "q": "Why are the remote deploy steps piped into bash?",
+   "right": "The server's login shell is fish, which cannot parse some bash syntax",
+   "wrong": [
+    "Bash is faster than fish",
+    "PM2 only runs under bash",
+    "GitHub Actions forbids other shells"
+   ],
+   "tier": 4,
+   "why": "Piping into bash avoids fish syntax problems."
+  },
+  {
+   "q": "gglearn's rate limiter keeps counters in process memory and the team plans to run four PM2 processes. What must change first?",
+   "right": "Move the counters to shared storage such as the database, since per-process counts would differ and reset on restart",
+   "wrong": [
+    "Nothing, since the counters synchronise automatically",
+    "Raise every limit fourfold",
+    "Disable rate limiting"
+   ],
+   "tier": 5,
+   "why": "In-memory counters are only valid while the app runs as a single process."
+  },
+  {
+   "q": "Why does ggmoney keep a separate schema per database driver rather than translating at runtime?",
+   "right": "A silent translation bug in a finance app is worse than some duplication",
+   "wrong": [
+    "PHP cannot translate SQL",
+    "It reduces the number of files",
+    "A regulator requires separate files"
+   ],
+   "tier": 4,
+   "why": "Explicit schemas trade duplication for safety."
+  },
+  {
+   "q": "What does the gglearn deploy do when a schema change would delete rows?",
+   "right": "It stops and fails because the drizzle-kit push is run without a force flag",
+   "wrong": [
+    "It deletes the rows and continues",
+    "It forces the push after a delay",
+    "It skips the build and restarts PM2"
+   ],
+   "tier": 4,
+   "why": "There is deliberately no force flag so destructive changes must be handled by a person."
+  },
+  {
+   "q": "After deploying, how does the gglearn deploy script check the release?",
+   "right": "It requires the app to answer HTTP 200 several times and fails, showing PM2 error logs, if it does not",
+   "wrong": [
+    "It only checks that PM2 reports online",
+    "It runs the full test suite on the server",
+    "It asks a person to open the site"
+   ],
+   "tier": 3,
+   "why": "The check fails loudly and shows logs."
+  },
+  {
+   "q": "Why is the gglearn-web app bound to 127.0.0.1 port 3400?",
+   "right": "So it is reachable only through Apache rather than directly from the internet",
+   "wrong": [
+    "Port 3400 is required by Next.js",
+    "To let Cloudflare connect to it directly",
+    "To disable TLS"
+   ],
+   "tier": 4,
+   "why": "Binding to loopback keeps the app behind the reverse proxy."
+  },
+  {
+   "q": "You must choose between strong consistency and availability for a stock-reservation counter that must never oversell. What do you choose and accept?",
+   "right": "Strong consistency, accepting higher latency or rejected requests during failures",
+   "wrong": [
+    "Eventual consistency, accepting overselling",
+    "Availability, merging reservations later",
+    "No consistency model, using a cache"
+   ],
+   "tier": 4,
+   "why": "Overselling is a correctness failure, so consistency wins over availability for this data."
+  },
+  {
+   "q": "Which statement about the CAP theorem is correct?",
+   "right": "It forces the consistency versus availability choice only while a network partition is happening",
+   "wrong": [
+    "It says a system can pick any two of the three at all times",
+    "It applies only to single-node databases",
+    "It says partitions never occur in the cloud"
+   ],
+   "tier": 5,
+   "why": "Outside a partition a system can offer both, though PACELC notes the latency trade-off."
+  }
+ ]
+}

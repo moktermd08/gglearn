@@ -1,0 +1,2677 @@
+{
+ "slug": "sdlc-backend",
+ "name": "5. Backend development",
+ "description": "APIs, business logic, jobs, queues, caching, search, storage.",
+ "roles": "developer",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "rest": "HTTP method or REST concept",
+  "status": "HTTP status code",
+  "err": "error-handling or input-safety practice",
+  "evo": "API evolution or pagination concept",
+  "layer": "backend layer or design pattern",
+  "auth": "authentication or authorization concept",
+  "job": "background job or queue concept",
+  "cache": "caching technique",
+  "perf": "performance or throttling technique",
+  "data": "transaction or consistency concept",
+  "files": "file storage safeguard",
+  "obs": "logging or observability practice",
+  "ext": "webhook, secret or external-service practice",
+  "co": "gglearn or ggsocial backend fact"
+ },
+ "cards": [
+  {
+   "group": "rest",
+   "subject": "A resource-oriented URL",
+   "tier": 1,
+   "says": [
+    "names a thing with a noun such as /orders/42",
+    "leaves the action to the HTTP method instead of a verb in the path"
+   ],
+   "use": "design the address of an endpoint that fetches one order",
+   "not": [
+    "puts the action in the path, as in /getOrder?id=42"
+   ]
+  },
+  {
+   "group": "rest",
+   "subject": "GET",
+   "tier": 1,
+   "says": [
+    "reads a resource without changing server state",
+    "is safe to repeat and to cache"
+   ],
+   "use": "need to fetch data and change nothing",
+   "not": [
+    "is the right method for creating a record when the body is large"
+   ],
+   "like": [
+    "POST"
+   ]
+  },
+  {
+   "group": "rest",
+   "subject": "POST",
+   "tier": 1,
+   "says": [
+    "creates a new subordinate resource or triggers processing",
+    "is not idempotent by default, so a repeat can create a second record"
+   ],
+   "use": "need the server to assign the id of a new record",
+   "not": [
+    "is idempotent by definition"
+   ],
+   "like": [
+    "PUT",
+    "PATCH"
+   ]
+  },
+  {
+   "group": "rest",
+   "subject": "PUT",
+   "tier": 2,
+   "says": [
+    "replaces the whole representation at a known URL",
+    "is idempotent, so sending it twice leaves the same end state"
+   ],
+   "use": "need to overwrite a resource completely at an address the client already knows",
+   "not": [
+    "updates only the fields that appear in the body"
+   ],
+   "like": [
+    "PATCH",
+    "POST"
+   ]
+  },
+  {
+   "group": "rest",
+   "subject": "PATCH",
+   "tier": 2,
+   "says": [
+    "applies a partial change to an existing resource",
+    "sends only the fields that should change"
+   ],
+   "use": "need to change one field of a large resource",
+   "not": [
+    "replaces the entire resource and clears omitted fields"
+   ],
+   "like": [
+    "PUT"
+   ]
+  },
+  {
+   "group": "rest",
+   "subject": "DELETE",
+   "tier": 2,
+   "says": [
+    "removes a resource",
+    "is idempotent because a repeat leaves the same end state"
+   ],
+   "use": "need to remove a record the client can address",
+   "not": [
+    "must return the deleted record in the response body"
+   ]
+  },
+  {
+   "group": "rest",
+   "subject": "Statelessness",
+   "tier": 3,
+   "says": [
+    "means each request carries everything the server needs to handle it",
+    "lets any server instance answer any request"
+   ],
+   "use": "need to add servers behind a load balancer without sticky routing",
+   "not": [
+    "requires the server to remember the previous request from each client"
+   ]
+  },
+  {
+   "group": "rest",
+   "subject": "An idempotent method",
+   "tier": 3,
+   "says": [
+    "leaves the same server state whether it is sent once or many times",
+    "makes a blind client retry safe"
+   ],
+   "use": "must decide whether a timed-out request can be retried automatically",
+   "not": [
+    "guarantees the response body is identical each time"
+   ]
+  },
+  {
+   "group": "rest",
+   "subject": "CORS",
+   "tier": 3,
+   "says": [
+    "is a browser-enforced policy that decides which other origins may read a response",
+    "is configured by the server through Access-Control headers"
+   ],
+   "use": "need a web page on one origin to call your API on another",
+   "not": [
+    "is an authentication mechanism that stops non-browser clients"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Status 201",
+   "tier": 2,
+   "says": [
+    "reports that a new resource was created",
+    "usually comes with a Location header pointing at the new resource"
+   ],
+   "use": "answer a successful create request",
+   "not": [
+    "is the normal reply to a read"
+   ],
+   "like": [
+    "Status 204"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Status 204",
+   "tier": 2,
+   "says": [
+    "reports success with no response body",
+    "is a common reply to a successful DELETE"
+   ],
+   "use": "succeed but have nothing to return",
+   "not": [
+    "must carry a JSON body describing the result"
+   ],
+   "like": [
+    "Status 201"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Status 400",
+   "tier": 1,
+   "says": [
+    "reports a request the server cannot parse or understand, such as broken JSON",
+    "blames the client rather than the server"
+   ],
+   "use": "reject a body that is not valid JSON",
+   "not": [
+    "means the server crashed while handling the request"
+   ],
+   "like": [
+    "Status 409"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Status 401",
+   "tier": 2,
+   "says": [
+    "means the caller is not authenticated or sent invalid credentials",
+    "is normally paired with a WWW-Authenticate header"
+   ],
+   "use": "answer a request with a missing or expired token",
+   "not": [
+    "means the caller is known but lacks the role"
+   ],
+   "like": [
+    "Status 403"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Status 403",
+   "tier": 2,
+   "says": [
+    "means the caller is identified but not permitted to do this",
+    "does not improve if the caller simply logs in again"
+   ],
+   "use": "refuse a logged-in user who lacks the needed role",
+   "not": [
+    "means the credentials were missing from the request"
+   ],
+   "like": [
+    "Status 401"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Status 404",
+   "tier": 1,
+   "says": [
+    "reports that nothing exists at the requested URL",
+    "is sometimes returned instead of 403 so a resource's existence is not revealed"
+   ],
+   "use": "hide that another user's record exists",
+   "not": [
+    "means the server is temporarily down"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Status 409",
+   "tier": 3,
+   "says": [
+    "reports a conflict with the current state of the resource",
+    "fits a duplicate unique value or a stale version on update"
+   ],
+   "use": "reject a signup whose email address is already registered",
+   "not": [
+    "means the request body could not be parsed"
+   ],
+   "like": [
+    "Status 400"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Status 429",
+   "tier": 2,
+   "says": [
+    "tells the caller it has exceeded a rate limit",
+    "is often paired with a Retry-After header"
+   ],
+   "use": "turn away a client that is sending too many requests",
+   "not": [
+    "means the server has run out of disk space"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A consistent error shape",
+   "tier": 2,
+   "says": [
+    "returns the same fields for every failure, such as a code and a message",
+    "lets clients handle errors with one code path"
+   ],
+   "use": "design what every endpoint returns on failure",
+   "not": [
+    "lets each endpoint invent its own error format for flexibility"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A machine-readable error code",
+   "tier": 3,
+   "says": [
+    "gives clients a stable identifier to branch on",
+    "stays the same even when the human message is reworded"
+   ],
+   "use": "let a client show a specific prompt when a coupon has expired",
+   "not": [
+    "is best replaced by matching on the message text"
+   ],
+   "like": [
+    "A consistent error shape"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "Hiding internal details",
+   "tier": 2,
+   "says": [
+    "keeps stack traces and SQL text out of responses",
+    "logs the full error server-side and returns a generic message with a request id"
+   ],
+   "use": "stop clients seeing database errors on a 500",
+   "not": [
+    "helps debugging by returning the stack trace to the caller"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "Boundary validation",
+   "tier": 2,
+   "says": [
+    "checks type, length, range and format of input at the point it enters the system",
+    "rejects bad input before any business logic runs"
+   ],
+   "use": "want bad data stopped at the door",
+   "not": [
+    "is needed only for requests from anonymous users"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A field allowlist",
+   "tier": 3,
+   "says": [
+    "accepts only the fields the endpoint names and ignores or rejects the rest",
+    "stops a client from setting fields it should not control"
+   ],
+   "use": "bind a request body onto a database record safely",
+   "not": [
+    "lists the fields that are forbidden and accepts everything else"
+   ],
+   "like": [
+    "Mass assignment"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "Mass assignment",
+   "tier": 4,
+   "says": [
+    "is a flaw where client-supplied fields are copied straight onto a model",
+    "lets a caller set fields such as isAdmin by adding them to the body"
+   ],
+   "use": "spot why User.update(req.body) is dangerous",
+   "not": [
+    "is a performance technique that updates many rows in one query"
+   ],
+   "like": [
+    "A field allowlist"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A parameterized query",
+   "tier": 1,
+   "says": [
+    "sends values to the database separately from the SQL text",
+    "prevents SQL injection from user input"
+   ],
+   "use": "build a query that includes an email typed by a user",
+   "not": [
+    "is made safe by escaping quotes in a concatenated string by hand"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A circuit breaker",
+   "tier": 4,
+   "says": [
+    "stops calls to a failing dependency for a cooling-off period",
+    "fails fast instead of piling up slow requests"
+   ],
+   "use": "keep a down payment provider from exhausting your threads",
+   "not": [
+    "retries every failed call immediately until it works"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "Graceful degradation",
+   "tier": 3,
+   "says": [
+    "keeps core features working when a dependency fails",
+    "serves a fallback such as a simpler result in place of the failed part"
+   ],
+   "use": "keep a product page up while recommendations are unavailable",
+   "not": [
+    "returns a 500 for the whole page if any part fails"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A bulkhead",
+   "tier": 5,
+   "says": [
+    "isolates resources such as thread or connection pools per dependency",
+    "stops one slow dependency from starving the others"
+   ],
+   "use": "prevent one slow downstream from consuming every worker",
+   "not": [
+    "is a cache placed in front of the database"
+   ],
+   "like": [
+    "A circuit breaker"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Offset pagination",
+   "tier": 2,
+   "says": [
+    "skips a number of rows and returns the next page",
+    "gets slower as the offset grows because skipped rows are still read"
+   ],
+   "use": "build a simple page-number list over a small table",
+   "not": [
+    "stays stable when rows are inserted while the client pages"
+   ],
+   "like": [
+    "Cursor pagination"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Cursor pagination",
+   "tier": 4,
+   "says": [
+    "continues from a marker for the last item seen",
+    "stays stable when rows are inserted or deleted during paging"
+   ],
+   "use": "page through a feed that changes constantly",
+   "not": [
+    "lets a client jump straight to page 50"
+   ],
+   "like": [
+    "Offset pagination"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "A page size cap",
+   "tier": 2,
+   "says": [
+    "limits how many items one request may ask for",
+    "protects the server from a client requesting everything at once"
+   ],
+   "use": "stop limit=1000000 hurting the database",
+   "not": [
+    "is unnecessary when an index exists"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "An idempotency key",
+   "tier": 4,
+   "says": [
+    "is a client-generated unique value sent with a request",
+    "lets the server return the stored result for a repeated request instead of repeating the work"
+   ],
+   "use": "stop a retried payment request charging twice",
+   "not": [
+    "is a secret that proves who the caller is"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "A conditional GET",
+   "tier": 3,
+   "says": [
+    "sends a validator such as If-None-Match for a cached copy",
+    "gets a 304 with no body if the resource is unchanged"
+   ],
+   "use": "save bandwidth when a client re-requests a large unchanged document",
+   "not": [
+    "always returns the full body"
+   ],
+   "like": [
+    "Optimistic concurrency with ETags"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Optimistic concurrency with ETags",
+   "tier": 5,
+   "says": [
+    "sends the version the client last saw in an If-Match header",
+    "fails the write with 412 if someone else changed the resource first"
+   ],
+   "use": "stop two editors silently overwriting each other over HTTP",
+   "not": [
+    "locks the row until the first editor finishes"
+   ],
+   "like": [
+    "A conditional GET"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "A breaking change",
+   "tier": 3,
+   "says": [
+    "removes, renames or changes the meaning of something clients rely on",
+    "needs a new version or a migration period"
+   ],
+   "use": "decide whether renaming a response field is safe for existing apps",
+   "not": [
+    "is limited to removing an entire endpoint"
+   ],
+   "like": [
+    "A backward-compatible change"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "A backward-compatible change",
+   "tier": 3,
+   "says": [
+    "adds something such as an optional field without altering existing behaviour",
+    "can ship without a new API version"
+   ],
+   "use": "add a new optional field to a response",
+   "not": [
+    "includes making a previously optional request field required"
+   ],
+   "like": [
+    "A breaking change"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "A tolerant reader",
+   "tier": 5,
+   "says": [
+    "ignores response fields it does not recognise",
+    "lets a server add fields without breaking old clients"
+   ],
+   "use": "write a client that survives the server adding fields",
+   "not": [
+    "fails on any field it does not know"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "URL versioning",
+   "tier": 3,
+   "says": [
+    "puts the version in the path, as in /v2/orders",
+    "makes the version visible in logs and easy to route"
+   ],
+   "use": "run two versions of an API side by side behind a gateway",
+   "not": [
+    "keeps one URL and hides the version in a custom header"
+   ],
+   "like": [
+    "A tolerant reader"
+   ]
+  },
+  {
+   "group": "layer",
+   "subject": "An entry point",
+   "tier": 1,
+   "says": [
+    "reads the request and checks who is calling",
+    "stays thin and hands the work to the business logic"
+   ],
+   "use": "decide what a route handler should do",
+   "not": [
+    "is the right place for pricing and eligibility rules"
+   ],
+   "like": [
+    "Business logic"
+   ]
+  },
+  {
+   "group": "layer",
+   "subject": "Business logic",
+   "tier": 1,
+   "says": [
+    "applies the rules of the domain, such as pricing or pass marks",
+    "is written as plain modules that tests can call directly"
+   ],
+   "use": "decide where an eligibility rule belongs",
+   "not": [
+    "belongs inside the HTTP handler so it is close to the request"
+   ],
+   "like": [
+    "An entry point",
+    "A data access layer"
+   ]
+  },
+  {
+   "group": "layer",
+   "subject": "A data access layer",
+   "tier": 1,
+   "says": [
+    "reads and writes the stored facts",
+    "hides query details from the rules that need the data"
+   ],
+   "use": "change the database without rewriting the rules",
+   "not": [
+    "decides whether a user is allowed to perform an action"
+   ],
+   "like": [
+    "Business logic"
+   ]
+  },
+  {
+   "group": "layer",
+   "subject": "A fat handler",
+   "tier": 2,
+   "says": [
+    "buries validation, rules and queries in one route function",
+    "is hard to test and tends to duplicate rules across routes"
+   ],
+   "use": "explain why the same rule has drifted apart in two endpoints",
+   "not": [
+    "is the recommended way to keep logic close to the request"
+   ]
+  },
+  {
+   "group": "layer",
+   "subject": "A single source of truth for a rule",
+   "tier": 2,
+   "says": [
+    "defines a rule in one place that every caller uses",
+    "means a change is made once and tests cover it directly"
+   ],
+   "use": "keep the page, admin tools and tests behaving the same",
+   "not": [
+    "copies the rule into each caller so they stay independent"
+   ]
+  },
+  {
+   "group": "layer",
+   "subject": "The repository pattern",
+   "tier": 3,
+   "says": [
+    "puts storage behind an interface of domain-shaped methods",
+    "lets tests swap in an in-memory version"
+   ],
+   "use": "test business rules without a real database",
+   "not": [
+    "makes every query slower by adding a network hop"
+   ]
+  },
+  {
+   "group": "layer",
+   "subject": "Dependency injection",
+   "tier": 3,
+   "says": [
+    "passes a component its collaborators instead of having it create them",
+    "makes it easy to replace a real mailer with a fake in tests"
+   ],
+   "use": "unit-test a service that sends email",
+   "not": [
+    "requires a framework or container to use"
+   ]
+  },
+  {
+   "group": "layer",
+   "subject": "A functional core",
+   "tier": 4,
+   "says": [
+    "keeps decisions in pure functions with no input or output",
+    "pushes database and network calls to a thin outer shell"
+   ],
+   "use": "make rules fast and deterministic to test",
+   "not": [
+    "mixes reads and writes with the rules for simplicity"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Authentication",
+   "tier": 1,
+   "says": [
+    "establishes who the caller is",
+    "comes before any decision about what the caller may do"
+   ],
+   "use": "answer who is making this request",
+   "not": [
+    "decides which actions the caller may take"
+   ],
+   "like": [
+    "Authorization"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Authorization",
+   "tier": 1,
+   "says": [
+    "decides what an identified caller may do",
+    "must be checked on every request, not only at login"
+   ],
+   "use": "decide whether this user may edit this record",
+   "not": [
+    "proves the caller's identity"
+   ],
+   "like": [
+    "Authentication"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "A server-side session",
+   "tier": 2,
+   "says": [
+    "stores an opaque session id in a cookie while the state lives on the server",
+    "can be ended immediately by deleting the server record"
+   ],
+   "use": "need to log a user out everywhere at once",
+   "not": [
+    "puts the user's data in the cookie itself"
+   ],
+   "like": [
+    "A JWT"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "A JWT",
+   "tier": 3,
+   "says": [
+    "is a signed token carrying claims such as the subject and expiry",
+    "is hard to revoke before it expires unless the server keeps extra state"
+   ],
+   "use": "pass identity between services without a shared session store",
+   "not": [
+    "hides its payload from anyone holding the token, since it is encrypted"
+   ],
+   "like": [
+    "A server-side session"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Password hashing",
+   "tier": 2,
+   "says": [
+    "uses a slow, salted one-way function such as bcrypt or Argon2",
+    "stores a result that cannot be decrypted back to the password"
+   ],
+   "use": "store user passwords safely",
+   "not": [
+    "encrypts passwords so support staff can recover them"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Role-based access control",
+   "tier": 2,
+   "says": [
+    "grants permissions through roles assigned to users",
+    "makes it easy to answer what an editor can do"
+   ],
+   "use": "manage permissions for many users with a few job types",
+   "not": [
+    "checks the individual record's owner"
+   ],
+   "like": [
+    "Object-level authorization"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Object-level authorization",
+   "tier": 4,
+   "says": [
+    "checks that this caller may access this specific record",
+    "stops a user changing the id in the URL to read someone else's data"
+   ],
+   "use": "fix an endpoint that returns any invoice whose id is guessed",
+   "not": [
+    "is satisfied once the caller has logged in"
+   ],
+   "like": [
+    "Role-based access control"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "The principle of least privilege",
+   "tier": 2,
+   "says": [
+    "gives each account or key only the access its job needs",
+    "limits the damage if a credential leaks"
+   ],
+   "use": "decide what permissions a background worker's database user needs",
+   "not": [
+    "gives every service the same admin rights to avoid configuration mistakes"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "CSRF",
+   "tier": 3,
+   "says": [
+    "tricks a browser into sending an authenticated request the user did not intend",
+    "is reduced by SameSite cookies and anti-forgery tokens"
+   ],
+   "use": "protect a cookie-authenticated form post",
+   "not": [
+    "lets an attacker run scripts in the victim's page"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "An HttpOnly cookie",
+   "tier": 3,
+   "says": [
+    "cannot be read by JavaScript running in the page",
+    "limits the damage of a cross-site scripting bug"
+   ],
+   "use": "keep a session cookie out of reach of injected scripts",
+   "not": [
+    "is sent only over encrypted connections"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "OAuth 2.0",
+   "tier": 5,
+   "says": [
+    "delegates limited access to a resource through access tokens",
+    "is an authorization framework, not a login protocol on its own"
+   ],
+   "use": "let a third-party app read a user's data without their password",
+   "not": [
+    "proves the user's identity without any extra layer"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "A background job",
+   "tier": 1,
+   "says": [
+    "runs outside the web request",
+    "is the right home for slow work such as sending email"
+   ],
+   "use": "avoid making a user wait for a slow task",
+   "not": [
+    "must finish before the response is sent"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "A queue",
+   "tier": 2,
+   "says": [
+    "holds work items until a worker takes them",
+    "lets producers and workers run at different speeds"
+   ],
+   "use": "smooth out bursts of work",
+   "not": [
+    "runs the tasks itself without any worker"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "A scheduled job",
+   "tier": 2,
+   "says": [
+    "runs on a timer such as a cron expression",
+    "suits work that must happen at set times with no request"
+   ],
+   "use": "need to run a cleanup every night",
+   "not": [
+    "is triggered only by a user action"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "An idempotent job",
+   "tier": 3,
+   "says": [
+    "gives the same result when run twice as when run once",
+    "makes retries and duplicate deliveries harmless"
+   ],
+   "use": "make a job safe to retry",
+   "not": [
+    "is one that never fails"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "Exponential backoff with jitter",
+   "tier": 3,
+   "says": [
+    "lengthens the wait after each failed attempt",
+    "adds randomness so many clients do not retry at the same instant"
+   ],
+   "use": "retry a flaky service without creating a retry storm",
+   "not": [
+    "retries immediately and as fast as possible"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "A dead-letter queue",
+   "tier": 3,
+   "says": [
+    "collects messages that kept failing after the retry limit",
+    "holds them for a person to inspect instead of blocking the main queue"
+   ],
+   "use": "deal with a message that fails every time",
+   "not": [
+    "deletes failed messages to keep the queue short"
+   ],
+   "like": [
+    "A poison message"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "At-least-once delivery",
+   "tier": 5,
+   "says": [
+    "guarantees a message is delivered but may deliver it more than once",
+    "makes idempotent consumers essential"
+   ],
+   "use": "design a consumer for a queue that can redeliver",
+   "not": [
+    "guarantees each message is processed exactly once"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "A poison message",
+   "tier": 5,
+   "says": [
+    "fails every time it is processed",
+    "blocks progress if it is retried forever without a limit"
+   ],
+   "use": "explain why one bad message stalled a worker",
+   "not": [
+    "is a message that carries a virus"
+   ],
+   "like": [
+    "A dead-letter queue"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "A visibility timeout",
+   "tier": 5,
+   "says": [
+    "hides a taken message from other workers for a set time",
+    "makes the message reappear if the worker does not acknowledge it"
+   ],
+   "use": "explain why a slow job ran twice at the same time",
+   "not": [
+    "deletes a message once it is read"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "The outbox pattern",
+   "tier": 5,
+   "says": [
+    "writes an event row in the same transaction as the data change",
+    "lets a separate process publish the event afterwards"
+   ],
+   "use": "avoid saving an order but losing the event, or the reverse",
+   "not": [
+    "publishes the event inside the request, before the commit"
+   ]
+  },
+  {
+   "group": "job",
+   "subject": "Compute on read",
+   "tier": 3,
+   "says": [
+    "derives a value when it is requested instead of storing it from a schedule",
+    "removes the need for a job and for keeping stored values fresh"
+   ],
+   "use": "decide whether work needs a scheduler at all",
+   "not": [
+    "is always faster than precomputing"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Caching",
+   "tier": 1,
+   "says": [
+    "stores the result of expensive work so it is not repeated",
+    "reuses a stored answer for later identical requests, at some cost in freshness"
+   ],
+   "use": "avoid repeating a costly query for every request",
+   "not": [
+    "always returns the newest data"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A TTL",
+   "tier": 2,
+   "says": [
+    "is the time after which a cached entry expires",
+    "bounds how stale a cached value can be"
+   ],
+   "use": "decide how long data may be old",
+   "not": [
+    "is the number of times an entry may be read"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Cache invalidation",
+   "tier": 3,
+   "says": [
+    "removes or refreshes entries when the source data changes",
+    "is the hard part of caching because stale data causes confusing bugs"
+   ],
+   "use": "stop users seeing an old price after an edit",
+   "not": [
+    "is unnecessary when a TTL is set"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Cache-aside",
+   "tier": 3,
+   "says": [
+    "checks the cache first and loads from the database on a miss",
+    "lets the application fill the cache and set the TTL"
+   ],
+   "use": "add a cache without changing how writes work",
+   "not": [
+    "writes to the cache and the database together on every update"
+   ],
+   "like": [
+    "Write-through"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Write-through",
+   "tier": 4,
+   "says": [
+    "writes to the cache and the database together",
+    "keeps the cache current at the cost of slower writes"
+   ],
+   "use": "need reads to find fresh data without waiting for a TTL",
+   "not": [
+    "fills the cache only when a read misses"
+   ],
+   "like": [
+    "Cache-aside"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A cache stampede",
+   "tier": 4,
+   "says": [
+    "happens when a popular entry expires and many requests rebuild it at once",
+    "is reduced by locking one rebuilder or by adding jitter to TTLs"
+   ],
+   "use": "stop a hot key's expiry spiking the database",
+   "not": [
+    "is a cache that has grown too large"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A per-user cache key",
+   "tier": 3,
+   "says": [
+    "includes the user in the key for personalised data",
+    "stops one user being served another user's cached response"
+   ],
+   "use": "cache a response that contains account details",
+   "not": [
+    "is safe to omit if the data is cached for a short time"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "The Cache-Control private directive",
+   "tier": 4,
+   "says": [
+    "lets only the user's own browser store the response",
+    "stops shared caches such as a CDN keeping it"
+   ],
+   "use": "mark a response containing account data as not for shared caches",
+   "not": [
+    "lets any proxy cache the response for everyone"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Rate limiting",
+   "tier": 1,
+   "says": [
+    "restricts how often a caller can do something",
+    "slows password guessing and abuse"
+   ],
+   "use": "slow down a login brute-force attack",
+   "not": [
+    "makes every request faster"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "A fixed-window limiter",
+   "tier": 4,
+   "says": [
+    "counts requests per key in a time window that then resets",
+    "can let a burst of nearly double the limit through around a window boundary"
+   ],
+   "use": "implement a simple counter per key",
+   "not": [
+    "smooths traffic exactly at all times"
+   ],
+   "like": [
+    "A token bucket",
+    "A sliding-window limiter"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "A sliding-window limiter",
+   "tier": 5,
+   "says": [
+    "counts requests over the most recent period instead of fixed blocks",
+    "avoids the boundary burst of a fixed window"
+   ],
+   "use": "limit requests without the boundary burst",
+   "not": [
+    "resets all counters at the same moment"
+   ],
+   "like": [
+    "A fixed-window limiter",
+    "A token bucket"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "A token bucket",
+   "tier": 4,
+   "says": [
+    "refills tokens at a steady rate and spends one per request",
+    "allows short bursts up to the bucket size"
+   ],
+   "use": "permit bursts while holding a steady average rate",
+   "not": [
+    "rejects any request that arrives faster than the average rate"
+   ],
+   "like": [
+    "A fixed-window limiter"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "A database index",
+   "tier": 2,
+   "says": [
+    "lets the database find rows without scanning the whole table",
+    "speeds reads but adds cost to writes"
+   ],
+   "use": "speed up a query that filters on one column",
+   "not": [
+    "has no effect on write speed"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "The N+1 query problem",
+   "tier": 4,
+   "says": [
+    "runs one query for a list and then one more per item",
+    "is fixed by a join or by loading the related rows in one batch"
+   ],
+   "use": "explain why a list page makes hundreds of queries",
+   "not": [
+    "is solved by adding more application servers"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Full-text search",
+   "tier": 4,
+   "says": [
+    "matches words in text using an index of terms",
+    "ranks results by relevance, which LIKE '%term%' cannot do"
+   ],
+   "use": "let users search article bodies quickly",
+   "not": [
+    "is the same as a LIKE '%term%' scan"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Connection pooling",
+   "tier": 4,
+   "says": [
+    "reuses a limited set of open database connections",
+    "stops each request paying the cost of a new connection"
+   ],
+   "use": "avoid exhausting the database's connection limit under load",
+   "not": [
+    "opens a fresh connection for every query"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "A separate search engine",
+   "tier": 5,
+   "says": [
+    "adds ranking, typo tolerance and scale beyond the database's own features",
+    "is worth adding only when those needs appear"
+   ],
+   "use": "decide when the database's built-in search is no longer enough",
+   "not": [
+    "should be the first step for any search box"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A database transaction",
+   "tier": 1,
+   "says": [
+    "groups several changes into one all-or-nothing unit",
+    "can be rolled back if any step fails"
+   ],
+   "use": "move money between two accounts",
+   "not": [
+    "makes each statement independently permanent as it runs"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Atomicity",
+   "tier": 2,
+   "says": [
+    "means a transaction's changes all happen or none do",
+    "ensures a crash halfway leaves no partial update"
+   ],
+   "use": "explain why half a transfer never remains",
+   "not": [
+    "means concurrent transactions cannot see each other"
+   ],
+   "like": [
+    "Isolation"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Isolation",
+   "tier": 3,
+   "says": [
+    "controls what concurrent transactions can see of each other's work",
+    "is tuned through levels that trade strictness for throughput"
+   ],
+   "use": "decide how much concurrent transactions may interfere",
+   "not": [
+    "means a transaction's changes survive a crash"
+   ],
+   "like": [
+    "Atomicity"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A lost update",
+   "tier": 3,
+   "says": [
+    "happens when two writers read the same value and the later write overwrites the earlier",
+    "is avoided with atomic updates, locks or version checks"
+   ],
+   "use": "explain a counter that lost increments under load",
+   "not": [
+    "is a row removed by a cascading delete"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A unique constraint",
+   "tier": 2,
+   "says": [
+    "makes the database reject duplicate values",
+    "enforces the rule even when two requests race"
+   ],
+   "use": "stop two accounts registering the same email",
+   "not": [
+    "is enforced by checking in application code before inserting"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Optimistic locking",
+   "tier": 4,
+   "says": [
+    "checks a version or timestamp at write time",
+    "fails the update if the row changed since it was read"
+   ],
+   "use": "handle rare conflicts without holding locks",
+   "not": [
+    "holds a row lock from read to write"
+   ],
+   "like": [
+    "Pessimistic locking"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Pessimistic locking",
+   "tier": 5,
+   "says": [
+    "locks rows as they are read, for example with SELECT ... FOR UPDATE",
+    "blocks other writers until the transaction ends"
+   ],
+   "use": "serialise access to a hot row under heavy contention",
+   "not": [
+    "never blocks another transaction"
+   ],
+   "like": [
+    "Optimistic locking"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A deadlock",
+   "tier": 5,
+   "says": [
+    "occurs when transactions each hold a lock the other needs",
+    "is resolved by the database aborting one transaction"
+   ],
+   "use": "explain why two transactions froze until one was killed",
+   "not": [
+    "occurs only when a table has no index"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Eventual consistency",
+   "tier": 4,
+   "says": [
+    "means replicas or caches converge to the same value after a delay",
+    "can show a stale read straight after a write"
+   ],
+   "use": "explain why a read from a replica missed a fresh write",
+   "not": [
+    "guarantees every read sees the latest write"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "An expand-contract migration",
+   "tier": 5,
+   "says": [
+    "adds the new column or table first, moves code over, then removes the old one",
+    "keeps old and new code working while a deploy rolls out"
+   ],
+   "use": "rename a column without downtime",
+   "not": [
+    "drops the old column in the same deploy that adds the new one"
+   ]
+  },
+  {
+   "group": "files",
+   "subject": "Detecting type from the bytes",
+   "tier": 3,
+   "says": [
+    "reads the file's actual content signature",
+    "ignores the type and name the client claims"
+   ],
+   "use": "verify an upload is really a PNG",
+   "not": [
+    "trusts the Content-Type header sent by the client"
+   ]
+  },
+  {
+   "group": "files",
+   "subject": "An upload size limit",
+   "tier": 2,
+   "says": [
+    "rejects files above a fixed number of bytes",
+    "protects memory, disk and bandwidth"
+   ],
+   "use": "stop a client uploading a huge file",
+   "not": [
+    "is enforced only by the browser"
+   ]
+  },
+  {
+   "group": "files",
+   "subject": "A generated file name",
+   "tier": 2,
+   "says": [
+    "replaces the client's name with a random or derived one",
+    "prevents collisions and path tricks in names"
+   ],
+   "use": "store an uploaded file safely",
+   "not": [
+    "keeps the original name so users can recognise it on disk"
+   ]
+  },
+  {
+   "group": "files",
+   "subject": "Storage outside the web root",
+   "tier": 3,
+   "says": [
+    "keeps uploads where the web server does not publish them",
+    "serves them only through a route that checks permission"
+   ],
+   "use": "stop an uploaded script being run or fetched directly",
+   "not": [
+    "puts uploads in the public folder for speed"
+   ]
+  },
+  {
+   "group": "files",
+   "subject": "Path traversal",
+   "tier": 3,
+   "says": [
+    "uses sequences such as ../ to escape the intended folder",
+    "is blocked by never joining client input into a file path"
+   ],
+   "use": "explain how /files?name=../../secret read a private file",
+   "not": [
+    "is a technique for speeding up directory listing"
+   ]
+  },
+  {
+   "group": "files",
+   "subject": "A signed URL",
+   "tier": 3,
+   "says": [
+    "grants time-limited access to one stored object",
+    "needs no session on the storage service"
+   ],
+   "use": "let a user download a private file directly from object storage",
+   "not": [
+    "makes the file public permanently"
+   ]
+  },
+  {
+   "group": "files",
+   "subject": "Rejecting SVG uploads",
+   "tier": 4,
+   "says": [
+    "avoids a format that can contain scripts",
+    "is a common choice for profile photo rules"
+   ],
+   "use": "decide which image formats a photo upload may accept",
+   "not": [
+    "is needed because SVG files are always too large"
+   ]
+  },
+  {
+   "group": "files",
+   "subject": "Re-encoding an uploaded image",
+   "tier": 5,
+   "says": [
+    "decodes and writes the image again",
+    "drops metadata and embedded payloads in the original"
+   ],
+   "use": "strip location data from uploaded photos",
+   "not": [
+    "leaves the original bytes untouched"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A log level",
+   "tier": 1,
+   "says": [
+    "marks how serious an entry is, such as debug, info, warn or error",
+    "lets production hide noisy detail"
+   ],
+   "use": "reduce noise in production logs",
+   "not": [
+    "decides which user may read the log"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Structured logging",
+   "tier": 2,
+   "says": [
+    "writes entries as fields such as JSON instead of free text",
+    "makes logs searchable by user, route or request id"
+   ],
+   "use": "filter logs by route and status",
+   "not": [
+    "makes logs unreadable by machines"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A correlation id",
+   "tier": 3,
+   "says": [
+    "is a value attached to one request and passed through every service",
+    "lets you follow a single request across logs"
+   ],
+   "use": "trace one failing request through several services",
+   "not": [
+    "is the user's login identifier"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Redacting secrets from logs",
+   "tier": 1,
+   "says": [
+    "keeps passwords, tokens and API keys out of log lines",
+    "removes sensitive fields before an entry is written"
+   ],
+   "use": "decide what to do with a request body containing a password",
+   "not": [
+    "is optional because logs are private"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A health check",
+   "tier": 2,
+   "says": [
+    "is an endpoint a load balancer or monitor calls to see if the app is up",
+    "should answer quickly without heavy work"
+   ],
+   "use": "let the platform restart a stuck process",
+   "not": [
+    "returns the full application log"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A readiness check",
+   "tier": 4,
+   "says": [
+    "reports whether an instance can take traffic now, for example its database connection works",
+    "keeps a starting instance out of rotation until ready"
+   ],
+   "use": "avoid routing traffic to an instance that cannot reach its database",
+   "not": [
+    "only tells the platform that the process is alive"
+   ],
+   "like": [
+    "A health check"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Tail latency (p99)",
+   "tier": 4,
+   "says": [
+    "is the response time that 99 percent of requests beat",
+    "exposes slowness an average hides"
+   ],
+   "use": "find why a few users see slow pages while the average looks fine",
+   "not": [
+    "is the same as the median"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "An audit log",
+   "tier": 3,
+   "says": [
+    "records who did what and when for sensitive actions",
+    "is append-only so history cannot be quietly rewritten"
+   ],
+   "use": "answer who changed this user's role last week",
+   "not": [
+    "is a debug log meant to be deleted often"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A webhook",
+   "tier": 2,
+   "says": [
+    "is an HTTP call a service makes to your endpoint when an event happens",
+    "saves the receiver from polling"
+   ],
+   "use": "learn when a payment succeeds without polling",
+   "not": [
+    "is a call your server makes to ask for new events on a timer"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "Webhook signature verification",
+   "tier": 4,
+   "says": [
+    "recomputes an HMAC over the raw body with a shared secret",
+    "rejects calls whose signature does not match"
+   ],
+   "use": "be sure an incoming webhook really came from the provider",
+   "not": [
+    "trusts the sender's IP address alone"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "Webhook replay protection",
+   "tier": 5,
+   "says": [
+    "rejects events whose signed timestamp is too old",
+    "stops a captured valid request being sent again later"
+   ],
+   "use": "stop an attacker replaying a recorded webhook",
+   "not": [
+    "is provided by the signature on its own"
+   ],
+   "like": [
+    "Webhook signature verification"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "Acknowledging a webhook fast",
+   "tier": 3,
+   "says": [
+    "returns a 2xx quickly and does the heavy work in a background job",
+    "avoids provider timeouts and needless redelivery"
+   ],
+   "use": "stop a provider retrying because your handler is slow",
+   "not": [
+    "processes the full event before replying"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "Deduplicating by event id",
+   "tier": 4,
+   "says": [
+    "stores the ids of events already handled",
+    "makes redelivered webhooks harmless"
+   ],
+   "use": "survive a provider sending the same event twice",
+   "not": [
+    "assumes each event arrives exactly once"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "Configuration from the environment",
+   "tier": 1,
+   "says": [
+    "reads settings such as keys and URLs from environment variables",
+    "keeps secrets out of the source code"
+   ],
+   "use": "run the same build in test and production with different keys",
+   "not": [
+    "hard-codes values into the repository for convenience"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "Keeping a secret out of version control",
+   "tier": 2,
+   "says": [
+    "keeps the value out of the repository and the logs",
+    "means the credential must be rotated if it is ever pushed"
+   ],
+   "use": "respond to an API key that was pushed to a public repository",
+   "not": [
+    "is safe once the commit is deleted from the branch"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "Secret rotation",
+   "tier": 5,
+   "says": [
+    "replaces a credential with a new one on a schedule or after exposure",
+    "works best when the system accepts old and new keys during a switch"
+   ],
+   "use": "change a key with no downtime",
+   "not": [
+    "is needed only when a developer leaves"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A timeout on outbound calls",
+   "tier": 2,
+   "says": [
+    "bounds how long the app waits for another service",
+    "stops a slow dependency holding workers forever"
+   ],
+   "use": "stop a stuck partner API freezing your requests",
+   "not": [
+    "is unnecessary when the partner says it is reliable"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A fallback when a service is missing",
+   "tier": 3,
+   "says": [
+    "keeps the product working with a simpler path when an external service is unavailable",
+    "returns a reduced result, such as keyword grading, in place of an AI call"
+   ],
+   "use": "keep grading working when the AI provider key is absent",
+   "not": [
+    "hides the failure by returning made-up results"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "Model output as untrusted input",
+   "tier": 3,
+   "says": [
+    "is validated before use like any other external data",
+    "is never run or inserted into queries without checks"
+   ],
+   "use": "decide how to handle text an AI model returns",
+   "not": [
+    "can skip validation because the model was instructed to be safe"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A cost budget on a paid service",
+   "tier": 3,
+   "says": [
+    "caps spend per period for a metered API",
+    "pauses or alerts when the cap is reached"
+   ],
+   "use": "stop a bug from running up a large bill",
+   "not": [
+    "is only needed after the first invoice"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn lib folder",
+   "tier": 2,
+   "says": [
+    "keeps rules as plain modules such as levels.ts, grading.ts and progress.ts",
+    "gives each module one concern"
+   ],
+   "use": "find where gglearn's business rules live",
+   "not": [
+    "holds the page components"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "A gglearn level attempt",
+   "tier": 2,
+   "says": [
+    "draws 10 questions",
+    "favours questions the learner has not yet answered correctly",
+    "passes at 80 percent"
+   ],
+   "use": "work out how a learner passes a level",
+   "not": [
+    "draws every question in the level"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn rate limiter",
+   "tier": 3,
+   "says": [
+    "uses a fixed window with a counter per key",
+    "keeps its counters in process memory"
+   ],
+   "use": "understand how gglearn slows repeated attempts",
+   "not": [
+    "stores counters in a shared Redis cluster"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn limiter's memory counters",
+   "tier": 4,
+   "says": [
+    "reset when the process restarts",
+    "are fine for one PM2 process and must move to the database if the process count changes"
+   ],
+   "use": "scale gglearn to more than one process",
+   "not": [
+    "are shared automatically between PM2 processes"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "A gglearn limiter check without a hit",
+   "tier": 4,
+   "says": [
+    "tells whether a key is still allowed without counting a hit",
+    "lets a login be tested for blocking without using up an attempt"
+   ],
+   "use": "ask whether a login is blocked without using up an attempt",
+   "not": [
+    "always counts a hit when called"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Clearing a gglearn limiter key",
+   "tier": 3,
+   "says": [
+    "resets the key's counter once the action succeeds",
+    "stops a legitimate user being locked out by earlier mistakes"
+   ],
+   "use": "handle a limiter key after a successful login",
+   "not": [
+    "is only possible by restarting the process"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn photo upload rule",
+   "tier": 3,
+   "says": [
+    "accepts JPEG, PNG or WebP only",
+    "caps a photo at 300 KB",
+    "takes the type from the file's bytes and rejects SVG"
+   ],
+   "use": "know what a gglearn user may upload as a photo",
+   "not": [
+    "trust the file extension and accept SVG"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn open-answer grading",
+   "tier": 3,
+   "says": [
+    "asks Claude to judge an answer against a reference answer and rubric",
+    "falls back to a coarse keyword check when no ANTHROPIC_API_KEY is set"
+   ],
+   "use": "know how gglearn marks written answers",
+   "not": [
+    "marks every written answer correct when the AI is offline"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn rival progress",
+   "tier": 3,
+   "says": [
+    "is deterministic and calculated when read",
+    "needs no scheduler"
+   ],
+   "use": "know how gglearn rivals advance",
+   "not": [
+    "is updated every minute by a cron job"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn finished-contest ranking",
+   "tier": 3,
+   "says": [
+    "is computed on read",
+    "needs no stored job to produce the final table"
+   ],
+   "use": "know how a finished gglearn contest is ranked",
+   "not": [
+    "are written to the database by a nightly job"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggsocial composer",
+   "tier": 2,
+   "says": [
+    "validates each post per platform",
+    "requires a title for Reddit and caps X posts at 280 characters"
+   ],
+   "use": "know why a draft is rejected before publishing",
+   "not": [
+    "applies one limit to every platform"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "A ggsocial agent",
+   "tier": 3,
+   "says": [
+    "does work for each brand every hour",
+    "runs as a background job"
+   ],
+   "use": "understand how ggsocial keeps working without a user clicking",
+   "not": [
+    "run only when an admin starts them"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggsocial posting-time job",
+   "tier": 3,
+   "says": [
+    "runs daily",
+    "suggests the best times to post"
+   ],
+   "use": "find what picks posting times",
+   "not": [
+    "runs on every page request"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggsocial activity checklist",
+   "tier": 3,
+   "says": [
+    "catches up every hour from facts",
+    "never overwrites a check a person recorded"
+   ],
+   "use": "know what happens to a manually recorded check when the job runs",
+   "not": [
+    "resets every item each hour regardless of who set it"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "A ggsocial workflow pause",
+   "tier": 4,
+   "says": [
+    "stops for a person when a safety rule triggers",
+    "also stops when a score is low or a step keeps failing"
+   ],
+   "use": "know when ggsocial hands work to a human",
+   "not": [
+    "happens only when the whole system is shut down"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggsocial run log",
+   "tier": 3,
+   "says": [
+    "records what each run made",
+    "records what each run cost"
+   ],
+   "use": "audit what a ggsocial run produced",
+   "not": [
+    "keeps only error messages"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggsocial AI budget",
+   "tier": 4,
+   "says": [
+    "logs every Claude call with its cost",
+    "shows each brand's spend today",
+    "pauses a run when the brand's daily budget is spent"
+   ],
+   "use": "know what stops AI spend running away in ggsocial",
+   "not": [
+    "lets runs continue after the budget and bills later"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggsocial AI reviewer",
+   "tier": 4,
+   "says": [
+    "scores work before it goes out",
+    "stops risky items for a person whatever the settings"
+   ],
+   "use": "know who approves risky AI-written posts",
+   "not": [
+    "can be configured to approve risky items automatically"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does this endpoint do wrong for a successful create?",
+   "right": "It returns 200 where 201 with a Location header would better describe creation",
+   "wrong": [
+    "It uses POST for a create",
+    "It sends JSON in the body",
+    "It should return 401 for creation"
+   ],
+   "tier": 1,
+   "why": "A create normally answers 201 and points at the new resource.",
+   "code": "app.post(\"/orders\", async (req, res) => {\n  const order = await createOrder(req.body);\n  res.status(200).json(order);\n});"
+  },
+  {
+   "q": "What is the danger in this query?",
+   "right": "String concatenation lets a crafted email change the SQL, which is SQL injection",
+   "wrong": [
+    "The query is too slow without LIMIT",
+    "Emails cannot be compared with =",
+    "SELECT * is not allowed in production"
+   ],
+   "tier": 1,
+   "why": "Values must be sent as parameters, never joined into the SQL text.",
+   "code": "db.query(\"SELECT * FROM users WHERE email = '\" + email + \"'\");"
+  },
+  {
+   "q": "What does this change achieve?",
+   "right": "The value travels separately from the SQL text, so it cannot alter the query",
+   "wrong": [
+    "It encrypts the email before it is stored",
+    "It caches the query result for later",
+    "It makes the database skip the unique index"
+   ],
+   "tier": 2,
+   "why": "Placeholders keep data and code apart.",
+   "code": "db.query(\"SELECT * FROM users WHERE email = $1\", [email]);"
+  },
+  {
+   "q": "What is missing from this handler?",
+   "right": "A check that the signed-in user owns this document",
+   "wrong": [
+    "A Content-Type header",
+    "A cache for the lookup",
+    "Pagination of the result"
+   ],
+   "tier": 3,
+   "why": "Logging in is not enough; access must be checked for the specific record.",
+   "code": "app.get(\"/docs/:id\", requireLogin, async (req, res) => {\n  const doc = await db.docs.find(req.params.id);\n  res.json(doc);\n});"
+  },
+  {
+   "q": "What is the security risk in this line?",
+   "right": "A caller can add fields such as isAdmin to the body and set them",
+   "wrong": [
+    "It deletes the user on every call",
+    "It exposes the password hash in the response",
+    "It runs the update twice"
+   ],
+   "tier": 3,
+   "why": "This is mass assignment; copy only an allowlist of fields.",
+   "code": "await User.update(req.params.id, req.body);"
+  },
+  {
+   "q": "A client times out and sends this request again with the same key. What should the server do?",
+   "right": "Return the stored result of the first request without charging again",
+   "wrong": [
+    "Charge again because the retry is a new request",
+    "Reject the retry with 403",
+    "Delete the first charge and create a new one"
+   ],
+   "tier": 3,
+   "why": "An idempotency key lets the server detect a repeat and replay the result.",
+   "code": "POST /payments\nIdempotency-Key: 7f3a9c2e-51d8\n{ \"amount\": 2500 }"
+  },
+  {
+   "q": "Why is cursor pagination preferred over this for a busy feed?",
+   "right": "Rows inserted during paging shift offsets, causing repeats or skips, and large offsets are slow",
+   "wrong": [
+    "OFFSET is not valid SQL",
+    "Cursors return more rows per request",
+    "LIMIT is slower than a cursor"
+   ],
+   "tier": 3,
+   "why": "A cursor continues from the last seen item, so inserts do not move the page.",
+   "code": "SELECT * FROM posts ORDER BY id DESC LIMIT 20 OFFSET 100000;"
+  },
+  {
+   "q": "A client sends this request and the resource has not changed. What does the server return?",
+   "right": "304 Not Modified with no body",
+   "wrong": [
+    "200 with an empty body",
+    "404 because the cache is gone",
+    "412 Precondition Failed"
+   ],
+   "tier": 4,
+   "why": "If-None-Match with a matching ETag means the cached copy is current.",
+   "code": "GET /report/9\nIf-None-Match: \"v42\""
+  },
+  {
+   "q": "A client updates with this header but another user changed the record first. What status fits?",
+   "right": "412 Precondition Failed",
+   "wrong": [
+    "201 Created",
+    "204 No Content",
+    "301 Moved Permanently"
+   ],
+   "tier": 4,
+   "why": "If-Match makes the write conditional on the version the client saw.",
+   "code": "PUT /notes/5\nIf-Match: \"v7\""
+  },
+  {
+   "q": "What is wrong with this loop?",
+   "right": "It runs one query per order, the N+1 problem",
+   "wrong": [
+    "It mutates the loop variable",
+    "It should use var",
+    "It makes the query too fast"
+   ],
+   "tier": 3,
+   "why": "Load customers in one batch or use a join.",
+   "code": "for (const o of orders) {\n  o.customer = await db.customer.get(o.customerId);\n}"
+  },
+  {
+   "q": "What happens if the second statement fails and the code runs ROLLBACK?",
+   "right": "Neither balance changes",
+   "wrong": [
+    "Only the first change stays",
+    "Only the second is retried",
+    "Both rows are deleted"
+   ],
+   "tier": 3,
+   "why": "A transaction is all-or-nothing.",
+   "code": "BEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\nCOMMIT;"
+  },
+  {
+   "q": "Which version avoids a lost update under concurrent withdrawals?",
+   "right": "UPDATE accounts SET balance = balance - 10 WHERE id = 1 AND balance >= 10",
+   "wrong": [
+    "Read the balance in code, subtract 10, then write the result back",
+    "Read the balance twice before writing",
+    "Add a sleep between the read and the write"
+   ],
+   "tier": 4,
+   "why": "A single atomic statement checks and changes together.",
+   "code": "UPDATE accounts SET balance = balance - 10 WHERE id = 1 AND balance >= 10;"
+  },
+  {
+   "q": "Why must the HMAC be computed over the raw request body?",
+   "right": "Re-serialised JSON can differ byte for byte from what the sender signed",
+   "wrong": [
+    "JSON cannot be hashed",
+    "The raw body is smaller",
+    "Parsed bodies are encrypted"
+   ],
+   "tier": 4,
+   "why": "Verification must use exactly the bytes that were signed.",
+   "code": "const expected = crypto.createHmac(\"sha256\", secret).update(rawBody).digest(\"hex\");"
+  },
+  {
+   "q": "Which pattern is this?",
+   "right": "Cache-aside",
+   "wrong": [
+    "Write-through",
+    "Read replica",
+    "Circuit breaker"
+   ],
+   "tier": 3,
+   "why": "The application checks the cache, loads on a miss and fills the cache.",
+   "code": "let v = await cache.get(key);\nif (!v) {\n  v = await db.load(key);\n  await cache.set(key, v, { ttl: 60 });\n}\nreturn v;"
+  },
+  {
+   "q": "What is the purpose of Math.random() in this delay?",
+   "right": "Jitter, so many clients do not retry at the same moment",
+   "wrong": [
+    "It makes the delay shorter than the base",
+    "It picks a random server",
+    "It stops the retry count rising"
+   ],
+   "tier": 4,
+   "why": "Randomised delays spread out retries.",
+   "code": "const delay = Math.min(cap, base * 2 ** attempt) * Math.random();"
+  },
+  {
+   "q": "What is a weakness of this limiter?",
+   "right": "A burst around the window boundary can pass nearly double the limit",
+   "wrong": [
+    "It never resets counters",
+    "It counts only failed requests",
+    "It cannot key by user"
+   ],
+   "tier": 4,
+   "why": "Fixed windows reset all at once, so two bursts straddling the edge both pass.",
+   "code": "const w = Math.floor(Date.now() / 60000);\nconst k = `${user}:${w}`;\ncount[k] = (count[k] ?? 0) + 1;\nif (count[k] > 100) return 429;"
+  },
+  {
+   "q": "What does this header allow?",
+   "right": "Only the user's own browser may store the response, for 60 seconds",
+   "wrong": [
+    "Any CDN may store it for 60 minutes",
+    "No one may store it",
+    "It is cached forever by shared proxies"
+   ],
+   "tier": 4,
+   "why": "private excludes shared caches.",
+   "code": "Cache-Control: private, max-age=60"
+  },
+  {
+   "q": "Why can a client not simply edit the role in this token?",
+   "right": "The signature would no longer match, so the server rejects it",
+   "wrong": [
+    "The payload is encrypted",
+    "Roles are ignored by the server",
+    "The token is stored on the server"
+   ],
+   "tier": 3,
+   "why": "A JWT is signed, so tampering is detected, though the payload is readable.",
+   "code": "{ \"sub\": \"42\", \"role\": \"user\", \"exp\": 1893456000 }"
+  },
+  {
+   "q": "What is the risk in this code?",
+   "right": "A name such as ../../etc/passwd escapes the uploads folder",
+   "wrong": [
+    "The file is read too slowly",
+    "fs.readFile cannot read text",
+    "The path is too short"
+   ],
+   "tier": 3,
+   "why": "Never join client input into a path; use generated names.",
+   "code": "fs.readFile(\"/uploads/\" + req.query.name);"
+  },
+  {
+   "q": "What is the benefit of logging in this form?",
+   "right": "Fields can be searched and filtered by route, user or request id",
+   "wrong": [
+    "The log file is smaller",
+    "The messages are encrypted",
+    "It runs the request faster"
+   ],
+   "tier": 2,
+   "why": "Structured entries are machine-readable.",
+   "code": "logger.info({ requestId, userId, route, ms: 84 }, \"request done\");"
+  },
+  {
+   "q": "What is wrong with this log call?",
+   "right": "It writes a password into the logs",
+   "wrong": [
+    "It uses the error level",
+    "It names the event",
+    "It has two fields"
+   ],
+   "tier": 1,
+   "why": "Secrets must never be logged.",
+   "code": "logger.error(\"login failed\", { email, password });"
+  },
+  {
+   "q": "Why would a readiness endpoint return 503 here?",
+   "right": "The instance cannot reach its database, so traffic should be kept away",
+   "wrong": [
+    "The disk is full of logs",
+    "The user is not logged in",
+    "The response is too large"
+   ],
+   "tier": 4,
+   "why": "Readiness tells the load balancer whether to route traffic.",
+   "code": "GET /ready  ->  503 { \"db\": \"unreachable\" }"
+  },
+  {
+   "q": "What can happen if the worker crashes right after send()?",
+   "right": "The message is redelivered and the email goes out twice",
+   "wrong": [
+    "The email is never sent",
+    "The queue deletes the message",
+    "The message moves to a database table"
+   ],
+   "tier": 4,
+   "why": "At-least-once delivery means work must be idempotent.",
+   "code": "const msg = await queue.pop();\nawait send(msg.email);\nawait queue.ack(msg);"
+  },
+  {
+   "q": "What problem does this pattern solve?",
+   "right": "The data change and its event are saved together, so neither can be lost alone",
+   "wrong": [
+    "It speeds up the INSERT",
+    "It removes the need for transactions",
+    "It encrypts the event"
+   ],
+   "tier": 5,
+   "why": "The outbox row commits with the order and is published later.",
+   "code": "BEGIN;\nINSERT INTO orders (id, total) VALUES (1, 2500);\nINSERT INTO outbox (event) VALUES ('order.created:1');\nCOMMIT;"
+  },
+  {
+   "q": "What does this statement do on a redelivered webhook?",
+   "right": "Ignores the duplicate event because its id is already stored",
+   "wrong": [
+    "Overwrites the earlier row",
+    "Raises an error and stops the server",
+    "Deletes the earlier event"
+   ],
+   "tier": 4,
+   "why": "A unique event id makes handling idempotent.",
+   "code": "INSERT INTO events (event_id, body) VALUES ($1, $2)\nON CONFLICT (event_id) DO NOTHING;"
+  },
+  {
+   "q": "Which query does this index help most?",
+   "right": "SELECT * FROM orders WHERE user_id = 5 ORDER BY created_at DESC",
+   "wrong": [
+    "SELECT * FROM orders WHERE total > 5",
+    "SELECT * FROM orders ORDER BY id",
+    "SELECT * FROM users WHERE name = 'x'"
+   ],
+   "tier": 3,
+   "why": "A composite index on (user_id, created_at) serves both filter and order.",
+   "code": "CREATE INDEX idx_orders_user ON orders (user_id, created_at);"
+  },
+  {
+   "q": "What should a well-behaved client do after this response?",
+   "right": "Wait about 30 seconds before trying again",
+   "wrong": [
+    "Retry immediately in a loop",
+    "Switch to a different user",
+    "Treat the request as permanently failed"
+   ],
+   "tier": 2,
+   "why": "Retry-After says when to retry.",
+   "code": "HTTP/1.1 429 Too Many Requests\nRetry-After: 30"
+  },
+  {
+   "q": "What does the 12 control here?",
+   "right": "The cost factor, making each hash slower and brute force harder",
+   "wrong": [
+    "The length of the password",
+    "The number of retries",
+    "The salt length"
+   ],
+   "tier": 3,
+   "why": "Higher cost slows every guess.",
+   "code": "const hash = await bcrypt.hash(password, 12);"
+  },
+  {
+   "q": "What does HttpOnly do in this cookie?",
+   "right": "Stops page JavaScript reading the cookie",
+   "wrong": [
+    "Forces HTTPS",
+    "Blocks cross-site requests",
+    "Makes the cookie permanent"
+   ],
+   "tier": 3,
+   "why": "HttpOnly limits the damage of cross-site scripting.",
+   "code": "Set-Cookie: sid=abc; HttpOnly; Secure; SameSite=Lax"
+  },
+  {
+   "q": "What does the layering in this handler break?",
+   "right": "The pricing rule sits in the handler, so other callers and tests cannot reuse it",
+   "wrong": [
+    "Handlers may not read JSON",
+    "The response must be 201",
+    "Discounts cannot be numbers"
+   ],
+   "tier": 2,
+   "why": "Move the rule to a business-logic module and call it from the handler.",
+   "code": "app.post(\"/cart\", (req, res) => {\n  const total = req.body.items.reduce((s, i) => s + i.price * i.qty, 0) * 0.9;\n  res.json({ total });\n});"
+  },
+  {
+   "q": "A learner answers 8 of 10 questions correctly on a gglearn level. What happens?",
+   "right": "The attempt passes, because 80 percent is the pass mark",
+   "wrong": [
+    "It fails, since 9 of 10 is needed",
+    "It passes only after a second attempt",
+    "It is graded by Claude before counting"
+   ],
+   "tier": 3,
+   "why": "The company rule is 10 questions with an 80 percent pass mark."
+  },
+  {
+   "q": "gglearn runs a second PM2 process. What happens to its rate limit counters?",
+   "right": "Each process keeps its own counters, so the effective limit grows until counters move to the database",
+   "wrong": [
+    "The processes share counters automatically",
+    "The limiter stops working",
+    "Counters move to Cloudflare"
+   ],
+   "tier": 4,
+   "why": "Counters live in process memory."
+  },
+  {
+   "q": "A user uploads a file named photo.png whose bytes are an SVG. What do gglearn's photo rules do?",
+   "right": "Reject it, because the type comes from the bytes and SVG is not allowed",
+   "wrong": [
+    "Accept it because of the .png name",
+    "Accept it and convert it to JPEG",
+    "Accept it after reducing it to 300 KB"
+   ],
+   "tier": 3,
+   "why": "Type is read from content, not the name."
+  },
+  {
+   "q": "ggsocial is composing a post for X with 320 characters. What happens?",
+   "right": "The composer's per-platform validation rejects it because of the 280 character cap",
+   "wrong": [
+    "It posts and X trims it",
+    "It is split into two automatically",
+    "It is accepted if a title is added"
+   ],
+   "tier": 3,
+   "why": "X is capped at 280 characters."
+  },
+  {
+   "q": "A brand's daily AI budget in ggsocial is spent while a run is in progress. What happens?",
+   "right": "The run is paused",
+   "wrong": [
+    "The run continues and bills later",
+    "The run is deleted",
+    "The budget doubles"
+   ],
+   "tier": 4,
+   "why": "ggsocial pauses a run when the brand's daily AI budget is spent."
+  },
+  {
+   "q": "There is no ANTHROPIC_API_KEY on the server. How does gglearn grade a written answer?",
+   "right": "With a coarse keyword fallback so the product still works",
+   "wrong": [
+    "It marks the answer correct",
+    "It refuses to show the question",
+    "It waits until a key appears"
+   ],
+   "tier": 3,
+   "why": "The fallback keeps grading available."
+  },
+  {
+   "q": "A person recorded a check on the ggsocial activity checklist and the hourly job runs. What happens to that check?",
+   "right": "It stays as recorded; the job never overwrites it",
+   "wrong": [
+    "It is reset to the job's value",
+    "It is deleted",
+    "It is recorded twice"
+   ],
+   "tier": 3,
+   "why": "Manual checks win over the job."
+  },
+  {
+   "q": "A dependency is slow and every worker retries instantly, making it worse. What do you add first?",
+   "right": "Exponential backoff with jitter and a retry limit",
+   "wrong": [
+    "More workers",
+    "A longer timeout with no retry limit",
+    "Retry faster so it recovers sooner"
+   ],
+   "tier": 3,
+   "why": "Spreading and limiting retries lets the dependency recover."
+  },
+  {
+   "q": "A customer was charged twice after a mobile app lost signal and retried. What is the best fix?",
+   "right": "Send an idempotency key and have the server store the result",
+   "wrong": [
+    "Tell users not to retry",
+    "Remove the timeout",
+    "Retry only on weekdays"
+   ],
+   "tier": 3,
+   "why": "The key makes the retry safe."
+  },
+  {
+   "q": "Users report seeing another person's account page after a CDN was added. What is the most likely cause?",
+   "right": "A personalised response was cached in a shared cache without a per-user key",
+   "wrong": [
+    "The password hashing cost is too low",
+    "The index is missing",
+    "The session cookie is too short"
+   ],
+   "tier": 3,
+   "why": "Mark private data private or key the cache by user."
+  },
+  {
+   "q": "A password-reset endpoint is being used to flood users with email. What do you do first?",
+   "right": "Rate limit by account and by IP and return the same reply whether or not the account exists",
+   "wrong": [
+    "Disable HTTPS",
+    "Increase the page size",
+    "Cache the reset email"
+   ],
+   "tier": 3,
+   "why": "Throttling and uniform replies reduce abuse and account probing."
+  },
+  {
+   "q": "One malformed message makes a worker fail repeatedly and blocks the queue. What should happen?",
+   "right": "After a retry limit, move it to a dead-letter queue for inspection",
+   "wrong": [
+    "Retry it forever",
+    "Delete it silently",
+    "Restart the server every minute"
+   ],
+   "tier": 3,
+   "why": "A dead-letter queue unblocks the main queue."
+  },
+  {
+   "q": "Mobile apps in the wild depend on a field called total. The team wants to rename it. What is safest?",
+   "right": "Add the new field, keep the old one, announce a deprecation and remove it later",
+   "wrong": [
+    "Rename it now and update the web app only",
+    "Rename it and bump the patch number",
+    "Remove the field and return null"
+   ],
+   "tier": 3,
+   "why": "Renaming is a breaking change; overlap lets clients migrate."
+  },
+  {
+   "q": "Two admins edit the same record and one silently overwrites the other. What is the best fix?",
+   "right": "Add a version check so the second write fails with a conflict",
+   "wrong": [
+    "Lock the table for editing",
+    "Ignore the later save",
+    "Add a sleep before saving"
+   ],
+   "tier": 4,
+   "why": "Optimistic concurrency detects the conflict."
+  },
+  {
+   "q": "A webhook provider keeps retrying because your handler takes 40 seconds. What do you change?",
+   "right": "Verify the signature, store the event, return 2xx and process in a background job",
+   "wrong": [
+    "Raise the provider's timeout",
+    "Process the event twice",
+    "Drop all events during peak hours"
+   ],
+   "tier": 3,
+   "why": "Acknowledge fast, work later, dedupe by event id."
+  },
+  {
+   "q": "A deploy drops a column while old instances still read it. Which approach avoids the outage?",
+   "right": "Expand-contract: stop using the column in code first, then drop it later",
+   "wrong": [
+    "Drop and deploy together",
+    "Rename the column in place",
+    "Lock the whole table until deploy ends"
+   ],
+   "tier": 4,
+   "why": "Migrations must work with old and new code during rollout."
+  },
+  {
+   "q": "An upload endpoint is receiving multi-gigabyte files. What is the right defence?",
+   "right": "Enforce a size limit early and stream rather than buffering in memory",
+   "wrong": [
+    "Trust the Content-Length header only",
+    "Buffer it all in memory",
+    "Rely on the browser to stop it"
+   ],
+   "tier": 3,
+   "why": "Limits protect memory and bandwidth."
+  },
+  {
+   "q": "A popular cache key expires and the database spikes as many requests rebuild it. What helps?",
+   "right": "Let one request rebuild while others wait, and add jitter to TTLs",
+   "wrong": [
+    "Remove the TTL entirely",
+    "Cache more keys",
+    "Disable the database index"
+   ],
+   "tier": 4,
+   "why": "This is a cache stampede."
+  },
+  {
+   "q": "Users see SQL errors and stack traces in 500 responses. What is the right fix?",
+   "right": "Log full detail server-side and return a generic message with a request id",
+   "wrong": [
+    "Return even more detail",
+    "Hide the error by returning 200",
+    "Disable logging"
+   ],
+   "tier": 2,
+   "why": "Errors should not leak internals."
+  },
+  {
+   "q": "A secret key was pushed to a repository. What is the first step?",
+   "right": "Rotate the key, then clean up and review access",
+   "wrong": [
+    "Delete the commit and carry on",
+    "Make the repository private only",
+    "Wait to see if it is used"
+   ],
+   "tier": 4,
+   "why": "A pushed secret must be treated as exposed."
+  },
+  {
+   "q": "Searching with LIKE '%term%' is slow on a large table. What is the next step?",
+   "right": "Use the database's full-text search with an index, and add a search engine only if needed",
+   "wrong": [
+    "Add a bigger server first",
+    "Cache every query",
+    "Remove the search box"
+   ],
+   "tier": 3,
+   "why": "Full-text indexes avoid scanning every row."
+  },
+  {
+   "q": "Average latency looks fine but some users complain of slowness. What do you check?",
+   "right": "Tail latency such as p95 and p99",
+   "wrong": [
+    "The average again",
+    "The number of log lines",
+    "The size of the favicon"
+   ],
+   "tier": 4,
+   "why": "Averages hide slow outliers."
+  },
+  {
+   "q": "An endpoint returns another user's invoice when the id in the URL is changed. What is the fix?",
+   "right": "Check on the server that the invoice belongs to the caller",
+   "wrong": [
+    "Hide the id in JavaScript",
+    "Use longer ids only",
+    "Require HTTPS only"
+   ],
+   "tier": 3,
+   "why": "Object-level authorization is the missing control."
+  },
+  {
+   "q": "A report takes 40 seconds and times out requests. What is a good design?",
+   "right": "Accept the request, return 202 with a status location, and run it as a background job",
+   "wrong": [
+    "Raise the timeout to 5 minutes",
+    "Run it on every page load",
+    "Cache the failure"
+   ],
+   "tier": 3,
+   "why": "Slow work belongs outside the request."
+  },
+  {
+   "q": "A payment provider outage is taking down your whole checkout. What do you add?",
+   "right": "A timeout, a circuit breaker and a fallback path",
+   "wrong": [
+    "More retries with no timeout",
+    "A larger page size",
+    "A new database index"
+   ],
+   "tier": 4,
+   "why": "Fail fast and degrade gracefully."
+  },
+  {
+   "q": "An AI model's reply is placed straight into an SQL string. What is the right approach?",
+   "right": "Treat it as untrusted input: validate it and use parameters",
+   "wrong": [
+    "Trust it because it is generated",
+    "Trim it and concatenate",
+    "Cache it first"
+   ],
+   "tier": 3,
+   "why": "Model output is external data."
+  },
+  {
+   "q": "Which is the better division of work?",
+   "right": "The handler checks the caller and calls a business module that applies the rules",
+   "wrong": [
+    "The handler contains the rules and the queries",
+    "The database client makes authorization decisions",
+    "The browser applies the discount rules"
+   ],
+   "tier": 2,
+   "why": "Thin entry points and shared rule modules."
+  },
+  {
+   "q": "A signup with an existing email should respond with which status?",
+   "right": "409 Conflict",
+   "wrong": [
+    "201 Created",
+    "204 No Content",
+    "503 Service Unavailable"
+   ],
+   "tier": 2,
+   "why": "The request conflicts with current state."
+  },
+  {
+   "q": "Which HTTP method fits reading a list without side effects?",
+   "right": "GET",
+   "wrong": [
+    "POST",
+    "DELETE",
+    "PATCH"
+   ],
+   "tier": 1,
+   "why": "GET is safe and cacheable."
+  },
+  {
+   "q": "Which pair describes 401 versus 403?",
+   "right": "401 means not authenticated; 403 means authenticated but not allowed",
+   "wrong": [
+    "401 means forbidden; 403 means not found",
+    "401 means server error; 403 means rate limited",
+    "They are interchangeable"
+   ],
+   "tier": 2,
+   "why": "The distinction is identity versus permission."
+  }
+ ]
+}

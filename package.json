@@ -20,7 +20,11 @@
     "check:dynamic": "tsx scripts/dynamic-check.ts",
     "coverage": "tsx scripts/coverage.ts",
     "generate:bank": "tsx --env-file=.env.local scripts/generate-bank.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:blueprint": "tsx --env-file=.env.local scripts/check-blueprint.ts",
+    "seed:cards": "tsx --env-file=.env.local scripts/seed-ai.ts --cards",
+    "check:cards": "tsx scripts/ai/check.ts --cards",
+    "fit:blueprint": "tsx --env-file=.env.local scripts/blueprint-fit.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",

@@ -1,0 +1,2268 @@
+{
+ "slug": "guru-design-tools",
+ "name": "Design and prototyping tools",
+ "description": "Figma, Canva, diagrams and presentations.",
+ "roles": "designer",
+ "kind": "tool",
+ "brand": "guru-graphics",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "concept": "graphics concept",
+  "structure": "file structure element",
+  "format": "file format",
+  "colour": "colour concept",
+  "export": "export and optimisation practice",
+  "proto": "prototyping concept",
+  "handoff": "design handoff practice",
+  "assets": "asset management practice",
+  "type": "typography term",
+  "print": "print production term",
+  "screen": "screen design concept",
+  "gg": "GuruGraphics deliverable"
+ },
+ "cards": [
+  {
+   "group": "concept",
+   "subject": "Vector graphics",
+   "tier": 1,
+   "says": [
+    "describes an image as mathematical paths and shapes",
+    "scales to any size without losing sharpness",
+    "stays small in file size when the artwork is simple"
+   ],
+   "use": "need a logo that stays sharp from a favicon to a billboard",
+   "not": [
+    "stores an image as a fixed grid of coloured pixels"
+   ],
+   "like": [
+    "Raster graphics"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Raster graphics",
+   "tier": 1,
+   "says": [
+    "stores an image as a grid of pixels",
+    "looks soft or blocky when enlarged beyond its resolution",
+    "suits photographs with continuous tones"
+   ],
+   "use": "work with a photograph that needs retouching",
+   "not": [
+    "scales to any size without any loss of quality"
+   ],
+   "like": [
+    "Vector graphics"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Resolution",
+   "tier": 1,
+   "says": [
+    "is the amount of pixel detail in a raster image, such as its width and height in pixels",
+    "limits how large a raster image can be shown before it looks soft"
+   ],
+   "use": "need to know whether a photo is big enough for its intended size"
+  },
+  {
+   "group": "concept",
+   "subject": "PPI",
+   "tier": 2,
+   "says": [
+    "measures how many image pixels fall in one inch of a screen or print",
+    "combines with pixel dimensions to give an image's physical size"
+   ],
+   "use": "want to relate pixel dimensions to a physical size",
+   "not": [
+    "counts the ink dots a printer lays down per inch"
+   ],
+   "like": [
+    "DPI"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "DPI",
+   "tier": 3,
+   "says": [
+    "counts printer dots per inch of output",
+    "describes the output device rather than the pixels stored in the image file"
+   ],
+   "use": "are talking about the dot density of a printer",
+   "not": [
+    "is the number of pixels stored in the image file"
+   ],
+   "like": [
+    "PPI"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "A Bezier curve",
+   "tier": 2,
+   "says": [
+    "is defined by anchor points and control handles",
+    "gives vector shapes their smooth curves"
+   ],
+   "use": "need a smooth, editable curve in a vector shape"
+  },
+  {
+   "group": "concept",
+   "subject": "An anchor point",
+   "tier": 2,
+   "says": [
+    "marks a point on a vector path where the path can change direction",
+    "carries handles that shape the curve on either side of it"
+   ],
+   "use": "want to reshape one corner of a vector path",
+   "like": [
+    "A Bezier curve"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "A stroke",
+   "tier": 1,
+   "says": [
+    "is the outline drawn along the edge of a vector path",
+    "has a width, cap and join that can be set"
+   ],
+   "use": "need an outline around a shape",
+   "not": [
+    "is the colour that floods the inside of a closed shape"
+   ],
+   "like": [
+    "A fill"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "A fill",
+   "tier": 1,
+   "says": [
+    "is the colour, gradient or pattern inside a closed vector shape",
+    "can be set independently of the outline"
+   ],
+   "use": "need a shape to be solid or gradient-coloured inside",
+   "not": [
+    "is the line drawn along the edge of a path"
+   ],
+   "like": [
+    "A stroke"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Rasterising",
+   "tier": 3,
+   "says": [
+    "converts vector artwork into a pixel image at a chosen size",
+    "cannot be reversed to recover the original paths exactly"
+   ],
+   "use": "must turn vector artwork into pixels for a fixed-size output"
+  },
+  {
+   "group": "concept",
+   "subject": "Auto-tracing",
+   "tier": 4,
+   "says": [
+    "converts a raster image into vector paths automatically",
+    "often leaves extra anchor points that need manual clean-up"
+   ],
+   "use": "are handed a low-resolution logo and need a vector version"
+  },
+  {
+   "group": "structure",
+   "subject": "A layer",
+   "tier": 1,
+   "says": [
+    "stacks one piece of artwork above or below others",
+    "can be hidden, locked or reordered without altering the others"
+   ],
+   "use": "need to edit the background without disturbing the text"
+  },
+  {
+   "group": "structure",
+   "subject": "A group",
+   "tier": 2,
+   "says": [
+    "bundles selected objects so they move and transform together",
+    "keeps its contents individually editable when opened"
+   ],
+   "use": "want several objects to move as one unit",
+   "like": [
+    "A frame"
+   ]
+  },
+  {
+   "group": "structure",
+   "subject": "An artboard",
+   "tier": 1,
+   "says": [
+    "is a separate canvas inside one file, such as one page or screen size",
+    "lets several sizes of one design sit side by side",
+    "can be exported on its own"
+   ],
+   "use": "need the same design at several sizes in one file"
+  },
+  {
+   "group": "structure",
+   "subject": "A frame",
+   "tier": 2,
+   "says": [
+    "is a container that can clip its contents to its edges",
+    "can carry layout rules such as constraints or auto layout"
+   ],
+   "use": "need a screen or card container that clips and arranges its content",
+   "like": [
+    "A group",
+    "An artboard"
+   ]
+  },
+  {
+   "group": "structure",
+   "subject": "A component",
+   "tier": 1,
+   "says": [
+    "is a reusable element defined once",
+    "holds the master definition that its copies follow"
+   ],
+   "use": "want a button designed once and reused everywhere",
+   "like": [
+    "An instance"
+   ]
+  },
+  {
+   "group": "structure",
+   "subject": "An instance",
+   "tier": 2,
+   "says": [
+    "is a linked copy of a component",
+    "inherits changes made to its main component",
+    "can override chosen properties such as its text"
+   ],
+   "use": "place a copy of a button on a screen and relabel it",
+   "not": [
+    "is the master definition that edits are made in"
+   ],
+   "like": [
+    "A component"
+   ]
+  },
+  {
+   "group": "structure",
+   "subject": "A variant",
+   "tier": 4,
+   "says": [
+    "is one state or option of a component, such as hover or disabled",
+    "groups related versions of a component into one set"
+   ],
+   "use": "need one component to cover sizes and states",
+   "like": [
+    "An instance"
+   ]
+  },
+  {
+   "group": "structure",
+   "subject": "A layer mask",
+   "tier": 3,
+   "says": [
+    "uses black and white values to hide and reveal pixels non-destructively",
+    "can be repainted to bring hidden content back"
+   ],
+   "use": "want to hide part of a photo without erasing it",
+   "not": [
+    "limits visibility to the outline of the layer beneath"
+   ],
+   "like": [
+    "A clipping mask"
+   ]
+  },
+  {
+   "group": "structure",
+   "subject": "A clipping mask",
+   "tier": 3,
+   "says": [
+    "limits the visibility of a layer to the shape of the layer beneath",
+    "lets a photo show only inside a shape"
+   ],
+   "use": "want an image to appear only inside a given shape",
+   "not": [
+    "is painted in black and white to hide pixels"
+   ],
+   "like": [
+    "A layer mask"
+   ]
+  },
+  {
+   "group": "structure",
+   "subject": "A smart object",
+   "tier": 4,
+   "says": [
+    "embeds source content so it can be scaled repeatedly without degrading it",
+    "can be linked to a separate file so edits update every use"
+   ],
+   "use": "expect to resize a placed image several times in a raster editor"
+  },
+  {
+   "group": "structure",
+   "subject": "An adjustment layer",
+   "tier": 3,
+   "says": [
+    "applies tone or colour changes without altering the pixels beneath",
+    "can be switched off or edited later"
+   ],
+   "use": "want to change a photo's brightness while keeping the original untouched"
+  },
+  {
+   "group": "structure",
+   "subject": "Auto layout",
+   "tier": 4,
+   "says": [
+    "resizes and spaces a container based on its contents",
+    "stacks children with set direction, spacing and padding"
+   ],
+   "use": "need a button that grows with its label"
+  },
+  {
+   "group": "structure",
+   "subject": "A constraint",
+   "tier": 4,
+   "says": [
+    "pins an object to an edge or the centre of its parent frame",
+    "decides how an object responds when the parent is resized"
+   ],
+   "use": "need a logo to stay at the top right when a frame is resized",
+   "like": [
+    "Auto layout"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "SVG",
+   "tier": 1,
+   "says": [
+    "is a text-based XML vector format",
+    "can be edited in a text editor",
+    "is embedded directly in web pages and styled with CSS"
+   ],
+   "use": "need a crisp logo or icon on a web page",
+   "not": [
+    "stores a fixed grid of pixels"
+   ],
+   "like": [
+    "PNG"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "PNG",
+   "tier": 1,
+   "says": [
+    "uses lossless compression",
+    "supports transparency through an alpha channel",
+    "suits screenshots and flat graphics as a raster"
+   ],
+   "use": "need a transparent raster image with sharp edges",
+   "not": [
+    "discards detail to shrink the file"
+   ],
+   "like": [
+    "JPEG",
+    "SVG"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "JPEG",
+   "tier": 1,
+   "says": [
+    "uses lossy compression",
+    "suits photographs",
+    "has no transparency support"
+   ],
+   "use": "are publishing a photograph where a small file matters",
+   "not": [
+    "supports transparency through an alpha channel"
+   ],
+   "like": [
+    "PNG",
+    "WebP"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "WebP",
+   "tier": 2,
+   "says": [
+    "supports both lossy and lossless compression",
+    "supports transparency and animation",
+    "was designed for use on the web"
+   ],
+   "use": "want one web image format that covers photographs and transparent graphics",
+   "like": [
+    "PNG",
+    "JPEG"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "AVIF",
+   "tier": 4,
+   "says": [
+    "compresses with an image codec derived from a video codec",
+    "supports transparency and wide colour gamut"
+   ],
+   "use": "want very efficient web photography and accept less universal tool support",
+   "like": [
+    "WebP"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "GIF",
+   "tier": 2,
+   "says": [
+    "is limited to a palette of 256 colours per frame",
+    "supports simple frame-by-frame animation"
+   ],
+   "use": "need a very simple looping animation that works anywhere",
+   "like": [
+    "PNG"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "PDF",
+   "tier": 1,
+   "says": [
+    "preserves layout, fonts and graphics in a fixed-page document",
+    "can hold both vector and raster content"
+   ],
+   "use": "need to send a fixed-layout or print-ready document",
+   "not": [
+    "can only contain text and no images"
+   ],
+   "like": [
+    "An AI file"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "An AI file",
+   "tier": 2,
+   "says": [
+    "is Adobe Illustrator's native editable vector format",
+    "keeps artboards, layers and live effects editable"
+   ],
+   "use": "need the editable master of a vector logo",
+   "like": [
+    "A PSD file"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "A PSD file",
+   "tier": 2,
+   "says": [
+    "is Photoshop's native layered raster format",
+    "keeps layers, masks and adjustment layers editable"
+   ],
+   "use": "need the editable master of a retouched image",
+   "like": [
+    "An AI file"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "EPS",
+   "tier": 5,
+   "says": [
+    "is an older PostScript-based format used for vector artwork",
+    "does not support transparency natively"
+   ],
+   "use": "are asked by a printer for a legacy vector format",
+   "like": [
+    "PDF"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "TIFF",
+   "tier": 3,
+   "says": [
+    "is a flexible raster format common in print and scanning",
+    "can hold CMYK data and lossless compression"
+   ],
+   "use": "need a high-quality raster master for a print workflow",
+   "like": [
+    "JPEG"
+   ]
+  },
+  {
+   "group": "format",
+   "subject": "A camera RAW file",
+   "tier": 4,
+   "says": [
+    "stores unprocessed sensor data",
+    "must be developed before it is shared"
+   ],
+   "use": "need maximum latitude to correct exposure after a shoot",
+   "not": [
+    "is a compressed web-ready photograph"
+   ],
+   "like": [
+    "JPEG"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "RGB",
+   "tier": 1,
+   "says": [
+    "mixes red, green and blue light additively",
+    "is the colour model used by screens",
+    "reaches white when all channels are at full strength"
+   ],
+   "use": "are designing for a screen",
+   "not": [
+    "mixes inks subtractively"
+   ],
+   "like": [
+    "CMYK"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "CMYK",
+   "tier": 1,
+   "says": [
+    "mixes cyan, magenta, yellow and black inks subtractively",
+    "is the model behind process-colour printing",
+    "usually reproduces fewer saturated colours than a screen"
+   ],
+   "use": "are preparing artwork for four-colour printing",
+   "not": [
+    "mixes light additively"
+   ],
+   "like": [
+    "RGB"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "A gamut",
+   "tier": 2,
+   "says": [
+    "is the range of colours a device or colour space can reproduce",
+    "differs between a screen and a printing process"
+   ],
+   "use": "ask why a bright screen colour cannot be printed"
+  },
+  {
+   "group": "colour",
+   "subject": "An ICC profile",
+   "tier": 4,
+   "says": [
+    "describes how a device's colour values map to real colours",
+    "can be embedded in a file to keep colour consistent between devices"
+   ],
+   "use": "need colour to look the same on different devices"
+  },
+  {
+   "group": "colour",
+   "subject": "sRGB",
+   "tier": 2,
+   "says": [
+    "is the standard default RGB colour space for the web",
+    "is the safe choice when the viewing device is unknown"
+   ],
+   "use": "are exporting images for general web viewing",
+   "like": [
+    "A wide-gamut colour space"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "A wide-gamut colour space",
+   "tier": 5,
+   "says": [
+    "covers a wider range of colours than sRGB",
+    "needs a colour-managed workflow to display as intended"
+   ],
+   "use": "work on screens and images that exceed sRGB",
+   "like": [
+    "sRGB"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "A spot colour",
+   "tier": 3,
+   "says": [
+    "is a premixed ink printed on its own plate",
+    "is specified by name from a matching library"
+   ],
+   "use": "need a brand colour reproduced exactly by a premixed ink",
+   "not": [
+    "is built from halftone dots of the four process inks"
+   ],
+   "like": [
+    "CMYK"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "A hex colour code",
+   "tier": 1,
+   "says": [
+    "writes an RGB colour as six hexadecimal digits",
+    "is the usual way to specify a screen colour in CSS"
+   ],
+   "use": "need to hand a developer an exact screen colour"
+  },
+  {
+   "group": "colour",
+   "subject": "HSL",
+   "tier": 3,
+   "says": [
+    "describes colour by hue, saturation and lightness",
+    "makes light and dark variants of one hue easy to create"
+   ],
+   "use": "want to derive tints and shades of a single hue"
+  },
+  {
+   "group": "colour",
+   "subject": "Colour management",
+   "tier": 4,
+   "says": [
+    "converts colour values between profiles so appearance stays consistent",
+    "relies on every stage knowing the profile of the file"
+   ],
+   "use": "see colours shift between design software and the browser"
+  },
+  {
+   "group": "colour",
+   "subject": "A rendering intent",
+   "tier": 5,
+   "says": [
+    "chooses how out-of-gamut colours are mapped during a profile conversion",
+    "includes options such as perceptual and relative colorimetric"
+   ],
+   "use": "convert a vivid image to a smaller gamut and want to control the result"
+  },
+  {
+   "group": "colour",
+   "subject": "RGB-to-CMYK conversion",
+   "tier": 4,
+   "says": [
+    "can dull saturated colours that fall outside the CMYK gamut",
+    "is best done late, from the RGB master, using the target profile"
+   ],
+   "use": "must prepare an RGB design for print"
+  },
+  {
+   "group": "colour",
+   "subject": "An alpha channel",
+   "tier": 2,
+   "says": [
+    "stores per-pixel transparency",
+    "lets an image blend onto any background"
+   ],
+   "use": "need a logo that sits over different backgrounds"
+  },
+  {
+   "group": "colour",
+   "subject": "Bit depth",
+   "tier": 5,
+   "says": [
+    "sets how many tonal levels each colour channel can hold",
+    "reduces visible banding in gradients when it is higher"
+   ],
+   "use": "see stepped bands in a smooth gradient"
+  },
+  {
+   "group": "export",
+   "subject": "Lossy compression",
+   "tier": 2,
+   "says": [
+    "discards some image data to shrink the file",
+    "cannot restore the discarded detail afterwards"
+   ],
+   "use": "need the smallest file for a photograph and can accept minor loss",
+   "like": [
+    "Lossless compression"
+   ]
+  },
+  {
+   "group": "export",
+   "subject": "Lossless compression",
+   "tier": 2,
+   "says": [
+    "shrinks a file while allowing exact reconstruction of the original pixels",
+    "gives smaller savings on photographs than lossy compression"
+   ],
+   "use": "must keep every pixel exactly as designed",
+   "like": [
+    "Lossy compression"
+   ]
+  },
+  {
+   "group": "export",
+   "subject": "Exporting at 2x",
+   "tier": 2,
+   "says": [
+    "produces an image with twice the pixel dimensions of its layout size",
+    "keeps images sharp on high-density screens"
+   ],
+   "use": "need an icon to look sharp on a high-density display"
+  },
+  {
+   "group": "export",
+   "subject": "Slicing",
+   "tier": 3,
+   "says": [
+    "marks a region of a design to be exported as its own image",
+    "lets one artboard produce several separate files"
+   ],
+   "use": "need several images cut from one composed layout"
+  },
+  {
+   "group": "export",
+   "subject": "SVG optimisation",
+   "tier": 3,
+   "says": [
+    "removes editor metadata and redundant markup from an SVG",
+    "keeps the visual result unchanged"
+   ],
+   "use": "find an exported SVG is full of editor-specific data"
+  },
+  {
+   "group": "export",
+   "subject": "A responsive image",
+   "tier": 4,
+   "says": [
+    "offers the browser several sizes of one image to choose from",
+    "avoids sending phones an image sized for a large monitor"
+   ],
+   "use": "serve one photo to phones and large desktops efficiently",
+   "like": [
+    "Resizing before export"
+   ]
+  },
+  {
+   "group": "export",
+   "subject": "Stripping metadata",
+   "tier": 3,
+   "says": [
+    "removes EXIF and editor data from an exported file",
+    "can remove location data embedded in photographs"
+   ],
+   "use": "publish a photograph that may carry the camera's location"
+  },
+  {
+   "group": "export",
+   "subject": "Resizing before export",
+   "tier": 2,
+   "says": [
+    "avoids shipping more pixels than the layout displays",
+    "is done to the largest size the image will be shown at"
+   ],
+   "use": "find a hero photo several times larger than it is displayed",
+   "like": [
+    "A responsive image"
+   ]
+  },
+  {
+   "group": "export",
+   "subject": "Choosing a JPEG quality level",
+   "tier": 4,
+   "says": [
+    "trades file size against visible artefacts",
+    "is judged by eye on the actual image because results vary with content"
+   ],
+   "use": "need to pick a compression setting for a photograph"
+  },
+  {
+   "group": "export",
+   "subject": "Lazy loading",
+   "tier": 4,
+   "says": [
+    "delays loading offscreen images until the visitor scrolls near them",
+    "reduces the data fetched on first view of a page"
+   ],
+   "use": "want long pages with many images to load quickly at first"
+  },
+  {
+   "group": "export",
+   "subject": "An SVG sprite",
+   "tier": 4,
+   "says": [
+    "bundles many icons into one file referenced by id",
+    "lets one request serve a whole icon set"
+   ],
+   "use": "want an icon set delivered in a single file"
+  },
+  {
+   "group": "export",
+   "subject": "A progressive JPEG",
+   "tier": 4,
+   "says": [
+    "loads as a blurry full image that sharpens in passes",
+    "shows the whole picture early on slow connections"
+   ],
+   "use": "want a large photo to show something quickly on a slow connection"
+  },
+  {
+   "group": "export",
+   "subject": "Dithering",
+   "tier": 5,
+   "says": [
+    "simulates missing colours by patterning pixels in a limited palette",
+    "can make a gradient look smoother in a 256-colour image"
+   ],
+   "use": "must reduce a gradient to a small palette without harsh banding"
+  },
+  {
+   "group": "proto",
+   "subject": "A wireframe",
+   "tier": 1,
+   "says": [
+    "sketches structure and layout without final visual styling",
+    "focuses on placement and function rather than colour and imagery"
+   ],
+   "use": "want to agree page structure before spending time on visuals",
+   "not": [
+    "is a fully styled picture of the finished screen"
+   ],
+   "like": [
+    "A mockup"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A mockup",
+   "tier": 2,
+   "says": [
+    "shows a static, visually styled version of a design",
+    "has no working interactions"
+   ],
+   "use": "need stakeholders to see exactly how a screen will look",
+   "not": [
+    "responds to clicks like the finished product"
+   ],
+   "like": [
+    "A prototype",
+    "A wireframe"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A prototype",
+   "tier": 1,
+   "says": [
+    "simulates how a design behaves through clickable interactions",
+    "can be tested with users before any code is written"
+   ],
+   "use": "want users to try a flow before it is built",
+   "not": [
+    "is the finished product released to customers"
+   ],
+   "like": [
+    "A mockup",
+    "A low-fidelity prototype",
+    "A high-fidelity prototype"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A low-fidelity prototype",
+   "tier": 2,
+   "says": [
+    "is a rough, quick version such as paper sketches or grey boxes",
+    "invites feedback on structure rather than polish"
+   ],
+   "use": "need quick feedback on an idea before investing in detail",
+   "like": [
+    "A high-fidelity prototype"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A high-fidelity prototype",
+   "tier": 3,
+   "says": [
+    "closely resembles the final look and behaviour",
+    "suits testing visual hierarchy and microinteractions",
+    "takes longer to build and change"
+   ],
+   "use": "need to test details of the look and feel with users",
+   "like": [
+    "A low-fidelity prototype"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A user flow",
+   "tier": 2,
+   "says": [
+    "maps the steps a person takes to complete a task",
+    "shows screens and decision points along a path"
+   ],
+   "use": "want to map how someone moves from start to goal"
+  },
+  {
+   "group": "proto",
+   "subject": "A trigger",
+   "tier": 2,
+   "says": [
+    "defines the click, tap or hover that starts a prototype action",
+    "connects one frame to another"
+   ],
+   "use": "need a button to take the viewer to the next screen",
+   "like": [
+    "A prototype transition"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A prototype transition",
+   "tier": 3,
+   "says": [
+    "defines the animation between two prototype states",
+    "can be a dissolve, a slide or a push"
+   ],
+   "use": "want the move between two screens to feel animated",
+   "like": [
+    "A trigger"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A usability test",
+   "tier": 3,
+   "says": [
+    "observes real users attempting tasks with a prototype",
+    "uncovers confusion the design team can no longer see"
+   ],
+   "use": "want evidence of where users get stuck"
+  },
+  {
+   "group": "proto",
+   "subject": "A design system",
+   "tier": 3,
+   "says": [
+    "collects reusable components, styles and guidance in one source",
+    "helps separate teams build screens that look consistent"
+   ],
+   "use": "need many designers and developers to produce consistent interfaces"
+  },
+  {
+   "group": "proto",
+   "subject": "A microinteraction",
+   "tier": 4,
+   "says": [
+    "is a small animated response to a single action, such as a toggle moving",
+    "gives feedback that an action registered"
+   ],
+   "use": "want a switch to acknowledge a tap"
+  },
+  {
+   "group": "proto",
+   "subject": "A coded prototype",
+   "tier": 5,
+   "says": [
+    "uses real code to test behaviour a design tool cannot simulate",
+    "can use real data and measure speed"
+   ],
+   "use": "must test performance or real data that a mock cannot show"
+  },
+  {
+   "group": "handoff",
+   "subject": "Inspect mode",
+   "tier": 2,
+   "says": [
+    "shows measurements, colours and code snippets for selected elements",
+    "lets developers read values straight from the design"
+   ],
+   "use": "are a developer who needs exact spacing and colour from a design"
+  },
+  {
+   "group": "handoff",
+   "subject": "A redline",
+   "tier": 2,
+   "says": [
+    "annotates a design with spacing, size and alignment measurements",
+    "goes stale when the design changes after it is drawn"
+   ],
+   "use": "must communicate exact spacing in a static handoff"
+  },
+  {
+   "group": "handoff",
+   "subject": "A design token",
+   "tier": 4,
+   "says": [
+    "stores a design decision such as colour, spacing or type size as a named value",
+    "lets one change propagate to both design and code"
+   ],
+   "use": "want a colour change to flow through every screen and codebase"
+  },
+  {
+   "group": "handoff",
+   "subject": "A spacing scale",
+   "tier": 3,
+   "says": [
+    "limits spacing to a small set of agreed values",
+    "removes one-off gaps that nobody can justify"
+   ],
+   "use": "find spacing differs slightly on every screen"
+  },
+  {
+   "group": "handoff",
+   "subject": "Marking assets for export",
+   "tier": 2,
+   "says": [
+    "tells developers which layers to export and in which formats and scales",
+    "avoids developers guessing what to extract"
+   ],
+   "use": "want developers to pull the right icon files themselves"
+  },
+  {
+   "group": "handoff",
+   "subject": "Documenting component states",
+   "tier": 3,
+   "says": [
+    "lists how an element looks when hovered, focused, disabled or in error",
+    "prevents developers from inventing missing states"
+   ],
+   "use": "need to list the hover, focus and disabled looks of a button for developers",
+   "like": [
+    "A handoff walkthrough",
+    "A redline"
+   ]
+  },
+  {
+   "group": "handoff",
+   "subject": "Design-to-code parity",
+   "tier": 5,
+   "says": [
+    "keeps design components and coded components alike in name and behaviour",
+    "reduces rework when the two drift apart"
+   ],
+   "use": "find the design library and the code library have different names for the same button"
+  },
+  {
+   "group": "handoff",
+   "subject": "Linking the design file from the requirement",
+   "tier": 3,
+   "says": [
+    "lets readers find the mockup next to what it must satisfy",
+    "is most useful with a note of the decision the prototype supported"
+   ],
+   "use": "want a requirement and its design to stay connected"
+  },
+  {
+   "group": "handoff",
+   "subject": "A handoff walkthrough",
+   "tier": 3,
+   "says": [
+    "lets the designer explain intent before building starts",
+    "surfaces developer questions early"
+   ],
+   "use": "want to avoid misreadings of a complex design",
+   "like": [
+    "Design QA"
+   ]
+  },
+  {
+   "group": "handoff",
+   "subject": "An accessibility annotation",
+   "tier": 5,
+   "says": [
+    "specifies reading order, focus order, labels and alt text for developers",
+    "records a need that a visual comp cannot show"
+   ],
+   "use": "must tell developers how a screen should work with a screen reader"
+  },
+  {
+   "group": "handoff",
+   "subject": "Design QA",
+   "tier": 4,
+   "says": [
+    "compares the built result against the design before release",
+    "catches drift in spacing, colour and states"
+   ],
+   "use": "want to check that what was built matches what was designed",
+   "like": [
+    "A handoff walkthrough"
+   ]
+  },
+  {
+   "group": "assets",
+   "subject": "A naming convention",
+   "tier": 1,
+   "says": [
+    "gives files predictable names with agreed order, case and separators",
+    "makes assets findable by search and sort"
+   ],
+   "use": "find files called final, final2 and final_new in one folder"
+  },
+  {
+   "group": "assets",
+   "subject": "A master file",
+   "tier": 2,
+   "says": [
+    "is the editable original from which every export is made",
+    "should be kept even when only exports are shared"
+   ],
+   "use": "need to change a logo after it has been sent out in several formats",
+   "not": [
+    "is a flattened copy made for one use"
+   ],
+   "like": [
+    "A derivative file"
+   ]
+  },
+  {
+   "group": "assets",
+   "subject": "A derivative file",
+   "tier": 2,
+   "says": [
+    "is a flattened or converted copy made for a particular use",
+    "should be regenerated from the master rather than edited"
+   ],
+   "use": "need a web copy of an approved print logo",
+   "not": [
+    "is the editable original of the artwork"
+   ],
+   "like": [
+    "A master file"
+   ]
+  },
+  {
+   "group": "assets",
+   "subject": "A digital asset management system",
+   "tier": 4,
+   "says": [
+    "stores approved assets with metadata, search and permissions in one place",
+    "tracks usage so copies do not drift across drives and email"
+   ],
+   "use": "have approved brand files scattered across drives and inboxes",
+   "like": [
+    "A brand asset library"
+   ]
+  },
+  {
+   "group": "assets",
+   "subject": "Asset metadata",
+   "tier": 2,
+   "says": [
+    "describes a file with tags, keywords, usage rights and authorship",
+    "makes assets searchable beyond their filenames"
+   ],
+   "use": "cannot find an image because its filename says nothing"
+  },
+  {
+   "group": "assets",
+   "subject": "A licence record",
+   "tier": 4,
+   "says": [
+    "records where an image or font came from and what use it permits",
+    "stops unlicensed material entering a campaign"
+   ],
+   "use": "must prove that a stock image may be used in a client campaign"
+  },
+  {
+   "group": "assets",
+   "subject": "A brand asset library",
+   "tier": 2,
+   "says": [
+    "collects approved logos, icons and templates for everyday use",
+    "gives staff one place to fetch the current version"
+   ],
+   "use": "want staff to stop using outdated logos",
+   "like": [
+    "A digital asset management system"
+   ]
+  },
+  {
+   "group": "assets",
+   "subject": "Packaging a file",
+   "tier": 4,
+   "says": [
+    "gathers a file with its linked images and fonts into one folder",
+    "lets another person open the work with nothing missing"
+   ],
+   "use": "need to send a layout to a printer who lacks your fonts"
+  },
+  {
+   "group": "assets",
+   "subject": "A linked image",
+   "tier": 3,
+   "says": [
+    "stays a separate file referenced by the design",
+    "breaks when the design is moved without it"
+   ],
+   "use": "see a missing-links warning after moving a project folder",
+   "not": [
+    "is stored inside the design file itself"
+   ],
+   "like": [
+    "An embedded image"
+   ]
+  },
+  {
+   "group": "assets",
+   "subject": "An embedded image",
+   "tier": 3,
+   "says": [
+    "is stored inside the design file",
+    "enlarges the file but travels with it"
+   ],
+   "use": "want a design file that cannot lose its pictures",
+   "not": [
+    "stays a separate file referenced by the design"
+   ],
+   "like": [
+    "A linked image"
+   ]
+  },
+  {
+   "group": "assets",
+   "subject": "A single approved version",
+   "tier": 3,
+   "says": [
+    "marks one file as the current approved artwork",
+    "removes doubt about which logo file to use"
+   ],
+   "use": "find three near-identical logo files in circulation"
+  },
+  {
+   "group": "assets",
+   "subject": "Archiving a project",
+   "tier": 5,
+   "says": [
+    "moves finished work to long-term storage with masters, fonts and links together",
+    "keeps the work reopenable years later"
+   ],
+   "use": "are closing a finished project and want to reopen it later"
+  },
+  {
+   "group": "type",
+   "subject": "A font family",
+   "tier": 1,
+   "says": [
+    "groups related weights and styles of one typeface",
+    "includes variants such as regular, italic and bold"
+   ],
+   "use": "need a consistent set of weights for a brand"
+  },
+  {
+   "group": "type",
+   "subject": "A variable font",
+   "tier": 5,
+   "says": [
+    "holds a range of weights or widths in one file",
+    "allows continuous adjustment between its extremes"
+   ],
+   "use": "want many weights without many separate files"
+  },
+  {
+   "group": "type",
+   "subject": "Kerning",
+   "tier": 2,
+   "says": [
+    "adjusts the space between a specific pair of letters",
+    "fixes awkward gaps such as in AV"
+   ],
+   "use": "see an uneven gap between two particular letters",
+   "like": [
+    "Tracking",
+    "Leading"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "Tracking",
+   "tier": 3,
+   "says": [
+    "adjusts the spacing across a whole run of text evenly",
+    "is often opened up slightly for small capitals"
+   ],
+   "use": "want to loosen a whole line of text",
+   "like": [
+    "Kerning"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "Leading",
+   "tier": 2,
+   "says": [
+    "is the vertical distance between lines of text",
+    "makes paragraphs feel tight or airy"
+   ],
+   "use": "find lines of body text too cramped",
+   "like": [
+    "Kerning"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "Font embedding",
+   "tier": 3,
+   "says": [
+    "stores the font inside a PDF so it displays correctly everywhere",
+    "is subject to the font's licence terms"
+   ],
+   "use": "must send a PDF to a reader who lacks the typeface"
+  },
+  {
+   "group": "type",
+   "subject": "A webfont",
+   "tier": 3,
+   "says": [
+    "is a font file served to the browser with a page",
+    "lets a site use a typeface the visitor does not have installed"
+   ],
+   "use": "want a page to show the brand typeface on any device"
+  },
+  {
+   "group": "type",
+   "subject": "A fallback font",
+   "tier": 3,
+   "says": [
+    "is a substitute used when the first-choice font is unavailable",
+    "is listed after the preferred font in a font stack"
+   ],
+   "use": "want text to remain legible if the brand font fails to load"
+  },
+  {
+   "group": "type",
+   "subject": "A type scale",
+   "tier": 3,
+   "says": [
+    "is a set of related text sizes with a consistent ratio",
+    "keeps headings and body text in proportion"
+   ],
+   "use": "find text sizes chosen arbitrarily on each screen"
+  },
+  {
+   "group": "type",
+   "subject": "A font licence",
+   "tier": 2,
+   "says": [
+    "states how a typeface may be installed, embedded and distributed",
+    "can differ for print, web and app use"
+   ],
+   "use": "want to put a purchased font on a website"
+  },
+  {
+   "group": "print",
+   "subject": "Bleed",
+   "tier": 1,
+   "says": [
+    "extends artwork beyond the trim edge",
+    "prevents white slivers when the page is cut"
+   ],
+   "use": "have a background colour that runs to the edge of a printed page"
+  },
+  {
+   "group": "print",
+   "subject": "A crop mark",
+   "tier": 2,
+   "says": [
+    "shows the printer where to cut",
+    "sits outside the trim area"
+   ],
+   "use": "need to show the printer where the sheet is trimmed"
+  },
+  {
+   "group": "print",
+   "subject": "A safe margin",
+   "tier": 2,
+   "says": [
+    "keeps text and logos clear of the trim edge",
+    "protects content from slight cutting variation"
+   ],
+   "use": "want text not to be cut off by trimming",
+   "like": [
+    "Bleed"
+   ]
+  },
+  {
+   "group": "print",
+   "subject": "Print resolution",
+   "tier": 3,
+   "says": [
+    "is commonly about 300 pixels per inch at final size for photographs",
+    "falls short when a small web image is stretched to poster size"
+   ],
+   "use": "must decide whether a photo is big enough for a printed leaflet"
+  },
+  {
+   "group": "print",
+   "subject": "Overprint",
+   "tier": 5,
+   "says": [
+    "prints one ink over another instead of knocking out what lies beneath",
+    "can cause unexpected colours when set by accident"
+   ],
+   "use": "see a colour mixing with the one underneath in a proof"
+  },
+  {
+   "group": "print",
+   "subject": "Rich black",
+   "tier": 4,
+   "says": [
+    "mixes CMYK inks to print a deeper black than black ink alone",
+    "is suited to large solid areas rather than small text"
+   ],
+   "use": "want a large black background to look deep and solid"
+  },
+  {
+   "group": "print",
+   "subject": "Transparency flattening",
+   "tier": 5,
+   "says": [
+    "merges overlapping transparent objects into opaque output",
+    "is needed by older output workflows"
+   ],
+   "use": "must output transparency to a workflow that cannot handle it"
+  },
+  {
+   "group": "print",
+   "subject": "Preflight",
+   "tier": 3,
+   "says": [
+    "checks a file for print problems such as missing fonts and low-resolution images",
+    "is run before artwork goes to the printer"
+   ],
+   "use": "want to catch print problems before the file leaves"
+  },
+  {
+   "group": "print",
+   "subject": "PDF/X",
+   "tier": 5,
+   "says": [
+    "is a family of PDF standards restricting content for reliable print exchange",
+    "typically requires fonts embedded and defined colour handling"
+   ],
+   "use": "need a print PDF that meets a printer's standard"
+  },
+  {
+   "group": "print",
+   "subject": "Converting text to outlines",
+   "tier": 3,
+   "says": [
+    "turns live text into vector shapes so no font is needed",
+    "makes the text no longer editable as text"
+   ],
+   "use": "must send artwork to a printer who lacks the typeface"
+  },
+  {
+   "group": "print",
+   "subject": "A proof",
+   "tier": 3,
+   "says": [
+    "shows how the job will look before the full run is printed",
+    "may be a soft proof on screen or a hard copy on paper"
+   ],
+   "use": "want to approve colour before a large print run"
+  },
+  {
+   "group": "print",
+   "subject": "Trapping",
+   "tier": 5,
+   "says": [
+    "slightly overlaps adjoining colours to hide gaps from misregistration",
+    "is applied where plates may not line up perfectly"
+   ],
+   "use": "fear thin white gaps where two printed colours meet"
+  },
+  {
+   "group": "print",
+   "subject": "Total ink coverage",
+   "tier": 5,
+   "says": [
+    "caps the combined ink percentage of CMYK in the darkest areas",
+    "prevents wet or smudging ink on press"
+   ],
+   "use": "find a dark area too saturated with ink for the press"
+  },
+  {
+   "group": "screen",
+   "subject": "Responsive design",
+   "tier": 2,
+   "says": [
+    "adapts a layout to the width of the viewing screen",
+    "lets one design serve phones, tablets and desktops"
+   ],
+   "use": "want one page to work on phones and desktops"
+  },
+  {
+   "group": "screen",
+   "subject": "A breakpoint",
+   "tier": 2,
+   "says": [
+    "is a width at which a layout changes",
+    "is where columns reflow or navigation changes form"
+   ],
+   "use": "need the navigation to change on narrow screens"
+  },
+  {
+   "group": "screen",
+   "subject": "Device pixel ratio",
+   "tier": 4,
+   "says": [
+    "is the number of physical pixels per CSS pixel",
+    "is why 2x assets look sharp on dense screens"
+   ],
+   "use": "ask why images look soft on a phone but sharp on an older monitor"
+  },
+  {
+   "group": "screen",
+   "subject": "A layout grid",
+   "tier": 2,
+   "says": [
+    "divides a frame into columns with gutters and margins",
+    "helps elements align across screens"
+   ],
+   "use": "want elements to line up consistently across pages"
+  },
+  {
+   "group": "screen",
+   "subject": "A contrast ratio",
+   "tier": 3,
+   "says": [
+    "compares the luminance of text and its background",
+    "is what accessibility guidelines use to judge legibility"
+   ],
+   "use": "need to check that grey text is readable on white"
+  },
+  {
+   "group": "screen",
+   "subject": "Alt text",
+   "tier": 1,
+   "says": [
+    "describes an image's content or purpose for people who cannot see it",
+    "is left empty for purely decorative images"
+   ],
+   "use": "add a photograph to a web page for screen reader users"
+  },
+  {
+   "group": "screen",
+   "subject": "A favicon",
+   "tier": 2,
+   "says": [
+    "is the small icon shown in browser tabs and bookmarks",
+    "must stay recognisable at very small sizes"
+   ],
+   "use": "want a brand mark visible in a browser tab"
+  },
+  {
+   "group": "screen",
+   "subject": "A dark colour scheme",
+   "tier": 4,
+   "says": [
+    "needs its own chosen colour pairs rather than a simple inversion",
+    "must still meet contrast requirements"
+   ],
+   "use": "are adding a dark theme to an interface"
+  },
+  {
+   "group": "screen",
+   "subject": "An icon grid",
+   "tier": 3,
+   "says": [
+    "keeps icons the same overall size and optical weight",
+    "provides keylines for circles, squares and rectangles"
+   ],
+   "use": "find icons in one set look uneven next to each other"
+  },
+  {
+   "group": "screen",
+   "subject": "Colour-independent cues",
+   "tier": 4,
+   "says": [
+    "convey meaning through text, shape or icon as well as colour",
+    "help people with colour vision deficiency"
+   ],
+   "use": "mark an error state in a form"
+  },
+  {
+   "group": "gg",
+   "subject": "GuruGraphics",
+   "tier": 1,
+   "says": [
+    "is a UK brand identity studio",
+    "does design and branding only",
+    "does not sell software, development, hosting or support"
+   ],
+   "use": "are asked whether this studio builds websites or hosting"
+  },
+  {
+   "group": "gg",
+   "subject": "Brand Discovery master artwork",
+   "tier": 2,
+   "says": [
+    "is supplied in AI, PDF, SVG, JPG and PNG",
+    "comes from the first engagement"
+   ],
+   "use": "want to know which file formats the first engagement delivers",
+   "like": [
+    "The editable working file set"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The editable working file set",
+   "tier": 3,
+   "says": [
+    "is handed over first in the Identity Programme",
+    "lets the client's own team adjust artwork later"
+   ],
+   "use": "want to know when the studio hands over editable source files",
+   "like": [
+    "Brand Discovery master artwork"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "A digital asset library",
+   "tier": 3,
+   "says": [
+    "gathers approved brand assets in digital form",
+    "is meant for the client to reuse in daily work"
+   ],
+   "use": "want to name the deliverable that gathers approved brand assets for reuse"
+  },
+  {
+   "group": "gg",
+   "subject": "A favicon and channel icon set",
+   "tier": 3,
+   "says": [
+    "serves small digital placements such as browser tabs and channels",
+    "has to stay recognisable when shown very small"
+   ],
+   "use": "want to name the deliverable for tab and channel branding"
+  },
+  {
+   "group": "gg",
+   "subject": "The Brand System guidelines document",
+   "tier": 3,
+   "says": [
+    "runs to 30-60 pages",
+    "covers logo, colour and typography rules",
+    "includes accessibility and contrast standards"
+   ],
+   "use": "want to know what the guidelines contain"
+  },
+  {
+   "group": "gg",
+   "subject": "Governance and asset management setup",
+   "tier": 4,
+   "says": [
+    "is first included in the Rollout Programme",
+    "helps a client keep rolled-out assets consistent"
+   ],
+   "use": "want to know which engagement sets up asset governance"
+  },
+  {
+   "group": "gg",
+   "subject": "The Brand Applications step",
+   "tier": 3,
+   "says": [
+    "translates the identity into real touchpoints",
+    "spans signage and stationery as well as digital media and presentations"
+   ],
+   "use": "want to know which step turns an identity into real-world items"
+  },
+  {
+   "group": "gg",
+   "subject": "The Brand Launch step",
+   "tier": 3,
+   "says": [
+    "equips teams with the creative assets and direction to introduce the identity",
+    "comes last of the five steps"
+   ],
+   "use": "want to know which step prepares a team to launch a new identity"
+  }
+ ],
+ "qa": [
+  {
+   "q": "A client's logo must appear on a business card, a website favicon and a roadside billboard. Which master format is the safest starting point?",
+   "right": "A vector file such as SVG or AI",
+   "wrong": [
+    "A single 1000-pixel PNG",
+    "A heavily compressed JPEG",
+    "A GIF"
+   ],
+   "tier": 1,
+   "why": "Vector artwork scales to any size without losing sharpness."
+  },
+  {
+   "q": "You enlarge a 200-pixel-wide photograph to fill a poster and it looks soft and blocky. What is the cause?",
+   "right": "The raster image does not hold enough pixel detail for the larger size",
+   "wrong": [
+    "The file is in RGB instead of CMYK",
+    "The image has too many layers",
+    "The file needs a different colour profile"
+   ],
+   "tier": 1,
+   "why": "Raster images are limited by their resolution."
+  },
+  {
+   "q": "Which file would you choose for a photograph on a web page where file size matters most and transparency is not needed?",
+   "right": "JPEG",
+   "wrong": [
+    "PNG",
+    "GIF",
+    "SVG"
+   ],
+   "tier": 1,
+   "why": "JPEG's lossy compression suits photographs."
+  },
+  {
+   "q": "Which format suits a flat logo that needs a transparent background on a web page and must stay sharp at any size?",
+   "right": "SVG",
+   "wrong": [
+    "JPEG",
+    "GIF",
+    "TIFF"
+   ],
+   "tier": 2,
+   "why": "SVG is a vector format that supports transparency."
+  },
+  {
+   "q": "A designer re-saves the same JPEG five times, each time applying compression. What is the effect?",
+   "right": "Quality degrades cumulatively because each save discards more data",
+   "wrong": [
+    "Nothing, because JPEG is lossless",
+    "The file gains transparency",
+    "The file converts to CMYK"
+   ],
+   "tier": 2,
+   "why": "Lossy compression cannot restore discarded data and repeats compound loss."
+  },
+  {
+   "q": "A screen design in RGB is going to a commercial printer. What should you do?",
+   "right": "Convert from the RGB master to the printer's CMYK profile and check the colours that shift",
+   "wrong": [
+    "Send the RGB file unchanged and trust the press to match",
+    "Convert to grayscale and back",
+    "Flatten the file to a GIF"
+   ],
+   "tier": 2,
+   "why": "Out-of-gamut colours can dull, so convert deliberately and review."
+  },
+  {
+   "q": "A printed leaflet has thin white slivers along the edge where the background colour should run to the paper edge. What was probably missing?",
+   "right": "Bleed beyond the trim edge",
+   "wrong": [
+    "A higher JPEG quality",
+    "A darker black",
+    "An alpha channel"
+   ],
+   "tier": 2,
+   "why": "Bleed extends artwork past the cut line so trimming variation does not show white."
+  },
+  {
+   "q": "A printer opens your layout and reports missing fonts. Which is the best remedy?",
+   "right": "Package the file with its fonts and links, or outline the text if licences allow",
+   "wrong": [
+    "Rename the file",
+    "Convert the layout to a GIF",
+    "Lower the resolution"
+   ],
+   "tier": 2,
+   "why": "The printer needs the fonts or text as outlines."
+  },
+  {
+   "q": "What is the difference between a clipping mask and a layer mask?",
+   "right": "A clipping mask uses the shape of the layer beneath, while a layer mask uses black and white to hide and reveal pixels",
+   "wrong": [
+    "A clipping mask deletes pixels, while a layer mask is a fill colour",
+    "They are two names for the same feature",
+    "A clipping mask applies only to text"
+   ],
+   "tier": 3,
+   "why": "They hide content in different ways."
+  },
+  {
+   "q": "Why do instances of a component update when the main component is edited?",
+   "right": "Instances are linked to the main component and inherit its changes",
+   "wrong": [
+    "Instances are separate flattened copies",
+    "The file is re-exported",
+    "Each instance has its own copy of the master"
+   ],
+   "tier": 2,
+   "why": "Linked instances follow their master except for overrides."
+  },
+  {
+   "q": "A designer changes the label on one button instance. What happens to the main component?",
+   "right": "Nothing, because a text override applies to that instance only",
+   "wrong": [
+    "The main component's label changes",
+    "All instances change",
+    "The instance becomes detached automatically and deleted"
+   ],
+   "tier": 3,
+   "why": "Overrides are local to the instance."
+  },
+  {
+   "q": "Which statement about PNG and JPEG is correct?",
+   "right": "PNG is lossless and supports transparency, while JPEG is lossy and does not",
+   "wrong": [
+    "JPEG is lossless and supports transparency",
+    "Both are vector formats",
+    "PNG always produces smaller files for photographs"
+   ],
+   "tier": 2,
+   "why": "These are the standard properties of the formats."
+  },
+  {
+   "q": "Which pair describes GIF correctly?",
+   "right": "A palette of up to 256 colours per frame and simple animation",
+   "wrong": [
+    "Unlimited colour and vector scaling",
+    "CMYK-only output",
+    "Lossless 16-bit colour"
+   ],
+   "tier": 3,
+   "why": "GIF is palette-limited."
+  },
+  {
+   "q": "Which is a good reason to export an icon at 2x?",
+   "right": "High-density screens have more physical pixels per layout pixel, so a 1x image looks soft",
+   "wrong": [
+    "It makes the file smaller",
+    "It converts the icon to vector",
+    "It removes the alpha channel"
+   ],
+   "tier": 2,
+   "why": "2x assets match dense screens."
+  },
+  {
+   "q": "A web page serves a 4000-pixel photograph that is displayed 800 pixels wide. What is the best fix?",
+   "right": "Resize and compress for the display size, ideally offering multiple sizes with responsive images",
+   "wrong": [
+    "Convert the photograph to a GIF",
+    "Embed it as base64 in the page",
+    "Leave it, since browsers shrink it for free"
+   ],
+   "tier": 3,
+   "why": "The browser still downloads every pixel."
+  },
+  {
+   "q": "Exported SVGs from your design tool are full of editor-specific metadata. What should you do?",
+   "right": "Run an SVG optimiser to strip redundant markup while keeping the visual result",
+   "wrong": [
+    "Convert them to JPEG",
+    "Open them in a text editor and delete everything",
+    "Rasterise them"
+   ],
+   "tier": 3,
+   "why": "Optimisation removes unneeded data."
+  },
+  {
+   "q": "What does a prototype have that a mockup does not?",
+   "right": "Interactions that simulate how the design behaves",
+   "wrong": [
+    "A visual style",
+    "Colour",
+    "A layout grid"
+   ],
+   "tier": 2,
+   "why": "A mockup is static."
+  },
+  {
+   "q": "A team wants quick feedback on structure for a new checkout idea before investing in detail. Which approach fits best?",
+   "right": "A low-fidelity prototype or wireframe",
+   "wrong": [
+    "A pixel-perfect high-fidelity prototype",
+    "A coded production build",
+    "A printed brochure"
+   ],
+   "tier": 2,
+   "why": "Low fidelity invites feedback on structure."
+  },
+  {
+   "q": "Why test a prototype with real users instead of only reviewing it internally?",
+   "right": "Users reveal confusion that the team can no longer see",
+   "wrong": [
+    "Users are cheaper than reviews",
+    "It removes the need for requirements",
+    "It makes the file smaller"
+   ],
+   "tier": 3,
+   "why": "Teams are too close to their own design."
+  },
+  {
+   "q": "A team needs to know whether a screen feels fast with real data. Which tool is most appropriate?",
+   "right": "A coded prototype",
+   "wrong": [
+    "A static mockup",
+    "A wireframe",
+    "A paper sketch"
+   ],
+   "tier": 4,
+   "why": "A design tool mock cannot show speed or real data."
+  },
+  {
+   "q": "A prototype looks polished and a stakeholder assumes the product is nearly finished. What is the best practice?",
+   "right": "Label it as a prototype and state what is not real",
+   "wrong": [
+    "Hide it from the stakeholder",
+    "Add more polish so it looks finished",
+    "Convert it to a PDF"
+   ],
+   "tier": 4,
+   "why": "A polished prototype can be mistaken for a finished product."
+  },
+  {
+   "q": "What is the purpose of design tokens?",
+   "right": "To store decisions like colour and spacing as named values shared between design and code",
+   "wrong": [
+    "To encrypt design files",
+    "To compress images",
+    "To lock layers"
+   ],
+   "tier": 3,
+   "why": "Tokens centralise design decisions."
+  },
+  {
+   "q": "A developer cannot tell how a button looks when focused or disabled because the design shows only one state. What was missing?",
+   "right": "Documented component states",
+   "wrong": [
+    "A higher resolution export",
+    "A CMYK profile",
+    "A bleed"
+   ],
+   "tier": 3,
+   "why": "Handoff should list the states."
+  },
+  {
+   "q": "Why link the design file from the requirement it satisfies?",
+   "right": "So readers can find the mockup next to what it must satisfy, ideally with a note on the decision it supported",
+   "wrong": [
+    "To reduce file size",
+    "To remove the need for review",
+    "To make the design editable by anyone"
+   ],
+   "tier": 3,
+   "why": "A design file alone does not record why."
+  },
+  {
+   "q": "A team has three near-identical logo files in circulation and staff keep using the wrong one. Which practice helps most?",
+   "right": "Mark a single approved version in a shared library or DAM",
+   "wrong": [
+    "Rename the files with the date",
+    "Email the logo to everyone again",
+    "Convert them all to JPEG"
+   ],
+   "tier": 3,
+   "why": "One authoritative approved file removes doubt."
+  },
+  {
+   "q": "What is the difference between a master file and a derivative?",
+   "right": "The master is the editable original, while a derivative is a copy made for a specific use",
+   "wrong": [
+    "The master is always a JPEG",
+    "A derivative is the editable original",
+    "They are the same thing"
+   ],
+   "tier": 2,
+   "why": "Exports should be regenerated from the master."
+  },
+  {
+   "q": "A designer moves a project folder and the layout now shows missing links. What most likely happened?",
+   "right": "Linked images were not moved with the design",
+   "wrong": [
+    "The file was converted to CMYK",
+    "The fonts were embedded",
+    "The artboards were merged"
+   ],
+   "tier": 3,
+   "why": "Linked images are referenced from separate files."
+  },
+  {
+   "q": "Which is true of embedded images?",
+   "right": "They are stored inside the design file, making it larger but self-contained",
+   "wrong": [
+    "They are separate files that can go missing",
+    "They are always vector",
+    "They cannot be exported"
+   ],
+   "tier": 3,
+   "why": "Embedding trades size for portability."
+  },
+  {
+   "q": "Two designers need to work on the same design and review each other's changes without disturbing the approved main file. Which feature helps?",
+   "right": "Branching and merging",
+   "wrong": [
+    "Locking every layer",
+    "Emailing copies",
+    "Flattening the file"
+   ],
+   "tier": 3,
+   "why": "Branches isolate exploratory changes."
+  },
+  {
+   "q": "A reviewer finds a stakeholder's feedback was based on an attached copy that was already out of date. What practice avoids this?",
+   "right": "Share a link to the live file so reviewers see the latest version",
+   "wrong": [
+    "Send more attachments",
+    "Print the design",
+    "Ask reviewers to guess"
+   ],
+   "tier": 3,
+   "why": "Links point to the latest version."
+  },
+  {
+   "q": "You share a design by link set so anyone with the link can open it. What should you check first?",
+   "right": "That no unreleased work is exposed to unintended viewers",
+   "wrong": [
+    "The CMYK profile",
+    "The bleed",
+    "The font size"
+   ],
+   "tier": 3,
+   "why": "Link permissions can expose unreleased work."
+  },
+  {
+   "q": "A shared component library is updated by one designer. How should the team receive the changes?",
+   "right": "By accepting the published library update in the files that use it",
+   "wrong": [
+    "By re-drawing every component",
+    "By emailing screenshots",
+    "By renaming the files"
+   ],
+   "tier": 3,
+   "why": "Libraries publish updates to consumers."
+  },
+  {
+   "q": "What is the right way to compare ink-based print colour with a screen colour before a big run?",
+   "right": "Approve a proof from the printer",
+   "wrong": [
+    "Trust the monitor",
+    "Compare the hex code",
+    "Check the file name"
+   ],
+   "tier": 3,
+   "why": "Proofs show how the job will print."
+  },
+  {
+   "q": "What does kerning adjust?",
+   "right": "The space between a specific pair of letters",
+   "wrong": [
+    "The space between every letter in a line",
+    "The distance between lines",
+    "The weight of the font"
+   ],
+   "tier": 2,
+   "why": "Kerning is pair-specific."
+  },
+  {
+   "q": "What is leading?",
+   "right": "The vertical distance between lines of text",
+   "wrong": [
+    "The space between two letters",
+    "The width of a glyph",
+    "The slant of a font"
+   ],
+   "tier": 2,
+   "why": "Leading controls line spacing."
+  },
+  {
+   "q": "Why list a fallback font in a font stack?",
+   "right": "So text stays legible if the preferred font does not load",
+   "wrong": [
+    "So text prints in colour",
+    "So fonts are embedded in PDFs",
+    "So images are smaller"
+   ],
+   "tier": 3,
+   "why": "A fallback keeps text readable."
+  },
+  {
+   "q": "You want to put a purchased font on a website. What should you check?",
+   "right": "That the font licence permits web use",
+   "wrong": [
+    "That the font is bold",
+    "That the font is variable",
+    "That the font is in CMYK"
+   ],
+   "tier": 3,
+   "why": "Licences can differ by use."
+  },
+  {
+   "q": "Large black background areas in a print job look washed out. Which technique helps?",
+   "right": "Rich black built from several inks",
+   "wrong": [
+    "A thinner stroke",
+    "A GIF export",
+    "Turning on lazy loading"
+   ],
+   "tier": 4,
+   "why": "Rich black gives a deeper solid."
+  },
+  {
+   "q": "Why use rich black for large areas but usually not for small text?",
+   "right": "Small text in several inks can show misregistration",
+   "wrong": [
+    "Rich black cannot be printed small",
+    "Black ink is invalid for text",
+    "Rich black is RGB only"
+   ],
+   "tier": 4,
+   "why": "Several plates can misalign on fine detail."
+  },
+  {
+   "q": "A designer sets an object to overprint by mistake. What might happen in print?",
+   "right": "Its ink mixes with the colour beneath instead of knocking it out",
+   "wrong": [
+    "The object disappears",
+    "The file converts to RGB",
+    "The bleed doubles"
+   ],
+   "tier": 4,
+   "why": "Overprint prints over the underlying ink."
+  },
+  {
+   "q": "A printer asks for a PDF/X file. What does that mean?",
+   "right": "A PDF following a standard that restricts content for reliable print exchange",
+   "wrong": [
+    "A PDF with only text",
+    "An editable PDF",
+    "A PDF using RGB only"
+   ],
+   "tier": 4,
+   "why": "PDF/X standardises print PDFs."
+  },
+  {
+   "q": "You are handed a low-resolution raster logo and need a scalable one. What is a typical route?",
+   "right": "Auto-trace it and clean up the paths, or redraw it",
+   "wrong": [
+    "Enlarge it in a raster editor",
+    "Save it as JPEG at higher quality",
+    "Add dithering"
+   ],
+   "tier": 4,
+   "why": "Tracing produces vector paths that need clean-up."
+  },
+  {
+   "q": "A photograph with a smooth sky shows visible stepped bands after processing. Which is the likely cause?",
+   "right": "Low bit depth or heavy compression",
+   "wrong": [
+    "Too many anchor points",
+    "Missing alt text",
+    "A wrong aspect ratio"
+   ],
+   "tier": 4,
+   "why": "Banding appears when tonal levels are limited."
+  },
+  {
+   "q": "A designer inverts a light interface to make a dark theme and some text becomes hard to read. What was the mistake?",
+   "right": "Inverting instead of choosing dark colour pairs that meet contrast requirements",
+   "wrong": [
+    "Using too many layers",
+    "Using a favicon",
+    "Exporting at 2x"
+   ],
+   "tier": 4,
+   "why": "Dark themes need chosen pairs."
+  },
+  {
+   "q": "An error state in a form is shown only by changing the border to red. What should you add?",
+   "right": "A text message or icon so the meaning does not rely on colour alone",
+   "wrong": [
+    "A thicker red border",
+    "A lighter red",
+    "Nothing"
+   ],
+   "tier": 4,
+   "why": "Colour alone fails users with colour vision deficiency."
+  },
+  {
+   "q": "A brand has a colour that must match exactly across packaging and signage regardless of press. Which is the best approach?",
+   "right": "Specify it as a spot colour",
+   "wrong": [
+    "Specify it as an RGB hex code only",
+    "Use a screenshot as reference",
+    "Ask the printer to guess"
+   ],
+   "tier": 4,
+   "why": "Spot colours are premixed."
+  },
+  {
+   "q": "Which engagement first delivers master artwork in AI, PDF, SVG, JPG and PNG, according to the studio's offer?",
+   "right": "Brand Discovery",
+   "wrong": [
+    "Rollout Programme only",
+    "Brand System only",
+    "None of them"
+   ],
+   "tier": 2,
+   "why": "The first engagement includes master artwork in those five formats."
+  },
+  {
+   "q": "A client of GuruGraphics asks the studio to host their website. How should this be answered?",
+   "right": "The studio does design and branding only and does not sell hosting",
+   "wrong": [
+    "Yes, hosting is included in Brand System",
+    "Yes, in the Rollout Programme",
+    "Hosting is included with the logo"
+   ],
+   "tier": 1,
+   "why": "GuruGraphics does not sell hosting."
+  },
+  {
+   "q": "A client wants editable working files and a digital asset library. Which engagement first includes them?",
+   "right": "The Identity Programme",
+   "wrong": [
+    "Brand Discovery",
+    "None; they are never offered",
+    "Only the Rollout Programme"
+   ],
+   "tier": 3,
+   "why": "Both are listed in the Identity Programme."
+  },
+  {
+   "q": "A client wants guidelines that include accessibility and contrast standards. Which engagement provides them?",
+   "right": "The Brand System",
+   "wrong": [
+    "Brand Discovery",
+    "The Identity Programme",
+    "None of them"
+   ],
+   "tier": 3,
+   "why": "The Brand System includes 30-60 page guidelines with accessibility and contrast standards."
+  },
+  {
+   "q": "A client wants a plan to roll a new identity out across estate, signage and print. Which engagement includes it?",
+   "right": "The Rollout Programme",
+   "wrong": [
+    "Brand Discovery",
+    "The Identity Programme",
+    "The Brand System"
+   ],
+   "tier": 4,
+   "why": "The Rollout Programme includes the estate, signage and print rollout plan."
+  },
+  {
+   "q": "A client asks which engagement sets up governance and asset management. Which is correct?",
+   "right": "The Rollout Programme",
+   "wrong": [
+    "Brand Discovery",
+    "The Identity Programme",
+    "None"
+   ],
+   "tier": 4,
+   "why": "Governance and asset management setup is listed in the Rollout Programme."
+  }
+ ]
+}

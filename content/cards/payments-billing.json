@@ -1,0 +1,2895 @@
+{
+ "slug": "payments-billing",
+ "name": "Payments and subscriptions",
+ "description": "Billing, ledger, subscriptions, refunds.",
+ "roles": "",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "growth",
+ "groups": {
+  "flow": "payment flow step",
+  "psp": "payment provider concept",
+  "hook": "webhook or idempotency practice",
+  "ledger": "ledger concept",
+  "invoice": "invoicing concept",
+  "sub": "subscription billing concept",
+  "dunning": "failed-payment recovery practice",
+  "tax": "tax concept",
+  "sec": "card security or fraud concept",
+  "recon": "reconciliation concept",
+  "money": "money-handling rule",
+  "payout": "payout concept",
+  "env": "environment or testing practice",
+  "co": "ggmoney or Moksy billing fact"
+ },
+ "cards": [
+  {
+   "group": "flow",
+   "subject": "Authorisation",
+   "tier": 1,
+   "says": [
+    "asks the issuer to approve a payment and hold the funds",
+    "returns an approval or a decline code",
+    "does not by itself move money to the merchant"
+   ],
+   "use": "want to confirm a card can pay before you ship goods",
+   "not": [
+    "transfers the money to the merchant's bank at once"
+   ],
+   "like": [
+    "Capture",
+    "A void"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Capture",
+   "tier": 1,
+   "says": [
+    "turns an approved authorisation into a request for the money",
+    "has to follow the authorisation within an allowed window",
+    "is the step after which the funds are due to be settled"
+   ],
+   "use": "have shipped the goods and want to take the held money",
+   "not": [
+    "can be done at any time after authorisation with no limit"
+   ],
+   "like": [
+    "Authorisation",
+    "A partial capture"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "A void",
+   "tier": 2,
+   "says": [
+    "cancels an authorisation before it is captured",
+    "releases the hold on the cardholder's funds",
+    "means no money was ever taken"
+   ],
+   "use": "need to cancel an order that has not been captured yet",
+   "not": [
+    "returns money that has already been captured and settled"
+   ],
+   "like": [
+    "A refund",
+    "Capture"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "A refund",
+   "tier": 1,
+   "says": [
+    "returns money to the customer after a payment was captured",
+    "is linked to the original payment",
+    "can cover only part of the original amount"
+   ],
+   "use": "need to give back part of a payment that was already taken",
+   "not": [
+    "is the same thing as a chargeback"
+   ],
+   "like": [
+    "A chargeback",
+    "A void"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "A chargeback",
+   "tier": 2,
+   "says": [
+    "is a dispute the cardholder raises with their own issuer",
+    "pulls the disputed amount back from the merchant while it is decided",
+    "gives the merchant a deadline to answer with evidence"
+   ],
+   "use": "see a customer dispute a charge through their bank",
+   "not": [
+    "is started by the merchant to reverse a sale"
+   ],
+   "like": [
+    "A refund",
+    "Representment"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Settlement",
+   "tier": 2,
+   "says": [
+    "moves captured funds towards the merchant in batches",
+    "happens after capture rather than at the same moment",
+    "is what eventually produces a payout to the bank"
+   ],
+   "use": "want to know when captured money turns into money in the bank",
+   "not": [
+    "happens at the same instant as authorisation"
+   ],
+   "like": [
+    "Capture"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "3-D Secure",
+   "tier": 3,
+   "says": [
+    "adds a cardholder authentication step such as a bank app prompt",
+    "can move liability for some fraud disputes to the issuer",
+    "may send the customer away from the checkout for a moment"
+   ],
+   "use": "want an extra check that the real cardholder is paying online",
+   "not": [
+    "removes the need for an authorisation request"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "A partial capture",
+   "tier": 3,
+   "says": [
+    "takes less than the authorised total",
+    "is typical when only part of an order ships",
+    "can leave the rest of the hold to lapse or be released"
+   ],
+   "use": "ship only part of an order that was authorised",
+   "not": [
+    "voids the whole authorisation"
+   ],
+   "like": [
+    "Capture"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Representment",
+   "tier": 5,
+   "says": [
+    "is the merchant's evidence submission contesting a chargeback",
+    "travels back through the acquirer to the issuer",
+    "is decided by the issuer or card network, not by the merchant"
+   ],
+   "use": "want to contest a dispute with proof of delivery",
+   "not": [
+    "is a second authorisation sent to the issuer"
+   ],
+   "like": [
+    "A chargeback"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Authorisation expiry",
+   "tier": 3,
+   "says": [
+    "lapses a hold that is not captured in time",
+    "frees the held funds back to the cardholder",
+    "means a late capture needs a fresh authorisation"
+   ],
+   "use": "find that goods ship long after the original approval",
+   "not": [
+    "extends itself every time the order is edited"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "A decline code",
+   "tier": 3,
+   "says": [
+    "tells the integrator why the issuer refused a payment",
+    "separates failures worth retrying from permanent ones",
+    "should be mapped to a customer-friendly message rather than shown raw"
+   ],
+   "use": "must decide whether to retry a failed card payment",
+   "not": [
+    "always means the card was stolen"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "A payment service provider",
+   "tier": 1,
+   "says": [
+    "gives merchants one integration for several payment methods",
+    "handles the connections to acquirers and card networks",
+    "usually offers an API and a dashboard"
+   ],
+   "use": "want to accept payments without building bank connections yourself",
+   "not": [
+    "is the bank that issued the cardholder's card"
+   ],
+   "like": [
+    "An issuer",
+    "An acquirer"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "An issuer",
+   "tier": 1,
+   "says": [
+    "is the bank that gave the cardholder their card",
+    "decides whether to approve an authorisation",
+    "receives the chargeback request from its cardholder"
+   ],
+   "use": "ask which party approves or declines the cardholder's payment",
+   "not": [
+    "holds the merchant's account for receiving card funds"
+   ],
+   "like": [
+    "An acquirer",
+    "A payment service provider"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "An acquirer",
+   "tier": 2,
+   "says": [
+    "holds the merchant's account for receiving card funds",
+    "passes the merchant's transactions towards the card network",
+    "is the merchant's side of a card payment"
+   ],
+   "use": "ask which bank receives the merchant's card money",
+   "not": [
+    "decides whether the cardholder has enough funds"
+   ],
+   "like": [
+    "An issuer",
+    "A payment service provider"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "A card network",
+   "tier": 2,
+   "says": [
+    "routes messages between acquirer and issuer",
+    "sets the rules that participants follow, including dispute rules",
+    "does not normally lend the money or hold the cardholder's account"
+   ],
+   "use": "need the rails that connect both banks in a card payment",
+   "not": [
+    "is the merchant's bank"
+   ],
+   "like": [
+    "An issuer",
+    "An acquirer"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "A payment gateway",
+   "tier": 2,
+   "says": [
+    "securely passes payment details from checkout to the processor",
+    "plays the online role of a physical card terminal",
+    "does not itself hold the merchant's funds"
+   ],
+   "use": "need the secure link between a web checkout and the processor",
+   "not": [
+    "issues cards to consumers"
+   ],
+   "like": [
+    "A payment service provider"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "Tokenisation",
+   "tier": 3,
+   "says": [
+    "replaces card details with a surrogate value",
+    "lets the merchant keep a reference instead of the card number",
+    "leaves the real number in the provider's secure vault"
+   ],
+   "use": "need to charge a returning customer without storing card numbers",
+   "not": [
+    "encrypts the number so the merchant can decrypt it later"
+   ],
+   "like": [
+    "Hosted fields"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "A payment intent",
+   "tier": 3,
+   "says": [
+    "represents one attempt to collect a specific amount",
+    "is created on the server before the customer pays",
+    "tracks the payment through states such as requires action and succeeded"
+   ],
+   "use": "need one object to follow a payment through authentication and confirmation",
+   "not": [
+    "is created again for every retry of the same sale"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "Hosted checkout",
+   "tier": 2,
+   "says": [
+    "sends the customer to a page run by the provider",
+    "keeps card entry off the merchant's own servers",
+    "gives the quickest route to accepting cards safely"
+   ],
+   "use": "want the least card-data exposure with the quickest integration",
+   "not": [
+    "gives the merchant total control of the page layout"
+   ],
+   "like": [
+    "A direct API integration",
+    "Hosted fields"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "A direct API integration",
+   "tier": 4,
+   "says": [
+    "collects card details on the merchant's own page and sends them to the API",
+    "widens the merchant's PCI scope",
+    "gives full control of the checkout design"
+   ],
+   "use": "want complete control of the checkout and accept the compliance burden",
+   "not": [
+    "keeps card numbers away from the merchant's servers"
+   ],
+   "like": [
+    "Hosted checkout",
+    "Hosted fields"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "A merchant of record",
+   "tier": 4,
+   "says": [
+    "is the party that acts as the legal seller to the customer",
+    "usually takes on the sales tax handling for the transaction",
+    "appears as the seller on the customer's receipt"
+   ],
+   "use": "want a third party to act as the legal seller of your product",
+   "not": [
+    "only forwards payments and never sells to the customer"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "An alternative payment method",
+   "tier": 2,
+   "says": [
+    "covers wallets, bank transfers and direct debits as well as cards",
+    "has its own flow and failure modes",
+    "may confirm only after the customer has left the checkout"
+   ],
+   "use": "need to offer customers choices other than cards",
+   "not": [
+    "always settles instantly"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "A statement descriptor",
+   "tier": 3,
+   "says": [
+    "is the text on the customer's bank statement for a charge",
+    "helps customers recognise a payment",
+    "reduces disputes from people who do not recognise a charge"
+   ],
+   "use": "get disputes from customers who say they never made the payment but did",
+   "not": [
+    "is a tax identifier printed on invoices"
+   ]
+  },
+  {
+   "group": "psp",
+   "subject": "A direct debit",
+   "tier": 3,
+   "says": [
+    "pulls money from the customer's bank account under a mandate",
+    "can be returned or disputed after the money has moved",
+    "suits regular payments that the customer authorises once"
+   ],
+   "use": "collect regular payments straight from a bank account",
+   "not": [
+    "is confirmed immediately in real time"
+   ],
+   "like": [
+    "An alternative payment method"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "A webhook",
+   "tier": 1,
+   "says": [
+    "is an HTTP request the provider sends when an event happens",
+    "lets you learn about asynchronous outcomes without polling",
+    "arrives at an endpoint that you expose"
+   ],
+   "use": "need to learn when a payment finally succeeds after the customer has left",
+   "not": [
+    "is a request your server makes to the provider on a timer"
+   ],
+   "like": [
+    "Polling",
+    "Event-id deduplication"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "Polling",
+   "tier": 2,
+   "says": [
+    "asks the provider repeatedly for the current state",
+    "adds delay and request load",
+    "can repair a webhook that was missed"
+   ],
+   "use": "need a fallback because a webhook may never have arrived",
+   "not": [
+    "tells you about changes the instant they happen"
+   ],
+   "like": [
+    "A webhook"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "Signature verification",
+   "tier": 2,
+   "says": [
+    "proves a webhook really came from the provider",
+    "computes a hash over the raw body with a shared secret",
+    "must pass before the payload is trusted"
+   ],
+   "use": "worry that anyone can post fake payment events to your endpoint",
+   "not": [
+    "is unnecessary when the endpoint URL is secret"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "An idempotency key",
+   "tier": 2,
+   "says": [
+    "lets a repeated request return the original result",
+    "is a unique value the client sends with a write request",
+    "stops a retry from charging twice"
+   ],
+   "use": "want to retry a charge after a network timeout without double charging",
+   "not": [
+    "is stored by the receiving side of a webhook to skip repeats"
+   ],
+   "like": [
+    "Event-id deduplication"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "Event-id deduplication",
+   "tier": 3,
+   "says": [
+    "stores the ids of events already processed",
+    "makes a handler safe when the same event arrives twice",
+    "runs on the receiving side of a webhook"
+   ],
+   "use": "get the same webhook delivered more than once",
+   "not": [
+    "is sent by the client with a write request"
+   ],
+   "like": [
+    "An idempotency key"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "At-least-once delivery",
+   "tier": 3,
+   "says": [
+    "may deliver the same event more than once",
+    "retries until the endpoint acknowledges",
+    "forces consumers to be idempotent"
+   ],
+   "use": "design a handler for a provider that retries on any non-2xx response",
+   "not": [
+    "guarantees each event arrives exactly once"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "Fast acknowledgement",
+   "tier": 3,
+   "says": [
+    "returns a 2xx quickly and does the work afterwards",
+    "avoids timeouts that trigger redelivery",
+    "usually hands the event to a queue"
+   ],
+   "use": "have a webhook handler doing slow work inline",
+   "not": [
+    "waits for the entire business process before replying"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "Out-of-order delivery",
+   "tier": 4,
+   "says": [
+    "can deliver a later event before an earlier one",
+    "makes handlers fetch current state or compare timestamps",
+    "breaks code that assumes a fixed event sequence"
+   ],
+   "use": "find a refund event arriving before the payment it refers to",
+   "not": [
+    "is prevented by at-least-once delivery"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "A dead-letter queue",
+   "tier": 4,
+   "says": [
+    "holds events that failed after all retries",
+    "lets people inspect and replay failures",
+    "stops one poison message blocking the rest"
+   ],
+   "use": "must not lose events that keep failing processing",
+   "not": [
+    "silently discards failed events"
+   ]
+  },
+  {
+   "group": "hook",
+   "subject": "Key reuse with different parameters",
+   "tier": 5,
+   "says": [
+    "should be rejected as a conflict",
+    "signals a client bug that mutates a retried request",
+    "must not return the result of the earlier, different request"
+   ],
+   "use": "see the same idempotency key arrive with a changed amount",
+   "not": [
+    "is safe because the newest parameters simply win"
+   ],
+   "like": [
+    "An idempotency key"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "Double entry",
+   "tier": 1,
+   "says": [
+    "records every transaction as equal debits and credits",
+    "keeps the books balanced by design",
+    "moves value between accounts rather than creating it"
+   ],
+   "use": "want every movement of money to leave a balanced trail",
+   "not": [
+    "records each transaction on one account only"
+   ],
+   "like": [
+    "A journal entry",
+    "A trial balance",
+    "A debit entry",
+    "A credit entry"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "A debit entry",
+   "tier": 2,
+   "says": [
+    "sits on the left side of a posting",
+    "increases asset and expense accounts",
+    "decreases liability and income accounts"
+   ],
+   "use": "ask which side increases an asset account",
+   "not": [
+    "always means money leaving the business"
+   ],
+   "like": [
+    "A credit entry"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "A credit entry",
+   "tier": 2,
+   "says": [
+    "sits on the right side of a posting",
+    "increases liability, equity and income accounts",
+    "decreases asset accounts"
+   ],
+   "use": "ask which side increases a liability or income account",
+   "not": [
+    "always means money coming into the business"
+   ],
+   "like": [
+    "A debit entry"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "A journal entry",
+   "tier": 2,
+   "says": [
+    "is one posted transaction made of two or more lines",
+    "has total debits equal to total credits",
+    "carries a date and a description"
+   ],
+   "use": "need to post a movement across several accounts",
+   "not": [
+    "can be saved with unequal totals if flagged"
+   ],
+   "like": [
+    "Double entry"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "A chart of accounts",
+   "tier": 2,
+   "says": [
+    "lists every account the ledger can post to",
+    "groups accounts into assets, liabilities, equity, income and expenses",
+    "is the structure that reports are built from"
+   ],
+   "use": "need to decide which accounts a new type of transaction posts to",
+   "not": [
+    "holds the individual customer invoices"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "A trial balance",
+   "tier": 3,
+   "says": [
+    "lists the balance of every account",
+    "shows total debits equal to total credits when postings balance",
+    "checks balance, not correctness"
+   ],
+   "use": "want a quick check that postings are balanced",
+   "not": [
+    "proves every posting went to the right account"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "A reversing entry",
+   "tier": 3,
+   "says": [
+    "corrects an error by posting the opposite of the original",
+    "leaves the original entry visible",
+    "is how an append-only ledger fixes mistakes"
+   ],
+   "use": "find a wrong posting that must be undone",
+   "not": [
+    "deletes the original posting from the ledger"
+   ],
+   "like": [
+    "Append-only posting"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "Append-only posting",
+   "tier": 3,
+   "says": [
+    "never edits or deletes a posted entry",
+    "keeps a complete audit trail",
+    "uses new entries to make corrections"
+   ],
+   "use": "must show auditors what happened and when",
+   "not": [
+    "allows posted entries to be edited if the user has permission"
+   ],
+   "like": [
+    "A reversing entry"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "Accounts receivable",
+   "tier": 2,
+   "says": [
+    "is money that customers owe the business",
+    "is an asset",
+    "is cleared when the customer pays"
+   ],
+   "use": "ask where an unpaid sent invoice sits in the books",
+   "not": [
+    "is money the business owes its suppliers"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "Deferred revenue",
+   "tier": 4,
+   "says": [
+    "is cash received for service not yet delivered",
+    "is held as a liability until earned",
+    "is released to revenue as the service period passes"
+   ],
+   "use": "bill a customer for a whole year in advance",
+   "not": [
+    "counts as earned revenue the moment cash arrives"
+   ]
+  },
+  {
+   "group": "ledger",
+   "subject": "A clearing account",
+   "tier": 5,
+   "says": [
+    "holds money in transit between systems",
+    "should return to zero once items are matched",
+    "signals unmatched items when its balance lingers"
+   ],
+   "use": "need to book provider payments before the bank shows the money",
+   "not": [
+    "permanently stores the profit of the business"
+   ],
+   "like": [
+    "A suspense account"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "An invoice",
+   "tier": 1,
+   "says": [
+    "requests payment for goods or services delivered",
+    "lists lines, quantities and amounts",
+    "creates a receivable when issued"
+   ],
+   "use": "need to ask a customer for payment",
+   "not": [
+    "is proof that payment has already been received"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "The invoice lifecycle",
+   "tier": 2,
+   "says": [
+    "moves from draft to sent to paid",
+    "can pass through a part paid state",
+    "can end as void instead of paid"
+   ],
+   "use": "ask what states an invoice can be in",
+   "not": [
+    "lets a sent invoice return to draft and be edited freely"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "A credit note",
+   "tier": 2,
+   "says": [
+    "reverses some or all of an invoice",
+    "carries its own number linked to the original",
+    "leaves the original invoice intact"
+   ],
+   "use": "need to correct a sent invoice without deleting it",
+   "not": [
+    "is used to request extra payment"
+   ],
+   "like": [
+    "A void invoice"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "A void invoice",
+   "tier": 3,
+   "says": [
+    "cancels an invoice that should not stand at all",
+    "keeps its number in the sequence",
+    "is used when nothing at all is due"
+   ],
+   "use": "issued an invoice by mistake and nothing is owed",
+   "not": [
+    "removes its number so the sequence is closed up"
+   ],
+   "like": [
+    "A credit note"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "Sequential invoice numbering",
+   "tier": 3,
+   "says": [
+    "gives every invoice a unique number in order",
+    "makes gaps visible to auditors",
+    "is why sent invoices are voided or credited, never deleted"
+   ],
+   "use": "must show that no invoice has silently disappeared",
+   "not": [
+    "is optional and numbers can be reused"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "A partial payment",
+   "tier": 3,
+   "says": [
+    "pays only part of an invoice",
+    "leaves the remaining balance open",
+    "has to be allocated to the right invoice"
+   ],
+   "use": "receive less than the invoice total",
+   "not": [
+    "closes the invoice as paid"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "Payment allocation",
+   "tier": 4,
+   "says": [
+    "matches received money to specific invoices",
+    "must cope with one payment covering many invoices",
+    "stops the same money paying two invoices"
+   ],
+   "use": "receive a single bank transfer for several invoices",
+   "not": [
+    "is done automatically by the bank"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "Account credit",
+   "tier": 3,
+   "says": [
+    "keeps unused money on the customer's account",
+    "offsets future invoices",
+    "is not a refund to the card"
+   ],
+   "use": "owe a customer money but they will keep buying",
+   "not": [
+    "must always be paid out in cash"
+   ],
+   "like": [
+    "A refund"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "An invoice snapshot",
+   "tier": 4,
+   "says": [
+    "freezes prices, tax and customer details at issue time",
+    "stops later catalogue changes rewriting history",
+    "is what the customer sees if they download it again later"
+   ],
+   "use": "change a product's details after invoices have been issued",
+   "not": [
+    "updates every old invoice when the catalogue changes"
+   ]
+  },
+  {
+   "group": "invoice",
+   "subject": "An idempotent refund",
+   "tier": 4,
+   "says": [
+    "carries a unique key on every refund request",
+    "refuses to refund more than was paid in total",
+    "survives provider retries and staff double-clicks"
+   ],
+   "use": "worry that a double-click could refund the same payment twice",
+   "not": [
+    "relies on staff remembering what they already refunded"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "A subscription",
+   "tier": 1,
+   "says": [
+    "links a customer to a plan for repeating billing periods",
+    "bills automatically each period",
+    "has a status such as active or cancelled"
+   ],
+   "use": "sell something that renews on a schedule",
+   "not": [
+    "is a one-off charge with no renewal"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "A plan",
+   "tier": 1,
+   "says": [
+    "defines the recurring product, interval and entitlements",
+    "can be changed by moving a subscription to another plan",
+    "is what a customer chooses at sign-up"
+   ],
+   "use": "describe what a customer buys each period",
+   "not": [
+    "records each payment a customer has made"
+   ],
+   "like": [
+    "A subscription"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "A billing period",
+   "tier": 2,
+   "says": [
+    "is the interval between recurring invoices",
+    "has a start date and an end date",
+    "sets the window in which entitlements or usage are counted"
+   ],
+   "use": "need to know which dates a charge covers",
+   "not": [
+    "is the time a card authorisation stays valid"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "Proration",
+   "tier": 3,
+   "says": [
+    "charges or credits for part of a period",
+    "applies when a plan changes mid-cycle",
+    "is computed from the time remaining"
+   ],
+   "use": "upgrade a customer halfway through the month",
+   "not": [
+    "bills the full new price from the original period start regardless"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "A free trial",
+   "tier": 2,
+   "says": [
+    "gives access before the first charge",
+    "converts to paid at the end unless cancelled",
+    "may or may not require a payment method up front"
+   ],
+   "use": "let a customer try a service before paying",
+   "not": [
+    "is billed in full on day one then refunded"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "An entitlement",
+   "tier": 2,
+   "says": [
+    "states what the plan lets the customer do",
+    "is kept apart from the money movement",
+    "should have exactly one owning service"
+   ],
+   "use": "decide what a paying customer may use",
+   "not": [
+    "is the invoice raised for the plan"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "Metered billing",
+   "tier": 3,
+   "says": [
+    "charges for measured consumption",
+    "needs durable usage events",
+    "normally bills after the period has ended"
+   ],
+   "use": "charge by how much a customer actually used",
+   "not": [
+    "charges a flat amount whatever the usage"
+   ],
+   "like": [
+    "Billing in arrears"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "Billing in advance",
+   "tier": 3,
+   "says": [
+    "charges at the start of the period",
+    "creates deferred revenue until the service is delivered",
+    "is the usual pattern for flat plans"
+   ],
+   "use": "charge a flat plan before the service period begins",
+   "not": [
+    "leaves the supplier carrying the risk of non-payment after delivery"
+   ],
+   "like": [
+    "Billing in arrears"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "Billing in arrears",
+   "tier": 3,
+   "says": [
+    "charges after the period has ended",
+    "suits usage that is only known afterwards",
+    "leaves the supplier carrying credit risk"
+   ],
+   "use": "charge for usage that can only be counted at period end",
+   "not": [
+    "collects money before any service is delivered"
+   ],
+   "like": [
+    "Billing in advance"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "Overage",
+   "tier": 3,
+   "says": [
+    "is usage beyond the included allowance",
+    "can be blocked, throttled or billed",
+    "needs a policy decided in advance"
+   ],
+   "use": "find customers using more than their plan includes",
+   "not": [
+    "is a refund for unused allowance"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "Cancellation at period end",
+   "tier": 3,
+   "says": [
+    "keeps access until the paid period finishes",
+    "stops the next renewal",
+    "does not refund the current period"
+   ],
+   "use": "let a customer leave but keep what they already paid for",
+   "not": [
+    "ends access and refunds immediately"
+   ]
+  },
+  {
+   "group": "sub",
+   "subject": "A subscription state machine",
+   "tier": 4,
+   "says": [
+    "has states such as trialling, active, past due and cancelled",
+    "moves on events rather than manual edits",
+    "decides whether a customer with a failed payment keeps access"
+   ],
+   "use": "need clear rules for what access each status gives",
+   "not": [
+    "lets staff set any status directly at any time"
+   ]
+  },
+  {
+   "group": "dunning",
+   "subject": "Dunning",
+   "tier": 1,
+   "says": [
+    "is the process of recovering failed or overdue payments",
+    "combines reminders with retries",
+    "aims to keep the customer rather than punish them"
+   ],
+   "use": "want to recover renewals that failed to charge",
+   "not": [
+    "is the process of issuing refunds in bulk"
+   ],
+   "like": [
+    "A payment retry schedule",
+    "A grace period"
+   ]
+  },
+  {
+   "group": "dunning",
+   "subject": "A payment retry schedule",
+   "tier": 2,
+   "says": [
+    "re-attempts a failed charge at planned intervals",
+    "recovers payments whose cause was temporary",
+    "stops after a defined limit"
+   ],
+   "use": "want failed renewals to be tried again automatically",
+   "not": [
+    "retries instantly and indefinitely"
+   ],
+   "like": [
+    "Dunning"
+   ]
+  },
+  {
+   "group": "dunning",
+   "subject": "A soft decline",
+   "tier": 3,
+   "says": [
+    "is a failure that may succeed later, such as insufficient funds",
+    "justifies a scheduled retry",
+    "may clear after the customer tops up or a limit resets"
+   ],
+   "use": "see a renewal fail for a temporary reason",
+   "not": [
+    "is a permanent refusal that retries cannot fix"
+   ],
+   "like": [
+    "A hard decline"
+   ]
+  },
+  {
+   "group": "dunning",
+   "subject": "A hard decline",
+   "tier": 3,
+   "says": [
+    "is a permanent refusal such as a closed account",
+    "should not be retried blindly",
+    "needs the customer to supply a new payment method"
+   ],
+   "use": "see an issuer report the card as closed or stolen",
+   "not": [
+    "is worth retrying every hour"
+   ],
+   "like": [
+    "A soft decline"
+   ]
+  },
+  {
+   "group": "dunning",
+   "subject": "A card account updater",
+   "tier": 4,
+   "says": [
+    "refreshes expired or reissued card details automatically",
+    "reduces failures caused by card replacement",
+    "works through the card networks and issuers"
+   ],
+   "use": "lose renewals because customers' cards were replaced",
+   "not": [
+    "is a manual spreadsheet that staff keep"
+   ]
+  },
+  {
+   "group": "dunning",
+   "subject": "A grace period",
+   "tier": 3,
+   "says": [
+    "keeps access for a set time after a failed payment",
+    "gives retries time to succeed",
+    "ends in suspension or cancellation if unpaid"
+   ],
+   "use": "want a customer to keep working while a card issue is fixed",
+   "not": [
+    "cancels access the moment a payment fails"
+   ]
+  },
+  {
+   "group": "dunning",
+   "subject": "The past-due status",
+   "tier": 2,
+   "says": [
+    "marks a subscription whose latest invoice is unpaid",
+    "sits between active and cancelled",
+    "still allows recovery"
+   ],
+   "use": "ask what to call a subscription with an unpaid renewal",
+   "not": [
+    "means the subscription has already been cancelled"
+   ]
+  },
+  {
+   "group": "dunning",
+   "subject": "Involuntary churn",
+   "tier": 4,
+   "says": [
+    "is customer loss caused by failed payments",
+    "is reduced by retries and card updaters",
+    "should be measured apart from voluntary cancellation"
+   ],
+   "use": "lose subscribers who never chose to leave",
+   "not": [
+    "is counted as customers who cancelled on purpose"
+   ]
+  },
+  {
+   "group": "dunning",
+   "subject": "A write-off",
+   "tier": 4,
+   "says": [
+    "removes an uncollectable invoice from receivables",
+    "is booked as bad debt expense",
+    "needs an approval and a reason"
+   ],
+   "use": "conclude that an overdue invoice will never be paid",
+   "not": [
+    "silently deletes the invoice record"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "VAT",
+   "tier": 1,
+   "says": [
+    "is charged on sales at each stage of a supply chain",
+    "is collected by the seller and passed to the tax authority",
+    "lets a registered buyer set input tax against output tax"
+   ],
+   "use": "ask how a sales tax that applies at every stage works",
+   "not": [
+    "is paid only by the final consumer's bank"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "Output tax",
+   "tier": 3,
+   "says": [
+    "is tax charged on your own sales",
+    "is owed to the tax authority",
+    "is netted against input tax in a return"
+   ],
+   "use": "need the tax collected from customers on a sale",
+   "not": [
+    "is tax paid on your own purchases"
+   ],
+   "like": [
+    "Input tax"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "Input tax",
+   "tier": 3,
+   "says": [
+    "is tax paid on your own purchases",
+    "may be offset against output tax when recoverable",
+    "depends on the nature of the purchase"
+   ],
+   "use": "need the tax you were charged by suppliers",
+   "not": [
+    "is tax you charge your customers"
+   ],
+   "like": [
+    "Output tax"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "A tax-exclusive price",
+   "tier": 2,
+   "says": [
+    "shows the amount before tax is added",
+    "shows tax as a separate line",
+    "is the usual way to quote to businesses"
+   ],
+   "use": "quote a price to a business buyer who will reclaim tax",
+   "not": [
+    "already contains the tax in the total"
+   ],
+   "like": [
+    "A tax-inclusive price"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "A tax-inclusive price",
+   "tier": 2,
+   "says": [
+    "shows a total that already contains tax",
+    "needs the tax part extracted by calculation",
+    "is the usual way to show prices to consumers"
+   ],
+   "use": "show consumers a price they will actually pay",
+   "not": [
+    "adds tax on top at the till"
+   ],
+   "like": [
+    "A tax-exclusive price"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "An effective-dated tax rate",
+   "tier": 5,
+   "says": [
+    "keeps old rates for old transactions",
+    "applies the rate valid on the supply date",
+    "stops a rate change rewriting history"
+   ],
+   "use": "find that a tax rate changed halfway through a billing year",
+   "not": [
+    "overwrites the old rate in place"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "The reverse charge",
+   "tier": 5,
+   "says": [
+    "shifts responsibility for reporting the tax to the buyer",
+    "shows no tax charged on the supplier's invoice",
+    "applies to certain cross-border business sales"
+   ],
+   "use": "sell to a business customer in another country under special rules",
+   "not": [
+    "makes the supplier collect extra tax"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "Place of supply",
+   "tier": 5,
+   "says": [
+    "decides which jurisdiction's tax rules apply",
+    "often depends on the customer's location for digital services",
+    "is why evidence of customer location is kept"
+   ],
+   "use": "sell a digital service to customers in several countries",
+   "not": [
+    "is always where the seller is registered"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "Tax on a credit note",
+   "tier": 3,
+   "says": [
+    "reverses the tax originally charged",
+    "affects the return for the period in which it is issued",
+    "follows the invoice it credits"
+   ],
+   "use": "issue a credit note for a taxed invoice",
+   "not": [
+    "is ignored by the tax return"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "A zero-rated supply",
+   "tier": 4,
+   "says": [
+    "is taxable at a rate of zero percent",
+    "still counts as a taxable sale on returns",
+    "can allow related input tax to be recovered"
+   ],
+   "use": "sell something taxable at a nil rate",
+   "not": [
+    "falls outside the tax system completely"
+   ],
+   "like": [
+    "An exempt supply"
+   ]
+  },
+  {
+   "group": "tax",
+   "subject": "An exempt supply",
+   "tier": 4,
+   "says": [
+    "falls outside charging tax",
+    "usually restricts recovery of related input tax",
+    "is not simply taxed at zero"
+   ],
+   "use": "sell something the tax rules exempt",
+   "not": [
+    "always allows full recovery of input tax"
+   ],
+   "like": [
+    "A zero-rated supply"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "PCI-DSS",
+   "tier": 1,
+   "says": [
+    "is a security standard for organisations handling card data",
+    "is maintained by an industry council rather than a government",
+    "applies to anyone who stores, processes or transmits card data"
+   ],
+   "use": "ask what security standard applies to taking card payments",
+   "not": [
+    "is a law passed by a national parliament"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Cardholder data",
+   "tier": 1,
+   "says": [
+    "includes the primary account number",
+    "is what the standard exists to protect",
+    "becomes more sensitive when stored with the name and expiry"
+   ],
+   "use": "ask what information PCI-DSS is protecting",
+   "not": [
+    "is only the customer's email address"
+   ],
+   "like": [
+    "Sensitive authentication data"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Sensitive authentication data",
+   "tier": 3,
+   "says": [
+    "includes the card security code",
+    "must never be stored after authorisation",
+    "stays prohibited even when encrypted"
+   ],
+   "use": "wonder whether you may keep the card security code for later charges",
+   "not": [
+    "may be stored if it is encrypted"
+   ],
+   "like": [
+    "Cardholder data"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "PCI scope",
+   "tier": 3,
+   "says": [
+    "is the set of systems that touch card data",
+    "shrinks when card entry is outsourced",
+    "drives the amount of compliance work"
+   ],
+   "use": "want to reduce your compliance workload",
+   "not": [
+    "covers only the payment page and nothing else"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Hosted fields",
+   "tier": 3,
+   "says": [
+    "show provider-hosted inputs inside your own page",
+    "keep card numbers from touching your servers",
+    "allow a custom look with less scope"
+   ],
+   "use": "want a branded card form without handling card numbers",
+   "not": [
+    "send card numbers through your server before the provider"
+   ],
+   "like": [
+    "Hosted checkout",
+    "Tokenisation"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Velocity checks",
+   "tier": 2,
+   "says": [
+    "limit how many attempts occur in a time window",
+    "catch card testing and credential stuffing",
+    "can be applied per card, per IP or per account"
+   ],
+   "use": "see many payment attempts arriving in seconds",
+   "not": [
+    "verify the address on the card"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Card testing",
+   "tier": 3,
+   "says": [
+    "is the use of small attempts to find which stolen numbers work",
+    "tends to produce many small declined payments",
+    "is slowed by velocity limits and bot challenges"
+   ],
+   "use": "see a burst of tiny failed payments with different card numbers",
+   "not": [
+    "is a legitimate load test run by the issuer"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A fraud risk score",
+   "tier": 3,
+   "says": [
+    "combines many signals into one likelihood figure",
+    "lets rules allow, review or block",
+    "needs tuning against real outcomes"
+   ],
+   "use": "want to decide automatically which orders to review",
+   "not": [
+    "is a guarantee that an order is genuine"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Friendly fraud",
+   "tier": 5,
+   "says": [
+    "is a dispute where the cardholder did make the purchase",
+    "is countered with delivery and usage evidence",
+    "is also called first-party misuse"
+   ],
+   "use": "get a chargeback for something the customer actually received",
+   "not": [
+    "is fraud by a stranger using stolen card details"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Account takeover",
+   "tier": 5,
+   "says": [
+    "is an attacker using a real customer's credentials",
+    "is slowed by multi-factor authentication",
+    "can lead to stored payment methods being misused"
+   ],
+   "use": "see a real customer's account used from a new device to buy",
+   "not": [
+    "is when a company buys another company's accounts"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "The chargeback ratio",
+   "tier": 4,
+   "says": [
+    "compares disputes to the number of transactions",
+    "can trigger monitoring programmes if it stays high",
+    "is improved by clear descriptors and prompt refunds"
+   ],
+   "use": "watch disputes climb relative to sales",
+   "not": [
+    "compares refunds to authorisations only"
+   ]
+  },
+  {
+   "group": "recon",
+   "subject": "Reconciliation",
+   "tier": 1,
+   "says": [
+    "compares your records with an outside source",
+    "investigates the differences it finds",
+    "should run on a schedule rather than only when something looks wrong"
+   ],
+   "use": "want to know whether your books agree with the bank",
+   "not": [
+    "edits the ledger until it matches"
+   ],
+   "like": [
+    "Bank reconciliation",
+    "Payout reconciliation"
+   ]
+  },
+  {
+   "group": "recon",
+   "subject": "Bank reconciliation",
+   "tier": 2,
+   "says": [
+    "matches ledger entries to bank statement lines",
+    "finds missing, extra and mismatched items",
+    "ends with explained differences"
+   ],
+   "use": "need to check the ledger's cash against the bank statement",
+   "not": [
+    "compares two internal reports from the same system"
+   ],
+   "like": [
+    "Payout reconciliation"
+   ]
+  },
+  {
+   "group": "recon",
+   "subject": "A settlement report",
+   "tier": 2,
+   "says": [
+    "lists the payments, fees and refunds inside each payout",
+    "is what you match to a bank deposit",
+    "comes from the provider"
+   ],
+   "use": "want to see what is inside a payout",
+   "not": [
+    "is the cardholder's statement"
+   ]
+  },
+  {
+   "group": "recon",
+   "subject": "Payout reconciliation",
+   "tier": 3,
+   "says": [
+    "matches one bank deposit to the transactions it contained",
+    "explains why a deposit differs from the sum of charges",
+    "needs the provider's per-payout detail"
+   ],
+   "use": "find a deposit that is smaller than the day's sales",
+   "not": [
+    "matches the bank statement to supplier bills"
+   ],
+   "like": [
+    "Bank reconciliation"
+   ]
+  },
+  {
+   "group": "recon",
+   "subject": "A timing difference",
+   "tier": 3,
+   "says": [
+    "is a gap that closes by itself as items clear",
+    "is not an error",
+    "appears when a payment is recorded before the bank shows it"
+   ],
+   "use": "see an item in the ledger that the bank has not yet shown",
+   "not": [
+    "is a permanent error that needs a reversal"
+   ]
+  },
+  {
+   "group": "recon",
+   "subject": "An unmatched item",
+   "tier": 3,
+   "says": [
+    "has no counterpart in the other source",
+    "must be investigated and owned",
+    "becomes riskier as it ages"
+   ],
+   "use": "find a bank line with no matching ledger entry",
+   "not": [
+    "is a duplicate that can be deleted at once"
+   ]
+  },
+  {
+   "group": "recon",
+   "subject": "Duplicate detection",
+   "tier": 3,
+   "says": [
+    "recognises the same transaction arriving by two routes",
+    "makes repeated imports safe",
+    "compares details such as reference, amount and date"
+   ],
+   "use": "import a bank file that overlaps with one already loaded",
+   "not": [
+    "posts every imported line as new"
+   ]
+  },
+  {
+   "group": "recon",
+   "subject": "A suspense account",
+   "tier": 4,
+   "says": [
+    "holds items that cannot yet be identified",
+    "should be cleared quickly",
+    "signals a problem when its balance grows"
+   ],
+   "use": "receive money you cannot yet attribute to a customer",
+   "not": [
+    "is the account where profit is retained"
+   ],
+   "like": [
+    "A clearing account"
+   ]
+  },
+  {
+   "group": "recon",
+   "subject": "A stale approval",
+   "tier": 4,
+   "says": [
+    "no longer counts once the underlying figures change",
+    "is detected by comparing a fingerprint of the figures",
+    "means the figures must be put up again"
+   ],
+   "use": "find that data changed after sign-off",
+   "not": [
+    "remains valid because it was once given"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "Minor units",
+   "tier": 1,
+   "says": [
+    "store amounts as whole numbers of the smallest currency unit",
+    "avoid decimal fractions in storage",
+    "are how pence or cents are held as integers"
+   ],
+   "use": "must store an amount like 19.99 pounds exactly",
+   "not": [
+    "store amounts as floating-point numbers"
+   ],
+   "like": [
+    "A decimal type"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "An ISO 4217 code",
+   "tier": 2,
+   "says": [
+    "identifies a currency with three letters",
+    "must accompany every stored amount",
+    "includes codes such as GBP and EUR"
+   ],
+   "use": "need an unambiguous name for a currency",
+   "not": [
+    "identifies a country rather than a currency"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "Floating-point arithmetic",
+   "tier": 2,
+   "says": [
+    "cannot represent many decimal fractions exactly",
+    "is why 0.1 plus 0.2 does not equal 0.3 exactly",
+    "should not carry money values"
+   ],
+   "use": "are tempted to use a float for a price",
+   "not": [
+    "is exact for any decimal value"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "A decimal type",
+   "tier": 3,
+   "says": [
+    "stores exact base-10 numbers",
+    "suits values with fractions of a minor unit",
+    "avoids binary rounding surprises"
+   ],
+   "use": "need exact decimals such as an exchange rate",
+   "not": [
+    "is stored as a binary float"
+   ],
+   "like": [
+    "Minor units"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "The currency exponent",
+   "tier": 3,
+   "says": [
+    "differs between currencies",
+    "is zero for some currencies and three for others",
+    "is why two decimals must not be hard-coded"
+   ],
+   "use": "handle a currency that has no minor unit",
+   "not": [
+    "is always two for every currency"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "A rounding policy",
+   "tier": 3,
+   "says": [
+    "decides how fractions of a minor unit are resolved",
+    "should be chosen once and applied consistently",
+    "states where in the calculation rounding happens"
+   ],
+   "use": "find invoice totals that differ by a penny from the sum of the lines",
+   "not": [
+    "is decided separately by each developer on each screen"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "Remainder allocation",
+   "tier": 4,
+   "says": [
+    "splits an amount without losing or creating a minor unit",
+    "gives leftover units to chosen parts",
+    "makes the parts add up to the whole"
+   ],
+   "use": "need to split 100 pence across three payees",
+   "not": [
+    "rounds each share and ignores the difference"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "An exchange-rate snapshot",
+   "tier": 3,
+   "says": [
+    "stores the rate used at the time of the transaction",
+    "makes later reporting reproducible",
+    "is kept with the document it was used for"
+   ],
+   "use": "must explain a converted amount months later",
+   "not": [
+    "looks up today's rate each time a report is run"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "Presentment currency",
+   "tier": 4,
+   "says": [
+    "is the currency shown to the customer",
+    "may differ from the settlement currency",
+    "is chosen to make pricing familiar"
+   ],
+   "use": "show customers prices in their own currency",
+   "not": [
+    "is the currency of the merchant's bank deposit"
+   ],
+   "like": [
+    "Settlement currency"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "Settlement currency",
+   "tier": 4,
+   "says": [
+    "is the currency in which funds reach the merchant",
+    "may require conversion from the presentment currency",
+    "is fixed by the merchant's account setup"
+   ],
+   "use": "ask in which currency the bank deposit arrives",
+   "not": [
+    "is the currency printed on the customer's receipt"
+   ],
+   "like": [
+    "Presentment currency"
+   ]
+  },
+  {
+   "group": "money",
+   "subject": "An FX gain or loss",
+   "tier": 5,
+   "says": [
+    "arises when rates move between invoice and payment",
+    "is booked as its own ledger line",
+    "is separate from the sale's revenue"
+   ],
+   "use": "receive a foreign-currency payment worth a different amount than invoiced",
+   "not": [
+    "is added silently to revenue"
+   ]
+  },
+  {
+   "group": "payout",
+   "subject": "A payout",
+   "tier": 1,
+   "says": [
+    "sends collected funds from the provider to the merchant's bank",
+    "arrives as a net amount",
+    "follows a schedule"
+   ],
+   "use": "want to know how collected funds reach your bank account",
+   "not": [
+    "refunds money to the customer's card"
+   ]
+  },
+  {
+   "group": "payout",
+   "subject": "A payout schedule",
+   "tier": 2,
+   "says": [
+    "sets how often the balance is transferred",
+    "adds a delay after capture",
+    "may be daily, weekly or monthly"
+   ],
+   "use": "need to know when funds will reach the bank",
+   "not": [
+    "is set by the customer at checkout"
+   ]
+  },
+  {
+   "group": "payout",
+   "subject": "A reserve",
+   "tier": 4,
+   "says": [
+    "withholds part of the balance against future refunds and disputes",
+    "is based on risk",
+    "is released later"
+   ],
+   "use": "see a provider hold back part of the balance",
+   "not": [
+    "is a fee deducted for good"
+   ]
+  },
+  {
+   "group": "payout",
+   "subject": "A negative balance",
+   "tier": 5,
+   "says": [
+    "arises when refunds and disputes exceed available funds",
+    "must be covered by the merchant",
+    "can be recovered from future payments"
+   ],
+   "use": "issue refunds greater than the balance in the account",
+   "not": [
+    "is a credit the provider gives the merchant"
+   ]
+  },
+  {
+   "group": "payout",
+   "subject": "A split payment",
+   "tier": 4,
+   "says": [
+    "divides one customer payment between platform and sellers",
+    "needs the share of each party recorded",
+    "is common in marketplaces"
+   ],
+   "use": "run a marketplace where a customer pays several sellers at once",
+   "not": [
+    "sends the entire amount to the platform's account only"
+   ]
+  },
+  {
+   "group": "payout",
+   "subject": "A connected account",
+   "tier": 4,
+   "says": [
+    "is a seller account that sits under a platform",
+    "receives its share of marketplace payments",
+    "goes through onboarding checks"
+   ],
+   "use": "need each seller to be paid separately by a platform",
+   "not": [
+    "is the platform's own bank account"
+   ]
+  },
+  {
+   "group": "payout",
+   "subject": "KYC onboarding",
+   "tier": 3,
+   "says": [
+    "verifies the identity of a seller before payouts",
+    "is required before funds can be sent out",
+    "may need documents such as proof of identity"
+   ],
+   "use": "onboard a seller who will receive money",
+   "not": [
+    "is a fraud check on each buyer's card"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A sandbox",
+   "tier": 1,
+   "says": [
+    "simulates the provider without moving real money",
+    "uses separate API keys and data",
+    "behaves like live in most but not all ways"
+   ],
+   "use": "want to build an integration without risking real money",
+   "not": [
+    "charges real cards at a discount"
+   ],
+   "like": [
+    "Live mode"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "Live mode",
+   "tier": 1,
+   "says": [
+    "moves real money",
+    "uses its own live keys",
+    "needs real accounts and verified settings"
+   ],
+   "use": "are ready to accept real payments",
+   "not": [
+    "accepts only test card numbers"
+   ],
+   "like": [
+    "A sandbox"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A test card number",
+   "tier": 2,
+   "says": [
+    "is a published number that triggers a specific outcome in the sandbox",
+    "fails in live mode",
+    "can simulate declines and authentication"
+   ],
+   "use": "need to see what happens when a card is declined",
+   "not": [
+    "works to make real purchases"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A secret API key",
+   "tier": 2,
+   "says": [
+    "must never be shipped to browsers or mobile apps",
+    "authorises server-side calls",
+    "is kept in server configuration"
+   ],
+   "use": "configure a server that calls the provider",
+   "not": [
+    "is safe to publish in front-end code"
+   ],
+   "like": [
+    "A publishable key"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A publishable key",
+   "tier": 3,
+   "says": [
+    "may appear in browser code",
+    "identifies the account to the client library",
+    "cannot perform privileged server actions"
+   ],
+   "use": "initialise the provider's client library on a web page",
+   "not": [
+    "must be hidden like a password"
+   ],
+   "like": [
+    "A secret API key"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A sandbox parity gap",
+   "tier": 5,
+   "says": [
+    "means passing in the sandbox does not prove live behaviour",
+    "comes from differences such as speed, rules and bank behaviour",
+    "is why a small live check is done"
+   ],
+   "use": "find a flow that worked in testing but failed with real banks",
+   "not": [
+    "is impossible because the sandbox copies live exactly"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A live smoke test",
+   "tier": 4,
+   "says": [
+    "runs one small real transaction after launch",
+    "is followed by a refund or void",
+    "confirms keys, webhooks and payouts are wired"
+   ],
+   "use": "want proof that live configuration works before announcing it",
+   "not": [
+    "replaces all sandbox testing"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A test clock",
+   "tier": 4,
+   "says": [
+    "advances simulated time for subscriptions",
+    "lets you test renewals and trials without waiting",
+    "exists only in the test environment"
+   ],
+   "use": "need to test a month-end renewal today",
+   "not": [
+    "changes the date on the production server"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "ggmoney",
+   "tier": 1,
+   "says": [
+    "is a plain-PHP bookkeeping tool",
+    "is built around UK HMRC filing",
+    "posts invoices and bills into a double-entry ledger"
+   ],
+   "use": "ask which bookkeeping tool is built around HMRC filing",
+   "not": [
+    "is a hosted card-payments processor"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggmoney ledger",
+   "tier": 2,
+   "says": [
+    "has a chart of accounts and journals",
+    "reads performance report actuals directly",
+    "keeps one source of truth rather than a separate copy"
+   ],
+   "use": "ask where ggmoney performance figures come from",
+   "not": [
+    "feeds reports from a duplicate reporting table"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Moving a ledger line to another brand",
+   "tier": 4,
+   "says": [
+    "changes only the brand tag",
+    "never changes the amount",
+    "keeps the history of the original posting"
+   ],
+   "use": "need to move older lines onto a different brand in ggmoney",
+   "not": [
+    "recalculates the amounts for the new brand"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggmoney banking layer",
+   "tier": 3,
+   "says": [
+    "reads transactions through read-only Open Banking feeds or CSV import",
+    "cannot move money",
+    "feeds reconciliation with outside evidence"
+   ],
+   "use": "ask how ggmoney gets bank transactions",
+   "not": [
+    "initiates payments from the bank account"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "ggmoney import matching",
+   "tier": 3,
+   "says": [
+    "recognises a transaction that arrives by feed and CSV as one",
+    "makes imports safe to repeat",
+    "stops a double import inflating cash"
+   ],
+   "use": "worry that importing a CSV after a feed will double-count",
+   "not": [
+    "posts both copies and asks staff to delete one"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "A ggmoney performance review",
+   "tier": 4,
+   "says": [
+    "freezes a period's figures with a fingerprint",
+    "is approved by someone other than the preparer",
+    "goes stale if the ledger moves first"
+   ],
+   "use": "need performance figures signed off in ggmoney",
+   "not": [
+    "stays approved even after the ledger changes"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Moksy subscriptions service",
+   "tier": 3,
+   "says": [
+    "owns plan entitlements and the current billing period",
+    "holds included monthly tokens and consumed tokens",
+    "holds the overage posture"
+   ],
+   "use": "ask which Moksy service owns entitlements",
+   "not": [
+    "is the source of truth for checkout transactions"
+   ],
+   "like": [
+    "The Moksy payments service"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Moksy payments service",
+   "tier": 3,
+   "says": [
+    "stays the source of truth for money movement, invoices and payouts",
+    "owns checkout transactions",
+    "does not own plan entitlements"
+   ],
+   "use": "ask which Moksy service owns invoices and payouts",
+   "not": [
+    "is the authoritative owner of consumed tokens"
+   ],
+   "like": [
+    "The Moksy subscriptions service"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Moksy token ledger",
+   "tier": 4,
+   "says": [
+    "records a durable usage event for every AI request",
+    "is the event log that the snapshot summarises",
+    "is the source from which usage is counted"
+   ],
+   "use": "ask where Moksy records AI usage",
+   "not": [
+    "keeps only a running total with no events"
+   ],
+   "like": [
+    "The Moksy usage snapshot"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Moksy usage snapshot",
+   "tier": 4,
+   "says": [
+    "is a fast-read summary of the current period",
+    "is derived from the usage events",
+    "is only a summary, not the source of truth"
+   ],
+   "use": "need a quick read of current-period consumption",
+   "not": [
+    "replaces the event log as the record"
+   ],
+   "like": [
+    "The Moksy token ledger"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Moksy allowance enforcement",
+   "tier": 4,
+   "says": [
+    "is designed with three modes: block, downgrade or bill overage",
+    "is described in the design for when the allowance runs out",
+    "is a later phase of the rollout"
+   ],
+   "use": "ask what happens when a Moksy plan's tokens run out",
+   "not": [
+    "is already marked as implemented in the rollout document"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Moksy billing rollout plan",
+   "tier": 5,
+   "says": [
+    "marks the foundation phase as implemented",
+    "lists enforcement as a later phase",
+    "lists invoices from the token ledger as a later phase"
+   ],
+   "use": "must say what is built and what is planned in Moksy billing",
+   "not": [
+    "says every billing phase is already built"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Moksy token reconciliation",
+   "tier": 5,
+   "says": [
+    "is planned to compare provider invoices with the token ledger",
+    "is planned to detect missing or duplicated usage events",
+    "is described as planned rather than built"
+   ],
+   "use": "ask how Moksy plans to check AI usage against provider bills",
+   "not": [
+    "is already running in production"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does a card authorisation do?",
+   "right": "Asks the issuer to approve the payment and hold the funds",
+   "wrong": [
+    "Transfers the money to the merchant's bank straight away",
+    "Returns money to the customer",
+    "Creates an invoice for the order"
+   ],
+   "tier": 1,
+   "why": "An authorisation reserves funds; capture and settlement move them later."
+  },
+  {
+   "q": "Why is money usually stored as integers of the smallest currency unit?",
+   "right": "To avoid floating-point rounding errors",
+   "wrong": [
+    "Because databases cannot store decimal numbers",
+    "Because currencies never have fractions",
+    "Because it removes the need for currency codes"
+   ],
+   "tier": 1,
+   "why": "Whole numbers of minor units are exact; binary floats cannot represent many decimals."
+  },
+  {
+   "q": "In double-entry bookkeeping, what must be true of every journal entry?",
+   "right": "Total debits equal total credits",
+   "wrong": [
+    "It touches exactly one account",
+    "It is always posted to the bank account",
+    "It has a positive total on the debit side only"
+   ],
+   "tier": 1,
+   "why": "Balanced debits and credits are the defining rule of double entry."
+  },
+  {
+   "q": "What is a webhook?",
+   "right": "An HTTP request the provider sends to your endpoint when an event happens",
+   "wrong": [
+    "A request your server sends to the provider every minute",
+    "A browser plug-in that fills in card forms",
+    "A report the bank emails each month"
+   ],
+   "tier": 1,
+   "why": "Webhooks push event notifications to a URL you expose."
+  },
+  {
+   "q": "What is a chargeback?",
+   "right": "A dispute raised by the cardholder with their issuer that pulls the amount back pending the outcome",
+   "wrong": [
+    "A refund the merchant chooses to give",
+    "A fee charged for failed payments",
+    "A second authorisation of the same card"
+   ],
+   "tier": 1,
+   "why": "Chargebacks start at the cardholder's bank, not with the merchant."
+  },
+  {
+   "q": "What does PCI-DSS cover?",
+   "right": "Security requirements for organisations that store, process or transmit card data",
+   "wrong": [
+    "Rules on how invoices must be numbered",
+    "Tax rates on card payments",
+    "Interest charged on late payments"
+   ],
+   "tier": 1,
+   "why": "It is an industry security standard for card data."
+  },
+  {
+   "q": "What is a sandbox environment for?",
+   "right": "Testing an integration without moving real money",
+   "wrong": [
+    "Storing live customer cards for later",
+    "Speeding up live payouts",
+    "Applying for a merchant account"
+   ],
+   "tier": 1,
+   "why": "Sandboxes use separate keys and data and simulate the provider."
+  },
+  {
+   "q": "A client sends the request below and the network drops before it sees the reply. It retries with the same header. What should a well-designed API do?",
+   "right": "Return the result of the first request without charging again",
+   "wrong": [
+    "Create a second charge because every request is new",
+    "Reject all retries for a day",
+    "Charge half the amount on the retry"
+   ],
+   "tier": 2,
+   "why": "The idempotency key lets the server recognise a repeat and replay the first outcome.",
+   "code": "POST /v1/charges\nIdempotency-Key: order-1042-attempt-1\n\n{\"amount\": 1999, \"currency\": \"GBP\"}"
+  },
+  {
+   "q": "What is the difference between a void and a refund?",
+   "right": "A void cancels before capture so no money moves; a refund returns money that was captured",
+   "wrong": [
+    "A void is for chargebacks and a refund is for fraud",
+    "A void is always partial and a refund is always full",
+    "There is no difference; the terms are interchangeable"
+   ],
+   "tier": 2,
+   "why": "Voids release a hold; refunds reverse a completed capture."
+  },
+  {
+   "q": "What does this print in most programming languages that use binary floating point?",
+   "right": "0.30000000000000004",
+   "wrong": [
+    "0.3",
+    "0.30",
+    "NaN"
+   ],
+   "tier": 2,
+   "why": "0.1 and 0.2 are not exactly representable, so the sum carries a tiny error.",
+   "code": "console.log(0.1 + 0.2)"
+  },
+  {
+   "q": "A price shown as 120 includes tax at a rate of 20 percent. How much of the 120 is tax?",
+   "right": "20",
+   "wrong": [
+    "24",
+    "100",
+    "12"
+   ],
+   "tier": 2,
+   "why": "Net is 120 divided by 1.2, which is 100, so tax is 20."
+  },
+  {
+   "q": "An invoice for 100 has received a payment of 60. Which status describes it best?",
+   "right": "Part paid",
+   "wrong": [
+    "Paid",
+    "Void",
+    "Draft"
+   ],
+   "tier": 2,
+   "why": "A partial payment leaves a balance open."
+  },
+  {
+   "q": "Why must a webhook signature be verified before the payload is trusted?",
+   "right": "Because anyone could post a fake event to a public endpoint",
+   "wrong": [
+    "Because it makes the provider send fewer events",
+    "Because it speeds up the reply",
+    "Because unsigned events are always older"
+   ],
+   "tier": 2,
+   "why": "The signature proves the sender knew the shared secret."
+  },
+  {
+   "q": "What does proration do when a customer upgrades halfway through a billing period?",
+   "right": "Charges or credits only for the part of the period each plan applied",
+   "wrong": [
+    "Charges the full new price and ignores the old plan",
+    "Cancels the subscription and creates a new customer",
+    "Waits until the next period to apply any change"
+   ],
+   "tier": 2,
+   "why": "Proration works out amounts from the time remaining."
+  },
+  {
+   "q": "Which identifier names a currency unambiguously in stored amounts?",
+   "right": "A three-letter ISO 4217 code such as GBP",
+   "wrong": [
+    "The country's flag emoji",
+    "The currency symbol only",
+    "The customer's postcode"
+   ],
+   "tier": 2,
+   "why": "Symbols are ambiguous; codes are standard."
+  },
+  {
+   "q": "Your webhook handler sends emails and builds PDFs inline and takes about ten seconds. The provider keeps redelivering events. What is the best fix?",
+   "right": "Acknowledge with a 2xx straight away and process the event from a queue, idempotently",
+   "wrong": [
+    "Ask the provider for more retries",
+    "Turn off signature verification to save time",
+    "Ignore any event after the first delivery"
+   ],
+   "tier": 3,
+   "why": "A fast acknowledgement stops timeouts; the queued work must still be safe to repeat."
+  },
+  {
+   "q": "The same payment succeeded event arrives twice and your handler posts two ledger entries. What would have prevented this?",
+   "right": "Recording processed event ids and skipping events already handled",
+   "wrong": [
+    "Sending an idempotency key to the provider",
+    "Switching the handler to polling every second",
+    "Posting entries with a rounding policy"
+   ],
+   "tier": 3,
+   "why": "Event-id deduplication makes the receiving side safe under at-least-once delivery."
+  },
+  {
+   "q": "A bank deposit is smaller than the sum of yesterday's charges. What should you check first?",
+   "right": "The settlement report for refunds, fees and disputes netted from the payout",
+   "wrong": [
+    "Whether every customer used 3-D Secure",
+    "Whether the currency code has three letters",
+    "Whether the ledger was double-counted by the bank"
+   ],
+   "tier": 3,
+   "why": "Payouts are net of deductions that the settlement report itemises."
+  },
+  {
+   "q": "A subscription renewal fails with an insufficient-funds decline. What is the sensible response?",
+   "right": "Treat it as a soft decline: retry on a schedule and tell the customer",
+   "wrong": [
+    "Cancel the subscription immediately",
+    "Retry every minute until it works",
+    "Delete the stored payment token"
+   ],
+   "tier": 3,
+   "why": "Temporary failures justify spaced retries with customer communication."
+  },
+  {
+   "q": "An issuer reports the card as stolen. What should the billing system do?",
+   "right": "Treat it as a hard decline and ask for a new payment method",
+   "wrong": [
+    "Retry hourly for a week",
+    "Wait for the customer to complain",
+    "Capture a different authorisation instead"
+   ],
+   "tier": 3,
+   "why": "Permanent refusals will not succeed on retry."
+  },
+  {
+   "q": "How should 100 pence be split across three payees without losing a penny?",
+   "right": "34, 33 and 33",
+   "wrong": [
+    "33, 33 and 33",
+    "33.33, 33.33 and 33.34",
+    "34, 34 and 34"
+   ],
+   "tier": 3,
+   "why": "Remainder allocation hands leftover minor units to chosen parts so the total stays whole.",
+   "code": "split(100, 3)"
+  },
+  {
+   "q": "A developer wants to log whole checkout request bodies, card fields included, to debug failures. What is the problem?",
+   "right": "Card data in logs pulls logs, backups and tools into PCI scope, so log ids and tokens instead",
+   "wrong": [
+    "Logs are too slow to hold request bodies",
+    "Card numbers are public so logging them is harmless",
+    "Logging prevents refunds from working"
+   ],
+   "tier": 3,
+   "why": "Keeping card data out of logs keeps scope small and risk low."
+  },
+  {
+   "q": "A customer completes a bank prompt for 3-D Secure, then closes the tab. How do you learn the final outcome?",
+   "right": "Through a webhook for the payment's final state, with polling as a fallback",
+   "wrong": [
+    "It is certain to be successful",
+    "By asking the customer to email",
+    "By assuming a decline"
+   ],
+   "tier": 3,
+   "why": "Outcomes can finish after the customer has gone; the server must learn asynchronously."
+  },
+  {
+   "q": "Which key may be placed in browser code?",
+   "right": "The publishable key",
+   "wrong": [
+    "The secret key",
+    "The webhook signing secret",
+    "The database password"
+   ],
+   "tier": 3,
+   "why": "Publishable keys identify the account but cannot perform privileged actions."
+  },
+  {
+   "q": "What happens to VAT when you issue a credit note against a taxed invoice?",
+   "right": "The credit note reverses the tax and affects the return for the period it is issued",
+   "wrong": [
+    "Nothing, because tax stays as originally charged",
+    "The tax is paid again in the original period",
+    "The tax moves into deferred revenue"
+   ],
+   "tier": 3,
+   "why": "Tax follows the invoice and its credit note."
+  },
+  {
+   "q": "A customer pays annually in advance. How should the supplier account for the cash on receipt?",
+   "right": "As deferred revenue, released to revenue over the service period",
+   "wrong": [
+    "As revenue in full immediately",
+    "As an expense",
+    "As accounts receivable"
+   ],
+   "tier": 3,
+   "why": "Cash for undelivered service is a liability until earned."
+  },
+  {
+   "q": "A team rounds each invoice line to two decimals, and totals sometimes differ by a penny from rounding the exact sum. What is the right fix?",
+   "right": "Define one rounding policy and apply it consistently, including who gets any remainder",
+   "wrong": [
+    "Let each screen round however it likes",
+    "Switch to floating point",
+    "Hide the difference from customers"
+   ],
+   "tier": 3,
+   "why": "Consistency, not a particular rule, is what makes totals reproducible."
+  },
+  {
+   "q": "A refund event reaches your handler before the payment event it refers to. What is the best design?",
+   "right": "Make handlers tolerate order, for example by fetching current state or comparing timestamps",
+   "wrong": [
+    "Assume the provider will fix the order",
+    "Drop the refund event",
+    "Hold all events for a day and sort them"
+   ],
+   "tier": 4,
+   "why": "Webhooks can arrive out of order."
+  },
+  {
+   "q": "Support staff double-click Refund and two refunds are created. Which controls prevent this?",
+   "right": "An idempotency key on the request and a cap on total refunded against the payment",
+   "wrong": [
+    "More staff training only",
+    "Rounding amounts to whole units",
+    "A longer payment timeout"
+   ],
+   "tier": 4,
+   "why": "Idempotent refunds survive double-clicks and retries."
+  },
+  {
+   "q": "A team tests month-end renewals by editing period dates in the production database. What is better?",
+   "right": "Use a test clock in the sandbox to advance simulated time",
+   "wrong": [
+    "Wait until the real month end",
+    "Edit the dates in the live provider dashboard",
+    "Disable renewals while testing"
+   ],
+   "tier": 4,
+   "why": "Test clocks let you simulate time without touching live data."
+  },
+  {
+   "q": "Everything passed in the sandbox, but on launch day payments from one type of card fail. What practice would have caught this?",
+   "right": "A small live smoke test and awareness of the sandbox parity gap",
+   "wrong": [
+    "Running the sandbox tests twice",
+    "Using only a publishable key",
+    "Disabling 3-D Secure"
+   ],
+   "tier": 4,
+   "why": "The sandbox does not copy every real bank and card behaviour."
+  },
+  {
+   "q": "A clearing account used for provider payments has shown a growing balance for three months. What does that most likely mean?",
+   "right": "Items are not being matched and cleared out",
+   "wrong": [
+    "The business is highly profitable",
+    "Currency rates have moved",
+    "The chart of accounts is too small"
+   ],
+   "tier": 4,
+   "why": "A clearing account should return to zero once items match."
+  },
+  {
+   "q": "A month's figures were approved, then a back-dated entry changed them. What should happen to the approval?",
+   "right": "It goes stale and the figures are put up for approval again",
+   "wrong": [
+    "It remains valid because it was given in good faith",
+    "It is deleted along with the entry",
+    "The preparer approves it themselves"
+   ],
+   "tier": 4,
+   "why": "Approval applies to the figures as they were; changed figures need fresh approval."
+  },
+  {
+   "q": "A customer disputes a charge claiming non-delivery, and you hold courier proof of delivery. What is the right step?",
+   "right": "Submit the evidence as representment before the deadline",
+   "wrong": [
+    "Issue a refund and ignore the dispute",
+    "Wait to see if the bank decides unprompted",
+    "Cancel the customer's account"
+   ],
+   "tier": 4,
+   "why": "Chargebacks have a response deadline; evidence is submitted through the acquirer."
+  },
+  {
+   "q": "Your chargeback ratio is climbing. What is the most useful first step?",
+   "right": "Segment the disputes by reason to see whether fraud, confusion or fulfilment is the cause",
+   "wrong": [
+    "Stop accepting all cards",
+    "Raise prices",
+    "Switch off 3-D Secure"
+   ],
+   "tier": 4,
+   "why": "Different causes need different fixes."
+  },
+  {
+   "q": "A business sells a digital service to consumers in several countries. What mainly decides which tax rules apply?",
+   "right": "The place of supply, supported by evidence of the customer's location",
+   "wrong": [
+    "Where the seller's servers are",
+    "The currency of the invoice",
+    "The day of the week of the sale"
+   ],
+   "tier": 4,
+   "why": "Place-of-supply rules often follow the customer's location."
+  },
+  {
+   "q": "In Moksy's billing design, which service is the authoritative owner of plan entitlements?",
+   "right": "The subscriptions service",
+   "wrong": [
+    "The payments service",
+    "The token snapshot",
+    "The invoice PDF generator"
+   ],
+   "tier": 4,
+   "why": "The payments service owns money movement, not entitlements."
+  },
+  {
+   "q": "In Moksy's design, if the usage snapshot and the token event log disagree, which is the record?",
+   "right": "The token ledger event log",
+   "wrong": [
+    "The snapshot",
+    "Whichever was updated last",
+    "The provider invoice"
+   ],
+   "tier": 4,
+   "why": "The event log is the ledger; the snapshot is only a summary."
+  },
+  {
+   "q": "Two services both store a customer's plan entitlements and they now disagree. What is the best fix?",
+   "right": "Give each fact one owning service and derive the other copy from it",
+   "wrong": [
+    "Add a nightly job that picks the newer copy",
+    "Store the entitlement in a third service as well",
+    "Let staff correct whichever looks wrong"
+   ],
+   "tier": 4,
+   "why": "Facts stored in two places drift; one owner prevents that."
+  },
+  {
+   "q": "Many small payments of low value, each with a different card number, arrive from one IP address in a minute. What is likely happening and what helps?",
+   "right": "Card testing; velocity limits and bot challenges help",
+   "wrong": [
+    "A normal sales rush; do nothing",
+    "Friendly fraud; submit representment",
+    "A currency mismatch; round the amounts"
+   ],
+   "tier": 4,
+   "why": "Bursts of tiny declined payments are the signature of card testing."
+  },
+  {
+   "q": "An invoice has the wrong amount and has already been sent. What is the usual practice?",
+   "right": "Issue a credit note and a corrected invoice, keeping the original",
+   "wrong": [
+    "Edit the original invoice",
+    "Delete the invoice and reuse its number",
+    "Ignore the difference until year end"
+   ],
+   "tier": 4,
+   "why": "The original stays intact and the sequence has no silent gaps."
+  },
+  {
+   "q": "The ledger shows an invoice paid, but ggmoney imports the same bank line by feed and by CSV. What stops double-counting?",
+   "right": "Import matching that recognises it as one transaction",
+   "wrong": [
+    "Deleting one of the lines by hand each month",
+    "Posting both and letting the totals offset",
+    "Disabling CSV import"
+   ],
+   "tier": 4,
+   "why": "Duplicate-safe import is part of ggmoney's banking layer."
+  },
+  {
+   "q": "A platform's seller refunds exceed their balance. What results?",
+   "right": "A negative balance that has to be covered or recovered from future payments",
+   "wrong": [
+    "The provider silently absorbs the amount",
+    "The refunds are cancelled automatically",
+    "The customers must repay the difference"
+   ],
+   "tier": 5,
+   "why": "Negative balances arise when refunds and disputes exceed available funds."
+  },
+  {
+   "q": "A client reuses an idempotency key but changes the amount. What should a good API do?",
+   "right": "Reject it as a conflict rather than return the old result",
+   "wrong": [
+    "Charge the new amount",
+    "Return the first result as if nothing changed",
+    "Charge both amounts"
+   ],
+   "tier": 5,
+   "why": "A reused key with different parameters signals a client bug."
+  },
+  {
+   "q": "A EUR invoice is booked in a GBP ledger and is paid later at a different rate. Where does the difference go?",
+   "right": "To a separate FX gain or loss line",
+   "wrong": [
+    "Into the original sales revenue",
+    "Nowhere; it is ignored",
+    "Back into the invoice total"
+   ],
+   "tier": 5,
+   "why": "Rate movement between invoice and payment is its own ledger item."
+  },
+  {
+   "q": "Which statement about Moksy billing is correct according to its rollout document?",
+   "right": "The foundation phase is implemented, while enforcement and token-ledger invoices are later phases",
+   "wrong": [
+    "All billing phases are implemented",
+    "Nothing has been built yet",
+    "Only enforcement is implemented"
+   ],
+   "tier": 5,
+   "why": "Treat later phases as planned, not built."
+  },
+  {
+   "q": "Events that keep failing after all retries pile up. What is the right handling?",
+   "right": "Park them in a dead-letter queue, fix the cause and replay them",
+   "wrong": [
+    "Delete them to keep the queue clear",
+    "Retry forever at full speed",
+    "Mark the payments as succeeded"
+   ],
+   "tier": 5,
+   "why": "Dead-letter queues preserve failures for inspection and replay."
+  },
+  {
+   "q": "A customer downgrades mid-cycle and is owed money for the unused time, but will continue as a customer. What fits best?",
+   "right": "Put the amount on the account as credit to offset the next invoice",
+   "wrong": [
+    "Refund to the card automatically",
+    "Ignore the unused time",
+    "Void the previous invoice"
+   ],
+   "tier": 5,
+   "why": "Account credit offsets future invoices without a refund."
+  },
+  {
+   "q": "A business wants a partner to act as the legal seller to customers and handle tax collection on its sales. Which model is that?",
+   "right": "Merchant of record",
+   "wrong": [
+    "Acquirer",
+    "Issuer",
+    "Card network"
+   ],
+   "tier": 5,
+   "why": "The merchant of record is the seller to the customer."
+  },
+  {
+   "q": "An overdue invoice is judged uncollectable. What is the correct treatment?",
+   "right": "Write it off as bad debt through an approved entry, keeping the invoice record",
+   "wrong": [
+    "Delete the invoice",
+    "Edit it down to zero",
+    "Move it to deferred revenue"
+   ],
+   "tier": 5,
+   "why": "Write-offs are posted and approved, never silent deletions."
+  },
+  {
+   "q": "Which of these is the correct order of a normal card payment flow?",
+   "right": "Authorise, capture, settle",
+   "wrong": [
+    "Settle, capture, authorise",
+    "Capture, authorise, refund",
+    "Authorise, refund, capture"
+   ],
+   "tier": 2,
+   "why": "Money is approved, claimed, then moved in a batch."
+  },
+  {
+   "q": "A webhook handler returns 500 on one event. What is the typical provider behaviour?",
+   "right": "It retries delivery, so the handler must be idempotent",
+   "wrong": [
+    "It never sends the event again",
+    "It switches to polling your server",
+    "It marks the payment as failed"
+   ],
+   "tier": 3,
+   "why": "At-least-once delivery means retries and possible duplicates."
+  },
+  {
+   "q": "A trial subscription ends and the customer has not cancelled. What should usually happen?",
+   "right": "It converts to paid and the first invoice is raised",
+   "wrong": [
+    "It is deleted",
+    "The customer is refunded",
+    "The plan stays free for ever"
+   ],
+   "tier": 3,
+   "why": "Trials convert at the end unless cancelled."
+  },
+  {
+   "q": "A payment appears in the ledger on the 31st but the bank statement shows it on the 2nd. How should you treat this?",
+   "right": "As a timing difference that clears by itself, not an error",
+   "wrong": [
+    "As a duplicate to be deleted",
+    "As fraud",
+    "As an FX loss"
+   ],
+   "tier": 4,
+   "why": "Timing differences close when the item clears."
+  },
+  {
+   "q": "Where should a refund's tax effect be recorded for a VAT-registered seller?",
+   "right": "On the credit note, reversing the tax originally charged",
+   "wrong": [
+    "Nowhere; refunds have no tax effect",
+    "On the original invoice by editing it",
+    "On the customer's statement only"
+   ],
+   "tier": 4,
+   "why": "Tax follows the invoice and the credit note reverses it."
+  }
+ ]
+}

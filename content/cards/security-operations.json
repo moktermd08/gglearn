@@ -1,0 +1,2639 @@
+{
+ "slug": "security-operations",
+ "name": "Security operations",
+ "description": "Identity, secrets, threat modelling, incident response.",
+ "roles": "developer",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "iam": "identity and access concept",
+  "auth": "authentication mechanism",
+  "secret": "secrets-handling practice",
+  "endpoint": "device and endpoint control",
+  "vuln": "vulnerability management concept",
+  "log": "logging and monitoring concept",
+  "ir": "incident response concept",
+  "social": "attack on people or accounts",
+  "resil": "backup and resilience concept",
+  "net": "network or cloud security concept",
+  "gov": "governance and assurance concept",
+  "threat": "threat modelling concept",
+  "ggl": "GGLearn security design choice",
+  "ggs": "company secrets-handling fact"
+ },
+ "cards": [
+  {
+   "group": "iam",
+   "subject": "Authentication",
+   "tier": 1,
+   "says": [
+    "verifies that a requester is who they claim to be",
+    "checks a claimed identity against proof such as a password or key"
+   ],
+   "use": "need to confirm who is signing in",
+   "not": [
+    "decides which records a signed-in user may open"
+   ],
+   "like": [
+    "Authorisation"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Authorisation",
+   "tier": 1,
+   "says": [
+    "decides what an authenticated identity is allowed to do",
+    "must be checked on the server for every request"
+   ],
+   "use": "need to decide whether a signed-in user may open a particular record",
+   "not": [
+    "proves that the person is who they say they are"
+   ],
+   "like": [
+    "Authentication"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Least privilege",
+   "tier": 1,
+   "says": [
+    "grants only the access needed to do the task",
+    "limits the damage a compromised account can cause"
+   ],
+   "use": "give a new starter access to systems",
+   "not": [
+    "gives every employee administrator rights to avoid support requests"
+   ],
+   "like": [
+    "Role-based access control",
+    "Just-in-time access",
+    "Privileged access management",
+    "Zero trust"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Role-based access control",
+   "tier": 2,
+   "says": [
+    "grants permissions through roles rather than to individuals",
+    "lets many people with the same job share an identical access set"
+   ],
+   "use": "have many staff with the same job who need identical access",
+   "not": [
+    "assigns every permission directly to each person"
+   ],
+   "like": [
+    "Least privilege",
+    "Just-in-time access"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Separation of duties",
+   "tier": 4,
+   "says": [
+    "splits a sensitive process so no single person can complete it alone",
+    "stops one person both raising and approving the same payment"
+   ],
+   "use": "need to stop one person from both requesting and approving a change",
+   "not": [
+    "gives one trusted administrator control of the whole process"
+   ],
+   "like": [
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Service account",
+   "tier": 2,
+   "says": [
+    "is an identity used by software rather than by a person",
+    "should hold its own narrowly scoped permissions"
+   ],
+   "use": "need an application to call another system without a person signing in",
+   "not": [
+    "should share the administrator's own password"
+   ],
+   "like": [
+    "Break-glass account"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Privileged access management",
+   "tier": 4,
+   "says": [
+    "controls and records the use of administrator-level accounts",
+    "can issue elevated rights that expire after use"
+   ],
+   "use": "need a record of who used administrator rights and why",
+   "not": [
+    "removes the need to review privileged accounts"
+   ],
+   "like": [
+    "Just-in-time access",
+    "Break-glass account"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Just-in-time access",
+   "tier": 5,
+   "says": [
+    "grants elevated rights only for a limited window after a request",
+    "leaves no standing administrator rights between tasks"
+   ],
+   "use": "want administrators to hold no permanent elevated rights",
+   "not": [
+    "gives a permanent administrator role to anyone who asks once"
+   ],
+   "like": [
+    "Privileged access management",
+    "Role-based access control"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Break-glass account",
+   "tier": 4,
+   "says": [
+    "is an emergency administrator account kept sealed for use when normal access fails",
+    "triggers an alert whenever it is used"
+   ],
+   "use": "must regain control when the identity provider is down",
+   "not": [
+    "is used every day by the administration team"
+   ],
+   "like": [
+    "Service account",
+    "Privileged access management"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Zero trust",
+   "tier": 5,
+   "says": [
+    "treats network location as no proof of trustworthiness",
+    "verifies each request using identity, device state and context"
+   ],
+   "use": "want access decisions that do not assume the office network is safe",
+   "not": [
+    "trusts any request that arrives from inside the corporate network"
+   ],
+   "like": [
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Multi-factor authentication",
+   "tier": 1,
+   "says": [
+    "requires proof from two or more different categories of factor",
+    "keeps a stolen password alone from opening the account"
+   ],
+   "use": "want a stolen password on its own to be useless",
+   "not": [
+    "is satisfied by entering two different passwords"
+   ],
+   "like": [
+    "Single sign-on",
+    "Passkey"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Single sign-on",
+   "tier": 1,
+   "says": [
+    "lets one login at an identity provider open many applications",
+    "gives a single place to disable a leaver's access to connected apps"
+   ],
+   "use": "want one place to cut a leaver's access to every connected application",
+   "not": [
+    "makes every application store its own copy of each password"
+   ],
+   "like": [
+    "Multi-factor authentication"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Password manager",
+   "tier": 1,
+   "says": [
+    "generates and stores a unique password for each account",
+    "fills credentials only on the site they were saved for"
+   ],
+   "use": "need a different strong password for every account",
+   "not": [
+    "is best used by reusing one strong master password on all sites"
+   ],
+   "like": [
+    "Multi-factor authentication"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Password hashing",
+   "tier": 1,
+   "says": [
+    "stores a one-way, deliberately slow transformation of the password",
+    "lets a server check a password without keeping it"
+   ],
+   "use": "must store user passwords in a database",
+   "not": [
+    "encrypts passwords so support staff can read them back"
+   ],
+   "like": [
+    "Multi-factor authentication"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Passkey",
+   "tier": 2,
+   "says": [
+    "signs in with a public-key credential bound to the site's domain",
+    "does not work on a look-alike domain, which blunts phishing"
+   ],
+   "use": "want sign-in that a fake login page cannot capture",
+   "not": [
+    "sends a reusable shared secret to the server at each sign-in"
+   ],
+   "like": [
+    "Authenticator app",
+    "Hardware security key"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Authenticator app",
+   "tier": 2,
+   "says": [
+    "generates time-based one-time codes from a secret held on the device",
+    "works without a phone signal"
+   ],
+   "use": "want a second factor that does not rely on the phone network",
+   "not": [
+    "is phishing-resistant because the code cannot be typed into a fake page"
+   ],
+   "like": [
+    "SMS one-time code",
+    "Hardware security key"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "SMS one-time code",
+   "tier": 3,
+   "says": [
+    "delivers a code over the phone network",
+    "is exposed to SIM-swap fraud"
+   ],
+   "use": "hear that an attacker has persuaded a carrier to move a victim's number",
+   "not": [
+    "is stronger than a hardware key because phones are always at hand"
+   ],
+   "like": [
+    "Authenticator app",
+    "Hardware security key"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "Hardware security key",
+   "tier": 3,
+   "says": [
+    "answers a cryptographic challenge tied to the site's origin",
+    "gives phishing-resistant second-factor sign-in"
+   ],
+   "use": "want a second factor that a phishing page cannot relay",
+   "not": [
+    "generates codes that a user types in, so a fake page can still capture them"
+   ],
+   "like": [
+    "Authenticator app",
+    "Passkey",
+    "SMS one-time code"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "OAuth 2.0",
+   "tier": 3,
+   "says": [
+    "lets an app obtain limited access to a resource through tokens without the user's password",
+    "issues access tokens with scopes"
+   ],
+   "use": "need a third-party app to read part of a user's data without handing over the password",
+   "not": [
+    "is a password hashing scheme"
+   ],
+   "like": [
+    "OpenID Connect"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "OpenID Connect",
+   "tier": 4,
+   "says": [
+    "adds an identity layer on top of OAuth 2.0",
+    "returns an ID token describing who signed in"
+   ],
+   "use": "need an app to learn who the user is, not just obtain access to data",
+   "not": [
+    "replaces TLS between browser and server"
+   ],
+   "like": [
+    "OAuth 2.0"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "Secrets scanning",
+   "tier": 2,
+   "says": [
+    "searches commits and files for credential patterns",
+    "can block a push that contains a key"
+   ],
+   "use": "want to catch API keys before they reach a shared repository",
+   "not": [
+    "encrypts the secrets it finds so they are safe"
+   ],
+   "like": [
+    "Secret rotation"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "Secret rotation",
+   "tier": 2,
+   "says": [
+    "replaces a credential so the old value stops working",
+    "is the first fix once a key has been exposed"
+   ],
+   "use": "learn that a key was pasted into a team chat",
+   "not": [
+    "can be skipped if the message is deleted quickly"
+   ],
+   "like": [
+    "Secrets scanning",
+    "A short-lived credential"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "Separate secrets per environment",
+   "tier": 2,
+   "says": [
+    "stops a leak in staging from unlocking production",
+    "gives each environment its own keys"
+   ],
+   "use": "worry that a test server leak could open the live system",
+   "not": [
+    "reuses the production key everywhere for convenience"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "Least-privilege API key",
+   "tier": 2,
+   "says": [
+    "carries only the permissions the integration needs",
+    "limits what a thief can do with a leaked key"
+   ],
+   "use": "create a key for a service that only sends email",
+   "not": [
+    "is simpler to manage when it has full account access"
+   ],
+   "like": [
+    "Separate secrets per environment"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "A secret committed to Git",
+   "tier": 3,
+   "says": [
+    "stays readable in history after a later commit deletes the file",
+    "must be treated as compromised and rotated"
+   ],
+   "use": "find a key in an old commit of a repository",
+   "not": [
+    "is made safe by deleting the file in the next commit"
+   ],
+   "like": [
+    "Secrets scanning"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "Secrets manager",
+   "tier": 4,
+   "says": [
+    "stores secrets centrally with access control and audit logs",
+    "can rotate credentials automatically"
+   ],
+   "use": "have many services that each need credentials and want a record of who read them",
+   "not": [
+    "keeps secrets in a plain file next to the code"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "Failing closed",
+   "tier": 4,
+   "says": [
+    "refuses to operate when a required protection is missing",
+    "prefers an outage over silently dropping a safeguard"
+   ],
+   "use": "decide what a service does when its encryption key is missing",
+   "not": [
+    "falls back to plaintext so users notice nothing"
+   ],
+   "like": [
+    "Defence in depth"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "Log redaction",
+   "tier": 3,
+   "says": [
+    "removes credential values before output is written",
+    "keeps tokens and passwords out of log files"
+   ],
+   "use": "worry that request logs record authorisation headers",
+   "not": [
+    "records full request headers to make debugging easier"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "A short-lived credential",
+   "tier": 4,
+   "says": [
+    "expires automatically after minutes or hours",
+    "reduces the value of a stolen token"
+   ],
+   "use": "want a stolen token to stop working soon without anyone acting",
+   "not": [
+    "are valid until someone remembers to revoke them"
+   ],
+   "like": [
+    "Secret rotation"
+   ]
+  },
+  {
+   "group": "secret",
+   "subject": "Envelope encryption",
+   "tier": 5,
+   "says": [
+    "encrypts data with a data key that is itself encrypted by a master key",
+    "lets the master key change without re-encrypting all the data"
+   ],
+   "use": "need to rotate a master key without re-encrypting every record",
+   "not": [
+    "encrypts each file twice with the same key"
+   ]
+  },
+  {
+   "group": "endpoint",
+   "subject": "Full-disk encryption",
+   "tier": 1,
+   "says": [
+    "protects the data on a lost or stolen laptop",
+    "makes the drive unreadable without the key or credential"
+   ],
+   "use": "worry about a laptop left on a train",
+   "not": [
+    "stops malware from running on the device"
+   ]
+  },
+  {
+   "group": "endpoint",
+   "subject": "Screen lock",
+   "tier": 1,
+   "says": [
+    "requires a credential after a short idle period",
+    "stops a passer-by using an unattended session"
+   ],
+   "use": "leave your desk for a few minutes",
+   "not": [
+    "is only needed on devices used outside the office"
+   ]
+  },
+  {
+   "group": "endpoint",
+   "subject": "Mobile device management",
+   "tier": 2,
+   "says": [
+    "enforces settings on enrolled devices",
+    "can remotely wipe a lost phone"
+   ],
+   "use": "must apply a security baseline and wipe lost phones centrally",
+   "not": [
+    "is a form of password hashing"
+   ],
+   "like": [
+    "Device compliance check"
+   ]
+  },
+  {
+   "group": "endpoint",
+   "subject": "Removing local administrator rights",
+   "tier": 2,
+   "says": [
+    "stops everyday accounts installing arbitrary software",
+    "limits what malware can change on a device"
+   ],
+   "use": "want malware run by a user to have less power on the machine",
+   "not": [
+    "makes the user's laptop impossible to update"
+   ],
+   "like": [
+    "Application allowlisting"
+   ]
+  },
+  {
+   "group": "endpoint",
+   "subject": "System hardening",
+   "tier": 2,
+   "says": [
+    "removes unnecessary services and accounts",
+    "sets secure defaults before a system goes live"
+   ],
+   "use": "are about to put a new server into service",
+   "not": [
+    "adds extra software to the server to make it harder to use"
+   ]
+  },
+  {
+   "group": "endpoint",
+   "subject": "Device compliance check",
+   "tier": 3,
+   "says": [
+    "grants access to apps only when the device meets a baseline",
+    "tests that the disk is encrypted and the system is patched"
+   ],
+   "use": "want to block sign-ins from laptops that are unpatched",
+   "not": [
+    "checks the user's identity and ignores the device"
+   ],
+   "like": [
+    "Mobile device management"
+   ]
+  },
+  {
+   "group": "endpoint",
+   "subject": "Endpoint detection and response",
+   "tier": 4,
+   "says": [
+    "records process-level activity on devices",
+    "lets responders isolate a host remotely"
+   ],
+   "use": "need to see what a suspicious process did and cut that laptop off the network",
+   "not": [
+    "only compares files against a list of known signatures"
+   ]
+  },
+  {
+   "group": "endpoint",
+   "subject": "Application allowlisting",
+   "tier": 4,
+   "says": [
+    "runs only software that has been approved",
+    "blocks unknown programs by default"
+   ],
+   "use": "want everything not explicitly approved to be refused on a device",
+   "not": [
+    "blocks only the programs on a list of known malware"
+   ],
+   "like": [
+    "Removing local administrator rights"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Vulnerability",
+   "tier": 1,
+   "says": [
+    "is a weakness that could be exploited",
+    "may exist in code, configuration or process"
+   ],
+   "use": "hear that a flaw could let an attacker in",
+   "not": [
+    "is the same thing as an attack in progress"
+   ],
+   "like": [
+    "Zero-day"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Patch management",
+   "tier": 1,
+   "says": [
+    "tracks, tests and applies software updates",
+    "closes known vulnerabilities in a planned way"
+   ],
+   "use": "need a routine for rolling out vendor fixes",
+   "not": [
+    "means installing updates only after an incident"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "CVE identifier",
+   "tier": 2,
+   "says": [
+    "gives a public unique name to a disclosed vulnerability",
+    "lets different tools refer to the same flaw"
+   ],
+   "use": "need a common reference for a specific disclosed vulnerability across scanners and advisories",
+   "not": [
+    "scores how severe the flaw is for your environment"
+   ],
+   "like": [
+    "CVSS score"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Vulnerability scan",
+   "tier": 2,
+   "says": [
+    "automatically checks systems for known weaknesses",
+    "produces a list of findings to triage"
+   ],
+   "use": "want a regular automated sweep for known weaknesses",
+   "not": [
+    "proves a flaw can be exploited by actually breaking in"
+   ],
+   "like": [
+    "Penetration test"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "CVSS score",
+   "tier": 4,
+   "says": [
+    "rates the technical severity of a vulnerability from 0 to 10",
+    "does not know how exposed your own systems are"
+   ],
+   "use": "need a standard severity number for a flaw",
+   "not": [
+    "measures how likely your company is to be targeted"
+   ],
+   "like": [
+    "CVE identifier"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Penetration test",
+   "tier": 2,
+   "says": [
+    "has authorised testers try to exploit weaknesses",
+    "shows real-world impact rather than a list of possibilities"
+   ],
+   "use": "want to know whether an attacker could chain weaknesses to reach sensitive data",
+   "not": [
+    "is carried out without the owner's permission"
+   ],
+   "like": [
+    "Vulnerability scan"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Zero-day",
+   "tier": 2,
+   "says": [
+    "is a vulnerability exploited before a patch exists",
+    "gives defenders no fix to apply on the day of attack"
+   ],
+   "use": "hear of an exploited flaw for which the vendor has no fix yet",
+   "not": [
+    "is a flaw that has been patched for a long time"
+   ],
+   "like": [
+    "Vulnerability"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Dependency scanning",
+   "tier": 3,
+   "says": [
+    "flags known-vulnerable libraries used by a project",
+    "reads the manifest or lock file"
+   ],
+   "use": "want to know whether any library your app uses has a published flaw",
+   "not": [
+    "tests your own source code for logic errors"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Risk-based prioritisation",
+   "tier": 5,
+   "says": [
+    "ranks fixes by exploitability, exposure and asset value",
+    "can put an internet-facing flaw ahead of a higher-scored internal one"
+   ],
+   "use": "have hundreds of findings and must choose what to fix first",
+   "not": [
+    "fixes findings in strict order of their CVSS score"
+   ],
+   "like": [
+    "CVSS score"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Compensating control",
+   "tier": 5,
+   "says": [
+    "reduces risk when a fix cannot be applied yet",
+    "might isolate a system that cannot be patched"
+   ],
+   "use": "cannot patch a legacy system this month",
+   "not": [
+    "is a way of formally deleting the vulnerability from the register"
+   ],
+   "like": [
+    "Patch management"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "An audit log",
+   "tier": 2,
+   "says": [
+    "records who did what and when",
+    "should be protected from alteration by the people it records"
+   ],
+   "use": "need to show who changed a permission last week",
+   "not": [
+    "is a performance trace meant only for debugging"
+   ],
+   "like": [
+    "A SIEM"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "A SIEM",
+   "tier": 2,
+   "says": [
+    "collects and correlates logs from many sources",
+    "raises alerts when events match detection rules"
+   ],
+   "use": "want events from servers, identity and cloud tools in one searchable place with alerts",
+   "not": [
+    "is a firewall that blocks traffic itself"
+   ],
+   "like": [
+    "An audit log"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Alert fatigue",
+   "tier": 3,
+   "says": [
+    "builds up when too many low-value alerts bury real ones",
+    "leads analysts to ignore or silence alerts"
+   ],
+   "use": "notice analysts closing alerts without reading them",
+   "not": [
+    "is solved by adding more alert rules of every kind"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "A behavioural baseline",
+   "tier": 2,
+   "says": [
+    "describes what normal activity looks like",
+    "lets unusual behaviour stand out"
+   ],
+   "use": "want to spot a user downloading far more data than usual",
+   "not": [
+    "is a list of known malicious file hashes"
+   ],
+   "like": [
+    "An indicator of compromise"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "An indicator of compromise",
+   "tier": 3,
+   "says": [
+    "is an observable artefact such as a malicious domain or file hash",
+    "can be searched for across logs after a report"
+   ],
+   "use": "receive a threat report listing malicious domains and need to check whether you saw them",
+   "not": [
+    "describes what normal activity looks like"
+   ],
+   "like": [
+    "A behavioural baseline"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Off-host log forwarding",
+   "tier": 5,
+   "says": [
+    "copies logs to a separate store as they are written",
+    "keeps an intruder from erasing the evidence on the compromised host"
+   ],
+   "use": "fear an intruder will delete the local logs on a server they control",
+   "not": [
+    "is needed only when disk space runs out"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "A correlation rule",
+   "tier": 4,
+   "says": [
+    "combines several events into one detection",
+    "might fire on many failed sign-ins followed by a success"
+   ],
+   "use": "want to detect many failed logins followed by a success from one address",
+   "not": [
+    "alerts on any single login event"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "A canary token",
+   "tier": 5,
+   "says": [
+    "is a decoy credential or file with no legitimate use",
+    "alerts whenever it is touched"
+   ],
+   "use": "want a near-certain signal that someone is snooping where they should not",
+   "not": [
+    "generates a daily report of normal activity"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "Preparation",
+   "tier": 1,
+   "says": [
+    "puts plans, contacts and tooling in place before an incident",
+    "includes knowing who to call and where logs are"
+   ],
+   "use": "want to be ready before anything goes wrong",
+   "not": [
+    "begins after the incident is declared"
+   ],
+   "like": [
+    "Recovery"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "Detection and analysis",
+   "tier": 2,
+   "says": [
+    "confirms whether an event is a real incident",
+    "works out its scope and affected systems"
+   ],
+   "use": "see an alert and must decide whether it is real and how big",
+   "not": [
+    "removes the attacker's access"
+   ],
+   "like": [
+    "Containment",
+    "Eradication"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "Containment",
+   "tier": 2,
+   "says": [
+    "limits the spread of an incident",
+    "may isolate a host or disable an account while preserving evidence"
+   ],
+   "use": "must stop an attacker spreading before anything is cleaned up",
+   "not": [
+    "rebuilds systems from known-good images"
+   ],
+   "like": [
+    "Eradication",
+    "Recovery"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "Eradication",
+   "tier": 4,
+   "says": [
+    "removes the cause, such as malware or a persistence mechanism",
+    "closes the hole the attacker used"
+   ],
+   "use": "have contained an incident and must now remove the attacker's foothold",
+   "not": [
+    "restores normal service for users"
+   ],
+   "like": [
+    "Containment",
+    "Recovery"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "Recovery",
+   "tier": 2,
+   "says": [
+    "restores service from a known-good state",
+    "is followed by closer monitoring for a repeat"
+   ],
+   "use": "need to bring systems back after the cause has been removed",
+   "not": [
+    "limits the spread of an attack in progress"
+   ],
+   "like": [
+    "Containment",
+    "Eradication"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "A post-incident review",
+   "tier": 2,
+   "says": [
+    "writes down a timeline, root cause and follow-up actions",
+    "is blameless about the people involved"
+   ],
+   "use": "want to learn from an incident once it is over",
+   "not": [
+    "is held only to decide whom to discipline"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "Chain of custody",
+   "tier": 5,
+   "says": [
+    "documents who handled evidence and when",
+    "keeps evidence reliable if it is later challenged"
+   ],
+   "use": "may need evidence to stand up to later scrutiny",
+   "not": [
+    "is the order in which servers are rebuilt"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "Incident severity classification",
+   "tier": 3,
+   "says": [
+    "classifies an incident by impact",
+    "decides response urgency and who must be told"
+   ],
+   "use": "must decide whether to wake the on-call team and notify executives",
+   "not": [
+    "ranks vulnerabilities by their CVSS number"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "A runbook",
+   "tier": 2,
+   "says": [
+    "is a step-by-step procedure written in advance for a known event type",
+    "reduces improvisation under pressure"
+   ],
+   "use": "want responders to follow agreed steps for a recurring type of alert",
+   "not": [
+    "is a record of what actually happened after an incident"
+   ],
+   "like": [
+    "A tabletop exercise"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "A tabletop exercise",
+   "tier": 2,
+   "says": [
+    "walks the team through a simulated incident in discussion",
+    "exposes gaps in plans without touching live systems"
+   ],
+   "use": "want to test the incident plan without disrupting systems",
+   "not": [
+    "attacks production systems to find weaknesses"
+   ],
+   "like": [
+    "A runbook"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "Breach notification duty",
+   "tier": 5,
+   "says": [
+    "may oblige you to inform regulators or affected people",
+    "runs to deadlines set by the applicable law"
+   ],
+   "use": "suspect personal data was taken and must decide who has to be told",
+   "not": [
+    "applies only when the company chooses to announce it"
+   ]
+  },
+  {
+   "group": "social",
+   "subject": "Phishing",
+   "tier": 1,
+   "says": [
+    "sends mass messages impersonating a trusted sender",
+    "aims to steal credentials or run malware"
+   ],
+   "use": "get an unexpected email asking you to sign in through a link",
+   "not": [
+    "is a phone call to a named individual"
+   ],
+   "like": [
+    "Spear phishing",
+    "Vishing"
+   ]
+  },
+  {
+   "group": "social",
+   "subject": "Spear phishing",
+   "tier": 2,
+   "says": [
+    "targets one person using personal or role details",
+    "is more convincing than a mass message"
+   ],
+   "use": "get a message that uses your manager's name and a real project",
+   "not": [
+    "is sent unchanged to millions of random addresses"
+   ],
+   "like": [
+    "Phishing",
+    "Business email compromise"
+   ]
+  },
+  {
+   "group": "social",
+   "subject": "Vishing",
+   "tier": 2,
+   "says": [
+    "uses a phone call to extract information or actions",
+    "often impersonates a help desk or bank"
+   ],
+   "use": "get a call from someone claiming to be IT who asks for your code",
+   "not": [
+    "delivers the lure by text message"
+   ],
+   "like": [
+    "Phishing"
+   ]
+  },
+  {
+   "group": "social",
+   "subject": "Business email compromise",
+   "tier": 3,
+   "says": [
+    "impersonates an executive or supplier to redirect a payment",
+    "often needs no malware at all"
+   ],
+   "use": "get an urgent request from the apparent director to change supplier bank details",
+   "not": [
+    "encrypts files and demands payment for the key"
+   ],
+   "like": [
+    "Spear phishing",
+    "Ransomware"
+   ]
+  },
+  {
+   "group": "social",
+   "subject": "Brute force",
+   "tier": 1,
+   "says": [
+    "tries many guesses against one account",
+    "is slowed by lockouts and rate limiting"
+   ],
+   "use": "see thousands of password guesses against a single account",
+   "not": [
+    "tries one common password across many accounts"
+   ],
+   "like": [
+    "Password spraying",
+    "Credential stuffing"
+   ]
+  },
+  {
+   "group": "social",
+   "subject": "Password spraying",
+   "tier": 4,
+   "says": [
+    "tries a few common passwords across many accounts",
+    "stays under per-account lockout thresholds"
+   ],
+   "use": "see one common password tried once against every account",
+   "not": [
+    "replays username and password pairs leaked from another site"
+   ],
+   "like": [
+    "Brute force",
+    "Credential stuffing"
+   ]
+  },
+  {
+   "group": "social",
+   "subject": "Credential stuffing",
+   "tier": 4,
+   "says": [
+    "replays username and password pairs leaked from other sites",
+    "succeeds where people reuse passwords"
+   ],
+   "use": "see logins succeed using real credentials from an old breach elsewhere",
+   "not": [
+    "guesses passwords from a short list across every account"
+   ],
+   "like": [
+    "Brute force",
+    "Password spraying"
+   ]
+  },
+  {
+   "group": "social",
+   "subject": "MFA fatigue",
+   "tier": 4,
+   "says": [
+    "floods a user with approval prompts until one is accepted",
+    "is blunted by number matching and rate limits on prompts"
+   ],
+   "use": "see a user receive dozens of push approvals at night",
+   "not": [
+    "steals a code by relaying the sign-in page"
+   ],
+   "like": [
+    "Adversary-in-the-middle phishing"
+   ]
+  },
+  {
+   "group": "social",
+   "subject": "Adversary-in-the-middle phishing",
+   "tier": 5,
+   "says": [
+    "proxies the real sign-in page to capture the session after MFA",
+    "is defeated by phishing-resistant credentials such as passkeys"
+   ],
+   "use": "see a stolen session cookie used after the user had completed MFA",
+   "not": [
+    "only works when the victim has no second factor"
+   ],
+   "like": [
+    "MFA fatigue"
+   ]
+  },
+  {
+   "group": "resil",
+   "subject": "Ransomware",
+   "tier": 1,
+   "says": [
+    "encrypts data and demands payment for the key",
+    "often deletes or encrypts backups it can reach"
+   ],
+   "use": "find files renamed and a note demanding payment",
+   "not": [
+    "silently copies data without altering it"
+   ]
+  },
+  {
+   "group": "resil",
+   "subject": "The 3-2-1 backup rule",
+   "tier": 2,
+   "says": [
+    "keeps three copies on two kinds of media with one offsite",
+    "survives the loss of any single copy or site"
+   ],
+   "use": "need a simple standard for how many backup copies to keep",
+   "not": [
+    "keeps one copy on one disk and checks it each year"
+   ]
+  },
+  {
+   "group": "resil",
+   "subject": "A restore test",
+   "tier": 2,
+   "says": [
+    "proves a backup can actually be restored",
+    "reveals how long recovery really takes"
+   ],
+   "use": "want evidence that backups are usable and not just present",
+   "not": [
+    "checks that the backup job reported success"
+   ]
+  },
+  {
+   "group": "resil",
+   "subject": "An immutable backup",
+   "tier": 3,
+   "says": [
+    "cannot be altered or deleted during its retention period",
+    "withstands an attacker who has administrator credentials"
+   ],
+   "use": "fear ransomware will delete backups using stolen admin rights",
+   "not": [
+    "can be edited by any administrator at any time"
+   ],
+   "like": [
+    "An offline backup"
+   ]
+  },
+  {
+   "group": "resil",
+   "subject": "An offline backup",
+   "tier": 4,
+   "says": [
+    "is kept disconnected so ransomware cannot reach it",
+    "relies on physical or logical separation from the network"
+   ],
+   "use": "want a copy that is unreachable from the network",
+   "not": [
+    "stays mounted on the server for speed"
+   ],
+   "like": [
+    "An immutable backup"
+   ]
+  },
+  {
+   "group": "resil",
+   "subject": "Recovery point objective",
+   "tier": 3,
+   "says": [
+    "states how much data loss, measured in time, is tolerable",
+    "sets how often backups must run"
+   ],
+   "use": "must decide how many hours of data the business can afford to lose",
+   "not": [
+    "states how long the service may be down"
+   ],
+   "like": [
+    "Recovery time objective"
+   ]
+  },
+  {
+   "group": "resil",
+   "subject": "Recovery time objective",
+   "tier": 3,
+   "says": [
+    "states how long a service may be down",
+    "drives the choice of recovery method"
+   ],
+   "use": "must decide how fast a service has to be back",
+   "not": [
+    "states how much data may be lost"
+   ],
+   "like": [
+    "Recovery point objective"
+   ]
+  },
+  {
+   "group": "resil",
+   "subject": "A disaster recovery plan",
+   "tier": 3,
+   "says": [
+    "describes how IT systems and data are restored after a major failure",
+    "assigns roles and an order of restoration"
+   ],
+   "use": "need documented steps to rebuild systems after losing a site",
+   "not": [
+    "covers only how staff keep working without computers"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A firewall",
+   "tier": 1,
+   "says": [
+    "filters traffic by rules on addresses, ports and protocols",
+    "denies what no rule allows"
+   ],
+   "use": "want only certain ports reachable from the internet",
+   "not": [
+    "inspects the meaning of every web request for attack patterns"
+   ],
+   "like": [
+    "A web application firewall"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "Network segmentation",
+   "tier": 2,
+   "says": [
+    "divides a network into zones",
+    "limits how far a breach can spread"
+   ],
+   "use": "want a compromised laptop unable to reach the database servers",
+   "not": [
+    "merges every system onto one flat network"
+   ],
+   "like": [
+    "A VPN"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A VPN",
+   "tier": 2,
+   "says": [
+    "creates an encrypted tunnel across an untrusted network",
+    "extends a private network to remote users"
+   ],
+   "use": "need remote staff to reach internal systems over the internet",
+   "not": [
+    "splits one network into isolated zones"
+   ],
+   "like": [
+    "Network segmentation"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "TLS",
+   "tier": 1,
+   "says": [
+    "encrypts data in transit",
+    "authenticates the server using a certificate"
+   ],
+   "use": "want traffic between browser and server unreadable on the way",
+   "not": [
+    "encrypts data stored on the server's disk"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A web application firewall",
+   "tier": 4,
+   "says": [
+    "filters HTTP requests for attack patterns",
+    "can block injection attempts before they reach the app"
+   ],
+   "use": "want a filter in front of a website that recognises injection attempts",
+   "not": [
+    "only allows or denies ports and addresses"
+   ],
+   "like": [
+    "A firewall"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "Defence in depth",
+   "tier": 1,
+   "says": [
+    "layers several independent controls",
+    "means one control failing does not expose everything"
+   ],
+   "use": "want protection that survives a single control failing",
+   "not": [
+    "relies on one very strong perimeter control"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "Shared responsibility model",
+   "tier": 2,
+   "says": [
+    "makes the cloud provider responsible for the underlying infrastructure",
+    "leaves configuration, data and identities with the customer"
+   ],
+   "use": "wonder who must secure the settings of a storage bucket in the cloud",
+   "not": [
+    "hands all security duties to the provider once you sign up"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "Cloud misconfiguration",
+   "tier": 4,
+   "says": [
+    "exposes data when a bucket or database is left open",
+    "is a customer-side error rather than a provider flaw"
+   ],
+   "use": "find that a storage bucket is readable by anyone on the internet",
+   "not": [
+    "is caused by a flaw in the provider's hypervisor"
+   ],
+   "like": [
+    "Cloud security posture management"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "Cloud security posture management",
+   "tier": 4,
+   "says": [
+    "continuously checks cloud settings against a baseline",
+    "flags drift such as a newly public bucket"
+   ],
+   "use": "want an automatic alert when someone makes a cloud resource public",
+   "not": [
+    "encrypts data held in cloud storage"
+   ],
+   "like": [
+    "Cloud misconfiguration"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "Egress filtering",
+   "tier": 4,
+   "says": [
+    "restricts outbound connections",
+    "stops a compromised host reaching attacker servers"
+   ],
+   "use": "want a compromised server unable to call out to an attacker's host",
+   "not": [
+    "blocks only inbound connections"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "Lateral movement",
+   "tier": 5,
+   "says": [
+    "is an attacker's step from one system to others after a foothold",
+    "is hampered by segmentation and unique credentials"
+   ],
+   "use": "see a compromised workstation connecting to many internal servers",
+   "not": [
+    "is the first step of gaining entry from the internet"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "An access review",
+   "tier": 2,
+   "says": [
+    "has owners periodically confirm who still needs access",
+    "removes access that is no longer justified"
+   ],
+   "use": "want to find leavers and role-changers who still have access",
+   "not": [
+    "tests applications for software flaws"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Security awareness training",
+   "tier": 1,
+   "says": [
+    "teaches staff to spot and report threats",
+    "works best when reporting is easy and blame-free"
+   ],
+   "use": "want staff to recognise phishing and know how to report it",
+   "not": [
+    "replaces technical controls"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A phishing simulation",
+   "tier": 3,
+   "says": [
+    "sends harmless fake phishing messages",
+    "measures reporting and gives targeted coaching"
+   ],
+   "use": "want to measure how staff react to phishing without real risk",
+   "not": [
+    "is a tool for punishing people who click"
+   ],
+   "like": [
+    "Security awareness training"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A vendor risk assessment",
+   "tier": 3,
+   "says": [
+    "evaluates a supplier's security before and during the relationship",
+    "looks at what data and access the supplier will have"
+   ],
+   "use": "are about to give a new supplier access to customer data",
+   "not": [
+    "is done only once on the day the contract is signed"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A SOC 2 report",
+   "tier": 3,
+   "says": [
+    "is an independent auditor's report on a service provider's controls",
+    "covers a period in its Type II form"
+   ],
+   "use": "ask a supplier for independent assurance over how its controls operated",
+   "not": [
+    "certifies that the supplier can never be breached"
+   ],
+   "like": [
+    "ISO 27001"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "ISO 27001",
+   "tier": 3,
+   "says": [
+    "is a standard for an information security management system",
+    "requires continual improvement and management review"
+   ],
+   "use": "want a recognised standard for running an information security management system",
+   "not": [
+    "is a technical specification for encryption algorithms"
+   ],
+   "like": [
+    "A SOC 2 report"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Audit evidence",
+   "tier": 3,
+   "says": [
+    "shows that a control actually operated",
+    "can be logs, tickets, approvals or screenshots with dates"
+   ],
+   "use": "are asked by an auditor to prove access reviews took place",
+   "not": [
+    "is a verbal assurance from the control owner"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Risk acceptance",
+   "tier": 5,
+   "says": [
+    "is a documented decision to live with a risk",
+    "is made by the accountable owner, not by the security team alone"
+   ],
+   "use": "decide not to fix a low-impact finding and must record it properly",
+   "not": [
+    "means the risk is ignored and unrecorded"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Data minimisation",
+   "tier": 3,
+   "says": [
+    "collects and keeps only the data needed",
+    "shrinks what a breach can expose"
+   ],
+   "use": "want to reduce what could leak if a system is breached",
+   "not": [
+    "keeps all data in case it is useful later"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "A threat model",
+   "tier": 2,
+   "says": [
+    "identifies assets, attackers and trust boundaries",
+    "is done before attackers get the chance"
+   ],
+   "use": "are designing a feature and want to find security problems early",
+   "not": [
+    "is a penetration test report on a live system"
+   ],
+   "like": [
+    "STRIDE"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "STRIDE",
+   "tier": 3,
+   "says": [
+    "is a checklist of six threat categories",
+    "covers spoofing, tampering and repudiation among them"
+   ],
+   "use": "want a checklist to walk through each threat type for a component",
+   "not": [
+    "is a scoring system for vulnerability severity"
+   ],
+   "like": [
+    "A threat model"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "A trust boundary",
+   "tier": 3,
+   "says": [
+    "is a point where data passes between different levels of trust",
+    "needs validation of whatever crosses it"
+   ],
+   "use": "want to know where input must be validated as it crosses between components",
+   "not": [
+    "is the edge of the company's physical premises"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Broken access control",
+   "tier": 2,
+   "says": [
+    "lets users act outside their permissions",
+    "is a major category of web application flaws"
+   ],
+   "use": "find that a normal user can open an admin page by changing the URL",
+   "not": [
+    "is a failure of encryption of data in transit"
+   ],
+   "like": [
+    "Insecure direct object reference"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Insecure direct object reference",
+   "tier": 3,
+   "says": [
+    "trusts an object id supplied by the client",
+    "lets one user read another user's record by changing the id"
+   ],
+   "use": "see that changing an id in a request returns someone else's record",
+   "not": [
+    "is an id that is too short to store"
+   ],
+   "like": [
+    "Broken access control"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Elevation of privilege",
+   "tier": 3,
+   "says": [
+    "lets an actor gain rights beyond those granted",
+    "is the E in STRIDE"
+   ],
+   "use": "find that a basic user can make themselves an administrator",
+   "not": [
+    "reads data the actor was never meant to see"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Repudiation",
+   "tier": 4,
+   "says": [
+    "lets an actor deny having performed an action",
+    "is answered by tamper-resistant audit logs"
+   ],
+   "use": "need to prove who approved a change when they say they did not",
+   "not": [
+    "alters data in transit without being noticed"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's password storage",
+   "tier": 2,
+   "says": [
+    "keeps a salted scrypt hash and never the password itself",
+    "records the cost settings in a versioned format so they can be raised"
+   ],
+   "use": "want to know how GGLearn stores sign-in passwords",
+   "not": [
+    "encrypts passwords so administrators can recover them"
+   ],
+   "like": [
+    "GGLearn's session cookie"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's session cookie",
+   "tier": 4,
+   "says": [
+    "carries the user id, issued-at time, version and a message authentication code",
+    "lets the server detect tampering"
+   ],
+   "use": "want to know what is inside GGLearn's signed session cookie",
+   "not": [
+    "stores the user's password hash"
+   ],
+   "like": [
+    "GGLearn's password storage",
+    "GGLearn's session lifetime"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's session lifetime",
+   "tier": 3,
+   "says": [
+    "is 30 days, enforced on the server from the signed issued-at time",
+    "does not depend on the cookie's maxAge"
+   ],
+   "use": "need to explain why a client-controlled cookie expiry is not trusted by GGLearn",
+   "not": [
+    "relies on the browser deleting the cookie after 30 days"
+   ],
+   "like": [
+    "GGLearn's session cookie",
+    "GGLearn's session version"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's session version",
+   "tier": 3,
+   "says": [
+    "lets the server revoke all of a user's older sessions at once",
+    "is bumped by sign out everywhere and by offboarding"
+   ],
+   "use": "want to log a user out of every device in GGLearn",
+   "not": [
+    "extends every session by thirty days"
+   ],
+   "like": [
+    "GGLearn's session lifetime"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's dummy password check",
+   "tier": 4,
+   "says": [
+    "runs a password verification even when the email is unknown",
+    "keeps response time from revealing which emails have accounts"
+   ],
+   "use": "want to know why GGLearn verifies a password against a fixed hash for unknown emails",
+   "not": [
+    "warms the hashing cache for the next real user"
+   ],
+   "like": [
+    "GGLearn's login rate limiter"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's invite-only signup",
+   "tier": 2,
+   "says": [
+    "lets people join only through an invitation link",
+    "closes the old route of open self-signup"
+   ],
+   "use": "need to know how new people get an account in GGLearn",
+   "not": [
+    "lets anyone on the internet create an account"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's per-request authorisation",
+   "tier": 3,
+   "says": [
+    "re-reads the user's role from the database on every request",
+    "makes role changes and offboarding apply at once"
+   ],
+   "use": "change someone's role in GGLearn and want to know when it takes effect",
+   "not": [
+    "trusts the role stored in the session cookie until it expires"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's drill answer finding",
+   "tier": 3,
+   "says": [
+    "shows a check returning the correct answer for any question id to any signed-in user",
+    "is fixed by keeping the answer key on the server and checking the caller's entitlement"
+   ],
+   "use": "want the GGLearn example of broken access control",
+   "not": [
+    "is an encryption error in the login cookie"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's login rate limiter",
+   "tier": 3,
+   "says": [
+    "lives in process memory and resets on restart",
+    "suits a single PM2 process"
+   ],
+   "use": "ask why GGLearn's login throttling would not work across several servers",
+   "not": [
+    "is stored in a shared database table"
+   ],
+   "like": [
+    "GGLearn's dummy password check"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's client address handling",
+   "tier": 5,
+   "says": [
+    "takes the client address a fixed number of hops from the end of X-Forwarded-For",
+    "uses the second-to-last entry behind Cloudflare and Apache"
+   ],
+   "use": "need to know which X-Forwarded-For entry GGLearn trusts",
+   "not": [
+    "uses the first entry because it is the original visitor"
+   ],
+   "like": [
+    "GGLearn's Cloudflare-only Apache rule"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's Cloudflare-only Apache rule",
+   "tier": 4,
+   "says": [
+    "allows only Cloudflare's published address ranges",
+    "is generated by a script that refuses a list that looks wrong"
+   ],
+   "use": "ask why visitors must not be able to reach Apache directly in GGLearn",
+   "not": [
+    "is already active on the live virtual hosts by default"
+   ],
+   "like": [
+    "GGLearn's client address handling"
+   ]
+  },
+  {
+   "group": "ggl",
+   "subject": "GGLearn's leaked-cookie response",
+   "tier": 4,
+   "says": [
+    "bumps session versions or rotates the signing secret to sign everyone out",
+    "preserves logs while the cause is found"
+   ],
+   "use": "suspect a signed GGLearn session has leaked and do not know whose",
+   "not": [
+    "waits for each cookie to expire after 30 days"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "GG Social's rsync with the delete flag",
+   "tier": 3,
+   "says": [
+    "removes server files that are absent from the source",
+    "destroys the production secrets file unless it is excluded"
+   ],
+   "use": "are reminded how a deploy script could remove a server-only secrets file",
+   "not": [
+    "uploads the server's secrets file back to the source"
+   ],
+   "like": [
+    "GG Money's deploy"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "Losing GG Social's app secret",
+   "tier": 3,
+   "says": [
+    "logs every user out",
+    "leaves stored platform tokens undecryptable"
+   ],
+   "use": "want to know what breaks when the GG Social app secret is lost",
+   "not": [
+    "only affects the colour theme of the site"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "GG Social's server-side secrets backup",
+   "tier": 3,
+   "says": [
+    "is a copy of the secrets file kept on the server",
+    "allows a deleted file to be restored"
+   ],
+   "use": "need to recover GG Social's deleted secrets file quickly",
+   "not": [
+    "is stored in the repository next to the code"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "GG Money's deploy",
+   "tier": 3,
+   "says": [
+    "never uploads the local config",
+    "keeps secrets out of what is shipped"
+   ],
+   "use": "ask how GG Money keeps local settings from being shipped to the server",
+   "not": [
+    "overwrites the server config with the local one each time"
+   ],
+   "like": [
+    "GG Social's rsync with the delete flag"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "GG Money's email key",
+   "tier": 3,
+   "says": [
+    "is created with only the permission needed to send mail",
+    "avoids a full-access key that could read contacts and rewrite the account"
+   ],
+   "use": "are told to create the GG Money email key and want to know why it is restricted",
+   "not": [
+    "is a full-access key because it is simpler"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "The Moksy AI gateway's credential encryption",
+   "tier": 5,
+   "says": [
+    "encrypts stored provider keys with AES-256-GCM using a master key from the environment",
+    "refuses to save credentials if the master key is not set"
+   ],
+   "use": "want to know how the Moksy AI gateway protects stored provider keys",
+   "not": [
+    "saves provider keys in plaintext when no master key is set"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "GG Money's forged account id finding",
+   "tier": 4,
+   "says": [
+    "shows a forged account id reading another company's bank lines",
+    "is an insecure direct object reference"
+   ],
+   "use": "want the GG Money example of trusting a client-supplied id",
+   "not": [
+    "is a weak password hashing parameter"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the main purpose of multi-factor authentication?",
+   "right": "To make a stolen password alone insufficient to sign in",
+   "wrong": [
+    "To make passwords unnecessary on every system",
+    "To speed up the sign-in process",
+    "To let several people share one account safely"
+   ],
+   "tier": 1,
+   "why": "MFA adds a second, different kind of proof."
+  },
+  {
+   "q": "Which is the safest way to handle an API key?",
+   "right": "Keep it in server-side configuration that is not committed to the repository",
+   "wrong": [
+    "Paste it into the team chat so everyone has it",
+    "Hard-code it next to the feature that uses it",
+    "Email it to yourself as a backup"
+   ],
+   "tier": 1,
+   "why": "Secrets belong outside source control and chat."
+  },
+  {
+   "q": "What should you do first with an email that unexpectedly asks you to sign in through a link?",
+   "right": "Do not click; report it and go to the site by another route",
+   "wrong": [
+    "Click the link to check whether it is genuine",
+    "Forward it to all colleagues as a warning",
+    "Reply and ask the sender to confirm by email"
+   ],
+   "tier": 1,
+   "why": "Reporting and avoiding the link keeps the lure inert."
+  },
+  {
+   "q": "Why do organisations keep software patched?",
+   "right": "Updates close known vulnerabilities that attackers exploit",
+   "wrong": [
+    "Updates always add new features users want",
+    "Unpatched software cannot start",
+    "Patches make the network faster"
+   ],
+   "tier": 1,
+   "why": "Patching removes known weaknesses."
+  },
+  {
+   "q": "What is the difference between authentication and authorisation?",
+   "right": "Authentication proves who you are; authorisation decides what you may do",
+   "wrong": [
+    "Authentication decides what you may do; authorisation proves who you are",
+    "They are two names for the same check",
+    "Authentication happens only once a year"
+   ],
+   "tier": 1,
+   "why": "Identity first, then permission."
+  },
+  {
+   "q": "Why is a unique password per account recommended?",
+   "right": "One breached site then cannot unlock the others",
+   "wrong": [
+    "Unique passwords never need to be changed",
+    "Sites reject duplicate passwords across accounts",
+    "Unique passwords cannot be phished"
+   ],
+   "tier": 2,
+   "why": "Reuse is what makes credential stuffing work."
+  },
+  {
+   "q": "Why should logs be copied to a separate system?",
+   "right": "An intruder on a host can delete the logs stored there",
+   "wrong": [
+    "Separate systems compress logs better",
+    "Logs are only legal evidence if stored offsite in another country",
+    "Hosts cannot write logs and run applications at once"
+   ],
+   "tier": 2,
+   "why": "Off-host copies preserve evidence."
+  },
+  {
+   "q": "Which backup practice best protects against ransomware?",
+   "right": "Keep at least one copy that is immutable or offline, and test restores",
+   "wrong": [
+    "Keep one backup on the file server for speed",
+    "Back up only once a year",
+    "Mount all backups permanently so they are easy to reach"
+   ],
+   "tier": 2,
+   "why": "Ransomware tries to encrypt or delete reachable backups."
+  },
+  {
+   "q": "What does the principle of least privilege mean?",
+   "right": "Give each account only the access its task needs",
+   "wrong": [
+    "Give every manager full access to reduce requests",
+    "Grant access to everyone and remove it on complaint",
+    "Use one shared account to reduce the number of permissions"
+   ],
+   "tier": 2,
+   "why": "Less access means less damage when compromised."
+  },
+  {
+   "q": "What does a SIEM do?",
+   "right": "Collects logs from many sources and alerts when events match rules",
+   "wrong": [
+    "Encrypts all network traffic",
+    "Scans code for typing errors",
+    "Blocks every unknown device from the network"
+   ],
+   "tier": 2,
+   "why": "It centralises and correlates events."
+  },
+  {
+   "q": "Why does a security awareness programme make reporting easy and blame-free?",
+   "right": "People who fear blame hide mistakes, and fast reports limit damage",
+   "wrong": [
+    "Blame is illegal in most workplaces",
+    "Reports are only valid when anonymous",
+    "Easy reporting replaces the need for technical controls"
+   ],
+   "tier": 2,
+   "why": "Early reports matter more than blame."
+  },
+  {
+   "q": "What is full-disk encryption protecting against?",
+   "right": "Data being read from a lost or stolen device",
+   "wrong": [
+    "Malware running on the device",
+    "Phishing emails reaching the user",
+    "Network eavesdropping on the office wifi"
+   ],
+   "tier": 2,
+   "why": "It protects data at rest."
+  },
+  {
+   "q": "Which statement about the cloud shared responsibility model is correct?",
+   "right": "The customer is responsible for configuring their own storage permissions and identities",
+   "wrong": [
+    "The provider secures every customer configuration automatically",
+    "The customer secures the provider's data centres",
+    "Responsibility never changes whatever service is used"
+   ],
+   "tier": 2,
+   "why": "Customers own their configuration and data."
+  },
+  {
+   "q": "Which is the best reason to use a password manager?",
+   "right": "It lets you use a long, unique password for every account without remembering them",
+   "wrong": [
+    "It makes every site support MFA",
+    "It removes the need for any second factor",
+    "It stops phishing pages from loading"
+   ],
+   "tier": 3,
+   "why": "Unique strong passwords become practical."
+  },
+  {
+   "q": "Which second factor is most resistant to a phishing page relaying the login?",
+   "right": "A hardware security key or passkey bound to the real site",
+   "wrong": [
+    "An SMS code typed into the page",
+    "A password hint question",
+    "A six-digit code emailed to the user"
+   ],
+   "tier": 3,
+   "why": "Origin-bound credentials will not respond to a look-alike domain."
+  },
+  {
+   "q": "A scanner reports 400 findings. What is the sensible way to start?",
+   "right": "Prioritise by exposure, exploitability and asset value, not by score alone",
+   "wrong": [
+    "Fix them in the order they appear in the report",
+    "Ignore anything below the highest severity band",
+    "Close the report until the next scan"
+   ],
+   "tier": 3,
+   "why": "Context decides real risk."
+  },
+  {
+   "q": "Why is a CVSS score alone not enough to decide what to patch first?",
+   "right": "It rates technical severity without knowing how exposed your system is",
+   "wrong": [
+    "It only covers flaws older than a year",
+    "It is calculated randomly by the scanner",
+    "It measures the cost of the patch"
+   ],
+   "tier": 3,
+   "why": "Environment and exploitation matter."
+  },
+  {
+   "q": "Which describes an insecure direct object reference?",
+   "right": "A request id from the client is trusted without checking the caller owns the object",
+   "wrong": [
+    "A database column with no index",
+    "A login page that is not served over TLS",
+    "A key that is too short to be secure"
+   ],
+   "tier": 3,
+   "why": "The server must check ownership."
+  },
+  {
+   "q": "Why is it risky to treat the first entry in X-Forwarded-For as the client address?",
+   "right": "The visitor can write that entry themselves",
+   "wrong": [
+    "It is always the proxy's own address",
+    "Proxies remove it",
+    "It only holds IPv6 addresses"
+   ],
+   "tier": 3,
+   "why": "Only entries added by your own proxies can be trusted."
+  },
+  {
+   "q": "What is the purpose of a tabletop exercise?",
+   "right": "To rehearse the response to a simulated incident through discussion",
+   "wrong": [
+    "To scan production for open ports",
+    "To restore a server from backup",
+    "To measure the speed of the network"
+   ],
+   "tier": 3,
+   "why": "It tests plans without touching systems."
+  },
+  {
+   "q": "What does a restore test prove that a successful backup job does not?",
+   "right": "That the data can actually be recovered and how long it takes",
+   "wrong": [
+    "That the backup job is scheduled",
+    "That the backup is encrypted",
+    "That the backup is stored in the cloud"
+   ],
+   "tier": 3,
+   "why": "Only a restore shows usability."
+  },
+  {
+   "q": "What does network segmentation mainly achieve?",
+   "right": "It limits how far a breach in one zone can spread",
+   "wrong": [
+    "It encrypts all traffic between users",
+    "It removes the need for patching",
+    "It makes every device share one address range"
+   ],
+   "tier": 3,
+   "why": "Smaller blast radius."
+  },
+  {
+   "q": "What is the correct order of the first stages of incident response?",
+   "right": "Prepare, detect and analyse, contain, eradicate, recover, review",
+   "wrong": [
+    "Recover, contain, detect, review, prepare",
+    "Eradicate, announce, contain, detect",
+    "Detect, review, recover, contain"
+   ],
+   "tier": 3,
+   "why": "The lifecycle follows this order."
+  },
+  {
+   "q": "What is the best use of a phishing simulation?",
+   "right": "To measure reporting and give targeted coaching",
+   "wrong": [
+    "To identify staff to discipline",
+    "To replace email filtering",
+    "To prove no one will ever click"
+   ],
+   "tier": 3,
+   "why": "The goal is learning, not punishment."
+  },
+  {
+   "q": "Which evidence best shows an auditor that quarterly access reviews took place?",
+   "right": "Dated review records showing who approved or removed which access",
+   "wrong": [
+    "A statement from the manager that reviews happen",
+    "The policy document that says reviews are required",
+    "A screenshot of the login page"
+   ],
+   "tier": 4,
+   "why": "Evidence must show the control operated."
+  },
+  {
+   "q": "What does the recovery point objective of four hours mean?",
+   "right": "The business can tolerate losing up to four hours of data",
+   "wrong": [
+    "Services must be restored within four hours",
+    "Backups are kept for four hours",
+    "Four people must approve every restore"
+   ],
+   "tier": 4,
+   "why": "RPO is about data loss, RTO about downtime."
+  },
+  {
+   "q": "Why is MFA fatigue effective against push approvals?",
+   "right": "The attacker repeats prompts until a tired user approves one",
+   "wrong": [
+    "The push protocol has no encryption",
+    "The attacker guesses the six-digit code",
+    "The user's phone number is changed by the carrier"
+   ],
+   "tier": 4,
+   "why": "It abuses human response, not cryptography."
+  },
+  {
+   "q": "Why can a committed secret never be treated as safe after deleting the file?",
+   "right": "The value remains in history and clones, so it must be rotated",
+   "wrong": [
+    "Deleted files are restored by the build server",
+    "Git encrypts history with the old key",
+    "It is safe once the branch is merged"
+   ],
+   "tier": 4,
+   "why": "History keeps the value."
+  },
+  {
+   "q": "What is the main benefit of short-lived credentials?",
+   "right": "A stolen token stops working soon without anyone acting",
+   "wrong": [
+    "They never need to be issued",
+    "They are impossible to copy",
+    "They remove the need for authentication"
+   ],
+   "tier": 4,
+   "why": "Expiry limits the window."
+  },
+  {
+   "q": "What is a compensating control?",
+   "right": "A measure that reduces risk when the proper fix cannot yet be applied",
+   "wrong": [
+    "A refund paid after a breach",
+    "A second copy of the vulnerable system",
+    "A promise to patch eventually"
+   ],
+   "tier": 4,
+   "why": "It buys time while a fix is arranged."
+  },
+  {
+   "q": "Why is an SOC 2 report not proof that a supplier cannot be breached?",
+   "right": "It reports on controls over a scope and period, not an absence of risk",
+   "wrong": [
+    "It is only valid for U.S. suppliers",
+    "It is produced by the supplier without an auditor",
+    "It covers only physical security"
+   ],
+   "tier": 5,
+   "why": "Assurance is not a guarantee."
+  },
+  {
+   "q": "Why does envelope encryption help with key rotation?",
+   "right": "Only the small data keys must be re-wrapped when the master key changes",
+   "wrong": [
+    "It makes the master key unnecessary",
+    "It encrypts the data twice at each rotation",
+    "It stores the master key beside the data"
+   ],
+   "tier": 5,
+   "why": "Re-wrapping is cheaper than re-encrypting all data."
+  },
+  {
+   "q": "Which design is most likely to survive a ransomware attack that obtains domain administrator rights?",
+   "right": "Immutable or offline backups that administrators cannot alter",
+   "wrong": [
+    "Backups on a share the administrators manage",
+    "Snapshots stored on the same volume",
+    "A second copy on a mounted network drive"
+   ],
+   "tier": 5,
+   "why": "The attacker can reach whatever the admin can."
+  },
+  {
+   "q": "A new employee asks why they cannot have administrator rights on their laptop. Which answer is best?",
+   "right": "Everyday work does not need them, and removing them limits what malware can change",
+   "wrong": [
+    "Administrator rights are only for senior staff",
+    "Laptops cannot have administrator accounts",
+    "It is a licensing restriction"
+   ],
+   "tier": 2,
+   "why": "Least privilege on endpoints."
+  },
+  {
+   "q": "A developer realises they pushed an API key to a shared repository an hour ago. What should they do first?",
+   "right": "Rotate the key, then clean up and review its use",
+   "wrong": [
+    "Delete the file in a new commit and move on",
+    "Wait to see whether anyone notices",
+    "Ask everyone to stop pulling the repository"
+   ],
+   "tier": 3,
+   "why": "The key must be treated as compromised."
+  },
+  {
+   "q": "A team receives an email from the apparent finance director asking for urgent change of supplier bank details. What is the right response?",
+   "right": "Verify through a known separate channel before acting",
+   "wrong": [
+    "Reply asking for confirmation by email",
+    "Change the details because the sender is senior",
+    "Forward it to the supplier"
+   ],
+   "tier": 3,
+   "why": "Out-of-band verification defeats business email compromise."
+  },
+  {
+   "q": "A user reports their laptop was stolen from a car. What should the response include?",
+   "right": "Revoke sessions, trigger a remote wipe and check the disk was encrypted",
+   "wrong": [
+    "Wait a week in case it is returned",
+    "Change only the wifi password",
+    "Reimage the laptop remotely and skip the report"
+   ],
+   "tier": 3,
+   "why": "Limit exposure quickly and confirm the data was protected."
+  },
+  {
+   "q": "An analyst sees hundreds of alerts a day and starts closing them unread. What is the best fix?",
+   "right": "Tune or remove noisy rules so alerts are worth reading",
+   "wrong": [
+    "Add more alert rules of every type",
+    "Turn off all alerts after hours",
+    "Ask the analyst to read faster"
+   ],
+   "tier": 3,
+   "why": "Alert fatigue is a design problem."
+  },
+  {
+   "q": "A supplier will process customer data for your company. What should happen before access is granted?",
+   "right": "Assess its security and agree what data and access it gets",
+   "wrong": [
+    "Sign the contract and assess later",
+    "Give it administrator access to speed onboarding",
+    "Accept its own statement of compliance without review"
+   ],
+   "tier": 3,
+   "why": "Vendor risk starts before onboarding."
+  },
+  {
+   "q": "Staff report a stranger following them through the badge door. What is the best response?",
+   "right": "Politely ask them to badge in or report to security",
+   "wrong": [
+    "Hold the door for them",
+    "Ignore it as the stranger looks professional",
+    "Disable the badge readers for the day"
+   ],
+   "tier": 3,
+   "why": "Tailgating bypasses the badge control."
+  },
+  {
+   "q": "After a breach is contained, a manager wants to restore service right away. What should you check first?",
+   "right": "That the cause is removed and the restored systems are known-good",
+   "wrong": [
+    "That the press release is approved",
+    "That the logs are deleted",
+    "That every user has changed their password to the same value"
+   ],
+   "tier": 4,
+   "why": "Restoring before eradication risks reinfection."
+  },
+  {
+   "q": "A critical internal flaw scores higher than an exposed one, but the exposed one has a public exploit. Which first?",
+   "right": "The exposed flaw with a public exploit",
+   "wrong": [
+    "The higher score regardless of exposure",
+    "Neither until the next scan",
+    "Whichever is older"
+   ],
+   "tier": 4,
+   "why": "Exploitability and exposure drive risk."
+  },
+  {
+   "q": "A legacy system cannot be patched until next quarter. What is a reasonable step now?",
+   "right": "Isolate it behind segmentation and restrict who can reach it",
+   "wrong": [
+    "Remove it from the vulnerability scan",
+    "Leave it exposed and note the date",
+    "Disable logging to save space"
+   ],
+   "tier": 4,
+   "why": "Compensating controls reduce exposure while waiting."
+  },
+  {
+   "q": "Two engineers share one administrator account. What is the main problem for investigations?",
+   "right": "Actions cannot be traced to a person",
+   "wrong": [
+    "The account will expire sooner",
+    "Passwords cannot be hashed",
+    "Sessions are no longer encrypted"
+   ],
+   "tier": 4,
+   "why": "Individual accountability needs individual accounts."
+  },
+  {
+   "q": "After an employee leaves, you find their account still active in three systems. Which control failed?",
+   "right": "The leaver process and access reviews",
+   "wrong": [
+    "Network segmentation",
+    "Full-disk encryption",
+    "TLS certificate renewal"
+   ],
+   "tier": 4,
+   "why": "Offboarding must reach every system."
+  },
+  {
+   "q": "A storage bucket holding customer files is found public. What is the best first move?",
+   "right": "Close public access, preserve logs and check what was accessed",
+   "wrong": [
+    "Delete the bucket to remove the problem",
+    "Wait until the monthly review",
+    "Move it to another region"
+   ],
+   "tier": 4,
+   "why": "Contain, keep evidence, then assess impact."
+  },
+  {
+   "q": "A single sign-on outage locks out every administrator. What should have been prepared?",
+   "right": "A sealed, monitored break-glass account",
+   "wrong": [
+    "A shared admin password in a chat channel",
+    "A permanent bypass of MFA for all admins",
+    "A larger password policy"
+   ],
+   "tier": 5,
+   "why": "Emergency access needs controls too."
+  },
+  {
+   "q": "An attacker has captured a session after the user completed MFA through a proxy page. Which control would have prevented it?",
+   "right": "Passkeys or hardware keys bound to the real site",
+   "wrong": [
+    "A longer password",
+    "More frequent password changes",
+    "Blocking SMS codes only"
+   ],
+   "tier": 5,
+   "why": "Origin-bound credentials will not sign for the proxy."
+  },
+  {
+   "q": "Your detection finds an admin account signing in from two continents within minutes. What is the best first move?",
+   "right": "Contain by revoking sessions and resetting the credential, keeping evidence",
+   "wrong": [
+    "Ignore it as a VPN error",
+    "Delete the account's logs",
+    "Wait for the user to report it"
+   ],
+   "tier": 5,
+   "why": "Contain first and preserve evidence."
+  },
+  {
+   "q": "Which company practice fits GGLearn's handling of passwords?",
+   "right": "Store only a salted scrypt hash in a versioned format",
+   "wrong": [
+    "Store encrypted passwords for password recovery",
+    "Store passwords in plaintext in a protected table",
+    "Store an unsalted fast hash"
+   ],
+   "tier": 2,
+   "why": "The company design keeps only salted, versioned hashes."
+  },
+  {
+   "q": "In GGLearn, why does the server enforce the 30-day session lifetime itself?",
+   "right": "Because the cookie's maxAge is controlled by the client",
+   "wrong": [
+    "Because browsers ignore all cookies after a day",
+    "Because the cookie cannot hold a date",
+    "Because 30 days is a legal requirement"
+   ],
+   "tier": 3,
+   "why": "The signed issued-at time is trusted instead."
+  },
+  {
+   "q": "A GGLearn user is offboarded. Why do their existing sessions stop working at once?",
+   "right": "Authorisation is re-read from the database on each request",
+   "wrong": [
+    "The session cookie deletes itself",
+    "The browser clears cookies at midnight",
+    "The rate limiter blocks them"
+   ],
+   "tier": 3,
+   "why": "Status and role are checked every request."
+  },
+  {
+   "q": "What is the reason GGLearn runs a dummy password check for unknown emails?",
+   "right": "So response time does not reveal which emails have accounts",
+   "wrong": [
+    "To cache hashes for the next user",
+    "To log failed attempts",
+    "Because the library needs one call per request"
+   ],
+   "tier": 4,
+   "why": "Uniform timing prevents enumeration."
+  },
+  {
+   "q": "The GGLearn login limiter keeps its counters in memory. What does that imply?",
+   "right": "It resets on restart and fits only a single process",
+   "wrong": [
+    "It shares counts across every server",
+    "It survives restarts",
+    "It cannot rate limit by address"
+   ],
+   "tier": 4,
+   "why": "In-memory state is local to the process."
+  },
+  {
+   "q": "A GG Social deploy used rsync with the delete flag and the secrets file vanished. What follows if the app secret was lost?",
+   "right": "Everyone is logged out and stored platform tokens cannot be decrypted",
+   "wrong": [
+    "Only the theme changes",
+    "Nothing, the secret regenerates identically",
+    "Only new users are affected"
+   ],
+   "tier": 4,
+   "why": "Restore the file from the server-side backup."
+  },
+  {
+   "q": "Why does the Moksy AI gateway refuse to save credentials when its master key is not set?",
+   "right": "Failing closed is safer than silently saving plaintext",
+   "wrong": [
+    "The database needs a key to open",
+    "Providers require a key to be set first",
+    "The cipher cannot handle empty keys"
+   ],
+   "tier": 4,
+   "why": "A missing protection should stop the operation."
+  },
+  {
+   "q": "A suspected GGLearn session leak has no known victim. What is the most direct lever?",
+   "right": "Rotate the signing secret or bump session versions to sign everyone out",
+   "wrong": [
+    "Ask users to clear their cookies",
+    "Wait for 30-day expiry",
+    "Disable the login rate limiter"
+   ],
+   "tier": 5,
+   "why": "Signed cookies and a version give clear revocation levers."
+  },
+  {
+   "q": "The Cloudflare-only Apache rule exists in the repository but the live vhosts do not include it. What is the consequence?",
+   "right": "Visitors can still reach Apache directly and spoof X-Forwarded-For",
+   "wrong": [
+    "It already blocks all non-Cloudflare traffic",
+    "Cloudflare traffic is blocked",
+    "The rate limiter is disabled"
+   ],
+   "tier": 5,
+   "why": "The rule takes effect only once included."
+  }
+ ]
+}

@@ -1,0 +1,2802 @@
+{
+ "slug": "sdlc-requirements",
+ "name": "2. Requirements analysis",
+ "description": "Functional and non-functional requirements, roles, compliance, integrations.",
+ "roles": "",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "growth",
+ "groups": {
+  "kind": "kind of requirement",
+  "story": "user story concept",
+  "uc": "requirements modelling concept",
+  "nfr": "quality attribute",
+  "role": "access control concept",
+  "comp": "compliance or integration concept",
+  "trace": "traceability concept",
+  "prio": "prioritisation concept",
+  "qual": "requirement defect or quality check",
+  "chg": "change control concept",
+  "val": "validation technique",
+  "doc": "requirements document element",
+  "gg": "requirements example from the company projects"
+ },
+ "cards": [
+  {
+   "group": "kind",
+   "subject": "A business requirement",
+   "tier": 1,
+   "says": [
+    "states the goal the organisation wants to reach by funding the project",
+    "is written in terms of outcomes for the business rather than features",
+    "is the reason the other requirements exist"
+   ],
+   "use": "need to explain why the project is worth doing",
+   "not": [
+    "lists the screens and fields of the user interface"
+   ],
+   "like": [
+    "A user requirement"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A user requirement",
+   "tier": 2,
+   "says": [
+    "describes what a group of users needs to be able to do",
+    "is usually phrased from the point of view of a role",
+    "sits between the business goal and the detailed system behaviour"
+   ],
+   "use": "collect what a role needs before any design exists",
+   "not": [
+    "describes the database tables the system must contain"
+   ],
+   "like": [
+    "A business requirement",
+    "A functional requirement"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A functional requirement",
+   "tier": 1,
+   "says": [
+    "states a behaviour or function the system must perform",
+    "can be demonstrated by giving an input and observing an output",
+    "describes what the system does rather than how well it does it"
+   ],
+   "use": "need to say what the system must do in response to an action",
+   "not": [
+    "states how fast the system must respond under load"
+   ],
+   "like": [
+    "A non-functional requirement",
+    "A user requirement"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A non-functional requirement",
+   "tier": 1,
+   "says": [
+    "states a quality the system must have, such as speed or availability",
+    "applies across many features rather than to one feature",
+    "shapes architecture choices and is costly to retrofit"
+   ],
+   "use": "need to state how well the system must work",
+   "not": [
+    "describes one function that a single user can trigger"
+   ],
+   "like": [
+    "A functional requirement",
+    "A constraint"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A constraint",
+   "tier": 2,
+   "says": [
+    "limits the solutions the team may choose",
+    "comes from outside the team, for example the platform, budget or a regulation",
+    "is not negotiable in the way a feature wish is"
+   ],
+   "use": "learn that production runs an older runtime so newer APIs are off limits",
+   "not": [
+    "is a feature the team picks to delight users"
+   ],
+   "like": [
+    "A business rule",
+    "An assumption"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A business rule",
+   "tier": 3,
+   "says": [
+    "is a policy or condition of the organisation that the system must enforce",
+    "exists independently of any software",
+    "is often expressed as if-then statements about data or decisions"
+   ],
+   "use": "hear that a refund over a set amount needs a manager's approval",
+   "not": [
+    "is a prediction about the future that nobody has checked"
+   ],
+   "like": [
+    "A constraint",
+    "An assumption"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "An assumption",
+   "tier": 3,
+   "says": [
+    "is something believed true but not yet confirmed",
+    "becomes a risk if it turns out to be false",
+    "should be written down with an owner who will confirm it"
+   ],
+   "use": "find that the plan depends on a third party API staying free",
+   "not": [
+    "is a rule the system is forced to follow by law"
+   ],
+   "like": [
+    "A constraint"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A transition requirement",
+   "tier": 4,
+   "says": [
+    "covers what is needed to move from the old way of working to the new system",
+    "includes data migration, training and cut-over steps",
+    "stops being needed once the system is fully live"
+   ],
+   "use": "must plan how existing records reach the new system on launch day",
+   "not": [
+    "describes a quality such as availability that lasts for the life of the system"
+   ],
+   "like": [
+    "A non-functional requirement"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A derived requirement",
+   "tier": 4,
+   "says": [
+    "follows from another requirement rather than being asked for directly",
+    "must keep a link back to the requirement it came from",
+    "appears when a high-level need is broken down during analysis"
+   ],
+   "use": "split one high-level need into several lower-level ones",
+   "not": [
+    "is invented by the developer with no source"
+   ],
+   "like": [
+    "A user requirement"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "A user story",
+   "tier": 1,
+   "says": [
+    "is a short sentence naming a role, an action and a benefit",
+    "is a prompt for a conversation rather than a full specification",
+    "is normally written in the form as a role, I want an action, so that a benefit"
+   ],
+   "use": "need a lightweight way to capture a need from a user's view",
+   "not": [
+    "is a complete contract that replaces all discussion"
+   ],
+   "like": [
+    "An epic",
+    "A use case"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "An epic",
+   "tier": 2,
+   "says": [
+    "is a large story too big to finish in one iteration",
+    "is split into smaller stories before it is built",
+    "groups related stories under one broad goal"
+   ],
+   "use": "find a story is too large to deliver in a single sprint",
+   "not": [
+    "is a single check used to decide if a story is done"
+   ],
+   "like": [
+    "A user story"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "Acceptance criteria",
+   "tier": 1,
+   "says": [
+    "are the checks that decide whether a story is done",
+    "are specific enough that two people would reach the same pass or fail result",
+    "are agreed before development starts"
+   ],
+   "use": "need an objective way to decide if work meets the need",
+   "not": [
+    "are the estimate of how many hours a story will take"
+   ],
+   "like": [
+    "The definition of done"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "The definition of done",
+   "tier": 3,
+   "says": [
+    "is a shared checklist that applies to every story",
+    "covers things such as review, testing and documentation",
+    "is the same for all stories whereas acceptance criteria differ per story"
+   ],
+   "use": "need one quality bar that every item must clear",
+   "not": [
+    "is written fresh for each individual story"
+   ],
+   "like": [
+    "Acceptance criteria"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "The Given-When-Then format",
+   "tier": 2,
+   "says": [
+    "writes a criterion as a starting state, an action and an expected result",
+    "comes from behaviour-driven development",
+    "turns a rule into an example that can be automated"
+   ],
+   "use": "want criteria that read like a runnable scenario",
+   "not": [
+    "is a prioritisation scheme with three levels"
+   ],
+   "like": [
+    "A rule-based criterion list"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "A rule-based criterion list",
+   "tier": 3,
+   "says": [
+    "states acceptance criteria as a bullet list of rules",
+    "suits constraints that hold in every case",
+    "is shorter than writing a scenario for each rule"
+   ],
+   "use": "need to record simple rules such as a pass mark of 80 percent",
+   "not": [
+    "describes a path through a dialogue between user and system step by step"
+   ],
+   "like": [
+    "The Given-When-Then format"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "The INVEST checklist",
+   "tier": 3,
+   "says": [
+    "tests whether a story is Independent, Negotiable, Valuable, Estimable, Small and Testable",
+    "is used to review the quality of stories before a sprint",
+    "flags a story that is too big or cannot be tested"
+   ],
+   "use": "want a quick test of whether a story is ready",
+   "not": [
+    "is a template for writing use case steps"
+   ],
+   "like": [
+    "The definition of ready"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "The definition of ready",
+   "tier": 4,
+   "says": [
+    "lists what a story needs before the team will take it into a sprint",
+    "often includes clear criteria and a known owner for open questions",
+    "protects the team from starting work on unclear items"
+   ],
+   "use": "keep vague items out of the sprint",
+   "not": [
+    "lists what must be true before a release goes to production"
+   ],
+   "like": [
+    "The INVEST checklist",
+    "The definition of done"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "A story map",
+   "tier": 4,
+   "says": [
+    "arranges stories along the steps of a user's journey",
+    "shows the backbone of activities with details underneath",
+    "helps cut a release slice that is thin but still usable end to end"
+   ],
+   "use": "need to see the whole journey before choosing what to build first",
+   "not": [
+    "is a flat list sorted only by estimated cost"
+   ],
+   "like": [
+    "An epic"
+   ]
+  },
+  {
+   "group": "story",
+   "subject": "A spike",
+   "tier": 5,
+   "says": [
+    "is a short time-boxed investigation to reduce uncertainty",
+    "produces knowledge rather than shippable features",
+    "is used when a story cannot be estimated because something is unknown"
+   ],
+   "use": "cannot estimate a story until you learn how an unfamiliar API behaves",
+   "not": [
+    "is a story that must deliver working code to users"
+   ],
+   "like": [
+    "A prototype"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "A use case",
+   "tier": 2,
+   "says": [
+    "describes how an actor interacts with a system to reach a goal",
+    "has a main success scenario and alternative flows",
+    "is more detailed than a typical user story"
+   ],
+   "use": "need a step-by-step description of an interaction with its failure paths",
+   "not": [
+    "is a single sentence naming role, action and benefit"
+   ],
+   "like": [
+    "A user story"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "An actor",
+   "tier": 1,
+   "says": [
+    "is a role outside the system that interacts with it",
+    "can be a person or another system",
+    "is named by role rather than by an individual's name"
+   ],
+   "use": "need to name who or what starts or takes part in an interaction",
+   "not": [
+    "is a step inside the system's internal processing"
+   ],
+   "like": [
+    "A stakeholder"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "A stakeholder",
+   "tier": 1,
+   "says": [
+    "is anyone affected by or able to influence the system",
+    "may never use the system directly",
+    "includes sponsors, regulators and support staff as well as users"
+   ],
+   "use": "need to find all the people whose needs must be considered",
+   "not": [
+    "is only a person who logs in to the system"
+   ],
+   "like": [
+    "An actor"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "The main success scenario",
+   "tier": 2,
+   "says": [
+    "is the sequence of steps when everything goes right",
+    "is also called the basic flow or happy path",
+    "has numbered steps alternating between actor and system"
+   ],
+   "use": "describe the normal route to the goal",
+   "not": [
+    "lists what happens when the user is not allowed"
+   ],
+   "like": [
+    "An alternative flow"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "An alternative flow",
+   "tier": 3,
+   "says": [
+    "describes a valid variation or failure branch from the main steps",
+    "refers to the main step where it branches",
+    "captures unhappy paths such as invalid input"
+   ],
+   "use": "need to record what happens when a service is down",
+   "not": [
+    "is the only path a use case may contain"
+   ],
+   "like": [
+    "The main success scenario"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "A precondition",
+   "tier": 3,
+   "says": [
+    "states what must be true before a use case can begin",
+    "is checked or guaranteed by something outside the use case steps",
+    "examples include that the user is signed in"
+   ],
+   "use": "need to say the user must already be authenticated",
+   "not": [
+    "states what is true after the use case ends"
+   ],
+   "like": [
+    "A postcondition"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "A postcondition",
+   "tier": 3,
+   "says": [
+    "states what is true after the use case completes",
+    "describes the observable state change such as a saved record",
+    "can differ between success and failure endings"
+   ],
+   "use": "need to say what the system looks like at the end",
+   "not": [
+    "states what must hold before the first step"
+   ],
+   "like": [
+    "A precondition"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "A use case diagram",
+   "tier": 2,
+   "says": [
+    "shows actors and the goals they pursue with the system",
+    "uses ellipses for use cases and stick figures for actors",
+    "gives an overview but not the detailed steps"
+   ],
+   "use": "need a one-page picture of who does what with the system",
+   "not": [
+    "shows the order of messages between objects over time"
+   ],
+   "like": [
+    "A sequence diagram"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "A sequence diagram",
+   "tier": 4,
+   "says": [
+    "shows messages between participants in time order",
+    "is drawn with lifelines running down the page",
+    "belongs to design more than to early requirements"
+   ],
+   "use": "need to show the order of calls between services",
+   "not": [
+    "lists all actors and goals on one page"
+   ],
+   "like": [
+    "A use case diagram",
+    "An activity diagram"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "An activity diagram",
+   "tier": 4,
+   "says": [
+    "shows a workflow as actions, decisions and parallel branches",
+    "reads like a flowchart with swim lanes for roles",
+    "helps expose gaps in a business process"
+   ],
+   "use": "want to model a process with decision points and handoffs between teams",
+   "not": [
+    "shows only the static structure of data"
+   ],
+   "like": [
+    "A sequence diagram"
+   ]
+  },
+  {
+   "group": "uc",
+   "subject": "An entity relationship diagram",
+   "tier": 4,
+   "says": [
+    "shows the data entities and how they relate",
+    "helps check that the requirements cover all the data to be stored",
+    "records cardinality such as one to many"
+   ],
+   "use": "need to agree the data a system must hold",
+   "not": [
+    "shows who may perform which actions"
+   ],
+   "like": [
+    "A use case diagram"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Performance",
+   "tier": 1,
+   "says": [
+    "measures speed such as response time and throughput",
+    "is stated against a defined load",
+    "is verified by a load or stress test"
+   ],
+   "use": "need a page to respond within an agreed time for most requests",
+   "not": [
+    "is the length of time the service is allowed to be down"
+   ],
+   "like": [
+    "Scalability",
+    "Availability"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Availability",
+   "tier": 2,
+   "says": [
+    "is the share of time the service is able to work",
+    "is stated as an allowed amount of downtime",
+    "is paired with a recovery target after a failure"
+   ],
+   "use": "must state how much downtime the business can accept",
+   "not": [
+    "is the number of requests handled per second"
+   ],
+   "like": [
+    "Reliability",
+    "Performance"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Scalability",
+   "tier": 3,
+   "says": [
+    "is the ability to handle growing load by adding resources",
+    "is expressed as the growth the system must absorb",
+    "can be vertical or horizontal"
+   ],
+   "use": "expect user numbers to grow tenfold over a year",
+   "not": [
+    "is the ease of fixing a defect in the code"
+   ],
+   "like": [
+    "Performance"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Reliability",
+   "tier": 3,
+   "says": [
+    "is the probability the system runs without failure for a period",
+    "is described by measures such as mean time between failures",
+    "concerns correct operation rather than just being up"
+   ],
+   "use": "need the system to complete work correctly over a long run",
+   "not": [
+    "is how quickly the system can be restored after an outage"
+   ],
+   "like": [
+    "Availability"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Security",
+   "tier": 1,
+   "says": [
+    "protects data and functions from unauthorised access or change",
+    "includes authentication, authorisation and encryption needs",
+    "is verified by reviews and testing such as penetration tests"
+   ],
+   "use": "must state who can see and change sensitive data",
+   "not": [
+    "lets users with disabilities use the product"
+   ],
+   "like": [
+    "Privacy"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Privacy",
+   "tier": 2,
+   "says": [
+    "limits how personal data is collected, used and shared",
+    "turns legal duties into behaviour such as consent and deletion",
+    "is wider than keeping data secret"
+   ],
+   "use": "must handle personal data in line with data protection rules",
+   "not": [
+    "is only about preventing hackers from breaking in"
+   ],
+   "like": [
+    "Security"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Usability",
+   "tier": 2,
+   "says": [
+    "measures how easily the intended users reach their goals",
+    "is judged with real users on real tasks",
+    "is stated as task success rate or time to complete"
+   ],
+   "use": "need new users to complete a first task without help",
+   "not": [
+    "is the amount of load the system can carry"
+   ],
+   "like": [
+    "Accessibility"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Accessibility",
+   "tier": 3,
+   "says": [
+    "ensures people with disabilities can use the product",
+    "includes support for screen readers and keyboard navigation",
+    "is verified by an audit against a recognised standard"
+   ],
+   "use": "must allow a screen reader user to complete the same tasks",
+   "not": [
+    "is about how quickly pages load on slow networks"
+   ],
+   "like": [
+    "Usability"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Maintainability",
+   "tier": 3,
+   "says": [
+    "is how easily the system can be understood, changed and fixed",
+    "is helped by modular design and tests",
+    "affects the long-term cost of ownership"
+   ],
+   "use": "expect the team to change the product often for years",
+   "not": [
+    "is how many users the system can serve at the same time"
+   ],
+   "like": [
+    "Portability"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Portability",
+   "tier": 4,
+   "says": [
+    "is how easily the system can run in a different environment",
+    "is reduced by tight coupling to one platform",
+    "is stated as a list of platforms that must be supported"
+   ],
+   "use": "must run on more than one operating system or cloud",
+   "not": [
+    "is how easily one developer can read another's code"
+   ],
+   "like": [
+    "Maintainability"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Recovery time objective",
+   "tier": 4,
+   "says": [
+    "is the longest time the business accepts to restore service after a failure",
+    "is set by the business rather than by the engineers",
+    "drives the cost of the backup and failover design"
+   ],
+   "use": "need to say how long an outage may last",
+   "not": [
+    "is the maximum amount of recent data that may be lost"
+   ],
+   "like": [
+    "Recovery point objective"
+   ]
+  },
+  {
+   "group": "nfr",
+   "subject": "Recovery point objective",
+   "tier": 5,
+   "says": [
+    "is the maximum period of data loss the business accepts",
+    "decides how often backups or replication must run",
+    "is measured backwards in time from the failure"
+   ],
+   "use": "need to say how much recent data can be lost after a failure",
+   "not": [
+    "is the longest time to bring service back"
+   ],
+   "like": [
+    "Recovery time objective"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "A role",
+   "tier": 1,
+   "says": [
+    "is a named set of permissions",
+    "is assigned to people rather than defined per person",
+    "reflects a job function such as reviewer or administrator"
+   ],
+   "use": "need to give a group of people the same access",
+   "not": [
+    "is the login name of one individual"
+   ],
+   "like": [
+    "A permission"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "A permission",
+   "tier": 1,
+   "says": [
+    "allows one specific action on one kind of resource",
+    "is combined into roles",
+    "is checked every time the action is attempted"
+   ],
+   "use": "need to decide who may view, edit or approve a thing",
+   "not": [
+    "is a job title in the organisation"
+   ],
+   "like": [
+    "A role"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "The principle of least privilege",
+   "tier": 2,
+   "says": [
+    "gives each user only the access needed for their job",
+    "reduces the harm from mistakes and stolen accounts",
+    "is reviewed again when someone changes job"
+   ],
+   "use": "deciding the default access for a new role",
+   "not": [
+    "gives everyone administrator rights to avoid support requests"
+   ],
+   "like": [
+    "Separation of duties"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Separation of duties",
+   "tier": 3,
+   "says": [
+    "requires that no one person can complete a sensitive process alone",
+    "stops the author of a change from also approving it",
+    "limits both error and fraud"
+   ],
+   "use": "find that the person who prepares a filing could also close it",
+   "not": [
+    "lets one administrator do every step so work is faster"
+   ],
+   "like": [
+    "The principle of least privilege"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "A permissions matrix",
+   "tier": 3,
+   "says": [
+    "lists roles against actions in a table",
+    "shows who may view, create, edit, approve or delete",
+    "gives a test case for every cell including the denied ones"
+   ],
+   "use": "need one place that shows who may do what",
+   "not": [
+    "is a diagram of the system's servers"
+   ],
+   "like": [
+    "Role-based access control"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Role-based access control",
+   "tier": 3,
+   "says": [
+    "grants access through roles",
+    "makes changes easier because you edit the role not every user",
+    "can become messy if there are too many roles"
+   ],
+   "use": "want access to follow job functions",
+   "not": [
+    "decides access from attributes such as time and location on each request"
+   ],
+   "like": [
+    "Attribute-based access control"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Attribute-based access control",
+   "tier": 5,
+   "says": [
+    "decides access by evaluating attributes of the user, the resource and the context",
+    "can express rules such as only during working hours from a managed device",
+    "is more flexible but harder to review than plain roles"
+   ],
+   "use": "need rules that depend on context as well as job",
+   "not": [
+    "assigns fixed permissions to named roles only"
+   ],
+   "like": [
+    "Role-based access control"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "The joiner, mover, leaver process",
+   "tier": 4,
+   "says": [
+    "covers granting, changing and removing access as people's jobs change",
+    "includes ending access immediately when someone leaves",
+    "prevents access that outlives a job"
+   ],
+   "use": "need to prevent leftover access after a person changes team or leaves",
+   "not": [
+    "describes how new features move from design to release"
+   ],
+   "like": [
+    "An access review"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "An access review",
+   "tier": 4,
+   "says": [
+    "is a periodic check that current access still matches current need",
+    "finds orphaned and excessive accounts",
+    "is run by the owners of each system or role"
+   ],
+   "use": "want to find permissions nobody needs any more",
+   "not": [
+    "is the first sign-in test of a new account"
+   ],
+   "like": [
+    "The joiner, mover, leaver process"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "A role-permission denied case",
+   "tier": 4,
+   "says": [
+    "is a test that proves a user without the right is refused",
+    "checks that the refusal gives no clue about hidden data",
+    "is needed as much as the allowed case"
+   ],
+   "use": "must test that an unauthorised user cannot reach a record",
+   "not": [
+    "is a test of the main success scenario only"
+   ],
+   "like": [
+    "A permissions matrix"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A compliance requirement",
+   "tier": 2,
+   "says": [
+    "turns an external rule into specific system behaviour",
+    "has a named source such as a law, standard or contract",
+    "needs input from the people responsible for legal matters"
+   ],
+   "use": "learn the product must follow a data protection law",
+   "not": [
+    "is a preference expressed by one user"
+   ],
+   "like": [
+    "A regulatory audit trail"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A consent requirement",
+   "tier": 3,
+   "says": [
+    "asks for a clear agreement before personal data is made public",
+    "is recorded so it can be shown later",
+    "may be withdrawn by the person"
+   ],
+   "use": "need a user to agree before name and photo become visible to others",
+   "not": [
+    "hides all personal data from every other user"
+   ],
+   "like": [
+    "A data retention rule"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A data retention rule",
+   "tier": 3,
+   "says": [
+    "sets how long data is kept before deletion",
+    "balances legal duty to keep against duty to delete",
+    "is implemented as a scheduled and tested purge"
+   ],
+   "use": "need to delete records after a legally set period",
+   "not": [
+    "records who agreed to a data use"
+   ],
+   "like": [
+    "A consent requirement"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "An audit trail",
+   "tier": 3,
+   "says": [
+    "records who did what and when",
+    "is protected against change by the people it records",
+    "supports compliance and investigation of incidents"
+   ],
+   "use": "must prove who approved a sensitive action",
+   "not": [
+    "is a backup of the database"
+   ],
+   "like": [
+    "A data retention rule"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "Data residency",
+   "tier": 4,
+   "says": [
+    "requires that data is stored in a particular country or region",
+    "affects the choice of hosting and suppliers",
+    "is a constraint that must be known before architecture is chosen"
+   ],
+   "use": "learn customer data may not leave a region",
+   "not": [
+    "decides how long data may be kept"
+   ],
+   "like": [
+    "A data retention rule"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "An integration requirement",
+   "tier": 2,
+   "says": [
+    "states what data flows to or from an external system",
+    "names an owner for the credentials and the interface",
+    "says what happens when the other system is unavailable"
+   ],
+   "use": "must connect to a payment, tax or social platform",
+   "not": [
+    "describes the colour scheme of the user interface"
+   ],
+   "like": [
+    "An interface contract"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "An interface contract",
+   "tier": 4,
+   "says": [
+    "defines the format, fields and rules of an exchange between systems",
+    "lets both sides build and test independently",
+    "must be versioned when it changes"
+   ],
+   "use": "need two teams to build against an agreed message format",
+   "not": [
+    "is a legal agreement between a company and a user"
+   ],
+   "like": [
+    "An integration requirement"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A third party limit",
+   "tier": 4,
+   "says": [
+    "is a restriction set by an external platform that the product cannot change",
+    "must be captured as a requirement early",
+    "can decide which features are possible at all"
+   ],
+   "use": "find that a platform offers no write interface",
+   "not": [
+    "is a quality target set by your own team"
+   ],
+   "like": [
+    "A constraint"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A fallback path",
+   "tier": 4,
+   "says": [
+    "defines what the system does when an integration fails",
+    "may queue work for later or hand it to a person",
+    "is tested by simulating the outage"
+   ],
+   "use": "need work to continue when an external service is down",
+   "not": [
+    "is a second copy of the whole system in another region"
+   ],
+   "like": [
+    "An interface contract"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A privacy impact assessment",
+   "tier": 5,
+   "says": [
+    "reviews how a feature handles personal data before it is built",
+    "identifies risks and the controls that reduce them",
+    "is carried out early enough to change the design"
+   ],
+   "use": "plan a feature that collects new kinds of personal data",
+   "not": [
+    "measures how fast the feature responds"
+   ],
+   "like": [
+    "A consent requirement"
+   ]
+  },
+  {
+   "group": "trace",
+   "subject": "Requirements traceability",
+   "tier": 2,
+   "says": [
+    "links each requirement to its source, design, test and release",
+    "shows which tests cover which requirement",
+    "helps assess the impact of a change"
+   ],
+   "use": "must show every requirement has been built and tested",
+   "not": [
+    "ranks requirements by value"
+   ],
+   "like": [
+    "A traceability matrix"
+   ]
+  },
+  {
+   "group": "trace",
+   "subject": "A traceability matrix",
+   "tier": 2,
+   "says": [
+    "is a table linking requirement identifiers to other artefacts",
+    "exposes requirements with no test",
+    "exposes work items with no requirement behind them"
+   ],
+   "use": "want to find gaps in test coverage against requirements",
+   "not": [
+    "lists which role may do which action"
+   ],
+   "like": [
+    "A permissions matrix"
+   ]
+  },
+  {
+   "group": "trace",
+   "subject": "Forward traceability",
+   "tier": 3,
+   "says": [
+    "follows a requirement on to design, code and tests",
+    "shows whether a requirement was implemented and verified",
+    "answers where a requirement ended up"
+   ],
+   "use": "want to check a requirement was built and tested",
+   "not": [
+    "follows a test back to the need that justified it"
+   ],
+   "like": [
+    "Backward traceability"
+   ]
+  },
+  {
+   "group": "trace",
+   "subject": "Backward traceability",
+   "tier": 3,
+   "says": [
+    "follows a work item back to the requirement that justified it",
+    "finds gold plating with no source",
+    "answers why a thing was built"
+   ],
+   "use": "find code or a feature nobody asked for",
+   "not": [
+    "follows a requirement on to its tests"
+   ],
+   "like": [
+    "Forward traceability"
+   ]
+  },
+  {
+   "group": "trace",
+   "subject": "A requirement identifier",
+   "tier": 1,
+   "says": [
+    "is a unique stable number given to each requirement",
+    "is never reused when the requirement is deleted",
+    "lets everyone refer to the same item"
+   ],
+   "use": "need to refer to a requirement in tests and release notes",
+   "not": [
+    "is the priority level of a requirement"
+   ],
+   "like": [
+    "A baseline"
+   ]
+  },
+  {
+   "group": "trace",
+   "subject": "A baseline",
+   "tier": 4,
+   "says": [
+    "is a reviewed and approved version of a set of requirements",
+    "is the reference point for later changes",
+    "changes only through a formal change process"
+   ],
+   "use": "need an agreed version to measure scope change against",
+   "not": [
+    "is the lowest priority group in a ranking"
+   ],
+   "like": [
+    "A requirement identifier"
+   ]
+  },
+  {
+   "group": "trace",
+   "subject": "Impact analysis",
+   "tier": 4,
+   "says": [
+    "estimates what a proposed change would affect",
+    "uses traceability links to find affected design, tests and documents",
+    "is done before a change is approved"
+   ],
+   "use": "must say what a late change would touch before approving it",
+   "not": [
+    "is a test of the finished product"
+   ],
+   "like": [
+    "Traceability"
+   ]
+  },
+  {
+   "group": "trace",
+   "subject": "Requirement status",
+   "tier": 3,
+   "says": [
+    "records where a requirement is, such as proposed, approved, built, tested or dropped",
+    "makes progress visible across the whole set",
+    "is updated as each stage completes"
+   ],
+   "use": "want a quick view of how much agreed scope is finished",
+   "not": [
+    "is the importance of a requirement to the business"
+   ],
+   "like": [
+    "A baseline"
+   ]
+  },
+  {
+   "group": "trace",
+   "subject": "Requirement attributes",
+   "tier": 3,
+   "says": [
+    "are data kept with each requirement such as owner, priority, source and status",
+    "make filtering and reporting possible",
+    "are chosen to be few enough to keep up to date"
+   ],
+   "use": "need to report on requirements by owner and priority",
+   "not": [
+    "are the steps of a use case"
+   ],
+   "like": [
+    "Requirement status"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "MoSCoW",
+   "tier": 2,
+   "says": [
+    "ranks items as must, should, could and won't have this time",
+    "fixes the must-haves needed for the release to work",
+    "makes explicit what is out of scope for now"
+   ],
+   "use": "need a simple four-way ranking for a release",
+   "not": [
+    "scores items by reach, impact, confidence and effort"
+   ],
+   "like": [
+    "The Kano model",
+    "RICE scoring"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "The Kano model",
+   "tier": 4,
+   "says": [
+    "classes features as basic, performance or delighter",
+    "explains why meeting basic needs gains no extra satisfaction",
+    "uses user survey answers to place features"
+   ],
+   "use": "want to know which features users merely expect and which excite them",
+   "not": [
+    "ranks items in four groups from must to won't"
+   ],
+   "like": [
+    "MoSCoW"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "RICE scoring",
+   "tier": 4,
+   "says": [
+    "scores items by reach, impact, confidence and effort",
+    "produces a number to compare unlike items",
+    "depends on estimates that should be challenged"
+   ],
+   "use": "need a consistent score to compare many items",
+   "not": [
+    "groups items into must, should, could and won't"
+   ],
+   "like": [
+    "MoSCoW",
+    "Weighted scoring"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Weighted scoring",
+   "tier": 4,
+   "says": [
+    "scores each item against criteria that carry different weights",
+    "makes the criteria and their importance explicit",
+    "depends on agreeing the weights first"
+   ],
+   "use": "need to compare options on cost, risk and value together",
+   "not": [
+    "fixes the number of each priority level"
+   ],
+   "like": [
+    "RICE scoring"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Cost of delay",
+   "tier": 5,
+   "says": [
+    "measures the value lost for each period a feature is not available",
+    "helps rank items that are urgent but small",
+    "is estimated with the business"
+   ],
+   "use": "must choose between a quick fix and a larger project that loses value daily",
+   "not": [
+    "is the cost to build the feature"
+   ],
+   "like": [
+    "Weighted scoring"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "A minimum viable product",
+   "tier": 3,
+   "says": [
+    "is the smallest release that lets you test the key assumption",
+    "is chosen to learn rather than to be complete",
+    "still has to work well for the users it serves"
+   ],
+   "use": "want to test whether users value an idea before building all of it",
+   "not": [
+    "is a prototype that is thrown away without users seeing it"
+   ],
+   "like": [
+    "A prototype"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Priority inflation",
+   "tier": 5,
+   "says": [
+    "happens when too many items are marked as top priority",
+    "removes the ability to choose",
+    "is countered by a cap on how many must-haves are allowed"
+   ],
+   "use": "find that 90 percent of requirements are marked critical",
+   "not": [
+    "is a rise in the cost of the project over time"
+   ],
+   "like": [
+    "MoSCoW"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Scope creep",
+   "tier": 3,
+   "says": [
+    "is the uncontrolled growth of scope after it was agreed",
+    "happens through many small unreviewed additions",
+    "is controlled by a change process"
+   ],
+   "use": "see small extra requests slip in without any review",
+   "not": [
+    "is a formal approved change to the baseline"
+   ],
+   "like": [
+    "A change request"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "A trade-off decision",
+   "tier": 4,
+   "says": [
+    "records which of two conflicting qualities was chosen and why",
+    "prevents the same argument being reopened",
+    "has a named owner and date"
+   ],
+   "use": "find that speed and cost conflict and one has to give",
+   "not": [
+    "lists the rejected features"
+   ],
+   "like": [
+    "MoSCoW"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "An ambiguous requirement",
+   "tier": 2,
+   "says": [
+    "can be read in more than one way",
+    "uses words such as fast, easy or secure with no measure",
+    "is fixed by adding a number, a condition or an example"
+   ],
+   "use": "find a requirement that says the page must load quickly",
+   "not": [
+    "has an identifier but no owner"
+   ],
+   "like": [
+    "An untestable requirement",
+    "A conflicting requirement"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "An untestable requirement",
+   "tier": 3,
+   "says": [
+    "cannot be checked to give a clear pass or fail",
+    "lacks a measure or an observable result",
+    "is rewritten with a threshold and a method of verification"
+   ],
+   "use": "cannot design a test for a requirement as written",
+   "not": [
+    "is a requirement that contradicts another one"
+   ],
+   "like": [
+    "An ambiguous requirement"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "A conflicting requirement",
+   "tier": 4,
+   "says": [
+    "contradicts another requirement",
+    "is found by reviewing requirements against each other",
+    "is resolved by the stakeholders with authority"
+   ],
+   "use": "find two requirements that cannot both be met",
+   "not": [
+    "has no source or owner"
+   ],
+   "like": [
+    "An ambiguous requirement"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "A solution-biased requirement",
+   "tier": 4,
+   "says": [
+    "prescribes how to build instead of what is needed",
+    "limits design choices without reason",
+    "is rewritten to state the underlying need"
+   ],
+   "use": "read a requirement that names a specific database for no stated reason",
+   "not": [
+    "states a measurable quality"
+   ],
+   "like": [
+    "A constraint"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "A compound requirement",
+   "tier": 3,
+   "says": [
+    "packs several needs into one statement",
+    "is hard to test because parts may pass and others fail",
+    "is split so each statement has one condition"
+   ],
+   "use": "find a requirement joined by and that bundles three behaviours",
+   "not": [
+    "is a requirement with a numeric threshold"
+   ],
+   "like": [
+    "An ambiguous requirement"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "A weak word",
+   "tier": 2,
+   "says": [
+    "is a term such as appropriate, user-friendly or etc that hides detail",
+    "is searched for during a requirements review",
+    "is replaced by a measurable statement"
+   ],
+   "use": "scan requirements for terms that can't be checked",
+   "not": [
+    "is a priority label"
+   ],
+   "like": [
+    "An ambiguous requirement"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "A measurable criterion",
+   "tier": 2,
+   "says": [
+    "states a quantity and a condition under which it is checked",
+    "lets two people reach the same verdict",
+    "for example, says 90 percent of requests finish within an agreed time under a stated load"
+   ],
+   "use": "turn a vague quality into something verifiable",
+   "not": [
+    "describes the feeling the user should have"
+   ],
+   "like": [
+    "An ambiguous requirement"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "A requirements review",
+   "tier": 3,
+   "says": [
+    "checks requirements for clarity, completeness, consistency and testability",
+    "involves users, developers and testers",
+    "finds defects at the cheapest point in the project"
+   ],
+   "use": "want defects found before design begins",
+   "not": [
+    "tests the finished software with real data"
+   ],
+   "like": [
+    "An inspection"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "An inspection",
+   "tier": 5,
+   "says": [
+    "is a formal review with defined roles and a checklist",
+    "records defects found and measures the review's yield",
+    "is used where the cost of missed errors is high"
+   ],
+   "use": "need a rigorous, measured review of a critical requirements document",
+   "not": [
+    "is an informal chat about the draft"
+   ],
+   "like": [
+    "A requirements review"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "A missing requirement",
+   "tier": 4,
+   "says": [
+    "is a need that nobody wrote down",
+    "often relates to error handling, security or a rarely used role",
+    "is found by checking against use cases and the permissions matrix"
+   ],
+   "use": "find that the unhappy paths were never specified",
+   "not": [
+    "is a requirement with two meanings"
+   ],
+   "like": [
+    "A conflicting requirement"
+   ]
+  },
+  {
+   "group": "chg",
+   "subject": "A change request",
+   "tier": 2,
+   "says": [
+    "is a formal proposal to alter an approved requirement",
+    "records the reason, the impact and the decision",
+    "is assessed before work begins"
+   ],
+   "use": "hear a stakeholder ask to add a feature after sign-off",
+   "not": [
+    "is a bug report about released software"
+   ],
+   "like": [
+    "Scope creep"
+   ]
+  },
+  {
+   "group": "chg",
+   "subject": "A change control board",
+   "tier": 3,
+   "says": [
+    "is the group that approves or rejects proposed changes",
+    "weighs impact on cost, schedule and risk",
+    "keeps a record of decisions"
+   ],
+   "use": "need an accountable body to decide on changes",
+   "not": [
+    "is a team that writes the code"
+   ],
+   "like": [
+    "A change request"
+   ]
+  },
+  {
+   "group": "chg",
+   "subject": "Change control",
+   "tier": 2,
+   "says": [
+    "is the process that governs how baselined requirements may change",
+    "prevents uncontrolled changes",
+    "is lighter in agile work but still present"
+   ],
+   "use": "need a clear route for altering agreed scope",
+   "not": [
+    "is the testing of software changes"
+   ],
+   "like": [
+    "Version control"
+   ]
+  },
+  {
+   "group": "chg",
+   "subject": "Version control for requirements",
+   "tier": 3,
+   "says": [
+    "keeps a history of every revision of the requirements",
+    "lets you compare and restore earlier versions",
+    "shows who changed what and when"
+   ],
+   "use": "need to see how a requirement looked three months ago",
+   "not": [
+    "decides which changes are approved"
+   ],
+   "like": [
+    "Change control"
+   ]
+  },
+  {
+   "group": "chg",
+   "subject": "A requirements volatility measure",
+   "tier": 5,
+   "says": [
+    "tracks how often requirements change over time",
+    "signals unstable scope or poor early analysis",
+    "is used to adjust plans and contingency"
+   ],
+   "use": "want evidence that scope is moving too much",
+   "not": [
+    "counts the defects found in testing"
+   ],
+   "like": [
+    "Scope creep"
+   ]
+  },
+  {
+   "group": "chg",
+   "subject": "An emergency change",
+   "tier": 5,
+   "says": [
+    "is made quickly outside the normal path because of urgent risk",
+    "is still recorded and reviewed afterwards",
+    "should be rare and have a clear approver"
+   ],
+   "use": "must fix a security flaw today before any board can meet",
+   "not": [
+    "is a change scheduled at the end of each quarter"
+   ],
+   "like": [
+    "A change request"
+   ]
+  },
+  {
+   "group": "chg",
+   "subject": "A backlog refinement session",
+   "tier": 3,
+   "says": [
+    "is a regular meeting to clarify, split and re-order upcoming stories",
+    "keeps requirements current in agile work",
+    "involves product owner and team"
+   ],
+   "use": "want stories understood before they enter a sprint",
+   "not": [
+    "approves a change to a signed-off baseline"
+   ],
+   "like": [
+    "A change control board"
+   ]
+  },
+  {
+   "group": "chg",
+   "subject": "A product owner",
+   "tier": 3,
+   "says": [
+    "decides the order and acceptance of the work for the team",
+    "is the single voice of the business for the backlog",
+    "accepts or rejects completed stories"
+   ],
+   "use": "need one person to decide priorities and answer questions",
+   "not": [
+    "is the person who writes the code for each story"
+   ],
+   "like": [
+    "A stakeholder"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "Validation",
+   "tier": 2,
+   "says": [
+    "checks that the requirements describe what stakeholders actually need",
+    "asks are we building the right thing",
+    "is done with users and business owners"
+   ],
+   "use": "want to be sure the requirements are the right ones",
+   "not": [
+    "checks that the software matches the specification"
+   ],
+   "like": [
+    "Verification"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "Verification",
+   "tier": 2,
+   "says": [
+    "checks that the product meets its stated requirements",
+    "asks are we building it right",
+    "is done by tests, inspections and analysis"
+   ],
+   "use": "need to show the build matches the specification",
+   "not": [
+    "checks that the requirements reflect real user needs"
+   ],
+   "like": [
+    "Validation"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "A prototype",
+   "tier": 2,
+   "says": [
+    "is an early model of the system used to get feedback",
+    "lets users react to something concrete",
+    "may be thrown away or evolved"
+   ],
+   "use": "users cannot say what they want until they see it",
+   "not": [
+    "is the final signed-off document"
+   ],
+   "like": [
+    "A wireframe",
+    "A minimum viable product"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "A wireframe",
+   "tier": 2,
+   "says": [
+    "is a simple outline of screen layout with no styling",
+    "is cheap to change",
+    "focuses on structure and flow rather than appearance"
+   ],
+   "use": "want to agree a screen's content and layout quickly",
+   "not": [
+    "is a working version of the code"
+   ],
+   "like": [
+    "A prototype"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "User acceptance testing",
+   "tier": 3,
+   "says": [
+    "is testing by the business users to confirm the system fits their needs",
+    "uses real scenarios against the acceptance criteria",
+    "is the last gate before release in many projects"
+   ],
+   "use": "need users to confirm the finished system before go-live",
+   "not": [
+    "is testing by the developers of their own code"
+   ],
+   "like": [
+    "Verification"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "A walkthrough",
+   "tier": 3,
+   "says": [
+    "is a session where the author steps through the requirements for feedback",
+    "is less formal than an inspection",
+    "reveals misunderstandings early"
+   ],
+   "use": "want a quick informal review with stakeholders",
+   "not": [
+    "is a formal review with a defect log and checklist"
+   ],
+   "like": [
+    "An inspection"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "A pilot",
+   "tier": 4,
+   "says": [
+    "is a limited real-world release to a small group",
+    "tests the requirements in live conditions",
+    "lowers the risk of a full launch"
+   ],
+   "use": "want evidence from real use before a full rollout",
+   "not": [
+    "is a paper review of a draft"
+   ],
+   "like": [
+    "User acceptance testing"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "An A/B test",
+   "tier": 5,
+   "says": [
+    "compares two versions with different users at the same time",
+    "uses real behaviour to judge which meets a goal better",
+    "needs a clear metric chosen first"
+   ],
+   "use": "cannot agree which of two designs will work better",
+   "not": [
+    "is a review by the project sponsor"
+   ],
+   "like": [
+    "A pilot"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "A requirements elicitation interview",
+   "tier": 2,
+   "says": [
+    "is a one-to-one conversation to learn a stakeholder's needs",
+    "uses open questions",
+    "is followed by a written summary for confirmation"
+   ],
+   "use": "want to learn needs in depth from a single expert",
+   "not": [
+    "is a written survey sent to many people"
+   ],
+   "like": [
+    "A workshop"
+   ]
+  },
+  {
+   "group": "val",
+   "subject": "A requirements workshop",
+   "tier": 3,
+   "says": [
+    "brings stakeholders together to agree needs",
+    "surfaces conflicts in the room",
+    "is led by a facilitator"
+   ],
+   "use": "need to resolve differing views quickly in one session",
+   "not": [
+    "is a one-to-one conversation with a single user"
+   ],
+   "like": [
+    "A requirements elicitation interview"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A requirements document",
+   "tier": 2,
+   "says": [
+    "records the agreed requirements in one place",
+    "has a unique identifier for each requirement",
+    "is reviewed and signed off by named stakeholders"
+   ],
+   "use": "need a shared reference for what will be built",
+   "not": [
+    "is a record of test results"
+   ],
+   "like": [
+    "A product backlog"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A product backlog",
+   "tier": 2,
+   "says": [
+    "is an ordered list of everything that may be built",
+    "is kept current by the product owner",
+    "replaces a large up-front specification in agile work"
+   ],
+   "use": "work iteratively with changing priorities",
+   "not": [
+    "is a baselined document that never changes"
+   ],
+   "like": [
+    "A requirements document"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A glossary",
+   "tier": 2,
+   "says": [
+    "defines the terms used in the requirements",
+    "stops different people using one word for different things",
+    "is shared by business and technical staff"
+   ],
+   "use": "find that two teams mean different things by customer",
+   "not": [
+    "lists the people who signed off the document"
+   ],
+   "like": [
+    "A requirements document"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "The scope statement",
+   "tier": 2,
+   "says": [
+    "states what is included and what is excluded",
+    "protects against assumptions about extra features",
+    "is part of the signed baseline"
+   ],
+   "use": "must settle what is out of scope",
+   "not": [
+    "lists every use case step"
+   ],
+   "like": [
+    "A glossary"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "Stakeholder sign-off",
+   "tier": 3,
+   "says": [
+    "is formal approval that the requirements are accepted",
+    "is given by people with authority to decide",
+    "makes later changes subject to change control"
+   ],
+   "use": "need agreement before design and build start",
+   "not": [
+    "proves the requirements are correct and complete"
+   ],
+   "like": [
+    "Validation"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A sign-off authority matrix",
+   "tier": 4,
+   "says": [
+    "lists who may approve which kind of requirement",
+    "avoids sign-off by someone with no authority",
+    "is agreed before the review starts"
+   ],
+   "use": "find that nobody knows who can approve a regulatory item",
+   "not": [
+    "lists which user roles may use the system"
+   ],
+   "like": [
+    "Stakeholder sign-off"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A software requirements specification",
+   "tier": 3,
+   "says": [
+    "is a formal document of functional and non-functional requirements",
+    "is aimed at designers, developers and testers",
+    "follows a structure such as a recognised standard"
+   ],
+   "use": "need a complete formal statement of what the system must do",
+   "not": [
+    "is a plan of the project's tasks and dates"
+   ],
+   "like": [
+    "A requirements document"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A context diagram",
+   "tier": 3,
+   "says": [
+    "shows the system as one box with the external actors and systems around it",
+    "fixes the boundary of the system",
+    "lists the data flowing across the boundary"
+   ],
+   "use": "need to show what lies inside and outside the system",
+   "not": [
+    "shows each step of a use case in order"
+   ],
+   "like": [
+    "A use case diagram"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "The limits of sign-off",
+   "tier": 5,
+   "says": [
+    "gives the team an agreed reference but does not make the content right",
+    "does not remove the need to validate with users",
+    "can lock in errors if change control is too rigid"
+   ],
+   "use": "hear that sign-off means the requirements cannot be wrong",
+   "not": [
+    "makes any later change impossible"
+   ],
+   "like": [
+    "Stakeholder sign-off"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn level exam rule",
+   "tier": 1,
+   "says": [
+    "draws 10 questions for a level exam",
+    "needs 80 percent to pass",
+    "unlocks the next level once a learner passes"
+   ],
+   "use": "want an example of a functional rule that can be tested directly",
+   "not": [
+    "lets a learner skip any level at will"
+   ],
+   "like": [
+    "The gglearn open answer grading"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn open answer grading",
+   "tier": 3,
+   "says": [
+    "grades open answers against a reference answer and a rubric",
+    "uses a coarser keyword fallback when there is no API key",
+    "is a functional requirement with a stated fallback"
+   ],
+   "use": "want an example of a requirement that names its fallback",
+   "not": [
+    "is graded by a person only"
+   ],
+   "like": [
+    "The gglearn level exam rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn production Node version",
+   "tier": 3,
+   "says": [
+    "runs on Node 20 in production",
+    "means code must avoid newer APIs",
+    "needs a native SQLite package version with a prebuilt binary for that Node"
+   ],
+   "use": "want an example of a constraint that comes from the platform",
+   "not": [
+    "is a feature chosen by the learners"
+   ],
+   "like": [
+    "The gglearn private contest rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn private contest rule",
+   "tier": 4,
+   "says": [
+    "returns a 404 to outsiders",
+    "hides the existence of the contest",
+    "is a privacy requirement written as behaviour"
+   ],
+   "use": "want an example of privacy turned into a testable rule",
+   "not": [
+    "shows the contest to anyone with the link"
+   ],
+   "like": [
+    "The gglearn public contest rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn public contest rule",
+   "tier": 4,
+   "says": [
+    "needs a consent box before joining",
+    "makes name, photo and progress public",
+    "can go from public to private but never back"
+   ],
+   "use": "want an example of consent and an irreversible state change",
+   "not": [
+    "can be made public again by an administrator after going private"
+   ],
+   "like": [
+    "The gglearn private contest rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn photo upload rule",
+   "tier": 4,
+   "says": [
+    "limits uploaded photos by size and type",
+    "rejects SVG files",
+    "is a security requirement as well as a usability one"
+   ],
+   "use": "want an example of an input restriction requirement",
+   "not": [
+    "accepts any file type up to a size limit"
+   ],
+   "like": [
+    "The gglearn public contest rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn offboarding requirement",
+   "tier": 4,
+   "says": [
+    "ends a leaver's access immediately",
+    "is handled by administrators",
+    "is part of the joiner, mover, leaver lifecycle"
+   ],
+   "use": "want an example of a leaver requirement",
+   "not": [
+    "keeps access for a notice period by default"
+   ],
+   "like": [
+    "The ggsocial approver role"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The ggsocial approver role",
+   "tier": 3,
+   "says": [
+    "can sign off a post",
+    "cannot edit the post",
+    "makes the approver different from the person who changed the text"
+   ],
+   "use": "want an example of separation of duties in content approval",
+   "not": [
+    "can edit and publish any post alone"
+   ],
+   "like": [
+    "The ggmoney second person approval"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The ggmoney second person approval",
+   "tier": 4,
+   "says": [
+    "requires a second person to approve a filing",
+    "refuses self-approval",
+    "stops the person who did the work from closing it"
+   ],
+   "use": "want an example of a four-eyes control on a filing",
+   "not": [
+    "lets the preparer close the filing after a review of their own work"
+   ],
+   "like": [
+    "The ggsocial approver role"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The ggsocial platform publishing limit",
+   "tier": 4,
+   "says": [
+    "lets only 45 of 109 platforms publish automatically",
+    "routes 64 platforms with no write API to a manual queue",
+    "shows how platform limits shape the product"
+   ],
+   "use": "want an example of a third party limit written as a requirement",
+   "not": [
+    "lets all 109 platforms publish automatically"
+   ],
+   "like": [
+    "The ggmoney HMRC dependency"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The ggmoney HMRC dependency",
+   "tier": 4,
+   "says": [
+    "depends on HMRC submission",
+    "needs the company's own credentials",
+    "is an integration that must be planned for ownership of credentials"
+   ],
+   "use": "want an example of an integration whose credentials the company holds",
+   "not": [
+    "uses credentials supplied by each customer's accountant"
+   ],
+   "like": [
+    "The ggsocial platform publishing limit"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does a functional requirement describe?",
+   "right": "What the system must do",
+   "wrong": [
+    "How fast the system must respond",
+    "Which budget the project has",
+    "Who funds the project"
+   ],
+   "tier": 1,
+   "why": "Functional requirements state behaviours or functions."
+  },
+  {
+   "q": "Which of these is a non-functional requirement?",
+   "right": "The service must be available 99.9 percent of each month",
+   "wrong": [
+    "A user can reset their password by email",
+    "An administrator can add a new reviewer",
+    "A learner can retake an exam"
+   ],
+   "tier": 1,
+   "why": "Availability is a quality of the system, not a function."
+  },
+  {
+   "q": "What does a user story usually contain?",
+   "right": "A role, an action and a benefit",
+   "wrong": [
+    "A table of database columns",
+    "A list of test results",
+    "A signed contract"
+   ],
+   "tier": 1,
+   "why": "The common form is as a role, I want an action, so that a benefit."
+  },
+  {
+   "q": "What is the purpose of acceptance criteria?",
+   "right": "To decide objectively whether a story is done",
+   "wrong": [
+    "To estimate the story's cost",
+    "To list the team members",
+    "To rank stories by value"
+   ],
+   "tier": 1,
+   "why": "Criteria are checks that give a pass or fail verdict."
+  },
+  {
+   "q": "Who is a stakeholder?",
+   "right": "Anyone affected by or able to influence the system",
+   "wrong": [
+    "Only the person who pays",
+    "Only the developers",
+    "Only people who log in"
+   ],
+   "tier": 1,
+   "why": "Stakeholders include indirect parties such as regulators."
+  },
+  {
+   "q": "Why is the word fast a poor word in a requirement?",
+   "right": "It cannot be measured or tested",
+   "wrong": [
+    "It is too short",
+    "It is a technical term",
+    "It always means a database"
+   ],
+   "tier": 1,
+   "why": "No threshold means no pass or fail test."
+  },
+  {
+   "q": "What is the main aim of traceability?",
+   "right": "To link each requirement to its source, design and tests",
+   "wrong": [
+    "To rank requirements by priority",
+    "To set the project budget",
+    "To approve changes"
+   ],
+   "tier": 1,
+   "why": "Traceability shows coverage and impact."
+  },
+  {
+   "q": "A requirement says the system must be user-friendly. What is the best first improvement?",
+   "right": "State a measurable target, such as the share of new users who finish a task without help",
+   "wrong": [
+    "Ask the developers to decide what it means",
+    "Remove it from the document",
+    "Move it to the glossary"
+   ],
+   "tier": 2,
+   "why": "A measurable criterion makes it testable."
+  },
+  {
+   "q": "What is the difference between validation and verification?",
+   "right": "Validation checks we are building the right thing; verification checks we built it right",
+   "wrong": [
+    "They mean the same thing",
+    "Validation is done only by developers",
+    "Verification is done only by users"
+   ],
+   "tier": 2,
+   "why": "Validation relates to the need; verification relates to the specification."
+  },
+  {
+   "q": "Which MoSCoW category holds items that are explicitly out of scope for this release?",
+   "right": "Won't have this time",
+   "wrong": [
+    "Must have",
+    "Should have",
+    "Could have"
+   ],
+   "tier": 2,
+   "why": "The W records what is deliberately deferred."
+  },
+  {
+   "q": "What is a baseline?",
+   "right": "An approved version of the requirements that changes only through change control",
+   "wrong": [
+    "The lowest priority group",
+    "The first draft",
+    "A list of stakeholders"
+   ],
+   "tier": 2,
+   "why": "Baselines give a fixed reference for later changes."
+  },
+  {
+   "q": "Which technique lets users react to something concrete before it is built?",
+   "right": "Building a prototype",
+   "wrong": [
+    "Writing a glossary",
+    "Adding requirement identifiers",
+    "Running a load test"
+   ],
+   "tier": 2,
+   "why": "Prototypes make needs visible."
+  },
+  {
+   "q": "What does the Given-When-Then format express?",
+   "right": "A starting state, an action and an expected result",
+   "wrong": [
+    "A priority level",
+    "A role and its permissions",
+    "A cost estimate"
+   ],
+   "tier": 2,
+   "why": "It comes from behaviour-driven development."
+  },
+  {
+   "q": "A permissions matrix is useful because it",
+   "right": "shows who may view, create, edit, approve or delete, giving a test for each cell",
+   "wrong": [
+    "lists the servers used",
+    "ranks features by cost",
+    "records the estimates"
+   ],
+   "tier": 2,
+   "why": "Each cell, including denied ones, becomes a test."
+  },
+  {
+   "q": "Why should each requirement have a unique identifier?",
+   "right": "So tests, designs and release notes can refer to the same item",
+   "wrong": [
+    "So the document looks formal",
+    "To set priority",
+    "To record the author's name"
+   ],
+   "tier": 2,
+   "why": "Stable identifiers support traceability."
+  },
+  {
+   "q": "Which of these is an actor in a use case?",
+   "right": "An external payment system that sends a confirmation",
+   "wrong": [
+    "The database index",
+    "A function inside the code",
+    "A line of the main scenario"
+   ],
+   "tier": 2,
+   "why": "Actors are outside the system, and can be systems."
+  },
+  {
+   "q": "Which quality attribute is measured by task success and time to complete for real users?",
+   "right": "Usability",
+   "wrong": [
+    "Scalability",
+    "Portability",
+    "Recovery"
+   ],
+   "tier": 2,
+   "why": "Usability is judged with users on tasks."
+  },
+  {
+   "q": "A team writes: The system shall be secure and easy to use and respond quickly. What is wrong?",
+   "right": "It bundles several vague needs into one untestable statement",
+   "wrong": [
+    "It is too detailed",
+    "It lacks a stakeholder",
+    "It uses the wrong tense"
+   ],
+   "tier": 3,
+   "why": "It is both compound and ambiguous."
+  },
+  {
+   "q": "A story is too big to finish in a sprint. What should the team do first?",
+   "right": "Split it into smaller stories that still deliver value",
+   "wrong": [
+    "Remove its acceptance criteria",
+    "Start it and finish next sprint",
+    "Lower its priority to won't have"
+   ],
+   "tier": 3,
+   "why": "Splitting keeps work small and testable."
+  },
+  {
+   "q": "A stakeholder asks for a new feature after sign-off. What should the analyst do?",
+   "right": "Raise a change request and assess its impact before deciding",
+   "wrong": [
+    "Add it quietly to the baseline",
+    "Refuse without discussion",
+    "Ask the developers to start at once"
+   ],
+   "tier": 3,
+   "why": "Changes to a baseline go through change control."
+  },
+  {
+   "q": "Which statement shows separation of duties?",
+   "right": "The person who approves a post is not the person who changed its text",
+   "wrong": [
+    "One administrator can do every step of a process",
+    "All users share a single account",
+    "Everyone has the same role"
+   ],
+   "tier": 3,
+   "why": "No one person can complete a sensitive process alone."
+  },
+  {
+   "q": "Why include unhappy paths in requirements?",
+   "right": "Failure, invalid input and denied access are where many defects occur",
+   "wrong": [
+    "They make the document longer",
+    "Users always ask for them",
+    "They replace the main scenario"
+   ],
+   "tier": 3,
+   "why": "Alternative flows capture what happens when things go wrong."
+  },
+  {
+   "q": "What does the INVEST checklist test?",
+   "right": "Whether a story is ready: independent, negotiable, valuable, estimable, small, testable",
+   "wrong": [
+    "Whether the budget is enough",
+    "Whether the team is full",
+    "Whether the code compiles"
+   ],
+   "tier": 3,
+   "why": "It is a quality check on stories."
+  },
+  {
+   "q": "Which pair is correctly matched?",
+   "right": "Precondition: true before the use case starts; postcondition: true when it ends",
+   "wrong": [
+    "Precondition: true after it ends; postcondition: true before it starts",
+    "Both describe only error handling",
+    "Both are non-functional"
+   ],
+   "tier": 3,
+   "why": "Preconditions come first, postconditions after."
+  },
+  {
+   "q": "What does backward traceability help you find?",
+   "right": "A feature that has no requirement behind it",
+   "wrong": [
+    "A requirement with no test",
+    "A defect in a test",
+    "The slowest page"
+   ],
+   "tier": 3,
+   "why": "It follows work back to its source."
+  },
+  {
+   "q": "A requirements review is most valuable",
+   "right": "before design begins, because defects are cheapest to fix then",
+   "wrong": [
+    "after release",
+    "only at the end of testing",
+    "only when the budget is cut"
+   ],
+   "tier": 3,
+   "why": "Early defects cost less."
+  },
+  {
+   "q": "What is the best way to document a constraint such as an older production runtime?",
+   "right": "Record it in the requirements with an owner and how it will be verified",
+   "wrong": [
+    "Leave it to the deployment team",
+    "Ignore until deploy day",
+    "Add it to the glossary only"
+   ],
+   "tier": 3,
+   "why": "Constraints belong in the requirements so nobody discovers them late."
+  },
+  {
+   "q": "What is the difference between the definition of done and acceptance criteria?",
+   "right": "The definition of done applies to all stories; acceptance criteria are specific to one story",
+   "wrong": [
+    "They are the same",
+    "Acceptance criteria apply to all stories",
+    "The definition of done is for stakeholders only"
+   ],
+   "tier": 3,
+   "why": "One is a shared quality bar and the other is per story."
+  },
+  {
+   "q": "A requirement says the system must use a particular database product with no reason given. What kind of defect is this?",
+   "right": "Solution bias: it prescribes how rather than what",
+   "wrong": [
+    "Ambiguity",
+    "Conflict",
+    "Incompleteness"
+   ],
+   "tier": 3,
+   "why": "The underlying need should be stated instead."
+  },
+  {
+   "q": "A learner needs 80 percent on a 10 question exam. Which acceptance criterion is correct?",
+   "right": "Given 10 answered questions, when 8 are correct, then the exam is passed and the next level unlocks",
+   "wrong": [
+    "The exam should be hard",
+    "Most learners should pass",
+    "The exam has some questions"
+   ],
+   "tier": 4,
+   "why": "It is specific and testable with numbers."
+  },
+  {
+   "q": "You find two requirements that contradict each other. What should you do?",
+   "right": "Take both to the stakeholders with authority and record the decision",
+   "wrong": [
+    "Choose the cheaper one",
+    "Implement both",
+    "Delete the later one"
+   ],
+   "tier": 4,
+   "why": "Conflicts are resolved by those who own the decision."
+  },
+  {
+   "q": "A requirement says 90 percent of searches finish within two seconds under 500 users. How should it be verified?",
+   "right": "With a load test at the stated load",
+   "wrong": [
+    "By asking users if it feels fast",
+    "By reading the code",
+    "By a design review only"
+   ],
+   "tier": 4,
+   "why": "Measurable criteria need a matching verification method."
+  },
+  {
+   "q": "A platform offers no write interface. What is the right requirement response?",
+   "right": "Capture the limit and specify a manual fallback such as a queue",
+   "wrong": [
+    "Assume it will be added later",
+    "Promise automatic publishing",
+    "Remove the platform silently"
+   ],
+   "tier": 4,
+   "why": "Third party limits shape what can be promised."
+  },
+  {
+   "q": "The business can tolerate one hour of outage but only five minutes of lost data. Which statement is correct?",
+   "right": "The recovery time objective is one hour and the recovery point objective is five minutes",
+   "wrong": [
+    "The recovery time objective is five minutes and the recovery point objective is one hour",
+    "Both are one hour",
+    "Both are five minutes"
+   ],
+   "tier": 4,
+   "why": "RTO is time to restore; RPO is data loss window."
+  },
+  {
+   "q": "A leaver still has access a month after leaving. Which requirement was missing?",
+   "right": "A joiner, mover, leaver process that ends access immediately",
+   "wrong": [
+    "A usability target",
+    "A performance target",
+    "A glossary"
+   ],
+   "tier": 4,
+   "why": "Access that outlives a job is a common risk."
+  },
+  {
+   "q": "Users keep changing their minds when they see the finished work. What practice would have helped most?",
+   "right": "Early prototypes and regular validation with users",
+   "wrong": [
+    "A longer document",
+    "More developers",
+    "A stricter sign-off"
+   ],
+   "tier": 4,
+   "why": "Validation earlier exposes mismatched needs."
+  },
+  {
+   "q": "A traceability matrix shows requirement 12 with no test. What does this mean?",
+   "right": "There is a gap in verification that must be closed",
+   "wrong": [
+    "The requirement can be dropped",
+    "The requirement is low priority",
+    "The test is hidden"
+   ],
+   "tier": 4,
+   "why": "Untested requirements are unverified."
+  },
+  {
+   "q": "Which is the best use of a spike?",
+   "right": "To investigate an unknown so a story can be estimated",
+   "wrong": [
+    "To deliver a feature to users",
+    "To replace acceptance criteria",
+    "To approve a change"
+   ],
+   "tier": 4,
+   "why": "Spikes buy knowledge."
+  },
+  {
+   "q": "The privacy rule says a private contest must not reveal that it exists. How should the system respond to an outsider asking for it?",
+   "right": "Return a not found response, as if it did not exist",
+   "wrong": [
+    "Return a forbidden response",
+    "Return the contest name",
+    "Redirect to the sign in page"
+   ],
+   "tier": 4,
+   "why": "A 404 does not confirm existence."
+  },
+  {
+   "q": "A requirement states the system must handle growth. Which rewrite is best?",
+   "right": "The system must support 10,000 concurrent users with response times unchanged",
+   "wrong": [
+    "The system should be scalable",
+    "The system will grow",
+    "The system is large"
+   ],
+   "tier": 4,
+   "why": "A numeric target is testable."
+  },
+  {
+   "q": "Everyone marks their requirements as must have. What is the best response?",
+   "right": "Introduce a cap or a forced ranking and discuss trade-offs",
+   "wrong": [
+    "Accept all of them",
+    "Reject them all",
+    "Let the developers decide"
+   ],
+   "tier": 5,
+   "why": "Priority inflation removes choice."
+  },
+  {
+   "q": "A signed-off document is found to contain a wrong requirement. What does this show?",
+   "right": "Sign-off gives an agreed reference but does not guarantee correctness",
+   "wrong": [
+    "Sign-off was invalid in law",
+    "The developers made a mistake",
+    "Change control is not needed"
+   ],
+   "tier": 5,
+   "why": "Validation still matters after sign-off."
+  },
+  {
+   "q": "Which question best finds missing requirements?",
+   "right": "What happens when this fails, and who else needs access?",
+   "wrong": [
+    "What colour should it be?",
+    "How many pages does it have?",
+    "Who wrote the document?"
+   ],
+   "tier": 5,
+   "why": "Failures and minor roles are the common gaps."
+  },
+  {
+   "q": "Which statement about attribute-based access control is true?",
+   "right": "It evaluates attributes of user, resource and context, so is more flexible but harder to review",
+   "wrong": [
+    "It is just a list of roles",
+    "It forbids rules based on time",
+    "It requires no testing"
+   ],
+   "tier": 5,
+   "why": "It trades simplicity for flexibility."
+  },
+  {
+   "q": "A security flaw must be fixed today. How should change control handle it?",
+   "right": "Allow an emergency change with a named approver and review it afterwards",
+   "wrong": [
+    "Wait for the next board meeting",
+    "Skip recording it",
+    "Ban the change"
+   ],
+   "tier": 5,
+   "why": "Emergency paths are controlled, not absent."
+  },
+  {
+   "q": "Speed and cost conflict. What should the analyst do?",
+   "right": "Record a trade-off decision with owner and rationale",
+   "wrong": [
+    "Pick whichever is cheaper silently",
+    "Delete both",
+    "Ask testers"
+   ],
+   "tier": 5,
+   "why": "Documented decisions stop the argument reopening."
+  },
+  {
+   "q": "A new feature collects a new type of personal data. When should a privacy impact assessment be done?",
+   "right": "Before design is fixed, so findings can change it",
+   "wrong": [
+    "After release",
+    "Never",
+    "Only on a complaint"
+   ],
+   "tier": 5,
+   "why": "Early review can change the design."
+  },
+  {
+   "q": "You can't estimate a story because an external API is unfamiliar. What is best?",
+   "right": "Run a time-boxed spike and report what you learn",
+   "wrong": [
+    "Guess a number",
+    "Drop the story",
+    "Wait for the vendor to explain"
+   ],
+   "tier": 5,
+   "why": "Spikes reduce uncertainty."
+  },
+  {
+   "q": "Why is a non-functional requirement costly to add late?",
+   "right": "It shapes the architecture, so changing it can mean redesign",
+   "wrong": [
+    "It has no test",
+    "It is optional",
+    "It affects only the user interface"
+   ],
+   "tier": 3,
+   "why": "Qualities cut across the whole system."
+  },
+  {
+   "q": "Which is a good reason to use a story map?",
+   "right": "To see the whole user journey and slice a thin usable release",
+   "wrong": [
+    "To estimate hours",
+    "To record defects",
+    "To list actors"
+   ],
+   "tier": 3,
+   "why": "It arranges stories along the journey."
+  },
+  {
+   "q": "A context diagram shows",
+   "right": "the system as one box with the external actors and data flows around it",
+   "wrong": [
+    "every function inside the system",
+    "the project plan",
+    "the list of test cases"
+   ],
+   "tier": 2,
+   "why": "It fixes the system boundary."
+  },
+  {
+   "q": "A business rule says refunds above a set amount need manager approval. How should it appear in the requirements?",
+   "right": "As a numbered rule with the threshold, the approver role and a test for the denied case",
+   "wrong": [
+    "As a note in the meeting minutes",
+    "As a general statement that approvals are needed",
+    "As part of the glossary only"
+   ],
+   "tier": 4,
+   "why": "A rule needs precise terms to be testable."
+  },
+  {
+   "q": "Why is Given-When-Then useful to testers?",
+   "right": "Each scenario can be turned directly into a test",
+   "wrong": [
+    "It sets the sprint length",
+    "It lists risks",
+    "It ranks stories"
+   ],
+   "tier": 3,
+   "why": "The format is close to executable examples."
+  }
+ ]
+}

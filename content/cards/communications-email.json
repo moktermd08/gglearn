@@ -1,0 +1,2962 @@
+{
+ "slug": "communications-email",
+ "name": "Communications and email",
+ "description": "Notifications, templates, deliverability.",
+ "roles": "",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "growth",
+ "groups": {
+  "auth": "email authentication concept",
+  "dlv": "deliverability concept",
+  "kind": "type of message",
+  "tpl": "template practice",
+  "notif": "notification design practice",
+  "consent": "consent and unsubscribe concept",
+  "queue": "reliable-sending pattern",
+  "chan": "communication channel",
+  "log": "logging and audit practice",
+  "fmt": "email format concept",
+  "a11y": "email accessibility practice",
+  "test": "testing and sandboxing practice",
+  "tone": "customer communication practice",
+  "mk": "Moksy communications fact"
+ },
+ "cards": [
+  {
+   "group": "auth",
+   "subject": "SPF",
+   "tier": 1,
+   "says": [
+    "publishes in a DNS TXT record the servers allowed to send for a domain",
+    "checks the envelope sender domain rather than the visible From address",
+    "stops working for a forwarded message unless the forwarder rewrites the sender"
+   ],
+   "use": "need to list which servers may send mail for your domain",
+   "not": [
+    "signs each message with a private key"
+   ],
+   "like": [
+    "DKIM",
+    "DMARC"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "DKIM",
+   "tier": 1,
+   "says": [
+    "signs selected headers and the body of each message with a private key",
+    "publishes the matching public key in DNS so receivers can verify the signature",
+    "fails verification when something alters the signed body in transit"
+   ],
+   "use": "need receivers to confirm a message was not changed after it left your system",
+   "not": [
+    "lists the IP addresses allowed to send for the domain"
+   ],
+   "like": [
+    "SPF",
+    "DMARC"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "DMARC",
+   "tier": 1,
+   "says": [
+    "tells receivers what to do with mail that fails authentication for the visible From domain",
+    "asks receivers to send reports about mail claiming to be from your domain",
+    "builds on SPF and DKIM rather than replacing them"
+   ],
+   "use": "need to instruct receivers how to treat spoofed mail and see who is sending as you",
+   "not": [
+    "encrypts the message body between servers"
+   ],
+   "like": [
+    "SPF",
+    "DKIM"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "A DKIM selector",
+   "tier": 2,
+   "says": [
+    "lets one domain publish several DKIM public keys side by side",
+    "appears as the s= tag in the DKIM-Signature header",
+    "makes key rotation possible without breaking mail already in flight"
+   ],
+   "use": "need to rotate a signing key without a gap in valid signatures",
+   "not": [
+    "names the receiving mail server"
+   ],
+   "like": [
+    "A DMARC aggregate report"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "DMARC p=none",
+   "tier": 2,
+   "says": [
+    "asks receivers to take no action on failing mail but still send reports",
+    "is the usual starting point when first publishing a DMARC record"
+   ],
+   "use": "are publishing DMARC for the first time and want to see who sends as you before enforcing",
+   "not": [
+    "blocks all mail from the domain"
+   ],
+   "like": [
+    "DMARC p=quarantine",
+    "DMARC p=reject"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "DMARC p=quarantine",
+   "tier": 3,
+   "says": [
+    "asks receivers to treat failing mail as suspicious, typically by placing it in spam",
+    "sits between monitoring only and outright refusal"
+   ],
+   "use": "have fixed your legitimate senders and want failing mail sent to spam first",
+   "not": [
+    "asks receivers to ignore the record"
+   ],
+   "like": [
+    "DMARC p=none",
+    "DMARC p=reject"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "DMARC p=reject",
+   "tier": 3,
+   "says": [
+    "asks receivers to refuse mail that fails DMARC at delivery time",
+    "is the strongest enforcement setting and the most effective against spoofing the domain"
+   ],
+   "use": "have confirmed every legitimate sender passes and want spoofed mail refused outright",
+   "not": [
+    "is safe to switch on before checking third-party senders"
+   ],
+   "like": [
+    "DMARC p=none",
+    "DMARC p=quarantine"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "The Return-Path address",
+   "tier": 3,
+   "says": [
+    "receives bounce messages for a delivery",
+    "is the envelope sender domain that SPF is evaluated against",
+    "can differ from the visible From address when a provider sends on your behalf"
+   ],
+   "use": "need to know where bounces go and which domain SPF checks",
+   "not": [
+    "is the address shown to the reader in the inbox list"
+   ],
+   "like": [
+    "A reply-to address"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "DMARC alignment",
+   "tier": 5,
+   "says": [
+    "requires the SPF or DKIM authenticated domain to match the visible From domain",
+    "can pass through either aligned SPF or aligned DKIM"
+   ],
+   "use": "see SPF pass yet DMARC fail because a provider's bounce domain differs from your From domain",
+   "not": [
+    "is satisfied by any passing SPF result regardless of domain"
+   ],
+   "like": [
+    "SPF",
+    "DKIM"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "A DMARC aggregate report",
+   "tier": 2,
+   "says": [
+    "is an XML summary of mail seen claiming to be from your domain",
+    "shows which sending sources passed or failed SPF and DKIM",
+    "is sent to the address named in the rua tag"
+   ],
+   "use": "need to discover forgotten systems that send mail as your domain",
+   "not": [
+    "contains the full text of each rejected message"
+   ],
+   "like": [
+    "A feedback loop"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "MTA-STS",
+   "tier": 5,
+   "says": [
+    "tells sending servers to require TLS when delivering to your domain",
+    "is published as a DNS record plus a policy file served over HTTPS"
+   ],
+   "use": "want sending servers to refuse to downgrade delivery to your domain to plain text",
+   "not": [
+    "signs outgoing messages with a private key"
+   ],
+   "like": [
+    "DKIM"
+   ]
+  },
+  {
+   "group": "auth",
+   "subject": "A verified sender",
+   "tier": 2,
+   "says": [
+    "proves to a provider that you control an address or domain before it will send as you",
+    "is required by many providers before any mail goes out"
+   ],
+   "use": "set up a new sending provider and it refuses to send from your address",
+   "not": [
+    "is the person who approves marketing copy"
+   ],
+   "like": [
+    "SPF"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "Sender reputation",
+   "tier": 1,
+   "says": [
+    "is a mailbox provider's running judgement of how trustworthy a sender is",
+    "is built from bounces, complaints, spam trap hits and authentication results",
+    "attaches to both the sending domain and the sending IP address"
+   ],
+   "use": "want to understand why good mail suddenly lands in spam",
+   "not": [
+    "is a score you buy from the provider"
+   ],
+   "like": [
+    "A suppression list"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "A hard bounce",
+   "tier": 1,
+   "says": [
+    "is a permanent delivery failure such as a mailbox that does not exist",
+    "should lead to the address being suppressed immediately"
+   ],
+   "use": "see a reply saying the recipient address does not exist",
+   "not": [
+    "clears up on its own after a retry"
+   ],
+   "like": [
+    "A soft bounce"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "A soft bounce",
+   "tier": 2,
+   "says": [
+    "is a temporary failure such as a full mailbox or a busy receiving server",
+    "is retried for a while before the address is treated as failing"
+   ],
+   "use": "see a deferral because the recipient's mailbox is full",
+   "not": [
+    "means the address will never accept mail"
+   ],
+   "like": [
+    "A hard bounce"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "A spam complaint",
+   "tier": 2,
+   "says": [
+    "happens when a recipient marks your message as spam",
+    "is reported back by some mailbox providers through a feedback loop",
+    "damages reputation more than an ordinary unsubscribe does"
+   ],
+   "use": "want to know why people clicking the spam button hurts you more than leaving quietly",
+   "not": [
+    "is a bounce sent by the receiving server"
+   ],
+   "like": [
+    "A hard bounce"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "A feedback loop",
+   "tier": 3,
+   "says": [
+    "forwards complaint reports from a mailbox provider to the sender",
+    "lets the sender remove complaining recipients from future mail"
+   ],
+   "use": "need to learn which recipients reported your mail as spam",
+   "not": [
+    "reports DNS errors in the SPF record"
+   ],
+   "like": [
+    "A DMARC aggregate report",
+    "A spam complaint"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "A suppression list",
+   "tier": 1,
+   "says": [
+    "stores addresses that must never be mailed again",
+    "is checked before every send",
+    "holds hard bounces, complainers and unsubscribes"
+   ],
+   "use": "need a guarantee that a bounced or unsubscribed address is never mailed again",
+   "not": [
+    "is the list of people who opened the last campaign"
+   ],
+   "like": [
+    "List hygiene"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "IP warm-up",
+   "tier": 3,
+   "says": [
+    "raises sending volume gradually so mailbox providers learn the sender's pattern",
+    "starts with the most engaged recipients"
+   ],
+   "use": "move to a brand new sending IP and must send a large volume",
+   "not": [
+    "means sending the entire list on the first day"
+   ],
+   "like": [
+    "A dedicated IP"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "A dedicated IP",
+   "tier": 3,
+   "says": [
+    "gives one sender sole ownership of the reputation of its IP address",
+    "needs steady volume to build and keep a good reputation"
+   ],
+   "use": "send enough steady volume to justify controlling your own reputation",
+   "not": [
+    "removes the need for SPF and DKIM"
+   ],
+   "like": [
+    "A shared IP"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "A shared IP",
+   "tier": 2,
+   "says": [
+    "pools reputation among many senders using the same address",
+    "can be harmed by another customer's bad behaviour"
+   ],
+   "use": "send low or irregular volume and cannot build a reputation alone",
+   "not": [
+    "gives you exclusive control of its reputation"
+   ],
+   "like": [
+    "A dedicated IP"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "A spam trap",
+   "tier": 5,
+   "says": [
+    "is an address real people never use or an abandoned one reused to catch bad list practices",
+    "signals that a list was bought, scraped or never cleaned"
+   ],
+   "use": "see a sudden reputation drop after importing an old purchased list",
+   "not": [
+    "is a folder where spam is delivered for inspection"
+   ],
+   "like": [
+    "A suppression list"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "List hygiene",
+   "tier": 3,
+   "says": [
+    "removes invalid and long-inactive addresses on a regular schedule",
+    "protects reputation by lowering bounce and trap hits"
+   ],
+   "use": "want to lower bounces before a large campaign",
+   "not": [
+    "adds new addresses from purchased lists"
+   ],
+   "like": [
+    "A suppression list"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "Domain separation",
+   "tier": 4,
+   "says": [
+    "sends marketing and transactional mail from different subdomains or streams",
+    "stops a marketing complaint spike from blocking password resets"
+   ],
+   "use": "fear that a campaign problem could block receipts and security alerts",
+   "not": [
+    "means using one address for all mail so reputation is shared"
+   ],
+   "like": [
+    "A dedicated IP"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "Transactional email",
+   "tier": 1,
+   "says": [
+    "is triggered by a user's own action or account event",
+    "is expected by the recipient and does not need marketing consent",
+    "must arrive promptly and reliably"
+   ],
+   "use": "send a receipt, password reset or order confirmation",
+   "not": [
+    "is bulk mail promoting a new product"
+   ],
+   "like": [
+    "Marketing email"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "Marketing email",
+   "tier": 1,
+   "says": [
+    "promotes products, offers or news to a list",
+    "requires consent and a working unsubscribe",
+    "is judged by engagement and complaint rates"
+   ],
+   "use": "want to announce a new feature to everyone who opted in",
+   "not": [
+    "is sent only after a user changes their password"
+   ],
+   "like": [
+    "Transactional email"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A password reset email",
+   "tier": 1,
+   "says": [
+    "contains a single-use link that expires quickly",
+    "is sent with a neutral on-screen confirmation whether or not the address has an account"
+   ],
+   "use": "build the flow that lets a locked-out user regain access",
+   "not": [
+    "includes the user's current password for convenience"
+   ],
+   "like": [
+    "A security alert"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A receipt email",
+   "tier": 1,
+   "says": [
+    "confirms a completed purchase with the amount and a reference",
+    "serves as a record the customer may need later"
+   ],
+   "use": "must give a customer proof of a payment",
+   "not": [
+    "advertises unrelated products as its main content"
+   ],
+   "like": [
+    "A deadline alert"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A security alert",
+   "tier": 2,
+   "says": [
+    "warns about activity such as a new sign-in or a changed credential",
+    "tells the recipient how to secure the account if it was not them",
+    "is sent even to users who unsubscribed from marketing"
+   ],
+   "use": "detect a sign-in from a new device",
+   "not": [
+    "is optional and skipped when the user mutes notifications"
+   ],
+   "like": [
+    "A password reset email"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A deadline alert",
+   "tier": 3,
+   "says": [
+    "warns that a date is approaching before a penalty or expiry",
+    "is useful only if sent early enough to act on"
+   ],
+   "use": "must remind a customer about an approaching filing or payment date",
+   "not": [
+    "thanks the customer after a purchase"
+   ],
+   "like": [
+    "A receipt email"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "A drip campaign",
+   "tier": 2,
+   "says": [
+    "sends a planned sequence of messages spaced over time",
+    "is triggered by an event such as signing up",
+    "stops for a person who has completed the goal"
+   ],
+   "use": "want to guide new users through the first week with timed messages",
+   "not": [
+    "sends one message to everyone at the same moment"
+   ],
+   "like": [
+    "Marketing email"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "An autoresponder",
+   "tier": 1,
+   "says": [
+    "replies automatically to an incoming message or sign-up",
+    "confirms receipt but does not promise a human answer"
+   ],
+   "use": "want people to know their message arrived",
+   "not": [
+    "is a person writing a personal reply"
+   ],
+   "like": [
+    "An out-of-office reply"
+   ]
+  },
+  {
+   "group": "kind",
+   "subject": "An out-of-office reply",
+   "tier": 3,
+   "says": [
+    "tells senders that the recipient is away and when they return",
+    "should be sent only once per sender to avoid reply loops",
+    "is marked as automatic so other systems do not answer it"
+   ],
+   "use": "are away and want people to know who covers for you",
+   "not": [
+    "should be sent for every message from the same sender"
+   ],
+   "like": [
+    "An autoresponder"
+   ]
+  },
+  {
+   "group": "tpl",
+   "subject": "A template placeholder",
+   "tier": 1,
+   "says": [
+    "is a named slot filled with real data at send time",
+    "keeps wording in one place while names and numbers vary"
+   ],
+   "use": "need one message design to carry each person's name and invoice number",
+   "not": [
+    "is a hard-coded value typed into every message"
+   ],
+   "like": [
+    "A default value"
+   ]
+  },
+  {
+   "group": "tpl",
+   "subject": "Output escaping",
+   "tier": 2,
+   "says": [
+    "converts markup characters in user data into harmless text",
+    "stops a name containing HTML from injecting content into the message"
+   ],
+   "use": "insert a customer-supplied name into an HTML email",
+   "not": [
+    "removes the need to validate the recipient address"
+   ],
+   "like": [
+    "Header injection protection"
+   ]
+  },
+  {
+   "group": "tpl",
+   "subject": "A default value",
+   "tier": 2,
+   "says": [
+    "supplies fallback text when a variable is missing",
+    "prevents a message from reading Hello , with a blank name"
+   ],
+   "use": "know some records have no first name",
+   "not": [
+    "hides the failure by skipping the send"
+   ],
+   "like": [
+    "A template placeholder"
+   ]
+  },
+  {
+   "group": "tpl",
+   "subject": "A shared layout",
+   "tier": 2,
+   "says": [
+    "wraps many templates in the same header, footer and styling",
+    "lets a legal footer be fixed in one file"
+   ],
+   "use": "want every message to carry the same footer and brand styling",
+   "not": [
+    "is a separate copy of each template per language"
+   ],
+   "like": [
+    "A template placeholder"
+   ]
+  },
+  {
+   "group": "tpl",
+   "subject": "Template versioning",
+   "tier": 5,
+   "says": [
+    "records which template revision produced each sent message",
+    "lets support reproduce what a customer actually received"
+   ],
+   "use": "need to prove exactly what wording a customer saw last month",
+   "not": [
+    "overwrites old wording so history is lost"
+   ],
+   "like": [
+    "A sample-data preview"
+   ]
+  },
+  {
+   "group": "tpl",
+   "subject": "A locale-specific template",
+   "tier": 3,
+   "says": [
+    "selects wording, date and number formats for the recipient's language",
+    "falls back to a default language when a translation is missing"
+   ],
+   "use": "serve customers in several languages",
+   "not": [
+    "translates by running the English text through a regex"
+   ],
+   "like": [
+    "A default value"
+   ]
+  },
+  {
+   "group": "tpl",
+   "subject": "A sample-data preview",
+   "tier": 3,
+   "says": [
+    "renders a template with realistic fake data before it is sent",
+    "catches broken placeholders and long names that break layout"
+   ],
+   "use": "want a non-developer to check wording before release",
+   "not": [
+    "sends the template to real customers as a test"
+   ],
+   "like": [
+    "A local mail catcher"
+   ]
+  },
+  {
+   "group": "tpl",
+   "subject": "Header injection protection",
+   "tier": 5,
+   "says": [
+    "rejects line breaks in values placed into subjects and recipient headers",
+    "stops an attacker adding extra headers or recipients through a form field"
+   ],
+   "use": "let users type a value that ends up in a subject line or Reply-To",
+   "not": [
+    "escapes angle brackets in the message body only"
+   ],
+   "like": [
+    "Output escaping"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "A digest",
+   "tier": 2,
+   "says": [
+    "batches several related events into one message",
+    "lowers volume for events that are not urgent"
+   ],
+   "use": "have many low-urgency updates for one person in a day",
+   "not": [
+    "sends each event instantly"
+   ],
+   "like": [
+    "A threshold alert"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "A threshold alert",
+   "tier": 3,
+   "says": [
+    "fires when a measure crosses a set level instead of on every change",
+    "can use several graded levels so the warning comes before the limit is hit"
+   ],
+   "use": "want to warn a customer before they run out of an allowance",
+   "not": [
+    "fires on every single change"
+   ],
+   "like": [
+    "A digest"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "An actionable message",
+   "tier": 2,
+   "says": [
+    "says what happened, what the person should do and who to contact",
+    "lets the reader act without searching elsewhere"
+   ],
+   "use": "want a message that reduces follow-up tickets",
+   "not": [
+    "only states that something happened"
+   ],
+   "like": [
+    "Notification fatigue"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "Quiet hours",
+   "tier": 2,
+   "says": [
+    "hold non-urgent notifications during a person's rest period",
+    "let urgent security messages through"
+   ],
+   "use": "want to avoid waking users for low-priority updates",
+   "not": [
+    "delay every message including security alerts"
+   ],
+   "like": [
+    "A per-thread mute"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "Notification severity levels",
+   "tier": 3,
+   "says": [
+    "rank messages so urgent ones use faster, louder channels",
+    "decide which messages can be batched and which cannot"
+   ],
+   "use": "must decide whether an event warrants SMS or only an in-app badge",
+   "not": [
+    "are the same for every event"
+   ],
+   "like": [
+    "Quiet hours"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "Alert deduplication",
+   "tier": 5,
+   "says": [
+    "collapses repeats of the same underlying problem into one alert",
+    "uses a key such as the resource and condition"
+   ],
+   "use": "see the same failure generate hundreds of messages",
+   "not": [
+    "deletes alerts without recording them"
+   ],
+   "like": [
+    "A digest"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "An escalation path",
+   "tier": 4,
+   "says": [
+    "moves an unacknowledged alert to a second person or channel after a wait",
+    "prevents a critical alert from dying in one unread inbox"
+   ],
+   "use": "need a critical alert to reach someone who is not responding",
+   "not": [
+    "resends the alert to the same person forever"
+   ],
+   "like": [
+    "Alert deduplication"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "Notification fatigue",
+   "tier": 2,
+   "says": [
+    "occurs when frequent low-value messages train people to ignore all of them",
+    "is a failure of volume and relevance rather than delivery"
+   ],
+   "use": "notice users disable every notification after a noisy week",
+   "not": [
+    "is cured by sending more reminders"
+   ],
+   "like": [
+    "An actionable message"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "A per-thread mute",
+   "tier": 2,
+   "says": [
+    "silences notifications for one conversation while leaving others active",
+    "is a user preference applied before a notification is queued"
+   ],
+   "use": "want users to stop alerts for one busy conversation only",
+   "not": [
+    "turns off all notifications for the account"
+   ],
+   "like": [
+    "Quiet hours"
+   ]
+  },
+  {
+   "group": "notif",
+   "subject": "An aggregated unread count",
+   "tier": 3,
+   "says": [
+    "shows one total of unread items across conversations",
+    "is an in-app signal that avoids sending an email for each message"
+   ],
+   "use": "want a badge that tells a user how much is waiting",
+   "not": [
+    "is sent to the user by SMS every minute"
+   ],
+   "like": [
+    "A digest"
+   ]
+  },
+  {
+   "group": "consent",
+   "subject": "Opt-in consent",
+   "tier": 1,
+   "says": [
+    "records that a person agreed to receive a kind of message",
+    "is given by an action such as ticking an unticked box"
+   ],
+   "use": "collect addresses for a newsletter",
+   "not": [
+    "is assumed because an address was found online"
+   ],
+   "like": [
+    "Double opt-in"
+   ]
+  },
+  {
+   "group": "consent",
+   "subject": "Double opt-in",
+   "tier": 2,
+   "says": [
+    "sends a confirmation link and subscribes only after it is clicked",
+    "proves the address belongs to the person who signed up",
+    "reduces typos and spam trap addresses on a list"
+   ],
+   "use": "must be sure an address is real and owned by the subscriber",
+   "not": [
+    "subscribes the address before any confirmation"
+   ],
+   "like": [
+    "Opt-in consent"
+   ]
+  },
+  {
+   "group": "consent",
+   "subject": "An unsubscribe link",
+   "tier": 1,
+   "says": [
+    "is a visible link in marketing mail that ends future messages",
+    "must work without logging in or paying"
+   ],
+   "use": "send marketing mail and need to let people leave easily",
+   "not": [
+    "is hidden in tiny grey text to discourage use"
+   ],
+   "like": [
+    "A preference center"
+   ]
+  },
+  {
+   "group": "consent",
+   "subject": "The List-Unsubscribe header",
+   "tier": 3,
+   "says": [
+    "lets mail clients show their own unsubscribe button",
+    "carries a mailto or https address for the request"
+   ],
+   "use": "want Gmail-style clients to offer a native unsubscribe control",
+   "not": [
+    "is displayed in the body of the message"
+   ],
+   "like": [
+    "One-click unsubscribe"
+   ]
+  },
+  {
+   "group": "consent",
+   "subject": "One-click unsubscribe",
+   "tier": 4,
+   "says": [
+    "lets a client unsubscribe the user with a single POST request",
+    "is signalled by a List-Unsubscribe-Post header",
+    "needs no confirmation page for the user"
+   ],
+   "use": "must support bulk-sender requirements for easy opt-out",
+   "not": [
+    "requires the user to log in first"
+   ],
+   "like": [
+    "The List-Unsubscribe header"
+   ]
+  },
+  {
+   "group": "consent",
+   "subject": "A preference center",
+   "tier": 2,
+   "says": [
+    "lets people choose topics and frequency instead of leaving entirely",
+    "reduces full unsubscribes by offering a lighter option"
+   ],
+   "use": "want to keep a subscriber who only dislikes the frequency",
+   "not": [
+    "removes the address from every list at once"
+   ],
+   "like": [
+    "An unsubscribe link"
+   ]
+  },
+  {
+   "group": "consent",
+   "subject": "A consent record",
+   "tier": 2,
+   "says": [
+    "stores who agreed, to what, when and through which form",
+    "is evidence if consent is ever questioned"
+   ],
+   "use": "must prove a person agreed to receive marketing",
+   "not": [
+    "is a screenshot kept on a laptop"
+   ],
+   "like": [
+    "A suppression list"
+   ]
+  },
+  {
+   "group": "consent",
+   "subject": "The STOP keyword",
+   "tier": 2,
+   "says": [
+    "lets an SMS recipient opt out by replying with a single word",
+    "must be honoured by ending further marketing texts to that number"
+   ],
+   "use": "send marketing text messages",
+   "not": [
+    "is ignored if the person opted in earlier"
+   ],
+   "like": [
+    "An unsubscribe link"
+   ]
+  },
+  {
+   "group": "consent",
+   "subject": "A transactional exemption",
+   "tier": 5,
+   "says": [
+    "allows service messages without marketing consent",
+    "does not cover promotional content added to a service message"
+   ],
+   "use": "are tempted to add a discount banner to a receipt",
+   "not": [
+    "lets you send promotions to anyone who bought once"
+   ],
+   "like": [
+    "Opt-in consent"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "The outbox pattern",
+   "tier": 2,
+   "says": [
+    "stores the message in your own database before any delivery attempt",
+    "lets a worker deliver it later",
+    "avoids losing the message if the process crashes between saving and sending"
+   ],
+   "use": "want a send to survive a provider outage or a crash",
+   "not": [
+    "calls the provider inline and ignores the failure"
+   ],
+   "like": [
+    "A retry with backoff"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "A retry with backoff",
+   "tier": 2,
+   "says": [
+    "waits longer between attempts after each failure",
+    "avoids hammering a provider that is already struggling"
+   ],
+   "use": "keep failing against a provider that is slow",
+   "not": [
+    "retries instantly in a tight loop"
+   ],
+   "like": [
+    "The outbox pattern"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "Jitter",
+   "tier": 4,
+   "says": [
+    "adds randomness to retry delays",
+    "stops many clients retrying at the same instant"
+   ],
+   "use": "see retries from many workers arriving in synchronised waves",
+   "not": [
+    "makes the retry delay constant"
+   ],
+   "like": [
+    "A retry with backoff"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "A dead state",
+   "tier": 3,
+   "says": [
+    "marks an item as given up after a set number of failed attempts",
+    "puts the item in front of a person instead of retrying forever"
+   ],
+   "use": "need failures to be visible rather than silent loops",
+   "not": [
+    "deletes the item to keep the queue short"
+   ],
+   "like": [
+    "A retry with backoff"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "An idempotency key",
+   "tier": 3,
+   "says": [
+    "identifies one logical send so a repeat does it only once",
+    "protects against duplicates when a request or event is retried"
+   ],
+   "use": "fear a retry will email the same customer twice",
+   "not": [
+    "is regenerated on every retry attempt"
+   ],
+   "like": [
+    "At-least-once delivery"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "At-least-once delivery",
+   "tier": 3,
+   "says": [
+    "guarantees a message is delivered one or more times",
+    "means receivers must tolerate duplicates"
+   ],
+   "use": "design a queue that never loses a message",
+   "not": [
+    "promises that no duplicate can ever occur"
+   ],
+   "like": [
+    "An idempotency key"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "Provider rate limits",
+   "tier": 3,
+   "says": [
+    "cap how many messages a provider accepts in a period",
+    "answer excess requests with a rate-limit error that should trigger a slower retry"
+   ],
+   "use": "see rejections when a burst of mail is submitted",
+   "not": [
+    "are removed by retrying faster"
+   ],
+   "like": [
+    "A token bucket"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "A token bucket",
+   "tier": 4,
+   "says": [
+    "allows short bursts up to its capacity while refilling at a steady rate",
+    "spends one token per message sent"
+   ],
+   "use": "want to permit a burst but cap the sustained sending speed",
+   "not": [
+    "blocks every request after the first minute"
+   ],
+   "like": [
+    "Provider rate limits"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "Queue depth",
+   "tier": 3,
+   "says": [
+    "counts messages waiting to be sent",
+    "rising steadily signals that sending is slower than creation"
+   ],
+   "use": "want an early sign that delivery is backing up",
+   "not": [
+    "measures how many recipients opened the mail"
+   ],
+   "like": [
+    "A dead state"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "A priority queue",
+   "tier": 5,
+   "says": [
+    "lets urgent messages overtake bulk ones",
+    "keeps password resets from waiting behind a newsletter"
+   ],
+   "use": "must send a security code while a large campaign is running",
+   "not": [
+    "sends in strict arrival order whatever the type"
+   ],
+   "like": [
+    "Domain separation"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "Per-domain throttling",
+   "tier": 5,
+   "says": [
+    "limits how fast mail goes to each receiving domain",
+    "follows the pace a mailbox provider tolerates"
+   ],
+   "use": "get temporary deferrals from one large mailbox provider during a campaign",
+   "not": [
+    "sends everything to one domain at once to finish sooner"
+   ],
+   "like": [
+    "Provider rate limits"
+   ]
+  },
+  {
+   "group": "queue",
+   "subject": "A circuit breaker",
+   "tier": 5,
+   "says": [
+    "stops calls to a failing provider for a cool-off period",
+    "lets queued mail wait or switch to a fallback route"
+   ],
+   "use": "keep a failing provider from slowing every worker",
+   "not": [
+    "retries each message more aggressively"
+   ],
+   "like": [
+    "A retry with backoff"
+   ]
+  },
+  {
+   "group": "chan",
+   "subject": "An in-app notification",
+   "tier": 1,
+   "says": [
+    "appears inside the product while the person uses it",
+    "suits low-urgency news that can wait until the next visit"
+   ],
+   "use": "have a minor update that does not need to reach someone outside the product",
+   "not": [
+    "reaches users who never open the app"
+   ],
+   "like": [
+    "Email"
+   ]
+  },
+  {
+   "group": "chan",
+   "subject": "Email",
+   "tier": 1,
+   "says": [
+    "reaches people outside the product and leaves a durable record",
+    "carries long content and attachments",
+    "can sit unread for days"
+   ],
+   "use": "need a record the customer can keep and search",
+   "not": [
+    "is guaranteed to be read within seconds"
+   ],
+   "like": [
+    "SMS"
+   ]
+  },
+  {
+   "group": "chan",
+   "subject": "SMS",
+   "tier": 1,
+   "says": [
+    "reaches a phone without an app or internet data",
+    "is short and has per-message cost",
+    "is best kept for time-sensitive or verification messages"
+   ],
+   "use": "need a short message to cut through, such as a delivery code",
+   "not": [
+    "suits long documents with attachments"
+   ],
+   "like": [
+    "Email",
+    "A push notification"
+   ]
+  },
+  {
+   "group": "chan",
+   "subject": "A push notification",
+   "tier": 2,
+   "says": [
+    "is delivered to an installed app through the platform's service",
+    "can be switched off by the user in device settings"
+   ],
+   "use": "want an immediate alert to people who installed your app",
+   "not": [
+    "works for people without the app installed"
+   ],
+   "like": [
+    "SMS"
+   ]
+  },
+  {
+   "group": "chan",
+   "subject": "A voice call",
+   "tier": 4,
+   "says": [
+    "is a high-intrusion channel for the most critical alerts",
+    "suits events needing immediate human attention"
+   ],
+   "use": "have an outage alert nobody has acknowledged by other channels",
+   "not": [
+    "is the right default for routine updates"
+   ],
+   "like": [
+    "SMS"
+   ]
+  },
+  {
+   "group": "chan",
+   "subject": "A status page",
+   "tier": 2,
+   "says": [
+    "publishes incident updates for everyone at one address",
+    "reduces repeated individual enquiries during an outage"
+   ],
+   "use": "face an outage with many customers asking the same question",
+   "not": [
+    "is a private message to one customer"
+   ],
+   "like": [
+    "An in-app notification"
+   ]
+  },
+  {
+   "group": "chan",
+   "subject": "Channel fallback",
+   "tier": 4,
+   "says": [
+    "moves to a second channel when the first fails or is not read in time",
+    "is chosen by the severity of the message"
+   ],
+   "use": "need a time-limited approval to reach someone who ignores email",
+   "not": [
+    "sends every channel at once for all messages"
+   ],
+   "like": [
+    "An escalation path"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "An email log record",
+   "tier": 2,
+   "says": [
+    "stores recipient, template, time and delivery status for each message",
+    "lets support answer where a message went"
+   ],
+   "use": "get a ticket saying a customer never received a message",
+   "not": [
+    "stores the full unredacted body of every message forever"
+   ],
+   "like": [
+    "An audit trail"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "A provider message id",
+   "tier": 3,
+   "says": [
+    "identifies a message at the provider",
+    "links later webhook events back to the original send",
+    "can be used to deduplicate repeated events"
+   ],
+   "use": "need to match a bounce event to the record you created",
+   "not": [
+    "is the same for every message in a campaign"
+   ],
+   "like": [
+    "A correlation id"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "A delivery status lifecycle",
+   "tier": 3,
+   "says": [
+    "moves a message through states such as queued, sent, delivered and bounced",
+    "is updated by events reported back from the provider"
+   ],
+   "use": "need to show support whether a message is waiting or failed",
+   "not": [
+    "is one flag set true when the send function returns"
+   ],
+   "like": [
+    "An email log record"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "An audit trail",
+   "tier": 2,
+   "says": [
+    "records who was notified, when and why",
+    "is append-only so history cannot be quietly edited"
+   ],
+   "use": "must show an auditor that a legal notice was sent",
+   "not": [
+    "is rewritten whenever a status changes"
+   ],
+   "like": [
+    "An email log record"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Redaction in logs",
+   "tier": 5,
+   "says": [
+    "masks personal data and secrets before they are stored",
+    "keeps tokens and full addresses out of long-lived logs"
+   ],
+   "use": "log enough to debug without storing reset links",
+   "not": [
+    "writes the whole message body to the log"
+   ],
+   "like": [
+    "Log retention"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Log retention",
+   "tier": 4,
+   "says": [
+    "sets how long delivery records are kept before deletion",
+    "balances support and audit needs against privacy"
+   ],
+   "use": "decide how long to keep records of sent messages",
+   "not": [
+    "keeps everything forever by default"
+   ],
+   "like": [
+    "Redaction in logs"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "A correlation id",
+   "tier": 4,
+   "says": [
+    "ties together log lines from several services for one request",
+    "follows a notification from the triggering action through to the send"
+   ],
+   "use": "trace why one action produced no email",
+   "not": [
+    "is the address of the recipient"
+   ],
+   "like": [
+    "A provider message id"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "A dead item review",
+   "tier": 4,
+   "says": [
+    "has a person inspect messages that exhausted their retries",
+    "looks for patterns such as one bad template or one failing provider"
+   ],
+   "use": "see the dead count growing",
+   "not": [
+    "clears the queue without reading it"
+   ],
+   "like": [
+    "A dead state"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "A plain-text part",
+   "tier": 1,
+   "says": [
+    "carries the message as text without markup",
+    "is shown by clients that cannot or will not render HTML",
+    "lowers the chance of being flagged as spam when it matches the HTML"
+   ],
+   "use": "want the message to read in any client and on a watch",
+   "not": [
+    "is optional and can contain different wording than the HTML"
+   ],
+   "like": [
+    "An HTML part"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "An HTML part",
+   "tier": 2,
+   "says": [
+    "carries the styled version of the message",
+    "needs inline styles and simple structure to render across clients"
+   ],
+   "use": "want a branded layout with images and buttons",
+   "not": [
+    "can safely use any modern web layout feature"
+   ],
+   "like": [
+    "A plain-text part"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "multipart/alternative",
+   "tier": 3,
+   "says": [
+    "packages the text and HTML versions of one message together",
+    "lets the client choose which version to display"
+   ],
+   "use": "send both a text and an HTML version in one email",
+   "not": [
+    "attaches the files to the message"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "Inline CSS",
+   "tier": 3,
+   "says": [
+    "places style rules on each element instead of in a shared stylesheet",
+    "survives clients that strip or ignore head styles"
+   ],
+   "use": "see styles disappear in a webmail client",
+   "not": [
+    "relies on external stylesheet links"
+   ],
+   "like": [
+    "Table layout"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "Table layout",
+   "tier": 3,
+   "says": [
+    "uses nested tables for structure because email clients render them predictably",
+    "avoids reliance on newer layout features that some clients ignore"
+   ],
+   "use": "need a multi-column email that renders in older clients",
+   "not": [
+    "uses CSS grid for all structure"
+   ],
+   "like": [
+    "Inline CSS"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "Preheader text",
+   "tier": 3,
+   "says": [
+    "is the snippet shown after the subject in the inbox list",
+    "can be hidden in the body so it does not appear twice"
+   ],
+   "use": "want to control the line of preview text next to the subject",
+   "not": [
+    "is the name shown as the sender"
+   ],
+   "like": [
+    "A subject line"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "A subject line",
+   "tier": 1,
+   "says": [
+    "is the first line a recipient reads in the inbox",
+    "should say plainly what the message is about"
+   ],
+   "use": "need people to understand the message before opening",
+   "not": [
+    "works best when written in capital letters"
+   ],
+   "like": [
+    "Preheader text"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "A reply-to address",
+   "tier": 2,
+   "says": [
+    "is where replies go when it differs from the sender",
+    "can send answers to a monitored team inbox"
+   ],
+   "use": "send from a system address but want answers to reach support",
+   "not": [
+    "is where bounce messages are delivered"
+   ],
+   "like": [
+    "The Return-Path address"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "A tracking pixel",
+   "tier": 5,
+   "says": [
+    "is a tiny remote image that signals an open when loaded",
+    "makes open counts unreliable because clients may preload images"
+   ],
+   "use": "need to explain why open rates are an unreliable measure",
+   "not": [
+    "measures clicks on links"
+   ],
+   "like": [
+    "Link tracking"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "Link tracking",
+   "tier": 4,
+   "says": [
+    "rewrites links through a redirect so clicks can be counted",
+    "can hurt trust when the visible and real link domains differ"
+   ],
+   "use": "want to count clicks on a campaign link",
+   "not": [
+    "counts how many times the message was opened"
+   ],
+   "like": [
+    "A tracking pixel"
+   ]
+  },
+  {
+   "group": "fmt",
+   "subject": "Image blocking",
+   "tier": 3,
+   "says": [
+    "hides remote images until the reader allows them",
+    "is why alt text and a text fallback matter"
+   ],
+   "use": "find that key information inside an image is missing for many readers",
+   "not": [
+    "is switched off in every client by default"
+   ],
+   "like": [
+    "A tracking pixel"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Alt text",
+   "tier": 1,
+   "says": [
+    "describes an image for screen readers and when images are blocked",
+    "should be empty for a purely decorative image"
+   ],
+   "use": "include an image that carries meaning",
+   "not": [
+    "is the file name of the image"
+   ],
+   "like": [
+    "Descriptive link text"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Descriptive link text",
+   "tier": 2,
+   "says": [
+    "says where a link goes or what it does",
+    "avoids click here as the only link label"
+   ],
+   "use": "let a screen reader user pick links from a list",
+   "not": [
+    "repeats the full URL as the label"
+   ],
+   "like": [
+    "Alt text"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Colour contrast",
+   "tier": 1,
+   "says": [
+    "makes text readable against its background",
+    "is checked with a contrast ratio against a standard"
+   ],
+   "use": "use light grey text on white for a footer",
+   "not": [
+    "is satisfied by any two different colours"
+   ],
+   "like": [
+    "Not relying on colour alone"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Not relying on colour alone",
+   "tier": 3,
+   "says": [
+    "adds a text label or icon next to colour cues",
+    "helps readers who cannot tell the colours apart"
+   ],
+   "use": "mark an overdue amount in red",
+   "not": [
+    "uses red for errors and nothing else"
+   ],
+   "like": [
+    "Colour contrast"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Semantic headings",
+   "tier": 3,
+   "says": [
+    "use real heading elements instead of bold styled text",
+    "let screen reader users move through sections"
+   ],
+   "use": "structure a long newsletter so it can be skimmed by assistive technology",
+   "not": [
+    "are chosen by size so the visual look matches"
+   ],
+   "like": [
+    "Alt text"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A language attribute",
+   "tier": 3,
+   "says": [
+    "tells assistive technology which language to pronounce",
+    "prevents a screen reader reading text with the wrong accent"
+   ],
+   "use": "send a message in a language different from the reader's default",
+   "not": [
+    "is needed only for right-to-left scripts"
+   ],
+   "like": [
+    "A locale-specific template"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Presentation role on layout tables",
+   "tier": 4,
+   "says": [
+    "tells assistive technology a table is only for layout",
+    "stops a screen reader announcing rows and columns"
+   ],
+   "use": "use a table to position a header and footer",
+   "not": [
+    "is needed for real data tables"
+   ],
+   "like": [
+    "Table layout"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Touch target size",
+   "tier": 4,
+   "says": [
+    "gives buttons enough height and spacing to tap accurately",
+    "helps people with limited dexterity and everyone on a small screen"
+   ],
+   "use": "design a button that readers will tap on a phone",
+   "not": [
+    "is solved by shrinking the button text"
+   ],
+   "like": [
+    "Colour contrast"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "An image-only email",
+   "tier": 4,
+   "says": [
+    "leaves the message unreadable when images are blocked or a screen reader is used",
+    "often scores worse with spam filters"
+   ],
+   "use": "are given a design supplied as one large picture",
+   "not": [
+    "is the most accessible way to keep fonts exact"
+   ],
+   "like": [
+    "Alt text"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Plain language",
+   "tier": 2,
+   "says": [
+    "uses short sentences and common words",
+    "helps readers with limited time, cognitive load or a second language"
+   ],
+   "use": "write a message many people will read on a phone while busy",
+   "not": [
+    "uses internal jargon to sound precise"
+   ],
+   "like": [
+    "Colour contrast"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "Sandbox mode",
+   "tier": 1,
+   "says": [
+    "accepts send requests but does not deliver to real recipients",
+    "lets you test integration code without sending live mail"
+   ],
+   "use": "want to check the send code without emailing customers",
+   "not": [
+    "delivers mail to a small percentage of real customers"
+   ],
+   "like": [
+    "A local mail catcher"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A local mail catcher",
+   "tier": 2,
+   "says": [
+    "receives outgoing mail on a local port and shows it in a web page",
+    "never forwards the message to the real recipient"
+   ],
+   "use": "develop locally and want to see the real rendered email",
+   "not": [
+    "delivers the message through the production provider"
+   ],
+   "like": [
+    "Sandbox mode"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A recipient allow-list",
+   "tier": 3,
+   "says": [
+    "limits non-production sends to approved addresses or domains",
+    "protects real customers from test mail"
+   ],
+   "use": "run a staging copy that holds real customer data",
+   "not": [
+    "lets any address receive staging mail"
+   ],
+   "like": [
+    "Sandbox mode"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "Provider test credentials",
+   "tier": 3,
+   "says": [
+    "keep test sends separate from the live account's reputation",
+    "are distinct keys from the production ones"
+   ],
+   "use": "need a CI job to exercise the send path safely",
+   "not": [
+    "reuse the production API key to save setup"
+   ],
+   "like": [
+    "A recipient allow-list"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A seed list",
+   "tier": 5,
+   "says": [
+    "is a set of test mailboxes at major providers used to check inbox placement",
+    "shows whether a campaign lands in inbox or spam before the main send"
+   ],
+   "use": "want to see where a campaign lands before the full send",
+   "not": [
+    "is the list of subscribers who clicked last time"
+   ],
+   "like": [
+    "A spam score check"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A client rendering test",
+   "tier": 3,
+   "says": [
+    "shows how a message appears across mail clients and devices",
+    "finds broken layouts in dark mode and with images blocked"
+   ],
+   "use": "must confirm a template looks right in many clients",
+   "not": [
+    "only needs a look in one browser"
+   ],
+   "like": [
+    "A sample-data preview"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A spam score check",
+   "tier": 4,
+   "says": [
+    "analyses content and headers for features filters dislike",
+    "flags problems such as a missing plain-text part"
+   ],
+   "use": "want to catch spam-like content before sending",
+   "not": [
+    "guarantees inbox placement when it passes"
+   ],
+   "like": [
+    "A seed list"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A webhook contract test",
+   "tier": 4,
+   "says": [
+    "checks that your handler copes with the provider's real event payloads",
+    "catches a changed field before it breaks production"
+   ],
+   "use": "fear a provider change will break event handling",
+   "not": [
+    "replays the same payload against the live recipient list"
+   ],
+   "like": [
+    "Sandbox mode"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A failure-path test",
+   "tier": 4,
+   "says": [
+    "simulates bounces, timeouts and rate-limit errors",
+    "proves that retries, the dead state and suppression behave"
+   ],
+   "use": "want to know the queue copes when the provider is down",
+   "not": [
+    "tests only the success case"
+   ],
+   "like": [
+    "A webhook contract test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A staged rollout",
+   "tier": 5,
+   "says": [
+    "sends a new template or flow to a small share first",
+    "limits the damage if something is wrong"
+   ],
+   "use": "change a high-volume template and fear a rendering bug",
+   "not": [
+    "sends to everyone at once to gain feedback quickly"
+   ]
+  },
+  {
+   "group": "tone",
+   "subject": "Leading with the outcome",
+   "tier": 1,
+   "says": [
+    "puts the result or required action at the top of the message",
+    "lets a busy reader act without reading the rest"
+   ],
+   "use": "write to a customer who needs to know what to do by Friday",
+   "not": [
+    "opens with a long company introduction"
+   ],
+   "like": [
+    "Naming the next step"
+   ]
+  },
+  {
+   "group": "tone",
+   "subject": "Naming the next step",
+   "tier": 2,
+   "says": [
+    "tells the reader exactly what to do and by when",
+    "includes a single clear route to do it"
+   ],
+   "use": "want fewer reply-and-ask follow-ups",
+   "not": [
+    "leaves it to the customer to guess"
+   ],
+   "like": [
+    "Leading with the outcome"
+   ]
+  },
+  {
+   "group": "tone",
+   "subject": "A specific apology",
+   "tier": 3,
+   "says": [
+    "names what went wrong and its effect on the customer",
+    "states what is being done to fix it"
+   ],
+   "use": "must apologise after a billing error",
+   "not": [
+    "says sorry for any inconvenience this may have caused"
+   ],
+   "like": [
+    "Avoiding blame"
+   ]
+  },
+  {
+   "group": "tone",
+   "subject": "Avoiding blame",
+   "tier": 3,
+   "says": [
+    "describes what happened without accusing the customer or a named colleague",
+    "keeps the focus on the fix"
+   ],
+   "use": "write after a customer mistake caused the problem",
+   "not": [
+    "points out that the customer should have read the terms"
+   ],
+   "like": [
+    "A specific apology"
+   ]
+  },
+  {
+   "group": "tone",
+   "subject": "An honest timeline",
+   "tier": 4,
+   "says": [
+    "gives a realistic time or says when the next update will come",
+    "avoids promising a fix time you cannot control"
+   ],
+   "use": "cannot say when an outage will end",
+   "not": [
+    "promises one hour to calm people down"
+   ],
+   "like": [
+    "An incident update cadence"
+   ]
+  },
+  {
+   "group": "tone",
+   "subject": "An incident update cadence",
+   "tier": 4,
+   "says": [
+    "promises updates at set intervals even when there is nothing new",
+    "stops customers chasing for news"
+   ],
+   "use": "run a long outage with many customers waiting",
+   "not": [
+    "goes silent until the fix is complete"
+   ],
+   "like": [
+    "An honest timeline"
+   ]
+  },
+  {
+   "group": "tone",
+   "subject": "False urgency",
+   "tier": 3,
+   "says": [
+    "pressures the reader with deadlines that do not exist",
+    "erodes trust and trains people to ignore genuine urgent messages"
+   ],
+   "use": "are tempted to write ACT NOW on a routine reminder",
+   "not": [
+    "raises response rates with no cost"
+   ],
+   "like": [
+    "Notification fatigue"
+   ]
+  },
+  {
+   "group": "tone",
+   "subject": "A reply-able sender",
+   "tier": 2,
+   "says": [
+    "lets customers answer a message to reach a person or a monitored inbox",
+    "shows a human or team name rather than a dead address"
+   ],
+   "use": "want customers to feel they can respond",
+   "not": [
+    "uses a no-reply address that discards answers"
+   ],
+   "like": [
+    "A reply-to address"
+   ]
+  },
+  {
+   "group": "tone",
+   "subject": "A consistent voice",
+   "tier": 3,
+   "says": [
+    "keeps tone, terms and sign-off the same across emails, app text and support",
+    "comes from a short style guide shared by writers and developers"
+   ],
+   "use": "find that error text and emails sound like different companies",
+   "not": [
+    "leaves each team to decide its own tone"
+   ],
+   "like": [
+    "A shared layout"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "The Moksy ChatOutbox",
+   "tier": 3,
+   "says": [
+    "is the model that stores each recipient notification before delivery",
+    "has a server-side drain that sends the stored items",
+    "retries items with backoff"
+   ],
+   "use": "need to know how the Moksy communications service protects notifications from provider outages",
+   "not": [
+    "calls the provider inline for each message"
+   ],
+   "like": [
+    "The Moksy dead state"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "The Moksy dead state",
+   "tier": 3,
+   "says": [
+    "is reached after 6 failed attempts",
+    "puts the item in front of a person instead of retrying forever"
+   ],
+   "use": "are asked when a Moksy outbox item stops being retried",
+   "not": [
+    "is reached after the first failure"
+   ],
+   "like": [
+    "The Moksy ChatOutbox"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy delivery status persistence",
+   "tier": 4,
+   "says": [
+    "keeps delivery status in the database so it survives a restart",
+    "stops status being lost when a server process is replaced"
+   ],
+   "use": "ask whether delivery status is lost when the Moksy server restarts",
+   "not": [
+    "stores the status only in process memory"
+   ],
+   "like": [
+    "The Moksy ChatOutbox"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "The Moksy inbound webhook shared secret",
+   "tier": 3,
+   "says": [
+    "guards the inbound webhook routes against callers who lack the secret",
+    "sits alongside Twilio signature validation"
+   ],
+   "use": "need to know how Moksy keeps strangers off its inbound webhook routes",
+   "not": [
+    "leaves the routes open since the URL is hard to guess"
+   ],
+   "like": [
+    "Twilio signature validation"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Twilio signature validation",
+   "tier": 3,
+   "says": [
+    "checks that an inbound SMS request really came from Twilio",
+    "rejects requests whose signature does not match"
+   ],
+   "use": "need to know how Moksy verifies inbound text message callbacks",
+   "not": [
+    "trusts any request that contains a valid-looking phone number"
+   ],
+   "like": [
+    "The Moksy inbound webhook shared secret"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "The Moksy WebhookEvent model",
+   "tier": 4,
+   "says": [
+    "records inbound email and SMS events by provider message id",
+    "ensures each event is processed once even when the provider retries"
+   ],
+   "use": "need to know how Moksy avoids processing a repeated inbound event twice",
+   "not": [
+    "processes every received event again"
+   ],
+   "like": [
+    "The Moksy ChatOutbox"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy per-user rate limiters",
+   "tier": 4,
+   "says": [
+    "cap message, attachment and thread-create routes per user",
+    "exempt system and admin senders"
+   ],
+   "use": "ask how Moksy limits abuse of its messaging routes",
+   "not": [
+    "apply one global cap shared by every user"
+   ],
+   "like": [
+    "The Moksy in-memory limiter gap"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "The Moksy in-memory limiter gap",
+   "tier": 5,
+   "says": [
+    "is a known risk because the limiter counts per process",
+    "needs a Redis-backed limiter once several replicas run"
+   ],
+   "use": "are asked why the current Moksy limiter would be inaccurate across several replicas",
+   "not": [
+    "is already solved by a shared store"
+   ],
+   "like": [
+    "Moksy per-user rate limiters"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "The Moksy reply-to token gap",
+   "tier": 5,
+   "says": [
+    "is a known risk because the form thread plus an id can be enumerated",
+    "is to be fixed by signing the token with an HMAC"
+   ],
+   "use": "are asked why Moksy plans to sign its reply-to tokens",
+   "not": [
+    "is already fixed with a signature"
+   ],
+   "like": [
+    "The Moksy WebhookEvent model"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy thread controls",
+   "tier": 2,
+   "says": [
+    "include per-thread mute, pin and mark-unread",
+    "let users decide which conversations alert them"
+   ],
+   "use": "ask which conversation controls the Moksy communications service lists as done",
+   "not": [
+    "are limited to delete and forward"
+   ],
+   "like": [
+    "Moksy read receipts"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy read receipts",
+   "tier": 3,
+   "says": [
+    "show in real time when a message has been read",
+    "come with aggregated unread counts"
+   ],
+   "use": "ask how Moksy lets senders see a message was read",
+   "not": [
+    "are sent by email once a day"
+   ],
+   "like": [
+    "Moksy thread controls"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy planned token alerts",
+   "tier": 3,
+   "says": [
+    "are planned to fire at 80, 90 and 100 percent of the allowance",
+    "warn a customer before running out"
+   ],
+   "use": "ask when the Moksy token plan intends to warn about the allowance",
+   "not": [
+    "are planned to fire only when the allowance is exhausted"
+   ],
+   "like": [
+    "A threshold alert"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "The ggmoney email feature",
+   "tier": 3,
+   "says": [
+    "sends payslips, invoices and deadline alerts through SendGrid",
+    "works but needs a verified sender"
+   ],
+   "use": "ask what the ggmoney email feature needs before it can send",
+   "not": [
+    "sends marketing newsletters through its own mail server"
+   ],
+   "like": [
+    "A verified sender"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the main difference between transactional and marketing email?",
+   "right": "Transactional email is triggered by a user's own action, while marketing email promotes to a consenting list",
+   "wrong": [
+    "Transactional email is always plain text and marketing is always HTML",
+    "Marketing email is sent faster than transactional email",
+    "Transactional email always needs an unsubscribe link and marketing never does"
+   ],
+   "tier": 1,
+   "why": "Transactional mail responds to an action or account event; marketing needs consent and an unsubscribe."
+  },
+  {
+   "q": "Which DNS record type normally holds an SPF policy?",
+   "right": "TXT",
+   "wrong": [
+    "MX",
+    "CNAME only",
+    "A"
+   ],
+   "tier": 1,
+   "why": "SPF is published as a TXT record."
+  },
+  {
+   "q": "Which control lets a receiver confirm that a message body was not altered in transit?",
+   "right": "DKIM",
+   "wrong": [
+    "SPF",
+    "The Return-Path",
+    "The Reply-To header"
+   ],
+   "tier": 1,
+   "why": "DKIM signs the message so alteration breaks the signature."
+  },
+  {
+   "q": "What does a hard bounce mean?",
+   "right": "The address permanently cannot receive mail, for example because the mailbox does not exist",
+   "wrong": [
+    "The mailbox is temporarily full",
+    "The recipient marked the message as spam",
+    "The message was opened but not clicked"
+   ],
+   "tier": 1,
+   "why": "Hard bounces are permanent and the address should be suppressed."
+  },
+  {
+   "q": "What should happen to an address that hard bounces?",
+   "right": "It should be added to the suppression list so it is not mailed again",
+   "wrong": [
+    "It should be retried every hour for a week",
+    "It should be moved to the marketing list",
+    "It should be emailed from a different domain"
+   ],
+   "tier": 1,
+   "why": "Repeated sends to dead addresses damage reputation."
+  },
+  {
+   "q": "Which of these needs a working unsubscribe link?",
+   "right": "A product announcement sent to a newsletter list",
+   "wrong": [
+    "A password reset link",
+    "A receipt for a purchase",
+    "A security alert about a new sign-in"
+   ],
+   "tier": 1,
+   "why": "Marketing mail needs an unsubscribe; service messages do not."
+  },
+  {
+   "q": "What is the purpose of the plain-text part of an email?",
+   "right": "It gives a readable version for clients that cannot or do not render HTML",
+   "wrong": [
+    "It stores the tracking data for opens",
+    "It replaces the subject line",
+    "It holds the DKIM signature"
+   ],
+   "tier": 1,
+   "why": "A text part improves compatibility and trust."
+  },
+  {
+   "q": "What does alt text do for an image in an email?",
+   "right": "It describes the image for screen readers and when images are blocked",
+   "wrong": [
+    "It makes the image load faster",
+    "It sets the image size",
+    "It links the image to a web page"
+   ],
+   "tier": 1,
+   "why": "Alt text is a text equivalent of the image."
+  },
+  {
+   "q": "Why is it bad to send every notification inline during the user's own request?",
+   "right": "A slow or failing provider then slows or fails the user's action, and a crash can lose the message",
+   "wrong": [
+    "Email providers refuse inline calls",
+    "Inline calls cannot include attachments",
+    "Inline calls ignore templates"
+   ],
+   "tier": 2,
+   "why": "Storing first and delivering from a worker decouples the two."
+  },
+  {
+   "q": "What does the outbox pattern guarantee when combined with retries?",
+   "right": "At-least-once delivery, so receivers must tolerate duplicates",
+   "wrong": [
+    "Exactly-once delivery with no extra work",
+    "At-most-once delivery",
+    "Delivery in under a second"
+   ],
+   "tier": 2,
+   "why": "Retries can repeat a send, so idempotency is needed."
+  },
+  {
+   "q": "Which error type should a retry with backoff treat as temporary?",
+   "right": "A timeout or a rate-limit response from the provider",
+   "wrong": [
+    "A response saying the recipient address is invalid",
+    "A response saying the sender domain is blocked by policy",
+    "A response saying the template does not exist"
+   ],
+   "tier": 2,
+   "why": "Timeouts and rate limits may clear; invalid addresses will not."
+  },
+  {
+   "q": "What is the purpose of jitter added to retry delays?",
+   "right": "To stop many workers retrying at the same instant",
+   "wrong": [
+    "To make retries slower for ever",
+    "To avoid logging failures",
+    "To increase the number of attempts"
+   ],
+   "tier": 3,
+   "why": "Randomising delays spreads the load."
+  },
+  {
+   "q": "What does the From domain in a DMARC check have to align with?",
+   "right": "The domain authenticated by SPF or DKIM",
+   "wrong": [
+    "The domain of the recipient",
+    "The domain of the provider's website",
+    "The domain in the Reply-To header"
+   ],
+   "tier": 3,
+   "why": "DMARC requires aligned authentication for the visible From domain."
+  },
+  {
+   "q": "Which action is a sensible first step when first publishing DMARC?",
+   "right": "Publish p=none with a report address and review who sends as the domain",
+   "wrong": [
+    "Publish p=reject immediately",
+    "Publish no record until spam appears",
+    "Remove SPF and rely on DMARC alone"
+   ],
+   "tier": 2,
+   "why": "Monitoring mode reveals legitimate senders before enforcement."
+  },
+  {
+   "q": "A webhook endpoint receives the same bounce event twice. What protects against processing it twice?",
+   "right": "Recording the provider's message or event id and ignoring ones already seen",
+   "wrong": [
+    "Increasing the timeout on the endpoint",
+    "Using a longer API key",
+    "Sending a second bounce to the provider"
+   ],
+   "tier": 3,
+   "why": "Idempotent handling by provider id is the standard defence."
+  },
+  {
+   "q": "What should be done before a webhook endpoint trusts an incoming event?",
+   "right": "Verify the provider's signature or shared secret",
+   "wrong": [
+    "Check that the request came over HTTP",
+    "Check that the body is under one kilobyte",
+    "Check that the user agent contains the provider's name"
+   ],
+   "tier": 2,
+   "why": "Public URLs can be called by anyone, so authenticity must be proven."
+  },
+  {
+   "q": "Why keep transactional and marketing mail on separate subdomains or streams?",
+   "right": "A marketing complaint spike then cannot block receipts and password resets",
+   "wrong": [
+    "Transactional mail cannot use DKIM",
+    "Marketing mail cannot use SPF",
+    "It removes the need for an unsubscribe link"
+   ],
+   "tier": 3,
+   "why": "Reputation is tracked per domain and stream."
+  },
+  {
+   "q": "What is IP warm-up?",
+   "right": "Raising the sending volume gradually on a new IP so providers learn the sender's pattern",
+   "wrong": [
+    "Pinging an IP before mailing it",
+    "Switching on a dedicated IP at full volume",
+    "Rotating IPs after each campaign"
+   ],
+   "tier": 3,
+   "why": "New IPs have no reputation and need a slow ramp."
+  },
+  {
+   "q": "Which header lets mail clients show a native unsubscribe button?",
+   "right": "List-Unsubscribe",
+   "wrong": [
+    "Reply-To",
+    "Return-Path",
+    "X-Mailer"
+   ],
+   "tier": 3,
+   "why": "List-Unsubscribe carries a mailto or https address."
+  },
+  {
+   "q": "What does the STOP keyword do in SMS marketing?",
+   "right": "Lets the recipient opt out by replying, and the sender must then stop marketing texts",
+   "wrong": [
+    "Pauses messages for one hour",
+    "Cancels the last order",
+    "Marks the number as verified"
+   ],
+   "tier": 2,
+   "why": "STOP is the standard opt-out and must be honoured."
+  },
+  {
+   "q": "Which channel suits a low-urgency update that can wait until the next visit?",
+   "right": "An in-app notification",
+   "wrong": [
+    "A voice call",
+    "An SMS to every user",
+    "A certified letter"
+   ],
+   "tier": 1,
+   "why": "Match channel intrusion to urgency."
+  },
+  {
+   "q": "Why does an email log record often hold a provider message id?",
+   "right": "So later delivery events can be matched to the original send",
+   "wrong": [
+    "So the message can be sent twice",
+    "So the template is encrypted",
+    "So the recipient can unsubscribe"
+   ],
+   "tier": 3,
+   "why": "The id is the link between your record and the provider's events."
+  },
+  {
+   "q": "Why are open rates an unreliable measure?",
+   "right": "Some clients preload images, which registers an open without the person reading",
+   "wrong": [
+    "Open tracking is illegal everywhere",
+    "Only text emails can be opened",
+    "Opens are counted only after a reply"
+   ],
+   "tier": 4,
+   "why": "Tracking pixels fire on image load, not on reading."
+  },
+  {
+   "q": "Which practice helps a screen reader user choose links from a list?",
+   "right": "Descriptive link text such as View your invoice",
+   "wrong": [
+    "Using the bare word here as every label",
+    "Using only an image as the link",
+    "Making all links the same colour"
+   ],
+   "tier": 2,
+   "why": "Link text should make sense out of context."
+  },
+  {
+   "q": "What is the safest way to test email sending in a staging environment holding real customer data?",
+   "right": "Use a recipient allow-list or a mail catcher so nothing reaches real customers",
+   "wrong": [
+    "Send to real customers at night",
+    "Reduce the batch size to ten customers",
+    "Remove the unsubscribe link"
+   ],
+   "tier": 2,
+   "why": "Staging must be unable to reach real customers."
+  },
+  {
+   "q": "What should a good alert message contain?",
+   "right": "What happened, what the person should do and who to contact",
+   "wrong": [
+    "Only the internal error code",
+    "A long history of the system",
+    "An apology and nothing else"
+   ],
+   "tier": 2,
+   "why": "Actionable messages cut follow-up tickets."
+  },
+  {
+   "q": "What is the correct way to put a customer's name into an HTML email template?",
+   "right": "Escape it as text when it is inserted",
+   "wrong": [
+    "Paste it in raw so formatting is kept",
+    "Convert it to lower case",
+    "Put it only in the subject"
+   ],
+   "tier": 2,
+   "why": "Unescaped user data can inject markup."
+  },
+  {
+   "q": "What does a spam trap hit usually indicate?",
+   "right": "The list contains stale or illegitimately obtained addresses",
+   "wrong": [
+    "The subject line is too long",
+    "The DKIM key has expired",
+    "The recipient clicked a link twice"
+   ],
+   "tier": 4,
+   "why": "Traps catch poor list sourcing and hygiene."
+  },
+  {
+   "q": "A team sees SPF pass for their provider's bounce domain, yet DMARC fails for their From domain. What is the most likely cause?",
+   "right": "The SPF-authenticated domain does not align with the From domain and DKIM is not aligned either",
+   "wrong": [
+    "DMARC ignores SPF entirely",
+    "The message was too large",
+    "The recipient's mailbox was full"
+   ],
+   "tier": 4,
+   "why": "DMARC needs an aligned SPF or aligned DKIM result; passing SPF on another domain is not enough."
+  },
+  {
+   "q": "A newsletter send is followed by a spike in spam complaints and the password reset emails start landing in spam. What should the team do first?",
+   "right": "Pause the campaign, check complaints and recipients, and move transactional mail to a separate stream",
+   "wrong": [
+    "Resend the password resets more often",
+    "Delete the DKIM record",
+    "Switch every message to plain text"
+   ],
+   "tier": 4,
+   "why": "Containing the problem and separating streams protects critical mail."
+  },
+  {
+   "q": "A developer wants to add a 20 percent discount banner to every receipt email. What is the best reaction?",
+   "right": "Check whether promotional content changes the message's status and consent needs before adding it",
+   "wrong": [
+    "Add it, since receipts are always exempt",
+    "Add it and remove the unsubscribe link",
+    "Add it only to the plain-text version"
+   ],
+   "tier": 4,
+   "why": "Promotional content in a service message can bring it under marketing rules."
+  },
+  {
+   "q": "A customer says they never received a password reset email. What should support check first?",
+   "right": "The email log for the message's status, then bounce or suppression entries for the address",
+   "wrong": [
+    "Re-run the password reset 20 times",
+    "Change the customer's password to a default",
+    "Ask the customer to reinstall the app"
+   ],
+   "tier": 2,
+   "why": "The log shows whether it was sent, delivered or suppressed."
+  },
+  {
+   "q": "A new IP is configured and the team plans to send the full 500,000 contact list on day one. What is the best advice?",
+   "right": "Warm up the IP, starting with the most engaged contacts and increasing volume",
+   "wrong": [
+    "Send the full list; volume proves the IP is good",
+    "Send only on weekends",
+    "Split the list into alphabetical order"
+   ],
+   "tier": 3,
+   "why": "Reputation must be built gradually."
+  },
+  {
+   "q": "A team imports an old list bought from a third party and sends a campaign. Soon bounces and trap hits rise. What went wrong?",
+   "right": "The list had no consent or hygiene, so it hurt reputation",
+   "wrong": [
+    "The subject line was too short",
+    "The HTML had too many tables",
+    "The DNS TTL was too long"
+   ],
+   "tier": 3,
+   "why": "Unverified purchased lists produce bounces and spam trap hits."
+  },
+  {
+   "q": "A provider starts returning rate-limit errors during a burst of 10,000 notifications. What is the best design response?",
+   "right": "Queue the messages and retry with backoff at a paced rate",
+   "wrong": [
+    "Retry every message immediately in a loop",
+    "Drop the failed messages",
+    "Turn off the error logging"
+   ],
+   "tier": 3,
+   "why": "A queue with backoff smooths bursts without losing messages."
+  },
+  {
+   "q": "A worker crashes after the database commit but before calling the email provider. Which design avoids losing the message?",
+   "right": "Storing it in an outbox that a worker drains and retries",
+   "wrong": [
+    "Calling the provider before committing",
+    "Skipping the database write",
+    "Sending the message twice to be safe"
+   ],
+   "tier": 3,
+   "why": "A durable outbox survives a crash between save and send."
+  },
+  {
+   "q": "Your outbox retries a message after a timeout, and the first attempt had actually succeeded. How do you avoid a duplicate email?",
+   "right": "Send with an idempotency key so the repeat is recognised",
+   "wrong": [
+    "Disable retries for good",
+    "Lower the timeout to one second",
+    "Delete the record after the first try"
+   ],
+   "tier": 4,
+   "why": "Retries of an ambiguous attempt need idempotency."
+  },
+  {
+   "q": "An item has failed after its maximum retries. What should happen to it?",
+   "right": "It moves to a dead state where a person can inspect it",
+   "wrong": [
+    "It is deleted silently",
+    "It is retried forever",
+    "It is marked delivered"
+   ],
+   "tier": 3,
+   "why": "Dead items need human attention, not silent loops."
+  },
+  {
+   "q": "An incident is affecting many customers and the cause is not yet known. What is the best customer message?",
+   "right": "State the impact, what is being investigated and when the next update will come",
+   "wrong": [
+    "Say it will be fixed within an hour",
+    "Say nothing until the cause is known",
+    "Blame an upstream vendor"
+   ],
+   "tier": 4,
+   "why": "Honest scope and a cadence beat guessed timelines."
+  },
+  {
+   "q": "A customer replies to a message from no-reply and gets no answer. What should change?",
+   "right": "Use a monitored reply address or tell the customer clearly where to get help",
+   "wrong": [
+    "Make the footer text smaller",
+    "Remove the unsubscribe link",
+    "Send the message again"
+   ],
+   "tier": 2,
+   "why": "Replies should go somewhere a person looks."
+  },
+  {
+   "q": "A developer logs the full password reset URL when a reset email is sent. What is wrong?",
+   "right": "The log now holds a live credential that anyone with log access could use",
+   "wrong": [
+    "Reset URLs are too long to log",
+    "Logs must be in JSON only",
+    "Log lines cannot include URLs"
+   ],
+   "tier": 4,
+   "why": "Secrets and tokens should be redacted or never logged."
+  },
+  {
+   "q": "A team finds the same disk-full alert has produced 400 emails overnight. Which feature should they add?",
+   "right": "Alert deduplication with a key for resource and condition",
+   "wrong": [
+    "A bigger mail server",
+    "More recipients",
+    "A shorter subject line"
+   ],
+   "tier": 3,
+   "why": "Deduplication collapses repeats of the same underlying issue."
+  },
+  {
+   "q": "A user turns off all marketing mail but still receives a new sign-in alert. Is this correct?",
+   "right": "Yes, security alerts are service messages and are sent regardless of marketing preferences",
+   "wrong": [
+    "No, an opt-out must stop every email",
+    "Yes, but only if the alert contains a discount",
+    "No, the alert must be sent by SMS instead"
+   ],
+   "tier": 3,
+   "why": "Security and account messages are separate from marketing consent."
+  },
+  {
+   "q": "A contact form places the visitor's input directly in the Subject header. What attack is possible?",
+   "right": "Header injection, where line breaks add extra recipients or headers",
+   "wrong": [
+    "SQL injection into the DNS",
+    "Cross-site request forgery on the logo",
+    "DKIM key theft"
+   ],
+   "tier": 4,
+   "why": "Newlines in header values let attackers add headers."
+  },
+  {
+   "q": "A team wants to send a legal notice and prove later that the customer was notified. What should they keep?",
+   "right": "An append-only audit record with recipient, time, template version and delivery status",
+   "wrong": [
+    "A copy of the SMTP password",
+    "Only the open rate",
+    "A screenshot of the inbox"
+   ],
+   "tier": 4,
+   "why": "An audit trail with the template version reproduces what was sent."
+  },
+  {
+   "q": "A monthly summary is being sent as 30 separate notifications to heavy users who then mute everything. What is the better design?",
+   "right": "Batch the low-urgency events into a digest",
+   "wrong": [
+    "Add more notification sounds",
+    "Send them by voice call",
+    "Raise the volume of each message"
+   ],
+   "tier": 3,
+   "why": "A digest lowers volume for non-urgent events."
+  },
+  {
+   "q": "A DMARC aggregate report shows an unfamiliar source passing SPF but failing alignment. What is a sensible next step?",
+   "right": "Find out whether it is a forgotten legitimate sender, and fix it before moving toward enforcement",
+   "wrong": [
+    "Ignore reports permanently",
+    "Set p=reject at once",
+    "Delete the report address"
+   ],
+   "tier": 5,
+   "why": "Reports reveal unknown senders to deal with before enforcing."
+  },
+  {
+   "q": "A team moves from p=none to p=reject in one step and customer invoices from a third-party billing tool start bouncing. What was missed?",
+   "right": "Checking that every legitimate third-party sender passes DMARC before enforcing",
+   "wrong": [
+    "Raising the SPF lookup limit",
+    "Adding a tracking pixel",
+    "Using a dedicated IP"
+   ],
+   "tier": 5,
+   "why": "Enforcement without covering third-party senders blocks real mail."
+  },
+  {
+   "q": "Your queue depth rises steadily for an hour but the dead count is zero. What does this suggest?",
+   "right": "Messages are created faster than they can be sent, such as from rate limiting or slow delivery",
+   "wrong": [
+    "Every message was delivered",
+    "The templates are broken",
+    "DKIM has expired"
+   ],
+   "tier": 4,
+   "why": "Rising depth without dead items shows backlog, not failure."
+  },
+  {
+   "q": "A provider outage lasts 20 minutes. Which design keeps most notifications from being lost?",
+   "right": "An outbox with retries and backoff that delivers after the provider recovers",
+   "wrong": [
+    "Dropping failed sends",
+    "Calling another API with the same data",
+    "Retrying once per day"
+   ],
+   "tier": 3,
+   "why": "Durable storage and backoff cover short outages."
+  },
+  {
+   "q": "A reviewer says a reset email says 'No account found for that address'. What is the privacy problem?",
+   "right": "It reveals which addresses have accounts; use a neutral message either way",
+   "wrong": [
+    "It uses too many words",
+    "It is too polite",
+    "It does not include a logo"
+   ],
+   "tier": 4,
+   "why": "Neutral responses avoid account enumeration."
+  },
+  {
+   "q": "This record is published for example.com. What does it do?",
+   "right": "It lists the servers allowed to send for the domain and tells receivers to treat others as failing hard",
+   "wrong": [
+    "It signs each message with a private key",
+    "It tells receivers where to send reports",
+    "It forces TLS on delivery"
+   ],
+   "tier": 3,
+   "why": "An SPF record lists permitted senders; -all marks others as hard fail.",
+   "code": "example.com. TXT \"v=spf1 include:_spf.provider.example ip4:203.0.113.10 -all\""
+  },
+  {
+   "q": "What does p=quarantine mean in this record?",
+   "right": "Failing mail should be treated as suspicious, typically sent to spam, and reports go to the address given",
+   "wrong": [
+    "Failing mail should be rejected",
+    "Failing mail should be ignored with no reports",
+    "Passing mail should be held for review"
+   ],
+   "tier": 3,
+   "why": "quarantine sits between none and reject; rua names the report address.",
+   "code": "_dmarc.example.com. TXT \"v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com\""
+  },
+  {
+   "q": "What do the two headers below allow a mail client to do?",
+   "right": "Offer a one-click unsubscribe button that sends a POST request",
+   "wrong": [
+    "Encrypt the message",
+    "Mark the message as read",
+    "Authenticate the sender"
+   ],
+   "tier": 4,
+   "why": "List-Unsubscribe plus List-Unsubscribe-Post enables one-click unsubscribe.",
+   "code": "List-Unsubscribe: <https://mail.example.com/u/abc123>\nList-Unsubscribe-Post: List-Unsubscribe=One-Click"
+  },
+  {
+   "q": "What is wrong with this retry loop?",
+   "right": "It retries instantly with no delay and no limit, hammering a failing provider forever",
+   "wrong": [
+    "It uses the wrong HTTP method",
+    "It sleeps too long",
+    "It logs too little"
+   ],
+   "tier": 3,
+   "why": "Retries need backoff and a maximum number of attempts.",
+   "code": "while (true) {\n  const ok = await sendEmail(msg);\n  if (ok) break;\n}"
+  },
+  {
+   "q": "Which change makes this retry safer?",
+   "right": "Add a maximum attempts count and wait longer between attempts",
+   "wrong": [
+    "Remove the check for success",
+    "Send the message twice per loop",
+    "Run the loop on the main thread"
+   ],
+   "tier": 3,
+   "why": "Backoff and an attempt cap prevent runaway retries.",
+   "code": "let attempt = 0;\nwhile (attempt < 6) {\n  if (await sendEmail(msg)) break;\n  await sleep(2 ** attempt * 1000);\n  attempt++;\n}"
+  },
+  {
+   "q": "What is wrong with building this subject line?",
+   "right": "User input containing a line break could add extra headers",
+   "wrong": [
+    "The subject is too short",
+    "The variable name is wrong",
+    "Template literals cannot be used"
+   ],
+   "tier": 4,
+   "why": "Strip CR and LF from any value placed in a header.",
+   "code": "const subject = `Hello ${req.body.name}`;"
+  },
+  {
+   "q": "What does the multipart structure below provide?",
+   "right": "Text and HTML versions of one message, from which the client chooses",
+   "wrong": [
+    "Two separate emails to the same person",
+    "A signed and encrypted message",
+    "An attachment and a calendar invite"
+   ],
+   "tier": 3,
+   "why": "multipart/alternative holds equivalent versions.",
+   "code": "Content-Type: multipart/alternative; boundary=\"b1\"\n\n--b1\nContent-Type: text/plain; charset=utf-8\n\nHello\n--b1\nContent-Type: text/html; charset=utf-8\n\n<p>Hello</p>\n--b1--"
+  },
+  {
+   "q": "A marketing manager wants to use a 'Last chance! Ends in 1 hour!' banner on every weekly email, though no deadline exists. Why push back?",
+   "right": "False urgency erodes trust and teaches people to ignore real alerts",
+   "wrong": [
+    "Banners increase spam scores in every case",
+    "Weekly mail cannot use banners",
+    "Deadlines are not allowed in email"
+   ],
+   "tier": 3,
+   "why": "Honest urgency preserves the value of real alerts."
+  },
+  {
+   "q": "A team wants to count how many customers read each invoice email using a tracking pixel. What caveat applies?",
+   "right": "Opens can be inflated by image preloading, so it is not a reliable proof of reading",
+   "wrong": [
+    "Pixels are blocked by DNS",
+    "Pixels cannot be added to HTML",
+    "Pixels only work on plain text"
+   ],
+   "tier": 4,
+   "why": "Treat opens as a rough signal, not evidence."
+  }
+ ]
+}

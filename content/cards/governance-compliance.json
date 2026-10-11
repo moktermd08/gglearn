@@ -1,0 +1,3190 @@
+{
+ "slug": "governance-compliance",
+ "name": "Governance and compliance",
+ "description": "Policies, approvals, audit trails, GDPR/HIPAA/PCI/FERPA, risk scoring.",
+ "roles": "",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "mandatory",
+ "groups": {
+  "policy": "governance concept",
+  "approval": "approval practice",
+  "trail": "audit trail and retention concept",
+  "principle": "data protection principle",
+  "right": "data protection right or duty",
+  "framework": "compliance framework or instrument",
+  "handling": "data handling practice",
+  "risk": "risk management concept",
+  "access": "access control practice",
+  "change": "change control practice",
+  "conduct": "conduct and governance concept",
+  "ai": "AI governance practice",
+  "assurance": "assurance and records practice"
+ },
+ "cards": [
+  {
+   "group": "policy",
+   "subject": "A policy",
+   "tier": 1,
+   "says": [
+    "states what must happen and why in the organisation's own rules",
+    "is approved by management and applies to everyone in scope",
+    "sets the mandatory rule without spelling out each click or keystroke"
+   ],
+   "use": "need a binding statement of what the organisation requires",
+   "not": [
+    "describes optional tips staff may ignore"
+   ],
+   "like": [
+    "A standard",
+    "A procedure",
+    "A guideline"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "A standard",
+   "tier": 2,
+   "says": [
+    "sets a specific measurable requirement that supports a policy",
+    "turns a broad rule into a checkable minimum such as a required password length",
+    "is mandatory but narrower than the policy it supports"
+   ],
+   "use": "need a concrete minimum that an auditor can test",
+   "not": [
+    "is a non-binding suggestion"
+   ],
+   "like": [
+    "A policy",
+    "A procedure",
+    "A guideline"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "A procedure",
+   "tier": 2,
+   "says": [
+    "lists the steps a person follows to carry out a task",
+    "says who does what and in which order",
+    "helps a new joiner repeat a task the same way every time"
+   ],
+   "use": "need a new starter to perform a recurring task consistently",
+   "not": [
+    "sets the high-level principle behind the rule"
+   ],
+   "like": [
+    "A policy",
+    "A standard",
+    "A guideline"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "A guideline",
+   "tier": 2,
+   "says": [
+    "offers advice on good practice that people may adapt",
+    "explains how to meet a policy when several approaches would work",
+    "is recommended rather than enforced"
+   ],
+   "use": "want to share good practice without making it compulsory",
+   "not": [
+    "is automatically enforced by an audit"
+   ],
+   "like": [
+    "A policy",
+    "A standard",
+    "A procedure"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "A control",
+   "tier": 1,
+   "says": [
+    "is the mechanism that makes a policy rule hard to skip",
+    "can be a technical block, a review step or a manual check",
+    "turns a written rule into something that can be tested"
+   ],
+   "use": "need to show that a rule is actually followed rather than only written",
+   "not": [
+    "is the written rule itself"
+   ],
+   "like": [
+    "A policy",
+    "Preventive control",
+    "Detective control"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "Preventive control",
+   "tier": 3,
+   "says": [
+    "stops a bad event from happening in the first place",
+    "includes a required approval before a change goes live",
+    "blocks the action instead of reporting it afterwards"
+   ],
+   "use": "want the mistake to be impossible rather than merely noticed",
+   "not": [
+    "finds a problem only after it has happened"
+   ],
+   "like": [
+    "Detective control",
+    "Corrective control",
+    "Compensating control"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "Detective control",
+   "tier": 3,
+   "says": [
+    "finds a problem after it has happened",
+    "includes a regular review of access logs for unusual activity",
+    "raises an alert so someone can respond"
+   ],
+   "use": "cannot block the action but need to spot misuse quickly",
+   "not": [
+    "prevents the event from occurring at all"
+   ],
+   "like": [
+    "Preventive control",
+    "Corrective control",
+    "Compensating control"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "Corrective control",
+   "tier": 4,
+   "says": [
+    "limits damage and restores normal service after an incident",
+    "includes restoring from a backup or reversing a wrong entry",
+    "acts once something has already gone wrong"
+   ],
+   "use": "need to fix and recover after a failure has been found",
+   "not": [
+    "is the same as a policy approval"
+   ],
+   "like": [
+    "Preventive control",
+    "Detective control",
+    "Compensating control"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "Compensating control",
+   "tier": 4,
+   "says": [
+    "stands in for a required control that cannot be applied",
+    "adds extra monitoring or review to cover a known gap",
+    "needs to reduce the risk about as much as the missing control would"
+   ],
+   "use": "cannot meet a requirement as written and must cover the gap another way",
+   "not": [
+    "removes the need to document the gap"
+   ],
+   "like": [
+    "Preventive control",
+    "Detective control",
+    "Corrective control"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "A policy exception",
+   "tier": 4,
+   "says": [
+    "is a formal, time-limited permission to depart from a policy",
+    "records who accepted the risk and when it will be reviewed",
+    "is approved by the owner who is accountable for the risk"
+   ],
+   "use": "have a genuine reason that a rule cannot be met for now",
+   "not": [
+    "is granted verbally and never written down"
+   ],
+   "like": [
+    "Compensating control",
+    "A guideline"
+   ]
+  },
+  {
+   "group": "policy",
+   "subject": "Risk appetite",
+   "tier": 5,
+   "says": [
+    "states how much risk the organisation is willing to accept to reach its goals",
+    "sets the boundary that individual risk decisions are judged against",
+    "is set by senior leadership rather than by each team"
+   ],
+   "use": "need to decide whether a risk is acceptable or must be reduced",
+   "not": [
+    "is the number of risks currently on the register"
+   ],
+   "like": [
+    "A risk register",
+    "A risk score"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "Segregation of duties",
+   "tier": 1,
+   "says": [
+    "means the person who prepares something is not the person who approves it",
+    "stops one mistake or one bad actor pushing a change all the way through alone",
+    "is a classic control in finance and software release"
+   ],
+   "use": "want one person unable to complete a risky process end to end",
+   "not": [
+    "gives every employee the same access so work can be shared"
+   ],
+   "like": [
+    "The four-eyes principle",
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "The four-eyes principle",
+   "tier": 2,
+   "says": [
+    "requires a second person to check an action before it takes effect",
+    "applies to a sensitive action even when the first person is trusted",
+    "reduces the chance of an unnoticed error"
+   ],
+   "use": "need a second pair of eyes before a sensitive action",
+   "not": [
+    "lets the author approve their own work after a break"
+   ],
+   "like": [
+    "Segregation of duties",
+    "Peer review"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "A versioned approval",
+   "tier": 3,
+   "says": [
+    "applies to one exact version of the thing approved",
+    "becomes invalid if the content changes afterwards",
+    "records who approved, what version and when"
+   ],
+   "use": "need an approval to stay tied to exactly what the approver saw",
+   "not": [
+    "covers every later edit of the same document"
+   ],
+   "like": [
+    "A stale approval",
+    "An evidence record",
+    "A frozen review fingerprint"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "A frozen review fingerprint",
+   "tier": 4,
+   "says": [
+    "is a value computed from the underlying numbers when GG Money freezes a brand review",
+    "stops matching if the ledger moves before approval",
+    "lets the system detect that the figures changed after the review was frozen"
+   ],
+   "use": "want GG Money to notice that figures moved after a review was frozen",
+   "not": [
+    "encrypts the review so only the approver can read it"
+   ],
+   "like": [
+    "A versioned approval",
+    "A stale approval"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "A stale approval",
+   "tier": 4,
+   "says": [
+    "is what a GG Money review becomes when its fingerprint no longer matches the ledger",
+    "has to be put up again for approval",
+    "shows that the approved numbers are not the current numbers"
+   ],
+   "use": "find that the ledger changed between freezing and approving a review",
+   "not": [
+    "keeps its approval and only shows a warning banner"
+   ],
+   "like": [
+    "A versioned approval",
+    "A frozen review fingerprint"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "An advisory automated check",
+   "tier": 3,
+   "says": [
+    "gathers evidence quickly and advises but never signs off",
+    "in GG Money flags issues for a person to consider",
+    "cannot take accountability for the decision"
+   ],
+   "use": "want a machine to collect evidence but a person to decide",
+   "not": [
+    "approves a review automatically when all checks are green"
+   ],
+   "like": [
+    "Human sign-off",
+    "An evidence record"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "Human sign-off",
+   "tier": 2,
+   "says": [
+    "puts a named person's accountability on the decision",
+    "is the only kind of approval GG Money accepts for a brand review",
+    "adds judgement about things an automatic check cannot see"
+   ],
+   "use": "need a decision that someone is answerable for",
+   "not": [
+    "can be given by an AI agent calling the API"
+   ],
+   "like": [
+    "An advisory automated check",
+    "Delegation of authority"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "An evidence record",
+   "tier": 3,
+   "says": [
+    "keeps proof that a control was carried out, such as who approved and when",
+    "lets a reviewer check a decision long afterwards",
+    "is stored with the decision rather than in someone's memory"
+   ],
+   "use": "need to prove later that a control really happened",
+   "not": [
+    "is a verbal assurance given at the time"
+   ],
+   "like": [
+    "A versioned approval",
+    "An audit trail"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "Delegation of authority",
+   "tier": 3,
+   "says": [
+    "gives another named person the right to approve while the owner is away",
+    "has a defined limit and an end date",
+    "is recorded so the later decision can be traced to the delegate"
+   ],
+   "use": "are unavailable and an approval cannot wait",
+   "not": [
+    "lets the delegate pass the approval on to anyone"
+   ],
+   "like": [
+    "Human sign-off",
+    "Break-glass access"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "An approval matrix",
+   "tier": 3,
+   "says": [
+    "lists which decisions need which level of approval",
+    "often scales approvers with the size or risk of the decision",
+    "stops people guessing who must sign off"
+   ],
+   "use": "are unsure who has to approve a given type of request",
+   "not": [
+    "is a list of staff holidays"
+   ],
+   "like": [
+    "Delegation of authority",
+    "Segregation of duties"
+   ]
+  },
+  {
+   "group": "approval",
+   "subject": "Rubber-stamping",
+   "tier": 5,
+   "says": [
+    "is approving without really reading what is being approved",
+    "turns an approval step into paperwork without protection",
+    "is more likely when approvers are flooded with low-risk requests"
+   ],
+   "use": "notice approvers clicking approve within seconds on every request",
+   "not": [
+    "is a recognised good practice for speed"
+   ],
+   "like": [
+    "The four-eyes principle",
+    "Human sign-off"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "An audit trail",
+   "tier": 1,
+   "says": [
+    "records who did what, to which record, when and with what result",
+    "lets you reconstruct events after the fact",
+    "must be hard to alter to be trusted"
+   ],
+   "use": "need to answer who changed a record and when",
+   "not": [
+    "records only the final state of the data"
+   ],
+   "like": [
+    "An evidence record",
+    "An email log"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "Immutability",
+   "tier": 2,
+   "says": [
+    "means a record cannot be edited or deleted once written",
+    "preserves the original entry even when it was wrong",
+    "is what GG Money applies to posted journals"
+   ],
+   "use": "want records that nobody can quietly rewrite",
+   "not": [
+    "lets an administrator overwrite old entries"
+   ],
+   "like": [
+    "A reversal entry",
+    "An audit trail"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "A reversal entry",
+   "tier": 3,
+   "says": [
+    "corrects a posted GG Money journal by adding an opposite entry",
+    "leaves both the error and the fix visible",
+    "is the accepted way to fix a mistake in an immutable ledger"
+   ],
+   "use": "find a mistake in a posted journal",
+   "not": [
+    "deletes the original journal and re-enters it"
+   ],
+   "like": [
+    "Immutability",
+    "A retention sweep"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "A retention period",
+   "tier": 2,
+   "says": [
+    "is how long a kind of record must be kept",
+    "depends on the legal and business obligations that apply",
+    "ends with archiving or disposal according to policy"
+   ],
+   "use": "need to decide how long to keep a type of record",
+   "not": [
+    "is the same for every record type everywhere"
+   ],
+   "like": [
+    "A retention class",
+    "Archiving"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "A retention class",
+   "tier": 3,
+   "says": [
+    "groups records of one kind so each kind has its own keep period in the Moksy audit service",
+    "gives authentication events one year and payments seven years in the configuration",
+    "falls back to a two-year default when none matches"
+   ],
+   "use": "need records of different kinds kept for different lengths",
+   "not": [
+    "is a user permission level"
+   ],
+   "like": [
+    "A retention period",
+    "The default class"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "The default class",
+   "tier": 4,
+   "says": [
+    "is where every Moksy audit record landed when callers never passed a class",
+    "made the per-class retention policy govern nothing in that period",
+    "is no longer the fate of records whose action name has a known prefix"
+   ],
+   "use": "find that all audit records share one keep period",
+   "not": [
+    "only applies to payment records"
+   ],
+   "like": [
+    "A retention class",
+    "Class derived from action prefix"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "Class derived from action prefix",
+   "tier": 4,
+   "says": [
+    "works out a Moksy audit record's class from the start of its action name",
+    "maps prefixes such as auth or payments to their classes",
+    "is overridden when the caller passes an explicit class"
+   ],
+   "use": "want records classified without every caller remembering to say so",
+   "not": [
+    "ignores an explicit class passed by the caller"
+   ],
+   "like": [
+    "The default class",
+    "A retention class"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "A retention sweep",
+   "tier": 4,
+   "says": [
+    "archives Moksy audit records that are past their retention",
+    "never deletes them",
+    "should also report what it did not do"
+   ],
+   "use": "need to move old audit records out of the live store safely",
+   "not": [
+    "purges expired records permanently on a timer"
+   ],
+   "like": [
+    "Archiving",
+    "A purge"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "A purge",
+   "tier": 5,
+   "says": [
+    "permanently destroys records past retention",
+    "is a deliberate super-admin decision in the Moksy audit service",
+    "should not happen on an automatic timer because destroying history is a legal choice"
+   ],
+   "use": "must permanently remove records for a legitimate reason",
+   "not": [
+    "is the routine housekeeping done by the sweep"
+   ],
+   "like": [
+    "A retention sweep",
+    "Archiving"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "Archiving",
+   "tier": 3,
+   "says": [
+    "moves records to cheaper or slower storage while keeping them retrievable",
+    "keeps old evidence available for audits",
+    "differs from deletion because the record still exists"
+   ],
+   "use": "want old records out of daily use but still available",
+   "not": [
+    "permanently removes the data"
+   ],
+   "like": [
+    "A purge",
+    "A retention sweep"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "A legal hold",
+   "tier": 5,
+   "says": [
+    "suspends deletion of records that may be needed in a dispute or investigation",
+    "overrides the normal retention schedule until it is lifted",
+    "is issued by legal or compliance rather than by the data owner"
+   ],
+   "use": "learn that records may be needed for a legal matter",
+   "not": [
+    "is lifted automatically at the end of the retention period"
+   ],
+   "like": [
+    "A retention period",
+    "A purge"
+   ]
+  },
+  {
+   "group": "trail",
+   "subject": "An email log",
+   "tier": 3,
+   "says": [
+    "in GG Money records who sent what, when and what the provider said",
+    "deliberately omits the message body",
+    "avoids keeping a second copy of sensitive content like a payslip email"
+   ],
+   "use": "need proof an email went out without copying its content",
+   "not": [
+    "stores the full text of every email for debugging"
+   ],
+   "like": [
+    "An audit trail",
+    "Data minimisation"
+   ]
+  },
+  {
+   "group": "principle",
+   "subject": "Lawfulness, fairness and transparency",
+   "tier": 2,
+   "says": [
+    "requires a valid legal basis for using personal data",
+    "expects people to be told clearly how their data is used",
+    "rules out handling personal data in ways that would be unfair to the person"
+   ],
+   "use": "need to justify why you may handle someone's personal data at all",
+   "not": [
+    "lets you use data in secret if it is useful"
+   ],
+   "like": [
+    "Purpose limitation",
+    "Accountability",
+    "A lawful basis"
+   ]
+  },
+  {
+   "group": "principle",
+   "subject": "Purpose limitation",
+   "tier": 2,
+   "says": [
+    "says data collected for one stated purpose is not reused for an incompatible one",
+    "means the purpose is decided and stated before collection",
+    "stops a customer list gathered for billing being quietly used for unrelated marketing"
+   ],
+   "use": "are tempted to reuse data for something new",
+   "not": [
+    "allows any later use if the data is already held"
+   ],
+   "like": [
+    "Data minimisation",
+    "Storage limitation"
+   ]
+  },
+  {
+   "group": "principle",
+   "subject": "Data minimisation",
+   "tier": 1,
+   "says": [
+    "means collecting only what you need for the stated purpose",
+    "applies to how much is collected, not just how long it is kept",
+    "is why GG Money's email log omits the message body"
+   ],
+   "use": "are designing a form or log and deciding which fields to keep",
+   "not": [
+    "says to collect everything in case it is useful later"
+   ],
+   "like": [
+    "Storage limitation",
+    "Purpose limitation",
+    "An email log"
+   ]
+  },
+  {
+   "group": "principle",
+   "subject": "Accuracy",
+   "tier": 2,
+   "says": [
+    "requires personal data to be correct and kept up to date",
+    "means wrong data must be corrected or erased without delay",
+    "protects people from decisions based on faulty records"
+   ],
+   "use": "discover that a stored detail about a person is out of date",
+   "not": [
+    "means data can be left as first entered"
+   ],
+   "like": [
+    "Integrity and confidentiality",
+    "Data minimisation"
+   ]
+  },
+  {
+   "group": "principle",
+   "subject": "Storage limitation",
+   "tier": 3,
+   "says": [
+    "says personal data is kept no longer than needed for its purpose",
+    "is applied through retention schedules and disposal",
+    "differs from minimisation because it is about time, not quantity"
+   ],
+   "use": "ask how long personal data may stay in a system",
+   "not": [
+    "lets data be kept forever once it is archived"
+   ],
+   "like": [
+    "Data minimisation",
+    "A retention period"
+   ]
+  },
+  {
+   "group": "principle",
+   "subject": "Integrity and confidentiality",
+   "tier": 3,
+   "says": [
+    "requires personal data to be protected against loss, damage and unauthorised access",
+    "is met with measures such as access control, encryption and backups",
+    "is the security principle of data protection law"
+   ],
+   "use": "are choosing technical safeguards for personal data",
+   "not": [
+    "only applies to data stored on paper"
+   ],
+   "like": [
+    "Accuracy",
+    "Accountability"
+   ]
+  },
+  {
+   "group": "principle",
+   "subject": "Accountability",
+   "tier": 3,
+   "says": [
+    "makes the organisation responsible for showing it complies",
+    "is met by keeping records, policies and evidence",
+    "means saying you comply is not enough without proof"
+   ],
+   "use": "are asked to prove compliance to a regulator",
+   "not": [
+    "is satisfied by a verbal promise to follow the rules"
+   ],
+   "like": [
+    "Integrity and confidentiality",
+    "An evidence record"
+   ]
+  },
+  {
+   "group": "principle",
+   "subject": "A lawful basis",
+   "tier": 3,
+   "says": [
+    "is the legal ground that permits processing personal data",
+    "can be consent, contract, legal obligation, vital interests, public task or legitimate interests",
+    "should be identified before processing begins"
+   ],
+   "use": "need to state why personal data may be processed",
+   "not": [
+    "is always the person's consent"
+   ],
+   "like": [
+    "Consent",
+    "Lawfulness, fairness and transparency"
+   ]
+  },
+  {
+   "group": "principle",
+   "subject": "Consent",
+   "tier": 3,
+   "says": [
+    "must be freely given, specific, informed and unambiguous when it is the lawful basis",
+    "can be withdrawn as easily as it was given",
+    "is not valid when it comes from a pre-ticked box"
+   ],
+   "use": "rely on a person's agreement as the reason to process data",
+   "not": [
+    "is valid when it is bundled into terms nobody reads"
+   ],
+   "like": [
+    "A lawful basis",
+    "Purpose limitation"
+   ]
+  },
+  {
+   "group": "right",
+   "subject": "The right of access",
+   "tier": 2,
+   "says": [
+    "lets a person get a copy of the personal data held about them",
+    "also entitles the person to know why and how it is used",
+    "is exercised through a subject access request"
+   ],
+   "use": "receive a request from a person asking what data you hold on them",
+   "not": [
+    "lets a person read other people's data in the same file"
+   ],
+   "like": [
+    "The right to rectification",
+    "The right to data portability"
+   ]
+  },
+  {
+   "group": "right",
+   "subject": "The right to rectification",
+   "tier": 2,
+   "says": [
+    "lets a person have inaccurate personal data corrected",
+    "also covers completing data that is incomplete",
+    "connects to the accuracy principle"
+   ],
+   "use": "have been told that a stored detail about a person is wrong",
+   "not": [
+    "lets a person delete the whole record"
+   ],
+   "like": [
+    "The right of access",
+    "The right to erasure",
+    "Accuracy"
+   ]
+  },
+  {
+   "group": "right",
+   "subject": "The right to erasure",
+   "tier": 3,
+   "says": [
+    "lets a person ask for their personal data to be deleted in certain cases",
+    "is not absolute and can be refused where a legal obligation requires keeping the data",
+    "is often called the right to be forgotten"
+   ],
+   "use": "get a request from a person to delete their data",
+   "not": [
+    "always overrides every legal record-keeping duty"
+   ],
+   "like": [
+    "The right to restriction",
+    "The right to object"
+   ]
+  },
+  {
+   "group": "right",
+   "subject": "The right to restriction",
+   "tier": 4,
+   "says": [
+    "lets a person ask that data be stored but not otherwise used",
+    "applies for example while the accuracy of the data is being checked",
+    "pauses processing without deleting"
+   ],
+   "use": "must stop using data while a dispute about it is resolved",
+   "not": [
+    "means the data must be destroyed at once"
+   ],
+   "like": [
+    "The right to erasure",
+    "The right to object"
+   ]
+  },
+  {
+   "group": "right",
+   "subject": "The right to data portability",
+   "tier": 4,
+   "says": [
+    "lets a person receive their data in a structured, commonly used, machine-readable format",
+    "can let the person have it passed to another provider",
+    "applies to data the person supplied under consent or contract"
+   ],
+   "use": "get a request from a person to move their data to a competitor",
+   "not": [
+    "covers every note the organisation wrote about them"
+   ],
+   "like": [
+    "The right of access",
+    "The right to rectification"
+   ]
+  },
+  {
+   "group": "right",
+   "subject": "The right to object",
+   "tier": 4,
+   "says": [
+    "lets a person object to processing based on legitimate interests",
+    "is absolute for direct marketing",
+    "forces the organisation to stop unless it shows compelling grounds"
+   ],
+   "use": "are told by a person to stop using their data for marketing",
+   "not": [
+    "can be refused for direct marketing if the data is useful"
+   ],
+   "like": [
+    "The right to restriction",
+    "The right to erasure"
+   ]
+  },
+  {
+   "group": "right",
+   "subject": "The right on automated decisions",
+   "tier": 5,
+   "says": [
+    "protects people from decisions made solely by automated processing that significantly affect them",
+    "lets a person ask for human intervention and contest the decision",
+    "matters when AI scores or ranks people"
+   ],
+   "use": "let an AI system alone decide something important about a person",
+   "not": [
+    "only applies to decisions made on paper"
+   ],
+   "like": [
+    "The right to object",
+    "Human in the loop",
+    "Bias in AI"
+   ]
+  },
+  {
+   "group": "right",
+   "subject": "Breach notification",
+   "tier": 4,
+   "says": [
+    "requires regulators to be told of a personal data breach within a short deadline where there is risk to people",
+    "can require the affected people to be told when the risk is high",
+    "relies on the organisation detecting and escalating quickly"
+   ],
+   "use": "discover that personal data was exposed",
+   "not": [
+    "can wait until the next annual audit"
+   ],
+   "like": [
+    "An incident report",
+    "The right of access"
+   ]
+  },
+  {
+   "group": "framework",
+   "subject": "GDPR",
+   "tier": 1,
+   "says": [
+    "is the European Union data protection regulation",
+    "applies to organisations handling personal data of people in the EU wherever the organisation is based",
+    "rests on principles such as minimisation, purpose limitation and accountability"
+   ],
+   "use": "handle personal data about people in Europe",
+   "not": [
+    "is a United States health-information law"
+   ],
+   "like": [
+    "HIPAA",
+    "CCPA",
+    "FERPA"
+   ]
+  },
+  {
+   "group": "framework",
+   "subject": "PCI DSS",
+   "tier": 2,
+   "says": [
+    "is an industry standard for organisations that handle payment card data",
+    "is safest met by avoiding touching card numbers at all",
+    "is set by the card brands, not by a government"
+   ],
+   "use": "take card payments in your system",
+   "not": [
+    "is a law about student records"
+   ],
+   "like": [
+    "GDPR",
+    "SOC 2",
+    "HIPAA"
+   ]
+  },
+  {
+   "group": "framework",
+   "subject": "HIPAA",
+   "tier": 2,
+   "says": [
+    "is a United States law that protects health information",
+    "applies to covered organisations and their suppliers",
+    "includes rules about how health records are accessed and disclosed"
+   ],
+   "use": "you work with health records of people in the United States",
+   "not": [
+    "is the European data protection regulation"
+   ],
+   "like": [
+    "GDPR",
+    "FERPA",
+    "PCI DSS"
+   ]
+  },
+  {
+   "group": "framework",
+   "subject": "FERPA",
+   "tier": 2,
+   "says": [
+    "is a United States law that protects student education records",
+    "gives students or parents rights to inspect and correct those records",
+    "restricts schools from disclosing records without consent"
+   ],
+   "use": "you handle school student records in the United States",
+   "not": [
+    "governs payment card security"
+   ],
+   "like": [
+    "HIPAA",
+    "GDPR"
+   ]
+  },
+  {
+   "group": "framework",
+   "subject": "SOC 2",
+   "tier": 3,
+   "says": [
+    "is an independent auditor's report on controls against trust services criteria",
+    "covers areas such as security, availability and confidentiality",
+    "is requested by customers as assurance about a service provider"
+   ],
+   "use": "are asked by a customer for assurance about your service controls",
+   "not": [
+    "is a law passed by a government"
+   ],
+   "like": [
+    "ISO 27001",
+    "PCI DSS"
+   ]
+  },
+  {
+   "group": "framework",
+   "subject": "ISO 27001",
+   "tier": 3,
+   "says": [
+    "is an international standard for an information security management system",
+    "can be certified by an accredited external body",
+    "is organised around risk assessment and continual improvement"
+   ],
+   "use": "want a recognised certification of your security management",
+   "not": [
+    "is a United States privacy statute"
+   ],
+   "like": [
+    "SOC 2",
+    "PCI DSS"
+   ]
+  },
+  {
+   "group": "framework",
+   "subject": "CCPA",
+   "tier": 4,
+   "says": [
+    "is a California privacy law",
+    "gives residents rights to know about and delete the personal information collected about them",
+    "lets residents opt out of the sale of their personal information"
+   ],
+   "use": "you serve consumers in California",
+   "not": [
+    "applies only inside the European Union"
+   ],
+   "like": [
+    "GDPR",
+    "HIPAA"
+   ]
+  },
+  {
+   "group": "framework",
+   "subject": "A data processing agreement",
+   "tier": 4,
+   "says": [
+    "is a contract that binds a supplier to handle personal data only on the organisation's instructions",
+    "sets security and sub-supplier terms for the processor",
+    "is required when a supplier processes personal data on your behalf"
+   ],
+   "use": "bring in a supplier who will process personal data for you",
+   "not": [
+    "is optional when the supplier is trusted"
+   ],
+   "like": [
+    "GDPR",
+    "SOC 2"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Data classification",
+   "tier": 1,
+   "says": [
+    "sorts information into levels such as public, internal, confidential and restricted",
+    "decides how strongly each kind of data is protected",
+    "gives staff a simple way to know how careful to be"
+   ],
+   "use": "need to know how carefully a piece of information must be handled",
+   "not": [
+    "is a list of who may log in"
+   ],
+   "like": [
+    "Data mapping",
+    "Encryption at rest"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Personal data",
+   "tier": 1,
+   "says": [
+    "is any information relating to an identified or identifiable person",
+    "includes names, email addresses and online identifiers",
+    "is protected by data protection law"
+   ],
+   "use": "are deciding whether a field falls under data protection rules",
+   "not": [
+    "covers only information that is marked confidential"
+   ],
+   "like": [
+    "Special category data",
+    "Anonymised data"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Special category data",
+   "tier": 3,
+   "says": [
+    "is personal data such as health, biometrics or religious belief that needs extra protection",
+    "normally needs an additional condition before it can be processed",
+    "carries higher risk of harm if exposed"
+   ],
+   "use": "design a feature that records health or biometric details",
+   "not": [
+    "is treated exactly like ordinary contact details"
+   ],
+   "like": [
+    "Personal data",
+    "Anonymised data"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Pseudonymisation",
+   "tier": 4,
+   "says": [
+    "replaces direct identifiers with a code while a key is kept separately",
+    "still counts as personal data because it can be reversed with the key",
+    "reduces risk without removing it"
+   ],
+   "use": "want to work with data while hiding identities but keep the ability to re-link",
+   "not": [
+    "makes the data permanently anonymous"
+   ],
+   "like": [
+    "Anonymised data",
+    "Masking"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Anonymised data",
+   "tier": 4,
+   "says": [
+    "cannot be linked back to a person by any reasonable means",
+    "falls outside data protection law when truly anonymous",
+    "is hard to achieve because combining datasets can re-identify people"
+   ],
+   "use": "want to share statistics with no way to identify anyone",
+   "not": [
+    "is the same as removing the name column"
+   ],
+   "like": [
+    "Pseudonymisation",
+    "Masking",
+    "Personal data"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Masking",
+   "tier": 3,
+   "says": [
+    "hides part of a value so only a safe portion is visible",
+    "shows for example only the last digits of a number",
+    "is what Moksy's scrub rules do to email addresses and phone numbers in text"
+   ],
+   "use": "need to show or pass on data without exposing the full value",
+   "not": [
+    "encrypts the whole database file"
+   ],
+   "like": [
+    "Pseudonymisation",
+    "Encryption at rest",
+    "An AI scrub rule"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Encryption at rest",
+   "tier": 3,
+   "says": [
+    "protects stored data so a stolen disk or backup is unreadable",
+    "does not protect data from a user who is already logged in with access",
+    "depends on keeping the keys separate and safe"
+   ],
+   "use": "worry about a lost laptop or stolen backup",
+   "not": [
+    "protects data while it moves across the network"
+   ],
+   "like": [
+    "Encryption in transit",
+    "Masking"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Encryption in transit",
+   "tier": 3,
+   "says": [
+    "protects data as it moves between systems or across a network",
+    "is provided for web traffic by TLS",
+    "stops eavesdropping on the connection"
+   ],
+   "use": "send sensitive data over the internet",
+   "not": [
+    "protects data sitting on a disk"
+   ],
+   "like": [
+    "Encryption at rest",
+    "Masking"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Data mapping",
+   "tier": 4,
+   "says": [
+    "records what personal data is held, where it flows and who receives it",
+    "underpins the records of processing an organisation must keep",
+    "reveals forgotten copies such as a debugging table"
+   ],
+   "use": "need to find every place personal data lives",
+   "not": [
+    "lists only the databases that IT owns"
+   ],
+   "like": [
+    "Data classification",
+    "A data protection impact assessment"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "A data protection impact assessment",
+   "tier": 4,
+   "says": [
+    "assesses risks to people before a high-risk use of personal data begins",
+    "is expected for large-scale or new technology uses such as profiling",
+    "identifies measures to reduce those risks"
+   ],
+   "use": "plan a new system that profiles people at scale",
+   "not": [
+    "is done once a year for every system"
+   ],
+   "like": [
+    "Data mapping",
+    "Privacy by design"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Privacy by design",
+   "tier": 4,
+   "says": [
+    "builds data protection into a system from the start",
+    "favours defaults that collect and expose the least data",
+    "is cheaper than bolting controls on later"
+   ],
+   "use": "are starting to design a new feature that handles personal data",
+   "not": [
+    "adds privacy notices after launch"
+   ],
+   "like": [
+    "A data protection impact assessment",
+    "Data minimisation"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "A sandbox redirect address",
+   "tier": 3,
+   "says": [
+    "in a GG Money sandbox install is the address that receives email instead of real recipients",
+    "means nothing is sent unless one is set",
+    "stops a test from emailing a real employee"
+   ],
+   "use": "test email features without risking messages to real people",
+   "not": [
+    "sends real payslips to staff during tests"
+   ],
+   "like": [
+    "An email log",
+    "Masking"
+   ]
+  },
+  {
+   "group": "handling",
+   "subject": "Tokenisation of card data",
+   "tier": 5,
+   "says": [
+    "replaces a card number with a token that is useless outside the payment system",
+    "shrinks the amount of card data an organisation holds",
+    "helps reduce the scope of payment card compliance"
+   ],
+   "use": "want to take repeat card payments without storing card numbers",
+   "not": [
+    "stores the full card number in an encrypted column"
+   ],
+   "like": [
+    "Encryption at rest",
+    "PCI DSS"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A risk score",
+   "tier": 2,
+   "says": [
+    "combines likelihood and impact into one comparable figure",
+    "is commonly worked out by multiplying the two",
+    "lets a rare severe event rank alongside a frequent minor one"
+   ],
+   "use": "need to compare very different worries",
+   "not": [
+    "measures how many controls have been written"
+   ],
+   "like": [
+    "Likelihood",
+    "Impact",
+    "A risk register"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Likelihood",
+   "tier": 1,
+   "says": [
+    "is how probable it is that a risk event will happen",
+    "is one of the two inputs to a simple risk score",
+    "needs evidence such as incident history to be estimated well"
+   ],
+   "use": "are rating how probable a problem is",
+   "not": [
+    "is the damage if the event happens"
+   ],
+   "like": [
+    "Impact",
+    "A risk score"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Impact",
+   "tier": 1,
+   "says": [
+    "is how bad the consequences are if the risk event happens",
+    "is the second input to a simple risk score",
+    "is made visible in GG Money's compliance calendar by writing what goes wrong if a task is missed"
+   ],
+   "use": "are rating the consequences of a problem",
+   "not": [
+    "is how often the event occurs"
+   ],
+   "like": [
+    "Likelihood",
+    "A risk score"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A risk register",
+   "tier": 2,
+   "says": [
+    "lists identified risks with their scores, owners and treatments",
+    "is reviewed so it stays current",
+    "gives leaders one place to see the main exposures"
+   ],
+   "use": "need one place that tracks known risks",
+   "not": [
+    "lists only risks that have already happened"
+   ],
+   "like": [
+    "A risk score",
+    "Risk appetite"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A risk owner",
+   "tier": 3,
+   "says": [
+    "is the named person accountable for managing one risk",
+    "decides with the organisation how it will be treated",
+    "is a person, not a team mailbox"
+   ],
+   "use": "need someone answerable for a specific risk",
+   "not": [
+    "is the person who first spotted it"
+   ],
+   "like": [
+    "A risk register",
+    "Human sign-off"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Inherent risk",
+   "tier": 4,
+   "says": [
+    "is the level of risk before any controls are applied",
+    "shows how exposed you would be with no protection",
+    "is compared with residual risk to see what controls achieve"
+   ],
+   "use": "want to judge how risky an activity is with no controls",
+   "not": [
+    "is the risk left after controls work"
+   ],
+   "like": [
+    "Residual risk",
+    "A risk score"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Residual risk",
+   "tier": 4,
+   "says": [
+    "is the risk that remains after controls are applied",
+    "must be accepted or further reduced",
+    "rises if a control is untested or fails"
+   ],
+   "use": "ask what exposure is left after existing controls",
+   "not": [
+    "is the risk before controls"
+   ],
+   "like": [
+    "Inherent risk",
+    "Risk appetite"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk mitigation",
+   "tier": 3,
+   "says": [
+    "reduces the likelihood or impact of a risk",
+    "is done through controls and changes",
+    "is chosen when the risk is too high but the activity is worth keeping"
+   ],
+   "use": "decide to add controls to bring a risk down",
+   "not": [
+    "means accepting the risk as it is"
+   ],
+   "like": [
+    "Risk acceptance",
+    "Risk transfer",
+    "Risk avoidance"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk acceptance",
+   "tier": 4,
+   "says": [
+    "knowingly lives with a risk because it falls within appetite or the cost to reduce it is too high",
+    "should be recorded and approved by the risk owner",
+    "is a decision, not a default for ignored risks"
+   ],
+   "use": "decide a small risk is not worth the cost of reducing",
+   "not": [
+    "happens automatically when nobody addresses a risk"
+   ],
+   "like": [
+    "Risk mitigation",
+    "Risk transfer",
+    "Risk avoidance"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk transfer",
+   "tier": 4,
+   "says": [
+    "shifts some of the financial impact to another party such as an insurer or supplier",
+    "does not remove the original responsibility to manage the risk",
+    "is common for losses that are rare but expensive"
+   ],
+   "use": "buy insurance against a rare costly event",
+   "not": [
+    "makes the risk disappear"
+   ],
+   "like": [
+    "Risk mitigation",
+    "Risk acceptance",
+    "Risk avoidance"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk avoidance",
+   "tier": 4,
+   "says": [
+    "stops the activity that creates the risk",
+    "removes the exposure entirely at the cost of the benefit",
+    "is chosen when a risk is above appetite and cannot be reduced enough"
+   ],
+   "use": "decide to stop doing something because the risk is too high",
+   "not": [
+    "adds monitoring without changing the activity"
+   ],
+   "like": [
+    "Risk mitigation",
+    "Risk acceptance",
+    "Risk transfer"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A compliance calendar",
+   "tier": 3,
+   "says": [
+    "in GG Money lists each recurring task with its frequency, sign-off owner, source rule and consequence of missing it",
+    "states that dates are reminders, not advice",
+    "marks some dates as needing confirmation because facts like a first accounting period sit outside the app"
+   ],
+   "use": "need to track recurring obligations and who signs them off",
+   "not": [
+    "is legal advice that guarantees deadlines are right"
+   ],
+   "like": [
+    "A risk register",
+    "Key risk indicator"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Key risk indicator",
+   "tier": 5,
+   "says": [
+    "is a measure that warns a risk is rising before an incident",
+    "tracks something like overdue reviews or failed backups",
+    "is watched against thresholds that trigger action"
+   ],
+   "use": "want an early signal that exposure is growing",
+   "not": [
+    "counts incidents after the year ends"
+   ],
+   "like": [
+    "A risk score",
+    "A risk register"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Least privilege",
+   "tier": 1,
+   "says": [
+    "gives people only the access they need to do their job",
+    "limits the damage if an account is misused or compromised",
+    "is reviewed as roles change"
+   ],
+   "use": "are deciding how much access a new person should get",
+   "not": [
+    "gives everyone admin rights to avoid delays"
+   ],
+   "like": [
+    "Role-based access control",
+    "Need to know"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Role-based access control",
+   "tier": 2,
+   "says": [
+    "grants permissions to roles rather than to individuals",
+    "gives a person the access of the role they hold",
+    "makes access easier to review and to change when someone moves"
+   ],
+   "use": "want permissions to follow job roles",
+   "not": [
+    "assigns each permission by hand to individual people"
+   ],
+   "like": [
+    "Least privilege",
+    "Need to know"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Need to know",
+   "tier": 3,
+   "says": [
+    "limits sensitive information to people who require it for their task",
+    "applies even to senior people who hold a high clearance",
+    "is narrower than being in the right role"
+   ],
+   "use": "someone asks for sensitive data out of curiosity",
+   "not": [
+    "gives access to anyone at the same grade"
+   ],
+   "like": [
+    "Least privilege",
+    "Role-based access control"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "An access review",
+   "tier": 3,
+   "says": [
+    "checks periodically that each person's access is still appropriate",
+    "is signed off by the owner of the system or data",
+    "catches access that built up as people changed roles"
+   ],
+   "use": "want to catch access that is no longer needed",
+   "not": [
+    "is done only when someone leaves"
+   ],
+   "like": [
+    "Joiner-mover-leaver process",
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Joiner-mover-leaver process",
+   "tier": 3,
+   "says": [
+    "adjusts access when people start, change role or leave",
+    "removes old permissions when someone moves rather than only adding new ones",
+    "revokes access promptly on departure"
+   ],
+   "use": "see a colleague move to a different team",
+   "not": [
+    "only grants access to new starters"
+   ],
+   "like": [
+    "An access review",
+    "Offboarding"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Offboarding",
+   "tier": 2,
+   "says": [
+    "removes a leaver's access and recovers their equipment",
+    "happens on or before their last day",
+    "closes accounts so none are left active unused"
+   ],
+   "use": "learn that a person is leaving the company",
+   "not": [
+    "waits until the next access review"
+   ],
+   "like": [
+    "Joiner-mover-leaver process",
+    "An access review"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Multi-factor authentication",
+   "tier": 1,
+   "says": [
+    "requires two or more different kinds of proof of identity",
+    "still protects an account when a password is stolen",
+    "combines something you know with something you have or are"
+   ],
+   "use": "want an account to survive a leaked password",
+   "not": [
+    "is satisfied by entering two passwords"
+   ],
+   "like": [
+    "Single sign-on",
+    "Privileged access"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Single sign-on",
+   "tier": 3,
+   "says": [
+    "lets one login give access to many services",
+    "centralises where accounts are created and removed",
+    "makes offboarding more reliable"
+   ],
+   "use": "want one place to manage who can use many tools",
+   "not": [
+    "stores each service's password in the browser of each user"
+   ],
+   "like": [
+    "Multi-factor authentication",
+    "Role-based access control"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Privileged access",
+   "tier": 4,
+   "says": [
+    "gives powerful rights such as administering systems",
+    "needs stronger approval, logging and review than ordinary access",
+    "is granted for the time it is needed rather than permanently"
+   ],
+   "use": "need elevated rights to administer a system",
+   "not": [
+    "is shared freely so the team can cover for each other"
+   ],
+   "like": [
+    "Break-glass access",
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Break-glass access",
+   "tier": 5,
+   "says": [
+    "is emergency access used only when normal routes fail",
+    "is heavily logged and reviewed afterwards",
+    "should be rare and time-limited"
+   ],
+   "use": "normal approval is down and a critical outage needs urgent fixing",
+   "not": [
+    "is a normal way to skip approvals when busy"
+   ],
+   "like": [
+    "Privileged access",
+    "Delegation of authority"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "A shared account",
+   "tier": 4,
+   "says": [
+    "is one login used by several people",
+    "breaks the audit trail because actions cannot be tied to one person",
+    "should be avoided in favour of named accounts"
+   ],
+   "use": "find a login that the whole team uses",
+   "not": [
+    "improves accountability because everyone knows the password"
+   ],
+   "like": [
+    "A service account",
+    "Multi-factor authentication"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "A service account",
+   "tier": 4,
+   "says": [
+    "is an account used by software rather than a person",
+    "should have only the permissions its job needs",
+    "has its credentials rotated and owned by a named person"
+   ],
+   "use": "need an application to connect to another system",
+   "not": [
+    "is a good place to store a team's shared password"
+   ],
+   "like": [
+    "A shared account",
+    "Privileged access"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "A change request",
+   "tier": 1,
+   "says": [
+    "records what will change, why, and who is responsible",
+    "is raised before the change is made",
+    "gives approvers something specific to review"
+   ],
+   "use": "need to make a change to a live system",
+   "not": [
+    "is filed after the change is live to tidy the records"
+   ],
+   "like": [
+    "Peer review",
+    "Change control"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Change control",
+   "tier": 2,
+   "says": [
+    "is the process that decides which changes go ahead and how",
+    "reduces unplanned outages from untracked changes",
+    "keeps a record of each change and its approval"
+   ],
+   "use": "want changes to a system to be controlled and traceable",
+   "not": [
+    "slows every change down with no benefit"
+   ],
+   "like": [
+    "A change request",
+    "Peer review"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Peer review",
+   "tier": 2,
+   "says": [
+    "has a colleague examine a change before it is accepted",
+    "catches mistakes the author cannot see",
+    "applies the four-eyes principle to code and documents"
+   ],
+   "use": "have finished a change and want it checked",
+   "not": [
+    "is performed by the author themselves"
+   ],
+   "like": [
+    "The four-eyes principle",
+    "A change request"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "A rollback plan",
+   "tier": 3,
+   "says": [
+    "says how to return to the previous working state if a change fails",
+    "is agreed before the change is made",
+    "is tested rather than assumed"
+   ],
+   "use": "worry that a deployment might break production",
+   "not": [
+    "is written only after the change has failed"
+   ],
+   "like": [
+    "Testing in staging",
+    "A post-implementation review"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Testing in staging",
+   "tier": 3,
+   "says": [
+    "checks a change in a copy of production before it goes live",
+    "finds problems without affecting real users",
+    "is only reliable if staging resembles production"
+   ],
+   "use": "want to try a change without risk to real users",
+   "not": [
+    "means testing directly on production"
+   ],
+   "like": [
+    "A rollback plan",
+    "Separation of environments"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Separation of environments",
+   "tier": 4,
+   "says": [
+    "keeps development, testing and production apart",
+    "prevents test data from reaching real customers",
+    "means real personal data is not copied into development without protection"
+   ],
+   "use": "are asked why developers should not use production data",
+   "not": [
+    "lets developers edit production directly for speed"
+   ],
+   "like": [
+    "Testing in staging",
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "An emergency change",
+   "tier": 4,
+   "says": [
+    "is a fast-tracked fix for an urgent live problem",
+    "still needs to be recorded and approved after the fact",
+    "is reviewed afterwards to see whether the shortcut was justified"
+   ],
+   "use": "need a fix for a live outage right now",
+   "not": [
+    "skips all records because there is no time"
+   ],
+   "like": [
+    "Break-glass access",
+    "A change request"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "A change freeze",
+   "tier": 4,
+   "says": [
+    "pauses non-urgent changes during a sensitive period",
+    "protects stability around events such as a year-end close",
+    "lets only emergency changes through"
+   ],
+   "use": "want to avoid new risk during a critical period",
+   "not": [
+    "blocks all changes including emergency fixes"
+   ],
+   "like": [
+    "An emergency change",
+    "Change control"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Traceability",
+   "tier": 3,
+   "says": [
+    "links a change back to its request, approval and test",
+    "lets an auditor follow a change from the reason to the result",
+    "depends on references such as ticket numbers in commit messages"
+   ],
+   "use": "are asked to show why a particular change was made",
+   "not": [
+    "is the same as keeping the code in a backup"
+   ],
+   "like": [
+    "An audit trail",
+    "A change request"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "A post-implementation review",
+   "tier": 5,
+   "says": [
+    "checks after a change whether it achieved its aim and what went wrong",
+    "feeds lessons into the next change",
+    "compares the outcome with the plan"
+   ],
+   "use": "want to learn from a change that has just gone live",
+   "not": [
+    "is done before the change is approved"
+   ],
+   "like": [
+    "A rollback plan",
+    "Peer review"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "A code of conduct",
+   "tier": 1,
+   "says": [
+    "sets out the behaviour the organisation expects from everyone",
+    "gives a shared reference for ethical decisions",
+    "applies to every person regardless of seniority"
+   ],
+   "use": "are unsure whether a behaviour is acceptable here",
+   "not": [
+    "applies only to new starters"
+   ],
+   "like": [
+    "An acceptable use policy",
+    "Ethics"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "A conflict of interest",
+   "tier": 2,
+   "says": [
+    "arises when a personal interest could influence a work decision",
+    "should be declared even if you think it will not affect you",
+    "is managed by disclosure and by stepping back from the decision"
+   ],
+   "use": "are asked to choose a supplier run by a relative",
+   "not": [
+    "is harmless as long as nobody finds out"
+   ],
+   "like": [
+    "A gift",
+    "Whistleblowing",
+    "Bribery"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "A gift",
+   "tier": 3,
+   "says": [
+    "needs checking against the gifts policy when a supplier offers it",
+    "is declared when it could look like an attempt to influence a decision",
+    "may need to be refused or returned if it is of more than modest value"
+   ],
+   "use": "receive a valuable present from a supplier before a contract decision",
+   "not": [
+    "can be accepted privately if it is a surprise"
+   ],
+   "like": [
+    "A conflict of interest",
+    "Bribery"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "Bribery",
+   "tier": 4,
+   "says": [
+    "is offering or accepting something of value to improperly influence a decision",
+    "is a crime in most countries even when done through an agent",
+    "cannot be justified as a local custom"
+   ],
+   "use": "are asked to pay a facilitation fee to speed an approval",
+   "not": [
+    "is only an offence when the money is large"
+   ],
+   "like": [
+    "A gift",
+    "A conflict of interest"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "Whistleblowing",
+   "tier": 3,
+   "says": [
+    "is reporting suspected wrongdoing through a protected channel",
+    "is protected by law in many places against retaliation",
+    "lets concerns reach someone who can act when the usual line manager is involved"
+   ],
+   "use": "suspect serious wrongdoing and your manager may be part of it",
+   "not": [
+    "is a breach of loyalty that should be avoided"
+   ],
+   "like": [
+    "A conflict of interest",
+    "Speaking up"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "Speaking up",
+   "tier": 2,
+   "says": [
+    "means raising a concern early before it becomes a larger problem",
+    "is encouraged for mistakes as well as for misconduct",
+    "depends on people not being blamed for good-faith reports"
+   ],
+   "use": "notice a mistake that could harm a customer",
+   "not": [
+    "means waiting until the audit finds it"
+   ],
+   "like": [
+    "Whistleblowing",
+    "A code of conduct"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "Confidentiality",
+   "tier": 1,
+   "says": [
+    "means not sharing non-public information with people who should not have it",
+    "continues after you leave the organisation",
+    "covers customer, staff and company information"
+   ],
+   "use": "hold information that is not meant to be public",
+   "not": [
+    "ends on your last day"
+   ],
+   "like": [
+    "Need to know",
+    "A code of conduct"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "An acceptable use policy",
+   "tier": 2,
+   "says": [
+    "sets out how company systems and accounts may be used",
+    "covers things such as installing software and using personal devices",
+    "is what staff agree to follow"
+   ],
+   "use": "want to know whether you may use work equipment for something",
+   "not": [
+    "is only relevant to the IT team"
+   ],
+   "like": [
+    "A code of conduct",
+    "Confidentiality"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "Phishing reporting",
+   "tier": 1,
+   "says": [
+    "means passing a suspicious message to the security team",
+    "helps protect colleagues who might get the same message",
+    "is better than deleting it quietly or replying"
+   ],
+   "use": "receive an email that asks you urgently for a password",
+   "not": [
+    "is unnecessary once you have deleted the message"
+   ],
+   "like": [
+    "Confidentiality",
+    "An acceptable use policy"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "Ethics",
+   "tier": 4,
+   "says": [
+    "asks what is right as well as what is legal",
+    "guides decisions where no rule gives a clear answer",
+    "is about judgement in the moment, not just rule-following"
+   ],
+   "use": "face a decision that is legal but could harm someone",
+   "not": [
+    "is satisfied by obeying the law and nothing more"
+   ],
+   "like": [
+    "A code of conduct",
+    "Compliance"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "Compliance",
+   "tier": 1,
+   "says": [
+    "is following the laws, regulations and internal policies that apply",
+    "needs evidence that rules are followed, not just intention",
+    "can be met on paper while the real behaviour differs"
+   ],
+   "use": "are asked what compliance means",
+   "not": [
+    "is the same as ethics"
+   ],
+   "like": [
+    "Ethics",
+    "Governance"
+   ]
+  },
+  {
+   "group": "conduct",
+   "subject": "Governance",
+   "tier": 1,
+   "says": [
+    "is the system of rules, roles and decisions by which an organisation is directed and held accountable",
+    "defines who decides what and who is answerable",
+    "pairs policies with controls that can be checked"
+   ],
+   "use": "are asked what governance means",
+   "not": [
+    "is the daily work of the helpdesk"
+   ],
+   "like": [
+    "Compliance",
+    "Ethics"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "An AI usage policy",
+   "tier": 1,
+   "says": [
+    "says which AI tools staff may use and for what",
+    "sets rules for what data may be entered into them",
+    "applies to everyone using AI at work"
+   ],
+   "use": "want to know what you may put into an AI tool",
+   "not": [
+    "bans staff from ever reading AI output"
+   ],
+   "like": [
+    "Shadow AI",
+    "Human in the loop"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Human in the loop",
+   "tier": 2,
+   "says": [
+    "keeps a person responsible for the decision an AI suggests",
+    "is how GG Money lets AI agents leave notes but only a person approve",
+    "lets someone catch wrong or unfair output before it takes effect"
+   ],
+   "use": "see an AI system propose an action with real consequences",
+   "not": [
+    "lets the AI act unattended once it passes a test"
+   ],
+   "like": [
+    "An advisory automated check",
+    "Shadow AI"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Shadow AI",
+   "tier": 3,
+   "says": [
+    "is use of AI tools that the organisation has not approved",
+    "can send company or customer data to an unvetted provider",
+    "is reduced by offering approved tools that meet real needs"
+   ],
+   "use": "find colleagues pasting customer data into an unapproved chatbot",
+   "not": [
+    "is fine as long as the output is correct"
+   ],
+   "like": [
+    "An AI usage policy",
+    "Human in the loop"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "An AI scrub rule",
+   "tier": 3,
+   "says": [
+    "in Moksy's AI policy service masks email addresses and phone numbers before text travels onwards",
+    "removes personal identifiers from a prompt before it leaves",
+    "applies data minimisation to AI traffic"
+   ],
+   "use": "want personal details removed from text sent to a model",
+   "not": [
+    "encrypts the AI provider's response"
+   ],
+   "like": [
+    "Masking",
+    "An AI usage policy"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Hallucination risk",
+   "tier": 3,
+   "says": [
+    "is the chance that an AI states false things confidently",
+    "means important AI output must be checked against a source",
+    "is why AI output should not be accepted without review in regulated work"
+   ],
+   "use": "plan to rely on AI output in a document that others will act on",
+   "not": [
+    "only occurs when the user prompts badly"
+   ],
+   "like": [
+    "Bias in AI",
+    "Human in the loop"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Bias in AI",
+   "tier": 4,
+   "says": [
+    "is a systematic unfair skew in an AI system's results",
+    "can come from unrepresentative training data",
+    "needs testing for different groups of people to find"
+   ],
+   "use": "worry that an AI screening tool treats groups differently",
+   "not": [
+    "disappears when the model is large enough"
+   ],
+   "like": [
+    "Hallucination risk",
+    "The right on automated decisions"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "A secret in a prompt",
+   "tier": 3,
+   "says": [
+    "is a credential or confidential value pasted into an AI tool",
+    "may be stored or seen by a third party",
+    "should be kept out of prompts and replaced with placeholders"
+   ],
+   "use": "are about to paste an access key into an AI assistant to get help",
+   "not": [
+    "is safe because the chat is private"
+   ],
+   "like": [
+    "An AI scrub rule",
+    "Shadow AI"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI record keeping",
+   "tier": 4,
+   "says": [
+    "logs AI events so use can be reviewed",
+    "is covered in Moksy's retention classes with its own keep period",
+    "supports accountability for what the AI did"
+   ],
+   "use": "need to show later what an AI system did and when",
+   "not": [
+    "is unnecessary because the model remembers"
+   ],
+   "like": [
+    "An audit trail",
+    "A retention class"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Prompt injection",
+   "tier": 5,
+   "says": [
+    "is text in input that tries to make an AI follow the attacker's instructions",
+    "can come from a web page or document the AI reads",
+    "is why AI agents should be given the least permission they need"
+   ],
+   "use": "let an AI agent read untrusted content while it has access to tools",
+   "not": [
+    "is prevented by telling the model to ignore it"
+   ],
+   "like": [
+    "Shadow AI",
+    "A secret in a prompt"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI transparency",
+   "tier": 4,
+   "says": [
+    "means telling people when they are dealing with AI or AI-assisted output",
+    "helps users decide how far to trust it",
+    "supports the right to contest automated decisions"
+   ],
+   "use": "customers might not realise a reply was machine-written",
+   "not": [
+    "is satisfied by a hidden note in the source code"
+   ],
+   "like": [
+    "Human in the loop",
+    "Bias in AI"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "An internal audit",
+   "tier": 3,
+   "says": [
+    "is a check on controls carried out by the organisation's own independent function",
+    "reports findings to senior management",
+    "tests whether controls work as described"
+   ],
+   "use": "want an independent look at controls without bringing in an outside firm",
+   "not": [
+    "is done by the team that owns the control"
+   ],
+   "like": [
+    "An external audit",
+    "An audit finding"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "An external audit",
+   "tier": 3,
+   "says": [
+    "is carried out by an independent outside firm",
+    "gives stakeholders confidence in the organisation's figures or controls",
+    "is separate from the organisation's internal checks"
+   ],
+   "use": "need independent assurance for a customer or regulator",
+   "not": [
+    "is carried out by the organisation's own staff"
+   ],
+   "like": [
+    "An internal audit",
+    "SOC 2"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "An audit finding",
+   "tier": 3,
+   "says": [
+    "is a recorded gap between what was found and what should be in place",
+    "is rated by severity",
+    "needs an owner and a date for the fix"
+   ],
+   "use": "hear an auditor report that a control did not work",
+   "not": [
+    "is a verbal remark that does not need tracking"
+   ],
+   "like": [
+    "Corrective action",
+    "An internal audit"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "Corrective action",
+   "tier": 4,
+   "says": [
+    "is the fix agreed for an audit finding or incident",
+    "has an owner and a due date",
+    "addresses the root cause, not only the symptom"
+   ],
+   "use": "need to fix a finding and stop it recurring",
+   "not": [
+    "is closed as soon as the symptom disappears"
+   ],
+   "like": [
+    "An audit finding",
+    "A post-implementation review"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "Audit sampling",
+   "tier": 4,
+   "says": [
+    "tests a subset of items instead of all of them",
+    "lets an auditor reach a conclusion about the whole population",
+    "works only if the sample is chosen without bias"
+   ],
+   "use": "cannot test every record but must draw a conclusion",
+   "not": [
+    "means testing only the records the owner picks"
+   ],
+   "like": [
+    "An internal audit",
+    "An audit finding"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "The three lines model",
+   "tier": 5,
+   "says": [
+    "separates operational management, risk and compliance oversight, and independent audit",
+    "puts the day-to-day ownership of risk with the first line",
+    "has internal audit as the independent third line"
+   ],
+   "use": "want to see who owns, oversees and independently checks risk",
+   "not": [
+    "makes the compliance team own all risk"
+   ],
+   "like": [
+    "An internal audit",
+    "A risk owner"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "Records management",
+   "tier": 3,
+   "says": [
+    "controls how records are created, kept and disposed of",
+    "uses a retention schedule to say how long each type is kept",
+    "helps find the right record when it is needed"
+   ],
+   "use": "need to decide how records are kept and disposed of",
+   "not": [
+    "means keeping everything forever"
+   ],
+   "like": [
+    "A retention period",
+    "An audit trail"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "Document control",
+   "tier": 3,
+   "says": [
+    "makes sure people use the current approved version of a document",
+    "keeps version history and approval status",
+    "retires old versions so they are not used by mistake"
+   ],
+   "use": "worry that staff are following an outdated procedure",
+   "not": [
+    "lets anyone edit the live policy"
+   ],
+   "like": [
+    "Records management",
+    "A versioned approval"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "An incident report",
+   "tier": 2,
+   "says": [
+    "describes what happened, the impact and the actions taken",
+    "should be raised as soon as an incident is noticed",
+    "feeds lessons back into controls"
+   ],
+   "use": "notice a security or data incident",
+   "not": [
+    "is held back until the cause is certain"
+   ],
+   "like": [
+    "Breach notification",
+    "Corrective action"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "Compliance calendar testing",
+   "tier": 5,
+   "says": [
+    "checks that scheduled obligation dates are right for different circumstances",
+    "treats the calendar as a system that can be wrong",
+    "is motivated by an October 2026 GG Money stress run that proposed some statutory dates could be a day or two late for certain year ends"
+   ],
+   "use": "want to be sure a deadline list will not mislead people",
+   "not": [
+    "is unnecessary once the calendar is published"
+   ],
+   "like": [
+    "A compliance calendar",
+    "Key risk indicator"
+   ]
+  },
+  {
+   "group": "assurance",
+   "subject": "Surfacing by risk",
+   "tier": 5,
+   "says": [
+    "shows high-severity items first instead of only the oldest",
+    "avoids a capped list of routine tasks hiding statutory deadlines",
+    "is the lesson of a backlog of daily housekeeping tasks in GG Money's calendar"
+   ],
+   "use": "find that low-severity noise is burying important deadlines",
+   "not": [
+    "sorts every task strictly by age"
+   ],
+   "like": [
+    "A compliance calendar",
+    "A risk score"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Which of these is an example of segregation of duties?",
+   "right": "The person who prepares a payment is not the person who approves it",
+   "wrong": [
+    "The manager prepares and approves every payment to save time",
+    "Everyone in the team shares one login for payments",
+    "Payments are approved by whoever is free first, including the preparer"
+   ],
+   "tier": 1,
+   "why": "Separating preparation from approval means no single person can complete a risky action alone."
+  },
+  {
+   "q": "What should you do first if you receive an email asking you urgently to confirm your password?",
+   "right": "Report it to the security team and do not reply",
+   "wrong": [
+    "Reply asking whether it is genuine",
+    "Click the link to check if it works, then close it",
+    "Delete it quietly and tell nobody"
+   ],
+   "tier": 1,
+   "why": "Reporting protects colleagues who may receive the same message."
+  },
+  {
+   "q": "What is the main purpose of an audit trail?",
+   "right": "To show who did what, to which record and when",
+   "wrong": [
+    "To speed up the system",
+    "To remove the need for passwords",
+    "To store a copy of every file in the company"
+   ],
+   "tier": 1,
+   "why": "A trail lets events be reconstructed after the fact."
+  },
+  {
+   "q": "Which statement best describes data minimisation?",
+   "right": "Collect only the personal data you need for the stated purpose",
+   "wrong": [
+    "Collect as much as possible in case it is useful later",
+    "Keep data forever but encrypt it",
+    "Collect data first and decide on a purpose afterwards"
+   ],
+   "tier": 1,
+   "why": "Minimisation limits how much is collected, which limits exposure."
+  },
+  {
+   "q": "A policy and a control are different. Which sentence is correct?",
+   "right": "A policy states the rule, and a control is the mechanism that makes it hard to skip",
+   "wrong": [
+    "A policy and a control are two names for the same document",
+    "A control is a written rule and a policy is a technical block",
+    "A policy is checked by auditors but a control never is"
+   ],
+   "tier": 1,
+   "why": "Governance pairs the rule with something that can be tested."
+  },
+  {
+   "q": "Which of these is personal data?",
+   "right": "An email address that identifies a customer",
+   "wrong": [
+    "A company's public product price list",
+    "The total number of orders last year across all customers",
+    "A software version number"
+   ],
+   "tier": 1,
+   "why": "Information relating to an identifiable person is personal data."
+  },
+  {
+   "q": "Your teammate asks to approve their own expense claim because the approver is away. What is the right response?",
+   "right": "Ask for a documented delegation to another approver",
+   "wrong": [
+    "Let them approve it and mention it later",
+    "Approve it yourself without telling anyone",
+    "Skip approval because the claim is small"
+   ],
+   "tier": 2,
+   "why": "A delegate keeps the preparer and approver separate and leaves a record."
+  },
+  {
+   "q": "In GG Money, why do automatic compliance checks never sign off a review?",
+   "right": "Sign-off needs a named person who takes responsibility",
+   "wrong": [
+    "Automatic checks are always wrong",
+    "Sign-off is only for senior staff",
+    "The checks run too slowly to finish"
+   ],
+   "tier": 2,
+   "why": "Machines gather evidence; a human takes accountability."
+  },
+  {
+   "q": "How does GG Money correct a mistake in a posted journal?",
+   "right": "By posting a reversal so both the error and the fix stay visible",
+   "wrong": [
+    "By editing the journal in place",
+    "By deleting the journal and posting a new one",
+    "By hiding it from reports"
+   ],
+   "tier": 2,
+   "why": "Immutable ledgers are corrected with additional entries."
+  },
+  {
+   "q": "A customer asks what personal data you hold about them. Which right are they using?",
+   "right": "The right of access",
+   "wrong": [
+    "The right to erasure",
+    "The right to portability only",
+    "The right to restriction"
+   ],
+   "tier": 2,
+   "why": "Access is the right to a copy of the data and the reasons for processing."
+  },
+  {
+   "q": "Which framework is an industry standard for organisations that handle payment card data?",
+   "right": "PCI DSS",
+   "wrong": [
+    "HIPAA",
+    "FERPA",
+    "GDPR"
+   ],
+   "tier": 2,
+   "why": "PCI DSS is set by the card brands for card data."
+  },
+  {
+   "q": "What does least privilege mean for a new starter?",
+   "right": "They get only the access their job needs",
+   "wrong": [
+    "They get the same access as their manager",
+    "They get no access until their first review",
+    "They get admin rights for the first month"
+   ],
+   "tier": 2,
+   "why": "Limited access limits the damage from misuse or compromise."
+  },
+  {
+   "q": "Which email data does GG Money deliberately NOT store in its email log?",
+   "right": "The message body",
+   "wrong": [
+    "The time the email was sent",
+    "Who the email was sent to",
+    "What the email provider said"
+   ],
+   "tier": 2,
+   "why": "A payslip body holds someone's salary, and a second copy is a liability."
+  },
+  {
+   "q": "You find a mistake in a colleague's document just after it was published. What is the best habit?",
+   "right": "Tell them promptly and follow the correction process",
+   "wrong": [
+    "Wait for the audit to find it",
+    "Quietly edit the live version without a record",
+    "Ignore it because it is not your document"
+   ],
+   "tier": 2,
+   "why": "Speaking up early keeps small errors small, and a record keeps the correction traceable."
+  },
+  {
+   "q": "Under GDPR-style law, what does storage limitation require?",
+   "right": "Keeping personal data no longer than needed for its purpose",
+   "wrong": [
+    "Storing all data in one country",
+    "Encrypting all data",
+    "Keeping data for exactly seven years"
+   ],
+   "tier": 2,
+   "why": "It is about time, while minimisation is about quantity."
+  },
+  {
+   "q": "A GG Money brand review was frozen and a ledger entry changed before approval. What happens?",
+   "right": "The fingerprint no longer matches, so the review goes stale and has to be put up again",
+   "wrong": [
+    "The approver is told but the review stays approved",
+    "The ledger change is rolled back automatically",
+    "The review is approved automatically using the new figures"
+   ],
+   "tier": 3,
+   "why": "An approval belongs to one exact version of the figures."
+  },
+  {
+   "q": "What is the best reason a frozen review carries a fingerprint of its numbers?",
+   "right": "It lets a change to the underlying figures be detected before approval counts",
+   "wrong": [
+    "It encrypts the numbers",
+    "It makes the page load faster",
+    "It counts how many times the review was opened"
+   ],
+   "tier": 3,
+   "why": "The fingerprint ties the approval to the exact numbers shown."
+  },
+  {
+   "q": "According to the Moksy audit service configuration, which pairing of retention class and keep period is correct?",
+   "right": "Payments seven years",
+   "wrong": [
+    "Authentication events seven years",
+    "Payments one year",
+    "AI events seven years"
+   ],
+   "tier": 3,
+   "why": "The configured values are authentication one year, payments seven years, AI events two years and a two-year default."
+  },
+  {
+   "q": "How long does the Moksy audit service keep authentication events, according to its configuration?",
+   "right": "One year",
+   "wrong": [
+    "Seven years",
+    "Two years",
+    "Forever"
+   ],
+   "tier": 3,
+   "why": "Authentication events are configured at one year; the values are configuration, not legal advice."
+  },
+  {
+   "q": "What did Moksy audit callers' failure to pass a class cause?",
+   "right": "Every record fell into the default class, so per-class policy governed nothing",
+   "wrong": [
+    "Every record was deleted immediately",
+    "Every record was kept for seven years",
+    "Every record was rejected"
+   ],
+   "tier": 3,
+   "why": "Deriving the class from the action prefix fixed it, and an explicit class still wins."
+  },
+  {
+   "q": "How does the Moksy audit service now work out a record's class when none is passed?",
+   "right": "From the action name prefix such as auth or payments",
+   "wrong": [
+    "From the time of day it was written",
+    "From the size of the record",
+    "From the user's job title"
+   ],
+   "tier": 3,
+   "why": "An explicit class passed by the caller still takes priority."
+  },
+  {
+   "q": "What does the Moksy retention sweep do to records past their retention?",
+   "right": "Archives them without deleting them",
+   "wrong": [
+    "Deletes them permanently",
+    "Hands them to the user who created them",
+    "Moves them to the default class"
+   ],
+   "tier": 3,
+   "why": "Purging remains a deliberate super-admin decision."
+  },
+  {
+   "q": "A sandbox install of GG Money has no redirect address set. What happens when a test tries to send email?",
+   "right": "Nothing is sent",
+   "wrong": [
+    "It is sent to real employees",
+    "It is sent to the developer's personal email",
+    "It is sent to the audit service"
+   ],
+   "tier": 3,
+   "why": "A sandbox sends nothing unless a redirect address is set, so tests cannot email real employees."
+  },
+  {
+   "q": "What does the Moksy AI policy service scrub rule do?",
+   "right": "Masks email addresses and phone numbers in text before it travels onwards",
+   "wrong": [
+    "Encrypts the model's reply",
+    "Blocks all AI requests after midnight",
+    "Deletes AI logs after one day"
+   ],
+   "tier": 3,
+   "why": "It applies data minimisation to AI traffic."
+  },
+  {
+   "q": "What does a GG Money compliance calendar entry state about each task?",
+   "right": "How often it recurs, who signs it off, the rule it comes from and what goes wrong if missed",
+   "wrong": [
+    "Only the due date",
+    "Only the person who created it",
+    "The legal penalty in each country"
+   ],
+   "tier": 3,
+   "why": "Writing the consequence makes the impact visible so tasks can be ranked."
+  },
+  {
+   "q": "What does the GG Money compliance calendar say about its dates?",
+   "right": "They are reminders, not advice",
+   "wrong": [
+    "They are legal advice that is always correct",
+    "They are final and cannot be changed",
+    "They apply only to the first accounting period"
+   ],
+   "tier": 3,
+   "why": "Some dates are marked as needing confirmation."
+  },
+  {
+   "q": "What is the difference between a preventive and a detective control?",
+   "right": "Preventive stops the event happening, detective finds it afterwards",
+   "wrong": [
+    "Preventive finds it afterwards, detective stops it",
+    "Both work only after the event",
+    "They are the same control used by different teams"
+   ],
+   "tier": 3,
+   "why": "A required approval is preventive; a log review is detective."
+  },
+  {
+   "q": "Which is a correct use of a risk score?",
+   "right": "Compare a rare severe event with a frequent minor one",
+   "wrong": [
+    "Prove that a control works",
+    "Replace the need for an audit",
+    "Decide who is to blame for an incident"
+   ],
+   "tier": 3,
+   "why": "Likelihood multiplied by impact gives a comparable figure."
+  },
+  {
+   "q": "Which authentication setup is multi-factor?",
+   "right": "A password plus a code from an authenticator app",
+   "wrong": [
+    "Two different passwords",
+    "A password plus a security question",
+    "The same password typed twice"
+   ],
+   "tier": 3,
+   "why": "Different kinds of factor are needed: know, have, are."
+  },
+  {
+   "q": "What does a change request give an approver?",
+   "right": "Something specific to review: what changes, why and who is responsible",
+   "wrong": [
+    "A reason to skip testing",
+    "Permission for any later change",
+    "A list of staff holidays"
+   ],
+   "tier": 3,
+   "why": "It is raised before the change is made."
+  },
+  {
+   "q": "Which describes consent as a GDPR lawful basis?",
+   "right": "It must be freely given, specific, informed and unambiguous",
+   "wrong": [
+    "It can be assumed from silence",
+    "It is valid inside long terms nobody reads",
+    "It cannot be withdrawn once given"
+   ],
+   "tier": 3,
+   "why": "Pre-ticked boxes and silence do not count."
+  },
+  {
+   "q": "A supplier offers you an expensive gift while you are choosing between suppliers. What should you do?",
+   "right": "Decline it or declare it under the gifts policy",
+   "wrong": [
+    "Accept it if nobody saw",
+    "Accept it and choose that supplier fairly anyway",
+    "Keep it and tell nobody until the contract is signed"
+   ],
+   "tier": 2,
+   "why": "A gift at that moment could look like an attempt to influence your decision."
+  },
+  {
+   "q": "A new feature will profile customers at large scale. What should happen before launch?",
+   "right": "A data protection impact assessment",
+   "wrong": [
+    "Nothing, as risks appear after launch",
+    "Only a privacy notice after launch",
+    "A retention sweep"
+   ],
+   "tier": 3,
+   "why": "High-risk processing should be assessed before it starts."
+  },
+  {
+   "q": "Why is deleting the first copy of a record not enough to meet an erasure request?",
+   "right": "Other copies such as logs and backups may also hold the data",
+   "wrong": [
+    "Erasure only applies to paper",
+    "Copies are never personal data",
+    "Erasure requests are always refused"
+   ],
+   "tier": 3,
+   "why": "Data mapping helps find forgotten copies."
+  },
+  {
+   "q": "Your team lead says an approval step is slowing delivery and proposes letting developers approve their own low-risk changes. What is the best response?",
+   "right": "Keep separation but make the step lighter for low-risk changes, for example through an approval matrix",
+   "wrong": [
+    "Agree, as low risk means no control is needed",
+    "Add three more approvers to every change",
+    "Move approvals to after release for all changes"
+   ],
+   "tier": 4,
+   "why": "Scale the control to the risk instead of removing separation."
+  },
+  {
+   "q": "A team finds that all their audit records are kept for the two-year default. What is the most likely cause?",
+   "right": "Callers are not passing a class and nothing derives it",
+   "wrong": [
+    "Authentication events are too numerous",
+    "The sweep deletes everything",
+    "The default is a legal minimum"
+   ],
+   "tier": 4,
+   "why": "This mirrors the past Moksy gap, which prefix-derived classes fixed."
+  },
+  {
+   "q": "A sweep job runs nightly and its log shows no errors. What more should you want from it?",
+   "right": "A report of what it skipped or did not do",
+   "wrong": [
+    "A longer log with more timestamps",
+    "Permission to purge anything it skipped",
+    "A manual approval for each record"
+   ],
+   "tier": 4,
+   "why": "A sweep should also report what it did not do, so silent gaps are visible."
+  },
+  {
+   "q": "An engineer wants to copy production customer data into a development database to debug. What is the best response?",
+   "right": "Use masked or synthetic data instead",
+   "wrong": [
+    "Allow it if they are trusted",
+    "Allow it for a week then ask them to delete it",
+    "Copy it but rename the database"
+   ],
+   "tier": 4,
+   "why": "Real personal data should not move into development unprotected."
+  },
+  {
+   "q": "A GG Money-style review is approved, then the underlying numbers move. What should the process do with the approval?",
+   "right": "Treat it as no longer valid and require a new approval",
+   "wrong": [
+    "Keep it because the approver was trusted",
+    "Edit the approval date to today",
+    "Delete the review"
+   ],
+   "tier": 4,
+   "why": "The approval applies to the exact version approved."
+  },
+  {
+   "q": "An AI agent calls an internal API and offers to approve a brand review that its checks cleared. What is the right design?",
+   "right": "Let the agent leave a note and require a named person to approve",
+   "wrong": [
+    "Let the agent approve if all checks pass",
+    "Let the agent approve if a manager is on holiday",
+    "Let the agent approve and notify later"
+   ],
+   "tier": 4,
+   "why": "Automation advises; a person is accountable."
+  },
+  {
+   "q": "A deadline list is capped at 50 items and a backlog of daily housekeeping tasks fills it. What risk does this create?",
+   "right": "Statutory deadlines could be hidden below the cap",
+   "wrong": [
+    "The list loads too slowly",
+    "The tasks will be double counted",
+    "Auditors will ignore the daily tasks"
+   ],
+   "tier": 4,
+   "why": "Surfacing by risk avoids noise burying severity."
+  },
+  {
+   "q": "A control has never failed in five years. What can you safely conclude?",
+   "right": "Nothing yet, because it may never have been tested",
+   "wrong": [
+    "The control is perfect",
+    "The risk is zero",
+    "The control can be removed"
+   ],
+   "tier": 4,
+   "why": "A control with no failures may simply never have been tested."
+  },
+  {
+   "q": "A person asks you to stop using their data for direct marketing. What must you do?",
+   "right": "Stop, because the right to object is absolute for direct marketing",
+   "wrong": [
+    "Refuse if the data is useful",
+    "Continue until they put it in writing twice",
+    "Stop only after 12 months"
+   ],
+   "tier": 4,
+   "why": "The objection to direct marketing cannot be refused."
+  },
+  {
+   "q": "A vendor will process customer personal data for you. What do you need in place?",
+   "right": "A data processing agreement",
+   "wrong": [
+    "Only a verbal promise",
+    "A copy of their marketing brochure",
+    "Nothing if they are well known"
+   ],
+   "tier": 4,
+   "why": "The contract binds them to process only on your instructions."
+  },
+  {
+   "q": "Two administrators share one admin login to cover each other. What is the main governance problem?",
+   "right": "Actions cannot be tied to one person, breaking the audit trail",
+   "wrong": [
+    "It costs more in licences",
+    "The login will expire sooner",
+    "It stops multi-factor authentication being useful"
+   ],
+   "tier": 4,
+   "why": "Named accounts keep accountability."
+  },
+  {
+   "q": "A team cannot meet a required control for three months. What is the best approach?",
+   "right": "Raise a time-limited policy exception with a compensating control",
+   "wrong": [
+    "Ignore the requirement until it is audited",
+    "Mark the control as passed",
+    "Disable the check"
+   ],
+   "tier": 4,
+   "why": "The exception records who accepted the risk and when it will be reviewed."
+  },
+  {
+   "q": "After a test run, a compliance calendar shows a statutory date one day late for a certain year end. What does that tell you?",
+   "right": "The calendar is a system that needs testing like any other",
+   "wrong": [
+    "Dates should be ignored",
+    "The auditors are wrong",
+    "The year end is unusual so no fix is needed"
+   ],
+   "tier": 5,
+   "why": "An October 2026 stress run proposed exactly this kind of issue; nothing was fixed at that time."
+  },
+  {
+   "q": "A legal dispute is expected. The retention period for some records ends next week. What should happen?",
+   "right": "Apply a legal hold so the records are not deleted",
+   "wrong": [
+    "Let the sweep delete them to reduce exposure",
+    "Archive them to a personal drive",
+    "Edit them to remove sensitive content"
+   ],
+   "tier": 5,
+   "why": "A legal hold overrides the normal schedule."
+  },
+  {
+   "q": "An AI agent that reads web pages has permission to send email. What is the key risk?",
+   "right": "Prompt injection could make it send email on an attacker's instruction",
+   "wrong": [
+    "The web pages will be too large",
+    "It will charge more for tokens",
+    "It will be unable to read images"
+   ],
+   "tier": 5,
+   "why": "Give agents only the permission they need."
+  },
+  {
+   "q": "An approver approves 200 requests in ten minutes. What is the likely governance problem?",
+   "right": "Rubber-stamping that gives no real protection",
+   "wrong": [
+    "The approver is working efficiently",
+    "The requests must be low risk",
+    "The approval matrix has too few levels"
+   ],
+   "tier": 5,
+   "why": "Approvals that are not read provide no control."
+  },
+  {
+   "q": "An auditor samples 25 records out of 5,000 and the owner picks which 25. What is the weakness?",
+   "right": "The sample may be biased so conclusions about the whole may be wrong",
+   "wrong": [
+    "The sample is too large",
+    "Owners cannot see their own records",
+    "Sampling is not allowed in audits"
+   ],
+   "tier": 5,
+   "why": "A sample must be chosen without bias to support a conclusion."
+  },
+  {
+   "q": "Several ranked-low risks sit together on the register. What second-order effect should you check?",
+   "right": "Whether they share a cause and could fail together",
+   "wrong": [
+    "Whether they are alphabetically ordered",
+    "Whether they have the same author",
+    "Whether they can be merged into one score"
+   ],
+   "tier": 5,
+   "why": "Correlated risks can combine into a larger one than any score shows."
+  },
+  {
+   "q": "A company relies on automated decisions to reject loan applicants. Which governance step best protects people?",
+   "right": "Offer human review and a way to contest the decision",
+   "wrong": [
+    "Hide that automation is used",
+    "Make rejections irreversible",
+    "Remove the audit log to save cost"
+   ],
+   "tier": 5,
+   "why": "People have a right to contest solely automated significant decisions."
+  },
+  {
+   "q": "After an emergency change in production, what is the best next step?",
+   "right": "Record and review it afterwards to see if the shortcut was justified",
+   "wrong": [
+    "Delete the ticket to avoid blame",
+    "Treat all future changes the same way",
+    "Assume it was fine because it worked"
+   ],
+   "tier": 5,
+   "why": "Emergency changes still need a record and review."
+  },
+  {
+   "q": "A supplier's SOC 2 report is two years old. What is the best judgement?",
+   "right": "Ask for a current report or other evidence, because the old one says little about today",
+   "wrong": [
+    "Accept it, as SOC 2 never expires",
+    "Reject the supplier automatically",
+    "Ask the supplier to certify verbally"
+   ],
+   "tier": 5,
+   "why": "Assurance reports describe a period, and controls change."
+  },
+  {
+   "q": "The retention sweep job fails silently for months. Which control type would have caught this?",
+   "right": "A detective control such as a monitored report of sweep outcomes",
+   "wrong": [
+    "A rollback plan",
+    "A policy exception",
+    "Stronger passwords"
+   ],
+   "tier": 5,
+   "why": "Monitoring that checks the sweep ran and what it did not do finds silent failure."
+  }
+ ]
+}

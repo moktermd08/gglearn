@@ -1,0 +1,2841 @@
+{
+ "slug": "data-analytics",
+ "name": "Data and analytics",
+ "description": "Event data, usage metering, reporting, dashboards.",
+ "roles": "",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "growth",
+ "groups": {
+  "event": "event tracking concept",
+  "metric": "metric concept",
+  "meter": "usage metering concept",
+  "dash": "dashboard and reporting practice",
+  "quality": "data quality concept",
+  "sql": "SQL concept",
+  "funnel": "funnel and cohort concept",
+  "ab": "experiment concept",
+  "stat": "statistics concept",
+  "vis": "chart or visualisation choice",
+  "pipe": "data pipeline or warehouse concept",
+  "priv": "analytics privacy practice",
+  "gg": "Moksy or GG Money data design fact"
+ },
+ "cards": [
+  {
+   "group": "event",
+   "subject": "A tracking plan",
+   "tier": 2,
+   "says": [
+    "lists every event and property the product is meant to send",
+    "gives each tracked event an owner and a written meaning",
+    "is the document analysts check before trusting a new event"
+   ],
+   "use": "need everyone to agree what an event means before it ships",
+   "not": [
+    "is generated automatically and never needs maintaining"
+   ]
+  },
+  {
+   "group": "event",
+   "subject": "An event property",
+   "tier": 1,
+   "says": [
+    "carries the context of an event such as the plan, page or item involved",
+    "lets one event name serve many cases without a new event for each"
+   ],
+   "use": "want to record which product a purchase event was about",
+   "not": [
+    "replace the need to name the event"
+   ],
+   "like": [
+    "A user property"
+   ]
+  },
+  {
+   "group": "event",
+   "subject": "A user property",
+   "tier": 2,
+   "says": [
+    "describes the person rather than a single action",
+    "is stored on the profile and applies to every later event",
+    "holds attributes such as signup plan or country"
+   ],
+   "use": "want to segment every event by the plan the user signed up on",
+   "not": [
+    "changes meaning each time a new event is sent"
+   ],
+   "like": [
+    "An event property"
+   ]
+  },
+  {
+   "group": "event",
+   "subject": "Object-action naming",
+   "tier": 2,
+   "says": [
+    "names events as a thing and what happened to it, such as invoice_sent",
+    "keeps event names consistent and easy to search",
+    "avoids vague names like click or action"
+   ],
+   "use": "want event names that stay readable as the product grows",
+   "not": [
+    "requires a separate event for every screen pixel"
+   ]
+  },
+  {
+   "group": "event",
+   "subject": "An event ID",
+   "tier": 2,
+   "says": [
+    "is unique to one occurrence of an event",
+    "lets a retried delivery be recognised and counted once",
+    "is generated at the source rather than on receipt"
+   ],
+   "use": "hear that a network retry may send the same event twice",
+   "not": [
+    "changes every time the event is retried"
+   ],
+   "like": [
+    "An idempotency key"
+   ]
+  },
+  {
+   "group": "event",
+   "subject": "An event timestamp",
+   "tier": 3,
+   "says": [
+    "records when the thing happened rather than when it was received",
+    "should be stored in a single timezone, usually UTC",
+    "can differ from the received time when a device is offline"
+   ],
+   "use": "must order events from a phone that was offline for an hour",
+   "not": [
+    "is always identical to the time the server received it"
+   ],
+   "like": [
+    "A late-arriving event"
+   ]
+  },
+  {
+   "group": "event",
+   "subject": "Client-side tracking",
+   "tier": 2,
+   "says": [
+    "sends events from the browser or app on the user's device",
+    "captures interface actions such as scrolls and clicks",
+    "can be lost to ad blockers and closed tabs"
+   ],
+   "use": "need to record how people move around the interface",
+   "not": [
+    "is guaranteed to reach the warehouse every time"
+   ],
+   "like": [
+    "Server-side tracking"
+   ]
+  },
+  {
+   "group": "event",
+   "subject": "Server-side tracking",
+   "tier": 3,
+   "says": [
+    "sends events from the backend after the action has really succeeded",
+    "is not blocked by ad blockers or browser settings",
+    "is the safer source for facts such as completed payments"
+   ],
+   "use": "need an event for a payment that must be counted exactly once",
+   "not": [
+    "sees every scroll and hover on the page"
+   ],
+   "like": [
+    "Client-side tracking"
+   ]
+  },
+  {
+   "group": "event",
+   "subject": "Event schema versioning",
+   "tier": 4,
+   "says": [
+    "adds a new version when the meaning or fields of an event change",
+    "stops old and new data being mixed under one name by accident",
+    "lets analysts filter on the version they understand"
+   ],
+   "use": "must change what a field means without breaking old dashboards",
+   "not": [
+    "silently redefines the field in place"
+   ]
+  },
+  {
+   "group": "event",
+   "subject": "A late-arriving event",
+   "tier": 4,
+   "says": [
+    "reaches the warehouse after the period it belongs to has been reported",
+    "can change numbers that were already published",
+    "is why pipelines reprocess a recent window instead of trusting yesterday's totals"
+   ],
+   "use": "see yesterday's total rise after it was reported",
+   "not": [
+    "is always safe to discard"
+   ],
+   "like": [
+    "An event timestamp"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "A metric definition",
+   "tier": 1,
+   "says": [
+    "states exactly how a number is calculated, including its filters and period",
+    "is written down once and shared",
+    "stops two teams reporting different numbers from the same data"
+   ],
+   "use": "find that two dashboards show different totals for the same name",
+   "not": [
+    "is clear enough without being written down"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "An active user",
+   "tier": 2,
+   "says": [
+    "is counted only after taking a qualifying action in the period",
+    "depends on which action the team chooses to qualify",
+    "gives a different count if the qualifying action changes"
+   ],
+   "use": "must decide what counts as being active this month",
+   "not": [
+    "is anyone who has ever created an account"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "A north star metric",
+   "tier": 2,
+   "says": [
+    "is the single measure of the value customers get from the product",
+    "guides teams towards the same outcome",
+    "should move when customers get real value"
+   ],
+   "use": "want the whole company aimed at one measure of customer value",
+   "not": [
+    "is always revenue for the quarter"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "A leading indicator",
+   "tier": 3,
+   "says": [
+    "moves before the outcome it predicts",
+    "gives time to act before results arrive",
+    "is often an early behaviour such as activation"
+   ],
+   "use": "want an early warning that renewals may fall",
+   "not": [
+    "is only known after the quarter closes"
+   ],
+   "like": [
+    "A lagging indicator"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "A lagging indicator",
+   "tier": 3,
+   "says": [
+    "confirms an outcome after it has already happened",
+    "is accurate but arrives too late to steer",
+    "includes revenue and churn"
+   ],
+   "use": "need the final confirmed result of last quarter",
+   "not": [
+    "moves before customers change behaviour"
+   ],
+   "like": [
+    "A leading indicator"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "A guardrail metric",
+   "tier": 4,
+   "says": [
+    "is watched to make sure a change does not cause harm elsewhere",
+    "protects measures such as page speed, errors or support load",
+    "can block a launch even when the main metric improves"
+   ],
+   "use": "want to ship a faster signup without raising refund requests",
+   "not": [
+    "is the metric a team tries to maximise"
+   ],
+   "like": [
+    "A north star metric"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Churn rate",
+   "tier": 2,
+   "says": [
+    "is the share of customers lost in a period",
+    "needs a clear denominator such as customers at the start of the period",
+    "can be counted by customers or by revenue"
+   ],
+   "use": "want the share of subscribers who cancelled this month",
+   "not": [
+    "counts new customers gained"
+   ],
+   "like": [
+    "Retention rate"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Retention rate",
+   "tier": 2,
+   "says": [
+    "is the share of a starting group still active later",
+    "complements churn, so the two add to one for the same group",
+    "is usually read per cohort"
+   ],
+   "use": "want to know how many of last month's signups are still active",
+   "not": [
+    "measures how many new users joined"
+   ],
+   "like": [
+    "Churn rate"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Customer lifetime value",
+   "tier": 4,
+   "says": [
+    "estimates the total margin a customer brings over the whole relationship",
+    "depends on assumptions about retention",
+    "is compared with the cost of acquiring that customer"
+   ],
+   "use": "must decide how much to spend winning a customer",
+   "not": [
+    "is the revenue from the first month only"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "A semantic layer",
+   "tier": 4,
+   "says": [
+    "defines metrics once so every tool computes them the same way",
+    "sits between the warehouse and the dashboards",
+    "lets analysts reuse a definition instead of rewriting it"
+   ],
+   "use": "want every dashboard to share one definition of revenue",
+   "not": [
+    "stores the raw events before any cleaning"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Goodhart's law",
+   "tier": 5,
+   "says": [
+    "warns that a measure used as a target stops being a good measure",
+    "explains why people game the number they are rewarded on",
+    "is a reason to pair every target with a guardrail"
+   ],
+   "use": "see a team hit its target while customers are less happy",
+   "not": [
+    "says that more data always improves a measure"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "Usage metering",
+   "tier": 1,
+   "says": [
+    "counts what each customer uses so limits and bills can be correct",
+    "records usage per customer, per period and per resource",
+    "feeds both enforcement and invoicing"
+   ],
+   "use": "need to bill customers for what they consume",
+   "not": [
+    "only counts logins"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "A usage ledger",
+   "tier": 2,
+   "says": [
+    "records each unit of consumption as its own row",
+    "is append-only, so history is never edited",
+    "can be summed to rebuild any customer's usage for a period"
+   ],
+   "use": "need a durable record that supports disputes",
+   "not": [
+    "keeps only the latest running total"
+   ],
+   "like": [
+    "A summary snapshot"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "A reversing entry",
+   "tier": 3,
+   "says": [
+    "corrects a ledger by adding an opposite row instead of editing the old one",
+    "keeps the original mistake visible in the history",
+    "nets out the wrong amount when totals are summed"
+   ],
+   "use": "find a wrong amount already written to an append-only ledger",
+   "not": [
+    "overwrites the earlier row in place"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "A summary snapshot",
+   "tier": 3,
+   "says": [
+    "holds a fast running total for the current period",
+    "is read on the hot path instead of summing the whole ledger",
+    "can be rebuilt from the ledger if it drifts"
+   ],
+   "use": "need a quick check of how much quota is left",
+   "not": [
+    "is the source of truth for money"
+   ],
+   "like": [
+    "A usage ledger"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "An idempotency key",
+   "tier": 3,
+   "says": [
+    "is sent with a request so a repeat can be recognised",
+    "makes a retried write count once",
+    "is stored with the result of the first attempt"
+   ],
+   "use": "retry a usage write after a timeout without double counting",
+   "not": [
+    "makes every retry count again"
+   ],
+   "like": [
+    "An event ID"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "Quota reservation",
+   "tier": 4,
+   "says": [
+    "sets aside expected usage before the work is done",
+    "stops concurrent requests from jointly overspending",
+    "is followed by a commit of the actual amount"
+   ],
+   "use": "must stop two simultaneous requests overspending the same allowance",
+   "not": [
+    "is done only after the provider call returns"
+   ],
+   "like": [
+    "Quota commit"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "Quota commit",
+   "tier": 4,
+   "says": [
+    "records the actual usage after the work finishes",
+    "releases any reserved amount that was not used",
+    "replaces the earlier estimate with the real figure"
+   ],
+   "use": "want the final measured amount recorded after the call",
+   "not": [
+    "happens before any work starts"
+   ],
+   "like": [
+    "Quota reservation"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "A hard limit",
+   "tier": 2,
+   "says": [
+    "blocks further use once the allowance is spent",
+    "gives the customer a firm cap on spend",
+    "needs a clear message so users know why they were blocked"
+   ],
+   "use": "must guarantee a customer cannot exceed the plan",
+   "not": [
+    "lets usage continue and bills the extra"
+   ],
+   "like": [
+    "Overage billing"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "Overage billing",
+   "tier": 3,
+   "says": [
+    "allows use beyond the allowance and charges for the excess",
+    "avoids interrupting customers at the limit",
+    "needs the customer to agree to the extra price in advance"
+   ],
+   "use": "want customers to keep working past their allowance and pay for it",
+   "not": [
+    "blocks use at the limit"
+   ],
+   "like": [
+    "A hard limit"
+   ]
+  },
+  {
+   "group": "meter",
+   "subject": "A billing period",
+   "tier": 2,
+   "says": [
+    "is the span of time one allowance and one invoice cover",
+    "sets the date an allowance resets",
+    "must be computed from the right start date to avoid drift"
+   ],
+   "use": "need to know when this month's allowance restarts",
+   "not": [
+    "is always the calendar month"
+   ]
+  },
+  {
+   "group": "dash",
+   "subject": "A dashboard",
+   "tier": 1,
+   "says": [
+    "shows chosen measures on one screen for a given audience",
+    "is only useful if its numbers are trusted",
+    "should answer a question the viewer actually has"
+   ],
+   "use": "want a quick view of how the business is doing",
+   "not": [
+    "is finished once the charts look good"
+   ]
+  },
+  {
+   "group": "dash",
+   "subject": "A single source of truth",
+   "tier": 2,
+   "says": [
+    "is the one agreed place a number comes from",
+    "stops teams quoting different totals",
+    "is the dataset every report reconciles to"
+   ],
+   "use": "find three reports quoting three revenue figures",
+   "not": [
+    "is a copy of the data kept in each team's spreadsheet"
+   ]
+  },
+  {
+   "group": "dash",
+   "subject": "A refresh timestamp",
+   "tier": 2,
+   "says": [
+    "tells viewers how old the numbers are",
+    "is shown on the dashboard itself",
+    "helps explain why a figure differs from live data"
+   ],
+   "use": "hear 'is this number current?' from a viewer",
+   "not": [
+    "is hidden to keep the page tidy"
+   ]
+  },
+  {
+   "group": "dash",
+   "subject": "Variance against plan",
+   "tier": 3,
+   "says": [
+    "shows the gap between actual and planned figures",
+    "turns a bare number into a judgement",
+    "is clearer when the plan's history is kept"
+   ],
+   "use": "want to know if revenue is ahead or behind target",
+   "not": [
+    "is the same as the average of actuals"
+   ]
+  },
+  {
+   "group": "dash",
+   "subject": "Drill-down",
+   "tier": 3,
+   "says": [
+    "lets a viewer move from a total to the parts that make it up",
+    "helps explain why a number moved",
+    "relies on the detail rows adding up to the total"
+   ],
+   "use": "need to find which region caused a drop in the total",
+   "not": [
+    "hides the underlying detail"
+   ]
+  },
+  {
+   "group": "dash",
+   "subject": "Self-serve analytics",
+   "tier": 3,
+   "says": [
+    "lets non-analysts explore data without writing queries",
+    "depends on well-defined shared metrics",
+    "can produce conflicting numbers if definitions are not governed"
+   ],
+   "use": "want business teams to answer simple questions without waiting on an analyst",
+   "not": [
+    "removes the need for any data governance"
+   ]
+  },
+  {
+   "group": "dash",
+   "subject": "Row-level security",
+   "tier": 4,
+   "says": [
+    "limits which rows a viewer can see based on who they are",
+    "lets one dashboard serve many teams safely",
+    "is enforced in the data layer rather than by hiding charts"
+   ],
+   "use": "need regional managers to see only their own region in one shared report",
+   "not": [
+    "is achieved by hiding columns in the chart"
+   ]
+  },
+  {
+   "group": "dash",
+   "subject": "Reconciling a total to source",
+   "tier": 3,
+   "says": [
+    "compares a report's total with the system it was built from",
+    "catches missing rows and double counting",
+    "should be done before a new report is trusted"
+   ],
+   "use": "build a new report and want proof its numbers are right",
+   "not": [
+    "is only needed once a year"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Completeness",
+   "tier": 2,
+   "says": [
+    "asks whether required values are all present",
+    "is measured as the share of rows with the field filled in",
+    "fails when a form field is silently skipped"
+   ],
+   "use": "find that a third of signups have no country",
+   "not": [
+    "asks whether values are correct"
+   ],
+   "like": [
+    "Accuracy"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Accuracy",
+   "tier": 2,
+   "says": [
+    "asks whether a value matches the real world",
+    "cannot be proved by format checks alone",
+    "is checked by comparing with a trusted source"
+   ],
+   "use": "suspect recorded prices differ from the invoices",
+   "not": [
+    "asks only whether the field is filled in"
+   ],
+   "like": [
+    "Completeness",
+    "Validity"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Validity",
+   "tier": 2,
+   "says": [
+    "asks whether a value fits the allowed format or range",
+    "catches an age of 400 or a malformed date",
+    "can pass even when the value is wrong"
+   ],
+   "use": "need to reject a date written as 31/02/2026",
+   "not": [
+    "proves a value matches reality"
+   ],
+   "like": [
+    "Accuracy"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Consistency",
+   "tier": 3,
+   "says": [
+    "asks whether the same fact agrees across systems",
+    "fails when one system says active and another says cancelled",
+    "is checked by comparing two sources of the same record"
+   ],
+   "use": "find that billing and the CRM disagree on a customer's plan",
+   "not": [
+    "asks whether the data is up to date"
+   ],
+   "like": [
+    "Timeliness"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Timeliness",
+   "tier": 3,
+   "says": [
+    "asks whether data is fresh enough for its use",
+    "is measured as lag between an event and its availability",
+    "matters more for operational alerts than for annual reports"
+   ],
+   "use": "hear that the dashboard is a day behind and ops needs hourly",
+   "not": [
+    "asks whether values are in the right format"
+   ],
+   "like": [
+    "Consistency"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Uniqueness",
+   "tier": 3,
+   "says": [
+    "asks whether each real thing appears once",
+    "fails when a customer has two records",
+    "is the aim of deduplication"
+   ],
+   "use": "find the same customer listed three times",
+   "not": [
+    "asks whether the field is filled in"
+   ],
+   "like": [
+    "Completeness"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A null value",
+   "tier": 2,
+   "says": [
+    "means a value is missing or unknown",
+    "is not the same as zero or an empty string",
+    "is skipped by most aggregate functions"
+   ],
+   "use": "need to tell 'no answer' apart from 'answered zero'",
+   "not": [
+    "is identical to the number zero"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Data lineage",
+   "tier": 4,
+   "says": [
+    "traces a number back through each step to its source",
+    "shows which reports a change would affect",
+    "helps find where an error entered"
+   ],
+   "use": "must know what breaks if a source column is renamed",
+   "not": [
+    "is a list of who viewed the report"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A data contract",
+   "tier": 4,
+   "says": [
+    "is an agreement on the shape and meaning of data a producer provides",
+    "lets consumers rely on a stable schema",
+    "is checked automatically when the producer changes"
+   ],
+   "use": "want producers to stop breaking downstream reports with silent changes",
+   "not": [
+    "is a legal contract with a customer"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Schema drift",
+   "tier": 4,
+   "says": [
+    "is an unplanned change in the structure of incoming data",
+    "breaks pipelines that assume fixed columns",
+    "is caught by schema checks at load time"
+   ],
+   "use": "find that a source added a column and the load fails",
+   "not": [
+    "is a planned and announced migration"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "GROUP BY",
+   "tier": 1,
+   "says": [
+    "collapses rows into one row per distinct combination of the listed columns",
+    "is needed to pair an aggregate with a plain column",
+    "runs after WHERE has filtered rows"
+   ],
+   "use": "want revenue per country",
+   "not": [
+    "sorts the output without changing the row count"
+   ],
+   "like": [
+    "A window function"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "WHERE",
+   "tier": 2,
+   "says": [
+    "filters individual rows before they are grouped",
+    "cannot use an aggregate result directly",
+    "makes the query read fewer rows"
+   ],
+   "use": "want to keep only this year's orders before counting",
+   "not": [
+    "filters groups after aggregation"
+   ],
+   "like": [
+    "HAVING"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "HAVING",
+   "tier": 3,
+   "says": [
+    "filters groups after aggregation",
+    "can use an aggregate such as COUNT(*) > 5",
+    "applies to grouped results, not raw rows"
+   ],
+   "use": "want only customers with more than five orders",
+   "not": [
+    "filters raw rows before grouping"
+   ],
+   "like": [
+    "WHERE"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "COUNT(*)",
+   "tier": 1,
+   "says": [
+    "counts every row in the group, including those with nulls",
+    "returns the number of rows rather than values"
+   ],
+   "use": "want the number of orders per customer",
+   "not": [
+    "skips rows where any column is null"
+   ],
+   "like": [
+    "COUNT(DISTINCT column)"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "COUNT(DISTINCT column)",
+   "tier": 2,
+   "says": [
+    "counts each different non-null value once",
+    "is used to count unique customers rather than orders",
+    "is slower than a plain count on big tables"
+   ],
+   "use": "want unique buyers rather than total purchases",
+   "not": [
+    "counts every row including repeats"
+   ],
+   "like": [
+    "COUNT(*)"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "AVG",
+   "tier": 2,
+   "says": [
+    "divides the sum by the number of non-null values",
+    "ignores null values rather than treating them as zero",
+    "is pulled upwards by a few very large values"
+   ],
+   "use": "want the mean order value",
+   "not": [
+    "counts nulls as zero"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "A join fan-out",
+   "tier": 4,
+   "says": [
+    "happens when a join matches one row to many and multiplies rows",
+    "inflates sums and counts if aggregated afterwards",
+    "is avoided by aggregating to the right grain before joining"
+   ],
+   "use": "find revenue doubled after joining orders to line items",
+   "not": [
+    "only occurs with a LEFT JOIN"
+   ],
+   "like": [
+    "A LEFT JOIN"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "A LEFT JOIN",
+   "tier": 2,
+   "says": [
+    "keeps every row from the left table",
+    "fills columns from the right table with nulls when no match exists",
+    "is used to find rows with no related record"
+   ],
+   "use": "want every customer listed, even those with no orders",
+   "not": [
+    "drops rows from the left table without a match"
+   ],
+   "like": [
+    "A join fan-out"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "A window function",
+   "tier": 4,
+   "says": [
+    "computes across related rows without collapsing them",
+    "keeps each input row in the output",
+    "is used for running totals and rankings"
+   ],
+   "use": "want each order shown alongside its customer's running total",
+   "not": [
+    "collapses rows like GROUP BY"
+   ],
+   "like": [
+    "GROUP BY",
+    "PARTITION BY"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "PARTITION BY",
+   "tier": 4,
+   "says": [
+    "splits rows into groups inside a window function",
+    "restarts the calculation for each group",
+    "does not reduce the number of rows"
+   ],
+   "use": "want a rank that restarts for each region",
+   "not": [
+    "is another name for GROUP BY"
+   ],
+   "like": [
+    "GROUP BY",
+    "A window function"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "Conditional aggregation",
+   "tier": 4,
+   "says": [
+    "puts a CASE expression inside an aggregate",
+    "lets one query produce several filtered totals as columns",
+    "is used for pivot-style summaries"
+   ],
+   "use": "want paid and refunded totals side by side per month",
+   "not": [
+    "requires a separate query for each total"
+   ]
+  },
+  {
+   "group": "sql",
+   "subject": "A CTE",
+   "tier": 3,
+   "says": [
+    "names a subquery with WITH so it can be read top to bottom",
+    "breaks a long query into understandable steps",
+    "can be referenced more than once in the same query"
+   ],
+   "use": "want to make a nested query readable",
+   "not": [
+    "permanently stores its result as a table"
+   ]
+  },
+  {
+   "group": "funnel",
+   "subject": "A funnel",
+   "tier": 1,
+   "says": [
+    "measures how many users complete each ordered step of a journey",
+    "shows the share lost between one step and the next",
+    "needs the steps defined in a fixed order"
+   ],
+   "use": "want to see where signups are lost between landing and payment",
+   "not": [
+    "groups users by when they joined"
+   ],
+   "like": [
+    "A cohort"
+   ]
+  },
+  {
+   "group": "funnel",
+   "subject": "A conversion rate",
+   "tier": 1,
+   "says": [
+    "is the share of a starting group that completes a goal",
+    "needs a clear denominator and time window",
+    "can be reported for a single step or the whole funnel"
+   ],
+   "use": "want the share of visitors who buy",
+   "not": [
+    "is the raw count of purchases"
+   ]
+  },
+  {
+   "group": "funnel",
+   "subject": "Drop-off",
+   "tier": 2,
+   "says": [
+    "is the share of users lost between two funnel steps",
+    "points to the step most worth investigating",
+    "is the complement of the step's conversion"
+   ],
+   "use": "want to find the step where most people leave",
+   "not": [
+    "is the number who completed the final step"
+   ]
+  },
+  {
+   "group": "funnel",
+   "subject": "A cohort",
+   "tier": 2,
+   "says": [
+    "is a group of users who share a starting point such as signup month",
+    "is followed over time as a group",
+    "lets groups from different dates be compared fairly"
+   ],
+   "use": "want to compare the January signups with the February signups",
+   "not": [
+    "is any random sample of the user base"
+   ],
+   "like": [
+    "A segment"
+   ]
+  },
+  {
+   "group": "funnel",
+   "subject": "A segment",
+   "tier": 2,
+   "says": [
+    "is a group defined by a trait such as plan, country or device",
+    "can be compared on any metric at one point in time",
+    "is not tied to a shared start date"
+   ],
+   "use": "want to compare mobile users with desktop users",
+   "not": [
+    "is a group that all joined in the same week"
+   ],
+   "like": [
+    "A cohort"
+   ]
+  },
+  {
+   "group": "funnel",
+   "subject": "A retention table",
+   "tier": 3,
+   "says": [
+    "lays out cohorts as rows and time since start as columns",
+    "shows the share of each cohort still active at each step",
+    "reveals whether newer cohorts retain better than older ones"
+   ],
+   "use": "want to see if retention is improving for recent signups",
+   "not": [
+    "lists every user's last login"
+   ],
+   "like": [
+    "A retention curve"
+   ]
+  },
+  {
+   "group": "funnel",
+   "subject": "A retention curve",
+   "tier": 3,
+   "says": [
+    "plots the share of a cohort still active against time since start",
+    "flattens when a stable core of users stays",
+    "falling steadily to zero signals no lasting value"
+   ],
+   "use": "want to know if a cohort settles into regular use",
+   "not": [
+    "plots daily revenue over the calendar"
+   ],
+   "like": [
+    "A retention table"
+   ]
+  },
+  {
+   "group": "funnel",
+   "subject": "Attribution",
+   "tier": 3,
+   "says": [
+    "assigns credit for a conversion to the touchpoints before it",
+    "gives different answers under different rules such as last touch",
+    "is a model, not a measured fact"
+   ],
+   "use": "want to decide which channel earned a signup",
+   "not": [
+    "measures exactly what caused the purchase"
+   ]
+  },
+  {
+   "group": "funnel",
+   "subject": "Activation",
+   "tier": 2,
+   "says": [
+    "is the first moment a user gets real value from the product",
+    "is defined as a specific early action",
+    "often predicts whether a user is retained"
+   ],
+   "use": "want to measure whether new users reach their first useful outcome",
+   "not": [
+    "is the moment a user signs up"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "An A/B test",
+   "tier": 1,
+   "says": [
+    "compares two versions by randomly splitting users between them",
+    "measures a chosen metric in each group",
+    "tests whether a change caused a difference"
+   ],
+   "use": "want evidence that a new design really improves signups",
+   "not": [
+    "compares this month with last month"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "A control group",
+   "tier": 1,
+   "says": [
+    "receives the unchanged experience",
+    "provides the baseline to compare against",
+    "is split from the test group at random"
+   ],
+   "use": "need a baseline to judge a change against",
+   "not": [
+    "is chosen as the users most likely to convert"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "Randomisation",
+   "tier": 2,
+   "says": [
+    "assigns users to groups by chance",
+    "makes the groups alike apart from the change",
+    "is what lets a difference be attributed to the change"
+   ],
+   "use": "want to be sure the groups differ only by the change",
+   "not": [
+    "lets users pick the version they prefer"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "A primary metric",
+   "tier": 2,
+   "says": [
+    "is the one measure chosen before the test to decide the result",
+    "prevents picking whichever number looks best afterwards",
+    "is stated alongside the planned sample size"
+   ],
+   "use": "want to decide the winning measure before looking at results",
+   "not": [
+    "is whichever metric moved the most"
+   ],
+   "like": [
+    "A guardrail metric"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "Sample size planning",
+   "tier": 3,
+   "says": [
+    "fixes how many users are needed before the test starts",
+    "depends on baseline rate, effect size and desired power",
+    "stops a test being ended when results first look good"
+   ],
+   "use": "must decide how long to run a test before it starts",
+   "not": [
+    "is decided after seeing the data"
+   ],
+   "like": [
+    "Statistical power"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "Statistical power",
+   "tier": 4,
+   "says": [
+    "is the chance of detecting a real effect of a given size",
+    "rises with a larger sample",
+    "is low in underpowered tests, which miss real effects"
+   ],
+   "use": "worry that a small test might miss a real improvement",
+   "not": [
+    "is the chance of a false positive"
+   ],
+   "like": [
+    "A p-value",
+    "Sample size planning"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "A p-value",
+   "tier": 3,
+   "says": [
+    "is the probability of results at least this extreme if there were no real effect",
+    "is not the probability that the change works",
+    "is compared with a threshold chosen in advance"
+   ],
+   "use": "want to know how surprising the result is if nothing changed",
+   "not": [
+    "is the chance that the hypothesis is true"
+   ],
+   "like": [
+    "A confidence interval"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "A confidence interval",
+   "tier": 3,
+   "says": [
+    "gives a range of plausible values for the true effect",
+    "shows the size and uncertainty together",
+    "includes zero when the effect is not clearly different from none"
+   ],
+   "use": "want to see how big the lift might really be",
+   "not": [
+    "is the probability the result was a fluke"
+   ],
+   "like": [
+    "A p-value"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "Peeking",
+   "tier": 4,
+   "says": [
+    "is checking results repeatedly and stopping when they look significant",
+    "raises the false-positive rate well above the stated level",
+    "is avoided by fixing the sample size or using sequential methods"
+   ],
+   "use": "see a test turn significant on day three of a planned fourteen",
+   "not": [
+    "makes results more reliable"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "A multiple-comparisons problem",
+   "tier": 4,
+   "says": [
+    "arises when many metrics or variants are tested at once",
+    "raises the chance that something looks significant by luck",
+    "calls for a stricter threshold or a correction"
+   ],
+   "use": "test twenty metrics and find one with a low p-value",
+   "not": [
+    "lowers the chance of a false positive"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "A sample ratio mismatch",
+   "tier": 4,
+   "says": [
+    "is a split of users that differs from the planned allocation",
+    "signals a bug in assignment or tracking",
+    "means the result should not be trusted until explained"
+   ],
+   "use": "find a planned 50/50 test with 52 percent in one group",
+   "not": [
+    "is expected random variation that can be ignored"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "A novelty effect",
+   "tier": 5,
+   "says": [
+    "is a short-lived change in behaviour because something is new",
+    "fades as users get used to the change",
+    "is a reason to run a test long enough to see it settle"
+   ],
+   "use": "see a big lift in the first days that shrinks later",
+   "not": [
+    "is a permanent change in user preference"
+   ]
+  },
+  {
+   "group": "ab",
+   "subject": "Practical significance",
+   "tier": 4,
+   "says": [
+    "asks whether an effect is big enough to matter",
+    "can be absent even when a result is statistically significant",
+    "is judged against cost and business value"
+   ],
+   "use": "find a significant lift of a tiny fraction of a percent",
+   "not": [
+    "is the same as a low p-value"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "The mean",
+   "tier": 1,
+   "says": [
+    "adds the values and divides by how many there are",
+    "is pulled towards very large or very small values",
+    "uses every value in the data"
+   ],
+   "use": "want the average of a roughly symmetric set of numbers",
+   "not": [
+    "is the middle value when sorted"
+   ],
+   "like": [
+    "The median",
+    "An outlier"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "The median",
+   "tier": 1,
+   "says": [
+    "is the middle value when the data is sorted",
+    "is barely moved by a few extreme values",
+    "is a better summary of typical income than the mean"
+   ],
+   "use": "want a typical value that a few huge orders cannot distort",
+   "not": [
+    "is the most frequent value"
+   ],
+   "like": [
+    "The mean",
+    "An outlier"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "Variance",
+   "tier": 3,
+   "says": [
+    "is the average squared distance from the mean",
+    "describes how spread out the values are",
+    "is measured in squared units"
+   ],
+   "use": "want to know how spread out response times are",
+   "not": [
+    "is the middle value of the data"
+   ],
+   "like": [
+    "Standard deviation"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "Standard deviation",
+   "tier": 2,
+   "says": [
+    "is the square root of the variance",
+    "is in the same units as the data",
+    "is small when values cluster near the mean"
+   ],
+   "use": "want a spread measure in the same units as the data",
+   "not": [
+    "is the average of the data"
+   ],
+   "like": [
+    "Variance"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "A percentile",
+   "tier": 2,
+   "says": [
+    "is the value below which a given share of the data falls",
+    "describes the tail of a distribution such as the 95th",
+    "is how response-time targets are often stated"
+   ],
+   "use": "want to know how slow the slowest five percent of requests are",
+   "not": [
+    "is the same as the mean"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "Correlation",
+   "tier": 2,
+   "says": [
+    "measures how strongly two variables move together",
+    "ranges from minus one to plus one",
+    "does not show that one causes the other"
+   ],
+   "use": "want to know whether two measures rise and fall together",
+   "not": [
+    "proves one variable causes the other"
+   ],
+   "like": [
+    "Causation"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "Causation",
+   "tier": 3,
+   "says": [
+    "means a change in one thing produces a change in another",
+    "is best shown by a randomised experiment",
+    "cannot be read from correlation alone"
+   ],
+   "use": "want to know if a feature actually raised retention",
+   "not": [
+    "is shown by two lines moving together"
+   ],
+   "like": [
+    "Correlation"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "A confounder",
+   "tier": 3,
+   "says": [
+    "is a hidden factor that affects both variables being compared",
+    "can create a correlation with no causal link",
+    "is controlled by randomisation"
+   ],
+   "use": "find that ice cream sales and drownings rise together",
+   "not": [
+    "is a variable that has no effect on anything"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "Sampling bias",
+   "tier": 3,
+   "says": [
+    "occurs when the sample does not represent the population",
+    "is created by how people are chosen or who responds",
+    "cannot be fixed by making the sample larger"
+   ],
+   "use": "survey only customers who contact support and generalise",
+   "not": [
+    "is cured by collecting more of the same responses"
+   ],
+   "like": [
+    "Random sampling"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "Random sampling",
+   "tier": 2,
+   "says": [
+    "gives every member of the population an equal chance of selection",
+    "avoids systematic bias in who is chosen",
+    "makes the sample representative on average"
+   ],
+   "use": "want a survey that fairly represents all customers",
+   "not": [
+    "picks the most convenient people"
+   ],
+   "like": [
+    "Sampling bias"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "A larger sample",
+   "tier": 3,
+   "says": [
+    "shrinks sampling uncertainty",
+    "cuts the standard error in proportion to the square root of its size",
+    "has diminishing returns once it is already large"
+   ],
+   "use": "wonder whether doubling a large sample halves the error",
+   "not": [
+    "remove bias as the sample grows"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "The central limit theorem",
+   "tier": 5,
+   "says": [
+    "says sample means tend towards a normal distribution as samples grow",
+    "holds even when the underlying data is not normal",
+    "underpins many standard significance tests"
+   ],
+   "use": "wonder why means of skewed data can still use normal-based tests",
+   "not": [
+    "says all data is normally distributed"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "Regression to the mean",
+   "tier": 4,
+   "says": [
+    "is the tendency of extreme results to be followed by more typical ones",
+    "can make a change seem to work when it did nothing",
+    "is a trap when you act on the worst performers"
+   ],
+   "use": "see the worst stores improve next month without any action",
+   "not": [
+    "shows a treatment must have worked"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "Simpson's paradox",
+   "tier": 5,
+   "says": [
+    "is a trend that reverses when groups are combined",
+    "arises when group sizes differ across categories",
+    "is a reason to check segments before trusting a total"
+   ],
+   "use": "find each region improved yet the overall rate fell",
+   "not": [
+    "is a mistake in the arithmetic"
+   ]
+  },
+  {
+   "group": "stat",
+   "subject": "An outlier",
+   "tier": 2,
+   "says": [
+    "is a value far from the rest of the data",
+    "can distort the mean but barely moves the median",
+    "should be investigated before it is removed"
+   ],
+   "use": "find one order a hundred times larger than the rest",
+   "not": [
+    "should always be deleted"
+   ],
+   "like": [
+    "The mean",
+    "The median"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A bar chart",
+   "tier": 1,
+   "says": [
+    "compares values across categories using bar length",
+    "should start its axis at zero",
+    "is easy to read for ranking"
+   ],
+   "use": "want to compare revenue across regions",
+   "not": [
+    "is best for showing a trend over many dates"
+   ],
+   "like": [
+    "A histogram",
+    "A line chart"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A line chart",
+   "tier": 1,
+   "says": [
+    "shows how a value changes over ordered time",
+    "makes trends and turning points easy to see",
+    "joins points to show continuity"
+   ],
+   "use": "want to show weekly signups over a year",
+   "not": [
+    "is best for comparing unrelated categories"
+   ],
+   "like": [
+    "A bar chart"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A scatter plot",
+   "tier": 2,
+   "says": [
+    "plots two numeric variables as points",
+    "reveals correlation, clusters and outliers",
+    "needs no category on either axis"
+   ],
+   "use": "want to see whether spend and revenue move together",
+   "not": [
+    "shows part of a whole"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A histogram",
+   "tier": 3,
+   "says": [
+    "groups a numeric variable into ranges and counts each",
+    "shows the shape of a distribution",
+    "differs from a bar chart because its bars touch in order"
+   ],
+   "use": "want to see how order values are distributed",
+   "not": [
+    "compares unrelated categories"
+   ],
+   "like": [
+    "A bar chart",
+    "A box plot"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A box plot",
+   "tier": 4,
+   "says": [
+    "shows median, quartiles and outliers in one compact shape",
+    "compares the spread of several groups side by side",
+    "hides the fine shape of the distribution"
+   ],
+   "use": "want to compare the spread of delivery times across carriers",
+   "not": [
+    "shows only the mean"
+   ],
+   "like": [
+    "A histogram"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A pie chart",
+   "tier": 2,
+   "says": [
+    "shows parts of a single whole",
+    "becomes hard to read with many slices",
+    "makes small differences between slices hard to see"
+   ],
+   "use": "want to show a share when there are only two or three parts",
+   "not": [
+    "is the clearest way to compare many categories"
+   ],
+   "like": [
+    "A stacked bar chart"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A stacked bar chart",
+   "tier": 3,
+   "says": [
+    "splits each bar into parts of a whole",
+    "makes the bottom segment easy to compare but others hard",
+    "shows totals and composition together"
+   ],
+   "use": "want totals per month and the mix inside each",
+   "not": [
+    "is ideal for comparing the middle segments"
+   ],
+   "like": [
+    "A pie chart"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A heatmap",
+   "tier": 3,
+   "says": [
+    "shows magnitude using colour across a grid",
+    "suits patterns across two categories such as day and hour",
+    "is also how cohort retention tables are often drawn"
+   ],
+   "use": "want to spot busy hours across the days of a week",
+   "not": [
+    "is best for exact value reading"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A truncated axis",
+   "tier": 3,
+   "says": [
+    "starts a bar chart's axis above zero",
+    "exaggerates small differences",
+    "is a common way charts mislead"
+   ],
+   "use": "notice a bar chart whose axis starts at 95",
+   "not": [
+    "is recommended to make bars comparable"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A dual-axis chart",
+   "tier": 4,
+   "says": [
+    "plots two measures on separate vertical scales",
+    "lets the apparent relationship change with the chosen scales",
+    "can mislead by implying a link"
+   ],
+   "use": "see two lines crossing only because the axes were scaled to cross",
+   "not": [
+    "is the safest way to show unrelated data"
+   ]
+  },
+  {
+   "group": "vis",
+   "subject": "A logarithmic scale",
+   "tier": 4,
+   "says": [
+    "spaces values by ratio rather than by difference",
+    "suits data that spans several orders of magnitude",
+    "needs a clear label so readers know it is not linear"
+   ],
+   "use": "want to show growth from hundreds to millions on one chart",
+   "not": [
+    "makes equal steps mean equal differences"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "ETL",
+   "tier": 2,
+   "says": [
+    "extracts data, transforms it, then loads the result into the destination",
+    "does the cleaning before the data reaches the warehouse",
+    "was common when warehouse storage was expensive"
+   ],
+   "use": "need to clean and reshape data before it lands in the target",
+   "not": [
+    "loads raw data first and transforms afterwards"
+   ],
+   "like": [
+    "ELT"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "ELT",
+   "tier": 3,
+   "says": [
+    "loads raw data into the warehouse first and transforms it there",
+    "keeps the raw copy so transformations can be rerun",
+    "uses the warehouse's own compute for the transformation"
+   ],
+   "use": "want to keep raw data and reshape it later in the warehouse",
+   "not": [
+    "transforms data before loading"
+   ],
+   "like": [
+    "ETL"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A data warehouse",
+   "tier": 1,
+   "says": [
+    "stores structured, cleaned data organised for analysis",
+    "is built for large read queries rather than many small writes",
+    "holds history from many source systems"
+   ],
+   "use": "want one place to query data from many systems",
+   "not": [
+    "is built for fast single-row updates in an app"
+   ],
+   "like": [
+    "A data lake"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A data lake",
+   "tier": 3,
+   "says": [
+    "stores raw data of many formats at low cost",
+    "applies structure when the data is read",
+    "can become unusable without a catalog"
+   ],
+   "use": "need cheap storage for raw files before deciding how to use them",
+   "not": [
+    "enforces a strict schema before loading"
+   ],
+   "like": [
+    "A data warehouse"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "An OLAP system",
+   "tier": 3,
+   "says": [
+    "answers analytical queries that scan and aggregate large data",
+    "is organised for reading many rows of a few columns",
+    "stores data in a column-oriented layout in many products"
+   ],
+   "use": "need to aggregate a year of events quickly",
+   "not": [
+    "handles individual order inserts for the app"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "Batch processing",
+   "tier": 2,
+   "says": [
+    "processes data in groups on a schedule",
+    "is simpler and cheaper than streaming",
+    "adds delay between an event and its result"
+   ],
+   "use": "need a nightly rebuild of daily totals",
+   "not": [
+    "processes each event the instant it arrives"
+   ],
+   "like": [
+    "Stream processing"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "Stream processing",
+   "tier": 3,
+   "says": [
+    "processes each event soon after it arrives",
+    "gives low-latency results",
+    "is harder to run correctly than batch"
+   ],
+   "use": "need live fraud signals within seconds",
+   "not": [
+    "waits for the end of the day"
+   ],
+   "like": [
+    "Batch processing"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "Orchestration",
+   "tier": 3,
+   "says": [
+    "schedules pipeline steps and runs them in dependency order",
+    "retries failed steps and raises alerts",
+    "makes it clear what ran and when"
+   ],
+   "use": "need step B to run only after step A succeeds",
+   "not": [
+    "transforms the data itself"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "An idempotent pipeline",
+   "tier": 4,
+   "says": [
+    "gives the same result however many times it is run",
+    "makes safe retries and reruns possible",
+    "is built by replacing a partition or using upserts rather than appending blindly"
+   ],
+   "use": "need to rerun yesterday's load without duplicating rows",
+   "not": [
+    "adds the same rows again on every rerun"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A fact table",
+   "tier": 3,
+   "says": [
+    "records measurable events such as orders, one row per event",
+    "holds numeric measures and keys to dimensions",
+    "is usually the largest table in a model"
+   ],
+   "use": "want a table of every sale with its amount",
+   "not": [
+    "lists descriptive attributes like customer name"
+   ],
+   "like": [
+    "A dimension table"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A dimension table",
+   "tier": 3,
+   "says": [
+    "holds descriptive attributes such as customer or product",
+    "is joined to a fact table to slice measures",
+    "is smaller and changes more slowly than facts"
+   ],
+   "use": "want to group sales by product category",
+   "not": [
+    "records every transaction"
+   ],
+   "like": [
+    "A fact table"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A star schema",
+   "tier": 4,
+   "says": [
+    "places one fact table in the centre joined to dimension tables",
+    "makes analytical queries simple and fast",
+    "denormalises dimensions to reduce joins"
+   ],
+   "use": "want an easy model for slicing sales by many attributes",
+   "not": [
+    "normalises every attribute into many linked tables"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A backfill",
+   "tier": 4,
+   "says": [
+    "reprocesses historical data after a fix or a new definition",
+    "should be repeatable and not duplicate rows",
+    "can change reported numbers for past periods"
+   ],
+   "use": "need to recompute last year's totals after changing a metric",
+   "not": [
+    "is a live stream of new events"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Data minimisation",
+   "tier": 2,
+   "says": [
+    "collects only the data needed for the stated purpose",
+    "reduces what can leak or be misused",
+    "is a principle of privacy law such as GDPR"
+   ],
+   "use": "are asked to add a field 'just in case'",
+   "not": [
+    "says collect everything that might be useful"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Pseudonymisation",
+   "tier": 3,
+   "says": [
+    "replaces direct identifiers with a code",
+    "keeps data linkable if the key is held separately",
+    "still counts as personal data"
+   ],
+   "use": "want to analyse behaviour without showing names",
+   "not": [
+    "makes data fully anonymous"
+   ],
+   "like": [
+    "Anonymisation"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Anonymisation",
+   "tier": 3,
+   "says": [
+    "removes the ability to identify any individual",
+    "cannot be reversed by reasonable means",
+    "takes data out of the scope of personal data rules when done properly"
+   ],
+   "use": "want to share data that no longer identifies anyone",
+   "not": [
+    "is just removing the name column"
+   ],
+   "like": [
+    "Pseudonymisation"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Consent",
+   "tier": 2,
+   "says": [
+    "is a clear, specific agreement given before data is collected",
+    "can be withdrawn by the person",
+    "must be recorded as evidence"
+   ],
+   "use": "need a legal basis for non-essential tracking",
+   "not": [
+    "is assumed if the user keeps browsing"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "A retention limit",
+   "tier": 3,
+   "says": [
+    "sets how long data is kept",
+    "requires deletion when the period ends",
+    "is stated in a policy and enforced by jobs"
+   ],
+   "use": "want old event data removed automatically",
+   "not": [
+    "means data is kept forever by default"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Minimum group size",
+   "tier": 4,
+   "says": [
+    "hides results from groups smaller than a set number",
+    "stops small counts revealing an individual",
+    "is applied in reports that slice data finely"
+   ],
+   "use": "want a breakdown that cannot expose one person",
+   "not": [
+    "shows every group however small"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Purpose limitation",
+   "tier": 3,
+   "says": [
+    "restricts use of data to the purposes it was collected for",
+    "needs fresh consent for a new, incompatible use",
+    "is a reason to document why each field is held"
+   ],
+   "use": "want to reuse support data for marketing analysis",
+   "not": [
+    "allows any reuse once data is collected"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Access control for data",
+   "tier": 2,
+   "says": [
+    "limits who can see which fields and datasets",
+    "follows least privilege",
+    "should be logged so access can be audited"
+   ],
+   "use": "need analysts to see only what their job needs",
+   "not": [
+    "gives every analyst the whole warehouse"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "The right to erasure",
+   "tier": 4,
+   "says": [
+    "lets a person ask for their personal data to be deleted",
+    "has to reach copies in analytics stores and backups per policy",
+    "is harder when data is spread across many systems"
+   ],
+   "use": "receive a request to delete a user's data",
+   "not": [
+    "applies only to the main application database"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The Moksy token ledger",
+   "tier": 3,
+   "says": [
+    "records user, organisation, project, provider, model, token counts, estimated cost, billing period and request id for every AI completion",
+    "is append-only, with corrections as reversing entries",
+    "sits beside a fast summary snapshot held on the subscription"
+   ],
+   "use": "need a durable record of each AI completion for billing and limits",
+   "not": [
+    "keeps token usage in memory only and loses it on restart"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Usage service versus billing truth in Moksy",
+   "tier": 4,
+   "says": [
+    "treats the usage service as product analytics and quota telemetry",
+    "keeps billing truth in the subscriptions ledger",
+    "needs the money source to be append-only, idempotent and reconciled"
+   ],
+   "use": "must decide which Moksy store is the source of truth for money",
+   "not": [
+    "makes the dashboard-tuned usage store the billing record"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy quota reserve and commit",
+   "tier": 4,
+   "says": [
+    "reserves quota before the provider call",
+    "commits the actual usage afterwards",
+    "stops concurrent requests overspending the allowance"
+   ],
+   "use": "need concurrent AI requests not to exceed a customer's quota",
+   "not": [
+    "checks the limit only after the provider call finishes"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The mid-month reset bug",
+   "tier": 5,
+   "says": [
+    "advanced the next reset from the wrong date",
+    "let one allowance run for two months",
+    "shows why period dates need careful computation and tests"
+   ],
+   "use": "hear of an allowance that lasted twice as long as intended",
+   "not": [
+    "blocked customers a month too early"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The Moksy exportable field registry",
+   "tier": 4,
+   "says": [
+    "is defined in code per resource",
+    "keeps any field not declared exportable inside the database",
+    "stops fields that are not importable from ever being written"
+   ],
+   "use": "want to be sure a new column does not leak through export",
+   "not": [
+    "exports every column unless it is blocked afterwards"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy import dry run",
+   "tier": 4,
+   "says": [
+    "shows a diff of what an import would change before applying it",
+    "can produce rollback operations",
+    "lets a person check the effect before committing"
+   ],
+   "use": "want to see what an import changes before it runs",
+   "not": [
+    "applies the import immediately with no preview"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "CSV injection",
+   "tier": 4,
+   "says": [
+    "happens when exported text starting with equals, plus, minus or at is read as a formula",
+    "is fixed by neutralising such leading characters in exported cells",
+    "was raised in GG Money's stress run for bank-supplied text"
+   ],
+   "use": "export bank-supplied text that a spreadsheet may execute",
+   "not": [
+    "is prevented by exporting as a larger file"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GG Money plan history",
+   "tier": 4,
+   "says": [
+    "ends the old plan line and starts a new one when an amount changes",
+    "keeps last quarter judged against last quarter's plan",
+    "lets variance stay honest over time"
+   ],
+   "use": "change a planned amount without rewriting past reports",
+   "not": [
+    "overwrites the old amount in place"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "An unplanned posting in GG Money",
+   "tier": 4,
+   "says": [
+    "is a posting that no plan line claims",
+    "is shown as unplanned and never dropped, so totals still reconcile",
+    "makes surprise spending visible"
+   ],
+   "use": "find spending that matches no plan line",
+   "not": [
+    "is hidden from the report to keep it tidy"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The all-companies view in GG Money",
+   "tier": 5,
+   "says": [
+    "leaves out sales between the owner's own companies",
+    "avoids counting the same money twice",
+    "is needed so combined totals are not inflated"
+   ],
+   "use": "combine the owner's companies into one total",
+   "not": [
+    "adds intercompany sales in so revenue looks larger"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "A frozen review in GG Money",
+   "tier": 5,
+   "says": [
+    "freezes a period with a fingerprint",
+    "needs a second person to approve",
+    "makes later changes to a reviewed period detectable"
+   ],
+   "use": "want a closed period that cannot be altered unnoticed",
+   "not": [
+    "can be edited freely by the person who prepared it"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Which statistic is least affected by a few extremely large values?",
+   "right": "The median",
+   "wrong": [
+    "The mean",
+    "The sum",
+    "The range"
+   ],
+   "tier": 1,
+   "why": "The median depends on position in the sorted data, not on how large the extremes are."
+  },
+  {
+   "q": "What does a funnel report show?",
+   "right": "The share of users who complete each ordered step of a journey",
+   "wrong": [
+    "The average time between two logins",
+    "The total revenue by region",
+    "The list of users who share a birthday"
+   ],
+   "tier": 1,
+   "why": "A funnel tracks drop-off from one step to the next."
+  },
+  {
+   "q": "Why write down the definition of an active user?",
+   "right": "So every team computes the same number from the same data",
+   "wrong": [
+    "So the number always goes up",
+    "So the data needs no cleaning",
+    "So events can be deleted sooner"
+   ],
+   "tier": 1,
+   "why": "Without a shared definition, different teams report different figures."
+  },
+  {
+   "q": "Which chart suits showing weekly signups across a year?",
+   "right": "A line chart",
+   "wrong": [
+    "A pie chart",
+    "A stacked pie chart",
+    "A heatmap of country names"
+   ],
+   "tier": 1,
+   "why": "Line charts show change over ordered time."
+  },
+  {
+   "q": "Which of these best describes correlation?",
+   "right": "Two variables tend to move together",
+   "wrong": [
+    "One variable is proved to cause the other",
+    "Two variables are always identical",
+    "Neither variable can change"
+   ],
+   "tier": 1,
+   "why": "Correlation describes association, not cause."
+  },
+  {
+   "q": "Which query returns the number of orders per customer?",
+   "right": "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id;",
+   "wrong": [
+    "SELECT customer_id, COUNT(*) FROM orders;",
+    "SELECT COUNT(customer_id) FROM orders WHERE customer_id;",
+    "SELECT customer_id FROM orders HAVING COUNT(*);"
+   ],
+   "tier": 2,
+   "why": "Pairing a plain column with an aggregate needs GROUP BY on that column.",
+   "code": "SELECT customer_id, COUNT(*)\nFROM orders\nGROUP BY customer_id;"
+  },
+  {
+   "q": "What does this query count?",
+   "right": "The distinct buyers who ordered, each counted once",
+   "wrong": [
+    "Every order row in the table",
+    "Only orders with no customer",
+    "The orders placed by the first customer"
+   ],
+   "tier": 2,
+   "why": "COUNT(DISTINCT ...) counts each different non-null value once.",
+   "code": "SELECT COUNT(DISTINCT customer_id)\nFROM orders;"
+  },
+  {
+   "q": "A table has 100 rows and 20 of them have a null email. What does COUNT(email) return?",
+   "right": "80",
+   "wrong": [
+    "100",
+    "20",
+    "0"
+   ],
+   "tier": 2,
+   "why": "COUNT(column) skips nulls, COUNT(*) does not."
+  },
+  {
+   "q": "What does AVG(score) do with rows where score is null?",
+   "right": "Ignores them",
+   "wrong": [
+    "Treats them as zero",
+    "Treats them as the previous value",
+    "Raises an error"
+   ],
+   "tier": 2,
+   "why": "Aggregate functions skip nulls, so the average is over non-null values only."
+  },
+  {
+   "q": "Why is an event ID useful?",
+   "right": "A retried delivery can be recognised and counted once",
+   "wrong": [
+    "It makes the event faster to send",
+    "It removes the need for a timestamp",
+    "It encrypts the event"
+   ],
+   "tier": 2,
+   "why": "A unique id lets a duplicate be detected."
+  },
+  {
+   "q": "Which filter belongs in HAVING rather than WHERE?",
+   "right": "Customers with more than five orders",
+   "wrong": [
+    "Orders placed this year",
+    "Orders over 100 in value",
+    "Customers in one country"
+   ],
+   "tier": 2,
+   "why": "The count exists only after grouping, so it must be filtered with HAVING.",
+   "code": "SELECT customer_id, COUNT(*) AS n\nFROM orders\nGROUP BY customer_id\nHAVING COUNT(*) > 5;"
+  },
+  {
+   "q": "What is the aim of randomising users in an A/B test?",
+   "right": "To make the groups alike apart from the change being tested",
+   "wrong": [
+    "To make the test finish sooner",
+    "To ensure the new version wins",
+    "To give every user both versions"
+   ],
+   "tier": 2,
+   "why": "Random assignment spreads other differences evenly across groups."
+  },
+  {
+   "q": "What does a tracking plan hold?",
+   "right": "The events and properties to send, with their meaning and owner",
+   "wrong": [
+    "The passwords for the analytics tool",
+    "The final dashboards",
+    "The list of customers who opted out"
+   ],
+   "tier": 2,
+   "why": "A tracking plan is the agreed contract for event data."
+  },
+  {
+   "q": "Which chart type should normally start its axis at zero?",
+   "right": "A bar chart",
+   "wrong": [
+    "A scatter plot",
+    "A line chart showing a small change",
+    "A sparkline"
+   ],
+   "tier": 2,
+   "why": "Bar length encodes value, so a truncated axis misleads."
+  },
+  {
+   "q": "Which is a leading indicator for subscription renewals?",
+   "right": "Whether new customers complete their first useful action",
+   "wrong": [
+    "Revenue recognised last quarter",
+    "Total cancellations in the closed quarter",
+    "Last year's churn"
+   ],
+   "tier": 2,
+   "why": "Early behaviour moves before the renewal outcome."
+  },
+  {
+   "q": "What is the best reason to use a data warehouse for reporting rather than the live app database?",
+   "right": "It is organised for large analytical queries without slowing the app",
+   "wrong": [
+    "It is faster for single-row updates",
+    "It never needs loading",
+    "It stores only the latest values"
+   ],
+   "tier": 2,
+   "why": "Analytical scans and live transactions suit different designs."
+  },
+  {
+   "q": "A dashboard shows revenue of 1.2m but finance says 1.0m. What should you do first?",
+   "right": "Compare both definitions and reconcile each to the source data",
+   "wrong": [
+    "Replace the dashboard with finance's spreadsheet",
+    "Average the two numbers",
+    "Hide the dashboard until next quarter"
+   ],
+   "tier": 3,
+   "why": "A mismatch usually comes from different definitions, filters or periods."
+  },
+  {
+   "q": "A team joins orders to order lines and sums order totals. The total doubles. Why?",
+   "right": "The join repeats each order once per line, so its total is added several times",
+   "wrong": [
+    "SUM always doubles values",
+    "The orders table has null totals",
+    "The join sorted the rows incorrectly"
+   ],
+   "tier": 3,
+   "why": "A one-to-many join fans out rows, inflating sums taken at the order level.",
+   "code": "SELECT SUM(o.total)\nFROM orders o\nJOIN order_lines l ON l.order_id = o.id;"
+  },
+  {
+   "q": "A variant shows a 3 percent lift with p = 0.04 after the team checked results daily for two weeks and stopped when it first dipped below 0.05. What is the concern?",
+   "right": "Repeated peeking inflates the false-positive rate, so the p-value overstates the evidence",
+   "wrong": [
+    "A p-value below 0.05 is never valid",
+    "Two weeks is too short for any test",
+    "Daily checks reduce the sample size"
+   ],
+   "tier": 3,
+   "why": "Stopping at the first significant look breaks the test's stated error rate."
+  },
+  {
+   "q": "Ice cream sales and sunburn cases rise together. What is the most likely explanation?",
+   "right": "A common cause, hot weather, drives both",
+   "wrong": [
+    "Ice cream causes sunburn",
+    "Sunburn causes ice cream sales",
+    "The data must be wrong"
+   ],
+   "tier": 3,
+   "why": "A confounder can produce correlation with no causal link."
+  },
+  {
+   "q": "A survey of customers who contacted support finds 60 percent are unhappy. What can you conclude about all customers?",
+   "right": "Very little, because the sample is not representative",
+   "wrong": [
+    "60 percent of all customers are unhappy",
+    "Most customers are happy",
+    "The sample is large enough to ignore bias"
+   ],
+   "tier": 3,
+   "why": "Sampling bias is not fixed by sample size."
+  },
+  {
+   "q": "Average order value is 80 and the median is 35. What does this suggest?",
+   "right": "A few very large orders pull the mean up, so the distribution is skewed",
+   "wrong": [
+    "The data has an error",
+    "Most orders are above 80",
+    "The mean and median should always match"
+   ],
+   "tier": 3,
+   "why": "Mean above median points to a right-skewed distribution."
+  },
+  {
+   "q": "What does a 95 percent confidence interval of -0.5 to +4.0 percentage points for a lift tell you?",
+   "right": "The true effect could be zero or slightly negative, so the result is inconclusive",
+   "wrong": [
+    "The change definitely works",
+    "The change definitely harms",
+    "The test needs no further consideration"
+   ],
+   "tier": 3,
+   "why": "An interval that includes zero does not show a clear difference."
+  },
+  {
+   "q": "A retry sends a usage event twice. Which design prevents double counting?",
+   "right": "Store a unique key per request and ignore a write whose key already exists",
+   "wrong": [
+    "Sum all events and halve the result",
+    "Delete the second event by hand each day",
+    "Send events less often"
+   ],
+   "tier": 3,
+   "why": "Idempotent writes make retries safe."
+  },
+  {
+   "q": "Which statement about a p-value is correct?",
+   "right": "It is the probability of results this extreme if there were no real effect",
+   "wrong": [
+    "It is the probability the change works",
+    "It is the size of the effect",
+    "It is the chance the test was run correctly"
+   ],
+   "tier": 3,
+   "why": "A p-value assumes the null hypothesis and measures surprise."
+  },
+  {
+   "q": "A pie chart with twelve slices is hard to read. What is a better choice?",
+   "right": "A sorted bar chart",
+   "wrong": [
+    "A 3D pie chart",
+    "A pie chart with brighter colours",
+    "A dual-axis chart"
+   ],
+   "tier": 3,
+   "why": "Bars make comparison across many categories easy."
+  },
+  {
+   "q": "Why keep raw data in an ELT pipeline?",
+   "right": "Transformations can be changed and rerun without reloading from the source",
+   "wrong": [
+    "It uses less storage than cleaned data",
+    "It removes the need for a warehouse",
+    "It stops anyone querying it"
+   ],
+   "tier": 3,
+   "why": "Raw data lets definitions evolve."
+  },
+  {
+   "q": "A report exports user emails to a partner who only needs counts. What is the best fix?",
+   "right": "Export aggregated counts and leave out the email column",
+   "wrong": [
+    "Keep emails but zip the file",
+    "Email the partner a password",
+    "Ask the partner to delete emails later"
+   ],
+   "tier": 3,
+   "why": "Data minimisation avoids sending data that is not needed."
+  },
+  {
+   "q": "Which of these is NOT a data quality problem?",
+   "right": "A chart using a clear title",
+   "wrong": [
+    "Two records for one customer",
+    "Dates in mixed formats",
+    "A required field left empty"
+   ],
+   "tier": 3,
+   "why": "A chart title is presentation, not data quality."
+  },
+  {
+   "q": "A cohort table shows later cohorts retain better each month. What does this suggest?",
+   "right": "Product or onboarding changes may be improving retention",
+   "wrong": [
+    "The tracking is broken",
+    "Older users are leaving faster",
+    "Retention cannot be compared across cohorts"
+   ],
+   "tier": 3,
+   "why": "Comparing cohorts at the same age shows whether retention is improving."
+  },
+  {
+   "q": "A late event for last Tuesday arrives today. How should a well-designed pipeline treat it?",
+   "right": "Assign it to Tuesday by event time and reprocess that day's total",
+   "wrong": [
+    "Count it in today's total",
+    "Discard it",
+    "Add it to both days"
+   ],
+   "tier": 3,
+   "why": "Event time decides the period, so recent windows are reprocessed."
+  },
+  {
+   "q": "A test planned 50/50 shows 10,400 users in A and 9,600 in B. What should you do?",
+   "right": "Investigate a possible sample ratio mismatch before trusting any result",
+   "wrong": [
+    "Report the result as normal",
+    "Remove users from A until it is even",
+    "Treat B as the winner"
+   ],
+   "tier": 4,
+   "why": "A split that differs from plan indicates an assignment or tracking fault."
+  },
+  {
+   "q": "A growth team tests 20 metrics and ships because one reached p = 0.03. What is the problem?",
+   "right": "With many comparisons, one such result is likely by chance alone",
+   "wrong": [
+    "P-values are not used in tests",
+    "Twenty metrics is too few",
+    "p = 0.03 is not below 0.05"
+   ],
+   "tier": 4,
+   "why": "Multiple comparisons need a stricter threshold or a pre-chosen primary metric."
+  },
+  {
+   "q": "A cheap model downgrade is added when users reach their limit. Which metric should guard it?",
+   "right": "Customer satisfaction or cancellations after the downgrade",
+   "wrong": [
+    "Total logins",
+    "Page weight",
+    "Number of dashboards"
+   ],
+   "tier": 4,
+   "why": "A guardrail checks the change does not harm customers."
+  },
+  {
+   "q": "Two requests arrive together when 10 units of quota remain, each needing 8. How does reserving first help?",
+   "right": "The first reserves 8, so the second is refused or reduced instead of overspending",
+   "wrong": [
+    "Both succeed and the ledger fixes it later",
+    "Both fail with no reason",
+    "The second waits until the month ends"
+   ],
+   "tier": 4,
+   "why": "Reservation makes concurrent checks see the same remaining balance."
+  },
+  {
+   "q": "A wrong 500-unit entry sits in an append-only usage ledger. How is it corrected?",
+   "right": "Add a reversing entry of minus 500, then the right entry",
+   "wrong": [
+    "Edit the original row",
+    "Delete the row",
+    "Reset the total by hand in the snapshot"
+   ],
+   "tier": 4,
+   "why": "Append-only ledgers keep history and correct with new rows."
+  },
+  {
+   "q": "Each of two regions improved its conversion rate, yet the overall rate fell. What is the likely cause?",
+   "right": "A shift in traffic towards the region with the lower rate, Simpson's paradox",
+   "wrong": [
+    "An arithmetic error that can only be a bug",
+    "The overall rate cannot fall",
+    "Conversion rates cannot be combined"
+   ],
+   "tier": 4,
+   "why": "Mix changes can reverse the combined trend."
+  },
+  {
+   "q": "Which design lets an analyst filter on the meaning they understand when an event's field changes?",
+   "right": "Add a version to the event and keep the old version's meaning",
+   "wrong": [
+    "Change the field in place",
+    "Delete old events",
+    "Rename the field without telling anyone"
+   ],
+   "tier": 4,
+   "why": "Versioning avoids silently mixing meanings."
+  },
+  {
+   "q": "A pipeline loads a day's data by appending. It fails halfway and is rerun. What is the risk?",
+   "right": "Duplicate rows for the part that loaded the first time",
+   "wrong": [
+    "Missing rows only",
+    "No risk",
+    "A faster second run"
+   ],
+   "tier": 4,
+   "why": "Appending is not idempotent; replacing the partition is."
+  },
+  {
+   "q": "What does this query produce?",
+   "right": "Each order with a running total per customer, by date",
+   "wrong": [
+    "One row per customer",
+    "Only the latest order per customer",
+    "The count of customers"
+   ],
+   "tier": 4,
+   "why": "A window function keeps rows and computes across a partition.",
+   "code": "SELECT order_id,\n  SUM(total) OVER (PARTITION BY customer_id ORDER BY ordered_at) AS running\nFROM orders;"
+  },
+  {
+   "q": "The worst-performing stores each improve next month with no intervention. What explains it?",
+   "right": "Regression to the mean",
+   "wrong": [
+    "A hidden promotion",
+    "A seasonal effect only",
+    "The measurement always improves"
+   ],
+   "tier": 4,
+   "why": "Extreme results tend to move toward typical ones."
+  },
+  {
+   "q": "A test is stopped after one week with a 12 percent lift. Two weeks later the lift is 2 percent. What may have occurred?",
+   "right": "A novelty effect faded as users got used to the change",
+   "wrong": [
+    "The lift was caused by the p-value",
+    "The control group changed permanently",
+    "Randomisation failed"
+   ],
+   "tier": 4,
+   "why": "Early lifts from novelty often shrink."
+  },
+  {
+   "q": "An export includes a cell with =HYPERLINK(...) from bank-supplied text. What is the risk?",
+   "right": "A spreadsheet may treat it as a formula, which is CSV injection",
+   "wrong": [
+    "The file becomes too large",
+    "The CSV fails to open",
+    "The text is encrypted"
+   ],
+   "tier": 4,
+   "why": "Cells starting with = + - or @ can execute in spreadsheets."
+  },
+  {
+   "q": "A feature's users retain better than non-users. Can you say the feature improves retention?",
+   "right": "No, users who choose it may already be more engaged, so a randomised test is needed",
+   "wrong": [
+    "Yes, correlation is enough",
+    "Yes, if the sample is large",
+    "No, retention cannot be measured"
+   ],
+   "tier": 5,
+   "why": "Self-selection confounds the comparison."
+  },
+  {
+   "q": "You report a metric to a team that is paid on it. Over time the metric improves but customer complaints rise. Which idea explains this?",
+   "right": "Goodhart's law: a measure used as a target stops being a good measure",
+   "wrong": [
+    "Simpson's paradox",
+    "The central limit theorem",
+    "Sampling error"
+   ],
+   "tier": 5,
+   "why": "People optimise the target rather than the goal."
+  },
+  {
+   "q": "A test of a rare outcome is underpowered and shows no significant effect. What is the sound conclusion?",
+   "right": "The test could not detect an effect of that size, so the question is still open",
+   "wrong": [
+    "The change has no effect",
+    "The change is harmful",
+    "The p-value proves the null hypothesis"
+   ],
+   "tier": 5,
+   "why": "Not significant is not the same as no effect."
+  },
+  {
+   "q": "A rare condition affects 1 in 1,000 people and a test is 99 percent accurate. A person tests positive. What matters most for the true chance they have it?",
+   "right": "The base rate, since most positives will be false",
+   "wrong": [
+    "Only the test accuracy",
+    "The age of the patient",
+    "The colour of the report"
+   ],
+   "tier": 5,
+   "why": "A low base rate means false positives dominate."
+  },
+  {
+   "q": "A report with a 98 percent match between two systems still hides what risk?",
+   "right": "The 2 percent mismatch may be concentrated in the most valuable records",
+   "wrong": [
+    "Nothing, 98 percent is complete",
+    "The systems must be identical",
+    "Percentages cannot be compared"
+   ],
+   "tier": 5,
+   "why": "Look at where the differences fall, not just how many."
+  },
+  {
+   "q": "A consent record is withdrawn. Which action is most consistent with good practice?",
+   "right": "Stop collecting, and delete or de-identify the person's analytics data per policy",
+   "wrong": [
+    "Keep collecting until the next quarter",
+    "Keep all data but hide it from dashboards",
+    "Ask the person to sign again"
+   ],
+   "tier": 5,
+   "why": "Withdrawal must be honoured going forward and in held data as policy requires."
+  },
+  {
+   "q": "A small region breakdown shows two users. Why might this report be a privacy risk?",
+   "right": "A group that small can reveal what one person did",
+   "wrong": [
+    "Small groups load slowly",
+    "Two is not a valid number",
+    "Percentages cannot be shown"
+   ],
+   "tier": 4,
+   "why": "A minimum group size prevents re-identification."
+  },
+  {
+   "q": "Which choice best shows a trend and a precise value together on a KPI tile?",
+   "right": "The number with a small sparkline and the change against the previous period",
+   "wrong": [
+    "The number alone",
+    "A pie chart of the number",
+    "A table of raw events"
+   ],
+   "tier": 3,
+   "why": "Context turns a bare number into information."
+  },
+  {
+   "q": "Which type of tracking is the safer source for a completed payment?",
+   "right": "Server-side tracking after the payment succeeds",
+   "wrong": [
+    "Client-side click tracking",
+    "Autocapture of button clicks",
+    "A page view event"
+   ],
+   "tier": 3,
+   "why": "Server-side events reflect what really happened and avoid ad-blockers."
+  },
+  {
+   "q": "What is the main difference between a cohort and a segment?",
+   "right": "A cohort shares a start point and is followed over time, while a segment shares a trait",
+   "wrong": [
+    "They are the same thing",
+    "A cohort is always smaller",
+    "A segment must be random"
+   ],
+   "tier": 2,
+   "why": "Cohort analysis is about time since a shared starting event."
+  },
+  {
+   "q": "Why can a 99th percentile response time be more useful than the mean?",
+   "right": "It shows how slow the worst requests are, which the mean hides",
+   "wrong": [
+    "It is always lower than the mean",
+    "It is easier to calculate",
+    "It removes the need for monitoring"
+   ],
+   "tier": 5,
+   "why": "Tails drive user pain, and means blur them."
+  },
+  {
+   "q": "A dashboard needs yesterday's figures to be final by 8am. Late events keep arriving for two days. What is a sound design?",
+   "right": "Reprocess a rolling window of recent days and mark recent figures as provisional",
+   "wrong": [
+    "Freeze the day at midnight forever",
+    "Delete late events",
+    "Hide the refresh time"
+   ],
+   "tier": 5,
+   "why": "Provisional labelling plus reprocessing keeps numbers honest."
+  }
+ ]
+}

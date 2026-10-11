@@ -1,0 +1,2639 @@
+{
+  "slug": "moksy-patterns-automation",
+  "name": "Patterns and automation",
+  "description": "Decisions as patterns, flows, and measuring the machine share.",
+  "roles": "developer",
+  "kind": "process",
+  "brand": "moksy-ai",
+  "audience": "staff",
+  "tier": "role",
+  "groups": {
+    "wf": "workflow concept",
+    "job": "background job concept",
+    "event": "event-driven concept",
+    "hook": "webhook concept",
+    "rel": "reliability pattern",
+    "sched": "scheduling concept",
+    "gate": "human-in-the-loop concept",
+    "reuse": "pattern-reuse concept",
+    "integ": "integration pattern",
+    "ops": "automation operations practice",
+    "mpat": "Moksy pattern-architecture term",
+    "mhand": "Moksy hand-off or measurement term",
+    "mint": "Moksy integration term",
+    "mplat": "Moksy platform automation term"
+  },
+  "cards": [
+    {
+      "group": "wf",
+      "subject": "A workflow",
+      "tier": 1,
+      "says": [
+        "chains steps into a repeatable process that runs without a person driving each one",
+        "has a defined trigger, ordered steps and an end state"
+      ],
+      "use": "want a multi-step process to run the same way every time",
+      "not": [
+        "is a single function call that cannot be split into steps"
+      ],
+      "like": [
+        "A step"
+      ]
+    },
+    {
+      "group": "wf",
+      "subject": "A trigger",
+      "tier": 1,
+      "says": [
+        "starts a workflow when something happens or a time arrives",
+        "is the entry point of a workflow rather than one of its actions"
+      ],
+      "use": "need to define what causes a workflow to begin",
+      "not": [
+        "decides which branch runs after the first step"
+      ],
+      "like": [
+        "A condition"
+      ]
+    },
+    {
+      "group": "wf",
+      "subject": "A step",
+      "tier": 1,
+      "says": [
+        "does one unit of work inside a workflow",
+        "passes its output to later steps as their input"
+      ],
+      "use": "need to break a process into units that can be retried separately",
+      "not": [
+        "is the whole workflow rather than a part of it"
+      ],
+      "like": [
+        "A trigger"
+      ]
+    },
+    {
+      "group": "wf",
+      "subject": "A condition",
+      "tier": 2,
+      "says": [
+        "routes a workflow down one path based on the data it sees",
+        "evaluates a rule such as an order total above a limit"
+      ],
+      "use": "need large and small requests to be handled differently",
+      "not": [
+        "runs every branch at once regardless of the data"
+      ],
+      "like": [
+        "A trigger",
+        "A fan-out and fan-in"
+      ]
+    },
+    {
+      "group": "wf",
+      "subject": "A fan-out and fan-in",
+      "tier": 3,
+      "says": [
+        "splits work into parallel branches and later joins their results",
+        "can wait for every branch, or only a quorum, before continuing"
+      ],
+      "use": "need to process many items at once and then combine the outcomes",
+      "not": [
+        "sends work to one branch at a time in a fixed order"
+      ],
+      "like": [
+        "A condition"
+      ]
+    },
+    {
+      "group": "wf",
+      "subject": "A state machine",
+      "tier": 3,
+      "says": [
+        "allows only declared transitions between named states",
+        "makes an illegal move such as completed back to running impossible"
+      ],
+      "use": "need to guarantee that a task never lands in an impossible state",
+      "not": [
+        "lets any state change to any other state freely"
+      ]
+    },
+    {
+      "group": "wf",
+      "subject": "A saga",
+      "tier": 4,
+      "says": [
+        "undoes completed steps with compensating actions when a later step fails",
+        "replaces one distributed transaction with a sequence of local ones"
+      ],
+      "use": "need all-or-nothing behaviour across services that share no transaction",
+      "not": [
+        "locks every service's database until the whole process commits"
+      ],
+      "like": [
+        "Orchestration",
+        "Choreography"
+      ]
+    },
+    {
+      "group": "wf",
+      "subject": "Orchestration",
+      "tier": 3,
+      "says": [
+        "has one central coordinator tell each service what to do next",
+        "keeps the whole process visible and changeable in one place"
+      ],
+      "use": "need the end-to-end flow to be readable in a single definition",
+      "not": [
+        "lets each service react on its own with no coordinator"
+      ],
+      "like": [
+        "Choreography"
+      ]
+    },
+    {
+      "group": "wf",
+      "subject": "Choreography",
+      "tier": 3,
+      "says": [
+        "lets each service react to events with no central coordinator",
+        "spreads the process definition across many subscribers"
+      ],
+      "use": "want services to stay loosely coupled and react on their own",
+      "not": [
+        "depends on a single engine that calls every step in turn"
+      ],
+      "like": [
+        "Orchestration"
+      ]
+    },
+    {
+      "group": "wf",
+      "subject": "A long-running workflow",
+      "tier": 4,
+      "says": [
+        "persists its state between steps so it survives restarts",
+        "can wait days for a timer or a person without holding a thread"
+      ],
+      "use": "have a process that waits days for an outside answer",
+      "not": [
+        "must finish inside a single request timeout"
+      ]
+    },
+    {
+      "group": "job",
+      "subject": "A background job",
+      "tier": 1,
+      "says": [
+        "runs work outside the request that asked for it",
+        "lets a web request return before slow work finishes"
+      ],
+      "use": "need a slow task not to block the user's page",
+      "not": [
+        "must complete before the user gets any response"
+      ]
+    },
+    {
+      "group": "job",
+      "subject": "A job queue",
+      "tier": 1,
+      "says": [
+        "holds jobs until a worker is free to take them",
+        "decouples how fast jobs arrive from how fast they are processed"
+      ],
+      "use": "see bursts of work arriving faster than it can be done",
+      "not": [
+        "runs each job at the moment it is added, never later"
+      ],
+      "like": [
+        "A worker"
+      ]
+    },
+    {
+      "group": "job",
+      "subject": "A worker",
+      "tier": 2,
+      "says": [
+        "pulls jobs from a queue and executes them",
+        "can be scaled out by running more copies"
+      ],
+      "use": "need more throughput from the same queue",
+      "not": [
+        "decides which jobs are created"
+      ],
+      "like": [
+        "A job queue"
+      ]
+    },
+    {
+      "group": "job",
+      "subject": "An acknowledgement",
+      "tier": 3,
+      "says": [
+        "tells the queue that a job finished so it can be removed",
+        "is safest sent after the work is durably done"
+      ],
+      "use": "need a crash mid-job not to lose the job",
+      "not": [
+        "is sent before the work starts to speed things up"
+      ],
+      "like": [
+        "A visibility timeout"
+      ]
+    },
+    {
+      "group": "job",
+      "subject": "A concurrency limit",
+      "tier": 3,
+      "says": [
+        "caps how many jobs of one kind run at once",
+        "protects a downstream system from being overwhelmed"
+      ],
+      "use": "need to stop a bulk import from exhausting a database connection pool",
+      "not": [
+        "raises throughput by letting unlimited jobs run together"
+      ]
+    },
+    {
+      "group": "job",
+      "subject": "A visibility timeout",
+      "tier": 4,
+      "says": [
+        "hides a claimed job from other workers for a limited time",
+        "returns the job to the queue if the worker never acknowledges it"
+      ],
+      "use": "need a crashed worker's job to be picked up by another worker",
+      "not": [
+        "deletes a job that takes too long to run"
+      ],
+      "like": [
+        "An acknowledgement",
+        "A job heartbeat"
+      ]
+    },
+    {
+      "group": "job",
+      "subject": "A job heartbeat",
+      "tier": 4,
+      "says": [
+        "extends a running job's claim while its worker is still alive",
+        "lets a long job outlive the normal claim time without being run twice"
+      ],
+      "use": "run a job that takes far longer than the claim period",
+      "not": [
+        "marks the job completed when it is sent"
+      ],
+      "like": [
+        "A visibility timeout"
+      ]
+    },
+    {
+      "group": "job",
+      "subject": "Backpressure",
+      "tier": 4,
+      "says": [
+        "slows or rejects producers when consumers fall behind",
+        "keeps an unbounded queue from exhausting memory"
+      ],
+      "use": "see queue depth growing without limit",
+      "not": [
+        "adds more producers to catch up with the backlog"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "An event",
+      "tier": 1,
+      "says": [
+        "records that something has already happened",
+        "is usually named in the past tense, like invoice.paid"
+      ],
+      "use": "need to announce a fact that other systems may care about",
+      "not": [
+        "orders one particular service to perform an action"
+      ],
+      "like": [
+        "A command"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "A command",
+      "tier": 2,
+      "says": [
+        "asks one specific recipient to do something",
+        "can be rejected by the recipient"
+      ],
+      "use": "need a particular service to carry out an action",
+      "not": [
+        "announces a fact to anyone who is listening"
+      ],
+      "like": [
+        "An event"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "A producer",
+      "tier": 1,
+      "says": [
+        "emits events without knowing who will consume them",
+        "is unaffected when a new consumer is added"
+      ],
+      "use": "need the sender to stay independent of the receivers",
+      "not": [
+        "must call every consumer directly"
+      ],
+      "like": [
+        "A consumer"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "A consumer",
+      "tier": 1,
+      "says": [
+        "receives events it registered interest in",
+        "can be added without changing the producer"
+      ],
+      "use": "want to react to something another system did",
+      "not": [
+        "decides what the producer publishes"
+      ],
+      "like": [
+        "A producer"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "A message broker",
+      "tier": 2,
+      "says": [
+        "stores and routes messages between producers and consumers",
+        "buffers events while a consumer is down"
+      ],
+      "use": "need events to survive a consumer outage",
+      "not": [
+        "executes the business logic of every consumer"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "Pub/sub",
+      "tier": 2,
+      "says": [
+        "delivers one published message to every subscriber of a topic",
+        "differs from a work queue where each message goes to one worker"
+      ],
+      "use": "need several systems to each react to the same event",
+      "not": [
+        "gives each message to exactly one worker that competes for it"
+      ],
+      "like": [
+        "A job queue"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "A thin event",
+      "tier": 3,
+      "says": [
+        "carries only an identifier and makes the consumer fetch the details",
+        "keeps messages small and the data always current"
+      ],
+      "use": "want small events and always-fresh data",
+      "not": [
+        "carries the full record so no callback is ever needed"
+      ],
+      "like": [
+        "A fat event"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "A fat event",
+      "tier": 3,
+      "says": [
+        "carries the full state consumers need",
+        "saves consumers a callback to the producer"
+      ],
+      "use": "want consumers to work even if the producer is unreachable",
+      "not": [
+        "carries only an identifier"
+      ],
+      "like": [
+        "A thin event"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "Event ordering",
+      "tier": 5,
+      "says": [
+        "is guaranteed only within a partition or key in most brokers",
+        "needs a key or sequence number when changes must be applied in order"
+      ],
+      "use": "must apply updates to the same account in the order they happened",
+      "not": [
+        "is guaranteed globally across all topics by default"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "The transactional outbox",
+      "tier": 4,
+      "says": [
+        "writes the event to a table in the same transaction as the state change",
+        "uses a relay to publish the stored rows afterwards"
+      ],
+      "use": "find that a service saved data but crashed before publishing the event",
+      "not": [
+        "publishes first and saves the state later"
+      ],
+      "like": [
+        "Event sourcing"
+      ]
+    },
+    {
+      "group": "event",
+      "subject": "Event sourcing",
+      "tier": 5,
+      "says": [
+        "stores state as an append-only sequence of events",
+        "rebuilds current state by replaying those events"
+      ],
+      "use": "need a complete history of every change to an aggregate",
+      "not": [
+        "keeps only the latest value and overwrites it on each change"
+      ],
+      "like": [
+        "The transactional outbox"
+      ]
+    },
+    {
+      "group": "hook",
+      "subject": "A webhook",
+      "tier": 1,
+      "says": [
+        "is an HTTP callback the sender makes when an event occurs",
+        "removes the need for the receiver to poll"
+      ],
+      "use": "want to be told about changes instead of asking repeatedly",
+      "not": [
+        "is a request the receiver sends on a timer to check for news"
+      ],
+      "like": [
+        "A webhook endpoint"
+      ]
+    },
+    {
+      "group": "hook",
+      "subject": "A webhook endpoint",
+      "tier": 1,
+      "says": [
+        "is a URL the receiver exposes to accept deliveries",
+        "should answer quickly with a 2xx status"
+      ],
+      "use": "need a place for a provider to send events",
+      "not": [
+        "is the URL of the sender's API"
+      ],
+      "like": [
+        "A webhook"
+      ]
+    },
+    {
+      "group": "hook",
+      "subject": "A webhook signature",
+      "tier": 2,
+      "says": [
+        "lets the receiver verify the sender with a shared-secret HMAC",
+        "is computed over the request body"
+      ],
+      "use": "need to confirm that a request really came from the provider",
+      "not": [
+        "encrypts the payload so nobody on the wire can read it"
+      ],
+      "like": [
+        "Webhook replay protection"
+      ]
+    },
+    {
+      "group": "hook",
+      "subject": "Fast acknowledgement",
+      "tier": 3,
+      "says": [
+        "returns a 2xx first and does the real work afterwards",
+        "keeps slow processing from causing sender timeouts and duplicate retries"
+      ],
+      "use": "see a provider time out and redeliver while your handler is still working",
+      "not": [
+        "finishes all processing before replying"
+      ]
+    },
+    {
+      "group": "hook",
+      "subject": "At-least-once webhook delivery",
+      "tier": 3,
+      "says": [
+        "can send the same event twice",
+        "treats a missing or non-2xx response as a reason to retry"
+      ],
+      "use": "must build a receiver that survives duplicate deliveries",
+      "not": [
+        "promises each event arrives exactly one time"
+      ],
+      "like": [
+        "Fast acknowledgement"
+      ]
+    },
+    {
+      "group": "hook",
+      "subject": "Webhook replay protection",
+      "tier": 4,
+      "says": [
+        "rejects deliveries whose signed timestamp is too old",
+        "keeps a captured delivery from being resent later"
+      ],
+      "use": "worry that an attacker could resend a captured delivery",
+      "not": [
+        "is achieved by hiding the endpoint URL"
+      ],
+      "like": [
+        "A webhook signature"
+      ]
+    },
+    {
+      "group": "hook",
+      "subject": "Raw-body verification",
+      "tier": 5,
+      "says": [
+        "computes the signature over the exact bytes received",
+        "fails if a framework re-serialises the JSON before checking"
+      ],
+      "use": "see valid signatures fail after a middleware parses the body",
+      "not": [
+        "verifies the signature over the parsed JSON object"
+      ]
+    },
+    {
+      "group": "hook",
+      "subject": "Subscription auto-pause",
+      "tier": 4,
+      "says": [
+        "stops sending to an endpoint after sustained failures",
+        "protects the sender from hammering a dead URL"
+      ],
+      "use": "see a subscriber's endpoint fail on every delivery for days",
+      "not": [
+        "deletes the subscription's history"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "Idempotency",
+      "tier": 2,
+      "says": [
+        "makes repeating an operation have the same effect as doing it once",
+        "is what makes retries safe"
+      ],
+      "use": "need a retry not to charge a customer twice",
+      "not": [
+        "guarantees an operation is never attempted more than once"
+      ],
+      "like": [
+        "An idempotency key"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "An idempotency key",
+      "tier": 3,
+      "says": [
+        "is a client-supplied unique id stored with the first result",
+        "lets a repeated request return the saved response instead of redoing the work"
+      ],
+      "use": "need to make a POST that creates something safe to retry",
+      "not": [
+        "is a server-generated session cookie"
+      ],
+      "like": [
+        "Idempotency"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "A retry",
+      "tier": 1,
+      "says": [
+        "repeats a failed operation in the hope the cause was temporary",
+        "helps with transient faults but is pointless for permanent ones"
+      ],
+      "use": "see a call fail with a brief network blip",
+      "not": [
+        "fixes a request that was malformed"
+      ],
+      "like": [
+        "A transient error",
+        "A permanent error"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "Exponential backoff",
+      "tier": 2,
+      "says": [
+        "increases the wait between retries, typically doubling it",
+        "gives a struggling dependency room to recover"
+      ],
+      "use": "see retries hammering a service that is already overloaded",
+      "not": [
+        "retries at a fixed interval forever"
+      ],
+      "like": [
+        "Jitter"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "Jitter",
+      "tier": 3,
+      "says": [
+        "adds randomness to retry delays",
+        "stops many clients retrying at the same instant"
+      ],
+      "use": "see a thundering herd after an outage ends",
+      "not": [
+        "lengthens every delay by the same fixed amount"
+      ],
+      "like": [
+        "Exponential backoff"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "A dead-letter queue",
+      "tier": 2,
+      "says": [
+        "holds messages that exhausted their retries",
+        "lets a person inspect and redrive failures",
+        "keeps a failing message from blocking healthy ones"
+      ],
+      "use": "need failed jobs parked for inspection",
+      "not": [
+        "permanently deletes failed messages to keep the queue clean"
+      ],
+      "like": [
+        "A poison message"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "A poison message",
+      "tier": 4,
+      "says": [
+        "fails every time it is processed",
+        "will clog a queue if it is retried for ever"
+      ],
+      "use": "find one malformed message stuck at the head of a queue",
+      "not": [
+        "succeeds on the second attempt"
+      ],
+      "like": [
+        "A dead-letter queue"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "A circuit breaker",
+      "tier": 3,
+      "says": [
+        "stops calls to a dependency after repeated failures",
+        "moves between closed, open and half-open states"
+      ],
+      "use": "see calls piling up against a failing service",
+      "not": [
+        "retries every failed call immediately"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "A timeout",
+      "tier": 2,
+      "says": [
+        "gives up on a call that takes too long",
+        "turns a hung call into a failure that retry policy can handle"
+      ],
+      "use": "have a call that can hang with no answer",
+      "not": [
+        "makes a slow call finish faster"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "A transient error",
+      "tier": 3,
+      "says": [
+        "is expected to clear by itself",
+        "is the kind of fault a retry can fix, such as a 503"
+      ],
+      "use": "see a dependency briefly unavailable",
+      "not": [
+        "will fail the same way however many times it is repeated"
+      ],
+      "like": [
+        "A permanent error"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "A permanent error",
+      "tier": 3,
+      "says": [
+        "will not succeed however often it is retried",
+        "is shown by a validation failure such as a 400 for a bad field"
+      ],
+      "use": "get a rejection for a payload that is malformed",
+      "not": [
+        "clears up after a short wait"
+      ],
+      "like": [
+        "A transient error"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "At-least-once delivery",
+      "tier": 3,
+      "says": [
+        "may deliver a message more than once but never loses it",
+        "is the usual broker default that leaves duplicate handling to the consumer"
+      ],
+      "use": "must choose a delivery guarantee where loss is unacceptable",
+      "not": [
+        "promises no message is ever delivered twice"
+      ],
+      "like": [
+        "Exactly-once processing"
+      ]
+    },
+    {
+      "group": "rel",
+      "subject": "Exactly-once processing",
+      "tier": 5,
+      "says": [
+        "is achieved in practice by at-least-once delivery plus idempotent handling",
+        "is a property of the outcome rather than of the network"
+      ],
+      "use": "need each payment to take effect one time despite redeliveries",
+      "not": [
+        "is provided by every broker with no consumer work"
+      ],
+      "like": [
+        "At-least-once delivery"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A cron expression",
+      "tier": 1,
+      "says": [
+        "describes a recurring time with five fields",
+        "reads minute, hour, day of month, month and day of week"
+      ],
+      "use": "need to say 'every weekday at 08:30'",
+      "not": [
+        "names a single moment that happens only once"
+      ],
+      "like": [
+        "A delayed job"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A scheduler",
+      "tier": 1,
+      "says": [
+        "starts work at defined times or intervals",
+        "turns a time rule into queued jobs"
+      ],
+      "use": "need a task to start without anyone clicking",
+      "not": [
+        "decides how a job's steps are ordered"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A delayed job",
+      "tier": 2,
+      "says": [
+        "runs once at a chosen future time",
+        "is created when something happens but executes later"
+      ],
+      "use": "need to send a reminder 24 hours after sign-up",
+      "not": [
+        "repeats on a cron schedule for ever"
+      ],
+      "like": [
+        "A cron expression"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A fixed-rate schedule",
+      "tier": 2,
+      "says": [
+        "starts runs at regular clock intervals regardless of how long they take",
+        "can start a new run while the previous one is still going"
+      ],
+      "use": "need a report every 10 minutes on the clock",
+      "not": [
+        "waits a set time after the previous run finishes"
+      ],
+      "like": [
+        "A fixed-delay schedule"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A fixed-delay schedule",
+      "tier": 2,
+      "says": [
+        "waits a set time after the previous run finishes",
+        "never lets two runs overlap"
+      ],
+      "use": "need a gap between the end of one run and the start of the next",
+      "not": [
+        "starts runs at regular clock times whatever the duration"
+      ],
+      "like": [
+        "A fixed-rate schedule"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A schedule time zone",
+      "tier": 3,
+      "says": [
+        "fixes a schedule to an explicit zone",
+        "matters because daylight saving shifts skip or repeat local hours"
+      ],
+      "use": "see a 02:30 job vanish on the night the clocks change",
+      "not": [
+        "is irrelevant when a schedule runs once a day"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "An overlap policy",
+      "tier": 3,
+      "says": [
+        "decides what happens when a run is still going at the next tick",
+        "offers choices such as skip, queue or cancel the old run"
+      ],
+      "use": "see a slow job still running when the next run is due",
+      "not": [
+        "decides which time zone a schedule uses"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "Misfire handling",
+      "tier": 5,
+      "says": [
+        "decides whether runs missed during downtime are skipped or run late",
+        "bounds how many missed runs are caught up"
+      ],
+      "use": "restart a scheduler after a long outage",
+      "not": [
+        "retries a failed run immediately"
+      ],
+      "like": [
+        "An overlap policy"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A scheduler lock",
+      "tier": 4,
+      "says": [
+        "ensures only one instance fires a schedule",
+        "prevents duplicate runs when several scheduler instances are deployed"
+      ],
+      "use": "see a cron job fire twice after scaling to two instances",
+      "not": [
+        "lets every instance run the schedule for safety"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A dead man's switch",
+      "tier": 4,
+      "says": [
+        "alerts when an expected run does not check in",
+        "catches a job that silently stopped running"
+      ],
+      "use": "worry that a nightly job has quietly stopped",
+      "not": [
+        "alerts only when a job reports an error"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "An approval gate",
+      "tier": 1,
+      "says": [
+        "pauses a workflow until a person approves or rejects",
+        "records who decided and when"
+      ],
+      "use": "need a person to sign off a payment above a limit",
+      "not": [
+        "lets the workflow continue without waiting for anyone"
+      ],
+      "like": [
+        "A four-eyes rule"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "Human in the loop",
+      "tier": 1,
+      "says": [
+        "keeps a person in the decision path of an automated process",
+        "ranges from approving every item to sampling a few"
+      ],
+      "use": "want people to stay accountable for automated outcomes",
+      "not": [
+        "removes every person from the process"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "An audit trail",
+      "tier": 2,
+      "says": [
+        "records who or what decided, with the inputs and the time",
+        "lets a decision be reconstructed later"
+      ],
+      "use": "need to explain months later why something was approved",
+      "not": [
+        "stores only the final outcome without inputs"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "A confidence threshold",
+      "tier": 3,
+      "says": [
+        "routes low-confidence machine decisions to a person",
+        "is best set from measured error rates"
+      ],
+      "use": "want the machine to decide only when it is sure",
+      "not": [
+        "is a fixed value that is never reviewed"
+      ],
+      "like": [
+        "A sampling audit"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "A sampling audit",
+      "tier": 3,
+      "says": [
+        "reviews a fixed fraction of confident automated decisions",
+        "catches silent drift in a model that looks accurate"
+      ],
+      "use": "worry that a once-accurate classifier is now failing quietly",
+      "not": [
+        "reviews only the decisions the machine was unsure about"
+      ],
+      "like": [
+        "A confidence threshold"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "A four-eyes rule",
+      "tier": 3,
+      "says": [
+        "requires two different people to approve a sensitive action",
+        "prevents the requester approving their own request"
+      ],
+      "use": "need a payout to be approved by someone other than its author",
+      "not": [
+        "lets one person approve any request at any size"
+      ],
+      "like": [
+        "An approval gate"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "An escalation",
+      "tier": 3,
+      "says": [
+        "passes a stalled approval to a more senior person after a time limit",
+        "keeps a request from sitting unanswered"
+      ],
+      "use": "see an approval request sit unanswered for days",
+      "not": [
+        "cancels the request when nobody answers"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "Automation bias",
+      "tier": 5,
+      "says": [
+        "leads reviewers to accept machine suggestions without checking",
+        "reduces the value of an approval gate"
+      ],
+      "use": "see approvers accept every suggestion within seconds",
+      "not": [
+        "makes people distrust every machine suggestion"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "Override capture",
+      "tier": 5,
+      "says": [
+        "records when a person changes a machine decision",
+        "turns corrections into data for improving the automation"
+      ],
+      "use": "want human corrections to cut future human work",
+      "not": [
+        "blocks people from changing machine decisions"
+      ],
+      "like": [
+        "An audit trail"
+      ]
+    },
+    {
+      "group": "gate",
+      "subject": "A reject option",
+      "tier": 5,
+      "says": [
+        "lets a classifier abstain instead of guess",
+        "trades coverage for lower error on the cases it does answer"
+      ],
+      "use": "need a classifier to hand uncertain cases to a person",
+      "not": [
+        "forces a label on every input however unclear"
+      ],
+      "like": [
+        "A confidence threshold"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "A reusable pattern",
+      "tier": 1,
+      "says": [
+        "captures a proven solution to a recurring problem",
+        "is applied by adapting it rather than copying it unchanged"
+      ],
+      "use": "face a problem that others have already solved well",
+      "not": [
+        "is a one-off script written for a single customer"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "A template",
+      "tier": 1,
+      "says": [
+        "is a pre-built workflow with blanks to fill in",
+        "gets someone started faster than a blank canvas"
+      ],
+      "use": "want a new automation to start from a working example",
+      "not": [
+        "is a finished automation that cannot be edited"
+      ],
+      "like": [
+        "Parameterisation"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "Parameterisation",
+      "tier": 2,
+      "says": [
+        "exposes the few settings that vary between uses",
+        "keeps the logic fixed while the values change"
+      ],
+      "use": "need the same logic with different thresholds for different teams",
+      "not": [
+        "copies the logic and edits it for each team"
+      ],
+      "like": [
+        "A template"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "Composition",
+      "tier": 3,
+      "says": [
+        "builds larger behaviour by combining small units",
+        "works best when each unit has clear inputs and outputs"
+      ],
+      "use": "want big automations made from small tested parts",
+      "not": [
+        "relies on one very large unit that does everything"
+      ],
+      "like": [
+        "A typed contract"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "A typed contract",
+      "tier": 3,
+      "says": [
+        "declares the input and output types of a unit",
+        "lets a composer check that steps fit together before running"
+      ],
+      "use": "want a mismatch between two steps caught before it runs",
+      "not": [
+        "leaves each unit's inputs undocumented"
+      ],
+      "like": [
+        "Composition"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "Versioned revisions",
+      "tier": 3,
+      "says": [
+        "let a change ship without silently altering every consumer",
+        "allow a consumer to pin a version and roll back"
+      ],
+      "use": "need to change a shared unit without breaking its users",
+      "not": [
+        "overwrite the single live copy in place"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "A registry",
+      "tier": 3,
+      "says": [
+        "lists available units with their versions and owners",
+        "makes reuse discoverable"
+      ],
+      "use": "find that two teams built the same automation unaware of each other",
+      "not": [
+        "runs the units on behalf of the callers"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "Reusing a published algorithm",
+      "tier": 2,
+      "says": [
+        "inherits years of scrutiny and known behaviour",
+        "needs its source and licence to be recorded"
+      ],
+      "use": "need a well-understood method rather than a home-made one",
+      "not": [
+        "avoids having to test the implementation"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "Shadow mode",
+      "tier": 4,
+      "says": [
+        "runs a new automation beside the old path without acting on its output",
+        "compares the two results before any switch"
+      ],
+      "use": "want to test replacing a manual process safely",
+      "not": [
+        "switches all traffic to the new path at once"
+      ],
+      "like": [
+        "A strangler migration"
+      ]
+    },
+    {
+      "group": "reuse",
+      "subject": "A strangler migration",
+      "tier": 5,
+      "says": [
+        "replaces a legacy path piece by piece",
+        "retires old code as each piece is switched over"
+      ],
+      "use": "need to replace a large legacy system without a big-bang cutover",
+      "not": [
+        "keeps the old and new paths running side by side for ever"
+      ],
+      "like": [
+        "Shadow mode"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "Polling",
+      "tier": 1,
+      "says": [
+        "asks a system repeatedly whether anything changed",
+        "wastes calls when changes are rare"
+      ],
+      "use": "must work with a system that offers no webhooks",
+      "not": [
+        "waits for the other system to call back"
+      ],
+      "like": [
+        "A webhook"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "An adapter",
+      "tier": 2,
+      "says": [
+        "translates between one system's interface and another's",
+        "keeps vendor quirks out of core logic"
+      ],
+      "use": "want to swap a vendor without rewriting the business logic",
+      "not": [
+        "stores a copy of the vendor's whole database"
+      ],
+      "like": [
+        "An anti-corruption layer"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "An automation hub",
+      "tier": 2,
+      "says": [
+        "connects many apps through prebuilt connectors and generic webhook and HTTP steps",
+        "lets a non-developer chain apps together"
+      ],
+      "use": "want a no-code way to connect a trigger in one app to an action in another",
+      "not": [
+        "replaces the need for any API on the apps"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "File interchange",
+      "tier": 2,
+      "says": [
+        "moves data as an exported file such as JSON, Markdown or CSV",
+        "works with systems that offer no API"
+      ],
+      "use": "need to hand data to a system that has no API",
+      "not": [
+        "pushes data to the system in real time"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "Pagination",
+      "tier": 2,
+      "says": [
+        "returns large results in pages",
+        "requires the client to ask for each following page"
+      ],
+      "use": "see an API return only the first hundred records",
+      "not": [
+        "returns every record in one response however many exist"
+      ],
+      "like": [
+        "Cursor pagination"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "Cursor pagination",
+      "tier": 3,
+      "says": [
+        "continues from an opaque position token",
+        "stays stable when rows are inserted during paging"
+      ],
+      "use": "see rows duplicated or skipped while paging a live list",
+      "not": [
+        "jumps to an arbitrary page number"
+      ],
+      "like": [
+        "Pagination"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "Rate-limit handling",
+      "tier": 3,
+      "says": [
+        "backs off when the API answers 429",
+        "reads a Retry-After header where one is offered"
+      ],
+      "use": "see an API reject calls with a 429",
+      "not": [
+        "retries instantly until the call succeeds"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "An OpenAPI document",
+      "tier": 3,
+      "says": [
+        "describes an HTTP API's operations and schemas in machine-readable form",
+        "allows clients and connectors to be generated"
+      ],
+      "use": "want connectors and client code generated for an HTTP API",
+      "not": [
+        "is the running code of the API"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "An MCP server",
+      "tier": 3,
+      "says": [
+        "exposes tools and data to an AI assistant through a standard protocol",
+        "lets one assistant integration work across many compatible clients"
+      ],
+      "use": "want an AI assistant to call your tools through a standard interface",
+      "not": [
+        "is a database engine for vector search"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "A canonical data model",
+      "tier": 4,
+      "says": [
+        "defines one shared shape that every system maps to",
+        "reduces N-by-N mappings to N"
+      ],
+      "use": "must connect many systems that each speak a different format",
+      "not": [
+        "maps each pair of systems directly"
+      ],
+      "like": [
+        "An anti-corruption layer"
+      ]
+    },
+    {
+      "group": "integ",
+      "subject": "An anti-corruption layer",
+      "tier": 5,
+      "says": [
+        "stops a foreign system's concepts leaking into your domain model",
+        "translates at the boundary in both directions"
+      ],
+      "use": "worry that a legacy vendor's data model is spreading through your code",
+      "not": [
+        "merges both systems into one shared database"
+      ],
+      "like": [
+        "A canonical data model",
+        "An adapter"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "A runbook",
+      "tier": 2,
+      "says": [
+        "documents the steps for handling a known failure",
+        "lets whoever is on call act without guessing"
+      ],
+      "use": "need a clear procedure for a failure that has happened before",
+      "not": [
+        "is the code that fixes the failure automatically"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "A dry run",
+      "tier": 2,
+      "says": [
+        "reports what an automation would do without doing it",
+        "lets a rule be checked against real data safely"
+      ],
+      "use": "want to check what a new rule would change before enabling it",
+      "not": [
+        "performs the changes and then reports them"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "A kill switch",
+      "tier": 3,
+      "says": [
+        "stops an automation at once without a deploy",
+        "is kept simple enough to use under pressure"
+      ],
+      "use": "see an automation misfiring at scale",
+      "not": [
+        "waits for the next release to take effect"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "A correlation id",
+      "tier": 3,
+      "says": [
+        "follows one request across every service and log line",
+        "lets a failed run be traced end to end"
+      ],
+      "use": "need to trace a failed run across several services",
+      "not": [
+        "identifies the user's account for billing"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "Queue depth and age",
+      "tier": 3,
+      "says": [
+        "shows backlog growth before users notice",
+        "gives the oldest waiting item's age as the more telling signal"
+      ],
+      "use": "want an early warning that workers are falling behind",
+      "not": [
+        "reports only how many jobs succeeded"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "A blast radius limit",
+      "tier": 4,
+      "says": [
+        "caps how much one automation can change in a single run",
+        "turns a buggy rule into a small incident rather than a large one"
+      ],
+      "use": "worry that a buggy rule could delete thousands of records",
+      "not": [
+        "removes the need to test the rule"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "An automation rate",
+      "tier": 4,
+      "says": [
+        "measures the share of cases completed without a person",
+        "is trustworthy only when counted from recorded decisions rather than estimated"
+      ],
+      "use": "want to know how much of the work the machine really does",
+      "not": [
+        "counts only the cases a person reviewed"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "A Moksy pattern",
+      "tier": 1,
+      "says": [
+        "is one decision with an id, typed inputs and outputs, bounded parameters and versioned revisions",
+        "is the unit that a flow is built from"
+      ],
+      "use": "need to name a single smart decision inside Moksy",
+      "not": [
+        "is a whole customer journey from idea to blueprint"
+      ],
+      "like": [
+        "A Moksy flow"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "A Moksy flow",
+      "tier": 2,
+      "says": [
+        "is a set of patterns and flows with named exports",
+        "is itself a step, so patterns combine into bigger patterns",
+        "has its order derived by topological sort rather than written by hand"
+      ],
+      "use": "need to name a group of patterns that together decide something larger",
+      "not": [
+        "is a single decision with no other patterns inside it"
+      ],
+      "like": [
+        "A Moksy pattern"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "The 1:99 goal",
+      "tier": 1,
+      "says": [
+        "asks for 99 percent of the work to be done by machine and 1 percent by a human",
+        "is measured from recorded decisions rather than guessed"
+      ],
+      "use": "want to state the founder's target for machine versus human work",
+      "not": [
+        "asks for one human per ninety-nine customers"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "The decidedBy stamp",
+      "tier": 3,
+      "says": [
+        "marks every dispatch as machine or human",
+        "is the data from which the 1:99 share is summed"
+      ],
+      "use": "need to know how Moksy counts who made each decision",
+      "not": [
+        "records which customer asked for the decision"
+      ],
+      "like": [
+        "The pattern dispatcher"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "The pattern dispatcher",
+      "tier": 3,
+      "says": [
+        "runs a pattern and stamps who decided",
+        "keeps a revision manifest of what ran"
+      ],
+      "use": "need the component that runs patterns and records the run",
+      "not": [
+        "only lists which patterns exist"
+      ],
+      "like": [
+        "The decidedBy stamp",
+        "The pattern registry"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "A selection shape",
+      "tier": 2,
+      "says": [
+        "describes how a pattern decides, such as classify, cover, configure, retrieve, derive, trigger or attach",
+        "returns a because alongside its answer",
+        "makes a new dataset a table rather than a release"
+      ],
+      "use": "need to say how a Moksy pattern arrives at its choice",
+      "not": [
+        "is a visual layout used by the dashboard"
+      ],
+      "like": [
+        "The because field"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "The because field",
+      "tier": 2,
+      "says": [
+        "explains a pattern's decision in words a person can read",
+        "lets a person see, and so correct, a decision"
+      ],
+      "use": "want a decision to be visible and correctable",
+      "not": [
+        "hides the reason for a decision to protect the algorithm"
+      ],
+      "like": [
+        "A selection shape"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "The pattern registry",
+      "tier": 3,
+      "says": [
+        "declares the patterns and flows of the pattern architecture",
+        "separates patterns declared from patterns implemented"
+      ],
+      "use": "need to know how many patterns exist and how many actually run",
+      "not": [
+        "executes each pattern when a customer asks"
+      ],
+      "like": [
+        "The pattern dispatcher"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "Pattern provenance",
+      "tier": 4,
+      "says": [
+        "requires each implementation to name the published algorithm it stands on",
+        "counts unnamed implementations in a number that can only fall"
+      ],
+      "use": "need to know where a Moksy decision's method came from",
+      "not": [
+        "lets any implementation skip naming its method"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "PatternRunService",
+      "tier": 4,
+      "says": [
+        "is the run seam for patterns",
+        "is admin-only and deliberately not on the customer path"
+      ],
+      "use": "need to know why admins can run patterns but customers' live decisions do not use them",
+      "not": [
+        "serves every customer decision in the live interview"
+      ],
+      "like": [
+        "The pattern dispatcher"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "The 51-decision brief",
+      "tier": 4,
+      "says": [
+        "traces each of the founder's 51 lines to the patterns that would decide it",
+        "marks each decision as inline, mixed, modelOnly or none"
+      ],
+      "use": "want to see which decisions still run outside patterns",
+      "not": [
+        "lists 51 patterns that are already live"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "The live-path reading of 0 percent",
+      "tier": 5,
+      "says": [
+        "came from the live interview deciding inline in a large service file rather than through the dispatcher",
+        "meant no human share could yet be computed"
+      ],
+      "use": "must explain why the brief did not claim 1:99 as a result",
+      "not": [
+        "showed that machines made no decisions at all"
+      ],
+      "like": [
+        "The 51-decision brief"
+      ]
+    },
+    {
+      "group": "mpat",
+      "subject": "The Blueprint flow",
+      "tier": 5,
+      "says": [
+        "needs nothing from outside except run context",
+        "stands for the whole path from idea to Blueprint"
+      ],
+      "use": "need the flow that covers an entire idea-to-Blueprint run",
+      "not": [
+        "needs another flow's output before it can start"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "The never handoff mode",
+      "tier": 3,
+      "says": [
+        "leaves the machine as the final decider",
+        "is declared on badges, level, ranking and level changes"
+      ],
+      "use": "need the mode where no person ever decides",
+      "not": [
+        "sends every case to a person"
+      ],
+      "like": [
+        "The always handoff mode"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "The onDoubt handoff mode",
+      "tier": 3,
+      "says": [
+        "hands a decision to a person when the output itself says it is unsure",
+        "is the default for patterns that declare nothing else"
+      ],
+      "use": "need the default mode where a person decides only when the machine doubts",
+      "not": [
+        "audits a fixed share of confident answers as well"
+      ],
+      "like": [
+        "The sample handoff mode"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "The sample handoff mode",
+      "tier": 5,
+      "says": [
+        "adds a fixed audit rate to onDoubt for confident answers",
+        "draws deterministically by hashing the run key so a replay routes identically"
+      ],
+      "use": "need audits of confident machine answers that replay the same way",
+      "not": [
+        "has a person approve a whole batch once"
+      ],
+      "like": [
+        "The onDoubt handoff mode",
+        "The batch handoff mode"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "The batch handoff mode",
+      "tier": 4,
+      "says": [
+        "has the machine decide every row and a person approve the batch once",
+        "counts as one human touch rather than one per row"
+      ],
+      "use": "need the monthly MXP to MOX close approved in one go",
+      "not": [
+        "sends each row to a different person"
+      ],
+      "like": [
+        "The sample handoff mode"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "The always handoff mode",
+      "tier": 4,
+      "says": [
+        "makes a person decide while the machine writes the case file",
+        "is declared for accreditation grants and choosing who to hire"
+      ],
+      "use": "need the mode where a person always decides",
+      "not": [
+        "leaves the machine as the final decider"
+      ],
+      "like": [
+        "The never handoff mode"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "A Moksy confidence floor",
+      "tier": 3,
+      "says": [
+        "sets the confidence below which a decision goes to a person",
+        "is hand-set today at 0.6 for customer-facing and 0.35 for internal decisions"
+      ],
+      "use": "need the numbers behind the onDoubt hand-off",
+      "not": [
+        "is learned automatically from every override today"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "Pattern coverage",
+      "tier": 3,
+      "says": [
+        "is the share of decisions that went through a pattern at all",
+        "shows a decision still made inline as unpublished"
+      ],
+      "use": "want to know how much of the work can be seen by the ledger",
+      "not": [
+        "is the share of pattern decisions that needed no person"
+      ],
+      "like": [
+        "Machine share"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "Machine share",
+      "tier": 3,
+      "says": [
+        "is the share of pattern decisions that needed no person",
+        "counts a batch approval once rather than once per row"
+      ],
+      "use": "want the number the 1:99 target is judged by",
+      "not": [
+        "is the share of decisions that went through a pattern at all"
+      ],
+      "like": [
+        "Pattern coverage"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "meetsTarget",
+      "tier": 4,
+      "says": [
+        "is true only when machine share is at least 0.99 and nothing is unmanaged",
+        "stays false while any decision is made outside the patterns"
+      ],
+      "use": "need to know when the ledger will say the 1:99 goal is met",
+      "not": [
+        "is true as soon as machine share reaches 0.99 on its own"
+      ],
+      "like": [
+        "Machine share"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "The worst ranking",
+      "tier": 4,
+      "says": [
+        "ranks patterns by the human time they cost",
+        "is the build backlog for the next patterns to automate"
+      ],
+      "use": "need to choose which pattern to automate next",
+      "not": [
+        "lists the patterns with the most errors"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "Conformal risk control",
+      "tier": 5,
+      "says": [
+        "is the designed next step for setting each floor from confirmed versus overridden outcomes",
+        "bounds the human share by construction rather than by hope"
+      ],
+      "use": "want confidence floors set from evidence rather than by hand",
+      "not": [
+        "is how the floors are set today"
+      ],
+      "like": [
+        "A Moksy confidence floor"
+      ]
+    },
+    {
+      "group": "mhand",
+      "subject": "Moksy's grounding rule",
+      "tier": 4,
+      "says": [
+        "lets a model phrase a figure but never originate one",
+        "makes the system refuse, ask, derive or give a band when a fact is missing"
+      ],
+      "use": "need the guardrail on numbers a machine shows a customer",
+      "not": [
+        "lets a model estimate any number that is missing"
+      ]
+    },
+    {
+      "group": "mint",
+      "subject": "The Moksy integration catalogue",
+      "tier": 2,
+      "says": [
+        "covers 1,165 apps in 41 families",
+        "is derived from one line per app, family and recipe",
+        "reaches apps by one of 13 paths over ten primitives"
+      ],
+      "use": "need the size and shape of Moksy's integration claims",
+      "not": [
+        "is a list of apps with a native adapter each"
+      ]
+    },
+    {
+      "group": "mint",
+      "subject": "Moksy webhook events",
+      "tier": 2,
+      "says": [
+        "include blueprint.ready, review.submitted and review.verdict",
+        "let an outside app be told when a Blueprint or a review lands"
+      ],
+      "use": "want a chat channel told the moment a Blueprint is ready",
+      "not": [
+        "are sent only by email"
+      ]
+    },
+    {
+      "group": "mint",
+      "subject": "The Moksy-Signature header",
+      "tier": 3,
+      "says": [
+        "carries a timestamp t and a v1 HMAC-SHA256 of the timestamp, a dot and the raw body",
+        "is checked by a receiver, who rejects a timestamp more than five minutes off"
+      ],
+      "use": "need to verify that a Moksy delivery is genuine and fresh",
+      "not": [
+        "is a bearer token that gives access to the Moksy API"
+      ]
+    },
+    {
+      "group": "mint",
+      "subject": "The Moksy webhook retry schedule",
+      "tier": 4,
+      "says": [
+        "makes eight attempts over about three days",
+        "widens the wait between attempts and adds about ten percent jitter"
+      ],
+      "use": "need to know how long a receiver has to recover before Moksy gives up",
+      "not": [
+        "retries once and then drops the event"
+      ]
+    },
+    {
+      "group": "mint",
+      "subject": "A Moksy API key",
+      "tier": 2,
+      "says": [
+        "is created in Settings under API and webhooks",
+        "lets an outside tool call the operations in the OpenAPI document"
+      ],
+      "use": "need an outside script or hub step to call Moksy",
+      "not": [
+        "is the customer's login password"
+      ]
+    },
+    {
+      "group": "mint",
+      "subject": "The Moksy MCP server",
+      "tier": 3,
+      "says": [
+        "is shipped as @moksy/mcp-server",
+        "uses a propose then confirm step on every tool that writes"
+      ],
+      "use": "want an AI assistant to read Blueprints and run a briefing",
+      "not": [
+        "lets an assistant write without any confirmation"
+      ]
+    },
+    {
+      "group": "mint",
+      "subject": "Moksy hub paths",
+      "tier": 2,
+      "says": [
+        "reach Zapier, n8n, Make, Pipedream and Power Automate through generic webhook and HTTP steps",
+        "need only a Moksy API key until a Moksy app is published on the hub"
+      ],
+      "use": "want to connect Moksy to an app through a no-code hub",
+      "not": [
+        "require a native Moksy adapter for every app"
+      ]
+    },
+    {
+      "group": "mint",
+      "subject": "Moksy integration effort grades",
+      "tier": 4,
+      "says": [
+        "rate E0 as needing nothing beyond the page and recipe",
+        "rate E1 as a hub template or worked API example",
+        "rate E2 as a native adapter with consent, mapping and sealed tokens"
+      ],
+      "use": "need to judge how much work an integration takes",
+      "not": [
+        "rate every integration as needing a native adapter"
+      ]
+    },
+    {
+      "group": "mplat",
+      "subject": "The Moksy jobs states",
+      "tier": 3,
+      "says": [
+        "are scheduled, queued, running, completed, failed, canceled and paused",
+        "let a running job move only to completed or failed"
+      ],
+      "use": "need to know which transitions the Moksy jobs service allows",
+      "not": [
+        "let a running job be paused or canceled"
+      ],
+      "like": [
+        "The Moksy jobs failure path"
+      ]
+    },
+    {
+      "group": "mplat",
+      "subject": "The Moksy jobs failure path",
+      "tier": 4,
+      "says": [
+        "retries a worker failure with backoff until attempts are exhausted",
+        "dead-letters the job when the attempts run out",
+        "clears the attempt count when a failed job is manually retried"
+      ],
+      "use": "need to follow what happens to a Moksy job that keeps failing",
+      "not": [
+        "drops a failed job silently after one attempt"
+      ],
+      "like": [
+        "The Moksy jobs states"
+      ]
+    },
+    {
+      "group": "mplat",
+      "subject": "The Moksy events service",
+      "tier": 3,
+      "says": [
+        "persists webhook subscriptions and signs each delivery",
+        "keeps a delivery log and can replay a delivery by id"
+      ],
+      "use": "need the Moksy service that sends outbound webhooks",
+      "not": [
+        "holds the subscriber list only in process memory"
+      ]
+    },
+    {
+      "group": "mplat",
+      "subject": "The Moksy event target design",
+      "tier": 5,
+      "says": [
+        "puts a durable broker behind events, with Redis Streams named as the pragmatic choice",
+        "pairs it with the transactional outbox, retries and a dead-letter queue"
+      ],
+      "use": "need the architecture review's target for event delivery",
+      "not": [
+        "keeps events as inline HTTP calls with no retry"
+      ],
+      "like": [
+        "The Moksy three rules"
+      ]
+    },
+    {
+      "group": "mplat",
+      "subject": "The Moksy three rules",
+      "tier": 4,
+      "says": [
+        "use synchronous calls only when the caller needs the answer",
+        "make everything else an event written through an outbox",
+        "require every cross-service interface to be a published contract"
+      ],
+      "use": "need the architecture review's definition of done for service calls",
+      "not": [
+        "allow every service to call every other directly"
+      ],
+      "like": [
+        "The Moksy event target design"
+      ]
+    },
+    {
+      "group": "mplat",
+      "subject": "The Moksy outbox finding",
+      "tier": 5,
+      "says": [
+        "found the outbox only in the communications service",
+        "noted that the pattern existed in the repository but was not the platform default"
+      ],
+      "use": "need to recall where the review found the outbox pattern in use",
+      "not": [
+        "found an outbox in every service"
+      ]
+    },
+    {
+      "group": "mplat",
+      "subject": "A Moksy real-jobs test run",
+      "tier": 3,
+      "says": [
+        "walks one real job post end to end through each role",
+        "goes both in and out as customer, reviewer, staff and account manager"
+      ],
+      "use": "want to test the whole platform with one realistic case",
+      "not": [
+        "checks one database table row by row"
+      ]
+    },
+    {
+      "group": "mplat",
+      "subject": "The Moksy manual deploy",
+      "tier": 3,
+      "says": [
+        "is run by pulling on the server and running npm run deploy:prod",
+        "rebuilds only changed services, health-checks and records the commit"
+      ],
+      "use": "need to know how a Moksy release reaches production",
+      "not": [
+        "happens automatically when code is pushed to GitHub"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "What does a webhook do that polling does not?",
+      "right": "The sender calls the receiver when an event happens",
+      "wrong": [
+        "The receiver asks the sender every few seconds",
+        "The receiver downloads a nightly export",
+        "The sender waits for the receiver to log in"
+      ],
+      "tier": 1,
+      "why": "A webhook is a push: the sender makes an HTTP call when the event occurs, so the receiver does not have to ask repeatedly."
+    },
+    {
+      "q": "Which cron expression means 'at 08:30 every weekday'?",
+      "right": "30 8 * * 1-5",
+      "wrong": [
+        "8 30 * * 1-5",
+        "30 8 1-5 * *",
+        "0 30 8 * 1-5"
+      ],
+      "tier": 1,
+      "why": "Cron fields are minute, hour, day of month, month, day of week, so 08:30 on Monday to Friday is 30 8 * * 1-5.",
+      "code": "30 8 * * 1-5"
+    },
+    {
+      "q": "What is the 1:99 goal in Moksy's pattern architecture?",
+      "right": "99 percent of the work done by machine and 1 percent by a human",
+      "wrong": [
+        "One human reviewer for every 99 customers",
+        "One pattern for every 99 decisions",
+        "99 percent uptime with one outage a quarter"
+      ],
+      "tier": 1,
+      "why": "The brief states the founder's goal as 1:99, measured from the decidedBy stamp on every dispatch."
+    },
+    {
+      "q": "Which name is in the Moksy webhook event list?",
+      "right": "blueprint.ready",
+      "wrong": [
+        "project.deleted",
+        "mox.minted",
+        "level.flapped"
+      ],
+      "tier": 2,
+      "why": "The integration catalogue lists blueprint.ready, review.submitted and review.verdict as webhook events."
+    },
+    {
+      "q": "In Moksy, what does every selection shape return alongside its answer?",
+      "right": "A because",
+      "wrong": [
+        "A price",
+        "A retry count",
+        "A signature"
+      ],
+      "tier": 2,
+      "why": "Every shape returns a because so a person can see and correct the decision."
+    },
+    {
+      "q": "What does a dead-letter queue hold?",
+      "right": "Messages that exhausted their retries",
+      "wrong": [
+        "Messages waiting for their first attempt",
+        "Messages that were processed successfully",
+        "Messages that arrived out of order"
+      ],
+      "tier": 2,
+      "why": "A dead-letter queue parks messages that could not be processed after the allowed attempts, for inspection and redrive."
+    },
+    {
+      "q": "A cron job should run at 02:30 local time in a zone with daylight saving. What can go wrong?",
+      "right": "On the night the clocks move forward the local 02:30 may not exist, so the run is skipped or shifted",
+      "wrong": [
+        "The job runs every minute that night",
+        "The job runs only on leap years",
+        "The scheduler deletes the job"
+      ],
+      "tier": 2,
+      "why": "Daylight saving can skip or repeat local hours, so a schedule needs an explicit zone and a rule for those nights."
+    },
+    {
+      "q": "Which of these is a command rather than an event?",
+      "right": "ChargeCustomer",
+      "wrong": [
+        "InvoicePaid",
+        "BlueprintFinalized",
+        "ReviewSubmitted"
+      ],
+      "tier": 2,
+      "why": "A command asks a specific recipient to do something and is named in the imperative; events are past-tense facts."
+    },
+    {
+      "q": "A Moksy flow is a set of patterns and flows. What else is a flow?",
+      "right": "Itself a step, so flows can be combined into bigger ones",
+      "wrong": [
+        "A single decision with no inner steps",
+        "A kind of database",
+        "A screen in the dashboard"
+      ],
+      "tier": 2,
+      "why": "The brief says a flow is itself a step, so patterns combine into bigger patterns."
+    },
+    {
+      "q": "What is wrong with this retry loop for a 503 from a struggling API?",
+      "right": "It retries at once with no delay, which adds load to a service that is already overloaded",
+      "wrong": [
+        "It uses a for loop",
+        "It retries too few times to ever succeed",
+        "It should retry only on 200 responses"
+      ],
+      "tier": 3,
+      "why": "Retries need a wait that grows (backoff), ideally with jitter, so they do not hammer a dependency that needs room to recover.",
+      "code": "for (let i = 0; i < 5; i++) {\n  const res = await fetch(url);\n  if (res.status !== 503) return res;\n}"
+    },
+    {
+      "q": "Why does this retry delay still cause a thundering herd after an outage?",
+      "right": "Every client waits exactly the same time, so they all retry together",
+      "wrong": [
+        "The delay is too long",
+        "Math.pow cannot be used for delays",
+        "The delay is applied before the first attempt"
+      ],
+      "tier": 3,
+      "why": "Without jitter, clients that failed together retry together. Add randomness to each delay.",
+      "code": "const delay = 1000 * Math.pow(2, attempt);\nawait sleep(delay);"
+    },
+    {
+      "q": "A client sends this request twice after a timeout. What should the server do on the second call?",
+      "right": "Return the stored response of the first call and not create a second order",
+      "wrong": [
+        "Create a second order with a new id",
+        "Reject it with 500 because the key was seen before",
+        "Delete the first order and recreate it"
+      ],
+      "tier": 3,
+      "why": "The Idempotency-Key header lets the server save the first result and answer a repeat with it, so retries are safe.",
+      "code": "POST /orders\nIdempotency-Key: 7c1f-order-4421\n{\"sku\": \"A-12\", \"qty\": 1}"
+    },
+    {
+      "q": "Which line of this webhook receiver is the bug?",
+      "right": "Parsing the body with express.json() before verifying, so the signature is checked over re-serialised JSON",
+      "wrong": [
+        "Replying 200 at all",
+        "Reading the header named Moksy-Signature",
+        "Using HMAC-SHA256"
+      ],
+      "tier": 3,
+      "why": "Signatures are computed over the exact bytes received. Verify against the raw body before parsing.",
+      "code": "app.use(express.json());\napp.post('/hook', (req, res) => {\n  const ok = verify(req.get('Moksy-Signature'), JSON.stringify(req.body));\n  res.sendStatus(ok ? 200 : 400);\n});"
+    },
+    {
+      "q": "What does this crontab line do?",
+      "right": "Runs the backup script at 02:15 on the first day of each month",
+      "wrong": [
+        "Runs the backup script every 15 minutes",
+        "Runs the backup script at 02:15 every day",
+        "Runs the backup script on the 15th at 02:00"
+      ],
+      "tier": 3,
+      "why": "Fields are minute 15, hour 2, day of month 1, any month, any weekday.",
+      "code": "15 2 1 * * /usr/local/bin/backup.sh"
+    },
+    {
+      "q": "Given these job states, which transition does the rule table forbid?",
+      "right": "running to queued",
+      "wrong": [
+        "queued to running",
+        "failed to queued",
+        "paused to queued"
+      ],
+      "tier": 3,
+      "why": "Only completed or failed may follow running in this table. A state machine rejects any move not declared.",
+      "code": "const RULES = {\n  scheduled: ['queued','canceled','paused'],\n  queued: ['running','canceled','paused'],\n  running: ['completed','failed'],\n  failed: ['queued','canceled','paused'],\n  paused: ['queued','canceled']\n};"
+    },
+    {
+      "q": "What does a receiver compute for the Moksy-Signature header with this form?",
+      "right": "An HMAC-SHA256 of the timestamp, a dot and the raw body, using the shared secret",
+      "wrong": [
+        "A SHA-1 hash of the body alone",
+        "An RSA signature of the header itself",
+        "A base64 copy of the secret"
+      ],
+      "tier": 4,
+      "why": "The delivery code documents that the timestamp is inside the signed string, so a captured delivery cannot be replayed with a fresh header.",
+      "code": "Moksy-Signature: t=1760000000,v1=5257a869e7ec..."
+    },
+    {
+      "q": "Why does the signed timestamp t matter in this header?",
+      "right": "A receiver can reject a delivery whose t is more than five minutes from now, defeating replay",
+      "wrong": [
+        "It tells the receiver which time zone the sender uses",
+        "It is how the receiver orders events",
+        "It makes the signature shorter"
+      ],
+      "tier": 4,
+      "why": "The timestamp sits inside the signed string, so it cannot be changed, and an old delivery fails the freshness check.",
+      "code": "Moksy-Signature: t=1760000000,v1=5257a869e7ec..."
+    },
+    {
+      "q": "What happens to the third item of this pipeline when the second fails, in a saga?",
+      "right": "The compensating action of the first item runs, and the third item never starts",
+      "wrong": [
+        "The third item runs anyway",
+        "The database rolls back all three automatically",
+        "The first item is retried until the second succeeds"
+      ],
+      "tier": 4,
+      "why": "A saga undoes completed local steps with compensations because there is no shared transaction.",
+      "code": "1. reserve stock   (compensate: release stock)\n2. charge card     (compensate: refund)\n3. book courier    (compensate: cancel booking)"
+    },
+    {
+      "q": "A scheduler runs on two replicas and a nightly job fires twice. Which fix addresses the cause?",
+      "right": "Add a scheduler lock or leader election so only one instance fires the schedule",
+      "wrong": [
+        "Lengthen the job's timeout",
+        "Add jitter to the retry delay",
+        "Increase the worker concurrency"
+      ],
+      "tier": 4,
+      "why": "Duplicate fires come from several scheduler instances; only one should own the schedule."
+    },
+    {
+      "q": "What does this outbox sequence guarantee?",
+      "right": "The state change and the event row commit together or not at all, so the event is never lost",
+      "wrong": [
+        "The event is delivered exactly once",
+        "The consumer processes events in global order",
+        "The broker never needs a retry"
+      ],
+      "tier": 4,
+      "why": "The relay publishes stored rows afterwards, which gives at-least-once delivery. Consumers must still handle duplicates.",
+      "code": "BEGIN;\n  UPDATE orders SET status='paid' WHERE id=42;\n  INSERT INTO outbox(topic, payload) VALUES ('order.paid', '{\"id\":42}');\nCOMMIT;\n-- a relay later reads outbox rows and publishes them"
+    },
+    {
+      "q": "A team's webhook handler does all its work before replying. The provider keeps redelivering the same event. What should the team do first?",
+      "right": "Acknowledge with 2xx straight away, queue the work, and make the handler idempotent",
+      "wrong": [
+        "Raise the provider's retry count",
+        "Turn off signature checking",
+        "Reply 500 so the provider stops"
+      ],
+      "tier": 3,
+      "why": "Slow handlers time out the sender, which retries. Reply fast, process afterwards, and tolerate duplicates."
+    },
+    {
+      "q": "A nightly import fails for one record with a 400 on a bad field. The job retries it 8 times. What is the better design?",
+      "right": "Treat a 400 as a permanent error, send that record to a dead letter, and carry on",
+      "wrong": [
+        "Retry it more slowly for longer",
+        "Drop the whole night's import",
+        "Switch the 400 to a 503 so retry works"
+      ],
+      "tier": 3,
+      "why": "Retrying a permanent error cannot help. Park it for a person and keep the rest moving."
+    },
+    {
+      "q": "A queue's oldest message is 40 minutes old while the depth is small. What does this most likely show?",
+      "right": "A stuck or poison message at the head, not a throughput shortage",
+      "wrong": [
+        "The workers are idle",
+        "The queue is healthy",
+        "The producers have stopped"
+      ],
+      "tier": 3,
+      "why": "A small depth with a large age points to something blocking, so check for a message failing repeatedly."
+    },
+    {
+      "q": "A bulk import is exhausting the database connection pool and slowing the website. What is the most direct fix?",
+      "right": "Put a concurrency limit on the import job",
+      "wrong": [
+        "Raise the job priority",
+        "Add jitter to the import schedule",
+        "Increase the retry count"
+      ],
+      "tier": 3,
+      "why": "A concurrency limit caps how many jobs of one kind run at once and protects the downstream system."
+    },
+    {
+      "q": "A team sets an approval gate for every refund. Approvers now click approve within seconds on all items. What is the risk, and what helps?",
+      "right": "Automation bias has emptied the gate; add sampling, show the reason and measure rejection rates",
+      "wrong": [
+        "Nothing; fast approvals mean the gate works",
+        "The approvers are too slow, so remove the gate",
+        "The gate needs more approvers per item"
+      ],
+      "tier": 4,
+      "why": "A gate that is always passed protects nothing. Surface the reasoning and track how often people disagree."
+    },
+    {
+      "q": "A classifier is accurate in testing but quietly drifting in production. Which control would catch it?",
+      "right": "A sampling audit of confident decisions",
+      "wrong": [
+        "A higher retry count",
+        "A longer timeout",
+        "A bigger queue"
+      ],
+      "tier": 4,
+      "why": "Confident answers bypass the person, so only a fixed audit rate on them reveals silent drift."
+    },
+    {
+      "q": "A team wants to replace a manual triage process with an automated rule. What is the safest first step?",
+      "right": "Run the rule in shadow mode beside the manual process and compare results",
+      "wrong": [
+        "Switch off the manual process and watch for complaints",
+        "Run it on 5 percent of cases with no comparison",
+        "Ask users whether they like it"
+      ],
+      "tier": 4,
+      "why": "Shadow mode acts on nothing and gives evidence of agreement before any switch."
+    },
+    {
+      "q": "Two teams discover they both built an address-cleaning automation. What would have prevented the duplicate?",
+      "right": "A registry of reusable units with owners and versions",
+      "wrong": [
+        "A longer deploy window",
+        "A rule that every step needs a retry",
+        "More cron jobs"
+      ],
+      "tier": 4,
+      "why": "Reuse needs discoverability; a registry lists what exists so teams adopt rather than rebuild."
+    },
+    {
+      "q": "A webhook subscriber's endpoint has returned errors for three days. What should the sender do?",
+      "right": "Back off, then pause the subscription and tell the owner, keeping a delivery log for replay",
+      "wrong": [
+        "Retry every second until it works",
+        "Delete the subscription silently",
+        "Send the events to a different customer's endpoint"
+      ],
+      "tier": 4,
+      "why": "Pausing protects both sides; the log lets the owner replay once the endpoint is fixed."
+    },
+    {
+      "q": "A job takes 40 minutes but the visibility timeout is 5 minutes. What will happen?",
+      "right": "Another worker will claim the job and it will run twice, unless a heartbeat extends the claim",
+      "wrong": [
+        "The job will be cancelled with no retry",
+        "The job will run faster",
+        "Nothing; the timeout only applies to failed jobs"
+      ],
+      "tier": 4,
+      "why": "A claim that expires while the job is still running returns it to the queue. Heartbeats or a longer claim fix this."
+    },
+    {
+      "q": "A process is described as automated, yet every case goes to a person for approval. How should its machine share be reported?",
+      "right": "As mostly human, because the share is counted from who decided, not what is claimed",
+      "wrong": [
+        "As 99 percent machine, since the design is automated",
+        "As 50 percent because both are involved",
+        "As unmeasurable"
+      ],
+      "tier": 4,
+      "why": "Moksy's approach stamps each dispatch as machine or human and sums those rows, so the share cannot be claimed by design."
+    },
+    {
+      "q": "A team proposes to switch a Moksy pattern from onDoubt to never to raise the machine share. What should you check first?",
+      "right": "Whether errors are costly enough that a person must stay able to catch them, since never removes the exit",
+      "wrong": [
+        "Whether the dashboard colour fits",
+        "Whether the pattern has a because",
+        "Whether the job queue is empty"
+      ],
+      "tier": 5,
+      "why": "never makes the machine final, so it fits low-risk decisions like badges and rankings, not ones with serious consequences."
+    },
+    {
+      "q": "A finance process uses batch approval for the month-end close. A reviewer proposes counting each row as a human touch. What is the effect?",
+      "right": "It would inflate the human share, because a batch approval is counted once, not once per row",
+      "wrong": [
+        "It would raise the machine share",
+        "It would have no effect",
+        "It would break coverage"
+      ],
+      "tier": 5,
+      "why": "In Moksy's ledger a batch approval counts once; the machine decided every row and a person approved the batch."
+    },
+    {
+      "q": "A migration plan runs both an inline function and a pattern for the same decision indefinitely. Why is this a problem?",
+      "right": "Two ways to run a step is worse than one, so the inline path should be deleted when the switch happens",
+      "wrong": [
+        "It is cheaper than the alternative",
+        "It guarantees correctness",
+        "It is the intended long-term design"
+      ],
+      "tier": 5,
+      "why": "The migration rule is that each phase ends with the inline code deleted, so only one path remains."
+    },
+    {
+      "q": "Which of these counts as the data behind Moksy's machine share?",
+      "right": "The machine or human value stamped on each dispatch",
+      "wrong": [
+        "A survey of staff time",
+        "The number of patterns in the registry",
+        "The customer satisfaction score"
+      ],
+      "tier": 3,
+      "why": "The share is the sum of decidedBy rows, so it is measured rather than estimated."
+    },
+    {
+      "q": "According to the brief, what did the live customer interview use to decide, as of 2026-09-14?",
+      "right": "Inline code in a large service file, not the dispatcher",
+      "wrong": [
+        "The pattern dispatcher for every decision",
+        "A human reviewer for every decision",
+        "A separate microservice per decision"
+      ],
+      "tier": 3,
+      "why": "The brief says the live path decides inline, so measured coverage was 0 percent."
+    },
+    {
+      "q": "Which pair is correctly matched for Moksy's handoff modes?",
+      "right": "batch with the monthly MXP to MOX close",
+      "wrong": [
+        "never with accreditation grants",
+        "always with badges",
+        "sample with level changes"
+      ],
+      "tier": 3,
+      "why": "The monthly close has the machine decide every row and a person approve once."
+    },
+    {
+      "q": "What is a Moksy selection shape?",
+      "right": "A way a pattern decides, such as classify or retrieve",
+      "wrong": [
+        "A way to draw a report",
+        "A kind of database index",
+        "A reviewer level"
+      ],
+      "tier": 3,
+      "why": "The seven shapes are classify, cover, configure, retrieve, derive, trigger and attach."
+    },
+    {
+      "q": "Which pairing for coverage and machine share is right in Moksy's ledger?",
+      "right": "Coverage is the share of decisions through a pattern; machine share is the share of pattern decisions needing no person",
+      "wrong": [
+        "Coverage counts human decisions; machine share counts patterns",
+        "They are two names for the same number",
+        "Coverage is measured only for batch decisions"
+      ],
+      "tier": 4,
+      "why": "They fail differently: an inline decision is invisible to machine share, which only sees pattern decisions."
+    },
+    {
+      "q": "When is meetsTarget true in Moksy's ledger?",
+      "right": "When machine share is at least 0.99 and nothing is unmanaged",
+      "wrong": [
+        "When machine share is at least 0.5",
+        "When every pattern is implemented",
+        "When the dispatcher has no errors"
+      ],
+      "tier": 4,
+      "why": "Both conditions are required, so a high share with unmanaged decisions still fails."
+    },
+    {
+      "q": "A founder asks whether a pattern's decision can be shown to a customer with a reason. Which Moksy feature provides it?",
+      "right": "The because that every selection shape returns",
+      "wrong": [
+        "The decidedBy stamp",
+        "The revision manifest",
+        "The registry"
+      ],
+      "tier": 4,
+      "why": "The because explains the decision so a person can see and correct it."
+    },
+    {
+      "q": "In the Moksy jobs service, which states can a failed job move to?",
+      "right": "queued, canceled or paused",
+      "wrong": [
+        "running or completed",
+        "completed or failed",
+        "scheduled only"
+      ],
+      "tier": 4,
+      "why": "A failed job can be queued again, canceled or paused, but not marked completed directly."
+    },
+    {
+      "q": "How long, roughly, does Moksy keep retrying a failing webhook delivery?",
+      "right": "About three days over eight attempts",
+      "wrong": [
+        "About ten seconds over two attempts",
+        "Forever",
+        "About a month over a hundred attempts"
+      ],
+      "tier": 4,
+      "why": "The delivery code states a backoff of about three days over eight attempts."
+    },
+    {
+      "q": "A customer-facing figure in a Moksy report is missing from the data. What does the grounding rule say the system should do?",
+      "right": "Refuse, ask, derive from data, or give a band, but never have a model invent the number",
+      "wrong": [
+        "Let the model estimate it quietly",
+        "Use the last customer's number",
+        "Round to the nearest hundred"
+      ],
+      "tier": 4,
+      "why": "A model may phrase a figure but may never originate one."
+    },
+    {
+      "q": "Why does Moksy's brief say 1:99 is achievable only as a measured number?",
+      "right": "Because every decision must go through the dispatcher and be stamped before a share can be computed",
+      "wrong": [
+        "Because customers must approve it",
+        "Because the target changes monthly",
+        "Because it needs a new database"
+      ],
+      "tier": 4,
+      "why": "While decisions are made inline, they are invisible to the ledger."
+    },
+    {
+      "q": "Which Moksy construct is meant to bound the human share by construction rather than by hand-set floors?",
+      "right": "Conformal risk control over confirmed versus overridden outcomes",
+      "wrong": [
+        "Hysteresis thresholds",
+        "Largest remainder apportionment",
+        "Wilson lower bound"
+      ],
+      "tier": 5,
+      "why": "The brief names conformal risk control as the designed next step for setting each floor from outcomes."
+    },
+    {
+      "q": "Which Moksy integration path would a team choose to pass a Blueprint to an app that has no API and no webhook support?",
+      "right": "The Blueprint interchange file in Markdown, JSON, HTML or PDF",
+      "wrong": [
+        "A native adapter with sealed tokens",
+        "The Moksy MCP server",
+        "A calendar feed"
+      ],
+      "tier": 5,
+      "why": "File interchange needs nothing from the app side but a place to open or paste a file."
+    },
+    {
+      "q": "The architecture review said a restart mid-report killed work permanently. What cause and cure did it give?",
+      "right": "Events were sent by inline HTTP with no queue or retry; use a broker plus a transactional outbox with retry and a dead-letter queue",
+      "wrong": [
+        "Reports were too large; split them into pages",
+        "Workers had too little memory; add RAM",
+        "Cron was misconfigured; fix the timezone"
+      ],
+      "tier": 5,
+      "why": "Without a durable queue a delivery lost to a restart is lost. The cure is durable delivery with replay."
+    }
+  ]
+}

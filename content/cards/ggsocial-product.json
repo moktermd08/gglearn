@@ -1,0 +1,2941 @@
+{
+  "slug": "ggsocial-product",
+  "name": "GGSocial",
+  "description": "Features, admin, moderation, support playbook.",
+  "roles": "",
+  "kind": "product",
+  "brand": "gglink",
+  "audience": "staff",
+  "tier": "growth",
+  "groups": {
+    "concept": "GGSocial concept or feature",
+    "rule": "composer rule",
+    "status": "post or target status term",
+    "role": "brand role or access term",
+    "auth": "sign-in or security detail",
+    "agent": "agent, workflow or review term",
+    "safety": "safety stop or cost control",
+    "config": "environment variable",
+    "deploy": "deployment detail",
+    "connect": "channel connection or media import",
+    "tech": "stack, testing or engineering detail",
+    "support": "support case",
+    "practice": "social media practice",
+    "metric": "social media metric"
+  },
+  "cards": [
+    {
+      "group": "concept",
+      "subject": "A brand",
+      "tier": 1,
+      "says": [
+        "is one company or project",
+        "owns its own channels, media, calendar, team and timezone",
+        "is the central table that channels and posts belong to"
+      ],
+      "use": "need to know which unit owns the channels, team and timezone",
+      "not": [
+        "is a single account on a single platform"
+      ],
+      "like": [
+        "A channel"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "A channel",
+      "tier": 1,
+      "says": [
+        "is a single account on a single platform",
+        "is owned by one brand",
+        "is either manual or live in mode"
+      ],
+      "use": "need the unit that stands for one account on one platform",
+      "not": [
+        "is shared across every brand in the app"
+      ],
+      "like": [
+        "A brand"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "The composer",
+      "tier": 1,
+      "says": [
+        "lets you write base copy once and override it per channel",
+        "shows live character counts while you type",
+        "applies the rules of each platform to the post"
+      ],
+      "use": "need to write one idea and tune it for each platform",
+      "not": [
+        "publishes the post without any approval step"
+      ],
+      "like": [
+        "The calendar",
+        "The publish queue"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "The calendar",
+      "tier": 1,
+      "says": [
+        "shows every brand on one month grid",
+        "colour-codes the brands",
+        "lets you drag a post to move it"
+      ],
+      "use": "want to see every brand's posts on one month grid",
+      "not": [
+        "shows only the posts of the brand you are signed in to first"
+      ],
+      "like": [
+        "The composer",
+        "The publish queue"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "The publish queue",
+      "tier": 2,
+      "says": [
+        "holds anything due on a manual channel",
+        "gives copy buttons, the media to download and platform-specific steps",
+        "marks a post published once you tick it off"
+      ],
+      "use": "need to post by hand on a platform that has no write API",
+      "not": [
+        "lists only posts that have already failed"
+      ],
+      "like": [
+        "Analytics",
+        "The calendar"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "Analytics",
+      "tier": 2,
+      "says": [
+        "shows what went out and where",
+        "shows whatever metrics the platform returns"
+      ],
+      "use": "want to see what was published and the metrics the platform handed back",
+      "not": [
+        "invents reach figures for platforms that report none"
+      ],
+      "like": [
+        "The publish queue"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "The playbook",
+      "tier": 2,
+      "says": [
+        "holds the master instructions for every format and every kind of engagement work",
+        "has limits the app checks by itself, such as hashtag count and copy length",
+        "lets each brand follow the master and tune any limit"
+      ],
+      "use": "need the written rule that a post or reply must follow",
+      "not": [
+        "is edited only through a server deploy"
+      ],
+      "like": [
+        "The composer"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "A manual channel",
+      "tier": 1,
+      "says": [
+        "is useful immediately without platform credentials",
+        "queues the post in the publish queue at the right time",
+        "ends with a person clicking publish",
+        "gets the same composer validation, calendar slot and approval flow as a live channel"
+      ],
+      "use": "have a platform with no write API for organic content",
+      "not": [
+        "is a stub that skips validation and approval"
+      ],
+      "like": [
+        "A live channel"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "A live channel",
+      "tier": 1,
+      "says": [
+        "publishes by itself through the platform API",
+        "needs credentials from the platform before it works"
+      ],
+      "use": "want the app to publish without a person clicking anything",
+      "not": [
+        "skips the composer's per-platform validation"
+      ],
+      "like": [
+        "A manual channel"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "Base copy",
+      "tier": 2,
+      "says": [
+        "is written once for a post",
+        "can be overridden for an individual channel",
+        "is the starting text that each post target inherits"
+      ],
+      "use": "write the same idea for several channels and then tune a few of them",
+      "not": [
+        "is locked once a post has more than one target"
+      ],
+      "like": [
+        "A post target"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "A post target",
+      "tier": 3,
+      "says": [
+        "exists once per channel on a post",
+        "has its own status separate from the post's status",
+        "may override the base copy"
+      ],
+      "use": "need the part of a post that belongs to one channel",
+      "not": [
+        "is the same record as the post itself"
+      ],
+      "like": [
+        "Base copy",
+        "A channel"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "The channel catalogue",
+      "tier": 2,
+      "says": [
+        "covers 109 platforms in 11 categories",
+        "has 45 live platforms and 64 manual-only platforms",
+        "is searchable and grouped by category"
+      ],
+      "use": "are asked how many platforms the app covers",
+      "not": [
+        "has more live platforms than manual-only ones"
+      ],
+      "like": [
+        "A platform adapter"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "The activity checklist",
+      "tier": 3,
+      "says": [
+        "catches up with the work that actually happened every hour",
+        "takes its counts from facts such as posts published and comments answered",
+        "never overwrites a check that a person recorded"
+      ],
+      "use": "ask what keeps the checklist up to date without manual ticking",
+      "not": [
+        "is filled in only by the performance analyst once a month"
+      ],
+      "like": [
+        "The playbook"
+      ]
+    },
+    {
+      "group": "concept",
+      "subject": "A tracked short link",
+      "tier": 3,
+      "says": [
+        "uses a random 7-character code",
+        "returns nothing but a 302 to the link's destination",
+        "is followed by strangers, so it has to get past the basic-auth wall"
+      ],
+      "use": "are asked how /l/ links behave",
+      "not": [
+        "shows a 401 password prompt to every reader by design"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "The Reddit rule",
+      "tier": 1,
+      "says": [
+        "requires both a title and a subreddit",
+        "treats a missing subreddit as an invalid post"
+      ],
+      "use": "post to Reddit and need to know what the composer demands",
+      "not": [
+        "needs only media"
+      ],
+      "like": [
+        "The YouTube rule"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "The YouTube rule",
+      "tier": 1,
+      "says": [
+        "requires a title",
+        "is one of the per-platform rules that the composer checks"
+      ],
+      "use": "are about to compose a YouTube post and need to know what it requires",
+      "not": [
+        "requires a subreddit"
+      ],
+      "like": [
+        "The Reddit rule"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "The Instagram rule",
+      "tier": 1,
+      "says": [
+        "requires media",
+        "stops a text-only post from passing validation"
+      ],
+      "use": "post to Instagram and the composer complains about the post",
+      "not": [
+        "requires a title and a subreddit"
+      ],
+      "like": [
+        "The YouTube rule"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "The X length cap",
+      "tier": 1,
+      "says": [
+        "limits a post to 280 characters",
+        "is checked against the live character count"
+      ],
+      "use": "need the number a post to X must stay under",
+      "not": [
+        "is 500 characters"
+      ],
+      "like": [
+        "X threading"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "X threading",
+      "tier": 2,
+      "says": [
+        "splits a long post into a thread on blank lines",
+        "lets one composer text become several connected posts"
+      ],
+      "use": "want a long text on X to become a thread",
+      "not": [
+        "splits on every full stop"
+      ],
+      "like": [
+        "The X length cap"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "A per-channel override",
+      "tier": 2,
+      "says": [
+        "replaces the base copy for one channel only",
+        "leaves the other channels' copy unchanged"
+      ],
+      "use": "need one channel to say something different from the base copy",
+      "not": [
+        "changes the copy for every channel of the brand"
+      ],
+      "like": [
+        "Base copy"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "A playbook must",
+      "tier": 4,
+      "says": [
+        "is a rule that scheduling and approval refuse to let a post break",
+        "is checked by the composer as you type",
+        "is a safety stop for an agent run when it is broken"
+      ],
+      "use": "learn why a post cannot be scheduled or approved even though the copy reads well",
+      "not": [
+        "is only advice that can be ignored at scheduling"
+      ],
+      "like": [
+        "The playbook"
+      ]
+    },
+    {
+      "group": "status",
+      "subject": "The draft status",
+      "tier": 1,
+      "says": [
+        "is the first post status in the approval flow",
+        "comes before the post needs approval"
+      ],
+      "use": "need the state of a post nobody has sent for review yet",
+      "not": [
+        "is a target status"
+      ],
+      "like": [
+        "The in_review status"
+      ]
+    },
+    {
+      "group": "status",
+      "subject": "The in_review status",
+      "tier": 2,
+      "says": [
+        "is the database status behind a post that needs approval",
+        "follows draft in the flow"
+      ],
+      "use": "need the state of a post waiting for a sign-off",
+      "not": [
+        "means the post has been published"
+      ],
+      "like": [
+        "The approved status",
+        "The draft status"
+      ]
+    },
+    {
+      "group": "status",
+      "subject": "The changes_requested status",
+      "tier": 3,
+      "says": [
+        "is a post status, not a target status",
+        "records that a reviewer asked for changes instead of signing off"
+      ],
+      "use": "are asked which post status exists because approvers can send work back",
+      "not": [
+        "is a target status"
+      ],
+      "like": [
+        "The in_review status"
+      ]
+    },
+    {
+      "group": "status",
+      "subject": "The approved status",
+      "tier": 2,
+      "says": [
+        "comes after in_review in the approval flow",
+        "is followed by scheduled"
+      ],
+      "use": "need the state after sign-off and before the post is scheduled",
+      "not": [
+        "comes straight after draft"
+      ],
+      "like": [
+        "The in_review status"
+      ]
+    },
+    {
+      "group": "status",
+      "subject": "The partially_published status",
+      "tier": 4,
+      "says": [
+        "is a post status, separate from the target statuses",
+        "is listed after published and before failed among the post statuses"
+      ],
+      "use": "are asked which post statuses exist besides published and failed",
+      "not": [
+        "is a target status"
+      ],
+      "like": [
+        "The post status list"
+      ]
+    },
+    {
+      "group": "status",
+      "subject": "The awaiting_manual status",
+      "tier": 3,
+      "says": [
+        "is a target status, not a post status",
+        "is one of the seven target statuses"
+      ],
+      "use": "are asked which target status is not a post status",
+      "not": [
+        "is a post status"
+      ],
+      "like": [
+        "The pending status"
+      ]
+    },
+    {
+      "group": "status",
+      "subject": "The post status list",
+      "tier": 4,
+      "says": [
+        "has nine values",
+        "runs draft, in_review, changes_requested, approved, scheduled, publishing, published, partially_published and failed"
+      ],
+      "use": "are asked how many statuses a post can have",
+      "not": [
+        "has seven values"
+      ],
+      "like": [
+        "The target status list"
+      ]
+    },
+    {
+      "group": "status",
+      "subject": "The target status list",
+      "tier": 4,
+      "says": [
+        "has seven values",
+        "runs pending, scheduled, publishing, awaiting_manual, published, failed and skipped"
+      ],
+      "use": "are asked how many statuses a post target can have",
+      "not": [
+        "has nine values"
+      ],
+      "like": [
+        "The post status list"
+      ]
+    },
+    {
+      "group": "status",
+      "subject": "The scheduled time",
+      "tier": 3,
+      "says": [
+        "is stored as an absolute instant",
+        "is rendered in the brand's timezone"
+      ],
+      "use": "need to know how a scheduled time is stored for a brand in another timezone",
+      "not": [
+        "is stored as text in the brand's local time without an offset"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The owner role",
+      "tier": 2,
+      "says": [
+        "can do everything in the brand",
+        "can archive the brand",
+        "is the role that can switch off a workflow step's review"
+      ],
+      "use": "need the role allowed to archive a brand",
+      "not": [
+        "is read-only"
+      ],
+      "like": [
+        "The admin role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The admin role",
+      "tier": 2,
+      "says": [
+        "manages channels, team and content",
+        "is the minimum role for managing channels, team and the brand"
+      ],
+      "use": "need the lowest role that can manage the team of a brand",
+      "not": [
+        "can archive the brand"
+      ],
+      "like": [
+        "The owner role",
+        "The editor role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The editor role",
+      "tier": 2,
+      "says": [
+        "can write, schedule and publish",
+        "is the minimum role for editing and publishing"
+      ],
+      "use": "need the lowest role that can write and schedule posts",
+      "not": [
+        "can manage the team"
+      ],
+      "like": [
+        "The admin role",
+        "The approver role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The approver role",
+      "tier": 2,
+      "says": [
+        "is for review only and cannot edit",
+        "can sign off a post"
+      ],
+      "use": "need someone who signs off content without being able to change it",
+      "not": [
+        "can write and publish posts"
+      ],
+      "like": [
+        "The editor role",
+        "The viewer role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The viewer role",
+      "tier": 1,
+      "says": [
+        "is read-only",
+        "is the lowest-ranked brand role"
+      ],
+      "use": "need to give someone access to look but not change anything",
+      "not": [
+        "can approve posts"
+      ],
+      "like": [
+        "The approver role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "A brand role",
+      "tier": 3,
+      "says": [
+        "applies to one brand only",
+        "lets one person be an editor on one company and a viewer on another"
+      ],
+      "use": "need to explain why roles are not global",
+      "not": [
+        "is set once for a user across every brand"
+      ],
+      "like": [
+        "The super admin flag"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The role ranking",
+      "tier": 4,
+      "says": [
+        "orders the roles viewer, approver, editor, admin, owner",
+        "is used by a helper that checks a role is at least a minimum"
+      ],
+      "use": "need to know how the code compares one role with another",
+      "not": [
+        "ranks approver above editor"
+      ],
+      "like": [
+        "requireBrandRole"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "requireBrandRole",
+      "tier": 4,
+      "says": [
+        "throws an error when the user lacks the needed role on that brand",
+        "is the check that server actions rely on instead of the UI"
+      ],
+      "use": "need the check that refuses a call from a user without the role",
+      "not": [
+        "hides the button in the interface"
+      ],
+      "like": [
+        "The role ranking"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The super admin flag",
+      "tier": 4,
+      "says": [
+        "is the is_super_admin column on users",
+        "defaults to false",
+        "covers a few global tasks such as editing the master playbook"
+      ],
+      "use": "need the flag that is not a brand role",
+      "not": [
+        "grants owner on every brand"
+      ],
+      "like": [
+        "A brand role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "A membership",
+      "tier": 3,
+      "says": [
+        "links one user to one brand with a role",
+        "has a unique index so a user has at most one membership per brand",
+        "cascades on delete from users and brands"
+      ],
+      "use": "need the table that gives a user a role on a brand",
+      "not": [
+        "holds the user's password hash"
+      ],
+      "like": [
+        "A brand role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The approving permission",
+      "tier": 5,
+      "says": [
+        "is allowed for the approver role and for admin and above",
+        "does not include the editor role"
+      ],
+      "use": "are told an editor wants to approve their own post and must say whether the code allows it",
+      "not": [
+        "is allowed for every role at or above editor"
+      ],
+      "like": [
+        "The editor role"
+      ]
+    },
+    {
+      "group": "auth",
+      "subject": "Password hashing",
+      "tier": 1,
+      "says": [
+        "uses bcrypt through bcryptjs",
+        "runs at cost 12"
+      ],
+      "use": "are asked how passwords are stored",
+      "not": [
+        "encrypts the password so it can be decrypted with APP_SECRET"
+      ],
+      "like": [
+        "The session token"
+      ]
+    },
+    {
+      "group": "auth",
+      "subject": "The session token",
+      "tier": 2,
+      "says": [
+        "is a signed JWT using HS256 through the jose library",
+        "is stored in a cookie named ggs_session"
+      ],
+      "use": "need to know what a sign-in creates",
+      "not": [
+        "is a random id stored as a database row"
+      ],
+      "like": [
+        "Password hashing"
+      ]
+    },
+    {
+      "group": "auth",
+      "subject": "The session cookie flags",
+      "tier": 3,
+      "says": [
+        "are httpOnly and SameSite lax",
+        "are secure in production"
+      ],
+      "use": "need the cookie attributes of ggs_session",
+      "not": [
+        "leave the cookie readable by page scripts"
+      ],
+      "like": [
+        "The session lifetime"
+      ]
+    },
+    {
+      "group": "auth",
+      "subject": "The session lifetime",
+      "tier": 3,
+      "says": [
+        "is 30 days",
+        "is how long the ggs_session cookie stays valid"
+      ],
+      "use": "are asked how long a signed-in session lasts",
+      "not": [
+        "is one hour"
+      ],
+      "like": [
+        "The session cookie flags"
+      ]
+    },
+    {
+      "group": "auth",
+      "subject": "APP_SECRET",
+      "tier": 2,
+      "says": [
+        "signs the session tokens",
+        "encrypts the stored platform tokens",
+        "must be set to 32 or more random characters",
+        "logs everyone out and invalidates saved credentials when it changes"
+      ],
+      "use": "need the one value whose loss logs everyone out and breaks every connected channel",
+      "not": [
+        "can be rotated safely without any side effects"
+      ],
+      "like": [
+        "CRON_SECRET"
+      ]
+    },
+    {
+      "group": "auth",
+      "subject": "An invite",
+      "tier": 3,
+      "says": [
+        "is looked up by token",
+        "counts only while it has not been accepted",
+        "can be tied to a sign-up link"
+      ],
+      "use": "are asked how a sign-up link can bring a person into a brand",
+      "not": [
+        "can be accepted any number of times"
+      ],
+      "like": [
+        "A membership"
+      ]
+    },
+    {
+      "group": "auth",
+      "subject": "A stored platform token",
+      "tier": 3,
+      "says": [
+        "is encrypted with APP_SECRET before it is stored",
+        "is never sent back to the browser"
+      ],
+      "use": "need to explain what happens to a token pasted into Connect",
+      "not": [
+        "is stored in plain text so it can be shown again"
+      ],
+      "like": [
+        "The session token"
+      ]
+    },
+    {
+      "group": "auth",
+      "subject": "An agent API token",
+      "tier": 4,
+      "says": [
+        "is sent in the X-Agent-Token header",
+        "starts with ggs_",
+        "is issued from Activities, AI agents",
+        "is rejected by the agent API when it is invalid or revoked"
+      ],
+      "use": "need to call /api/agent/activities from a script",
+      "not": [
+        "is sent in the Authorization header"
+      ],
+      "like": [
+        "The basic-auth wall"
+      ]
+    },
+    {
+      "group": "auth",
+      "subject": "The basic-auth wall",
+      "tier": 4,
+      "says": [
+        "uses /etc/apache2/ggsocial.htpasswd",
+        "occupies the Authorization header",
+        "has to be let past for short links, media files and the agent API"
+      ],
+      "use": "learn why the agent token travels in a different header",
+      "not": [
+        "is enforced by the Next.js middleware"
+      ],
+      "like": [
+        "An agent API token"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The content strategist",
+      "tier": 2,
+      "says": [
+        "keeps the content plan ahead of the calendar",
+        "proposes new ideas from the brand book, goals and the lessons of past posts"
+      ],
+      "use": "need the agent that proposes ideas when the plan would not cover the next weeks",
+      "not": [
+        "books posts into open calendar slots"
+      ],
+      "like": [
+        "The content writer"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The content writer",
+      "tier": 2,
+      "says": [
+        "keeps the calendar full from the plan",
+        "books each post into an open slot",
+        "revises anything a reviewer sends back using their note"
+      ],
+      "use": "need the agent that turns planned ideas into scheduled posts",
+      "not": [
+        "reads yesterday's posts every morning"
+      ],
+      "like": [
+        "The content strategist",
+        "The performance analyst"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The community manager",
+      "tier": 1,
+      "says": [
+        "drafts replies to new comments, messages, mentions and reviews",
+        "sets tone and priority",
+        "flags anything a person must decide"
+      ],
+      "use": "need the agent that answers audience comments and messages",
+      "not": [
+        "writes the monthly report"
+      ],
+      "like": [
+        "The performance analyst"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The performance analyst",
+      "tier": 2,
+      "says": [
+        "reads yesterday's posts every morning",
+        "writes the weekly review and the monthly report"
+      ],
+      "use": "need the agent that reports on how posts performed",
+      "not": [
+        "drafts replies to reviews"
+      ],
+      "like": [
+        "The community manager",
+        "The content writer"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The reviewer",
+      "tier": 3,
+      "says": [
+        "is Claude Haiku by default",
+        "scores everything an agent makes out of 100",
+        "flags risks",
+        "sends weak but safe work back once with its fixes"
+      ],
+      "use": "need the model that checks agent output before a person is asked",
+      "not": [
+        "is a human on the team with the approver role"
+      ],
+      "like": [
+        "The performance analyst"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The Review inbox",
+      "tier": 2,
+      "says": [
+        "is where everything waiting on a person lands",
+        "lets you approve, send back with a note or stop the run"
+      ],
+      "use": "need the one place for reviews, safety stops and manual steps",
+      "not": [
+        "is the same screen as the publish queue"
+      ],
+      "like": [
+        "The publish queue"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "A workflow",
+      "tier": 3,
+      "says": [
+        "is a set of steps done by an agent, a tool or a person",
+        "is how each kind of work is run"
+      ],
+      "use": "need to explain how agent work is organised into steps",
+      "not": [
+        "is a single Claude call"
+      ],
+      "like": [
+        "The Review inbox"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The publish a planned post workflow",
+      "tier": 3,
+      "says": [
+        "is the workflow the content writer hands each post to",
+        "is one of the first three workflows"
+      ],
+      "use": "need the workflow that takes a planned post through to publishing",
+      "not": [
+        "sends replies to comments"
+      ],
+      "like": [
+        "The answer a comment or message workflow"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The answer a comment or message workflow",
+      "tier": 3,
+      "says": [
+        "sends replies through the platform on connected Facebook, Instagram, YouTube, Bluesky and Mastodon channels",
+        "carries the community manager's drafts"
+      ],
+      "use": "need the workflow whose output is a reply to an audience member",
+      "not": [
+        "plans new content ideas"
+      ],
+      "like": [
+        "The plan new ideas workflow"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The plan new ideas workflow",
+      "tier": 3,
+      "says": [
+        "is the workflow that produces new ideas for the plan",
+        "is run by the content strategist"
+      ],
+      "use": "need the workflow that keeps the plan supplied with ideas",
+      "not": [
+        "publishes a post"
+      ],
+      "like": [
+        "The answer a comment or message workflow"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "Step review",
+      "tier": 4,
+      "says": [
+        "is on for every step until the brand's owner switches it off",
+        "needs a reason, which is kept in the log, when it is switched off"
+      ],
+      "use": "are asked who can stop a step from pausing for a person",
+      "not": [
+        "is off for every step by default"
+      ],
+      "like": [
+        "A safety stop"
+      ]
+    },
+    {
+      "group": "safety",
+      "subject": "A safety stop",
+      "tier": 3,
+      "says": [
+        "pauses a run whatever the review setting",
+        "sends the item to the Review inbox"
+      ],
+      "use": "learn why a run paused although the brand owner switched review off",
+      "not": [
+        "can be disabled per brand by the owner"
+      ],
+      "like": [
+        "Step review"
+      ]
+    },
+    {
+      "group": "safety",
+      "subject": "A flagged risk",
+      "tier": 3,
+      "says": [
+        "is a risk the reviewer flags such as prices, refunds, legal or health matters",
+        "also covers an apology, a complaint, a sensitive topic or a claim it cannot check"
+      ],
+      "use": "see a reply that mentions a refund pause for a person",
+      "not": [
+        "is raised only for posts containing profanity"
+      ],
+      "like": [
+        "A safety stop"
+      ]
+    },
+    {
+      "group": "safety",
+      "subject": "A score under the pass mark",
+      "tier": 4,
+      "says": [
+        "is a safety stop based on the reviewer's score out of 100",
+        "uses the brand's own pass mark"
+      ],
+      "use": "see a draft pause because the reviewer scored it low",
+      "not": [
+        "uses one pass mark set globally for every brand"
+      ],
+      "like": [
+        "A flagged risk"
+      ]
+    },
+    {
+      "group": "safety",
+      "subject": "A broken playbook must",
+      "tier": 4,
+      "says": [
+        "stops an agent run just as it stops scheduling and approval",
+        "is checked against the rule the activity follows"
+      ],
+      "use": "see an agent's post paused for breaking a hard limit",
+      "not": [
+        "is overridden when review is off"
+      ],
+      "like": [
+        "A playbook must"
+      ]
+    },
+    {
+      "group": "safety",
+      "subject": "The reviewer being unable to run",
+      "tier": 4,
+      "says": [
+        "is itself a safety stop",
+        "pauses work for a person instead of letting it through unchecked"
+      ],
+      "use": "ask what happens when the reviewing model is unavailable",
+      "not": [
+        "lets agent work through unchecked"
+      ],
+      "like": [
+        "A flagged risk"
+      ]
+    },
+    {
+      "group": "safety",
+      "subject": "The daily AI budget",
+      "tier": 4,
+      "says": [
+        "is a per-brand limit that stops agent work when spent",
+        "shows today's spend on the Workflows page"
+      ],
+      "use": "see runs pause because the brand has used up its AI allowance",
+      "not": [
+        "is one global limit shared by every brand"
+      ],
+      "like": [
+        "A step that keeps failing"
+      ]
+    },
+    {
+      "group": "safety",
+      "subject": "A step that keeps failing",
+      "tier": 4,
+      "says": [
+        "is a safety stop that applies to a repeatedly failing step",
+        "pauses the run whatever the review setting"
+      ],
+      "use": "see a run stop after the same step failed again and again",
+      "not": [
+        "is retried indefinitely until it succeeds"
+      ],
+      "like": [
+        "The daily AI budget"
+      ]
+    },
+    {
+      "group": "safety",
+      "subject": "A failure alert",
+      "tier": 4,
+      "says": [
+        "is emailed to each brand's owners and admins",
+        "needs RESEND_API_KEY and ALERT_FROM",
+        "is sent at most once every 12 hours"
+      ],
+      "use": "need to know who is told when a post runs out of retries or a channel needs reconnecting",
+      "not": [
+        "is sent to every member of the brand"
+      ],
+      "like": [
+        "The Review inbox"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "DATABASE_URL",
+      "tier": 1,
+      "says": [
+        "is the Postgres connection string",
+        "is one of the two values to fill in first in .env.local"
+      ],
+      "use": "need the variable that points the app at its database",
+      "not": [
+        "selects the media storage driver"
+      ],
+      "like": [
+        "APP_SECRET"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "CRON_SECRET",
+      "tier": 3,
+      "says": [
+        "is the bearer token the /api/cron/publish endpoint requires",
+        "is sent as Authorization: Bearer by Vercel's cron"
+      ],
+      "use": "need the value that protects the publish tick endpoint",
+      "not": [
+        "signs the session cookie"
+      ],
+      "like": [
+        "APP_SECRET"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "APP_URL",
+      "tier": 3,
+      "says": [
+        "is the public base URL of the app",
+        "must be reachable from the internet in production because platform APIs fetch media from it",
+        "is the base of OAuth redirect URIs"
+      ],
+      "use": "see Instagram fail to fetch a post's media in production",
+      "not": [
+        "is only used for the page title"
+      ],
+      "like": [
+        "MEDIA_DRIVER"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "MEDIA_DRIVER",
+      "tier": 3,
+      "says": [
+        "is either local or s3",
+        "defaults to local, which writes to .data/uploads"
+      ],
+      "use": "need to choose where uploaded media is stored",
+      "not": [
+        "selects the database driver"
+      ],
+      "like": [
+        "APP_URL"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "The Canva variables",
+      "tier": 4,
+      "says": [
+        "are CANVA_CLIENT_ID and CANVA_CLIENT_SECRET",
+        "enable importing Canva designs into Media"
+      ],
+      "use": "need to turn on the Canva import button",
+      "not": [
+        "enable Google Photos import"
+      ],
+      "like": [
+        "The Google variables"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "The Google variables",
+      "tier": 4,
+      "says": [
+        "are GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET",
+        "enable Google Photos import and Connect with Google for YouTube"
+      ],
+      "use": "need to turn on Google Photos import and YouTube connection",
+      "not": [
+        "enable Facebook sign-in"
+      ],
+      "like": [
+        "The Canva variables",
+        "The Meta variables"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "The Meta variables",
+      "tier": 4,
+      "says": [
+        "are META_APP_ID and META_APP_SECRET",
+        "enable Connect with Facebook for Facebook Page and Instagram channels"
+      ],
+      "use": "need to turn on Connect with Facebook",
+      "not": [
+        "enable YouTube connection"
+      ],
+      "like": [
+        "The Google variables"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "RESEARCH_SIGNALS",
+      "tier": 5,
+      "says": [
+        "can be set to off to stop the content strategist reading outside signals",
+        "makes the strategist search Hacker News for the last 30 days by default",
+        "sends only the pillar words out of the server"
+      ],
+      "use": "are asked how to stop the strategist searching outside the app",
+      "not": [
+        "reads Reddit and Google News by default"
+      ],
+      "like": [
+        "ANTHROPIC_API_KEY"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "ANTHROPIC_API_KEY",
+      "tier": 2,
+      "says": [
+        "is optional",
+        "enables drafting with Claude and the brand agents"
+      ],
+      "use": "need the variable without which the agents cannot run",
+      "not": [
+        "is required before the app starts"
+      ],
+      "like": [
+        "The Claude model variables"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "The Claude model variables",
+      "tier": 4,
+      "says": [
+        "are CLAUDE_WRITING_MODEL, CLAUDE_ANALYSIS_MODEL and CLAUDE_REVIEW_MODEL",
+        "default to claude-sonnet-5 for writing and analysis and claude-haiku-4-5 for review"
+      ],
+      "use": "want to change which model writes, analyses or reviews",
+      "not": [
+        "default the reviewer to the same model as the writer"
+      ],
+      "like": [
+        "ANTHROPIC_API_KEY"
+      ]
+    },
+    {
+      "group": "config",
+      "subject": "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY",
+      "tier": 5,
+      "says": [
+        "is pinned in .env the first time the deploy runs",
+        "keeps unchanged server actions working across builds",
+        "is found in the /root/ggsocial-backups/env-* copies if lost"
+      ],
+      "use": "need the key whose loss is as bad as losing APP_SECRET for open tabs",
+      "not": [
+        "is stored in the git repository"
+      ],
+      "like": [
+        "APP_SECRET"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "npm run deploy",
+      "tier": 2,
+      "says": [
+        "type-checks, lints and runs tests on your machine first",
+        "stops at the first failing step",
+        "rsyncs the tree and streams scripts/deploy-remote.sh to the server"
+      ],
+      "use": "need the command that ships the app to the live server",
+      "not": [
+        "builds directly on the production database host with no checks"
+      ],
+      "like": [
+        "SKIP_TESTS=1"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "SKIP_TESTS=1",
+      "tier": 3,
+      "says": [
+        "skips the type-check, lint and tests in the deploy",
+        "is meant for an emergency fix"
+      ],
+      "use": "need to ship a hotfix while the checks are failing",
+      "not": [
+        "skips only the tests"
+      ],
+      "like": [
+        "npm run deploy"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The deploy backup step",
+      "tier": 3,
+      "says": [
+        "backs up the database to /root/ggsocial-backups/ before anything changes",
+        "runs on the server half of the deploy"
+      ],
+      "use": "need to know what protects the data if a schema push goes wrong",
+      "not": [
+        "copies the uploads directory to S3"
+      ],
+      "like": [
+        "The schema push"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The schema push",
+      "tier": 4,
+      "says": [
+        "runs drizzle-kit push before the restart",
+        "is run without --force so a drift that would drop data stops instead of auto-approving"
+      ],
+      "use": "need to know why the schema is pushed before pm2 restarts",
+      "not": [
+        "runs after the restart"
+      ],
+      "like": [
+        "The deploy backup step"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The build into .next-new",
+      "tier": 4,
+      "says": [
+        "lets the old build keep serving while the new one is built",
+        "is stamped with a deployment id",
+        "is swapped in, so only the restart is a gap"
+      ],
+      "use": "need to explain why a failed build no longer takes the site down",
+      "not": [
+        "builds in place over .next"
+      ],
+      "like": [
+        "The Turbopack trap"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The rsync --delete trap",
+      "tier": 4,
+      "says": [
+        "deletes the production .env because it is not in the repo",
+        "is avoided with --exclude .env",
+        "also removes .env.local, which is a symlink to .env"
+      ],
+      "use": "worry that a sync could wipe the secrets on the server",
+      "not": [
+        "only deletes .next"
+      ],
+      "like": [
+        "APP_SECRET"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The Tailwind binary trap",
+      "tier": 5,
+      "says": [
+        "is the missing @tailwindcss/oxide-linux-x64-gnu module after npm ci",
+        "is solved by installing it with --no-save at the version of the installed oxide package"
+      ],
+      "use": "see Cannot find module './tailwindcss-oxide.linux-x64-gnu.node' during the build",
+      "not": [
+        "is solved by committing the Linux binary to the lockfile"
+      ],
+      "like": [
+        "The Node version trap"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The Node version trap",
+      "tier": 5,
+      "says": [
+        "comes from bash -lc sourcing nvm and putting Node 18 first on the PATH",
+        "is avoided by putting /usr/bin first so install, build and runtime use Node 20",
+        "can leave a running server without its build directory when the build fails after rm -rf .next"
+      ],
+      "use": "see Node.js version >=20.9.0 is required during a deploy",
+      "not": [
+        "is caused by pm2 running an old Node"
+      ],
+      "like": [
+        "The Tailwind binary trap"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The stale tab trap",
+      "tier": 4,
+      "says": [
+        "breaks a tab left open across a deploy with Failed to find Server Action",
+        "is fixed by a deploymentId that makes Next reload the page",
+        "needs both sides of a deploy to carry an id before it protects"
+      ],
+      "use": "have users report errors on their next click after a deploy",
+      "not": [
+        "is fixed by restarting the database"
+      ],
+      "like": [
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The live :443 vhost trap",
+      "tier": 5,
+      "says": [
+        "is a regular file in sites-enabled, not a symlink",
+        "is the copy Apache serves, so edits to sites-available change nothing",
+        "is checked with apachectl -S"
+      ],
+      "use": "edit the SSL vhost and see no change after a clean reload",
+      "not": [
+        "is a symlink to sites-available"
+      ],
+      "like": [
+        "The basic-auth wall"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The Vercel deployment",
+      "tier": 3,
+      "says": [
+        "needs MEDIA_DRIVER=s3 because serverless filesystems are wiped between invocations",
+        "uses vercel.json to call /api/cron/publish every five minutes",
+        "needs npm run db:push once against the production database"
+      ],
+      "use": "are asked how to deploy to Vercel with hosted Postgres",
+      "not": [
+        "works with MEDIA_DRIVER=local"
+      ],
+      "like": [
+        "npm run deploy"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The pm2 web process",
+      "tier": 3,
+      "says": [
+        "is called ggsocial-web",
+        "runs next start -p 3200 on 127.0.0.1 only"
+      ],
+      "use": "need the pm2 process that serves the site behind Apache",
+      "not": [
+        "listens on a public port directly"
+      ],
+      "like": [
+        "The pm2 scheduler"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The pm2 scheduler",
+      "tier": 3,
+      "says": [
+        "is called ggsocial-scheduler",
+        "ticks /api/cron/publish every 60 seconds",
+        "calls /api/cron/agents every 5 minutes and the goals, pages and playbook endpoints hourly"
+      ],
+      "use": "need the process that dispatches scheduled posts",
+      "not": [
+        "runs inside the web process"
+      ],
+      "like": [
+        "The pm2 web process"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The production database",
+      "tier": 3,
+      "says": [
+        "runs in Docker as ggsocial-pg using postgres:16",
+        "listens on 127.0.0.1:5434",
+        "keeps data in the ggsocial-pgdata volume"
+      ],
+      "use": "need to find the production Postgres",
+      "not": [
+        "is a hosted database service"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "Connect with Facebook",
+      "tier": 3,
+      "says": [
+        "publishes to Facebook Pages and Instagram",
+        "is enabled by META_APP_ID and META_APP_SECRET",
+        "keeps working because Facebook Page tokens do not expire"
+      ],
+      "use": "connect a Facebook Page or Instagram account",
+      "not": [
+        "uses a Google OAuth client"
+      ],
+      "like": [
+        "Connect with Google"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "Connect with Google",
+      "tier": 3,
+      "says": [
+        "connects YouTube channels",
+        "refreshes Google tokens before they run out",
+        "needs the YouTube Data API v3 and the youtube.force-ssl and youtube.upload scopes"
+      ],
+      "use": "connect a YouTube channel",
+      "not": [
+        "uses a Meta app"
+      ],
+      "like": [
+        "Connect with Facebook"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "An Instagram account for live mode",
+      "tier": 4,
+      "says": [
+        "must be a business or creator account linked to a Facebook Page",
+        "needs the instagram_content_publish permission"
+      ],
+      "use": "ask why an Instagram account cannot go live",
+      "not": [
+        "can be a personal account"
+      ],
+      "like": [
+        "Connect with Facebook"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "An unverified Google project",
+      "tier": 5,
+      "says": [
+        "makes YouTube uploads private",
+        "lets only test users connect"
+      ],
+      "use": "see uploaded videos come out private on YouTube",
+      "not": [
+        "has no effect on uploads"
+      ],
+      "like": [
+        "Connect with Google"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "A channel that needs reconnecting",
+      "tier": 3,
+      "says": [
+        "is a channel the platform stopped accepting the sign-in for",
+        "drops back to manual so posts still go out through the publish queue"
+      ],
+      "use": "see a live channel marked needs reconnecting",
+      "not": [
+        "keeps trying to publish in live mode"
+      ],
+      "like": [
+        "A manual channel"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "Bluesky connection",
+      "tier": 3,
+      "says": [
+        "uses an app password",
+        "reads replies and mentions into Engagement every ten minutes",
+        "reads back likes, replies and reposts but not reach"
+      ],
+      "use": "connect a Bluesky account",
+      "not": [
+        "uses an OAuth sign-in button"
+      ],
+      "like": [
+        "Mastodon connection"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "Mastodon connection",
+      "tier": 4,
+      "says": [
+        "uses an application token from your instance",
+        "needs the read:notifications and read:statuses scopes as well as the posting ones",
+        "tells you in the channel when the platform refuses an older token"
+      ],
+      "use": "see a Mastodon channel that posts but cannot read replies",
+      "not": [
+        "needs only the posting scopes"
+      ],
+      "like": [
+        "Bluesky connection"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "The Google Photos import",
+      "tier": 4,
+      "says": [
+        "opens Google's own picker in a new tab",
+        "imports only the photos and videos picked there",
+        "uses the photospicker.mediaitems.readonly scope"
+      ],
+      "use": "ask why the app cannot browse a whole Photos library",
+      "not": [
+        "browses the whole library inside the app"
+      ],
+      "like": [
+        "The Canva import"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "Live access for LinkedIn",
+      "tier": 4,
+      "says": [
+        "needs the Community Management API with w_organization_social",
+        "has the slowest app review of the listed platforms"
+      ],
+      "use": "need to tell the team which live platform review is slowest",
+      "not": [
+        "needs no review"
+      ],
+      "like": [
+        "Live access for X"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "Live access for X",
+      "tier": 4,
+      "says": [
+        "needs API Basic tier or above with OAuth 2.0 and tweet.write",
+        "needs no review but is paid"
+      ],
+      "use": "need the live platform that is paid rather than reviewed",
+      "not": [
+        "needs a long review but is free"
+      ],
+      "like": [
+        "Live access for LinkedIn"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "Live access for Reddit",
+      "tier": 4,
+      "says": [
+        "uses a script or web app from reddit.com/prefs/apps with the submit scope",
+        "needs no review"
+      ],
+      "use": "need the live platform that uses reddit.com/prefs/apps",
+      "not": [
+        "needs an audited app"
+      ],
+      "like": [
+        "Live access for TikTok"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "Live access for Telegram",
+      "tier": 3,
+      "says": [
+        "needs a bot from @BotFather",
+        "needs the bot added to the channel as admin"
+      ],
+      "use": "need to publish to a Telegram channel",
+      "not": [
+        "needs an app review"
+      ],
+      "like": [
+        "Live access for Discord"
+      ]
+    },
+    {
+      "group": "connect",
+      "subject": "Live access for WhatsApp Business",
+      "tier": 4,
+      "says": [
+        "needs a Meta app, business verification and approved templates"
+      ],
+      "use": "need the live platform that requires business verification and approved templates",
+      "not": [
+        "needs only a token"
+      ],
+      "like": [
+        "Live access for Telegram"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "Next.js in GGSocial",
+      "tier": 2,
+      "says": [
+        "is pinned exactly at 16.3.5 together with React 19.2.8",
+        "has breaking changes, so the bundled docs are checked first per AGENTS.md"
+      ],
+      "use": "are about to change framework code and need the rule from AGENTS.md",
+      "not": [
+        "can be assumed to behave like older Next.js"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "Drizzle and the postgres driver",
+      "tier": 1,
+      "says": [
+        "are how GGSocial reads and writes Postgres",
+        "keep the schema in src/lib/db/schema.ts"
+      ],
+      "use": "need the database library of the app",
+      "not": [
+        "is Prisma with MySQL"
+      ],
+      "like": [
+        "drizzle-kit"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "drizzle-kit",
+      "tier": 3,
+      "says": [
+        "pushes and generates the schema",
+        "is run by npm run db:push",
+        "is also used by the tests to push the real schema into PGlite"
+      ],
+      "use": "need the tool that creates the tables",
+      "not": [
+        "is the ORM used in queries"
+      ],
+      "like": [
+        "Drizzle and the postgres driver"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "The GG UI kit",
+      "tier": 3,
+      "says": [
+        "lives in src/gg-ui and is a copy of the kit shared with GGLeads",
+        "is stamped with its source commit in SOURCE.md",
+        "must not be edited in ggsocial"
+      ],
+      "use": "want to change the sidebar or a stat tile",
+      "not": [
+        "is edited directly in ggsocial"
+      ],
+      "like": [
+        "sync-ui.mjs"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "sync-ui.mjs",
+      "tier": 4,
+      "says": [
+        "copies the GG UI kit from the GGLeads checkout",
+        "fails with --check if the copy was edited or is behind"
+      ],
+      "use": "need to update or verify the UI kit copy",
+      "not": [
+        "publishes the UI kit to npm"
+      ],
+      "like": [
+        "The GG UI kit"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "A platform adapter",
+      "tier": 4,
+      "says": [
+        "is one file in src/lib/platforms/adapters",
+        "implements the Platform contract",
+        "needs one line in the registry"
+      ],
+      "use": "need to add platform 110",
+      "not": [
+        "is added by editing the composer component"
+      ],
+      "like": [
+        "The manualPlatform factory"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "The manualPlatform factory",
+      "tier": 5,
+      "says": [
+        "builds a manual-only channel from a row in adapters/_catalog.ts",
+        "means channels with no write API skip the adapter file"
+      ],
+      "use": "add a platform that has no write API",
+      "not": [
+        "needs a full adapter file"
+      ],
+      "like": [
+        "A platform adapter"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "Vitest in GGSocial",
+      "tier": 2,
+      "says": [
+        "runs with npm test, which is vitest run",
+        "includes files matching tests/**/*.test.ts",
+        "uses a node environment with a 30-second timeout"
+      ],
+      "use": "need to run the test suite",
+      "not": [
+        "runs in a jsdom browser environment"
+      ],
+      "like": [
+        "PGlite in tests"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "PGlite in tests",
+      "tier": 4,
+      "says": [
+        "is an in-memory Postgres built by tests/stubs/test-db.ts",
+        "lets database tests run without a running Postgres",
+        "has the real schema pushed into it through drizzle-kit's API"
+      ],
+      "use": "need to test database code without Docker",
+      "not": [
+        "connects to the production database"
+      ],
+      "like": [
+        "Vitest in GGSocial"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "The deploy test gate",
+      "tier": 3,
+      "says": [
+        "runs the type-check, lint and npm test before the deploy",
+        "stops the deploy when any of them fails"
+      ],
+      "use": "ask what stops a broken change from being deployed",
+      "not": [
+        "is run by the server after the build"
+      ],
+      "like": [
+        "SKIP_TESTS=1"
+      ]
+    },
+    {
+      "group": "tech",
+      "subject": "Storing time in UTC",
+      "tier": 3,
+      "says": [
+        "keeps one unambiguous instant for a post",
+        "is shown in each brand's timezone"
+      ],
+      "use": "have brands in different timezones sharing one scheduler",
+      "not": [
+        "stores the local clock time without a zone"
+      ],
+      "like": [
+        "The scheduled time"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "Everyone logged out at once",
+      "tier": 3,
+      "says": [
+        "is explained by APP_SECRET having changed",
+        "also leaves stored platform tokens undecryptable so channels need reconnecting"
+      ],
+      "use": "get a report that all users and channels broke after a deploy",
+      "not": [
+        "is explained by an expired Let's Encrypt certificate"
+      ],
+      "like": [
+        "A stale tab after a deploy"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A stale tab after a deploy",
+      "tier": 3,
+      "says": [
+        "fails with Failed to find Server Action",
+        "is prevented by the deploymentId, which makes Next reload the page"
+      ],
+      "use": "get a report of an error on the first click after a deploy",
+      "not": [
+        "means the user's role was removed"
+      ],
+      "like": [
+        "Everyone logged out at once"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "Readers seeing a 401 on a short link",
+      "tier": 4,
+      "says": [
+        "means /l/ is behind the basic-auth wall",
+        "is fixed with a Require all granted Location block for /l/ in both vhosts"
+      ],
+      "use": "are told strangers get a password prompt on tracked links",
+      "not": [
+        "is fixed by changing the link's code"
+      ],
+      "like": [
+        "Instagram failing to fetch media"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "Instagram failing to fetch media",
+      "tier": 4,
+      "says": [
+        "points to APP_URL not being reachable from the internet or the media route being behind the wall",
+        "is fixed by letting /api/media/file/ through"
+      ],
+      "use": "get a report that an Instagram post fails at the media step",
+      "not": [
+        "means the Instagram account is personal"
+      ],
+      "like": [
+        "Readers seeing a 401 on a short link"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A viewer who cannot edit",
+      "tier": 2,
+      "says": [
+        "is working as designed because the viewer role is read-only",
+        "is changed by an admin or owner giving a higher role"
+      ],
+      "use": "get a ticket that a team member cannot edit a post",
+      "not": [
+        "is a bug in the composer"
+      ],
+      "like": [
+        "An editor who cannot approve"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "An editor who cannot approve",
+      "tier": 5,
+      "says": [
+        "is working as designed because approving needs the approver role or admin and above",
+        "is changed by giving the person approver or admin"
+      ],
+      "use": "get a ticket that an editor cannot sign off a post",
+      "not": [
+        "is a bug in the editor role"
+      ],
+      "like": [
+        "A viewer who cannot edit"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A post stuck in the publish queue",
+      "tier": 3,
+      "says": [
+        "is waiting for a person to publish by hand on a manual channel",
+        "is cleared by ticking it off after posting"
+      ],
+      "use": "get a ticket that a scheduled post on a manual-only platform has not gone out",
+      "not": [
+        "means the scheduler crashed"
+      ],
+      "like": [
+        "A channel that needs reconnecting"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A run paused for a person",
+      "tier": 3,
+      "says": [
+        "lands in the Review inbox",
+        "is resolved by approving, sending back with a note or stopping the run"
+      ],
+      "use": "get a ticket that an agent's reply never went out",
+      "not": [
+        "is resolved by restarting pm2"
+      ],
+      "like": [
+        "A safety stop"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A site down after a failed build",
+      "tier": 5,
+      "says": [
+        "is checked first by polling /login",
+        "may mean the build failed after rm -rf .next with the wrong Node on the PATH"
+      ],
+      "use": "see the site down right after a failed deploy",
+      "not": [
+        "is fixed by rotating APP_SECRET"
+      ],
+      "like": [
+        "The Node version trap"
+      ]
+    },
+    {
+      "group": "practice",
+      "subject": "A content calendar",
+      "tier": 1,
+      "says": [
+        "plans what is published, where and when",
+        "keeps several channels from posting at cross purposes"
+      ],
+      "use": "need to plan posts across a month",
+      "not": [
+        "replaces the need for any approval"
+      ],
+      "like": [
+        "A content pillar"
+      ]
+    },
+    {
+      "group": "practice",
+      "subject": "A content pillar",
+      "tier": 2,
+      "says": [
+        "is a recurring theme a brand posts about",
+        "keeps ideas on strategy"
+      ],
+      "use": "need a theme to generate ideas around",
+      "not": [
+        "is a single post"
+      ],
+      "like": [
+        "A content calendar"
+      ]
+    },
+    {
+      "group": "practice",
+      "subject": "Brand voice",
+      "tier": 2,
+      "says": [
+        "describes how the brand sounds in writing",
+        "should stay consistent across platforms"
+      ],
+      "use": "write for a brand across several platforms",
+      "not": [
+        "should change completely on every platform"
+      ],
+      "like": [
+        "A content pillar"
+      ]
+    },
+    {
+      "group": "practice",
+      "subject": "Content repurposing",
+      "tier": 3,
+      "says": [
+        "adapts one idea into several formats",
+        "respects each platform's format instead of copying text verbatim"
+      ],
+      "use": "need to get more from one idea",
+      "not": [
+        "means posting the same text everywhere unchanged"
+      ],
+      "like": [
+        "A per-channel override"
+      ]
+    },
+    {
+      "group": "practice",
+      "subject": "An approval gate",
+      "tier": 2,
+      "says": [
+        "puts a second person between a draft and publishing",
+        "reduces the chance of an error or off-brand post going out"
+      ],
+      "use": "want fewer mistakes in published content",
+      "not": [
+        "is unnecessary when the writer is senior"
+      ],
+      "like": [
+        "The approver role"
+      ]
+    },
+    {
+      "group": "practice",
+      "subject": "Community moderation",
+      "tier": 3,
+      "says": [
+        "reviews and responds to comments and messages",
+        "removes or escalates abusive content",
+        "sends sensitive matters to a person"
+      ],
+      "use": "need to handle a hostile comment on a brand post",
+      "not": [
+        "leaves every comment to an automatic reply"
+      ],
+      "like": [
+        "The community manager"
+      ]
+    },
+    {
+      "group": "practice",
+      "subject": "An escalation path",
+      "tier": 4,
+      "says": [
+        "says who must decide when a matter is sensitive",
+        "covers prices, refunds, legal and health matters in this app's safety stops"
+      ],
+      "use": "face a complaint that mentions a refund or legal threat",
+      "not": [
+        "lets any editor reply immediately"
+      ],
+      "like": [
+        "A flagged risk"
+      ]
+    },
+    {
+      "group": "practice",
+      "subject": "UTM parameters",
+      "tier": 3,
+      "says": [
+        "tag a link so analytics can attribute the visit",
+        "identify source, medium and campaign"
+      ],
+      "use": "need to know which post a visit came from",
+      "not": [
+        "change how the link looks on the platform"
+      ],
+      "like": [
+        "A tracked short link"
+      ]
+    },
+    {
+      "group": "practice",
+      "subject": "A posting window",
+      "tier": 3,
+      "says": [
+        "is a time range when a brand's audience is likely to be active",
+        "can be suggested from what performed in the past"
+      ],
+      "use": "choose when to schedule a post",
+      "not": [
+        "is fixed for all brands and platforms"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Reach",
+      "tier": 2,
+      "says": [
+        "counts the unique accounts that saw a post",
+        "is not reported by Bluesky or Mastodon in this app"
+      ],
+      "use": "need how many different people saw a post",
+      "not": [
+        "counts every time a post was shown, repeats included"
+      ],
+      "like": [
+        "Impressions"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Impressions",
+      "tier": 2,
+      "says": [
+        "count every time a post was shown",
+        "can exceed reach because one person may see a post more than once"
+      ],
+      "use": "need total displays of a post",
+      "not": [
+        "count unique accounts"
+      ],
+      "like": [
+        "Reach"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Engagement rate",
+      "tier": 3,
+      "says": [
+        "divides interactions such as likes, comments and shares by an audience measure",
+        "compares posts of different audience sizes"
+      ],
+      "use": "compare a small account's post with a large one",
+      "not": [
+        "is the number of followers"
+      ],
+      "like": [
+        "Click-through rate"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Click-through rate",
+      "tier": 3,
+      "says": [
+        "divides clicks by the number of times a link was shown",
+        "measures how well a post drives traffic"
+      ],
+      "use": "judge how well a link in a post attracts clicks",
+      "not": [
+        "divides likes by followers"
+      ],
+      "like": [
+        "Engagement rate"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Follower growth",
+      "tier": 2,
+      "says": [
+        "is the net change in followers over a period",
+        "is read daily by the goals job in this app"
+      ],
+      "use": "track how an audience changes over time",
+      "not": [
+        "counts the people who saw one post"
+      ],
+      "like": [
+        "Reach"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Response time",
+      "tier": 3,
+      "says": [
+        "is how long a brand takes to answer a comment or message",
+        "is a service measure of community management"
+      ],
+      "use": "judge how quickly the team replies to people",
+      "not": [
+        "is how fast the page loads"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "In GGSocial, what is a brand?",
+      "right": "One company or project with its own channels, media, calendar, team and timezone",
+      "wrong": [
+        "A single account on a single platform",
+        "A saved post template",
+        "A user role"
+      ],
+      "tier": 1,
+      "why": "The README defines a brand as one company or project."
+    },
+    {
+      "q": "How many platforms does GGSocial cover in 11 categories?",
+      "right": "109",
+      "wrong": [
+        "45",
+        "64",
+        "11"
+      ],
+      "tier": 1,
+      "why": "109 platforms: 45 live, 64 manual-only."
+    },
+    {
+      "q": "A platform has no write API for organic content. What does GGSocial do?",
+      "right": "Composes, validates, schedules and queues the post for a person to publish with copy-ready blocks",
+      "wrong": [
+        "Refuses to support it",
+        "Publishes through a hidden browser",
+        "Emails the post to the brand owner"
+      ],
+      "tier": 1,
+      "why": "Manual channels get the same flow and end with a person clicking publish."
+    },
+    {
+      "q": "Which role is read-only?",
+      "right": "Viewer",
+      "wrong": [
+        "Approver",
+        "Editor",
+        "Admin"
+      ],
+      "tier": 1,
+      "why": "The viewer role is read-only."
+    },
+    {
+      "q": "Which database and ORM does GGSocial use?",
+      "right": "Postgres with Drizzle",
+      "wrong": [
+        "MySQL with Prisma",
+        "SQLite with TypeORM",
+        "MongoDB with Mongoose"
+      ],
+      "tier": 1,
+      "why": "The schema is in src/lib/db/schema.ts."
+    },
+    {
+      "q": "A user must write a Reddit post in the composer. What must it have?",
+      "right": "A title and a subreddit",
+      "wrong": [
+        "Only media",
+        "A thread on blank lines",
+        "A character count under 280"
+      ],
+      "tier": 2,
+      "why": "Reddit needs a title and a subreddit."
+    },
+    {
+      "q": "A team wants a person to sign off posts but not change them. Which role?",
+      "right": "Approver",
+      "wrong": [
+        "Viewer",
+        "Editor",
+        "Admin"
+      ],
+      "tier": 2,
+      "why": "Approver is review only and cannot edit."
+    },
+    {
+      "q": "Where does a post for a manual channel appear when it is due?",
+      "right": "In the publish queue with copy buttons, media and steps",
+      "wrong": [
+        "In analytics only",
+        "In the Review inbox as a safety stop",
+        "Nowhere until the scheduler publishes it"
+      ],
+      "tier": 2,
+      "why": "Ticking it off marks it published."
+    },
+    {
+      "q": "Which agent reads yesterday's posts each morning?",
+      "right": "The performance analyst",
+      "wrong": [
+        "The content writer",
+        "The community manager",
+        "The content strategist"
+      ],
+      "tier": 2,
+      "why": "It also writes weekly and monthly reports."
+    },
+    {
+      "q": "How are passwords stored?",
+      "right": "Hashed with bcrypt at cost 12",
+      "wrong": [
+        "Encrypted reversibly with APP_SECRET",
+        "Hashed with MD5",
+        "Stored in plain text"
+      ],
+      "tier": 2,
+      "why": "bcryptjs at cost 12."
+    },
+    {
+      "q": "What is the session cookie called, and what does it hold?",
+      "right": "ggs_session, a signed JWT",
+      "wrong": [
+        "session_id, a database row id",
+        "token, an API key",
+        "ggs_cookie, a base64 email"
+      ],
+      "tier": 3,
+      "why": "HS256 via jose, httpOnly, SameSite lax, 30 days."
+    },
+    {
+      "q": "What is the lowest role that may edit and publish?",
+      "right": "Editor",
+      "wrong": [
+        "Approver",
+        "Viewer",
+        "Admin"
+      ],
+      "tier": 3,
+      "why": "Editing and publishing need editor or above."
+    },
+    {
+      "q": "An owner turns off review for the community manager's reply step. A draft reply mentions a refund. What happens?",
+      "right": "The run still pauses, because a flagged risk is a safety stop whatever the setting",
+      "wrong": [
+        "It publishes because review is off",
+        "It is deleted",
+        "It is sent to the viewer role"
+      ],
+      "tier": 3,
+      "why": "Safety stops override the review setting."
+    },
+    {
+      "q": "Which of these is a post status but NOT a target status?",
+      "right": "changes_requested",
+      "wrong": [
+        "pending",
+        "awaiting_manual",
+        "skipped"
+      ],
+      "tier": 3,
+      "why": "Targets have pending, scheduled, publishing, awaiting_manual, published, failed and skipped."
+    },
+    {
+      "q": "Your team needs the app to stop searching outside signals when the strategist plans ideas. What do you set?",
+      "code": "RESEARCH_SIGNALS=off",
+      "right": "RESEARCH_SIGNALS=off",
+      "wrong": [
+        "ANTHROPIC_API_KEY=off",
+        "MEDIA_DRIVER=local",
+        "CRON_SECRET= (empty)"
+      ],
+      "tier": 3,
+      "why": "By default it searches Hacker News for the last 30 days."
+    },
+    {
+      "q": "The scheduler is not running in development. Scheduled posts never go out. What command do you run in a second terminal?",
+      "code": "npm run scheduler",
+      "right": "npm run scheduler",
+      "wrong": [
+        "npm run seed",
+        "npm run db:push",
+        "npm run deploy"
+      ],
+      "tier": 3,
+      "why": "Scheduled posts are dispatched by a scheduler tick, not the web request."
+    },
+    {
+      "q": "A new setup needs uploads that survive on Vercel. Which setting?",
+      "right": "MEDIA_DRIVER=s3",
+      "wrong": [
+        "MEDIA_DRIVER=local",
+        "APP_URL=localhost",
+        "CRON_SECRET=s3"
+      ],
+      "tier": 3,
+      "why": "Serverless filesystems are wiped between invocations."
+    },
+    {
+      "q": "Which header carries the agent API token?",
+      "right": "X-Agent-Token",
+      "wrong": [
+        "Authorization",
+        "X-Api-Key",
+        "Cookie"
+      ],
+      "tier": 3,
+      "why": "Basic auth already occupies the Authorization header."
+    },
+    {
+      "q": "Why does a server action re-check the role even though the UI hides the button?",
+      "right": "Hiding a button is not the security boundary",
+      "wrong": [
+        "Sessions expire every minute",
+        "The database is slow",
+        "Roles change hourly"
+      ],
+      "tier": 4,
+      "why": "The check is on the server."
+    },
+    {
+      "q": "An editor on Brand A calls the add-team-member action directly. What happens?",
+      "right": "It is refused because managing the team needs admin or above",
+      "wrong": [
+        "It succeeds because editors can write",
+        "It succeeds but is logged",
+        "It is queued for approval"
+      ],
+      "tier": 4,
+      "why": "requireBrandRole throws when the role is too low."
+    },
+    {
+      "q": "A user says an editor cannot approve their own post. What is the correct reading of the code?",
+      "right": "Approving needs approver or admin and above, so an editor cannot approve",
+      "wrong": [
+        "Any role at or above editor can approve",
+        "Only owners can approve",
+        "Approval needs super admin"
+      ],
+      "tier": 4,
+      "why": "Editor is not in the approval rule."
+    },
+    {
+      "q": "Which of these is NOT a safety stop?",
+      "right": "The post uses an emoji",
+      "wrong": [
+        "The daily AI budget is spent",
+        "A step keeps failing",
+        "The reviewer cannot run"
+      ],
+      "tier": 4,
+      "why": "Emojis are not a safety stop."
+    },
+    {
+      "q": "What does the reviewer do with weak but safe work?",
+      "right": "Sends it back to the agent once with fixes before asking a person",
+      "wrong": [
+        "Deletes it",
+        "Publishes it anyway",
+        "Asks a person at once"
+      ],
+      "tier": 4,
+      "why": "Only then is a person asked."
+    },
+    {
+      "q": "What does a changed APP_SECRET do?",
+      "right": "Logs everyone out and makes stored platform tokens undecryptable",
+      "wrong": [
+        "Only logs out admins",
+        "Changes the database password",
+        "Nothing until restart"
+      ],
+      "tier": 4,
+      "why": "Channels would need reconnecting."
+    },
+    {
+      "q": "Why must APP_URL be reachable from the internet in production?",
+      "right": "Platform APIs fetch media from it",
+      "wrong": [
+        "Users sign in through it",
+        "Stripe needs it",
+        "Postgres connects to it"
+      ],
+      "tier": 4,
+      "why": "Instagram, Facebook, Pinterest and TikTok fetch media with no credentials."
+    },
+    {
+      "q": "How do you add a manual-only platform with no write API?",
+      "right": "Add a row to adapters/_catalog.ts and let manualPlatform() build the rest",
+      "wrong": [
+        "Write a full adapter and registry line",
+        "Change the composer component",
+        "Add a new database table"
+      ],
+      "tier": 4,
+      "why": "Platforms with a write API need an adapter file plus one registry line."
+    },
+    {
+      "q": "What does a normal npm run deploy do on your machine before it syncs?",
+      "right": "Type-checks, lints and runs the tests; a failure in any stops the deploy",
+      "wrong": [
+        "Backs up the database",
+        "Runs drizzle-kit push",
+        "Builds into .next-new"
+      ],
+      "tier": 4,
+      "why": "SKIP_TESTS=1 skips all three, for an emergency only."
+    },
+    {
+      "q": "How do database tests run without Docker?",
+      "right": "An in-memory PGlite database with the real schema pushed in",
+      "wrong": [
+        "They connect to the production database",
+        "They mock every query by hand",
+        "They run SQLite"
+      ],
+      "tier": 4,
+      "why": "tests/stubs/test-db.ts builds it."
+    },
+    {
+      "q": "A Mastodon channel posts fine but replies never arrive in Engagement. Most likely cause?",
+      "right": "The token lacks the read:notifications and read:statuses scopes",
+      "wrong": [
+        "APP_SECRET is too short",
+        "The channel is manual",
+        "The brand has no timezone"
+      ],
+      "tier": 4,
+      "why": "Older tokens must be created again with the scopes."
+    },
+    {
+      "q": "Which pm2 process ticks /api/cron/publish?",
+      "right": "ggsocial-scheduler, every 60 seconds",
+      "wrong": [
+        "ggsocial-web, every 5 minutes",
+        "ggsocial-pg, hourly",
+        "Apache, every 10 seconds"
+      ],
+      "tier": 4,
+      "why": "It also calls the agents endpoint every 5 minutes."
+    },
+    {
+      "q": "A deploy shows one `tick failed: fetch failed` in the scheduler log. What does it mean?",
+      "right": "It is expected during the restart window; repeated ones are not",
+      "wrong": [
+        "The database is corrupted",
+        "The build failed",
+        "The vhost is wrong"
+      ],
+      "tier": 5,
+      "why": "The scheduler fetches while the web process restarts."
+    },
+    {
+      "q": "A user reports Failed to find Server Action after your deploy. What is the cause?",
+      "right": "A tab left open on the old build calls an id the new build lacks",
+      "wrong": [
+        "The role was removed",
+        "APP_SECRET changed",
+        "The schema push failed"
+      ],
+      "tier": 5,
+      "why": "deploymentId makes Next reload when ids differ."
+    },
+    {
+      "q": "After a failed build, a retry replays the same error. What avoids it?",
+      "right": "Build into a fresh .next-new each time",
+      "wrong": [
+        "Run npm ci twice",
+        "Restart Apache",
+        "Delete the database"
+      ],
+      "tier": 5,
+      "why": "Turbopack caches the failure."
+    },
+    {
+      "q": "The deploy script ran rsync with --delete and the site lost all logins. What was missing?",
+      "right": "--exclude .env",
+      "wrong": [
+        "--exclude .next",
+        "--exclude node_modules",
+        "--ignore-times"
+      ],
+      "tier": 5,
+      "why": ".env is not in the repo, so rsync deletes it."
+    },
+    {
+      "q": "Editing sites-available/ggsocial.gglink.co.uk-le-ssl.conf passed configtest and reloaded but changed nothing. Why?",
+      "right": "The live :443 vhost is a regular file in sites-enabled, not a symlink",
+      "wrong": [
+        "Apache caches vhosts for 24 hours",
+        "Let's Encrypt overrides it",
+        "pm2 restarts Apache"
+      ],
+      "tier": 5,
+      "why": "Check with apachectl -S."
+    },
+    {
+      "q": "The build fails with Node.js version >=20.9.0 is required. What is the usual cause in this deploy?",
+      "right": "bash -lc sources nvm and puts Node 18 first",
+      "wrong": [
+        "pm2 is running Node 20",
+        "Tailwind needs Node 18",
+        "Apache overrides Node"
+      ],
+      "tier": 5,
+      "why": "Put /usr/bin first on the PATH."
+    },
+    {
+      "q": "The build dies with Cannot find module './tailwindcss-oxide.linux-x64-gnu.node'. What do you do?",
+      "right": "Install @tailwindcss/oxide-linux-x64-gnu with --no-save at the installed oxide version",
+      "wrong": [
+        "Commit the Linux binary",
+        "Run next dev on the server",
+        "Remove Tailwind"
+      ],
+      "tier": 5,
+      "why": "The macOS lockfile omits the optional dependency."
+    },
+    {
+      "q": "A drizzle-kit push stops with a prompt. Why not use --force?",
+      "right": "It would auto-approve a drop if the live schema drifted",
+      "wrong": [
+        "It is slower",
+        "It skips the backup",
+        "It breaks Tailwind"
+      ],
+      "tier": 5,
+      "why": "Run with < /dev/null so it fails fast."
+    },
+    {
+      "q": "Which of these keeps the old build serving while the new one builds?",
+      "right": "Building into .next-new and swapping it in",
+      "wrong": [
+        "Running next dev",
+        "Restarting pm2 first",
+        "Deleting .next before building"
+      ],
+      "tier": 5,
+      "why": "Only the restart is a gap."
+    },
+    {
+      "q": "The agent API is behind the basic-auth wall. What is the correct fix?",
+      "right": "Add a Require all granted Location /api/agent/ block, since each route rejects bad tokens itself",
+      "wrong": [
+        "Remove basic auth",
+        "Send tokens in Authorization",
+        "Make the token public"
+      ],
+      "tier": 5,
+      "why": "Both vhosts need it."
+    },
+    {
+      "q": "A community manager's reply is about a legal threat. What happens even if review is off?",
+      "right": "It pauses in the Review inbox as a flagged risk",
+      "wrong": [
+        "It is sent automatically",
+        "It is deleted",
+        "It is posted as a draft"
+      ],
+      "tier": 5,
+      "why": "Legal matters are flagged risks."
+    },
+    {
+      "q": "A post to YouTube has the title but the upload shows private. What is the likely reason?",
+      "right": "The Google project is not yet verified",
+      "wrong": [
+        "The channel is manual",
+        "APP_URL is wrong",
+        "The role is viewer"
+      ],
+      "tier": 5,
+      "why": "Until verification, uploads are private and only test users connect."
+    },
+    {
+      "q": "Your Instagram post fails at the media step in production. What do you check first?",
+      "right": "APP_URL reachable from the internet and /api/media/file/ let past the wall",
+      "wrong": [
+        "The database size",
+        "The viewer role",
+        "Node version"
+      ],
+      "tier": 3,
+      "why": "Instagram fetches media from APP_URL without credentials."
+    },
+    {
+      "q": "A user wants to know which table gives them a role per brand.",
+      "right": "memberships",
+      "wrong": [
+        "users",
+        "channels",
+        "invites"
+      ],
+      "tier": 3,
+      "why": "One row per user and brand with a unique index."
+    },
+    {
+      "q": "A scheduled post to Medium has not gone out. Where is it?",
+      "right": "In the publish queue, waiting for a person to post it",
+      "wrong": [
+        "Failed in the scheduler",
+        "In the Review inbox",
+        "Archived"
+      ],
+      "tier": 3,
+      "why": "Medium is manual-only."
+    },
+    {
+      "q": "What does Bluesky use to connect?",
+      "right": "An app password",
+      "wrong": [
+        "OAuth consent",
+        "A webhook URL",
+        "A bot token"
+      ],
+      "tier": 2,
+      "why": "Mastodon uses an application token."
+    },
+    {
+      "q": "A reader sees a 401 on a /l/ short link. What is the fix?",
+      "right": "Add a Require all granted Location /l/ to both vhosts and reload Apache",
+      "wrong": [
+        "Change the link code",
+        "Re-run db:push",
+        "Switch media to S3"
+      ],
+      "tier": 3,
+      "why": "Short links must pass the basic-auth wall."
+    },
+    {
+      "q": "A brand owner wants agents to stop pausing for review on one step. What is required?",
+      "right": "The owner switches that step's review off with a reason that is kept in the log",
+      "wrong": [
+        "Any editor flips the switch",
+        "A super admin edits the database",
+        "Nothing; review is off by default"
+      ],
+      "tier": 4,
+      "why": "Review is on for every step until the owner switches it off."
+    },
+    {
+      "q": "A brand wants a social post to read well across platforms. What is a good practice?",
+      "right": "Adapt the idea to each platform's format instead of pasting the same text",
+      "wrong": [
+        "Paste identical text everywhere",
+        "Use every hashtag possible",
+        "Always add a link"
+      ],
+      "tier": 3,
+      "why": "Repurposing respects each platform."
+    },
+    {
+      "q": "A client asks how many unique people saw a post. Which metric?",
+      "right": "Reach",
+      "wrong": [
+        "Impressions",
+        "Click-through rate",
+        "Follower growth"
+      ],
+      "tier": 3,
+      "why": "Impressions count repeats."
+    },
+    {
+      "q": "A comment from an angry customer arrives. What is the right handling?",
+      "right": "Draft a reply but route it to a person to decide if it is a sensitive matter",
+      "wrong": [
+        "Delete it",
+        "Ignore it",
+        "Auto-send a generic apology"
+      ],
+      "tier": 4,
+      "why": "Complaints and apologies are flagged risks here."
+    },
+    {
+      "q": "A support ticket says an approver 'can't fix a typo'. What do you tell them?",
+      "right": "The approver role is review only; send the post back with a change request so an editor fixes it",
+      "wrong": [
+        "Give the approver the owner role",
+        "Edit the database",
+        "Disable the role check"
+      ],
+      "tier": 5,
+      "why": "Separation of duties."
+    },
+    {
+      "q": "An admin asks what to do after changing the schema in code. Which order is right at deploy?",
+      "right": "Push the schema before restarting, or the new build will query columns that do not exist",
+      "wrong": [
+        "Restart first, then push",
+        "Skip the push",
+        "Push after the health check"
+      ],
+      "tier": 3,
+      "why": "drizzle-kit push comes before the restart."
+    },
+    {
+      "q": "Someone wants to edit src/gg-ui/ in ggsocial to change a badge. What do you advise?",
+      "right": "Change it in GGLeads (packages/ui) and copy it across with node scripts/sync-ui.mjs",
+      "wrong": [
+        "Edit it here and commit",
+        "Fork the kit",
+        "Delete src/gg-ui"
+      ],
+      "tier": 5,
+      "why": "A --check run fails if the copy was edited."
+    }
+  ]
+}

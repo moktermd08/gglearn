@@ -1,0 +1,2752 @@
+{
+ "slug": "tools-plan-design",
+ "name": "Tools: plan and design",
+ "description": "Roadmaps, research, docs, wikis, diagrams, prototyping.",
+ "roles": "",
+ "kind": "tool",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "groups": {
+  "pm": "roadmap and product concept",
+  "res": "user research method",
+  "fb": "feedback practice",
+  "doc": "documentation practice",
+  "note": "note-taking practice",
+  "diag": "diagram type",
+  "wb": "whiteboard practice",
+  "des": "design tool concept",
+  "proto": "prototyping concept",
+  "hand": "handoff practice",
+  "pres": "presentation practice",
+  "trk": "issue tracker concept",
+  "vh": "collaboration and version history feature",
+  "nm": "naming and organisation practice",
+  "a11y": "accessibility check",
+  "moksycat": "Moksy catalogue term",
+  "moksyplan": "Moksy planning fact"
+ },
+ "cards": [
+  {
+   "group": "pm",
+   "subject": "A product roadmap",
+   "tier": 1,
+   "says": [
+    "communicates the direction and priorities of a product over time",
+    "is a plan that is expected to change as the team learns",
+    "is read mostly by stakeholders who do not edit it"
+   ],
+   "use": "need to show stakeholders where the product is heading",
+   "not": [
+    "is a binding contract of delivery dates"
+   ],
+   "like": [
+    "A now-next-later roadmap",
+    "An outcome-based roadmap",
+    "A roadmap item in Moksy"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A backlog",
+   "tier": 1,
+   "says": [
+    "holds the ordered list of work not yet done",
+    "is reordered as priorities change",
+    "is detailed at the top and rough at the bottom"
+   ],
+   "use": "need one ordered list of what to build after the current work",
+   "not": [
+    "must be fully specified before any item can be started"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A now-next-later roadmap",
+   "tier": 2,
+   "says": [
+    "groups work by how soon it will be tackled rather than by calendar date",
+    "avoids promising dates for items further away",
+    "has three columns that signal certainty falling with distance"
+   ],
+   "use": "want to show direction without committing to dates",
+   "not": [
+    "attaches an exact release date to every card"
+   ],
+   "like": [
+    "A product roadmap",
+    "An outcome-based roadmap"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "MoSCoW prioritisation",
+   "tier": 2,
+   "says": [
+    "sorts requirements into must, should, could and will-not-have-this-time",
+    "makes explicit what is out of scope for now"
+   ],
+   "use": "need to agree the minimum set of requirements for a release",
+   "not": [
+    "gives every requirement a numeric score"
+   ],
+   "like": [
+    "RICE scoring",
+    "An impact-effort matrix"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "An impact-effort matrix",
+   "tier": 2,
+   "says": [
+    "plots ideas on a grid of expected value against cost to deliver",
+    "highlights quick wins in the high-value, low-effort corner"
+   ],
+   "use": "want a fast visual way to compare ideas in a workshop",
+   "not": [
+    "calculates a score from reach and confidence"
+   ],
+   "like": [
+    "RICE scoring",
+    "MoSCoW prioritisation"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "RICE scoring",
+   "tier": 3,
+   "says": [
+    "scores an idea on reach, impact, confidence and effort",
+    "divides the estimated benefit by the effort",
+    "discounts ideas whose benefit is a guess by using a confidence factor"
+   ],
+   "use": "need to compare many ideas with a repeatable formula",
+   "not": [
+    "sorts items into must-have and nice-to-have buckets"
+   ],
+   "like": [
+    "MoSCoW prioritisation",
+    "An impact-effort matrix"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "An outcome-based roadmap",
+   "tier": 3,
+   "says": [
+    "lists the problems to solve or results to achieve rather than the features to ship",
+    "leaves the solution open for the team to discover"
+   ],
+   "use": "want the team to own a problem instead of a fixed feature list",
+   "not": [
+    "is just a feature list with a different title"
+   ],
+   "like": [
+    "A product roadmap",
+    "A now-next-later roadmap"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "The Kano model",
+   "tier": 5,
+   "says": [
+    "classifies features as basic expectations, performance features or delighters",
+    "predicts that a delighter tends to become an expectation over time"
+   ],
+   "use": "need to judge which features customers merely expect and which would delight them",
+   "not": [
+    "scores features by reach and effort"
+   ],
+   "like": [
+    "RICE scoring"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "An opportunity solution tree",
+   "tier": 5,
+   "says": [
+    "maps a desired outcome to customer opportunities, then to solutions and experiments",
+    "keeps the link between evidence and the idea being tested visible"
+   ],
+   "use": "want to show how an idea traces back to a customer need",
+   "not": [
+    "lists releases in date order"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A user interview",
+   "tier": 1,
+   "says": [
+    "asks one person open questions about their behaviour and context",
+    "yields rich qualitative detail from a small number of people"
+   ],
+   "use": "need to learn why people do something",
+   "not": [
+    "measures how common a behaviour is across the whole user base"
+   ],
+   "like": [
+    "A survey",
+    "Contextual inquiry",
+    "A diary study"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A survey",
+   "tier": 1,
+   "says": [
+    "collects answers to fixed questions from many people",
+    "gives numbers but little explanation of why"
+   ],
+   "use": "need to measure how common an opinion or behaviour is",
+   "not": [
+    "reveals the unspoken reasons behind a behaviour"
+   ],
+   "like": [
+    "A user interview"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A persona",
+   "tier": 3,
+   "says": [
+    "summarises a segment of users as a representative profile",
+    "is only as trustworthy as the research it is built from"
+   ],
+   "use": "want the team to keep a specific kind of user in mind while designing",
+   "not": [
+    "is a real customer whose details are shared with the whole team"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Usability testing",
+   "tier": 3,
+   "says": [
+    "watches people attempt realistic tasks with a design",
+    "reveals where users get stuck or confused"
+   ],
+   "use": "need to know whether people can complete a task",
+   "not": [
+    "measures how many people would buy the product"
+   ],
+   "like": [
+    "A user interview",
+    "An A/B test"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A card sort",
+   "tier": 3,
+   "says": [
+    "asks people to group topics into categories that feel natural to them",
+    "informs the labels and grouping of navigation"
+   ],
+   "use": "need to decide how to group and name navigation items",
+   "not": [
+    "checks whether people can find an item in a finished hierarchy"
+   ],
+   "like": [
+    "A tree test"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A tree test",
+   "tier": 3,
+   "says": [
+    "checks whether people can find items in a proposed hierarchy without any visual design",
+    "measures how findable content is under a given structure"
+   ],
+   "use": "need to validate a navigation structure before designing screens",
+   "not": [
+    "asks people to invent their own categories"
+   ],
+   "like": [
+    "A card sort"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "An A/B test",
+   "tier": 3,
+   "says": [
+    "compares two variants by showing them to separate random groups of users",
+    "needs enough traffic to reach a reliable conclusion"
+   ],
+   "use": "want quantitative evidence about which variant performs better",
+   "not": [
+    "explains why users prefer one variant"
+   ],
+   "like": [
+    "Usability testing"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A diary study",
+   "tier": 4,
+   "says": [
+    "has participants record their own experiences over days or weeks",
+    "captures behaviour that cannot be observed in one session"
+   ],
+   "use": "need to understand behaviour that unfolds over a long period",
+   "not": [
+    "observes the participant in the room as they work"
+   ],
+   "like": [
+    "Contextual inquiry"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Contextual inquiry",
+   "tier": 4,
+   "says": [
+    "observes people doing their real work in their own setting",
+    "uncovers workarounds that people forget to mention in an interview"
+   ],
+   "use": "need to see how a task is really done rather than how people describe it",
+   "not": [
+    "asks participants to complete a fixed script of tasks in a lab"
+   ],
+   "like": [
+    "A user interview",
+    "A diary study"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A feedback inbox",
+   "tier": 1,
+   "says": [
+    "gathers requests from many channels into one place",
+    "stops feedback from being lost in individual email threads"
+   ],
+   "use": "want everyone's customer comments to land in one list",
+   "not": [
+    "decides which requests will be built"
+   ],
+   "like": [
+    "Interview notes and feedback in Moksy"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "Feedback tagging",
+   "tier": 2,
+   "says": [
+    "lets you count how often a theme appears",
+    "works best with a small agreed vocabulary of tags"
+   ],
+   "use": "need to see which problems come up most often",
+   "not": [
+    "replaces reading the original comments"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A support ticket as feedback",
+   "tier": 2,
+   "says": [
+    "records a problem in the customer's own words",
+    "over-represents people who ran into trouble"
+   ],
+   "use": "want evidence of what is going wrong for customers today",
+   "not": [
+    "represents the opinions of customers who are satisfied and silent"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "A voting board",
+   "tier": 4,
+   "says": [
+    "lets users upvote requests made by others",
+    "shows how many people want something but not why"
+   ],
+   "use": "want a rough public signal of demand for requests",
+   "not": [
+    "explains the underlying need behind each request"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "Closing the loop",
+   "tier": 4,
+   "says": [
+    "tells people who gave feedback what was decided and why",
+    "encourages them to keep sharing feedback"
+   ],
+   "use": "want contributors to see their input led somewhere",
+   "not": [
+    "is only needed for requests that get built"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "Anonymising participants",
+   "tier": 3,
+   "says": [
+    "removes names and identifying details from research notes",
+    "lets findings be shared more widely with less privacy risk"
+   ],
+   "use": "need to share interview notes beyond the research team",
+   "not": [
+    "makes it unnecessary to ask for consent"
+   ],
+   "like": [
+    "Recording retention"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "Separating a request from the need",
+   "tier": 4,
+   "says": [
+    "asks what the customer is trying to achieve behind the solution they suggested",
+    "opens up options better than the one proposed"
+   ],
+   "use": "hear a customer ask for a specific feature",
+   "not": [
+    "means ignoring suggestions customers make"
+   ]
+  },
+  {
+   "group": "fb",
+   "subject": "Recording retention",
+   "tier": 3,
+   "says": [
+    "limits how long raw recordings are kept",
+    "supports deleting a participant's data on request"
+   ],
+   "use": "need a rule for how long to keep interview recordings",
+   "not": [
+    "applies only to published reports"
+   ],
+   "like": [
+    "Anonymising participants"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A README",
+   "tier": 1,
+   "says": [
+    "explains what a project is and how to start using it",
+    "sits at the top of a repository where newcomers look first"
+   ],
+   "use": "want a newcomer to get started without asking anyone",
+   "not": [
+    "is the full design history of the project"
+   ],
+   "like": [
+    "The ggsocial DEPLOY.md",
+    "The gglearn docs folder and README"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A wiki",
+   "tier": 1,
+   "says": [
+    "is a set of linked pages that many people can edit",
+    "suits material that changes often and is written by non-developers"
+   ],
+   "use": "need a shared place for meeting notes, onboarding and plans",
+   "not": [
+    "is the best home for text that must stay true alongside code"
+   ],
+   "like": [
+    "Docs as code"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A decision log",
+   "tier": 2,
+   "says": [
+    "records what was decided, when and why",
+    "saves the team from reopening settled questions"
+   ],
+   "use": "want a running list of the choices a team has made",
+   "not": [
+    "describes the steps to handle an incident"
+   ],
+   "like": [
+    "An architecture decision record"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A page owner",
+   "tier": 2,
+   "says": [
+    "is one named person responsible for a page staying correct",
+    "gives readers someone to ask about the content"
+   ],
+   "use": "find that nobody updates a shared page",
+   "not": [
+    "means only that person may ever edit the page"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A last-reviewed date",
+   "tier": 2,
+   "says": [
+    "tells the reader how fresh a page is",
+    "helps readers judge whether to trust the content"
+   ],
+   "use": "want readers to judge if a page is still current",
+   "not": [
+    "proves that the content is correct"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "Docs as code",
+   "tier": 3,
+   "says": [
+    "keeps documentation in version control and reviews it with the code",
+    "lets one pull request change both a feature and its docs"
+   ],
+   "use": "need documentation that must stay true alongside code",
+   "not": [
+    "moves all documentation out of the repository into a wiki"
+   ],
+   "like": [
+    "A wiki"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "An architecture decision record",
+   "tier": 4,
+   "says": [
+    "captures one decision with its context, the options considered and the consequences",
+    "is kept as a short dated file in the repository"
+   ],
+   "use": "want to preserve the reasoning behind a technical choice for future developers",
+   "not": [
+    "is updated in place whenever the decision changes without keeping history"
+   ],
+   "like": [
+    "A decision log"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A runbook",
+   "tier": 3,
+   "says": [
+    "lists the steps to handle a known operational task or incident",
+    "is written to be followed under pressure"
+   ],
+   "use": "want an on-call person to handle a known failure without guessing",
+   "not": [
+    "explains the product vision to new staff"
+   ],
+   "like": [
+    "The ggsocial DEPLOY.md"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "The four kinds of documentation",
+   "tier": 5,
+   "says": [
+    "separates tutorials, how-to guides, reference and explanation",
+    "gives each type of reader need its own kind of page"
+   ],
+   "use": "find that one page tries to teach, instruct and describe at once",
+   "not": [
+    "says every page should contain all four in equal parts"
+   ]
+  },
+  {
+   "group": "note",
+   "subject": "A meeting note",
+   "tier": 1,
+   "says": [
+    "records decisions, owners and next steps rather than a transcript",
+    "is useful to people who did not attend"
+   ],
+   "use": "want absent colleagues to catch up on what was agreed",
+   "not": [
+    "is a word-for-word transcript of the discussion"
+   ]
+  },
+  {
+   "group": "note",
+   "subject": "An action item",
+   "tier": 1,
+   "says": [
+    "names one owner and a due date for a task agreed in a meeting",
+    "is checked at the start of the next meeting"
+   ],
+   "use": "agree a task in a meeting",
+   "not": [
+    "is complete once it has been discussed"
+   ]
+  },
+  {
+   "group": "note",
+   "subject": "A folder",
+   "tier": 2,
+   "says": [
+    "puts each note in exactly one place",
+    "expresses a single hierarchy of categories"
+   ],
+   "use": "want a simple structure where every note has one home",
+   "not": [
+    "lets one note appear under several categories at once"
+   ],
+   "like": [
+    "A tag"
+   ]
+  },
+  {
+   "group": "note",
+   "subject": "A tag",
+   "tier": 2,
+   "says": [
+    "lets one note belong to several categories at once",
+    "can be searched across all folders"
+   ],
+   "use": "want one note to be findable under more than one topic",
+   "not": [
+    "moves the note to a different location"
+   ],
+   "like": [
+    "A folder"
+   ]
+  },
+  {
+   "group": "note",
+   "subject": "Backlinks",
+   "tier": 4,
+   "says": [
+    "show every note that links to the one being read",
+    "reveal connections without a manual index"
+   ],
+   "use": "want to see which notes refer to the page you are viewing",
+   "not": [
+    "are links that point to external websites"
+   ]
+  },
+  {
+   "group": "note",
+   "subject": "A permanent note",
+   "tier": 5,
+   "says": [
+    "states one idea in the writer's own words and links to related notes",
+    "grows a personal knowledge base over time"
+   ],
+   "use": "want notes that remain useful long after the source is forgotten",
+   "not": [
+    "copies a quotation from a source unchanged"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "A flowchart",
+   "tier": 1,
+   "says": [
+    "shows steps and decisions in a process using arrows between shapes",
+    "uses a diamond for a yes-or-no decision"
+   ],
+   "use": "need to show the steps of a process and where it branches",
+   "not": [
+    "shows messages between systems in time order"
+   ],
+   "like": [
+    "A swimlane diagram",
+    "A sequence diagram",
+    "A user flow"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "A user flow",
+   "tier": 2,
+   "says": [
+    "shows the path a person takes through a product to reach a goal",
+    "lays out screens and the choices that lead between them"
+   ],
+   "use": "want to plan how a user gets from sign-up to first success",
+   "not": [
+    "describes how servers communicate"
+   ],
+   "like": [
+    "A flowchart",
+    "A flowchart"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "A swimlane diagram",
+   "tier": 2,
+   "says": [
+    "assigns each step to the person or team responsible using parallel lanes",
+    "exposes handoffs between teams"
+   ],
+   "use": "need to show who is responsible for each step of a process",
+   "not": [
+    "shows the states of a single object"
+   ],
+   "like": [
+    "A flowchart"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "An architecture diagram",
+   "tier": 2,
+   "says": [
+    "shows the components of a system and the connections between them",
+    "helps newcomers see what talks to what"
+   ],
+   "use": "want to explain the main parts of a system to a new developer",
+   "not": [
+    "lists every field in a database table"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "A system context diagram",
+   "tier": 4,
+   "says": [
+    "shows the system as one box surrounded by its users and external systems",
+    "leaves out the internal structure"
+   ],
+   "use": "need to show the boundary of a system and what it interacts with",
+   "not": [
+    "shows the classes inside one component"
+   ],
+   "like": [
+    "The C4 model"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "A sequence diagram",
+   "tier": 3,
+   "says": [
+    "shows messages between participants in time order along vertical lifelines",
+    "makes the order of calls in an interaction clear"
+   ],
+   "use": "need to show who calls whom and in what order",
+   "not": [
+    "shows the shape of the stored data"
+   ],
+   "like": [
+    "A flowchart"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "An entity-relationship diagram",
+   "tier": 3,
+   "says": [
+    "shows data entities and the relationships between them",
+    "indicates how many of one entity can relate to another"
+   ],
+   "use": "need to design or explain a database structure",
+   "not": [
+    "shows the order of API calls over time"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "A state diagram",
+   "tier": 5,
+   "says": [
+    "shows the states an object can be in and the transitions between them",
+    "makes illegal transitions easy to spot"
+   ],
+   "use": "need to specify how an order or account moves through its lifecycle",
+   "not": [
+    "assigns steps to teams in lanes"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "The C4 model",
+   "tier": 5,
+   "says": [
+    "describes software at four zoom levels: context, containers, components and code",
+    "lets each audience pick the level of detail they need"
+   ],
+   "use": "want diagrams at several levels of zoom for different readers",
+   "not": [
+    "is a notation for drawing database tables"
+   ],
+   "like": [
+    "A system context diagram"
+   ]
+  },
+  {
+   "group": "diag",
+   "subject": "Diagram as code",
+   "tier": 5,
+   "says": [
+    "describes a diagram in text that a tool renders",
+    "lets a diagram be versioned and diffed like source code"
+   ],
+   "use": "want diagram changes to be reviewed in a pull request",
+   "not": [
+    "makes the diagram impossible to edit without special software"
+   ]
+  },
+  {
+   "group": "wb",
+   "subject": "A whiteboard",
+   "tier": 1,
+   "says": [
+    "offers an unbounded shared canvas for informal sketching",
+    "is for exploring rather than for the final record"
+   ],
+   "use": "want a place to sketch ideas with others",
+   "not": [
+    "is the best long-term home for decisions"
+   ]
+  },
+  {
+   "group": "wb",
+   "subject": "Dot voting",
+   "tier": 2,
+   "says": [
+    "gives each participant a few votes to place on options",
+    "surfaces group preference quickly"
+   ],
+   "use": "need to narrow many ideas down in a workshop",
+   "not": [
+    "gives the facilitator the deciding vote"
+   ]
+  },
+  {
+   "group": "wb",
+   "subject": "A facilitator",
+   "tier": 2,
+   "says": [
+    "keeps a session on topic and balanced between voices",
+    "does not need to be the most senior person"
+   ],
+   "use": "find that a workshop is dominated by one or two voices",
+   "not": [
+    "decides the outcome of the workshop alone"
+   ]
+  },
+  {
+   "group": "wb",
+   "subject": "Silent brainstorming",
+   "tier": 4,
+   "says": [
+    "has people write ideas alone before discussing them",
+    "reduces anchoring on the first idea spoken aloud"
+   ],
+   "use": "want ideas from quieter people before the discussion starts",
+   "not": [
+    "lets the loudest person speak first to set direction"
+   ]
+  },
+  {
+   "group": "wb",
+   "subject": "A retrospective board",
+   "tier": 3,
+   "says": [
+    "collects what went well, what did not and what to change",
+    "ends with agreed actions for the next iteration"
+   ],
+   "use": "want a team to reflect on how it worked together",
+   "not": [
+    "plans the content of the next release"
+   ]
+  },
+  {
+   "group": "wb",
+   "subject": "Capturing board outcomes",
+   "tier": 3,
+   "says": [
+    "moves decisions and actions from the board into a lasting document",
+    "prevents conclusions disappearing when the board is cleared"
+   ],
+   "use": "finish a workshop and want the results to last",
+   "not": [
+    "means exporting a screenshot and deleting everything else"
+   ]
+  },
+  {
+   "group": "des",
+   "subject": "A frame",
+   "tier": 1,
+   "says": [
+    "is a container that represents a screen or section and holds other layers",
+    "can clip content that extends beyond its edge"
+   ],
+   "use": "want a container for a screen or a section of one",
+   "not": [
+    "is a single image that cannot contain other layers"
+   ]
+  },
+  {
+   "group": "des",
+   "subject": "A vector graphic",
+   "tier": 1,
+   "says": [
+    "is described by paths and shapes so it scales without losing sharpness",
+    "suits logos and icons"
+   ],
+   "use": "need an icon that stays crisp at any size",
+   "not": [
+    "is made of a fixed grid of pixels"
+   ],
+   "like": [
+    "A raster image"
+   ]
+  },
+  {
+   "group": "des",
+   "subject": "A raster image",
+   "tier": 1,
+   "says": [
+    "is made of pixels and loses sharpness when enlarged",
+    "suits photographs"
+   ],
+   "use": "need to include a photograph in a design",
+   "not": [
+    "scales to any size without losing sharpness"
+   ],
+   "like": [
+    "A vector graphic"
+   ]
+  },
+  {
+   "group": "des",
+   "subject": "A component",
+   "tier": 3,
+   "says": [
+    "is a reusable element whose instances stay linked to the main definition",
+    "updates every instance when the main definition changes"
+   ],
+   "use": "keep recreating the same button in many places",
+   "not": [
+    "copies the element so each copy is independent"
+   ],
+   "like": [
+    "A variant"
+   ]
+  },
+  {
+   "group": "des",
+   "subject": "A design system",
+   "tier": 3,
+   "says": [
+    "combines reusable components, tokens and usage guidance",
+    "keeps products visually consistent across teams"
+   ],
+   "use": "want many designers and developers to build consistent interfaces",
+   "not": [
+    "is a single style sheet for one page"
+   ]
+  },
+  {
+   "group": "des",
+   "subject": "A variant",
+   "tier": 4,
+   "says": [
+    "is one version of a component, such as a state or size, grouped under that component",
+    "lets one component cover hover, disabled and other states"
+   ],
+   "use": "need a button in several sizes and states under one component",
+   "not": [
+    "is an unrelated copy of a component"
+   ],
+   "like": [
+    "A component"
+   ]
+  },
+  {
+   "group": "des",
+   "subject": "A design token",
+   "tier": 4,
+   "says": [
+    "stores a design decision such as a colour or spacing value under a name",
+    "lets one change flow through every place the value is used"
+   ],
+   "use": "want to change a brand colour everywhere in one edit",
+   "not": [
+    "is a security credential for the design tool"
+   ]
+  },
+  {
+   "group": "des",
+   "subject": "Auto layout",
+   "tier": 4,
+   "says": [
+    "makes a frame resize and reflow around its content",
+    "spaces its children by rules instead of by hand"
+   ],
+   "use": "want a button to grow when its label gets longer",
+   "not": [
+    "pins a layer to an edge of a resizing parent only"
+   ],
+   "like": [
+    "Constraints"
+   ]
+  },
+  {
+   "group": "des",
+   "subject": "Constraints",
+   "tier": 4,
+   "says": [
+    "control how a layer behaves when its parent frame is resized",
+    "pin a layer to an edge or let it scale with the parent"
+   ],
+   "use": "want an element to stay anchored to the right as a frame widens",
+   "not": [
+    "reflow all children according to padding and gap rules"
+   ],
+   "like": [
+    "Auto layout"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A sketch",
+   "tier": 1,
+   "says": [
+    "tests whether a basic idea or flow makes sense",
+    "costs only minutes to make and throw away"
+   ],
+   "use": "want to test an idea as cheaply as possible",
+   "not": [
+    "needs polished visuals to be useful"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A wireframe",
+   "tier": 1,
+   "says": [
+    "shows layout and structure without final colour or imagery",
+    "keeps attention on arrangement rather than appearance"
+   ],
+   "use": "want feedback on the structure of a screen, not its looks",
+   "not": [
+    "shows the final visual styling of the product"
+   ],
+   "like": [
+    "A mockup"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A mockup",
+   "tier": 2,
+   "says": [
+    "shows the visual design of a screen without being interactive",
+    "lets stakeholders judge appearance"
+   ],
+   "use": "want to show how the finished screen will look",
+   "not": [
+    "links screens so people can tap through them"
+   ],
+   "like": [
+    "A wireframe",
+    "A clickable prototype"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A clickable prototype",
+   "tier": 2,
+   "says": [
+    "links screens so a user can tap through a flow",
+    "lets people attempt a task before anything is built"
+   ],
+   "use": "need to see whether people can finish a task",
+   "not": [
+    "contains the real back-end logic of the product"
+   ],
+   "like": [
+    "A mockup"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "Fidelity",
+   "tier": 2,
+   "says": [
+    "describes how closely a prototype resembles the final product",
+    "should be chosen to match the question being asked"
+   ],
+   "use": "need to decide how detailed a prototype should be",
+   "not": [
+    "is always better when it is higher"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A coded prototype",
+   "tier": 4,
+   "says": [
+    "tests behaviour a mock cannot show, such as speed or real data",
+    "costs more to build than a clickable mock"
+   ],
+   "use": "need to test how something performs with real data",
+   "not": [
+    "is the cheapest way to test whether a flow makes sense"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "Prototype labelling",
+   "tier": 3,
+   "says": [
+    "tells viewers what is not real",
+    "stops a mock being mistaken for the finished product"
+   ],
+   "use": "are about to show a polished prototype to stakeholders",
+   "not": [
+    "is only necessary for rough sketches"
+   ]
+  },
+  {
+   "group": "proto",
+   "subject": "A Wizard of Oz test",
+   "tier": 5,
+   "says": [
+    "has a person secretly perform the work the product will later automate",
+    "tests demand for a feature before building it"
+   ],
+   "use": "want to test an automated feature without building the automation",
+   "not": [
+    "is a test of the product's load capacity"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "Design handoff",
+   "tier": 1,
+   "says": [
+    "passes finished design intent from designers to developers",
+    "works best as an ongoing conversation rather than a single event"
+   ],
+   "use": "finish a design and need developers to build it",
+   "not": [
+    "ends the designer's involvement"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "Inspect mode",
+   "tier": 2,
+   "says": [
+    "lets a developer read measurements, colours and fonts from a design file",
+    "reduces guesswork when building from a mockup"
+   ],
+   "use": "need exact spacing and colour values from a design",
+   "not": [
+    "edits the design file for the developer"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "A design link on the ticket",
+   "tier": 3,
+   "says": [
+    "connects a design file to the ticket it supports",
+    "keeps the reason for a design findable from the work item"
+   ],
+   "use": "want developers to find the right design from an issue",
+   "not": [
+    "replaces the need to describe acceptance criteria"
+   ],
+   "like": [
+    "A component mapping",
+    "A design file in Moksy"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "An edge-state spec",
+   "tier": 4,
+   "says": [
+    "specifies empty, loading, error and long-text cases beyond the happy path",
+    "prevents developers from inventing those states themselves"
+   ],
+   "use": "find that a design shows only the ideal case",
+   "not": [
+    "is only relevant to backend work"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "A responsive spec",
+   "tier": 3,
+   "says": [
+    "describes how a layout changes across screen sizes",
+    "names the breakpoints where the layout changes"
+   ],
+   "use": "need to tell developers how a design adapts to small screens",
+   "not": [
+    "shows only one desktop layout"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "An early developer review",
+   "tier": 4,
+   "says": [
+    "catches interactions that are hard to build before the design is polished",
+    "keeps the build estimate realistic"
+   ],
+   "use": "want to find feasibility problems before design work is finished",
+   "not": [
+    "happens only after the feature is shipped"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "A shared token file",
+   "tier": 5,
+   "says": [
+    "keeps named design values shared between the design file and the codebase",
+    "lets a colour change in one source reach both design and code"
+   ],
+   "use": "find that colours differ between the design file and the live site",
+   "not": [
+    "is exported once and never kept in sync"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "A component mapping",
+   "tier": 4,
+   "says": [
+    "pairs each design component with its code counterpart",
+    "stops designers and developers building duplicate versions"
+   ],
+   "use": "want designers and developers to share one set of building blocks",
+   "not": [
+    "lists only the colours used in the product"
+   ],
+   "like": [
+    "A design link on the ticket"
+   ]
+  },
+  {
+   "group": "pres",
+   "subject": "A slide deck",
+   "tier": 1,
+   "says": [
+    "presents a plan as a sequence of slides to an audience",
+    "supports a spoken explanation rather than replacing it"
+   ],
+   "use": "need to walk an audience through a plan",
+   "not": [
+    "is the best format for a long reference manual"
+   ]
+  },
+  {
+   "group": "pres",
+   "subject": "The one-message rule",
+   "tier": 2,
+   "says": [
+    "limits each slide to a single takeaway",
+    "keeps slides readable at a glance"
+   ],
+   "use": "find that slides are crowded with several points",
+   "not": [
+    "says a slide must contain at least five bullet points"
+   ]
+  },
+  {
+   "group": "pres",
+   "subject": "An opening ask",
+   "tier": 2,
+   "says": [
+    "states what you need from the audience before the supporting detail",
+    "lets listeners judge the detail against a clear decision"
+   ],
+   "use": "want a decision from the audience at the end of a meeting",
+   "not": [
+    "is saved for the final slide as a surprise"
+   ]
+  },
+  {
+   "group": "pres",
+   "subject": "A shared link",
+   "tier": 3,
+   "says": [
+    "shows every viewer the latest version of a deck",
+    "can expose unreleased work if anyone with the link may open it"
+   ],
+   "use": "want an audience to always see the current version",
+   "not": [
+    "freezes a snapshot that never changes"
+   ]
+  },
+  {
+   "group": "pres",
+   "subject": "A PDF export",
+   "tier": 3,
+   "says": [
+    "preserves a deck's appearance in a format almost any device can open",
+    "survives the original tool becoming unavailable"
+   ],
+   "use": "need a portable copy of a deck that does not depend on the tool",
+   "not": [
+    "keeps the deck editable in the original tool"
+   ]
+  },
+  {
+   "group": "pres",
+   "subject": "Appendix slides",
+   "tier": 3,
+   "says": [
+    "hold backup detail for questions without lengthening the main story",
+    "stay out of the main sequence of the talk"
+   ],
+   "use": "want detail ready for questions but out of the presentation",
+   "not": [
+    "are shown first so the audience sees all the data"
+   ]
+  },
+  {
+   "group": "pres",
+   "subject": "Situation, complication, resolution",
+   "tier": 5,
+   "says": [
+    "frames a story as context, then a problem, then the proposed answer",
+    "makes a recommendation feel like the natural next step"
+   ],
+   "use": "need to structure a persuasive presentation",
+   "not": [
+    "begins with the conclusion hidden until the end of the appendix"
+   ]
+  },
+  {
+   "group": "trk",
+   "subject": "An issue",
+   "tier": 1,
+   "says": [
+    "describes one unit of work, bug or request with an owner and a status",
+    "is the basic record of an issue tracker"
+   ],
+   "use": "want one trackable record for a piece of work",
+   "not": [
+    "is a conversation in a chat channel"
+   ]
+  },
+  {
+   "group": "trk",
+   "subject": "A Kanban board",
+   "tier": 1,
+   "says": [
+    "shows work as cards moving through columns",
+    "makes the current state of work visible at a glance"
+   ],
+   "use": "want to see where every item of work stands",
+   "not": [
+    "fixes a set of work for a timebox"
+   ],
+   "like": [
+    "A sprint"
+   ]
+  },
+  {
+   "group": "trk",
+   "subject": "A workflow status",
+   "tier": 2,
+   "says": [
+    "marks where an issue is in its lifecycle, such as open or done",
+    "maps to the columns of a board"
+   ],
+   "use": "want to know how far along an issue is",
+   "not": [
+    "tags an issue with a category such as bug or design"
+   ]
+  },
+  {
+   "group": "trk",
+   "subject": "An epic",
+   "tier": 2,
+   "says": [
+    "groups related issues under a larger goal",
+    "is delivered by finishing the issues inside it"
+   ],
+   "use": "need to track a large goal made of many issues",
+   "not": [
+    "is a single small task"
+   ]
+  },
+  {
+   "group": "trk",
+   "subject": "A sprint",
+   "tier": 2,
+   "says": [
+    "is a fixed-length timebox in which a team commits to a set of work",
+    "ends with a review of what was delivered"
+   ],
+   "use": "want to work in short, repeated cycles of fixed length",
+   "not": [
+    "lets work flow continuously with no set period"
+   ],
+   "like": [
+    "A Kanban board"
+   ]
+  },
+  {
+   "group": "trk",
+   "subject": "Acceptance criteria",
+   "tier": 2,
+   "says": [
+    "state the conditions that make an issue done",
+    "give the tester and developer the same target"
+   ],
+   "use": "want a clear test of whether an issue is finished",
+   "not": [
+    "describe how long the work will take"
+   ]
+  },
+  {
+   "group": "trk",
+   "subject": "A good bug report",
+   "tier": 2,
+   "says": [
+    "gives steps to reproduce, expected result and actual result",
+    "lets another person see the problem without asking questions"
+   ],
+   "use": "need to report a defect so that someone else can fix it",
+   "not": [
+    "says only that something is broken"
+   ]
+  },
+  {
+   "group": "trk",
+   "subject": "A WIP limit",
+   "tier": 4,
+   "says": [
+    "caps how many items may sit in a column at once",
+    "exposes bottlenecks by stopping new work starting"
+   ],
+   "use": "find that too many items are started and few are finished",
+   "not": [
+    "sets a deadline for each item"
+   ]
+  },
+  {
+   "group": "trk",
+   "subject": "Issue triage",
+   "tier": 4,
+   "says": [
+    "reviews new issues to decide priority, owner or closure",
+    "keeps the backlog from filling with unreviewed items"
+   ],
+   "use": "find that new issues pile up without a decision",
+   "not": [
+    "fixes each issue in order of arrival"
+   ]
+  },
+  {
+   "group": "vh",
+   "subject": "Version history",
+   "tier": 1,
+   "says": [
+    "lets you view and restore earlier states of a document",
+    "shows who changed what and when"
+   ],
+   "use": "need to recover an earlier state of a document",
+   "not": [
+    "prevents anyone from editing the document"
+   ],
+   "like": [
+    "An audit log"
+   ]
+  },
+  {
+   "group": "vh",
+   "subject": "A comment thread",
+   "tier": 1,
+   "says": [
+    "attaches a discussion to a specific part of a document",
+    "can be resolved once the point is settled"
+   ],
+   "use": "want to discuss one specific paragraph without editing it",
+   "not": [
+    "changes the text of the document"
+   ]
+  },
+  {
+   "group": "vh",
+   "subject": "Suggestion mode",
+   "tier": 3,
+   "says": [
+    "records proposed edits for the owner to accept or reject",
+    "leaves the original text visible until a decision is made"
+   ],
+   "use": "want to propose changes without overwriting the author's text",
+   "not": [
+    "commits edits immediately for all readers"
+   ]
+  },
+  {
+   "group": "vh",
+   "subject": "Real-time co-editing",
+   "tier": 3,
+   "says": [
+    "shows several people's changes in one document at once",
+    "merges simultaneous edits automatically"
+   ],
+   "use": "need several people to write in one document together",
+   "not": [
+    "requires each person to work on a separate copy"
+   ]
+  },
+  {
+   "group": "vh",
+   "subject": "Permission levels",
+   "tier": 3,
+   "says": [
+    "separate who may view, comment and edit",
+    "let an owner give each person only the access they need"
+   ],
+   "use": "want a client to read a document but not change it",
+   "not": [
+    "give everyone the same access by default"
+   ]
+  },
+  {
+   "group": "vh",
+   "subject": "A single source of truth",
+   "tier": 4,
+   "says": [
+    "avoids divergent copies by keeping one live document that everyone links to",
+    "means people share a link rather than an attached copy"
+   ],
+   "use": "find that several versions of a plan are circulating",
+   "not": [
+    "is achieved by emailing the latest attachment to everyone"
+   ],
+   "like": [
+    "One home per document"
+   ]
+  },
+  {
+   "group": "vh",
+   "subject": "A named version",
+   "tier": 3,
+   "says": [
+    "marks a meaningful milestone in a document's history",
+    "is easier to return to than an unlabelled automatic save"
+   ],
+   "use": "want to mark the version that was approved",
+   "not": [
+    "stops later edits being made"
+   ]
+  },
+  {
+   "group": "vh",
+   "subject": "Link sharing scope",
+   "tier": 4,
+   "says": [
+    "decides whether only named people or anyone with the link can open a document",
+    "should be checked before sending a link outside the team"
+   ],
+   "use": "are about to send a link to unreleased work",
+   "not": [
+    "only affects how the link looks"
+   ]
+  },
+  {
+   "group": "vh",
+   "subject": "An audit log",
+   "tier": 5,
+   "says": [
+    "records who changed or shared what and when",
+    "helps investigate unexpected access or edits"
+   ],
+   "use": "need to find out who shared a document externally",
+   "not": [
+    "restores deleted content automatically"
+   ],
+   "like": [
+    "Version history"
+   ]
+  },
+  {
+   "group": "nm",
+   "subject": "A naming convention",
+   "tier": 1,
+   "says": [
+    "makes names predictable so files can be found without opening them",
+    "is agreed once and then followed by the team"
+   ],
+   "use": "want files to be findable by name",
+   "not": [
+    "is chosen by each person individually"
+   ]
+  },
+  {
+   "group": "nm",
+   "subject": "A date prefix in YYYY-MM-DD form",
+   "tier": 2,
+   "says": [
+    "puts the year first so alphabetical order is chronological",
+    "avoids ambiguity between day-first and month-first dates"
+   ],
+   "use": "want files to sort in date order by name",
+   "not": [
+    "makes files sort by author name"
+   ]
+  },
+  {
+   "group": "nm",
+   "subject": "A final in a file name",
+   "tier": 2,
+   "says": [
+    "invites a later 'final-final' file because the word describes a moment rather than a version",
+    "is a poor substitute for version history"
+   ],
+   "use": "see a file named final_v3_really_final",
+   "not": [
+    "guarantees that nobody will edit the file again"
+   ]
+  },
+  {
+   "group": "nm",
+   "subject": "A shallow folder hierarchy",
+   "tier": 2,
+   "says": [
+    "keeps files within a few clicks",
+    "makes it easier to know where a file belongs"
+   ],
+   "use": "find that people cannot locate files in deep folders",
+   "not": [
+    "improves with ever more nested subfolders"
+   ]
+  },
+  {
+   "group": "nm",
+   "subject": "One home per document",
+   "tier": 4,
+   "says": [
+    "prevents duplicate copies drifting apart",
+    "lets other places link to it instead of copying it"
+   ],
+   "use": "find the same document saved in several places",
+   "not": [
+    "means copies are kept in every team folder for safety"
+   ],
+   "like": [
+    "A single source of truth"
+   ]
+  },
+  {
+   "group": "nm",
+   "subject": "Structuring by access",
+   "tier": 4,
+   "says": [
+    "groups content by who may see it",
+    "allows permissions to be set once at folder level"
+   ],
+   "use": "need to keep client work separate from internal drafts",
+   "not": [
+    "ignores who needs to see the content"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Alt text",
+   "tier": 1,
+   "says": [
+    "describes the purpose of an image to people who cannot see it",
+    "is read aloud by screen readers"
+   ],
+   "use": "want an informative image to make sense to a screen reader user",
+   "not": [
+    "is a caption displayed under the image for all readers"
+   ],
+   "like": [
+    "A screen reader"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A contrast checker",
+   "tier": 1,
+   "says": [
+    "calculates the contrast ratio between text and background colours",
+    "compares the result against accessibility thresholds"
+   ],
+   "use": "need to check whether text is readable against its background",
+   "not": [
+    "checks whether a page works with the keyboard"
+   ],
+   "like": [
+    "WCAG"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "WCAG",
+   "tier": 2,
+   "says": [
+    "is the W3C's set of guidelines for accessible web content",
+    "organises requirements under perceivable, operable, understandable and robust",
+    "defines conformance levels A, AA and AAA"
+   ],
+   "use": "need a recognised standard to measure accessibility against",
+   "not": [
+    "is a software tool that fixes accessibility problems automatically"
+   ],
+   "like": [
+    "A contrast checker"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "An automated accessibility scanner",
+   "tier": 2,
+   "says": [
+    "finds problems that rules can detect, such as missing alt text or low contrast",
+    "cannot judge whether alt text is meaningful"
+   ],
+   "use": "want a fast first pass over many pages",
+   "not": [
+    "finds every accessibility problem on a page"
+   ],
+   "like": [
+    "Manual accessibility testing"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A screen reader",
+   "tier": 2,
+   "says": [
+    "reads on-screen content aloud or sends it to a braille display",
+    "depends on correct semantic structure to be usable"
+   ],
+   "use": "need to understand how blind users experience a page",
+   "not": [
+    "magnifies the screen for people with low vision"
+   ],
+   "like": [
+    "Alt text"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Keyboard-only testing",
+   "tier": 3,
+   "says": [
+    "checks that every function works without a mouse and that focus is visible",
+    "reveals broken tab order and keyboard traps"
+   ],
+   "use": "need to confirm that a page can be used without a mouse",
+   "not": [
+    "checks the contrast of text colours"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A colour-blindness simulator",
+   "tier": 4,
+   "says": [
+    "previews a design as people with colour vision deficiency see it",
+    "shows whether meaning is carried by colour alone"
+   ],
+   "use": "want to see if a chart relies on red and green alone",
+   "not": [
+    "measures contrast ratios"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "An ARIA label",
+   "tier": 5,
+   "says": [
+    "supplies an accessible name when no visible text provides one",
+    "should not replace a native element that already does the job"
+   ],
+   "use": "have an icon-only button with no visible text",
+   "not": [
+    "makes a div behave like a button without further work"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Manual accessibility testing",
+   "tier": 5,
+   "says": [
+    "judges what automated tools cannot, such as reading order and clear link text",
+    "uses real assistive technology to check the experience"
+   ],
+   "use": "need to verify the experience beyond what a scanner reports",
+   "not": [
+    "is unnecessary once a scanner reports zero errors"
+   ],
+   "like": [
+    "An automated accessibility scanner"
+   ]
+  },
+  {
+   "group": "moksycat",
+   "subject": "The Moksy catalogue's families",
+   "tier": 2,
+   "says": [
+    "groups apps into families such as roadmaps, documents and design",
+    "gives each family a unit that an integration carries"
+   ],
+   "use": "need to see how Moksy organises its planning and design integrations",
+   "not": [
+    "lists each app as an unrelated one-off build"
+   ]
+  },
+  {
+   "group": "moksycat",
+   "subject": "The status works today",
+   "tier": 2,
+   "says": [
+    "means a path Moksy already ships carries the app with only a URL, file, link or MCP entry needed from the app",
+    "needs no work on the app side beyond providing one of those"
+   ],
+   "use": "need to know which apps are usable now with nothing extra",
+   "not": [
+    "requires a native adapter to be built first"
+   ],
+   "like": [
+    "The status through a hub",
+    "The status with a script",
+    "The status adapter planned",
+    "The status not yet",
+    "Effort grade E0"
+   ]
+  },
+  {
+   "group": "moksycat",
+   "subject": "The status through a hub",
+   "tier": 3,
+   "says": [
+    "means the app works now using an automation hub's generic webhook and HTTP steps plus a Moksy API key",
+    "relies on a hub rather than a native connector"
+   ],
+   "use": "need to know which apps connect through an automation platform",
+   "not": [
+    "means the app is retired"
+   ],
+   "like": [
+    "The status works today",
+    "The status with a script",
+    "The status adapter planned",
+    "The status not yet",
+    "Effort grade E1"
+   ]
+  },
+  {
+   "group": "moksycat",
+   "subject": "The status with a script",
+   "tier": 3,
+   "says": [
+    "means only Moksy's public API called from the app's own scripting carries the connection",
+    "has no built-in connector or hub recipe"
+   ],
+   "use": "need to know which apps reach Moksy only by custom scripting",
+   "not": [
+    "means a hub template is available"
+   ],
+   "like": [
+    "The status works today",
+    "The status through a hub",
+    "The status adapter planned",
+    "The status not yet"
+   ]
+  },
+  {
+   "group": "moksycat",
+   "subject": "The status adapter planned",
+   "tier": 3,
+   "says": [
+    "means only a first-class connector would carry the app and that connector is not built",
+    "is not yet usable"
+   ],
+   "use": "need to know which apps wait on a native connector",
+   "not": [
+    "means the app already works through a hub"
+   ],
+   "like": [
+    "The status works today",
+    "The status through a hub",
+    "The status with a script",
+    "The status not yet",
+    "Effort grade E2"
+   ]
+  },
+  {
+   "group": "moksycat",
+   "subject": "The status not yet",
+   "tier": 3,
+   "says": [
+    "means the app offers nothing Moksy can use",
+    "has no path available"
+   ],
+   "use": "need to know which apps cannot be integrated at all",
+   "not": [
+    "means a connector is planned"
+   ],
+   "like": [
+    "The status works today",
+    "The status through a hub",
+    "The status with a script",
+    "The status adapter planned"
+   ]
+  },
+  {
+   "group": "moksycat",
+   "subject": "Effort grade E0",
+   "tier": 3,
+   "says": [
+    "means there is nothing to do to connect the app",
+    "goes with apps that already work today"
+   ],
+   "use": "need to know which integrations need no work",
+   "not": [
+    "means a native adapter must be built"
+   ],
+   "like": [
+    "Effort grade E1",
+    "Effort grade E2",
+    "The status works today"
+   ]
+  },
+  {
+   "group": "moksycat",
+   "subject": "Effort grade E1",
+   "tier": 3,
+   "says": [
+    "means a hub template or worked example is needed",
+    "falls between nothing to do and a native adapter"
+   ],
+   "use": "need to know which integrations need a template or example",
+   "not": [
+    "means nothing at all needs doing"
+   ],
+   "like": [
+    "Effort grade E0",
+    "Effort grade E2",
+    "The status through a hub"
+   ]
+  },
+  {
+   "group": "moksycat",
+   "subject": "Effort grade E2",
+   "tier": 3,
+   "says": [
+    "means a native adapter must be built",
+    "is the highest effort grade"
+   ],
+   "use": "need to know which integrations require a first-class connector",
+   "not": [
+    "means a hub template is enough"
+   ],
+   "like": [
+    "Effort grade E0",
+    "Effort grade E1",
+    "The status adapter planned"
+   ]
+  },
+  {
+   "group": "moksyplan",
+   "subject": "A roadmap item in Moksy",
+   "tier": 3,
+   "says": [
+    "can start a Briefing",
+    "is the unit that moves in the product management and roadmaps family"
+   ],
+   "use": "want a roadmap item to begin a Moksy workflow",
+   "not": [
+    "becomes an invoice"
+   ],
+   "like": [
+    "A product roadmap"
+   ]
+  },
+  {
+   "group": "moksyplan",
+   "subject": "Interview notes and feedback in Moksy",
+   "tier": 3,
+   "says": [
+    "are the Sources a problem statement is built from",
+    "are the unit that moves in the user research and feedback family"
+   ],
+   "use": "want evidence to feed a Moksy problem statement",
+   "not": [
+    "are deployment logs"
+   ],
+   "like": [
+    "A feedback inbox"
+   ]
+  },
+  {
+   "group": "moksyplan",
+   "subject": "A design file in Moksy",
+   "tier": 3,
+   "says": [
+    "is cited in the Blueprint",
+    "is the unit that moves in the design and prototyping family",
+    "sits next to the requirements it supports"
+   ],
+   "use": "want designs linked to Moksy requirements",
+   "not": [
+    "replaces the requirements document"
+   ],
+   "like": [
+    "A design link on the ticket"
+   ]
+  },
+  {
+   "group": "moksyplan",
+   "subject": "A whiteboard in Moksy",
+   "tier": 4,
+   "says": [
+    "is catalogued as an input to a Briefing",
+    "can be attached to a Blueprint"
+   ],
+   "use": "want a board to feed a Moksy Briefing",
+   "not": [
+    "is reached through a native adapter only"
+   ]
+  },
+  {
+   "group": "moksyplan",
+   "subject": "A Blueprint as a deck",
+   "tier": 4,
+   "says": [
+    "is the intended pattern in the presentations and publishing family",
+    "can be presented as a slide deck or published as a page"
+   ],
+   "use": "want to present a Blueprint to stakeholders",
+   "not": [
+    "must be exported from a spreadsheet first"
+   ]
+  },
+  {
+   "group": "moksyplan",
+   "subject": "The generated catalogue file",
+   "tier": 4,
+   "says": [
+    "is produced from source files",
+    "must not be edited by hand"
+   ],
+   "use": "want to change an entry in the Moksy catalogue document",
+   "not": [
+    "is the place where entries should be edited directly"
+   ]
+  },
+  {
+   "group": "moksyplan",
+   "subject": "The ggsocial DEPLOY.md",
+   "tier": 3,
+   "says": [
+    "records traps learned the hard way",
+    "notes that a deploy sync with delete can wipe the production secrets file",
+    "notes that the server's login shell cannot parse some commands"
+   ],
+   "use": "want an example of operational knowledge kept in a repository",
+   "not": [
+    "is a wiki page maintained outside the repository"
+   ],
+   "like": [
+    "A README",
+    "A runbook"
+   ]
+  },
+  {
+   "group": "moksyplan",
+   "subject": "The gglearn docs folder and README",
+   "tier": 2,
+   "says": [
+    "keep documentation in the repository alongside the code",
+    "are reviewed with the code"
+   ],
+   "use": "want to know where gglearn's documentation lives",
+   "not": [
+    "live only in a wiki"
+   ],
+   "like": [
+    "A README"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the main job of a product roadmap?",
+   "right": "To communicate the direction and priorities of a product over time",
+   "wrong": [
+    "To list every bug found in testing",
+    "To record each developer's hours",
+    "To store the final source code"
+   ],
+   "tier": 1,
+   "why": "A roadmap shows where the product is heading and why."
+  },
+  {
+   "q": "What does a user interview mainly give you?",
+   "right": "Rich qualitative detail about why people behave as they do",
+   "wrong": [
+    "A statistically exact count of users",
+    "A measure of server speed",
+    "A finished design"
+   ],
+   "tier": 1,
+   "why": "Interviews explain behaviour but involve few people."
+  },
+  {
+   "q": "Why use a README?",
+   "right": "So a newcomer can learn what a project is and how to start without asking anyone",
+   "wrong": [
+    "To store the production secrets",
+    "To replace all tests",
+    "To record every past decision in full"
+   ],
+   "tier": 1,
+   "why": "A README is the front door of a repository."
+  },
+  {
+   "q": "Which diagram uses a diamond for a yes-or-no decision?",
+   "right": "A flowchart",
+   "wrong": [
+    "An entity-relationship diagram",
+    "A mind map",
+    "A sequence diagram"
+   ],
+   "tier": 1,
+   "why": "Flowcharts use diamonds for decision points."
+  },
+  {
+   "q": "What does alt text do?",
+   "right": "Describes the purpose of an image to people who cannot see it",
+   "wrong": [
+    "Compresses the image file",
+    "Makes the image load faster",
+    "Sets the image border"
+   ],
+   "tier": 1,
+   "why": "Screen readers read alt text aloud."
+  },
+  {
+   "q": "What is the difference between a vector and a raster image?",
+   "right": "A vector image is made of paths and scales cleanly, a raster image is made of pixels",
+   "wrong": [
+    "A raster image scales cleanly, a vector image is made of pixels",
+    "They are the same file type",
+    "A vector image can only be a photograph"
+   ],
+   "tier": 1,
+   "why": "Vectors suit icons and logos; rasters suit photos."
+  },
+  {
+   "q": "Which tool helps you choose the minimum set of requirements for a release by labelling items must, should, could and won't?",
+   "right": "MoSCoW prioritisation",
+   "wrong": [
+    "RICE scoring",
+    "A swimlane diagram",
+    "The Kano model"
+   ],
+   "tier": 2,
+   "why": "MoSCoW buckets requirements."
+  },
+  {
+   "q": "A team wants quantitative evidence of which of two page designs performs better. What should they run?",
+   "right": "An A/B test",
+   "wrong": [
+    "A card sort",
+    "A diary study",
+    "A persona workshop"
+   ],
+   "tier": 2,
+   "why": "An A/B test compares variants with separate user groups."
+  },
+  {
+   "q": "Why is a page owner useful in a wiki?",
+   "right": "One named person is responsible for the page staying correct",
+   "wrong": [
+    "Only that person may read it",
+    "It stops the page being searched",
+    "It makes the page load faster"
+   ],
+   "tier": 2,
+   "why": "Ownership fights stale pages."
+  },
+  {
+   "q": "What does a swimlane diagram add that a plain flowchart lacks?",
+   "right": "Lanes that show who is responsible for each step",
+   "wrong": [
+    "Arrows between steps",
+    "Decision diamonds",
+    "A time scale in hours"
+   ],
+   "tier": 2,
+   "why": "Lanes expose handoffs between teams."
+  },
+  {
+   "q": "What is the benefit of a component in a design tool?",
+   "right": "Instances stay linked, so changing the main component updates all of them",
+   "wrong": [
+    "Each copy is independent of the others",
+    "It exports the file to code automatically",
+    "It removes the need for a grid"
+   ],
+   "tier": 2,
+   "why": "Components keep reusable elements consistent."
+  },
+  {
+   "q": "What do acceptance criteria state?",
+   "right": "The conditions that make an issue done",
+   "wrong": [
+    "How long the issue will take",
+    "Who reported the issue",
+    "Which sprint the issue was created in"
+   ],
+   "tier": 2,
+   "why": "They give tester and developer the same target."
+  },
+  {
+   "q": "Which question does an automated accessibility scanner fail to answer?",
+   "right": "Whether the alt text actually describes the image meaningfully",
+   "wrong": [
+    "Whether alt text is missing",
+    "Whether a colour contrast is too low",
+    "Whether a form field lacks a label"
+   ],
+   "tier": 2,
+   "why": "Rules detect presence, not meaning."
+  },
+  {
+   "q": "Which file name sorts in chronological order alphabetically?",
+   "right": "2026-03-14-planning-notes",
+   "wrong": [
+    "14-03-2026-planning-notes",
+    "March 14 planning notes",
+    "planning-notes-14032026"
+   ],
+   "tier": 2,
+   "why": "Year-first ISO dates sort chronologically."
+  },
+  {
+   "q": "Which prioritisation method divides estimated benefit by effort and discounts guesses with a confidence factor?",
+   "right": "RICE scoring",
+   "wrong": [
+    "MoSCoW prioritisation",
+    "An impact-effort matrix",
+    "The Kano model"
+   ],
+   "tier": 3,
+   "why": "RICE uses reach, impact, confidence and effort."
+  },
+  {
+   "q": "What is the difference between a card sort and a tree test?",
+   "right": "A card sort asks people to build groupings, a tree test checks whether they can find items in a given structure",
+   "wrong": [
+    "A tree test asks people to build groupings, a card sort checks findability",
+    "They are two names for the same method",
+    "A card sort needs working software, a tree test does not"
+   ],
+   "tier": 3,
+   "why": "Card sorts generate structure; tree tests validate it."
+  },
+  {
+   "q": "A UI design shows one wide screen with no empty, loading or error states. What is missing?",
+   "right": "An edge-state specification",
+   "wrong": [
+    "A vector export",
+    "A diary study",
+    "A tree test"
+   ],
+   "tier": 3,
+   "why": "Developers otherwise invent the missing states."
+  },
+  {
+   "q": "What does a WIP limit expose?",
+   "right": "Bottlenecks, by stopping new work starting while a column is full",
+   "wrong": [
+    "The cost of each item",
+    "Who reported each bug",
+    "Which items are low priority"
+   ],
+   "tier": 3,
+   "why": "Limits force the team to finish before starting."
+  },
+  {
+   "q": "What is the effect of having a design token for a brand colour?",
+   "right": "Changing the token updates every place the colour is used",
+   "wrong": [
+    "The colour can no longer be changed",
+    "The colour is hidden from developers",
+    "Each use must be edited separately"
+   ],
+   "tier": 3,
+   "why": "Tokens give a value one name."
+  },
+  {
+   "q": "Which description fits Auto layout rather than Constraints?",
+   "right": "A frame that resizes and reflows around its content",
+   "wrong": [
+    "A layer pinned to the right edge of a parent",
+    "A way to rotate layers",
+    "A method of exporting images"
+   ],
+   "tier": 3,
+   "why": "Constraints pin to parents; auto layout reflows children."
+  },
+  {
+   "q": "What is the purpose of silent brainstorming?",
+   "right": "To reduce anchoring on the first idea spoken aloud",
+   "wrong": [
+    "To save time by skipping discussion entirely",
+    "To let the senior person choose",
+    "To produce a single idea quickly"
+   ],
+   "tier": 3,
+   "why": "People write alone first, then discuss."
+  },
+  {
+   "q": "Which sentence best describes docs as code?",
+   "right": "Documentation lives in version control and is reviewed with the code",
+   "wrong": [
+    "Documentation is generated only from comments",
+    "Documentation is stored in the wiki and copied to the repo yearly",
+    "Documentation is kept in email"
+   ],
+   "tier": 3,
+   "why": "One pull request can change both."
+  },
+  {
+   "q": "What does a sequence diagram show best?",
+   "right": "Messages between participants in time order",
+   "wrong": [
+    "The shape of the stored data",
+    "The users of a system as one box",
+    "The pixel layout of a screen"
+   ],
+   "tier": 3,
+   "why": "Vertical lifelines show order of calls."
+  },
+  {
+   "q": "In Moksy's catalogue, what does the status 'works today' mean?",
+   "right": "A path Moksy already ships carries the app, with only a URL, file, link or MCP entry needed",
+   "wrong": [
+    "The app needs a native connector that is not built",
+    "The app works only through an automation hub",
+    "Only Moksy's API called from the app's own scripting carries it"
+   ],
+   "tier": 3,
+   "why": "It needs nothing from the app side beyond one of those."
+  },
+  {
+   "q": "Which Moksy catalogue effort grade means a native adapter must be built?",
+   "right": "E2",
+   "wrong": [
+    "E0",
+    "E1",
+    "No grade; native adapters are never needed"
+   ],
+   "tier": 3,
+   "why": "E0 is nothing to do, E1 is a hub template or worked example, E2 is a native adapter."
+  },
+  {
+   "q": "What does the Kano model predict about delighters?",
+   "right": "They tend to become basic expectations over time",
+   "wrong": [
+    "They never change in value",
+    "They are the same as bugs",
+    "They are always the cheapest features to build"
+   ],
+   "tier": 4,
+   "why": "Today's surprise becomes tomorrow's baseline."
+  },
+  {
+   "q": "Which method best uncovers workarounds people forget to mention in interviews?",
+   "right": "Contextual inquiry",
+   "wrong": [
+    "A survey",
+    "A tree test",
+    "An A/B test"
+   ],
+   "tier": 4,
+   "why": "Observing real work reveals workarounds."
+  },
+  {
+   "q": "What is the purpose of the C4 model's levels?",
+   "right": "Letting each audience pick a zoom level from context to code",
+   "wrong": [
+    "Ranking diagrams by quality",
+    "Showing the order of deployments",
+    "Compressing diagrams for email"
+   ],
+   "tier": 4,
+   "why": "Context, containers, components and code."
+  },
+  {
+   "q": "Why is diagram as code useful?",
+   "right": "Diagram changes can be versioned and diffed like source code",
+   "wrong": [
+    "It makes diagrams impossible to render",
+    "It removes the need for review",
+    "It only works for photographs"
+   ],
+   "tier": 4,
+   "why": "Text sources go through pull requests."
+  },
+  {
+   "q": "When is an ARIA label appropriate?",
+   "right": "For an icon-only button that has no visible text to name it",
+   "wrong": [
+    "On a native button that already has a text label, to override it",
+    "To make a div behave fully like a button without keyboard support",
+    "To hide text from sighted users"
+   ],
+   "tier": 4,
+   "why": "ARIA supplies a name only where none exists and should not replace native elements."
+  },
+  {
+   "q": "Which testing step is needed even when a scanner reports zero errors?",
+   "right": "Manual testing with assistive technology and keyboard",
+   "wrong": [
+    "Nothing further",
+    "Only a contrast check",
+    "Only a translation review"
+   ],
+   "tier": 4,
+   "why": "Scanners cannot judge reading order or clear link text."
+  },
+  {
+   "q": "What does a Wizard of Oz test tell you?",
+   "right": "Whether people want an automated feature, before anyone builds the automation",
+   "wrong": [
+    "How fast the server responds under load",
+    "Whether the colours meet contrast thresholds",
+    "How many bugs remain"
+   ],
+   "tier": 4,
+   "why": "A person secretly does the work behind the interface."
+  },
+  {
+   "q": "Why must the Moksy catalogue markdown file not be edited by hand?",
+   "right": "It is generated from source files, so manual edits would be overwritten and drift from the truth",
+   "wrong": [
+    "It is encrypted",
+    "Editing it deletes the apps",
+    "Only hub vendors may change it"
+   ],
+   "tier": 5,
+   "why": "Edit the sources and regenerate."
+  },
+  {
+   "q": "A team's wiki page says deployments use script A, but the repo now uses script B. What should you do first?",
+   "right": "Move the authoritative steps into the repo next to the script and leave a pointer in the wiki",
+   "wrong": [
+    "Add a bold warning at the top of the wiki page",
+    "Ask the team to remember the change",
+    "Delete the wiki page without a replacement"
+   ],
+   "tier": 3,
+   "why": "Code-coupled docs belong with the code."
+  },
+  {
+   "q": "A stakeholder sees a polished clickable prototype and asks why the feature is not live. What would have prevented this?",
+   "right": "Labelling it as a prototype and stating what is not real",
+   "wrong": [
+    "Making it look rougher without explanation",
+    "Removing the stakeholder from the review",
+    "Hiding it until launch"
+   ],
+   "tier": 3,
+   "why": "Fidelity should match the question and be labelled."
+  },
+  {
+   "q": "You have run five interviews and a heavyweight platform is proposed. What is a sensible first step?",
+   "right": "Start with a shared document and a sheet, and set a trigger for moving to a platform",
+   "wrong": [
+    "Buy the platform immediately",
+    "Stop researching until a platform is chosen",
+    "Store the notes in individual inboxes"
+   ],
+   "tier": 4,
+   "why": "Low volume rarely justifies heavy tooling; check export, API, permissions and deletion first."
+  },
+  {
+   "q": "You are about to send a deck link to a client and the deck contains unreleased pricing work. What should you check?",
+   "right": "Who can open the link, whether it is limited to named people",
+   "wrong": [
+    "The slide count",
+    "The font size of the notes",
+    "Whether the deck has a dark theme"
+   ],
+   "tier": 3,
+   "why": "Open links can expose unreleased work."
+  },
+  {
+   "q": "Customers keep asking for an 'export to spreadsheet' button. What is the best next step?",
+   "right": "Ask what they are trying to achieve before deciding on the feature",
+   "wrong": [
+    "Build the button immediately",
+    "Reject the request",
+    "Add it to the roadmap with a date"
+   ],
+   "tier": 4,
+   "why": "The request may hide a different underlying need."
+  },
+  {
+   "q": "A button label in your design grows longer in translation and overflows. Which feature solves this best?",
+   "right": "Auto layout so the frame grows with the content",
+   "wrong": [
+    "Rasterising the button as an image",
+    "A fixed-size frame",
+    "Dot voting"
+   ],
+   "tier": 3,
+   "why": "Auto layout reflows around content."
+  },
+  {
+   "q": "Your team's backlog has hundreds of unreviewed items. What practice helps?",
+   "right": "Regular triage to set priority, owner or closure",
+   "wrong": [
+    "Closing the tracker",
+    "Increasing the WIP limit",
+    "Renaming the labels"
+   ],
+   "tier": 4,
+   "why": "Triage keeps the backlog meaningful."
+  },
+  {
+   "q": "A research recording contains a participant's name and opinions about colleagues. Another team asks for it. What should you do?",
+   "right": "Check consent and share an anonymised summary instead of the raw recording",
+   "wrong": [
+    "Send the recording",
+    "Post it in a public channel",
+    "Refuse to share any findings"
+   ],
+   "tier": 4,
+   "why": "Raw material needs consent and access control."
+  },
+  {
+   "q": "A chart uses only red and green to show good and bad. What is the problem and the fix?",
+   "right": "Colour alone carries the meaning, so add labels or patterns",
+   "wrong": [
+    "The chart is too small, so enlarge it",
+    "There are too many colours, so add more",
+    "Nothing; red and green are universal"
+   ],
+   "tier": 4,
+   "why": "Colour-blind users cannot distinguish them."
+  },
+  {
+   "q": "A scanner shows zero accessibility errors but users report they cannot complete checkout by keyboard. How do you reconcile this?",
+   "right": "Scanners miss problems like tab order and keyboard traps, so test manually",
+   "wrong": [
+    "The users must be wrong",
+    "The scanner is broken and should be replaced",
+    "Add more alt text"
+   ],
+   "tier": 5,
+   "why": "Automated tools only catch a portion of issues."
+  },
+  {
+   "q": "Two designers keep building their own versions of a card component. What practice fixes this?",
+   "right": "Maintain one shared component library with a code mapping",
+   "wrong": [
+    "Ask them to use different colours",
+    "Export the cards as PNG files",
+    "Stop using components"
+   ],
+   "tier": 4,
+   "why": "One source of building blocks avoids duplicates."
+  },
+  {
+   "q": "A decision made six months ago is being reargued because nobody remembers why. What was missing?",
+   "right": "A decision log or decision record with context and options",
+   "wrong": [
+    "A bigger meeting room",
+    "A longer roadmap",
+    "A different font"
+   ],
+   "tier": 4,
+   "why": "Recording the why saves reopening settled questions."
+  },
+  {
+   "q": "A designer hands off a file with only the main flow designed. What is likely to happen in build?",
+   "right": "Developers invent empty, loading and error states without design input",
+   "wrong": [
+    "The build will be faster",
+    "Accessibility will improve",
+    "Nothing, the states are automatic"
+   ],
+   "tier": 4,
+   "why": "Edge states need to be specified."
+  },
+  {
+   "q": "A roadmap with exact dates for all next-year items keeps slipping and eroding trust. What would you change?",
+   "right": "Move to a now-next-later or outcome-based format that avoids dates for distant items",
+   "wrong": [
+    "Add more dates",
+    "Remove the roadmap entirely",
+    "Hide the roadmap from stakeholders"
+   ],
+   "tier": 5,
+   "why": "Distant certainty is false precision."
+  },
+  {
+   "q": "You need to design navigation for a new site and have no structure yet. Which method first, and which second?",
+   "right": "A card sort first to generate groupings, then a tree test to check findability",
+   "wrong": [
+    "A tree test first, then a card sort",
+    "An A/B test first, then a diary study",
+    "A survey only"
+   ],
+   "tier": 4,
+   "why": "Generate structure, then validate it."
+  },
+  {
+   "q": "In the Moksy catalogue an app has status 'adapter planned'. What can you say about it today?",
+   "right": "It cannot be connected until a native connector is built",
+   "wrong": [
+    "It works now through any hub",
+    "It is already usable with a URL",
+    "It is retired"
+   ],
+   "tier": 4,
+   "why": "Only a first-class connector would carry it, and that is not built."
+  },
+  {
+   "q": "A designer exports every icon as a PNG at one size and developers complain icons look blurry on large screens. What would you change?",
+   "right": "Export icons as vector files so they scale cleanly",
+   "wrong": [
+    "Export larger PNG files only",
+    "Remove the icons",
+    "Convert the icons to a photograph"
+   ],
+   "tier": 4,
+   "why": "Vectors scale without losing sharpness."
+  },
+  {
+   "q": "A workshop board has 40 sticky notes and the team votes with three dots each. One person votes for all three on their own idea. What does the facilitator do?",
+   "right": "Agree up front that each person places each dot on a different option, and note the result as input rather than a decision",
+   "wrong": [
+    "Let the vote stand and ship it",
+    "Cancel the workshop",
+    "Count that person's votes twice"
+   ],
+   "tier": 5,
+   "why": "Dot voting is a signal, and rules should be agreed first."
+  },
+  {
+   "q": "Your team cites 'a design file shows what but not why'. How do you keep the why?",
+   "right": "Link the design from the requirement and write the decision it supported",
+   "wrong": [
+    "Rename the file",
+    "Export it as an image",
+    "Tell people in chat"
+   ],
+   "tier": 5,
+   "why": "Traceability preserves the reason for design choices."
+  },
+  {
+   "q": "A support team's tickets suggest that a feature is hated, but your voting board shows no complaints. What explains the gap?",
+   "right": "Tickets over-represent people who hit trouble while the voting board hears from those motivated to vote",
+   "wrong": [
+    "The ticket system is faulty",
+    "Users never lie",
+    "Voting boards measure only satisfaction"
+   ],
+   "tier": 5,
+   "why": "Each channel has its own bias, so triangulate."
+  },
+  {
+   "q": "An engineer asks whether the ggsocial DEPLOY.md should move to the wiki. Which answer matches the stated practice?",
+   "right": "Keep it in the repository, because code-coupled operational knowledge is easily lost in a wiki",
+   "wrong": [
+    "Move it so that non-developers can edit it",
+    "Delete it after each deploy",
+    "Store it on the production server only"
+   ],
+   "tier": 4,
+   "why": "The DEPLOY.md records traps learned the hard way alongside the code."
+  },
+  {
+   "q": "A team uses a stakeholder-friendly roadmap but a leader asks, 'Which interviews justify this item?' and nobody knows. What is the root cause and fix?",
+   "right": "Evidence is not linked to decisions, so link roadmap items back to the research that justifies them",
+   "wrong": [
+    "The roadmap has too few columns",
+    "The interviews were too short",
+    "The team should drop roadmaps"
+   ],
+   "tier": 5,
+   "why": "A roadmap should point back to evidence."
+  },
+  {
+   "q": "A team shares one deck as an email attachment and finds three versions in circulation. What change fixes it?",
+   "right": "Share a link to a single live deck and keep a PDF export for portability",
+   "wrong": [
+    "Attach the file again with 'final' in the name",
+    "Email it to fewer people",
+    "Print it"
+   ],
+   "tier": 4,
+   "why": "A link shows the latest version; the export is a backup."
+  },
+  {
+   "q": "Which of these is a good bug report?",
+   "right": "Steps to reproduce, what you expected and what actually happened",
+   "wrong": [
+    "It's broken, please fix",
+    "The app is slow sometimes",
+    "A screenshot with no text"
+   ],
+   "tier": 3,
+   "why": "A good report lets someone else see the problem."
+  },
+  {
+   "q": "What is the purpose of dot voting?",
+   "right": "To narrow many ideas down quickly by giving each person a few votes",
+   "wrong": [
+    "To give the facilitator the final decision",
+    "To hide who prefers what",
+    "To rank colours"
+   ],
+   "tier": 2,
+   "why": "It surfaces group preference."
+  },
+  {
+   "q": "Where do decisions and actions belong after a whiteboard workshop?",
+   "right": "In a lasting document, not just on the board",
+   "wrong": [
+    "Only on the board",
+    "Only in people's memory",
+    "In the chat channel topic only"
+   ],
+   "tier": 2,
+   "why": "Boards are cleared; documents last."
+  },
+  {
+   "q": "A new teammate cannot find a file named 'Final_v2_NEW.docx'. What naming change helps most?",
+   "right": "Use a descriptive title with a date prefix and rely on version history",
+   "wrong": [
+    "Add more exclamation marks",
+    "Rename it to 'document'",
+    "Store it in a deeper folder"
+   ],
+   "tier": 3,
+   "why": "Names should be predictable and versions tracked by the tool."
+  }
+ ]
+}

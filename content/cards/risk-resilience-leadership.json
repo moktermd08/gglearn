@@ -1,0 +1,2931 @@
+{
+ "slug": "risk-resilience-leadership",
+ "name": "Risk, Resilience and Incident Leadership",
+ "description": "Risk identification, assessment and treatment, risk appetite, business continuity and disaster recovery, incident command and communication, blameless post-mortems, reliability targets, third-party risk, breach response, security governance, privacy, AI risk, key-person risk, insurance and regulatory change for leaders.",
+ "roles": "cto,ceo,security,manager,devops",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "risk": "risk management concept",
+  "treat": "risk treatment option or control type",
+  "bcdr": "continuity or recovery concept",
+  "ic": "incident response role or practice",
+  "comm": "crisis communication practice",
+  "pm": "post-incident practice",
+  "sla": "reliability target concept",
+  "third": "third-party or supply-chain risk practice",
+  "breach": "data breach response concept",
+  "gov": "security governance concept",
+  "priv": "privacy concept",
+  "ai": "AI risk or governance concept",
+  "res": "resilience or key-person practice",
+  "cover": "insurance or regulatory-change concept"
+ },
+ "cards": [
+  {
+   "group": "risk",
+   "subject": "Risk",
+   "tier": 1,
+   "says": [
+    "describes something uncertain that could affect an objective",
+    "combines a chance of happening with a consequence if it does"
+   ],
+   "use": "need to name something uncertain that could hurt a goal",
+   "not": [
+    "is a problem that has already happened and needs action now"
+   ],
+   "like": [
+    "Risk register"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Likelihood",
+   "tier": 1,
+   "says": [
+    "estimates how probable it is that a risk event occurs",
+    "is rated on a scale such as rare to almost certain"
+   ],
+   "use": "need to judge how probable a threat is",
+   "not": [
+    "estimates how much damage the event would cause"
+   ],
+   "like": [
+    "Impact",
+    "Risk velocity"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Impact",
+   "tier": 1,
+   "says": [
+    "estimates the size of the consequence if a risk event occurs",
+    "can be measured in money, downtime, harm to people or lost trust"
+   ],
+   "use": "need to judge how bad a threat would be if it happened",
+   "not": [
+    "estimates how often the event is expected to occur"
+   ],
+   "like": [
+    "Likelihood"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk score",
+   "tier": 1,
+   "says": [
+    "multiplies likelihood by impact to rank risks",
+    "lets very different risks be compared on one scale",
+    "can rank a rare disaster and a frequent nuisance the same"
+   ],
+   "use": "need to decide which of many risks to look at first",
+   "not": [
+    "proves how much money a risk will cost"
+   ],
+   "like": [
+    "Quantitative risk analysis"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk register",
+   "tier": 1,
+   "says": [
+    "records each identified risk with its rating, owner and treatment",
+    "is reviewed on a regular schedule rather than filed once",
+    "becomes shelfware when no one is accountable for updating it"
+   ],
+   "use": "need one shared list of known risks and who is handling each",
+   "not": [
+    "is written once at project start and then closed"
+   ],
+   "like": [
+    "Risk owner"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk owner",
+   "tier": 1,
+   "says": [
+    "is the named person accountable for managing one risk",
+    "holds the authority to fund or decide its treatment",
+    "is a person or role, not a committee"
+   ],
+   "use": "find a register entry that nobody is acting on",
+   "not": [
+    "is always the security team regardless of the risk"
+   ],
+   "like": [
+    "Risk register"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk appetite",
+   "tier": 2,
+   "says": [
+    "states how much risk the organisation is willing to pursue to meet its goals",
+    "is set by the board or executive leadership",
+    "guides which risks are worth taking in the first place"
+   ],
+   "use": "need to decide whether a new venture's level of risk is acceptable in principle",
+   "not": [
+    "is a measurable limit on one specific metric"
+   ],
+   "like": [
+    "Risk tolerance"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk tolerance",
+   "tier": 3,
+   "says": [
+    "sets the acceptable variation around one specific objective",
+    "is expressed as a measurable limit such as maximum hours of downtime",
+    "is narrower and more operational than appetite"
+   ],
+   "use": "need a concrete threshold that triggers escalation",
+   "not": [
+    "is the board's broad statement of strategy"
+   ],
+   "like": [
+    "Risk appetite"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Residual risk",
+   "tier": 3,
+   "says": [
+    "is the risk that remains after controls and treatments are applied",
+    "is the level a named owner formally accepts when treatment is finished",
+    "is never exactly zero"
+   ],
+   "use": "need to know what exposure is left after the controls are in place",
+   "not": [
+    "is the risk before any control is counted"
+   ],
+   "like": [
+    "Risk appetite"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Key risk indicator",
+   "tier": 3,
+   "says": [
+    "is a metric that signals rising exposure before a loss occurs",
+    "triggers escalation when it crosses an agreed threshold"
+   ],
+   "use": "need an early warning that a risk is growing",
+   "not": [
+    "counts the losses that already happened last year"
+   ],
+   "like": [
+    "Risk tolerance"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Quantitative risk analysis",
+   "tier": 4,
+   "says": [
+    "expresses risk as ranges of probable financial loss",
+    "uses estimated frequencies and loss sizes instead of colour ratings",
+    "needs calibrated estimates to avoid false precision"
+   ],
+   "use": "must compare a security spend against the expected loss it prevents",
+   "not": [
+    "removes the need for expert judgement"
+   ],
+   "like": [
+    "Risk score"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk velocity",
+   "tier": 5,
+   "says": [
+    "measures how quickly a risk event reaches the business once it triggers",
+    "raises the priority of fast-moving risks that leave little time to respond"
+   ],
+   "use": "find that a moderate risk would hit the business within minutes of starting",
+   "not": [
+    "measures how often the event is expected to occur"
+   ],
+   "like": [
+    "Likelihood"
+   ]
+  },
+  {
+   "group": "treat",
+   "subject": "Risk avoidance",
+   "tier": 2,
+   "says": [
+    "stops the activity that creates the risk",
+    "gives up the potential benefit of that activity along with the risk"
+   ],
+   "use": "decide a venture's exposure is beyond appetite and drop it",
+   "not": [
+    "keeps the activity but adds extra controls"
+   ],
+   "like": [
+    "Risk mitigation",
+    "Risk acceptance"
+   ]
+  },
+  {
+   "group": "treat",
+   "subject": "Risk mitigation",
+   "tier": 2,
+   "says": [
+    "lowers likelihood, impact or both through controls",
+    "continues the activity while reducing exposure",
+    "leaves some residual risk behind"
+   ],
+   "use": "can cut a risk with extra safeguards and still run the activity",
+   "not": [
+    "shifts the cost of a loss to an insurer"
+   ],
+   "like": [
+    "Risk avoidance",
+    "Risk transfer"
+   ]
+  },
+  {
+   "group": "treat",
+   "subject": "Risk transfer",
+   "tier": 2,
+   "says": [
+    "shifts the financial consequence to another party such as an insurer or supplier",
+    "leaves reputational harm with the organisation"
+   ],
+   "use": "want a third party to bear the cost of a rare but severe loss",
+   "not": [
+    "removes the underlying cause of the risk"
+   ],
+   "like": [
+    "Risk mitigation",
+    "Risk acceptance"
+   ]
+  },
+  {
+   "group": "treat",
+   "subject": "Risk acceptance",
+   "tier": 2,
+   "says": [
+    "knowingly keeps a risk without further treatment",
+    "needs a named owner's sign-off and a review date"
+   ],
+   "use": "find that treating a risk would cost more than the loss it prevents",
+   "not": [
+    "means a risk is ignored because nobody noticed it"
+   ],
+   "like": [
+    "Risk avoidance",
+    "Risk transfer"
+   ]
+  },
+  {
+   "group": "treat",
+   "subject": "Preventive control",
+   "tier": 2,
+   "says": [
+    "stops a risk event from happening in the first place",
+    "is exemplified by access restrictions and approval steps"
+   ],
+   "use": "want to block an unauthorised change before it takes effect",
+   "not": [
+    "discovers an event after it has started"
+   ],
+   "like": [
+    "Detective control",
+    "Corrective control"
+   ]
+  },
+  {
+   "group": "treat",
+   "subject": "Detective control",
+   "tier": 2,
+   "says": [
+    "discovers that an event has happened or is happening",
+    "depends on someone acting on the alert it raises",
+    "is exemplified by log review and monitoring"
+   ],
+   "use": "want to be told when something slips past the barriers",
+   "not": [
+    "restores systems after an event"
+   ],
+   "like": [
+    "Preventive control",
+    "Corrective control"
+   ]
+  },
+  {
+   "group": "treat",
+   "subject": "Corrective control",
+   "tier": 3,
+   "says": [
+    "limits damage and restores the normal state after an event",
+    "reduces impact rather than preventing the event",
+    "is exemplified by restoring from backup"
+   ],
+   "use": "need to bring a damaged system back after a failure",
+   "not": [
+    "blocks the event before it begins"
+   ],
+   "like": [
+    "Preventive control",
+    "Detective control"
+   ]
+  },
+  {
+   "group": "treat",
+   "subject": "Compensating control",
+   "tier": 3,
+   "says": [
+    "stands in for a required control that cannot be implemented",
+    "must deliver a comparable level of protection"
+   ],
+   "use": "cannot apply a mandated control because of a technical constraint",
+   "not": [
+    "is any extra control added beyond what is required"
+   ],
+   "like": [
+    "Defence in depth"
+   ]
+  },
+  {
+   "group": "treat",
+   "subject": "Defence in depth",
+   "tier": 3,
+   "says": [
+    "layers several independent controls so one failure is not fatal",
+    "avoids relying on a single safeguard"
+   ],
+   "use": "worry that one failed safeguard could expose everything",
+   "not": [
+    "relies on one very strong perimeter control"
+   ],
+   "like": [
+    "Compensating control"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Business impact analysis",
+   "tier": 1,
+   "says": [
+    "identifies critical processes and the cost of interrupting them over time",
+    "sets the recovery priorities that plans are built on"
+   ],
+   "use": "need to know which services must come back first",
+   "not": [
+    "tests whether a backup can be restored"
+   ],
+   "like": [
+    "Business continuity plan"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Business continuity plan",
+   "tier": 2,
+   "says": [
+    "keeps critical business functions running during a disruption",
+    "covers people, premises, suppliers and processes, not only IT"
+   ],
+   "use": "need staff to keep serving customers while systems are down",
+   "not": [
+    "restores servers and databases after a failure"
+   ],
+   "like": [
+    "Disaster recovery plan"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Disaster recovery plan",
+   "tier": 2,
+   "says": [
+    "restores IT systems and data after a major failure",
+    "usually forms one component of the wider continuity effort"
+   ],
+   "use": "need step-by-step instructions to rebuild systems at another site",
+   "not": [
+    "decides how staff work from home during a disruption"
+   ],
+   "like": [
+    "Business continuity plan"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Recovery time objective",
+   "tier": 1,
+   "says": [
+    "is the longest acceptable time to restore a service after an outage",
+    "drives how much to invest in redundancy and failover"
+   ],
+   "use": "need to decide how fast a service must be back",
+   "not": [
+    "is the maximum acceptable data loss measured in time"
+   ],
+   "like": [
+    "Recovery point objective",
+    "Maximum tolerable period of disruption"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Recovery point objective",
+   "tier": 1,
+   "says": [
+    "is the maximum acceptable data loss measured in time",
+    "sets how often backups or replication must run"
+   ],
+   "use": "need to decide how much recent data the business can afford to lose",
+   "not": [
+    "is the longest acceptable time to restore the service"
+   ],
+   "like": [
+    "Recovery time objective"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Maximum tolerable period of disruption",
+   "tier": 5,
+   "says": [
+    "is the point at which an outage threatens the survival of the organisation",
+    "sets an upper bound that the recovery time objective must stay inside"
+   ],
+   "use": "need the outer limit beyond which the business itself would fail",
+   "not": [
+    "is the data loss a service can accept"
+   ],
+   "like": [
+    "Recovery time objective"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Active-active deployment",
+   "tier": 4,
+   "says": [
+    "serves live traffic from more than one site at the same time",
+    "can give near-zero recovery time at the highest cost"
+   ],
+   "use": "need that customers notice nothing when a whole site fails",
+   "not": [
+    "keeps an idle environment that is built only after disaster"
+   ],
+   "like": [
+    "Warm standby",
+    "Cold standby"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Warm standby",
+   "tier": 3,
+   "says": [
+    "keeps a scaled-down copy running that is scaled up on failure",
+    "recovers in minutes to hours at moderate cost"
+   ],
+   "use": "want faster recovery than rebuilding but cannot afford a full duplicate",
+   "not": [
+    "provisions the environment only after a disaster is declared"
+   ],
+   "like": [
+    "Active-active deployment",
+    "Cold standby"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Cold standby",
+   "tier": 3,
+   "says": [
+    "provisions the environment only after a disaster is declared",
+    "is the cheapest option and the slowest to recover"
+   ],
+   "use": "accept days of downtime for a low-priority system",
+   "not": [
+    "serves live traffic from several sites at once"
+   ],
+   "like": [
+    "Warm standby",
+    "Active-active deployment"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Failover",
+   "tier": 1,
+   "says": [
+    "switches service to a standby component when the primary fails",
+    "can be automatic or a manual decision"
+   ],
+   "use": "need service to move to the backup when the primary breaks",
+   "not": [
+    "returns traffic to the original site after repair"
+   ],
+   "like": [
+    "Recovery time objective"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Backup restore test",
+   "tier": 2,
+   "says": [
+    "proves that a backup can actually be restored within the required time",
+    "reveals broken or incomplete backups before a disaster does"
+   ],
+   "use": "learn that nobody has ever restored from the backups",
+   "not": [
+    "counts how many backup jobs ran successfully"
+   ],
+   "like": [
+    "Immutable backup"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Immutable backup",
+   "tier": 4,
+   "says": [
+    "cannot be altered or deleted for a set retention period",
+    "protects recovery from ransomware that targets backups"
+   ],
+   "use": "worry that an attacker with admin rights could erase every backup copy",
+   "not": [
+    "is any backup stored on the same server as the data"
+   ],
+   "like": [
+    "Backup restore test"
+   ]
+  },
+  {
+   "group": "bcdr",
+   "subject": "Single point of failure",
+   "tier": 2,
+   "says": [
+    "is a component whose failure stops the whole service",
+    "is found by tracing the dependencies of a critical service"
+   ],
+   "use": "need to find the one part that could take everything down",
+   "not": [
+    "is a component that has several redundant copies"
+   ],
+   "like": [
+    "Defence in depth"
+   ]
+  },
+  {
+   "group": "ic",
+   "subject": "Incident commander",
+   "tier": 1,
+   "says": [
+    "owns decisions and coordination for the duration of an incident",
+    "delegates hands-on fixing rather than debugging personally",
+    "decides when to escalate or declare the incident over"
+   ],
+   "use": "need one person making the call while many people work an outage",
+   "not": [
+    "writes the customer updates"
+   ],
+   "like": [
+    "Operations lead",
+    "Communications lead"
+   ]
+  },
+  {
+   "group": "ic",
+   "subject": "Operations lead",
+   "tier": 3,
+   "says": [
+    "directs the technical work of diagnosing and mitigating",
+    "reports findings and options to the incident commander"
+   ],
+   "use": "need someone to run the technical investigation and keep engineers from duplicating effort",
+   "not": [
+    "owns the final decision on severity"
+   ],
+   "like": [
+    "Incident commander"
+   ]
+  },
+  {
+   "group": "ic",
+   "subject": "Communications lead",
+   "tier": 3,
+   "says": [
+    "writes and sends updates to stakeholders and customers",
+    "shields responders from constant status questions"
+   ],
+   "use": "need someone to keep stakeholders informed so responders can focus",
+   "not": [
+    "records a timestamped log of every action"
+   ],
+   "like": [
+    "Scribe"
+   ]
+  },
+  {
+   "group": "ic",
+   "subject": "Scribe",
+   "tier": 3,
+   "says": [
+    "records a timestamped log of actions and decisions during the incident",
+    "provides the raw timeline later used in the post-mortem"
+   ],
+   "use": "need an accurate record of who did what and when",
+   "not": [
+    "sends the customer status updates"
+   ],
+   "like": [
+    "Communications lead"
+   ]
+  },
+  {
+   "group": "ic",
+   "subject": "Incident severity level",
+   "tier": 1,
+   "says": [
+    "classifies an incident by its business impact",
+    "decides who is paged and how often updates go out",
+    "is defined in advance so nobody argues about it mid-incident"
+   ],
+   "use": "need to decide how large a response an incident deserves",
+   "not": [
+    "is chosen by whichever engineer finds the problem and never changed"
+   ],
+   "like": [
+    "Escalation path"
+   ]
+  },
+  {
+   "group": "ic",
+   "subject": "Incident declaration",
+   "tier": 2,
+   "says": [
+    "formally starts the response process and assigns roles",
+    "is better made early and downgraded than made late"
+   ],
+   "use": "suspect customer impact but do not yet know the cause",
+   "not": [
+    "waits until the root cause is confirmed"
+   ],
+   "like": [
+    "Incident severity level"
+   ]
+  },
+  {
+   "group": "ic",
+   "subject": "Escalation path",
+   "tier": 2,
+   "says": [
+    "defines who is called next when the first responder cannot resolve the issue",
+    "includes time-based and severity-based triggers"
+   ],
+   "use": "cannot reach the owner of a failing service and the clock is running",
+   "not": [
+    "rates how serious an incident is"
+   ],
+   "like": [
+    "Incident severity level"
+   ]
+  },
+  {
+   "group": "ic",
+   "subject": "Mitigation before diagnosis",
+   "tier": 3,
+   "says": [
+    "restores service first and investigates the cause afterwards",
+    "favours rollback or failover over live debugging"
+   ],
+   "use": "can undo the last release to end customer impact while the cause is unknown",
+   "not": [
+    "requires the root cause to be proven before any change"
+   ],
+   "like": [
+    "Runbook"
+   ]
+  },
+  {
+   "group": "ic",
+   "subject": "Runbook",
+   "tier": 1,
+   "says": [
+    "gives step-by-step instructions for a known operational situation",
+    "reduces reliance on memory under stress"
+   ],
+   "use": "want a tired on-call engineer to handle a known alert correctly",
+   "not": [
+    "records the lessons of a past incident"
+   ],
+   "like": [
+    "Mitigation before diagnosis"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "Holding statement",
+   "tier": 2,
+   "says": [
+    "acknowledges an issue while facts are still unclear",
+    "commits to a time for the next update"
+   ],
+   "use": "must say something publicly before the cause is known",
+   "not": [
+    "announces the final cause and the fix"
+   ],
+   "like": [
+    "Fixed update cadence"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "Single spokesperson",
+   "tier": 2,
+   "says": [
+    "speaks for the organisation during a crisis",
+    "prevents contradictory messages from different people"
+   ],
+   "use": "see several leaders giving different accounts to the press",
+   "not": [
+    "lets each team answer questions in its own words"
+   ],
+   "like": [
+    "Communications lead"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "Fixed update cadence",
+   "tier": 2,
+   "says": [
+    "promises updates at set intervals even when nothing has changed",
+    "reduces inbound questions because people know when to expect news"
+   ],
+   "use": "find stakeholders chasing responders for status every few minutes",
+   "not": [
+    "sends an update only when the cause is known"
+   ],
+   "like": [
+    "Holding statement"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "Status page",
+   "tier": 1,
+   "says": [
+    "publishes service health to customers in one known place",
+    "is hosted separately from the systems it reports on"
+   ],
+   "use": "need customers to check service health without contacting support",
+   "not": [
+    "is an internal log read only by responders"
+   ],
+   "like": [
+    "Dark site"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "Customer impact statement",
+   "tier": 3,
+   "says": [
+    "describes what customers can and cannot do right now",
+    "leads with the effect on users rather than the technical cause"
+   ],
+   "use": "need to tell customers what is affected in plain words",
+   "not": [
+    "explains the architecture of the failing component"
+   ],
+   "like": [
+    "Holding statement"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "Executive briefing",
+   "tier": 3,
+   "says": [
+    "gives leaders the impact, current status, decisions needed and next update time",
+    "keeps executives out of the technical response channel"
+   ],
+   "use": "need to update the CEO without interrupting the responders",
+   "not": [
+    "contains the full engineering log for the CEO to read"
+   ],
+   "like": [
+    "Customer impact statement"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "Internal-first communication",
+   "tier": 4,
+   "says": [
+    "tells employees before or together with the public",
+    "gives staff approved lines for customer questions"
+   ],
+   "use": "worry that staff will learn about the crisis from the news",
+   "not": [
+    "keeps staff uninformed to prevent leaks"
+   ],
+   "like": [
+    "Single spokesperson"
+   ]
+  },
+  {
+   "group": "comm",
+   "subject": "Dark site",
+   "tier": 5,
+   "says": [
+    "is a pre-built page held ready to publish in a crisis",
+    "does not depend on the primary website's infrastructure"
+   ],
+   "use": "expect the main website to be down when you need to publish",
+   "not": [
+    "is a hidden page used to collect customer complaints"
+   ],
+   "like": [
+    "Status page"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Blameless post-mortem",
+   "tier": 1,
+   "says": [
+    "examines how the system allowed the failure rather than who erred",
+    "assumes people acted sensibly on the information they had",
+    "encourages honest reporting of mistakes"
+   ],
+   "use": "want people to share what really happened after an outage",
+   "not": [
+    "names the person responsible and records a penalty"
+   ],
+   "like": [
+    "Contributing-factor analysis"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Incident timeline",
+   "tier": 2,
+   "says": [
+    "orders events with timestamps from first impact to resolution",
+    "is built from the scribe's log, chat history and monitoring data"
+   ],
+   "use": "need to reconstruct exactly what happened and when",
+   "not": [
+    "lists the future improvements and their owners"
+   ],
+   "like": [
+    "Action item"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Contributing-factor analysis",
+   "tier": 3,
+   "says": [
+    "recognises that incidents usually have several causes that combined",
+    "replaces the search for a single culprit"
+   ],
+   "use": "find that a failure needed three separate weaknesses to line up",
+   "not": [
+    "stops once the first cause is found"
+   ],
+   "like": [
+    "Five whys"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Five whys",
+   "tier": 3,
+   "says": [
+    "asks why repeatedly to move from symptom towards cause",
+    "can mislead by following one linear chain of reasoning"
+   ],
+   "use": "want a quick technique for tracing a symptom back through the process",
+   "not": [
+    "maps every factor that contributed in parallel"
+   ],
+   "like": [
+    "Contributing-factor analysis"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Action item",
+   "tier": 1,
+   "says": [
+    "turns a lesson into a specific change with an owner and due date",
+    "is worthless unless tracked to completion"
+   ],
+   "use": "need the post-mortem to produce real change",
+   "not": [
+    "is a general intention to do better next time"
+   ],
+   "like": [
+    "Follow-through review"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Follow-through review",
+   "tier": 4,
+   "says": [
+    "checks periodically that post-mortem actions were finished",
+    "reports overdue actions to leadership"
+   ],
+   "use": "see the same incident repeat because earlier fixes were never completed",
+   "not": [
+    "is held once, straight after the incident ends"
+   ],
+   "like": [
+    "Action item",
+    "Incident trend review"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Incident trend review",
+   "tier": 5,
+   "says": [
+    "looks across many incidents for recurring themes",
+    "finds systemic weaknesses invisible in any single post-mortem"
+   ],
+   "use": "suspect separate outages share an underlying pattern",
+   "not": [
+    "checks that last month's action items are done"
+   ],
+   "like": [
+    "Follow-through review"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Near-miss review",
+   "tier": 3,
+   "says": [
+    "learns from events that almost caused harm",
+    "depends on a culture where reporting is safe"
+   ],
+   "use": "want to learn from a failure that was caught by luck",
+   "not": [
+    "investigates only incidents that caused customer impact"
+   ],
+   "like": [
+    "Blameless post-mortem"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Mean time to detect",
+   "tier": 3,
+   "says": [
+    "measures the average time from start of impact until someone knows",
+    "improves with better monitoring and alerting"
+   ],
+   "use": "want to know how long failures run unnoticed",
+   "not": [
+    "measures the average time to restore service"
+   ],
+   "like": [
+    "Mean time to recover"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Mean time to recover",
+   "tier": 3,
+   "says": [
+    "measures the average time from start of an outage until service is restored",
+    "improves with rehearsed rollback and clear runbooks"
+   ],
+   "use": "want to know how long outages typically last",
+   "not": [
+    "measures how long failures run unnoticed"
+   ],
+   "like": [
+    "Mean time to detect"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Hindsight bias",
+   "tier": 5,
+   "says": [
+    "makes an outcome seem obvious once it is known",
+    "leads reviewers to judge earlier decisions unfairly"
+   ],
+   "use": "notice reviewers saying the warning signs were plain to see",
+   "not": [
+    "comes from reviewing too little data"
+   ],
+   "like": [
+    "Blameless post-mortem"
+   ]
+  },
+  {
+   "group": "sla",
+   "subject": "Service level indicator",
+   "tier": 2,
+   "says": [
+    "is a measured quantity describing service health such as request success rate",
+    "supplies the numbers that objectives are judged on"
+   ],
+   "use": "need to decide what to measure about a service",
+   "not": [
+    "is a promise to customers with penalties"
+   ],
+   "like": [
+    "Service level objective",
+    "Service level agreement"
+   ]
+  },
+  {
+   "group": "sla",
+   "subject": "Service level objective",
+   "tier": 2,
+   "says": [
+    "sets the internal reliability goal for an indicator over a time window",
+    "guides engineering decisions about reliability work"
+   ],
+   "use": "need an agreed target for how reliable a service should be",
+   "not": [
+    "is a contract term that pays credits when missed"
+   ],
+   "like": [
+    "Service level indicator",
+    "Service level agreement"
+   ]
+  },
+  {
+   "group": "sla",
+   "subject": "Service level agreement",
+   "tier": 2,
+   "says": [
+    "is a contractual promise to customers",
+    "carries consequences such as credits when missed"
+   ],
+   "use": "need to state in a contract what a customer is promised",
+   "not": [
+    "is a purely internal engineering target"
+   ],
+   "like": [
+    "Service level objective"
+   ]
+  },
+  {
+   "group": "sla",
+   "subject": "Error budget",
+   "tier": 3,
+   "says": [
+    "is the amount of unreliability an objective allows over a window",
+    "equals 100 percent minus the objective",
+    "lets teams spend risk on shipping change"
+   ],
+   "use": "need to balance feature speed against stability with a number",
+   "not": [
+    "is the money set aside to pay SLA credits"
+   ],
+   "like": [
+    "Burn rate"
+   ]
+  },
+  {
+   "group": "sla",
+   "subject": "Error budget policy",
+   "tier": 5,
+   "says": [
+    "states what changes when the budget is spent, such as pausing feature releases",
+    "settles the response in advance so it is not argued during a crisis"
+   ],
+   "use": "find teams disagreeing about whether to freeze releases after repeated outages",
+   "not": [
+    "sets the target availability for a service"
+   ],
+   "like": [
+    "Error budget"
+   ]
+  },
+  {
+   "group": "sla",
+   "subject": "Burn rate",
+   "tier": 4,
+   "says": [
+    "measures how fast the error budget is being consumed",
+    "supports alerts that fire on fast or slow depletion"
+   ],
+   "use": "want to be warned that the budget will run out well before the window ends",
+   "not": [
+    "is the total unreliability allowed in a window"
+   ],
+   "like": [
+    "Error budget"
+   ]
+  },
+  {
+   "group": "sla",
+   "subject": "Availability percentage",
+   "tier": 1,
+   "says": [
+    "expresses uptime as a share such as 99.9 percent",
+    "cuts permitted downtime tenfold with each added nine"
+   ],
+   "use": "need to translate a reliability target into allowed minutes of downtime",
+   "not": [
+    "measures how quickly failures are detected"
+   ],
+   "like": [
+    "Service level objective"
+   ]
+  },
+  {
+   "group": "sla",
+   "subject": "Symptom-based alerting",
+   "tier": 4,
+   "says": [
+    "pages people on user-visible failures rather than internal causes",
+    "reduces noise from alerts nobody needs to act on"
+   ],
+   "use": "find that on-call is flooded with alerts that never affect users",
+   "not": [
+    "alerts on every metric that crosses a threshold"
+   ],
+   "like": [
+    "Mean time to detect"
+   ]
+  },
+  {
+   "group": "sla",
+   "subject": "100 percent reliability target",
+   "tier": 4,
+   "says": [
+    "costs far more than it returns because users cannot perceive the difference",
+    "is unrealistic when dependencies fail more often than that"
+   ],
+   "use": "hear a stakeholder demand that the service must never fail",
+   "not": [
+    "is the sensible default for every critical service"
+   ],
+   "like": [
+    "Availability percentage"
+   ]
+  },
+  {
+   "group": "third",
+   "subject": "Vendor tiering",
+   "tier": 3,
+   "says": [
+    "ranks suppliers by data access and business criticality",
+    "decides how much due diligence each supplier receives"
+   ],
+   "use": "have hundreds of suppliers and limited review capacity",
+   "not": [
+    "gives every supplier an identical review"
+   ],
+   "like": [
+    "Security questionnaire"
+   ]
+  },
+  {
+   "group": "third",
+   "subject": "Security questionnaire",
+   "tier": 2,
+   "says": [
+    "collects a vendor's self-reported control answers",
+    "needs evidence checking because answers are unverified"
+   ],
+   "use": "need a first view of a supplier's security practices",
+   "not": [
+    "independently tests the supplier's systems"
+   ],
+   "like": [
+    "Vendor tiering"
+   ]
+  },
+  {
+   "group": "third",
+   "subject": "Concentration risk",
+   "tier": 5,
+   "says": [
+    "arises when too much depends on one supplier or region",
+    "turns a single provider outage into a company-wide one"
+   ],
+   "use": "find that every critical service runs on the same cloud region",
+   "not": [
+    "comes from having many small suppliers"
+   ],
+   "like": [
+    "Fourth-party risk"
+   ]
+  },
+  {
+   "group": "third",
+   "subject": "Fourth-party risk",
+   "tier": 4,
+   "says": [
+    "comes from the suppliers of your suppliers",
+    "stays invisible unless the contract requires disclosure of subprocessors"
+   ],
+   "use": "discover your vendor relies on an unknown provider for your data",
+   "not": [
+    "comes from your own direct employees"
+   ],
+   "like": [
+    "Concentration risk"
+   ]
+  },
+  {
+   "group": "third",
+   "subject": "Software bill of materials",
+   "tier": 3,
+   "says": [
+    "lists the components and libraries inside a software product",
+    "lets you check quickly whether a newly disclosed flaw affects you"
+   ],
+   "use": "hear about a critical flaw in a common library and need to know where you use it",
+   "not": [
+    "lists the licences you have bought"
+   ],
+   "like": [
+    "Supply-chain attack"
+   ]
+  },
+  {
+   "group": "third",
+   "subject": "Supply-chain attack",
+   "tier": 3,
+   "says": [
+    "compromises a trusted supplier or dependency to reach its customers",
+    "arrives through legitimate updates and so bypasses the perimeter"
+   ],
+   "use": "learn that a trusted update was tampered with at its source",
+   "not": [
+    "exploits a flaw in your own firewall"
+   ],
+   "like": [
+    "Software bill of materials"
+   ]
+  },
+  {
+   "group": "third",
+   "subject": "Exit plan",
+   "tier": 4,
+   "says": [
+    "describes how to leave a vendor with data returned and service moved",
+    "is best agreed before signing, when leverage is greatest"
+   ],
+   "use": "depend on one supplier and fear being trapped",
+   "not": [
+    "is written after the vendor relationship has failed"
+   ],
+   "like": [
+    "Source code escrow"
+   ]
+  },
+  {
+   "group": "third",
+   "subject": "Right to audit",
+   "tier": 4,
+   "says": [
+    "lets the customer inspect or commission a review of a supplier's controls",
+    "is a contract clause rather than a technical control"
+   ],
+   "use": "need to verify a critical supplier's claims beyond its questionnaire",
+   "not": [
+    "lets the supplier audit the customer's staff"
+   ],
+   "like": [
+    "Security questionnaire"
+   ]
+  },
+  {
+   "group": "third",
+   "subject": "Source code escrow",
+   "tier": 5,
+   "says": [
+    "deposits source code with a neutral party to be released on defined events",
+    "protects against supplier insolvency or abandonment of a product"
+   ],
+   "use": "depend on a small vendor's software and fear it could vanish",
+   "not": [
+    "lets the customer read the source at any time"
+   ],
+   "like": [
+    "Exit plan"
+   ]
+  },
+  {
+   "group": "breach",
+   "subject": "Personal data breach",
+   "tier": 2,
+   "says": [
+    "is a security incident that exposes personal data to unauthorised parties",
+    "includes accidental disclosure and loss, not only attacks"
+   ],
+   "use": "find that a spreadsheet of customer records was emailed to the wrong recipient",
+   "not": [
+    "happens only when an outside attacker steals data"
+   ],
+   "like": [
+    "Breach assessment"
+   ]
+  },
+  {
+   "group": "breach",
+   "subject": "Containment",
+   "tier": 2,
+   "says": [
+    "stops a breach from spreading or continuing",
+    "comes before eradication and recovery"
+   ],
+   "use": "must stop an attacker from reaching more systems right now",
+   "not": [
+    "removes the attacker's access for good"
+   ],
+   "like": [
+    "Eradication"
+   ]
+  },
+  {
+   "group": "breach",
+   "subject": "Eradication",
+   "tier": 3,
+   "says": [
+    "removes the attacker's access and malicious artefacts from the environment",
+    "must be complete or the attacker returns"
+   ],
+   "use": "must make sure no backdoor remains after containing an intrusion",
+   "not": [
+    "limits the attacker's movement in the short term"
+   ],
+   "like": [
+    "Containment"
+   ]
+  },
+  {
+   "group": "breach",
+   "subject": "Evidence preservation",
+   "tier": 3,
+   "says": [
+    "keeps logs and disk images intact for investigation",
+    "conflicts with the urge to wipe and rebuild immediately"
+   ],
+   "use": "want to rebuild an infected server but need to keep forensic proof",
+   "not": [
+    "deletes affected systems as fast as possible"
+   ],
+   "like": [
+    "Containment"
+   ]
+  },
+  {
+   "group": "breach",
+   "subject": "Breach assessment",
+   "tier": 3,
+   "says": [
+    "judges the likely harm to affected people from the exposed data",
+    "informs whether notification to authorities or individuals is required"
+   ],
+   "use": "need to decide whether a leak must be reported",
+   "not": [
+    "lists the controls that failed"
+   ],
+   "like": [
+    "Personal data breach"
+   ]
+  },
+  {
+   "group": "breach",
+   "subject": "Notification clock",
+   "tier": 3,
+   "says": [
+    "is a regulator-set time limit that often runs from the moment of awareness",
+    "makes early escalation to legal and privacy staff essential"
+   ],
+   "use": "suspect a breach on a Friday and wonder whether the weekend counts",
+   "not": [
+    "starts only when the investigation is complete"
+   ],
+   "like": [
+    "Affected-person notification"
+   ]
+  },
+  {
+   "group": "breach",
+   "subject": "Affected-person notification",
+   "tier": 3,
+   "says": [
+    "tells the people whose data was exposed what happened and what to do",
+    "explains likely consequences and protective steps in plain language"
+   ],
+   "use": "must write to customers whose data was exposed",
+   "not": [
+    "is sent only to the regulator"
+   ],
+   "like": [
+    "Notification clock"
+   ]
+  },
+  {
+   "group": "breach",
+   "subject": "Legal counsel engagement",
+   "tier": 3,
+   "says": [
+    "brings lawyers in early to advise on obligations and on how findings are shared",
+    "helps keep investigation discussions deliberate and controlled"
+   ],
+   "use": "face a breach with unclear notification duties",
+   "not": [
+    "delays the response until the investigation ends"
+   ],
+   "like": [
+    "Breach assessment"
+   ]
+  },
+  {
+   "group": "breach",
+   "subject": "Ransom payment decision",
+   "tier": 5,
+   "says": [
+    "is a leadership decision weighing legal limits, recovery options and uncertain outcomes",
+    "does not guarantee that stolen data is deleted or returned"
+   ],
+   "use": "face encrypted systems and a demand for payment",
+   "not": [
+    "is made by the IT team alone as a technical matter"
+   ],
+   "like": [
+    "Containment"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "ISO 27001",
+   "tier": 2,
+   "says": [
+    "is an international standard for an information security management system",
+    "can be certified by an independent accredited auditor",
+    "requires continual improvement of the system"
+   ],
+   "use": "need a certification recognised internationally across industries",
+   "not": [
+    "is an audit report written about service organisations"
+   ],
+   "like": [
+    "SOC 2"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "SOC 2",
+   "tier": 2,
+   "says": [
+    "is an independent auditor's report on a service organisation's controls",
+    "is built on the trust services criteria",
+    "is commonly requested by customers during supplier reviews"
+   ],
+   "use": "hear a customer ask for an auditor's report on how you protect their data",
+   "not": [
+    "is a certificate of a management system"
+   ],
+   "like": [
+    "ISO 27001"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Information security management system",
+   "tier": 3,
+   "says": [
+    "is the set of policies, processes and roles that manage security systematically",
+    "runs on a plan, do, check, act cycle"
+   ],
+   "use": "want security managed as an ongoing system rather than a project",
+   "not": [
+    "is a single software tool that blocks attacks"
+   ],
+   "like": [
+    "Statement of applicability"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Statement of applicability",
+   "tier": 4,
+   "says": [
+    "lists which controls apply and why others are excluded",
+    "is a required document in ISO 27001 certification"
+   ],
+   "use": "must justify why some standard controls are not used",
+   "not": [
+    "lists the incidents of the past year"
+   ],
+   "like": [
+    "Information security management system"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "SOC 2 Type I",
+   "tier": 3,
+   "says": [
+    "describes whether controls are suitably designed at one point in time",
+    "is quicker to obtain than a Type II report"
+   ],
+   "use": "need a first report quickly and have no operating history yet",
+   "not": [
+    "tests controls over a period of months"
+   ],
+   "like": [
+    "SOC 2 Type II"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "SOC 2 Type II",
+   "tier": 3,
+   "says": [
+    "tests whether controls operated effectively over a period",
+    "gives customers stronger assurance than a point-in-time view"
+   ],
+   "use": "need to show that controls worked consistently over time",
+   "not": [
+    "describes control design at a single date"
+   ],
+   "like": [
+    "SOC 2 Type I"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Information security policy",
+   "tier": 1,
+   "says": [
+    "sets management's top-level security rules and intent",
+    "is approved by senior leadership and reviewed periodically"
+   ],
+   "use": "need a rule that every employee must follow",
+   "not": [
+    "is a technical procedure for configuring one server"
+   ],
+   "like": [
+    "Policy exception process"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Policy exception process",
+   "tier": 3,
+   "says": [
+    "records a time-limited deviation from policy with an owner who accepts the risk",
+    "brings unofficial workarounds into view"
+   ],
+   "use": "find a team that cannot comply with a policy for a good reason",
+   "not": [
+    "approves permanent deviations without review"
+   ],
+   "like": [
+    "Information security policy"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Security awareness training",
+   "tier": 1,
+   "says": [
+    "teaches staff to recognise and report threats such as phishing",
+    "works best when repeated and reinforced regularly"
+   ],
+   "use": "want staff to spot and report suspicious emails",
+   "not": [
+    "replaces technical controls"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Three lines model",
+   "tier": 4,
+   "says": [
+    "separates management, risk oversight and independent assurance",
+    "keeps internal audit independent of the controls it checks"
+   ],
+   "use": "find that the team running a control is also the one checking it",
+   "not": [
+    "puts all risk work under one team"
+   ],
+   "like": [
+    "Segregation of duties"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Segregation of duties",
+   "tier": 3,
+   "says": [
+    "splits a sensitive task between people so one person cannot abuse it alone",
+    "is exemplified by separating who requests a payment from who approves it"
+   ],
+   "use": "find one person can create and approve the same payment",
+   "not": [
+    "gives one trusted person full control to speed things up"
+   ],
+   "like": [
+    "Three lines model"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Board security reporting",
+   "tier": 4,
+   "says": [
+    "translates technical status into risk, trend and decision terms",
+    "avoids raw vulnerability counts as the headline"
+   ],
+   "use": "must brief directors who are not technical",
+   "not": [
+    "lists every alert from the monitoring tools"
+   ],
+   "like": [
+    "Key risk indicator"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Compliance-as-security fallacy",
+   "tier": 5,
+   "says": [
+    "confuses a point-in-time audit result with ongoing security",
+    "assumes a certificate proves the organisation cannot be breached"
+   ],
+   "use": "hear a leader say passing the audit means we are safe",
+   "not": [
+    "recognises that audits replace security work"
+   ],
+   "like": [
+    "SOC 2 Type II"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Data controller",
+   "tier": 1,
+   "says": [
+    "decides why and how personal data is processed",
+    "carries primary accountability to individuals and regulators"
+   ],
+   "use": "are the party that decides the purpose of collecting customer data",
+   "not": [
+    "processes data only on another party's instructions"
+   ],
+   "like": [
+    "Data processor"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Data processor",
+   "tier": 1,
+   "says": [
+    "processes personal data on behalf of a controller",
+    "acts on documented instructions"
+   ],
+   "use": "are a supplier handling customer data only to provide a service",
+   "not": [
+    "decides independently why the data is collected"
+   ],
+   "like": [
+    "Data controller"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Data subject",
+   "tier": 1,
+   "says": [
+    "is the living individual that the personal data is about",
+    "holds rights such as access and correction"
+   ],
+   "use": "need the term for the person whose data is held",
+   "not": [
+    "is the organisation holding the data"
+   ],
+   "like": [
+    "Data controller"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Personal data",
+   "tier": 1,
+   "says": [
+    "is any information relating to an identifiable person",
+    "includes indirect identifiers such as online identifiers"
+   ],
+   "use": "are unsure whether a record counts as covered by privacy rules",
+   "not": [
+    "covers only names and addresses"
+   ],
+   "like": [
+    "Anonymisation"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Lawful basis",
+   "tier": 2,
+   "says": [
+    "is the justification required before personal data may be processed",
+    "must be identified before processing starts, not afterwards"
+   ],
+   "use": "want to start a new use of customer data and must justify it",
+   "not": [
+    "is always the individual's consent"
+   ],
+   "like": [
+    "Consent"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Consent",
+   "tier": 3,
+   "says": [
+    "is one lawful basis that must be freely given, specific and informed",
+    "must be as easy to withdraw as to give"
+   ],
+   "use": "rely on the individual's agreement as the justification",
+   "not": [
+    "can be assumed from silence or pre-ticked boxes"
+   ],
+   "like": [
+    "Lawful basis"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Data minimisation",
+   "tier": 2,
+   "says": [
+    "collects and keeps only the data needed for the stated purpose",
+    "limits exposure by holding less"
+   ],
+   "use": "are asked to add a form field that is not needed for the service",
+   "not": [
+    "keeps all data in case it is useful later"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Data protection impact assessment",
+   "tier": 3,
+   "says": [
+    "assesses privacy risks of high-risk processing before it starts",
+    "identifies measures that reduce harm to individuals"
+   ],
+   "use": "plan a new system that profiles people on a large scale",
+   "not": [
+    "is done after launch as a review"
+   ],
+   "like": [
+    "Privacy by design"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Privacy by design",
+   "tier": 3,
+   "says": [
+    "builds privacy protections into systems from the start",
+    "defaults to the most protective setting"
+   ],
+   "use": "are designing a new product and want privacy built in, not added later",
+   "not": [
+    "adds protections after a complaint"
+   ],
+   "like": [
+    "Data protection impact assessment"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Data subject access request",
+   "tier": 2,
+   "says": [
+    "lets an individual ask for a copy of the data held about them",
+    "depends on knowing where personal data lives across systems"
+   ],
+   "use": "receive a request from a customer for everything held about them",
+   "not": [
+    "lets an authority inspect the company's servers"
+   ],
+   "like": [
+    "Data subject"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Pseudonymisation",
+   "tier": 4,
+   "says": [
+    "replaces identifiers with a key held separately",
+    "still counts as personal data because re-identification is possible"
+   ],
+   "use": "want analysts to work on data without seeing names while keeping the ability to re-link",
+   "not": [
+    "makes data permanently non-personal"
+   ],
+   "like": [
+    "Anonymisation"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "Anonymisation",
+   "tier": 5,
+   "says": [
+    "removes identifiability irreversibly so data is no longer personal",
+    "is hard to achieve when datasets can be combined"
+   ],
+   "use": "want to publish a dataset that can never be traced back to people",
+   "not": [
+    "is achieved by replacing names with codes"
+   ],
+   "like": [
+    "Pseudonymisation"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Hallucination",
+   "tier": 1,
+   "says": [
+    "is fluent model output that is false or unsupported",
+    "cannot be ruled out by a model's confident tone"
+   ],
+   "use": "see a model cite a source that does not exist",
+   "not": [
+    "is a deliberate attack on the model"
+   ],
+   "like": [
+    "Prompt injection"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Prompt injection",
+   "tier": 2,
+   "says": [
+    "hides instructions in input that the model may follow as commands",
+    "is hard to block completely when models read untrusted content"
+   ],
+   "use": "let an AI assistant read emails or web pages from outsiders",
+   "not": [
+    "is false output caused by missing training data"
+   ],
+   "like": [
+    "Hallucination"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Shadow AI",
+   "tier": 2,
+   "says": [
+    "is staff use of unapproved AI tools with company data",
+    "grows when approved tools are slow or missing"
+   ],
+   "use": "find employees pasting customer records into a free chatbot",
+   "not": [
+    "is an approved assistant running in the background"
+   ],
+   "like": [
+    "AI acceptable use policy"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI acceptable use policy",
+   "tier": 2,
+   "says": [
+    "states which AI tools, data and tasks are permitted",
+    "tells staff which data must never be put into external tools"
+   ],
+   "use": "need clear rules for staff before rolling out AI tools",
+   "not": [
+    "lists the technical architecture of the models"
+   ],
+   "like": [
+    "Shadow AI"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Human in the loop",
+   "tier": 3,
+   "says": [
+    "places a person to review or approve high-impact outputs before they take effect",
+    "needs real authority, time and information to override"
+   ],
+   "use": "let an AI recommend decisions that significantly affect individuals",
+   "not": [
+    "means a person is told about the output afterwards"
+   ],
+   "like": [
+    "Automation bias"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Automation bias",
+   "tier": 5,
+   "says": [
+    "is the tendency to over-trust automated suggestions",
+    "can reduce a human-review control to a rubber stamp"
+   ],
+   "use": "notice reviewers approve almost every AI suggestion without checking",
+   "not": [
+    "is a model's skew against a demographic group"
+   ],
+   "like": [
+    "Human in the loop"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Model drift",
+   "tier": 3,
+   "says": [
+    "is a decline in model performance as real-world data changes",
+    "is caught by monitoring quality over time"
+   ],
+   "use": "see a once-accurate model slowly get worse as customer behaviour changes",
+   "not": [
+    "is a model suddenly changed by its provider"
+   ],
+   "like": [
+    "Vendor model change risk"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI use-case inventory",
+   "tier": 3,
+   "says": [
+    "lists every AI system in use with its owner, data and purpose",
+    "is the base on which any governance depends"
+   ],
+   "use": "cannot answer how many AI tools the company is using",
+   "not": [
+    "lists the training datasets of one model"
+   ],
+   "like": [
+    "Risk-tiered AI governance"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Risk-tiered AI governance",
+   "tier": 4,
+   "says": [
+    "applies stronger review to higher-impact AI uses",
+    "avoids a heavy process for low-risk uses"
+   ],
+   "use": "need to govern dozens of AI uses without blocking harmless ones",
+   "not": [
+    "applies the same full review to every use"
+   ],
+   "like": [
+    "AI use-case inventory"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Vendor model change risk",
+   "tier": 5,
+   "says": [
+    "arises when a provider updates a model so its behaviour shifts",
+    "is mitigated by version pinning and regression tests"
+   ],
+   "use": "find outputs changed overnight though your own code did not",
+   "not": [
+    "is caused by changing market data over months"
+   ],
+   "like": [
+    "Model drift"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Key-person risk",
+   "tier": 2,
+   "says": [
+    "arises when critical knowledge or authority rests with one individual",
+    "is reduced by documentation, deputies and sharing responsibilities"
+   ],
+   "use": "find that only one engineer knows how the billing system works",
+   "not": [
+    "is solved by retaining the person with a bonus alone"
+   ],
+   "like": [
+    "Succession plan"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Succession plan",
+   "tier": 3,
+   "says": [
+    "names and prepares people to take over critical roles",
+    "covers both planned departures and sudden loss"
+   ],
+   "use": "need to know who steps in if a senior leader leaves tomorrow",
+   "not": [
+    "lists the current staff by seniority"
+   ],
+   "like": [
+    "Key-person risk"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Tabletop exercise",
+   "tier": 3,
+   "says": [
+    "walks a team through a scenario by discussion without touching systems",
+    "exposes gaps in roles and decisions cheaply"
+   ],
+   "use": "want to rehearse the response plan without disrupting production",
+   "not": [
+    "injects real failures into running systems"
+   ],
+   "like": [
+    "Game day"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Game day",
+   "tier": 4,
+   "says": [
+    "injects real failures to rehearse response and test system behaviour",
+    "finds technical weaknesses that discussion would miss"
+   ],
+   "use": "want to learn whether failover actually works under real faults",
+   "not": [
+    "is a discussion-only walkthrough of a scenario"
+   ],
+   "like": [
+    "Tabletop exercise"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Scenario planning",
+   "tier": 4,
+   "says": [
+    "explores several plausible futures and prepares options for each",
+    "does not try to predict the single most likely outcome"
+   ],
+   "use": "face deep uncertainty where forecasting one outcome is unreliable",
+   "not": [
+    "picks the most probable forecast and plans only for it"
+   ],
+   "like": [
+    "Pre-mortem"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Pre-mortem",
+   "tier": 4,
+   "says": [
+    "imagines the project has already failed and works backwards to find causes",
+    "surfaces concerns people hesitate to voice in planning"
+   ],
+   "use": "want a team to name the ways a plan could fail before it starts",
+   "not": [
+    "reviews a failure after it has happened"
+   ],
+   "like": [
+    "Blameless post-mortem",
+    "Scenario planning"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Graceful degradation",
+   "tier": 4,
+   "says": [
+    "lets a service keep core functions when a dependency fails",
+    "trades full features for continued availability"
+   ],
+   "use": "want the shop to keep taking orders even if recommendations break",
+   "not": [
+    "shuts down the whole service when any part fails"
+   ],
+   "like": [
+    "Failover"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Crisis management team",
+   "tier": 3,
+   "says": [
+    "brings executives together with defined roles to lead the response to a major event",
+    "separates strategic decisions from the technical response"
+   ],
+   "use": "face an event so serious that it needs executive decisions beyond the technical team",
+   "not": [
+    "replaces the incident commander during the technical work"
+   ],
+   "like": [
+    "Incident commander"
+   ]
+  },
+  {
+   "group": "cover",
+   "subject": "Cyber insurance",
+   "tier": 2,
+   "says": [
+    "transfers part of the financial cost of cyber events to an insurer",
+    "does not replace controls and does not restore reputation"
+   ],
+   "use": "want to cover the costs of response and recovery for a rare large loss",
+   "not": [
+    "guarantees that the insurer prevents attacks"
+   ],
+   "like": [
+    "Risk transfer"
+   ]
+  },
+  {
+   "group": "cover",
+   "subject": "Policy retention",
+   "tier": 3,
+   "says": [
+    "is the amount of a loss the insured pays before cover applies",
+    "is higher when the premium is lower"
+   ],
+   "use": "must choose how much loss to bear before the insurer pays",
+   "not": [
+    "is the maximum amount the insurer will pay"
+   ],
+   "like": [
+    "Policy sublimit"
+   ]
+  },
+  {
+   "group": "cover",
+   "subject": "Policy exclusion",
+   "tier": 3,
+   "says": [
+    "names circumstances the insurer will not cover",
+    "can remove cover for events such as unpatched known flaws or acts of war"
+   ],
+   "use": "read a policy to learn what would not be paid",
+   "not": [
+    "extends cover to additional events"
+   ],
+   "like": [
+    "Policy sublimit"
+   ]
+  },
+  {
+   "group": "cover",
+   "subject": "Policy sublimit",
+   "tier": 5,
+   "says": [
+    "caps cover for one type of loss below the overall limit",
+    "can leave a large gap for costs such as extortion or regulatory response"
+   ],
+   "use": "find that the policy pays far less than expected for one kind of loss",
+   "not": [
+    "is the amount the insured must pay first"
+   ],
+   "like": [
+    "Policy retention"
+   ]
+  },
+  {
+   "group": "cover",
+   "subject": "Horizon scanning",
+   "tier": 3,
+   "says": [
+    "looks ahead for emerging rules, technologies and threats",
+    "gives time to prepare before new obligations apply"
+   ],
+   "use": "want early warning of regulation that will affect the business",
+   "not": [
+    "checks compliance with rules already in force"
+   ],
+   "like": [
+    "Regulatory change impact assessment"
+   ]
+  },
+  {
+   "group": "cover",
+   "subject": "Obligations register",
+   "tier": 3,
+   "says": [
+    "lists the laws, contracts and standards the organisation must meet",
+    "links each obligation to an owner and the controls that satisfy it"
+   ],
+   "use": "cannot say which rules apply to a product or who is responsible",
+   "not": [
+    "lists the risks the board has accepted"
+   ],
+   "like": [
+    "Risk register"
+   ]
+  },
+  {
+   "group": "cover",
+   "subject": "Regulatory change impact assessment",
+   "tier": 5,
+   "says": [
+    "analyses how a new or changed rule affects processes, systems and cost",
+    "produces an owned plan and date for any required change"
+   ],
+   "use": "learn that a rule will change and need to know what must be altered",
+   "not": [
+    "monitors for emerging rules"
+   ],
+   "like": [
+    "Horizon scanning"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "A risk is rated likelihood 4 and impact 5 on a five-point scale. What is its score under the usual multiplication method?",
+   "right": "20",
+   "wrong": [
+    "9",
+    "25",
+    "45"
+   ],
+   "tier": 1,
+   "why": "The usual score multiplies likelihood by impact, so 4 x 5 = 20."
+  },
+  {
+   "q": "What is the main job of a risk register?",
+   "right": "To hold every identified risk with its rating, owner and treatment in one reviewed list",
+   "wrong": [
+    "To log every incident after it has been resolved",
+    "To record the budget for each security tool",
+    "To replace the board's risk appetite statement"
+   ],
+   "tier": 1,
+   "why": "A register is the living list of risks and who is managing each."
+  },
+  {
+   "q": "What does a recovery point objective describe?",
+   "right": "How much recent data the business can afford to lose, measured in time",
+   "wrong": [
+    "How long the service may stay down",
+    "How many staff must be on call",
+    "How often the disaster recovery plan is printed"
+   ],
+   "tier": 1,
+   "why": "RPO is about data loss; RTO is about downtime."
+  },
+  {
+   "q": "What does a recovery time objective describe?",
+   "right": "The longest acceptable time to bring a service back after an outage",
+   "wrong": [
+    "The amount of data that may be lost",
+    "The time the post-mortem must be published",
+    "The number of backup copies to keep"
+   ],
+   "tier": 1,
+   "why": "RTO is the downtime limit."
+  },
+  {
+   "q": "What is the purpose of a blameless post-mortem?",
+   "right": "To learn how the system allowed the failure so it can be improved",
+   "wrong": [
+    "To decide which person should be disciplined",
+    "To prove to customers the company did nothing wrong",
+    "To produce the record needed for insurance only"
+   ],
+   "tier": 1,
+   "why": "Blamelessness encourages honest accounts, which is what makes learning possible."
+  },
+  {
+   "q": "Which statement best separates an SLO from an SLA?",
+   "right": "An SLO is an internal reliability goal, while an SLA is a contractual promise with consequences",
+   "wrong": [
+    "An SLO is for databases and an SLA is for web servers",
+    "An SLO is measured yearly and an SLA monthly",
+    "An SLO is written by customers and an SLA by engineers"
+   ],
+   "tier": 2,
+   "why": "Teams typically set the SLO stricter than the SLA so they have room to react before breaking the contract."
+  },
+  {
+   "q": "A service has a 99.9 percent monthly availability objective. What is the error budget?",
+   "right": "0.1 percent of the month's requests or time",
+   "wrong": [
+    "99.9 percent of the month",
+    "1 percent of the month",
+    "The number of incidents allowed per year"
+   ],
+   "tier": 2,
+   "why": "The budget is 100 percent minus the objective."
+  },
+  {
+   "q": "Which statement about the three roles of controls is correct?",
+   "right": "Preventive controls block events, detective controls find them, corrective controls reduce damage afterwards",
+   "wrong": [
+    "Detective controls block events, preventive controls find them",
+    "Corrective controls are applied before an event to reduce likelihood",
+    "All three do exactly the same job at different cost"
+   ],
+   "tier": 2,
+   "why": "The three types act before, during and after an event."
+  },
+  {
+   "q": "Under which circumstance is risk acceptance appropriate?",
+   "right": "The cost of treating the risk exceeds the expected loss and a named owner signs it off",
+   "wrong": [
+    "The risk has not yet been assessed",
+    "The risk is hard to understand",
+    "The team cannot agree on a rating"
+   ],
+   "tier": 2,
+   "why": "Acceptance must be a deliberate, recorded decision, not neglect."
+  },
+  {
+   "q": "What does a business impact analysis produce that a disaster recovery plan depends on?",
+   "right": "The recovery priorities and time limits for each critical process",
+   "wrong": [
+    "The list of staff to be dismissed after an event",
+    "The insurance premium for the year",
+    "The price of the backup tool"
+   ],
+   "tier": 2,
+   "why": "BIA tells the plan what to recover first and how fast."
+  },
+  {
+   "q": "What distinguishes a fixed update cadence in incident communication?",
+   "right": "It promises updates at set intervals even when there is nothing new",
+   "wrong": [
+    "It sends an update only when the cause is confirmed",
+    "It lets each responder post whenever convenient",
+    "It replaces the status page"
+   ],
+   "tier": 2,
+   "why": "Predictable updates reduce interruptions and anxiety."
+  },
+  {
+   "q": "In privacy terms, which party decides why and how personal data is processed?",
+   "right": "The controller",
+   "wrong": [
+    "The processor",
+    "The data subject",
+    "The auditor"
+   ],
+   "tier": 2,
+   "why": "The controller decides purposes and means; a processor acts on its instructions."
+  },
+  {
+   "q": "What is the difference between risk appetite and risk tolerance?",
+   "right": "Appetite is the broad level of risk leadership will pursue, tolerance is a measurable limit for one objective",
+   "wrong": [
+    "Appetite is for security risks and tolerance for financial risks",
+    "Appetite is set by staff and tolerance by the board",
+    "They are two names for the same threshold"
+   ],
+   "tier": 3,
+   "why": "Tolerance turns appetite into concrete limits that trigger escalation."
+  },
+  {
+   "q": "Why do teams run backup restore tests?",
+   "right": "A backup that has never been restored is an assumption, not a capability",
+   "wrong": [
+    "Restore tests lower the cost of storage",
+    "Restore tests are required to keep backup software licensed",
+    "They remove the need for an RPO"
+   ],
+   "tier": 3,
+   "why": "Only a test shows backups are complete and restorable within the RTO."
+  },
+  {
+   "q": "What is the strongest reason to use mitigation before diagnosis during an outage?",
+   "right": "Customer impact ends sooner, and the cause can be studied afterwards",
+   "wrong": [
+    "The cause is rarely worth knowing",
+    "It avoids writing a post-mortem",
+    "Rollbacks never carry any risk"
+   ],
+   "tier": 3,
+   "why": "Restoring service is the priority; root cause analysis can follow safely."
+  },
+  {
+   "q": "What does SOC 2 Type II give a customer that Type I does not?",
+   "right": "Evidence that controls operated effectively over a period",
+   "wrong": [
+    "A guarantee that the supplier will never be breached",
+    "Certification under an international standard",
+    "A list of the supplier's customers"
+   ],
+   "tier": 3,
+   "why": "Type I describes design at one point in time; Type II tests operation over time."
+  },
+  {
+   "q": "What makes a post-mortem action item useful?",
+   "right": "It names a specific change, an owner and a due date",
+   "wrong": [
+    "It states a general wish for better care",
+    "It is assigned to the whole team",
+    "It is written only for incidents of the highest severity"
+   ],
+   "tier": 3,
+   "why": "Without an owner and date, actions rarely happen."
+  },
+  {
+   "q": "Which feature makes pseudonymised data still personal data?",
+   "right": "The key allowing re-identification still exists",
+   "wrong": [
+    "It contains numbers",
+    "It is stored in the cloud",
+    "It has been shared with an employee"
+   ],
+   "tier": 3,
+   "why": "If identity can be restored, the data remains personal."
+  },
+  {
+   "q": "What is the main weakness of the five whys technique in a complex outage?",
+   "right": "It follows one linear chain and can miss other contributing factors",
+   "wrong": [
+    "It requires an external facilitator",
+    "It cannot be applied after a customer complaint",
+    "It always names a person as the cause"
+   ],
+   "tier": 3,
+   "why": "Complex failures have multiple causes; a single chain oversimplifies."
+  },
+  {
+   "q": "Why is a software bill of materials valuable when a flaw in a common library is announced?",
+   "right": "It tells you quickly which of your products include the library",
+   "wrong": [
+    "It patches the library automatically",
+    "It proves the library is safe",
+    "It removes the need for an exit plan"
+   ],
+   "tier": 3,
+   "why": "The inventory turns a question of days into a lookup."
+  },
+  {
+   "q": "What does human in the loop require to be a real control?",
+   "right": "Reviewers with authority, time and information to override the output",
+   "wrong": [
+    "Someone being informed after the decision took effect",
+    "A reviewer who approves any output within seconds",
+    "A written policy mentioning review"
+   ],
+   "tier": 3,
+   "why": "Without genuine ability to override, review becomes a formality."
+  },
+  {
+   "q": "Which scenario describes concentration risk?",
+   "right": "All critical systems depend on one provider's single region",
+   "wrong": [
+    "The company has many small suppliers",
+    "A vendor adds a new subprocessor",
+    "The company buys cyber insurance"
+   ],
+   "tier": 4,
+   "why": "Dependence on one supplier or location turns one failure into a company-wide event."
+  },
+  {
+   "q": "Why is a 100 percent reliability target usually a poor choice?",
+   "right": "The cost rises steeply and users cannot perceive the difference beyond their own dependencies",
+   "wrong": [
+    "Regulators ban it",
+    "It prevents any error budget from being measured in percent",
+    "It requires too many staff to be on call at once"
+   ],
+   "tier": 4,
+   "why": "Each extra nine costs more while returning less user value."
+  },
+  {
+   "q": "An error budget policy is most useful for which purpose?",
+   "right": "Deciding in advance what happens, such as a release freeze, when the budget is spent",
+   "wrong": [
+    "Setting the price of customer credits",
+    "Choosing the monitoring vendor",
+    "Assigning blame for outages"
+   ],
+   "tier": 4,
+   "why": "A pre-agreed response removes argument at the moment of conflict."
+  },
+  {
+   "q": "Why is immutable backup valuable against ransomware?",
+   "right": "Attackers with admin rights cannot erase the copies during the retention period",
+   "wrong": [
+    "It makes backups restore faster",
+    "It removes the need to test restores",
+    "It encrypts the live data"
+   ],
+   "tier": 4,
+   "why": "Immutability protects the last line of recovery."
+  },
+  {
+   "q": "What is the main trade-off of an active-active deployment?",
+   "right": "Near-zero recovery time at the highest cost and complexity",
+   "wrong": [
+    "It is cheap but slow to recover",
+    "It cannot survive a site failure",
+    "It needs no testing"
+   ],
+   "tier": 4,
+   "why": "Running several live sites costs more, and data consistency is harder."
+  },
+  {
+   "q": "Which approach reduces the risk of insurance exclusions leaving a gap?",
+   "right": "Read the exclusions and sublimits against your actual scenarios before buying",
+   "wrong": [
+    "Choose the policy with the lowest premium",
+    "Assume the headline limit applies to every loss",
+    "Let the insurer define your risk appetite"
+   ],
+   "tier": 4,
+   "why": "Cover is defined by its exclusions and sublimits, not the headline limit."
+  },
+  {
+   "q": "What does a three lines model protect?",
+   "right": "Independence of assurance from the people who run the controls",
+   "wrong": [
+    "The speed of software releases",
+    "The confidentiality of the register",
+    "The security budget"
+   ],
+   "tier": 4,
+   "why": "Audit should not check its own work."
+  },
+  {
+   "q": "Which statement about cyber insurance and risk transfer is most accurate?",
+   "right": "Insurance can cover some financial costs but does not remove the risk or the reputational damage",
+   "wrong": [
+    "It transfers all liability to the insurer",
+    "It makes controls unnecessary",
+    "It guarantees the cover during any event"
+   ],
+   "tier": 5,
+   "why": "Transfer shifts cost, not accountability or trust."
+  },
+  {
+   "q": "Why does hindsight bias matter in a post-mortem?",
+   "right": "It makes past decisions look obviously wrong and discourages honest accounts",
+   "wrong": [
+    "It makes incidents appear shorter",
+    "It hides the timeline",
+    "It causes more incidents"
+   ],
+   "tier": 5,
+   "why": "Reviewers must reconstruct what responders knew at the time."
+  },
+  {
+   "q": "What is the key weakness of treating compliance as proof of security?",
+   "right": "An audit is a point-in-time check against a standard, not proof against current threats",
+   "wrong": [
+    "Audits are always dishonest",
+    "Standards forbid good security",
+    "Compliance costs too much"
+   ],
+   "tier": 5,
+   "why": "Certificates show a baseline, not ongoing protection."
+  },
+  {
+   "q": "A customer reports checkout failures at 02:10 and the on-call engineer cannot tell how widespread it is. What should happen first?",
+   "right": "Declare an incident at a provisional severity, assign an incident commander and open the incident channel",
+   "wrong": [
+    "Wait until the cause is known before declaring",
+    "Email all customers an apology",
+    "Ask the CEO to approve the severity before paging anyone"
+   ],
+   "tier": 3,
+   "why": "Early declaration with downgrade later is better than late declaration."
+  },
+  {
+   "q": "Midway through a major outage the CTO joins the incident channel and starts giving engineering instructions. What is the best response from the incident commander?",
+   "right": "Brief the CTO and invite them to advise through the commander, keeping one voice of command",
+   "wrong": [
+    "Let the CTO take over silently",
+    "Ask the CTO to leave the company channel",
+    "Pause the response until the CTO has read the logs"
+   ],
+   "tier": 3,
+   "why": "Single command prevents conflicting orders; senior people can still contribute through the commander."
+  },
+  {
+   "q": "Errors began right after the latest release and customers are affected, but the team wants more time to find the exact bug. What should the commander do?",
+   "right": "Roll back first, then diagnose from the preserved evidence",
+   "wrong": [
+    "Keep debugging live until the bug is found",
+    "Disable monitoring to cut alert noise",
+    "Wait for the next scheduled release"
+   ],
+   "tier": 4,
+   "why": "Mitigate first when a safe rollback exists and impact continues."
+  },
+  {
+   "q": "The executive team asks for updates every ten minutes and is interrupting the responders. What should you do?",
+   "right": "Agree a fixed update cadence and have the communications lead brief them outside the technical channel",
+   "wrong": [
+    "Tell executives to stop asking",
+    "Let engineers answer in the technical thread",
+    "Stop updating until the cause is found"
+   ],
+   "tier": 3,
+   "why": "A predictable cadence meets the need without disturbing the work."
+  },
+  {
+   "q": "A major customer posts about an outage on social media before the cause is known. What should the company say?",
+   "right": "Acknowledge the issue, describe what customers are experiencing and promise the next update time",
+   "wrong": [
+    "Say nothing until the cause is confirmed",
+    "Blame the cloud supplier",
+    "Deny that anything is wrong until verified"
+   ],
+   "tier": 3,
+   "why": "A holding statement fills the vacuum without guessing."
+  },
+  {
+   "q": "After a breach is suspected on Friday evening, a manager says the team will decide on Monday whether it counts. What is the main concern?",
+   "right": "Notification time limits may already be running from the moment of awareness",
+   "wrong": [
+    "Staff should not work over the weekend",
+    "The press may call on Monday",
+    "The cause is too uncertain to discuss"
+   ],
+   "tier": 4,
+   "why": "Delays can consume regulatory time; legal and privacy staff need to know at once."
+  },
+  {
+   "q": "A server holding customer data shows signs of intrusion. The engineer wants to wipe and rebuild immediately. What should the lead do?",
+   "right": "Contain the host and preserve images and logs first, then rebuild",
+   "wrong": [
+    "Allow the rebuild to restore service sooner",
+    "Shut down logging to protect data",
+    "Delete the affected accounts quickly"
+   ],
+   "tier": 4,
+   "why": "Evidence is needed to scope the breach and meet obligations."
+  },
+  {
+   "q": "Attackers encrypt production systems and demand payment. Backups are partly affected. Who should make the decision on paying?",
+   "right": "Senior leadership with legal counsel, weighing legal limits and recovery options",
+   "wrong": [
+    "The IT team on technical grounds",
+    "The first responder who found the note",
+    "The insurer without company input"
+   ],
+   "tier": 5,
+   "why": "The decision has legal, financial and ethical dimensions beyond IT."
+  },
+  {
+   "q": "Your post-mortem list from last quarter shows most action items open and the same outage has recurred. What should leadership do first?",
+   "right": "Establish a follow-through review with owners, dates and reporting of overdue actions",
+   "wrong": [
+    "Ask the team to write fewer actions",
+    "Hold a new post-mortem with a different facilitator",
+    "Treat the repeat as unlucky"
+   ],
+   "tier": 3,
+   "why": "Without follow-through, learning does not turn into change."
+  },
+  {
+   "q": "A post-mortem draft concludes that an engineer made an error and recommends retraining them. What is the better response?",
+   "right": "Ask why the system allowed one slip to cause an outage and list the contributing factors",
+   "wrong": [
+    "Accept the finding as the root cause",
+    "Remove the engineer from on-call",
+    "Delete the draft and move on"
+   ],
+   "tier": 4,
+   "why": "Human error is a starting point for analysis, not its end."
+  },
+  {
+   "q": "A supplier's security questionnaire is returned with every answer ticked yes. What is the best next step for a critical vendor?",
+   "right": "Request supporting evidence such as an audit report and verify key claims",
+   "wrong": [
+    "Accept it since all answers are positive",
+    "Reject the vendor automatically",
+    "Send the same questionnaire again"
+   ],
+   "tier": 3,
+   "why": "Self-reported answers need evidence, especially for critical vendors."
+  },
+  {
+   "q": "A critical supplier tells you its own provider has been breached. Your contract has no clause for this. What should you do first?",
+   "right": "Ask what of your data is affected and start your own breach assessment",
+   "wrong": [
+    "Wait for the supplier to finish its report",
+    "Terminate the contract immediately",
+    "Ignore it as the supplier's concern"
+   ],
+   "tier": 4,
+   "why": "As the data owner you must assess impact even when the incident is upstream."
+  },
+  {
+   "q": "A product team plans to feed customer support transcripts into an external AI tool. What should you do before approving?",
+   "right": "Check the provider's data handling terms and assess the privacy risks",
+   "wrong": [
+    "Approve because the tool is popular",
+    "Ban all AI tools",
+    "Only ask the vendor to confirm in an email it is secure"
+   ],
+   "tier": 3,
+   "why": "Data protection review and contract terms come before use."
+  },
+  {
+   "q": "Employees paste confidential documents into a free chatbot because the approved tool is slow. What is the best leadership response?",
+   "right": "Fix the approved option and set clear rules, instead of relying on a ban alone",
+   "wrong": [
+    "Block all AI sites and consider it solved",
+    "Ignore it unless data leaks",
+    "Punish the heaviest users publicly"
+   ],
+   "tier": 4,
+   "why": "Shadow AI grows where sanctioned options fail to meet needs."
+  },
+  {
+   "q": "A model's answers changed overnight though your code did not. The provider released an update. What should you do?",
+   "right": "Pin the model version where possible and run regression tests before accepting the change",
+   "wrong": [
+    "Retrain the model on your own",
+    "Ignore the change since it is better",
+    "Switch to another provider at once"
+   ],
+   "tier": 5,
+   "why": "Vendor changes are a known risk to be tested and controlled."
+  },
+  {
+   "q": "Only one engineer understands the billing system and has just resigned. What should you do first?",
+   "right": "Capture knowledge with a handover, documentation and a named deputy before they leave",
+   "wrong": [
+    "Offer a counter-offer and do nothing else",
+    "Wait until a problem occurs",
+    "Rewrite the system from scratch"
+   ],
+   "tier": 3,
+   "why": "Key-person risk is reduced by sharing knowledge and responsibility."
+  },
+  {
+   "q": "The CEO asks why the company still has unpatched legacy systems. The cost to retire them is high. What is the best approach?",
+   "right": "Present the risk in terms of likelihood, impact and cost, and ask a named owner to accept or fund it",
+   "wrong": [
+    "Say it is a technical matter",
+    "Promise to fix everything this quarter",
+    "Hide the systems from the register"
+   ],
+   "tier": 4,
+   "why": "Executives decide trade-offs when risks are presented in business terms with an owner."
+  },
+  {
+   "q": "Your annual disaster recovery test shows a four-hour recovery for a service with a one-hour RTO. What should you do?",
+   "right": "Report the gap to the risk owner and decide whether to invest or accept the risk with sign-off",
+   "wrong": [
+    "Change the RTO to match the result quietly",
+    "Wait for the next scheduled test",
+    "Mark the test as passed"
+   ],
+   "tier": 4,
+   "why": "A gap is a risk decision, not an administrative detail."
+  },
+  {
+   "q": "Two risks in the register share the same dependency on one data centre. How should you treat them?",
+   "right": "Recognise the correlation and assess the combined exposure of a single failure",
+   "wrong": [
+    "Add the scores to get a total of independent risks",
+    "Delete one as a duplicate",
+    "Lower both scores because they are shared"
+   ],
+   "tier": 5,
+   "why": "Correlated risks can fail together and so understate the aggregate."
+  },
+  {
+   "q": "A new vendor will process personal data for you. Which document sets the vendor's handling obligations?",
+   "right": "A data processing agreement",
+   "wrong": [
+    "A press release",
+    "A software bill of materials",
+    "A post-mortem report"
+   ],
+   "tier": 2,
+   "why": "The agreement binds the processor to act on instructions and protect the data."
+  },
+  {
+   "q": "A regulator announces a rule change that will affect how you store data in a year. What is the first step?",
+   "right": "Assess its impact, assign an owner and plan the changes",
+   "wrong": [
+    "Wait until the deadline",
+    "Ask customers what they think",
+    "Update the risk appetite statement"
+   ],
+   "tier": 3,
+   "why": "An owned impact assessment turns news into a plan."
+  },
+  {
+   "q": "Your cyber insurance renewal asks for proof of multi-factor authentication and backups tested. What does this tell you?",
+   "right": "Insurers price cover on the controls you operate, so weak controls can raise cost or limit cover",
+   "wrong": [
+    "Insurance now replaces those controls",
+    "The questions are only for marketing",
+    "Controls are optional for insured companies"
+   ],
+   "tier": 4,
+   "why": "Underwriting links premiums and terms to controls."
+  },
+  {
+   "q": "A customer asks for everything the company holds about them. What is this called?",
+   "right": "A data subject access request",
+   "wrong": [
+    "A breach notification",
+    "A privacy impact assessment",
+    "A service level agreement"
+   ],
+   "tier": 2,
+   "why": "Individuals can ask to see the data held about them."
+  },
+  {
+   "q": "A team missed its SLO twice and has spent the error budget, but product pushes a feature launch. What does a good policy say?",
+   "right": "Pause non-essential feature releases until reliability work restores the budget",
+   "wrong": [
+    "Launch anyway to keep customers",
+    "Raise the SLO target",
+    "Stop measuring reliability"
+   ],
+   "tier": 3,
+   "why": "An error budget policy decides the trade-off in advance."
+  },
+  {
+   "q": "The board receives a security report of 3,000 unpatched vulnerabilities. What is the better way to report?",
+   "right": "Show trend, risk to critical services and decisions needed from the board",
+   "wrong": [
+    "Add the list as an appendix",
+    "Avoid reporting until the count falls",
+    "Show only good news"
+   ],
+   "tier": 4,
+   "why": "The board needs risk and decisions, not raw counts."
+  },
+  {
+   "q": "Which action is best at the start of a ransomware incident?",
+   "right": "Isolate affected systems to contain the spread and notify the incident commander",
+   "wrong": [
+    "Delete all backups to be safe",
+    "Pay the ransom at once",
+    "Post details on social media"
+   ],
+   "tier": 2,
+   "why": "Containment limits further damage while leadership decides next steps."
+  },
+  {
+   "q": "Before a launch the team runs an exercise imagining it has failed badly a year from now. What is this called and what is its benefit?",
+   "right": "A pre-mortem, which surfaces concerns that planning meetings suppress",
+   "wrong": [
+    "A post-mortem, which finds who was at fault",
+    "A game day, which tests failover under real faults",
+    "A tabletop exercise, which replays last year's outage"
+   ],
+   "tier": 5,
+   "why": "Imagining failure in advance gives permission to voice doubts."
+  },
+  {
+   "q": "You are asked to rank two risks of equal score: one rare but catastrophic, one frequent and minor. What additional factor deserves attention?",
+   "right": "How quickly each could reach the business and whether the catastrophic one threatens survival",
+   "wrong": [
+    "The age of the risk entries",
+    "Which has the longer description",
+    "Which team raised it"
+   ],
+   "tier": 5,
+   "why": "Equal scores can hide differences in speed and survivability."
+  }
+ ]
+}

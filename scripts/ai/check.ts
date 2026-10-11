@@ -1,25 +1,24 @@
-/** npx tsx scripts/ai/check.ts [slug...]   validates data files: pool size, per-level counts, warnings, samples */
-import fs from "node:fs";
-import path from "node:path";
-import { generate, levelOf, LEVEL_COUNT, MIN_PER_LEVEL } from "./engine";
-import type { TrackSpec } from "./types";
+/** npx tsx scripts/ai/check.ts [--cards] [slug...]   validates data files: pool size, per-level counts, warnings, samples */
+import { generate, levelOf, LEVEL_COUNT } from "./engine";
+import { loadSpecs, minPerLevelFor } from "./specs";
 
-const dir = path.join(__dirname, "data");
 const want = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const sample = process.argv.includes("--sample");
 (async () => {
   let bad = 0;
-  for (const f of fs.readdirSync(dir).filter((x) => x.endsWith(".ts") && !x.startsWith("_")).sort()) {
-    const slug = f.replace(".ts", "");
-    if (want.length && !want.includes(slug)) continue;
-    const spec: TrackSpec = (await import(path.join(dir, f))).default;
+  for (const { slug, spec, origin } of await loadSpecs(process.argv.includes("--cards") ? "cards" : "ts", want)) {
     const { qs, pool, warnings } = generate(spec);
+    // `use` is spliced after "when you" / "You", and `says` after the subject, so each must start with a verb, not a noun phrase
+    for (const k of spec.cards) {
+      if (k.use && /^(a|an|the|there|it|they|this|that|some|your|our|my|their|no|each|every|any|one|two|three)\b/i.test(k.use.trim())) warnings.push(`card "${k.subject}": use must start with a verb ("need...", "want...", "are asked to..."): "${k.use}"`);
+      k.says.forEach((p) => { if (/^[A-Z]/.test(p.trim()) && !/^(I|API|AI|CI|CD|HR)\b/.test(p.trim())) warnings.push(`card "${k.subject}": says should start lower-case with a verb: "${p}"`); });
+    }
     const per = Array(LEVEL_COUNT).fill(0);
     qs.forEach((_, i) => per[levelOf(i, qs.length) - 1]++);
     const min = Math.min(...per);
     const forms: Record<string, number> = {};
     qs.forEach((q) => (forms[q.form] = (forms[q.form] ?? 0) + 1));
-    const ok = min >= MIN_PER_LEVEL && spec.slug === slug;
+    const ok = min >= minPerLevelFor(spec, origin) && spec.slug === slug;
     if (!ok) bad++;
     console.log(`${ok ? "OK  " : "FAIL"} ${slug}: ${spec.cards.length} cards, ${spec.qa?.length ?? 0} qa -> pool ${pool}, kept ${qs.length}, min/level ${min}`);
     if (spec.slug !== slug) console.log(`  slug "${spec.slug}" must equal file name`);

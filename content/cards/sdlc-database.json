@@ -1,0 +1,2775 @@
+{
+ "slug": "sdlc-database",
+ "name": "6. Database design",
+ "description": "Modelling, indexing, migrations, backups, archival.",
+ "roles": "developer",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "model": "data modelling concept",
+  "key": "key or constraint",
+  "norm": "normalisation concept",
+  "idx": "indexing concept",
+  "plan": "query performance concept",
+  "txn": "transaction concept",
+  "mig": "migration practice",
+  "bak": "backup and recovery concept",
+  "life": "data lifecycle practice",
+  "pii": "personal data practice",
+  "choice": "database design choice",
+  "sqlite": "SQLite behaviour",
+  "gg": "GGLearn schema fact",
+  "ops": "project database operation"
+ },
+ "cards": [
+  {
+   "group": "model",
+   "subject": "An entity",
+   "tier": 1,
+   "says": [
+    "represents a kind of thing the app stores, such as a user or an order",
+    "usually becomes a table with one row per instance"
+   ],
+   "use": "need to decide what things the system must remember",
+   "not": [
+    "is always stored as a single column"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A relationship",
+   "tier": 1,
+   "says": [
+    "describes how two entities are connected",
+    "is one-to-one, one-to-many or many-to-many"
+   ],
+   "use": "need to say that one customer can place many orders",
+   "not": [
+    "exists only in application code and never in the schema"
+   ],
+   "like": [
+    "A one-to-many relationship",
+    "A many-to-many relationship",
+    "A junction table"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A one-to-many relationship",
+   "tier": 2,
+   "says": [
+    "puts the foreign key on the many side",
+    "lets one parent row own several child rows"
+   ],
+   "use": "model a blog post that has many comments",
+   "not": [
+    "needs a junction table to work"
+   ],
+   "like": [
+    "A many-to-many relationship",
+    "A relationship"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A many-to-many relationship",
+   "tier": 2,
+   "says": [
+    "cannot be stored with a single foreign key column on either table",
+    "needs a third table that links the two sides"
+   ],
+   "use": "model students who take many courses while each course has many students",
+   "not": [
+    "is stored by a comma-separated list of ids in one column"
+   ],
+   "like": [
+    "A one-to-many relationship",
+    "A junction table",
+    "A relationship"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A junction table",
+   "tier": 3,
+   "says": [
+    "holds one row per linked pair of records",
+    "can carry attributes of the link itself, such as an enrolment date",
+    "often uses its two foreign keys together as a composite primary key"
+   ],
+   "use": "need to record which user enrolled in which track and when",
+   "not": [
+    "holds a copy of every column from both tables it links"
+   ],
+   "like": [
+    "A many-to-many relationship"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A single source of truth",
+   "tier": 2,
+   "says": [
+    "keeps each fact stored in exactly one place",
+    "stops copies of a fact from drifting apart"
+   ],
+   "use": "see the same value kept in three tables and disagreeing",
+   "not": [
+    "means every table must store all the data it ever needs"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A derived column",
+   "tier": 3,
+   "says": [
+    "stores a value that could be computed from other columns",
+    "needs a rule to keep it in step with its sources"
+   ],
+   "use": "have measured a slow aggregate and decide to store a total",
+   "not": [
+    "can never become stale"
+   ],
+   "like": [
+    "Denormalisation"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A lookup table",
+   "tier": 3,
+   "says": [
+    "holds a fixed list of allowed values as rows that other tables reference",
+    "lets a label change in one row without rewriting every row that uses it"
+   ],
+   "use": "need a list of statuses that can grow without changing the schema",
+   "not": [
+    "is created automatically by every foreign key"
+   ],
+   "like": [
+    "A CHECK constraint"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "Storing timestamps in UTC",
+   "tier": 3,
+   "says": [
+    "avoids ambiguity when users and servers sit in different time zones",
+    "converts to local time only when shown to a person"
+   ],
+   "use": "run servers and users in several time zones",
+   "not": [
+    "makes daylight saving changes corrupt stored values"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "An effective-dated row",
+   "tier": 4,
+   "says": [
+    "records the period during which a value was true",
+    "lets you report what a price was last March"
+   ],
+   "use": "need history of a value after it changes instead of overwriting it",
+   "not": [
+    "overwrites the old value in place"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A polymorphic association",
+   "tier": 5,
+   "says": [
+    "points at rows in different tables using a type column plus an id",
+    "cannot be enforced by an ordinary foreign key"
+   ],
+   "use": "have comments that can attach to posts, photos or videos",
+   "not": [
+    "is checked by the database like any foreign key"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "A primary key",
+   "tier": 1,
+   "says": [
+    "uniquely identifies each row in a table",
+    "is the usual target of foreign keys in other tables"
+   ],
+   "use": "need every row to have an identity other rows can refer to",
+   "not": [
+    "may repeat as long as the other columns differ"
+   ],
+   "like": [
+    "A UNIQUE constraint",
+    "A composite key"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "A foreign key",
+   "tier": 1,
+   "says": [
+    "ties a column to the primary key of another table",
+    "blocks a child row that points at a missing parent"
+   ],
+   "use": "need the database to refuse an order for a customer that does not exist",
+   "not": [
+    "copies the parent row into the child table"
+   ],
+   "like": [
+    "A relational database",
+    "A primary key",
+    "ON DELETE RESTRICT",
+    "ON DELETE CASCADE"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "A NOT NULL constraint",
+   "tier": 1,
+   "says": [
+    "rejects a row that leaves the column empty",
+    "turns a required field into a rule the database enforces"
+   ],
+   "use": "need a column such as email to always have a value",
+   "not": [
+    "rejects empty strings as well as NULL"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "A UNIQUE constraint",
+   "tier": 2,
+   "says": [
+    "rejects a second row with the same value in the column or column set",
+    "can cover several columns so only the combination must be unique"
+   ],
+   "use": "need only one enrolment per user and track",
+   "not": [
+    "makes the column the table's primary key"
+   ],
+   "like": [
+    "A primary key"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "A CHECK constraint",
+   "tier": 2,
+   "says": [
+    "rejects a row whose values fail a stated condition",
+    "can limit a column to a range or a list of allowed values"
+   ],
+   "use": "need a price column to never be negative",
+   "not": [
+    "looks up values in another table"
+   ],
+   "like": [
+    "A lookup table"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "A surrogate key",
+   "tier": 3,
+   "says": [
+    "is a generated identifier with no business meaning",
+    "stays stable when real-world details change"
+   ],
+   "use": "need an identifier that survives an email address change",
+   "not": [
+    "is built from the customer's real details"
+   ],
+   "like": [
+    "A natural key"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "A natural key",
+   "tier": 3,
+   "says": [
+    "is built from real-world data such as an email or a country code",
+    "forces updates to every reference if the real-world value changes"
+   ],
+   "use": "have a stable standard code that already identifies each row",
+   "not": [
+    "is always generated by the database"
+   ],
+   "like": [
+    "A surrogate key"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "A composite key",
+   "tier": 3,
+   "says": [
+    "combines two or more columns to identify a row",
+    "is common in junction tables"
+   ],
+   "use": "need the pair of two ids to be the identity of a link row",
+   "not": [
+    "can only be used on tables with no foreign keys"
+   ],
+   "like": [
+    "A primary key"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "An auto-increment key",
+   "tier": 2,
+   "says": [
+    "is assigned by the database in increasing order",
+    "can reveal how many rows exist when exposed in a URL"
+   ],
+   "use": "want simple ids handed out without the client choosing them",
+   "not": [
+    "is guaranteed to have no gaps"
+   ],
+   "like": [
+    "A random UUID key"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "A random UUID key",
+   "tier": 4,
+   "says": [
+    "can be generated by the client without asking the database",
+    "scatters new rows across the index instead of appending to the end"
+   ],
+   "use": "need ids created offline or in several systems before they reach the database",
+   "not": [
+    "is smaller than an integer key"
+   ],
+   "like": [
+    "An auto-increment key"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "ON DELETE CASCADE",
+   "tier": 4,
+   "says": [
+    "deletes child rows automatically when the parent row is deleted",
+    "can remove far more data than intended after a mistaken delete"
+   ],
+   "use": "want an order's lines to disappear together with the order",
+   "not": [
+    "blocks the delete when children exist"
+   ],
+   "like": [
+    "ON DELETE RESTRICT"
+   ]
+  },
+  {
+   "group": "key",
+   "subject": "ON DELETE RESTRICT",
+   "tier": 4,
+   "says": [
+    "refuses to delete a parent row while child rows still reference it",
+    "forces the caller to deal with the children first"
+   ],
+   "use": "must protect records, such as invoices, that may not vanish with their customer",
+   "not": [
+    "deletes the child rows as well"
+   ],
+   "like": [
+    "ON DELETE CASCADE",
+    "A foreign key"
+   ]
+  },
+  {
+   "group": "norm",
+   "subject": "Normalisation",
+   "tier": 1,
+   "says": [
+    "organises tables so each fact is stored once",
+    "reduces update, insert and delete anomalies"
+   ],
+   "use": "see the same customer address copied into many rows",
+   "not": [
+    "always makes reads faster"
+   ]
+  },
+  {
+   "group": "norm",
+   "subject": "An update anomaly",
+   "tier": 2,
+   "says": [
+    "leaves a fact inconsistent because one copy changed and the others did not"
+   ],
+   "use": "change a customer's address in one order row but not in the rest",
+   "not": [
+    "occurs only when a table has no primary key"
+   ],
+   "like": [
+    "An insertion anomaly",
+    "A deletion anomaly"
+   ]
+  },
+  {
+   "group": "norm",
+   "subject": "An insertion anomaly",
+   "tier": 3,
+   "says": [
+    "stops you recording one fact until an unrelated fact exists",
+    "appears when a new course cannot be stored until a student enrols"
+   ],
+   "use": "cannot add a product to a table until someone has ordered it",
+   "not": [
+    "is caused by a column holding too many NULLs"
+   ],
+   "like": [
+    "An update anomaly",
+    "A deletion anomaly"
+   ]
+  },
+  {
+   "group": "norm",
+   "subject": "A deletion anomaly",
+   "tier": 3,
+   "says": [
+    "loses an unrelated fact when the last row holding it is deleted",
+    "erases a supplier's details when its only order is removed"
+   ],
+   "use": "lose a customer's address when their last order is deleted",
+   "not": [
+    "is the same as a cascading delete working as designed"
+   ],
+   "like": [
+    "An update anomaly",
+    "An insertion anomaly"
+   ]
+  },
+  {
+   "group": "norm",
+   "subject": "First normal form",
+   "tier": 3,
+   "says": [
+    "requires each column to hold one atomic value",
+    "forbids repeating groups such as a comma-separated list in one column"
+   ],
+   "use": "find a tags column holding 'red,blue,green'",
+   "not": [
+    "requires every table to have a foreign key"
+   ],
+   "like": [
+    "Second normal form",
+    "Third normal form"
+   ]
+  },
+  {
+   "group": "norm",
+   "subject": "Second normal form",
+   "tier": 3,
+   "says": [
+    "requires every non-key column to depend on the whole of a composite key",
+    "is only in question when a table has a multi-column key"
+   ],
+   "use": "see a column that depends on only one part of a two-column key",
+   "not": [
+    "is about splitting values into atomic parts"
+   ],
+   "like": [
+    "First normal form",
+    "Third normal form"
+   ]
+  },
+  {
+   "group": "norm",
+   "subject": "Third normal form",
+   "tier": 3,
+   "says": [
+    "forbids a non-key column from depending on another non-key column",
+    "moves a city-to-postcode style dependency into its own table"
+   ],
+   "use": "see a column that is determined by another ordinary column rather than by the key",
+   "not": [
+    "is satisfied by any table with a primary key"
+   ],
+   "like": [
+    "First normal form",
+    "Second normal form"
+   ]
+  },
+  {
+   "group": "norm",
+   "subject": "Denormalisation",
+   "tier": 3,
+   "says": [
+    "deliberately duplicates data to avoid expensive joins",
+    "trades extra write work and drift risk for read speed"
+   ],
+   "use": "have measured a slow join on a busy read path",
+   "not": [
+    "is the same as a design with no keys"
+   ],
+   "like": [
+    "A derived column"
+   ]
+  },
+  {
+   "group": "norm",
+   "subject": "Boyce-Codd normal form",
+   "tier": 5,
+   "says": [
+    "requires every determinant to be a candidate key",
+    "closes a gap third normal form can leave when candidate keys overlap"
+   ],
+   "use": "meet a table with overlapping candidate keys that still shows an anomaly",
+   "not": [
+    "is weaker than first normal form"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "A full table scan",
+   "tier": 1,
+   "says": [
+    "reads every row to find matches",
+    "is perfectly acceptable on a tiny table"
+   ],
+   "use": "see a query on a huge table read all of its rows",
+   "not": [
+    "can only happen when an index is present"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "A B-tree index",
+   "tier": 1,
+   "says": [
+    "keeps keys sorted in a balanced tree",
+    "supports equality, range and ORDER BY lookups"
+   ],
+   "use": "need fast lookups and range filters on a column",
+   "not": [
+    "answers only exact-match lookups"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "A unique index",
+   "tier": 2,
+   "says": [
+    "enforces a rule while also speeding lookups on its columns",
+    "rejects a second row with the same key"
+   ],
+   "use": "want to forbid duplicates and also look rows up quickly",
+   "not": [
+    "slows reads but never helps them"
+   ],
+   "like": [
+    "A B-tree index"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "A composite index",
+   "tier": 3,
+   "says": [
+    "orders entries by its first column, then by the next",
+    "can serve queries that use its leftmost columns"
+   ],
+   "use": "filter on two columns together in a hot query",
+   "not": [
+    "serves a filter on its second column alone just as well"
+   ],
+   "like": [
+    "The leftmost prefix rule",
+    "A B-tree index",
+    "A covering index",
+    "A unique index"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "The leftmost prefix rule",
+   "tier": 3,
+   "says": [
+    "explains why an index on (a, b) cannot reliably serve a filter on b alone",
+    "means column order in a composite index matters"
+   ],
+   "use": "wonder why a user-only search ignores an index on (competition, user)",
+   "not": [
+    "says the index must be created on the first column of the table"
+   ],
+   "like": [
+    "A composite index"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "Index selectivity",
+   "tier": 3,
+   "says": [
+    "is the share of distinct values in a column",
+    "makes a column worth indexing when it is high"
+   ],
+   "use": "debate indexing a yes/no flag",
+   "not": [
+    "is higher for a column with only two values"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "Over-indexing",
+   "tier": 2,
+   "says": [
+    "slows every insert and update because each index must be maintained",
+    "wastes disk and memory on indexes no query uses"
+   ],
+   "use": "see a write-heavy table with an index on every column",
+   "not": [
+    "only affects SELECT statements"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "An index on a foreign key column",
+   "tier": 3,
+   "says": [
+    "speeds joins from a parent to its children",
+    "speeds the check made when a parent row is deleted"
+   ],
+   "use": "see a parent delete or join crawl because the child column has no index",
+   "not": [
+    "is created automatically for you in SQLite"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "A covering index",
+   "tier": 5,
+   "says": [
+    "contains every column the query needs so the table is never read",
+    "makes each index entry wider, so writes cost more"
+   ],
+   "use": "want a hot query answered from the index alone",
+   "not": [
+    "is another name for a unique index"
+   ],
+   "like": [
+    "A composite index",
+    "A B-tree index"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "A partial index",
+   "tier": 4,
+   "says": [
+    "indexes only the rows that match a WHERE condition",
+    "stays small when few rows matter, such as unprocessed jobs"
+   ],
+   "use": "need to look up only pending rows in a table that is mostly finished rows",
+   "not": [
+    "indexes every row but compresses them"
+   ]
+  },
+  {
+   "group": "idx",
+   "subject": "An index on an expression",
+   "tier": 5,
+   "says": [
+    "indexes the result of a function such as lower(email)",
+    "is used only when the query writes the same expression"
+   ],
+   "use": "need case-insensitive lookups on an indexed column",
+   "not": [
+    "is used even when the query wraps the column in a different function"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "EXPLAIN",
+   "tier": 2,
+   "says": [
+    "shows how the database intends to run a query",
+    "reveals whether an index will be used or the table scanned"
+   ],
+   "use": "want to see why one query is slow",
+   "not": [
+    "executes the query and returns its rows"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "The query planner",
+   "tier": 2,
+   "says": [
+    "chooses the execution strategy for each query",
+    "estimates costs from table statistics"
+   ],
+   "use": "wonder why the database picked one index over another",
+   "not": [
+    "runs your statements in the order you wrote them"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "SELECT *",
+   "tier": 2,
+   "says": [
+    "returns columns the caller never uses",
+    "defeats covering indexes"
+   ],
+   "use": "see a query pull wide rows to display two fields",
+   "not": [
+    "is always the fastest way to read a row"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "The N+1 query problem",
+   "tier": 3,
+   "says": [
+    "runs one query for a list and then one more per row",
+    "is fixed with a join or a single batched query"
+   ],
+   "use": "see a page issue hundreds of near-identical queries while rendering a list",
+   "not": [
+    "happens only when a table has no index"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "OFFSET pagination",
+   "tier": 3,
+   "says": [
+    "makes the database read and discard every skipped row",
+    "gets slower as the page number grows"
+   ],
+   "use": "see page 5000 of a list take far longer than page 1",
+   "not": [
+    "jumps straight to the requested page using the index"
+   ],
+   "like": [
+    "Keyset pagination"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Keyset pagination",
+   "tier": 4,
+   "says": [
+    "continues from the last key value the client saw",
+    "stays fast on deep pages"
+   ],
+   "use": "need stable, fast paging through a large ordered list",
+   "not": [
+    "lets users jump to an arbitrary page number cheaply"
+   ],
+   "like": [
+    "OFFSET pagination"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A sargable predicate",
+   "tier": 4,
+   "says": [
+    "compares a bare indexed column to a value so the index can be used",
+    "is broken by wrapping the column in a function"
+   ],
+   "use": "see an index ignored because the WHERE clause calls a function on the column",
+   "not": [
+    "is any condition that uses an equals sign"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A LIKE pattern with a leading wildcard",
+   "tier": 4,
+   "says": [
+    "such as '%smith' prevents an ordinary index from narrowing the search",
+    "usually forces a scan of the whole table"
+   ],
+   "use": "need to search for text that can appear anywhere in a column",
+   "not": [
+    "is served efficiently by an ordinary index"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "A transaction",
+   "tier": 1,
+   "says": [
+    "groups statements so they all succeed or all fail",
+    "ends with a commit or a rollback"
+   ],
+   "use": "need a transfer to debit one account and credit another together",
+   "not": [
+    "runs each statement in a separate commit"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "A rollback",
+   "tier": 1,
+   "says": [
+    "discards every change made since the transaction began"
+   ],
+   "use": "hit an error halfway through a multi-step change",
+   "not": [
+    "makes the transaction's changes permanent"
+   ],
+   "like": [
+    "A commit"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "A commit",
+   "tier": 1,
+   "says": [
+    "makes a transaction's changes permanent",
+    "makes them visible to other transactions"
+   ],
+   "use": "finish all the steps of a change and want it kept",
+   "not": [
+    "discards the changes made so far"
+   ],
+   "like": [
+    "A rollback"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "Atomicity",
+   "tier": 2,
+   "says": [
+    "means a transaction is applied entirely or not at all"
+   ],
+   "use": "need a half-finished transfer never to be stored",
+   "not": [
+    "means committed data survives a crash"
+   ],
+   "like": [
+    "Durability",
+    "Isolation"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "Isolation",
+   "tier": 2,
+   "says": [
+    "controls how far concurrent transactions can see each other's work"
+   ],
+   "use": "worry that two users editing at once will see inconsistent data",
+   "not": [
+    "means committed data survives a crash"
+   ],
+   "like": [
+    "Atomicity",
+    "Durability"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "Durability",
+   "tier": 2,
+   "says": [
+    "means committed data survives a crash or power loss"
+   ],
+   "use": "need a confirmed order to still exist after the server restarts",
+   "not": [
+    "means a transaction is all-or-nothing"
+   ],
+   "like": [
+    "Atomicity",
+    "Isolation"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "A dirty read",
+   "tier": 3,
+   "says": [
+    "sees changes another transaction has not yet committed",
+    "can return data that is later rolled back"
+   ],
+   "use": "read a balance that another session then rolls back",
+   "not": [
+    "happens only under serializable isolation"
+   ],
+   "like": [
+    "A non-repeatable read",
+    "A phantom read"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "A lost update",
+   "tier": 3,
+   "says": [
+    "happens when two writers read the same value and the later write overwrites the earlier one",
+    "is avoided by atomic UPDATE expressions or version checks"
+   ],
+   "use": "see two users editing the same record and one change silently vanish",
+   "not": [
+    "is another name for a dirty read"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "A non-repeatable read",
+   "tier": 4,
+   "says": [
+    "returns a different value when the same row is read twice in one transaction",
+    "happens when another transaction commits a change in between"
+   ],
+   "use": "see a report disagree with itself within one transaction",
+   "not": [
+    "means a row was read before it was committed"
+   ],
+   "like": [
+    "A dirty read",
+    "A phantom read"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "A phantom read",
+   "tier": 4,
+   "says": [
+    "finds new rows matching a query appearing between two runs of it",
+    "concerns a set of rows rather than one row's value"
+   ],
+   "use": "see a COUNT change between two runs inside one transaction",
+   "not": [
+    "is caused by an uncommitted update"
+   ],
+   "like": [
+    "A dirty read",
+    "A non-repeatable read"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "Serializable isolation",
+   "tier": 5,
+   "says": [
+    "makes concurrent transactions behave as though they ran one at a time",
+    "is the strictest standard isolation level"
+   ],
+   "use": "must stop write skew where two transactions each check a rule and both break it",
+   "not": [
+    "allows dirty reads for speed"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "A deadlock",
+   "tier": 4,
+   "says": [
+    "occurs when two transactions each wait for a lock the other holds",
+    "is resolved by aborting one of them as the victim"
+   ],
+   "use": "see two jobs update the same two rows in opposite order and freeze",
+   "not": [
+    "is cured by adding more indexes"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "Optimistic locking",
+   "tier": 4,
+   "says": [
+    "checks a version number at update time and fails if the row changed",
+    "avoids holding locks while a user is thinking"
+   ],
+   "use": "want to detect a lost update on a record edited through a web form",
+   "not": [
+    "locks the row as soon as it is read"
+   ],
+   "like": [
+    "Pessimistic locking"
+   ]
+  },
+  {
+   "group": "txn",
+   "subject": "Pessimistic locking",
+   "tier": 4,
+   "says": [
+    "locks the row up front so other writers must wait",
+    "suits short, high-contention updates"
+   ],
+   "use": "expect many writers to fight over the same row",
+   "not": [
+    "lets everyone read and write freely and only checks at the end"
+   ],
+   "like": [
+    "Optimistic locking"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "A migration",
+   "tier": 1,
+   "says": [
+    "applies an ordered change to the database structure",
+    "is recorded so that it runs once"
+   ],
+   "use": "need to change the schema in a reviewed and repeatable way",
+   "not": [
+    "is a manual edit made directly on the production server"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "An additive change",
+   "tier": 1,
+   "says": [
+    "adds a table or a nullable column without touching existing rows",
+    "is the safest kind of schema change on a live table"
+   ],
+   "use": "want a low-risk change to a table that already holds data",
+   "not": [
+    "removes data that is no longer needed"
+   ],
+   "like": [
+    "A destructive change"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "A destructive change",
+   "tier": 2,
+   "says": [
+    "drops or reshapes existing columns or data",
+    "can lose rows that cannot be recovered without a backup"
+   ],
+   "use": "are about to drop a column or change a type on a live table",
+   "not": [
+    "only ever adds new columns"
+   ],
+   "like": [
+    "An additive change"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "A NOT NULL column added with no default",
+   "tier": 3,
+   "says": [
+    "cannot be added to a table that already has rows because they would have no value",
+    "is made safe by adding it as nullable, backfilling, then tightening"
+   ],
+   "use": "need to add a required column to a table that already holds data",
+   "not": [
+    "leaves existing rows with an empty string automatically"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "A backfill",
+   "tier": 2,
+   "says": [
+    "fills a new column for rows that already exist",
+    "is best run in small batches so it does not hold long locks"
+   ],
+   "use": "have just added a column and need old rows populated",
+   "not": [
+    "is the step that removes the old column"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Expand and contract",
+   "tier": 5,
+   "says": [
+    "adds the new structure, migrates data, switches code, and removes the old structure in a later release",
+    "lets old and new application versions run against the same database"
+   ],
+   "use": "need to rename a column on a live system without downtime",
+   "not": [
+    "renames the column in one step during the deploy"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "A backward-compatible schema",
+   "tier": 4,
+   "says": [
+    "works with both the old and the new version of the application",
+    "makes a rolling deploy safe"
+   ],
+   "use": "run old and new app versions side by side during a deploy",
+   "not": [
+    "requires stopping all traffic first"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Schema drift",
+   "tier": 2,
+   "says": [
+    "is the gap between the schema file and the live database",
+    "appears when someone changes production by hand"
+   ],
+   "use": "find a column in production that no migration ever created",
+   "not": [
+    "is the delay while a migration runs"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "A down migration",
+   "tier": 3,
+   "says": [
+    "reverses a schema change",
+    "cannot bring back data that a dropped column already lost"
+   ],
+   "use": "want a way to undo a release's schema change",
+   "not": [
+    "is always lossless"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "The recovery point objective",
+   "tier": 2,
+   "says": [
+    "states how much recent data you can afford to lose",
+    "sets how often backups must be taken"
+   ],
+   "use": "must decide how often to back up",
+   "not": [
+    "states how long you can afford to be down"
+   ],
+   "like": [
+    "The recovery time objective"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "The recovery time objective",
+   "tier": 2,
+   "says": [
+    "states how long you can afford to be down",
+    "shapes how fast a restore must be"
+   ],
+   "use": "must decide how quickly service has to return after a failure",
+   "not": [
+    "states how much recent data you can afford to lose"
+   ],
+   "like": [
+    "The recovery point objective"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "A restore test",
+   "tier": 2,
+   "says": [
+    "proves a backup can actually be recovered",
+    "turns a hope into evidence"
+   ],
+   "use": "want to know whether last night's backup is any use",
+   "not": [
+    "is unnecessary if the backup job reports success"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "An offsite copy",
+   "tier": 2,
+   "says": [
+    "survives the loss of the machine or site holding the original",
+    "is stored on a different machine from the database"
+   ],
+   "use": "worry that one disk failure would destroy both data and backups",
+   "not": [
+    "is satisfied by a second folder on the same disk"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "A logical backup",
+   "tier": 3,
+   "says": [
+    "exports data as SQL statements or rows",
+    "is portable across versions but slow to restore at scale"
+   ],
+   "use": "need to move data between different engine versions",
+   "not": [
+    "copies the raw database files"
+   ],
+   "like": [
+    "A physical backup"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "A physical backup",
+   "tier": 3,
+   "says": [
+    "copies the database files or pages themselves",
+    "restores quickly but ties you to the engine and version"
+   ],
+   "use": "need the fastest possible restore of a very large database",
+   "not": [
+    "is a text file of INSERT statements"
+   ],
+   "like": [
+    "A logical backup"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "A consistent snapshot",
+   "tier": 2,
+   "says": [
+    "captures data as of a single moment while writes continue",
+    "avoids half-applied changes in the copy"
+   ],
+   "use": "need to back up a live database that is being written to",
+   "not": [
+    "is made by copying files one at a time while the database runs"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "Point-in-time recovery",
+   "tier": 5,
+   "says": [
+    "replays a log of changes onto a base backup to reach a chosen moment",
+    "can undo a bad delete that happened mid-morning"
+   ],
+   "use": "need to restore to just before an accidental delete at 10:42",
+   "not": [
+    "can only restore to the moment each nightly backup was taken"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "A replica",
+   "tier": 4,
+   "says": [
+    "copies every change, including a mistaken delete, to the standby",
+    "improves availability but is not a backup"
+   ],
+   "use": "think a standby server protects you from a dropped table",
+   "not": [
+    "rolls back a bad change automatically"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "The 3-2-1 rule",
+   "tier": 3,
+   "says": [
+    "keeps three copies on two kinds of media with one offsite",
+    "guards against a single failure destroying every copy"
+   ],
+   "use": "want a simple checklist for how many copies to keep and where",
+   "not": [
+    "says to keep one copy on three different disks in the same server"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "Backup encryption",
+   "tier": 4,
+   "says": [
+    "protects copies at rest because they hold the same personal data as the live database",
+    "matters most for offsite copies"
+   ],
+   "use": "store backups with a third party or on removable media",
+   "not": [
+    "is unnecessary because backups are not personal data"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "A soft delete",
+   "tier": 1,
+   "says": [
+    "marks a row deleted with a flag or timestamp instead of removing it",
+    "needs every query to filter out the marked rows"
+   ],
+   "use": "want deleted records to be recoverable",
+   "not": [
+    "removes the row permanently"
+   ],
+   "like": [
+    "A hard delete"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "A hard delete",
+   "tier": 1,
+   "says": [
+    "removes the row permanently",
+    "frees the row's space for reuse"
+   ],
+   "use": "must truly remove data once policy allows",
+   "not": [
+    "leaves the row in place with a flag"
+   ],
+   "like": [
+    "A soft delete"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "A retention policy",
+   "tier": 2,
+   "says": [
+    "states how long each kind of data is kept and why",
+    "gives deletion a rule instead of a guess"
+   ],
+   "use": "ask how long old records should stay in the database",
+   "not": [
+    "says to keep everything forever in case it is useful"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Data archival",
+   "tier": 2,
+   "says": [
+    "moves rarely used data out of hot tables while keeping it retrievable",
+    "keeps the working tables small and fast"
+   ],
+   "use": "have years of old rows slowing the busiest tables",
+   "not": [
+    "is the same as deleting the data"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "An audit trail",
+   "tier": 2,
+   "says": [
+    "records who changed what and when",
+    "is append-only so history cannot be rewritten"
+   ],
+   "use": "must show who altered a record last month",
+   "not": [
+    "is a copy of the current rows only"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Created and updated timestamps",
+   "tier": 1,
+   "says": [
+    "record when a row was inserted and when it last changed",
+    "help debugging and incremental sync"
+   ],
+   "use": "need to see when a row last changed",
+   "not": [
+    "are filled in by the user on every form"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "A purge job",
+   "tier": 2,
+   "says": [
+    "deletes expired rows on a schedule",
+    "works in small batches to avoid long locks"
+   ],
+   "use": "must remove data that has passed its retention period",
+   "not": [
+    "archives rows but never deletes them"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "A unique index limited to non-deleted rows",
+   "tier": 5,
+   "says": [
+    "lets a soft-deleted row's value be reused",
+    "keeps active rows unique through a WHERE deleted_at IS NULL condition"
+   ],
+   "use": "soft delete users but let a new user take the same email",
+   "not": [
+    "blocks any reuse of a soft-deleted value"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "A legal hold",
+   "tier": 4,
+   "says": [
+    "suspends deletion of named data while a dispute or investigation lasts",
+    "overrides the normal purge schedule"
+   ],
+   "use": "are told that records tied to a dispute must not be purged",
+   "not": [
+    "is a type of database lock"
+   ]
+  },
+  {
+   "group": "pii",
+   "subject": "Personal data",
+   "tier": 1,
+   "says": [
+    "is any information that identifies or can identify a person",
+    "includes email addresses and IP addresses"
+   ],
+   "use": "need to decide whether a column falls under privacy rules",
+   "not": [
+    "is limited to names and passwords"
+   ]
+  },
+  {
+   "group": "pii",
+   "subject": "Data minimisation",
+   "tier": 2,
+   "says": [
+    "collects only the fields the purpose requires",
+    "reduces what a breach can expose"
+   ],
+   "use": "are tempted to store a birth date nobody needs",
+   "not": [
+    "means collecting everything now in case it is useful later"
+   ]
+  },
+  {
+   "group": "pii",
+   "subject": "Password hashing",
+   "tier": 1,
+   "says": [
+    "stores a slow, salted one-way hash rather than the password",
+    "means a stolen table does not reveal the passwords directly"
+   ],
+   "use": "must store credentials so they can be checked but not read",
+   "not": [
+    "stores the password encrypted so it can be decrypted on demand"
+   ]
+  },
+  {
+   "group": "pii",
+   "subject": "Encryption at rest",
+   "tier": 3,
+   "says": [
+    "protects stored files and backups if a disk or copy is stolen",
+    "does not stop an authorised application user reading the data"
+   ],
+   "use": "worry about a lost laptop or stolen backup drive",
+   "not": [
+    "hides data from anyone who can log in to the app"
+   ]
+  },
+  {
+   "group": "pii",
+   "subject": "A least-privilege database account",
+   "tier": 3,
+   "says": [
+    "grants the application only the permissions it needs",
+    "limits the damage of a flaw such as SQL injection"
+   ],
+   "use": "set up the account your app uses to connect",
+   "not": [
+    "gives the app full administrator rights for convenience"
+   ]
+  },
+  {
+   "group": "pii",
+   "subject": "Test data masking",
+   "tier": 2,
+   "says": [
+    "replaces real personal values before production data reaches development",
+    "keeps realistic shapes without the real people"
+   ],
+   "use": "want to copy production data into a test database",
+   "not": [
+    "copies real customer data as it is"
+   ]
+  },
+  {
+   "group": "pii",
+   "subject": "Pseudonymisation",
+   "tier": 4,
+   "says": [
+    "replaces identifiers with tokens while the mapping is kept separately",
+    "still counts as personal data because it can be reversed"
+   ],
+   "use": "need analysts to work on records without seeing names",
+   "not": [
+    "makes the data permanently impossible to link to a person"
+   ],
+   "like": [
+    "Anonymisation"
+   ]
+  },
+  {
+   "group": "pii",
+   "subject": "Anonymisation",
+   "tier": 4,
+   "says": [
+    "removes identifiability irreversibly so the data is no longer personal",
+    "cannot be undone by re-attaching a stored mapping"
+   ],
+   "use": "want to keep statistics after a person's data must go",
+   "not": [
+    "can be undone with a lookup table"
+   ],
+   "like": [
+    "Pseudonymisation"
+   ]
+  },
+  {
+   "group": "pii",
+   "subject": "An erasure request",
+   "tier": 4,
+   "says": [
+    "requires locating a person's data across tables, exports and copies",
+    "is not satisfied by a soft-delete flag alone"
+   ],
+   "use": "are asked by a user to delete their personal data",
+   "not": [
+    "is met by hiding the account in the interface"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "A relational database",
+   "tier": 1,
+   "says": [
+    "stores data in tables with defined columns and relationships",
+    "enforces constraints and supports joins"
+   ],
+   "use": "need strong integrity rules across related records",
+   "not": [
+    "stores each record as a free-form document with no schema"
+   ],
+   "like": [
+    "A document store"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "A document store",
+   "tier": 2,
+   "says": [
+    "stores self-describing documents such as JSON",
+    "suits records whose shape varies from one item to the next"
+   ],
+   "use": "hold items whose fields differ widely and are usually read whole",
+   "not": [
+    "enforces foreign keys between collections"
+   ],
+   "like": [
+    "A relational database"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "A key-value store",
+   "tier": 1,
+   "says": [
+    "looks up a value by a single key",
+    "offers very fast simple reads but no joins"
+   ],
+   "use": "need a cache or session lookup by a known key",
+   "not": [
+    "supports joins across tables"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "A graph database",
+   "tier": 3,
+   "says": [
+    "models data as nodes and edges",
+    "makes multi-hop traversals cheap"
+   ],
+   "use": "need to find friends of friends several steps away",
+   "not": [
+    "stores rows only in fixed columns"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "Polyglot persistence",
+   "tier": 4,
+   "says": [
+    "uses different kinds of store for different jobs in one system",
+    "adds operational and consistency burden"
+   ],
+   "use": "weigh adding a second database type for one feature",
+   "not": [
+    "means running the same data in two identical databases"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "Shared-schema multi-tenancy",
+   "tier": 3,
+   "says": [
+    "keeps every tenant's rows in the same tables with a tenant id column",
+    "relies on every query filtering by tenant"
+   ],
+   "use": "serve many small customers cheaply from one database",
+   "not": [
+    "gives each tenant a separate database file"
+   ],
+   "like": [
+    "Database-per-tenant",
+    "Schema-per-tenant"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "Schema-per-tenant",
+   "tier": 5,
+   "says": [
+    "gives each tenant its own set of tables inside one database",
+    "needs each migration applied to every schema"
+   ],
+   "use": "need stronger separation than a tenant id column but one database server",
+   "not": [
+    "puts all tenants into one set of tables"
+   ],
+   "like": [
+    "Shared-schema multi-tenancy",
+    "Database-per-tenant"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "Database-per-tenant",
+   "tier": 5,
+   "says": [
+    "gives each tenant a completely separate database",
+    "isolates tenants best but multiplies migrations and backups"
+   ],
+   "use": "must keep one large customer's data physically separate",
+   "not": [
+    "is the cheapest model when there are thousands of tenants"
+   ],
+   "like": [
+    "Shared-schema multi-tenancy",
+    "Schema-per-tenant"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "Row-level security",
+   "tier": 5,
+   "says": [
+    "applies tenant filters inside the database so a missing WHERE cannot leak rows",
+    "moves isolation from application code into a policy"
+   ],
+   "use": "fear a developer forgetting the tenant filter in a shared schema",
+   "not": [
+    "is a feature present in every database engine"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "Sharding",
+   "tier": 4,
+   "says": [
+    "splits one dataset across several databases by a shard key",
+    "makes cross-shard joins and transactions hard"
+   ],
+   "use": "have outgrown what one machine can write",
+   "not": [
+    "copies the full dataset to every node"
+   ],
+   "like": [
+    "A read replica"
+   ]
+  },
+  {
+   "group": "choice",
+   "subject": "A read replica",
+   "tier": 4,
+   "says": [
+    "serves reads from a copy so the primary handles writes",
+    "may return slightly stale data"
+   ],
+   "use": "need to take heavy reporting reads off the primary",
+   "not": [
+    "accepts writes that sync back to the primary"
+   ],
+   "like": [
+    "Sharding"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "A SQLite database",
+   "tier": 1,
+   "says": [
+    "stores the whole database in a single file",
+    "runs inside the application process with no separate server"
+   ],
+   "use": "want a database with no server to install",
+   "not": [
+    "needs a daemon process listening on a port"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "The foreign_keys pragma",
+   "tier": 2,
+   "says": [
+    "must be turned on for each connection before SQLite enforces foreign keys",
+    "is off by default"
+   ],
+   "use": "find that child rows can point at missing parents",
+   "not": [
+    "is stored permanently in the database file"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "Write-ahead logging",
+   "tier": 4,
+   "says": [
+    "lets readers continue while one writer appends to a log file",
+    "is switched on with PRAGMA journal_mode = WAL"
+   ],
+   "use": "see readers blocked while a writer works",
+   "not": [
+    "allows many simultaneous writers"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "The SQLite write lock",
+   "tier": 2,
+   "says": [
+    "allows only one writing transaction at a time",
+    "makes long write transactions block other writers"
+   ],
+   "use": "see 'database is locked' under concurrent writes",
+   "not": [
+    "is held per table so writers to different tables never wait"
+   ],
+   "like": [
+    "The busy_timeout pragma"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "The busy_timeout pragma",
+   "tier": 4,
+   "says": [
+    "makes a connection wait for a lock instead of failing at once",
+    "is set in milliseconds"
+   ],
+   "use": "want a blocked writer to retry for a few seconds",
+   "not": [
+    "increases the number of simultaneous writers"
+   ],
+   "like": [
+    "The SQLite write lock"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "SQLite type affinity",
+   "tier": 4,
+   "says": [
+    "lets a column accept a value of a different type than declared",
+    "means a declared INTEGER column is a preference, not a guarantee"
+   ],
+   "use": "see text stored in an INTEGER column without an error",
+   "not": [
+    "rejects any value of the wrong type"
+   ],
+   "like": [
+    "A STRICT table"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "A STRICT table",
+   "tier": 5,
+   "says": [
+    "enforces the declared column types",
+    "rejects a value that cannot be stored as the declared type"
+   ],
+   "use": "want SQLite to reject text in an integer column",
+   "not": [
+    "is the default for all tables"
+   ],
+   "like": [
+    "SQLite type affinity"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "VACUUM INTO",
+   "tier": 3,
+   "says": [
+    "writes a compacted, consistent copy of the database to a new file",
+    "can be run while the source database is in use"
+   ],
+   "use": "need a consistent copy of a live SQLite file",
+   "not": [
+    "deletes the source database after copying"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The enroll_unique index",
+   "tier": 2,
+   "says": [
+    "stops a learner enrolling in the same track twice",
+    "covers user and track",
+    "holds even when two requests race"
+   ],
+   "use": "need to explain why duplicate enrolments are impossible in GGLearn",
+   "not": [
+    "is enforced only by the enrolment page's code"
+   ],
+   "like": [
+    "The questions_dedupe index",
+    "The certificate unique index"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The questions_dedupe index",
+   "tier": 3,
+   "says": [
+    "makes a question unique per track, level and prompt",
+    "keeps a repeated import from creating copies"
+   ],
+   "use": "import the same question bank twice and expect no duplicates",
+   "not": [
+    "deletes the older questions first"
+   ],
+   "like": [
+    "The enroll_unique index"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The certificate unique index",
+   "tier": 3,
+   "says": [
+    "allows one certificate per user, track and level"
+   ],
+   "use": "need to know how GGLearn avoids issuing the same certificate twice",
+   "not": [
+    "allows one certificate per user across all tracks"
+   ],
+   "like": [
+    "The enroll_unique index"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The competition members unique index",
+   "tier": 3,
+   "says": [
+    "stops a user joining the same competition twice",
+    "leads with the competition column"
+   ],
+   "use": "need to know how a user is kept from joining a competition twice",
+   "not": [
+    "leads with the user column"
+   ],
+   "like": [
+    "The cm_user_lookup index"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The cm_user_lookup index",
+   "tier": 3,
+   "says": [
+    "speeds the page that lists which competitions a user is in",
+    "exists because the unique index on competition and user cannot serve a user-only search"
+   ],
+   "use": "wonder why a second index exists on the competition members table",
+   "not": [
+    "duplicates the unique index to enforce the same rule"
+   ],
+   "like": [
+    "The competition members unique index"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's foreign_keys setting",
+   "tier": 3,
+   "says": [
+    "is switched on when the database connection opens",
+    "is needed because SQLite does not enforce foreign keys unless asked"
+   ],
+   "use": "wonder why GGLearn's connection code sets a pragma",
+   "not": [
+    "is turned on by running drizzle-kit push"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLearn schema file",
+   "tier": 2,
+   "says": [
+    "is lib/db/schema.ts",
+    "defines the tables with Drizzle for SQLite",
+    "is what drizzle-kit push compares with the live database"
+   ],
+   "use": "need to find where GGLearn's tables are defined",
+   "not": [
+    "is a set of numbered SQL migration files"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "A user's role in GGLearn",
+   "tier": 3,
+   "says": [
+    "is stored once on the user row and read each time",
+    "avoids stale copies of the role in sessions"
+   ],
+   "use": "wonder where GGLearn keeps a person's role",
+   "not": [
+    "is copied into every session at sign-in and trusted afterwards"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's SQLite file during deploy",
+   "tier": 3,
+   "says": [
+    "is excluded from the rsync so a release never overwrites live data",
+    "is never replaced by the copy in the repository"
+   ],
+   "use": "wonder how GGLearn deploys avoid wiping learner data",
+   "not": [
+    "is overwritten by the repository copy on each deploy"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "The drizzle-kit push step in the GGLearn deploy",
+   "tier": 3,
+   "says": [
+    "runs without --force",
+    "stops and fails the deploy if a change would delete rows"
+   ],
+   "use": "wonder how GGLearn guards against a schema change destroying data",
+   "not": [
+    "runs with --force so the schema always matches"
+   ],
+   "like": [
+    "Push ordering in ggsocial"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Push ordering in ggsocial",
+   "tier": 5,
+   "says": [
+    "runs the schema push before the app restarts",
+    "prevents the new build querying columns that do not exist yet"
+   ],
+   "use": "wonder why ggsocial applies the schema before restarting",
+   "not": [
+    "restarts the app first so users see no downtime"
+   ],
+   "like": [
+    "The drizzle-kit push step in the GGLearn deploy"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "ggmoney migration files",
+   "tier": 3,
+   "says": [
+    "are kept as numbered files in db/migrations",
+    "are run by bin/migrate.php rather than by a schema-diff tool"
+   ],
+   "use": "need to know how ggmoney changes its schema",
+   "not": [
+    "are generated by drizzle-kit push"
+   ],
+   "like": [
+    "The bin/migrate.php script"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "The bin/migrate.php script",
+   "tier": 3,
+   "says": [
+    "applies only the migrations still pending",
+    "is safe to run repeatedly"
+   ],
+   "use": "need to know whether running ggmoney's migrate script twice is harmful",
+   "not": [
+    "drops and recreates all tables on each run"
+   ],
+   "like": [
+    "ggmoney migration files"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "The bin/backup.php script",
+   "tier": 3,
+   "says": [
+    "runs nightly from cron",
+    "uses mysqldump for MySQL and VACUUM INTO for SQLite"
+   ],
+   "use": "need to know how ggmoney's backup is scheduled",
+   "not": [
+    "runs only when an operator starts it by hand"
+   ],
+   "like": [
+    "ggmoney local snapshots"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "The ggmoney six-year rule",
+   "tier": 3,
+   "says": [
+    "applies to statutory accounting records",
+    "is the reason ggmoney backs up nightly"
+   ],
+   "use": "wonder why ggmoney treats its data as long-lived",
+   "not": [
+    "allows accounting records to be purged after one year"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "The mysqldump --single-transaction option",
+   "tier": 3,
+   "says": [
+    "takes a consistent snapshot without blocking writes",
+    "is what ggmoney's backup uses for MySQL"
+   ],
+   "use": "need to back up ggmoney's MySQL data while the app is running",
+   "not": [
+    "locks every table for the length of the dump"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "ggmoney local snapshots",
+   "tier": 5,
+   "says": [
+    "number thirty daily copies",
+    "are stated plainly not to be an offsite backup"
+   ],
+   "use": "wonder how safe ggmoney's backups are against losing the server",
+   "not": [
+    "are copied offsite automatically"
+   ],
+   "like": [
+    "The bin/backup.php script"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "The ggsocial pre-deploy backup",
+   "tier": 3,
+   "says": [
+    "copies the database to /root/ggsocial-backups",
+    "runs before anything is changed"
+   ],
+   "use": "need to know where ggsocial's database is saved before a deploy",
+   "not": [
+    "runs after the schema push to confirm it worked"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does PRIMARY KEY on id guarantee in this table?",
+   "right": "No two rows can share the same id",
+   "wrong": [
+    "Every other column also becomes unique",
+    "The id column is encrypted on disk",
+    "No other table may refer to this table"
+   ],
+   "tier": 1,
+   "code": "CREATE TABLE users (\n  id INTEGER PRIMARY KEY,\n  email TEXT NOT NULL\n);",
+   "why": "A primary key identifies each row uniquely and is what other tables point at."
+  },
+  {
+   "q": "A rating column must only ever hold 1 to 5. Which definition makes the database enforce that?",
+   "right": "rating INTEGER CHECK (rating BETWEEN 1 AND 5)",
+   "wrong": [
+    "rating INTEGER DEFAULT 5",
+    "rating INTEGER NOT NULL",
+    "rating INTEGER PRIMARY KEY"
+   ],
+   "tier": 1,
+   "why": "A CHECK constraint rejects rows whose values fail the stated condition."
+  },
+  {
+   "q": "After this runs, what is account 1's balance compared with before?",
+   "right": "Unchanged, because the change was rolled back",
+   "wrong": [
+    "Reduced by 100",
+    "Reduced by 100 and logged",
+    "The statement fails and locks the table"
+   ],
+   "tier": 1,
+   "code": "BEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nROLLBACK;",
+   "why": "ROLLBACK discards everything done since BEGIN."
+  },
+  {
+   "q": "Is this schema change safe on a live table that already has rows?",
+   "right": "Yes, it is additive and existing rows are untouched",
+   "wrong": [
+    "No, it rewrites every row and locks the table for hours",
+    "No, it deletes the oldest rows",
+    "Yes, but only after dropping the table"
+   ],
+   "tier": 1,
+   "code": "ALTER TABLE users ADD COLUMN nickname TEXT;",
+   "why": "Adding a nullable column does not change existing rows."
+  },
+  {
+   "q": "What happens on the second INSERT?",
+   "right": "It fails with a unique constraint error",
+   "wrong": [
+    "It silently updates the first row",
+    "It succeeds and creates a duplicate",
+    "It deletes the first row and inserts a new one"
+   ],
+   "tier": 1,
+   "code": "CREATE UNIQUE INDEX enroll_unique ON enrollments (user_id, track_id);\nINSERT INTO enrollments (user_id, track_id) VALUES (1, 5);\nINSERT INTO enrollments (user_id, track_id) VALUES (1, 5);",
+   "why": "A unique index makes a duplicate impossible, even with racing requests."
+  },
+  {
+   "q": "Which query lists only the users who are not soft-deleted?",
+   "right": "SELECT * FROM users WHERE deleted_at IS NULL;",
+   "wrong": [
+    "SELECT * FROM users WHERE deleted_at = NULL;",
+    "SELECT * FROM users WHERE deleted_at = 0;",
+    "SELECT * FROM users HAVING deleted_at;"
+   ],
+   "tier": 2,
+   "why": "NULL is tested with IS NULL; comparing with = NULL is never true."
+  },
+  {
+   "q": "Why does this query return no rows even though some users are active?",
+   "right": "Comparing to NULL with = is never true, so the condition matches nothing",
+   "wrong": [
+    "The table has no index on deleted_at",
+    "WHERE cannot be used with timestamps",
+    "The query needs a GROUP BY"
+   ],
+   "tier": 2,
+   "code": "SELECT * FROM users WHERE deleted_at = NULL;",
+   "why": "Use IS NULL; = NULL evaluates to unknown."
+  },
+  {
+   "q": "What does the first line of this plan tell you?",
+   "right": "The query reads every row of orders",
+   "wrong": [
+    "The query uses a covering index",
+    "The query is cached",
+    "The table has no primary key"
+   ],
+   "tier": 2,
+   "code": "EXPLAIN QUERY PLAN SELECT * FROM orders WHERE note = 'x';\n-- QUERY PLAN\n-- `--SCAN orders",
+   "why": "SCAN means a full table scan; SEARCH ... USING INDEX means an index was used."
+  },
+  {
+   "q": "Which statement best speeds up frequent lookups by email?",
+   "right": "CREATE INDEX idx_users_email ON users (email);",
+   "wrong": [
+    "ALTER TABLE users ADD COLUMN email_fast TEXT;",
+    "CREATE VIEW users_by_email AS SELECT * FROM users;",
+    "VACUUM;"
+   ],
+   "tier": 2,
+   "why": "An index on the filtered column lets the database search instead of scan."
+  },
+  {
+   "q": "With foreign_keys ON, what happens to order_lines rows for order 1 after this delete?",
+   "right": "They are deleted too",
+   "wrong": [
+    "They stay and point at nothing",
+    "The delete fails",
+    "They are moved to order 0"
+   ],
+   "tier": 2,
+   "code": "PRAGMA foreign_keys = ON;\nCREATE TABLE order_lines (\n  id INTEGER PRIMARY KEY,\n  order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE\n);\nDELETE FROM orders WHERE id = 1;",
+   "why": "ON DELETE CASCADE removes child rows with the parent."
+  },
+  {
+   "q": "A fresh SQLite connection runs this insert and there is no order 99. What happens?",
+   "right": "It succeeds, because foreign key checks are off by default",
+   "wrong": [
+    "It fails with a foreign key error",
+    "SQLite creates order 99",
+    "It is queued until order 99 exists"
+   ],
+   "tier": 2,
+   "code": "INSERT INTO order_lines (order_id) VALUES (99);",
+   "why": "SQLite enforces foreign keys only after PRAGMA foreign_keys = ON."
+  },
+  {
+   "q": "A post has many comments. Where does the foreign key go?",
+   "right": "On the comments table, as post_id",
+   "wrong": [
+    "On the posts table, as comment_id",
+    "In a third junction table only",
+    "In both tables"
+   ],
+   "tier": 2,
+   "why": "In a one-to-many relationship the foreign key sits on the many side."
+  },
+  {
+   "q": "Students take many courses and courses have many students. What is the standard design?",
+   "right": "A junction table with a foreign key to each side",
+   "wrong": [
+    "A comma-separated course list in the students table",
+    "One column per course on the students table",
+    "A foreign key from courses to the first student"
+   ],
+   "tier": 2,
+   "why": "A many-to-many relationship needs a link table."
+  },
+  {
+   "q": "A team's nightly backup job reports success every day and nobody has restored from it. What is the best next step?",
+   "right": "Restore a recent backup into a test copy and check the data",
+   "wrong": [
+    "Do nothing, since the job reports success",
+    "Make the job run twice a night",
+    "Compress the backups more"
+   ],
+   "tier": 2,
+   "why": "Only a restore proves a backup works."
+  },
+  {
+   "q": "Backups run at 02:00 and the server fails at 17:00. What is the most recent data you can recover?",
+   "right": "Everything up to 02:00, so up to 15 hours of changes are lost",
+   "wrong": [
+    "Everything up to 16:59",
+    "Everything up to the previous midnight",
+    "Nothing, because backups cannot restore data"
+   ],
+   "tier": 2,
+   "why": "The recovery point is the time of the last good backup."
+  },
+  {
+   "q": "Which filter can this composite index narrow directly from its leftmost column?",
+   "right": "WHERE user_id = 3",
+   "wrong": [
+    "WHERE track_id = 7",
+    "WHERE track_id IN (1, 2)",
+    "WHERE created_at > '2026-01-01'"
+   ],
+   "tier": 3,
+   "code": "CREATE INDEX ix_enroll ON enrollments (user_id, track_id);",
+   "why": "A composite index serves queries that start from its first column."
+  },
+  {
+   "q": "A team has an index on users(email) but this query still scans. Why?",
+   "right": "The function on the column stops the plain index being used; index lower(email) or store it normalised",
+   "wrong": [
+    "Indexes cannot be used with WHERE",
+    "lower() is not allowed in SQLite",
+    "The index must be rebuilt after every query"
+   ],
+   "tier": 3,
+   "code": "SELECT * FROM users WHERE lower(email) = 'a@x.com';",
+   "why": "Wrapping an indexed column in a function makes the predicate non-sargable."
+  },
+  {
+   "q": "A page renders 200 posts and the log shows 201 queries. What is the problem and the fix?",
+   "right": "N+1 queries; fetch the authors with one join or one batched query",
+   "wrong": [
+    "A missing primary key; add one",
+    "Too few indexes; index every column",
+    "The database is too small; add a replica"
+   ],
+   "tier": 3,
+   "code": "const posts = await db.all('SELECT * FROM posts LIMIT 200');\nfor (const p of posts) {\n  p.author = await db.get('SELECT * FROM users WHERE id = ?', p.user_id);\n}",
+   "why": "One query for the list plus one per row is the N+1 pattern."
+  },
+  {
+   "q": "Why does this query get slower on later pages?",
+   "right": "The database has to read and discard all the skipped rows first",
+   "wrong": [
+    "LIMIT disables the index",
+    "OFFSET sorts rows in reverse",
+    "The result is cached per page"
+   ],
+   "tier": 3,
+   "code": "SELECT * FROM events ORDER BY id LIMIT 20 OFFSET 100000;",
+   "why": "OFFSET cost grows with the number of rows skipped; keyset pagination avoids it."
+  },
+  {
+   "q": "A script inserts 50,000 rows into SQLite with a separate commit for each and takes minutes. What is the best fix?",
+   "right": "Wrap the inserts in a single BEGIN ... COMMIT",
+   "wrong": [
+    "Add an index on every column",
+    "Run the inserts from several processes at once",
+    "Switch the column types to TEXT"
+   ],
+   "tier": 3,
+   "why": "Each commit forces a sync to disk; one transaction pays that cost once."
+  },
+  {
+   "q": "Transaction A updates a row and later rolls back. Transaction B read the new value before the rollback. What was B's problem?",
+   "right": "A dirty read",
+   "wrong": [
+    "A phantom read",
+    "A deadlock",
+    "A lost update"
+   ],
+   "tier": 3,
+   "why": "Reading uncommitted data that is later discarded is a dirty read."
+  },
+  {
+   "q": "Why is the first form safer than the second when two requests run at once?",
+   "right": "The database applies the subtraction to the current value atomically; the second can overwrite another request's change",
+   "wrong": [
+    "The first uses fewer bytes on the wire",
+    "The second is not valid SQL",
+    "The first skips constraint checks"
+   ],
+   "tier": 3,
+   "code": "-- first\nUPDATE accounts SET balance = balance - 10 WHERE id = 1;\n-- second (app computed newBalance after reading)\nUPDATE accounts SET balance = ? WHERE id = 1;",
+   "why": "A read-modify-write in the app can produce a lost update."
+  },
+  {
+   "q": "A migration adds a required column with no default to a table that already has rows. In SQLite, what happens?",
+   "right": "It is refused; add a default or add the column as nullable and backfill",
+   "wrong": [
+    "Existing rows get an empty string",
+    "The existing rows are deleted",
+    "It works but locks the table forever"
+   ],
+   "tier": 3,
+   "code": "ALTER TABLE users ADD COLUMN plan TEXT NOT NULL;",
+   "why": "Existing rows would have no value for a NOT NULL column."
+  },
+  {
+   "q": "A team must populate a new column for 20 million existing rows on a live system. What should they do?",
+   "right": "Backfill in small batches",
+   "wrong": [
+    "Run one UPDATE for all rows in the busiest hour",
+    "Drop the table and reload it",
+    "Skip the backfill and leave the column empty forever"
+   ],
+   "tier": 3,
+   "why": "Small batches avoid long locks and let the system keep serving users."
+  },
+  {
+   "q": "Users are soft-deleted with deleted_at. What does this index allow?",
+   "right": "A new user can reuse the email of a soft-deleted user while active emails stay unique",
+   "wrong": [
+    "Two active users can share an email",
+    "Soft-deleted users are removed from disk",
+    "Emails become case-insensitive"
+   ],
+   "tier": 3,
+   "code": "CREATE UNIQUE INDEX users_email_active\n  ON users (email) WHERE deleted_at IS NULL;",
+   "why": "A partial unique index applies only where deleted_at IS NULL."
+  },
+  {
+   "q": "A support person says 'what changed on this record last week and who did it?'. Which design answers it?",
+   "right": "An append-only audit table with actor, time, and before and after values",
+   "wrong": [
+    "A single updated_at column",
+    "The current row with no history",
+    "A comment field edited by whoever last changed the record"
+   ],
+   "tier": 3,
+   "why": "An audit trail records who, when and what, and should not be rewritable."
+  },
+  {
+   "q": "A SaaS app uses one shared schema with a tenant_id column. What is wrong with this query?",
+   "right": "It never filters by tenant, so a guessed id could return another tenant's invoice",
+   "wrong": [
+    "It uses SELECT *",
+    "It should use OFFSET",
+    "The id column must be text"
+   ],
+   "tier": 3,
+   "code": "SELECT * FROM invoices WHERE id = ?;",
+   "why": "Every query in a shared schema must be scoped by tenant_id."
+  },
+  {
+   "q": "Deleting a parent row is slow and the child table's foreign key column has no index. What is the likely cause?",
+   "right": "The database scans the child table to find referencing rows",
+   "wrong": [
+    "The parent has too many columns",
+    "Foreign keys always lock the database",
+    "The child table has too few rows"
+   ],
+   "tier": 3,
+   "why": "An index on the foreign key column speeds the delete check and joins."
+  },
+  {
+   "q": "A developer wants production data to test with. What is the safest approach?",
+   "right": "Copy it only after masking personal values",
+   "wrong": [
+    "Copy it as it is to a laptop",
+    "Share the production password with the team",
+    "Disable the production constraints and test there"
+   ],
+   "tier": 3,
+   "why": "Masking keeps realistic shapes without exposing real people."
+  },
+  {
+   "q": "How should an app store user passwords?",
+   "right": "As a slow, salted one-way hash",
+   "wrong": [
+    "Encrypted so support can read them back",
+    "As plain text in a restricted table",
+    "As a fast unsalted checksum"
+   ],
+   "tier": 3,
+   "why": "Hashing allows checking a password without being able to read it."
+  },
+  {
+   "q": "The query below is answered from the index alone. What makes that possible?",
+   "right": "The index contains customer_id and total, so it covers the query",
+   "wrong": [
+    "total is the primary key",
+    "The table has no rows",
+    "SQLite caches the result"
+   ],
+   "tier": 4,
+   "code": "CREATE INDEX ix_orders ON orders (customer_id, total);\nSELECT total FROM orders WHERE customer_id = 5;",
+   "why": "A covering index holds every column the query needs."
+  },
+  {
+   "q": "A report reads the same row twice in one transaction and gets different values. Which setting prevents that?",
+   "right": "Repeatable read or stricter isolation",
+   "wrong": [
+    "Read uncommitted",
+    "Dropping the transaction",
+    "Turning off constraints"
+   ],
+   "tier": 4,
+   "why": "A non-repeatable read is prevented by repeatable read and serializable isolation."
+  },
+  {
+   "q": "A live app with two servers deployed one after the other must rename users.fullname to users.display_name. What should the team do?",
+   "right": "Add display_name, write both, backfill, switch reads, and drop fullname in a later release",
+   "wrong": [
+    "Rename the column in the same deploy as the code change",
+    "Stop all traffic and rename by hand in production",
+    "Create a new database and abandon the old one"
+   ],
+   "tier": 4,
+   "why": "Expand and contract keeps old and new versions working during the deploy."
+  },
+  {
+   "q": "A SQLite app has slow reads while a nightly job writes. Which change usually helps?",
+   "right": "Switch to write-ahead logging",
+   "wrong": [
+    "Turn off foreign keys",
+    "Add a second writer process",
+    "Move the file to a USB drive"
+   ],
+   "tier": 4,
+   "code": "PRAGMA journal_mode = WAL;",
+   "why": "WAL lets readers continue while a writer appends to the log."
+  },
+  {
+   "q": "A SQLite app throws 'database is locked' whenever two requests write at once. What is the most sensible first fix?",
+   "right": "Set a busy timeout and keep write transactions short",
+   "wrong": [
+    "Open a new database file per request",
+    "Disable the journal",
+    "Remove every index"
+   ],
+   "tier": 4,
+   "code": "PRAGMA busy_timeout = 5000;",
+   "why": "SQLite allows one writer; waiting briefly and holding the lock briefly avoids most failures."
+  },
+  {
+   "q": "A bad DELETE ran at 10:42 and the last nightly backup is from 02:00. Change logs have been archived. What recovers the most data?",
+   "right": "Restore the 02:00 backup and replay the log to just before 10:42",
+   "wrong": [
+    "Restore the 02:00 backup and accept the loss",
+    "Restore the replica",
+    "Run the delete again with a WHERE clause"
+   ],
+   "tier": 4,
+   "why": "Point-in-time recovery replays changes onto a base backup up to a chosen moment."
+  },
+  {
+   "q": "Someone drops a table on the primary and the replica drops it too. What should the team do?",
+   "right": "Restore from a backup, because a replica copies mistakes",
+   "wrong": [
+    "Fail over to the replica, which still has the table",
+    "Wait for the replica to resync",
+    "Recreate the table empty and carry on"
+   ],
+   "tier": 4,
+   "why": "A replica copies every change, including mistakes; it is not a backup."
+  },
+  {
+   "q": "Deleting a customer cascades to their orders, but finance must keep invoices. What is the best fix?",
+   "right": "Use RESTRICT and soft-delete or anonymise the customer instead",
+   "wrong": [
+    "Keep CASCADE and export the orders first",
+    "Remove the foreign key",
+    "Delete the finance rules"
+   ],
+   "tier": 4,
+   "why": "Cascade can erase records you are required to keep."
+  },
+  {
+   "q": "Which query pages forward fast through a large table?",
+   "right": "SELECT * FROM events WHERE id < ? ORDER BY id DESC LIMIT 20;",
+   "wrong": [
+    "SELECT * FROM events ORDER BY id DESC LIMIT 20 OFFSET ?;",
+    "SELECT * FROM events ORDER BY RANDOM() LIMIT 20;",
+    "SELECT COUNT(*) FROM events;"
+   ],
+   "tier": 4,
+   "why": "Keyset pagination continues from the last seen key and avoids skipping rows."
+  },
+  {
+   "q": "A user asks for deletion of their account. The app only sets deleted_at. What is the problem?",
+   "right": "Their personal data still exists in the table",
+   "wrong": [
+    "The row is too large",
+    "Soft delete is illegal",
+    "The user cannot sign up again"
+   ],
+   "tier": 4,
+   "why": "A flag hides the row but does not remove the personal data."
+  },
+  {
+   "q": "After loading millions of rows the database starts choosing poor query plans. What is a likely cause and fix?",
+   "right": "Stale statistics; refresh them with ANALYZE",
+   "wrong": [
+    "Too many columns; drop the table",
+    "The index is full; delete it",
+    "The database is encrypted"
+   ],
+   "tier": 4,
+   "why": "The planner relies on statistics, which go stale after bulk loads."
+  },
+  {
+   "q": "A comment count column often disagrees with the real number of comments. What is the best fix?",
+   "right": "Update the counter in the same transaction as the change",
+   "wrong": [
+    "Run a nightly job and accept the drift",
+    "Remove the foreign key",
+    "Cache the page for a day"
+   ],
+   "tier": 4,
+   "why": "A derived value should change in the same transaction as its source."
+  },
+  {
+   "q": "Two jobs each lock rows A and B in opposite order and freeze. What fix is standard?",
+   "right": "Take locks in a consistent order and retry the aborted transaction",
+   "wrong": [
+    "Add an index to both tables",
+    "Run both jobs at once on purpose",
+    "Raise the isolation level to read uncommitted"
+   ],
+   "tier": 4,
+   "why": "A consistent lock order prevents the circular wait."
+  },
+  {
+   "q": "This update affects 0 rows. What does that tell you?",
+   "right": "Another writer changed the row since you read it, so reload or report a conflict",
+   "wrong": [
+    "The query has a syntax error",
+    "The row was inserted twice",
+    "The database is read-only"
+   ],
+   "tier": 4,
+   "code": "UPDATE docs\nSET body = ?, version = version + 1\nWHERE id = ? AND version = ?;",
+   "why": "With optimistic locking a version mismatch means someone else updated first."
+  },
+  {
+   "q": "Why is this index small and fast for a job queue where most rows are done?",
+   "right": "It indexes only the pending rows",
+   "wrong": [
+    "It indexes only the oldest rows",
+    "It compresses the whole table",
+    "It makes status unique"
+   ],
+   "tier": 5,
+   "code": "CREATE INDEX jobs_pending ON jobs (run_at) WHERE status = 'pending';",
+   "why": "A partial index covers only rows matching its WHERE condition."
+  },
+  {
+   "q": "Developers keep forgetting the tenant filter in a shared schema. What is the strongest systemic fix?",
+   "right": "Enforce isolation in the database (row-level security or a mandatory scoped query layer) and test it",
+   "wrong": [
+    "Ask developers to be more careful",
+    "Rely on code review alone",
+    "Switch every column to TEXT"
+   ],
+   "tier": 5,
+   "why": "Moving isolation out of each individual query removes the human failure mode."
+  },
+  {
+   "q": "Comments attach to posts or photos through commentable_type and commentable_id. What is the integrity weakness?",
+   "right": "The database cannot enforce a foreign key on the polymorphic pair",
+   "wrong": [
+    "Comments cannot be sorted",
+    "It forces a junction table",
+    "Text columns cannot be indexed"
+   ],
+   "tier": 5,
+   "why": "A type-plus-id pair cannot be a real foreign key; separate nullable keys with a CHECK or separate link tables can be."
+  },
+  {
+   "q": "In SQLite, what does this return?",
+   "right": "text",
+   "wrong": [
+    "integer",
+    "null",
+    "an error is raised"
+   ],
+   "tier": 5,
+   "code": "CREATE TABLE t (n INTEGER);\nINSERT INTO t VALUES ('abc');\nSELECT typeof(n) FROM t;",
+   "why": "Without STRICT, type affinity stores a non-convertible value as text."
+  },
+  {
+   "q": "Two on-call doctors each check that at least one other doctor is on call, then both go off call. What anomaly is this and what prevents it?",
+   "right": "Write skew; serializable isolation or locking the shared rule",
+   "wrong": [
+    "A dirty read; read uncommitted",
+    "A phantom delete; a bigger disk",
+    "A lost index; a covering index"
+   ],
+   "tier": 5,
+   "why": "Each transaction read a state the other then invalidated."
+  },
+  {
+   "q": "A nightly backup job exits with code 0 but the files are only a few bytes. What gap does this expose?",
+   "right": "No check of backup size, integrity or restorability",
+   "wrong": [
+    "The server clock is wrong",
+    "The files should be compressed more",
+    "Backups should run during the day"
+   ],
+   "tier": 5,
+   "why": "Monitor backup output and restore regularly."
+  },
+  {
+   "q": "A team's backup script copies the live SQLite file with cp while the app is writing. What is the risk and the better approach?",
+   "right": "The copy can be inconsistent; use VACUUM INTO or the online backup API",
+   "wrong": [
+    "No risk; cp is atomic",
+    "It deletes the live file; use mv",
+    "It only misses the indexes"
+   ],
+   "tier": 3,
+   "why": "A plain copy of a database in use may capture a half-written state."
+  },
+  {
+   "q": "In GGLearn, learners reported duplicate enrolments after a double-click. Why can the database still guarantee uniqueness?",
+   "right": "A unique index on user and track rejects the second insert even if two requests race",
+   "wrong": [
+    "The button is disabled in the page",
+    "Sessions are single-threaded",
+    "Enrolments are deleted nightly"
+   ],
+   "tier": 3,
+   "why": "A database constraint cannot be bypassed by racing requests."
+  },
+  {
+   "q": "A GGLearn deploy fails because the schema change would delete rows. What is the right response?",
+   "right": "Do not force it; back up, use steps to move the data, and remove the old column in a later release",
+   "wrong": [
+    "Rerun with --force immediately",
+    "Skip the schema push forever",
+    "Delete the failing table and let push recreate it"
+   ],
+   "tier": 4,
+   "why": "The deploy refuses destructive pushes on purpose."
+  },
+  {
+   "q": "ggsocial's new build queries a column that the schema push has not created yet. What ordering mistake caused it?",
+   "right": "The app was restarted before the schema push ran",
+   "wrong": [
+    "The push ran before the restart",
+    "The database was backed up first",
+    "The column was nullable"
+   ],
+   "tier": 3,
+   "why": "Schema should be applied before the new build serves traffic."
+  },
+  {
+   "q": "A new GGLearn page must list the competitions a user is in, and the competition members table is only indexed on (competition, user). What should be added?",
+   "right": "A separate index on user",
+   "wrong": [
+    "A second copy of the table",
+    "A unique index on competition alone",
+    "Nothing, the composite index covers it"
+   ],
+   "tier": 3,
+   "why": "A composite index does not serve searches that skip its first column; GGLearn added cm_user_lookup."
+  },
+  {
+   "q": "Why does the GGLearn rsync deploy exclude the SQLite file?",
+   "right": "So a release never overwrites live learner data",
+   "wrong": [
+    "Because SQLite files are too large",
+    "Because rsync cannot copy binary files",
+    "To speed up compilation"
+   ],
+   "tier": 3,
+   "why": "The live database must survive deploys untouched."
+  },
+  {
+   "q": "ggmoney's nightly job backs up SQLite with VACUUM INTO instead of copying the file. Why?",
+   "right": "It gives a consistent snapshot of a database in use",
+   "wrong": [
+    "It encrypts the file",
+    "It makes backups offsite",
+    "It is the only way to compress files"
+   ],
+   "tier": 4,
+   "why": "A plain copy may be inconsistent while writes continue."
+  },
+  {
+   "q": "A reviewer notes ggmoney keeps 30 daily snapshots on the same server. What weakness should be fixed first?",
+   "right": "Add an offsite copy, since a lost server takes the snapshots with it",
+   "wrong": [
+    "Keep fewer snapshots",
+    "Back up more often locally",
+    "Encrypt the cron job"
+   ],
+   "tier": 4,
+   "why": "Local copies do not survive loss of the machine."
+  },
+  {
+   "q": "ggmoney must keep accounting records for six years, and a developer proposes a purge job that deletes anything older than two years. What should happen?",
+   "right": "Reject it; the retention rule must come before the purge",
+   "wrong": [
+    "Approve it to save space",
+    "Run it only on weekends",
+    "Move the purge into the application"
+   ],
+   "tier": 5,
+   "why": "Delete only when policy allows."
+  },
+  {
+   "q": "A migration needs to change a column type on a live table of 100 million rows. Which approach is safest?",
+   "right": "Add a new column, backfill in batches, switch code to it, then drop the old column later",
+   "wrong": [
+    "ALTER the type in place during peak hours",
+    "Drop the table and rebuild from backup",
+    "Change the type in the application only"
+   ],
+   "tier": 5,
+   "why": "Expand and contract avoids a long lock and keeps rollback possible."
+  }
+ ]
+}

@@ -1,0 +1,2429 @@
+{
+  "slug": "moksy-product",
+  "name": "Moksy",
+  "description": "Journeys, reviewer/customer/staff roles, MXP/MOX, patterns, reports, the 1:99 goal.",
+  "roles": "",
+  "kind": "product",
+  "brand": "moksy-ai",
+  "audience": "staff",
+  "groups": {
+    "journey": "Moksy journey stage, role or term",
+    "currency": "Moksy currency or ledger term",
+    "ladder": "level-system concept",
+    "rung": "published reviewer rung or band",
+    "review": "review-process concept",
+    "conduct": "reviewer code-of-conduct standard",
+    "platform": "platform component or architecture term",
+    "pattern": "pattern-architecture term",
+    "facts": "report or data-integrity rule",
+    "local": "local-run or deployment step",
+    "prod": "product-management practice",
+    "metric": "product metric",
+    "qual": "quality-control practice",
+    "op": "pricing, release or support practice"
+  },
+  "cards": [
+    {
+      "group": "journey",
+      "subject": "A Moksy project",
+      "tier": 1,
+      "says": [
+        "holds one idea and its document",
+        "is created by a customer to start working on an idea",
+        "is the container that the interview, the document and the review all belong to"
+      ],
+      "use": "want to know where one idea and its document live",
+      "not": [
+        "is created by a reviewer when claiming a job"
+      ],
+      "like": [
+        "The Moksy interview",
+        "The output document"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "The Moksy interview",
+      "tier": 1,
+      "says": [
+        "has an AI ask the customer a series of questions",
+        "turns the customer's idea into answers",
+        "supplies the input that the output document is built from"
+      ],
+      "use": "need the stage that gathers the customer's answers",
+      "not": [
+        "is carried out by a human reviewer reading the idea aloud"
+      ],
+      "like": [
+        "The output document",
+        "Expert review"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "The output document",
+      "tier": 1,
+      "says": [
+        "is built from the customer's interview answers",
+        "is called report, plan, spec, solution plan, document and blueprint in different parts of the customer interface",
+        "is the centre of the product"
+      ],
+      "use": "need the thing a customer receives after the interview",
+      "not": [
+        "is written by hand by staff before the interview starts"
+      ],
+      "like": [
+        "Expert review",
+        "The build stage"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "Expert review",
+      "tier": 2,
+      "says": [
+        "comes after the output document is generated",
+        "has a reviewer check the document and correct what is wrong",
+        "sits between the document and the build stage"
+      ],
+      "use": "need the step where a person checks the generated document",
+      "not": [
+        "happens before the customer answers any question"
+      ],
+      "like": [
+        "The Moksy interview",
+        "The build stage"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "The build stage",
+      "tier": 2,
+      "says": [
+        "covers downloads, exports and hiring",
+        "comes after expert review",
+        "is where the customer takes the result away"
+      ],
+      "use": "want to export the document or hire people to build the plan",
+      "not": [
+        "is the stage in which the AI asks its questions"
+      ],
+      "like": [
+        "Expert review"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "A Moksy customer",
+      "tier": 1,
+      "says": [
+        "creates projects and receives documents",
+        "starts the journey by typing in an idea",
+        "lands on the screen called Home"
+      ],
+      "like": [
+        "A Moksy reviewer",
+        "A staff operator"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "A Moksy reviewer",
+      "tier": 1,
+      "says": [
+        "checks documents and earns from doing so",
+        "works from a home area separate from the customer home",
+        "is paid for reviews in MOX"
+      ],
+      "not": [
+        "receives output documents as a customer"
+      ],
+      "like": [
+        "A Moksy customer",
+        "A staff operator"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "A staff operator",
+      "tier": 1,
+      "says": [
+        "runs the platform from an operator console",
+        "uses the home called the Console"
+      ],
+      "like": [
+        "A Moksy customer",
+        "A Moksy reviewer"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "The Console",
+      "tier": 2,
+      "says": [
+        "is the staff home in the Moksy lexicon",
+        "is the operator console used to run the platform"
+      ],
+      "like": [
+        "Home"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "Home",
+      "tier": 2,
+      "says": [
+        "is the lexicon's name for the customer home screen",
+        "is where a customer starts in the customer area"
+      ],
+      "like": [
+        "The Console"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "An account manager",
+      "tier": 3,
+      "says": [
+        "is a person assigned to look after accounts",
+        "has no assignment field in code yet according to the fact base",
+        "makes the promise of a personal account manager a plan rather than a stored row"
+      ],
+      "use": "are asked whether every customer already has a personal account manager",
+      "not": [
+        "is stored as a field on every user record today"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "A Moksy role",
+      "tier": 3,
+      "says": [
+        "is the security ceiling for what a person can do",
+        "is independent of the reviewer level",
+        "does not change when a user's level is pinned"
+      ],
+      "use": "need to explain what controls a person's permissions",
+      "not": [
+        "is calculated from a person's MXP"
+      ],
+      "like": [
+        "Level"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "Level",
+      "tier": 3,
+      "says": [
+        "is what someone has earned rather than what they may do",
+        "is independent of role",
+        "can be frozen by a super admin pin"
+      ],
+      "not": [
+        "raises a person's security ceiling when it goes up"
+      ],
+      "like": [
+        "A Moksy role"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "A real-jobs test run",
+      "tier": 4,
+      "says": [
+        "walks one real job post end to end as customer, reviewer, staff and account manager",
+        "draws on a pool of two thousand real job posts",
+        "earns MXP only, because MOX moves only when real money does"
+      ],
+      "use": "test the product against a real job post",
+      "not": [
+        "moves real MOX between wallets in every run"
+      ]
+    },
+    {
+      "group": "journey",
+      "subject": "The Moksy lexicon",
+      "tier": 3,
+      "says": [
+        "lists the shared words for the product's customer-facing vocabulary",
+        "records the six names the output document currently has",
+        "notes that MOX and MXP are the two coined words Moksy owns well"
+      ],
+      "not": [
+        "fixes the stored level numbers to new values"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "MOX",
+      "tier": 1,
+      "says": [
+        "stands for Moksy credit",
+        "equals one cent per unit",
+        "is held in the Wallet",
+        "can be bought in packs"
+      ],
+      "use": "need the unit used to price and pay for reviews",
+      "not": [
+        "stands for Moksy Experience Points"
+      ],
+      "like": [
+        "MXP",
+        "Starter MOX"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "MXP",
+      "tier": 1,
+      "says": [
+        "stands for Moksy Experience Points",
+        "is what a person climbs the Ladder with",
+        "is a different thing from the credit used to pay reviewers"
+      ],
+      "use": "need the unit that measures progression",
+      "not": [
+        "is held in the Wallet and withdrawn as money"
+      ],
+      "like": [
+        "MOX"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "The Wallet",
+      "tier": 1,
+      "says": [
+        "holds a person's MOX",
+        "is the thing the lexicon pairs with MOX"
+      ],
+      "not": [
+        "is climbed by earning MXP"
+      ],
+      "like": [
+        "The Ladder"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "The Ladder",
+      "tier": 1,
+      "says": [
+        "is climbed with MXP",
+        "is the thing the lexicon pairs with MXP"
+      ],
+      "not": [
+        "holds a person's balance of MOX"
+      ],
+      "like": [
+        "The Wallet"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "Starter MOX",
+      "tier": 2,
+      "says": [
+        "is granted when someone joins",
+        "gives a new user an opening MOX balance"
+      ],
+      "like": [
+        "MOX"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "Escrow",
+      "tier": 3,
+      "says": [
+        "holds MOX while a review is open",
+        "releases the fee once the review is accepted",
+        "also releases the fee if the customer's response window closes without a dispute"
+      ],
+      "use": "need to explain why a reviewer is not paid the instant they submit",
+      "not": [
+        "pays the reviewer immediately on submission"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "The Earnings view",
+      "tier": 3,
+      "says": [
+        "shows the MOX a reviewer has earned",
+        "is kept separate from Payouts in what reviewers see"
+      ],
+      "like": [
+        "The Payouts view"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "The Payouts view",
+      "tier": 3,
+      "says": [
+        "shows money sent to a bank",
+        "is a separate state from Earnings"
+      ],
+      "not": [
+        "shows MOX earned but not yet withdrawn"
+      ],
+      "like": [
+        "The Earnings view"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "Ledger class E",
+      "tier": 4,
+      "says": [
+        "is the only class of MOX that can be withdrawn",
+        "holds earned MOX"
+      ],
+      "use": "need to know which MOX a reviewer can take out as money",
+      "like": [
+        "Ledger class R",
+        "Ledger class P"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "Ledger class R",
+      "tier": 4,
+      "says": [
+        "receives MOX from operator grants",
+        "cannot be withdrawn and can only be spent in the platform"
+      ],
+      "like": [
+        "Ledger class P",
+        "Ledger class E"
+      ]
+    },
+    {
+      "group": "currency",
+      "subject": "Ledger class P",
+      "tier": 4,
+      "says": [
+        "receives MOX when an operator grants it against a purchase",
+        "cannot be withdrawn and can only be spent in the platform"
+      ],
+      "like": [
+        "Ledger class R",
+        "Ledger class E"
+      ]
+    },
+    {
+      "group": "ladder",
+      "subject": "The 20-rung reviewer system",
+      "tier": 2,
+      "says": [
+        "runs from Novice up to Titan",
+        "is the reviewer level system documented in the README today",
+        "has 20 rungs"
+      ],
+      "use": "need the level system the README documents",
+      "like": [
+        "The customer ladder",
+        "The lexicon's six-rung names"
+      ]
+    },
+    {
+      "group": "ladder",
+      "subject": "Novice",
+      "tier": 2,
+      "says": [
+        "is the lowest rung with a score floor of 5",
+        "is where the README's 20-rung system starts"
+      ],
+      "like": [
+        "Titan",
+        "Expert"
+      ]
+    },
+    {
+      "group": "ladder",
+      "subject": "Titan",
+      "tier": 2,
+      "says": [
+        "is the top rung with a score floor of 100",
+        "is where the README's 20-rung system ends"
+      ],
+      "like": [
+        "Novice",
+        "Expert"
+      ]
+    },
+    {
+      "group": "ladder",
+      "subject": "Expert",
+      "tier": 2,
+      "says": [
+        "sits at rung 5 with a score floor of 25",
+        "is the default threshold for claiming review jobs",
+        "has a threshold that admins can configure"
+      ],
+      "use": "need to know the default minimum to claim review jobs",
+      "not": [
+        "is the top rung of the system"
+      ],
+      "like": [
+        "Novice",
+        "Titan"
+      ]
+    },
+    {
+      "group": "ladder",
+      "subject": "The level score",
+      "tier": 3,
+      "says": [
+        "is a weighted sum of signals added to a base of 5",
+        "is clamped between 5 and 100",
+        "is computed automatically unless a level is pinned"
+      ],
+      "not": [
+        "can go below the base of 5"
+      ]
+    },
+    {
+      "group": "ladder",
+      "subject": "The score signal set",
+      "tier": 4,
+      "says": [
+        "bundles earnings in MOX, completed reviews, peer and admin endorsements, customer reviews, network connections and platform activities",
+        "contains seven signals",
+        "leaves out lifetime spend, which belongs to the customer ladder"
+      ],
+      "like": [
+        "The level score"
+      ]
+    },
+    {
+      "group": "ladder",
+      "subject": "A pinned level",
+      "tier": 4,
+      "says": [
+        "is set by a super admin",
+        "freezes the automatic computation of a user's level"
+      ],
+      "not": [
+        "changes the user's role to match"
+      ]
+    },
+    {
+      "group": "ladder",
+      "subject": "The customer ladder",
+      "tier": 3,
+      "says": [
+        "classifies customers as guest, free, paid, premium, vip and vvip",
+        "is driven by lifetime spend and an admin tag",
+        "is separate from the reviewer levels"
+      ],
+      "like": [
+        "The 20-rung reviewer system"
+      ]
+    },
+    {
+      "group": "ladder",
+      "subject": "The lexicon's six-rung names",
+      "tier": 4,
+      "says": [
+        "propose Candidate, Contributor, Reviewer, Senior, Principal and Fellow",
+        "would show a level as, for example, Senior · Level 9",
+        "leave the stored level numbers and MXP thresholds unchanged"
+      ],
+      "use": "are asked what the brand direction would change",
+      "not": [
+        "change the MXP thresholds needed for each level"
+      ],
+      "like": [
+        "The 20-rung reviewer system"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "The Candidate rung",
+      "tier": 2,
+      "says": [
+        "has applied but not yet passed the Calibration",
+        "holds no claim rights of any kind"
+      ],
+      "like": [
+        "The Contributor rung"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "The Contributor rung",
+      "tier": 2,
+      "says": [
+        "has passed the Calibration",
+        "has its first three reviews read by a senior reviewer before they reach the customer",
+        "may claim Peer Review one Section at a time at Band C1"
+      ],
+      "like": [
+        "The Candidate rung",
+        "The Reviewer rung"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "The Reviewer rung",
+      "tier": 3,
+      "says": [
+        "may claim Expert Review as well as Peer Review",
+        "may take Section Reviews at Band C2",
+        "may hold two Tracks and three pieces of work at once"
+      ],
+      "like": [
+        "The Contributor rung",
+        "The Senior rung"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "The Senior rung",
+      "tier": 3,
+      "says": [
+        "adds Priority Review and direct invitations",
+        "may delegate Sections",
+        "may sign off a Blueprint up to Band C3",
+        "may hold three Tracks and five pieces of work at once"
+      ],
+      "like": [
+        "The Reviewer rung",
+        "The Principal rung"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "The Principal rung",
+      "tier": 3,
+      "says": [
+        "is by invitation on a record Moksy can point at",
+        "may sign off up to Band C4",
+        "has no limit on Tracks and may hold eight pieces of work at once",
+        "is one of the people who check a Contributor's first three reviews"
+      ],
+      "like": [
+        "The Senior rung"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "Band C1",
+      "tier": 3,
+      "says": [
+        "describes Simple work"
+      ],
+      "like": [
+        "Band C2",
+        "Band C3",
+        "Band C4"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "Band C2",
+      "tier": 3,
+      "says": [
+        "describes Single-system work"
+      ],
+      "like": [
+        "Band C1",
+        "Band C3",
+        "Band C4"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "Band C3",
+      "tier": 3,
+      "says": [
+        "describes Complex work"
+      ],
+      "like": [
+        "Band C1",
+        "Band C2",
+        "Band C4"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "Band C4",
+      "tier": 3,
+      "says": [
+        "describes Regulated work",
+        "is the highest Band a Principal may sign off"
+      ],
+      "like": [
+        "Band C1",
+        "Band C2",
+        "Band C3"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "Concurrency",
+      "tier": 4,
+      "says": [
+        "is what a rung most visibly buys",
+        "rises from one piece of work at a time for a Contributor to eight for a Principal"
+      ],
+      "not": [
+        "can be raised by buying a higher Membership"
+      ]
+    },
+    {
+      "group": "rung",
+      "subject": "A rung's limits",
+      "tier": 4,
+      "says": [
+        "is not bought by any Membership",
+        "is not permission to take a specific job, because the claim gate still checks conflicts, Band and availability",
+        "does not lower the standard of review",
+        "does not survive an undeclared conflict"
+      ],
+      "use": "are asked whether a rung guarantees access to a particular job"
+    },
+    {
+      "group": "review",
+      "subject": "The reviewer Queue",
+      "tier": 2,
+      "says": [
+        "holds the jobs a reviewer's accreditation, Band and availability allow",
+        "shows the scope, window and fee before a job is claimed",
+        "lets a reviewer leave a job at no cost"
+      ],
+      "not": [
+        "pushes jobs onto reviewers who must accept them"
+      ],
+      "like": [
+        "Claiming a job"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Claiming a job",
+      "tier": 3,
+      "says": [
+        "starts the clock on the review",
+        "is a choice, since leaving a job in the Queue costs nothing"
+      ],
+      "like": [
+        "The reviewer Queue"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "A correction",
+      "tier": 2,
+      "says": [
+        "is a specific fix to a part of a Blueprint that is wrong, with the reason",
+        "is accepted or pushed back by the customer",
+        "builds the reviewer's standing once accepted"
+      ],
+      "not": [
+        "is a complete rewrite of the Blueprint"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Peer Review",
+      "tier": 2,
+      "says": [
+        "is the free check for a customer on the free Membership",
+        "carries no money and earns MXP",
+        "is where a new reviewer builds a record"
+      ],
+      "like": [
+        "Expert Review"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Expert Review",
+      "tier": 3,
+      "says": [
+        "is claimed from the Reviewer rung upward",
+        "is a paid review rather than a free check"
+      ],
+      "like": [
+        "Peer Review"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "The Calibration",
+      "tier": 2,
+      "says": [
+        "is a blind review of a seeded document with planted defects",
+        "takes 45 to 60 minutes",
+        "is sat by everybody who applies"
+      ],
+      "use": "need the step that proves a reviewer can catch real flaws",
+      "not": [
+        "can be skipped by someone who types a high level into the form"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Accreditation",
+      "tier": 3,
+      "says": [
+        "is held per Category",
+        "lets one reviewer sit on different rungs in different fields",
+        "is calibrated rather than granted because someone likes you"
+      ],
+      "like": [
+        "The Calibration"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Prior experience",
+      "tier": 4,
+      "says": [
+        "sets the rung and Band a reviewer starts on",
+        "never decides whether a person is asked to sit the Calibration"
+      ],
+      "not": [
+        "exempts senior applicants from the Calibration"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "A disputed review",
+      "tier": 4,
+      "says": [
+        "goes to a senior reviewer to adjudicate",
+        "is settled by a decision that determines whether the review counts as accepted",
+        "sends the fee the way the decision goes"
+      ],
+      "not": [
+        "is settled by the Wallet balance of the customer"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "A review returned late",
+      "tier": 4,
+      "says": [
+        "is declined work with extra steps",
+        "earns no payment when returned outside the window the job carries"
+      ],
+      "not": [
+        "is paid in full if the corrections are good"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "An acceptable review",
+      "tier": 3,
+      "says": [
+        "points at a Section and says what is wrong with it",
+        "can be verified by someone else without taking the reviewer's word",
+        "is proportionate to the flaw it addresses",
+        "is conflict-free and the reviewer's own work"
+      ],
+      "use": "are asked what makes a review acceptable at every rung"
+    },
+    {
+      "group": "review",
+      "subject": "Disagreeing with a whole Blueprint",
+      "tier": 5,
+      "says": [
+        "is argued in the review with reasons rather than asserted",
+        "belongs in the review itself, not in a side message"
+      ],
+      "not": [
+        "is a footnote when the flaw is major"
+      ]
+    },
+    {
+      "group": "conduct",
+      "subject": "Independence",
+      "tier": 3,
+      "says": [
+        "means reviewing the plan in front of you on its merits",
+        "forbids softening a review to protect an acceptance rate",
+        "lets a reviewer decline at no cost when they cannot be independent"
+      ],
+      "like": [
+        "A conflict of interest"
+      ]
+    },
+    {
+      "group": "conduct",
+      "subject": "A conflict of interest",
+      "tier": 3,
+      "says": [
+        "must be declared before accepting work, not after",
+        "can be a commercial relationship with the customer or work for a direct competitor",
+        "can be an interest in the tools or suppliers the plan recommends"
+      ],
+      "not": [
+        "disqualifies a reviewer the moment it is disclosed"
+      ],
+      "like": [
+        "Independence"
+      ]
+    },
+    {
+      "group": "conduct",
+      "subject": "Confidentiality",
+      "tier": 3,
+      "says": [
+        "covers everything in a customer's plan",
+        "continues after the review ends",
+        "forbids feeding a plan into a tool that retains it"
+      ],
+      "not": [
+        "ends when the review is accepted"
+      ]
+    },
+    {
+      "group": "conduct",
+      "subject": "Competence",
+      "tier": 3,
+      "says": [
+        "means accepting only work you can judge",
+        "holds that a confident review from outside your domain is worse than none"
+      ],
+      "not": [
+        "is counted against a reviewer who leaves a job in the Queue"
+      ]
+    },
+    {
+      "group": "conduct",
+      "subject": "Your own work",
+      "tier": 4,
+      "says": [
+        "allows a model to help you read or draft",
+        "forbids submitting a model's output as the review",
+        "ends the account when passing it off is found"
+      ],
+      "like": [
+        "Competence"
+      ]
+    },
+    {
+      "group": "conduct",
+      "subject": "Conduct towards customers",
+      "tier": 3,
+      "says": [
+        "asks a reviewer to be direct about what is wrong and civil about who wrote it",
+        "holds that contempt is not rigour"
+      ]
+    },
+    {
+      "group": "conduct",
+      "subject": "A breach of the code",
+      "tier": 4,
+      "says": [
+        "is reviewed by a senior reviewer or by Moksy",
+        "can end in a correction, a level reduction, suspension or removal",
+        "leads to withheld fees only where the work itself was fraudulent"
+      ],
+      "not": [
+        "always ends in a permanent ban"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The API gateway",
+      "tier": 1,
+      "says": [
+        "is the only public API entry",
+        "listens on port 5001 in the local stack",
+        "has a controller that holds nearly ten thousand lines of business logic, which the review flags"
+      ],
+      "not": [
+        "is reachable only from inside the internal Docker network"
+      ],
+      "like": [
+        "The dashboard"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The dashboard",
+      "tier": 1,
+      "says": [
+        "is the web app people log into",
+        "is a Vite app on port 3001 locally"
+      ],
+      "like": [
+        "The documentation site",
+        "The API gateway"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The documentation site",
+      "tier": 1,
+      "says": [
+        "is the Docusaurus developer documentation",
+        "runs on port 3000 locally"
+      ],
+      "like": [
+        "The dashboard"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The health endpoint",
+      "tier": 2,
+      "says": [
+        "is exposed by every service",
+        "lets a deploy check that a rebuilt service came up"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The foundation folder",
+      "tier": 2,
+      "says": [
+        "holds 25 backend services",
+        "sits beside two frontends and three shared packages"
+      ],
+      "not": [
+        "holds a single monolithic application"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The internal Docker network",
+      "tier": 3,
+      "says": [
+        "gives the backend services no route to the host",
+        "is bridged to the outside only by the gateway"
+      ],
+      "like": [
+        "The API gateway"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "Database per service",
+      "tier": 3,
+      "says": [
+        "gives each service its own logical database",
+        "was found by the architecture review as 23 distinct databases",
+        "means no service reads another's collections"
+      ],
+      "not": [
+        "puts every service on one shared collection"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The service handshake",
+      "tier": 4,
+      "says": [
+        "combines a gateway key with a short-lived internal token",
+        "is rated amber by the architecture review",
+        "relies on one shared secret and plain http between services"
+      ],
+      "not": [
+        "uses mutual TLS certificates for each service"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The events service fan-out",
+      "tier": 4,
+      "says": [
+        "delivers events inline over HTTP",
+        "happens with no message broker in place"
+      ],
+      "like": [
+        "The service handshake"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The architecture review verdict",
+      "tier": 4,
+      "says": [
+        "puts the platform roughly 60 percent of the way to a proper microservice architecture",
+        "rates the service-to-service handshake amber"
+      ],
+      "not": [
+        "declares the platform fully complete as a microservice system"
+      ]
+    },
+    {
+      "group": "platform",
+      "subject": "The moksy-mvp prototype",
+      "tier": 3,
+      "says": [
+        "interrogates a sample project with 42 questions",
+        "generates a 10-phase solution document",
+        "ships with school management, e-commerce and healthcare portal sample datasets"
+      ],
+      "not": [
+        "is the production microservice platform"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The 1:99 goal",
+      "tier": 1,
+      "says": [
+        "wants 99 percent of the work done by machine and 1 percent by a human",
+        "is the founder's goal in the pattern architecture brief"
+      ],
+      "not": [
+        "is a pricing ratio between two plans"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "A Moksy pattern",
+      "tier": 2,
+      "says": [
+        "is one smart decision with an id, typed inputs and outputs, bounded parameters and versioned revisions",
+        "is the unit that every smart decision in Moksy is meant to be"
+      ],
+      "like": [
+        "A flow"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "A flow",
+      "tier": 2,
+      "says": [
+        "is a set of patterns and flows with named exports",
+        "can itself be used as a step, so patterns combine into bigger patterns"
+      ],
+      "like": [
+        "A Moksy pattern"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The pattern registry",
+      "tier": 3,
+      "says": [
+        "declares 110 patterns, 18 of them implemented",
+        "lists 12 flows such as project profile, scope, solution, delivery, document and blueprint"
+      ],
+      "not": [
+        "shows all 110 patterns as implemented"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "A selection shape",
+      "tier": 3,
+      "says": [
+        "is one of seven ways a pattern decides: classify, cover, configure, retrieve, derive, trigger or attach",
+        "returns a because alongside its answer"
+      ],
+      "like": [
+        "The because"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The because",
+      "tier": 3,
+      "says": [
+        "lets a person see and correct a decision",
+        "comes back with every selection shape's answer"
+      ],
+      "like": [
+        "A selection shape"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The decidedBy stamp",
+      "tier": 4,
+      "says": [
+        "marks every dispatch as decided by machine or human",
+        "is how the 1:99 share is measured rather than guessed"
+      ],
+      "not": [
+        "is a survey of staff each quarter"
+      ]
+    },
+    {
+      "group": "pattern",
+      "subject": "The migration status of the live interview",
+      "tier": 5,
+      "says": [
+        "was, as written on 2026-09-14, decided inline in a large service file rather than through the dispatcher",
+        "meant measured 1:99 coverage was 0 percent",
+        "was a brief for founder review"
+      ],
+      "not": [
+        "showed 99 percent machine decisions on the live path"
+      ],
+      "like": [
+        "The 1:99 goal"
+      ]
+    },
+    {
+      "group": "facts",
+      "subject": "The traceable-number rule",
+      "tier": 2,
+      "says": [
+        "requires every number, name, date and judgement shown to a customer to resolve to a locally held row",
+        "requires a pinned version and a source for each fact"
+      ],
+      "not": [
+        "lets a model supply any figure that sounds plausible"
+      ]
+    },
+    {
+      "group": "facts",
+      "subject": "The model-phrasing rule",
+      "tier": 3,
+      "says": [
+        "lets a model phrase a figure",
+        "never lets a model originate one"
+      ],
+      "not": [
+        "forbids the model from writing any sentence in a report"
+      ]
+    },
+    {
+      "group": "facts",
+      "subject": "The missing-fact behaviour",
+      "tier": 3,
+      "says": [
+        "has the system refuse, ask, derive or give a band",
+        "avoids inventing a number when a fact is absent"
+      ],
+      "not": [
+        "fills the gap with the model's best guess"
+      ]
+    },
+    {
+      "group": "facts",
+      "subject": "The analysis-area set",
+      "tier": 3,
+      "says": [
+        "numbers 22 and is what reports cover",
+        "is called pillars internally",
+        "is kept out of customer-facing copy, which uses plain wording"
+      ],
+      "like": [
+        "The report-type count"
+      ]
+    },
+    {
+      "group": "facts",
+      "subject": "The report-type count",
+      "tier": 4,
+      "says": [
+        "disagrees between sources, 58 in the lexicon and 57 in the real-jobs brief",
+        "has a code catalogue of 37 that is to be amended"
+      ],
+      "use": "are asked how many kinds of report Moksy has",
+      "like": [
+        "The analysis-area set"
+      ]
+    },
+    {
+      "group": "facts",
+      "subject": "The target report",
+      "tier": 4,
+      "says": [
+        "names the organisation or person's real problem and the challenges each actor faces",
+        "gives who builds it at which level, how long it takes and what it costs in their currency"
+      ],
+      "like": [
+        "The traceable-number rule"
+      ]
+    },
+    {
+      "group": "facts",
+      "subject": "The solution-option list",
+      "tier": 4,
+      "says": [
+        "includes from scratch, rebuild, open source, closed source, a corporate suite or a hybrid",
+        "is weighed in the target report alongside the automated version"
+      ]
+    },
+    {
+      "group": "local",
+      "subject": "The Docker-first rule",
+      "tier": 1,
+      "says": [
+        "has everything run in Docker",
+        "tells developers not to run npm install on the host",
+        "avoids platform-specific binaries from the host crashing in containers"
+      ],
+      "not": [
+        "asks developers to install dependencies on the host first"
+      ]
+    },
+    {
+      "group": "local",
+      "subject": "The quick start",
+      "tier": 1,
+      "says": [
+        "copies .env.example to .env and fills the required secrets",
+        "then runs npm run dev, followed by npm run seed and npm run seed:personas"
+      ],
+      "like": [
+        "The mandatory-secret set"
+      ]
+    },
+    {
+      "group": "local",
+      "subject": "The mandatory-secret set",
+      "tier": 3,
+      "says": [
+        "numbers seven",
+        "includes the JWT secrets, the internal gateway key and the Mongo app credentials",
+        "must be set or the services will not boot"
+      ],
+      "like": [
+        "The quick start"
+      ]
+    },
+    {
+      "group": "local",
+      "subject": "Mock billing mode",
+      "tier": 3,
+      "says": [
+        "simulates subscriptions and MOX top-ups instantly",
+        "is one of two local billing modes"
+      ],
+      "like": [
+        "Stripe test mode"
+      ]
+    },
+    {
+      "group": "local",
+      "subject": "Stripe test mode",
+      "tier": 3,
+      "says": [
+        "uses Stripe test keys",
+        "charges no real money, as the other local billing mode"
+      ],
+      "like": [
+        "Mock billing mode"
+      ]
+    },
+    {
+      "group": "local",
+      "subject": "The local AI default",
+      "tier": 3,
+      "says": [
+        "is a local Ollama model",
+        "sets the OPENAI_API_KEY variable to ollama on purpose"
+      ],
+      "not": [
+        "requires a paid hosted API key to start"
+      ]
+    },
+    {
+      "group": "local",
+      "subject": "Manual deployment",
+      "tier": 3,
+      "says": [
+        "happens only when someone pulls on the server",
+        "means pushing to GitHub deploys nothing"
+      ],
+      "not": [
+        "runs automatically on every push to GitHub"
+      ]
+    },
+    {
+      "group": "local",
+      "subject": "npm run deploy:prod",
+      "tier": 4,
+      "says": [
+        "rebuilds only the services that changed",
+        "health-checks the result and records the commit",
+        "has a plan-only preview"
+      ],
+      "like": [
+        "Manual deployment"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "A problem statement",
+      "tier": 1,
+      "says": [
+        "says who has what problem and why it matters",
+        "comes before a solution is proposed"
+      ],
+      "like": [
+        "A user story"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "A minimum viable product",
+      "tier": 1,
+      "says": [
+        "is the smallest version that tests the core assumption with real users",
+        "trades completeness for early learning"
+      ],
+      "not": [
+        "is a low-quality version never intended to improve"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "Jobs to be done",
+      "tier": 2,
+      "says": [
+        "frames demand as the progress a customer wants to make",
+        "looks at the situation a person is in rather than their demographics"
+      ],
+      "like": [
+        "A user story"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "A user story",
+      "tier": 2,
+      "says": [
+        "describes a need from the user's point of view",
+        "is often written as as a user, I want, so that"
+      ],
+      "like": [
+        "An acceptance criterion"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "An acceptance criterion",
+      "tier": 3,
+      "says": [
+        "states a testable condition a story must meet",
+        "lets the team and the requester agree when work is done"
+      ],
+      "like": [
+        "A user story"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "A product roadmap",
+      "tier": 3,
+      "says": [
+        "communicates direction and priorities over time",
+        "is better framed as outcomes than as a promise of dates"
+      ],
+      "like": [
+        "A backlog"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "A backlog",
+      "tier": 2,
+      "says": [
+        "is an ordered list of work waiting for the team",
+        "is reordered as priorities change"
+      ],
+      "like": [
+        "A product roadmap"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "Prioritisation",
+      "tier": 3,
+      "says": [
+        "weighs expected impact against effort and strategy",
+        "decides what not to do as much as what to do"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "Product discovery",
+      "tier": 4,
+      "says": [
+        "tests whether a problem and solution are worth building before committing",
+        "uses interviews and prototypes to cut the risk of building the wrong thing"
+      ],
+      "like": [
+        "A minimum viable product"
+      ]
+    },
+    {
+      "group": "prod",
+      "subject": "Product-market fit",
+      "tier": 5,
+      "says": [
+        "means a real market keeps choosing the product",
+        "shows up as retention and demand rather than a launch-day spike"
+      ],
+      "not": [
+        "is reached the day the first feature ships"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Activation rate",
+      "tier": 1,
+      "says": [
+        "measures the share of new users who reach a first meaningful action",
+        "is an early signal of whether onboarding works"
+      ],
+      "like": [
+        "Conversion rate",
+        "Retention"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Retention",
+      "tier": 2,
+      "says": [
+        "measures how many users keep coming back over time",
+        "is usually read as a curve by cohort"
+      ],
+      "like": [
+        "Churn rate",
+        "Activation rate"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Churn rate",
+      "tier": 2,
+      "says": [
+        "measures the share of customers who stop over a period",
+        "is the loss that retention work tries to reduce"
+      ],
+      "like": [
+        "Retention"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Conversion rate",
+      "tier": 2,
+      "says": [
+        "measures the share of visitors who complete a target action such as signing up or paying",
+        "is read at a given step of a funnel"
+      ],
+      "like": [
+        "Activation rate",
+        "Funnel analysis"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Funnel analysis",
+      "tier": 3,
+      "says": [
+        "shows how many users drop off at each step of a sequence",
+        "points to the step that loses the most people"
+      ],
+      "like": [
+        "Cohort analysis",
+        "Conversion rate"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Cohort analysis",
+      "tier": 3,
+      "says": [
+        "groups users by a shared start period to compare behaviour over time",
+        "stops a mixed-age user base hiding a trend"
+      ],
+      "like": [
+        "Funnel analysis"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "A north-star metric",
+      "tier": 3,
+      "says": [
+        "is the single measure that best captures the value customers get",
+        "aligns teams on one outcome"
+      ],
+      "not": [
+        "is the same as monthly revenue by definition"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Time to value",
+      "tier": 3,
+      "says": [
+        "measures how long a new user takes to experience the product's benefit",
+        "falls when onboarding removes friction"
+      ],
+      "like": [
+        "Activation rate"
+      ]
+    },
+    {
+      "group": "metric",
+      "subject": "Customer lifetime value",
+      "tier": 4,
+      "says": [
+        "estimates the total revenue or margin a customer brings over the relationship",
+        "is read against the cost of winning that customer"
+      ],
+      "like": [
+        "Monthly recurring revenue"
+      ]
+    },
+    {
+      "group": "qual",
+      "subject": "A rubric",
+      "tier": 1,
+      "says": [
+        "defines criteria and levels for judging work consistently",
+        "lets two reviewers apply the same standard"
+      ],
+      "like": [
+        "A golden set"
+      ]
+    },
+    {
+      "group": "qual",
+      "subject": "Inter-rater agreement",
+      "tier": 3,
+      "says": [
+        "measures how often independent reviewers reach the same judgement",
+        "reveals when a standard is too vague to apply consistently"
+      ]
+    },
+    {
+      "group": "qual",
+      "subject": "A seeded defect",
+      "tier": 3,
+      "says": [
+        "plants a known flaw in a test item to see whether a reviewer catches it",
+        "turns a review into a measurable test"
+      ],
+      "like": [
+        "A golden set"
+      ]
+    },
+    {
+      "group": "qual",
+      "subject": "A golden set",
+      "tier": 3,
+      "says": [
+        "is a set of items with trusted answers used to check quality",
+        "can be rerun after a change to see whether quality moved"
+      ],
+      "like": [
+        "A seeded defect"
+      ]
+    },
+    {
+      "group": "qual",
+      "subject": "A sampling audit",
+      "tier": 3,
+      "says": [
+        "checks a random sample of finished work rather than all of it",
+        "estimates quality across a large volume at lower cost"
+      ],
+      "like": [
+        "The four-eyes principle"
+      ]
+    },
+    {
+      "group": "qual",
+      "subject": "A blind review",
+      "tier": 3,
+      "says": [
+        "hides information that could bias the reviewer, such as the author's identity",
+        "keeps judgement on the work itself"
+      ]
+    },
+    {
+      "group": "qual",
+      "subject": "The four-eyes principle",
+      "tier": 2,
+      "says": [
+        "requires a second person to check work before it is released",
+        "reduces the chance that one person's mistake gets through"
+      ],
+      "like": [
+        "A sampling audit"
+      ]
+    },
+    {
+      "group": "qual",
+      "subject": "A regression check",
+      "tier": 4,
+      "says": [
+        "re-tests existing behaviour after a change",
+        "catches a fix that quietly breaks something that worked"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "Freemium",
+      "tier": 1,
+      "says": [
+        "offers a free plan to attract users and sells upgrades",
+        "depends on a share of free users paying later"
+      ],
+      "like": [
+        "A free trial"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "A free trial",
+      "tier": 1,
+      "says": [
+        "gives access for a limited time before payment is required",
+        "ends in a choice to subscribe or leave"
+      ],
+      "like": [
+        "Freemium"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "Usage-based pricing",
+      "tier": 2,
+      "says": [
+        "charges according to how much is consumed",
+        "needs metering to record consumption"
+      ],
+      "like": [
+        "Seat-based pricing"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "Seat-based pricing",
+      "tier": 2,
+      "says": [
+        "charges per user account",
+        "grows with the number of people using it"
+      ],
+      "like": [
+        "Usage-based pricing"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "An entitlement",
+      "tier": 3,
+      "says": [
+        "defines which features or limits a plan grants",
+        "is checked by the product to decide what a customer may do"
+      ],
+      "like": [
+        "Metering"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "Metering",
+      "tier": 3,
+      "says": [
+        "records consumption so that usage can be billed",
+        "must be accurate because invoices depend on it"
+      ],
+      "like": [
+        "An entitlement"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "Proration",
+      "tier": 3,
+      "says": [
+        "charges a partial amount when a plan changes mid-cycle",
+        "keeps an upgrade fair for the days left"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "A grace period",
+      "tier": 4,
+      "says": [
+        "keeps access for a short time after a payment fails",
+        "gives the customer a chance to fix the problem before service stops"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "A feature flag",
+      "tier": 3,
+      "says": [
+        "lets code ship switched off and be enabled later",
+        "can disable a feature without a new deploy"
+      ],
+      "like": [
+        "A canary release",
+        "A rollback"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "A canary release",
+      "tier": 4,
+      "says": [
+        "sends a new version to a small share of traffic first",
+        "limits the damage if the release is bad"
+      ],
+      "like": [
+        "A feature flag",
+        "A rollback"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "A rollback",
+      "tier": 3,
+      "says": [
+        "returns to the previous known good version",
+        "is the fastest safe response to a release that breaks things"
+      ],
+      "like": [
+        "A canary release"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "A service-level agreement",
+      "tier": 3,
+      "says": [
+        "states the response or availability a customer can expect",
+        "turns a support promise into something measurable"
+      ],
+      "like": [
+        "Triage"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "Triage",
+      "tier": 2,
+      "says": [
+        "sorts incoming issues by severity and urgency",
+        "decides what is handled first"
+      ],
+      "like": [
+        "A service-level agreement",
+        "A severity level"
+      ]
+    },
+    {
+      "group": "op",
+      "subject": "A severity level",
+      "tier": 3,
+      "says": [
+        "classifies how serious an incident is by impact",
+        "sets how fast and how widely people must respond"
+      ],
+      "like": [
+        "Triage"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "What does Moksy's tagline promise to turn an idea into?",
+      "right": "A build-ready plan",
+      "wrong": [
+        "A finished, deployed application",
+        "A funded start-up",
+        "A trained AI model"
+      ],
+      "tier": 1,
+      "why": "The tagline is turning an idea into a build-ready plan."
+    },
+    {
+      "q": "How much is one MOX worth?",
+      "right": "One cent",
+      "wrong": [
+        "One pound",
+        "One MXP",
+        "Ten cents"
+      ],
+      "tier": 1,
+      "why": "1 MOX equals one cent."
+    },
+    {
+      "q": "Which unit does a person climb the Ladder with?",
+      "right": "MXP",
+      "wrong": [
+        "MOX",
+        "Starter MOX",
+        "Escrow"
+      ],
+      "tier": 1,
+      "why": "MXP is Moksy Experience Points, used for the Ladder; the Wallet holds MOX."
+    },
+    {
+      "q": "Which service is the only public API entry in the Moksy platform?",
+      "right": "The gateway",
+      "wrong": [
+        "Auth",
+        "Storage",
+        "Events"
+      ],
+      "tier": 1,
+      "why": "Everything else sits on an internal Docker network with no route to the host."
+    },
+    {
+      "q": "On which port does the gateway listen in the local stack?",
+      "right": "5001",
+      "wrong": [
+        "3000",
+        "3001",
+        "8080"
+      ],
+      "tier": 1,
+      "why": "The gateway is on 5001; the docs site is on 3000 and the dashboard on 3001."
+    },
+    {
+      "q": "In the customer journey, what immediately follows the interview?",
+      "right": "An output document is generated from the answers",
+      "wrong": [
+        "The customer is charged for hosting",
+        "A developer is hired",
+        "The project is deleted"
+      ],
+      "tier": 2,
+      "why": "Answers become the input to the document; expert review and the build stage come after."
+    },
+    {
+      "q": "Which stage covers downloads, exports and hiring?",
+      "right": "The build stage",
+      "wrong": [
+        "The interview",
+        "Expert review",
+        "The Calibration"
+      ],
+      "tier": 2,
+      "why": "The build stage follows expert review."
+    },
+    {
+      "q": "A new developer wants to speed up Moksy's local start by running npm install on the host. What does the README say?",
+      "right": "Do not; everything runs in Docker, and host installs leave platform-specific binaries that crash in containers",
+      "wrong": [
+        "Do it, because the dashboard needs host node_modules",
+        "Do it, but only for the shared packages",
+        "Do it only on macOS"
+      ],
+      "tier": 2,
+      "why": "The Docker-first rule avoids host binaries leaking into containers."
+    },
+    {
+      "q": "Someone pushes a commit to GitHub and expects production to update. What actually happens?",
+      "right": "Nothing is deployed; deployment is manual with git pull and npm run deploy:prod on the server",
+      "wrong": [
+        "Production rebuilds every service automatically",
+        "Only the dashboard redeploys",
+        "A plan-only preview is posted to the team"
+      ],
+      "tier": 2,
+      "why": "Pushing to GitHub deploys nothing."
+    },
+    {
+      "q": "A new developer runs the stack but the services refuse to boot. What should be checked first?",
+      "right": "That the seven mandatory secrets are set in .env",
+      "wrong": [
+        "That npm install was run on the host",
+        "That Stripe live keys are present",
+        "That the OPENAI_API_KEY holds a paid key"
+      ],
+      "tier": 2,
+      "why": "Services will not boot without the mandatory secrets copied from .env.example and filled in."
+    },
+    {
+      "q": "Which local billing mode simulates subscriptions and MOX top-ups instantly?",
+      "right": "Mock",
+      "wrong": [
+        "Stripe live",
+        "Escrow",
+        "Seeded personas"
+      ],
+      "tier": 2,
+      "why": "Mock simulates; Stripe test mode uses test keys and charges no real money."
+    },
+    {
+      "q": "Which of these does a reviewer see as money sent to a bank?",
+      "right": "Payouts",
+      "wrong": [
+        "Earnings",
+        "Escrow",
+        "Starter MOX"
+      ],
+      "tier": 2,
+      "why": "Earnings show MOX earned; Payouts show money sent to a bank."
+    },
+    {
+      "q": "What is the default threshold for claiming review jobs on the README's 20-rung system?",
+      "right": "Expert (rung 5)",
+      "wrong": [
+        "Novice (rung 1)",
+        "Titan (rung 20)",
+        "Candidate"
+      ],
+      "tier": 2,
+      "why": "Expert is the default and admins can configure it."
+    },
+    {
+      "q": "A support agent is asked how many reviewer rungs there are. The published Levels page lists five and the internal lexicon six. What should the agent do?",
+      "right": "Quote the published five and say they will confirm whether a further rung exists",
+      "wrong": [
+        "Say there are six, because the lexicon is more recent",
+        "Say there are twenty, from the README",
+        "Say the number depends on the Membership"
+      ],
+      "tier": 3,
+      "why": "Support quotes the published pages and confirms disagreements rather than guessing."
+    },
+    {
+      "q": "A customer asks whether the AI makes up the figures in their report. What is the rule?",
+      "right": "Every number should resolve to a stored fact with a source, and a model may phrase a figure but never originate one",
+      "wrong": [
+        "The model may estimate any figure it is confident about",
+        "Figures are written by the reviewer from memory",
+        "Numbers are only shown in the free Membership"
+      ],
+      "tier": 3,
+      "why": "The traceable-number rule is the centre of the report."
+    },
+    {
+      "q": "A report needs a figure that Moksy holds no fact for. What should the system do?",
+      "right": "Refuse, ask, derive it or give a band",
+      "wrong": [
+        "Insert the model's best estimate",
+        "Copy the nearest figure from another customer",
+        "Leave it blank without comment"
+      ],
+      "tier": 3,
+      "why": "A missing fact is never filled by an invented number."
+    },
+    {
+      "q": "A reviewer's MOX came from an operator grant. Can they withdraw it?",
+      "right": "No, because only class E, earned MOX, is withdrawable",
+      "wrong": [
+        "Yes, as soon as the grant lands",
+        "Yes, after a 14-day hold",
+        "Yes, if they hold the Expert rung"
+      ],
+      "tier": 3,
+      "why": "Operator grants go to class R, or to class P against a purchase, and those can only be spent in the platform."
+    },
+    {
+      "q": "A user is promoted from developer to cto and a teammate expects their reviewer level to change too. What happens?",
+      "right": "Nothing happens to the level, because role and level are independent",
+      "wrong": [
+        "The level rises to match the new role",
+        "The level resets to Novice",
+        "The level is pinned automatically"
+      ],
+      "tier": 3,
+      "why": "Role is the security ceiling; level is what someone has earned."
+    },
+    {
+      "q": "Which of these is NOT one of the seven signals in the level score?",
+      "right": "Lifetime spend",
+      "wrong": [
+        "Completed reviews",
+        "Peer endorsements",
+        "Network connections"
+      ],
+      "tier": 3,
+      "why": "Lifetime spend drives the customer ladder instead."
+    },
+    {
+      "q": "Between which values is the level score clamped?",
+      "right": "5 and 100",
+      "wrong": [
+        "0 and 100",
+        "1 and 20",
+        "5 and 25"
+      ],
+      "tier": 3,
+      "why": "The score is a weighted sum added to a base of 5 and clamped to 5 to 100."
+    },
+    {
+      "q": "A reviewer notices a customer's plan recommends a tool they hold shares in. What should they do?",
+      "right": "Declare the conflict before accepting the work, or decline",
+      "wrong": [
+        "Accept and disclose after the review",
+        "Review it but avoid commenting on that tool",
+        "Ask the customer to remove the tool first"
+      ],
+      "tier": 3,
+      "why": "Conflicts are declared before work is accepted; concealment, not disclosure, is the offence."
+    },
+    {
+      "q": "A reviewer uses a model to help read a plan, then writes their own corrections. Is that allowed?",
+      "right": "Yes, because using a model to help read or draft is fine so long as the review is their own judgement",
+      "wrong": [
+        "No, any use of a model ends the account",
+        "Yes, even if they submit the model's output unchanged",
+        "Only on the Principal rung"
+      ],
+      "tier": 3,
+      "why": "Submitting a model's output as the review is what is forbidden."
+    },
+    {
+      "q": "A Contributor wants to claim a Section Review at Band C2. Will the claim gate allow it?",
+      "right": "No, a Contributor may claim Peer Review one Section at a time at Band C1",
+      "wrong": [
+        "Yes, as long as they declare their Track",
+        "Yes, if their Membership allows it",
+        "Yes, with a senior reviewer reading it"
+      ],
+      "tier": 3,
+      "why": "Section Reviews at C2 begin at the Reviewer rung."
+    },
+    {
+      "q": "Which rung may delegate Sections?",
+      "right": "Senior",
+      "wrong": [
+        "Contributor",
+        "Reviewer",
+        "Candidate"
+      ],
+      "tier": 3,
+      "why": "Senior adds Priority Review, direct invitations and delegation."
+    },
+    {
+      "q": "Which Band describes regulated work?",
+      "right": "C4",
+      "wrong": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "tier": 3,
+      "why": "C1 Simple, C2 Single system, C3 Complex, C4 Regulated."
+    },
+    {
+      "q": "A customer disputes a reviewer's work. Who adjudicates?",
+      "right": "A senior reviewer",
+      "wrong": [
+        "The customer's account manager",
+        "The gateway service",
+        "The reviewer's own peers at the same rung"
+      ],
+      "tier": 3,
+      "why": "Their decision settles whether the review counts as accepted, and the fee follows."
+    },
+    {
+      "q": "Why is a reviewer's fee not paid the instant they submit?",
+      "right": "It is held in Escrow until the review is accepted or the response window closes without a dispute",
+      "wrong": [
+        "It is held until the next payout cycle",
+        "It is held until the reviewer reaches the next rung",
+        "It is converted to MXP first"
+      ],
+      "tier": 3,
+      "why": "Escrow protects both sides while a review is open."
+    },
+    {
+      "q": "What happens when a super admin pins a user to a level?",
+      "right": "Automatic computation of their level is frozen",
+      "wrong": [
+        "Their role changes to match",
+        "Their MOX balance resets",
+        "Their level is hidden from them"
+      ],
+      "tier": 3,
+      "why": "A pin overrides the signal-based score."
+    },
+    {
+      "q": "Which is the best example of an acceptable correction in a review?",
+      "right": "Section 4's data model contradicts section 2; here is the corrected relationship and why",
+      "wrong": [
+        "The plan feels weak overall",
+        "Rewrite section 4 entirely in your own words",
+        "This is not how I would build it"
+      ],
+      "tier": 3,
+      "why": "A correction points at a Section, says what is wrong and can be verified by someone else."
+    },
+    {
+      "q": "The founder asks whether Moksy has reached 1:99. What is the honest answer from the pattern brief?",
+      "right": "No; the live path decides inline rather than through the dispatcher, so measured coverage read 0 percent when the brief was written",
+      "wrong": [
+        "Yes, because 18 of 110 patterns are implemented",
+        "Yes, because the brief states the goal",
+        "It cannot be measured at all"
+      ],
+      "tier": 4,
+      "why": "The share is measured by the decidedBy stamp, and the live interview had not been migrated."
+    },
+    {
+      "q": "How is the 1:99 share meant to be measured?",
+      "right": "By stamping every dispatch decidedBy as machine or human and counting",
+      "wrong": [
+        "By surveying staff each quarter",
+        "By counting lines of code",
+        "By estimating from support tickets"
+      ],
+      "tier": 4,
+      "why": "Measured, not guessed."
+    },
+    {
+      "q": "Which is a documented weakness of how the events service sends events?",
+      "right": "It fans out inline over HTTP with no message broker",
+      "wrong": [
+        "It writes directly into other services' databases",
+        "It uses a separate public port",
+        "It sends events only on deploy"
+      ],
+      "tier": 4,
+      "why": "The architecture review flags this."
+    },
+    {
+      "q": "Why did the architecture review rate the service handshake amber?",
+      "right": "One shared secret, divergent client copies and plain http between services",
+      "wrong": [
+        "It uses no token at all",
+        "It requires a human to approve each call",
+        "It only works in production"
+      ],
+      "tier": 4,
+      "why": "A gateway key plus a short-lived internal token is used, but with those weaknesses."
+    },
+    {
+      "q": "A senior engineer with fifteen years of experience asks to skip the Calibration. What is the answer?",
+      "right": "Everyone sits it; experience sets the rung and Band they start on, not whether they are asked",
+      "wrong": [
+        "Skip it if they hold a Principal role elsewhere",
+        "Skip it if they email careers",
+        "Skip it only for the free Membership"
+      ],
+      "tier": 4,
+      "why": "A level typed into a form is not evidence."
+    },
+    {
+      "q": "Why are a new reviewer's first three reviews read by a senior reviewer?",
+      "right": "To protect the customer while the reviewer's record is short, at no cost to the reviewer",
+      "wrong": [
+        "To charge the reviewer for supervision",
+        "To lower the reviewer's score",
+        "To hold the fee until the next rung"
+      ],
+      "tier": 4,
+      "why": "The check protects the customer; the reviewer does not pay for it."
+    },
+    {
+      "q": "A customer on a sales call is told every Moksy customer has a personal account manager. What should a careful colleague say?",
+      "right": "That is a plan: no account-manager assignment exists in code yet",
+      "wrong": [
+        "Confirm it, since it is in the lexicon",
+        "Say it is available only on premium customers",
+        "Say it is handled by the payments service"
+      ],
+      "tier": 4,
+      "why": "The fact base says the promise is not yet a stored row."
+    },
+    {
+      "q": "Someone asks how many kinds of report Moksy produces. Which answer is most accurate?",
+      "right": "The sources disagree: 58 in the lexicon and 57 in the real-jobs brief; confirm before quoting",
+      "wrong": [
+        "Exactly 37, from the code catalogue",
+        "Exactly 22, from the analysis areas",
+        "Exactly 110, from the registry"
+      ],
+      "tier": 4,
+      "why": "The 22 are analysis areas, 110 are patterns, and 37 is a catalogue to be amended."
+    },
+    {
+      "q": "A review comes back after the window the job carried. What is the consequence?",
+      "right": "It earns no payment, as late work is declined work",
+      "wrong": [
+        "It is paid at half the usual rate",
+        "It is paid in full if the corrections are good",
+        "It is paid in MXP instead"
+      ],
+      "tier": 4,
+      "why": "Work returned outside the window is not paid."
+    },
+    {
+      "q": "A new team plans to reward reviewers for their acceptance rate. What risk does the code of conduct point to?",
+      "right": "Reviewers may soften reviews to protect the rate, which breaks independence",
+      "wrong": [
+        "Reviewers will decline more jobs",
+        "Reviewers will leave the Queue empty",
+        "Customers will stop disputing"
+      ],
+      "tier": 4,
+      "why": "Independence forbids softening a review to protect an acceptance rate."
+    },
+    {
+      "q": "The lexicon's six plain names were adopted. What changes in the product?",
+      "right": "Only the words people read; stored level numbers and MXP thresholds stay the same",
+      "wrong": [
+        "The MXP thresholds for each level",
+        "Every reviewer's stored level number",
+        "The roles that can claim jobs"
+      ],
+      "tier": 5,
+      "why": "The lexicon says only the words change."
+    },
+    {
+      "q": "An operator wants to grant a reviewer MOX that they can withdraw. What does the ledger allow?",
+      "right": "No path creates withdrawable MOX; whether to open one is a pending founder decision",
+      "wrong": [
+        "A grant to class E",
+        "A grant to class R that becomes withdrawable after 14 days",
+        "A grant to class P that converts on payout"
+      ],
+      "tier": 5,
+      "why": "Operator grants go to R, or to P against a purchase."
+    },
+    {
+      "q": "What does an experiment run earn?",
+      "right": "MXP only, because MOX moves only when real money does",
+      "wrong": [
+        "MOX and MXP",
+        "MOX only",
+        "Nothing"
+      ],
+      "tier": 5,
+      "why": "The real-jobs brief keeps test runs from moving real money."
+    },
+    {
+      "q": "A reviewer disagrees with a whole Blueprint, not just a Section. How should they handle it?",
+      "right": "Say so in the review with reasons; it has to be argued, not asserted",
+      "wrong": [
+        "Decline the job without reasons",
+        "Leave a short note in a side message",
+        "Rewrite the Blueprint themselves"
+      ],
+      "tier": 5,
+      "why": "Disagreement belongs in the review itself."
+    },
+    {
+      "q": "A team wants to release a feature to a small share of users first, to limit damage if it is bad. Which practice is this?",
+      "right": "A canary release",
+      "wrong": [
+        "A rollback",
+        "Proration",
+        "A rubric"
+      ],
+      "tier": 2,
+      "why": "A canary sends the new version to a small share of traffic first."
+    },
+    {
+      "q": "Which metric measures the share of new users who reach a first meaningful action?",
+      "right": "Activation rate",
+      "wrong": [
+        "Churn rate",
+        "Customer lifetime value",
+        "Net promoter score"
+      ],
+      "tier": 2,
+      "why": "Activation is an early signal of whether onboarding works."
+    },
+    {
+      "q": "Churn rises after an onboarding change. What should the team do first?",
+      "right": "Compare cohorts by signup period before and after the change",
+      "wrong": [
+        "Drop the change immediately",
+        "Look only at the overall average",
+        "Wait a quarter and re-check"
+      ],
+      "tier": 3,
+      "why": "Cohort analysis separates a real effect from a mix of older and newer users."
+    },
+    {
+      "q": "A customer upgrades mid-month and is charged only for the remaining days at the higher price. What is this called?",
+      "right": "Proration",
+      "wrong": [
+        "Metering",
+        "A grace period",
+        "A canary release"
+      ],
+      "tier": 3,
+      "why": "Proration charges a partial amount when a plan changes mid-cycle."
+    },
+    {
+      "q": "A team has forty feature requests and capacity for five. What is the sound way to choose?",
+      "right": "Weigh expected impact against effort and strategy, and decide what not to do",
+      "wrong": [
+        "Build those requested by the loudest customer",
+        "Build the easiest five",
+        "Build the oldest five"
+      ],
+      "tier": 3,
+      "why": "Prioritisation is a trade-off."
+    },
+    {
+      "q": "Trial users sign up but rarely return after the second day. Which measure most directly points at the cause?",
+      "right": "Time to value",
+      "wrong": [
+        "Monthly recurring revenue",
+        "Net promoter score",
+        "Customer lifetime value"
+      ],
+      "tier": 4,
+      "why": "If users do not feel the benefit quickly they leave early."
+    },
+    {
+      "q": "A new release raises the error rate sharply. What is the fastest safe response?",
+      "right": "Roll back or switch the feature off, then investigate",
+      "wrong": [
+        "Wait to see whether it settles",
+        "Ask users to clear their cache",
+        "Add logging and keep the release live"
+      ],
+      "tier": 4,
+      "why": "A rollback or flag returns to a known good state first."
+    },
+    {
+      "q": "Two reviewers score the same item very differently. What does this suggest?",
+      "right": "Low inter-rater agreement, so the rubric may be too vague to apply consistently",
+      "wrong": [
+        "The item must be flawless",
+        "One reviewer must be dishonest",
+        "A golden set is unnecessary"
+      ],
+      "tier": 4,
+      "why": "Disagreement across raters often traces to unclear criteria."
+    },
+    {
+      "q": "A customer's card payment fails. The product keeps access for a few days while they fix it. Which mechanic is that?",
+      "right": "A grace period",
+      "wrong": [
+        "Metering",
+        "Proration",
+        "An entitlement"
+      ],
+      "tier": 3,
+      "why": "A grace period delays service loss after a failed payment."
+    },
+    {
+      "q": "A support queue holds an outage report and a typo report. How should triage proceed?",
+      "right": "Rank by severity and impact, so the outage is handled first",
+      "wrong": [
+        "Handle in arrival order",
+        "Handle the easiest first",
+        "Wait for the typo reporter to escalate"
+      ],
+      "tier": 4,
+      "why": "Triage sorts by severity and urgency."
+    },
+    {
+      "q": "A founder wants to ship the full plan before talking to any user. What does product discovery advise?",
+      "right": "Test the problem and solution with users first, to cut the risk of building the wrong thing",
+      "wrong": [
+        "Ship the full plan, then measure",
+        "Hire designers first",
+        "Add more features to reduce risk"
+      ],
+      "tier": 5,
+      "why": "Discovery precedes commitment."
+    }
+  ]
+}

@@ -1,0 +1,2666 @@
+{
+ "slug": "service-design-pricing",
+ "name": "Service Design, Scoping and Pricing",
+ "description": "What a service is, catalogue tiers, discovery and qualifying, scoping and statements of work, change control, estimation, pricing models, margin and utilisation, proposals, contract concepts, delivery governance, support and service levels, upsell and renewal, complaint recovery and subcontracting.",
+ "roles": "sales,account manager,project manager,delivery manager,cto,ceo,full stack developer",
+ "kind": "service",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "concept": "service concept",
+  "catalogue": "catalogue or tiering concept",
+  "discovery": "discovery or qualifying practice",
+  "scope": "scoping document or element",
+  "change": "change or scope-control practice",
+  "estimate": "estimation technique",
+  "pricing": "pricing model",
+  "margin": "margin or utilisation measure",
+  "contract": "contract concept",
+  "proposal": "proposal or negotiation practice",
+  "delivery": "delivery governance or handover practice",
+  "support": "support or service-level concept",
+  "growth": "retention or recovery practice",
+  "partner": "subcontracting or white-label concept"
+ },
+ "cards": [
+  {
+   "group": "concept",
+   "subject": "Service",
+   "tier": 1,
+   "says": [
+    "delivers an outcome through work performed for the client",
+    "cannot be stored or handed over as a finished object before it is performed",
+    "depends heavily on the time and skill of the people delivering it"
+   ],
+   "use": "sell work that a team performs rather than an item the client takes away",
+   "not": [
+    "is a physical item shipped to the client"
+   ],
+   "like": [
+    "Product"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Product",
+   "tier": 1,
+   "says": [
+    "is built once and sold repeatedly in much the same form",
+    "scales without adding delivery time for each extra buyer"
+   ],
+   "use": "want to sell the same finished offer to many buyers without redoing the work",
+   "not": [
+    "has to be rebuilt from scratch for every buyer"
+   ],
+   "like": [
+    "Service",
+    "Productised service"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Productised service",
+   "tier": 2,
+   "says": [
+    "packages a repeatable service with a fixed scope, price and timeline",
+    "lets sales quote quickly because the steps are standardised"
+   ],
+   "use": "want a service that can be sold from a page without a long scoping process",
+   "not": [
+    "is custom designed after a long discovery for each client"
+   ],
+   "like": [
+    "Bespoke engagement",
+    "Managed service"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Bespoke engagement",
+   "tier": 2,
+   "says": [
+    "is shaped around one client's particular needs",
+    "needs discovery before it can be priced"
+   ],
+   "use": "meet a need that no standard package covers",
+   "not": [
+    "is sold at a fixed catalogue price to every buyer"
+   ],
+   "like": [
+    "Productised service"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Deliverable",
+   "tier": 1,
+   "says": [
+    "is a tangible output the client receives, such as a site or report",
+    "is named in the scope so both sides know what will be handed over"
+   ],
+   "use": "need to name exactly what the client will receive at the end of a phase",
+   "not": [
+    "is the business change the client hopes to see"
+   ],
+   "like": [
+    "Outcome"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Outcome",
+   "tier": 2,
+   "says": [
+    "is the change in the client's business that the work is meant to cause",
+    "can be influenced by the service but is rarely fully controlled by the provider"
+   ],
+   "use": "want to describe the result the client cares about rather than the items delivered",
+   "not": [
+    "is any document produced during delivery"
+   ],
+   "like": [
+    "Deliverable"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Managed service",
+   "tier": 3,
+   "says": [
+    "takes over the ongoing running of something for a recurring fee",
+    "stays accountable for results after the initial build"
+   ],
+   "use": "offer to operate a client's hosting or automation month after month rather than hand it over",
+   "not": [
+    "ends when the first deliverable is accepted"
+   ],
+   "like": [
+    "Productised service",
+    "Maintenance retainer"
+   ]
+  },
+  {
+   "group": "concept",
+   "subject": "Service blueprint",
+   "tier": 4,
+   "says": [
+    "maps what the client sees and the behind-the-scenes steps that support it",
+    "shows the points where the client and the provider interact",
+    "exposes handoffs where delivery can fail"
+   ],
+   "use": "want to find where a service breaks down between client-facing and back-office work",
+   "not": [
+    "is the price list for a package"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Service catalogue",
+   "tier": 1,
+   "says": [
+    "lists the services offered with a description and entry terms",
+    "gives sales and clients one consistent view of what can be bought"
+   ],
+   "use": "need a single place that shows what the company sells and in what packages",
+   "not": [
+    "records the hours each person has worked"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Free tier",
+   "tier": 1,
+   "says": [
+    "offers a limited version or audit at no charge",
+    "exists to build trust and to qualify buyers"
+   ],
+   "use": "want prospects to experience value before any commitment",
+   "not": [
+    "covers the full scope at a discounted price"
+   ],
+   "like": [
+    "Semi-free tier"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Semi-free tier",
+   "tier": 2,
+   "says": [
+    "gives part of the offer free and charges for the remainder",
+    "passes the paid portion's real cost on to the buyer"
+   ],
+   "use": "want to give a free starting piece but charge for the work that costs real effort",
+   "not": [
+    "charges the same fee as the paid tier but with less support"
+   ],
+   "like": [
+    "Free tier"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Paid tier",
+   "tier": 1,
+   "says": [
+    "sells a defined package for a stated fee",
+    "sets the standard scope that most buyers are expected to choose"
+   ],
+   "use": "sell a standard package that most clients can buy without negotiation",
+   "not": [
+    "is built from scratch for each buyer"
+   ],
+   "like": [
+    "Custom tier"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Custom tier",
+   "tier": 2,
+   "says": [
+    "builds scope and price for the individual client after discovery",
+    "is for needs the standard packages cannot cover"
+   ],
+   "use": "meet a request that falls outside every published package",
+   "not": [
+    "is priced from a fixed public list"
+   ],
+   "like": [
+    "Paid tier",
+    "Enterprise tier"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Enterprise tier",
+   "tier": 3,
+   "says": [
+    "adds security review, procurement steps and negotiated terms for large buyers",
+    "usually brings named contacts and formal service levels"
+   ],
+   "use": "sell to a large organisation that insists on its own contract terms and vendor checks",
+   "not": [
+    "is the cheapest self-serve package"
+   ],
+   "like": [
+    "Custom tier"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Good-better-best",
+   "tier": 3,
+   "says": [
+    "presents three graded packages side by side",
+    "steers many buyers towards the middle option"
+   ],
+   "use": "want to let buyers compare graded options on one page",
+   "not": [
+    "offers a single package with no alternatives"
+   ],
+   "like": [
+    "Tier fence"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Add-on",
+   "tier": 2,
+   "says": [
+    "is an optional extra priced separately from the base package",
+    "lets a buyer expand a package without changing tier"
+   ],
+   "use": "want to offer an optional extra such as more pages or an extra report",
+   "not": [
+    "is included in every package at no cost"
+   ],
+   "like": [
+    "Bundle"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Bundle",
+   "tier": 3,
+   "says": [
+    "combines several services at one combined price",
+    "raises adoption of services the buyer might not have bought alone"
+   ],
+   "use": "want to sell hosting, support and SEO together as one offer",
+   "not": [
+    "sells one service with optional extras"
+   ],
+   "like": [
+    "Add-on"
+   ]
+  },
+  {
+   "group": "catalogue",
+   "subject": "Tier fence",
+   "tier": 5,
+   "says": [
+    "is a real difference between tiers that stops buyers who need more from choosing the cheaper tier",
+    "protects higher tiers from being undercut by lower ones"
+   ],
+   "use": "find that buyers with large needs keep choosing the cheapest package",
+   "not": [
+    "is a limit on how many clients can be served at once"
+   ],
+   "like": [
+    "Good-better-best"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Discovery call",
+   "tier": 1,
+   "says": [
+    "gathers the client's goals, constraints and context before any quote",
+    "is led by questions rather than a presentation"
+   ],
+   "use": "meet a new lead for the first time and need to understand the real need",
+   "not": [
+    "is a call to close the sale on the first contact"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Qualifying",
+   "tier": 1,
+   "says": [
+    "decides whether a lead is worth pursuing",
+    "tests fit, need and ability to buy before time is spent on a proposal"
+   ],
+   "use": "need to avoid spending days on a proposal for a lead that cannot buy",
+   "not": [
+    "is the final negotiation of price"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "BANT",
+   "tier": 2,
+   "says": [
+    "checks budget, authority, need and timeline",
+    "gives a quick checklist for lead fit"
+   ],
+   "use": "want a simple four-part checklist to judge whether a lead is ready",
+   "not": [
+    "measures client satisfaction after delivery"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Ideal client profile",
+   "tier": 2,
+   "says": [
+    "describes the type of client the service serves best and most profitably",
+    "helps decide which leads to chase and which to decline"
+   ],
+   "use": "want to focus marketing and sales on the clients who are the best fit",
+   "not": [
+    "is a list of all current clients"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Stakeholder mapping",
+   "tier": 3,
+   "says": [
+    "identifies who signs, who influences and who can block a decision",
+    "reveals whether the person on the call can actually approve spend"
+   ],
+   "use": "suspect the person you are talking to is not the final decision maker",
+   "not": [
+    "lists the tasks in the delivery plan"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Red-flag lead",
+   "tier": 3,
+   "says": [
+    "shows warning signs such as refusing to share goals or expecting enterprise results on a tiny budget",
+    "predicts scope disputes and late payment"
+   ],
+   "use": "notice a prospect who haggles over price before any scope is discussed",
+   "not": [
+    "is a lead that has asked for a discount"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Budget conversation",
+   "tier": 3,
+   "says": [
+    "raises a realistic budget range early in discovery",
+    "lets the provider propose options that fit rather than guess"
+   ],
+   "use": "keep proposing work the client cannot afford",
+   "not": [
+    "happens only after the contract is signed"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Discovery summary",
+   "tier": 2,
+   "says": [
+    "writes down what was learned and sends it back to the client to confirm",
+    "prevents misunderstandings from reaching the proposal"
+   ],
+   "use": "want written proof that you and the client heard the same needs",
+   "not": [
+    "is the signed statement of work"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "No-bid decision",
+   "tier": 4,
+   "says": [
+    "declines an engagement that fits badly or carries too much risk",
+    "protects delivery capacity for better-fit work"
+   ],
+   "use": "face a lead that needs skills you lack and a deadline you cannot meet",
+   "not": [
+    "means losing a deal on price"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Scope of work",
+   "tier": 1,
+   "says": [
+    "lists what will be done and what will not",
+    "sets the boundary against which extra requests are judged"
+   ],
+   "use": "need to define the edges of what the client is paying for",
+   "not": [
+    "lists the provider's internal costs"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Statement of work",
+   "tier": 2,
+   "says": [
+    "names the deliverables, timeline, fees and responsibilities for one engagement",
+    "is usually issued under a wider master agreement"
+   ],
+   "use": "need a signed document that fixes what one engagement includes",
+   "not": [
+    "sets the general terms that cover all future work"
+   ],
+   "like": [
+    "Master services agreement"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Assumption",
+   "tier": 2,
+   "says": [
+    "states a condition taken as true that the estimate depends on",
+    "gives a reason to revisit price when the condition proves false"
+   ],
+   "use": "know the estimate depends on the client supplying content by a certain date",
+   "not": [
+    "names work that is excluded"
+   ],
+   "like": [
+    "Exclusion",
+    "Client dependency"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Exclusion",
+   "tier": 2,
+   "says": [
+    "names something explicitly out of scope",
+    "removes doubt over work the client might assume was included"
+   ],
+   "use": "want to make clear that ongoing content writing is not part of the build",
+   "not": [
+    "states a condition the estimate relies on"
+   ],
+   "like": [
+    "Assumption"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Client dependency",
+   "tier": 3,
+   "says": [
+    "is an input the client must supply, such as content, access or approvals",
+    "can delay the schedule when it is late"
+   ],
+   "use": "need access and approvals from the client before work can proceed",
+   "not": [
+    "is a task the provider completes alone"
+   ],
+   "like": [
+    "Assumption"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Work breakdown structure",
+   "tier": 3,
+   "says": [
+    "splits deliverables into smaller tasks that can be estimated",
+    "supports bottom-up estimating"
+   ],
+   "use": "must estimate a large project and need to decompose it into tasks first",
+   "not": [
+    "is a list of the client's stakeholders"
+   ],
+   "like": [
+    "Bottom-up estimate"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Scope baseline",
+   "tier": 4,
+   "says": [
+    "is the approved scope against which later changes are measured",
+    "is updated only through an approved change"
+   ],
+   "use": "need an agreed reference point to judge whether a request is a change",
+   "not": [
+    "is the first rough idea shared in discovery"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Paid discovery",
+   "tier": 4,
+   "says": [
+    "sells a small scoping engagement before the main project",
+    "produces a researched scope and estimate the client can keep"
+   ],
+   "use": "face a large unclear project that cannot be priced safely from a short call",
+   "not": [
+    "is an unpaid sales meeting"
+   ],
+   "like": [
+    "Discovery call"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Success metric",
+   "tier": 3,
+   "says": [
+    "defines how the client will judge that the work achieved its aim",
+    "is agreed before the work starts"
+   ],
+   "use": "need the client to say in numbers what a good result looks like",
+   "not": [
+    "is the number of hours worked"
+   ],
+   "like": [
+    "Acceptance criteria"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Scope creep",
+   "tier": 1,
+   "says": [
+    "is the gradual growth of work with no matching change to fee or time",
+    "often arrives as many small requests that each seem minor"
+   ],
+   "use": "see the project filling with small extras no one priced",
+   "not": [
+    "is a formally approved scope change"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Change request",
+   "tier": 1,
+   "says": [
+    "is a formal ask to alter agreed scope",
+    "starts the process of costing and approving a change"
+   ],
+   "use": "hear the client ask for a feature that was not in the agreed scope",
+   "not": [
+    "is a bug report about agreed work"
+   ],
+   "like": [
+    "Change order"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Change order",
+   "tier": 2,
+   "says": [
+    "is the signed approval of a priced scope change",
+    "adjusts fee, timeline or both once approved"
+   ],
+   "use": "want written approval of the extra cost and time before starting extra work",
+   "not": [
+    "is the client's first informal wish list"
+   ],
+   "like": [
+    "Change request"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Impact assessment",
+   "tier": 3,
+   "says": [
+    "sizes the effect of a change on cost, time and risk",
+    "lets the client decide with full information"
+   ],
+   "use": "need to say what a client's late change will cost in time and money",
+   "not": [
+    "is the review held after delivery"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Gold plating",
+   "tier": 3,
+   "says": [
+    "is the team adding unrequested extras beyond the agreed scope",
+    "raises cost and risk without the client having asked"
+   ],
+   "use": "see a developer adding features nobody requested",
+   "not": [
+    "is a client request for more features"
+   ],
+   "like": [
+    "Scope creep"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Change control",
+   "tier": 2,
+   "says": [
+    "routes every change through request, assessment and approval",
+    "stops work starting on unapproved changes"
+   ],
+   "use": "need a defined path so that no extra work is started on a verbal ask",
+   "not": [
+    "is a way to avoid ever accepting changes"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Scope trade-off",
+   "tier": 3,
+   "says": [
+    "swaps new work for existing work to hold the fee and date",
+    "keeps the budget unchanged by dropping something of equal size"
+   ],
+   "use": "hear the client want an addition but refuse more budget or time",
+   "not": [
+    "adds the work and absorbs the cost"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Defect versus change",
+   "tier": 4,
+   "says": [
+    "separates work that fails the agreed specification from work that adds to it",
+    "treats the first as a warranty fix and the second as a paid change"
+   ],
+   "use": "hear a client call a new request a bug and expect it free",
+   "not": [
+    "treats every client request as a paid change"
+   ]
+  },
+  {
+   "group": "change",
+   "subject": "Silent absorption",
+   "tier": 5,
+   "says": [
+    "is taking on extras without recording them",
+    "hides the true cost of serving the client from management and sets a precedent"
+   ],
+   "use": "find a team doing unrecorded favours for a client month after month",
+   "not": [
+    "is a documented and approved concession"
+   ],
+   "like": [
+    "Scope creep"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Bottom-up estimate",
+   "tier": 2,
+   "says": [
+    "adds up estimates for each small task",
+    "takes longer to prepare but is usually more accurate when tasks are known"
+   ],
+   "use": "have a clear task list and need an accurate figure",
+   "not": [
+    "compares the job to a similar past project"
+   ],
+   "like": [
+    "Analogous estimate",
+    "Top-down estimate"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Top-down estimate",
+   "tier": 2,
+   "says": [
+    "starts from a total budget or time and divides it among parts",
+    "is quick and suited to early, low-detail stages"
+   ],
+   "use": "have a fixed budget from the client and need to see what fits",
+   "not": [
+    "adds detailed task estimates upward"
+   ],
+   "like": [
+    "Bottom-up estimate"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Analogous estimate",
+   "tier": 2,
+   "says": [
+    "uses the actual result of a similar past project as the starting point",
+    "depends on how truly similar the earlier project was"
+   ],
+   "use": "have delivered a near-identical site before and need a fast figure",
+   "not": [
+    "sums task-level estimates"
+   ],
+   "like": [
+    "Bottom-up estimate",
+    "Parametric estimate"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Parametric estimate",
+   "tier": 3,
+   "says": [
+    "multiplies a measured unit rate by the quantity of work",
+    "relies on historical data for the cost per unit"
+   ],
+   "use": "know the average cost per page or per integration from past work",
+   "not": [
+    "relies on one similar past project"
+   ],
+   "like": [
+    "Analogous estimate"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Three-point estimate",
+   "tier": 3,
+   "says": [
+    "combines optimistic, most likely and pessimistic values",
+    "can weight the likely value more heavily than the extremes"
+   ],
+   "use": "need to show uncertainty in a task rather than a single number",
+   "not": [
+    "uses a single number agreed by the team"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Contingency buffer",
+   "tier": 2,
+   "says": [
+    "adds explicit time or cost to cover known uncertainty",
+    "is shown and managed rather than hidden"
+   ],
+   "use": "expect some unknowns and want to cover them openly",
+   "not": [
+    "adds hidden extra hours to each task"
+   ],
+   "like": [
+    "Hidden padding"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Hidden padding",
+   "tier": 3,
+   "says": [
+    "adds secret margin inside each task estimate",
+    "makes it impossible to see or manage the real risk"
+   ],
+   "use": "find each person adding a little extra to every task without telling anyone",
+   "not": [
+    "is a visible buffer agreed with the client"
+   ],
+   "like": [
+    "Contingency buffer"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Cone of uncertainty",
+   "tier": 5,
+   "says": [
+    "shows that estimates are widest early and narrow as work progresses",
+    "argues for giving ranges at the start of a project"
+   ],
+   "use": "asked for a single exact price on a vague first call",
+   "not": [
+    "shows that estimates grow more accurate without any new information"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Planning fallacy",
+   "tier": 4,
+   "says": [
+    "is the habit of underestimating even when past projects ran long",
+    "is reduced by using real data from similar past work"
+   ],
+   "use": "see the team keep promising dates that its own history shows are optimistic",
+   "not": [
+    "is the habit of over-padding every estimate"
+   ]
+  },
+  {
+   "group": "estimate",
+   "subject": "Spike",
+   "tier": 4,
+   "says": [
+    "is a short time-boxed investigation to reduce uncertainty",
+    "produces knowledge rather than a finished feature"
+   ],
+   "use": "cannot estimate a task because of an unknown integration",
+   "not": [
+    "is an urgent production fix"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Fixed price",
+   "tier": 1,
+   "says": [
+    "sets one agreed fee for a defined scope",
+    "puts the risk of overrun on the provider"
+   ],
+   "use": "know the scope is stable and the client wants cost certainty",
+   "not": [
+    "lets the client pay only for hours worked"
+   ],
+   "like": [
+    "Time and materials"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Time and materials",
+   "tier": 1,
+   "says": [
+    "bills for the hours worked and materials used",
+    "puts the risk of overrun on the client"
+   ],
+   "use": "expect the scope to be unclear and to change as work proceeds",
+   "not": [
+    "guarantees the client a fixed total"
+   ],
+   "like": [
+    "Fixed price",
+    "Capped time and materials"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Capped time and materials",
+   "tier": 3,
+   "says": [
+    "bills hours worked but never above an agreed ceiling",
+    "limits the client's exposure while keeping flexibility"
+   ],
+   "use": "meet a client who wants flexibility but needs a maximum figure",
+   "not": [
+    "bills a fixed fee whatever the hours"
+   ],
+   "like": [
+    "Time and materials"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Retainer",
+   "tier": 2,
+   "says": [
+    "reserves a block of time or availability for a regular fee",
+    "treats unused hours as lost or rolled over, depending on the terms"
+   ],
+   "use": "meet a client who needs steady ongoing access to a team each month",
+   "not": [
+    "charges only when a specific project is finished"
+   ],
+   "like": [
+    "Subscription"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Value-based pricing",
+   "tier": 3,
+   "says": [
+    "sets the fee from the value the client gets rather than the cost of delivery",
+    "needs proof of the value the work will create"
+   ],
+   "use": "expect the work to earn the client far more than the hours suggest",
+   "not": [
+    "adds a fixed percentage to delivery cost"
+   ],
+   "like": [
+    "Cost-plus pricing"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Subscription",
+   "tier": 2,
+   "says": [
+    "charges a recurring fee for continued access to a packaged service",
+    "gives the provider predictable income"
+   ],
+   "use": "sell a standard service that the client uses continuously",
+   "not": [
+    "bills hours worked at the end of a project"
+   ],
+   "like": [
+    "Retainer"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Usage-based pricing",
+   "tier": 3,
+   "says": [
+    "charges according to how much of the service is consumed",
+    "makes revenue vary with the client's activity"
+   ],
+   "use": "see the cost to serve rise with the volume the client uses",
+   "not": [
+    "charges the same monthly fee at any volume"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Cost-plus pricing",
+   "tier": 3,
+   "says": [
+    "adds a margin to the cost of delivery",
+    "ignores what the work is worth to the client"
+   ],
+   "use": "want a simple price built from cost with an added margin",
+   "not": [
+    "bases the fee on the client's expected benefit"
+   ],
+   "like": [
+    "Value-based pricing"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Success fee",
+   "tier": 4,
+   "says": [
+    "ties part of the fee to a result the client achieves",
+    "moves some outcome risk to the provider"
+   ],
+   "use": "meet a client who will only pay if a measured result is reached",
+   "not": [
+    "is paid whatever the result"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Milestone billing",
+   "tier": 2,
+   "says": [
+    "invoices when agreed milestones are reached",
+    "spreads payments across the project instead of one invoice at the end"
+   ],
+   "use": "want to invoice in stages as work is accepted",
+   "not": [
+    "bills the full amount before work starts"
+   ]
+  },
+  {
+   "group": "pricing",
+   "subject": "Price anchoring",
+   "tier": 3,
+   "says": [
+    "sets a reference figure that shapes how later numbers are judged",
+    "is why showing the higher option first can change buyers' perception"
+   ],
+   "use": "want a mid-priced package to look reasonable beside a premium one",
+   "not": [
+    "lowers every price to the cheapest competitor"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Gross margin",
+   "tier": 2,
+   "says": [
+    "is revenue minus direct delivery cost, shown as a share of revenue",
+    "measures how much of each sale is left after delivering it"
+   ],
+   "use": "want to know how much of a fee remains after the people who delivered it are paid",
+   "not": [
+    "is the percentage added on top of cost"
+   ],
+   "like": [
+    "Markup"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Markup",
+   "tier": 3,
+   "says": [
+    "adds a percentage on top of cost to reach a price",
+    "gives a larger percentage figure than the margin for the same price"
+   ],
+   "use": "need to turn a delivery cost into a price using a percentage on cost",
+   "not": [
+    "is revenue minus cost divided by revenue"
+   ],
+   "like": [
+    "Gross margin"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Utilisation rate",
+   "tier": 2,
+   "says": [
+    "is billable hours as a share of available hours",
+    "drops when staff spend time on non-billable work"
+   ],
+   "use": "need to know how much of the team's time earns revenue",
+   "not": [
+    "is the share of billed work that gets paid"
+   ],
+   "like": [
+    "Realisation rate"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Realisation rate",
+   "tier": 5,
+   "says": [
+    "compares what was billed with the value of time worked at standard rates",
+    "falls when work is discounted or written off"
+   ],
+   "use": "find the team works full days but billings keep trailing hours worked",
+   "not": [
+    "is billable hours divided by available hours"
+   ],
+   "like": [
+    "Utilisation rate"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Blended rate",
+   "tier": 3,
+   "says": [
+    "is the average hourly rate across a mixed team",
+    "moves when the mix of senior and junior time changes"
+   ],
+   "use": "need one hourly figure for a team of different seniority",
+   "not": [
+    "is the hourly rate of the most senior person"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Effective hourly rate",
+   "tier": 3,
+   "says": [
+    "divides the fee received by the hours actually spent",
+    "exposes unprofitable fixed-price projects"
+   ],
+   "use": "want the real earning rate of a fixed-price project that overran",
+   "not": [
+    "is the rate printed on the rate card"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Cost to serve",
+   "tier": 3,
+   "says": [
+    "is the total cost of supporting one client over a period",
+    "includes support, account management and overhead, not just build hours"
+   ],
+   "use": "suspect a small client takes far more support than their fee covers",
+   "not": [
+    "is the sale price of the package"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Work in progress",
+   "tier": 4,
+   "says": [
+    "is value of work done but not yet invoiced",
+    "grows when billing lags behind delivery and strains cash flow"
+   ],
+   "use": "see delivered work pile up with no invoice issued",
+   "not": [
+    "is money the client has already paid in advance"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Capacity planning",
+   "tier": 3,
+   "says": [
+    "compares the team's available hours with committed work",
+    "shows whether a new sale can be delivered on time"
+   ],
+   "use": "are about to sign a project and need to know whether the team can absorb it",
+   "not": [
+    "measures client satisfaction"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Service level agreement",
+   "tier": 1,
+   "says": [
+    "sets measurable service levels such as response times",
+    "defines remedies when levels are missed"
+   ],
+   "use": "hear the client want response and availability promises in writing",
+   "not": [
+    "lists the project deliverables and fees"
+   ],
+   "like": [
+    "Master services agreement"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Master services agreement",
+   "tier": 3,
+   "says": [
+    "sets the general terms for all work between two parties",
+    "lets separate statements of work be added without renegotiating terms"
+   ],
+   "use": "expect several engagements with the same client over time",
+   "not": [
+    "fixes the price of one specific project"
+   ],
+   "like": [
+    "Statement of work"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Non-disclosure agreement",
+   "tier": 1,
+   "says": [
+    "obliges the parties to keep shared information confidential",
+    "is often signed before detailed discovery"
+   ],
+   "use": "need to share sensitive information before agreeing a deal",
+   "not": [
+    "transfers ownership of the work produced"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "IP ownership clause",
+   "tier": 2,
+   "says": [
+    "states who owns the work product after delivery",
+    "is often tied to payment in full"
+   ],
+   "use": "hear the client ask who owns the finished design and code",
+   "not": [
+    "states how quickly defects will be fixed"
+   ],
+   "like": [
+    "Licence"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Licence",
+   "tier": 3,
+   "says": [
+    "grants permission to use something without transferring ownership",
+    "may be limited by time, purpose or territory"
+   ],
+   "use": "let the client use a component while the provider keeps ownership",
+   "not": [
+    "transfers full ownership to the client"
+   ],
+   "like": [
+    "IP ownership clause"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Warranty",
+   "tier": 2,
+   "says": [
+    "promises to fix defects found within a defined period after delivery",
+    "covers faults against the agreed specification, not new requests"
+   ],
+   "use": "hear the client report a fault shortly after go-live",
+   "not": [
+    "promises new features after launch"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Termination clause",
+   "tier": 2,
+   "says": [
+    "sets how and when either party may end the agreement",
+    "states notice periods and what happens to unpaid work"
+   ],
+   "use": "need to know how a client can leave and what they owe when they do",
+   "not": [
+    "describes how defects will be fixed"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Acceptance criteria",
+   "tier": 2,
+   "says": [
+    "are testable conditions a deliverable must meet to be accepted",
+    "prevent open-ended sign-off disputes"
+   ],
+   "use": "want an objective test for when a deliverable counts as done",
+   "not": [
+    "are the client's general wishes for the project"
+   ],
+   "like": [
+    "Success metric"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Limitation of liability",
+   "tier": 5,
+   "says": [
+    "caps the damages one party can owe the other",
+    "protects the provider from losses far larger than the fee"
+   ],
+   "use": "worry that a fault could create a claim much larger than the contract value",
+   "not": [
+    "promises unlimited compensation for any loss"
+   ],
+   "like": [
+    "Indemnity"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Indemnity",
+   "tier": 5,
+   "says": [
+    "obliges one party to cover the other's losses from specified claims",
+    "is often used for third-party infringement claims"
+   ],
+   "use": "are asked to cover the client against a claim that delivered work infringes someone's rights",
+   "not": [
+    "caps the total damages payable"
+   ],
+   "like": [
+    "Limitation of liability"
+   ]
+  },
+  {
+   "group": "contract",
+   "subject": "Data processing agreement",
+   "tier": 4,
+   "says": [
+    "sets how a provider handles personal data on the client's behalf",
+    "is typically needed when the provider processes the client's personal data"
+   ],
+   "use": "will host or process client customer data",
+   "not": [
+    "describes the payment schedule"
+   ]
+  },
+  {
+   "group": "proposal",
+   "subject": "Proposal",
+   "tier": 1,
+   "says": [
+    "presents the client's problem, the proposed solution, price and next steps",
+    "is shaped by what was learned in discovery"
+   ],
+   "use": "need to put a full recommended solution in front of a client",
+   "not": [
+    "is the signed contract"
+   ],
+   "like": [
+    "Quote"
+   ]
+  },
+  {
+   "group": "proposal",
+   "subject": "Quote",
+   "tier": 1,
+   "says": [
+    "states a price for a clearly defined scope",
+    "may be only a few lines of scope and figures"
+   ],
+   "use": "meet a client who only needs a price for a well-defined job",
+   "not": [
+    "argues why the client should change strategy"
+   ],
+   "like": [
+    "Proposal"
+   ]
+  },
+  {
+   "group": "proposal",
+   "subject": "Executive summary",
+   "tier": 2,
+   "says": [
+    "gives the decision maker the problem, solution and price in a short page",
+    "is often the only part a senior reader fully reads"
+   ],
+   "use": "expect the person who signs not to read the whole document",
+   "not": [
+    "lists the detailed task plan"
+   ]
+  },
+  {
+   "group": "proposal",
+   "subject": "Validity period",
+   "tier": 2,
+   "says": [
+    "states how long the quoted price and terms stay open",
+    "protects the provider from cost changes"
+   ],
+   "use": "want the quoted price to expire if the client delays",
+   "not": [
+    "states how long the project will take"
+   ]
+  },
+  {
+   "group": "proposal",
+   "subject": "Options page",
+   "tier": 3,
+   "says": [
+    "offers two or three priced routes with different scope",
+    "moves the decision from yes-or-no to which-one"
+   ],
+   "use": "want the client to choose between versions of the solution",
+   "not": [
+    "presents a single price with no alternatives"
+   ]
+  },
+  {
+   "group": "proposal",
+   "subject": "Social proof",
+   "tier": 2,
+   "says": [
+    "shows evidence from past clients such as case studies",
+    "reduces the buyer's perceived risk"
+   ],
+   "use": "meet a prospect who is unsure whether you can deliver",
+   "not": [
+    "lists the provider's internal costs"
+   ]
+  },
+  {
+   "group": "proposal",
+   "subject": "Concession trading",
+   "tier": 5,
+   "says": [
+    "gives a discount or extra only in return for something from the buyer",
+    "keeps the price from being cut for free"
+   ],
+   "use": "hear the buyer ask for a lower price at the negotiation stage",
+   "not": [
+    "gives a discount to close quickly"
+   ]
+  },
+  {
+   "group": "proposal",
+   "subject": "Win-loss review",
+   "tier": 4,
+   "says": [
+    "studies why proposals were won or lost",
+    "feeds findings back into pricing and positioning"
+   ],
+   "use": "want to learn why recent bids keep losing to one competitor",
+   "not": [
+    "measures client satisfaction after delivery"
+   ]
+  },
+  {
+   "group": "proposal",
+   "subject": "Lowball bid",
+   "tier": 4,
+   "says": [
+    "wins work by pricing below real cost",
+    "risks a loss and pressure to cut quality or fight every change"
+   ],
+   "use": "are tempted to underprice to win a competitive tender",
+   "not": [
+    "sets a price that includes a healthy margin"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "Onboarding checklist",
+   "tier": 1,
+   "says": [
+    "lists the access, contacts and information needed from the client at the start",
+    "reduces delay caused by missing inputs"
+   ],
+   "use": "want to collect logins, brand assets and contacts at the outset",
+   "not": [
+    "records faults found during testing"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "Kickoff meeting",
+   "tier": 1,
+   "says": [
+    "aligns client and team on scope, roles, dates and communication",
+    "is held at the start of delivery"
+   ],
+   "use": "are starting delivery and need everyone to agree the plan",
+   "not": [
+    "is the final review before launch"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "Single point of contact",
+   "tier": 2,
+   "says": [
+    "gives the client one named person for communication",
+    "prevents mixed messages from several team members"
+   ],
+   "use": "find the client getting contradictory updates from different staff",
+   "not": [
+    "gives every staff member direct client access"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "RACI matrix",
+   "tier": 3,
+   "says": [
+    "assigns who is responsible, accountable, consulted and informed",
+    "clarifies ownership of each task or decision"
+   ],
+   "use": "find people unsure who makes the final call on an approval",
+   "not": [
+    "lists the milestones and dates"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "Communication plan",
+   "tier": 3,
+   "says": [
+    "sets who gets what updates, how often and through which channel",
+    "reduces surprises for the client"
+   ],
+   "use": "hear the client complain that they never know progress",
+   "not": [
+    "records the changes to scope"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "RAID log",
+   "tier": 3,
+   "says": [
+    "records risks, assumptions, issues and dependencies",
+    "is reviewed regularly with the client"
+   ],
+   "use": "want a single place to track what could go wrong and what is blocked",
+   "not": [
+    "lists the agreed deliverables"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "Steering committee",
+   "tier": 4,
+   "says": [
+    "brings senior client and provider leaders together to oversee a larger engagement",
+    "decides on escalated issues, scope and budget"
+   ],
+   "use": "run a large engagement that needs senior-level oversight and decisions",
+   "not": [
+    "is the daily team stand-up"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "User acceptance testing",
+   "tier": 3,
+   "says": [
+    "lets the client test the deliverable against agreed criteria",
+    "ends with a sign-off or a list of defects to fix"
+   ],
+   "use": "want the client to verify the work before it goes live",
+   "not": [
+    "is testing done only by the provider's developers"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "QA checklist",
+   "tier": 2,
+   "says": [
+    "lists the checks a deliverable must pass before it goes to the client",
+    "catches defects before the client sees them"
+   ],
+   "use": "want a repeatable list to review the work before handing it over",
+   "not": [
+    "is the client's wish list"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "Handover pack",
+   "tier": 2,
+   "says": [
+    "gives the client the access, documentation and instructions to run what was delivered",
+    "includes training or a walk-through"
+   ],
+   "use": "finish a project and see the client's team take over",
+   "not": [
+    "is the signed proposal"
+   ]
+  },
+  {
+   "group": "delivery",
+   "subject": "Post-project review",
+   "tier": 3,
+   "says": [
+    "looks back at what went well and badly after delivery",
+    "feeds lessons into estimates and process"
+   ],
+   "use": "close a project and want the team to learn from it",
+   "not": [
+    "is a review of the proposal before it is sent"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Maintenance retainer",
+   "tier": 2,
+   "says": [
+    "covers ongoing updates, fixes and monitoring for a regular fee",
+    "keeps delivered work healthy after launch"
+   ],
+   "use": "want to keep a delivered site updated and supported each month",
+   "not": [
+    "covers building brand-new projects"
+   ],
+   "like": [
+    "Managed service"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Support ticket",
+   "tier": 1,
+   "says": [
+    "records one client request or fault with its status",
+    "gives a traceable history of the issue"
+   ],
+   "use": "need every client request logged and followed",
+   "not": [
+    "is a monthly invoice"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Response time",
+   "tier": 1,
+   "says": [
+    "is how fast the provider first replies to a request",
+    "starts the clock on the first acknowledgement, not the fix"
+   ],
+   "use": "hear the client ask how fast someone will pick up their request",
+   "not": [
+    "is how long the fix takes"
+   ],
+   "like": [
+    "Resolution time"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Resolution time",
+   "tier": 2,
+   "says": [
+    "is how long it takes to fix the problem",
+    "is usually longer than the first response target"
+   ],
+   "use": "hear the client ask when the problem will be fully fixed",
+   "not": [
+    "is how fast the first reply arrives"
+   ],
+   "like": [
+    "Response time"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Severity level",
+   "tier": 3,
+   "says": [
+    "ranks an issue by its impact on the client's business",
+    "sets the response target for that issue"
+   ],
+   "use": "need to decide which of several faults to handle first",
+   "not": [
+    "ranks clients by size"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Service hours",
+   "tier": 2,
+   "says": [
+    "state the days and times when support is staffed",
+    "are the window in which response targets count"
+   ],
+   "use": "hear the client ask whether weekend problems will be handled",
+   "not": [
+    "are the hours billed on a project"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Uptime commitment",
+   "tier": 3,
+   "says": [
+    "states the share of time a service should be available",
+    "usually excludes agreed maintenance windows"
+   ],
+   "use": "hear the client need a measurable availability promise for hosting",
+   "not": [
+    "is the target time to answer a ticket"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Service credit",
+   "tier": 4,
+   "says": [
+    "compensates the client with a credit when a service level is missed",
+    "is often the sole remedy for a missed uptime target"
+   ],
+   "use": "see the service miss its stated availability",
+   "not": [
+    "is a refund of the full contract"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Escalation path",
+   "tier": 2,
+   "says": [
+    "defines who an issue goes to when it is not resolved in time",
+    "names levels of seniority"
+   ],
+   "use": "find a critical issue stuck with no one knowing who to call",
+   "not": [
+    "is a list of the client's contacts"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "First-line support",
+   "tier": 2,
+   "says": [
+    "handles routine requests and basic troubleshooting",
+    "passes complex issues to specialists"
+   ],
+   "use": "need a first contact to resolve simple requests quickly",
+   "not": [
+    "handles only the most complex engineering faults"
+   ]
+  },
+  {
+   "group": "support",
+   "subject": "Incident review",
+   "tier": 4,
+   "says": [
+    "analyses a serious outage to find causes and actions",
+    "focuses on fixing the system, not blaming people"
+   ],
+   "use": "come out of a major outage and want to prevent a repeat",
+   "not": [
+    "assigns blame to the engineer on duty"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Upsell",
+   "tier": 1,
+   "says": [
+    "offers a higher tier or bigger version of what the client already buys",
+    "works best when tied to a need the client has shown"
+   ],
+   "use": "meet a client who has outgrown their current package",
+   "not": [
+    "offers a different service to a new buyer"
+   ],
+   "like": [
+    "Cross-sell"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Cross-sell",
+   "tier": 1,
+   "says": [
+    "offers a different service to an existing client",
+    "builds on the trust already earned"
+   ],
+   "use": "see that a hosting client could benefit from SEO",
+   "not": [
+    "offers a bigger version of the same service"
+   ],
+   "like": [
+    "Upsell"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Renewal",
+   "tier": 2,
+   "says": [
+    "extends a contract or subscription for another term",
+    "is easier when value has been shown during the term"
+   ],
+   "use": "see a client's annual agreement close to ending",
+   "not": [
+    "is a first sale to a new buyer"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Churn",
+   "tier": 1,
+   "says": [
+    "is clients leaving or cancelling over a period",
+    "reduces recurring revenue"
+   ],
+   "use": "want to count how many clients stopped paying",
+   "not": [
+    "is clients buying more"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Client health score",
+   "tier": 3,
+   "says": [
+    "combines signals such as usage, satisfaction and payment into one rating",
+    "flags at-risk accounts early"
+   ],
+   "use": "want a quick way to see which accounts might leave",
+   "not": [
+    "is the client's credit rating"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Quarterly business review",
+   "tier": 3,
+   "says": [
+    "is a regular meeting that shows the client the results delivered",
+    "creates a natural moment to plan upsell and renewal"
+   ],
+   "use": "want to prove value to the client and plan the next period",
+   "not": [
+    "is the first discovery call"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Net revenue retention",
+   "tier": 5,
+   "says": [
+    "measures revenue from existing clients including expansion and loss",
+    "can exceed 100 percent when upsell outweighs churn"
+   ],
+   "use": "want to know whether existing clients are growing or shrinking in value",
+   "not": [
+    "counts revenue from new clients"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Early warning signal",
+   "tier": 4,
+   "says": [
+    "is a behaviour such as slower replies or fewer logins that predicts churn",
+    "gives time to act before the client leaves"
+   ],
+   "use": "notice a client stops joining calls and delays invoices",
+   "not": [
+    "is the formal cancellation notice"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Complaint acknowledgement",
+   "tier": 1,
+   "says": [
+    "tells the client quickly that the complaint is heard",
+    "comes before any explanation or fix"
+   ],
+   "use": "receive an angry email about a missed date",
+   "not": [
+    "defends the team's decisions first"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Root cause analysis",
+   "tier": 3,
+   "says": [
+    "traces a failure back to the underlying cause",
+    "prevents the same complaint from recurring"
+   ],
+   "use": "see the same type of complaint come up three times",
+   "not": [
+    "fixes only the symptom the client noticed"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Goodwill gesture",
+   "tier": 3,
+   "says": [
+    "offers a small concession to repair trust after a failure",
+    "is given with a clear explanation and not as a habit"
+   ],
+   "use": "want to repair the relationship after a service failure cost the client time",
+   "not": [
+    "is a contractual entitlement"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Service recovery paradox",
+   "tier": 5,
+   "says": [
+    "describes clients who become more loyal after a well-handled failure than if none had occurred",
+    "does not justify causing failures on purpose"
+   ],
+   "use": "hear someone argue that failing deliberately could build loyalty",
+   "not": [
+    "says a failure always loses the client"
+   ]
+  },
+  {
+   "group": "growth",
+   "subject": "Executive sponsor call",
+   "tier": 4,
+   "says": [
+    "brings a senior leader into a troubled account to show commitment",
+    "is used when normal channels have not rebuilt trust"
+   ],
+   "use": "see a key account threaten to leave after repeated problems",
+   "not": [
+    "is the first routine status update"
+   ]
+  },
+  {
+   "group": "partner",
+   "subject": "Subcontractor",
+   "tier": 1,
+   "says": [
+    "is an outside provider who performs part of the delivery under the main supplier",
+    "remains the main supplier's responsibility to the client"
+   ],
+   "use": "lack in-house skills for part of the project",
+   "not": [
+    "is the client's own employee"
+   ],
+   "like": [
+    "White-label delivery"
+   ]
+  },
+  {
+   "group": "partner",
+   "subject": "White-label delivery",
+   "tier": 2,
+   "says": [
+    "delivers work under the provider's own brand though another firm produces it",
+    "keeps the partner invisible to the client"
+   ],
+   "use": "want to sell a service that a partner builds without showing their name",
+   "not": [
+    "names the partner on every deliverable"
+   ],
+   "like": [
+    "Subcontractor"
+   ]
+  },
+  {
+   "group": "partner",
+   "subject": "Flow-down terms",
+   "tier": 5,
+   "says": [
+    "pass the main contract's obligations, such as confidentiality and quality, to the subcontractor",
+    "stop gaps between what the provider promised and the subcontractor owes"
+   ],
+   "use": "promised the client confidentiality that your subcontractor has not agreed to",
+   "not": [
+    "remove liability from the main supplier"
+   ]
+  },
+  {
+   "group": "partner",
+   "subject": "Subcontractor margin",
+   "tier": 3,
+   "says": [
+    "is the difference between what the client pays and what the subcontractor charges",
+    "pays for coordination, risk and quality control"
+   ],
+   "use": "are pricing work that a partner will build",
+   "not": [
+    "is the subcontractor's profit alone"
+   ]
+  },
+  {
+   "group": "partner",
+   "subject": "Partner due diligence",
+   "tier": 3,
+   "says": [
+    "checks a partner's skills, references, security and finances before use",
+    "reduces the chance of poor quality reaching the client"
+   ],
+   "use": "are about to rely on a new freelance team for client work",
+   "not": [
+    "happens after the client complains"
+   ]
+  },
+  {
+   "group": "partner",
+   "subject": "Partner quality gate",
+   "tier": 3,
+   "says": [
+    "reviews partner output before it reaches the client",
+    "keeps one standard whoever produced the work"
+   ],
+   "use": "receive white-label work with errors the client could have seen",
+   "not": [
+    "is the partner's own internal review only"
+   ]
+  },
+  {
+   "group": "partner",
+   "subject": "Key-person risk",
+   "tier": 4,
+   "says": [
+    "arises when delivery depends on one individual",
+    "can cause delay or loss when that person is unavailable"
+   ],
+   "use": "find that only one freelancer knows how a client's system works",
+   "not": [
+    "comes from having too many specialists"
+   ]
+  },
+  {
+   "group": "partner",
+   "subject": "Non-solicitation clause",
+   "tier": 4,
+   "says": [
+    "stops a partner from approaching the provider's clients or staff",
+    "protects the client relationship in white-label arrangements"
+   ],
+   "use": "worry a white-label partner might sell directly to your client",
+   "not": [
+    "stops the client from changing provider"
+   ]
+  },
+  {
+   "group": "partner",
+   "subject": "Single-supplier dependency",
+   "tier": 4,
+   "says": [
+    "is reliance on one partner for a critical part of delivery",
+    "leaves the provider exposed if that partner fails or raises prices"
+   ],
+   "use": "find that all your hosting depends on a single outside vendor",
+   "not": [
+    "is using several suppliers for the same function"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the clearest difference between a service and a product?",
+   "right": "A service is delivered through work performed for the client, while a product is built once and sold repeatedly",
+   "wrong": [
+    "A service always costs more than a product",
+    "A product is always digital and a service is always physical",
+    "A service has no price until the client approves it"
+   ],
+   "tier": 1,
+   "why": "Services depend on delivery effort for each client; products scale as the same finished offer."
+  },
+  {
+   "q": "What does a service catalogue do?",
+   "right": "Lists the services offered with descriptions and entry terms",
+   "wrong": [
+    "Records every hour each person worked",
+    "Stores signed client contracts",
+    "Ranks clients by revenue"
+   ],
+   "tier": 1,
+   "why": "A catalogue is the shared view of what can be bought."
+  },
+  {
+   "q": "What is the main aim of a discovery call?",
+   "right": "To understand the client's goals, constraints and context before quoting",
+   "wrong": [
+    "To close the sale on the first call",
+    "To present the full price list",
+    "To collect the first payment"
+   ],
+   "tier": 1,
+   "why": "Discovery gathers facts so scope and price are based on the real need."
+  },
+  {
+   "q": "In a fixed-price project, who carries the risk if the work takes longer than estimated?",
+   "right": "The provider",
+   "wrong": [
+    "The client",
+    "Both sides equally, always",
+    "Nobody, because the price adjusts automatically"
+   ],
+   "tier": 1,
+   "why": "A fixed fee means overrun cost falls on the provider unless a change is approved."
+  },
+  {
+   "q": "In a time-and-materials project, who carries the main risk of overrun?",
+   "right": "The client, because they pay for the hours used",
+   "wrong": [
+    "The provider, who must absorb extra hours",
+    "The subcontractor",
+    "Neither, because hours are capped by default"
+   ],
+   "tier": 1,
+   "why": "Time and materials bills actual effort, so extra effort raises the client's bill."
+  },
+  {
+   "q": "What is scope creep?",
+   "right": "Work growing beyond the agreed scope without matching changes to fee or time",
+   "wrong": [
+    "A formal change to the agreed scope",
+    "A discount given to win a deal",
+    "A delay caused by the client paying late"
+   ],
+   "tier": 1,
+   "why": "Uncontrolled growth is what makes it creep."
+  },
+  {
+   "q": "Which action best fits a first reaction to an upset client's complaint?",
+   "right": "Acknowledge it quickly and tell them it is being looked at",
+   "wrong": [
+    "Explain why the team was right",
+    "Wait until the cause is fully known before replying",
+    "Offer a refund straight away"
+   ],
+   "tier": 1,
+   "why": "Prompt acknowledgement comes before explanation or remedy."
+  },
+  {
+   "q": "What is the job of an exclusion in a statement of work?",
+   "right": "To state clearly what is not included",
+   "wrong": [
+    "To state what the estimate assumes is true",
+    "To list the payment dates",
+    "To name who owns the work"
+   ],
+   "tier": 2,
+   "why": "Exclusions remove doubt about out-of-scope work."
+  },
+  {
+   "q": "What is an assumption in a scope document?",
+   "right": "A condition taken as true on which the estimate depends",
+   "wrong": [
+    "A promise by the client to buy more",
+    "A feature added at no charge",
+    "A term that ends the contract"
+   ],
+   "tier": 2,
+   "why": "If an assumption fails, the price or timeline may need to change."
+  },
+  {
+   "q": "What does BANT check?",
+   "right": "Budget, authority, need and timeline",
+   "wrong": [
+    "Brand, audience, niche and tone",
+    "Billing, accounts, notices and terms",
+    "Backlog, approvals, notes and tasks"
+   ],
+   "tier": 2,
+   "why": "BANT is a quick qualification checklist."
+  },
+  {
+   "q": "Which statement about response time and resolution time is correct?",
+   "right": "Response time is how fast the first reply comes, and resolution time is how long the fix takes",
+   "wrong": [
+    "They mean the same thing",
+    "Response time is the time to fix, and resolution time is the time to reply",
+    "Both start only after the issue is fixed"
+   ],
+   "tier": 2,
+   "why": "They measure different points in handling an issue."
+  },
+  {
+   "q": "What does a change order do?",
+   "right": "Records signed approval of a priced scope change",
+   "wrong": [
+    "Reports a bug found in testing",
+    "Replaces the whole statement of work",
+    "Cancels the project"
+   ],
+   "tier": 2,
+   "why": "It makes the extra cost and time agreed in writing."
+  },
+  {
+   "q": "A retainer is best described as:",
+   "right": "A recurring fee that reserves time or availability",
+   "wrong": [
+    "A single payment on completion",
+    "A fee that depends on the result achieved",
+    "A deposit that is refunded at the end"
+   ],
+   "tier": 2,
+   "why": "A retainer buys ongoing access, not a one-off outcome."
+  },
+  {
+   "q": "What is utilisation rate?",
+   "right": "Billable hours as a share of available hours",
+   "wrong": [
+    "Billed amount as a share of the value of time worked",
+    "Profit as a share of revenue",
+    "Hours worked divided by the project budget"
+   ],
+   "tier": 2,
+   "why": "Utilisation shows how much available time earns revenue."
+  },
+  {
+   "q": "Why do acceptance criteria matter in a contract?",
+   "right": "They give an objective test for when a deliverable is accepted",
+   "wrong": [
+    "They set the price of each deliverable",
+    "They limit the provider's liability",
+    "They state how long the contract lasts"
+   ],
+   "tier": 2,
+   "why": "Without them sign-off can become a matter of opinion."
+  },
+  {
+   "q": "Which is true of gross margin versus markup on the same price?",
+   "right": "Margin is calculated on revenue and markup on cost, so the markup percentage is the larger figure",
+   "wrong": [
+    "Markup is calculated on revenue and margin on cost",
+    "They always give the same percentage",
+    "Markup is always smaller than margin"
+   ],
+   "tier": 3,
+   "why": "For a cost of 80 and a price of 100, margin is 20 percent and markup is 25 percent."
+  },
+  {
+   "q": "When is a bottom-up estimate more appropriate than an analogous one?",
+   "right": "When the tasks are known and can be listed individually",
+   "wrong": [
+    "When the project is very unlike anything done before and has no detail",
+    "When the client wants an answer in five minutes",
+    "When the budget is already fixed"
+   ],
+   "tier": 3,
+   "why": "Bottom-up adds task-level estimates and is more accurate when tasks are known."
+  },
+  {
+   "q": "What does a three-point estimate give that a single number does not?",
+   "right": "A view of uncertainty through optimistic, likely and pessimistic values",
+   "wrong": [
+    "A guarantee of the delivery date",
+    "A fixed price",
+    "A way to avoid contingency"
+   ],
+   "tier": 3,
+   "why": "Three values show the spread of the estimate."
+  },
+  {
+   "q": "What makes a contingency buffer different from hidden padding?",
+   "right": "A buffer is visible and managed, while padding is concealed inside task estimates",
+   "wrong": [
+    "A buffer is always larger",
+    "Padding is approved by the client while a buffer is not",
+    "There is no difference"
+   ],
+   "tier": 3,
+   "why": "Visible buffers allow the real risk to be discussed and controlled."
+  },
+  {
+   "q": "For which situation is value-based pricing most suitable?",
+   "right": "A small piece of work that could earn the client many times its cost",
+   "wrong": [
+    "A commodity service compared on price by every buyer",
+    "A job that is paid for at cost with a markup",
+    "A support ticket with a fixed response time"
+   ],
+   "tier": 3,
+   "why": "Value-based pricing depends on a large benefit to the client."
+  },
+  {
+   "q": "What risk does cost-plus pricing carry?",
+   "right": "It ignores the value to the client and can leave money on the table or price out the sale",
+   "wrong": [
+    "It always loses money",
+    "It makes the client carry all delivery risk",
+    "It cannot be used with a fixed fee"
+   ],
+   "tier": 3,
+   "why": "Cost-plus looks inward at cost rather than outward at value."
+  },
+  {
+   "q": "What does capped time and materials protect?",
+   "right": "The client from paying more than an agreed ceiling",
+   "wrong": [
+    "The provider from any overrun",
+    "The client from paying for any hours",
+    "The provider from scope changes"
+   ],
+   "tier": 3,
+   "why": "The cap limits exposure while keeping the flexibility of hourly billing."
+  },
+  {
+   "q": "What does a master services agreement allow?",
+   "right": "Separate statements of work to be added under standing general terms",
+   "wrong": [
+    "A single project to be priced without scope",
+    "The client to skip acceptance testing",
+    "Fixed fees to change automatically"
+   ],
+   "tier": 3,
+   "why": "It saves renegotiating terms for each engagement."
+  },
+  {
+   "q": "What is the purpose of a RACI matrix?",
+   "right": "To show who is responsible, accountable, consulted and informed for each task or decision",
+   "wrong": [
+    "To track hours worked per person",
+    "To record defects found",
+    "To rank clients"
+   ],
+   "tier": 3,
+   "why": "RACI removes confusion about ownership."
+  },
+  {
+   "q": "What is the value of a client health score?",
+   "right": "It combines signals into a rating that flags at-risk accounts early",
+   "wrong": [
+    "It sets the price for renewal",
+    "It records payments received",
+    "It replaces client meetings"
+   ],
+   "tier": 3,
+   "why": "Early flags give time to act before the client leaves."
+  },
+  {
+   "q": "Why add a flow-down clause to a subcontract?",
+   "right": "So the subcontractor is bound by the obligations the provider made to the client",
+   "wrong": [
+    "So the client can contact the subcontractor directly",
+    "So the subcontractor can set its own terms",
+    "So the provider is released from responsibility"
+   ],
+   "tier": 3,
+   "why": "Without it the provider can owe duties that nobody downstream is bound to meet."
+  },
+  {
+   "q": "What is the main difference between a defect and a change?",
+   "right": "A defect fails the agreed specification and is fixed under warranty, while a change adds to the agreed scope",
+   "wrong": [
+    "A defect is always minor and a change is always major",
+    "A change is free and a defect is paid",
+    "They are treated the same way"
+   ],
+   "tier": 4,
+   "why": "The agreed specification decides which it is."
+  },
+  {
+   "q": "What does realisation rate reveal that utilisation does not?",
+   "right": "How much of the time worked was billed at full value",
+   "wrong": [
+    "How many hours were available",
+    "How many clients are active",
+    "How many tickets were closed"
+   ],
+   "tier": 4,
+   "why": "Discounts and write-offs lower realisation even when utilisation is high."
+  },
+  {
+   "q": "What does net revenue retention above 100 percent mean?",
+   "right": "Expansion from existing clients outweighs the revenue lost to churn and downgrades",
+   "wrong": [
+    "No client left",
+    "New clients exceeded the target",
+    "Prices rose for everybody"
+   ],
+   "tier": 4,
+   "why": "It measures the existing client base, not new sales."
+  },
+  {
+   "q": "Why do many providers sell a paid discovery before a large project?",
+   "right": "To scope and estimate an unclear project safely and give the client a usable output",
+   "wrong": [
+    "To collect a deposit without committing to build",
+    "To avoid signing a contract",
+    "To skip the proposal"
+   ],
+   "tier": 4,
+   "why": "It reduces the risk of guessing a price for an unclear scope."
+  },
+  {
+   "q": "What is the main danger of a lowball bid?",
+   "right": "It wins work that loses money or leads to cut quality and fights over every change",
+   "wrong": [
+    "It always loses the tender",
+    "It gives the client too much power",
+    "It breaks confidentiality"
+   ],
+   "tier": 4,
+   "why": "Underpricing pushes pain into delivery."
+  },
+  {
+   "q": "What is the point of concession trading in negotiation?",
+   "right": "A discount or extra is given only in return for something such as longer term or faster payment",
+   "wrong": [
+    "Concessions are offered quickly to close",
+    "Price is never discussed",
+    "The client makes all concessions"
+   ],
+   "tier": 4,
+   "why": "Trading keeps a concession from being a free reduction."
+  },
+  {
+   "q": "What does an indemnity clause do?",
+   "right": "Obliges one party to cover the other's losses from specified claims",
+   "wrong": [
+    "Caps the total fees payable",
+    "Sets the support response time",
+    "States when the contract ends"
+   ],
+   "tier": 5,
+   "why": "It allocates risk for named third-party claims."
+  },
+  {
+   "q": "A lead on a first call refuses to share any goals and asks only for the cheapest price. What should you do first?",
+   "right": "Ask what outcome they want and what budget range they have, and treat it as a possible red flag",
+   "wrong": [
+    "Send your lowest price",
+    "Send a full proposal immediately",
+    "Offer a free month to win them"
+   ],
+   "tier": 2,
+   "why": "Without goals or budget you cannot scope; refusing to share is a warning sign."
+  },
+  {
+   "q": "A client emails asking for an extra feature that is not in the signed scope, and the team lead says 'it's quick, just do it'. What should happen?",
+   "right": "Assess the impact and raise a change request before starting",
+   "wrong": [
+    "Do it silently to keep the client happy",
+    "Refuse and ignore the email",
+    "Start now and invoice at the end of the project"
+   ],
+   "tier": 3,
+   "why": "Change control protects both sides and avoids silent absorption."
+  },
+  {
+   "q": "A fixed-price project is two weeks late because the client has not supplied content. What is your strongest position?",
+   "right": "Point to the client dependency and assumption in the statement of work and agree a revised date or change",
+   "wrong": [
+    "Absorb the cost to avoid conflict",
+    "Stop work without telling the client",
+    "Switch to time and materials without discussion"
+   ],
+   "tier": 3,
+   "why": "A written dependency is the basis for adjusting time or price."
+  },
+  {
+   "q": "A client says the new contact form 'is broken' because it does not send a copy to a second address nobody asked for. How should you classify this?",
+   "right": "As a change, because it adds to the agreed specification",
+   "wrong": [
+    "As a warranty defect to fix free",
+    "As scope creep by the provider",
+    "As gold plating"
+   ],
+   "tier": 3,
+   "why": "The agreed specification determines whether it is a defect."
+  },
+  {
+   "q": "A prospect with a small budget wants a bespoke platform. What is the best response?",
+   "right": "Offer a smaller productised option or a phased scope that fits the budget",
+   "wrong": [
+    "Quote the bespoke price anyway",
+    "Accept the budget and deliver the full platform",
+    "Decline without explanation"
+   ],
+   "tier": 3,
+   "why": "Fitting scope to budget keeps the deal and the margin."
+  },
+  {
+   "q": "A client wants an exact price after a ten-minute call on a vague idea. What is the best response?",
+   "right": "Give a range with stated assumptions, or propose a paid discovery to define scope",
+   "wrong": [
+    "Give one exact fixed price now",
+    "Refuse to give any figure",
+    "Double the price to be safe"
+   ],
+   "tier": 3,
+   "why": "Early estimates need ranges because of the cone of uncertainty."
+  },
+  {
+   "q": "Two of your developers each add a few extra hours to every task 'just in case'. What is the problem?",
+   "right": "The padding is hidden, so the real risk cannot be seen or managed",
+   "wrong": [
+    "The estimates are now exact",
+    "The client will be undercharged",
+    "It saves the project manager time"
+   ],
+   "tier": 3,
+   "why": "Use a visible contingency instead."
+  },
+  {
+   "q": "A client has been quietly receiving small favours from the team for months and now expects them as standard. What should you do?",
+   "right": "Record the extras, show their value and agree whether to charge or include them in a retainer",
+   "wrong": [
+    "Stop all favours immediately without telling them",
+    "Continue forever",
+    "Bill the client for all past favours at once"
+   ],
+   "tier": 3,
+   "why": "Silent absorption sets precedent; make it visible and decide."
+  },
+  {
+   "q": "A client's site went down and the retainer promises a one-hour response. You reply in forty minutes but the fix takes six hours. Was the response level met?",
+   "right": "Yes, the response target was met, though resolution was separate",
+   "wrong": [
+    "No, because the fix took six hours",
+    "No, because the reply was not a fix",
+    "Only if the client agrees"
+   ],
+   "tier": 3,
+   "why": "Response time measures the first reply, not the fix."
+  },
+  {
+   "q": "A white-label partner delivers work with visible errors the day before the deadline. What control would have prevented this?",
+   "right": "A quality gate that reviews partner output before it reaches the client",
+   "wrong": [
+    "A larger contingency in the price",
+    "A longer proposal",
+    "A lower subcontractor margin"
+   ],
+   "tier": 3,
+   "why": "A gate catches partner errors before the client sees them."
+  },
+  {
+   "q": "A fixed-price web project overran and its effective hourly rate is far below the rate card. What should you check first?",
+   "right": "Whether scope grew without change orders and whether the estimate omitted tasks",
+   "wrong": [
+    "Whether the team worked too few hours",
+    "Whether the client paid late",
+    "Whether the rate card is too high"
+   ],
+   "tier": 4,
+   "why": "Overrun on fixed price usually traces to unmanaged scope or missing tasks."
+  },
+  {
+   "q": "A client is paying on time but has stopped joining calls and logging in. What is the best next step?",
+   "right": "Treat it as an early warning signal and contact them to check value and needs",
+   "wrong": [
+    "Wait until they cancel",
+    "Raise their price",
+    "Send the renewal invoice early"
+   ],
+   "tier": 4,
+   "why": "Behaviour change often precedes churn."
+  },
+  {
+   "q": "A key account complains for the third time about missed dates. Normal updates have not helped. What is the strongest response?",
+   "right": "Run a root cause analysis and bring a senior sponsor into a recovery call with a plan",
+   "wrong": [
+    "Send another apology email",
+    "Offer a discount and say nothing more",
+    "Reassign the account without telling them"
+   ],
+   "tier": 4,
+   "why": "Repeated failure needs cause analysis and visible senior commitment."
+  },
+  {
+   "q": "A large buyer insists on its own contract and a security questionnaire for a small web project. Which tier approach fits?",
+   "right": "Treat it as enterprise: involve procurement and review whether the margin covers the extra overhead",
+   "wrong": [
+    "Refuse, because it is not in the catalogue",
+    "Skip the questionnaire to save time",
+    "Accept all terms without review"
+   ],
+   "tier": 4,
+   "why": "Enterprise buyers bring extra process cost that must be priced."
+  },
+  {
+   "q": "A sales colleague offers a client a 20 percent discount unprompted to close a deal. What should you say?",
+   "right": "Trade it for something, such as a longer term or faster payment",
+   "wrong": [
+    "Approve it, since closing matters most",
+    "Reject any discount ever",
+    "Offer 40 percent so the client feels special"
+   ],
+   "tier": 4,
+   "why": "Free discounts teach clients to ask for more."
+  },
+  {
+   "q": "Your only freelancer who understands a client's automation workflow becomes unavailable. Which risk is this?",
+   "right": "Key-person risk",
+   "wrong": [
+    "Scope creep",
+    "Gold plating",
+    "Churn"
+   ],
+   "tier": 4,
+   "why": "Delivery depended on a single individual."
+  },
+  {
+   "q": "A client asks you to guarantee that their new site will double their leads. What is the best response?",
+   "right": "Agree measurable success metrics and what you control, and avoid guaranteeing outcomes outside your control",
+   "wrong": [
+    "Guarantee it to win the work",
+    "Refuse to discuss results",
+    "Say results cannot be measured"
+   ],
+   "tier": 4,
+   "why": "Outcomes depend on factors beyond the provider; metrics should be agreed."
+  },
+  {
+   "q": "A client wants to cancel their monthly retainer two weeks before the term ends. What should you check first?",
+   "right": "The termination and notice terms in the agreement",
+   "wrong": [
+    "Whether the client is allowed to pay less",
+    "The support ticket history only",
+    "The competitor's price list"
+   ],
+   "tier": 4,
+   "why": "The contract decides notice and what is owed."
+  },
+  {
+   "q": "Your team's utilisation is high but profit is falling. Which metric should you look at?",
+   "right": "Realisation rate, to see if work is being discounted or written off",
+   "wrong": [
+    "Churn only",
+    "Number of leads",
+    "Number of tickets"
+   ],
+   "tier": 4,
+   "why": "High hours with low billing points to realisation problems."
+  },
+  {
+   "q": "A client demands a fixed price for an AI-automation project whose data sources are not yet known. What is the safest approach?",
+   "right": "Sell a paid discovery or a capped time-and-materials phase, then fix the price for the remainder",
+   "wrong": [
+    "Quote a fixed price for everything",
+    "Refuse the project",
+    "Quote time and materials with no cap and no review"
+   ],
+   "tier": 4,
+   "why": "Unknowns should be reduced before fixing a price."
+  },
+  {
+   "q": "A subcontractor wants a clause letting them contact your clients directly. What should you do?",
+   "right": "Reject it and include a non-solicitation clause",
+   "wrong": [
+    "Accept, since they are a partner",
+    "Allow it only for small clients",
+    "Ask the client to approve it"
+   ],
+   "tier": 5,
+   "why": "Direct contact would put your client relationship at risk."
+  },
+  {
+   "q": "A client threatens legal action over an outage and claims losses far above the contract fee. Which contract term do you rely on first?",
+   "right": "The limitation of liability",
+   "wrong": [
+    "The payment terms",
+    "The kickoff plan",
+    "The service catalogue"
+   ],
+   "tier": 5,
+   "why": "The cap defines the maximum damages that can be claimed."
+  },
+  {
+   "q": "A client's contract is up for renewal. Net revenue retention is above 100 percent but several small accounts left. What does this suggest?",
+   "right": "Larger accounts expanded enough to offset the loss, so check why small accounts leave",
+   "wrong": [
+    "Churn is no longer a concern",
+    "Prices are too high everywhere",
+    "Support is performing perfectly"
+   ],
+   "tier": 5,
+   "why": "A healthy aggregate can hide a segment problem."
+  },
+  {
+   "q": "A client says their SLA was breached after a planned weekend maintenance window took the site offline for two hours. What do you check?",
+   "right": "Whether the agreed maintenance window is excluded from the uptime commitment",
+   "wrong": [
+    "Whether the client was happy",
+    "Whether the site is fast",
+    "Whether the invoice was paid"
+   ],
+   "tier": 3,
+   "why": "Agreed maintenance windows are normally excluded from availability."
+  },
+  {
+   "q": "A client asks which package fits a start-up that wants to test its idea cheaply. Which catalogue concept helps?",
+   "right": "A free or semi-free tier to build trust before a paid package",
+   "wrong": [
+    "An enterprise tier",
+    "A custom tier with negotiated terms",
+    "A lowball bid"
+   ],
+   "tier": 2,
+   "why": "A free entry offer lets the client try before committing."
+  }
+ ]
+}
