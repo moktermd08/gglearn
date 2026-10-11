@@ -15,17 +15,29 @@ export const LEVEL_SPREAD = 2;
 const DAY = 86400;
 
 let tablesReady = false;
+
+/** Is this the database saying the table is not there (as opposed to being busy, locked or broken)? Drizzle may wrap the driver's error. */
+export function isMissingTable(err: unknown): boolean {
+  for (let e: unknown = err, i = 0; e && i < 4; e = (e as { cause?: unknown }).cause, i++) {
+    if (/no such table/i.test(String((e as { message?: unknown }).message ?? ""))) return true;
+  }
+  return false;
+}
+
 /**
  * Are the role check tables there? They arrive with `npm run db:push`. Until then nobody can take a check, so nothing may
- * depend on one: promotion is not held for it, and pages that mention it stay quiet instead of failing.
+ * depend on one: promotion is not held for it, and pages that mention it stay quiet instead of failing. Only a missing table
+ * counts: any other error (busy, locked, broken) is rethrown, because treating it as "no tables" would silently drop the
+ * requirement and let people be promoted without a check.
  */
 export function roleExamsAvailable(): boolean {
   if (tablesReady) return true;
   try {
     db.select({ id: roleExams.id }).from(roleExams).limit(1).all();
     return (tablesReady = true);
-  } catch {
-    return false;
+  } catch (err) {
+    if (isMissingTable(err)) return false;
+    throw err;
   }
 }
 
