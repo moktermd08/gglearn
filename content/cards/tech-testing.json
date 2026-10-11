@@ -1,0 +1,2977 @@
+{
+ "slug": "tech-testing",
+ "name": "Technologies: testing",
+ "description": "Playwright, Jest, test strategy.",
+ "roles": "developer",
+ "kind": "technology",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "runner": "test runner or framework",
+  "btool": "browser testing tool",
+  "btech": "browser test technique",
+  "comp": "component testing tool or query",
+  "api": "API testing tool or approach",
+  "mock": "mocking tool or technique",
+  "snap": "snapshot or visual testing concept",
+  "cov": "coverage tool or setting",
+  "feat": "test runner feature",
+  "data": "test data or test database technique",
+  "a11y": "accessibility testing tool",
+  "load": "load testing tool or concept",
+  "ci": "CI test integration practice",
+  "gg": "GG testing setup"
+ },
+ "cards": [
+  {
+   "group": "runner",
+   "subject": "Jest",
+   "tier": 1,
+   "says": [
+    "bundles its own assertions, mocking and coverage in one package",
+    "runs test files in parallel worker processes and is configured through a jest.config file"
+   ],
+   "use": "want a batteries-included runner for a JavaScript project that is not built on Vite",
+   "not": [
+    "needs a separate assertion library such as Chai before any test can run"
+   ],
+   "like": [
+    "Vitest",
+    "Mocha"
+   ]
+  },
+  {
+   "group": "runner",
+   "subject": "Vitest",
+   "tier": 1,
+   "says": [
+    "reuses the Vite configuration and transform pipeline for its tests",
+    "exposes a Jest-compatible API through the vi helper"
+   ],
+   "use": "already build with Vite and want tests to share that configuration",
+   "not": [
+    "can only run tests that were written for a browser"
+   ],
+   "like": [
+    "Jest",
+    "Mocha"
+   ]
+  },
+  {
+   "group": "runner",
+   "subject": "Mocha",
+   "tier": 2,
+   "says": [
+    "provides test structure and a runner but leaves assertions and mocking to other libraries",
+    "is commonly paired with Chai for assertions and Sinon for spies"
+   ],
+   "use": "want a minimal runner and prefer to pick your own assertion library",
+   "not": [
+    "bundles its own mocking library"
+   ],
+   "like": [
+    "Jest",
+    "Vitest"
+   ]
+  },
+  {
+   "group": "runner",
+   "subject": "Node's built-in test runner",
+   "tier": 2,
+   "says": [
+    "is started with node --test and needs no installed package",
+    "provides test, describe and it through the node:test module"
+   ],
+   "use": "want tests for a small Node project without adding any dependency",
+   "not": [
+    "requires Babel to run ES modules"
+   ],
+   "like": [
+    "Jest",
+    "Mocha"
+   ]
+  },
+  {
+   "group": "runner",
+   "subject": "pytest",
+   "tier": 1,
+   "says": [
+    "discovers functions named test_* and checks them with plain assert statements",
+    "injects setup values into tests through fixtures named as arguments"
+   ],
+   "use": "write Python tests and want readable asserts and reusable fixtures",
+   "not": [
+    "requires every test to be a method on a class that inherits from TestCase"
+   ],
+   "like": [
+    "JUnit",
+    "PHPUnit"
+   ]
+  },
+  {
+   "group": "runner",
+   "subject": "JUnit",
+   "tier": 2,
+   "says": [
+    "is the standard unit testing framework for Java",
+    "marks test methods with the @Test annotation"
+   ],
+   "use": "test a Java or Kotlin service on the JVM",
+   "not": [
+    "is the main test framework for Python projects"
+   ],
+   "like": [
+    "PHPUnit",
+    "pytest"
+   ]
+  },
+  {
+   "group": "runner",
+   "subject": "PHPUnit",
+   "tier": 2,
+   "says": [
+    "is the most widely used unit testing framework for PHP",
+    "has tests extend a TestCase class and call assertion methods on it"
+   ],
+   "use": "test PHP application code with a conventional xUnit framework",
+   "not": [
+    "runs tests written as JavaScript describe and it blocks"
+   ],
+   "like": [
+    "JUnit",
+    "pytest"
+   ]
+  },
+  {
+   "group": "runner",
+   "subject": "Go's testing package",
+   "tier": 2,
+   "says": [
+    "runs functions named TestXxx when go test is invoked",
+    "ships in the standard library, so no third-party runner is needed"
+   ],
+   "use": "write unit tests for a Go package",
+   "not": [
+    "requires an external assertion library to compare any two values"
+   ],
+   "like": [
+    "pytest",
+    "JUnit"
+   ]
+  },
+  {
+   "group": "btool",
+   "subject": "Playwright",
+   "tier": 1,
+   "says": [
+    "drives Chromium, Firefox and WebKit through one API",
+    "gives every test its own isolated browser context",
+    "records traces that can be replayed step by step"
+   ],
+   "use": "need cross-browser end-to-end tests with built-in tracing",
+   "not": [
+    "runs the test code inside the browser alongside the application"
+   ],
+   "like": [
+    "Cypress",
+    "Puppeteer",
+    "Selenium WebDriver"
+   ]
+  },
+  {
+   "group": "btool",
+   "subject": "Cypress",
+   "tier": 1,
+   "says": [
+    "runs the test code inside the browser alongside the application",
+    "retries queries and assertions automatically until they pass or time out",
+    "reruns tests in an interactive runner as files change"
+   ],
+   "use": "want to watch and debug front-end tests live in the browser as you write them",
+   "not": [
+    "controls the browser from a separate process over the WebDriver protocol"
+   ],
+   "like": [
+    "Playwright",
+    "Selenium WebDriver"
+   ]
+  },
+  {
+   "group": "btool",
+   "subject": "Selenium WebDriver",
+   "tier": 2,
+   "says": [
+    "controls browsers through the W3C WebDriver protocol",
+    "has client bindings for Java, Python, C# and other languages"
+   ],
+   "use": "already have a large end-to-end suite in a language such as Java",
+   "not": [
+    "records traces and videos of every run by default"
+   ],
+   "like": [
+    "Playwright",
+    "Appium"
+   ]
+  },
+  {
+   "group": "btool",
+   "subject": "Puppeteer",
+   "tier": 2,
+   "says": [
+    "is a Node library that automates a browser for screenshots, PDFs and scraping as well as testing",
+    "does not provide a test runner or assertion library of its own"
+   ],
+   "use": "need to script a browser from Node for PDF generation or screenshots",
+   "not": [
+    "comes with a built-in assertion and reporting system"
+   ],
+   "like": [
+    "Playwright",
+    "Cypress"
+   ]
+  },
+  {
+   "group": "btool",
+   "subject": "Appium",
+   "tier": 2,
+   "says": [
+    "automates native and hybrid mobile apps using the WebDriver protocol",
+    "drives iOS and Android devices or emulators from the same style of test script"
+   ],
+   "use": "need automated tests of a native mobile app",
+   "not": [
+    "can only test web pages in desktop browsers"
+   ],
+   "like": [
+    "Selenium WebDriver"
+   ]
+  },
+  {
+   "group": "btool",
+   "subject": "A headless browser",
+   "tier": 1,
+   "says": [
+    "runs without a visible window",
+    "is how browser tests normally run on a CI server"
+   ],
+   "use": "run end-to-end tests on a machine with no display",
+   "not": [
+    "cannot execute JavaScript"
+   ],
+   "like": [
+    "Puppeteer"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "Auto-waiting",
+   "tier": 1,
+   "says": [
+    "makes an action wait until the element is visible, enabled and stable before it acts",
+    "removes most of the need for fixed sleeps in browser tests"
+   ],
+   "use": "see clicks fail because the element had not finished rendering",
+   "not": [
+    "is turned on by adding a long timeout to every test"
+   ],
+   "like": [
+    "A web-first assertion"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "A web-first assertion",
+   "tier": 2,
+   "says": [
+    "retries the check until the condition holds or the timeout expires",
+    "is written as await expect(locator).toBeVisible() rather than reading a boolean first"
+   ],
+   "use": "need an assertion that tolerates a page that updates asynchronously",
+   "not": [
+    "reads the value once and fails immediately if it is not yet true"
+   ],
+   "like": [
+    "Auto-waiting"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "A role-based locator",
+   "tier": 2,
+   "says": [
+    "finds an element by its accessible role and name such as a button called Save",
+    "keeps tests aligned with what assistive technology exposes"
+   ],
+   "use": "want selectors that survive CSS refactors and double as an accessibility check",
+   "not": [
+    "is tied to the nesting of div elements on the page"
+   ],
+   "like": [
+    "A test id attribute",
+    "A brittle CSS or XPath selector"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "A test id attribute",
+   "tier": 2,
+   "says": [
+    "adds a data attribute such as data-testid used only to find the element",
+    "stays stable when visible text or styling changes"
+   ],
+   "use": "have no accessible role or label that identifies the element uniquely",
+   "not": [
+    "is read aloud by screen readers"
+   ],
+   "like": [
+    "A role-based locator"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "A brittle CSS or XPath selector",
+   "tier": 3,
+   "says": [
+    "is tied to page structure so it breaks when a wrapper element is added",
+    "is the usual reason a selector fails after an unrelated layout change"
+   ],
+   "use": "hear that a test broke after a purely visual refactor",
+   "not": [
+    "is the most resilient way to find an element"
+   ],
+   "like": [
+    "A role-based locator",
+    "A test id attribute"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "A page object",
+   "tier": 3,
+   "says": [
+    "wraps a page's locators and actions in a class so tests read as intent",
+    "puts selector changes in one place instead of every test"
+   ],
+   "use": "find the same ten selectors repeated across many end-to-end tests",
+   "not": [
+    "hides assertions so that tests contain no expectations at all"
+   ],
+   "like": [
+    "Stored authentication state"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "Network interception",
+   "tier": 3,
+   "says": [
+    "stubs or observes the HTTP requests the page makes, for example with page.route",
+    "lets a test force an error response without breaking the real backend"
+   ],
+   "use": "need to test how the interface shows a failed API call",
+   "not": [
+    "slows the browser to simulate a bad connection and nothing else"
+   ],
+   "like": [
+    "A browser context"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "Stored authentication state",
+   "tier": 5,
+   "says": [
+    "saves cookies and local storage after one login so later tests start already signed in",
+    "removes repeated UI logins from the run time of a large suite"
+   ],
+   "use": "see hundreds of tests each spend seconds on the login screen",
+   "not": [
+    "shares one live browser session between all parallel tests"
+   ],
+   "like": [
+    "A browser context"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "A browser context",
+   "tier": 2,
+   "says": [
+    "is an isolated profile with its own cookies, storage and session",
+    "is much cheaper to create than launching a new browser"
+   ],
+   "use": "need two different users in one test without them sharing a session",
+   "not": [
+    "is the same thing as a browser tab"
+   ],
+   "like": [
+    "Stored authentication state"
+   ]
+  },
+  {
+   "group": "btech",
+   "subject": "A trace file",
+   "tier": 3,
+   "says": [
+    "records actions, DOM snapshots, console output and network calls for a run",
+    "lets you debug a CI failure after the machine is gone"
+   ],
+   "use": "need to understand why a test failed only on the CI server",
+   "not": [
+    "is a plain text log with no page snapshots"
+   ],
+   "like": [
+    "A headless browser"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "React Testing Library",
+   "tier": 1,
+   "says": [
+    "renders components into a DOM and queries them the way a user would",
+    "discourages asserting on internal state and implementation details"
+   ],
+   "use": "test what a React component shows and does for the user",
+   "not": [
+    "gives direct access to a component's state through a wrapper object"
+   ],
+   "like": [
+    "jsdom",
+    "user-event"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "jsdom",
+   "tier": 1,
+   "says": [
+    "implements the DOM in Node so component tests run without a real browser",
+    "does not perform layout, so element sizes and positions are meaningless"
+   ],
+   "use": "run component tests quickly inside Node",
+   "not": [
+    "renders pixels that can be compared against screenshots"
+   ],
+   "like": [
+    "happy-dom"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "happy-dom",
+   "tier": 3,
+   "says": [
+    "emulates the browser DOM in Node with an emphasis on speed over completeness",
+    "is chosen as a lighter alternative when jsdom is too slow"
+   ],
+   "use": "find the DOM environment is a bottleneck in a large component suite",
+   "not": [
+    "runs the real browser engine under the hood"
+   ],
+   "like": [
+    "jsdom"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "user-event",
+   "tier": 2,
+   "says": [
+    "simulates a whole interaction such as typing with the events a browser would fire",
+    "is awaited because its methods are asynchronous"
+   ],
+   "use": "want a click or keystroke to behave like a real user's",
+   "not": [
+    "dispatches one raw DOM event and nothing else"
+   ],
+   "like": [
+    "fireEvent"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "fireEvent",
+   "tier": 2,
+   "says": [
+    "dispatches a single DOM event directly without simulating the surrounding interaction",
+    "skips events such as focus and keydown that a real user would also trigger"
+   ],
+   "use": "need to trigger one specific low-level event",
+   "not": [
+    "types text one character at a time with realistic key events"
+   ],
+   "like": [
+    "user-event"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A getBy query",
+   "tier": 1,
+   "says": [
+    "throws immediately when no element or more than one element matches",
+    "suits asserting that an element is present right now"
+   ],
+   "use": "expect an element to already be in the document",
+   "not": [
+    "returns null when nothing matches"
+   ],
+   "like": [
+    "A queryBy query",
+    "A findBy query"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A queryBy query",
+   "tier": 2,
+   "says": [
+    "returns null when nothing matches instead of throwing",
+    "suits asserting that an element is absent"
+   ],
+   "use": "need to prove that a message is not displayed",
+   "not": [
+    "waits for the element to appear"
+   ],
+   "like": [
+    "A getBy query",
+    "A findBy query"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A findBy query",
+   "tier": 2,
+   "says": [
+    "returns a promise that resolves once the element appears",
+    "fails after a timeout if the element never shows up"
+   ],
+   "use": "expect an element to appear after a data fetch finishes",
+   "not": [
+    "throws immediately if the element is missing at call time"
+   ],
+   "like": [
+    "A getBy query",
+    "waitFor"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "waitFor",
+   "tier": 3,
+   "says": [
+    "retries a callback until it stops throwing or a timeout passes",
+    "is used to assert on a result that appears after asynchronous work"
+   ],
+   "use": "need a custom condition that no single query expresses",
+   "not": [
+    "pauses the test for a fixed number of milliseconds"
+   ],
+   "like": [
+    "A findBy query"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "act",
+   "tier": 4,
+   "says": [
+    "flushes pending React state updates and effects before assertions run",
+    "produces a warning when state changes happen outside it during a test"
+   ],
+   "use": "see a warning that an update was not wrapped",
+   "not": [
+    "makes asynchronous code synchronous permanently"
+   ],
+   "like": [
+    "waitFor"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "jest-dom matchers",
+   "tier": 2,
+   "says": [
+    "add assertions such as toBeInTheDocument and toBeDisabled for DOM nodes",
+    "make failures read in terms of the page rather than raw properties"
+   ],
+   "use": "want readable assertions about DOM state",
+   "not": [
+    "replace the need for any query function"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "supertest",
+   "tier": 2,
+   "says": [
+    "sends HTTP requests to a Node server in process and asserts on the response",
+    "binds the app to an ephemeral port, so no server needs to be started separately"
+   ],
+   "use": "want to test Express routes without deploying or listening on a fixed port",
+   "not": [
+    "drives a real browser to click through pages"
+   ],
+   "like": [
+    "A framework test client",
+    "A black-box API test"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "A framework test client",
+   "tier": 2,
+   "says": [
+    "calls the application's routes without opening a network socket",
+    "is provided by frameworks such as Django and Laravel for request-level tests"
+   ],
+   "use": "want request tests that skip the web server entirely",
+   "not": [
+    "requires the app to be deployed to a staging host"
+   ],
+   "like": [
+    "supertest"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "A black-box API test",
+   "tier": 3,
+   "says": [
+    "calls a deployed environment over the real network",
+    "exercises routing, TLS and infrastructure that in-process tests skip"
+   ],
+   "use": "need to confirm a deployed service answers correctly after a release",
+   "not": [
+    "inspects the application's internal functions directly"
+   ],
+   "like": [
+    "supertest",
+    "A framework test client"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "Pact",
+   "tier": 5,
+   "says": [
+    "records what a consumer expects from a provider as a contract file",
+    "lets the provider verify that contract in its own pipeline"
+   ],
+   "use": "want a provider team to learn before deploying that a change breaks a consumer",
+   "not": [
+    "load tests an API with many virtual users"
+   ],
+   "like": [
+    "Response schema validation"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "Response schema validation",
+   "tier": 3,
+   "says": [
+    "checks that real responses conform to the documented schema such as an OpenAPI definition",
+    "catches a field that was renamed or changed type"
+   ],
+   "use": "suspect the implementation has drifted from the published API description",
+   "not": [
+    "verifies that the provider meets each consumer's specific expectations"
+   ],
+   "like": [
+    "Pact"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "Newman",
+   "tier": 2,
+   "says": [
+    "runs a Postman collection from the command line",
+    "lets a collection created in a GUI run as a CI step"
+   ],
+   "use": "need to run an existing Postman collection in a pipeline",
+   "not": [
+    "compiles Postman scripts into a native binary for load tests"
+   ],
+   "like": [
+    "REST Assured"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "REST Assured",
+   "tier": 4,
+   "says": [
+    "is a Java library with a given-when-then DSL for testing REST services",
+    "lets a JVM team assert on status, headers and JSON paths fluently"
+   ],
+   "use": "test a REST service from Java code with readable assertions",
+   "not": [
+    "is a Node library that binds an Express app to a port"
+   ],
+   "like": [
+    "supertest",
+    "Newman"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "A negative API test",
+   "tier": 3,
+   "says": [
+    "sends malformed, unauthorised or forbidden requests and expects a 4xx response",
+    "proves the endpoint rejects what it should reject"
+   ],
+   "use": "want proof that a protected route refuses a caller with no token",
+   "not": [
+    "only repeats the happy-path request with different data"
+   ],
+   "like": [
+    "A black-box API test"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "An OpenAPI mock server",
+   "tier": 4,
+   "says": [
+    "answers requests with example responses generated from the specification",
+    "lets front-end work start before the backend exists"
+   ],
+   "use": "need a stand-in API while the real one is not built",
+   "not": [
+    "records live traffic and replays it later"
+   ],
+   "like": [
+    "Pact"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "A mock function",
+   "tier": 1,
+   "says": [
+    "records its calls, arguments and return values",
+    "can be given a return value or implementation per test, for example with vi.fn or jest.fn"
+   ],
+   "use": "need to assert that a callback was called with specific arguments",
+   "not": [
+    "replaces a whole imported module"
+   ],
+   "like": [
+    "A module mock",
+    "A spy on a method"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "A spy on a method",
+   "tier": 2,
+   "says": [
+    "wraps an existing method so calls are recorded while the original can still run",
+    "can be put back with mockRestore"
+   ],
+   "use": "want to watch a real method without replacing it permanently",
+   "not": [
+    "replaces every export of a module at import time"
+   ],
+   "like": [
+    "A mock function",
+    "A module mock"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "A module mock",
+   "tier": 2,
+   "says": [
+    "replaces an imported module for the whole test file, for example with vi.mock or jest.mock",
+    "is hoisted above the import statements"
+   ],
+   "use": "need every import of a dependency to be replaced for a file",
+   "not": [
+    "only affects one call of one function"
+   ],
+   "like": [
+    "A mock function",
+    "A manual mock in __mocks__"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "A manual mock in __mocks__",
+   "tier": 4,
+   "says": [
+    "lives in a __mocks__ folder next to the module it replaces",
+    "is picked up when the module mock is requested for that path"
+   ],
+   "use": "want one reusable stand-in for a module shared by many tests",
+   "not": [
+    "is generated automatically by the runner from the real code"
+   ],
+   "like": [
+    "A module mock"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "Sinon",
+   "tier": 3,
+   "says": [
+    "is a standalone library of spies, stubs and fake timers that works with any runner",
+    "provides a sandbox that restores everything in one call"
+   ],
+   "use": "use Mocha and need test doubles from a separate library",
+   "not": [
+    "is the mocking system built into Jest"
+   ],
+   "like": [
+    "Mock Service Worker",
+    "nock"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "Mock Service Worker",
+   "tier": 3,
+   "says": [
+    "intercepts requests at the network layer so application code stays unchanged",
+    "uses the same request handlers in the browser and in Node"
+   ],
+   "use": "want API mocks that work for both tests and local development",
+   "not": [
+    "patches the fetch function inside each component"
+   ],
+   "like": [
+    "nock"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "nock",
+   "tier": 2,
+   "says": [
+    "intercepts outgoing HTTP calls in Node and replies with canned responses",
+    "can fail a test that makes an unexpected request when networking is disabled"
+   ],
+   "use": "test Node code that calls a third-party HTTP API",
+   "not": [
+    "intercepts requests in a browser service worker"
+   ],
+   "like": [
+    "Mock Service Worker"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "Fake timers",
+   "tier": 2,
+   "says": [
+    "replace setTimeout and Date so the test moves time forward by hand",
+    "make a one-second timeout testable without waiting"
+   ],
+   "use": "need to test a debounce or a retry delay quickly",
+   "not": [
+    "slow the real clock down"
+   ],
+   "like": [
+    "A mock function"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "mockClear",
+   "tier": 3,
+   "says": [
+    "resets recorded calls and results while keeping the configured implementation",
+    "is what stops one test's call counts leaking into the next"
+   ],
+   "use": "see call counts from an earlier test affecting assertions",
+   "not": [
+    "restores the original implementation of a spied method"
+   ],
+   "like": [
+    "A spy on a method"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "Dependency injection for tests",
+   "tier": 4,
+   "says": [
+    "passes collaborators in as parameters so a test can supply fakes without patching modules",
+    "reduces the need for module-level mocking"
+   ],
+   "use": "find tests that need heavy module mocking just to replace one client",
+   "not": [
+    "requires a mocking framework to function"
+   ],
+   "like": [
+    "A module mock"
+   ]
+  },
+  {
+   "group": "mock",
+   "subject": "Over-mocking",
+   "tier": 5,
+   "says": [
+    "produces tests that mirror the implementation and pass while the real integration is broken",
+    "hides defects in SQL, serialisation and wiring"
+   ],
+   "use": "see unit tests pass while a production bug in a database query ships",
+   "not": [
+    "makes tests slower than using real dependencies"
+   ],
+   "like": [
+    "A mock function"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "toMatchSnapshot",
+   "tier": 1,
+   "says": [
+    "stores serialised output in a .snap file on the first run and compares against it later",
+    "produces a stored file that is reviewed in a pull request like code"
+   ],
+   "use": "want to detect any unexpected change to a large rendered output",
+   "not": [
+    "writes the expected value into the test source file"
+   ],
+   "like": [
+    "toMatchInlineSnapshot"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "toMatchInlineSnapshot",
+   "tier": 3,
+   "says": [
+    "writes the expected value into the test source itself",
+    "keeps the expectation next to the assertion for a short output"
+   ],
+   "use": "want a small snapshot visible in the test without opening another file",
+   "not": [
+    "stores the output in a separate .snap file"
+   ],
+   "like": [
+    "toMatchSnapshot"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "The snapshot update flag",
+   "tier": 3,
+   "says": [
+    "rewrites stored snapshots with the current output when passed to the runner",
+    "should be used only after reading the diff"
+   ],
+   "use": "have intentionally changed output and need to accept the new snapshot",
+   "not": [
+    "deletes tests whose snapshots fail"
+   ],
+   "like": [
+    "An obsolete snapshot"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "An obsolete snapshot",
+   "tier": 4,
+   "says": [
+    "is a stored snapshot that no test uses any more",
+    "is reported by the runner and can be removed with the update flag"
+   ],
+   "use": "see a report of snapshots left over from a deleted test",
+   "not": [
+    "is a snapshot that fails because output changed"
+   ],
+   "like": [
+    "The snapshot update flag"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "A snapshot property matcher",
+   "tier": 4,
+   "says": [
+    "lets non-deterministic fields such as ids and dates match by type",
+    "keeps generated values from failing the snapshot on every run"
+   ],
+   "use": "see a snapshot fail only because a timestamp changed",
+   "not": [
+    "freezes the system clock for the whole suite"
+   ],
+   "like": [
+    "toMatchSnapshot"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "A snapshot serializer",
+   "tier": 5,
+   "says": [
+    "controls how a value is converted to text before it is stored",
+    "can hide noise or format custom objects readably"
+   ],
+   "use": "need class instances or generated names to appear stably in snapshots",
+   "not": [
+    "compares two snapshot files line by line"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "A giant snapshot",
+   "tier": 4,
+   "says": [
+    "is approved without being read, so it stops catching defects",
+    "fails for so many unrelated reasons that people update it blindly"
+   ],
+   "use": "hear that a team updates snapshots without reviewing them",
+   "not": [
+    "is the best way to check precise behaviour of one function"
+   ],
+   "like": [
+    "toMatchSnapshot"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "A screenshot assertion",
+   "tier": 3,
+   "says": [
+    "compares a rendered page with a stored baseline image and fails above a pixel tolerance",
+    "is available in Playwright as toHaveScreenshot"
+   ],
+   "use": "want to catch an unintended visual change that DOM checks miss",
+   "not": [
+    "compares the serialised DOM tree to a .snap file"
+   ],
+   "like": [
+    "A baseline screenshot"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "Storybook",
+   "tier": 3,
+   "says": [
+    "renders components in isolation as stories",
+    "gives visual and accessibility tools a stable set of states to test"
+   ],
+   "use": "want each component state available to visual regression tools",
+   "not": [
+    "is a replacement for the unit test runner"
+   ],
+   "like": [
+    "BackstopJS"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "BackstopJS",
+   "tier": 4,
+   "says": [
+    "runs screenshot comparisons driven by a scenario configuration file",
+    "produces a report that shows reference, test and difference images"
+   ],
+   "use": "want a standalone visual regression tool configured by scenarios",
+   "not": [
+    "renders components from stories in isolation"
+   ],
+   "like": [
+    "Storybook"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "Masking dynamic regions",
+   "tier": 4,
+   "says": [
+    "hides areas such as dates, ads and avatars before a screenshot is compared",
+    "cuts false alarms in visual tests"
+   ],
+   "use": "see visual diffs fail every run because of a rotating banner",
+   "not": [
+    "raises the allowed pixel difference for the entire page"
+   ],
+   "like": [
+    "A baseline screenshot"
+   ]
+  },
+  {
+   "group": "snap",
+   "subject": "A baseline screenshot",
+   "tier": 3,
+   "says": [
+    "is the approved image a later capture is compared with",
+    "should be generated in the same environment that will run the comparison"
+   ],
+   "use": "see visual tests pass locally and fail in CI because of font rendering",
+   "not": [
+    "is regenerated automatically on every run"
+   ],
+   "like": [
+    "A screenshot assertion"
+   ]
+  },
+  {
+   "group": "cov",
+   "subject": "Istanbul",
+   "tier": 2,
+   "says": [
+    "instruments source code to count executed statements, branches and functions",
+    "is the instrumentation behind the nyc command-line tool"
+   ],
+   "use": "need coverage from code instrumented before it runs",
+   "not": [
+    "reads coverage data that the JavaScript engine collects natively"
+   ],
+   "like": [
+    "V8 coverage"
+   ]
+  },
+  {
+   "group": "cov",
+   "subject": "V8 coverage",
+   "tier": 3,
+   "says": [
+    "collects coverage natively from the JavaScript engine without rewriting the code",
+    "is available through the coverage provider setting in modern runners"
+   ],
+   "use": "want coverage with less overhead and no instrumentation step",
+   "not": [
+    "adds counters to the source before it runs"
+   ],
+   "like": [
+    "Istanbul"
+   ]
+  },
+  {
+   "group": "cov",
+   "subject": "An lcov report",
+   "tier": 3,
+   "says": [
+    "is a text format read by IDE plugins and coverage services",
+    "lists hit counts per line, function and branch for each file"
+   ],
+   "use": "need to upload coverage to an external reporting service",
+   "not": [
+    "is a human-friendly HTML page with colours"
+   ],
+   "like": [
+    "An HTML coverage report"
+   ]
+  },
+  {
+   "group": "cov",
+   "subject": "An HTML coverage report",
+   "tier": 1,
+   "says": [
+    "highlights covered and uncovered lines in each source file",
+    "is opened in a browser to find what a test run missed"
+   ],
+   "use": "want to see exactly which branches no test touched",
+   "not": [
+    "is the format coverage services ingest"
+   ],
+   "like": [
+    "An lcov report"
+   ]
+  },
+  {
+   "group": "cov",
+   "subject": "A coverage threshold",
+   "tier": 3,
+   "says": [
+    "fails the run when a percentage falls below a configured value",
+    "turns coverage from a report into a gate"
+   ],
+   "use": "want a pull request blocked if coverage drops below the agreed level",
+   "not": [
+    "adds tests automatically until the number is reached"
+   ],
+   "like": [
+    "Diff coverage"
+   ]
+  },
+  {
+   "group": "cov",
+   "subject": "Diff coverage",
+   "tier": 3,
+   "says": [
+    "measures coverage only on the lines changed in a pull request",
+    "stops a good overall number from hiding untested new code"
+   ],
+   "use": "find new code is untested while the project total stays high",
+   "not": [
+    "counts every file in the repository equally"
+   ],
+   "like": [
+    "A coverage threshold"
+   ]
+  },
+  {
+   "group": "cov",
+   "subject": "Coverage include patterns",
+   "tier": 4,
+   "says": [
+    "decide which source files are counted, including files no test imports",
+    "stop untested files from being left out of the percentage"
+   ],
+   "use": "see a high coverage number while many source files are never imported",
+   "not": [
+    "exclude generated files from the test run"
+   ]
+  },
+  {
+   "group": "cov",
+   "subject": "Stryker",
+   "tier": 4,
+   "says": [
+    "is a mutation testing framework for JavaScript and TypeScript",
+    "changes operators in the code and checks whether any test fails"
+   ],
+   "use": "want to know whether tests would notice a changed condition",
+   "not": [
+    "measures which lines a test executes"
+   ],
+   "like": [
+    "PIT"
+   ]
+  },
+  {
+   "group": "cov",
+   "subject": "PIT",
+   "tier": 5,
+   "says": [
+    "is a mutation testing system for Java",
+    "reports mutants that survived because no test failed"
+   ],
+   "use": "want mutation scores for a JVM codebase",
+   "not": [
+    "is a JavaScript coverage instrumenter"
+   ],
+   "like": [
+    "Stryker"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "Watch mode",
+   "tier": 1,
+   "says": [
+    "reruns tests related to changed files whenever you save",
+    "gives fast feedback while developing"
+   ],
+   "use": "want the relevant tests to rerun on every save",
+   "not": [
+    "runs the whole suite once and exits with a status code"
+   ],
+   "like": [
+    "The CI environment flag"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "Filtering tests by name",
+   "tier": 1,
+   "says": [
+    "runs only the tests whose names match a pattern, for example with -t",
+    "is useful when debugging one failing case"
+   ],
+   "use": "need to run one failing test without the rest of the suite",
+   "not": [
+    "skips tests whose names match a pattern permanently"
+   ],
+   "like": [
+    "A focused test"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "A focused test",
+   "tier": 3,
+   "says": [
+    "is marked with only so the runner executes it and skips the others in the file",
+    "must never be committed because it silently disables the rest"
+   ],
+   "use": "find a suite that passes in CI but runs one test",
+   "not": [
+    "is reported as a to-do and never run"
+   ],
+   "like": [
+    "Filtering tests by name"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "Parallel workers",
+   "tier": 3,
+   "says": [
+    "run test files in separate processes or threads",
+    "speed up a suite but expose shared-state problems"
+   ],
+   "use": "see a suite get faster but start failing intermittently",
+   "not": [
+    "run the tests inside one file strictly in sequence"
+   ],
+   "like": [
+    "Test sharding"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "Test sharding",
+   "tier": 3,
+   "says": [
+    "splits the test files across several machines or jobs",
+    "is selected with a flag such as --shard=2/4"
+   ],
+   "use": "need to cut CI time by spreading the suite over runners",
+   "not": [
+    "runs files in several threads on one machine"
+   ],
+   "like": [
+    "Parallel workers"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "A setup file",
+   "tier": 3,
+   "says": [
+    "runs before each test file to register matchers or global mocks",
+    "keeps shared test configuration out of individual tests"
+   ],
+   "use": "want custom matchers available in every test file",
+   "not": [
+    "runs once before the whole run starts"
+   ],
+   "like": [
+    "A global setup"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "A global setup",
+   "tier": 3,
+   "says": [
+    "runs once before the entire test run, for example to start a database",
+    "can export a teardown that runs after the last test"
+   ],
+   "use": "need one expensive resource started once for the full suite",
+   "not": [
+    "runs again before every test file"
+   ],
+   "like": [
+    "A setup file"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "A test timeout",
+   "tier": 1,
+   "says": [
+    "fails a test that takes longer than the configured limit",
+    "prevents a hung promise from stalling the run forever"
+   ],
+   "use": "see a test hang waiting for a promise that never resolves",
+   "not": [
+    "pauses a test until a condition becomes true"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "A reporter",
+   "tier": 3,
+   "says": [
+    "formats results as dots, a tree, JUnit XML or JSON",
+    "is how CI systems read test results"
+   ],
+   "use": "need results in a format a CI dashboard can parse",
+   "not": [
+    "decides which tests run"
+   ],
+   "like": [
+    "The CI environment flag"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "A retry on failure setting",
+   "tier": 5,
+   "says": [
+    "reruns a failing test and can mark it flaky if a retry passes",
+    "hides instability unless the passed-on-retry tests are reported"
+   ],
+   "use": "see failures vanish after being rerun",
+   "not": [
+    "fixes the root cause of a race condition"
+   ],
+   "like": [
+    "Bail"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "Bail",
+   "tier": 4,
+   "says": [
+    "stops the run after a set number of failures",
+    "saves minutes when early failures make the rest meaningless"
+   ],
+   "use": "want a broken build to stop quickly",
+   "not": [
+    "reruns failed tests until they pass"
+   ],
+   "like": [
+    "A retry on failure setting"
+   ]
+  },
+  {
+   "group": "feat",
+   "subject": "Multi-project configuration",
+   "tier": 5,
+   "says": [
+    "runs groups of tests with different environments or settings in one invocation",
+    "lets node and jsdom tests use separate configs together"
+   ],
+   "use": "have server tests needing node and component tests needing a DOM",
+   "not": [
+    "splits one test file across several machines"
+   ],
+   "like": [
+    "Test sharding"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A pytest fixture",
+   "tier": 2,
+   "says": [
+    "is a function marked with @pytest.fixture that a test requests by naming it as an argument",
+    "can be scoped to a function, module or session"
+   ],
+   "use": "need a database connection created once and shared by many Python tests",
+   "not": [
+    "must be called manually at the top of each test"
+   ],
+   "like": [
+    "A Playwright fixture",
+    "A beforeEach hook"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A Playwright fixture",
+   "tier": 3,
+   "says": [
+    "extends the test function with a setup value that is created only for tests that ask for it",
+    "tears itself down after the test that used it"
+   ],
+   "use": "need a logged-in page object available only to tests that request it",
+   "not": [
+    "runs before every test whether it is used or not"
+   ],
+   "like": [
+    "A pytest fixture",
+    "A beforeEach hook"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A beforeEach hook",
+   "tier": 1,
+   "says": [
+    "runs setup code before every test in its scope",
+    "gives each test fresh state instead of sharing objects between tests"
+   ],
+   "use": "want each test to start with a new instance of the object under test",
+   "not": [
+    "runs once before the first test of the run"
+   ],
+   "like": [
+    "A pytest fixture",
+    "A global setup"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A factory function",
+   "tier": 1,
+   "says": [
+    "generates valid objects with sensible defaults that a test overrides",
+    "makes a test show only the fields that matter to it"
+   ],
+   "use": "find every test hand-writing a long user object",
+   "not": [
+    "generates random values with no way to control them"
+   ],
+   "like": [
+    "Faker"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Faker",
+   "tier": 2,
+   "says": [
+    "generates realistic fake names, emails and addresses",
+    "accepts a seed so a failing run can be reproduced exactly"
+   ],
+   "use": "need plentiful realistic-looking data for tests",
+   "not": [
+    "returns the same value for the same field in every run, with no seed"
+   ],
+   "like": [
+    "A factory function"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Testcontainers",
+   "tier": 4,
+   "says": [
+    "starts disposable real services such as databases in containers from test code",
+    "lets integration tests use the same engine as production"
+   ],
+   "use": "want integration tests against real Postgres without a shared test server",
+   "not": [
+    "replaces the database with an in-process fake"
+   ],
+   "like": [
+    "An in-memory test database"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "An in-memory test database",
+   "tier": 2,
+   "says": [
+    "avoids disk and server setup, so suites start quickly",
+    "can differ from the production SQL dialect and hide dialect-specific bugs"
+   ],
+   "use": "want very fast database tests and accept some dialect risk",
+   "not": [
+    "is guaranteed to behave exactly like the production engine"
+   ],
+   "like": [
+    "Testcontainers",
+    "PGlite"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "PGlite",
+   "tier": 4,
+   "says": [
+    "runs Postgres compiled to WebAssembly inside the test process",
+    "gives the real Postgres dialect without a server or container"
+   ],
+   "use": "want Postgres behaviour in tests with no Docker",
+   "not": [
+    "is a SQLite build with a Postgres-like syntax"
+   ],
+   "like": [
+    "An in-memory test database",
+    "Testcontainers"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A database per worker",
+   "tier": 5,
+   "says": [
+    "gives each parallel test process its own database or schema",
+    "stops parallel files from overwriting each other's rows"
+   ],
+   "use": "see intermittent failures only when tests run in parallel against one database",
+   "not": [
+    "serialises all tests into a single process"
+   ],
+   "like": [
+    "Real migrations in the test database"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Real migrations in the test database",
+   "tier": 4,
+   "says": [
+    "build the test schema from the same migration files used in production",
+    "catch a broken migration before it reaches a real database"
+   ],
+   "use": "find tests passing against a hand-written schema that does not match production",
+   "not": [
+    "populate tables with seed rows"
+   ],
+   "like": [
+    "A database per worker"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Truncating tables between tests",
+   "tier": 4,
+   "says": [
+    "empties tables with a single statement, so cleanup works across connections",
+    "is slower than rolling back a transaction but needs no shared connection"
+   ],
+   "use": "need cleanup for code that opens its own database connections",
+   "not": [
+    "undoes a test's changes by rolling back one transaction"
+   ],
+   "like": [
+    "Real migrations in the test database"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "axe-core",
+   "tier": 1,
+   "says": [
+    "is an open-source engine that runs accessibility rules against a page or DOM",
+    "reports violations with an impact level and the elements affected"
+   ],
+   "use": "want an automated accessibility rule engine to embed in tests",
+   "not": [
+    "is a browser automation tool"
+   ],
+   "like": [
+    "jest-axe",
+    "Lighthouse"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "jest-axe",
+   "tier": 3,
+   "says": [
+    "adds a toHaveNoViolations matcher that runs axe on rendered HTML",
+    "is used in Jest-style component tests"
+   ],
+   "use": "want component tests to fail on accessibility violations",
+   "not": [
+    "runs axe in a full browser against a deployed page"
+   ],
+   "like": [
+    "axe-core",
+    "AxeBuilder"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "AxeBuilder",
+   "tier": 3,
+   "says": [
+    "is the Playwright integration that runs axe against a live page",
+    "can scope the scan with include, exclude and tag options"
+   ],
+   "use": "want an accessibility scan inside a Playwright end-to-end test",
+   "not": [
+    "is a matcher added to Jest's expect"
+   ],
+   "like": [
+    "jest-axe"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Lighthouse",
+   "tier": 1,
+   "says": [
+    "audits a page for performance, accessibility and other categories",
+    "scores the accessibility category using a subset of automated checks"
+   ],
+   "use": "want one report covering performance and accessibility",
+   "not": [
+    "only audits accessibility"
+   ],
+   "like": [
+    "axe-core",
+    "pa11y"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "pa11y",
+   "tier": 4,
+   "says": [
+    "runs accessibility checks on URLs from the command line or CI",
+    "can be scheduled across a list of pages"
+   ],
+   "use": "want a simple command-line accessibility check across several URLs",
+   "not": [
+    "is a unit test matcher for components"
+   ],
+   "like": [
+    "Lighthouse"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "eslint-plugin-jsx-a11y",
+   "tier": 2,
+   "says": [
+    "lints JSX for accessibility mistakes such as images without alt text",
+    "catches problems at edit time before any test runs"
+   ],
+   "use": "want accessibility mistakes flagged in the editor and in lint",
+   "not": [
+    "scans a rendered page in a browser"
+   ],
+   "like": [
+    "axe-core"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "An axe WCAG tag filter",
+   "tier": 5,
+   "says": [
+    "limits a scan to rules tagged for a given WCAG level, for example wcag2a",
+    "lets a team track conformance against one target"
+   ],
+   "use": "need a scan that reports only rules for a chosen conformance level",
+   "not": [
+    "disables axe for pages that have already been checked"
+   ],
+   "like": [
+    "AxeBuilder"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A manual screen reader pass",
+   "tier": 4,
+   "says": [
+    "finds problems automated rules cannot judge, such as whether alt text is meaningful",
+    "complements axe rather than being replaced by it"
+   ],
+   "use": "hear that the site is accessible because axe reported no violations",
+   "not": [
+    "is unnecessary once an automated scan passes"
+   ],
+   "like": [
+    "axe-core"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "k6",
+   "tier": 2,
+   "says": [
+    "has test scripts written in JavaScript and run by a Go-based engine",
+    "ships as a single binary and provides a built-in http module for scripts"
+   ],
+   "use": "want load tests as code with pass-or-fail criteria",
+   "not": [
+    "builds test plans in a graphical editor saved as XML"
+   ],
+   "like": [
+    "JMeter",
+    "Gatling",
+    "Locust"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "JMeter",
+   "tier": 2,
+   "says": [
+    "builds test plans in a graphical editor and saves them as .jmx files",
+    "should run in non-GUI mode for real load generation"
+   ],
+   "use": "inherit a load test saved as a graphical test plan",
+   "not": [
+    "describes scenarios as JavaScript functions"
+   ],
+   "like": [
+    "k6",
+    "Gatling"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "Gatling",
+   "tier": 3,
+   "says": [
+    "describes scenarios as code in a DSL on an asynchronous, non-blocking engine",
+    "produces an HTML report after each simulation"
+   ],
+   "use": "want code-based scenarios on the JVM with detailed reports",
+   "not": [
+    "configures load only through a graphical editor"
+   ],
+   "like": [
+    "k6",
+    "JMeter"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "Locust",
+   "tier": 3,
+   "says": [
+    "defines user behaviour as Python classes with @task methods",
+    "can spread load over several worker machines"
+   ],
+   "use": "want to write load scenarios in Python",
+   "not": [
+    "uses an XML test plan"
+   ],
+   "like": [
+    "k6"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "A virtual user",
+   "tier": 1,
+   "says": [
+    "is a simulated client that runs the scenario script in a loop",
+    "lets one machine represent many concurrent users"
+   ],
+   "use": "need to simulate many concurrent visitors from one load generator",
+   "not": [
+    "is a person recruited to test manually"
+   ],
+   "like": [
+    "Think time"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "Think time",
+   "tier": 2,
+   "says": [
+    "is the pause a script inserts between actions to mimic a person reading the page",
+    "makes the generated load more realistic"
+   ],
+   "use": "see load numbers far above what real users produce",
+   "not": [
+    "is the time the server takes to respond"
+   ],
+   "like": [
+    "A virtual user"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "A ramping stage",
+   "tier": 3,
+   "says": [
+    "raises the number of virtual users gradually over a period",
+    "avoids a sudden spike that hides when degradation began"
+   ],
+   "use": "want to find the load at which latency starts to climb",
+   "not": [
+    "holds a fixed user count for the whole test"
+   ],
+   "like": [
+    "A pass-or-fail threshold"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "A pass-or-fail threshold",
+   "tier": 3,
+   "says": [
+    "turns a metric such as p95 latency into a criterion that fails the run",
+    "makes load tests usable as a CI gate"
+   ],
+   "use": "want a performance regression to fail the pipeline",
+   "not": [
+    "decides how many virtual users start"
+   ],
+   "like": [
+    "A ramping stage"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "An open workload model",
+   "tier": 5,
+   "says": [
+    "starts new requests at a fixed arrival rate regardless of response time",
+    "keeps sending when the system slows down, like real independent users"
+   ],
+   "use": "model public traffic where users arrive independently",
+   "not": [
+    "waits for each response before sending the next"
+   ],
+   "like": [
+    "A closed workload model"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "A closed workload model",
+   "tier": 5,
+   "says": [
+    "keeps a fixed number of users, each waiting for its response before the next request",
+    "slows its own request rate when the system gets slow"
+   ],
+   "use": "model a fixed pool of users such as staff on an internal system",
+   "not": [
+    "sends at a constant arrival rate no matter what"
+   ],
+   "like": [
+    "An open workload model"
+   ]
+  },
+  {
+   "group": "load",
+   "subject": "Coordinated omission",
+   "tier": 5,
+   "says": [
+    "understates latency because a stalled system makes the tool send fewer requests",
+    "is avoided by measuring from the intended send time"
+   ],
+   "use": "hear low reported latency from a tool that waits for each response",
+   "not": [
+    "means that two virtual users sent the same request"
+   ],
+   "like": [
+    "A closed workload model"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Dependency caching",
+   "tier": 2,
+   "says": [
+    "restores installed packages between pipeline runs keyed on the lockfile",
+    "cuts installation time without changing results"
+   ],
+   "use": "see most of the pipeline time spent downloading packages",
+   "not": [
+    "skips running the tests whose files did not change"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A service container",
+   "tier": 3,
+   "says": [
+    "starts a real database or queue next to the job for integration tests",
+    "is removed when the job ends"
+   ],
+   "use": "need a real Mongo or Postgres available to CI integration tests",
+   "not": [
+    "mocks the database inside the test code"
+   ],
+   "like": [
+    "Testcontainers"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A matrix build",
+   "tier": 2,
+   "says": [
+    "runs the same job across combinations such as Node versions or operating systems",
+    "reveals environment-specific failures"
+   ],
+   "use": "need to confirm the code works on several runtime versions",
+   "not": [
+    "splits one suite into slices"
+   ],
+   "like": [
+    "Test sharding"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A JUnit XML report",
+   "tier": 3,
+   "says": [
+    "is a standard result file CI dashboards parse to list failed tests",
+    "is written by a reporter option in most runners"
+   ],
+   "use": "want failed tests listed in the CI interface instead of raw logs",
+   "not": [
+    "is a coverage format"
+   ],
+   "like": [
+    "A reporter"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A failure artifact",
+   "tier": 3,
+   "says": [
+    "uploads traces, screenshots and videos when a job fails",
+    "preserves evidence that disappears when the runner is destroyed"
+   ],
+   "use": "cannot reproduce a failure that happened only in CI",
+   "not": [
+    "caches dependencies between runs"
+   ],
+   "like": [
+    "A trace file"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "The CI environment flag",
+   "tier": 3,
+   "says": [
+    "makes tools such as Vitest run once instead of entering watch mode",
+    "is the CI variable most runners check for"
+   ],
+   "use": "find a pipeline hanging because the runner waits for file changes",
+   "not": [
+    "makes every test pass faster"
+   ],
+   "like": [
+    "Watch mode"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "The Jest --ci option",
+   "tier": 4,
+   "says": [
+    "stops new snapshots being written automatically",
+    "makes a missing snapshot fail instead of being created"
+   ],
+   "use": "want a CI run to fail when a snapshot file is absent",
+   "not": [
+    "updates all stale snapshots"
+   ],
+   "like": [
+    "The snapshot update flag"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Browser binaries in CI",
+   "tier": 3,
+   "says": [
+    "must be installed or come from a prepared image before end-to-end tests run",
+    "are best pinned so local and CI results match"
+   ],
+   "use": "see end-to-end jobs fail because no browser is installed",
+   "not": [
+    "are bundled with the test runner package itself"
+   ],
+   "like": [
+    "A headless browser"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Merging shard coverage",
+   "tier": 5,
+   "says": [
+    "combines partial coverage reports from parallel jobs into one total",
+    "is needed before a threshold can be applied across shards"
+   ],
+   "use": "see each sharded job reporting only a slice of the coverage",
+   "not": [
+    "splits the report into one file per source directory"
+   ],
+   "like": [
+    "Test sharding"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Tests against a preview deployment",
+   "tier": 3,
+   "says": [
+    "run end-to-end checks on a per-pull-request deployment",
+    "find problems that a local build cannot"
+   ],
+   "use": "want browser tests to hit a temporary environment for the change",
+   "not": [
+    "run the full suite on the production site"
+   ],
+   "like": [
+    "A black-box API test"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A forbid-only setting",
+   "tier": 4,
+   "says": [
+    "fails the run if a focused test is present",
+    "prevents a committed only from silently skipping the suite"
+   ],
+   "use": "want CI to reject a committed only",
+   "not": [
+    "marks planned tests as to-do"
+   ],
+   "like": [
+    "A focused test"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "makeTestDb in ggsocial",
+   "tier": 3,
+   "says": [
+    "creates an in-memory Postgres with PGlite",
+    "builds the real app schema inside it using drizzle-kit's pushSchema"
+   ],
+   "use": "read how ggsocial tests avoid needing a live Postgres",
+   "not": [
+    "starts a Docker container with a full Postgres server"
+   ],
+   "like": [
+    "Moksy's itest suites"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggsocial's database mock",
+   "tier": 4,
+   "says": [
+    "replaces the app's database module with vi.mock(\"@/lib/db\")",
+    "lets each test seed its own brands, users and memberships"
+   ],
+   "use": "read how ggsocial tests point application code at the test database",
+   "not": [
+    "connects to the shared staging database"
+   ],
+   "like": [
+    "makeTestDb in ggsocial"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggsocial's server-only alias",
+   "tier": 4,
+   "says": [
+    "points the server-only package at a stub in the Vitest config",
+    "exists because that package deliberately throws outside a real Next.js server build"
+   ],
+   "use": "see a ggsocial test fail on importing a server-only module",
+   "not": [
+    "turns the node test environment into a browser one"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGMONEY_TEST_DRIVER",
+   "tier": 4,
+   "says": [
+    "switches ggmoney's suite from SQLite to MySQL when set to mysql",
+    "proves the two database schemas behave identically"
+   ],
+   "use": "want ggmoney tests to prove behaviour under MySQL strict mode",
+   "not": [
+    "sets which tax year the tests treat as verified"
+   ],
+   "like": [
+    "TAX_YEARS_VERIFIED"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "TAX_YEARS_VERIFIED",
+   "tier": 5,
+   "says": [
+    "is defined in ggmoney's tests so unverified tax years are not presented as checked",
+    "keeps payroll warning until a tax year is verified"
+   ],
+   "use": "read how ggmoney avoids presenting unchecked tax figures as correct",
+   "not": [
+    "selects the database driver for the test run"
+   ],
+   "like": [
+    "GGMONEY_TEST_DRIVER"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's itest suites",
+   "tier": 5,
+   "says": [
+    "are *.itest.mjs files that persist through real Mongoose models against a real Mongo",
+    "need a Mongo service container in CI"
+   ],
+   "use": "read how Moksy proves unique indexes and guarded updates",
+   "not": [
+    "use an in-memory SQLite database"
+   ],
+   "like": [
+    "makeTestDb in ggsocial"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's dashboard e2e script",
+   "tier": 4,
+   "says": [
+    "runs a Vitest flow test rather than a real browser",
+    "covers the requirements-to-document flow"
+   ],
+   "use": "hear that the Moksy dashboard has an e2e script and ask whether it uses a browser",
+   "not": [
+    "launches Playwright against the deployed dashboard"
+   ],
+   "like": [
+    "Moksy's Playwright dependency"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's Playwright dependency",
+   "tier": 5,
+   "says": [
+    "appears only as a declared dependency in foundation/requirements/package.json",
+    "has no playwright.config anywhere in the repos"
+   ],
+   "use": "hear a claim that Moksy has established browser end-to-end tests",
+   "not": [
+    "drives the dashboard's end-to-end script"
+   ],
+   "like": [
+    "Moksy's dashboard e2e script"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's node --test packages",
+   "tier": 3,
+   "says": [
+    "run on Node's built-in test runner rather than Vitest",
+    "coexist with many services that carry a vitest.config.js"
+   ],
+   "use": "find some Moksy packages with no Vitest config",
+   "not": [
+    "are run by Jest"
+   ],
+   "like": [
+    "Node's built-in test runner"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's check:dynamic",
+   "tier": 3,
+   "says": [
+    "self-tests dynamic question families by executing real node, python, php, sqlite3, git, semver and tsc",
+    "checks that each stated answer matches what real execution produces"
+   ],
+   "use": "want to know whether generated question answers are correct",
+   "not": [
+    "unit tests the login and scoring logic"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GG repositories and Jest",
+   "tier": 2,
+   "says": [
+    "do not use Jest, since no repository has a Jest config",
+    "use Vitest in ggsocial and plain PHP scripts in ggmoney"
+   ],
+   "use": "are asked whether Jest is used in any GG repository",
+   "not": [
+    "use Jest in ggsocial"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does this line check in Jest or Vitest?",
+   "right": "It asserts that sum(2, 3) returns exactly 5",
+   "wrong": [
+    "It runs sum five times and counts the calls",
+    "It replaces sum with a mock that returns 5",
+    "It waits five milliseconds for sum to finish"
+   ],
+   "tier": 1,
+   "why": "toBe is a strict-equality matcher, so the assertion passes only when the value is 5.",
+   "code": "expect(sum(2, 3)).toBe(5);"
+  },
+  {
+   "q": "Why does this assertion fail even though both objects look the same?",
+   "right": "toBe compares by identity and two separate literals are different objects",
+   "wrong": [
+    "Objects can never be compared in a test",
+    "The property a is a number, so a number-only matcher is required",
+    "The matcher must be awaited before it compares anything"
+   ],
+   "tier": 2,
+   "why": "toBe uses Object.is. Use toEqual to compare structure.",
+   "code": "expect({ a: 1 }).toBe({ a: 1 });"
+  },
+  {
+   "q": "What is wrong with this test?",
+   "right": "The promise is not returned or awaited, so the test can finish before the assertion runs",
+   "wrong": [
+    "resolves is not a valid matcher",
+    "toEqual cannot compare objects containing ids",
+    "fetchUser must always be replaced with a mock"
+   ],
+   "tier": 3,
+   "why": "Without return or await, a rejected assertion can be reported after the test has already passed.",
+   "code": "test(\"loads user\", () => {\n  expect(fetchUser(1)).resolves.toEqual({ id: 1 });\n});"
+  },
+  {
+   "q": "In Vitest, which call creates a mock function?",
+   "right": "vi.fn()",
+   "wrong": [
+    "jest.fn(), which works unchanged in Vitest",
+    "mock.create()",
+    "test.spy()"
+   ],
+   "tier": 2,
+   "why": "Vitest exposes its mocking helpers on vi, not on jest.",
+   "code": "const handler = vi.fn();"
+  },
+  {
+   "q": "Which command runs this file with Node's built-in test runner?",
+   "right": "node --test",
+   "wrong": [
+    "node --jest",
+    "npm install node-test",
+    "node run-tests"
+   ],
+   "tier": 2,
+   "why": "The node:test module is executed by the node --test command and needs no installed package.",
+   "code": "import test from \"node:test\";\nimport assert from \"node:assert/strict\";\n\ntest(\"adds\", () => {\n  assert.equal(1 + 1, 2);\n});"
+  },
+  {
+   "q": "Why use queryByText here rather than getByText?",
+   "right": "getByText would throw when nothing matches, while queryByText returns null so absence can be asserted",
+   "wrong": [
+    "queryByText waits for the element to appear",
+    "getByText cannot find text inside buttons",
+    "queryByText ignores hidden elements only"
+   ],
+   "tier": 3,
+   "why": "queryBy queries return null on no match, which is what an absence assertion needs.",
+   "code": "render(<Cart items={[]} />);\nexpect(screen.queryByText(\"Checkout\")).not.toBeInTheDocument();"
+  },
+  {
+   "q": "What does findByText do that getByText does not?",
+   "right": "It waits and retries until the text appears or a timeout passes",
+   "wrong": [
+    "It matches text case-insensitively by default",
+    "It returns every matching element in an array",
+    "It ignores elements that are not visible"
+   ],
+   "tier": 3,
+   "why": "findBy queries return a promise, so they suit content that appears after asynchronous work.",
+   "code": "render(<Profile />);\nconst name = await screen.findByText(\"Ada\");"
+  },
+  {
+   "q": "Why is the textbox found by role and name?",
+   "right": "It locates the input the way a user or assistive technology would, by role and accessible name",
+   "wrong": [
+    "It is the only query that works in jsdom",
+    "It matches the CSS class called email",
+    "It is always faster than any other query"
+   ],
+   "tier": 3,
+   "why": "Role queries reward accessible markup and are less coupled to implementation.",
+   "code": "const user = userEvent.setup();\nawait user.type(screen.getByRole(\"textbox\", { name: /email/i }), \"a@b.co\");"
+  },
+  {
+   "q": "What is the problem with this React Testing Library assertion?",
+   "right": "It checks internal component state instead of what the user sees",
+   "wrong": [
+    "It runs before the component renders",
+    "It uses a matcher that does not exist",
+    "It requires act to be removed"
+   ],
+   "tier": 3,
+   "why": "Testing Library encourages asserting on rendered output, so refactors do not break tests.",
+   "code": "expect(component.state.count).toBe(1);"
+  },
+  {
+   "q": "What does request(app) do in this supertest call?",
+   "right": "It sends the request to the app in process on an ephemeral port, with no server started by you",
+   "wrong": [
+    "It requires the app to be listening on port 3000 first",
+    "It replaces the app with a mock",
+    "It opens the route in a browser"
+   ],
+   "tier": 2,
+   "why": "supertest binds the app to a temporary port for the request.",
+   "code": "const res = await request(app).post(\"/login\").send({ email, password });\nexpect(res.status).toBe(401);"
+  },
+  {
+   "q": "After adding supertest tests, Jest prints that it did not exit one second after the run. app.js calls app.listen when imported. What is the best fix?",
+   "right": "Export the app without listening and call listen only in a separate server entry file",
+   "wrong": [
+    "Raise the Jest timeout to 60 seconds",
+    "Call process.exit at the end of every test",
+    "Run the tests with a different assertion library"
+   ],
+   "tier": 4,
+   "why": "Importing a module that opens a port leaves a handle open. Separating app from server fixes it."
+  },
+  {
+   "q": "Why is the second form better in a Playwright test?",
+   "right": "The web-first assertion retries until visible or the timeout expires, while isVisible is read once",
+   "wrong": [
+    "isVisible throws on hidden elements",
+    "The first form does not support text locators",
+    "The retrying form runs synchronously"
+   ],
+   "tier": 3,
+   "why": "await expect(locator).toBeVisible() is retried, so it tolerates asynchronous rendering.",
+   "code": "await page.getByRole(\"button\", { name: \"Save\" }).click();\nawait expect(page.getByText(\"Saved\")).toBeVisible();\n// instead of: expect(await page.getByText(\"Saved\").isVisible()).toBe(true);"
+  },
+  {
+   "q": "What is the main problem with this line in an end-to-end test?",
+   "right": "A fixed sleep wastes time when the app is fast and still flakes when it is slow",
+   "wrong": [
+    "waitForTimeout is not available in browsers",
+    "It cancels all pending network requests",
+    "It blocks other tests from starting"
+   ],
+   "tier": 2,
+   "why": "Wait for a condition such as an element or response, not a fixed duration.",
+   "code": "await page.waitForTimeout(3000);"
+  },
+  {
+   "q": "What is this route handler used for?",
+   "right": "Making the orders request fail so the error state of the page can be tested",
+   "wrong": [
+    "Slowing the page to measure performance",
+    "Recording the real response for later playback",
+    "Blocking the page from loading images"
+   ],
+   "tier": 3,
+   "why": "page.route intercepts matching requests and can fulfil them with a controlled response.",
+   "code": "await page.route(\"**/api/orders\", route =>\n  route.fulfill({ status: 500, body: \"{}\" })\n);"
+  },
+  {
+   "q": "A suite of 200 Playwright tests each log in through the UI and takes too long. What should the team do first?",
+   "right": "Log in once in a setup step, save the storage state and reuse it in the tests",
+   "wrong": [
+    "Disable parallel workers so the logins do not clash",
+    "Replace the tests with snapshot tests",
+    "Increase the test timeout for every test"
+   ],
+   "tier": 4,
+   "why": "Stored authentication state removes the repeated login from each test's run time."
+  },
+  {
+   "q": "Why can't you write const el = await cy.get(\".price\") in Cypress?",
+   "right": "Cypress commands are queued and chainable, not promises",
+   "wrong": [
+    "cy.get returns a string",
+    "await is forbidden in all JavaScript tests",
+    "cy.get only works inside beforeEach"
+   ],
+   "tier": 4,
+   "why": "Cypress enqueues commands and runs them in order, so you chain .then instead of awaiting.",
+   "code": "const el = await cy.get(\".price\");"
+  },
+  {
+   "q": "Why does the mock apply even though vi.mock is written after the import?",
+   "right": "vi.mock is hoisted above the imports before the module graph loads",
+   "wrong": [
+    "Imports are evaluated lazily at the end of the file",
+    "The runner re-imports the file after each assertion",
+    "vi.mock edits the import statement in the source file"
+   ],
+   "tier": 3,
+   "why": "The runner hoists module mock calls so the replacement is in place before the real module loads.",
+   "code": "import { sendEmail } from \"./mailer\";\nvi.mock(\"./mailer\");"
+  },
+  {
+   "q": "What does the final line do?",
+   "right": "It restores the real Date.now after the spy",
+   "wrong": [
+    "It deletes the spy's recorded calls but keeps returning 0",
+    "It makes Date.now return the current time permanently as 0",
+    "It mocks the whole Date object"
+   ],
+   "tier": 3,
+   "why": "mockRestore removes the spy and puts the original method back.",
+   "code": "const spy = vi.spyOn(Date, \"now\").mockReturnValue(0);\n// ... run assertions ...\nspy.mockRestore();"
+  },
+  {
+   "q": "Why does this test pass without waiting a second?",
+   "right": "Fake timers let the test advance the clock by hand",
+   "wrong": [
+    "The callback is called synchronously by setTimeout",
+    "vi.fn skips the delay of timers it wraps",
+    "The runner ignores timeouts under two seconds"
+   ],
+   "tier": 3,
+   "why": "With fake timers, advanceTimersByTime fires the scheduled callback instantly.",
+   "code": "vi.useFakeTimers();\nconst cb = vi.fn();\nsetTimeout(cb, 1000);\nvi.advanceTimersByTime(1000);\nexpect(cb).toHaveBeenCalledTimes(1);"
+  },
+  {
+   "q": "A service's unit tests mock every function, yet a wrong SQL query shipped. What change helps most?",
+   "right": "Add an integration test that runs the query against a real database",
+   "wrong": [
+    "Mock the query builder as well",
+    "Raise the coverage threshold to 100 percent",
+    "Convert the tests to snapshot tests"
+   ],
+   "tier": 4,
+   "why": "Mocks cannot prove that the real query is correct; a real database can."
+  },
+  {
+   "q": "What is the second argument to toMatchSnapshot for?",
+   "right": "Property matchers that let the id and date match by type instead of exact value",
+   "wrong": [
+    "A custom file name for the snapshot",
+    "A timeout for the comparison",
+    "A flag that updates the snapshot"
+   ],
+   "tier": 3,
+   "why": "Non-deterministic fields would otherwise fail the snapshot on every run.",
+   "code": "expect(user).toMatchSnapshot({\n  id: expect.any(Number),\n  createdAt: expect.any(Date),\n});"
+  },
+  {
+   "q": "After an intended UI change, many snapshot tests fail. A developer runs the update flag across the whole suite and commits. What should have happened first?",
+   "right": "Review each snapshot diff to confirm every change was intended, then update",
+   "wrong": [
+    "Delete the snapshot files and commit without them",
+    "Disable snapshot tests until the redesign ends",
+    "Raise the pixel tolerance"
+   ],
+   "tier": 4,
+   "why": "Blind updates turn snapshots into rubber stamps that approve defects."
+  },
+  {
+   "q": "Why do CI pipelines often run jest with --ci?",
+   "right": "It stops new snapshots being written automatically, so a missing one fails",
+   "wrong": [
+    "It makes tests run in a browser",
+    "It deletes obsolete snapshots",
+    "It disables coverage collection"
+   ],
+   "tier": 2,
+   "why": "In CI an unexpected missing snapshot should be an error rather than a silent new file."
+  },
+  {
+   "q": "What happens with this configuration?",
+   "right": "The run fails when line coverage is below 80 percent",
+   "wrong": [
+    "Only files with 80 lines are counted",
+    "Tests are retried 80 times",
+    "Coverage is collected for 80 percent of the files"
+   ],
+   "tier": 3,
+   "why": "A threshold turns a coverage report into a gate.",
+   "code": "export default defineConfig({\n  test: { coverage: { thresholds: { lines: 80 } } },\n});"
+  },
+  {
+   "q": "A team has 95 percent line coverage and still ships a defect. Which technique tells you whether the tests would notice a changed condition?",
+   "right": "Mutation testing",
+   "wrong": [
+    "Increasing the line coverage threshold",
+    "Running the suite in watch mode",
+    "Snapshot testing the whole module"
+   ],
+   "tier": 4,
+   "why": "Coverage shows execution, not detection. Mutants that survive reveal weak assertions."
+  },
+  {
+   "q": "Coverage reports 92 percent, but several source files are never imported by any test. What should the team do?",
+   "right": "Configure the coverage include pattern so all source files are counted",
+   "wrong": [
+    "Lower the threshold to 80",
+    "Exclude those files with ignore comments",
+    "Switch to a different assertion library"
+   ],
+   "tier": 4,
+   "why": "Files that no test loads can be left out of the percentage unless included explicitly."
+  },
+  {
+   "q": "What does watch mode do?",
+   "right": "It reruns the relevant tests whenever you save a file",
+   "wrong": [
+    "It runs the tests on the production server",
+    "It repeats the full suite forever without stopping",
+    "It records a video of the tests"
+   ],
+   "tier": 1,
+   "why": "Watch mode gives fast feedback during development."
+  },
+  {
+   "q": "How does test_health receive client?",
+   "right": "pytest matches the argument name to a fixture and injects its return value",
+   "wrong": [
+    "It is imported at the top of the file",
+    "The test must call client() itself",
+    "It is a global variable set by pytest"
+   ],
+   "tier": 2,
+   "why": "Fixtures are requested by naming them as parameters.",
+   "code": "@pytest.fixture\ndef client(app):\n    return app.test_client()\n\ndef test_health(client):\n    assert client.get(\"/health\").status_code == 200"
+  },
+  {
+   "q": "How many test cases does pytest report for this test?",
+   "right": "Three, one for each tuple",
+   "wrong": [
+    "One, because there is a single function",
+    "Six, one for each value",
+    "Zero, because parametrize needs a plugin"
+   ],
+   "tier": 3,
+   "why": "Each parameter set becomes its own test case.",
+   "code": "@pytest.mark.parametrize(\"a,b,total\", [(1, 2, 3), (0, 0, 0), (-1, 1, 0)])\ndef test_add(a, b, total):\n    assert add(a, b) == total"
+  },
+  {
+   "q": "Why call a factory with an override like this?",
+   "right": "The test shows only the field that matters, and defaults fill the rest",
+   "wrong": [
+    "Factories require every field to be passed",
+    "It makes the test depend on database ids",
+    "It prevents the object from being valid"
+   ],
+   "tier": 3,
+   "why": "Overrides keep the test's intent visible.",
+   "code": "const user = buildUser({ role: \"admin\" });"
+  },
+  {
+   "q": "Tests pass when run alone but fail intermittently in parallel against one shared database. What fix is most appropriate?",
+   "right": "Give each worker its own database or schema",
+   "wrong": [
+    "Increase the test timeout",
+    "Turn on automatic retries",
+    "Add fixed sleeps between tests"
+   ],
+   "tier": 4,
+   "why": "Parallel files overwrite each other's rows in a shared database."
+  },
+  {
+   "q": "Tests run on in-memory SQLite while production uses Postgres, and a JSON query passes in tests but fails in production. What is the best response?",
+   "right": "Run the integration tests against a real Postgres, for example with Testcontainers or a service container",
+   "wrong": [
+    "Add more unit tests with mocks",
+    "Rewrite the query to avoid JSON",
+    "Disable the failing test"
+   ],
+   "tier": 4,
+   "why": "A different dialect hides engine-specific behaviour."
+  },
+  {
+   "q": "What does this code do?",
+   "right": "It starts a disposable real Postgres container and returns its connection URL",
+   "wrong": [
+    "It starts an in-memory SQLite database",
+    "It mocks the pg module",
+    "It restores a database backup"
+   ],
+   "tier": 3,
+   "why": "Testcontainers creates throwaway services for integration tests.",
+   "code": "const pg = await new PostgreSqlContainer().start();\nconst url = pg.getConnectionUri();"
+  },
+  {
+   "q": "What does this Playwright assertion check?",
+   "right": "That axe found no accessibility violations on the page",
+   "wrong": [
+    "That the page loads in under a second",
+    "That every link on the page works",
+    "That the page has no JavaScript errors"
+   ],
+   "tier": 3,
+   "why": "AxeBuilder runs axe-core on the live page and returns violations.",
+   "code": "const results = await new AxeBuilder({ page }).analyze();\nexpect(results.violations).toEqual([]);"
+  },
+  {
+   "q": "A team says the site is accessible because the axe scan passes. What is the best response?",
+   "right": "Automated rules catch only part of the problems, so keyboard and screen reader checks are still needed",
+   "wrong": [
+    "Axe passing proves WCAG conformance",
+    "Axe results are always false positives",
+    "Lighthouse must replace it"
+   ],
+   "tier": 4,
+   "why": "Tools cannot judge things such as whether alt text is meaningful."
+  },
+  {
+   "q": "What is toHaveNoViolations?",
+   "right": "A custom matcher from jest-axe that fails when axe reports violations",
+   "wrong": [
+    "A built-in Jest matcher for DOM nodes",
+    "A Playwright method for screenshots",
+    "A Testing Library query"
+   ],
+   "tier": 3,
+   "why": "jest-axe adds it to expect.",
+   "code": "const { container } = render(<Form />);\nexpect(await axe(container)).toHaveNoViolations();"
+  },
+  {
+   "q": "What does this k6 threshold do?",
+   "right": "It marks the run failed if the 95th percentile request duration reaches 500 ms",
+   "wrong": [
+    "It limits the test to 500 requests",
+    "It sends 95 requests per second",
+    "It stops the script after 500 ms"
+   ],
+   "tier": 3,
+   "why": "Thresholds turn metrics into pass-or-fail criteria.",
+   "code": "export const options = {\n  thresholds: { http_req_duration: [\"p(95)<500\"] },\n};\nexport default function () {\n  http.get(\"https://staging.example.com/api/items\");\n}"
+  },
+  {
+   "q": "A load test reports a good average latency but users complain of slowness. What should the team look at?",
+   "right": "Percentiles such as p95 and p99",
+   "wrong": [
+    "The total number of virtual users",
+    "The size of the test script",
+    "Only the fastest request"
+   ],
+   "tier": 4,
+   "why": "Averages hide the slow tail that individual users experience."
+  },
+  {
+   "q": "A load tool waits for each response before sending the next request, and a server stall makes the report look fine. What is this measurement problem called?",
+   "right": "Coordinated omission",
+   "wrong": [
+    "Think time inflation",
+    "Open model drift",
+    "Warm-up bias"
+   ],
+   "tier": 5,
+   "why": "The tool omits the requests it would have sent during the stall, understating latency."
+  },
+  {
+   "q": "What does wait_time = between(1, 3) represent in this Locust file?",
+   "right": "Think time, a pause of one to three seconds between tasks",
+   "wrong": [
+    "The server's response time limit",
+    "The number of users added each second",
+    "The test duration"
+   ],
+   "tier": 4,
+   "why": "It models a person pausing between actions.",
+   "code": "class Shopper(HttpUser):\n    wait_time = between(1, 3)\n\n    @task\n    def browse(self):\n        self.client.get(\"/items\")"
+  },
+  {
+   "q": "What does this command do on a CI machine?",
+   "right": "It runs the second of four slices of the suite",
+   "wrong": [
+    "It runs four tests in parallel on two workers",
+    "It retries failures twice",
+    "It runs only the second test file"
+   ],
+   "tier": 3,
+   "why": "Sharding splits files across jobs to cut wall-clock time.",
+   "code": "npx playwright test --shard=2/4"
+  },
+  {
+   "q": "Visual tests pass locally but fail in CI with tiny text differences. What is the likely fix?",
+   "right": "Generate and compare baselines in the same container image used by CI",
+   "wrong": [
+    "Raise the pixel tolerance to ignore all differences",
+    "Remove the screenshots",
+    "Use a smaller viewport"
+   ],
+   "tier": 4,
+   "why": "Font rendering varies by operating system, so baselines should come from the same environment."
+  },
+  {
+   "q": "A Playwright job fails in CI but never locally, and the runner is destroyed afterward. What helps debug it?",
+   "right": "Upload the trace and screenshots as artifacts on failure",
+   "wrong": [
+    "Raise the retry count",
+    "Cache the dependencies",
+    "Remove the headless setting"
+   ],
+   "tier": 4,
+   "why": "Artifacts preserve evidence that would otherwise vanish with the runner."
+  },
+  {
+   "q": "A team sets CI retries to 3 and the dashboard stays green. What should they add?",
+   "right": "Report tests that pass only on retry as flaky and track them for fixing",
+   "wrong": [
+    "Raise retries to 10",
+    "Delete tests that failed once",
+    "Disable the retry setting but ignore failures"
+   ],
+   "tier": 4,
+   "why": "Retries hide instability unless passed-on-retry tests are surfaced."
+  },
+  {
+   "q": "A committed test.only makes CI run a single test and pass. Which setting prevents this?",
+   "right": "A forbid-only setting that fails the run when a focused test exists",
+   "wrong": [
+    "Setting a longer timeout",
+    "Enabling watch mode",
+    "Running tests in a random order"
+   ],
+   "tier": 5,
+   "why": "Focused tests silently disable the rest of the file.",
+   "code": "test.only(\"checkout works\", async ({ page }) => {\n  // ...\n});"
+  },
+  {
+   "q": "A test passes alone but fails after another test in the full run. The mock is declared at module level and never cleared. What is the best fix?",
+   "right": "Clear or restore mocks after each test, for example in afterEach or through config",
+   "wrong": [
+    "Run only that test in CI",
+    "Put a sleep before the failing test",
+    "Make the mock return different values"
+   ],
+   "tier": 5,
+   "why": "Shared mock state leaks calls and implementations between tests."
+  },
+  {
+   "q": "A provider team renames a response field. Which test is designed to catch this before deployment?",
+   "right": "The provider's verification of the consumer's contract",
+   "wrong": [
+    "The consumer's unit tests",
+    "A snapshot of the API client",
+    "A load test of the endpoint"
+   ],
+   "tier": 5,
+   "why": "Consumer-driven contract tests record expectations that the provider verifies."
+  },
+  {
+   "q": "A mutation testing report shows a surviving mutant. What does that mean?",
+   "right": "No test failed when the code was changed, so the tests have a gap",
+   "wrong": [
+    "The code was changed incorrectly",
+    "Coverage was below the threshold",
+    "The test suite ran too slowly"
+   ],
+   "tier": 4,
+   "why": "A surviving mutant shows that behaviour is not asserted."
+  },
+  {
+   "q": "Why create the cart in beforeEach rather than as a shared constant at the top?",
+   "right": "Each test gets fresh state, so tests do not depend on order",
+   "wrong": [
+    "beforeEach runs faster than a constant",
+    "A constant cannot hold objects",
+    "It lets tests share the same cart on purpose"
+   ],
+   "tier": 3,
+   "why": "Fresh state per test removes order dependence.",
+   "code": "let cart;\nbeforeEach(() => {\n  cart = new Cart();\n});"
+  },
+  {
+   "q": "What does this Mock Service Worker handler do?",
+   "right": "It answers GET /api/user with JSON for any code making that request, without changing app code",
+   "wrong": [
+    "It edits the app's fetch calls at build time",
+    "It starts a real API server on a port",
+    "It records requests and sends them to a vendor"
+   ],
+   "tier": 3,
+   "why": "MSW intercepts at the network layer.",
+   "code": "http.get(\"/api/user\", () => HttpResponse.json({ name: \"Ada\" }))"
+  },
+  {
+   "q": "A ggsocial test fails because an imported module pulls in the server-only package. What does ggsocial's Vitest setup do about this?",
+   "right": "It aliases server-only to a stub in the config",
+   "wrong": [
+    "It switches the tests to a browser environment",
+    "It removes the import with a Babel plugin",
+    "It installs a different Next.js version"
+   ],
+   "tier": 4,
+   "why": "The package deliberately throws outside a real Next.js server build, so the config aliases it to a stub."
+  },
+  {
+   "q": "How can ggmoney check that its tests behave identically on MySQL, which runs in strict mode?",
+   "right": "Set GGMONEY_TEST_DRIVER=mysql and the DB_* variables to run the same assertions on MySQL",
+   "wrong": [
+    "Rewrite the tests as Jest tests",
+    "Run them only against SQLite",
+    "Use PHPUnit for the MySQL run"
+   ],
+   "tier": 4,
+   "why": "By default the suite uses SQLite. The variable runs the same checks against MySQL."
+  },
+  {
+   "q": "Why do Moksy's *.itest.mjs suites use a real Mongo instead of a mock?",
+   "right": "Unique indexes and guarded updates cannot be proven with a mock",
+   "wrong": [
+    "Mocks are not supported by Vitest",
+    "Mongo is faster than a mock",
+    "The CI workflow has no mocks"
+   ],
+   "tier": 3,
+   "why": "Only a real database enforces index and update behaviour. CI starts a Mongo service container."
+  },
+  {
+   "q": "A reviewer says Moksy has Playwright browser tests because Playwright is in a package.json. What is the best response?",
+   "right": "It is only a declared dependency in one package and no playwright config exists, so browser e2e is not established",
+   "wrong": [
+    "Moksy runs Playwright in ci.yml",
+    "Playwright tests are in the dashboard e2e script",
+    "Moksy replaced Playwright with Jest"
+   ],
+   "tier": 4,
+   "why": "The dashboard e2e script runs a Vitest flow test instead of a real browser."
+  },
+  {
+   "q": "How does ggsocial's makeTestDb avoid needing a live Postgres?",
+   "right": "It creates an in-memory Postgres with PGlite and builds the real schema with pushSchema",
+   "wrong": [
+    "It mocks every query to return empty rows",
+    "It uses SQLite with a translated schema",
+    "It starts a Docker container per test"
+   ],
+   "tier": 3,
+   "why": "The same dialect and schema keep tests fast and close to production."
+  },
+  {
+   "q": "What does GGLearn's check:dynamic verify?",
+   "right": "That each stated answer of the dynamic question families matches what real execution produces",
+   "wrong": [
+    "That login and scoring logic work",
+    "That every page renders in a browser",
+    "That the deploy script succeeds"
+   ],
+   "tier": 3,
+   "why": "It runs real tools such as node, python and git to check answers. It does not cover application logic."
+  },
+  {
+   "q": "Which of these is a valid reason to use Vitest in a Vite project?",
+   "right": "It reuses the same Vite configuration and transforms for tests",
+   "wrong": [
+    "It is the only runner that supports TypeScript",
+    "It runs tests in a real browser by default",
+    "It needs no configuration at all for aliases in any project"
+   ],
+   "tier": 2,
+   "why": "Sharing configuration with Vite is a main selling point of Vitest."
+  },
+  {
+   "q": "Which protocol does Selenium WebDriver use to control browsers?",
+   "right": "The W3C WebDriver protocol",
+   "wrong": [
+    "The Chrome DevTools Protocol only",
+    "GraphQL over HTTP",
+    "gRPC"
+   ],
+   "tier": 2,
+   "why": "Selenium is built around the WebDriver standard."
+  },
+  {
+   "q": "Why is a role-based locator generally preferred over a deep CSS selector in browser tests?",
+   "right": "It survives layout refactors and reflects what assistive technology exposes",
+   "wrong": [
+    "It runs faster in every browser",
+    "It removes the need for assertions",
+    "It works without any accessible names"
+   ],
+   "tier": 2,
+   "why": "Role and name rarely change in a purely visual refactor."
+  },
+  {
+   "q": "A team's unit tests spend most of their time in jsdom setup. Which change addresses this with the least rewriting?",
+   "right": "Try a lighter DOM environment such as happy-dom for tests that do not need full fidelity",
+   "wrong": [
+    "Replace all tests with Selenium",
+    "Remove the DOM from the tests entirely",
+    "Turn on snapshots for every component"
+   ],
+   "tier": 3,
+   "why": "happy-dom favours speed over completeness, with the risk of missing browser behaviour."
+  }
+ ]
+}

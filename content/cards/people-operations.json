@@ -1,0 +1,2842 @@
+{
+ "slug": "people-operations",
+ "name": "People and operations",
+ "description": "Roles, onboarding, staff operations.",
+ "roles": "manager",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "role": "access and permissions concept",
+  "onboard": "onboarding practice",
+  "offboard": "offboarding step",
+  "probation": "probation practice",
+  "perf": "performance management practice",
+  "leave": "leave and absence concept",
+  "hire": "hiring process element",
+  "ritual": "team ritual or working practice",
+  "ladder": "career ladder or development concept",
+  "data": "employee data handling practice",
+  "desk": "operating cover or structure concept",
+  "gg": "people-system behaviour in gglearn",
+  "mk": "Moksy staff-operations or reviewer-onboarding element"
+ },
+ "cards": [
+  {
+   "group": "role",
+   "subject": "Least privilege",
+   "tier": 1,
+   "says": [
+    "gives each person only the access their job needs",
+    "limits the damage a mistaken or compromised account can do",
+    "is checked against what a person actually does, not their seniority"
+   ],
+   "use": "need to decide how much access a new starter should get",
+   "not": [
+    "grants everyone full access to save setup time"
+   ],
+   "like": [
+    "Role-based access control"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Role-based access control",
+   "tier": 2,
+   "says": [
+    "bundles permissions into named roles that people are assigned",
+    "lets access change by moving a person between roles",
+    "avoids granting each permission to each person one by one"
+   ],
+   "use": "want access to follow job titles rather than individual requests",
+   "not": [
+    "assigns every permission directly to a named person"
+   ],
+   "like": [
+    "Least privilege",
+    "Separation of duties"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Separation of duties",
+   "tier": 3,
+   "says": [
+    "splits a risky task so no single person can complete it alone",
+    "makes the person who requests an action differ from the one who approves it",
+    "reduces the chance of undetected error or fraud"
+   ],
+   "use": "must stop one person from both raising and approving a payment",
+   "not": [
+    "lets the author of a change approve it without another person"
+   ],
+   "like": [
+    "Least privilege",
+    "Privileged access"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Access review",
+   "tier": 3,
+   "says": [
+    "compares who holds access with who should hold it",
+    "finds access left behind after a person changes role",
+    "is repeated on a regular schedule rather than done once"
+   ],
+   "use": "suspect people kept permissions from earlier jobs",
+   "not": [
+    "happens only once, when the account is first created"
+   ],
+   "like": [
+    "Permission creep"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Joiner-mover-leaver process",
+   "tier": 2,
+   "says": [
+    "covers access changes when people join, change role or leave",
+    "treats a role change as an access event, not only a hire or exit",
+    "keeps access aligned with the person's current job"
+   ],
+   "use": "want one routine that handles starters, transfers and departures",
+   "not": [
+    "applies only on the day a person is hired"
+   ],
+   "like": [
+    "Access review"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Privileged access",
+   "tier": 3,
+   "says": [
+    "allows actions that can change other people's access or critical settings",
+    "is held by few people and for a limited time",
+    "needs stronger approval and logging than ordinary access"
+   ],
+   "use": "must decide who can change other users' roles",
+   "not": [
+    "is given to all staff by default"
+   ],
+   "like": [
+    "Break-glass access",
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Shared account",
+   "tier": 3,
+   "says": [
+    "lets several people sign in with one set of credentials",
+    "makes it impossible to tell which person did an action",
+    "must have its password changed when any user leaves"
+   ],
+   "use": "find that one login is used by a whole team",
+   "not": [
+    "records exactly which individual performed each action"
+   ],
+   "like": [
+    "Service account"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Break-glass access",
+   "tier": 5,
+   "says": [
+    "gives emergency access outside normal approval for a defined crisis",
+    "is logged and reviewed afterwards",
+    "is held sealed and used only when ordinary routes fail"
+   ],
+   "use": "need an emergency route when the usual approver is unreachable",
+   "not": [
+    "replaces normal access for everyday work"
+   ],
+   "like": [
+    "Privileged access"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Permission creep",
+   "tier": 5,
+   "says": [
+    "builds up as people collect access across successive roles",
+    "leaves a person with more rights than their current job needs",
+    "is found by comparing current access to current duties"
+   ],
+   "use": "notice a long-serving employee can reach systems unrelated to their job",
+   "not": [
+    "happens only when an account is hacked"
+   ],
+   "like": [
+    "Access review"
+   ]
+  },
+  {
+   "group": "role",
+   "subject": "Service account",
+   "tier": 4,
+   "says": [
+    "lets software rather than a person sign in to a system",
+    "has no human owner who can answer a security challenge",
+    "needs a named person responsible for it and for rotating its secrets"
+   ],
+   "use": "need an automated job to reach a system without a person logging in",
+   "not": [
+    "is safe to share among all engineers"
+   ],
+   "like": [
+    "Shared account"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "Pre-boarding",
+   "tier": 1,
+   "says": [
+    "prepares accounts, equipment and a welcome before the first day",
+    "reduces idle time and anxiety at the start",
+    "begins once an offer is accepted"
+   ],
+   "use": "want a new starter productive on day one",
+   "not": [
+    "starts only at the end of the first month"
+   ],
+   "like": [
+    "Orientation"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "Onboarding checklist",
+   "tier": 1,
+   "says": [
+    "lists the access, learning and introductions a new person needs",
+    "makes starts consistent from one hire to the next",
+    "gives the manager a record of what has been done"
+   ],
+   "use": "want every new hire to get the same complete start",
+   "not": [
+    "is written fresh from memory for each hire"
+   ],
+   "like": [
+    "First-week plan"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "Buddy",
+   "tier": 1,
+   "says": [
+    "is a peer named to help a new person with everyday questions",
+    "is separate from the line manager",
+    "helps the newcomer learn unwritten norms"
+   ],
+   "use": "want a new starter to have a safe person to ask small questions",
+   "not": [
+    "decides the new person's pay and promotion"
+   ],
+   "like": [
+    "Mentor"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "First-week plan",
+   "tier": 2,
+   "says": [
+    "sets out the specific meetings, tools and tasks for the opening days",
+    "includes introductions to the people the newcomer will work with",
+    "gives a first small real task to build confidence"
+   ],
+   "use": "need to schedule the opening days of a new hire",
+   "not": [
+    "is a long-term career plan"
+   ],
+   "like": [
+    "Onboarding checklist",
+    "30-60-90 day plan"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "30-60-90 day plan",
+   "tier": 3,
+   "says": [
+    "divides the first three months into learning, contributing and owning phases",
+    "sets expectations that a manager and new hire agree together",
+    "gives natural points for progress conversations"
+   ],
+   "use": "want clear milestones for a new person's first quarter",
+   "not": [
+    "covers only the first three days"
+   ],
+   "like": [
+    "First-week plan"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "Role-based learning path",
+   "tier": 3,
+   "says": [
+    "assigns study material according to a person's job role",
+    "puts the most essential topics first",
+    "saves each person from choosing what to learn from scratch"
+   ],
+   "use": "want new hires in the same job to learn the same core things",
+   "not": [
+    "gives every employee the identical syllabus regardless of job"
+   ],
+   "like": [
+    "Onboarding checklist"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "Shadowing",
+   "tier": 2,
+   "says": [
+    "has a newcomer watch an experienced person do real work",
+    "shows how tasks are done in practice beyond the documents",
+    "is followed by the newcomer doing the task with support"
+   ],
+   "use": "want a new starter to see a task done before attempting it",
+   "not": [
+    "means the newcomer works alone from day one"
+   ],
+   "like": [
+    "Buddy"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "Orientation",
+   "tier": 1,
+   "says": [
+    "introduces the organisation, its policies and its facilities",
+    "is usually a short one-off event",
+    "covers the basics every employee needs"
+   ],
+   "use": "need to give new people the company-wide basics",
+   "not": [
+    "is the whole of a new hire's role training"
+   ],
+   "like": [
+    "Pre-boarding"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "Onboarding feedback survey",
+   "tier": 4,
+   "says": [
+    "asks new hires what helped and what was missing",
+    "improves the process for the next cohort",
+    "is most useful when sent after a few weeks, not on day one"
+   ],
+   "use": "want evidence on how well starts are going",
+   "not": [
+    "measures how long people stay in the job"
+   ],
+   "like": [
+    "Probation review"
+   ]
+  },
+  {
+   "group": "onboard",
+   "subject": "Time to productivity",
+   "tier": 4,
+   "says": [
+    "measures how long a new hire takes to work at the expected level",
+    "varies by role and complexity of the job",
+    "is shortened by clear goals and early real tasks"
+   ],
+   "use": "want to judge whether onboarding is effective",
+   "not": [
+    "counts only the hours spent in training"
+   ],
+   "like": [
+    "Onboarding feedback survey"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Access revocation",
+   "tier": 1,
+   "says": [
+    "removes accounts and permissions when employment ends",
+    "happens across every system, not only the main one",
+    "should take effect at the moment employment ends"
+   ],
+   "use": "need to stop a departed person reaching company systems",
+   "not": [
+    "can wait a few weeks after the person leaves"
+   ],
+   "like": [
+    "Session invalidation"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Session invalidation",
+   "tier": 3,
+   "says": [
+    "signs out logins that are already open",
+    "closes the gap left when only the account is disabled",
+    "stops a stale token from continuing to work"
+   ],
+   "use": "worry that a leaver's open sessions stay usable after disabling",
+   "not": [
+    "only hides the account from the directory"
+   ],
+   "like": [
+    "Access revocation"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Knowledge handover",
+   "tier": 2,
+   "says": [
+    "transfers what a leaver knew to the people who stay",
+    "covers processes that exist only in one person's head",
+    "starts before the last day"
+   ],
+   "use": "fear a process will be lost when its owner leaves",
+   "not": [
+    "is optional once the person has left"
+   ],
+   "like": [
+    "Handover notes"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Handover notes",
+   "tier": 2,
+   "says": [
+    "record what a person owns, how it works and what is pending",
+    "are written for a named successor to read",
+    "list contacts, schedules and known problems"
+   ],
+   "use": "need a written record of an area before its owner leaves",
+   "not": [
+    "are the exit interview transcript"
+   ],
+   "like": [
+    "Knowledge handover",
+    "Exit interview"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Exit interview",
+   "tier": 3,
+   "says": [
+    "collects the leaver's honest view on why they are going",
+    "gives themes about management, pay and workload",
+    "is a source of improvement ideas, not of handover detail"
+   ],
+   "use": "want to learn why people leave",
+   "not": [
+    "transfers ownership of accounts and files"
+   ],
+   "like": [
+    "Handover notes"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Ownership transfer",
+   "tier": 3,
+   "says": [
+    "moves accounts, files, customers and tasks to a named person",
+    "prevents orphaned work with no owner",
+    "is confirmed by the receiver, not assumed"
+   ],
+   "use": "find that a leaver owned customer accounts and shared files",
+   "not": [
+    "deletes the leaver's files"
+   ],
+   "like": [
+    "Knowledge handover"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Secret rotation",
+   "tier": 4,
+   "says": [
+    "changes passwords and keys a leaver knew",
+    "closes routes that work independently of the person's own account",
+    "applies especially to shared credentials"
+   ],
+   "use": "know that a leaver had a shared password or API key",
+   "not": [
+    "is unnecessary once the login is disabled"
+   ],
+   "like": [
+    "Access revocation"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Equipment return",
+   "tier": 1,
+   "says": [
+    "recovers laptops, devices and badges",
+    "is recorded so nothing is left unaccounted for",
+    "pairs with wiping or reassigning the device"
+   ],
+   "use": "need to collect company hardware from a leaver",
+   "not": [
+    "covers only the leaver's paper files"
+   ],
+   "like": [
+    "Access revocation"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Two-person offboarding",
+   "tier": 5,
+   "says": [
+    "has a second person check the steps for privileged leavers",
+    "catches steps missed by the first person",
+    "is a form of separation of duties applied to exits"
+   ],
+   "use": "are removing someone who held broad privileged access",
+   "not": [
+    "lets one person sign off their own checklist alone"
+   ],
+   "like": [
+    "Separation of duties"
+   ]
+  },
+  {
+   "group": "offboard",
+   "subject": "Soft removal",
+   "tier": 4,
+   "says": [
+    "marks a person as left instead of deleting their record",
+    "keeps history and references intact",
+    "prevents sign-in while preserving who did what"
+   ],
+   "use": "must keep audit history but stop a person from logging in",
+   "not": [
+    "erases every trace of the person from the system"
+   ],
+   "like": [
+    "Access revocation"
+   ]
+  },
+  {
+   "group": "probation",
+   "subject": "Probation period",
+   "tier": 1,
+   "says": [
+    "is an initial period in which fit for the job is assessed",
+    "has set objectives and review points",
+    "ends with a confirm, extend or end decision"
+   ],
+   "use": "are starting a new hire and want a structured assessment window",
+   "not": [
+    "guarantees the job for life"
+   ],
+   "like": [
+    "Probation review"
+   ]
+  },
+  {
+   "group": "probation",
+   "subject": "Probation objectives",
+   "tier": 1,
+   "says": [
+    "state what the new hire must show by the end of the period",
+    "are agreed in writing at the start",
+    "are specific enough to judge as met or not met"
+   ],
+   "use": "want a new hire to know what success looks like",
+   "not": [
+    "are drawn up only at the final review"
+   ],
+   "like": [
+    "Probation period"
+   ]
+  },
+  {
+   "group": "probation",
+   "subject": "Probation review",
+   "tier": 2,
+   "says": [
+    "compares progress with the agreed objectives at a set point",
+    "gives the person feedback with time left to improve",
+    "is recorded so the later decision has evidence"
+   ],
+   "use": "are reaching a scheduled progress point in someone's first months",
+   "not": [
+    "happens only when someone resigns"
+   ],
+   "like": [
+    "Mid-point check-in"
+   ]
+  },
+  {
+   "group": "probation",
+   "subject": "Mid-point check-in",
+   "tier": 3,
+   "says": [
+    "happens halfway through the period to flag concerns early",
+    "gives the person time to change course",
+    "avoids a surprise at the final decision"
+   ],
+   "use": "want to raise a concern while there is still time to fix it",
+   "not": [
+    "replaces the final probation review"
+   ],
+   "like": [
+    "Probation review"
+   ]
+  },
+  {
+   "group": "probation",
+   "subject": "Probation extension",
+   "tier": 5,
+   "says": [
+    "lengthens the period when evidence is not yet enough to decide",
+    "comes with clear new objectives and a new date",
+    "should be explained to the person in writing"
+   ],
+   "use": "cannot yet tell if a new hire meets the standard",
+   "not": [
+    "is a silent way to avoid a hard decision"
+   ],
+   "like": [
+    "Probation confirmation"
+   ]
+  },
+  {
+   "group": "probation",
+   "subject": "Probation confirmation",
+   "tier": 3,
+   "says": [
+    "confirms a new hire has met the objectives and continues in the role",
+    "is communicated in writing",
+    "moves the person to the normal performance cycle"
+   ],
+   "use": "have reached the end of probation with objectives met",
+   "not": [
+    "is automatic with no decision recorded"
+   ],
+   "like": [
+    "Probation extension"
+   ]
+  },
+  {
+   "group": "probation",
+   "subject": "Early warning conversation",
+   "tier": 4,
+   "says": [
+    "tells a struggling new hire where they fall short and what to change",
+    "is held as soon as the gap is seen",
+    "avoids a surprise when a decision is taken"
+   ],
+   "use": "notice a new hire missing the standard in the first weeks",
+   "not": [
+    "is saved for the last day of the period"
+   ],
+   "like": [
+    "Mid-point check-in"
+   ]
+  },
+  {
+   "group": "probation",
+   "subject": "Support plan",
+   "tier": 5,
+   "says": [
+    "pairs named help such as coaching or training with the objectives",
+    "tests whether a gap is skill, clarity or environment",
+    "is offered before a negative decision"
+   ],
+   "use": "suspect a new hire's difficulty comes from missing support",
+   "not": [
+    "is a penalty given to the person"
+   ],
+   "like": [
+    "Performance improvement plan"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Goal setting",
+   "tier": 1,
+   "says": [
+    "agrees what a person is expected to achieve in a period",
+    "links individual work to team and company aims",
+    "is revisited as priorities change"
+   ],
+   "use": "need to make clear what good looks like for the next quarter",
+   "not": [
+    "happens only at the end of the year"
+   ],
+   "like": [
+    "Objectives and key results"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "SMART goal",
+   "tier": 2,
+   "says": [
+    "is specific, measurable, achievable, relevant and time-bound",
+    "can be judged as met or not at a date",
+    "avoids vague aims such as work harder"
+   ],
+   "use": "need a goal that can be checked at its deadline",
+   "not": [
+    "is defined by being as ambitious as possible"
+   ],
+   "like": [
+    "Objectives and key results"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Objectives and key results",
+   "tier": 3,
+   "says": [
+    "pairs an inspiring objective with measurable key results",
+    "is usually set for a quarter or a year",
+    "can be used to stretch rather than only to check"
+   ],
+   "use": "want ambitious aims with measurable results attached",
+   "not": [
+    "is a pay scale"
+   ],
+   "like": [
+    "SMART goal",
+    "Goal setting"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Continuous feedback",
+   "tier": 2,
+   "says": [
+    "gives people input close to the event it concerns",
+    "makes the formal review contain no surprises",
+    "works in both directions between people and managers"
+   ],
+   "use": "want feedback to be useful at the time it happens",
+   "not": [
+    "is saved up for the annual review"
+   ],
+   "like": [
+    "Performance review"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Situation-behaviour-impact feedback",
+   "tier": 3,
+   "says": [
+    "describes the situation, the observed behaviour and its effect",
+    "keeps feedback on actions rather than personality",
+    "gives the person facts they can act on"
+   ],
+   "use": "need a structure for specific, non-judgemental feedback",
+   "not": [
+    "begins by judging the person's character"
+   ],
+   "like": [
+    "Continuous feedback"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Performance review",
+   "tier": 2,
+   "says": [
+    "assesses performance across a set period against expectations",
+    "produces a written record agreed with the person",
+    "feeds into development and, in many places, pay decisions"
+   ],
+   "use": "are reaching the formal assessment point in the cycle",
+   "not": [
+    "is the only time feedback is ever given"
+   ],
+   "like": [
+    "Continuous feedback",
+    "Calibration"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Calibration",
+   "tier": 5,
+   "says": [
+    "compares ratings across managers to keep standards consistent",
+    "reduces differences caused by lenient or harsh raters",
+    "is a discussion of evidence, not a vote on people"
+   ],
+   "use": "worry that two managers rate the same work differently",
+   "not": [
+    "lets each manager set their own private scale"
+   ],
+   "like": [
+    "Performance review"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Self-assessment",
+   "tier": 2,
+   "says": [
+    "asks a person to assess their own work before the review",
+    "brings the person's view and evidence into the conversation",
+    "exposes differences between self-view and manager view"
+   ],
+   "use": "want the person's own account before the manager forms a view",
+   "not": [
+    "replaces the manager's assessment"
+   ],
+   "like": [
+    "360 feedback"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "360 feedback",
+   "tier": 3,
+   "says": [
+    "collects views from peers, reports, managers and sometimes others",
+    "shows how behaviour is seen from several directions",
+    "is best used for development rather than a single rating"
+   ],
+   "use": "want a rounded picture of how someone works with others",
+   "not": [
+    "comes only from the person's line manager"
+   ],
+   "like": [
+    "Self-assessment"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Performance improvement plan",
+   "tier": 4,
+   "says": [
+    "sets specific expectations, support and a review date for a gap",
+    "is a documented and time-limited process",
+    "should follow earlier feedback, not be the first the person hears"
+   ],
+   "use": "have a sustained gap that earlier feedback has not closed",
+   "not": [
+    "is a surprise given with no earlier warning"
+   ],
+   "like": [
+    "Support plan"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Recency bias",
+   "tier": 3,
+   "says": [
+    "gives too much weight to the latest events in a period",
+    "is reduced by keeping notes through the whole period",
+    "makes a review reflect weeks rather than the year"
+   ],
+   "use": "notice a review mentions only the last month",
+   "not": [
+    "favours the earliest event in a period"
+   ],
+   "like": [
+    "Halo effect"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Halo effect",
+   "tier": 3,
+   "says": [
+    "lets one strong trait colour judgement of everything else",
+    "can make a likeable person look better at the whole job",
+    "is reduced by scoring each criterion separately"
+   ],
+   "use": "see a person rated highly on all criteria because of one strength",
+   "not": [
+    "gives too much weight to recent events"
+   ],
+   "like": [
+    "Recency bias"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Annual leave",
+   "tier": 1,
+   "says": [
+    "is paid time off taken for rest",
+    "is requested in advance and approved against team cover",
+    "accrues or is allocated according to the employer's policy"
+   ],
+   "use": "want planned time off for a holiday",
+   "not": [
+    "is time off only for illness"
+   ],
+   "like": [
+    "Sick leave"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Sick leave",
+   "tier": 1,
+   "says": [
+    "covers absence because of illness or injury",
+    "is reported on the day, following the reporting procedure",
+    "is not normally scheduled in advance"
+   ],
+   "use": "are unwell and cannot work today",
+   "not": [
+    "is booked weeks ahead like a holiday"
+   ],
+   "like": [
+    "Annual leave"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Parental leave",
+   "tier": 2,
+   "says": [
+    "is time away from work around the arrival of a child",
+    "is planned with notice so work can be covered",
+    "ends with a return conversation and handover back"
+   ],
+   "use": "need to plan cover for a long, planned absence of a team member",
+   "not": [
+    "is unplanned time off at a few hours' notice"
+   ],
+   "like": [
+    "Sick leave"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Leave balance",
+   "tier": 2,
+   "says": [
+    "records how much leave a person has accrued, taken and left",
+    "is checked before a request is approved",
+    "is carried forward or lapses under the written policy"
+   ],
+   "use": "need to know how many days a person can still take",
+   "not": [
+    "is the number of people absent today"
+   ],
+   "like": [
+    "Annual leave"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Leave approval workflow",
+   "tier": 3,
+   "says": [
+    "routes a request to the manager who knows the team's cover",
+    "records the decision so both sides have evidence",
+    "is checked against clashes with other absences"
+   ],
+   "use": "need to decide whether two people can be away at once",
+   "not": [
+    "approves every request automatically with no check"
+   ],
+   "like": [
+    "Cover plan"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Cover plan",
+   "tier": 3,
+   "says": [
+    "names who handles a person's work while they are away",
+    "is agreed before the absence starts",
+    "lists urgent items and who decides in the person's place"
+   ],
+   "use": "must keep work moving while a person is absent",
+   "not": [
+    "is written after the person returns"
+   ],
+   "like": [
+    "Handover before leave",
+    "Rota"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Handover before leave",
+   "tier": 3,
+   "says": [
+    "gives the cover person the context, pending items and contacts",
+    "reduces calls to someone who is meant to be away",
+    "is written down, not only said in passing"
+   ],
+   "use": "are about to go on leave with live work in progress",
+   "not": [
+    "means the person stays reachable throughout the leave"
+   ],
+   "like": [
+    "Cover plan"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Return-to-work conversation",
+   "tier": 4,
+   "says": [
+    "welcomes a person back and catches up on what changed",
+    "checks whether any adjustments or support are needed",
+    "is held after sickness or long absences"
+   ],
+   "use": "have a colleague returning after a long absence",
+   "not": [
+    "is a disciplinary hearing"
+   ],
+   "like": [
+    "Handover before leave"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Unplanned absence procedure",
+   "tier": 4,
+   "says": [
+    "tells staff whom to notify and by when if they cannot work",
+    "lets the manager trigger cover quickly",
+    "is known to everyone in advance"
+   ],
+   "use": "need staff to know what to do when they cannot come in",
+   "not": [
+    "is made up on the day it is first needed"
+   ],
+   "like": [
+    "Sick leave",
+    "Cover plan"
+   ]
+  },
+  {
+   "group": "leave",
+   "subject": "Public holiday calendar",
+   "tier": 3,
+   "says": [
+    "lists the days the organisation is closed for shared holidays",
+    "lets teams plan coverage around them",
+    "can differ between locations"
+   ],
+   "use": "are planning rotas across offices in different places",
+   "not": [
+    "is the same for every team in every location"
+   ],
+   "like": [
+    "Annual leave"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Job description",
+   "tier": 1,
+   "says": [
+    "states the purpose, duties and requirements of a role",
+    "is the base from which a vacancy is advertised",
+    "should be updated when the role changes"
+   ],
+   "use": "need to explain what a vacancy involves",
+   "not": [
+    "is a record of a person's past performance"
+   ],
+   "like": [
+    "Role scorecard"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Role scorecard",
+   "tier": 3,
+   "says": [
+    "defines the outcomes and competencies a hire must show",
+    "is agreed before interviews begin",
+    "lets interviewers rate candidates on the same criteria"
+   ],
+   "use": "want interviewers to judge candidates against the same standard",
+   "not": [
+    "is written after the final choice is made"
+   ],
+   "like": [
+    "Job description"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Structured interview",
+   "tier": 3,
+   "says": [
+    "asks every candidate the same questions in the same order",
+    "scores answers against agreed criteria",
+    "predicts job performance better than free conversation"
+   ],
+   "use": "want comparable, fair evidence across candidates",
+   "not": [
+    "lets each interviewer improvise unrelated questions"
+   ],
+   "like": [
+    "Work sample"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Work sample",
+   "tier": 3,
+   "says": [
+    "asks the candidate to do a small piece of real job work",
+    "shows skill directly instead of describing it",
+    "should be limited in time and fair to all candidates"
+   ],
+   "use": "want to see how a candidate actually performs the work",
+   "not": [
+    "is a personality questionnaire"
+   ],
+   "like": [
+    "Structured interview"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Reference check",
+   "tier": 3,
+   "says": [
+    "asks former colleagues to confirm a candidate's claims and work",
+    "is done with the candidate's permission",
+    "adds evidence from people who have seen the work"
+   ],
+   "use": "want an outside view of a candidate before an offer",
+   "not": [
+    "replaces the interview"
+   ],
+   "like": [
+    "Offer stage"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Hiring pipeline",
+   "tier": 2,
+   "says": [
+    "tracks candidates through stages from application to offer",
+    "shows where candidates are lost or delayed",
+    "gives each stage a named owner"
+   ],
+   "use": "want to see how many candidates are at each stage",
+   "not": [
+    "is a list of current employees"
+   ],
+   "like": [
+    "Offer stage"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Candidate experience",
+   "tier": 2,
+   "says": [
+    "is how the process feels to an applicant at every step",
+    "includes clear communication and timely replies",
+    "shapes whether a candidate accepts or recommends the employer"
+   ],
+   "use": "want rejected applicants to leave with a respectful impression",
+   "not": [
+    "is measured only by offers accepted"
+   ],
+   "like": [
+    "Hiring pipeline"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Offer stage",
+   "tier": 2,
+   "says": [
+    "makes a written proposal of the role and terms to the chosen candidate",
+    "follows the decision and approvals",
+    "ends with acceptance, negotiation or decline"
+   ],
+   "use": "have chosen a candidate and must make it formal",
+   "not": [
+    "is the first screening of applications"
+   ],
+   "like": [
+    "Reference check"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Interview debrief",
+   "tier": 5,
+   "says": [
+    "gathers interviewers' independent scores before discussion",
+    "stops the loudest voice from setting the outcome",
+    "ends with a recorded decision and reasons"
+   ],
+   "use": "want a hiring decision based on separate, written evidence",
+   "not": [
+    "happens in the corridor with no notes"
+   ],
+   "like": [
+    "Structured interview"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Unconscious bias in hiring",
+   "tier": 5,
+   "says": [
+    "leads to favouring candidates who resemble the interviewer",
+    "is reduced by structure, scorecards and independent scoring",
+    "affects judgement even when people intend to be fair"
+   ],
+   "use": "suspect decisions follow personal similarity rather than evidence",
+   "not": [
+    "is removed by trusting first impressions"
+   ],
+   "like": [
+    "Structured interview"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Interview panel",
+   "tier": 3,
+   "says": [
+    "brings several interviewers who cover different criteria",
+    "avoids repeated questions across rounds",
+    "lets views be compared across independent raters"
+   ],
+   "use": "need broader evidence than one interviewer provides",
+   "not": [
+    "is one manager making all decisions alone"
+   ],
+   "like": [
+    "Interview debrief"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "Daily stand-up",
+   "tier": 1,
+   "says": [
+    "is a short daily meeting where a team shares progress and blockers",
+    "stays brief and focuses on coordination",
+    "is held at a fixed time"
+   ],
+   "use": "need the team to surface blockers each day",
+   "not": [
+    "is a long problem-solving session"
+   ],
+   "like": [
+    "Retrospective"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "Weekly team meeting",
+   "tier": 2,
+   "says": [
+    "reviews priorities, news and upcoming work each week",
+    "keeps everyone aware of what others are doing",
+    "has an agenda circulated in advance"
+   ],
+   "use": "want a regular time to align the whole team",
+   "not": [
+    "replaces all one-to-one conversations"
+   ],
+   "like": [
+    "Daily stand-up"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "One-to-one meeting",
+   "tier": 1,
+   "says": [
+    "is a regular private conversation between a manager and a report",
+    "belongs to the report and covers their concerns and growth",
+    "is not cancelled casually"
+   ],
+   "use": "want a regular place for feedback, support and career talk",
+   "not": [
+    "is a status report to the whole team"
+   ],
+   "like": [
+    "Weekly team meeting",
+    "Performance review"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "Retrospective",
+   "tier": 2,
+   "says": [
+    "looks back at how the team worked and picks improvements",
+    "ends with a few agreed actions with owners",
+    "is held at the end of a cycle of work"
+   ],
+   "use": "want the team to learn from the last period",
+   "not": [
+    "is a forward plan of the next release"
+   ],
+   "like": [
+    "Planning meeting"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "Planning meeting",
+   "tier": 2,
+   "says": [
+    "decides what the team will take on in the coming period",
+    "sizes work against available capacity",
+    "accounts for planned leave and cover"
+   ],
+   "use": "need to choose work for the next cycle",
+   "not": [
+    "reviews what went wrong last time"
+   ],
+   "like": [
+    "Retrospective"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "All-hands",
+   "tier": 2,
+   "says": [
+    "gathers the whole organisation for company news and direction",
+    "gives leaders a place to answer questions openly",
+    "is held less often than team meetings"
+   ],
+   "use": "want to share company-wide updates with everyone",
+   "not": [
+    "is a private meeting for managers only"
+   ],
+   "like": [
+    "Weekly team meeting"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "Demo",
+   "tier": 3,
+   "says": [
+    "shows finished work to people outside the team who care about it",
+    "gets feedback while change is still cheap",
+    "builds shared understanding of progress"
+   ],
+   "use": "want stakeholders to see real results, not slides",
+   "not": [
+    "is a closed meeting for the author only"
+   ],
+   "like": [
+    "Retrospective"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "Team charter",
+   "tier": 4,
+   "says": [
+    "records the purpose, norms and ways of working a team agrees",
+    "is written together and revisited",
+    "helps new members learn how the team operates"
+   ],
+   "use": "want a shared written agreement on how the team works",
+   "not": [
+    "is a list of individual salaries"
+   ],
+   "like": [
+    "Working agreement"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "Working agreement",
+   "tier": 3,
+   "says": [
+    "sets concrete rules such as response times and meeting hours",
+    "is short and agreed by everyone affected",
+    "is amended by the team when a rule on hours or response times stops helping"
+   ],
+   "use": "need explicit expectations on availability and handoffs",
+   "not": [
+    "is imposed by outside auditors"
+   ],
+   "like": [
+    "Team charter"
+   ]
+  },
+  {
+   "group": "ritual",
+   "subject": "Decision log",
+   "tier": 5,
+   "says": [
+    "records what was decided, by whom, when and why",
+    "lets later readers see the reasoning behind choices",
+    "prevents the same debate being reopened without new facts"
+   ],
+   "use": "want to know why a past choice was made",
+   "not": [
+    "is a to-do list of unfinished tasks"
+   ],
+   "like": [
+    "Team charter"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Career ladder",
+   "tier": 1,
+   "says": [
+    "describes the levels of a job family and what each expects",
+    "shows people how to progress",
+    "makes expectations visible instead of implied"
+   ],
+   "use": "want staff to see the path from one level to the next",
+   "not": [
+    "is a list of open vacancies"
+   ],
+   "like": [
+    "Competency matrix"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Competency matrix",
+   "tier": 3,
+   "says": [
+    "lists skills and behaviours expected at each level",
+    "lets a person compare their work to the next level",
+    "uses observable descriptions rather than adjectives"
+   ],
+   "use": "need clear evidence for what each level requires",
+   "not": [
+    "is a seating chart"
+   ],
+   "like": [
+    "Career ladder"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Level",
+   "tier": 2,
+   "says": [
+    "marks the scope and independence expected of a person",
+    "can differ from job title",
+    "sets the starting point for what a person may be trusted with"
+   ],
+   "use": "need to know how much independence a person should have",
+   "not": [
+    "is the same as years of service"
+   ],
+   "like": [
+    "Promotion"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Promotion",
+   "tier": 2,
+   "says": [
+    "moves a person up a level after sustained work at that level",
+    "is based on evidence of the next level's expectations",
+    "comes with expanded scope"
+   ],
+   "use": "have a person who has consistently performed at the next level",
+   "not": [
+    "is a reward for long service alone"
+   ],
+   "like": [
+    "Level"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Individual contributor track",
+   "tier": 3,
+   "says": [
+    "lets people progress in craft without managing others",
+    "has senior levels with wider technical or professional influence",
+    "avoids forcing good practitioners into management"
+   ],
+   "use": "want to grow a skilled specialist who does not want to manage",
+   "not": [
+    "requires managing a large team to progress"
+   ],
+   "like": [
+    "Management track"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Management track",
+   "tier": 3,
+   "says": [
+    "advances people who lead teams and outcomes",
+    "values coaching, planning and hiring skills",
+    "is a different job, not a reward for a strong specialist"
+   ],
+   "use": "want to develop someone into a people leader",
+   "not": [
+    "is the only way to earn a pay rise"
+   ],
+   "like": [
+    "Individual contributor track"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Promotion packet",
+   "tier": 5,
+   "says": [
+    "collects evidence of a person's work against the next level",
+    "is reviewed by people beyond the line manager",
+    "reduces dependence on one manager's opinion"
+   ],
+   "use": "must support a promotion case with written evidence",
+   "not": [
+    "is a letter of recommendation only"
+   ],
+   "like": [
+    "Calibration"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Mentor",
+   "tier": 2,
+   "says": [
+    "offers advice from experience outside the line management chain",
+    "helps the mentee with career and judgement",
+    "is chosen for what they can teach, not for authority"
+   ],
+   "use": "want career advice from a more experienced person who is not your manager",
+   "not": [
+    "approves the mentee's pay and promotion"
+   ],
+   "like": [
+    "Sponsor",
+    "Buddy"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Sponsor",
+   "tier": 4,
+   "says": [
+    "uses their influence to put a person forward for opportunities",
+    "speaks for the person in rooms the person is not in",
+    "is more active than a mentor"
+   ],
+   "use": "want a senior person to advocate for a promising colleague",
+   "not": [
+    "only gives advice and never acts on the person's behalf"
+   ],
+   "like": [
+    "Mentor"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Succession plan",
+   "tier": 5,
+   "says": [
+    "names people who could take over critical roles",
+    "identifies the development each successor needs",
+    "reduces risk when a key person leaves"
+   ],
+   "use": "worry about who could take over if a key person left suddenly",
+   "not": [
+    "chooses a replacement only after someone resigns"
+   ],
+   "like": [
+    "Bus factor"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Data minimisation",
+   "tier": 2,
+   "says": [
+    "collects only the personal data needed for a purpose",
+    "reduces what can be lost or misused",
+    "asks for a reason before adding a new field"
+   ],
+   "use": "are designing a form that asks about employees",
+   "not": [
+    "collects everything in case it is useful later"
+   ],
+   "like": [
+    "Need-to-know"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Need-to-know",
+   "tier": 2,
+   "says": [
+    "limits information to people whose work requires it",
+    "applies strongly to pay, health and disciplinary records",
+    "is the information version of least privilege"
+   ],
+   "use": "must decide who may see a colleague's salary",
+   "not": [
+    "shares sensitive details with the whole team"
+   ],
+   "like": [
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Personnel file",
+   "tier": 3,
+   "says": [
+    "holds the formal records of one person's employment",
+    "has restricted access and a retention period",
+    "should contain facts, not casual opinions"
+   ],
+   "use": "need to know where a person's contract and reviews are kept",
+   "not": [
+    "is open for any employee to browse"
+   ],
+   "like": [
+    "Retention schedule"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Retention schedule",
+   "tier": 4,
+   "says": [
+    "sets how long each kind of record is kept",
+    "triggers secure deletion when the period ends",
+    "avoids both premature loss and indefinite hoarding"
+   ],
+   "use": "must decide when to delete old employee records",
+   "not": [
+    "keeps everything forever by default"
+   ],
+   "like": [
+    "Personnel file"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Sensitive personal data",
+   "tier": 3,
+   "says": [
+    "covers details such as health, finances or protected characteristics",
+    "deserves tighter access and handling than ordinary contact data",
+    "should be collected only where truly necessary"
+   ],
+   "use": "hold a document that discloses a person's medical condition",
+   "not": [
+    "is the same as a work email address"
+   ],
+   "like": [
+    "Data minimisation"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Access logging",
+   "tier": 4,
+   "says": [
+    "records who viewed or changed personal records and when",
+    "lets misuse be detected and investigated",
+    "depends on individual rather than shared accounts"
+   ],
+   "use": "want to find out who opened a record",
+   "not": [
+    "stores the contents of every record again"
+   ],
+   "like": [
+    "Shared account"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Redaction",
+   "tier": 3,
+   "says": [
+    "removes or masks details before a document is shared",
+    "lets a record be used without revealing who it concerns",
+    "must be applied to the stored copy, not just hidden on screen"
+   ],
+   "use": "must share an example case without naming the people involved",
+   "not": [
+    "deletes the original record"
+   ],
+   "like": [
+    "Data minimisation"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Confidential review feedback",
+   "tier": 4,
+   "says": [
+    "keeps individual peer comments away from the person reviewed unless agreed otherwise",
+    "encourages honest input",
+    "is shared as themes rather than attributed quotes"
+   ],
+   "use": "collect peer comments for a colleague's review",
+   "not": [
+    "is posted on a public channel"
+   ],
+   "like": [
+    "360 feedback"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Secure sharing of staff data",
+   "tier": 4,
+   "says": [
+    "sends staff records through approved channels with limited access",
+    "expires or revokes links once the need ends",
+    "avoids copies in personal email or chat"
+   ],
+   "use": "must send payroll details to an external adviser",
+   "not": [
+    "is done by attaching the file to a group email"
+   ],
+   "like": [
+    "Need-to-know"
+   ]
+  },
+  {
+   "group": "desk",
+   "subject": "Desk",
+   "tier": 1,
+   "says": [
+    "is a named operating function that owns a queue and a set of duties",
+    "survives whoever sits at it",
+    "is what work and capabilities are granted to"
+   ],
+   "use": "want a job to exist independently of one person",
+   "not": [
+    "is a physical table in an office"
+   ],
+   "like": [
+    "Rota"
+   ]
+  },
+  {
+   "group": "desk",
+   "subject": "Queue",
+   "tier": 1,
+   "says": [
+    "holds the work items waiting for a desk to handle",
+    "makes the volume of waiting work visible",
+    "is owned by a named function"
+   ],
+   "use": "need a single place where incoming work waits",
+   "not": [
+    "is a list of staff holidays"
+   ],
+   "like": [
+    "Desk"
+   ]
+  },
+  {
+   "group": "desk",
+   "subject": "Duty",
+   "tier": 3,
+   "says": [
+    "is one bounded task a desk is responsible for",
+    "carries a class, a floor level and risk tags",
+    "can be assigned, trained and covered"
+   ],
+   "use": "must break a role into definite responsibilities",
+   "not": [
+    "is a general aspiration with no limits"
+   ],
+   "like": [
+    "Escalation path"
+   ]
+  },
+  {
+   "group": "desk",
+   "subject": "Rota",
+   "tier": 2,
+   "says": [
+    "shares a recurring responsibility among people on a schedule",
+    "makes cover predictable",
+    "spreads out-of-hours burden fairly"
+   ],
+   "use": "need several people to take turns covering a service",
+   "not": [
+    "fixes one person to the work permanently"
+   ],
+   "like": [
+    "Cover plan"
+   ]
+  },
+  {
+   "group": "desk",
+   "subject": "Escalation path",
+   "tier": 3,
+   "says": [
+    "names who takes an item the first handler cannot resolve",
+    "is defined before it is needed",
+    "stops items bouncing between people with no owner"
+   ],
+   "use": "face a case the first-line handler cannot decide",
+   "not": [
+    "sends the problem back to the customer"
+   ],
+   "like": [
+    "Duty"
+   ]
+  },
+  {
+   "group": "desk",
+   "subject": "Runbook",
+   "tier": 3,
+   "says": [
+    "gives step-by-step instructions for a recurring or urgent task",
+    "lets a trained stand-in act without the usual expert",
+    "is kept current by the people who use it"
+   ],
+   "use": "want someone other than the expert to handle an incident",
+   "not": [
+    "explains the company's history"
+   ],
+   "like": [
+    "Handover notes"
+   ]
+  },
+  {
+   "group": "desk",
+   "subject": "Bus factor",
+   "tier": 5,
+   "says": [
+    "counts how many people could leave before work stops",
+    "is low when only one person holds the knowledge",
+    "is raised by documenting and cross-training"
+   ],
+   "use": "want to know how risky it is that one person knows a process",
+   "not": [
+    "counts how many people sit in a team"
+   ],
+   "like": [
+    "Succession plan"
+   ]
+  },
+  {
+   "group": "desk",
+   "subject": "Single point of failure",
+   "tier": 5,
+   "says": [
+    "is one person or component whose loss stops the whole process",
+    "is removed by cover, backups and documentation",
+    "appears in people processes as well as systems"
+   ],
+   "use": "find a process that only one person can run",
+   "not": [
+    "is guaranteed to fail every time it is used"
+   ],
+   "like": [
+    "Bus factor"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn role set",
+   "tier": 1,
+   "says": [
+    "has exactly three roles: learner, manager and admin",
+    "gives managers the running of people and content areas",
+    "gives admins the ability to do everything"
+   ],
+   "use": "need to know what roles gglearn defines",
+   "not": [
+    "has a separate payouts-clerk role"
+   ],
+   "like": [
+    "gglearn fresh authorization check"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn fresh authorization check",
+   "tier": 3,
+   "says": [
+    "re-reads a person's role from the database on every request",
+    "makes a role change or offboarding take effect immediately",
+    "avoids waiting for a cookie to expire"
+   ],
+   "use": "want a removed person to lose access at once in gglearn",
+   "not": [
+    "trusts the role stored in the cookie until it expires"
+   ],
+   "like": [
+    "gglearn session version"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn manager offboarding rule",
+   "tier": 3,
+   "says": [
+    "lets managers offboard only learners",
+    "reserves offboarding of other people for admins",
+    "was added after a review found a manager could lock an admin out"
+   ],
+   "use": "ask who a gglearn manager may offboard",
+   "not": [
+    "lets a manager offboard an admin"
+   ],
+   "like": [
+    "gglearn self-offboarding block"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn self-offboarding block",
+   "tier": 4,
+   "says": [
+    "stops anyone from offboarding their own account",
+    "applies even to admins",
+    "prevents accidental self-lockout"
+   ],
+   "use": "want to know if an admin can offboard themselves in gglearn",
+   "not": [
+    "lets admins offboard themselves freely"
+   ],
+   "like": [
+    "gglearn manager offboarding rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn session version",
+   "tier": 4,
+   "says": [
+    "is bumped on offboarding to sign out every existing session",
+    "lets old sessions be refused without waiting for them to expire",
+    "is stored against the user"
+   ],
+   "use": "need gglearn to end all of a person's open sessions at once",
+   "not": [
+    "is a counter of pages a user has visited"
+   ],
+   "like": [
+    "gglearn fresh authorization check"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn offboarded status",
+   "tier": 3,
+   "says": [
+    "marks a user as offboarded instead of deleting the record",
+    "keeps history and references intact",
+    "blocks sign-in"
+   ],
+   "use": "ask why gglearn keeps an offboarded person's row",
+   "not": [
+    "removes the person's row from the database"
+   ],
+   "like": [
+    "gglearn session version"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn timing-equalised login",
+   "tier": 5,
+   "says": [
+    "pays the cost of a password hash for unknown or offboarded accounts",
+    "stops response time revealing which emails exist",
+    "protects against account enumeration by timing"
+   ],
+   "use": "want to know why gglearn hashes a password even for unknown emails",
+   "not": [
+    "returns faster for unknown emails to save server time"
+   ],
+   "like": [
+    "gglearn offboarded status"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn create-person action",
+   "tier": 2,
+   "says": [
+    "takes a name, email, job role and initial password",
+    "creates an onboarding checklist for the new person",
+    "enrols the person in tracks recommended for their job role"
+   ],
+   "use": "ask what happens when a gglearn manager adds a person",
+   "not": [
+    "only sends the new person an email"
+   ],
+   "like": [
+    "gglearn onboarding checklist"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn onboarding checklist",
+   "tier": 2,
+   "says": [
+    "includes shadowing a teammate on a real task",
+    "is created automatically when a person is added",
+    "mirrors an offboarding checklist at the other end of employment"
+   ],
+   "use": "ask what gglearn creates for a new person",
+   "not": [
+    "contains only payroll forms"
+   ],
+   "like": [
+    "gglearn offboarding checklist"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn offboarding checklist",
+   "tier": 3,
+   "says": [
+    "asks for handover notes for each area the person owns",
+    "asks for answers to the ten questions only the person knows",
+    "includes returning equipment and revoking tool access"
+   ],
+   "use": "ask what gglearn lists when a person leaves",
+   "not": [
+    "lists only the leaver's holiday balance"
+   ],
+   "like": [
+    "gglearn onboarding checklist",
+    "gglearn handover note"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn handover note",
+   "tier": 3,
+   "says": [
+    "is saved against the person who is leaving",
+    "can optionally be tied to a track",
+    "is added by a manager"
+   ],
+   "use": "want to record knowledge in gglearn before someone departs",
+   "not": [
+    "is generated automatically from the leaver's emails"
+   ],
+   "like": [
+    "gglearn offboarding checklist"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy staff-operations desk",
+   "tier": 2,
+   "says": [
+    "is a named operating function that owns a queue and a bounded set of duties",
+    "is seated by people at levels",
+    "survives whoever sits at it"
+   ],
+   "use": "ask how the Moksy staff-operations paper names a job",
+   "not": [
+    "is a single named employee"
+   ],
+   "like": [
+    "Moksy unstaffed report"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy unstaffed report",
+   "tier": 3,
+   "says": [
+    "shows a desk with nobody seated as unstaffed",
+    "avoids showing the desk as an empty queue",
+    "makes a coverage gap visible"
+   ],
+   "use": "want to know how the Moksy paper reports a desk with nobody at it",
+   "not": [
+    "reports the desk as an empty queue"
+   ],
+   "like": [
+    "Moksy staff-operations desk"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy desk grouping",
+   "tier": 3,
+   "says": [
+    "groups the proposed 32 desks by what they answer for",
+    "includes groups such as customer-facing, marketplace, money, trust and platform",
+    "ties each desk to a role in the existing workforce table"
+   ],
+   "use": "ask how the Moksy paper organises its desks",
+   "not": [
+    "puts all desks in a single list with no groups"
+   ],
+   "like": [
+    "Moksy duty class"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy duty class",
+   "tier": 4,
+   "says": [
+    "labels a duty as make, decide, review or sign off",
+    "sits alongside a floor level and risk tags",
+    "describes the kind of action a duty involves"
+   ],
+   "use": "ask how the Moksy paper categorises what a duty does",
+   "not": [
+    "labels a duty by the colour of its queue"
+   ],
+   "like": [
+    "Moksy risk tag",
+    "Moksy floor level"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy floor level",
+   "tier": 5,
+   "says": [
+    "sets the minimum level a person needs to perform a duty",
+    "stops people below that level from being seated on the duty",
+    "is set for each duty rather than for each person"
+   ],
+   "use": "ask what the lowest level for a duty is called in the Moksy paper",
+   "not": [
+    "caps the highest level a person can reach"
+   ],
+   "like": [
+    "Moksy duty class"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy risk tag",
+   "tier": 5,
+   "says": [
+    "marks duties involving money, personal data, irreversible actions or bulk actions",
+    "signals that senior or second-person approval is needed for high-risk duties",
+    "is attached to each duty"
+   ],
+   "use": "ask how the Moksy paper flags dangerous duties",
+   "not": [
+    "tags a duty with the desk's budget"
+   ],
+   "like": [
+    "Moksy duty class"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy operator-role set",
+   "tier": 3,
+   "says": [
+    "contains four roles in the staff-operations paper",
+    "is mostly guarded by a single is-staff check",
+    "cannot distinguish a payouts clerk from a content editor"
+   ],
+   "use": "ask why the Moksy paper says role checks are too coarse",
+   "not": [
+    "is described as eight fine-grained desks in the paper"
+   ],
+   "like": [
+    "Moksy staff-operations desk"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy staff-operations status",
+   "tier": 5,
+   "says": [
+    "is at founder review with nothing built",
+    "has case counts that are unverified until someone walks them",
+    "is a proposal to plan from, not evidence of coverage"
+   ],
+   "use": "are asked whether the Moksy staff-operations design is live",
+   "not": [
+    "is shipped and running in production"
+   ],
+   "like": [
+    "Moksy operator-role set"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy reviewer onboarding choices",
+   "tier": 2,
+   "says": [
+    "asks the person to choose only what they do and at what level",
+    "works out everything else for the person to correct",
+    "follows the principle of easy, fast, automated and accurate"
+   ],
+   "use": "ask what a new Moksy reviewer decides",
+   "not": [
+    "asks the person to fill in a long form of ten choices"
+   ],
+   "like": [
+    "Moksy role-and-level grid"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy role-and-level grid",
+   "tier": 4,
+   "says": [
+    "multiplies 25 roles by 8 levels to give 200 crosses",
+    "contains 148 real combinations",
+    "includes 52 combinations that are refused"
+   ],
+   "use": "ask how many role-and-level combinations Moksy reviewer onboarding has",
+   "not": [
+    "treats all 200 combinations as real"
+   ],
+   "like": [
+    "Moksy refused cross"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy refused cross",
+   "tier": 5,
+   "says": [
+    "rejects a role-and-level combination that does not exist",
+    "offers the nearest real level instead",
+    "is one of the 52 non-real combinations"
+   ],
+   "use": "ask what happens when a reviewer picks an impossible role and level in Moksy",
+   "not": [
+    "silently accepts the impossible combination"
+   ],
+   "like": [
+    "Moksy role-and-level grid"
+   ]
+  },
+  {
+   "group": "mk",
+   "subject": "Moksy reviewer setup summary",
+   "tier": 3,
+   "says": [
+    "shows title, setup minutes before the first deciding review, what the person may review, who reads their first reviews and how to ask for help",
+    "is shown for the person to correct",
+    "is worked out from the role and level"
+   ],
+   "use": "ask what the Moksy reviewer onboarding shows after the two choices",
+   "not": [
+    "hides all computed details from the person"
+   ],
+   "like": [
+    "Moksy reviewer onboarding choices"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the main purpose of an onboarding checklist?",
+   "right": "To make sure every new hire gets the same complete start",
+   "wrong": [
+    "To rank new hires against each other",
+    "To replace the manager's conversations with the new hire",
+    "To record why a person left"
+   ],
+   "tier": 1,
+   "why": "A checklist gives consistency and a record of what has been done."
+  },
+  {
+   "q": "What does least privilege mean?",
+   "right": "Each person gets only the access their job needs",
+   "wrong": [
+    "Each person gets the access their seniority suggests",
+    "Only managers get any access",
+    "Access is granted once and never reviewed"
+   ],
+   "tier": 1,
+   "why": "It limits the damage a mistaken or compromised account can do."
+  },
+  {
+   "q": "When should access end for a person who leaves?",
+   "right": "When their employment ends, across every system",
+   "wrong": [
+    "At the end of the month in which they leave",
+    "When they next try to sign in",
+    "After their manager notices unusual activity"
+   ],
+   "tier": 1,
+   "why": "Delays leave an open door for no business reason."
+  },
+  {
+   "q": "What is a buddy in onboarding?",
+   "right": "A peer named to help a newcomer with everyday questions",
+   "wrong": [
+    "The person who decides the newcomer's pay",
+    "A senior leader who sponsors the newcomer's promotion",
+    "An external trainer who runs the induction"
+   ],
+   "tier": 1,
+   "why": "A buddy is a friendly first contact, separate from the line manager."
+  },
+  {
+   "q": "What is a one-to-one meeting for?",
+   "right": "A regular private conversation between a manager and a report about support, feedback and growth",
+   "wrong": [
+    "A weekly status report to the whole team",
+    "A disciplinary hearing",
+    "A planning session for the next release"
+   ],
+   "tier": 1,
+   "why": "It is the report's meeting as much as the manager's."
+  },
+  {
+   "q": "Which of these is a handover note?",
+   "right": "A written record of what a person owns, how it works and what is pending",
+   "wrong": [
+    "A farewell message to the team",
+    "A list of the leaver's holidays",
+    "A copy of the leaver's contract"
+   ],
+   "tier": 1,
+   "why": "It lets a successor carry on without asking the leaver."
+  },
+  {
+   "q": "What is a job description?",
+   "right": "A statement of the purpose, duties and requirements of a role",
+   "wrong": [
+    "A record of how well someone did last year",
+    "A list of the company's open invoices",
+    "A summary of an interview"
+   ],
+   "tier": 1,
+   "why": "It is the base from which a vacancy is advertised."
+  },
+  {
+   "q": "Which describes annual leave?",
+   "right": "Planned paid time off requested in advance and approved against team cover",
+   "wrong": [
+    "Time off taken at once when someone is ill",
+    "Time away that needs no notice",
+    "Time off available only after leaving the company"
+   ],
+   "tier": 1,
+   "why": "Planning lets the team arrange cover."
+  },
+  {
+   "q": "What are probation objectives?",
+   "right": "What the new hire must show by the end of the period, agreed at the start",
+   "wrong": [
+    "The company's yearly revenue goals",
+    "The employee's preferred working hours",
+    "The criteria used to rank the whole team"
+   ],
+   "tier": 2,
+   "why": "Clear, written objectives make the final decision fair."
+  },
+  {
+   "q": "Why does a structured interview improve hiring?",
+   "right": "Every candidate gets the same questions scored against agreed criteria",
+   "wrong": [
+    "Interviewers can follow their instincts about each person",
+    "The candidate controls the topics",
+    "It is shorter than any other format"
+   ],
+   "tier": 2,
+   "why": "Comparable evidence reduces noise and bias."
+  },
+  {
+   "q": "What does separation of duties require?",
+   "right": "That no single person can complete a risky task alone",
+   "wrong": [
+    "That every task is done by the most senior person",
+    "That tasks are rotated monthly",
+    "That a person logs each action in a diary"
+   ],
+   "tier": 2,
+   "why": "Requester and approver should differ."
+  },
+  {
+   "q": "What is the difference between a mentor and a line manager?",
+   "right": "A mentor advises from outside the management chain and does not decide pay or promotion",
+   "wrong": [
+    "A mentor sets the mentee's objectives",
+    "A mentor reviews performance for pay",
+    "A mentor must work in the same team"
+   ],
+   "tier": 2,
+   "why": "Independence lets a mentee speak freely."
+  },
+  {
+   "q": "What is a cover plan for an absence?",
+   "right": "An agreement before the absence naming who handles the work and decides in the person's place",
+   "wrong": [
+    "A note written after the person returns",
+    "A request to the person to stay reachable on holiday",
+    "A list of the person's tasks given to the whole team"
+   ],
+   "tier": 2,
+   "why": "Cover works only if planned before the absence."
+  },
+  {
+   "q": "What does a retrospective produce?",
+   "right": "A few agreed improvement actions with owners",
+   "wrong": [
+    "A plan of the next release",
+    "A list of the team's pay rises",
+    "A decision about who to promote"
+   ],
+   "tier": 2,
+   "why": "It looks back at how the team worked, then picks changes."
+  },
+  {
+   "q": "What does a competency matrix help with?",
+   "right": "Comparing a person's work with what each level expects",
+   "wrong": [
+    "Scheduling meeting rooms",
+    "Recording leave balances",
+    "Choosing which tool to buy"
+   ],
+   "tier": 2,
+   "why": "Observable descriptions make level expectations clear."
+  },
+  {
+   "q": "Why is a shared account a problem for staff data?",
+   "right": "It makes it impossible to tell which person did an action",
+   "wrong": [
+    "It is slower than individual accounts",
+    "It cannot hold more than one password",
+    "It requires a larger licence"
+   ],
+   "tier": 3,
+   "why": "Individual accounts underpin logging and accountability."
+  },
+  {
+   "q": "What is a role scorecard?",
+   "right": "A definition of the outcomes and competencies a hire must show, agreed before interviews",
+   "wrong": [
+    "A ranking of candidates after interviews",
+    "A summary of salary bands",
+    "A list of questions to ask referees"
+   ],
+   "tier": 3,
+   "why": "It makes ratings comparable across interviewers."
+  },
+  {
+   "q": "What is recency bias in a performance review?",
+   "right": "Giving too much weight to the latest events in the period",
+   "wrong": [
+    "Rating everyone the same",
+    "Letting one strong trait colour all scores",
+    "Preferring candidates from the same school"
+   ],
+   "tier": 3,
+   "why": "Notes kept through the whole period reduce it."
+  },
+  {
+   "q": "What does calibration do in a performance cycle?",
+   "right": "Compares ratings across managers so standards are consistent",
+   "wrong": [
+    "Sets each person's salary",
+    "Lets each manager use a private scale",
+    "Replaces the one-to-one"
+   ],
+   "tier": 3,
+   "why": "It is a discussion of evidence, not a vote."
+  },
+  {
+   "q": "Why record a decision in a decision log?",
+   "right": "So later readers can see what was decided, by whom and why",
+   "wrong": [
+    "So the decision cannot be changed under any circumstances",
+    "So meetings can be shorter",
+    "So the minutes can be shared outside the company"
+   ],
+   "tier": 3,
+   "why": "The reasoning prevents repeated debates without new facts."
+  },
+  {
+   "q": "What does data minimisation mean for an employee form?",
+   "right": "Ask only for the personal data needed for the stated purpose",
+   "wrong": [
+    "Ask for everything in case it is useful",
+    "Hide the form from the employee",
+    "Store the answers in a spreadsheet"
+   ],
+   "tier": 3,
+   "why": "Less data held means less to lose or misuse."
+  },
+  {
+   "q": "What is a bus factor of one?",
+   "right": "Only one person holds the knowledge needed for the work",
+   "wrong": [
+    "One vehicle is shared by the team",
+    "One person has too much work",
+    "One manager supervises everyone"
+   ],
+   "tier": 3,
+   "why": "Cross-training and documentation raise it."
+  },
+  {
+   "q": "What does gglearn do when it offboards a person?",
+   "right": "Marks them offboarded and bumps a session version so open sessions are signed out",
+   "wrong": [
+    "Deletes the person's row",
+    "Waits for the cookie to expire",
+    "Emails the person a farewell"
+   ],
+   "tier": 3,
+   "why": "The record stays, the access ends immediately."
+  },
+  {
+   "q": "Who may a gglearn manager offboard?",
+   "right": "Only learners",
+   "wrong": [
+    "Anyone",
+    "Only admins",
+    "Only themselves"
+   ],
+   "tier": 3,
+   "why": "A review found a manager could lock out an admin, so it was fixed."
+  },
+  {
+   "q": "In the Moksy staff-operations paper, what is a desk?",
+   "right": "A named operating function that owns a queue and duties and survives whoever sits at it",
+   "wrong": [
+    "A physical workstation for one employee",
+    "A dashboard of reports",
+    "A customer's support ticket"
+   ],
+   "tier": 2,
+   "why": "It makes a job a named thing instead of a habit."
+  },
+  {
+   "q": "In Moksy reviewer onboarding, what does the person choose?",
+   "right": "What they do and at what level",
+   "wrong": [
+    "Their salary and start date",
+    "Their desk and their manager",
+    "Their tools and their working hours"
+   ],
+   "tier": 2,
+   "why": "Everything else is worked out and shown for correction."
+  },
+  {
+   "q": "A new starter's first day is tomorrow and nothing is set up. What should you have done earlier?",
+   "right": "Pre-board: prepare accounts, equipment and a welcome after the offer is accepted",
+   "wrong": [
+    "Wait until the first day to request access",
+    "Give them administrator access to save time",
+    "Ask them to set up their own accounts"
+   ],
+   "tier": 2,
+   "why": "Pre-boarding removes idle time at the start."
+  },
+  {
+   "q": "Your team lost its only person who knew the monthly payments process, and they have left. What is the best lesson to apply to the next similar role?",
+   "right": "Document processes, name a cover person and raise the bus factor before anyone leaves",
+   "wrong": [
+    "Hire a replacement with the same name",
+    "Ask all staff to avoid leave",
+    "Keep processes verbal so they stay flexible"
+   ],
+   "tier": 3,
+   "why": "Knowledge handover must begin before the last day."
+  },
+  {
+   "q": "A leaver had the password to a shared account. Their personal login is disabled. What should you do next?",
+   "right": "Rotate the shared password and any keys they knew",
+   "wrong": [
+    "Nothing, because their login is disabled",
+    "Ask the person to promise not to use it",
+    "Wait to see whether it is misused"
+   ],
+   "tier": 3,
+   "why": "Disabling a login does not stop credentials that work independently."
+  },
+  {
+   "q": "A manager approves their own expense claim in the system. Which principle is broken?",
+   "right": "Separation of duties",
+   "wrong": [
+    "Data minimisation",
+    "Role-based learning paths",
+    "Pre-boarding"
+   ],
+   "tier": 3,
+   "why": "The requester and approver must differ."
+  },
+  {
+   "q": "A new hire has missed objectives for three weeks of a twelve-week probation. What should you do first?",
+   "right": "Hold an early conversation about the gap, support needed and what to change",
+   "wrong": [
+    "Wait for the final review to tell them",
+    "Extend the probation without telling them",
+    "Move their objectives without recording it"
+   ],
+   "tier": 4,
+   "why": "Early, specific feedback leaves time to improve and avoids surprises."
+  },
+  {
+   "q": "Two managers rate similar work differently and one team has far higher ratings. What helps most?",
+   "right": "Calibration, comparing evidence across managers against the same standard",
+   "wrong": [
+    "Giving the lenient manager's rating to everyone",
+    "Ranking people by who spoke up most",
+    "Letting each team keep its own scale"
+   ],
+   "tier": 4,
+   "why": "Calibration reduces rater differences."
+  },
+  {
+   "q": "An interview panel meets and the most senior person speaks first. What is the better way to run the debrief?",
+   "right": "Have every interviewer submit scores before discussion",
+   "wrong": [
+    "Let the senior person state the decision, then discuss",
+    "Skip the debrief if the first round was positive",
+    "Choose the candidate most people remember"
+   ],
+   "tier": 4,
+   "why": "Independent scoring stops anchoring on the loudest voice."
+  },
+  {
+   "q": "A colleague cannot work because of illness and no one knows who covers their urgent tasks. What would have prevented this?",
+   "right": "An unplanned absence procedure and a cover plan known in advance",
+   "wrong": [
+    "A stricter holiday policy",
+    "A longer probation period",
+    "A bigger meeting room"
+   ],
+   "tier": 4,
+   "why": "People need to know whom to notify and who steps in."
+  },
+  {
+   "q": "An employee wants to grow as a specialist and does not wish to manage others. What fits best?",
+   "right": "An individual contributor track with senior levels",
+   "wrong": [
+    "Promotion into a management role regardless",
+    "Staying at the same level indefinitely",
+    "Moving to a different company"
+   ],
+   "tier": 3,
+   "why": "Craft progression avoids forcing good practitioners into management."
+  },
+  {
+   "q": "Many long-serving staff can open systems unrelated to their jobs. What is the problem and the fix?",
+   "right": "Permission creep, fixed by regular access reviews",
+   "wrong": [
+    "Weak onboarding, fixed by longer orientation",
+    "Shared accounts, fixed by a new password",
+    "Poor calibration, fixed by 360 feedback"
+   ],
+   "tier": 4,
+   "why": "Reviews compare held access to current duties."
+  },
+  {
+   "q": "A privileged administrator is leaving. Who should check the offboarding steps?",
+   "right": "A second person, because privileged exits warrant a second pair of eyes",
+   "wrong": [
+    "The leaver, since they know their access best",
+    "No one, to protect privacy",
+    "Any employee who asks"
+   ],
+   "tier": 4,
+   "why": "This is separation of duties applied to exits."
+  },
+  {
+   "q": "In an emergency the normal approver cannot be reached and a system must be fixed at once. What does an organisation use?",
+   "right": "Break-glass access that is logged and reviewed afterwards",
+   "wrong": [
+    "Shared passwords left on a note",
+    "Permanent administrator rights for everyone",
+    "Waiting until the approver returns"
+   ],
+   "tier": 4,
+   "why": "Emergency access is controlled and audited, not open-ended."
+  },
+  {
+   "q": "A colleague says the 200 role-and-level crosses in Moksy reviewer onboarding are all valid. What is the correct response?",
+   "right": "148 are real and 52 are refused with the nearest real level offered",
+   "wrong": [
+    "All 200 are real",
+    "Only 25 are real",
+    "None are real until each person confirms"
+   ],
+   "tier": 4,
+   "why": "The paper reports 25 roles by 8 levels giving 200 crosses."
+  },
+  {
+   "q": "Someone says Moksy's staff-operations desks are already running. What should you check?",
+   "right": "The paper's own status: it is at founder review and nothing is built",
+   "wrong": [
+    "The number of desks listed",
+    "Whether the desk names look professional",
+    "Whether the queue is empty"
+   ],
+   "tier": 5,
+   "why": "A proposal is not evidence of coverage."
+  },
+  {
+   "q": "Why does gglearn pay the cost of a password hash for unknown or offboarded accounts at login?",
+   "right": "So response time does not reveal which emails exist",
+   "wrong": [
+    "To make logins slower for everyone",
+    "To log the user out later",
+    "To test the database speed"
+   ],
+   "tier": 5,
+   "why": "Equal timing stops account enumeration."
+  },
+  {
+   "q": "Why does gglearn re-read authorization from the database on every request?",
+   "right": "So role changes and offboarding take effect immediately",
+   "wrong": [
+    "To reduce database load",
+    "Because cookies cannot be stored",
+    "To count page views"
+   ],
+   "tier": 4,
+   "why": "It avoids waiting for a cookie to expire."
+  },
+  {
+   "q": "A gglearn manager adds a person to the platform. What happens as a direct result?",
+   "right": "An onboarding checklist is created and the person is enrolled in tracks for their job role",
+   "wrong": [
+    "The person is made an admin",
+    "Nothing until the person signs in",
+    "A leaving checklist is created"
+   ],
+   "tier": 3,
+   "why": "Access, learning and people are set up together."
+  },
+  {
+   "q": "Your company wants to know whether onboarding is working. Which measure is most direct?",
+   "right": "Time for a new hire to reach the expected level of work",
+   "wrong": [
+    "Hours of training attended",
+    "Number of emails the new hire sent",
+    "Size of the welcome pack"
+   ],
+   "tier": 4,
+   "why": "Time to productivity reflects real outcomes."
+  },
+  {
+   "q": "An HR record export includes a colleague's health note and is to be sent to an outside adviser. What is the right approach?",
+   "right": "Share only what is needed, redact the rest and use an approved secure channel",
+   "wrong": [
+    "Send the full file by group email",
+    "Post it on the team channel",
+    "Send it to the adviser's personal address"
+   ],
+   "tier": 4,
+   "why": "Need-to-know and secure sharing apply to sensitive data."
+  },
+  {
+   "q": "A manager repeatedly cancels the one-to-one with a struggling report. What is the likely effect?",
+   "right": "Problems stay hidden and the report feels unsupported",
+   "wrong": [
+    "The report gains independence",
+    "The next review becomes more accurate",
+    "Feedback becomes more continuous"
+   ],
+   "tier": 3,
+   "why": "The meeting is the place where support and feedback happen."
+  },
+  {
+   "q": "A team repeats the same argument in meetings each month. Which practice addresses this?",
+   "right": "A decision log recording what was decided and why",
+   "wrong": [
+    "A longer weekly meeting",
+    "A larger all-hands",
+    "A new job description"
+   ],
+   "tier": 3,
+   "why": "The log stops debates being reopened without new facts."
+  },
+  {
+   "q": "A candidate gives a strong first impression and an interviewer rates every criterion highly. Which bias is likely?",
+   "right": "Halo effect",
+   "wrong": [
+    "Recency bias",
+    "Permission creep",
+    "Calibration"
+   ],
+   "tier": 3,
+   "why": "One strong trait colours the rest."
+  },
+  {
+   "q": "A growing team finds every task is called an ops job and no one knows who owns it. What does the desk idea suggest?",
+   "right": "Name the function, define its duties and queue and seat people at it",
+   "wrong": [
+    "Hire more staff before defining anything",
+    "Give everyone every task",
+    "Rotate the work randomly each day"
+   ],
+   "tier": 4,
+   "why": "Naming the job lets cover, training and handover happen."
+  },
+  {
+   "q": "A candidate asks why a work sample is part of the hiring process. What is the best answer?",
+   "right": "It shows skill directly instead of only describing it",
+   "wrong": [
+    "It replaces the interview",
+    "It measures personality",
+    "It is only required for managers"
+   ],
+   "tier": 3,
+   "why": "Work samples give direct evidence of performance."
+  },
+  {
+   "q": "What should be agreed between a manager and new hire in a 30-60-90 day plan?",
+   "right": "Expectations for learning, contributing and owning across the first three months",
+   "wrong": [
+    "The new hire's pay for three years",
+    "The final probation outcome",
+    "Who will be promoted first"
+   ],
+   "tier": 3,
+   "why": "It gives natural points for progress conversations."
+  },
+  {
+   "q": "A leaver owned several customer relationships. What must the offboarding include?",
+   "right": "Transferring ownership and telling customers who their new contact is",
+   "wrong": [
+    "Deleting the customer records",
+    "Leaving the accounts unassigned",
+    "Asking customers to wait for the leaver's replacement without notice"
+   ],
+   "tier": 4,
+   "why": "Unowned customers are the main knowledge-loss risk."
+  }
+ ]
+}

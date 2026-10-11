@@ -1,0 +1,3000 @@
+{
+ "slug": "product-management-core",
+ "name": "Product Management Fundamentals",
+ "description": "Product vision and strategy, user research, problem framing, discovery and delivery, requirements, prioritisation, roadmaps, MVPs and experiments, product metrics, pricing, onboarding and launch, feedback loops, product-market fit, lifecycle and B2B, B2C and platform contexts for people who build or run products.",
+ "roles": "cto,product designer,project manager,manager,developer,full stack developer,ceo",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "strategy": "product strategy concept",
+  "research": "user research method",
+  "framing": "user and problem framing tool",
+  "discovery": "discovery or delivery practice",
+  "reqs": "requirements practice",
+  "prio": "prioritisation framework",
+  "road": "roadmapping concept",
+  "exp": "MVP or experimentation concept",
+  "metric": "product metric",
+  "monet": "pricing or packaging concept",
+  "adopt": "launch or adoption practice",
+  "life": "product lifecycle or market-fit concept",
+  "team": "product collaboration practice",
+  "context": "product context concept"
+ },
+ "cards": [
+  {
+   "group": "strategy",
+   "subject": "Product vision",
+   "tier": 1,
+   "says": [
+    "describes the future the product is meant to create for its users",
+    "stays stable across several planning cycles",
+    "gives a team a shared reason for the product to exist"
+   ],
+   "use": "need to explain why the product exists to a new team member",
+   "not": [
+    "lists the features planned for next quarter"
+   ],
+   "like": [
+    "Product strategy",
+    "Product principles"
+   ]
+  },
+  {
+   "group": "strategy",
+   "subject": "Product strategy",
+   "tier": 1,
+   "says": [
+    "sets the choices about where to play and how to win",
+    "states which customers and problems the team will deliberately not serve",
+    "connects the vision to a coherent set of bets"
+   ],
+   "use": "need to decide which of two promising opportunities to refuse",
+   "not": [
+    "is a list of every feature in the backlog"
+   ],
+   "like": [
+    "Product vision",
+    "Strategic bet"
+   ]
+  },
+  {
+   "group": "strategy",
+   "subject": "Product principles",
+   "tier": 3,
+   "says": [
+    "act as agreed rules that settle recurring trade-offs without escalation",
+    "describe what the team values when two good options collide",
+    "are specific enough that a reasonable team could disagree with them"
+   ],
+   "use": "find teams re-arguing the same trade-off in every planning meeting",
+   "not": [
+    "describe the target market size"
+   ],
+   "like": [
+    "Product vision",
+    "Product strategy"
+   ]
+  },
+  {
+   "group": "strategy",
+   "subject": "Strategic bet",
+   "tier": 3,
+   "says": [
+    "commits scarce capacity to an outcome that may not pay off",
+    "is written as a belief with a way of finding out it was wrong",
+    "accepts an opportunity cost in exchange for a possible large gain"
+   ],
+   "use": "need to place a large investment under real uncertainty",
+   "not": [
+    "is a guaranteed outcome with a fixed delivery date"
+   ],
+   "like": [
+    "Product strategy"
+   ]
+  },
+  {
+   "group": "strategy",
+   "subject": "Positioning statement",
+   "tier": 3,
+   "says": [
+    "names the target customer, the category and the main benefit over alternatives",
+    "tells customers why this product is different from the next best option",
+    "is shared by product, marketing and sales"
+   ],
+   "use": "hear sales and marketing describe the product in three different ways",
+   "not": [
+    "is the legal description of the product in the terms of service"
+   ],
+   "like": [
+    "Competitive moat"
+   ]
+  },
+  {
+   "group": "strategy",
+   "subject": "Competitive moat",
+   "tier": 4,
+   "says": [
+    "makes a product costly for rivals to copy or for customers to leave",
+    "can come from network effects, switching costs, data or scale",
+    "erodes if the company stops investing in what created it"
+   ],
+   "use": "are asked what protects the product once a larger rival copies the features",
+   "not": [
+    "is any feature that a competitor has not yet built"
+   ],
+   "like": [
+    "Positioning statement"
+   ]
+  },
+  {
+   "group": "strategy",
+   "subject": "Product-led growth",
+   "tier": 3,
+   "says": [
+    "lets users reach value through the product itself before talking to sales",
+    "relies on onboarding, free tiers or trials to drive acquisition and expansion",
+    "treats the product as the main driver of conversion"
+   ],
+   "use": "want users to try and adopt the product without a sales conversation",
+   "not": [
+    "depends on a large outbound sales team to close every deal"
+   ],
+   "like": [
+    "Sales-led growth"
+   ]
+  },
+  {
+   "group": "strategy",
+   "subject": "Sales-led growth",
+   "tier": 3,
+   "says": [
+    "relies on a sales team to find, demo and close customers",
+    "suits products with high contract values and complex buying processes",
+    "uses the sales conversation to shape deals that the product alone cannot close"
+   ],
+   "use": "sell a high-value product that needs a long evaluation by several buyers",
+   "not": [
+    "depends on users upgrading themselves without any contact"
+   ],
+   "like": [
+    "Product-led growth"
+   ]
+  },
+  {
+   "group": "strategy",
+   "subject": "Opportunity cost",
+   "tier": 2,
+   "says": [
+    "is the value of the best option given up when another is chosen",
+    "makes every yes to a feature a no to something else",
+    "applies even when the chosen work is profitable"
+   ],
+   "use": "need to compare a proposed project with what the team would otherwise do",
+   "not": [
+    "is the money paid to the vendors that build a feature"
+   ],
+   "like": [
+    "Strategic bet"
+   ]
+  },
+  {
+   "group": "research",
+   "subject": "User interview",
+   "tier": 1,
+   "says": [
+    "asks one person open questions about their past behaviour",
+    "uncovers motivations and context that numbers cannot show",
+    "works best when the interviewer listens more than talks"
+   ],
+   "use": "want to learn why customers behave as they do",
+   "not": [
+    "proves how many customers share a view"
+   ],
+   "like": [
+    "Survey",
+    "Contextual inquiry"
+   ]
+  },
+  {
+   "group": "research",
+   "subject": "Contextual inquiry",
+   "tier": 3,
+   "says": [
+    "observes users doing real work in their own environment",
+    "reveals workarounds that users forget to mention in interviews",
+    "combines watching with short questions in the moment"
+   ],
+   "use": "suspect users have workarounds they will not describe",
+   "not": [
+    "is a remote survey sent to a large panel"
+   ],
+   "like": [
+    "User interview",
+    "Diary study"
+   ]
+  },
+  {
+   "group": "research",
+   "subject": "Survey",
+   "tier": 2,
+   "says": [
+    "collects structured answers from many respondents at low cost",
+    "measures how common an attitude or behaviour is",
+    "is weak at explaining the reasons behind answers"
+   ],
+   "use": "need to size how widespread a problem is across the customer base",
+   "not": [
+    "uncovers unexpected needs through follow-up questions"
+   ],
+   "like": [
+    "User interview"
+   ]
+  },
+  {
+   "group": "research",
+   "subject": "Usability test",
+   "tier": 2,
+   "says": [
+    "watches representative users try to complete realistic tasks",
+    "finds where the interface confuses people",
+    "can use a prototype long before engineering starts"
+   ],
+   "use": "want to find where users get stuck in a flow before building it",
+   "not": [
+    "measures the long-term retention of the feature"
+   ],
+   "like": [
+    "Contextual inquiry",
+    "A/B test"
+   ]
+  },
+  {
+   "group": "research",
+   "subject": "Diary study",
+   "tier": 3,
+   "says": [
+    "asks participants to log experiences over days or weeks",
+    "captures behaviour that happens over time rather than in one session",
+    "costs participants effort, so dropout is a risk"
+   ],
+   "use": "need to understand a habit that unfolds over several weeks",
+   "not": [
+    "tests one prototype task in a single sitting"
+   ],
+   "like": [
+    "Contextual inquiry"
+   ]
+  },
+  {
+   "group": "research",
+   "subject": "Card sorting",
+   "tier": 3,
+   "says": [
+    "asks users to group items into categories they find natural",
+    "informs navigation and information architecture",
+    "reveals the labels people expect for content"
+   ],
+   "use": "need to decide how to organise a menu with many items",
+   "not": [
+    "measures task completion time on a checkout form"
+   ],
+   "like": [
+    "Usability test"
+   ]
+  },
+  {
+   "group": "research",
+   "subject": "Affinity mapping",
+   "tier": 2,
+   "says": [
+    "groups research notes by similarity to reveal themes",
+    "turns raw observations from many sessions into patterns",
+    "is done collaboratively so the whole team shares the findings"
+   ],
+   "use": "have a pile of notes from a dozen interviews and need the main themes",
+   "not": [
+    "scores features by reach and effort"
+   ],
+   "like": [
+    "Survey"
+   ]
+  },
+  {
+   "group": "research",
+   "subject": "Leading question",
+   "tier": 2,
+   "says": [
+    "hints at the answer the interviewer hopes to hear",
+    "biases the response toward agreement",
+    "is avoided by asking about past behaviour openly"
+   ],
+   "use": "review an interview script containing the phrase 'Wouldn't you love a dashboard for this?'",
+   "not": [
+    "is an open question that lets the user choose the topic"
+   ],
+   "like": [
+    "Say-do gap"
+   ]
+  },
+  {
+   "group": "research",
+   "subject": "Say-do gap",
+   "tier": 4,
+   "says": [
+    "is the difference between what users claim and what they actually do",
+    "makes stated intentions a weak forecast of behaviour",
+    "is why observed behaviour outweighs opinion in research"
+   ],
+   "use": "hear users say they would pay for a feature but usage data shows they ignore similar ones",
+   "not": [
+    "is the delay between a bug report and its fix"
+   ],
+   "like": [
+    "Leading question"
+   ]
+  },
+  {
+   "group": "framing",
+   "subject": "Persona",
+   "tier": 1,
+   "says": [
+    "is a research-based archetype of a group of users",
+    "summarises goals, context and pain points of a segment",
+    "goes stale if it is not refreshed with new research"
+   ],
+   "use": "need a shared picture of the typical user across the team",
+   "not": [
+    "is a single real customer named in a case study"
+   ],
+   "like": [
+    "Customer segment",
+    "Ideal customer profile"
+   ]
+  },
+  {
+   "group": "framing",
+   "subject": "Jobs to be done",
+   "tier": 2,
+   "says": [
+    "frames what progress a customer is trying to make in a situation",
+    "looks at the circumstance and motivation rather than demographics",
+    "explains why customers switch from one solution to another"
+   ],
+   "use": "find that customers with very different demographics hire the product for the same reason",
+   "not": [
+    "groups users by age and job title"
+   ],
+   "like": [
+    "Persona",
+    "Job story"
+   ]
+  },
+  {
+   "group": "framing",
+   "subject": "Job story",
+   "tier": 3,
+   "says": [
+    "is written as a situation, a motivation and an expected outcome",
+    "drops the persona role and focuses on context",
+    "rewrites a user story around circumstance"
+   ],
+   "use": "want a story format that describes the trigger instead of a type of user",
+   "not": [
+    "begins with 'As a' and a named role"
+   ],
+   "like": [
+    "Jobs to be done"
+   ]
+  },
+  {
+   "group": "framing",
+   "subject": "Problem statement",
+   "tier": 1,
+   "says": [
+    "describes who has a problem, what it is and why it matters",
+    "is written without naming a solution",
+    "keeps a team solving the right thing before design starts"
+   ],
+   "use": "find a team already debating button placement before agreeing what problem they solve",
+   "not": [
+    "names the feature to be built and its release date"
+   ],
+   "like": [
+    "Desired outcome"
+   ]
+  },
+  {
+   "group": "framing",
+   "subject": "Opportunity solution tree",
+   "tier": 3,
+   "says": [
+    "links a desired outcome to opportunities and then to candidate solutions",
+    "shows several solutions per opportunity instead of one",
+    "connects each experiment to the opportunity it tests"
+   ],
+   "use": "want to show how experiments trace back to an outcome",
+   "not": [
+    "lists tasks in a project plan by owner"
+   ],
+   "like": [
+    "Customer journey map"
+   ]
+  },
+  {
+   "group": "framing",
+   "subject": "Customer journey map",
+   "tier": 2,
+   "says": [
+    "lays out the stages a customer goes through from awareness to use",
+    "marks emotions and pain points at each stage",
+    "exposes handoffs where the experience breaks"
+   ],
+   "use": "need to find where the experience breaks between marketing, sign-up and first use",
+   "not": [
+    "ranks features by estimated revenue"
+   ],
+   "like": [
+    "Customer segment"
+   ]
+  },
+  {
+   "group": "framing",
+   "subject": "Customer segment",
+   "tier": 1,
+   "says": [
+    "is a group of customers with shared needs or behaviour",
+    "lets the team decide whom to serve first",
+    "can be defined by behaviour as well as company traits"
+   ],
+   "use": "need to choose which group of customers to focus a release on",
+   "not": [
+    "is a named fictional character with a photo"
+   ],
+   "like": [
+    "Persona",
+    "Ideal customer profile"
+   ]
+  },
+  {
+   "group": "framing",
+   "subject": "Ideal customer profile",
+   "tier": 3,
+   "says": [
+    "describes the kind of account that gets the most value and is most likely to succeed",
+    "guides sales, marketing and product focus together",
+    "is built from existing best customers, not wishes"
+   ],
+   "use": "want sales to stop closing customers who churn within months",
+   "not": [
+    "describes one user's day inside the product"
+   ],
+   "like": [
+    "Persona",
+    "Customer segment"
+   ]
+  },
+  {
+   "group": "framing",
+   "subject": "Desired outcome",
+   "tier": 3,
+   "says": [
+    "states a change in customer or business behaviour the team wants",
+    "is measurable and independent of any solution",
+    "turns a vague goal into something a team can test against"
+   ],
+   "use": "want a team to aim at a result rather than a deliverable",
+   "not": [
+    "is the list of features a stakeholder requested"
+   ],
+   "like": [
+    "Problem statement"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Product discovery",
+   "tier": 1,
+   "says": [
+    "decides what is worth building by testing ideas with users",
+    "reduces risk before engineering commits",
+    "continues alongside delivery rather than ending at a gate"
+   ],
+   "use": "need evidence an idea is valuable before engineering builds it",
+   "not": [
+    "builds and ships the agreed solution at quality"
+   ],
+   "like": [
+    "Product delivery"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Product delivery",
+   "tier": 1,
+   "says": [
+    "builds, tests and ships the chosen solution reliably",
+    "turns validated decisions into working software",
+    "is judged on quality, predictability and release cadence"
+   ],
+   "use": "need to turn a validated design into production software",
+   "not": [
+    "tests which problems customers care about"
+   ],
+   "like": [
+    "Product discovery"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Dual-track agile",
+   "tier": 3,
+   "says": [
+    "runs discovery and delivery in parallel by the same team",
+    "feeds validated work into the delivery backlog",
+    "avoids a hand-off between a research phase and a build phase"
+   ],
+   "use": "want discovery and delivery to happen side by side instead of one after another",
+   "not": [
+    "is a waterfall plan with a requirements gate"
+   ],
+   "like": [
+    "Product trio"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Product trio",
+   "tier": 3,
+   "says": [
+    "pairs a product manager, a designer and an engineer in discovery",
+    "brings feasibility and usability into decisions early",
+    "shares customer contact across all three disciplines"
+   ],
+   "use": "want engineering and design to join customer conversations from the start",
+   "not": [
+    "is a committee of three executives that approves releases"
+   ],
+   "like": [
+    "Dual-track agile"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Assumption mapping",
+   "tier": 4,
+   "says": [
+    "lists what must be true for an idea to work and sorts it by risk and evidence",
+    "exposes the assumptions most likely to sink the idea",
+    "chooses the next test by the least evidence and the highest impact"
+   ],
+   "use": "need to choose what to test first among dozens of unknowns",
+   "not": [
+    "scores features by reach and effort"
+   ],
+   "like": [
+    "Riskiest assumption test"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Riskiest assumption test",
+   "tier": 4,
+   "says": [
+    "tests the belief that would most damage the idea if wrong",
+    "is cheaper than building the product to learn the same thing",
+    "is chosen before smaller, safer questions"
+   ],
+   "use": "need the cheapest way to learn whether the whole idea can work",
+   "not": [
+    "validates the easiest assumption first"
+   ],
+   "like": [
+    "Assumption mapping"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Four product risks",
+   "tier": 4,
+   "says": [
+    "cover value, usability, feasibility and business viability",
+    "divide discovery questions among product, design and engineering",
+    "remind a team that a buildable idea can still be unwanted"
+   ],
+   "use": "find a team that proved an idea was feasible but never tested whether anyone wants it",
+   "not": [
+    "are schedule, cost, scope and quality"
+   ],
+   "like": [
+    "Riskiest assumption test"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Prototype",
+   "tier": 1,
+   "says": [
+    "is a cheap simulation of an idea used to learn before building",
+    "can be a clickable mock or a paper sketch",
+    "is thrown away or rebuilt rather than shipped"
+   ],
+   "use": "want user reactions to an interface before any code exists",
+   "not": [
+    "is the production release candidate"
+   ],
+   "like": [
+    "Minimum viable product"
+   ]
+  },
+  {
+   "group": "discovery",
+   "subject": "Design sprint",
+   "tier": 5,
+   "says": [
+    "compresses problem framing, ideas, prototype and user test into a few days",
+    "commits a small cross-functional team to one hard question",
+    "ends with real user reactions to a prototype"
+   ],
+   "use": "need a fast, focused answer to a big, uncertain question with a cross-functional team",
+   "not": [
+    "is a regular two-week delivery iteration"
+   ],
+   "like": [
+    "Prototype"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "User story",
+   "tier": 1,
+   "says": [
+    "describes a need from a user's point of view in a short sentence",
+    "invites a conversation rather than replacing it",
+    "fits into a single iteration when well sized"
+   ],
+   "use": "need to describe a small piece of value from the user's side",
+   "not": [
+    "is a full specification with every screen defined"
+   ],
+   "like": [
+    "Epic",
+    "Job story"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "Acceptance criteria",
+   "tier": 1,
+   "says": [
+    "state the conditions that must be met for a story to be accepted",
+    "are testable, with a clear pass or fail",
+    "are agreed before development starts"
+   ],
+   "use": "need to know when a story is truly finished from the customer's view",
+   "not": [
+    "describe how many engineers will work on a story"
+   ],
+   "like": [
+    "Definition of done"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "INVEST",
+   "tier": 3,
+   "says": [
+    "lists the qualities of a good story: independent, negotiable, valuable, estimable, small and testable",
+    "gives a team a quick check on story quality",
+    "flags stories too large to estimate or test"
+   ],
+   "use": "want a quick checklist to judge whether stories are well formed",
+   "not": [
+    "scores features by reach and impact"
+   ],
+   "like": [
+    "User story"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "Epic",
+   "tier": 1,
+   "says": [
+    "is a large body of work that is split into stories",
+    "spans several iterations",
+    "groups stories under one larger goal"
+   ],
+   "use": "have a goal too large to finish in one iteration",
+   "not": [
+    "is a task that fits in one afternoon"
+   ],
+   "like": [
+    "User story"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "Story splitting",
+   "tier": 3,
+   "says": [
+    "breaks a large story into smaller ones that each deliver value",
+    "slices vertically through the whole flow rather than by layer",
+    "keeps each slice releasable on its own"
+   ],
+   "use": "find a story too large for one iteration",
+   "not": [
+    "divides work into separate database and interface tasks"
+   ],
+   "like": [
+    "Epic"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "Definition of done",
+   "tier": 2,
+   "says": [
+    "is the team-wide quality bar every item must meet to be complete",
+    "covers tests, review and documentation for all stories",
+    "applies to every item, unlike per-story criteria"
+   ],
+   "use": "find stories marked complete that still lack tests and review",
+   "not": [
+    "lists the conditions for one story's acceptance"
+   ],
+   "like": [
+    "Acceptance criteria",
+    "Definition of ready"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "Definition of ready",
+   "tier": 3,
+   "says": [
+    "is a checklist that a story must meet before the team starts it",
+    "covers clarity, size and dependencies known",
+    "can turn into a gate that slows the team if over-applied"
+   ],
+   "use": "find a team pulling in stories that nobody understands",
+   "not": [
+    "is the quality bar for completed work"
+   ],
+   "like": [
+    "Definition of done"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "Non-functional requirement",
+   "tier": 3,
+   "says": [
+    "describes how well the system must work, such as speed, security or availability",
+    "is easy to forget in a story focused on features",
+    "often has a large effect on cost and architecture"
+   ],
+   "use": "notice stories describe features but say nothing about speed or privacy",
+   "not": [
+    "describes what a feature does for a user task"
+   ],
+   "like": [
+    "Acceptance criteria"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "Given-When-Then",
+   "tier": 3,
+   "says": [
+    "writes a scenario as a starting state, an action and an expected result",
+    "makes acceptance criteria readable by non-engineers and testable",
+    "gives a team one shared example per behaviour"
+   ],
+   "use": "want acceptance criteria written as concrete scenarios",
+   "not": [
+    "is a template for describing a persona"
+   ],
+   "like": [
+    "Acceptance criteria"
+   ]
+  },
+  {
+   "group": "reqs",
+   "subject": "Product requirements document",
+   "tier": 3,
+   "says": [
+    "records the problem, goals, scope and requirements for a release",
+    "is most useful when it captures the why and not only the what",
+    "stays lean and is updated as the team learns"
+   ],
+   "use": "need one place that records the problem, scope and non-goals for a larger initiative",
+   "not": [
+    "replaces all conversation between product and engineering"
+   ],
+   "like": [
+    "User story"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "RICE",
+   "tier": 2,
+   "says": [
+    "scores ideas by reach, impact, confidence and effort",
+    "divides reach times impact times confidence by effort",
+    "penalises ideas with weak evidence through the confidence factor"
+   ],
+   "use": "need a numeric ranking that accounts for how sure the team is",
+   "not": [
+    "sorts requests into must, should, could and won't"
+   ],
+   "like": [
+    "ICE",
+    "MoSCoW"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "ICE",
+   "tier": 3,
+   "says": [
+    "scores ideas on impact, confidence and ease",
+    "is faster than RICE because it has no reach estimate",
+    "suits quick growth experiments"
+   ],
+   "use": "need a quick score for many experiment ideas without estimating reach",
+   "not": [
+    "multiplies reach by impact over effort"
+   ],
+   "like": [
+    "RICE"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "MoSCoW",
+   "tier": 2,
+   "says": [
+    "sorts requirements into must, should, could and won't have",
+    "forces a release to name what it will not include",
+    "is used to set scope within a fixed time or budget"
+   ],
+   "use": "have a fixed deadline and need to agree what must be in the release",
+   "not": [
+    "gives each idea a numeric score"
+   ],
+   "like": [
+    "RICE",
+    "Kano model"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Kano model",
+   "tier": 3,
+   "says": [
+    "classifies features as basic, performance or delight",
+    "shows that delighters become expected over time",
+    "uses paired survey questions on having and lacking a feature"
+   ],
+   "use": "want to know which features customers merely expect and which would delight",
+   "not": [
+    "scores features by effort and reach"
+   ],
+   "like": [
+    "MoSCoW",
+    "Value versus effort"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Value versus effort",
+   "tier": 1,
+   "says": [
+    "plots ideas on a two-axis grid to find quick wins",
+    "highlights high-value, low-effort items first",
+    "flags high-effort, low-value items to drop"
+   ],
+   "use": "want a fast visual first cut of a long list",
+   "not": [
+    "multiplies four factors into a single score"
+   ],
+   "like": [
+    "RICE",
+    "Weighted scoring"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Weighted scoring",
+   "tier": 3,
+   "says": [
+    "rates ideas against criteria that carry agreed weights",
+    "makes the trade-off criteria explicit for stakeholders",
+    "gives a different answer when the weights change"
+   ],
+   "use": "need to rank ideas against several business criteria that matter differently",
+   "not": [
+    "classifies features by customer delight"
+   ],
+   "like": [
+    "RICE"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Cost of delay",
+   "tier": 4,
+   "says": [
+    "estimates the value lost for each unit of time a feature is not live",
+    "distinguishes urgent items from important ones",
+    "depends on the shape of how value decays"
+   ],
+   "use": "must choose between two features when one loses value quickly if released late",
+   "not": [
+    "is the cost of the team's tools each month"
+   ],
+   "like": [
+    "WSJF"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "WSJF",
+   "tier": 5,
+   "says": [
+    "divides the cost of delay by job size",
+    "puts the item with the best delay cost per unit of effort first",
+    "is used in scaled agile frameworks to sequence work"
+   ],
+   "use": "need to sequence jobs to minimise the total cost of delay",
+   "not": [
+    "sorts features into basic, performance and delight"
+   ],
+   "like": [
+    "Cost of delay",
+    "RICE"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "HiPPO",
+   "tier": 3,
+   "says": [
+    "names the highest paid person's opinion winning over evidence",
+    "is countered by agreed criteria and data",
+    "creates a risk that decisions follow rank rather than customer need"
+   ],
+   "use": "see a senior leader override a ranked list based on instinct",
+   "not": [
+    "is a scoring factor for hours of effort"
+   ],
+   "like": [
+    "Weighted scoring"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Outcome-based roadmap",
+   "tier": 3,
+   "says": [
+    "organises plans around customer or business outcomes",
+    "leaves room to choose solutions as the team learns",
+    "avoids promising exact features and dates"
+   ],
+   "use": "want a roadmap that states problems to solve rather than features to ship",
+   "not": [
+    "lists features with fixed delivery dates"
+   ],
+   "like": [
+    "Feature roadmap",
+    "Now-next-later roadmap"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Now-next-later roadmap",
+   "tier": 2,
+   "says": [
+    "groups work by how soon the team will address it",
+    "drops specific dates in favour of rough horizons",
+    "shows detail for now and increasing uncertainty for later"
+   ],
+   "use": "need a roadmap that avoids false precision on dates",
+   "not": [
+    "gives every item a committed month and quarter"
+   ],
+   "like": [
+    "Outcome-based roadmap",
+    "Date-based roadmap"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Feature roadmap",
+   "tier": 2,
+   "says": [
+    "lists the features planned to ship",
+    "tends to read as a promise to the audience",
+    "focuses on outputs more than outcomes"
+   ],
+   "use": "hear stakeholders ask which features will ship next quarter",
+   "not": [
+    "is organised around measurable customer outcomes"
+   ],
+   "like": [
+    "Outcome-based roadmap"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Date-based roadmap",
+   "tier": 2,
+   "says": [
+    "places each item against a calendar date or quarter",
+    "creates strong expectations that turn into commitments",
+    "fits fixed external deadlines such as regulation"
+   ],
+   "use": "must show a legal deadline that cannot move",
+   "not": [
+    "uses rough horizons with no dates"
+   ],
+   "like": [
+    "Now-next-later roadmap"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Roadmap theme",
+   "tier": 3,
+   "says": [
+    "groups related work under a customer problem or goal",
+    "gives several initiatives one shared purpose",
+    "reduces debates about individual features"
+   ],
+   "use": "find a roadmap with fifty small unrelated items",
+   "not": [
+    "is a single feature with its own release date"
+   ],
+   "like": [
+    "Outcome-based roadmap"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Objective",
+   "tier": 2,
+   "says": [
+    "states what the team wants to achieve in a short inspiring sentence",
+    "is qualitative and is measured by key results",
+    "gives direction without naming the work"
+   ],
+   "use": "want a short ambitious goal that people can remember",
+   "not": [
+    "is a numeric target on its own"
+   ],
+   "like": [
+    "Key result"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Key result",
+   "tier": 2,
+   "says": [
+    "is a measurable outcome that shows an objective is met",
+    "is a result rather than a task or output",
+    "has a number and a time frame"
+   ],
+   "use": "need a number that proves an objective was achieved",
+   "not": [
+    "lists the tasks needed to finish an objective"
+   ],
+   "like": [
+    "Objective"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Dependency mapping",
+   "tier": 3,
+   "says": [
+    "identifies work that waits on other teams or systems",
+    "surfaces risk to dates before commitments are made",
+    "shows which roadmap items cannot start independently"
+   ],
+   "use": "find that a planned launch waits on three other teams",
+   "not": [
+    "ranks items by customer value"
+   ],
+   "like": [
+    "Capacity buffer"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Capacity buffer",
+   "tier": 4,
+   "says": [
+    "reserves part of the team's time for unplanned work",
+    "keeps plans honest about interruptions and bugs",
+    "avoids planning at 100 percent utilisation"
+   ],
+   "use": "find a team always late because plans use every available hour",
+   "not": [
+    "adds extra features at the end of the iteration"
+   ],
+   "like": [
+    "Dependency mapping"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Minimum viable product",
+   "tier": 1,
+   "says": [
+    "is the smallest version that tests a core hypothesis with real users",
+    "is built to learn rather than to impress",
+    "may be manual behind the scenes"
+   ],
+   "use": "need the cheapest real product that tests whether customers want the core idea",
+   "not": [
+    "is the final polished release with all planned features"
+   ],
+   "like": [
+    "Prototype"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Concierge MVP",
+   "tier": 3,
+   "says": [
+    "delivers the service by hand to a few customers",
+    "proves demand before any automation is built",
+    "gives deep learning about the real workflow"
+   ],
+   "use": "want to learn the real workflow by doing the service manually for a few customers",
+   "not": [
+    "fakes an automated interface while humans work in secret"
+   ],
+   "like": [
+    "Wizard of Oz MVP"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Wizard of Oz MVP",
+   "tier": 4,
+   "says": [
+    "presents an automated-looking interface that people operate behind the scenes",
+    "tests how users respond before the technology exists",
+    "hides the manual work from the customer"
+   ],
+   "use": "want to test an automated experience that is not built yet without telling users",
+   "not": [
+    "tells the customer openly that staff do the work by hand"
+   ],
+   "like": [
+    "Concierge MVP"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Fake door test",
+   "tier": 4,
+   "says": [
+    "offers a feature that does not exist yet to measure interest",
+    "counts clicks on a call to action as a demand signal",
+    "needs a respectful message once a user clicks"
+   ],
+   "use": "want to measure demand for a feature before building it",
+   "not": [
+    "tests the usability of a built feature"
+   ],
+   "like": [
+    "Wizard of Oz MVP"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Hypothesis",
+   "tier": 1,
+   "says": [
+    "states a belief and the result that would prove it wrong",
+    "connects a change to an expected effect on a metric",
+    "must be falsifiable to be useful"
+   ],
+   "use": "need a precise, testable statement before starting an experiment",
+   "not": [
+    "is a confirmed fact from analytics"
+   ],
+   "like": [
+    "Guardrail metric"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "A/B test",
+   "tier": 1,
+   "says": [
+    "compares two versions with random groups of users at the same time",
+    "isolates the effect of one change",
+    "needs enough users to detect a difference"
+   ],
+   "use": "want to know whether a change causes better conversion",
+   "not": [
+    "compares this week to last week"
+   ],
+   "like": [
+    "Feature flag",
+    "Control group"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Control group",
+   "tier": 1,
+   "says": [
+    "gets the existing experience during an experiment",
+    "provides the baseline for measuring a change",
+    "is randomly assigned to avoid bias"
+   ],
+   "use": "need a baseline to compare the new experience against",
+   "not": [
+    "is the group that receives the new variant"
+   ],
+   "like": [
+    "A/B test"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Statistical significance",
+   "tier": 3,
+   "says": [
+    "indicates the observed difference is unlikely to be chance alone",
+    "depends on sample size and variance",
+    "does not say the effect is large or important"
+   ],
+   "use": "see a tiny difference marked significant in a huge test and wonder whether it matters",
+   "not": [
+    "proves the change will help every segment"
+   ],
+   "like": [
+    "Sample size"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Sample size",
+   "tier": 3,
+   "says": [
+    "is the number of users needed to detect an effect reliably",
+    "should be calculated before the test starts",
+    "grows when the expected effect is smaller"
+   ],
+   "use": "need to know how long an experiment must run before launching it",
+   "not": [
+    "is chosen after seeing which variant is ahead"
+   ],
+   "like": [
+    "Statistical significance"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Minimum detectable effect",
+   "tier": 5,
+   "says": [
+    "is the smallest change the test is designed to detect",
+    "sets the required sample size",
+    "is chosen from what would be worth acting on"
+   ],
+   "use": "must decide how large a lift is worth detecting before sizing a test",
+   "not": [
+    "is the largest allowed difference between groups"
+   ],
+   "like": [
+    "Sample size"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Peeking",
+   "tier": 5,
+   "says": [
+    "is checking results repeatedly and stopping when a variant looks ahead",
+    "inflates the false positive rate",
+    "is avoided by fixing the sample size in advance"
+   ],
+   "use": "see a team stop a test the first day the variant was ahead",
+   "not": [
+    "is a design review before the test"
+   ],
+   "like": [
+    "Statistical significance"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Guardrail metric",
+   "tier": 4,
+   "says": [
+    "watches for harm to something important while a primary metric is optimised",
+    "can stop a launch even if the main metric improves",
+    "covers areas such as speed, errors or cancellations"
+   ],
+   "use": "want to make sure a conversion test does not hurt refunds or support load",
+   "not": [
+    "is the single metric the experiment aims to increase"
+   ],
+   "like": [
+    "Hypothesis"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Novelty effect",
+   "tier": 5,
+   "says": [
+    "inflates early engagement with a change simply because it is new",
+    "fades as users get used to the new experience",
+    "is a reason to run a test long enough to see settled behaviour"
+   ],
+   "use": "see a new design win in week one but decline after two weeks",
+   "not": [
+    "is a statistical error from small samples"
+   ],
+   "like": [
+    "Peeking"
+   ]
+  },
+  {
+   "group": "exp",
+   "subject": "Feature flag",
+   "tier": 3,
+   "says": [
+    "switches a feature on or off without a new deployment",
+    "allows gradual exposure and quick rollback",
+    "separates deploying code from releasing it"
+   ],
+   "use": "want to release a feature to ten percent of users and turn it off instantly",
+   "not": [
+    "is a permanent customer setting in the product"
+   ],
+   "like": [
+    "A/B test"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Activation rate",
+   "tier": 2,
+   "says": [
+    "measures the share of new users who reach a first meaningful value",
+    "is defined by an event that predicts later retention",
+    "moves with onboarding improvements"
+   ],
+   "use": "want to know how many new sign-ups reach the first value",
+   "not": [
+    "measures the share of customers who cancel each month"
+   ],
+   "like": [
+    "Retention",
+    "Conversion rate"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Retention",
+   "tier": 1,
+   "says": [
+    "measures how many users keep coming back over time",
+    "is shown as a curve by cohort",
+    "is the strongest sign of sustained value"
+   ],
+   "use": "need to know whether users stay after the first week",
+   "not": [
+    "counts how many new users signed up"
+   ],
+   "like": [
+    "Churn",
+    "Activation rate"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Churn",
+   "tier": 1,
+   "says": [
+    "measures the share of customers lost in a period",
+    "is the complement of retention",
+    "can be tracked as users or as revenue"
+   ],
+   "use": "want to know how many customers were lost this quarter",
+   "not": [
+    "counts users who reach their first success"
+   ],
+   "like": [
+    "Retention"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Cohort analysis",
+   "tier": 3,
+   "says": [
+    "groups users by when they joined and follows each group over time",
+    "separates product change from the mix of new users",
+    "shows whether newer cohorts retain better"
+   ],
+   "use": "need to know whether recent changes improved retention for new users",
+   "not": [
+    "compares total users across two years"
+   ],
+   "like": [
+    "Retention"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Funnel",
+   "tier": 1,
+   "says": [
+    "shows the share of users who complete each step towards a goal",
+    "exposes the step with the largest drop-off",
+    "is analysed step by step in order"
+   ],
+   "use": "need to find where users drop between sign-up and purchase",
+   "not": [
+    "tracks users who return week after week"
+   ],
+   "like": [
+    "Conversion rate"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Conversion rate",
+   "tier": 1,
+   "says": [
+    "is the share of visitors or users who complete a target action",
+    "can be measured for a single step or the whole funnel",
+    "has a denominator that must be defined clearly"
+   ],
+   "use": "want a single percentage of visitors who finished the target action",
+   "not": [
+    "measures how long a user stays in a session"
+   ],
+   "like": [
+    "Funnel",
+    "Activation rate"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Net Promoter Score",
+   "tier": 1,
+   "says": [
+    "asks how likely users are to recommend the product on a zero to ten scale",
+    "subtracts the share of detractors from the share of promoters",
+    "ranges from minus one hundred to one hundred"
+   ],
+   "use": "want a single loyalty indicator based on willingness to recommend",
+   "not": [
+    "measures satisfaction with one support interaction"
+   ],
+   "like": [
+    "Customer satisfaction"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Customer satisfaction",
+   "tier": 2,
+   "says": [
+    "asks how satisfied a user is with a specific interaction or feature",
+    "is collected right after the event",
+    "reflects a moment more than overall loyalty"
+   ],
+   "use": "want a rating right after a support chat or a feature use",
+   "not": [
+    "asks whether customers would recommend the company to others"
+   ],
+   "like": [
+    "Net Promoter Score"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "North star metric",
+   "tier": 2,
+   "says": [
+    "is the single measure that best captures the value delivered to customers",
+    "aligns teams toward the same outcome",
+    "should lead to long-term revenue rather than just reflect it"
+   ],
+   "use": "need one number to align several teams around customer value",
+   "not": [
+    "is the quarterly revenue target"
+   ],
+   "like": [
+    "Input metric"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Input metric",
+   "tier": 4,
+   "says": [
+    "is a lever a team controls that drives the north star",
+    "changes sooner than the outcome it feeds",
+    "breaks the north star into parts that teams can own"
+   ],
+   "use": "want each squad to own a number it can move that feeds the headline metric",
+   "not": [
+    "is the headline measure of customer value"
+   ],
+   "like": [
+    "North star metric",
+    "Leading indicator"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Leading indicator",
+   "tier": 4,
+   "says": [
+    "moves early and predicts a later result",
+    "gives a team time to act before the outcome shows",
+    "is weaker as proof than the lagging result itself"
+   ],
+   "use": "need an early signal that predicts renewal months before the contract ends",
+   "not": [
+    "confirms what already happened"
+   ],
+   "like": [
+    "Input metric"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Vanity metric",
+   "tier": 3,
+   "says": [
+    "looks impressive but does not guide a decision",
+    "grows without telling you whether users get value",
+    "includes total sign-ups and page views"
+   ],
+   "use": "find a dashboard that only shows total registered users",
+   "not": [
+    "predicts retention and informs action"
+   ],
+   "like": [
+    "North star metric"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Per-seat pricing",
+   "tier": 2,
+   "says": [
+    "charges for each user with access",
+    "is simple to explain and predict",
+    "can discourage adding users who use the product lightly"
+   ],
+   "use": "sell a collaboration tool where value grows with the number of team members",
+   "not": [
+    "bills by the amount consumed"
+   ],
+   "like": [
+    "Usage-based pricing"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Usage-based pricing",
+   "tier": 3,
+   "says": [
+    "charges according to consumption such as calls or storage",
+    "ties revenue closely to the value used",
+    "makes customer bills harder to predict"
+   ],
+   "use": "sell an infrastructure service whose value scales with volume",
+   "not": [
+    "charges a flat fee per user per month"
+   ],
+   "like": [
+    "Per-seat pricing"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Freemium",
+   "tier": 1,
+   "says": [
+    "gives a free tier forever and charges for advanced use",
+    "relies on a share of free users converting to paid",
+    "costs money to serve free users"
+   ],
+   "use": "want a large user base and expect a small share to upgrade",
+   "not": [
+    "gives full access for a limited time only"
+   ],
+   "like": [
+    "Free trial"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Free trial",
+   "tier": 1,
+   "says": [
+    "gives full or most access for a limited period",
+    "pushes users to reach value before it expires",
+    "ends in a decision to pay or leave"
+   ],
+   "use": "want users to experience the full product before paying",
+   "not": [
+    "offers a limited tier with no time limit"
+   ],
+   "like": [
+    "Freemium"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Good-better-best tiers",
+   "tier": 3,
+   "says": [
+    "offers three packages with rising features and price",
+    "makes the middle option easy to choose",
+    "lets customers self-select by need and budget"
+   ],
+   "use": "want to serve small and large customers with the same product",
+   "not": [
+    "charges one price for all customers"
+   ],
+   "like": [
+    "Bundling"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Value-based pricing",
+   "tier": 3,
+   "says": [
+    "sets price from the value customers gain",
+    "starts from willingness to pay and not from cost",
+    "needs customer research on the benefit received"
+   ],
+   "use": "find that the product saves customers ten times its price yet is priced by cost",
+   "not": [
+    "adds a fixed margin to cost"
+   ],
+   "like": [
+    "Cost-plus pricing"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Cost-plus pricing",
+   "tier": 3,
+   "says": [
+    "sets price by adding a margin to the cost of delivery",
+    "ignores how much value customers receive",
+    "can leave money on the table or overprice"
+   ],
+   "use": "price a physical product from its unit cost",
+   "not": [
+    "is based on what customers will pay for the benefit"
+   ],
+   "like": [
+    "Value-based pricing"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Willingness to pay",
+   "tier": 3,
+   "says": [
+    "is the most a customer would pay for a product",
+    "varies by segment and context",
+    "is estimated from research such as price sensitivity surveys"
+   ],
+   "use": "need to estimate how much a segment would pay before setting a price",
+   "not": [
+    "is the lowest price that covers cost"
+   ],
+   "like": [
+    "Value-based pricing"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Grandfathering",
+   "tier": 5,
+   "says": [
+    "keeps existing customers on an old plan when prices change",
+    "reduces churn caused by a price rise",
+    "adds support and billing complexity over time"
+   ],
+   "use": "are raising prices and fear existing customers will leave",
+   "not": [
+    "moves all customers to the new price immediately"
+   ],
+   "like": [
+    "Per-seat pricing"
+   ]
+  },
+  {
+   "group": "monet",
+   "subject": "Bundling",
+   "tier": 4,
+   "says": [
+    "sells several products together at one price",
+    "raises perceived value and average order",
+    "can hide weaker components"
+   ],
+   "use": "want to sell several features together at a single price",
+   "not": [
+    "splits a product into separately priced parts"
+   ],
+   "like": [
+    "Good-better-best tiers"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Onboarding",
+   "tier": 1,
+   "says": [
+    "guides new users from sign-up to first value",
+    "reduces drop-off in the first sessions",
+    "is measured by activation"
+   ],
+   "use": "want new users to reach first value quickly",
+   "not": [
+    "handles billing disputes for existing customers"
+   ],
+   "like": [
+    "Product tour"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Aha moment",
+   "tier": 2,
+   "says": [
+    "is the point a user first experiences the product's value",
+    "correlates with later retention",
+    "is found by comparing behaviour of retained and churned users"
+   ],
+   "use": "want to define the moment that predicts a user will stay",
+   "not": [
+    "is the first time a user logs in"
+   ],
+   "like": [
+    "Activation rate"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Empty state",
+   "tier": 3,
+   "says": [
+    "is what users see before any content exists",
+    "guides first actions instead of showing a blank screen",
+    "is a chance to teach rather than leave users stuck"
+   ],
+   "use": "notice new users land on a blank screen and leave",
+   "not": [
+    "is an error shown when a server fails"
+   ],
+   "like": [
+    "Product tour"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Product tour",
+   "tier": 2,
+   "says": [
+    "walks users through key features with prompts",
+    "helps most when tied to a task rather than a feature list",
+    "annoys users when it blocks the screen at the start"
+   ],
+   "use": "want to introduce interface elements in context",
+   "not": [
+    "is a one-time email to new users"
+   ],
+   "like": [
+    "Onboarding"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Feature adoption rate",
+   "tier": 3,
+   "says": [
+    "is the share of eligible users who use a feature",
+    "shows whether a released feature reaches its audience",
+    "needs a clear definition of eligible users"
+   ],
+   "use": "want to know whether a released feature gets used",
+   "not": [
+    "counts the number of times a feature is mentioned in support"
+   ],
+   "like": [
+    "Activation rate"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Go-to-market plan",
+   "tier": 3,
+   "says": [
+    "coordinates product, marketing, sales and support for a launch",
+    "defines target customer, message, channels and pricing",
+    "is needed for market launches, not only code release"
+   ],
+   "use": "need to coordinate marketing, sales and support for a launch",
+   "not": [
+    "lists the technical steps to deploy code"
+   ],
+   "like": [
+    "Launch tiering"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Launch tiering",
+   "tier": 3,
+   "says": [
+    "classifies launches by size to match effort and visibility",
+    "avoids treating every release as a major event",
+    "uses criteria such as customer impact and strategic value"
+   ],
+   "use": "find the team spends the same effort on every release regardless of importance",
+   "not": [
+    "groups customers into pricing plans"
+   ],
+   "like": [
+    "Go-to-market plan"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Phased rollout",
+   "tier": 3,
+   "says": [
+    "exposes a release to a growing share of users",
+    "limits harm if a problem exists",
+    "allows monitoring before full release"
+   ],
+   "use": "want to catch problems before every user sees a change",
+   "not": [
+    "releases to everyone at once"
+   ],
+   "like": [
+    "Dark launch",
+    "Beta program"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Beta program",
+   "tier": 3,
+   "says": [
+    "gives a selected group of customers early access",
+    "collects feedback before general release",
+    "works best with engaged customers who will report problems"
+   ],
+   "use": "want feedback from willing customers before a general release",
+   "not": [
+    "gradually increases traffic with no customer involvement"
+   ],
+   "like": [
+    "Phased rollout"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Dark launch",
+   "tier": 5,
+   "says": [
+    "deploys a feature to production but hides it from users",
+    "tests performance under real load before exposure",
+    "separates technical risk from customer exposure"
+   ],
+   "use": "want to test a new service under real traffic without users seeing it",
+   "not": [
+    "shows the feature to a small group of customers"
+   ],
+   "like": [
+    "Phased rollout"
+   ]
+  },
+  {
+   "group": "adopt",
+   "subject": "Rollback plan",
+   "tier": 4,
+   "says": [
+    "describes how to return to the previous version if a release fails",
+    "is prepared before the launch, not during the incident",
+    "names who decides and what triggers the rollback"
+   ],
+   "use": "are about to release a risky change and need a way back",
+   "not": [
+    "lists the marketing steps for a launch"
+   ],
+   "like": [
+    "Feature flag"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Product-market fit",
+   "tier": 2,
+   "says": [
+    "exists when a product satisfies a strong market demand",
+    "shows in retention, organic growth and customers who would be upset without it",
+    "is the point after which scaling pays off more than reshaping"
+   ],
+   "use": "need to decide if the product is ready to scale spending",
+   "not": [
+    "is reached when the product has launched"
+   ],
+   "like": [
+    "Sean Ellis test"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Sean Ellis test",
+   "tier": 3,
+   "says": [
+    "asks how users would feel if they could no longer use the product",
+    "treats a large 'very disappointed' share as a signal of fit",
+    "gives a survey-based sign of product-market fit"
+   ],
+   "use": "want a survey signal of whether users would miss the product",
+   "not": [
+    "measures the likelihood to recommend on a zero to ten scale"
+   ],
+   "like": [
+    "Net Promoter Score",
+    "Product-market fit"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Flattening retention curve",
+   "tier": 5,
+   "says": [
+    "levels off above zero as a cohort ages",
+    "indicates a core group of users who stay",
+    "is a quantitative sign of product-market fit"
+   ],
+   "use": "look at a cohort chart that settles at a steady share of users",
+   "not": [
+    "keeps falling towards zero over time"
+   ],
+   "like": [
+    "Product-market fit"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Product lifecycle",
+   "tier": 2,
+   "says": [
+    "moves a product through introduction, growth, maturity and decline",
+    "changes what the team should prioritise at each stage",
+    "helps decide when to invest or harvest"
+   ],
+   "use": "need to match investment to the stage a product is in",
+   "not": [
+    "is the sprint cycle of the development team"
+   ],
+   "like": [
+    "Crossing the chasm"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Crossing the chasm",
+   "tier": 5,
+   "says": [
+    "describes the gap between early adopters and the mainstream market",
+    "requires a focused niche to win first",
+    "fits technology products with a different buyer in each group"
+   ],
+   "use": "need to move from enthusiasts to mainstream buyers who want proven solutions",
+   "not": [
+    "is the gap between deployment and release"
+   ],
+   "like": [
+    "Product lifecycle"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Sunsetting",
+   "tier": 3,
+   "says": [
+    "retires a product or feature in a planned way",
+    "needs notice, a migration path and support",
+    "frees capacity for products with more value"
+   ],
+   "use": "must retire an old feature that few customers use",
+   "not": [
+    "deletes the feature in the next release without notice"
+   ],
+   "like": [
+    "Deprecation policy"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Deprecation policy",
+   "tier": 4,
+   "says": [
+    "states how long a feature stays supported after announcement",
+    "gives customers predictable time to move",
+    "applies to APIs as well as to features"
+   ],
+   "use": "want customers to trust that features do not vanish without warning",
+   "not": [
+    "lists the features planned for the next release"
+   ],
+   "like": [
+    "Sunsetting"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Migration path",
+   "tier": 3,
+   "says": [
+    "gives customers a route from the old product to the new one",
+    "reduces churn during a retirement",
+    "includes tools, documentation and support"
+   ],
+   "use": "are retiring a feature and want customers to stay",
+   "not": [
+    "tells customers to find another provider"
+   ],
+   "like": [
+    "Sunsetting"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Sunk cost fallacy",
+   "tier": 3,
+   "says": [
+    "continues an effort because of past spending rather than future value",
+    "makes teams keep a failing product alive",
+    "is countered by judging only future costs and benefits"
+   ],
+   "use": "hear a team say they cannot stop because they have spent two years",
+   "not": [
+    "weighs future value of the options"
+   ],
+   "like": [
+    "Opportunity cost"
+   ]
+  },
+  {
+   "group": "life",
+   "subject": "Feature bloat",
+   "tier": 3,
+   "says": [
+    "accumulates features that make a product harder to use and maintain",
+    "comes from adding without removing",
+    "is countered by usage review and retirement"
+   ],
+   "use": "find a product where most features are used by under one percent of users",
+   "not": [
+    "describes a lean product with few features"
+   ],
+   "like": [
+    "Sunk cost fallacy"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Feedback loop",
+   "tier": 2,
+   "says": [
+    "returns what customers say and do back to the team",
+    "shortens the time between a release and learning from it",
+    "needs an owner or it fills with unread input"
+   ],
+   "use": "want every release to produce learning for the next one",
+   "not": [
+    "is a one-way announcement to customers"
+   ],
+   "like": [
+    "Voice of the customer"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Voice of the customer",
+   "tier": 3,
+   "says": [
+    "gathers customer needs from many sources into one view",
+    "combines support, sales, research and usage data",
+    "keeps teams from relying on one loud account"
+   ],
+   "use": "want a balanced view of customers instead of the last request heard",
+   "not": [
+    "is a single survey sent once a year"
+   ],
+   "like": [
+    "Feedback loop"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Feedback triage",
+   "tier": 3,
+   "says": [
+    "sorts incoming requests into themes and decides which to act on",
+    "separates the problem behind a request from the requested solution",
+    "avoids building every suggestion"
+   ],
+   "use": "have hundreds of feature requests and no way to see patterns",
+   "not": [
+    "adds every request to the roadmap in order received"
+   ],
+   "like": [
+    "Support tagging"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Support tagging",
+   "tier": 3,
+   "says": [
+    "labels support tickets by theme so patterns show up",
+    "turns support volume into product evidence",
+    "only works if tags are consistent across agents"
+   ],
+   "use": "want support tickets to show what to fix first",
+   "not": [
+    "answers customers faster with templates"
+   ],
+   "like": [
+    "Feedback triage"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Engineering estimate",
+   "tier": 3,
+   "says": [
+    "is a forecast of effort with uncertainty and not a promise",
+    "improves when the team is involved in discovery",
+    "should include a range when the unknowns are large"
+   ],
+   "use": "need to plan work and know how reliable the number is",
+   "not": [
+    "is a commitment on the delivery date"
+   ],
+   "like": [
+    "Technical spike"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Technical debt allocation",
+   "tier": 3,
+   "says": [
+    "reserves a share of capacity for improving the codebase",
+    "keeps delivery speed from falling over time",
+    "needs the product manager to treat it as a priority"
+   ],
+   "use": "find that new features slow down each quarter",
+   "not": [
+    "delays all maintenance until after the next launch"
+   ],
+   "like": [
+    "Capacity buffer"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Design critique",
+   "tier": 3,
+   "says": [
+    "reviews a design against the user problem and goals",
+    "focuses feedback on goals rather than personal taste",
+    "includes product and engineering as well as designers"
+   ],
+   "use": "want feedback on a design that stays on the problem",
+   "not": [
+    "approves a design by seniority"
+   ],
+   "like": [
+    "Usability test"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Stakeholder alignment",
+   "tier": 4,
+   "says": [
+    "builds shared understanding of goals and trade-offs before decisions",
+    "reduces surprises at review time",
+    "uses regular updates to show what was decided and why"
+   ],
+   "use": "find that a launch was blocked by a leader who had not been consulted",
+   "not": [
+    "gets approval from everyone for every decision"
+   ],
+   "like": [
+    "Decision log"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Decision log",
+   "tier": 5,
+   "says": [
+    "records what was decided, by whom, why and with what alternatives",
+    "lets new people see the reasons behind past choices",
+    "prevents the same debate from reopening without new evidence"
+   ],
+   "use": "find the team reopening a settled decision because nobody remembers why it was made",
+   "not": [
+    "lists the tasks assigned in the current iteration"
+   ],
+   "like": [
+    "Stakeholder alignment"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Technical spike",
+   "tier": 4,
+   "says": [
+    "is a short time-boxed investigation of a technical unknown",
+    "answers a feasibility question rather than delivering a feature",
+    "ends with a learning, not a shippable increment"
+   ],
+   "use": "cannot estimate a story because the integration approach is unknown",
+   "not": [
+    "delivers a finished feature to customers"
+   ],
+   "like": [
+    "Engineering estimate",
+    "Prototype"
+   ]
+  },
+  {
+   "group": "context",
+   "subject": "Buying committee",
+   "tier": 3,
+   "says": [
+    "is the group of people who decide a business purchase",
+    "includes users, a champion, an economic buyer and security reviewers",
+    "makes B2B sales cycles longer than consumer ones"
+   ],
+   "use": "sell to a large company where several roles must agree",
+   "not": [
+    "is the single consumer who decides alone"
+   ],
+   "like": [
+    "Economic buyer"
+   ]
+  },
+  {
+   "group": "context",
+   "subject": "Economic buyer",
+   "tier": 4,
+   "says": [
+    "holds the budget and signs off on a business purchase",
+    "cares about outcomes and cost more than features",
+    "often differs from the daily user"
+   ],
+   "use": "find that daily users love the product but the contract is not signed",
+   "not": [
+    "is the person who uses the product every day"
+   ],
+   "like": [
+    "Champion",
+    "Buying committee"
+   ]
+  },
+  {
+   "group": "context",
+   "subject": "Champion",
+   "tier": 3,
+   "says": [
+    "is an internal advocate who drives adoption inside a customer",
+    "helps the vendor navigate the buying process",
+    "may leave the company and take the deal with them"
+   ],
+   "use": "need someone inside the customer to push the purchase through",
+   "not": [
+    "is the person who signs the contract"
+   ],
+   "like": [
+    "Economic buyer"
+   ]
+  },
+  {
+   "group": "context",
+   "subject": "Enterprise requirement",
+   "tier": 3,
+   "says": [
+    "covers needs such as single sign-on, audit logs and role-based access",
+    "often blocks a deal if missing",
+    "is demanded by security and IT rather than daily users"
+   ],
+   "use": "find that large deals stall on security questionnaires",
+   "not": [
+    "is a feature loved by individual users"
+   ],
+   "like": [
+    "Non-functional requirement"
+   ]
+  },
+  {
+   "group": "context",
+   "subject": "Network effect",
+   "tier": 4,
+   "says": [
+    "makes a product more valuable as more people use it",
+    "creates a barrier for competitors",
+    "needs a critical mass before it works"
+   ],
+   "use": "build a product whose value grows with each added user",
+   "not": [
+    "makes a product cheaper to deliver at scale"
+   ],
+   "like": [
+    "Cold-start problem"
+   ]
+  },
+  {
+   "group": "context",
+   "subject": "Cold-start problem",
+   "tier": 5,
+   "says": [
+    "is the difficulty of attracting the first users when value depends on others",
+    "is common in marketplaces and social products",
+    "is often solved by starting with one narrow segment or one side"
+   ],
+   "use": "launch a marketplace where buyers need sellers and sellers need buyers",
+   "not": [
+    "is a slow server start after a deployment"
+   ],
+   "like": [
+    "Network effect"
+   ]
+  },
+  {
+   "group": "context",
+   "subject": "Platform product",
+   "tier": 3,
+   "says": [
+    "provides capabilities that other teams or partners build on",
+    "succeeds when its customers can build without the platform team",
+    "is judged on adoption by builders"
+   ],
+   "use": "build capabilities that many teams will use to build their own products",
+   "not": [
+    "serves end users directly with a single workflow"
+   ],
+   "like": [
+    "API product"
+   ]
+  },
+  {
+   "group": "context",
+   "subject": "API product",
+   "tier": 4,
+   "says": [
+    "treats an interface as a product with documentation, versioning and support",
+    "has developers as customers",
+    "breaks trust when changes are made without notice"
+   ],
+   "use": "offer an interface that outside developers integrate with",
+   "not": [
+    "is hidden code inside a single application"
+   ],
+   "like": [
+    "Platform product"
+   ]
+  },
+  {
+   "group": "context",
+   "subject": "Internal platform product",
+   "tier": 5,
+   "says": [
+    "serves employees and teams as customers",
+    "gains adoption through usefulness rather than mandate",
+    "measures success by the productivity of the teams using it"
+   ],
+   "use": "run a shared tooling team whose customers are other teams in the company",
+   "not": [
+    "is sold to external customers as a subscription"
+   ],
+   "like": [
+    "Platform product"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the difference between a problem and a solution in product work?",
+   "right": "A problem is a user need or pain; a solution is one way of addressing it",
+   "wrong": [
+    "A problem is a bug; a solution is a release",
+    "A problem is the competitor's weakness; a solution is our feature",
+    "They are the same thing described by different teams"
+   ],
+   "tier": 1,
+   "why": "Keeping the two apart lets a team consider several solutions to one problem."
+  },
+  {
+   "q": "What is the main purpose of a user interview in discovery?",
+   "right": "To learn about the person's real behaviour, context and motivations",
+   "wrong": [
+    "To get approval for the planned design",
+    "To count how many users want a feature",
+    "To ask users to pick the final solution"
+   ],
+   "tier": 1,
+   "why": "Interviews give depth about why people act; they do not measure how common something is."
+  },
+  {
+   "q": "What does MVP stand for in product work?",
+   "right": "Minimum viable product",
+   "wrong": [
+    "Most valuable product",
+    "Maximum viable potential",
+    "Minimum validated process"
+   ],
+   "tier": 1,
+   "why": "The MVP is the smallest product that tests the core hypothesis."
+  },
+  {
+   "q": "In RICE scoring, what does the C stand for?",
+   "right": "Confidence",
+   "wrong": [
+    "Cost",
+    "Customers",
+    "Complexity"
+   ],
+   "tier": 1,
+   "why": "Confidence reduces the score of ideas that rest on weak evidence."
+  },
+  {
+   "q": "What does an acceptance criterion describe?",
+   "right": "A testable condition that must hold for the story to be accepted",
+   "wrong": [
+    "The estimated hours for the story",
+    "The person who requested the story",
+    "The release date of the story"
+   ],
+   "tier": 1,
+   "why": "Acceptance criteria give a clear pass or fail."
+  },
+  {
+   "q": "Which question best checks that a story is written from the user's perspective?",
+   "right": "What does the user get from this and why do they care?",
+   "wrong": [
+    "Which database table does this touch?",
+    "How many hours will this take?",
+    "Which team owns the service?"
+   ],
+   "tier": 2,
+   "why": "A user story states a need and value from the user's side."
+  },
+  {
+   "q": "Which statement about the Kano model is correct?",
+   "right": "Features that delight today tend to become expected over time",
+   "wrong": [
+    "Every feature gains value the more it is built",
+    "Basic needs delight customers when present",
+    "Delighters are the same as must-haves"
+   ],
+   "tier": 2,
+   "why": "Delighters drift toward basic expectations as markets learn them."
+  },
+  {
+   "q": "How is a Net Promoter Score calculated?",
+   "right": "Percentage of promoters minus percentage of detractors",
+   "wrong": [
+    "Average of all ratings from zero to ten",
+    "Percentage of users who rated nine or ten",
+    "Number of promoters divided by detractors"
+   ],
+   "tier": 2,
+   "why": "Passives are ignored and the result ranges from minus 100 to 100."
+  },
+  {
+   "q": "Which roadmap format avoids committing to exact dates for later work?",
+   "right": "Now-next-later",
+   "wrong": [
+    "Gantt chart with fixed milestones",
+    "Release calendar by month",
+    "Dependency matrix with dates"
+   ],
+   "tier": 2,
+   "why": "Horizons express certainty without false precision."
+  },
+  {
+   "q": "What is a north star metric?",
+   "right": "One measure that best captures the value customers receive",
+   "wrong": [
+    "The metric the CEO prefers",
+    "The total revenue target",
+    "The number of features shipped"
+   ],
+   "tier": 2,
+   "why": "It aligns teams around customer value that leads to business results."
+  },
+  {
+   "q": "Which of these is a vanity metric?",
+   "right": "Total registered accounts ever created",
+   "wrong": [
+    "Weekly retention of the latest cohort",
+    "Share of new users completing setup",
+    "Trial-to-paid conversion rate"
+   ],
+   "tier": 2,
+   "why": "Cumulative totals only grow and rarely guide decisions."
+  },
+  {
+   "q": "What is the difference between discovery and delivery?",
+   "right": "Discovery decides what is worth building; delivery builds and ships it well",
+   "wrong": [
+    "Discovery is design; delivery is engineering",
+    "Discovery happens before launch; delivery after",
+    "Discovery is for new products; delivery for old ones"
+   ],
+   "tier": 2,
+   "why": "Both continue throughout a product's life and involve all disciplines."
+  },
+  {
+   "q": "Which pricing model charges according to how much a customer consumes?",
+   "right": "Usage-based",
+   "wrong": [
+    "Per seat",
+    "Freemium",
+    "Tiered flat fee"
+   ],
+   "tier": 2,
+   "why": "Revenue follows consumption, such as calls or storage."
+  },
+  {
+   "q": "A team's A/B test shows a variant ahead after two days, and the plan was fourteen days. What should they do?",
+   "right": "Wait for the planned sample, because stopping early inflates false positives",
+   "wrong": [
+    "Stop and ship because it is ahead",
+    "Extend to a month to be sure",
+    "Add more variants to the test"
+   ],
+   "tier": 3,
+   "why": "Repeated peeking and stopping on a lead produces unreliable winners."
+  },
+  {
+   "q": "Which is the best description of a guardrail metric?",
+   "right": "A metric that must not get worse while the main metric improves",
+   "wrong": [
+    "The main metric the test aims to raise",
+    "A metric for the finance team only",
+    "A target set by the CEO for the year"
+   ],
+   "tier": 3,
+   "why": "Guardrails prevent wins on one measure from hiding harm elsewhere."
+  },
+  {
+   "q": "A feature request arrives from one large customer. What does product thinking suggest first?",
+   "right": "Understand the problem behind the request and how many others share it",
+   "wrong": [
+    "Add it to the roadmap as requested",
+    "Reject it because it came from one customer",
+    "Ask engineering to estimate it before anything else"
+   ],
+   "tier": 3,
+   "why": "Requests express solutions; the underlying need may be shared and solved better another way."
+  },
+  {
+   "q": "What makes acceptance criteria written as Given-When-Then useful?",
+   "right": "They describe concrete, testable scenarios everyone can read",
+   "wrong": [
+    "They remove the need for testing",
+    "They replace the user story",
+    "They set the story's priority"
+   ],
+   "tier": 3,
+   "why": "Scenarios turn vague wishes into checks."
+  },
+  {
+   "q": "Which activation definition is the strongest?",
+   "right": "An action that new users take which correlates with later retention",
+   "wrong": [
+    "Logging in once",
+    "Visiting the pricing page",
+    "Opening the welcome email"
+   ],
+   "tier": 3,
+   "why": "The activation event should predict long-term value, not just early activity."
+  },
+  {
+   "q": "Which is a sign of product-market fit?",
+   "right": "Retention curves flatten and users would be very disappointed without the product",
+   "wrong": [
+    "Sign-ups grow because of advertising spend",
+    "The roadmap is full for the next year",
+    "The team has shipped all planned features"
+   ],
+   "tier": 3,
+   "why": "Fit shows up in sustained use and strong customer attachment."
+  },
+  {
+   "q": "What is the main risk of a roadmap built as a list of features with dates?",
+   "right": "It reads as a promise and discourages learning and changing course",
+   "wrong": [
+    "It is too short to be useful",
+    "It cannot be shared outside the team",
+    "It hides the product vision"
+   ],
+   "tier": 3,
+   "why": "Date-based feature lists turn estimates into commitments."
+  },
+  {
+   "q": "Why does RICE include a confidence factor?",
+   "right": "To lower the score of ideas whose impact is mostly a guess",
+   "wrong": [
+    "To rank ideas by cost",
+    "To compare teams against each other",
+    "To show how many customers asked for the idea"
+   ],
+   "tier": 3,
+   "why": "Two ideas with equal estimates differ when one has evidence."
+  },
+  {
+   "q": "Which describes a concierge MVP?",
+   "right": "Delivering the service manually to a few customers to learn the workflow",
+   "wrong": [
+    "Building a full automated product for one customer",
+    "Showing a landing page for a service that does not exist",
+    "Giving the product away for free"
+   ],
+   "tier": 3,
+   "why": "The customer knows the work is manual, and the team learns before automating."
+  },
+  {
+   "q": "Which pairing of research method and question is best?",
+   "right": "Usability test: where do users get stuck on this flow?",
+   "wrong": [
+    "Survey: why did this one user abandon checkout?",
+    "Interview: how many users prefer blue?",
+    "Analytics: what do users feel about the brand?"
+   ],
+   "tier": 3,
+   "why": "Each method answers a different kind of question."
+  },
+  {
+   "q": "Which statement about personas is correct?",
+   "right": "They should be based on research and updated as understanding changes",
+   "wrong": [
+    "They should be invented from team assumptions",
+    "They need a photo and a hobby to be valid",
+    "They replace talking to users"
+   ],
+   "tier": 3,
+   "why": "Personas built without evidence encode bias."
+  },
+  {
+   "q": "What does 'outcome over output' mean for a team?",
+   "right": "Success is measured by changes in user behaviour and business results, not by features shipped",
+   "wrong": [
+    "Teams should ship fewer releases",
+    "Outputs are not important",
+    "Only revenue counts as an outcome"
+   ],
+   "tier": 3,
+   "why": "Output is what is built; outcomes are what changes because of it."
+  },
+  {
+   "q": "A team ships a redesign and overall conversion rises, but support tickets double. What is the right reading?",
+   "right": "The primary metric improved but a guardrail was hurt, so investigate before calling it a win",
+   "wrong": [
+    "The test is a success because conversion rose",
+    "The tickets are unrelated and should be ignored",
+    "The redesign should be reverted immediately without analysis"
+   ],
+   "tier": 4,
+   "why": "Success is judged on the primary metric and the harm measures together."
+  },
+  {
+   "q": "A sales leader insists a custom feature is needed to close a large deal. The product manager's best first step is to",
+   "right": "Understand the underlying need and whether it fits the strategy and other customers",
+   "wrong": [
+    "Build it to win the deal",
+    "Refuse because custom features are never acceptable",
+    "Ask engineering for a promise of a delivery date"
+   ],
+   "tier": 4,
+   "why": "One deal can distort the product; test it against strategy and broader demand."
+  },
+  {
+   "q": "A team has two equal-sized features and one of them loses most of its value if released after the next quarter. How should they be sequenced?",
+   "right": "Start with the item that loses the most value per unit of time if delayed",
+   "wrong": [
+    "Start with the easiest",
+    "Start with the one the loudest stakeholder requested",
+    "Start with the most complex to reduce risk"
+   ],
+   "tier": 4,
+   "why": "Cost of delay shows the urgency that raw value ranking hides."
+  },
+  {
+   "q": "Your onboarding drop-off is largest at the account-connection step. What should you do first?",
+   "right": "Watch users at that step and find out why they stop",
+   "wrong": [
+    "Add a longer welcome tutorial",
+    "Remove the step without checking",
+    "Send more reminder emails"
+   ],
+   "tier": 4,
+   "why": "Identify the cause before choosing a fix."
+  },
+  {
+   "q": "Which A/B test result is most trustworthy?",
+   "right": "One with a sample size set in advance and a single pre-registered primary metric",
+   "wrong": [
+    "One that ran until the variant was significant",
+    "One that tested ten metrics and reported the best",
+    "One that compared this month to last month"
+   ],
+   "tier": 4,
+   "why": "Pre-planned design avoids false positives from flexible stopping and cherry-picking."
+  },
+  {
+   "q": "A new feature gets 5 percent adoption after launch. What is the most useful next step?",
+   "right": "Find out whether the eligible users knew it existed, tried it and why they stopped",
+   "wrong": [
+    "Declare the feature a failure and remove it",
+    "Add a pop-up for all users",
+    "Ask for a larger marketing budget"
+   ],
+   "tier": 4,
+   "why": "Adoption is a funnel; discover where users drop before reacting."
+  },
+  {
+   "q": "Which pricing signal suggests a price rise is possible?",
+   "right": "Customers see strong value, churn is low and few reject the price in sales",
+   "wrong": [
+    "Competitors have raised prices",
+    "The company needs more revenue",
+    "Costs have gone up"
+   ],
+   "tier": 4,
+   "why": "Price follows value and demand, not the company's needs."
+  },
+  {
+   "q": "A B2B product has happy users but renewals are failing. Which stakeholder has most likely been missed?",
+   "right": "The economic buyer who owns the budget",
+   "wrong": [
+    "The newest user",
+    "The support agent",
+    "The designer"
+   ],
+   "tier": 4,
+   "why": "Users alone do not decide renewal."
+  },
+  {
+   "q": "An internal platform team's tool is mandated, yet teams build workarounds. What does this show?",
+   "right": "The platform has product gaps; adoption by mandate hides them",
+   "wrong": [
+    "The teams are resisting change",
+    "The tool needs a longer training course",
+    "The mandate needs stricter enforcement"
+   ],
+   "tier": 4,
+   "why": "When customers avoid a product, the product is the first place to look."
+  },
+  {
+   "q": "Which is the best reason to cut a low-usage feature?",
+   "right": "It adds maintenance and complexity cost without value to a meaningful group, and affected users get a migration path",
+   "wrong": [
+    "The competitors removed it",
+    "The team dislikes working on it",
+    "It was costly to build"
+   ],
+   "tier": 4,
+   "why": "Sunset decisions rest on future costs and value, not on past spending."
+  },
+  {
+   "q": "Interviewees say they would definitely pay for a new report. Usage of a similar existing report is low. What is the best interpretation?",
+   "right": "Stated intent is weak evidence; observed behaviour should carry more weight",
+   "wrong": [
+    "The existing report needs better marketing only",
+    "The interview results are correct and should be built",
+    "The sample is too small to ignore"
+   ],
+   "tier": 4,
+   "why": "Say-do gaps are common, and behaviour outranks opinion."
+  },
+  {
+   "q": "A startup has strong sign-ups, retention near zero and a plan to scale marketing. What is the best advice?",
+   "right": "Pause scaling and fix retention first, because acquisition amplifies a leaky product",
+   "wrong": [
+    "Double the marketing spend to grow faster",
+    "Add features to the roadmap",
+    "Switch the north star to sign-ups"
+   ],
+   "tier": 5,
+   "why": "Without product-market fit, growth spend wastes money."
+  },
+  {
+   "q": "A marketplace has many buyers but few sellers and is losing both. What approach most directly addresses the cold start?",
+   "right": "Focus on one narrow niche and seed supply there until it is dense",
+   "wrong": [
+    "Run broad advertising to all buyers",
+    "Lower the fees for all categories",
+    "Add more features for buyers"
+   ],
+   "tier": 5,
+   "why": "Marketplace value needs liquidity in a small segment first."
+  },
+  {
+   "q": "A team wants to change pricing for all customers at once to a usage model. What is the safest approach?",
+   "right": "Test with new customers or a segment, model the effect on existing bills and consider grandfathering",
+   "wrong": [
+    "Switch everyone at the next billing date",
+    "Run it only for the largest customers",
+    "Announce a change by email and wait"
+   ],
+   "tier": 5,
+   "why": "Pricing changes are hard to reverse and can cause churn."
+  },
+  {
+   "q": "An executive asks you to commit to feature dates for the year on the roadmap. What is the best response?",
+   "right": "Offer outcomes with confidence levels for near-term items and horizons for later ones",
+   "wrong": [
+    "Give exact dates to avoid conflict",
+    "Refuse to share any roadmap",
+    "Share an internal engineering plan"
+   ],
+   "tier": 5,
+   "why": "Honest uncertainty protects trust better than precise but false dates."
+  },
+  {
+   "q": "Two teams own metrics that conflict: one raises sign-ups with free credits; the other watches revenue per user. What should leadership do?",
+   "right": "Agree on a shared outcome and use guardrails that both teams are measured on",
+   "wrong": [
+    "Let each team optimise independently",
+    "Remove one team's metric",
+    "Pick the higher growth number"
+   ],
+   "tier": 5,
+   "why": "Local metrics need a shared outcome to avoid trading away value."
+  },
+  {
+   "q": "A platform product has few adopters despite good technology. Which action is most likely to help?",
+   "right": "Treat internal teams as customers: interview them, find the first valuable use case and support it",
+   "wrong": [
+    "Mandate use by leadership",
+    "Add more features to the platform",
+    "Reduce the team"
+   ],
+   "tier": 5,
+   "why": "Platforms grow through proven value for builders."
+  },
+  {
+   "q": "A team keeps adding features each quarter and satisfaction is falling. Which practice would help?",
+   "right": "Review usage, remove or retire low-value features and define what the product will not do",
+   "wrong": [
+    "Add an onboarding tour",
+    "Hire more designers",
+    "Increase release frequency"
+   ],
+   "tier": 3,
+   "why": "Subtracting is part of managing complexity."
+  },
+  {
+   "q": "A PM is asked to write a user story for 'build a dashboard'. What should they do first?",
+   "right": "Ask what decision or job the user needs the dashboard to support",
+   "wrong": [
+    "Specify the charts to include",
+    "Estimate the hours needed",
+    "Assign it to a designer"
+   ],
+   "tier": 3,
+   "why": "Stories should express the need, not the solution."
+  },
+  {
+   "q": "Which of these is a leading indicator for subscription renewal?",
+   "right": "Customers' weekly use of key features in the months before renewal",
+   "wrong": [
+    "Annual revenue last year",
+    "Renewal count this quarter",
+    "Total customers served to date"
+   ],
+   "tier": 3,
+   "why": "Usage predicts renewal early enough to act."
+  },
+  {
+   "q": "What is a good use of a feature flag during a release?",
+   "right": "Turning a feature on for a small share of users and off again quickly if problems appear",
+   "wrong": [
+    "Locking a feature behind a higher price plan",
+    "Recording which user requested the feature",
+    "Documenting the feature for support"
+   ],
+   "tier": 2,
+   "why": "Flags separate deploying code from exposing it."
+  },
+  {
+   "q": "Which interview question is least likely to bias the answer?",
+   "right": "Tell me about the last time you did this task.",
+   "wrong": [
+    "Don't you think this feature would save time?",
+    "Would you use a tool that does X?",
+    "How much would you pay for this?"
+   ],
+   "tier": 3,
+   "why": "Questions about past behaviour avoid hypotheticals and leading."
+  },
+  {
+   "q": "A product has 40 percent week-four retention for its newest cohort versus 25 percent a year ago, but total active users are flat. What explains it?",
+   "right": "Fewer new users are joining, so the cohorts improved but acquisition slowed",
+   "wrong": [
+    "Retention is not improving",
+    "Older users are leaving faster",
+    "The metric is invalid"
+   ],
+   "tier": 4,
+   "why": "Cohort analysis separates behaviour change from the mix of users."
+  },
+  {
+   "q": "A discovery team has ten untested assumptions. Which should they test first?",
+   "right": "The one with the highest impact if wrong and the least evidence",
+   "wrong": [
+    "The easiest to test",
+    "The one the CEO believes",
+    "The one the team is most confident in"
+   ],
+   "tier": 4,
+   "why": "Risk is impact times uncertainty."
+  },
+  {
+   "q": "A retired API is still used by a few large customers. What is the most appropriate action?",
+   "right": "Give a dated notice, provide a migration route and support, then retire as announced",
+   "wrong": [
+    "Remove it quietly in the next release",
+    "Keep it forever",
+    "Tell customers to rewrite their integrations by themselves"
+   ],
+   "tier": 5,
+   "why": "Predictable retirement preserves trust."
+  },
+  {
+   "q": "During planning, engineering says a story cannot be estimated. What should the team do?",
+   "right": "Time-box a spike to resolve the unknown and then estimate",
+   "wrong": [
+    "Estimate it as large",
+    "Skip the story",
+    "Estimate it based on the last similar story"
+   ],
+   "tier": 3,
+   "why": "Spikes convert unknowns into estimable work."
+  }
+ ]
+}

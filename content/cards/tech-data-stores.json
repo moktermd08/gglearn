@@ -1,0 +1,2875 @@
+{
+ "slug": "tech-data-stores",
+ "name": "Technologies: data stores",
+ "description": "PostgreSQL, Redis, SQLite and Drizzle, vector databases.",
+ "roles": "developer",
+ "kind": "technology",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "fam": "data store family",
+  "pg": "PostgreSQL feature",
+  "redis": "Redis feature",
+  "sqlite": "SQLite and Drizzle fact",
+  "doc": "MongoDB concept",
+  "vec": "vector database concept",
+  "search": "search engine concept",
+  "cache": "caching pattern",
+  "dist": "replication and sharding concept",
+  "cons": "consistency and transaction concept",
+  "choose": "store selection principle",
+  "ops": "backup and migration tool",
+  "gg": "data store fact in our projects"
+ },
+ "cards": [
+  {
+   "group": "fam",
+   "subject": "A relational store",
+   "tier": 1,
+   "says": [
+    "organises data in tables of rows and columns linked by keys",
+    "queries data with SQL",
+    "enforces a schema declared up front"
+   ],
+   "use": "need joins and constraints across well-structured records",
+   "not": [
+    "stores each record as a self-describing blob with no shared structure"
+   ],
+   "like": [
+    "A document store"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "A document store",
+   "tier": 1,
+   "says": [
+    "keeps each record as a self-contained JSON-like document",
+    "lets documents in one collection differ in shape",
+    "reads a whole aggregate such as an order with its lines in one fetch"
+   ],
+   "use": "keep an aggregate together and read it as one unit",
+   "not": [
+    "requires every document to match one fixed table definition"
+   ],
+   "like": [
+    "A relational store",
+    "A key-value store"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "A key-value store",
+   "tier": 1,
+   "says": [
+    "maps a key to an opaque value and looks values up by that key",
+    "offers little beyond lookups by key and does not query by value contents",
+    "scales simply because every operation touches one key"
+   ],
+   "use": "need the fastest possible lookup by a known key",
+   "not": [
+    "supports joins between values by default"
+   ],
+   "like": [
+    "A document store"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "A wide-column store",
+   "tier": 3,
+   "says": [
+    "groups values into column families addressed by a row key",
+    "is built to spread huge write volumes across many nodes",
+    "lets rows in the same table have different columns"
+   ],
+   "use": "ingest massive write volumes with queries known in advance",
+   "not": [
+    "is the same thing as a columnar analytics store"
+   ],
+   "like": [
+    "A columnar analytics store"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "A columnar analytics store",
+   "tier": 3,
+   "says": [
+    "stores each column's values together on disk",
+    "reads only the columns a query names",
+    "compresses well because neighbouring values are similar"
+   ],
+   "use": "scan and aggregate a few columns over billions of rows",
+   "not": [
+    "is optimised for updating single rows many times per second"
+   ],
+   "like": [
+    "A wide-column store",
+    "A relational store"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "A graph database",
+   "tier": 3,
+   "says": [
+    "stores entities as nodes and relationships as edges",
+    "follows relationships without expensive join chains",
+    "answers questions such as friends of friends efficiently"
+   ],
+   "use": "traverse many-hop relationships between connected records",
+   "not": [
+    "is the best choice for summing a column over every row"
+   ],
+   "like": [
+    "A relational store"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "An in-memory store",
+   "tier": 2,
+   "says": [
+    "keeps its working data in RAM",
+    "answers in far less time than a disk-bound database",
+    "needs a persistence plan or accepts losing data on restart"
+   ],
+   "use": "serve data that must be read in a fraction of a millisecond",
+   "not": [
+    "keeps data safe across a power cut without any configuration"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "An object store",
+   "tier": 2,
+   "says": [
+    "stores whole files as objects addressed by a key",
+    "suits large blobs such as images and backups",
+    "does not support editing part of an object in place"
+   ],
+   "use": "keep uploads, exports and backup files",
+   "not": [
+    "supports SQL joins between objects"
+   ],
+   "like": [
+    "A key-value store"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "Polyglot persistence",
+   "tier": 4,
+   "says": [
+    "uses a different store for each job inside one system",
+    "adds operational work for every extra store",
+    "needs a clear owner of truth for each fact"
+   ],
+   "use": "see one system with documents, cache and search needs",
+   "not": [
+    "means copying the same data into every store as equal masters"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "MVCC",
+   "tier": 3,
+   "says": [
+    "keeps several versions of a row so readers do not block writers",
+    "gives each transaction a consistent snapshot",
+    "leaves dead row versions that must later be cleaned up"
+   ],
+   "use": "explain why a long read does not block updates in PostgreSQL",
+   "not": [
+    "locks the whole table for every read"
+   ],
+   "like": [
+    "Autovacuum"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "A jsonb column",
+   "tier": 2,
+   "says": [
+    "stores JSON in a decomposed binary form",
+    "can be indexed and queried by key or path",
+    "does not preserve key order or duplicate keys"
+   ],
+   "use": "need flexible fields inside a relational row",
+   "not": [
+    "stores the original text exactly with its whitespace"
+   ],
+   "like": [
+    "A GIN index"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "A GIN index",
+   "tier": 4,
+   "says": [
+    "maps each element or key to the rows that contain it",
+    "speeds containment queries on jsonb and arrays",
+    "is the usual index behind full-text search"
+   ],
+   "use": "need to query inside jsonb, arrays or text",
+   "not": [
+    "is the default index created for every primary key"
+   ],
+   "like": [
+    "A B-tree index"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "Autovacuum",
+   "tier": 3,
+   "says": [
+    "runs in the background to reclaim dead row versions",
+    "refreshes the statistics the planner uses",
+    "leaves dead rows piling up as table bloat when it falls behind"
+   ],
+   "use": "see a heavily updated table growing without new data",
+   "not": [
+    "rewrites the table to defragment the disk every night"
+   ],
+   "like": [
+    "MVCC"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "The PostgreSQL write-ahead log",
+   "tier": 3,
+   "says": [
+    "records each change before the data files are updated",
+    "is replayed to recover after a crash",
+    "feeds streaming replication and point-in-time recovery"
+   ],
+   "use": "explain how PostgreSQL survives a crash mid-write",
+   "not": [
+    "is a text log meant only for humans to read"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "A PostgreSQL extension",
+   "tier": 3,
+   "says": [
+    "adds types, functions or index methods installed with CREATE EXTENSION",
+    "is how vector similarity search is added to PostgreSQL",
+    "must be installed per database"
+   ],
+   "use": "want PostgreSQL to store and compare embeddings",
+   "not": [
+    "is a separate server process that PostgreSQL proxies to"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "A connection pooler",
+   "tier": 4,
+   "says": [
+    "shares a small set of server connections among many clients",
+    "protects PostgreSQL, which spends a process on every connection",
+    "can break session features in transaction pooling mode"
+   ],
+   "use": "see many app instances exhausting database connections",
+   "not": [
+    "makes each query run faster by caching its plan on the client"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "LISTEN and NOTIFY",
+   "tier": 4,
+   "says": [
+    "lets sessions send messages through the database on named channels",
+    "delivers only to sessions connected at that moment",
+    "needs no extra broker for light signalling"
+   ],
+   "use": "want a lightweight signal between processes already using PostgreSQL",
+   "not": [
+    "queues messages durably for sessions that are offline"
+   ],
+   "like": [
+    "Redis pub/sub"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "Table partitioning",
+   "tier": 4,
+   "says": [
+    "splits one large table into child tables by range, list or hash",
+    "lets queries skip partitions that cannot match",
+    "makes dropping old data a cheap partition drop"
+   ],
+   "use": "manage a huge table where old rows are discarded by date",
+   "not": [
+    "spreads the table across several servers automatically"
+   ],
+   "like": [
+    "Hash sharding"
+   ]
+  },
+  {
+   "group": "pg",
+   "subject": "EXPLAIN ANALYZE",
+   "tier": 3,
+   "says": [
+    "runs the query and reports actual timings and row counts",
+    "shows where the plan's estimates differ from reality",
+    "executes writes for real when used on one"
+   ],
+   "use": "find out why a query is slow",
+   "not": [
+    "only prints the estimated plan without running anything"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "A Redis string",
+   "tier": 1,
+   "says": [
+    "is the basic value type and can hold text, numbers or bytes",
+    "supports atomic increment on numeric values",
+    "can be set with an expiry in one command"
+   ],
+   "use": "keep a counter or a cached blob",
+   "not": [
+    "can only hold text shorter than one line"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "A Redis hash",
+   "tier": 2,
+   "says": [
+    "maps field names to values under one key",
+    "suits an object with several attributes",
+    "lets you read or change one field without rewriting the rest"
+   ],
+   "use": "store a user profile with separate fields",
+   "not": [
+    "keeps its fields sorted by score"
+   ],
+   "like": [
+    "A Redis sorted set"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "A Redis list",
+   "tier": 2,
+   "says": [
+    "keeps ordered elements with push and pop at both ends",
+    "can act as a simple queue",
+    "is accessed by position, so the middle is slow to reach"
+   ],
+   "use": "build a simple work queue",
+   "not": [
+    "rejects duplicate elements"
+   ],
+   "like": [
+    "A Redis set"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "A Redis set",
+   "tier": 2,
+   "says": [
+    "holds unique, unordered members",
+    "supports union, intersection and difference",
+    "answers membership in constant time"
+   ],
+   "use": "track which users have already seen an item",
+   "not": [
+    "keeps members in insertion order"
+   ],
+   "like": [
+    "A Redis list",
+    "A Redis sorted set"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "A Redis sorted set",
+   "tier": 3,
+   "says": [
+    "ties a numeric score to each unique member",
+    "returns members ordered by score or by rank",
+    "is the usual structure for a leaderboard"
+   ],
+   "use": "build a leaderboard ranked by points",
+   "not": [
+    "allows the same member twice with different scores"
+   ],
+   "like": [
+    "A Redis set"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "A Redis stream",
+   "tier": 4,
+   "says": [
+    "is an append-only log of entries with generated ids",
+    "supports consumer groups that share the work",
+    "keeps entries until they are trimmed, unlike pub/sub"
+   ],
+   "use": "need a durable event log with acknowledged consumption",
+   "not": [
+    "drops a message once any subscriber has read it"
+   ],
+   "like": [
+    "Redis pub/sub",
+    "A Redis list"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "Redis pub/sub",
+   "tier": 3,
+   "says": [
+    "broadcasts messages to current subscribers of a channel",
+    "stores no messages",
+    "loses what a disconnected subscriber would have received"
+   ],
+   "use": "push live notifications where missed messages are acceptable",
+   "not": [
+    "replays missed messages to subscribers when they reconnect"
+   ],
+   "like": [
+    "A Redis stream"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "Key expiry",
+   "tier": 2,
+   "says": [
+    "deletes a key automatically after a time to live",
+    "is set with commands such as EXPIRE or SET with EX",
+    "is the basis of cache and session lifetimes"
+   ],
+   "use": "want cached data to disappear on its own",
+   "not": [
+    "must be run by a separate cleanup job you write"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "An RDB snapshot",
+   "tier": 3,
+   "says": [
+    "saves a point-in-time copy of the dataset to a file",
+    "gives compact files that restart quickly",
+    "can lose writes made since the last snapshot"
+   ],
+   "use": "want periodic compact backups of Redis",
+   "not": [
+    "logs every single write command as it happens"
+   ],
+   "like": [
+    "An append-only file"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "An append-only file",
+   "tier": 3,
+   "says": [
+    "logs every write command so it can be replayed",
+    "can be synced to disk every second or every write",
+    "is larger and slower to load than a snapshot"
+   ],
+   "use": "want to lose at most about a second of Redis writes",
+   "not": [
+    "is a point-in-time image taken at intervals"
+   ],
+   "like": [
+    "An RDB snapshot"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "MULTI and EXEC",
+   "tier": 4,
+   "says": [
+    "queue commands and run them as one uninterrupted sequence",
+    "do not roll back earlier commands if a later one fails at run time",
+    "are not the same as a relational transaction"
+   ],
+   "use": "need several Redis commands to run without interleaving",
+   "not": [
+    "undo all commands if any one fails"
+   ]
+  },
+  {
+   "group": "redis",
+   "subject": "SET with NX",
+   "tier": 4,
+   "says": [
+    "sets a key only if it does not already exist",
+    "is the building block of a simple lock",
+    "should be paired with an expiry so a crashed holder cannot block forever"
+   ],
+   "use": "need only one worker to take a job",
+   "not": [
+    "overwrites the existing value every time"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "An embedded database",
+   "tier": 1,
+   "says": [
+    "runs inside the application process",
+    "needs no separate server to install or log into",
+    "stores its data in a local file"
+   ],
+   "use": "want a database with nothing to operate",
+   "not": [
+    "requires a network connection to a database server"
+   ],
+   "like": [
+    "A relational store"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "SQLite's single-file storage",
+   "tier": 1,
+   "says": [
+    "keeps a whole database in one file",
+    "can be backed up as one file when the copy is taken safely",
+    "ties the data to the machine that holds the file"
+   ],
+   "use": "want a simple deployment with one file to back up",
+   "not": [
+    "spreads tables over a cluster of nodes"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "SQLite's single writer",
+   "tier": 3,
+   "says": [
+    "allows one write transaction at a time",
+    "lets many readers run alongside in WAL mode",
+    "becomes a bottleneck under heavy concurrent writes"
+   ],
+   "use": "judge whether SQLite fits a write-heavy workload",
+   "not": [
+    "allows many simultaneous writers on separate tables"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "SQLite WAL mode",
+   "tier": 3,
+   "says": [
+    "appends changes to a separate log before merging them into the database file",
+    "lets readers continue while a writer writes",
+    "is turned on with a journal_mode pragma"
+   ],
+   "use": "need readers not to block behind a writer",
+   "not": [
+    "makes the database accept many concurrent writers"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "SQLite's foreign key pragma",
+   "tier": 3,
+   "says": [
+    "turns on foreign-key enforcement",
+    "is off by default",
+    "must be set on each new connection"
+   ],
+   "use": "find that orphan rows are being allowed",
+   "not": [
+    "is stored permanently in the database file once set"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "SQLite's flexible typing",
+   "tier": 4,
+   "says": [
+    "lets a column hold values of a different type than declared",
+    "relies on type affinity rather than strict types",
+    "can be tightened with strict tables"
+   ],
+   "use": "want SQLite to reject text in an integer column",
+   "not": [
+    "refuses any value that does not match the declared type"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "Drizzle ORM",
+   "tier": 2,
+   "says": [
+    "describes tables in TypeScript code",
+    "infers query result types from that schema",
+    "supports PostgreSQL, MySQL and SQLite dialects"
+   ],
+   "use": "want type-checked queries without writing a separate schema language",
+   "not": [
+    "generates only raw SQL strings with no types"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "drizzle-kit generate",
+   "tier": 3,
+   "says": [
+    "compares the schema to the last state and writes SQL migration files",
+    "produces files that can be reviewed and committed",
+    "does not change any database by itself"
+   ],
+   "use": "need reviewable migrations that other environments will follow",
+   "not": [
+    "syncs the schema straight to the database with no files"
+   ],
+   "like": [
+    "drizzle-kit push",
+    "drizzle-kit migrate"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "drizzle-kit push",
+   "tier": 3,
+   "says": [
+    "applies the current schema directly to a database",
+    "leaves no migration history",
+    "suits fast local iteration"
+   ],
+   "use": "are iterating quickly on a local database",
+   "not": [
+    "writes numbered migration files for production"
+   ],
+   "like": [
+    "drizzle-kit generate"
+   ]
+  },
+  {
+   "group": "sqlite",
+   "subject": "drizzle-kit migrate",
+   "tier": 3,
+   "says": [
+    "applies generated migration files in order",
+    "records which migrations have run",
+    "is the step that makes shared databases follow the committed history"
+   ],
+   "use": "need production to run the committed migration files",
+   "not": [
+    "creates new migration files from schema changes"
+   ],
+   "like": [
+    "drizzle-kit generate"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A MongoDB document",
+   "tier": 1,
+   "says": [
+    "is a record made of field and value pairs, stored as BSON",
+    "can hold nested objects and arrays",
+    "always has a unique _id field"
+   ],
+   "use": "store a record with nested data",
+   "not": [
+    "must have the same fields as every other document in its collection"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A MongoDB collection",
+   "tier": 1,
+   "says": [
+    "is a group of documents",
+    "plays the role a table plays in a relational database",
+    "does not force its documents to share a shape by default"
+   ],
+   "use": "decide where to put related documents",
+   "not": [
+    "is a separate server instance"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "BSON",
+   "tier": 3,
+   "says": [
+    "is the binary format MongoDB uses to store documents",
+    "adds types such as dates and binary data beyond plain JSON",
+    "encodes documents compactly for traversal"
+   ],
+   "use": "wonder why MongoDB has a date type that JSON lacks",
+   "not": [
+    "is a plain text format identical to JSON"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "An ObjectId",
+   "tier": 3,
+   "says": [
+    "is a 12-byte identifier generated by default for _id",
+    "embeds a creation timestamp in its leading bytes",
+    "is created by the driver without asking the server"
+   ],
+   "use": "need an id that sorts roughly by creation time",
+   "not": [
+    "is guaranteed to be sequential with no gaps"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "Embedding documents",
+   "tier": 3,
+   "says": [
+    "nests related data inside the parent document",
+    "reads parent and children in one fetch",
+    "gets awkward when the nested array grows without bound"
+   ],
+   "use": "data is read together and the children are few",
+   "not": [
+    "is the right way to model many-to-many relationships between large sets"
+   ],
+   "like": [
+    "Referencing documents"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "Referencing documents",
+   "tier": 3,
+   "says": [
+    "stores the id of a related document instead of its content",
+    "needs a second query or lookup to follow the link",
+    "avoids duplicating data that many parents share"
+   ],
+   "use": "children are shared by many parents or grow without limit",
+   "not": [
+    "is how a document store avoids ever needing a second read"
+   ],
+   "like": [
+    "Embedding documents"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "The aggregation pipeline",
+   "tier": 4,
+   "says": [
+    "passes documents through stages such as match, group and sort",
+    "does filtering and grouping on the server",
+    "is MongoDB's counterpart to SQL's grouping queries"
+   ],
+   "use": "need totals per category from a collection",
+   "not": [
+    "is a client-side loop over every document"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A MongoDB replica set",
+   "tier": 3,
+   "says": [
+    "keeps copies of the data on several nodes",
+    "elects a new primary if the current one fails",
+    "accepts writes only on the primary"
+   ],
+   "use": "need MongoDB to survive the loss of a node",
+   "not": [
+    "accepts writes on every member at once"
+   ],
+   "like": [
+    "MongoDB sharding"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "MongoDB sharding",
+   "tier": 4,
+   "says": [
+    "splits a collection across shards by a shard key",
+    "routes queries through a router process",
+    "is added for scale beyond one replica set"
+   ],
+   "use": "see a collection outgrow a single replica set",
+   "not": [
+    "is how MongoDB keeps copies for high availability"
+   ],
+   "like": [
+    "A MongoDB replica set"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "Schema validation in MongoDB",
+   "tier": 4,
+   "says": [
+    "checks documents against rules when they are written",
+    "can use JSON Schema syntax",
+    "lets a flexible store still reject malformed data"
+   ],
+   "use": "want a document store to refuse documents missing a required field",
+   "not": [
+    "happens automatically with no rules being defined"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "An embedding",
+   "tier": 1,
+   "says": [
+    "is a list of numbers that represents meaning",
+    "places similar content close together in vector space",
+    "is produced by a model"
+   ],
+   "use": "need to compare texts by meaning rather than by words",
+   "not": [
+    "is a compressed copy of the original text that can be decompressed"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "Vector similarity search",
+   "tier": 2,
+   "says": [
+    "finds the stored vectors nearest to a query vector",
+    "returns results ranked by distance or similarity",
+    "finds matches by meaning rather than exact words"
+   ],
+   "use": "want to find documents related to a question",
+   "not": [
+    "matches only rows containing the exact query words"
+   ],
+   "like": [
+    "Keyword search"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "Cosine similarity",
+   "tier": 3,
+   "says": [
+    "measures the angle between two vectors",
+    "ignores vector length",
+    "has a value near one for vectors pointing the same way"
+   ],
+   "use": "compare embeddings regardless of their magnitude",
+   "not": [
+    "measures the straight-line gap between two points"
+   ],
+   "like": [
+    "Euclidean distance",
+    "Dot product"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "Euclidean distance",
+   "tier": 3,
+   "says": [
+    "measures the straight-line gap between two vectors",
+    "is smaller for closer points",
+    "is sensitive to vector length"
+   ],
+   "use": "need a distance where magnitude matters",
+   "not": [
+    "measures only the angle between two vectors"
+   ],
+   "like": [
+    "Cosine similarity"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "Dot product",
+   "tier": 4,
+   "says": [
+    "multiplies matching components and sums them",
+    "equals cosine similarity when vectors are normalised to length one",
+    "grows with vector length"
+   ],
+   "use": "vectors are already normalised and speed matters",
+   "not": [
+    "is always smaller than cosine similarity"
+   ],
+   "like": [
+    "Cosine similarity"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "Approximate nearest neighbour search",
+   "tier": 3,
+   "says": [
+    "trades a little accuracy for much faster lookups",
+    "avoids comparing the query with every stored vector",
+    "may miss a true nearest neighbour"
+   ],
+   "use": "search millions of vectors fast enough for a live request",
+   "not": [
+    "guarantees the exact nearest vector every time"
+   ],
+   "like": [
+    "Exact nearest neighbour search"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "Exact nearest neighbour search",
+   "tier": 3,
+   "says": [
+    "compares the query with every stored vector",
+    "always returns the true nearest vectors",
+    "slows down as the collection grows"
+   ],
+   "use": "have a small collection and need perfect results",
+   "not": [
+    "skips most vectors by using an index"
+   ],
+   "like": [
+    "Approximate nearest neighbour search"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "An HNSW index",
+   "tier": 4,
+   "says": [
+    "links vectors in layered proximity graphs",
+    "starts a search at a sparse top layer and moves down",
+    "trades memory and build time for fast, accurate queries"
+   ],
+   "use": "need a graph index behind approximate search",
+   "not": [
+    "buckets vectors by a hash of their first letter"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "Recall in vector search",
+   "tier": 4,
+   "says": [
+    "is the share of true nearest neighbours the search actually returns",
+    "drops when the index is tuned for speed over accuracy",
+    "is measured against an exact search"
+   ],
+   "use": "are checking how much an approximate index loses",
+   "not": [
+    "is the time a query takes to return"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "A metadata filter",
+   "tier": 3,
+   "says": [
+    "restricts vector search to items whose attributes match",
+    "applies conditions such as a tenant or a document type",
+    "is how one collection serves many users without mixing their results"
+   ],
+   "use": "must return only one customer's data from a shared collection",
+   "not": [
+    "changes the embedding of each stored item"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "A chunk",
+   "tier": 3,
+   "says": [
+    "is a piece of a document embedded as one vector",
+    "is sized so it holds one idea",
+    "is retrieved on its own and passed to a model as context"
+   ],
+   "use": "split a long document before embedding",
+   "not": [
+    "is a whole document regardless of length"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "A vector collection",
+   "tier": 2,
+   "says": [
+    "holds vectors of one fixed dimension",
+    "stores a payload alongside each vector",
+    "is where a distance metric is chosen"
+   ],
+   "use": "set up a place to store embeddings",
+   "not": [
+    "mixes vectors from different models freely"
+   ]
+  },
+  {
+   "group": "vec",
+   "subject": "Re-embedding",
+   "tier": 5,
+   "says": [
+    "is needed for all stored data when the embedding model changes",
+    "is required because vectors from different models are not comparable",
+    "is a reason to keep the source text next to the vectors"
+   ],
+   "use": "decide to switch embedding models",
+   "not": [
+    "can be skipped because old and new vectors line up"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "An inverted index",
+   "tier": 3,
+   "says": [
+    "maps each term to the documents that contain it",
+    "makes finding documents by word fast",
+    "is the core structure of a search engine"
+   ],
+   "use": "explain why full-text search is fast",
+   "not": [
+    "maps each document to the list of its page numbers"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "An analyzer",
+   "tier": 3,
+   "says": [
+    "breaks text into tokens and normalises them",
+    "runs at index time and at query time",
+    "decides how case and punctuation are treated"
+   ],
+   "use": "want searches to ignore case and punctuation",
+   "not": [
+    "ranks results by their relevance score"
+   ],
+   "like": [
+    "Stemming"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "Stemming",
+   "tier": 3,
+   "says": [
+    "reduces words to a root form",
+    "lets a search for run match running",
+    "can occasionally conflate unrelated words"
+   ],
+   "use": "want plural and tense variants to match",
+   "not": [
+    "corrects misspelled search terms"
+   ],
+   "like": [
+    "Fuzzy matching"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "Fuzzy matching",
+   "tier": 4,
+   "says": [
+    "tolerates a small number of character edits in a term",
+    "finds results despite typing mistakes",
+    "costs more than an exact term lookup"
+   ],
+   "use": "want misspelled queries to still find results",
+   "not": [
+    "reduces words to a shared root"
+   ],
+   "like": [
+    "Stemming"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "BM25",
+   "tier": 4,
+   "says": [
+    "scores a document by term frequency, term rarity and document length",
+    "gives rarer query terms more weight",
+    "is the default keyword relevance formula in many search engines"
+   ],
+   "use": "explain how keyword search ranks results",
+   "not": [
+    "compares the angle between embedding vectors"
+   ],
+   "like": [
+    "Cosine similarity"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "Hybrid search",
+   "tier": 4,
+   "says": [
+    "combines keyword scores with vector similarity",
+    "catches exact terms that embeddings blur",
+    "merges two ranked lists into one"
+   ],
+   "use": "need both exact-word and meaning-based matching",
+   "not": [
+    "uses only the inverted index"
+   ],
+   "like": [
+    "Vector similarity search"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "Keyword search",
+   "tier": 2,
+   "says": [
+    "matches the words in the query against indexed terms",
+    "finds exact names and codes reliably",
+    "does not understand synonyms by itself"
+   ],
+   "use": "must find an exact part number",
+   "not": [
+    "finds documents by the meaning of the query"
+   ],
+   "like": [
+    "Vector similarity search"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "Near-real-time refresh",
+   "tier": 4,
+   "says": [
+    "makes new documents searchable after a short refresh interval",
+    "means a write is not visible instantly",
+    "is the reason a just-saved document may be missing from results"
+   ],
+   "use": "see a new item missing from search for a moment",
+   "not": [
+    "guarantees a document is searchable the moment it is written"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "A search index as derived data",
+   "tier": 4,
+   "says": [
+    "is a copy built from the system of record",
+    "can be rebuilt from the source of truth",
+    "needs updating whenever the source changes"
+   ],
+   "use": "decide where the authoritative copy of data should live",
+   "not": [
+    "is the only place the data is stored"
+   ]
+  },
+  {
+   "group": "search",
+   "subject": "PostgreSQL full-text search",
+   "tier": 3,
+   "says": [
+    "turns text into a tsvector and matches it with a tsquery",
+    "is usually backed by a GIN index",
+    "avoids running a separate search service for modest needs"
+   ],
+   "use": "need decent text search without a new service",
+   "not": [
+    "requires a separate engine to be installed"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Cache-aside",
+   "tier": 2,
+   "says": [
+    "has the application check the cache first and load from the database on a miss",
+    "fills the cache only for data that is requested",
+    "leaves the application responsible for updating or removing stale entries"
+   ],
+   "use": "want the most common caching pattern with the app in control",
+   "not": [
+    "has the cache itself fetch from the database on a miss"
+   ],
+   "like": [
+    "Read-through cache"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A read-through cache",
+   "tier": 3,
+   "says": [
+    "loads missing data from the store through the cache layer",
+    "hides the database from the application code",
+    "keeps the loading logic inside the cache"
+   ],
+   "use": "want the cache to handle misses itself",
+   "not": [
+    "has the application load data on a miss"
+   ],
+   "like": [
+    "Cache-aside"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A write-through cache",
+   "tier": 3,
+   "says": [
+    "writes to the cache and the database together",
+    "keeps the cache consistent with stored data",
+    "makes each write slower"
+   ],
+   "use": "cannot tolerate a cache that lags behind writes",
+   "not": [
+    "acknowledges writes before the database has them"
+   ],
+   "like": [
+    "A write-behind cache"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A write-behind cache",
+   "tier": 4,
+   "says": [
+    "acknowledges a write after updating the cache and saves to the database later",
+    "batches database writes",
+    "can lose acknowledged writes if the cache fails first"
+   ],
+   "use": "want fast writes and accept a small loss window",
+   "not": [
+    "updates the database before the cache"
+   ],
+   "like": [
+    "A write-through cache"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Cache invalidation",
+   "tier": 3,
+   "says": [
+    "removes or refreshes entries when their source changes",
+    "is notoriously hard to get right",
+    "is easier when entries have a short lifetime"
+   ],
+   "use": "change data that is also held in a cache",
+   "not": [
+    "is handled by the database without any cache involvement"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A cache stampede",
+   "tier": 4,
+   "says": [
+    "occurs when many requests miss at once and all recompute the value",
+    "often follows the expiry of a popular key",
+    "is reduced by locking, early refresh or randomised lifetimes"
+   ],
+   "use": "see a popular key expire and the database spike",
+   "not": [
+    "is the removal of the least recently used entry"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "LRU eviction",
+   "tier": 3,
+   "says": [
+    "removes the least recently used entry when the cache is full",
+    "assumes recently used data will be used again",
+    "needs a memory limit to be set"
+   ],
+   "use": "decide what a full cache should drop",
+   "not": [
+    "removes the oldest entry regardless of use"
+   ],
+   "like": [
+    "TTL expiry"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "The cache hit ratio",
+   "tier": 2,
+   "says": [
+    "is the share of lookups answered from the cache",
+    "shows whether the cache is worth its memory",
+    "drops when the working set exceeds the cache size"
+   ],
+   "use": "measure whether a cache is helping",
+   "not": [
+    "is the speed of the cache's network link"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Negative caching",
+   "tier": 4,
+   "says": [
+    "stores the fact that something does not exist",
+    "stops repeated lookups for missing items from reaching the database",
+    "needs a short lifetime so newly created items appear"
+   ],
+   "use": "see repeated requests for ids that do not exist",
+   "not": [
+    "caches only successful lookups"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Primary-replica replication",
+   "tier": 2,
+   "says": [
+    "sends writes to one primary and copies them to replicas",
+    "lets replicas serve reads",
+    "gives a standby that can be promoted"
+   ],
+   "use": "want read scaling and a standby copy",
+   "not": [
+    "lets every node accept writes"
+   ],
+   "like": [
+    "Multi-primary replication"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Synchronous replication",
+   "tier": 3,
+   "says": [
+    "waits for a replica to confirm before acknowledging a write",
+    "avoids losing acknowledged writes on failover",
+    "adds latency and can stall when the replica is down"
+   ],
+   "use": "cannot lose any acknowledged write",
+   "not": [
+    "acknowledges the write before it leaves the primary"
+   ],
+   "like": [
+    "Asynchronous replication"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Asynchronous replication",
+   "tier": 3,
+   "says": [
+    "acknowledges a write before replicas have it",
+    "keeps writes fast",
+    "can lose the last writes if the primary fails"
+   ],
+   "use": "want the fastest writes and accept a small loss window",
+   "not": [
+    "makes the primary wait for every replica"
+   ],
+   "like": [
+    "Synchronous replication"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Replication lag",
+   "tier": 3,
+   "says": [
+    "is the delay before a write reaches a replica",
+    "makes replica reads briefly stale",
+    "grows when replicas are overloaded"
+   ],
+   "use": "see a user not find a record they just saved",
+   "not": [
+    "is the time taken to start a new replica"
+   ],
+   "like": [
+    "Read-your-writes"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Read-your-writes consistency",
+   "tier": 4,
+   "says": [
+    "lets a client always see its own earlier writes",
+    "is often achieved by reading from the primary right after a write",
+    "can be broken by reading from a lagging replica"
+   ],
+   "use": "want users to see their own edit immediately",
+   "not": [
+    "guarantees every user sees every write at once"
+   ],
+   "like": [
+    "Replication lag"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Failover",
+   "tier": 3,
+   "says": [
+    "promotes a replica when the primary fails",
+    "should be tested before it is needed",
+    "with asynchronous replication may drop the latest writes"
+   ],
+   "use": "lose the primary",
+   "not": [
+    "restores a backup into an empty node"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Split brain",
+   "tier": 5,
+   "says": [
+    "occurs when two nodes both believe they are primary",
+    "can accept conflicting writes",
+    "is prevented by requiring a majority to elect a leader"
+   ],
+   "use": "face a network partition that separates two halves of a cluster",
+   "not": [
+    "is a node running out of disk space"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Multi-primary replication",
+   "tier": 4,
+   "says": [
+    "lets more than one node accept writes",
+    "needs a way to resolve conflicting updates",
+    "adds write availability at the cost of complexity"
+   ],
+   "use": "must accept writes in several regions at once",
+   "not": [
+    "has one write node and read-only copies"
+   ],
+   "like": [
+    "Primary-replica replication"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Hash sharding",
+   "tier": 3,
+   "says": [
+    "places a row on a shard by hashing its shard key",
+    "spreads load evenly",
+    "makes range scans touch many shards"
+   ],
+   "use": "want even distribution of writes",
+   "not": [
+    "keeps adjacent keys together on one shard"
+   ],
+   "like": [
+    "Range sharding"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Range sharding",
+   "tier": 3,
+   "says": [
+    "assigns contiguous key ranges to shards",
+    "keeps range scans on few shards",
+    "can create a hot shard if keys grow monotonically"
+   ],
+   "use": "want efficient scans over key ranges",
+   "not": [
+    "spreads adjacent keys over all shards"
+   ],
+   "like": [
+    "Hash sharding"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "A hot shard",
+   "tier": 4,
+   "says": [
+    "is a shard receiving far more traffic than the others",
+    "often results from a poor shard key",
+    "limits scale to what one shard can handle"
+   ],
+   "use": "see one node saturated while others idle",
+   "not": [
+    "is a replica that is up to date"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "A shard key",
+   "tier": 4,
+   "says": [
+    "decides which shard stores a row",
+    "should have many values and spread traffic",
+    "is hard to change after data exists"
+   ],
+   "use": "design how rows will be distributed",
+   "not": [
+    "is the key that encrypts data per shard"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Consistent hashing",
+   "tier": 5,
+   "says": [
+    "maps keys and nodes onto a ring",
+    "moves only a fraction of keys when a node is added or removed",
+    "avoids reshuffling nearly everything"
+   ],
+   "use": "add a node to a cache cluster without massive remapping",
+   "not": [
+    "assigns key ranges by alphabetical order"
+   ],
+   "like": [
+    "Hash sharding"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "A quorum",
+   "tier": 4,
+   "says": [
+    "is a majority of nodes needed to agree",
+    "guarantees reads overlap the latest write when reads plus writes exceed the node count",
+    "lets a cluster keep working with a minority down"
+   ],
+   "use": "tune how many nodes must acknowledge",
+   "not": [
+    "is any single node that responds first"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Logical replication",
+   "tier": 4,
+   "says": [
+    "copies row changes for chosen tables",
+    "can send a subset of data to another database",
+    "differs from byte-level copying of the whole cluster"
+   ],
+   "use": "want to replicate only some tables",
+   "not": [
+    "copies every byte of the storage files"
+   ],
+   "like": [
+    "Physical replication"
+   ]
+  },
+  {
+   "group": "dist",
+   "subject": "Physical replication",
+   "tier": 4,
+   "says": [
+    "ships the write-ahead log to copy the whole cluster",
+    "produces a replica identical at the storage level",
+    "cannot select individual tables"
+   ],
+   "use": "want an exact standby of the whole server",
+   "not": [
+    "replicates row changes for selected tables only"
+   ],
+   "like": [
+    "Logical replication"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "ACID",
+   "tier": 1,
+   "says": [
+    "stands for atomicity, consistency, isolation and durability",
+    "describes guarantees of a database transaction",
+    "is the model relational databases are known for"
+   ],
+   "use": "need all-or-nothing updates with durable results",
+   "not": [
+    "promises eventual consistency across replicas"
+   ],
+   "like": [
+    "BASE"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "BASE",
+   "tier": 3,
+   "says": [
+    "stands for basically available, soft state and eventually consistent",
+    "favours availability over strict consistency",
+    "is contrasted with ACID"
+   ],
+   "use": "describe a store that stays up and converges later",
+   "not": [
+    "guarantees an immediate global ordering of all writes"
+   ],
+   "like": [
+    "ACID"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "The CAP theorem",
+   "tier": 3,
+   "says": [
+    "says a partitioned system must choose between consistency and availability",
+    "applies when the network splits",
+    "is often misread as choose any two at all times"
+   ],
+   "use": "reason about behaviour during a network partition",
+   "not": [
+    "says a database may pick any two of three at all times and lose nothing"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Eventual consistency",
+   "tier": 2,
+   "says": [
+    "lets replicas disagree briefly",
+    "converges if updates stop",
+    "allows stale reads"
+   ],
+   "use": "accept brief staleness for availability",
+   "not": [
+    "guarantees every read sees the latest write"
+   ],
+   "like": [
+    "Strong consistency"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Strong consistency",
+   "tier": 3,
+   "says": [
+    "makes every read return the latest committed write",
+    "costs latency, because replicas must coordinate",
+    "simplifies application reasoning"
+   ],
+   "use": "cannot allow stale reads",
+   "not": [
+    "allows replicas to disagree for a while"
+   ],
+   "like": [
+    "Eventual consistency"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Linearizability",
+   "tier": 5,
+   "says": [
+    "makes operations appear to take effect at a single instant",
+    "orders operations consistently with real time",
+    "behaves like a single copy of the data"
+   ],
+   "use": "need the strictest single-object guarantee",
+   "not": [
+    "only orders operations within one session"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "The read committed isolation level",
+   "tier": 3,
+   "says": [
+    "lets a transaction see only committed data",
+    "can show different values for the same row within one transaction",
+    "is the default in PostgreSQL"
+   ],
+   "use": "need protection from dirty reads at low cost",
+   "not": [
+    "gives one fixed snapshot for the whole transaction"
+   ],
+   "like": [
+    "Snapshot isolation"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Snapshot isolation",
+   "tier": 4,
+   "says": [
+    "gives each transaction a view as of its start",
+    "prevents non-repeatable reads",
+    "allows write skew"
+   ],
+   "use": "need a stable view for a long read",
+   "not": [
+    "is the same as serializable isolation"
+   ],
+   "like": [
+    "The read committed isolation level"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Write skew",
+   "tier": 5,
+   "says": [
+    "happens when two transactions read the same data and update different rows, breaking a rule",
+    "can occur under snapshot isolation",
+    "is prevented by serializable isolation or explicit locks"
+   ],
+   "use": "see two on-call doctors each go off duty at once",
+   "not": [
+    "is a replica falling behind"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "Two-phase commit",
+   "tier": 5,
+   "says": [
+    "has a coordinator ask all participants to prepare, then commit",
+    "can block participants if the coordinator fails",
+    "provides atomic commit across several stores"
+   ],
+   "use": "need one atomic commit across two databases",
+   "not": [
+    "lets each store commit independently with no coordination"
+   ],
+   "like": [
+    "The saga pattern"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "The saga pattern",
+   "tier": 5,
+   "says": [
+    "is a sequence of local transactions with compensating actions",
+    "gives up atomicity for availability",
+    "needs each step to be undoable"
+   ],
+   "use": "coordinate a multi-service workflow without a distributed transaction",
+   "not": [
+    "locks every service until all commit"
+   ],
+   "like": [
+    "Two-phase commit"
+   ]
+  },
+  {
+   "group": "cons",
+   "subject": "An idempotent write",
+   "tier": 4,
+   "says": [
+    "has the same effect when repeated",
+    "makes retries safe",
+    "is often done with a unique request key"
+   ],
+   "use": "retry a request after a timeout",
+   "not": [
+    "fails the second time it is run"
+   ]
+  },
+  {
+   "group": "choose",
+   "subject": "Starting with PostgreSQL",
+   "tier": 2,
+   "says": [
+    "is a safe default for most business applications",
+    "covers relational data, json, text search and queues at modest scale",
+    "delays the need for extra systems"
+   ],
+   "use": "are choosing the first database for a new product",
+   "not": [
+    "is wrong for any application with more than one table"
+   ]
+  },
+  {
+   "group": "choose",
+   "subject": "Designing around the access pattern",
+   "tier": 3,
+   "says": [
+    "starts from the queries and writes the system must serve",
+    "decides which store and keys fit",
+    "matters more than the data's apparent shape"
+   ],
+   "use": "are unsure which store to pick",
+   "not": [
+    "picks the store with the most features"
+   ]
+  },
+  {
+   "group": "choose",
+   "subject": "A source of truth",
+   "tier": 3,
+   "says": [
+    "is the one store whose copy wins when copies disagree",
+    "is written first and replicated to others",
+    "makes caches and search indexes rebuildable"
+   ],
+   "use": "data lives in more than one place",
+   "not": [
+    "is the fastest store in the system"
+   ],
+   "like": [
+    "A search index as derived data"
+   ]
+  },
+  {
+   "group": "choose",
+   "subject": "Operational burden",
+   "tier": 3,
+   "says": [
+    "covers backups, upgrades, monitoring and on-call for a store",
+    "grows with each additional technology",
+    "favours managed or embedded options for small teams"
+   ],
+   "use": "watch a small team add yet another database",
+   "not": [
+    "is ignored because installing a store is a one-time cost"
+   ]
+  },
+  {
+   "group": "choose",
+   "subject": "The need for transactions",
+   "tier": 3,
+   "says": [
+    "points towards a relational store when updates must succeed together",
+    "is costly to retrofit onto a store without them",
+    "should be decided early"
+   ],
+   "use": "must update two records in a payment or neither",
+   "not": [
+    "can be added later by changing a cache setting"
+   ]
+  },
+  {
+   "group": "choose",
+   "subject": "Data volume and growth",
+   "tier": 3,
+   "says": [
+    "asks how big data will be and how fast it grows",
+    "decides whether one node is enough",
+    "should be estimated rather than guessed from today's size"
+   ],
+   "use": "plan capacity before choosing a store",
+   "not": [
+    "is irrelevant once indexes exist"
+   ]
+  },
+  {
+   "group": "choose",
+   "subject": "Lock-in",
+   "tier": 4,
+   "says": [
+    "is the cost of leaving a vendor-specific store",
+    "grows with use of proprietary query features",
+    "is reduced by standard interfaces and exportable data"
+   ],
+   "use": "weigh a cloud-only database against a portable one",
+   "not": [
+    "disappears if the vendor is large enough"
+   ]
+  },
+  {
+   "group": "choose",
+   "subject": "Managed versus self-hosted",
+   "tier": 3,
+   "says": [
+    "trades control for less operational work",
+    "moves backups and patching to a provider",
+    "still leaves you responsible for restore tests and access control"
+   ],
+   "use": "decide who patches and backs up the database",
+   "not": [
+    "removes the need to ever test a restore"
+   ]
+  },
+  {
+   "group": "choose",
+   "subject": "Ephemeral data",
+   "tier": 2,
+   "says": [
+    "is data that can be lost and rebuilt",
+    "fits caches, sessions and counters",
+    "needs no durable backup"
+   ],
+   "use": "decide what to put in an in-memory store",
+   "not": [
+    "is data that legally must be kept for years"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "pg_dump",
+   "tier": 2,
+   "says": [
+    "makes a logical backup of one PostgreSQL database",
+    "can write plain SQL or a custom archive format",
+    "is piped through gzip in a simple backup script"
+   ],
+   "use": "take a quick logical backup of a PostgreSQL database",
+   "not": [
+    "copies the data directory of the whole cluster"
+   ],
+   "like": [
+    "pg_basebackup"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "pg_restore",
+   "tier": 3,
+   "says": [
+    "restores archives made by pg_dump in custom or directory format",
+    "can restore selected objects",
+    "is not used for plain SQL dumps"
+   ],
+   "use": "restore a custom-format dump",
+   "not": [
+    "replays a plain SQL file"
+   ],
+   "like": [
+    "pg_dump"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "pg_basebackup",
+   "tier": 4,
+   "says": [
+    "takes a physical copy of the whole PostgreSQL cluster",
+    "is the starting point for a streaming replica",
+    "combines with archived WAL for point-in-time recovery"
+   ],
+   "use": "set up a new replica or a physical backup",
+   "not": [
+    "dumps one database as SQL"
+   ],
+   "like": [
+    "pg_dump"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "WAL archiving",
+   "tier": 4,
+   "says": [
+    "saves completed write-ahead log segments elsewhere",
+    "lets a base backup be rolled forward to a chosen moment",
+    "is required for point-in-time recovery"
+   ],
+   "use": "must restore to just before a bad delete",
+   "not": [
+    "is a nightly dump of tables"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "mongodump",
+   "tier": 3,
+   "says": [
+    "exports MongoDB data as BSON files",
+    "is restored with mongorestore",
+    "does not by itself give a consistent point in time on a busy cluster"
+   ],
+   "use": "make a basic MongoDB backup",
+   "not": [
+    "writes a plain SQL script"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "The SQLite backup command",
+   "tier": 3,
+   "says": [
+    "copies a live database safely through the backup API",
+    "avoids a torn copy that a plain file copy risks during a write",
+    "writes the result as a normal database file"
+   ],
+   "use": "back up a SQLite database that is in use",
+   "not": [
+    "is a mysqldump option"
+   ],
+   "like": [
+    "VACUUM INTO"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "VACUUM INTO",
+   "tier": 4,
+   "says": [
+    "writes a compacted copy of a SQLite database to a new file",
+    "produces a consistent snapshot",
+    "is a simple way to take a backup"
+   ],
+   "use": "want a clean single-file snapshot of SQLite",
+   "not": [
+    "compacts the database in place without a copy"
+   ],
+   "like": [
+    "The SQLite backup command"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "CREATE INDEX CONCURRENTLY",
+   "tier": 4,
+   "says": [
+    "builds a PostgreSQL index without blocking writes",
+    "takes longer than a normal build",
+    "cannot run inside a transaction block"
+   ],
+   "use": "add an index to a busy production table",
+   "not": [
+    "locks the table against all writes until done"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A migration history table",
+   "tier": 3,
+   "says": [
+    "records which migrations have been applied",
+    "lets the tool run only the pending ones",
+    "keeps environments in step"
+   ],
+   "use": "know which schema changes a database has",
+   "not": [
+    "stores backups of the data"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Expand and contract",
+   "tier": 4,
+   "says": [
+    "adds the new structure first, moves data, then removes the old",
+    "keeps old and new application versions working during a deploy",
+    "avoids a breaking change in a single step"
+   ],
+   "use": "rename a column without downtime",
+   "not": [
+    "drops the old column and adds the new one in the same deploy"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A restore drill",
+   "tier": 3,
+   "says": [
+    "restores a backup into a scratch environment on a schedule",
+    "proves the backup is usable",
+    "measures how long recovery takes"
+   ],
+   "use": "want to know a backup really works",
+   "not": [
+    "checks only that the backup file exists"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A zero-downtime migration",
+   "tier": 5,
+   "says": [
+    "keeps the service available while the schema changes",
+    "splits a risky change into backward-compatible steps",
+    "avoids long locks on large tables"
+   ],
+   "use": "change a large live table",
+   "not": [
+    "takes the site offline for the duration"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggsocial's data store",
+   "tier": 1,
+   "says": [
+    "is PostgreSQL accessed through Drizzle",
+    "describes tables in a TypeScript schema file",
+    "uses jsonb for flexible structured fields"
+   ],
+   "use": "ask which database ggsocial uses",
+   "not": [
+    "is a single SQLite file"
+   ],
+   "like": [
+    "gglearn's data store"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn's data store",
+   "tier": 1,
+   "says": [
+    "is a single SQLite file read through better-sqlite3 and Drizzle",
+    "uses WAL mode and turns foreign keys on",
+    "runs as one process on one machine"
+   ],
+   "use": "ask which database gglearn uses",
+   "not": [
+    "is a PostgreSQL server in a container"
+   ],
+   "like": [
+    "ggsocial's data store"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggmoney's database drivers",
+   "tier": 2,
+   "says": [
+    "can run on SQLite or MySQL, chosen by DB_DRIVER",
+    "default to SQLite for development and tests",
+    "keep a separate migration folder for each engine"
+   ],
+   "use": "ask how ggmoney supports two databases",
+   "not": [
+    "are always PostgreSQL in production"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggmoney's MySQL strict mode",
+   "tier": 4,
+   "says": [
+    "makes a truncated money value raise an error",
+    "guards against silent data damage that SQLite's flexibility would allow",
+    "is asserted by the deploy-check script"
+   ],
+   "use": "worry about wrong values being stored quietly",
+   "not": [
+    "is switched off so inserts never fail"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's MongoDB layout",
+   "tier": 3,
+   "says": [
+    "runs one MongoDB container for many services",
+    "gives each service its own named database",
+    "reads each connection string from MONGODB_URI"
+   ],
+   "use": "ask how Moksy services keep data apart",
+   "not": [
+    "shares one database among all services"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's open-files limit",
+   "tier": 5,
+   "says": [
+    "is raised in the compose file because Mongo ran out of file handles twice",
+    "follows from every service holding a connection pool",
+    "teaches sizing connections and limits as well as starting the container"
+   ],
+   "use": "learn why Moksy raised a limit on its Mongo container",
+   "not": [
+    "was added to speed up queries"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's Qdrant service",
+   "tier": 4,
+   "says": [
+    "is the vector database behind the AI memory feature",
+    "runs only in the ai and full profiles",
+    "has its own volume"
+   ],
+   "use": "ask where Moksy keeps embeddings",
+   "not": [
+    "is the store for permissions data"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn's in-memory rate limiting",
+   "tier": 4,
+   "says": [
+    "keeps attempt counters in process memory",
+    "works while the app is one process",
+    "resets its counters on restart"
+   ],
+   "use": "ask why gglearn needs no store for rate limiting",
+   "not": [
+    "relies on a Redis cluster"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggsocial's database exposure",
+   "tier": 3,
+   "says": [
+    "binds the Postgres container to 127.0.0.1 only",
+    "keeps data in a named volume so it survives container replacement",
+    "is never opened to the internet"
+   ],
+   "use": "ask how ggsocial protects its database",
+   "not": [
+    "publishes the Postgres port to all interfaces"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "A team stores users and their orders and needs an order and its payment record to succeed or fail together. Which kind of store fits best?",
+   "right": "A relational database with transactions",
+   "wrong": [
+    "A cache with a time to live",
+    "A search index",
+    "A pub/sub channel"
+   ],
+   "tier": 2,
+   "why": "Atomic multi-record updates are what transactions in a relational store provide."
+  },
+  {
+   "q": "A product page is slow because the same row is read thousands of times a minute and changes once a day. What should the team add first?",
+   "right": "A cache in front of the database with an expiry",
+   "wrong": [
+    "A second primary database accepting writes",
+    "A graph database",
+    "A bigger shard key"
+   ],
+   "tier": 2,
+   "why": "Mostly-read, rarely-changing data is the textbook case for a cache."
+  },
+  {
+   "q": "Which Redis structure is the natural fit for a game leaderboard?",
+   "right": "A sorted set",
+   "wrong": [
+    "A plain list",
+    "A hash",
+    "A set"
+   ],
+   "tier": 2,
+   "why": "A sorted set keeps members ordered by score and returns rank cheaply."
+  },
+  {
+   "q": "What does this command do?",
+   "right": "It sets the key only if it is absent, with a 30 second expiry",
+   "wrong": [
+    "It overwrites the key and expires it after 30 minutes",
+    "It appends a value to a list for 30 seconds",
+    "It locks the whole database for 30 seconds"
+   ],
+   "tier": 3,
+   "why": "NX means only if not present and EX gives seconds; together they form a simple expiring lock.",
+   "code": "SET job:42:lock worker-1 NX EX 30"
+  },
+  {
+   "q": "A Redis instance restarts and some recent writes are gone, though snapshots exist. What explains it?",
+   "right": "Snapshots are taken at intervals, so later writes were not yet saved",
+   "wrong": [
+    "Redis never persists anything",
+    "Snapshots are encrypted and cannot be read",
+    "Redis deletes keys on every restart"
+   ],
+   "tier": 3,
+   "why": "RDB snapshots are point-in-time, so writes after the last one can be lost."
+  },
+  {
+   "q": "Which statement about Redis pub/sub is true?",
+   "right": "A subscriber that is offline misses messages published meanwhile",
+   "wrong": [
+    "Messages are stored until read",
+    "It guarantees exactly-once delivery",
+    "It retains a full history for new subscribers"
+   ],
+   "tier": 3,
+   "why": "Pub/sub keeps no messages, which is why streams exist for durable consumption."
+  },
+  {
+   "q": "A background worker must process each queued job once, and workers may crash mid-job. Which Redis feature suits this best?",
+   "right": "A stream with a consumer group and acknowledgements",
+   "wrong": [
+    "Pub/sub on a channel",
+    "A string holding the last job id",
+    "A set of finished jobs only"
+   ],
+   "tier": 4,
+   "why": "Consumer groups track unacknowledged entries so crashed work can be claimed again."
+  },
+  {
+   "q": "What does this query return on a table with a jsonb column named data?",
+   "right": "Rows whose data contains the key role with the value admin",
+   "wrong": [
+    "Rows whose data has any key containing admin",
+    "Only the role column of each row",
+    "All rows, with data converted to text"
+   ],
+   "tier": 3,
+   "why": "The @> operator tests containment and is supported by a GIN index.",
+   "code": "SELECT * FROM users WHERE data @> '{\"role\": \"admin\"}';"
+  },
+  {
+   "q": "A query filters on a jsonb column with the containment operator and is slow on a large table. What helps most?",
+   "right": "A GIN index on the column",
+   "wrong": [
+    "A B-tree index on the whole jsonb column for text search",
+    "More replicas",
+    "Switching the column to text"
+   ],
+   "tier": 4,
+   "why": "GIN indexes jsonb elements so containment avoids a full scan.",
+   "code": "CREATE INDEX idx_users_data ON users USING GIN (data);"
+  },
+  {
+   "q": "A heavily updated PostgreSQL table keeps growing although the row count is stable. Which is the most likely cause?",
+   "right": "Dead row versions are not being cleaned up fast enough",
+   "wrong": [
+    "The write-ahead log is disabled",
+    "The planner statistics are too fresh",
+    "Foreign keys are enabled"
+   ],
+   "tier": 4,
+   "why": "MVCC leaves old versions that vacuum must reclaim."
+  },
+  {
+   "q": "An app opens hundreds of connections per instance and PostgreSQL slows down. What is the standard fix?",
+   "right": "Put a connection pooler between the app and the database",
+   "wrong": [
+    "Add more indexes",
+    "Switch every column to jsonb",
+    "Disable the write-ahead log"
+   ],
+   "tier": 4,
+   "why": "PostgreSQL spends a process per connection, so pooling keeps the count small."
+  },
+  {
+   "q": "A team wants an exact standby copy of a whole PostgreSQL server. Which tool starts that?",
+   "right": "pg_basebackup",
+   "wrong": [
+    "pg_dump of a single table",
+    "EXPLAIN ANALYZE",
+    "VACUUM INTO"
+   ],
+   "tier": 4,
+   "why": "A physical base backup is the starting point for a streaming replica."
+  },
+  {
+   "q": "Which command is used to restore a custom-format archive made by pg_dump?",
+   "right": "pg_restore",
+   "wrong": [
+    "pg_basebackup",
+    "psql with the archive piped in as SQL",
+    "mongorestore"
+   ],
+   "tier": 3,
+   "why": "Custom and directory formats need pg_restore; plain SQL goes through psql.",
+   "code": "pg_dump -Fc mydb > mydb.dump"
+  },
+  {
+   "q": "What does this command produce?",
+   "right": "A gzip-compressed plain SQL backup of one database",
+   "wrong": [
+    "A physical copy of the cluster",
+    "A migration file for Drizzle",
+    "A snapshot of Redis"
+   ],
+   "tier": 2,
+   "why": "pg_dump writes SQL which is then compressed by gzip.",
+   "code": "pg_dump mydb | gzip > mydb.sql.gz"
+  },
+  {
+   "q": "Which statement about SQLite foreign keys is correct?",
+   "right": "Enforcement must be switched on for each connection",
+   "wrong": [
+    "They are always enforced",
+    "They are enforced only inside WAL mode",
+    "They cannot be used in SQLite"
+   ],
+   "tier": 3,
+   "why": "The foreign_keys pragma is off by default and is per connection.",
+   "code": "PRAGMA foreign_keys = ON;"
+  },
+  {
+   "q": "A web app on SQLite has many readers and occasional writes, and readers sometimes wait behind a writer. Which setting reduces that?",
+   "right": "Turn on WAL journal mode",
+   "wrong": [
+    "Disable foreign keys",
+    "Use strict tables",
+    "Run VACUUM every request"
+   ],
+   "tier": 3,
+   "why": "In WAL mode readers continue while a writer writes."
+  },
+  {
+   "q": "Which Drizzle command applies the committed migration files to a database?",
+   "right": "drizzle-kit migrate",
+   "wrong": [
+    "drizzle-kit generate",
+    "drizzle-kit studio",
+    "drizzle-kit push"
+   ],
+   "tier": 3,
+   "why": "generate writes files; migrate runs them in order."
+  },
+  {
+   "q": "A developer is changing the schema constantly on a local database and does not want migration files yet. Which command fits?",
+   "right": "drizzle-kit push",
+   "wrong": [
+    "drizzle-kit migrate on production",
+    "drizzle-kit studio",
+    "Editing the database file by hand"
+   ],
+   "tier": 2,
+   "why": "Push syncs the schema directly with no history, suited to quick local work."
+  },
+  {
+   "q": "Two environments must follow the exact same schema steps. Which Drizzle workflow should the team use?",
+   "right": "Generate migration files, commit them, and migrate each environment",
+   "wrong": [
+    "Push from each developer's machine to production",
+    "Copy the SQLite file between servers",
+    "Edit tables in the studio"
+   ],
+   "tier": 4,
+   "why": "Versioned migration files give every environment the same ordered history."
+  },
+  {
+   "q": "A shared MongoDB product document has an ever-growing array of reviews. What is the safer model?",
+   "right": "Store reviews in their own collection and reference the product",
+   "wrong": [
+    "Embed all reviews in the product document forever",
+    "Store reviews in a Redis list",
+    "Use one document per day"
+   ],
+   "tier": 4,
+   "why": "Unbounded arrays make documents large and slow; referencing avoids that."
+  },
+  {
+   "q": "Which Mongo query returns documents whose status is active?",
+   "right": "db.orders.find({ status: \"active\" })",
+   "wrong": [
+    "db.orders.select(status = active)",
+    "db.orders.get({ active: status })",
+    "db.orders.where.status.active()"
+   ],
+   "tier": 2,
+   "why": "find takes a filter document of field and value pairs.",
+   "code": "db.orders.find({ status: \"active\" })"
+  },
+  {
+   "q": "A Mongo service pipeline groups orders by customer and sums totals. What is this feature called?",
+   "right": "The aggregation pipeline",
+   "wrong": [
+    "A replica set election",
+    "A shard key",
+    "BSON validation"
+   ],
+   "tier": 3,
+   "why": "Stages like $match and $group run on the server.",
+   "code": "db.orders.aggregate([{ $group: { _id: \"$customerId\", total: { $sum: \"$amount\" } } }])"
+  },
+  {
+   "q": "Many services share one MongoDB and the server starts refusing connections with too many open files. What is the right response?",
+   "right": "Size connection pools and raise the file handle limit",
+   "wrong": [
+    "Store everything in one service's database",
+    "Disable replication",
+    "Switch to cosine similarity"
+   ],
+   "tier": 4,
+   "why": "Each service's pool uses handles, so pools and limits must be sized together."
+  },
+  {
+   "q": "Which description fits an embedding?",
+   "right": "A list of numbers where similar meanings are close together",
+   "wrong": [
+    "A hash that is unique for each sentence",
+    "A compressed copy of the document",
+    "A SQL index on text"
+   ],
+   "tier": 1,
+   "why": "Embeddings encode meaning so distance reflects similarity."
+  },
+  {
+   "q": "Two embedding vectors are normalised to length one. Which statement is true?",
+   "right": "Their dot product equals their cosine similarity",
+   "wrong": [
+    "Their Euclidean distance is always zero",
+    "Their cosine similarity is undefined",
+    "Their dot product is always one"
+   ],
+   "tier": 4,
+   "why": "With unit length the length term disappears from cosine."
+  },
+  {
+   "q": "A vector index is tuned for speed and users report that a relevant document sometimes does not appear. What is being lost?",
+   "right": "Recall",
+   "wrong": [
+    "Durability",
+    "Atomicity",
+    "Replication lag"
+   ],
+   "tier": 4,
+   "why": "Approximate search can miss true nearest neighbours."
+  },
+  {
+   "q": "A team changes its embedding model. What must they do with stored vectors?",
+   "right": "Re-embed all the source content with the new model",
+   "wrong": [
+    "Nothing, vectors are interchangeable",
+    "Only re-embed new documents",
+    "Convert them using cosine similarity"
+   ],
+   "tier": 5,
+   "why": "Vectors from different models live in different spaces and cannot be compared."
+  },
+  {
+   "q": "A multi-tenant assistant stores every customer's chunks in one collection. How is one customer's data kept from appearing for another?",
+   "right": "Apply a metadata filter on the tenant for every query",
+   "wrong": [
+    "Normalise the vectors",
+    "Use a larger top-k",
+    "Rely on the embedding model to separate them"
+   ],
+   "tier": 4,
+   "why": "Filtering on a tenant attribute restricts the search to that tenant's items."
+  },
+  {
+   "q": "Users search a catalogue for exact part numbers and the semantic search keeps returning loosely related items. What is a good fix?",
+   "right": "Combine keyword search with vector search",
+   "wrong": [
+    "Increase the embedding dimension",
+    "Remove the metadata filter",
+    "Cache the results forever"
+   ],
+   "tier": 4,
+   "why": "Hybrid search captures exact terms that embeddings blur."
+  },
+  {
+   "q": "Why is a search engine's full-text lookup fast?",
+   "right": "It uses an inverted index from terms to documents",
+   "wrong": [
+    "It scans every document on each query",
+    "It stores one row per character",
+    "It uses cosine similarity on every word"
+   ],
+   "tier": 2,
+   "why": "Looking up the term gives the documents directly."
+  },
+  {
+   "q": "A new product was saved but does not appear in search for about a second. What explains it?",
+   "right": "The index is refreshed near real time, not instantly",
+   "wrong": [
+    "The product failed validation",
+    "Search results are cached for a year",
+    "The inverted index only rebuilds nightly"
+   ],
+   "tier": 4,
+   "why": "Near-real-time engines make writes searchable after a refresh interval."
+  },
+  {
+   "q": "After changing an analyzer the old documents are not found by the new rules. What should the team do?",
+   "right": "Reindex the documents from the source of truth",
+   "wrong": [
+    "Delete the analyzer",
+    "Increase the replication factor",
+    "Switch off stemming"
+   ],
+   "tier": 4,
+   "why": "Analysis happens at index time, so existing entries must be rebuilt."
+  },
+  {
+   "q": "A popular cached key expires and the database is suddenly overloaded by identical queries. What is this called?",
+   "right": "A cache stampede",
+   "wrong": [
+    "Replication lag",
+    "A hot shard",
+    "Write skew"
+   ],
+   "tier": 3,
+   "why": "Many requests miss together and all recompute the value."
+  },
+  {
+   "q": "Which change best reduces the chance of that problem?",
+   "right": "Add random jitter to expiry times and let one request refresh the value",
+   "wrong": [
+    "Remove the cache",
+    "Make every key expire at midnight",
+    "Raise the cache hit ratio target"
+   ],
+   "tier": 4,
+   "why": "Staggered expiry and single refresh avoid simultaneous recomputation."
+  },
+  {
+   "q": "In which pattern does the application look in the cache first, then load from the database on a miss?",
+   "right": "Cache-aside",
+   "wrong": [
+    "Write-through",
+    "Write-behind",
+    "Read replica"
+   ],
+   "tier": 2,
+   "why": "In cache-aside the application fills the cache itself."
+  },
+  {
+   "q": "A cache acknowledges writes before saving them and then the cache node crashes. What was lost?",
+   "right": "Acknowledged writes not yet saved to the database",
+   "wrong": [
+    "Only the oldest entries",
+    "The database schema",
+    "Nothing, writes are always persisted first"
+   ],
+   "tier": 4,
+   "why": "Write-behind trades durability for speed."
+  },
+  {
+   "q": "Users repeatedly request ids that do not exist and each request hits the database. Which technique helps?",
+   "right": "Negative caching with a short expiry",
+   "wrong": [
+    "A longer replication delay",
+    "Hash sharding",
+    "Disabling the cache"
+   ],
+   "tier": 4,
+   "why": "Caching the absence stops repeated database lookups."
+  },
+  {
+   "q": "A user saves a profile and the page reloaded from a replica shows the old values. What is the cause and a usual fix?",
+   "right": "Replication lag; read from the primary right after a write",
+   "wrong": [
+    "Index bloat; run VACUUM",
+    "Split brain; add a quorum",
+    "A deadlock; retry the transaction"
+   ],
+   "tier": 4,
+   "why": "Replica reads can be stale; read-your-writes can be provided by reading the primary."
+  },
+  {
+   "q": "A cluster is split by a network partition and both halves accept writes. What is this?",
+   "right": "Split brain",
+   "wrong": [
+    "Failover",
+    "Resharding",
+    "Write-around"
+   ],
+   "tier": 5,
+   "why": "Two primaries diverge; majority-based election prevents it."
+  },
+  {
+   "q": "A team shards by creation date and one shard receives all new writes. What is this problem?",
+   "right": "A hot shard",
+   "wrong": [
+    "A quorum failure",
+    "A stale read",
+    "A deadlock"
+   ],
+   "tier": 4,
+   "why": "Monotonically growing keys concentrate load on the newest range."
+  },
+  {
+   "q": "Which shard key is generally healthiest for evenly spreading writes?",
+   "right": "A high-cardinality key such as a user id hashed",
+   "wrong": [
+    "A boolean flag",
+    "The country code only",
+    "The current date"
+   ],
+   "tier": 4,
+   "why": "Many values and even traffic avoid hot shards."
+  },
+  {
+   "q": "A cluster of three replicas requires two acknowledgements for writes and reads from two nodes. What does this guarantee?",
+   "right": "Reads overlap with the latest acknowledged write",
+   "wrong": [
+    "Writes are never lost if all nodes fail",
+    "Reads are faster than a single node",
+    "Writes are stored on one node only"
+   ],
+   "tier": 5,
+   "why": "Read and write quorums that sum above the node count must share a node."
+  },
+  {
+   "q": "Which describes eventual consistency?",
+   "right": "Replicas may disagree for a time but converge if writes stop",
+   "wrong": [
+    "Every read sees the newest write",
+    "Writes are applied in a single global order immediately",
+    "Data is never replicated"
+   ],
+   "tier": 2,
+   "why": "Convergence is promised, not immediate agreement."
+  },
+  {
+   "q": "What does the C in CAP mean?",
+   "right": "Every read sees the latest write or an error",
+   "wrong": [
+    "Every node has a cache",
+    "Data is compressed",
+    "Transactions are committed in batches"
+   ],
+   "tier": 3,
+   "why": "CAP's consistency is linearizable-style agreement across copies."
+  },
+  {
+   "q": "During a network partition a system keeps answering from both sides with possibly stale data. Which choice did it make?",
+   "right": "Availability over consistency",
+   "wrong": [
+    "Consistency over availability",
+    "Durability over atomicity",
+    "Partition prevention"
+   ],
+   "tier": 3,
+   "why": "It chose to respond rather than refuse."
+  },
+  {
+   "q": "Two doctors each check the on-call count, see two on duty, and each go off duty. Both transactions commit under snapshot isolation. What anomaly is this?",
+   "right": "Write skew",
+   "wrong": [
+    "A dirty read",
+    "A phantom shard",
+    "Replication lag"
+   ],
+   "tier": 5,
+   "why": "Each wrote a different row, so the rule broke although neither conflicted directly."
+  },
+  {
+   "q": "A payment spans two separate databases and must commit on both or neither. Which classic protocol does this?",
+   "right": "Two-phase commit",
+   "wrong": [
+    "Cache-aside",
+    "Consistent hashing",
+    "Hybrid search"
+   ],
+   "tier": 5,
+   "why": "A coordinator asks all to prepare and then commit."
+  },
+  {
+   "q": "A booking spans three services that cannot share a transaction. A later step fails. How does a saga respond?",
+   "right": "Run compensating actions that undo the earlier steps",
+   "wrong": [
+    "Lock all services until the failure clears",
+    "Roll back with a single database command",
+    "Ignore the earlier steps"
+   ],
+   "tier": 5,
+   "why": "Sagas rely on undoable local steps."
+  },
+  {
+   "q": "A client retries a payment request after a timeout. Which design prevents a double charge?",
+   "right": "An idempotency key checked on the server",
+   "wrong": [
+    "A faster retry",
+    "Eventual consistency",
+    "A larger connection pool"
+   ],
+   "tier": 4,
+   "why": "A unique request key makes repeat requests have one effect."
+  },
+  {
+   "q": "A new startup app with one team needs users, orders and simple search. Which choice is wisest?",
+   "right": "Start with PostgreSQL and add stores only when a need is shown",
+   "wrong": [
+    "Use five specialised stores from day one",
+    "Use a graph database for everything",
+    "Store everything in Redis"
+   ],
+   "tier": 3,
+   "why": "One well-understood store keeps operation simple until real needs arrive."
+  },
+  {
+   "q": "A team proposes adding Redis, a search engine and a graph database for a small app. What should you ask first?",
+   "right": "What access pattern does each one serve that the current database cannot?",
+   "wrong": [
+    "Which has the most features?",
+    "Which logo is nicest?",
+    "Can they all be installed today?"
+   ],
+   "tier": 4,
+   "why": "Each extra store adds operating cost and must justify itself."
+  },
+  {
+   "q": "A search index and the main database disagree about a product's price. Which is correct?",
+   "right": "The source of truth, then rebuild the index from it",
+   "wrong": [
+    "The search index, always",
+    "Whichever has the later timestamp",
+    "Neither; delete the product"
+   ],
+   "tier": 4,
+   "why": "Derived copies are rebuilt from the system of record."
+  },
+  {
+   "q": "Which backup practice proves a backup works?",
+   "right": "Regularly restoring it into a scratch environment",
+   "wrong": [
+    "Checking the file exists",
+    "Storing it on the same disk",
+    "Compressing it more"
+   ],
+   "tier": 3,
+   "why": "Only a restore shows the backup is usable."
+  },
+  {
+   "q": "On a busy production table a team must add an index without blocking writes. Which statement should they run in PostgreSQL?",
+   "right": "CREATE INDEX CONCURRENTLY",
+   "wrong": [
+    "CREATE INDEX with an exclusive lock at night",
+    "DROP TABLE and recreate",
+    "VACUUM FULL"
+   ],
+   "tier": 4,
+   "why": "The concurrent build allows writes during the build.",
+   "code": "CREATE INDEX CONCURRENTLY idx_orders_user ON orders (user_id);"
+  },
+  {
+   "q": "A column must be renamed while two app versions run during a deploy. Which approach is safest?",
+   "right": "Add the new column, copy data, move the app, then drop the old column",
+   "wrong": [
+    "Rename the column in one migration",
+    "Drop the old column then add the new one",
+    "Take the database offline and restore a backup"
+   ],
+   "tier": 5,
+   "why": "Expand and contract keeps both versions working throughout."
+  },
+  {
+   "q": "ggmoney stores money as whole pence. Why does its MySQL schema use BIGINT?",
+   "right": "A plain INT would overflow at about 21.5 million pounds",
+   "wrong": [
+    "BIGINT is faster for all queries",
+    "MySQL has no integer type",
+    "SQLite requires it"
+   ],
+   "tier": 4,
+   "why": "Two billion pence is about 21.5 million pounds, so a larger integer is needed."
+  },
+  {
+   "q": "Why does gglearn keep rate limit counters in process memory?",
+   "right": "The app runs as one process and the counters may reset on restart",
+   "wrong": [
+    "Redis is always unavailable",
+    "Memory is more durable than files",
+    "SQLite cannot store counters"
+   ],
+   "tier": 4,
+   "why": "That design only works while there is a single process."
+  },
+  {
+   "q": "Which statement about the ggsocial production database is correct?",
+   "right": "Postgres runs in a container bound to 127.0.0.1 with a named volume",
+   "wrong": [
+    "The Postgres port is open to the internet",
+    "Data is stored in the container layer only",
+    "It runs from a SQLite file"
+   ],
+   "tier": 3,
+   "why": "Binding locally avoids exposure and the volume keeps data across container replacement."
+  }
+ ]
+}

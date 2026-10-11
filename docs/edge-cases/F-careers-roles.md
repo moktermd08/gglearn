@@ -10,10 +10,10 @@
 - F-007 ⚠️ If every step of the next level is uncountable, the person is held at "nothing-to-measure"; managers can't promote without admin override.
 - F-008 ✅ Max 10 levels per role ladder; level 1 has no steps.
 - F-009 ✅ Customers have no career.
-- F-010 ⚠️ Ladders exist only for developer, designer, sales, manager. Everyone else sees nothing.
-- F-011 ❌ Create a ladder for a new role from scratch: `addCareerLevel` starts one, but with no steps until an admin adds them track by track.
+- F-010 ✅ Ladders exist for 27 roles (`content/careers/roles/`). A role with no ladder shows "no career path yet" on `/journey`.
+- F-011 ✅ A new role's ladder is a JSON file from `content/careers/_template.json`, seeded with `npm run seed:careers` (see `docs/career-template.md`).
 - F-012 ❌ Copy a ladder from another role. None.
-- F-013 ❌ Branches (developer → support developer or architect). Single linear ladder per role.
+- F-013 ⚠️ Branches: ladders stay linear, but `career_bridges` lets a level cross onto another role's ladder (Lead Developer to Engineering Manager). Which bridges exist is data, not code.
 - F-014 ❌ Lateral move without demotion. A change of `jobRole` has no UI.
 - F-015 ❌ Promotion also changes `jobRole` (Developer → Lead Developer is the same role key; fine), but Developer → Manager needs a role change and a new ladder.
 - F-016 ❌ Salary band linked to the level. None.
@@ -34,7 +34,7 @@
 - F-029 ❌ Promotion effective date in the future. None.
 - F-030 ❌ Promotion announcement. None.
 - F-031 ✅ Dashboard shows the next level and open steps (`openSteps`).
-- F-032 ❌ Estimated promotion date from current pace. None.
+- F-032 ✅ `/journey` compares the pace needed for a goal date with levels passed in the last four weeks and projects a finish date.
 - F-033 ❌ Team-wide readiness view ("who is promotable this quarter"). `/admin/careers` lists per person.
 - F-034 ❌ Promotion cycle windows (April and October only). None.
 - F-035 ❌ Budget-limited promotions. None.

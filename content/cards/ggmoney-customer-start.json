@@ -1,0 +1,2616 @@
+{
+  "slug": "ggmoney-customer-start",
+  "name": "Getting started with GGMoney",
+  "description": "Set up payments and understand your statements.",
+  "roles": "",
+  "kind": "product",
+  "brand": "gglink",
+  "audience": "customer",
+  "tier": "mandatory",
+  "groups": {
+    "ggm": "GGMoney feature or term",
+    "bank": "bank-connection term",
+    "rec": "reconciliation or statement term",
+    "doc": "invoice or bill concept",
+    "vat": "VAT concept",
+    "payroll": "payroll term",
+    "report": "financial report or bookkeeping concept",
+    "fraud": "scam or fraud type",
+    "habit": "security habit",
+    "approve": "approval or control practice",
+    "record": "record-keeping practice",
+    "help": "way of getting help",
+    "cash": "money-handling concept"
+  },
+  "cards": [
+    {
+      "group": "ggm",
+      "subject": "The bank feed",
+      "tier": 1,
+      "says": [
+        "brings bank transactions into GGMoney through Open Banking",
+        "is the day-to-day route for getting transactions in without uploading files",
+        "has to be pointed at one of your bank accounts before anything syncs"
+      ],
+      "use": "want transactions to arrive without uploading statement files",
+      "not": [
+        "lets GGMoney make payments out of your bank account"
+      ],
+      "like": [
+        "Bank CSV import"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "Bank CSV import",
+      "tier": 1,
+      "says": [
+        "loads transactions from a statement file you upload",
+        "covers banks no provider supports, closed accounts and older history",
+        "writes to the same place as the bank feed"
+      ],
+      "use": "need to load the history of a closed account",
+      "not": [
+        "is the only way to get any transaction into GGMoney"
+      ],
+      "like": [
+        "The bank feed"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "The compliance calendar",
+      "tier": 2,
+      "says": [
+        "lists tax and filing duties as records with due dates",
+        "drives the deadline reminder emails",
+        "states that its dates are reminders, not advice"
+      ],
+      "use": "want to see which filing deadlines are coming up",
+      "not": [
+        "gives personal tax advice for your situation"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "A posted journal",
+      "tier": 4,
+      "says": [
+        "is never edited or deleted once it has been posted",
+        "is corrected by posting a reversal",
+        "leaves both the mistake and the fix visible in the books"
+      ],
+      "use": "need to fix a wrong entry that has already been posted",
+      "not": [
+        "can be quietly overwritten by the owner"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "A person's role in a company",
+      "tier": 2,
+      "says": [
+        "is one of owner, accountant or viewer",
+        "is held separately for each company the person belongs to"
+      ],
+      "use": "want to know how access to a company's books is labelled",
+      "not": [
+        "is the same for every company a person belongs to"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "Company and individual records",
+      "tier": 4,
+      "says": [
+        "are kept as separate entity types",
+        "mean a company's books and a person's tax profile are not the same kind of record"
+      ],
+      "use": "wonder why a personal profile is not treated like a company",
+      "not": [
+        "are stored as one combined record type"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "Whole pence",
+      "tier": 3,
+      "says": [
+        "are how GGMoney stores every money value, as an integer",
+        "avoid the rounding drift that decimal fractions can introduce"
+      ],
+      "use": "want to know how GGMoney avoids fractions of a penny creeping into totals",
+      "not": [
+        "are replaced by floating-point numbers when totals are large"
+      ],
+      "like": [
+        "Basis points"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "Basis points",
+      "tier": 4,
+      "says": [
+        "hold a percentage as an integer, so 20 percent is stored as 2000",
+        "keep rates exact in the same way whole pence keep amounts exact"
+      ],
+      "use": "see a rate stored as a large whole number rather than a percentage",
+      "not": [
+        "are hundredths of a basis, so 20 percent is 20"
+      ],
+      "like": [
+        "Whole pence"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "Sandbox mode",
+      "tier": 2,
+      "says": [
+        "runs against provider and HMRC test services rather than live ones",
+        "is used to practise before real credentials and approval exist",
+        "means nothing is really filed with HMRC"
+      ],
+      "use": "want to try a filing without it being real",
+      "not": [
+        "files real returns but marks them as drafts"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "The payslip",
+      "tier": 1,
+      "says": [
+        "shows pay and deductions for one pay period",
+        "is given to the employee",
+        "shows its workings in full in GGMoney"
+      ],
+      "use": "want to see how a figure on a payslip was reached",
+      "not": [
+        "is optional and has no link to payroll figures"
+      ],
+      "like": [
+        "Net pay",
+        "Gross pay"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "The trial balance",
+      "tier": 3,
+      "says": [
+        "lists every account's balance so that debits equal credits",
+        "is one of the reports GGMoney produces from the ledger",
+        "is a check on the books before the other statements are drawn up"
+      ],
+      "use": "want a quick check that the books balance",
+      "not": [
+        "shows only profit for the year"
+      ],
+      "like": [
+        "The profit and loss account",
+        "The balance sheet"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "The Open Banking providers behind GGMoney",
+      "tier": 2,
+      "says": [
+        "include GoCardless, TrueLayer and Plaid",
+        "sit behind one common bank connector"
+      ],
+      "use": "ask which providers sit behind GGMoney's bank connections",
+      "not": [
+        "come from a single built-in bank only"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "Invoices and bills in GGMoney",
+      "tier": 1,
+      "says": [
+        "cover sales invoices you issue and purchase bills you receive",
+        "link to the contacts they were raised for"
+      ],
+      "use": "want to record who owes you and whom you owe",
+      "not": [
+        "are only recorded through bank statement import"
+      ]
+    },
+    {
+      "group": "ggm",
+      "subject": "Email from GGMoney",
+      "tier": 2,
+      "says": [
+        "carries payslips, invoices and deadline alerts",
+        "is guarded so nothing sends when no email key is configured"
+      ],
+      "use": "wonder why no email arrives from a test setup",
+      "not": [
+        "is always sent even in a test setup"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Open Banking",
+      "tier": 1,
+      "says": [
+        "lets you share your bank data with an approved provider with your consent",
+        "does not require you to hand your banking password to the provider",
+        "is the regulated route that bank feeds in finance software use"
+      ],
+      "use": "want a regulated way to share bank data with software",
+      "not": [
+        "lets any website move money out of your account without asking"
+      ],
+      "like": [
+        "Bank CSV import"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Read-only access",
+      "tier": 2,
+      "says": [
+        "lets software see transactions but not move money",
+        "is the scope GGMoney asks bank-data providers for",
+        "limits the harm if a connection is ever misused"
+      ],
+      "use": "want to be sure a connected tool cannot pay anyone",
+      "not": [
+        "lets software approve payments up to a daily limit"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Your online banking password",
+      "tier": 1,
+      "says": [
+        "is never seen by GGMoney",
+        "is typed only on your bank's own login screen",
+        "should never be given to a tool, a helper or a caller"
+      ],
+      "use": "are asked by a message to send your banking password",
+      "not": [
+        "is passed to GGMoney once and then stored"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Bank consent",
+      "tier": 2,
+      "says": [
+        "is the permission you give for a provider to read your bank data",
+        "expires and has to be renewed",
+        "can be withdrawn by you"
+      ],
+      "use": "need to understand why a feed stops after a while",
+      "not": [
+        "lasts forever once you approve it"
+      ],
+      "like": [
+        "The renewal warning"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Consent length under UK Open Banking",
+      "tier": 2,
+      "says": [
+        "is at most 90 days",
+        "means a feed will need your approval again after that time"
+      ],
+      "use": "ask how long a UK Open Banking connection lasts before renewal",
+      "not": [
+        "is one year for every provider"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "The renewal warning",
+      "tier": 3,
+      "says": [
+        "appears from 14 days before consent ends",
+        "gives you time to renew before the feed stops"
+      ],
+      "use": "want to avoid a gap in your transactions",
+      "not": [
+        "appears only after the feed has stopped"
+      ],
+      "like": [
+        "Bank consent"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Pointing a feed at an account",
+      "tier": 4,
+      "says": [
+        "links a connected feed to one of your bank accounts in GGMoney",
+        "is needed before anything syncs",
+        "cannot be done twice for the same account by two feeds"
+      ],
+      "use": "have connected a bank but no transactions appear",
+      "not": [
+        "happens automatically the moment you approve the bank"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "The first sync",
+      "tier": 3,
+      "says": [
+        "takes everything the bank allows",
+        "brings in the longest history the connection provides"
+      ],
+      "use": "connect a feed for the first time",
+      "not": [
+        "reads only the last week of transactions"
+      ],
+      "like": [
+        "Later syncs"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Later syncs",
+      "tier": 3,
+      "says": [
+        "re-read the last week of transactions",
+        "pick up items that posted late"
+      ],
+      "use": "wonder how a late-posting payment reaches the books",
+      "not": [
+        "repeat the whole history each time"
+      ],
+      "like": [
+        "The first sync"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "The account opening date",
+      "tier": 5,
+      "says": [
+        "causes earlier transactions to be skipped",
+        "marks where an account's records begin"
+      ],
+      "use": "see old transactions that were not imported",
+      "not": [
+        "stops all transactions after it from importing"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Duplicate recognition across routes",
+      "tier": 5,
+      "says": [
+        "treats a transaction that arrives by both feed and CSV as one",
+        "protects totals when two routes overlap"
+      ],
+      "use": "import a statement file for a period the feed already covers",
+      "not": [
+        "doubles the transaction so that you can delete one copy"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "Bank reconciliation",
+      "tier": 1,
+      "says": [
+        "compares your records with the bank statement",
+        "finds items that appear on one side only",
+        "is how you prove your books agree with the bank"
+      ],
+      "use": "want to confirm your records match the bank",
+      "not": [
+        "is the process of paying all bills at once"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "A bank statement",
+      "tier": 1,
+      "says": [
+        "is the bank's own record of money in and out of an account",
+        "is the evidence your books are checked against"
+      ],
+      "use": "need independent evidence of what the bank holds",
+      "not": [
+        "is created by your own bookkeeping records"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "A reconciled transaction",
+      "tier": 4,
+      "says": [
+        "has been matched to a statement line",
+        "is left unchanged by later syncs because it may sit in a filed VAT return"
+      ],
+      "use": "wonder why a sync did not alter a matched line",
+      "not": [
+        "is edited freely by every sync"
+      ],
+      "like": [
+        "An unreconciled item"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "An unreconciled item",
+      "tier": 2,
+      "says": [
+        "has no match yet between the books and the bank",
+        "needs investigating or matching"
+      ],
+      "use": "see a line that is in the bank but not your books",
+      "not": [
+        "has already been confirmed against the statement"
+      ],
+      "like": [
+        "A reconciled transaction"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "The opening balance",
+      "tier": 2,
+      "says": [
+        "is the starting figure when you begin recording an account",
+        "should agree to the statement at that date"
+      ],
+      "use": "start recording an account that already holds money",
+      "not": [
+        "is calculated from the next month's sales"
+      ],
+      "like": [
+        "The closing balance"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "The closing balance",
+      "tier": 2,
+      "says": [
+        "is the balance at the end of a statement period",
+        "should equal the next period's opening balance"
+      ],
+      "use": "check that one statement period joins the next",
+      "not": [
+        "is the balance at the start of the period"
+      ],
+      "like": [
+        "The opening balance"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "A timing difference",
+      "tier": 4,
+      "says": [
+        "arises when a payment is recorded but has not yet cleared",
+        "usually clears itself within a few days"
+      ],
+      "use": "see a recorded cheque missing from the statement",
+      "not": [
+        "is a sign of fraud every time"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "A bank charge missing from the books",
+      "tier": 3,
+      "says": [
+        "appears on the statement but not in your records",
+        "needs recording as an expense"
+      ],
+      "use": "find a fee on the statement that you never entered",
+      "not": [
+        "is a mistake the bank must reverse"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "Automatic transaction matching",
+      "tier": 5,
+      "says": [
+        "merges two transactions only when account, date and amount match",
+        "does not merge when more than one candidate fits"
+      ],
+      "use": "worry that two similar payments could be wrongly merged",
+      "not": [
+        "merges any two transactions with the same amount"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "An unexplained transaction",
+      "tier": 4,
+      "says": [
+        "has no known purpose",
+        "should be queried before it is categorised",
+        "can be an early sign of fraud or error"
+      ],
+      "use": "find a payment nobody recognises",
+      "not": [
+        "is safest to categorise as miscellaneous and move on"
+      ]
+    },
+    {
+      "group": "rec",
+      "subject": "Regular reconciliation",
+      "tier": 2,
+      "says": [
+        "catches errors and fraud early",
+        "is easier monthly than once a year"
+      ],
+      "use": "want problems found while they are still easy to trace",
+      "not": [
+        "is only needed at year end"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "A sales invoice",
+      "tier": 1,
+      "says": [
+        "bills a customer for goods or services you supplied",
+        "creates money owed to you"
+      ],
+      "use": "need to ask a customer to pay",
+      "not": [
+        "records something you bought from a supplier"
+      ],
+      "like": [
+        "A purchase bill"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "A purchase bill",
+      "tier": 1,
+      "says": [
+        "records what you owe a supplier",
+        "creates a payable until you pay it"
+      ],
+      "use": "receive an invoice from a supplier",
+      "not": [
+        "is issued to your customer"
+      ],
+      "like": [
+        "A sales invoice"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "A contact",
+      "tier": 1,
+      "says": [
+        "stores the details of a customer or supplier",
+        "is attached to the invoices and bills raised for it"
+      ],
+      "use": "need one place for a customer's or supplier's details",
+      "not": [
+        "holds the company's own bank statement"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "A credit note",
+      "tier": 2,
+      "says": [
+        "reduces or cancels an invoice already issued",
+        "is the proper way to correct an invoice instead of deleting it"
+      ],
+      "use": "need to correct an issued invoice without erasing it",
+      "not": [
+        "is a new invoice for an extra amount"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "Payment terms",
+      "tier": 2,
+      "says": [
+        "set how many days a customer has to pay",
+        "are shown on the invoice"
+      ],
+      "use": "agree how long a customer may take to pay",
+      "not": [
+        "are the fees charged for paying early"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "The invoice number sequence",
+      "tier": 3,
+      "says": [
+        "gives each invoice a unique, ordered reference",
+        "makes a missing document easy to spot"
+      ],
+      "use": "want to see at a glance whether an invoice is missing",
+      "not": [
+        "can be reused after an invoice is cancelled"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "A purchase order",
+      "tier": 3,
+      "says": [
+        "authorises a purchase before the supplier invoices",
+        "lets the bill be checked against what was approved"
+      ],
+      "use": "want to approve spending before it happens",
+      "not": [
+        "is sent to a customer to request payment"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "A receipt",
+      "tier": 2,
+      "says": [
+        "is evidence that a payment was made",
+        "supports the expense claimed in the books"
+      ],
+      "use": "need proof that something was paid for",
+      "not": [
+        "is the same as an unpaid invoice"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "A payment allocation",
+      "tier": 3,
+      "says": [
+        "matches a payment against the invoices or bills it settles",
+        "lets one payment cover several invoices",
+        "lets a part payment leave a balance still due"
+      ],
+      "use": "receive one payment that covers two invoices",
+      "not": [
+        "can only match one invoice per payment"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "An overdue invoice",
+      "tier": 2,
+      "says": [
+        "remains unpaid after its due date",
+        "calls for a polite reminder first"
+      ],
+      "use": "find an invoice past its due date",
+      "not": [
+        "is automatically cancelled after the due date"
+      ]
+    },
+    {
+      "group": "doc",
+      "subject": "A supplier statement",
+      "tier": 5,
+      "says": [
+        "lists what the supplier believes you owe",
+        "is compared with your bills to find missing ones"
+      ],
+      "use": "want to find a bill you have not recorded",
+      "not": [
+        "replaces the need to record bills"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "VAT",
+      "tier": 1,
+      "says": [
+        "is a tax added to most goods and services in the UK",
+        "is collected by registered businesses and passed to HMRC"
+      ],
+      "use": "ask what the tax on an invoice is for",
+      "not": [
+        "is a tax on a business's profit only"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "Output VAT",
+      "tier": 2,
+      "says": [
+        "is the VAT you charge on your sales",
+        "is owed to HMRC"
+      ],
+      "use": "want the VAT you have charged customers",
+      "not": [
+        "is the VAT you pay on purchases"
+      ],
+      "like": [
+        "Input VAT"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "Input VAT",
+      "tier": 2,
+      "says": [
+        "is the VAT you pay on purchases",
+        "can usually be reclaimed by a registered business"
+      ],
+      "use": "want the VAT you have paid suppliers",
+      "not": [
+        "is the VAT you charge customers"
+      ],
+      "like": [
+        "Output VAT"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "A VAT return",
+      "tier": 2,
+      "says": [
+        "summarises VAT due on sales and reclaimable on purchases for a period",
+        "is sent to HMRC at set intervals"
+      ],
+      "use": "need to report VAT for a period",
+      "not": [
+        "is filed once a year with the accounts"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "The standard VAT accounting scheme",
+      "tier": 3,
+      "says": [
+        "bases VAT on the dates of invoices",
+        "puts a sale in the return even if the customer has not paid yet"
+      ],
+      "use": "want VAT counted when the invoice is issued",
+      "not": [
+        "bases VAT on when cash is received"
+      ],
+      "like": [
+        "The cash accounting scheme"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "The cash accounting scheme",
+      "tier": 3,
+      "says": [
+        "bases VAT on when money is paid or received",
+        "suits businesses whose customers pay late"
+      ],
+      "use": "have customers who pay slowly and want to pay VAT only after they do",
+      "not": [
+        "bases VAT on the invoice date"
+      ],
+      "like": [
+        "The standard VAT accounting scheme"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "The flat rate scheme",
+      "tier": 4,
+      "says": [
+        "applies a set percentage to turnover to work out the payment",
+        "simplifies calculating VAT"
+      ],
+      "use": "want to pay VAT as a fixed percentage rather than tracking each purchase",
+      "not": [
+        "bases every figure on actual invoice dates and input VAT"
+      ],
+      "like": [
+        "The cash accounting scheme"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "Making Tax Digital for VAT",
+      "tier": 3,
+      "says": [
+        "requires digital records and submission through software",
+        "sends VAT returns to HMRC from compatible software"
+      ],
+      "use": "ask why a VAT return is sent from software",
+      "not": [
+        "lets you post paper returns instead"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "Finalising a VAT return",
+      "tier": 4,
+      "says": [
+        "freezes the figures before sending",
+        "is a different step from submitting"
+      ],
+      "use": "want the figures locked for review before filing",
+      "not": [
+        "sends the return to HMRC"
+      ],
+      "like": [
+        "Submitting a VAT return"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "Submitting a VAT return",
+      "tier": 4,
+      "says": [
+        "needs its own declaration",
+        "cannot be withdrawn because HMRC has no way to withdraw a return"
+      ],
+      "use": "are ready to send a finalised return",
+      "not": [
+        "can be undone by deleting the draft"
+      ],
+      "like": [
+        "Finalising a VAT return"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "The reverse charge",
+      "tier": 5,
+      "says": [
+        "makes the customer account for VAT on certain supplies",
+        "moves the VAT accounting from supplier to customer"
+      ],
+      "use": "buy a service where the customer must account for the VAT",
+      "not": [
+        "adds a second charge on top of normal VAT"
+      ]
+    },
+    {
+      "group": "vat",
+      "subject": "Rounding in VAT boxes 6 to 9",
+      "tier": 5,
+      "says": [
+        "goes down to whole pounds",
+        "is different from the penny rounding used in payroll"
+      ],
+      "use": "wonder why pence disappear from some VAT boxes",
+      "not": [
+        "rounds to the nearest penny"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "Gross pay",
+      "tier": 1,
+      "says": [
+        "is pay before any deductions",
+        "is the starting point on a payslip"
+      ],
+      "use": "want to see pay before tax",
+      "not": [
+        "is take-home pay"
+      ],
+      "like": [
+        "Net pay"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "Net pay",
+      "tier": 1,
+      "says": [
+        "is take-home pay after deductions",
+        "is what reaches the employee's bank account"
+      ],
+      "use": "want to know what the employee receives",
+      "not": [
+        "is pay before tax"
+      ],
+      "like": [
+        "Gross pay"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "PAYE",
+      "tier": 2,
+      "says": [
+        "collects income tax from wages through the employer",
+        "is paid over to HMRC by the employer"
+      ],
+      "use": "ask how income tax on wages reaches HMRC",
+      "not": [
+        "is the tax charged on a company's profit"
+      ],
+      "like": [
+        "National Insurance"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "National Insurance",
+      "tier": 2,
+      "says": [
+        "is a separate contribution from income tax",
+        "is deducted from pay and also paid by the employer"
+      ],
+      "use": "see a deduction that is not income tax",
+      "not": [
+        "is the same deduction as income tax"
+      ],
+      "like": [
+        "PAYE"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "A tax code",
+      "tier": 2,
+      "says": [
+        "tells the employer how much tax-free pay to allow",
+        "affects how much PAYE is taken"
+      ],
+      "use": "find that the tax taken seems wrong",
+      "not": [
+        "is chosen by the employee each month"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "A student loan deduction",
+      "tier": 3,
+      "says": [
+        "is taken from pay above a threshold",
+        "is calculated by the payroll software"
+      ],
+      "use": "see a deduction for a student loan",
+      "not": [
+        "is paid directly by the employer from company funds"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "A workplace pension",
+      "tier": 3,
+      "says": [
+        "has contributions from the employee and the employer",
+        "is shown as a deduction on the payslip"
+      ],
+      "use": "see a pension amount on a payslip",
+      "not": [
+        "is paid only by the employer"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "Statutory pay",
+      "tier": 4,
+      "says": [
+        "is pay required by law, such as sick or maternity pay",
+        "has its own rules in the payroll calculation"
+      ],
+      "use": "need to pay an employee who is off sick or on leave",
+      "not": [
+        "is optional bonus pay"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "Real Time Information",
+      "tier": 3,
+      "says": [
+        "reports pay and deductions to HMRC each time staff are paid"
+      ],
+      "use": "ask how HMRC learns about each pay run",
+      "not": [
+        "is a once-a-year report"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "Rounding in payroll",
+      "tier": 5,
+      "says": [
+        "differs by tax on purpose",
+        "rounds PAYE down to the penny",
+        "rounds student loan figures down to whole pounds"
+      ],
+      "use": "wonder why different deductions round differently",
+      "not": [
+        "uses one rounding rule for every figure"
+      ]
+    },
+    {
+      "group": "payroll",
+      "subject": "The verified tax year rule",
+      "tier": 5,
+      "says": [
+        "stops payroll being filed for a year whose rates are not verified",
+        "protects against filing with wrong rates"
+      ],
+      "use": "see that payroll will not file for a new tax year yet",
+      "not": [
+        "lets payroll be filed with last year's rates"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "The profit and loss account",
+      "tier": 2,
+      "says": [
+        "shows income less costs over a period",
+        "tells you whether the business made a profit"
+      ],
+      "use": "want to see whether the business made money over a period",
+      "not": [
+        "lists what the business owns and owes on one date"
+      ],
+      "like": [
+        "The balance sheet"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "The balance sheet",
+      "tier": 2,
+      "says": [
+        "shows what the business owns and owes on one date",
+        "has assets on one side and liabilities and equity on the other"
+      ],
+      "use": "want a snapshot of the business on one date",
+      "not": [
+        "shows income and costs over a year"
+      ],
+      "like": [
+        "The profit and loss account"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "A cash flow statement",
+      "tier": 3,
+      "says": [
+        "shows money moving in and out over a period",
+        "can show profit while cash is short"
+      ],
+      "use": "want to see why cash is short despite profit",
+      "not": [
+        "lists what customers owe"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "An aged debtors report",
+      "tier": 3,
+      "says": [
+        "groups unpaid customer invoices by how overdue they are",
+        "helps decide whom to chase first"
+      ],
+      "use": "want to see which customer invoices are most overdue",
+      "not": [
+        "groups money owed to suppliers"
+      ],
+      "like": [
+        "An aged creditors report"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "An aged creditors report",
+      "tier": 3,
+      "says": [
+        "groups unpaid supplier bills by age",
+        "helps plan which suppliers to pay"
+      ],
+      "use": "want to see which supplier bills are most overdue",
+      "not": [
+        "groups money owed by customers"
+      ],
+      "like": [
+        "An aged debtors report"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "A chart of accounts",
+      "tier": 2,
+      "says": [
+        "lists the categories used to record income, costs, assets and liabilities",
+        "gives each category a name and code"
+      ],
+      "use": "want to see how transactions are categorised",
+      "not": [
+        "lists customers and suppliers"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "Double-entry bookkeeping",
+      "tier": 4,
+      "says": [
+        "records every transaction as a debit and a credit",
+        "keeps debits and credits equal"
+      ],
+      "use": "ask why every entry has two sides",
+      "not": [
+        "records each transaction once"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "The general ledger",
+      "tier": 3,
+      "says": [
+        "holds all of a company's accounts",
+        "is where journals post"
+      ],
+      "use": "need the full record behind the reports",
+      "not": [
+        "lists only the customers"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "Year-end accounts",
+      "tier": 4,
+      "says": [
+        "summarise a company's results for its financial year",
+        "are built from the ledger"
+      ],
+      "use": "ask what a company produces at the end of its financial year",
+      "not": [
+        "are produced weekly"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "Phishing",
+      "tier": 1,
+      "says": [
+        "tricks you into revealing details by email",
+        "often copies a trusted brand",
+        "tries to get you to click a link or open an attachment"
+      ],
+      "use": "receive an email asking you to sign in via a link",
+      "not": [
+        "is a technical attack that needs no action from you"
+      ],
+      "like": [
+        "Smishing",
+        "Vishing"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "Smishing",
+      "tier": 2,
+      "says": [
+        "is phishing by text message",
+        "often claims a delivery or a bank problem"
+      ],
+      "use": "get a text asking you to confirm details via a link",
+      "not": [
+        "is phishing by phone call"
+      ],
+      "like": [
+        "Phishing",
+        "Vishing"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "Vishing",
+      "tier": 2,
+      "says": [
+        "is phishing by phone call",
+        "often pretends to be a bank or HMRC"
+      ],
+      "use": "get a call urging you to move money to a safe account",
+      "not": [
+        "is phishing by text message"
+      ],
+      "like": [
+        "Phishing",
+        "Smishing"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "Social engineering",
+      "tier": 2,
+      "says": [
+        "manipulates people rather than technology",
+        "relies on urgency, authority or fear"
+      ],
+      "use": "ask why scammers target people rather than systems",
+      "not": [
+        "breaks encryption directly"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "A fake HMRC message",
+      "tier": 2,
+      "says": [
+        "threatens penalties or promises a refund",
+        "asks for personal or payment details",
+        "pressures you to act at once"
+      ],
+      "use": "get a message claiming you owe tax and must pay now",
+      "not": [
+        "is always sent from a verified HMRC address"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "Mandate fraud",
+      "tier": 4,
+      "says": [
+        "asks you to change a supplier's bank details",
+        "usually arrives as a request that looks like it came from the supplier"
+      ],
+      "use": "receive a request to change a supplier's bank details",
+      "not": [
+        "is a bank error in a standing order"
+      ],
+      "like": [
+        "Business email compromise"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "Chief executive fraud",
+      "tier": 4,
+      "says": [
+        "impersonates a senior person to demand an urgent payment",
+        "relies on staff reluctance to question authority"
+      ],
+      "use": "get an urgent message that appears to be from the boss asking for payment",
+      "not": [
+        "is a request from a supplier to change bank details"
+      ],
+      "like": [
+        "Business email compromise"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "Account takeover",
+      "tier": 3,
+      "says": [
+        "uses stolen login details to act as you",
+        "is far harder with a second sign-in step"
+      ],
+      "use": "find activity you did not do on an account",
+      "not": [
+        "only happens when a device is stolen"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "A fake invoice",
+      "tier": 3,
+      "says": [
+        "bills for goods or services never ordered",
+        "hopes the bill is paid without checking"
+      ],
+      "use": "receive an invoice for something nobody recalls ordering",
+      "not": [
+        "is a genuine bill with a late fee"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "An overpayment scam",
+      "tier": 5,
+      "says": [
+        "sends too much money and asks for the difference back",
+        "relies on the original payment later being reversed"
+      ],
+      "use": "are paid too much and asked to refund the difference",
+      "not": [
+        "is a bank mistake that is safe to refund at once"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "Authorised push payment fraud",
+      "tier": 5,
+      "says": [
+        "tricks you into sending the money yourself",
+        "is hard to reverse once the payment has gone"
+      ],
+      "use": "are talked into making a payment yourself by a caller",
+      "not": [
+        "is the same as an unauthorised card payment"
+      ]
+    },
+    {
+      "group": "fraud",
+      "subject": "Business email compromise",
+      "tier": 5,
+      "says": [
+        "takes over a real email account to redirect payments",
+        "makes a fraudulent request look genuine"
+      ],
+      "use": "suspect a real colleague's email account is being misused",
+      "not": [
+        "is a spam email sent to many people"
+      ],
+      "like": [
+        "Mandate fraud",
+        "Chief executive fraud"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "A strong, unique password",
+      "tier": 1,
+      "says": [
+        "is long and different for every account",
+        "limits the damage if one account leaks"
+      ],
+      "use": "set a password for a new account",
+      "not": [
+        "can safely be reused if it is long"
+      ],
+      "like": [
+        "A password manager"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "A password manager",
+      "tier": 2,
+      "says": [
+        "stores and fills unique passwords",
+        "can warn you when a site address looks wrong"
+      ],
+      "use": "cannot remember many different passwords",
+      "not": [
+        "stores your passwords in one note on your phone"
+      ],
+      "like": [
+        "A strong, unique password"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "A second sign-in step",
+      "tier": 2,
+      "says": [
+        "asks for something more than your password",
+        "blocks most attacks that use only a stolen password"
+      ],
+      "use": "want to protect an account even if the password leaks",
+      "not": [
+        "replaces the need for a password"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Signing out of a shared device",
+      "tier": 1,
+      "says": [
+        "ends your session so the next user cannot use it",
+        "is important after using a borrowed device"
+      ],
+      "use": "finish using a computer someone else can access",
+      "not": [
+        "is unnecessary if you close the window"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Locking your screen",
+      "tier": 1,
+      "says": [
+        "stops others using your session while you are away",
+        "should be done whenever you step away"
+      ],
+      "use": "leave your desk for a few minutes",
+      "not": [
+        "is only needed overnight"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Checking the web address",
+      "tier": 2,
+      "says": [
+        "helps confirm you are on the real site",
+        "looks for the exact domain before you sign in"
+      ],
+      "use": "are about to sign in from a link in an email",
+      "not": [
+        "is satisfied by a padlock alone"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Not clicking unexpected links",
+      "tier": 2,
+      "says": [
+        "avoids landing on a fake sign-in page",
+        "means going to the site yourself instead"
+      ],
+      "use": "get a message that urges you to click a link",
+      "not": [
+        "is safe when the message uses a known logo"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Keeping software updated",
+      "tier": 2,
+      "says": [
+        "closes known security holes",
+        "applies to devices, browsers and apps"
+      ],
+      "use": "see an update notification for your browser",
+      "not": [
+        "only matters for new features"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Least privilege",
+      "tier": 4,
+      "says": [
+        "gives each person only the access they need",
+        "limits what a mistake or a stolen account can do"
+      ],
+      "use": "decide how much access to give a new helper",
+      "not": [
+        "gives everyone full access to avoid delays"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Reviewing access when someone leaves",
+      "tier": 4,
+      "says": [
+        "removes their access promptly",
+        "closes a common gap in small businesses"
+      ],
+      "use": "need to handle a team member leaving the business",
+      "not": [
+        "can wait until the next audit"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Calling back on a known number",
+      "tier": 3,
+      "says": [
+        "checks an unexpected request using contact details you already trust",
+        "avoids using numbers supplied in the message"
+      ],
+      "use": "get a call asking you to confirm payment details",
+      "not": [
+        "uses the number the caller gives you"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Public Wi-Fi",
+      "tier": 3,
+      "says": [
+        "is a risk for sensitive work",
+        "is safer to avoid for banking and finance tools"
+      ],
+      "use": "need to check your bank in a cafe",
+      "not": [
+        "is as safe as your home network"
+      ]
+    },
+    {
+      "group": "habit",
+      "subject": "Recovery codes",
+      "tier": 4,
+      "says": [
+        "let you regain access if you lose your second step",
+        "should be stored safely and offline"
+      ],
+      "use": "set up a second sign-in step",
+      "not": [
+        "are shared with support to unlock your account"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "The four-eyes principle",
+      "tier": 2,
+      "says": [
+        "requires a second person to check important actions",
+        "reduces both mistakes and fraud"
+      ],
+      "use": "want a second pair of eyes on a payment",
+      "not": [
+        "lets one person approve their own work"
+      ],
+      "like": [
+        "Segregation of duties"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "Second-person approval of filings",
+      "tier": 3,
+      "says": [
+        "is required in GGMoney for filings",
+        "is refused by the app if the same person tries to approve their own filing"
+      ],
+      "use": "ask who must approve a filing in GGMoney",
+      "not": [
+        "is optional for filings and required for routine tasks"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "Routine task approval",
+      "tier": 3,
+      "says": [
+        "needs only one person in GGMoney",
+        "is lighter than the check needed for a filing"
+      ],
+      "use": "ask how many people must approve a routine compliance task",
+      "not": [
+        "needs two people for every task"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "Segregation of duties",
+      "tier": 4,
+      "says": [
+        "splits the tasks of requesting, approving and paying",
+        "stops one person controlling a whole transaction"
+      ],
+      "use": "design who may raise and who may pay a bill",
+      "not": [
+        "gives one person every step for speed"
+      ],
+      "like": [
+        "The four-eyes principle"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "An approval limit",
+      "tier": 4,
+      "says": [
+        "caps what one person can approve alone",
+        "sends larger amounts to someone senior"
+      ],
+      "use": "set how much one person may approve",
+      "not": [
+        "is set to unlimited for owners"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "An audit trail",
+      "tier": 3,
+      "says": [
+        "records who did what and when",
+        "lets you reconstruct how a figure came about"
+      ],
+      "use": "need to trace who changed a record",
+      "not": [
+        "is deleted once a period is closed"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "An irreversible submission",
+      "tier": 4,
+      "says": [
+        "cannot be taken back once sent",
+        "calls for a check and a declaration first"
+      ],
+      "use": "are about to send something that cannot be withdrawn",
+      "not": [
+        "can be recalled from the recipient"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "An automatic check",
+      "tier": 4,
+      "says": [
+        "reports a problem but never signs anything off",
+        "leaves the decision to a person"
+      ],
+      "use": "see a check that flags an issue on a filing",
+      "not": [
+        "approves the filing automatically if clean"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "Review before filing",
+      "tier": 2,
+      "says": [
+        "catches errors while they can be fixed",
+        "is the step between finalising and submitting"
+      ],
+      "use": "want to catch mistakes before sending",
+      "not": [
+        "happens after the filing is sent"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "Delegation",
+      "tier": 5,
+      "says": [
+        "passes a task to another person with defined limits",
+        "does not remove the delegator's accountability"
+      ],
+      "use": "ask someone to approve payments while you are away",
+      "not": [
+        "transfers all responsibility to the delegate"
+      ]
+    },
+    {
+      "group": "approve",
+      "subject": "Sign-off",
+      "tier": 2,
+      "says": [
+        "is a named person's recorded approval",
+        "shows who accepted a piece of work"
+      ],
+      "use": "need a record that a task was accepted",
+      "not": [
+        "is an automatic status that needs no person"
+      ]
+    },
+    {
+      "group": "record",
+      "subject": "Keeping receipts",
+      "tier": 1,
+      "says": [
+        "keeps the evidence for each expense",
+        "should be done as the spending happens"
+      ],
+      "use": "just paid for something for the business",
+      "not": [
+        "can wait until the year end"
+      ]
+    },
+    {
+      "group": "record",
+      "subject": "A separate business bank account",
+      "tier": 2,
+      "says": [
+        "keeps business money apart from personal money",
+        "makes reconciliation and reporting simpler"
+      ],
+      "use": "want to avoid mixing personal and business spending",
+      "not": [
+        "is unnecessary for a company"
+      ]
+    },
+    {
+      "group": "record",
+      "subject": "Digital records",
+      "tier": 2,
+      "says": [
+        "are searchable and easy to back up",
+        "are required for VAT under Making Tax Digital"
+      ],
+      "use": "ask why paper records alone are not enough for VAT",
+      "not": [
+        "replace the need for any backup"
+      ]
+    },
+    {
+      "group": "record",
+      "subject": "Backups",
+      "tier": 3,
+      "says": [
+        "protect against loss of records",
+        "are best kept off the machine they copy"
+      ],
+      "use": "worry about losing your books",
+      "not": [
+        "are enough if kept on the same device"
+      ]
+    },
+    {
+      "group": "record",
+      "subject": "A monthly close",
+      "tier": 3,
+      "says": [
+        "finishes the month's records before the next begins",
+        "reconciles bank accounts and reviews unusual items"
+      ],
+      "use": "want a regular routine for finishing the books",
+      "not": [
+        "is done only at the financial year end"
+      ]
+    },
+    {
+      "group": "record",
+      "subject": "A mileage log",
+      "tier": 3,
+      "says": [
+        "records journeys for business travel claims",
+        "includes date, purpose and distance"
+      ],
+      "use": "drive for business and plan to claim",
+      "not": [
+        "is needed only for company cars"
+      ]
+    },
+    {
+      "group": "record",
+      "subject": "Evidence for every entry",
+      "tier": 4,
+      "says": [
+        "means each figure can be traced to a document",
+        "supports an answer to any query about the books"
+      ],
+      "use": "are asked to justify an entry in the books",
+      "not": [
+        "lets you record entries without a document"
+      ]
+    },
+    {
+      "group": "record",
+      "subject": "Record retention",
+      "tier": 2,
+      "says": [
+        "means keeping records for the period the law requires",
+        "applies to business and tax records"
+      ],
+      "use": "wonder when old records can be discarded",
+      "not": [
+        "lets records be discarded at the end of each month"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Describing a problem precisely",
+      "tier": 2,
+      "says": [
+        "says what you did, what you expected and what happened",
+        "helps support solve the problem faster"
+      ],
+      "use": "need to report a problem",
+      "not": [
+        "is just 'it does not work'"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Sharing a screenshot safely",
+      "tier": 2,
+      "says": [
+        "hides passwords, codes and account numbers",
+        "gives support the evidence without exposing secrets"
+      ],
+      "use": "want to send a screenshot to support",
+      "not": [
+        "includes the full page with every detail"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Never sharing your password with support",
+      "tier": 1,
+      "says": [
+        "is a rule for any genuine support team",
+        "protects you from impersonators"
+      ],
+      "use": "are asked by 'support' for your password",
+      "not": [
+        "is safe once the caller proves their name"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Checking that support is genuine",
+      "tier": 3,
+      "says": [
+        "uses contact details you found yourself",
+        "avoids replying to unsolicited offers of help"
+      ],
+      "use": "get an unexpected message offering help with your account",
+      "not": [
+        "trusts the contact in the message"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Asking an accountant",
+      "tier": 2,
+      "says": [
+        "suits tax decisions and unusual transactions",
+        "goes beyond what a reminder calendar can say"
+      ],
+      "use": "face a tax decision for your situation",
+      "not": [
+        "is replaced by calendar reminders"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Reporting suspected fraud",
+      "tier": 3,
+      "says": [
+        "starts with telling your bank at once",
+        "includes reporting to the national fraud service"
+      ],
+      "use": "think you have sent money to a scammer",
+      "not": [
+        "can wait until you are sure"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "A support reference number",
+      "tier": 2,
+      "says": [
+        "identifies your case",
+        "lets you follow up without repeating everything"
+      ],
+      "use": "need to follow up on a support request",
+      "not": [
+        "is used as a password"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Escalating a problem",
+      "tier": 4,
+      "says": [
+        "raises it to someone senior when the first reply fails",
+        "includes the earlier reference and what was tried"
+      ],
+      "use": "have not got an answer after repeated attempts",
+      "not": [
+        "means starting a fresh unrelated request"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Calendar dates are reminders, not advice",
+      "tier": 3,
+      "says": [
+        "is what the compliance calendar says about its dates",
+        "means you must confirm the date on the official source"
+      ],
+      "use": "rely on a calendar date for a filing",
+      "not": [
+        "means the date is legally binding in the app"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "Cash flow",
+      "tier": 1,
+      "says": [
+        "is the movement of money in and out of a business",
+        "can be tight even when a business is profitable"
+      ],
+      "use": "ask whether the business can pay bills next month",
+      "not": [
+        "is the same as annual profit"
+      ],
+      "like": [
+        "Profit"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "Profit",
+      "tier": 2,
+      "says": [
+        "is income less costs for a period",
+        "can exist before the money has arrived"
+      ],
+      "use": "compare earnings with the bank balance",
+      "not": [
+        "is the amount in the bank"
+      ],
+      "like": [
+        "Cash flow"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "Working capital",
+      "tier": 4,
+      "says": [
+        "is current assets less current liabilities",
+        "shows whether short-term bills can be met"
+      ],
+      "use": "want to know if short-term obligations can be met",
+      "not": [
+        "is the business's long-term borrowing"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "A budget",
+      "tier": 1,
+      "says": [
+        "sets planned income and spending",
+        "is compared with actuals to find differences"
+      ],
+      "use": "plan spending for the coming months",
+      "not": [
+        "records what was spent last year"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "A Direct Debit",
+      "tier": 2,
+      "says": [
+        "lets a company collect amounts you agreed to",
+        "is covered by the Direct Debit Guarantee"
+      ],
+      "use": "set up a payment where the amount may vary",
+      "not": [
+        "is a fixed amount you send on a schedule"
+      ],
+      "like": [
+        "A standing order"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "A standing order",
+      "tier": 2,
+      "says": [
+        "sends a fixed amount on a schedule you set",
+        "is controlled by you, not by the recipient"
+      ],
+      "use": "pay the same amount every month",
+      "not": [
+        "lets the recipient change the amount"
+      ],
+      "like": [
+        "A Direct Debit"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "Faster Payments",
+      "tier": 2,
+      "says": [
+        "is the UK service for near-instant bank transfers",
+        "is the usual route for everyday online transfers"
+      ],
+      "use": "make an everyday transfer to another UK account",
+      "not": [
+        "is the same as the system for large same-day payments"
+      ],
+      "like": [
+        "CHAPS"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "CHAPS",
+      "tier": 3,
+      "says": [
+        "is a UK same-day payment system for high-value transfers",
+        "is often used for property purchases"
+      ],
+      "use": "need a large payment to arrive the same day",
+      "not": [
+        "is a Direct Debit scheme"
+      ],
+      "like": [
+        "Faster Payments"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "Confirmation of Payee",
+      "tier": 3,
+      "says": [
+        "checks the name matches the account before a payment",
+        "may warn of a mismatch"
+      ],
+      "use": "are about to pay a new supplier",
+      "not": [
+        "guarantees the payment is safe"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "A cash buffer",
+      "tier": 2,
+      "says": [
+        "is money set aside for slow months",
+        "gives time when customers pay late"
+      ],
+      "use": "want to survive a late-paying customer",
+      "not": [
+        "is money kept in the till"
+      ]
+    },
+    {
+      "group": "cash",
+      "subject": "A chargeback",
+      "tier": 5,
+      "says": [
+        "is a card-payment dispute through the card issuer",
+        "may recover money for faulty or undelivered goods"
+      ],
+      "use": "pay by card for something never delivered",
+      "not": [
+        "applies to every bank transfer"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "What does GGMoney ask bank-data providers for when connecting a bank feed?",
+      "right": "Read-only access",
+      "wrong": [
+        "Permission to approve payments",
+        "Your online banking password",
+        "Access to move money between accounts"
+      ],
+      "tier": 1,
+      "why": "GGMoney asks providers for read-only scopes, so nothing can move money."
+    },
+    {
+      "q": "Where should you type your online banking password?",
+      "right": "Only on your bank's own login screen",
+      "wrong": [
+        "Into any app that asks for it",
+        "Into a message to support so they can check",
+        "Into a finance tool so it can sync"
+      ],
+      "tier": 1,
+      "why": "Open Banking connections are approved on the bank's own screen; GGMoney never sees the password."
+    },
+    {
+      "q": "What is a bank reconciliation?",
+      "right": "Comparing your records with the bank statement",
+      "wrong": [
+        "Paying all bills in one batch",
+        "Closing a bank account",
+        "Asking the bank for a loan"
+      ],
+      "tier": 1,
+      "why": "Reconciliation checks that your books agree with the bank."
+    },
+    {
+      "q": "What does a sales invoice do?",
+      "right": "Bills a customer for goods or services you supplied",
+      "wrong": [
+        "Records money you owe a supplier",
+        "Reports pay to HMRC",
+        "Lists your bank charges"
+      ],
+      "tier": 1,
+      "why": "A sales invoice creates money owed to you."
+    },
+    {
+      "q": "What is the safest response to an unexpected email asking you to sign in through a link?",
+      "right": "Go to the site yourself by typing its address or using a saved bookmark",
+      "wrong": [
+        "Click the link and sign in quickly",
+        "Reply asking if it is genuine",
+        "Forward it to a colleague and sign in anyway"
+      ],
+      "tier": 1,
+      "why": "Going to the site yourself avoids a fake sign-in page."
+    },
+    {
+      "q": "What does net pay mean on a payslip?",
+      "right": "Take-home pay after deductions",
+      "wrong": [
+        "Pay before any deductions",
+        "The employer's total cost",
+        "The tax paid to HMRC"
+      ],
+      "tier": 1,
+      "why": "Net pay is gross pay less deductions."
+    },
+    {
+      "q": "Which GGMoney route brings transactions in without uploading files?",
+      "right": "The bank feed",
+      "wrong": [
+        "Bank CSV import",
+        "A purchase order",
+        "A credit note"
+      ],
+      "tier": 1,
+      "why": "Bank feeds use Open Banking; CSV import uses a file."
+    },
+    {
+      "q": "What should you do after using a shared computer for your finance tools?",
+      "right": "Sign out so the next user cannot use your session",
+      "wrong": [
+        "Close the window and leave it",
+        "Leave it signed in for the next person",
+        "Save the password in the browser"
+      ],
+      "tier": 1,
+      "why": "Signing out ends the session."
+    },
+    {
+      "q": "How long can UK Open Banking consent last at most?",
+      "right": "90 days",
+      "wrong": [
+        "One year",
+        "30 days",
+        "Until you cancel it"
+      ],
+      "tier": 2,
+      "why": "Consent expires and must be renewed; GGMoney warns from 14 days out."
+    },
+    {
+      "q": "From how many days before consent ends does GGMoney start warning you?",
+      "right": "14 days",
+      "wrong": [
+        "1 day",
+        "90 days",
+        "It does not warn"
+      ],
+      "tier": 2,
+      "why": "The warning gives time to renew before the feed stops."
+    },
+    {
+      "q": "A bank feed is connected in GGMoney but no transactions appear. What is the most likely missing step?",
+      "right": "Pointing the feed at one of your bank accounts",
+      "wrong": [
+        "Reinstalling the app",
+        "Entering your banking password",
+        "Waiting for the next tax year"
+      ],
+      "tier": 2,
+      "why": "Nothing syncs until the feed is pointed at an account."
+    },
+    {
+      "q": "What does a compliance calendar date mean in GGMoney?",
+      "right": "A reminder, not advice",
+      "wrong": [
+        "A legally binding date set by the app",
+        "A date the app files for you automatically",
+        "An approval deadline for HMRC"
+      ],
+      "tier": 2,
+      "why": "The generated calendar states that dates are reminders, not advice."
+    },
+    {
+      "q": "Output VAT is...",
+      "right": "VAT charged on your sales",
+      "wrong": [
+        "VAT paid on purchases",
+        "A tax on profit",
+        "A fee charged by HMRC"
+      ],
+      "tier": 2,
+      "why": "Input VAT is on purchases; output VAT is on sales."
+    },
+    {
+      "q": "Which scheme bases VAT on when money is paid or received?",
+      "right": "Cash accounting",
+      "wrong": [
+        "Standard accounting",
+        "Reverse charge",
+        "Making Tax Digital"
+      ],
+      "tier": 2,
+      "why": "Standard bases VAT on invoice dates; cash accounting on payment dates."
+    },
+    {
+      "q": "What is phishing?",
+      "right": "Tricking you into revealing details, often by email",
+      "wrong": [
+        "A virus that needs no action from you",
+        "A bank fee",
+        "A password rule"
+      ],
+      "tier": 2,
+      "why": "Phishing relies on you being persuaded to act."
+    },
+    {
+      "q": "Why keep business and personal money in separate bank accounts?",
+      "right": "It keeps reconciliation and reporting simple",
+      "wrong": [
+        "It is required to use Open Banking",
+        "It lowers VAT",
+        "It removes the need for receipts"
+      ],
+      "tier": 2,
+      "why": "Mixing makes it hard to see what is business spending."
+    },
+    {
+      "q": "What does a password manager do?",
+      "right": "Stores and fills a unique password for each account",
+      "wrong": [
+        "Chooses one password for all sites",
+        "Removes the need for a second sign-in step",
+        "Keeps passwords in a shared note"
+      ],
+      "tier": 2,
+      "why": "Unique passwords limit the damage if one leaks."
+    },
+    {
+      "q": "What is the difference between profit and cash flow?",
+      "right": "Profit is income less costs; cash flow is money actually moving in and out",
+      "wrong": [
+        "They are always equal",
+        "Profit is cash in the bank",
+        "Cash flow is only for large firms"
+      ],
+      "tier": 2,
+      "why": "A profitable business can still run short of cash."
+    },
+    {
+      "q": "A caller says you must move money to a safe account at once. What is the best response?",
+      "right": "Hang up and call your bank on a number you already trust",
+      "wrong": [
+        "Follow the instructions quickly",
+        "Give the caller your card details to verify",
+        "Ask the caller for their number and call it"
+      ],
+      "tier": 2,
+      "why": "Banks never ask you to move money to a safe account; urgency is a scam signal."
+    },
+    {
+      "q": "A finalised VAT return is ready. What is true about submitting it in GGMoney?",
+      "right": "Submitting is a separate act with its own declaration",
+      "wrong": [
+        "It happens automatically when finalised",
+        "It can be withdrawn afterwards",
+        "It needs no declaration"
+      ],
+      "tier": 3,
+      "why": "HMRC has no way to withdraw a return, so submitting is a deliberate step."
+    },
+    {
+      "q": "Why does a sync not change a reconciled transaction?",
+      "right": "It may sit inside a filed VAT return",
+      "wrong": [
+        "Reconciled rows are deleted",
+        "Providers forbid changes",
+        "The first sync always overrides them"
+      ],
+      "tier": 3,
+      "why": "Reconciled rows are protected from later syncs."
+    },
+    {
+      "q": "A transaction arrives by both feed and CSV import. What does GGMoney do?",
+      "right": "Recognises it as one transaction",
+      "wrong": [
+        "Records it twice",
+        "Deletes both copies",
+        "Asks you to delete one"
+      ],
+      "tier": 3,
+      "why": "Both routes write to the same place and duplicates are recognised."
+    },
+    {
+      "q": "How does GGMoney correct a mistake in a posted journal?",
+      "right": "By posting a reversal",
+      "wrong": [
+        "By editing the journal",
+        "By deleting the journal",
+        "By waiting for the next sync"
+      ],
+      "tier": 3,
+      "why": "Posted journals are never edited, so both the error and the fix stay visible."
+    },
+    {
+      "q": "Who must approve a filing in GGMoney?",
+      "right": "A second person; the app refuses self-approval",
+      "wrong": [
+        "Only the person who prepared it",
+        "No one, because checks are automatic",
+        "Any visitor to the site"
+      ],
+      "tier": 3,
+      "why": "Filings need a second person, routine tasks one."
+    },
+    {
+      "q": "An automatic check on a filing finds nothing wrong. What happens next?",
+      "right": "A person still has to sign it off",
+      "wrong": [
+        "The filing is approved",
+        "It is submitted immediately",
+        "The check signs off for the second person"
+      ],
+      "tier": 3,
+      "why": "Automatic checks report first but never sign anything off."
+    },
+    {
+      "q": "Why does GGMoney store money as whole pence?",
+      "right": "To avoid rounding drift from decimal fractions",
+      "wrong": [
+        "Because pounds cannot be stored",
+        "To hide small amounts",
+        "To save on bank fees"
+      ],
+      "tier": 3,
+      "why": "Integers keep totals exact."
+    },
+    {
+      "q": "A supplier emails to say its bank details have changed. What should you do before paying?",
+      "right": "Confirm using contact details you already trust",
+      "wrong": [
+        "Update the details and pay",
+        "Reply to the email to confirm",
+        "Pay half to the new account to test"
+      ],
+      "tier": 3,
+      "why": "Calling back on a known number defeats mandate fraud."
+    },
+    {
+      "q": "What does the four-eyes principle mean?",
+      "right": "A second person checks important actions",
+      "wrong": [
+        "Two people share a password",
+        "One person does everything quickly",
+        "Every task is automated"
+      ],
+      "tier": 3,
+      "why": "A second pair of eyes catches mistakes and fraud."
+    },
+    {
+      "q": "Which statement about payroll rounding in GGMoney is correct?",
+      "right": "Rounding differs by tax on purpose",
+      "wrong": [
+        "One rule is used for every figure",
+        "All figures round up",
+        "Pence are dropped from every deduction"
+      ],
+      "tier": 3,
+      "why": "PAYE rounds down to the penny, NI to nearest, student loan down to whole pounds."
+    },
+    {
+      "q": "Why do transactions before an account's opening date not appear?",
+      "right": "They are skipped",
+      "wrong": [
+        "The bank deletes them",
+        "They are imported twice",
+        "They need a second approval"
+      ],
+      "tier": 3,
+      "why": "Anything dated before the account opening date is skipped."
+    },
+    {
+      "q": "A customer pays one amount that covers three invoices. Which feature records this?",
+      "right": "A payment allocation",
+      "wrong": [
+        "A credit note",
+        "A purchase order",
+        "A contact"
+      ],
+      "tier": 3,
+      "why": "Payment allocations match one payment to several invoices."
+    },
+    {
+      "q": "What does a trial balance check?",
+      "right": "That total debits equal total credits",
+      "wrong": [
+        "That profit is positive",
+        "That VAT is paid",
+        "That customers have paid"
+      ],
+      "tier": 3,
+      "why": "It lists every account balance so debits and credits can be compared."
+    },
+    {
+      "q": "Which is a sign of an account takeover?",
+      "right": "Activity you did not carry out",
+      "wrong": [
+        "A slow-loading page",
+        "A routine update notice",
+        "A reminder email you expected"
+      ],
+      "tier": 3,
+      "why": "Stolen login details let someone act as you."
+    },
+    {
+      "q": "What should you do first if you think you have paid a scammer?",
+      "right": "Tell your bank immediately",
+      "wrong": [
+        "Wait to see if the money returns",
+        "Pay again to correct it",
+        "Delete the messages"
+      ],
+      "tier": 3,
+      "why": "Quick contact with your bank gives the best chance of recovering funds."
+    },
+    {
+      "q": "A feed has been working but transactions stop appearing after three months. What is the most likely cause?",
+      "right": "The bank consent expired and needs renewing",
+      "wrong": [
+        "The password was changed in GGMoney",
+        "The account opening date moved",
+        "VAT was submitted"
+      ],
+      "tier": 4,
+      "why": "Open Banking consent lasts at most 90 days."
+    },
+    {
+      "q": "You import a statement file that overlaps with the period the feed already covers. What should you expect?",
+      "right": "Overlapping transactions are recognised as the same",
+      "wrong": [
+        "Each transaction is doubled",
+        "The feed is disconnected",
+        "Reconciled rows are overwritten"
+      ],
+      "tier": 4,
+      "why": "Duplicates across routes are recognised as one."
+    },
+    {
+      "q": "Which is NOT true of a finalised VAT return in GGMoney?",
+      "right": "It has already been sent to HMRC",
+      "wrong": [
+        "Its figures are frozen",
+        "It is a step before submission",
+        "Submitting has its own declaration"
+      ],
+      "tier": 4,
+      "why": "Finalising freezes figures; submitting is a separate act."
+    },
+    {
+      "q": "Payroll will not file for a new tax year. What is the likely reason?",
+      "right": "The year's rates have not been verified",
+      "wrong": [
+        "The year is too early",
+        "The employee has left",
+        "VAT is unpaid"
+      ],
+      "tier": 4,
+      "why": "A year is fileable only once its rates are verified."
+    },
+    {
+      "q": "A message appears to come from your director asking for an urgent transfer. What is the best first step?",
+      "right": "Check by phone on a known number",
+      "wrong": [
+        "Pay quickly to avoid delay",
+        "Reply to the message for details",
+        "Forward it to a colleague to pay"
+      ],
+      "tier": 4,
+      "why": "Urgency plus authority is the pattern of chief executive fraud."
+    },
+    {
+      "q": "A buyer overpays and asks you to refund the difference. What is the safest response?",
+      "right": "Wait until the original payment has fully cleared and been verified",
+      "wrong": [
+        "Refund at once",
+        "Refund half now",
+        "Ask the buyer to send a screenshot"
+      ],
+      "tier": 4,
+      "why": "Overpayment scams rely on the original payment being reversed later."
+    },
+    {
+      "q": "Why is a screenshot sent to support safer when passwords are hidden?",
+      "right": "Support does not need secrets to diagnose a problem",
+      "wrong": [
+        "It makes the picture smaller",
+        "It stops the screenshot being copied",
+        "It is required by the bank"
+      ],
+      "tier": 4,
+      "why": "Never expose passwords, codes or account numbers."
+    },
+    {
+      "q": "A sync took in the last week of transactions only. Which sync was it?",
+      "right": "A later sync",
+      "wrong": [
+        "The first sync",
+        "A CSV import",
+        "A reconciliation"
+      ],
+      "tier": 4,
+      "why": "The first sync takes everything the bank allows; later syncs re-read the last week."
+    },
+    {
+      "q": "Which is the most reliable way to avoid being caught by an urgent payment demand?",
+      "right": "Verify the request using a channel you already trust",
+      "wrong": [
+        "Pay immediately and ask afterwards",
+        "Reply to the request",
+        "Trust the logo in the message"
+      ],
+      "tier": 4,
+      "why": "Verification through a separate trusted channel breaks the scam."
+    },
+    {
+      "q": "Why is it risky to approve your own work in a finance tool?",
+      "right": "It removes the independent check",
+      "wrong": [
+        "It slows the system",
+        "It breaks accounting rules automatically",
+        "It deletes the audit trail"
+      ],
+      "tier": 4,
+      "why": "Self-approval is refused for filings in GGMoney."
+    },
+    {
+      "q": "A routine compliance task needs how many approvals in GGMoney?",
+      "right": "One person",
+      "wrong": [
+        "Two people",
+        "Three people",
+        "None"
+      ],
+      "tier": 4,
+      "why": "Filings need a second person; routine tasks need one."
+    },
+    {
+      "q": "Why is rounding handled differently for different taxes?",
+      "right": "Using one rule for all would put a penny out on some payslips",
+      "wrong": [
+        "To confuse auditors",
+        "Because HMRC bans rounding",
+        "To save database space"
+      ],
+      "tier": 5,
+      "why": "Each tax has its own rule on purpose."
+    },
+    {
+      "q": "What is the main risk of a business email compromise?",
+      "right": "A real email account is used to redirect payments",
+      "wrong": [
+        "Spam in your inbox",
+        "A slow computer",
+        "A forgotten password"
+      ],
+      "tier": 5,
+      "why": "The request looks genuine because it comes from a real account."
+    },
+    {
+      "q": "A payment arrives for the wrong amount from a customer and also lists an unknown reference. What should you do first?",
+      "right": "Investigate and match it to the correct invoice before recording",
+      "wrong": [
+        "Record it as miscellaneous income",
+        "Refund it immediately",
+        "Ignore it until year end"
+      ],
+      "tier": 5,
+      "why": "Unexplained items should be queried before they are categorised."
+    },
+    {
+      "q": "You share an unexpected recovery code with a caller who says it is for support. What does this expose?",
+      "right": "Your account to takeover",
+      "wrong": [
+        "Nothing, support needs it",
+        "Only your email",
+        "Only your username"
+      ],
+      "tier": 5,
+      "why": "Recovery codes should stay private; genuine support never needs them."
+    },
+    {
+      "q": "A sandbox install shows a VAT return as submitted. What does that mean?",
+      "right": "Nothing was filed for real",
+      "wrong": [
+        "HMRC received it",
+        "It is final",
+        "It was filed on paper"
+      ],
+      "tier": 5,
+      "why": "Sandbox mode runs against test services."
+    },
+    {
+      "q": "A statement shows a balance that does not match the books and the difference is small. What is the best next step?",
+      "right": "Find and explain the difference before adjusting anything",
+      "wrong": [
+        "Post a balancing entry",
+        "Ignore the difference",
+        "Delete the oldest transaction"
+      ],
+      "tier": 5,
+      "why": "Small differences can hide errors or fraud."
+    }
+  ]
+}

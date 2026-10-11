@@ -1,0 +1,2347 @@
+{
+ "slug": "tech-tailwind",
+ "name": "Technologies: Tailwind CSS",
+ "description": "Utility-first styling as used in GGLearn and GGSocial.",
+ "roles": "developer",
+ "kind": "technology",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "core": "Tailwind concept",
+  "resp": "responsive design concept",
+  "state": "state variant",
+  "box": "box utility",
+  "type": "typography utility",
+  "colour": "colour utility",
+  "layout": "layout utility",
+  "theme": "theming concept",
+  "ext": "Tailwind extension or tool",
+  "extract": "component extraction technique",
+  "scan": "build and scanning concept",
+  "dark": "dark mode technique",
+  "a11y": "accessibility practice",
+  "perf": "performance practice",
+  "react": "React or Next.js integration practice",
+  "gg": "GGLearn and GGSocial Tailwind fact"
+ },
+ "cards": [
+  {
+   "group": "core",
+   "subject": "Utility-first CSS",
+   "tier": 1,
+   "says": [
+    "styles an element by composing small single-purpose classes in the markup",
+    "avoids inventing a name for every piece of UI"
+   ],
+   "use": "want to style a button without opening a separate stylesheet",
+   "not": [
+    "requires a hand-written class for every element"
+   ]
+  },
+  {
+   "group": "core",
+   "subject": "A utility class",
+   "tier": 1,
+   "says": [
+    "does one narrow styling job such as setting padding or a colour",
+    "is combined with many others on the same element"
+   ],
+   "use": "want to add padding to one element and nothing else"
+  },
+  {
+   "group": "core",
+   "subject": "Tailwind CSS",
+   "tier": 1,
+   "says": [
+    "is a utility-first CSS framework",
+    "generates CSS only for the class names it finds in your source",
+    "uses colon prefixes for states and breakpoints"
+   ],
+   "not": [
+    "ships every possible utility in one fixed stylesheet"
+   ]
+  },
+  {
+   "group": "core",
+   "subject": "A variant prefix",
+   "tier": 2,
+   "says": [
+    "applies a utility only under a condition such as hover or a breakpoint",
+    "is written before the class and joined to it with a colon"
+   ],
+   "use": "want a colour to change only when the pointer is over the element",
+   "not": [
+    "is a separate attribute placed beside class"
+   ],
+   "like": [
+    "A utility class"
+   ]
+  },
+  {
+   "group": "core",
+   "subject": "Preflight",
+   "tier": 2,
+   "says": [
+    "resets browser default styles on top of a modern base",
+    "strips default heading sizes and list markers"
+   ],
+   "use": "wonder why an h1 renders at body size with no margin",
+   "not": [
+    "adds a decorative theme to every element"
+   ]
+  },
+  {
+   "group": "core",
+   "subject": "Co-located styling",
+   "tier": 3,
+   "says": [
+    "keeps the style next to the markup it affects",
+    "lets you delete an element and its styling together",
+    "removes the risk that editing a shared class breaks an unrelated page"
+   ],
+   "use": "worry that changing a stylesheet rule will break another page"
+  },
+  {
+   "group": "core",
+   "subject": "A constrained design scale",
+   "tier": 3,
+   "says": [
+    "limits spacing, size and colour choices to a shared set of steps",
+    "keeps spacing consistent across a team"
+   ],
+   "use": "want designers and developers to share one spacing vocabulary",
+   "not": [
+    "accepts any pixel value you type into a class without limits"
+   ]
+  },
+  {
+   "group": "core",
+   "subject": "Long class strings",
+   "tier": 3,
+   "says": [
+    "are the main readability cost of utility-first markup",
+    "are tamed by extracting a component for repeated patterns"
+   ]
+  },
+  {
+   "group": "core",
+   "subject": "Utilities compared with inline styles",
+   "tier": 3,
+   "says": [
+    "can express hover, breakpoints and dark mode where a style attribute cannot",
+    "draw their values from a shared scale"
+   ],
+   "use": "need a hover effect that a style attribute cannot express",
+   "not": [
+    "are just inline styles with shorter names"
+   ]
+  },
+  {
+   "group": "core",
+   "subject": "Utility specificity",
+   "tier": 4,
+   "says": [
+    "is kept low and flat so utilities rarely fight each other",
+    "lets the order in the generated stylesheet, not the class order in markup, decide a conflict"
+   ],
+   "not": [
+    "is raised by writing the later class last in the attribute"
+   ]
+  },
+  {
+   "group": "core",
+   "subject": "The order of classes in an attribute",
+   "tier": 4,
+   "says": [
+    "does not decide which of two conflicting utilities wins",
+    "has no effect on the generated CSS"
+   ],
+   "use": "put p-4 and p-8 on one element and wonder which applies",
+   "not": [
+    "makes the last class win"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Mobile-first breakpoints",
+   "tier": 1,
+   "says": [
+    "apply an unprefixed utility at every screen size",
+    "apply a prefixed utility from that breakpoint upward"
+   ],
+   "use": "build a layout that is one column on phones and wider on desktops",
+   "not": [
+    "apply a prefixed utility only below that breakpoint"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "The md: prefix",
+   "tier": 1,
+   "says": [
+    "applies its utility from the medium breakpoint and wider",
+    "starts at 768px by default"
+   ],
+   "use": "want a change to start on tablet-width screens and stay for larger ones",
+   "not": [
+    "applies only between medium and large widths"
+   ],
+   "like": [
+    "The sm: prefix",
+    "The max-md: variant"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "The sm: prefix",
+   "tier": 2,
+   "says": [
+    "is the first default breakpoint above the unprefixed base",
+    "starts at 640px by default"
+   ],
+   "use": "want a utility to switch on just above phone width",
+   "not": [
+    "targets only small phones"
+   ],
+   "like": [
+    "The md: prefix"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "The 2xl: prefix",
+   "tier": 3,
+   "says": [
+    "is the largest default breakpoint prefix",
+    "starts at 1536px by default"
+   ],
+   "use": "want a utility to change only on very wide monitors"
+  },
+  {
+   "group": "resp",
+   "subject": "The max-md: variant",
+   "tier": 3,
+   "says": [
+    "applies a utility only below the md breakpoint",
+    "targets small screens directly without a mobile-first override"
+   ],
+   "use": "need a style on phones only and nowhere else",
+   "like": [
+    "The md: prefix"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "A breakpoint range variant such as md:max-lg:",
+   "tier": 4,
+   "says": [
+    "limits a utility to the band between two breakpoints",
+    "combines a minimum and a maximum width condition"
+   ],
+   "use": "need a style that applies on tablets only",
+   "like": [
+    "The max-md: variant"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "hidden md:block",
+   "tier": 2,
+   "says": [
+    "hides an element on small screens and shows it from md upward",
+    "pairs a base display none with a breakpoint display"
+   ],
+   "use": "want a sidebar visible only on wide screens"
+  },
+  {
+   "group": "resp",
+   "subject": "The container class",
+   "tier": 3,
+   "says": [
+    "sets a max-width that changes at each breakpoint",
+    "does not centre itself unless you add mx-auto"
+   ],
+   "use": "want content capped to a width that follows the breakpoints",
+   "not": [
+    "centres its content horizontally on its own"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Container query variants",
+   "tier": 4,
+   "says": [
+    "size styles by the parent container rather than the viewport",
+    "suit a component reused in both narrow and wide slots"
+   ],
+   "use": "need a card to reflow when its sidebar slot is narrow even on a wide screen",
+   "not": [
+    "react to the viewport width just like breakpoint prefixes"
+   ],
+   "like": [
+    "The md: prefix"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "The hover: variant",
+   "tier": 1,
+   "says": [
+    "applies a utility while the pointer is over the element",
+    "is the usual way to add a pointer-over colour change"
+   ],
+   "use": "want a link to turn white when the pointer is over it",
+   "like": [
+    "The focus: variant",
+    "The active: variant"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "The focus: variant",
+   "tier": 1,
+   "says": [
+    "applies a utility while the element has keyboard or programmatic focus",
+    "styles a focused input with a ring or border"
+   ],
+   "use": "want a text input to show a coloured ring while it is focused",
+   "like": [
+    "The hover: variant",
+    "The focus-visible: variant"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "The active: variant",
+   "tier": 2,
+   "says": [
+    "applies a utility while the element is being pressed",
+    "gives a button instant press feedback"
+   ],
+   "use": "want a button to darken while the mouse button is held down",
+   "like": [
+    "The hover: variant"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "The focus-visible: variant",
+   "tier": 3,
+   "says": [
+    "applies focus styles for keyboard focus but not for most mouse clicks",
+    "is the usual choice for focus rings on buttons and links"
+   ],
+   "use": "want a ring for keyboard users that does not flash on every mouse click",
+   "not": [
+    "is identical to focus: in every browser interaction"
+   ],
+   "like": [
+    "The focus: variant"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "The disabled: variant",
+   "tier": 2,
+   "says": [
+    "applies to controls that carry the disabled attribute",
+    "dims or greys a button that cannot be used"
+   ],
+   "use": "want a submit button to look inactive while the form is invalid"
+  },
+  {
+   "group": "state",
+   "subject": "The group-hover: variant",
+   "tier": 3,
+   "says": [
+    "styles a child when a marked ancestor is hovered",
+    "needs the group class on the ancestor"
+   ],
+   "use": "want a card title to underline when anywhere on the card is hovered",
+   "not": [
+    "styles the ancestor when its child is hovered"
+   ],
+   "like": [
+    "The peer-checked: variant"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "The peer-checked: variant",
+   "tier": 4,
+   "says": [
+    "styles an element from the checked state of an earlier sibling marked peer",
+    "requires the peer to come before the styled element in the DOM"
+   ],
+   "use": "want a label to change style when a checkbox beside it is ticked",
+   "not": [
+    "styles a parent from its child's state"
+   ],
+   "like": [
+    "The group-hover: variant"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "The odd: variant",
+   "tier": 2,
+   "says": [
+    "styles every other child starting from the first",
+    "is the usual way to stripe table rows"
+   ],
+   "use": "want alternate table rows to have a tinted background"
+  },
+  {
+   "group": "state",
+   "subject": "The aria-expanded: variant",
+   "tier": 4,
+   "says": [
+    "styles an element from its ARIA attribute value",
+    "keeps the visual state tied to the accessibility state"
+   ],
+   "use": "want a chevron to rotate when the button's aria-expanded is true",
+   "not": [
+    "only works if you also toggle a custom class in JavaScript"
+   ],
+   "like": [
+    "A data attribute variant"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "A data attribute variant such as data-[state=open]:",
+   "tier": 4,
+   "says": [
+    "styles an element from the value of a data attribute",
+    "suits component libraries that expose open or closed state as a data attribute"
+   ],
+   "use": "use a headless menu component that sets data-state on its panel",
+   "like": [
+    "The aria-expanded: variant"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "Stacked variants",
+   "tier": 3,
+   "says": [
+    "combine several conditions by chaining prefixes in one class",
+    "apply the utility only when every chained condition is true"
+   ],
+   "use": "want a hover colour that applies only at wide screen sizes"
+  },
+  {
+   "group": "box",
+   "subject": "p-4",
+   "tier": 1,
+   "says": [
+    "adds padding on all four sides",
+    "equals 1rem of padding with the default spacing scale"
+   ],
+   "use": "want equal inner space around a card's content",
+   "like": [
+    "mx-auto"
+   ]
+  },
+  {
+   "group": "box",
+   "subject": "mx-auto",
+   "tier": 2,
+   "says": [
+    "centres a block with a set width using automatic side margins",
+    "has no centring effect on a block that fills its parent"
+   ],
+   "use": "need a fixed-width column centred on the page",
+   "not": [
+    "centres text inside the element"
+   ],
+   "like": [
+    "p-4"
+   ]
+  },
+  {
+   "group": "box",
+   "subject": "w-full",
+   "tier": 2,
+   "says": [
+    "sets the width to 100 percent of the parent",
+    "makes a block-level child match its container width"
+   ],
+   "use": "want an image or input to fill the width of its column",
+   "like": [
+    "max-w-md"
+   ]
+  },
+  {
+   "group": "box",
+   "subject": "max-w-md",
+   "tier": 3,
+   "says": [
+    "caps the width without forcing the element to that width",
+    "lets a narrower container shrink the element below the cap"
+   ],
+   "use": "want a form to stay readable on wide screens but shrink on phones",
+   "not": [
+    "forces the width to a fixed size"
+   ],
+   "like": [
+    "w-full"
+   ]
+  },
+  {
+   "group": "box",
+   "subject": "min-h-screen",
+   "tier": 2,
+   "says": [
+    "sets the minimum height to the full viewport height",
+    "lets the element grow taller if the content needs it"
+   ],
+   "use": "want a page background to fill the screen even when content is short",
+   "not": [
+    "fixes the element at exactly the viewport height"
+   ]
+  },
+  {
+   "group": "box",
+   "subject": "ring-2",
+   "tier": 3,
+   "says": [
+    "draws a ring around the element without changing its layout size",
+    "is a common focus indicator"
+   ],
+   "use": "want a focus outline that does not push neighbouring content",
+   "not": [
+    "adds two pixels to the element's width and height"
+   ]
+  },
+  {
+   "group": "box",
+   "subject": "The spacing scale",
+   "tier": 2,
+   "says": [
+    "maps numeric steps to multiples of a base unit",
+    "makes one step equal 0.25rem by default"
+   ],
+   "use": "wonder how large p-6 is"
+  },
+  {
+   "group": "type",
+   "subject": "text-sm",
+   "tier": 1,
+   "says": [
+    "sets a smaller font size together with a matching line height",
+    "is a step on the type scale"
+   ],
+   "use": "want secondary captions smaller than body text",
+   "like": [
+    "leading-relaxed"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "font-semibold",
+   "tier": 1,
+   "says": [
+    "sets the font weight to 600",
+    "gives headings and labels a medium-heavy weight"
+   ],
+   "use": "want a card heading bolder than body text but not fully bold"
+  },
+  {
+   "group": "type",
+   "subject": "leading-relaxed",
+   "tier": 3,
+   "says": [
+    "sets a taller line height for easier reading",
+    "changes spacing between lines rather than between letters"
+   ],
+   "use": "want paragraphs to have more air between lines",
+   "like": [
+    "tracking-tight",
+    "text-sm"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "tracking-tight",
+   "tier": 3,
+   "says": [
+    "tightens the spacing between letters",
+    "is common on large headings"
+   ],
+   "use": "want a large heading's letters set closer together",
+   "like": [
+    "leading-relaxed"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "truncate",
+   "tier": 3,
+   "says": [
+    "clips overflowing single-line text with an ellipsis",
+    "needs a bounded width to take effect"
+   ],
+   "use": "need a long title to stay on one line inside a narrow card",
+   "like": [
+    "line-clamp-3"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "line-clamp-3",
+   "tier": 4,
+   "says": [
+    "limits text to three lines and ends it with an ellipsis",
+    "works for multi-line previews"
+   ],
+   "use": "want a three-line preview of a long description",
+   "not": [
+    "limits text to three words"
+   ],
+   "like": [
+    "truncate"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "The colour shade scale",
+   "tier": 2,
+   "says": [
+    "pairs a colour name with a numeric shade",
+    "runs from light at low numbers to dark at high numbers"
+   ],
+   "use": "see a class such as slate-300 and want to know what the number means"
+  },
+  {
+   "group": "colour",
+   "subject": "The opacity modifier",
+   "tier": 3,
+   "says": [
+    "adds transparency to a colour with a slash suffix",
+    "removes the need for a separate opacity utility per colour"
+   ],
+   "use": "want a black overlay at half strength",
+   "not": [
+    "only works on backgrounds"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "text-slate-300",
+   "tier": 2,
+   "says": [
+    "sets the text colour to a light shade of the slate palette",
+    "colours text, not the background"
+   ],
+   "use": "want light grey-blue text on a dark header",
+   "like": [
+    "bg-slate-900",
+    "border-white/10"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "bg-slate-900",
+   "tier": 2,
+   "says": [
+    "sets the background colour to a very dark shade of the slate palette",
+    "colours the element's background, not its text"
+   ],
+   "use": "want a near-black panel",
+   "like": [
+    "text-slate-300",
+    "border-white/10"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "border-white/10",
+   "tier": 3,
+   "says": [
+    "sets the border colour to white at ten percent opacity",
+    "gives a faint divider on dark backgrounds"
+   ],
+   "use": "want a barely visible edge on a dark card",
+   "like": [
+    "text-slate-300",
+    "bg-slate-900"
+   ]
+  },
+  {
+   "group": "colour",
+   "subject": "bg-clip-text text-transparent",
+   "tier": 4,
+   "says": [
+    "lets a background gradient show through the letters",
+    "needs a gradient background to be visible"
+   ],
+   "use": "want a headline filled with a colour gradient"
+  },
+  {
+   "group": "layout",
+   "subject": "flex",
+   "tier": 1,
+   "says": [
+    "turns an element into a flex container",
+    "lays its children out in a row by default"
+   ],
+   "use": "need children placed side by side",
+   "like": [
+    "grid"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "flex-col",
+   "tier": 2,
+   "says": [
+    "stacks flex children vertically",
+    "switches the main axis to vertical"
+   ],
+   "use": "want a column of items inside a flex container",
+   "like": [
+    "flex"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "items-center",
+   "tier": 2,
+   "says": [
+    "aligns flex or grid items on the cross axis to the centre",
+    "centres a row of items vertically"
+   ],
+   "use": "want an icon and label vertically centred in a row",
+   "like": [
+    "justify-between"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "justify-between",
+   "tier": 2,
+   "says": [
+    "pushes the first and last items to the edges with equal gaps between",
+    "distributes free space along the main axis"
+   ],
+   "use": "want a logo on the left and a menu on the right",
+   "like": [
+    "items-center"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "gap-4",
+   "tier": 2,
+   "says": [
+    "adds equal space between flex or grid children",
+    "does not add space before the first or after the last child"
+   ],
+   "like": [
+    "space-x-4"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "space-x-4",
+   "tier": 3,
+   "says": [
+    "adds horizontal margin between siblings through a selector",
+    "breaks down when children wrap onto a second line"
+   ],
+   "like": [
+    "gap-4"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "flex-wrap",
+   "tier": 3,
+   "says": [
+    "lets flex children move to the next line when they run out of room",
+    "stops a single-row flex container from squeezing items"
+   ],
+   "use": "want a tag list to flow onto several lines"
+  },
+  {
+   "group": "layout",
+   "subject": "flex-1",
+   "tier": 3,
+   "says": [
+    "lets a flex child grow and shrink to fill the available space",
+    "makes siblings share space equally when all have it"
+   ],
+   "use": "want a main area to fill whatever width the sidebar leaves"
+  },
+  {
+   "group": "layout",
+   "subject": "shrink-0",
+   "tier": 4,
+   "says": [
+    "stops a flex child from shrinking below its natural size",
+    "keeps an avatar from being squashed by long text beside it"
+   ],
+   "use": "need an avatar to keep its size next to a long name"
+  },
+  {
+   "group": "layout",
+   "subject": "grid",
+   "tier": 1,
+   "says": [
+    "turns an element into a grid container",
+    "places children into rows and columns"
+   ],
+   "use": "need a two-dimensional layout of cards",
+   "like": [
+    "flex"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "grid-cols-3",
+   "tier": 2,
+   "says": [
+    "creates three equal-width columns",
+    "pairs with gap utilities to space the cells"
+   ],
+   "use": "want three equal cards per row"
+  },
+  {
+   "group": "layout",
+   "subject": "col-span-2",
+   "tier": 3,
+   "says": [
+    "makes a grid item cover two columns",
+    "needs a grid parent to have any effect"
+   ],
+   "use": "want one featured card to be twice as wide as the others"
+  },
+  {
+   "group": "layout",
+   "subject": "sticky top-0",
+   "tier": 3,
+   "says": [
+    "pins an element to the top of its scroll container while scrolling",
+    "keeps a header visible as the page moves"
+   ],
+   "use": "want a header to stay visible while the page scrolls"
+  },
+  {
+   "group": "theme",
+   "subject": "A design token",
+   "tier": 2,
+   "says": [
+    "is a named design value such as a colour or spacing step",
+    "gives one place to change a value used across the app"
+   ],
+   "use": "want to restyle a brand colour in one edit",
+   "not": [
+    "is a JavaScript function that runs at render time"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "The Tailwind theme",
+   "tier": 2,
+   "says": [
+    "defines the scales that utilities draw from",
+    "is extended or overridden to match a brand"
+   ],
+   "use": "need the colour palette to match the brand"
+  },
+  {
+   "group": "theme",
+   "subject": "Extending the theme",
+   "tier": 3,
+   "says": [
+    "adds new values alongside the defaults",
+    "keeps every built-in scale value available"
+   ],
+   "use": "want one extra brand colour and all the default ones too",
+   "not": [
+    "removes the default scale for that property"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "CSS variables as theme values",
+   "tier": 3,
+   "says": [
+    "can change at runtime without rebuilding the CSS",
+    "let one utility class show different colours in different themes"
+   ],
+   "use": "need the same class to look different in light and dark themes"
+  },
+  {
+   "group": "theme",
+   "subject": "Semantic colour tokens",
+   "tier": 3,
+   "says": [
+    "name a colour by its role such as surface or danger rather than its hue",
+    "let a theme swap hues without touching components"
+   ],
+   "use": "want components to survive a rebrand without edits",
+   "not": [
+    "name a colour by its hue so it can never change role"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "An arbitrary value",
+   "tier": 2,
+   "says": [
+    "sets a one-off value in square brackets inside a class",
+    "needs no entry in the theme"
+   ],
+   "use": "need a single pixel width the scale does not offer",
+   "not": [
+    "is rejected by the build unless it is in the theme"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "An arbitrary property such as [mask-type:luminance]",
+   "tier": 4,
+   "says": [
+    "writes any CSS property and value in brackets as a class",
+    "covers CSS with no dedicated utility"
+   ],
+   "use": "need a CSS property that Tailwind has no utility for"
+  },
+  {
+   "group": "theme",
+   "subject": "Promoting an arbitrary value to a token",
+   "tier": 3,
+   "says": [
+    "replaces copies of a one-off value with a single named step",
+    "gives a repeated value one place to change"
+   ],
+   "use": "see w-[37px] copied into many components",
+   "like": [
+    "A design token"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "An underscore inside brackets",
+   "tier": 4,
+   "says": [
+    "stands for a space in an arbitrary value",
+    "lets a multi-part value such as grid-cols-[1fr_2fr] fit in one class"
+   ],
+   "use": "write a grid template with two tracks in an arbitrary value",
+   "not": [
+    "marks the value as a CSS variable"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A Tailwind plugin",
+   "tier": 2,
+   "says": [
+    "adds utilities, variants or base styles beyond the core set",
+    "packages reusable styling for sharing across projects"
+   ],
+   "use": "need a reusable set of styles beyond the built-in utilities"
+  },
+  {
+   "group": "ext",
+   "subject": "The typography plugin",
+   "tier": 3,
+   "says": [
+    "styles raw rendered HTML such as markdown through a prose class",
+    "gives headings, lists and quotes sensible defaults inside one wrapper"
+   ],
+   "use": "render CMS or markdown content that you cannot add classes to",
+   "not": [
+    "is needed to use any text-* utility"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "The forms plugin",
+   "tier": 3,
+   "says": [
+    "gives form controls a consistent base appearance that utilities can then restyle",
+    "resets native input styling for easier theming"
+   ],
+   "use": "want checkboxes and selects to look the same across browsers"
+  },
+  {
+   "group": "ext",
+   "subject": "A custom utility",
+   "tier": 4,
+   "says": [
+    "adds your own single-purpose class that still works with variants such as hover:",
+    "is the way to name a low-level style that Tailwind lacks"
+   ],
+   "use": "need a single-purpose class that Tailwind does not provide",
+   "like": [
+    "@apply"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A custom variant",
+   "tier": 4,
+   "says": [
+    "defines a new condition that can prefix any utility",
+    "turns a selector or media condition into a reusable prefix"
+   ],
+   "use": "want a prefix for a theme or condition Tailwind has no name for"
+  },
+  {
+   "group": "ext",
+   "subject": "The Prettier plugin for Tailwind",
+   "tier": 3,
+   "says": [
+    "sorts class names into a consistent order",
+    "changes only the order of classes, not the styling"
+   ],
+   "use": "want every developer's class strings in the same order"
+  },
+  {
+   "group": "ext",
+   "subject": "Tailwind CSS IntelliSense",
+   "tier": 2,
+   "says": [
+    "autocompletes class names in the editor",
+    "shows the CSS a class produces on hover"
+   ],
+   "use": "want the editor to suggest valid class names as you type"
+  },
+  {
+   "group": "extract",
+   "subject": "Extracting a component",
+   "tier": 2,
+   "says": [
+    "wraps a repeated markup-and-class pattern in a reusable component",
+    "keeps one source of truth for the markup and not just the classes"
+   ],
+   "use": "see the same card markup and classes on many pages",
+   "not": [
+    "copies the class string into a CSS file"
+   ]
+  },
+  {
+   "group": "extract",
+   "subject": "@apply",
+   "tier": 3,
+   "says": [
+    "inlines existing utilities into a custom CSS rule",
+    "builds a named class out of utilities"
+   ],
+   "use": "need a named class for markup you do not control",
+   "not": [
+    "adds a utility to the generated stylesheet without any CSS rule"
+   ],
+   "like": [
+    "Extracting a component"
+   ]
+  },
+  {
+   "group": "extract",
+   "subject": "@layer components",
+   "tier": 4,
+   "says": [
+    "places custom classes where utilities can still override them",
+    "keeps hand-written classes lower in the cascade than utilities"
+   ],
+   "use": "write a .btn class that a utility can still adjust",
+   "like": [
+    "@apply"
+   ]
+  },
+  {
+   "group": "extract",
+   "subject": "A list rendered in a loop",
+   "tier": 3,
+   "says": [
+    "repeats a class string many times on the page while writing it once in source",
+    "makes duplicated output harmless to maintain"
+   ],
+   "use": "worry about the same classes appearing on fifty list rows"
+  },
+  {
+   "group": "extract",
+   "subject": "Variant props",
+   "tier": 3,
+   "says": [
+    "choose among predefined class sets such as primary or ghost",
+    "keep one component covering several looks"
+   ],
+   "use": "need one Button component to render primary and secondary looks"
+  },
+  {
+   "group": "extract",
+   "subject": "Overusing @apply",
+   "tier": 4,
+   "says": [
+    "recreates the naming and sync problems utilities were meant to avoid",
+    "hides which utilities an element really uses"
+   ],
+   "not": [
+    "is the recommended default for every element"
+   ]
+  },
+  {
+   "group": "extract",
+   "subject": "A named class such as .btn",
+   "tier": 3,
+   "says": [
+    "suits a tiny pattern shared by many unrelated places",
+    "lives in the global stylesheet rather than in a component"
+   ],
+   "use": "need one small look shared by plain HTML as well as components"
+  },
+  {
+   "group": "extract",
+   "subject": "Copy-pasting class strings",
+   "tier": 2,
+   "says": [
+    "turns a design change into a search across many files",
+    "is the main reason to extract components"
+   ],
+   "like": [
+    "Extracting a component"
+   ]
+  },
+  {
+   "group": "scan",
+   "subject": "Content scanning",
+   "tier": 2,
+   "says": [
+    "searches source files for class-name tokens",
+    "generates CSS only for the class names it finds"
+   ],
+   "use": "wonder how Tailwind decides which CSS to emit"
+  },
+  {
+   "group": "scan",
+   "subject": "A complete class name",
+   "tier": 2,
+   "says": [
+    "must appear as a whole string in the source to be detected",
+    "is found by the scanner even inside a plain string or object value"
+   ],
+   "use": "write a class name inside a conditional expression",
+   "not": [
+    "can be assembled from pieces at runtime and still be detected"
+   ]
+  },
+  {
+   "group": "scan",
+   "subject": "Dynamic class construction such as text-${color}-500",
+   "tier": 3,
+   "says": [
+    "builds a name the scanner never sees as a whole",
+    "leaves the class out of the stylesheet"
+   ],
+   "not": [
+    "is detected because the pieces appear in the file"
+   ],
+   "like": [
+    "A lookup object of full class names"
+   ]
+  },
+  {
+   "group": "scan",
+   "subject": "A lookup object of full class names",
+   "tier": 3,
+   "says": [
+    "lists each complete class once so the scanner can see it",
+    "maps a status or variant to its classes"
+   ],
+   "like": [
+    "Dynamic class construction such as text-${color}-500"
+   ]
+  },
+  {
+   "group": "scan",
+   "subject": "Safelisting",
+   "tier": 4,
+   "says": [
+    "forces named classes to be generated even when no file contains them",
+    "covers classes that arrive from a database or CMS"
+   ],
+   "use": "receive class names as strings from a CMS at runtime",
+   "not": [
+    "is the normal way to handle every conditional class"
+   ]
+  },
+  {
+   "group": "scan",
+   "subject": "Adding a source path",
+   "tier": 4,
+   "says": [
+    "tells the scanner to look in files outside its default locations",
+    "is needed when components live in a separate package"
+   ],
+   "use": "find that components from a shared package come out unstyled"
+  },
+  {
+   "group": "scan",
+   "subject": "The PostCSS plugin",
+   "tier": 3,
+   "says": [
+    "runs Tailwind as a step in the CSS build",
+    "is registered in postcss.config.mjs"
+   ],
+   "use": "need Tailwind to run inside a bundler that uses PostCSS"
+  },
+  {
+   "group": "scan",
+   "subject": "On-demand generation",
+   "tier": 3,
+   "says": [
+    "emits a rule when a class is first found rather than shipping a prebuilt list",
+    "makes arbitrary values possible"
+   ],
+   "use": "wonder how bg-[#070b1a] can work without being in a list"
+  },
+  {
+   "group": "dark",
+   "subject": "The dark: variant",
+   "tier": 1,
+   "says": [
+    "applies a utility when dark mode is active",
+    "is stacked on a base class such as bg-white dark:bg-slate-900"
+   ],
+   "use": "want a white card to turn dark in dark mode"
+  },
+  {
+   "group": "dark",
+   "subject": "prefers-color-scheme",
+   "tier": 2,
+   "says": [
+    "is the CSS media feature that reports the user's operating-system theme",
+    "lets a page follow the OS light or dark setting"
+   ],
+   "use": "want the page to follow the device theme",
+   "not": [
+    "is a JavaScript API you must call to read the theme"
+   ],
+   "like": [
+    "Media-based dark mode"
+   ]
+  },
+  {
+   "group": "dark",
+   "subject": "Media-based dark mode",
+   "tier": 2,
+   "says": [
+    "follows the operating system's colour-scheme preference",
+    "needs no toggle or JavaScript"
+   ],
+   "use": "want dark mode with no code and no toggle button",
+   "not": [
+    "lets the user override the OS from a button without any other code"
+   ],
+   "like": [
+    "Selector-based dark mode",
+    "prefers-color-scheme"
+   ]
+  },
+  {
+   "group": "dark",
+   "subject": "Selector-based dark mode",
+   "tier": 3,
+   "says": [
+    "activates dark styles from a class or attribute on an ancestor",
+    "needs JavaScript to set and remember the user's choice"
+   ],
+   "use": "want a visible light-dark toggle that overrides the OS",
+   "like": [
+    "Media-based dark mode"
+   ]
+  },
+  {
+   "group": "dark",
+   "subject": "Token-driven dark mode",
+   "tier": 4,
+   "says": [
+    "swaps CSS variable values so components carry no dark: classes",
+    "keeps theme logic in one stylesheet rather than in every component"
+   ],
+   "use": "want dark mode without touching every component's class list",
+   "like": [
+    "The dark: variant"
+   ]
+  },
+  {
+   "group": "dark",
+   "subject": "A dark-only design",
+   "tier": 3,
+   "says": [
+    "ships a single dark palette with no light variant",
+    "needs no toggle and no dark: classes"
+   ],
+   "use": "build a product that only has one dark look"
+  },
+  {
+   "group": "dark",
+   "subject": "A stored theme preference applied after render",
+   "tier": 4,
+   "says": [
+    "causes a flash of the wrong theme",
+    "is avoided by setting the theme attribute before first paint"
+   ]
+  },
+  {
+   "group": "dark",
+   "subject": "Designing dark colours",
+   "tier": 4,
+   "says": [
+    "picks each shade for contrast rather than inverting the light palette",
+    "may switch the text on an accent fill to a dark colour"
+   ],
+   "use": "find that an inverted palette makes accent buttons hard to read"
+  },
+  {
+   "group": "a11y",
+   "subject": "sr-only",
+   "tier": 2,
+   "says": [
+    "hides content visually while keeping it available to screen readers",
+    "gives an icon-only button its text label"
+   ],
+   "use": "need an accessible name for an icon-only button",
+   "not": [
+    "removes the element from the accessibility tree like display none"
+   ],
+   "like": [
+    "The hidden utility"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "focus:not-sr-only",
+   "tier": 4,
+   "says": [
+    "reveals visually hidden content when the element receives focus",
+    "is the usual way to build a skip link"
+   ],
+   "use": "want a skip-to-content link that appears only for keyboard users"
+  },
+  {
+   "group": "a11y",
+   "subject": "focus-visible:ring-2",
+   "tier": 3,
+   "says": [
+    "gives keyboard users a visible focus indicator",
+    "adds a ring for focus from the keyboard"
+   ],
+   "like": [
+    "outline-none"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "outline-none",
+   "tier": 4,
+   "says": [
+    "removes the default focus outline",
+    "is an accessibility problem unless another focus indicator replaces it"
+   ],
+   "not": [
+    "is the recommended default for every button"
+   ],
+   "like": [
+    "focus-visible:ring-2"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "The motion-reduce: variant",
+   "tier": 3,
+   "says": [
+    "applies a utility when the user prefers reduced motion",
+    "turns off animation for people sensitive to movement"
+   ],
+   "use": "want a spinner or parallax effect to stop for users who request less motion",
+   "like": [
+    "The dark: variant"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "The hidden utility",
+   "tier": 3,
+   "says": [
+    "removes an element from layout and the accessibility tree",
+    "hides content from sighted users and screen readers alike"
+   ],
+   "use": "want content absent for everyone",
+   "like": [
+    "sr-only"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Utility classes and semantics",
+   "tier": 2,
+   "says": [
+    "change appearance but never add semantics or keyboard behaviour",
+    "leave a styled div without button behaviour"
+   ],
+   "not": [
+    "turn a div into a button for assistive technology"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Colour as the only state signal",
+   "tier": 3,
+   "says": [
+    "fails users who cannot tell the colours apart",
+    "is fixed by adding an icon, text or underline"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Small generated CSS",
+   "tier": 2,
+   "says": [
+    "stays small because only used utilities are emitted",
+    "grows with distinct classes, not with how often each is used"
+   ],
+   "use": "wonder why the stylesheet is small despite a huge framework"
+  },
+  {
+   "group": "perf",
+   "subject": "Production minification",
+   "tier": 2,
+   "says": [
+    "compresses the generated stylesheet in a production build",
+    "removes whitespace and comments from the output"
+   ],
+   "use": "ship the stylesheet in a production build"
+  },
+  {
+   "group": "perf",
+   "subject": "No runtime cost",
+   "tier": 3,
+   "says": [
+    "means nothing is computed in the browser to produce styles",
+    "contrasts with runtime CSS-in-JS"
+   ],
+   "use": "compare utility CSS with a library that builds styles in JavaScript"
+  },
+  {
+   "group": "perf",
+   "subject": "Animating transform and opacity",
+   "tier": 4,
+   "says": [
+    "is cheaper for the browser than animating width or height",
+    "avoids re-flowing the layout on every frame"
+   ],
+   "use": "want a smooth hover animation on a card"
+  },
+  {
+   "group": "perf",
+   "subject": "An over-wide safelist",
+   "tier": 4,
+   "says": [
+    "inflates the stylesheet with classes never used",
+    "is a cost paid by every visitor"
+   ],
+   "like": [
+    "Safelisting"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Many unique arbitrary values",
+   "tier": 4,
+   "says": [
+    "each generate their own rule, so the stylesheet grows",
+    "are a sign to add tokens to the theme"
+   ]
+  },
+  {
+   "group": "react",
+   "subject": "className",
+   "tier": 1,
+   "says": [
+    "is the React prop that receives a Tailwind class string",
+    "replaces the HTML class attribute name in JSX"
+   ],
+   "use": "write a Tailwind class string on a JSX element",
+   "not": [
+    "is spelled class in JSX"
+   ]
+  },
+  {
+   "group": "react",
+   "subject": "A global stylesheet imported in the root layout",
+   "tier": 2,
+   "says": [
+    "loads the Tailwind CSS for every page of a Next.js app",
+    "makes the utilities available to all routes without per-page imports"
+   ],
+   "use": "need Tailwind styles on every route of a Next.js app"
+  },
+  {
+   "group": "react",
+   "subject": "A template literal with a ternary",
+   "tier": 2,
+   "says": [
+    "chooses between full class names at render time",
+    "works as long as every complete class name appears in the source"
+   ],
+   "use": "need a class to depend on a boolean prop",
+   "not": [
+    "lets you build class names from fragments"
+   ]
+  },
+  {
+   "group": "react",
+   "subject": "clsx",
+   "tier": 3,
+   "says": [
+    "joins class names conditionally and drops falsy values",
+    "does not know that two Tailwind classes conflict"
+   ],
+   "use": "need to combine several conditional class names cleanly",
+   "not": [
+    "resolves p-4 versus p-8 conflicts for you"
+   ],
+   "like": [
+    "tailwind-merge"
+   ]
+  },
+  {
+   "group": "react",
+   "subject": "tailwind-merge",
+   "tier": 4,
+   "says": [
+    "removes earlier conflicting utilities when a later one targets the same property",
+    "lets a component accept a className override safely"
+   ],
+   "use": "need a caller's px-8 to beat a component's default px-4",
+   "like": [
+    "clsx"
+   ]
+  },
+  {
+   "group": "react",
+   "subject": "class-variance-authority",
+   "tier": 4,
+   "says": [
+    "declares component variants as a map from props to class strings",
+    "gives a Button typed primary and secondary options"
+   ],
+   "use": "want a typed variant API for a Button",
+   "like": [
+    "clsx"
+   ]
+  },
+  {
+   "group": "react",
+   "subject": "Server Components with Tailwind",
+   "tier": 3,
+   "says": [
+    "need no special handling because Tailwind emits static CSS",
+    "can use className exactly like client components"
+   ],
+   "use": "wonder whether Tailwind works in Server Components"
+  },
+  {
+   "group": "react",
+   "subject": "A className prop on a component",
+   "tier": 3,
+   "says": [
+    "lets callers adjust a component's layout without forking it",
+    "is usually merged with the component's own classes"
+   ],
+   "use": "want a Card that callers can position from outside"
+  },
+  {
+   "group": "react",
+   "subject": "A CSS variable passed through the style prop",
+   "tier": 4,
+   "says": [
+    "carries a runtime number into a bracket class such as w-[var(--w)]",
+    "keeps the class name static while the value changes"
+   ],
+   "use": "need a progress bar width from data"
+  },
+  {
+   "group": "gg",
+   "subject": "Tailwind in our apps",
+   "tier": 2,
+   "says": [
+    "is listed as tailwindcss and @tailwindcss/postcss in package.json",
+    "is on major version 4 with the minor not pinned"
+   ],
+   "use": "need to check which Tailwind major gglearn and ggsocial use"
+  },
+  {
+   "group": "gg",
+   "subject": "postcss.config.mjs",
+   "tier": 2,
+   "says": [
+    "registers the @tailwindcss/postcss plugin",
+    "is where each app wires Tailwind into the build"
+   ],
+   "use": "look for where Tailwind is registered in gglearn"
+  },
+  {
+   "group": "gg",
+   "subject": "The missing tailwind.config file",
+   "tier": 3,
+   "says": [
+    "means configuration lives in CSS",
+    "shows the apps use CSS-first configuration"
+   ],
+   "use": "wonder why gglearn has no tailwind.config file"
+  },
+  {
+   "group": "gg",
+   "subject": "@import \"tailwindcss\"",
+   "tier": 2,
+   "says": [
+    "starts app/globals.css",
+    "pulls Tailwind's layers into the stylesheet"
+   ],
+   "use": "need the first line of the globals.css"
+  },
+  {
+   "group": "gg",
+   "subject": "The ggsocial :root tokens",
+   "tier": 3,
+   "says": [
+    "define --bg, --surface, --border, --text, --muted and --accent as variables",
+    "hold the light-theme values"
+   ],
+   "use": "need to know where ggsocial's colours are defined",
+   "like": [
+    "The gglearn colour tokens"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The ggsocial @theme inline block",
+   "tier": 4,
+   "says": [
+    "maps variables such as --surface to --color-surface",
+    "makes utilities such as bg-surface-2 and text-muted exist"
+   ],
+   "use": "wonder why bg-surface-2 works in ggsocial",
+   "like": [
+    "The gglearn colour tokens"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn colour tokens",
+   "tier": 3,
+   "says": [
+    "set --background and --foreground in :root",
+    "are mapped to color-background and color-foreground by @theme inline"
+   ],
+   "use": "need to know how gglearn exposes its colours to utilities",
+   "like": [
+    "The ggsocial @theme inline block"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn dark mode",
+   "tier": 3,
+   "says": [
+    "is dark-only, with no light theme to switch to",
+    "uses no dark: variant classes in its components"
+   ],
+   "use": "wonder whether gglearn has a theme toggle"
+  },
+  {
+   "group": "gg",
+   "subject": "The ggsocial dark mode",
+   "tier": 3,
+   "says": [
+    "follows the system theme through a prefers-color-scheme media query",
+    "lets data-theme=\"light\" force light even when the OS is dark"
+   ],
+   "use": "need to know how ggsocial chooses light or dark",
+   "like": [
+    "The gglearn dark mode"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn named classes",
+   "tier": 3,
+   "says": [
+    "are .card, .btn and .gradient-text in globals.css",
+    "keep repeated looks while layout stays as utilities"
+   ],
+   "use": "look for where gglearn keeps its card and button styles"
+  },
+  {
+   "group": "gg",
+   "subject": "The ggsocial components/ui.tsx",
+   "tier": 3,
+   "says": [
+    "holds its own Card, Button and Field built from utilities",
+    "is preferred over copying long class strings"
+   ],
+   "use": "look for ggsocial's shared UI primitives"
+  },
+  {
+   "group": "gg",
+   "subject": "Unlayered rules in globals.css",
+   "tier": 4,
+   "says": [
+    "beat every Tailwind utility regardless of specificity",
+    "make a rule like button { color: inherit } override text-accent-fg"
+   ],
+   "use": "see a utility ignored because of a plain global rule",
+   "not": [
+    "are overridden by every utility because their specificity is lower"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The shared kit's base.css",
+   "tier": 4,
+   "says": [
+    "would fight Tailwind's preflight reset",
+    "is never imported; only styles.css is"
+   ],
+   "use": "wire the shared gg-ui kit into ggsocial"
+  },
+  {
+   "group": "gg",
+   "subject": "The Linux Tailwind native binary",
+   "tier": 5,
+   "says": [
+    "is skipped by npm ci when the lockfile was generated on macOS",
+    "is fixed on the server with an explicit npm install --no-save pinned to the installed oxide version"
+   ],
+   "use": "see a cannot-find-module error for @tailwindcss/oxide-linux-x64-gnu during a server build"
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does this class string do to the element's children?",
+   "right": "Lays them in a row, vertically centred, with equal space between them",
+   "wrong": [
+    "Stacks them in a column with no spacing",
+    "Turns each child into its own grid",
+    "Hides every child except the first"
+   ],
+   "tier": 1,
+   "why": "flex makes a row, items-center centres on the cross axis and gap-4 spaces the children.",
+   "code": "<div class=\"flex items-center gap-4\">...</div>"
+  },
+  {
+   "q": "With the default spacing scale, how much padding does p-4 add?",
+   "right": "1rem on all four sides",
+   "wrong": [
+    "4px on the top only",
+    "4rem on all four sides",
+    "0.4rem on the left and right"
+   ],
+   "tier": 1,
+   "why": "One spacing step is 0.25rem, so step 4 is 1rem."
+  },
+  {
+   "q": "What does Tailwind put in the stylesheet it generates?",
+   "right": "Only the CSS for the class names it finds in your source files",
+   "wrong": [
+    "Every utility it can possibly produce",
+    "Only the classes used on the first page",
+    "A copy of every class from node_modules"
+   ],
+   "tier": 1,
+   "why": "Content scanning keeps the output small."
+  },
+  {
+   "q": "In this markup, when does the background change?",
+   "right": "While the pointer is over the button",
+   "wrong": [
+    "Only after the button is clicked",
+    "Only on keyboard focus",
+    "Only on touch screens"
+   ],
+   "tier": 1,
+   "why": "The hover: prefix applies the utility under the hover condition.",
+   "code": "<button class=\"bg-blue-600 hover:bg-blue-700\">Save</button>"
+  },
+  {
+   "q": "What does rounded-full do on a square image with equal width and height?",
+   "right": "Makes it a circle",
+   "wrong": [
+    "Adds a one-pixel border",
+    "Makes the corners sharper",
+    "Crops it to a half-height rectangle"
+   ],
+   "tier": 1,
+   "why": "A full radius on a square produces a circle.",
+   "code": "<img class=\"h-10 w-10 rounded-full\" src=\"/a.png\" alt=\"\">"
+  },
+  {
+   "q": "Which prop do you use to give a JSX element Tailwind classes?",
+   "right": "className",
+   "wrong": [
+    "class",
+    "styleClass",
+    "tw"
+   ],
+   "tier": 1,
+   "why": "JSX uses className for the HTML class attribute.",
+   "code": "<div className=\"p-4 text-sm\">...</div>"
+  },
+  {
+   "q": "On a 900px wide screen, how wide is this element, and how wide on a 500px screen?",
+   "right": "Half its parent on the 900px screen, full width on the 500px screen",
+   "wrong": [
+    "Full width on both",
+    "Half its parent on both",
+    "Full width at 900px and half at 500px"
+   ],
+   "tier": 2,
+   "why": "The unprefixed class is the mobile base; md: applies from 768px upward.",
+   "code": "<div class=\"w-full md:w-1/2\">...</div>"
+  },
+  {
+   "q": "Which class string is small text on phones and larger text from md upward?",
+   "right": "text-sm md:text-lg",
+   "wrong": [
+    "md:text-sm text-lg",
+    "sm:text-sm lg:text-lg",
+    "text-lg max-md:text-sm md:text-sm"
+   ],
+   "tier": 2,
+   "why": "Tailwind is mobile-first, so the base class is the smallest layout and the prefix adds the change."
+  },
+  {
+   "q": "Why is the span in this button there?",
+   "right": "It gives the icon-only button an accessible name that only screen readers see",
+   "wrong": [
+    "It makes the button load faster",
+    "It adds a tooltip for mouse users",
+    "It removes the button from the tab order"
+   ],
+   "tier": 2,
+   "why": "sr-only hides content visually while keeping it in the accessibility tree.",
+   "code": "<button><svg aria-hidden=\"true\">...</svg><span class=\"sr-only\">Close</span></button>"
+  },
+  {
+   "q": "What does bg-black/50 mean?",
+   "right": "A black background at fifty percent opacity",
+   "wrong": [
+    "A black background at fifty pixels",
+    "Black on the first of fifty states",
+    "A background that is fifty percent black and fifty percent white"
+   ],
+   "tier": 2,
+   "why": "The slash suffix is the opacity modifier."
+  },
+  {
+   "q": "What must be on the parent for this link to underline when the card is hovered?",
+   "right": "The group class",
+   "wrong": [
+    "The peer class",
+    "The hover class",
+    "The relative class"
+   ],
+   "tier": 2,
+   "why": "group-hover: styles a child from a marked ancestor.",
+   "code": "<div class=\"group ...\"><a class=\"group-hover:underline\">Title</a></div>"
+  },
+  {
+   "q": "What does mx-auto need in order to centre a block?",
+   "right": "A set width or max width smaller than the parent",
+   "wrong": [
+    "A text-center on the block itself",
+    "A flex-col on the block",
+    "A fixed position"
+   ],
+   "tier": 2,
+   "why": "Automatic side margins only share leftover space when the block does not fill the parent.",
+   "code": "<div class=\"mx-auto max-w-3xl\">...</div>"
+  },
+  {
+   "q": "What is the difference between h-screen and min-h-screen?",
+   "right": "min-h-screen lets the element grow taller than the viewport when content needs it",
+   "wrong": [
+    "h-screen grows with content, min-h-screen does not",
+    "They are the same utility",
+    "min-h-screen is the viewport width"
+   ],
+   "tier": 2,
+   "why": "h-screen fixes the height; min-h-screen sets only a floor."
+  },
+  {
+   "q": "What does the first line of app/globals.css do in our apps?",
+   "right": "Loads Tailwind with an @import of tailwindcss",
+   "wrong": [
+    "Registers the postcss plugin",
+    "Lists every class to generate",
+    "Turns on dark mode"
+   ],
+   "tier": 2,
+   "why": "Configuration is CSS-first and starts with the import.",
+   "code": "@import \"tailwindcss\";"
+  },
+  {
+   "q": "Why does this component sometimes lose its colour?",
+   "right": "The scanner cannot see the full class name, so the CSS may never be generated",
+   "wrong": [
+    "Template literals are not allowed in JSX",
+    "Tailwind only supports red",
+    "className cannot take variables"
+   ],
+   "tier": 3,
+   "why": "Class names must appear as whole strings.",
+   "code": "function Tag({ color }) {\n  return <p className={`text-${color}-500`}>New</p>;\n}"
+  },
+  {
+   "q": "In this markup, what makes the label bold?",
+   "right": "The checkbox being checked, because the peer comes before the label",
+   "wrong": [
+    "Hovering the label",
+    "The label being the first child",
+    "Any checkbox anywhere on the page"
+   ],
+   "tier": 3,
+   "why": "peer-checked: reads the state of a preceding sibling.",
+   "code": "<input type=\"checkbox\" class=\"peer\" />\n<label class=\"peer-checked:font-bold\">Agree</label>"
+  },
+  {
+   "q": "What does this CSS do?",
+   "right": "Copies the declarations of those utilities into the .btn rule",
+   "wrong": [
+    "Defines the utilities for the first time",
+    "Loads the utilities from a CDN",
+    "Applies them to every element"
+   ],
+   "tier": 3,
+   "why": "@apply inlines existing utilities into a custom rule.",
+   "code": ".btn {\n  @apply rounded-lg bg-slate-900 px-4 py-2 text-white;\n}"
+  },
+  {
+   "q": "What does this grid do from md upward?",
+   "right": "Uses three columns with spacing, and one column below md",
+   "wrong": [
+    "Uses one column from md upward",
+    "Uses three columns on phones and one on desktop",
+    "Hides the grid below md"
+   ],
+   "tier": 3,
+   "why": "The unprefixed grid-cols-1 is the base and md: overrides it.",
+   "code": "<ul class=\"grid grid-cols-1 gap-4 md:grid-cols-3\">...</ul>"
+  },
+  {
+   "q": "What does the underscore in this class stand for?",
+   "right": "A space between the two track sizes",
+   "wrong": [
+    "A literal underscore character",
+    "A CSS variable reference",
+    "An empty track"
+   ],
+   "tier": 3,
+   "why": "Underscores in arbitrary values become spaces.",
+   "code": "grid-cols-[1fr_2fr]"
+  },
+  {
+   "q": "What does this combination do?",
+   "right": "Passes a runtime value into a class that stays static for the scanner",
+   "wrong": [
+    "Builds a new class name at runtime",
+    "Forces the class into the safelist",
+    "Disables the width utility"
+   ],
+   "tier": 3,
+   "why": "The style prop carries the variable; the class refers to it.",
+   "code": "<div className=\"h-2 w-[var(--w)]\" style={{ \"--w\": `${pct}%` } as React.CSSProperties} />"
+  },
+  {
+   "q": "What is wrong with this button for keyboard users?",
+   "right": "It shows no focus indicator when tabbed to",
+   "wrong": [
+    "It cannot be clicked",
+    "It is invisible to screen readers",
+    "Its text is too small"
+   ],
+   "tier": 3,
+   "why": "outline-none removes the default outline and nothing replaces it.",
+   "code": "<button class=\"rounded bg-blue-600 px-4 py-2 text-white outline-none\">Save</button>"
+  },
+  {
+   "q": "Which colour wins here?",
+   "right": "It depends on the order of rules in the generated stylesheet, not the class order",
+   "wrong": [
+    "red, because it comes first",
+    "blue, because it comes last",
+    "Neither, the element is unstyled"
+   ],
+   "tier": 3,
+   "why": "Class attribute order does not decide conflicts.",
+   "code": "<p class=\"text-red-500 text-blue-500\">Hi</p>"
+  },
+  {
+   "q": "What does the dark: part of this class do?",
+   "right": "Applies bg-slate-900 when dark mode is active",
+   "wrong": [
+    "Always applies bg-slate-900",
+    "Applies bg-white in dark mode",
+    "Switches the OS theme"
+   ],
+   "tier": 3,
+   "why": "The dark: variant is conditional on dark mode.",
+   "code": "<div class=\"bg-white dark:bg-slate-900\">"
+  },
+  {
+   "q": "Which dark mode strategy follows the OS with no JavaScript and no toggle?",
+   "right": "Media-based dark mode using prefers-color-scheme",
+   "wrong": [
+    "A class on the html element",
+    "A localStorage flag",
+    "A data attribute set by a script"
+   ],
+   "tier": 3,
+   "why": "The media feature reports the OS preference directly."
+  },
+  {
+   "q": "Why add motion-reduce:animate-none here?",
+   "right": "To stop the animation for users who ask for reduced motion",
+   "wrong": [
+    "To speed up the animation",
+    "To hide the element",
+    "To run it only once"
+   ],
+   "tier": 3,
+   "why": "motion-reduce: reacts to the user's reduced motion preference.",
+   "code": "<div class=\"animate-spin motion-reduce:animate-none\">"
+  },
+  {
+   "q": "What does this do?",
+   "right": "Hides the nav below md and shows it as flex from md upward",
+   "wrong": [
+    "Shows it below md and hides it above",
+    "Hides it at every size",
+    "Shows it only on hover"
+   ],
+   "tier": 3,
+   "why": "hidden is the base, md:flex replaces it.",
+   "code": "<nav class=\"hidden md:flex\">...</nav>"
+  },
+  {
+   "q": "What does truncate do to a single line of overflowing text?",
+   "right": "Clips it and ends it with an ellipsis",
+   "wrong": [
+    "Wraps it onto a new line",
+    "Shrinks the font size",
+    "Removes the overflowing words from the DOM"
+   ],
+   "tier": 3,
+   "why": "It combines overflow clipping, an ellipsis and no wrapping."
+  },
+  {
+   "q": "Why use the typography plugin on a blog?",
+   "right": "To style markdown-rendered HTML you cannot put classes on",
+   "wrong": [
+    "To make images load faster",
+    "To disable preflight",
+    "To add dark mode"
+   ],
+   "tier": 3,
+   "why": "A prose wrapper styles headings, lists and quotes in raw HTML.",
+   "code": "<article class=\"prose\">...</article>"
+  },
+  {
+   "q": "What is the result when isActive is true?",
+   "right": "px-4 bg-blue-500",
+   "wrong": [
+    "px-4 false",
+    "bg-blue-500",
+    "px-4 isActive"
+   ],
+   "tier": 3,
+   "why": "clsx adds truthy conditional entries and drops falsy ones.",
+   "code": "clsx(\"px-4\", isActive && \"bg-blue-500\", false)"
+  },
+  {
+   "q": "What happens to the link on hover?",
+   "right": "The text turns white with a smooth transition",
+   "wrong": [
+    "The text turns white instantly",
+    "The text stays slate",
+    "The link becomes underlined"
+   ],
+   "tier": 3,
+   "why": "transition animates the colour change added by hover:.",
+   "code": "<a class=\"text-slate-300 transition hover:text-white\">Docs</a>"
+  },
+  {
+   "q": "Why does gap-4 beat space-x-4 for a list that wraps?",
+   "right": "gap spaces rows and columns properly when items wrap, margin-based spacing does not",
+   "wrong": [
+    "gap is faster to render",
+    "space-x only works on grids",
+    "gap works only on one line"
+   ],
+   "tier": 3,
+   "why": "Selector-based margins do not handle a second line of wrapped items well."
+  },
+  {
+   "q": "What does flex-col change about items-center?",
+   "right": "It centres items horizontally, because the cross axis is now horizontal",
+   "wrong": [
+    "It centres items vertically as before",
+    "It disables centring",
+    "It centres text only"
+   ],
+   "tier": 3,
+   "why": "items-* aligns on the cross axis, which flips with the direction.",
+   "code": "<div class=\"flex flex-col items-center\">"
+  },
+  {
+   "q": "A status badge colour arrives from the API as red or green. What is the safe way to style it?",
+   "right": "Map each status to a full class name in a lookup object",
+   "wrong": [
+    "Build bg-${colour}-100 with a template literal",
+    "Add every colour to a runtime style tag",
+    "Turn off content scanning"
+   ],
+   "tier": 4,
+   "why": "Complete class names must be visible to the scanner.",
+   "code": "const badge = {\n  red: \"bg-red-100 text-red-800\",\n  green: \"bg-green-100 text-green-800\",\n};"
+  },
+  {
+   "q": "A team added a global rule and now text-accent-fg is ignored on buttons. What is the likely cause?",
+   "right": "The global rule sits outside any layer and beats every utility",
+   "wrong": [
+    "Utilities cannot set text colour",
+    "The class is misspelled in the config",
+    "The browser caches the CSS"
+   ],
+   "tier": 4,
+   "why": "Unlayered rules beat layered utilities regardless of specificity; keep base rules in @layer base.",
+   "code": "button { color: inherit; }"
+  },
+  {
+   "q": "npm ci succeeds but the Linux server build fails with cannot find module @tailwindcss/oxide-linux-x64-gnu. What is the fix?",
+   "right": "Run an explicit npm install --no-save pinned to the installed oxide version on the server",
+   "wrong": [
+    "Delete Tailwind and use inline styles",
+    "Raise the server memory limit",
+    "Rename postcss.config.mjs"
+   ],
+   "tier": 4,
+   "why": "The lockfile generated on macOS lacks the Linux binary, so the fix stays out of the lockfile."
+  },
+  {
+   "q": "Components from a shared workspace package render unstyled in the app. What should you check first?",
+   "right": "That the scanner is told to include the package's source path",
+   "wrong": [
+    "That the package uses class instead of className",
+    "That dark mode is enabled",
+    "That preflight is imported twice"
+   ],
+   "tier": 4,
+   "why": "The scanner only reads files it knows about."
+  },
+  {
+   "q": "What does inline do in this block?",
+   "right": "References the variable itself instead of copying its value, so runtime changes flow through",
+   "wrong": [
+    "Makes the colour apply only to inline elements",
+    "Compiles the colour to hex at build time",
+    "Marks the token as private"
+   ],
+   "tier": 4,
+   "why": "With inline, utilities keep pointing at var(--surface).",
+   "code": "@theme inline {\n  --color-surface: var(--surface);\n}"
+  },
+  {
+   "q": "Users see a white flash before a dark page appears. What is the cause?",
+   "right": "The stored theme preference is applied after the first paint",
+   "wrong": [
+    "Dark mode needs a bigger stylesheet",
+    "The dark: variant is disabled in production",
+    "The viewport meta tag is missing"
+   ],
+   "tier": 4,
+   "why": "Set the theme attribute before the page paints."
+  },
+  {
+   "q": "What does this link do, and when is it visible?",
+   "right": "It is hidden until it receives keyboard focus, then it appears so users can skip to content",
+   "wrong": [
+    "It is always visible",
+    "It is removed from the page",
+    "It is visible only to screen readers always"
+   ],
+   "tier": 4,
+   "why": "sr-only plus focus:not-sr-only builds a skip link.",
+   "code": "<a href=\"#main\" class=\"sr-only focus:not-sr-only\">Skip to content</a>"
+  },
+  {
+   "q": "A Button has px-4 and a caller passes className=\"px-8\". How do you make the caller win reliably?",
+   "right": "Merge the classes with tailwind-merge",
+   "wrong": [
+    "Put px-8 first in the string",
+    "Use !important in a style tag",
+    "Add a second class attribute"
+   ],
+   "tier": 4,
+   "why": "Class order does not decide; tailwind-merge drops the earlier conflicting utility.",
+   "code": "className={twMerge(\"px-4 rounded\", className)}"
+  },
+  {
+   "q": "Why use aria-expanded:rotate-180 on a chevron?",
+   "right": "The visual state follows the accessibility state without extra JavaScript toggling a class",
+   "wrong": [
+    "It animates the chevron automatically",
+    "It works without aria-expanded being set",
+    "It rotates every chevron on the page"
+   ],
+   "tier": 4,
+   "why": "Tying style to the ARIA attribute keeps both in sync.",
+   "code": "<button aria-expanded=\"false\"><svg class=\"aria-expanded:rotate-180\">...</svg></button>"
+  },
+  {
+   "q": "When does this underline show?",
+   "right": "On hover, and only from md upward",
+   "wrong": [
+    "On hover at every size",
+    "At md only, never above",
+    "Always from md upward"
+   ],
+   "tier": 4,
+   "why": "Stacked variants all must be true.",
+   "code": "md:hover:underline"
+  },
+  {
+   "q": "What does this selector variant style?",
+   "right": "The direct li children of the list",
+   "wrong": [
+    "Only the first li",
+    "The list itself",
+    "Every li at any depth"
+   ],
+   "tier": 4,
+   "why": "The arbitrary variant writes the selector in brackets.",
+   "code": "<ul class=\"[&>li]:mb-2\">"
+  },
+  {
+   "q": "The same 12-class string is pasted into forty files. What is the best first step?",
+   "right": "Extract a component that owns the markup and classes",
+   "wrong": [
+    "Add the classes to a safelist",
+    "Replace them with arbitrary values",
+    "Generate them with template literals"
+   ],
+   "tier": 4,
+   "why": "A component keeps one source of truth for markup and classes."
+  },
+  {
+   "q": "A card needs to reflow when its sidebar slot is narrow even on a wide screen. Which feature fits?",
+   "right": "Container query variants",
+   "wrong": [
+    "The md: prefix",
+    "The container class",
+    "The max-md: variant"
+   ],
+   "tier": 4,
+   "why": "Viewport breakpoints cannot see the slot size."
+  },
+  {
+   "q": "Your team wants every component styled through an @apply class. What is the main risk?",
+   "right": "It recreates naming and sync problems and hides which utilities an element uses",
+   "wrong": [
+    "It makes the CSS invalid",
+    "It disables variants permanently",
+    "It prevents purging"
+   ],
+   "tier": 4,
+   "why": "Utility-first markup avoids both problems."
+  },
+  {
+   "q": "Why do hundreds of bracket values like w-[37px] signal a problem?",
+   "right": "Each distinct value generates its own rule, and the repeated values belong in the theme",
+   "wrong": [
+    "They are rejected by the scanner",
+    "They disable dark mode",
+    "They break preflight"
+   ],
+   "tier": 4,
+   "why": "Promote repeated values to tokens."
+  },
+  {
+   "q": "Why pick transition-transform with a scale hover over animating width?",
+   "right": "Transform animation avoids re-flowing layout on every frame",
+   "wrong": [
+    "width cannot be animated in CSS",
+    "Transform needs no GPU",
+    "Tailwind blocks width transitions"
+   ],
+   "tier": 4,
+   "why": "Transform and opacity are cheaper to animate."
+  },
+  {
+   "q": "A brand blue is typed as bg-[#1d4ed8] in sixty places and the brand is changing. What should have been done?",
+   "right": "Add a named colour token to the theme and use its utility",
+   "wrong": [
+    "Safelist the arbitrary class",
+    "Turn the colour into a template literal",
+    "Move it to inline styles"
+   ],
+   "tier": 5,
+   "why": "A token gives the value one place to change."
+  },
+  {
+   "q": "A .card class in plain global CSS keeps beating p-6 on the same element. Why, and what is the fix?",
+   "right": "Unlayered rules beat utilities, so move it into @layer components",
+   "wrong": [
+    "p-6 is not a real utility",
+    "Specificity of classes is equal, so the first wins",
+    "The card class needs !important in markup"
+   ],
+   "tier": 5,
+   "why": "Layered utilities lose to unlayered rules.",
+   "code": ".card { padding: 1rem; }"
+  },
+  {
+   "q": "What does this class string need for the headline to show a colour gradient?",
+   "right": "A gradient background to be present, since the text is transparent",
+   "wrong": [
+    "Nothing else, transparent shows a gradient automatically",
+    "An inline SVG filter",
+    "A dark: variant"
+   ],
+   "tier": 5,
+   "why": "bg-clip-text clips the background to the letters and text-transparent reveals it.",
+   "code": "<h1 class=\"bg-clip-text text-transparent ...\">Title</h1>"
+  },
+  {
+   "q": "What does cn do in this component?",
+   "right": "Joins conditional classes and resolves Tailwind conflicts so the caller's classes win",
+   "wrong": [
+    "Generates the CSS at runtime",
+    "Adds the classes to the safelist",
+    "Removes duplicate components"
+   ],
+   "tier": 5,
+   "why": "cn is typically twMerge(clsx(...)).",
+   "code": "function cn(...inputs) {\n  return twMerge(clsx(inputs));\n}"
+  },
+  {
+   "q": "Deploy fixed the build error but the same failure still shows. What does ggsocial's DEPLOY.md warn about?",
+   "right": "Turbopack can cache a failed build",
+   "wrong": [
+    "PM2 caching the old process",
+    "The browser caching preflight",
+    "npm caching the lockfile"
+   ],
+   "tier": 5,
+   "why": "The cache must be cleared before the fixed build is trusted."
+  }
+ ]
+}

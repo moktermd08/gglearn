@@ -1,0 +1,2880 @@
+{
+  "slug": "ggsocial-customer-start",
+  "name": "Getting started with GGSocial",
+  "description": "Connect your accounts and plan your first posts.",
+  "roles": "",
+  "kind": "product",
+  "brand": "gglink",
+  "audience": "customer",
+  "tier": "mandatory",
+  "groups": {
+    "area": "GGSocial concept or screen",
+    "chan": "channel or connection concept",
+    "queue": "manual-publishing step",
+    "prac": "content practice",
+    "rule": "platform rule or limit",
+    "sched": "scheduling concept",
+    "flow": "post status or review step",
+    "role": "team role or access concept",
+    "play": "Playbook check or concept",
+    "ana": "analytics measure",
+    "safe": "account-safety practice",
+    "etiq": "platform etiquette practice",
+    "agent": "agent or review concept",
+    "help": "support step"
+  },
+  "cards": [
+    {
+      "group": "area",
+      "subject": "A brand",
+      "tier": 1,
+      "says": [
+        "is one company or project in GGSocial",
+        "has its own channels, media, calendar, team and timezone",
+        "is the unit that owns a set of channels"
+      ],
+      "use": "want the unit that groups one company's channels and team",
+      "not": [
+        "is a single account on one social platform"
+      ],
+      "like": [
+        "A channel"
+      ]
+    },
+    {
+      "group": "area",
+      "subject": "A channel",
+      "tier": 1,
+      "says": [
+        "is one account on one platform",
+        "belongs to exactly one brand",
+        "is what a post is sent to"
+      ],
+      "use": "need the unit that stands for one connected social account",
+      "not": [
+        "is a group of teammates working on a brand"
+      ],
+      "like": [
+        "A brand"
+      ]
+    },
+    {
+      "group": "area",
+      "subject": "The Composer",
+      "tier": 1,
+      "says": [
+        "lets you write base copy once and override it for each channel",
+        "shows live character counts as you type",
+        "checks per-platform rules while you write"
+      ],
+      "use": "want to write one idea for several platforms at once",
+      "not": [
+        "shows every brand on a month grid"
+      ],
+      "like": [
+        "The Calendar",
+        "Base copy"
+      ]
+    },
+    {
+      "group": "area",
+      "subject": "The Calendar",
+      "tier": 1,
+      "says": [
+        "shows every brand on one month grid",
+        "colour-codes posts by brand",
+        "lets you drag a post to move it to another day"
+      ],
+      "use": "want to see what is planned across your brands this month",
+      "not": [
+        "holds the master rules for each format"
+      ],
+      "like": [
+        "The Composer",
+        "The Playbook"
+      ]
+    },
+    {
+      "group": "area",
+      "subject": "The Playbook",
+      "tier": 2,
+      "says": [
+        "holds master instructions for each format and kind of engagement",
+        "checks limits such as hashtag count and copy length itself",
+        "can stop a post from being scheduled when a must rule is broken"
+      ],
+      "use": "want to know where the content rules for a brand live",
+      "not": [
+        "lists the posts that failed to publish"
+      ],
+      "like": [
+        "The Calendar",
+        "The Review inbox"
+      ]
+    },
+    {
+      "group": "area",
+      "subject": "Analytics",
+      "tier": 2,
+      "says": [
+        "shows what went out and where",
+        "reports whatever metrics each platform returns",
+        "is where you look back at published posts"
+      ],
+      "use": "want to see how published posts performed",
+      "not": [
+        "is where you write the copy for a post"
+      ],
+      "like": [
+        "The Publish queue"
+      ]
+    },
+    {
+      "group": "area",
+      "subject": "The Publish queue",
+      "tier": 2,
+      "says": [
+        "holds anything due on a manual-only channel",
+        "gives you copy buttons and media to download",
+        "ends with you ticking the item off"
+      ],
+      "use": "have a post that you must publish by hand",
+      "not": [
+        "lists every post ever written"
+      ],
+      "like": [
+        "The Review inbox"
+      ]
+    },
+    {
+      "group": "area",
+      "subject": "The Review inbox",
+      "tier": 2,
+      "says": [
+        "collects everything waiting for a person",
+        "lets you approve, send back with a note or stop a run",
+        "gathers work from the brand's agents in one place"
+      ],
+      "use": "want one place to see what is waiting for your decision",
+      "not": [
+        "is where manual posts are copied and pasted"
+      ],
+      "like": [
+        "The Publish queue",
+        "The Playbook"
+      ]
+    },
+    {
+      "group": "area",
+      "subject": "Base copy",
+      "tier": 2,
+      "says": [
+        "is the text you write once for all channels",
+        "applies to every channel that has no override",
+        "is the starting point you tune per platform"
+      ],
+      "use": "need the shared text that every channel starts from",
+      "not": [
+        "is the text that only one channel uses"
+      ],
+      "like": [
+        "A channel override"
+      ]
+    },
+    {
+      "group": "area",
+      "subject": "A channel override",
+      "tier": 3,
+      "says": [
+        "replaces the base copy on one channel only",
+        "lets you tune wording or length to a single platform",
+        "leaves the base copy of the other channels untouched"
+      ],
+      "use": "need X shorter and Instagram warmer than the shared text",
+      "not": [
+        "changes the base copy on every channel"
+      ],
+      "like": [
+        "Base copy"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "A live channel",
+      "tier": 2,
+      "says": [
+        "is published to by GGSocial itself through the platform's API",
+        "needs no one to paste the post at the scheduled time",
+        "still goes through the normal approval flow"
+      ],
+      "use": "want a post to go out automatically at the scheduled time",
+      "not": [
+        "needs a person to click publish on the platform"
+      ],
+      "like": [
+        "A manual-only channel"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "A manual-only channel",
+      "tier": 2,
+      "says": [
+        "has a platform with no write API for organic content",
+        "gets composed, checked, scheduled and queued like any other",
+        "ends with a person posting it"
+      ],
+      "use": "are on a platform that cannot be published to automatically",
+      "not": [
+        "is skipped by the Composer and Calendar"
+      ],
+      "like": [
+        "A live channel"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "Copy-ready blocks",
+      "tier": 3,
+      "says": [
+        "give a person text prepared to paste into the platform",
+        "are prepared for manual-only channels",
+        "save retyping when you post by hand"
+      ],
+      "use": "post by hand and want the text ready to paste",
+      "not": [
+        "publish the post for you on the platform"
+      ],
+      "like": [
+        "Copy buttons"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "Connecting a channel",
+      "tier": 1,
+      "says": [
+        "links a social account to a brand",
+        "is done by an admin or the owner of the brand",
+        "happens before any post can go to that account"
+      ],
+      "use": "want to add a new social account to a brand",
+      "not": [
+        "is done by a viewer"
+      ],
+      "like": [
+        "Reconnecting a channel"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "Reconnecting a channel",
+      "tier": 3,
+      "says": [
+        "restores access after saved permission has lapsed",
+        "usually goes through the platform's own sign-in and permission screen",
+        "is the usual fix for an expired or failing channel"
+      ],
+      "use": "see a channel marked expired",
+      "not": [
+        "requires deleting the whole brand"
+      ],
+      "like": [
+        "Connecting a channel"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "The connected status",
+      "tier": 2,
+      "says": [
+        "shows that GGSocial can currently use the channel",
+        "is the healthy state of a channel"
+      ],
+      "use": "want to know a channel is ready to use",
+      "not": [
+        "means the channel's saved access has lapsed"
+      ],
+      "like": [
+        "The expired status",
+        "The disconnected status"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "The disconnected status",
+      "tier": 3,
+      "says": [
+        "shows that no account is currently linked to the channel",
+        "tells you the channel needs connecting before it can be used"
+      ],
+      "use": "see a channel that has no account linked",
+      "not": [
+        "means the platform rejected the last post"
+      ],
+      "like": [
+        "The connected status",
+        "The error status"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "The expired status",
+      "tier": 3,
+      "says": [
+        "shows that the channel's saved access has run out",
+        "is cleared by reconnecting the account"
+      ],
+      "use": "see that a channel's permission has lapsed",
+      "not": [
+        "means the channel was archived"
+      ],
+      "like": [
+        "The error status",
+        "The disconnected status"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "The error status",
+      "tier": 4,
+      "says": [
+        "shows that the last attempt to use the channel failed",
+        "calls for a look at the channel before more posts are scheduled to it"
+      ],
+      "use": "see a channel whose last attempt failed",
+      "not": [
+        "means everything is working normally"
+      ],
+      "like": [
+        "The expired status",
+        "The disconnected status"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "A platform API",
+      "tier": 3,
+      "says": [
+        "lets software act on an account with the account holder's permission",
+        "is what makes automatic publishing possible",
+        "is controlled by the platform, not by GGSocial"
+      ],
+      "use": "wonder why some platforms can be published to automatically",
+      "not": [
+        "is a setting you switch on in the Composer"
+      ],
+      "like": [
+        "Copy-ready blocks"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "The platform permission screen",
+      "tier": 3,
+      "says": [
+        "asks you to grant access to your account without sharing your password",
+        "is usually shown by the platform itself during connecting",
+        "lets you see what access you are granting"
+      ],
+      "use": "connect a channel and want to avoid typing your platform password into GGSocial",
+      "not": [
+        "is where you type your GGSocial password"
+      ],
+      "like": [
+        "Reconnecting a channel"
+      ]
+    },
+    {
+      "group": "chan",
+      "subject": "Channel categories",
+      "tier": 2,
+      "says": [
+        "group the many platforms GGSocial covers",
+        "make channels easier to search and browse"
+      ],
+      "use": "want to find a platform among more than a hundred",
+      "not": [
+        "decide which role you have on a brand"
+      ]
+    },
+    {
+      "group": "queue",
+      "subject": "Copy buttons",
+      "tier": 2,
+      "says": [
+        "put a post's text on your clipboard in one click",
+        "sit in the Publish queue next to each item"
+      ],
+      "use": "want to paste the post text into a platform quickly",
+      "not": [
+        "publish the post to the platform"
+      ],
+      "like": [
+        "Copy-ready blocks"
+      ]
+    },
+    {
+      "group": "queue",
+      "subject": "The media download",
+      "tier": 2,
+      "says": [
+        "gives you the images or video to upload by hand",
+        "is offered in the Publish queue"
+      ],
+      "use": "need the picture or video for a manual post",
+      "not": [
+        "resizes media for every platform"
+      ]
+    },
+    {
+      "group": "queue",
+      "subject": "Platform-specific steps",
+      "tier": 3,
+      "says": [
+        "tell you how to finish the post on that platform",
+        "differ from one manual-only platform to another"
+      ],
+      "use": "are unsure how to post on a particular manual-only platform",
+      "not": [
+        "are identical for every platform"
+      ]
+    },
+    {
+      "group": "queue",
+      "subject": "Ticking off a queue item",
+      "tier": 2,
+      "says": [
+        "marks the post as published",
+        "tells GGSocial that you posted it by hand",
+        "is done after the post is live on the platform"
+      ],
+      "use": "have just posted a queued item on the platform",
+      "not": [
+        "posts it for you automatically"
+      ],
+      "like": [
+        "Copy buttons"
+      ]
+    },
+    {
+      "group": "queue",
+      "subject": "The awaiting-manual status",
+      "tier": 4,
+      "says": [
+        "shows that a post is waiting for a person to publish it",
+        "applies to a channel target on a manual-only channel"
+      ],
+      "use": "see a target that is waiting for you to post it",
+      "not": [
+        "means the post has already been published"
+      ],
+      "like": [
+        "Ticking off a queue item"
+      ]
+    },
+    {
+      "group": "queue",
+      "subject": "A manual posting checklist",
+      "tier": 3,
+      "says": [
+        "has you paste the copy, attach the media and check the preview",
+        "ends with ticking the item off in the queue"
+      ],
+      "use": "want a routine for posting by hand without mistakes",
+      "not": [
+        "is only needed for live channels"
+      ]
+    },
+    {
+      "group": "queue",
+      "subject": "Checking the live post",
+      "tier": 4,
+      "says": [
+        "confirms that the post looks right on the platform after you publish by hand",
+        "catches missing media or broken links before the audience sees them"
+      ],
+      "use": "have published by hand and want to be sure it went out properly",
+      "not": [
+        "is unnecessary once an item is ticked off"
+      ],
+      "like": [
+        "Ticking off a queue item"
+      ]
+    },
+    {
+      "group": "queue",
+      "subject": "A due queue item",
+      "tier": 3,
+      "says": [
+        "is a post whose scheduled time has arrived on a manual-only channel",
+        "waits for a person rather than going out by itself"
+      ],
+      "use": "see a manual item that has reached its scheduled time",
+      "not": [
+        "publishes at the scheduled time on its own"
+      ],
+      "like": [
+        "The awaiting-manual status"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "Audience",
+      "tier": 1,
+      "says": [
+        "is the group of people a post is written for",
+        "shapes the topics, tone and timing of a post"
+      ],
+      "use": "want to decide what to say before writing",
+      "not": [
+        "is the list of platforms a brand uses"
+      ],
+      "like": [
+        "Tone of voice"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "Tone of voice",
+      "tier": 2,
+      "says": [
+        "is how a brand sounds in writing",
+        "should stay recognisable across channels",
+        "can flex a little between platforms"
+      ],
+      "use": "want a brand to sound consistent everywhere",
+      "not": [
+        "is the topic a post is about"
+      ],
+      "like": [
+        "Audience",
+        "A brand voice guide"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "A brand voice guide",
+      "tier": 3,
+      "says": [
+        "writes down the tone, words to use and words to avoid",
+        "helps several writers sound like one brand"
+      ],
+      "use": "have more than one person writing for the same brand",
+      "not": [
+        "lists the platform character limits"
+      ],
+      "like": [
+        "Tone of voice"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "A hook",
+      "tier": 2,
+      "says": [
+        "is the opening line meant to stop the scroll",
+        "has to work before the viewer taps to read more"
+      ],
+      "use": "want the first words of a post to earn attention",
+      "not": [
+        "is the link at the end of a post"
+      ],
+      "like": [
+        "A call to action"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "A call to action",
+      "tier": 2,
+      "says": [
+        "tells the reader the one thing to do next",
+        "is usually one clear request at the end"
+      ],
+      "use": "want readers to sign up, reply or click",
+      "not": [
+        "is the opening line of a post"
+      ],
+      "like": [
+        "A hook"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "Alt text",
+      "tier": 3,
+      "says": [
+        "describes an image for people who cannot see it",
+        "helps screen-reader users follow the post"
+      ],
+      "use": "add an image and want it to be accessible",
+      "not": [
+        "is a hidden keyword list for search engines"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "Hashtags",
+      "tier": 2,
+      "says": [
+        "label a post with a topic people can follow or search",
+        "work best when few and relevant"
+      ],
+      "use": "want a post to be found by people interested in a topic",
+      "not": [
+        "are required on every post by every platform"
+      ],
+      "like": [
+        "Content pillars"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "Content pillars",
+      "tier": 3,
+      "says": [
+        "are the few recurring themes a brand posts about",
+        "stop a feed from feeling random"
+      ],
+      "use": "want a steady set of themes to plan around",
+      "not": [
+        "are the colours used on the Calendar"
+      ],
+      "like": [
+        "Hashtags",
+        "A content mix"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "A content mix",
+      "tier": 4,
+      "says": [
+        "balances helpful, entertaining and promotional posts",
+        "stops a feed from becoming all selling"
+      ],
+      "use": "notice that every post is a sales pitch",
+      "not": [
+        "means posting the same text on every channel"
+      ],
+      "like": [
+        "Content pillars"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "Repurposing",
+      "tier": 3,
+      "says": [
+        "adapts one idea into formats that suit different platforms",
+        "saves effort without pasting identical text everywhere"
+      ],
+      "use": "have one good idea and several platforms",
+      "not": [
+        "means reposting identical text everywhere"
+      ],
+      "like": [
+        "A channel override"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "Evergreen content",
+      "tier": 3,
+      "says": [
+        "stays useful long after it is first posted",
+        "can be shared again later with a fresh angle"
+      ],
+      "use": "want content that does not date quickly",
+      "not": [
+        "is only relevant to a current news event"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "Posting cadence",
+      "tier": 2,
+      "says": [
+        "is how often a brand posts",
+        "is better kept steady than burst-and-vanish"
+      ],
+      "use": "decide how many posts a week you can keep up",
+      "not": [
+        "is the time of day a post goes out"
+      ],
+      "like": [
+        "A posting window"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "Plain language",
+      "tier": 2,
+      "says": [
+        "uses short, familiar words instead of jargon",
+        "makes a post easy to read on a phone"
+      ],
+      "use": "want a post anyone can follow at a glance",
+      "not": [
+        "means leaving out the call to action"
+      ]
+    },
+    {
+      "group": "prac",
+      "subject": "A campaign",
+      "tier": 3,
+      "says": [
+        "groups related posts around one goal and period",
+        "lets you judge the posts together"
+      ],
+      "use": "are promoting one launch across a few weeks",
+      "not": [
+        "is one post on one channel"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "The X 280-character limit",
+      "tier": 1,
+      "says": [
+        "caps a standard X post at 280 characters",
+        "is counted live in the Composer"
+      ],
+      "use": "are drafting for X and need to know the length",
+      "not": [
+        "applies to Instagram captions"
+      ],
+      "like": [
+        "An X thread"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "An X thread",
+      "tier": 2,
+      "says": [
+        "splits a long idea into connected posts",
+        "is made in GGSocial by separating parts with blank lines"
+      ],
+      "use": "have more to say than fits in 280 characters",
+      "not": [
+        "is a single long post that X accepts as is"
+      ],
+      "like": [
+        "The X 280-character limit"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "The Reddit title and subreddit rule",
+      "tier": 2,
+      "says": [
+        "needs a title and a subreddit before a post is valid",
+        "sends the post to a community, not to a personal feed"
+      ],
+      "use": "are preparing a post for Reddit",
+      "not": [
+        "needs only a hashtag"
+      ],
+      "like": [
+        "The YouTube title rule"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "The YouTube title rule",
+      "tier": 2,
+      "says": [
+        "needs a title on the video post",
+        "is checked in the Composer"
+      ],
+      "use": "are preparing a video post for YouTube",
+      "not": [
+        "needs a subreddit"
+      ],
+      "like": [
+        "The Reddit title and subreddit rule"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "The Instagram media rule",
+      "tier": 1,
+      "says": [
+        "needs an image or video on the post",
+        "cannot be satisfied by text alone"
+      ],
+      "use": "are preparing a post for Instagram",
+      "not": [
+        "needs a thread"
+      ],
+      "like": [
+        "The YouTube title rule"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "The live character count",
+      "tier": 2,
+      "says": [
+        "updates as you type in the Composer",
+        "shows how close you are to a platform's limit"
+      ],
+      "use": "want to know whether the copy will fit",
+      "not": [
+        "is only shown after you publish"
+      ],
+      "like": [
+        "Per-platform rules"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "Per-platform rules",
+      "tier": 2,
+      "says": [
+        "differ from one platform to another",
+        "are checked in the Composer before a post is scheduled"
+      ],
+      "use": "wonder why the same text is valid on one channel but not another",
+      "not": [
+        "are the same for every platform"
+      ],
+      "like": [
+        "A brand voice guide"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "Platform rule changes",
+      "tier": 4,
+      "says": [
+        "can alter limits or formats without GGSocial deciding it",
+        "are a reason to recheck a channel when a post is rejected"
+      ],
+      "use": "find a post that used to work is now rejected",
+      "not": [
+        "never happen once a channel is connected"
+      ],
+      "like": [
+        "Per-platform rules"
+      ]
+    },
+    {
+      "group": "rule",
+      "subject": "How emoji count toward a limit",
+      "tier": 4,
+      "says": [
+        "can use more than one character of a platform's allowance",
+        "are why a post can seem to fit and still be too long"
+      ],
+      "use": "are close to a limit and the copy includes emoji",
+      "not": [
+        "never count at all"
+      ],
+      "like": [
+        "The live character count"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A draft",
+      "tier": 1,
+      "says": [
+        "is a post still being written",
+        "has not been sent for approval or scheduled"
+      ],
+      "use": "have a post you are still working on",
+      "not": [
+        "is a post waiting for an approver"
+      ],
+      "like": [
+        "The needs-approval status"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "An absolute instant",
+      "tier": 3,
+      "says": [
+        "is one exact moment that does not change with where you are",
+        "is how a scheduled time is stored"
+      ],
+      "use": "want to know why a scheduled post goes out at one moment for everyone",
+      "not": [
+        "changes depending on each viewer's phone"
+      ],
+      "like": [
+        "The brand timezone"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "The brand timezone",
+      "tier": 3,
+      "says": [
+        "is the timezone scheduled times are shown in",
+        "belongs to the brand, not to each viewer"
+      ],
+      "use": "see a scheduled time and wonder which clock it uses",
+      "not": [
+        "is always UTC"
+      ],
+      "like": [
+        "An absolute instant"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "Dragging a post on the Calendar",
+      "tier": 2,
+      "says": [
+        "moves it to another day",
+        "is the quick way to reschedule"
+      ],
+      "use": "want to move a planned post to a different day",
+      "not": [
+        "deletes the post and drafts a new one"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "A posting window",
+      "tier": 3,
+      "says": [
+        "is the time range in which a post should go out",
+        "can be checked by the Playbook"
+      ],
+      "use": "must keep posts inside agreed hours",
+      "not": [
+        "is the length of a video"
+      ],
+      "like": [
+        "Posting cadence"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "Testing the best time to post",
+      "tier": 3,
+      "says": [
+        "uses your own analytics to see when your audience responds",
+        "beats copying a generic best-time chart"
+      ],
+      "use": "want to choose posting times for your own audience",
+      "not": [
+        "relies on a single universal best hour"
+      ],
+      "like": [
+        "A posting window"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "An audience in several timezones",
+      "tier": 4,
+      "says": [
+        "means no single hour suits everyone",
+        "can be served by posting at more than one hour"
+      ],
+      "use": "have followers spread across different countries",
+      "not": [
+        "is solved by posting only at midnight"
+      ],
+      "like": [
+        "The brand timezone"
+      ]
+    },
+    {
+      "group": "sched",
+      "subject": "Batch scheduling",
+      "tier": 3,
+      "says": [
+        "plans several posts in one sitting",
+        "keeps a feed steady when the team is busy"
+      ],
+      "use": "want to plan a week of posts at once",
+      "not": [
+        "publishes everything at the same moment"
+      ],
+      "like": [
+        "Posting cadence"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The needs-approval status",
+      "tier": 2,
+      "says": [
+        "shows that a post is waiting for a reviewer",
+        "comes after a draft in the normal flow"
+      ],
+      "use": "see a post that is waiting for an approver",
+      "not": [
+        "shows that a post is already live"
+      ],
+      "like": [
+        "A draft",
+        "The approved status"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The changes-requested status",
+      "tier": 3,
+      "says": [
+        "shows that a reviewer sent the post back for edits",
+        "returns the post to its author"
+      ],
+      "use": "see a post a reviewer has returned",
+      "not": [
+        "shows that the post was approved"
+      ],
+      "like": [
+        "The needs-approval status"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The approved status",
+      "tier": 2,
+      "says": [
+        "shows that a reviewer has signed the post off",
+        "comes before a post is scheduled"
+      ],
+      "use": "see a post that is ready to be scheduled",
+      "not": [
+        "shows that the post is still being written"
+      ],
+      "like": [
+        "The scheduled status"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The scheduled status",
+      "tier": 2,
+      "says": [
+        "shows that a post has a time and is waiting to go out",
+        "follows approval"
+      ],
+      "use": "see a post with a set time that has not gone out yet",
+      "not": [
+        "shows that it was sent back for edits"
+      ],
+      "like": [
+        "The approved status",
+        "The published status"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The publishing status",
+      "tier": 3,
+      "says": [
+        "shows that a post is in the middle of going out",
+        "comes between scheduled and published"
+      ],
+      "use": "see a post that is being sent right now",
+      "not": [
+        "shows that it was approved"
+      ],
+      "like": [
+        "The published status"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The published status",
+      "tier": 2,
+      "says": [
+        "shows that the post is live",
+        "is the end of the normal flow"
+      ],
+      "use": "see a post that has gone out successfully",
+      "not": [
+        "shows that it is waiting to be scheduled"
+      ],
+      "like": [
+        "The scheduled status"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The partially-published status",
+      "tier": 4,
+      "says": [
+        "shows that some channels published and at least one did not",
+        "is the outcome when one channel fails and others succeed"
+      ],
+      "use": "see a post that went out on two channels but not a third",
+      "not": [
+        "means every channel published"
+      ],
+      "like": [
+        "The failed status"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "The failed status",
+      "tier": 3,
+      "says": [
+        "shows that a post could not be published",
+        "calls for you to check the channel and try again"
+      ],
+      "use": "see a post that did not go out",
+      "not": [
+        "means the post went out on every channel"
+      ],
+      "like": [
+        "The partially-published status"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "A comment on a post",
+      "tier": 2,
+      "says": [
+        "lets a reviewer explain what to fix",
+        "stays with the post for the team to read"
+      ],
+      "use": "want to leave feedback without changing the text",
+      "not": [
+        "publishes the post"
+      ],
+      "like": [
+        "A change request"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "A change request",
+      "tier": 3,
+      "says": [
+        "sends the post back to its author",
+        "is how an approver asks for edits"
+      ],
+      "use": "are an approver and want edits made",
+      "not": [
+        "lets an approver edit the post"
+      ],
+      "like": [
+        "A comment on a post"
+      ]
+    },
+    {
+      "group": "flow",
+      "subject": "Per-channel statuses",
+      "tier": 4,
+      "says": [
+        "track each channel of a post separately",
+        "explain why one post can be partly published"
+      ],
+      "use": "want to know how a post can succeed on one channel and fail on another",
+      "not": [
+        "are always identical across channels"
+      ],
+      "like": [
+        "The partially-published status"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The owner role",
+      "tier": 2,
+      "says": [
+        "can do everything on a brand",
+        "is the only role that can archive the brand"
+      ],
+      "use": "need to know who can archive a brand",
+      "not": [
+        "can only read the brand"
+      ],
+      "like": [
+        "The admin role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The admin role",
+      "tier": 2,
+      "says": [
+        "manages channels, team and content",
+        "can add teammates to a brand"
+      ],
+      "use": "need someone to connect channels and manage the team",
+      "not": [
+        "can only comment on posts"
+      ],
+      "like": [
+        "The owner role",
+        "The editor role",
+        "Inviting a teammate"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The editor role",
+      "tier": 2,
+      "says": [
+        "writes, schedules and publishes posts",
+        "cannot manage channels or the team"
+      ],
+      "use": "need someone to write and schedule posts",
+      "not": [
+        "can only review without editing"
+      ],
+      "like": [
+        "The admin role",
+        "The approver role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The approver role",
+      "tier": 2,
+      "says": [
+        "reviews posts and can comment or request changes",
+        "cannot edit what they review"
+      ],
+      "use": "need a sign-off step that does not change the content",
+      "not": [
+        "can write and schedule posts"
+      ],
+      "like": [
+        "The editor role",
+        "The viewer role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The viewer role",
+      "tier": 2,
+      "says": [
+        "can read but not change anything",
+        "suits someone who only needs to watch progress"
+      ],
+      "use": "need to give a stakeholder read-only access",
+      "not": [
+        "can approve posts"
+      ],
+      "like": [
+        "The approver role"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "Per-brand roles",
+      "tier": 3,
+      "says": [
+        "mean one person can hold different roles in different brands",
+        "are set brand by brand"
+      ],
+      "use": "work with several brands and need different access in each",
+      "not": [
+        "apply to the whole account at once"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "Least privilege",
+      "tier": 3,
+      "says": [
+        "gives each person only the access their job needs",
+        "reduces the damage a mistake or stolen login can do"
+      ],
+      "use": "choose a role for a new teammate",
+      "not": [
+        "gives everyone admin to save time"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "The role check on every action",
+      "tier": 4,
+      "says": [
+        "is repeated each time an action is attempted",
+        "means hiding a button is not what protects the brand"
+      ],
+      "use": "wonder whether a viewer could get around a hidden button",
+      "not": [
+        "only happens when a person signs in"
+      ],
+      "like": [
+        "Least privilege"
+      ]
+    },
+    {
+      "group": "role",
+      "subject": "Inviting a teammate",
+      "tier": 3,
+      "says": [
+        "is done by an admin or the owner",
+        "lets the person sign up and join the brand"
+      ],
+      "use": "want a colleague to join a brand",
+      "not": [
+        "can be done by any viewer"
+      ],
+      "like": [
+        "Per-brand roles"
+      ]
+    },
+    {
+      "group": "play",
+      "subject": "A must rule",
+      "tier": 3,
+      "says": [
+        "stops a post from being scheduled or approved when broken",
+        "is stronger than a suggestion"
+      ],
+      "use": "need a limit that cannot be bypassed",
+      "not": [
+        "is only a gentle hint"
+      ],
+      "like": [
+        "Master instructions"
+      ]
+    },
+    {
+      "group": "play",
+      "subject": "Master instructions",
+      "tier": 3,
+      "says": [
+        "describe how each format and kind of engagement should be done",
+        "are the standing guidance for the brand's content"
+      ],
+      "use": "want to know how a format should be written",
+      "not": [
+        "are limits on media size"
+      ],
+      "like": [
+        "A must rule"
+      ]
+    },
+    {
+      "group": "play",
+      "subject": "The title-word limit",
+      "tier": 3,
+      "says": [
+        "caps how many words a title may have",
+        "is checked by the app itself"
+      ],
+      "use": "are writing a title for a platform that has titles",
+      "not": [
+        "limits the number of hashtags"
+      ],
+      "like": [
+        "The copy-length limit"
+      ]
+    },
+    {
+      "group": "play",
+      "subject": "The hashtag-count limit",
+      "tier": 3,
+      "says": [
+        "caps how many hashtags a post may carry",
+        "is checked by the app itself"
+      ],
+      "use": "are tempted to add a dozen hashtags",
+      "not": [
+        "limits title words"
+      ],
+      "like": [
+        "The title-word limit"
+      ]
+    },
+    {
+      "group": "play",
+      "subject": "The copy-length limit",
+      "tier": 3,
+      "says": [
+        "caps how long the body text may be",
+        "is checked before scheduling"
+      ],
+      "use": "have a long caption",
+      "not": [
+        "limits image shape"
+      ],
+      "like": [
+        "The title-word limit"
+      ]
+    },
+    {
+      "group": "play",
+      "subject": "The aspect-ratio limit",
+      "tier": 3,
+      "says": [
+        "checks the shape of an image or video",
+        "guards against awkward cropping"
+      ],
+      "use": "upload media of an unusual shape",
+      "not": [
+        "limits caption length"
+      ],
+      "like": [
+        "The copy-length limit"
+      ]
+    },
+    {
+      "group": "play",
+      "subject": "A format",
+      "tier": 2,
+      "says": [
+        "is a kind of post that the Playbook can give its own instructions and limits",
+        "lets the rules differ between, for example, a short post and a video"
+      ],
+      "use": "want to apply the right guidance to a kind of post",
+      "not": [
+        "is a person's role on a brand"
+      ],
+      "like": [
+        "Master instructions"
+      ]
+    },
+    {
+      "group": "play",
+      "subject": "Engagement guidelines",
+      "tier": 3,
+      "says": [
+        "cover how to reply to comments and messages",
+        "set the expected manner when talking with the audience"
+      ],
+      "use": "want to know how to answer a comment",
+      "not": [
+        "are limits on hashtag count"
+      ],
+      "like": [
+        "Master instructions"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "Reach",
+      "tier": 2,
+      "says": [
+        "counts the distinct people who saw a post",
+        "is not the same as the number of views"
+      ],
+      "use": "want to know how many different people saw a post",
+      "not": [
+        "counts every time the post was shown"
+      ],
+      "like": [
+        "Impressions"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "Impressions",
+      "tier": 2,
+      "says": [
+        "count every time a post was shown",
+        "can exceed reach because one person may see a post twice"
+      ],
+      "use": "want to know how often a post was displayed",
+      "not": [
+        "count only different people"
+      ],
+      "like": [
+        "Reach"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "Engagement",
+      "tier": 2,
+      "says": [
+        "counts actions such as likes, comments, shares and saves",
+        "shows that people did more than just see the post"
+      ],
+      "use": "want to know whether people responded",
+      "not": [
+        "counts people who scrolled past"
+      ],
+      "like": [
+        "Reach"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "Engagement rate",
+      "tier": 3,
+      "says": [
+        "divides engagement by an audience measure",
+        "lets posts with different audience sizes be compared"
+      ],
+      "use": "want to compare a small account's post with a large one",
+      "not": [
+        "is the raw number of likes"
+      ],
+      "like": [
+        "Engagement",
+        "Click-through rate"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "Click-through rate",
+      "tier": 3,
+      "says": [
+        "divides link clicks by the number of times the post was seen",
+        "shows how persuasive the link was"
+      ],
+      "use": "want to judge how well a link in a post worked",
+      "not": [
+        "divides comments by followers"
+      ],
+      "like": [
+        "Engagement rate"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "Follower growth",
+      "tier": 3,
+      "says": [
+        "tracks how the audience size changes over time",
+        "is best read next to what you posted"
+      ],
+      "use": "want to know if the audience is growing",
+      "not": [
+        "counts likes on a single post"
+      ],
+      "like": [
+        "A vanity metric"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "A vanity metric",
+      "tier": 4,
+      "says": [
+        "looks impressive without telling you what to do next",
+        "can rise while the business goal stays flat"
+      ],
+      "use": "are tempted to celebrate a big number that changes nothing",
+      "not": [
+        "is always the most useful number"
+      ],
+      "like": [
+        "Engagement rate"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "Benchmarking against yourself",
+      "tier": 4,
+      "says": [
+        "compares new results with your own past results",
+        "is usually fairer than comparing with a different account"
+      ],
+      "use": "want to know if a post did well for you",
+      "not": [
+        "compares you only with the largest accounts"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "Metrics that vary by platform",
+      "tier": 2,
+      "says": [
+        "mean the numbers GGSocial shows depend on what each platform returns",
+        "can differ in name and meaning between platforms"
+      ],
+      "use": "find that two platforms report different measures",
+      "not": [
+        "are identical on every platform"
+      ],
+      "like": [
+        "Analytics"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "A UTM parameter",
+      "tier": 4,
+      "says": [
+        "tags a link so visits can be traced to a post",
+        "shows up in a website's own analytics"
+      ],
+      "use": "want to see in your site analytics which post sent a visitor",
+      "not": [
+        "changes the picture size"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "A reporting period",
+      "tier": 3,
+      "says": [
+        "is the span of time that a report covers",
+        "should match the length of a campaign for a fair read"
+      ],
+      "use": "want to compare this month with last",
+      "not": [
+        "is the time of day a post goes out"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "A sample size",
+      "tier": 5,
+      "says": [
+        "is how many posts a conclusion rests on",
+        "makes a result from one post unreliable"
+      ],
+      "use": "are about to change strategy after one post did well",
+      "not": [
+        "is the number of followers"
+      ]
+    },
+    {
+      "group": "ana",
+      "subject": "Attribution",
+      "tier": 5,
+      "says": [
+        "is deciding which post or action gets credit for a result",
+        "is rarely exact because people see many things before acting"
+      ],
+      "use": "are asked which single post caused a sale",
+      "not": [
+        "is a metric every platform reports"
+      ],
+      "like": [
+        "A UTM parameter"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "A strong password",
+      "tier": 1,
+      "says": [
+        "is long and unique to one service",
+        "is not a word or a pattern easy to guess"
+      ],
+      "use": "are choosing a password for GGSocial",
+      "not": [
+        "is your name followed by a number"
+      ],
+      "like": [
+        "Password reuse"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "Password reuse",
+      "tier": 2,
+      "says": [
+        "lets one breach unlock several accounts",
+        "is why a different password is needed per service"
+      ],
+      "use": "are tempted to use your email password everywhere",
+      "not": [
+        "is safe if the password is long"
+      ],
+      "like": [
+        "A strong password"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "A password manager",
+      "tier": 2,
+      "says": [
+        "stores a different strong password for each service",
+        "fills passwords only on the right site"
+      ],
+      "use": "cannot remember a unique password for every service",
+      "not": [
+        "sends your passwords to your teammates"
+      ],
+      "like": [
+        "Password reuse"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "Two-step verification",
+      "tier": 3,
+      "says": [
+        "asks for a second proof besides the password",
+        "protects an account even if the password leaks"
+      ],
+      "use": "want an account to survive a stolen password",
+      "not": [
+        "replaces the password completely"
+      ],
+      "like": [
+        "A strong password"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "Phishing",
+      "tier": 3,
+      "says": [
+        "tricks you into giving a password through a fake page or message",
+        "often imitates a platform or a colleague"
+      ],
+      "use": "get an email asking you to sign in through a link",
+      "not": [
+        "is a safe way to reset a password"
+      ],
+      "like": [
+        "A fake verification message"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "A fake verification message",
+      "tier": 4,
+      "says": [
+        "claims your account will be closed unless you act",
+        "aims to steal a login or a code"
+      ],
+      "use": "get a direct message warning of an urgent account closure",
+      "not": [
+        "is sent by GGSocial to prove you are genuine"
+      ],
+      "like": [
+        "Phishing"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "Removing a departed teammate",
+      "tier": 3,
+      "says": [
+        "takes away access when someone leaves",
+        "is done by an admin or the owner"
+      ],
+      "use": "have a colleague who no longer works on the brand",
+      "not": [
+        "can wait until their password changes"
+      ],
+      "like": [
+        "Least privilege"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "Never sharing a password in chat",
+      "tier": 2,
+      "says": [
+        "keeps a password out of messages that can be forwarded",
+        "is replaced by inviting people with their own login"
+      ],
+      "use": "need a colleague to get access",
+      "not": [
+        "is fine when you trust the person"
+      ],
+      "like": [
+        "Inviting a teammate"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "Reviewing connected apps",
+      "tier": 4,
+      "says": [
+        "lists the apps allowed to act on your platform account",
+        "lets you remove ones you no longer use"
+      ],
+      "use": "want to cut down on old access to your accounts",
+      "not": [
+        "happens automatically every day"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "A shared computer",
+      "tier": 3,
+      "says": [
+        "is a risk if you stay signed in",
+        "calls for signing out when you finish"
+      ],
+      "use": "are signing in on a machine other people use",
+      "not": [
+        "is fine if you close the tab"
+      ]
+    },
+    {
+      "group": "safe",
+      "subject": "An unexpected sign-in alert",
+      "tier": 4,
+      "says": [
+        "calls for changing the password and checking connected channels",
+        "should be treated as possible unauthorised access"
+      ],
+      "use": "get a notice about a sign-in that was not you",
+      "not": [
+        "can be ignored"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Replying promptly",
+      "tier": 2,
+      "says": [
+        "shows the audience that someone is listening",
+        "builds trust over time"
+      ],
+      "use": "have comments waiting on a post",
+      "not": [
+        "is optional and has no effect on trust"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Sponsored disclosure",
+      "tier": 3,
+      "says": [
+        "tells the audience that a post is paid or gifted",
+        "is expected by platforms and regulators"
+      ],
+      "use": "post something a partner paid for",
+      "not": [
+        "is optional if the audience can guess"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Reddit self-promotion",
+      "tier": 3,
+      "says": [
+        "is limited by many communities' own rules",
+        "goes down better when the post offers value first"
+      ],
+      "use": "want to share your product on Reddit",
+      "not": [
+        "is welcome in every subreddit"
+      ],
+      "like": [
+        "The Reddit title and subreddit rule"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Buying followers",
+      "tier": 3,
+      "says": [
+        "adds accounts that do not engage",
+        "can hurt a platform's trust in the account"
+      ],
+      "use": "are tempted to inflate your follower count",
+      "not": [
+        "raises genuine engagement"
+      ],
+      "like": [
+        "A vanity metric"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Permission for images",
+      "tier": 3,
+      "says": [
+        "is needed when a picture belongs to someone else",
+        "avoids copyright complaints"
+      ],
+      "use": "want to use a photo you found online",
+      "not": [
+        "is not needed if you credit the site"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Handling a negative comment",
+      "tier": 3,
+      "says": [
+        "answers calmly and offers to help",
+        "moves a complex complaint to a private channel"
+      ],
+      "use": "get an angry public comment",
+      "not": [
+        "deletes it quickly to hide it"
+      ],
+      "like": [
+        "Replying promptly"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Posting identical text everywhere",
+      "tier": 4,
+      "says": [
+        "can look like spam on platforms that value native content",
+        "is avoided by tuning a post for each channel"
+      ],
+      "use": "are about to paste the same copy on every platform",
+      "not": [
+        "is the best way to save time"
+      ],
+      "like": [
+        "Repurposing"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Pausing during a sensitive event",
+      "tier": 5,
+      "says": [
+        "holds scheduled posts when the world is mourning or in crisis",
+        "avoids a cheerful promotion landing at a bad moment"
+      ],
+      "use": "see major bad news just before posts are due",
+      "not": [
+        "means keeping the schedule unchanged"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Tagging and mentioning",
+      "tier": 2,
+      "says": [
+        "notifies the person or brand you name",
+        "should be used only when it is relevant to them"
+      ],
+      "use": "want to credit a partner in a post",
+      "not": [
+        "is harmless however often you do it"
+      ]
+    },
+    {
+      "group": "etiq",
+      "subject": "Respecting privacy",
+      "tier": 3,
+      "says": [
+        "avoids posting personal details about customers",
+        "needs consent before a customer is featured"
+      ],
+      "use": "want to share a customer's message",
+      "not": [
+        "is unnecessary if the message was public"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The content strategist agent",
+      "tier": 3,
+      "says": [
+        "keeps the content plan ahead of the calendar",
+        "works at the level of ideas"
+      ],
+      "use": "want a plan of topics before posts are written",
+      "not": [
+        "drafts replies to comments"
+      ],
+      "like": [
+        "The content writer agent"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The content writer agent",
+      "tier": 3,
+      "says": [
+        "keeps the calendar full from the plan",
+        "books posts into open slots and revises work sent back"
+      ],
+      "use": "want posts written from the plan and placed on the calendar",
+      "not": [
+        "reports on yesterday's results"
+      ],
+      "like": [
+        "The content strategist agent"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The community manager agent",
+      "tier": 3,
+      "says": [
+        "drafts replies to comments, messages, mentions and reviews",
+        "flags anything a person must decide"
+      ],
+      "use": "want help answering your audience",
+      "not": [
+        "writes the weekly performance report"
+      ],
+      "like": [
+        "The performance analyst agent"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The performance analyst agent",
+      "tier": 3,
+      "says": [
+        "reads yesterday's posts each morning",
+        "writes weekly and monthly reports"
+      ],
+      "use": "want a regular summary of how posts performed",
+      "not": [
+        "answers customers"
+      ],
+      "like": [
+        "The community manager agent"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "Review on every step",
+      "tier": 4,
+      "says": [
+        "is on until the brand owner switches it off",
+        "means a person checks agent work before it moves on"
+      ],
+      "use": "switch agents on for the first time",
+      "not": [
+        "is off by default"
+      ],
+      "like": [
+        "A safety stop"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The reviewer score",
+      "tier": 4,
+      "says": [
+        "rates agent output out of 100",
+        "flags risks as well as quality"
+      ],
+      "use": "want to know how agent work is judged",
+      "not": [
+        "is set by the audience"
+      ],
+      "like": [
+        "A safety stop"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "Weak but safe work",
+      "tier": 4,
+      "says": [
+        "goes back to the agent once with fixes",
+        "does not need a person yet"
+      ],
+      "use": "see agent output with a low score and no risk",
+      "not": [
+        "is published straight away"
+      ],
+      "like": [
+        "A safety stop"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "A safety stop",
+      "tier": 4,
+      "says": [
+        "pauses a run whatever the review setting",
+        "protects against risky content going out"
+      ],
+      "use": "want to know what always needs a person",
+      "not": [
+        "can be switched off for convenience"
+      ],
+      "like": [
+        "Review on every step"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "Risky topics such as prices and refunds",
+      "tier": 4,
+      "says": [
+        "always stop for a person",
+        "include legal and health matters too"
+      ],
+      "use": "have an agent draft a reply about money back",
+      "not": [
+        "are handled by the agent alone"
+      ],
+      "like": [
+        "A safety stop"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The daily AI budget",
+      "tier": 5,
+      "says": [
+        "is a limit on what the agents may spend in a day",
+        "pauses a run for a person once it is spent"
+      ],
+      "use": "want to know why agent work stopped partway",
+      "not": [
+        "has no effect on agent runs"
+      ],
+      "like": [
+        "A safety stop"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "The AI cost log",
+      "tier": 4,
+      "says": [
+        "records the cost of every AI call GGSocial makes",
+        "exists so that agent spending can be traced"
+      ],
+      "use": "want to understand what agent work costs",
+      "not": [
+        "is hidden from the brand owner"
+      ],
+      "like": [
+        "The daily AI budget"
+      ]
+    },
+    {
+      "group": "agent",
+      "subject": "Sending work back with a note",
+      "tier": 4,
+      "says": [
+        "tells the agent what to improve",
+        "keeps a person in control of the result"
+      ],
+      "use": "are in the Review inbox and want something improved",
+      "not": [
+        "approves the work as it stands"
+      ],
+      "like": [
+        "The Review inbox"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Describing the problem",
+      "tier": 1,
+      "says": [
+        "says what you did, what you expected and what happened",
+        "helps support understand without a lot of back and forth"
+      ],
+      "use": "are about to contact support",
+      "not": [
+        "is just saying it does not work"
+      ],
+      "like": [
+        "Steps to reproduce"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "A screenshot",
+      "tier": 2,
+      "says": [
+        "shows support exactly what you see",
+        "should hide any private details first"
+      ],
+      "use": "want to show an error on screen",
+      "not": [
+        "is a substitute for telling support which brand it was"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "The exact error message",
+      "tier": 2,
+      "says": [
+        "gives support a clue to the cause",
+        "is best copied word for word"
+      ],
+      "use": "see an error on screen",
+      "not": [
+        "is better paraphrased from memory"
+      ],
+      "like": [
+        "A screenshot"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Steps to reproduce",
+      "tier": 3,
+      "says": [
+        "list the actions that lead to the problem",
+        "let support see it for themselves"
+      ],
+      "use": "have a problem that only happens sometimes",
+      "not": [
+        "are only needed for new users"
+      ],
+      "like": [
+        "Describing the problem"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Naming the brand and channel",
+      "tier": 3,
+      "says": [
+        "tells support where the problem is",
+        "saves time because roles and channels belong to a brand"
+      ],
+      "use": "report a problem with one account of several",
+      "not": [
+        "is unnecessary if you have only one"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Checking channel status first",
+      "tier": 3,
+      "says": [
+        "shows whether the channel has expired or errored",
+        "often reveals the fix before you contact support"
+      ],
+      "use": "find a post did not go out",
+      "not": [
+        "is skipped as soon as something fails"
+      ],
+      "like": [
+        "Reconnecting a channel"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Never sending your password to support",
+      "tier": 2,
+      "says": [
+        "keeps your login private",
+        "is the rule for any genuine support team"
+      ],
+      "use": "are asked for your password in a support request",
+      "not": [
+        "is normal for a faster fix"
+      ],
+      "like": [
+        "Never sharing a password in chat"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Saying how urgent it is",
+      "tier": 3,
+      "says": [
+        "tells support how soon a fix is needed",
+        "helps them decide what to look at first"
+      ],
+      "use": "have a post due to go out within the hour",
+      "not": [
+        "is unnecessary if you wrote clearly"
+      ]
+    },
+    {
+      "group": "help",
+      "subject": "Trying one change at a time",
+      "tier": 4,
+      "says": [
+        "lets you see which action fixed the problem",
+        "gives support a clearer history"
+      ],
+      "use": "are trying several fixes for a failing channel",
+      "not": [
+        "is slower than doing everything at once"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "What is a channel in GGSocial?",
+      "right": "One account on one platform, owned by one brand",
+      "wrong": [
+        "A group of teammates",
+        "A folder of images",
+        "A page in the Calendar"
+      ],
+      "tier": 1,
+      "why": "A channel is a single account on a single platform."
+    },
+    {
+      "q": "What is the length limit for a standard post on X in the Composer?",
+      "right": "280 characters",
+      "wrong": [
+        "100 characters",
+        "2,000 characters",
+        "There is no limit"
+      ],
+      "tier": 1,
+      "why": "X caps at 280 characters and the Composer counts live."
+    },
+    {
+      "q": "Which platform needs media on every post?",
+      "right": "Instagram",
+      "wrong": [
+        "Reddit",
+        "X",
+        "None of them"
+      ],
+      "tier": 1,
+      "why": "Instagram needs an image or video."
+    },
+    {
+      "q": "What does a Reddit post need?",
+      "right": "A title and a subreddit",
+      "wrong": [
+        "A hashtag",
+        "A video",
+        "A thread"
+      ],
+      "tier": 1,
+      "why": "Reddit needs a title and a subreddit."
+    },
+    {
+      "q": "How do people sign in to GGSocial?",
+      "right": "With an email address and a password",
+      "wrong": [
+        "With a phone number only",
+        "With a hardware key only",
+        "They do not sign in"
+      ],
+      "tier": 1,
+      "why": "Accounts use email and password."
+    },
+    {
+      "q": "Where do you write one piece of copy for several channels?",
+      "right": "The Composer",
+      "wrong": [
+        "The Calendar",
+        "The Review inbox",
+        "Analytics"
+      ],
+      "tier": 1,
+      "why": "The Composer holds base copy and overrides."
+    },
+    {
+      "q": "What is the difference between a live and a manual-only channel?",
+      "right": "A live channel is published to by GGSocial; a manual-only channel ends with a person posting",
+      "wrong": [
+        "Live channels cost more",
+        "Manual-only channels cannot be scheduled",
+        "Live channels skip approval"
+      ],
+      "tier": 2,
+      "why": "Manual-only platforms offer no write API for organic content."
+    },
+    {
+      "q": "In what order does a post normally move through approval?",
+      "right": "Draft, needs approval, approved, scheduled",
+      "wrong": [
+        "Draft, published, approved",
+        "Scheduled, draft, approved",
+        "Approved, draft, scheduled"
+      ],
+      "tier": 2,
+      "why": "A post is approved before it is scheduled."
+    },
+    {
+      "q": "Which role can review posts but cannot edit them?",
+      "right": "Approver",
+      "wrong": [
+        "Editor",
+        "Admin",
+        "Owner"
+      ],
+      "tier": 2,
+      "why": "An approver reviews only."
+    },
+    {
+      "q": "Which role is read-only?",
+      "right": "Viewer",
+      "wrong": [
+        "Approver",
+        "Editor",
+        "Admin"
+      ],
+      "tier": 2,
+      "why": "A viewer can look but not change."
+    },
+    {
+      "q": "Where do you finish a post for a manual-only channel?",
+      "right": "In the Publish queue",
+      "wrong": [
+        "In Analytics",
+        "In the Playbook",
+        "In the Calendar header"
+      ],
+      "tier": 2,
+      "why": "The queue holds copy buttons, media and steps."
+    },
+    {
+      "q": "Are roles global for the whole account or per brand?",
+      "right": "Per brand",
+      "wrong": [
+        "Global for the account",
+        "Per post",
+        "Per platform"
+      ],
+      "tier": 2,
+      "why": "A person can hold different roles in different brands."
+    },
+    {
+      "q": "What does a Playbook rule marked as must do?",
+      "right": "Scheduling and approval refuse a post that breaks it",
+      "wrong": [
+        "Nothing, it is a suggestion",
+        "It deletes the post",
+        "It emails the owner"
+      ],
+      "tier": 3,
+      "why": "Must rules block scheduling and approval."
+    },
+    {
+      "q": "In which timezone is a post's scheduled time shown?",
+      "right": "The brand's own timezone",
+      "wrong": [
+        "Always UTC",
+        "The viewer's phone only",
+        "New York time"
+      ],
+      "tier": 3,
+      "why": "The time is an absolute instant shown in the brand's timezone."
+    },
+    {
+      "q": "You have posted a queued item by hand. What do you do in GGSocial?",
+      "right": "Tick it off in the queue so it is marked published",
+      "wrong": [
+        "Nothing, it updates itself",
+        "Delete the brand",
+        "Email the platform"
+      ],
+      "tier": 3,
+      "why": "Ticking the item off marks it published."
+    },
+    {
+      "q": "Which role is the minimum needed to schedule and publish posts?",
+      "right": "Editor",
+      "wrong": [
+        "Viewer",
+        "Approver",
+        "Owner only"
+      ],
+      "tier": 3,
+      "why": "Editing and publishing need editor or above."
+    },
+    {
+      "q": "Which role can connect channels and manage the team?",
+      "right": "Admin or above",
+      "wrong": [
+        "Editor",
+        "Approver",
+        "Viewer"
+      ],
+      "tier": 3,
+      "why": "Managing channels and team needs admin or above."
+    },
+    {
+      "q": "Only one role can archive a brand. Which?",
+      "right": "Owner",
+      "wrong": [
+        "Admin",
+        "Editor",
+        "Approver"
+      ],
+      "tier": 3,
+      "why": "Archiving is reserved for the owner."
+    },
+    {
+      "q": "What is the best way to tune wording for one platform only?",
+      "right": "Override the base copy on that channel",
+      "wrong": [
+        "Rewrite every channel from scratch",
+        "Change the brand name",
+        "Recolour the Calendar"
+      ],
+      "tier": 3,
+      "why": "A channel override leaves other channels alone."
+    },
+    {
+      "q": "Which view shows every brand on a single month grid?",
+      "right": "The Calendar",
+      "wrong": [
+        "The Review inbox",
+        "The Playbook",
+        "Analytics"
+      ],
+      "tier": 2,
+      "why": "The Calendar is colour-coded by brand."
+    },
+    {
+      "q": "A draft for X is 400 characters. What can you do?",
+      "right": "Shorten it or split it into a thread with blank lines",
+      "wrong": [
+        "Publish it as is",
+        "Switch it to Instagram",
+        "Nothing, it is blocked forever"
+      ],
+      "tier": 4,
+      "why": "X caps at 280 and can thread on blank lines."
+    },
+    {
+      "q": "You are an approver and spot a typo. What is the right move?",
+      "right": "Comment or request changes so an editor fixes it",
+      "wrong": [
+        "Edit the post yourself",
+        "Delete the post",
+        "Ask a viewer to fix it"
+      ],
+      "tier": 4,
+      "why": "Approvers cannot edit."
+    },
+    {
+      "q": "A post is published on two channels but fails on a third. Which overall status fits?",
+      "right": "Partially published",
+      "wrong": [
+        "Published",
+        "Draft",
+        "Approved"
+      ],
+      "tier": 4,
+      "why": "Each channel has its own status."
+    },
+    {
+      "q": "A viewer opens a direct link to an edit action. What happens?",
+      "right": "GGSocial checks their role again and refuses",
+      "wrong": [
+        "The edit goes through",
+        "Their role is upgraded",
+        "The page deletes itself"
+      ],
+      "tier": 4,
+      "why": "Hiding a button is not the security boundary."
+    },
+    {
+      "q": "A post to a channel fails and the channel shows expired. What is the best first step?",
+      "right": "Reconnect the channel through the platform's sign-in",
+      "wrong": [
+        "Delete the brand",
+        "Ask the viewer to publish",
+        "Raise the character limit"
+      ],
+      "tier": 4,
+      "why": "Expired access is restored by reconnecting."
+    },
+    {
+      "q": "A colleague leaves the team. What should an admin do?",
+      "right": "Remove their access to the brand",
+      "wrong": [
+        "Wait for their password to change",
+        "Make them a viewer for ever",
+        "Archive the brand"
+      ],
+      "tier": 3,
+      "why": "Departed teammates should lose access promptly."
+    },
+    {
+      "q": "A teammate asks for your password so they can post. What should you do?",
+      "right": "Invite them so they have their own login",
+      "wrong": [
+        "Share it by chat",
+        "Share it by email",
+        "Write it on a note"
+      ],
+      "tier": 3,
+      "why": "Never share passwords; invite people instead."
+    },
+    {
+      "q": "An email says your account will close unless you sign in through a link. What should you do?",
+      "right": "Ignore the link and go to the site directly",
+      "wrong": [
+        "Click quickly",
+        "Reply with your password",
+        "Forward it to every teammate"
+      ],
+      "tier": 3,
+      "why": "This is typical phishing."
+    },
+    {
+      "q": "Which is the strongest way to protect a login?",
+      "right": "A unique long password plus two-step verification",
+      "wrong": [
+        "A short password you remember",
+        "The same password as your email",
+        "A password shared with the team"
+      ],
+      "tier": 3,
+      "why": "Unique password and a second step."
+    },
+    {
+      "q": "A manual-only post is due but you cannot post it yet. What should you not do?",
+      "right": "Tick it off as published",
+      "wrong": [
+        "Leave it in the queue",
+        "Ask a teammate to take over",
+        "Reschedule it"
+      ],
+      "tier": 4,
+      "why": "Ticking off tells GGSocial it is live."
+    },
+    {
+      "q": "An agent drafts a reply promising a refund. What happens?",
+      "right": "The run pauses for a person",
+      "wrong": [
+        "It is sent at once",
+        "It is deleted silently",
+        "The platform decides"
+      ],
+      "tier": 4,
+      "why": "Prices, refunds, legal and health matters always stop for a person."
+    },
+    {
+      "q": "Which agent reads yesterday's posts each morning?",
+      "right": "The performance analyst",
+      "wrong": [
+        "The content writer",
+        "The community manager",
+        "The content strategist"
+      ],
+      "tier": 3,
+      "why": "The analyst turns results into reports."
+    },
+    {
+      "q": "Where does everything waiting for a person land?",
+      "right": "The Review inbox",
+      "wrong": [
+        "The Playbook",
+        "The Calendar",
+        "Analytics"
+      ],
+      "tier": 3,
+      "why": "You can approve, send back with a note or stop the run."
+    },
+    {
+      "q": "Who can switch off review for a brand's agent steps?",
+      "right": "The brand owner",
+      "wrong": [
+        "Any viewer",
+        "The agents",
+        "Nobody"
+      ],
+      "tier": 5,
+      "why": "The reason is kept in the log."
+    },
+    {
+      "q": "Agent work scores weak but is safe. What happens?",
+      "right": "It goes back to the agent once with fixes",
+      "wrong": [
+        "It is published",
+        "It is deleted",
+        "The owner is locked out"
+      ],
+      "tier": 5,
+      "why": "Weak but safe work gets one chance to improve."
+    },
+    {
+      "q": "What is logged for every AI call GGSocial makes?",
+      "right": "Its cost",
+      "wrong": [
+        "Your location",
+        "Your password",
+        "Nothing"
+      ],
+      "tier": 5,
+      "why": "AI usage and cost are logged."
+    },
+    {
+      "q": "You see a post with a large reach but almost no clicks on its link. What should you check first?",
+      "right": "Whether the call to action and link placement were clear",
+      "wrong": [
+        "Whether the Calendar colour was right",
+        "Whether the brand timezone changed",
+        "Whether the reviewer approved it"
+      ],
+      "tier": 4,
+      "why": "Reach without clicks points at the call to action."
+    },
+    {
+      "q": "A small account's post got 50 likes and a big account's got 500. Which comparison is fairer?",
+      "right": "Engagement rate",
+      "wrong": [
+        "Raw likes",
+        "Number of hashtags",
+        "Time of day"
+      ],
+      "tier": 3,
+      "why": "Rates adjust for audience size."
+    },
+    {
+      "q": "Your audience is in several countries. What is a sensible approach?",
+      "right": "Post at more than one hour and learn from analytics",
+      "wrong": [
+        "Post only at midnight",
+        "Pick the most popular hour for one country",
+        "Stop scheduling"
+      ],
+      "tier": 4,
+      "why": "No single hour suits everyone."
+    },
+    {
+      "q": "You want to know which post sent visitors to your site. What helps?",
+      "right": "Tag the link with a UTM parameter",
+      "wrong": [
+        "Add more hashtags",
+        "Post at noon",
+        "Lower the image quality"
+      ],
+      "tier": 4,
+      "why": "UTM tags show up in site analytics."
+    },
+    {
+      "q": "A public comment is angry and rude. What is a good response?",
+      "right": "Reply calmly and offer to continue in private",
+      "wrong": [
+        "Delete it at once",
+        "Reply in the same tone",
+        "Ignore it for a month"
+      ],
+      "tier": 3,
+      "why": "Calm replies build trust."
+    },
+    {
+      "q": "You want to use a photo from a website. What should you do first?",
+      "right": "Get permission from the owner",
+      "wrong": [
+        "Credit the website only",
+        "Crop out the watermark",
+        "Use it, as it is public"
+      ],
+      "tier": 3,
+      "why": "Credit does not replace permission."
+    },
+    {
+      "q": "A partner paid you to post about their product. What should the post include?",
+      "right": "A clear note that it is sponsored",
+      "wrong": [
+        "Nothing special",
+        "Extra hashtags",
+        "A different image"
+      ],
+      "tier": 3,
+      "why": "Disclosure is expected."
+    },
+    {
+      "q": "Major bad news breaks just before a cheerful promotion is due. What should you do?",
+      "right": "Pause or reschedule the post",
+      "wrong": [
+        "Publish it anyway",
+        "Add more emoji",
+        "Reply to every comment at once"
+      ],
+      "tier": 4,
+      "why": "Check the mood before promotion goes out."
+    },
+    {
+      "q": "You paste the same text on X, Instagram and Reddit. What is the main risk?",
+      "right": "It can read as spam and miss each platform's norms",
+      "wrong": [
+        "It uses more characters",
+        "It breaks the Calendar",
+        "It changes the brand timezone"
+      ],
+      "tier": 4,
+      "why": "Tune a post for each channel."
+    },
+    {
+      "q": "You are about to contact support about a failed post. What should you include?",
+      "right": "Brand, channel, what you expected, what happened and the exact error",
+      "wrong": [
+        "Your password",
+        "Only the word failed",
+        "A photo of your desk"
+      ],
+      "tier": 3,
+      "why": "Specific reports are solved faster."
+    },
+    {
+      "q": "Support asks for your password to look into the problem. What should you do?",
+      "right": "Decline and offer other details",
+      "wrong": [
+        "Send it",
+        "Send half",
+        "Send it by chat only"
+      ],
+      "tier": 3,
+      "why": "A genuine team never needs it."
+    },
+    {
+      "q": "A channel has errored and three posts are scheduled to it. What is the best step?",
+      "right": "Look at the channel, fix it, then check the scheduled posts",
+      "wrong": [
+        "Add more posts",
+        "Delete the brand",
+        "Switch all roles to viewer"
+      ],
+      "tier": 4,
+      "why": "Fix the cause before more posts pile up."
+    },
+    {
+      "q": "You post a lot of selling and engagement drops. What does this suggest?",
+      "right": "The content mix needs more helpful or entertaining posts",
+      "wrong": [
+        "The Calendar is broken",
+        "The timezone is wrong",
+        "The channel has expired"
+      ],
+      "tier": 4,
+      "why": "A feed of only promotion tires an audience."
+    },
+    {
+      "q": "You need a sign-off step without letting the reviewer change the text. Which role?",
+      "right": "Approver",
+      "wrong": [
+        "Editor",
+        "Admin",
+        "Owner"
+      ],
+      "tier": 3,
+      "why": "Approvers cannot edit."
+    },
+    {
+      "q": "Post copy fits in the Composer but is rejected by the platform. What could explain it?",
+      "right": "Emoji or the platform's rules counting differently",
+      "wrong": [
+        "The Calendar colour",
+        "The brand name",
+        "The viewer role"
+      ],
+      "tier": 5,
+      "why": "Platforms count characters their own way and change rules."
+    },
+    {
+      "q": "One post changed hands from author to approver, who asked for edits. What status does it show?",
+      "right": "Changes requested",
+      "wrong": [
+        "Approved",
+        "Scheduled",
+        "Published"
+      ],
+      "tier": 3,
+      "why": "A change request returns the post to its author."
+    },
+    {
+      "q": "Why might a platform be manual-only?",
+      "right": "It offers no write API for organic posts",
+      "wrong": [
+        "It is too small",
+        "It costs extra",
+        "GGSocial forgot to add it"
+      ],
+      "tier": 2,
+      "why": "Some platforms offer no way to publish automatically."
+    },
+    {
+      "q": "A result looked great on a single post. Why is it risky to rewrite the whole strategy?",
+      "right": "One post is a tiny sample",
+      "wrong": [
+        "Posts never repeat",
+        "Analytics is always wrong",
+        "Platforms hide metrics"
+      ],
+      "tier": 5,
+      "why": "One result can be luck."
+    }
+  ]
+}

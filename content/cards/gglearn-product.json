@@ -1,0 +1,2985 @@
+{
+  "slug": "gglearn-product",
+  "name": "GGLearn",
+  "description": "Tracks, levels, competitions, certificates, admin and deploy.",
+  "roles": "",
+  "kind": "product",
+  "brand": "gglink",
+  "audience": "staff",
+  "tier": "growth",
+  "groups": {
+    "overview": "GGLearn concept",
+    "level": "level or placement concept",
+    "grading": "grading or question-status concept",
+    "game": "gamified-layer element",
+    "contest": "competition or certificate concept",
+    "people": "account, role or security rule",
+    "scope": "scope or required-learning rule",
+    "career": "career or journey concept",
+    "content": "content-pipeline concept",
+    "ops": "deployment or operations item",
+    "admin": "admin or learner page",
+    "pm": "product-management practice",
+    "learning": "learning or assessment principle",
+    "release": "release or operations practice"
+  },
+  "cards": [
+    {
+      "group": "overview",
+      "subject": "GGLearn",
+      "tier": 1,
+      "says": [
+        "is the company training academy for the brands",
+        "lets a learner pick a track and climb 20 levels from Novice to Titan",
+        "was rebuilt from the TrialTest and SkillsTest exam platforms into a learning product"
+      ],
+      "use": "need the name of the product that trains staff across the brands",
+      "not": [
+        "is a public marketplace that sells third-party courses"
+      ],
+      "like": [
+        "A track",
+        "A brand"
+      ]
+    },
+    {
+      "group": "overview",
+      "subject": "A track",
+      "tier": 1,
+      "says": [
+        "is one question-bank domain",
+        "belongs to exactly one brand",
+        "is the unit a learner joins to study one subject"
+      ],
+      "use": "need the unit a learner enrols in to study one subject",
+      "not": [
+        "holds a single exam question"
+      ],
+      "like": [
+        "A brand",
+        "An enrolment",
+        "A track kind"
+      ]
+    },
+    {
+      "group": "overview",
+      "subject": "A brand",
+      "tier": 1,
+      "says": [
+        "has a slug, a name and a tagline",
+        "is the grouping that a set of tracks hangs off",
+        "sits above tracks in the content hierarchy"
+      ],
+      "use": "need to know what a group of tracks belongs to",
+      "not": [
+        "is one learner's account"
+      ],
+      "like": [
+        "A track",
+        "A knowledge item"
+      ]
+    },
+    {
+      "group": "overview",
+      "subject": "A track kind",
+      "tier": 2,
+      "says": [
+        "is one of subject, product, service, tool, technology or process",
+        "labels what sort of thing a track teaches",
+        "is set on the track and not on individual questions"
+      ],
+      "use": "want to classify a track by what it teaches",
+      "not": [
+        "is one of beginner, intermediate or advanced"
+      ],
+      "like": [
+        "A track",
+        "A question type"
+      ]
+    },
+    {
+      "group": "overview",
+      "subject": "An enrolment",
+      "tier": 2,
+      "says": [
+        "joins one learner to one track",
+        "is unique per user and track",
+        "stores the goal the learner chose and the level they were placed at"
+      ],
+      "use": "need the record that links a learner to a track",
+      "not": [
+        "is created by an exam run"
+      ],
+      "like": [
+        "A track",
+        "A knowledge item"
+      ]
+    },
+    {
+      "group": "overview",
+      "subject": "A knowledge item",
+      "tier": 1,
+      "says": [
+        "is the single source of truth for a track's content",
+        "is the row that authored questions link back to",
+        "has a version that rises when its body changes"
+      ],
+      "use": "need the record that a question's facts come from",
+      "not": [
+        "is issued as a certificate when a level is passed"
+      ],
+      "like": [
+        "A question type",
+        "A study guide"
+      ]
+    },
+    {
+      "group": "overview",
+      "subject": "A question type",
+      "tier": 2,
+      "says": [
+        "is one of mcq, open or scenario",
+        "decides how an answer is graded",
+        "is stored on every question beside its level and prompt"
+      ],
+      "use": "want to know what shape of question a learner will see",
+      "not": [
+        "is one of easy, medium or hard"
+      ],
+      "like": [
+        "A track kind",
+        "A knowledge item"
+      ]
+    },
+    {
+      "group": "overview",
+      "subject": "A study guide",
+      "tier": 2,
+      "says": [
+        "shows the level syllabus plus flip cards from that level's questions",
+        "is stored in the lessons table",
+        "counts as one of the three daily quests when read"
+      ],
+      "use": "want to revise a level before sitting its exam",
+      "not": [
+        "is graded and can pass a level"
+      ],
+      "like": [
+        "A drill",
+        "A knowledge item"
+      ]
+    },
+    {
+      "group": "overview",
+      "subject": "A legacy foundations track",
+      "tier": 3,
+      "says": [
+        "is hidden from browsing once a matching titan track exists",
+        "keeps working for enrolled learners and direct links",
+        "is not deleted when it is hidden"
+      ],
+      "use": "wonder why an old TrialTest-imported track no longer appears in the list",
+      "not": [
+        "is deleted when a titan track for the same subject is seeded"
+      ],
+      "like": [
+        "The legacy bank"
+      ]
+    },
+    {
+      "group": "overview",
+      "subject": "The legacy bank",
+      "tier": 3,
+      "says": [
+        "is thin at levels 16 to 20",
+        "has no brand-specific content",
+        "is imported from the TrialTest data folder by the base seed"
+      ],
+      "use": "wonder why real brand knowledge has to be authored by hand",
+      "not": [
+        "covers every level of every brand in depth"
+      ],
+      "like": [
+        "A legacy foundations track"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "The level ladder",
+      "tier": 1,
+      "says": [
+        "runs from Novice at level 1 to Titan at level 20",
+        "has twenty named steps",
+        "includes Practitioner, Expert, Master and Legend among its names"
+      ],
+      "use": "need the name of the full climb a learner makes in a track",
+      "not": [
+        "has ten levels from Beginner to Master"
+      ],
+      "like": [
+        "A rank"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "A rank",
+      "tier": 1,
+      "says": [
+        "groups four consecutive levels together",
+        "is one of Initiate, Adept, Expert, Master or Titan",
+        "decides which avatar a learner shows"
+      ],
+      "use": "want to name a band of four levels",
+      "not": [
+        "groups ten levels together"
+      ],
+      "like": [
+        "The level ladder"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "The Initiate rank",
+      "tier": 2,
+      "says": [
+        "starts at level 1",
+        "runs from Novice to Beginner"
+      ],
+      "use": "want the rank a brand-new learner starts in",
+      "not": [
+        "starts at level 5"
+      ],
+      "like": [
+        "The Adept rank",
+        "The Titan rank"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "The Adept rank",
+      "tier": 2,
+      "says": [
+        "starts at level 5",
+        "begins at Trainee and ends at Capable"
+      ],
+      "use": "want the rank that covers levels 5 to 8",
+      "not": [
+        "starts at level 9"
+      ],
+      "like": [
+        "The Initiate rank",
+        "The Titan rank"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "The Titan rank",
+      "tier": 3,
+      "says": [
+        "starts at level 17",
+        "covers Virtuoso, Legend, Grandmaster and Titan"
+      ],
+      "use": "want the top rank, covering levels 17 to 20",
+      "not": [
+        "starts at level 13"
+      ],
+      "like": [
+        "The Initiate rank"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "An exam run",
+      "tier": 1,
+      "says": [
+        "draws 10 questions for the level",
+        "favours questions the learner has not yet answered correctly",
+        "is reused if an unfinished one already exists for that level"
+      ],
+      "use": "need one attempt at a level exam",
+      "not": [
+        "draws a fixed set of 20 questions every time"
+      ],
+      "like": [
+        "A drill",
+        "The placement check"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "The pass mark",
+      "tier": 1,
+      "says": [
+        "is 80 percent",
+        "unlocks the next level when reached",
+        "is applied to a weighted score and not a plain count"
+      ],
+      "use": "want the score a run needs to pass a level",
+      "not": [
+        "is 60 percent"
+      ],
+      "like": [
+        "A run score"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "Level unlocking",
+      "tier": 3,
+      "says": [
+        "lets a learner start a level up to one above the highest level passed",
+        "means levels are taken in order",
+        "cannot be skipped by clicking ahead"
+      ],
+      "use": "wonder whether a learner can jump straight to level 12",
+      "not": [
+        "opens every level as soon as the learner enrols"
+      ],
+      "like": [
+        "The placement check"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "The placement check",
+      "tier": 3,
+      "says": [
+        "is a binary search for what someone already knows",
+        "probes the middle level with 3 multiple-choice questions each round",
+        "counts a level as mastered only when all 3 are answered correctly",
+        "never skips past level 15"
+      ],
+      "use": "want a new learner to start above level 1 without sitting every exam",
+      "not": [
+        "awards certificates for the levels it skips"
+      ],
+      "like": [
+        "An exam run",
+        "A placed level"
+      ]
+    },
+    {
+      "group": "level",
+      "subject": "A placed level",
+      "tier": 3,
+      "says": [
+        "is stored on the enrolment",
+        "is only ever raised",
+        "never counts as passing for required learning or promotion"
+      ],
+      "use": "need to know why a placement result does not satisfy a requirement",
+      "not": [
+        "is lowered when a learner fails an exam"
+      ],
+      "like": [
+        "The placement check"
+      ]
+    },
+    {
+      "group": "grading",
+      "subject": "Multiple-choice grading",
+      "tier": 1,
+      "says": [
+        "compares the answer with the stored option key after trimming and lowercasing",
+        "scores 1 for a match and 0 otherwise",
+        "returns the question's hint or 'Not quite.' as feedback"
+      ],
+      "use": "want to know how an mcq answer is marked",
+      "not": [
+        "is marked by Claude against a rubric"
+      ],
+      "like": [
+        "Open-answer grading"
+      ]
+    },
+    {
+      "group": "grading",
+      "subject": "Open-answer grading",
+      "tier": 2,
+      "says": [
+        "is done by Claude against a reference answer and a rubric",
+        "applies to the open and scenario question types",
+        "returns a score from 0 to 1 with one or two sentences of feedback"
+      ],
+      "use": "need to know who marks a written answer",
+      "not": [
+        "compares the typed text with an option key"
+      ],
+      "like": [
+        "Multiple-choice grading",
+        "The keyword fallback"
+      ]
+    },
+    {
+      "group": "grading",
+      "subject": "The AI grader",
+      "tier": 4,
+      "says": [
+        "wraps the learner's answer as untrusted data",
+        "cuts the answer to 4000 characters",
+        "is told never to follow instructions inside the answer",
+        "uses a model that the GRADER_MODEL setting can override"
+      ],
+      "use": "worry that a learner could write instructions inside an answer",
+      "not": [
+        "trusts the learner's answer as part of its own prompt"
+      ],
+      "like": [
+        "The keyword fallback"
+      ]
+    },
+    {
+      "group": "grading",
+      "subject": "The keyword fallback",
+      "tier": 2,
+      "says": [
+        "is used when ANTHROPIC_API_KEY is not set or the AI call fails",
+        "measures coverage of words in the model answer and the rubric",
+        "never awards more than 0.9"
+      ],
+      "use": "have no AI key configured but still need written answers scored",
+      "not": [
+        "awards full marks when any keyword appears"
+      ],
+      "like": [
+        "The AI grader"
+      ]
+    },
+    {
+      "group": "grading",
+      "subject": "The weight of a question",
+      "tier": 3,
+      "says": [
+        "defaults to 10",
+        "multiplies the question's score when the run is totalled",
+        "makes some questions count for more than others"
+      ],
+      "use": "want a harder question to count more toward a run score",
+      "not": [
+        "is the number of seconds allowed to answer"
+      ],
+      "like": [
+        "The pass mark"
+      ]
+    },
+    {
+      "group": "grading",
+      "subject": "A run score",
+      "tier": 4,
+      "says": [
+        "multiplies each question's score by its weight",
+        "is the sum of those results divided by the total weight",
+        "passes at 0.8 or more"
+      ],
+      "use": "work out how a run's final score is built",
+      "not": [
+        "is the plain count of correct answers out of ten"
+      ],
+      "like": [
+        "The pass mark",
+        "The weight of a question"
+      ]
+    },
+    {
+      "group": "grading",
+      "subject": "A question in review",
+      "tier": 3,
+      "says": [
+        "is held back from learners until it is published",
+        "is the status that imported company questions arrive with",
+        "is published for a whole track by an admin"
+      ],
+      "use": "need new company questions kept hidden until their facts are checked",
+      "not": [
+        "is already drawn into exams"
+      ],
+      "like": [
+        "A retired question"
+      ]
+    },
+    {
+      "group": "grading",
+      "subject": "A retired question",
+      "tier": 3,
+      "says": [
+        "is taken out of the pool so it is no longer drawn",
+        "can be set back to active by a manager",
+        "is chosen from the improvement loop when a question is flawed"
+      ],
+      "use": "need to stop a broken question from being asked without deleting it",
+      "not": [
+        "is deleted from the database for good"
+      ],
+      "like": [
+        "A question in review"
+      ]
+    },
+    {
+      "group": "grading",
+      "subject": "The duplicate-prompt index",
+      "tier": 4,
+      "says": [
+        "blocks the same prompt at the same track and level",
+        "is a unique index on the questions table",
+        "is why importing a file twice does not add duplicates"
+      ],
+      "use": "see why re-running an import does not double the questions",
+      "not": [
+        "stops a learner seeing the same question twice"
+      ],
+      "like": [
+        "Dynamic questions"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "A drill",
+      "tier": 1,
+      "says": [
+        "is 5 instant-feedback multiple-choice questions",
+        "draws only from levels the learner has already passed",
+        "never draws from the level the learner is about to sit"
+      ],
+      "use": "want quick practice that cannot leak exam answers",
+      "not": [
+        "is a full level exam that can pass a level"
+      ],
+      "like": [
+        "An exam run",
+        "A study guide"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "A drill's answer record",
+      "tier": 4,
+      "says": [
+        "notes which drill questions were really answered",
+        "uses a one-hour window",
+        "must reach enough distinct questions before XP is awarded"
+      ],
+      "use": "see why opening a drill without answering earns nothing",
+      "not": [
+        "awards XP the moment the drill page opens"
+      ],
+      "like": [
+        "A drill"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "The daily quests",
+      "tier": 1,
+      "says": [
+        "are study the guide, quick drill and take an exam",
+        "can each be completed once per track per UTC day",
+        "feed streaks and badges"
+      ],
+      "use": "want the three small daily tasks a learner can do",
+      "not": [
+        "reset at the learner's local midnight"
+      ],
+      "like": [
+        "A streak"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "The quest XP values",
+      "tier": 2,
+      "says": [
+        "give 20 XP for the study guide",
+        "give 30 XP for a quick drill",
+        "give 40 XP for finishing an exam"
+      ],
+      "use": "need the points each daily quest is worth",
+      "not": [
+        "give 100 XP for each quest"
+      ],
+      "like": [
+        "Exam XP"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "Exam XP",
+      "tier": 2,
+      "says": [
+        "is the score times 100, rounded",
+        "adds 50 if the run passed"
+      ],
+      "use": "work out the XP from a single exam run",
+      "not": [
+        "is a flat 150 whatever the score"
+      ],
+      "like": [
+        "The quest XP values",
+        "XP per level"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "A streak",
+      "tier": 1,
+      "says": [
+        "counts consecutive days with at least one quest",
+        "may end today or yesterday and still be live"
+      ],
+      "use": "want to count days in a row of practice",
+      "not": [
+        "counts only days with a passed exam"
+      ],
+      "like": [
+        "The daily quests"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "XP per level",
+      "tier": 3,
+      "says": [
+        "is 150 on the rival scale",
+        "turns XP into a level by division"
+      ],
+      "use": "need the exchange rate between XP and a level",
+      "not": [
+        "is 100 XP per level"
+      ],
+      "like": [
+        "Exam XP",
+        "A rival"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "A rival",
+      "tier": 2,
+      "says": [
+        "is a stable named opponent for every track",
+        "earns between 55 and 70 XP a day with a small wobble",
+        "has a level equal to its XP divided by 150",
+        "is deterministic, so no background job is needed"
+      ],
+      "use": "want the opponent shown head-to-head on a track page",
+      "not": [
+        "is another learner chosen at random"
+      ],
+      "like": [
+        "A bot",
+        "XP per level"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "The On Fire badge",
+      "tier": 2,
+      "says": [
+        "is earned by a 3-day streak"
+      ],
+      "use": "wonder which badge marks three days in a row",
+      "not": [
+        "is earned by passing level 10"
+      ],
+      "like": [
+        "The Unstoppable badge"
+      ]
+    },
+    {
+      "group": "game",
+      "subject": "The Unstoppable badge",
+      "tier": 3,
+      "says": [
+        "is earned by a 7-day streak"
+      ],
+      "use": "wonder which badge marks a week in a row",
+      "not": [
+        "is earned by a 3-day streak"
+      ],
+      "like": [
+        "The On Fire badge"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "A competition",
+      "tier": 1,
+      "says": [
+        "is a time-boxed contest on one track",
+        "is won by gaining a set number of levels before the deadline",
+        "can last from 1 to 90 days with an optional delayed start"
+      ],
+      "use": "want learners to race each other on a track",
+      "not": [
+        "is an exam with a time limit per question"
+      ],
+      "like": [
+        "A level certificate"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "A contest baseline",
+      "tier": 3,
+      "says": [
+        "is the highest level passed before racing started",
+        "means only newly passed levels count",
+        "lets beginners and experts compete fairly"
+      ],
+      "use": "wonder why a veteran does not win just by already being high",
+      "not": [
+        "is level 0 for everyone"
+      ],
+      "like": [
+        "A reduced target"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "A reduced target",
+      "tier": 5,
+      "says": [
+        "applies to someone within N levels of Titan",
+        "is shown on the leaderboard",
+        "stops the goal asking for levels that do not exist"
+      ],
+      "use": "see why a person near the top has a lower goal than N",
+      "not": [
+        "applies to anyone who started at level 1"
+      ],
+      "like": [
+        "A contest baseline"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "Contest ranking",
+      "tier": 4,
+      "says": [
+        "puts whoever reached the goal first on top",
+        "then orders by levels gained",
+        "uses XP in the window as the last tie-break"
+      ],
+      "use": "work out who wins when two people both reach the goal",
+      "not": [
+        "is decided by total XP first"
+      ],
+      "like": [
+        "A reduced target"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "Contest standings",
+      "tier": 5,
+      "says": [
+        "are computed on read and clamped to the end time",
+        "never change once a contest has finished"
+      ],
+      "use": "wonder why a finished leaderboard stays fixed",
+      "not": [
+        "are rewritten each night by a job"
+      ],
+      "like": [
+        "A bot"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "A bot",
+      "tier": 4,
+      "says": [
+        "is simulated and labelled as such",
+        "follows a fixed daily XP schedule",
+        "does not study or answer any questions"
+      ],
+      "use": "need an opponent when nobody else is racing",
+      "not": [
+        "is a trained model that sits real exams"
+      ],
+      "like": [
+        "A rival",
+        "A private contest"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "Bot pace tiers",
+      "tier": 4,
+      "says": [
+        "run at 45 XP a day for casual",
+        "run at 75 XP a day for steady",
+        "run at 120 XP a day for fierce"
+      ],
+      "use": "set how fast a simulated opponent should move",
+      "not": [
+        "run at 150 XP a day for every bot"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "A private contest",
+      "tier": 3,
+      "says": [
+        "gives outsiders a 404",
+        "can only be opened by the organiser, invited people and members",
+        "hides even that it exists, with a generic page title"
+      ],
+      "use": "keep a team race out of sight",
+      "not": [
+        "can be watched by anyone without signing in"
+      ],
+      "like": [
+        "A public contest"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "A public contest",
+      "tier": 3,
+      "says": [
+        "can be watched by anyone without signing in",
+        "needs a consent tick before joining",
+        "can be switched to private but never the other way round"
+      ],
+      "use": "want an open leaderboard that outsiders can follow",
+      "not": [
+        "is hidden from every non-member"
+      ],
+      "like": [
+        "A private contest"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "A level certificate",
+      "tier": 1,
+      "says": [
+        "is issued automatically on passing level 5, 10, 15 or 20",
+        "is verifiable at /cert/ followed by its code",
+        "is titled Foundation, Practitioner, Expert or Titan"
+      ],
+      "use": "need proof that a learner passed a milestone level",
+      "not": [
+        "is claimed by hand after a contest ends"
+      ],
+      "like": [
+        "A contest certificate"
+      ]
+    },
+    {
+      "group": "contest",
+      "subject": "A contest certificate",
+      "tier": 3,
+      "says": [
+        "is claimed after a contest ends",
+        "goes only to people who reached the goal",
+        "calls the first to finish champion and the rest finisher"
+      ],
+      "use": "want a certificate for winning a race and not for passing a level",
+      "not": [
+        "is issued automatically on passing level 10"
+      ],
+      "like": [
+        "A level certificate"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "The admin role",
+      "tier": 1,
+      "says": [
+        "can offboard anyone except themselves",
+        "alone can publish a track's questions held in review",
+        "can override a promotion block with a reason"
+      ],
+      "use": "need the role with the widest powers",
+      "not": [
+        "is redirected to the dashboard from /admin"
+      ],
+      "like": [
+        "The manager role",
+        "The learner role"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "The manager role",
+      "tier": 2,
+      "says": [
+        "can issue invites and run onboarding",
+        "can offboard only learners",
+        "can retire or restore a question"
+      ],
+      "use": "need a role that runs people but cannot offboard other admins",
+      "not": [
+        "can publish a whole track held in review"
+      ],
+      "like": [
+        "The admin role",
+        "The learner role"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "The learner role",
+      "tier": 2,
+      "says": [
+        "is sent back to the dashboard if it opens /admin",
+        "can tick its own onboarding checklist items"
+      ],
+      "use": "need the role that studies but does not manage",
+      "not": [
+        "can issue invites"
+      ],
+      "like": [
+        "The manager role",
+        "The admin role"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "A job role",
+      "tier": 2,
+      "says": [
+        "drives a person's recommended and role-required tracks",
+        "is matched in lower case, exactly",
+        "is free text on the person and not a pick-list"
+      ],
+      "use": "see why a mistyped role gets no role-required tracks",
+      "not": [
+        "is the same thing as the admin, manager or learner role"
+      ],
+      "like": [
+        "The admin role"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "An invite",
+      "tier": 1,
+      "says": [
+        "is a single-use link bound to one email address and job role",
+        "expires after 7 days",
+        "is the only way an account is created"
+      ],
+      "use": "bring a new person into GGLearn",
+      "not": [
+        "lets anyone self-register from the login page"
+      ],
+      "like": [
+        "An invite token"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "An invite token",
+      "tier": 5,
+      "says": [
+        "is random and shown once",
+        "is stored only as a SHA-256 hash",
+        "cannot be recovered by an admin later"
+      ],
+      "use": "wonder why an old invite link cannot be shown again",
+      "not": [
+        "is stored in plain text so it can be resent"
+      ],
+      "like": [
+        "An invite"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "Accepting an invite",
+      "tier": 3,
+      "says": [
+        "needs a name and a password of 8 to 200 characters",
+        "consumes the invite and creates the account in one transaction",
+        "enrols the new person in up to 6 recommended tracks and gives them a checklist"
+      ],
+      "use": "see why one link cannot create two accounts",
+      "not": [
+        "needs a one-time code sent by email"
+      ],
+      "like": [
+        "An invite"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "Password storage",
+      "tier": 5,
+      "says": [
+        "uses scrypt with the cost parameters kept inside the hash",
+        "upgrades a legacy hash at the next sign-in"
+      ],
+      "use": "wonder how stored passwords are protected",
+      "not": [
+        "keeps passwords encrypted with a key that can decrypt them"
+      ],
+      "like": [
+        "An invite token"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "The login rate limit",
+      "tier": 4,
+      "says": [
+        "allows 5 failed tries per IP and email pair",
+        "allows 30 per IP, both in 15-minute windows",
+        "lives in process memory and resets on restart"
+      ],
+      "use": "wonder how repeated bad passwords are slowed down",
+      "not": [
+        "is stored in the database and survives restarts"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "The session cookie",
+      "tier": 2,
+      "says": [
+        "is signed and httpOnly",
+        "lasts 30 days and is enforced on the server",
+        "is invalidated by a per-user session version"
+      ],
+      "use": "wonder how a sign-in is remembered",
+      "not": [
+        "holds the password so the learner can be re-checked"
+      ],
+      "like": [
+        "The session version"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "The session version",
+      "tier": 5,
+      "says": [
+        "is bumped to sign a person out everywhere",
+        "is bumped when someone is offboarded",
+        "makes older cookies stop working at once"
+      ],
+      "use": "need to kill every live session for one person",
+      "not": [
+        "is stored in the cookie and cannot be changed"
+      ],
+      "like": [
+        "The session cookie"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "Offboarding",
+      "tier": 2,
+      "says": [
+        "sets the status to offboarded",
+        "ends access immediately by bumping the session version",
+        "adds a four-item offboarding checklist",
+        "is refused for the manager's own account"
+      ],
+      "use": "need a leaver's access removed at once",
+      "not": [
+        "deletes the person's history"
+      ],
+      "like": [
+        "The onboarding checklist"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "The onboarding checklist",
+      "tier": 2,
+      "says": [
+        "has five items for staff and three for customers",
+        "can be ticked by the new person for their own items",
+        "can be ticked for anyone by a manager"
+      ],
+      "use": "see what a new joiner has to do in their first weeks",
+      "not": [
+        "is ticked only by a manager"
+      ],
+      "like": [
+        "Offboarding"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "Sign-in method",
+      "tier": 1,
+      "says": [
+        "is email and password only",
+        "has no single sign-on",
+        "is not backed by a mailer in the code"
+      ],
+      "use": "wonder how people sign in to GGLearn",
+      "not": [
+        "supports SSO through the company identity provider"
+      ],
+      "like": [
+        "An invite"
+      ]
+    },
+    {
+      "group": "people",
+      "subject": "A login's timing",
+      "tier": 5,
+      "says": [
+        "pays for a password hash even for unknown or offboarded accounts",
+        "means response time does not reveal which emails exist"
+      ],
+      "use": "worry that login time could reveal which emails have accounts",
+      "not": [
+        "returns instantly for emails that are not registered"
+      ],
+      "like": [
+        "The login rate limit"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "A scope",
+      "tier": 2,
+      "says": [
+        "is a company, a brand or a project that a person belongs to",
+        "is set at invite time",
+        "decides which tracks a person can see"
+      ],
+      "use": "need to define which part of the company someone works in",
+      "not": [
+        "is a job role"
+      ],
+      "like": [
+        "A job role",
+        "An audience"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "An audience",
+      "tier": 2,
+      "says": [
+        "is staff or customer for a person",
+        "is staff, customer or both for a track",
+        "keeps customers from seeing staff tracks"
+      ],
+      "use": "see why a customer never sees a staff-only track",
+      "not": [
+        "is the same thing as a scope"
+      ],
+      "like": [
+        "A scope"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "A shared brand",
+      "tier": 3,
+      "says": [
+        "makes its tracks visible to all staff",
+        "includes academy brands such as Tech Foundations"
+      ],
+      "use": "wonder why every staff member sees the technology tracks",
+      "not": [
+        "is visible only to customers"
+      ],
+      "like": [
+        "A project-scoped track"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "A project-scoped track",
+      "tier": 3,
+      "says": [
+        "is visible only to people with that project's scope",
+        "is stricter than a brand-scoped track"
+      ],
+      "use": "keep a track limited to one project's staff",
+      "not": [
+        "is visible to everyone in the company"
+      ],
+      "like": [
+        "A shared brand"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "The mandatory tier",
+      "tier": 2,
+      "says": [
+        "must be passed by everyone in scope",
+        "is a tier on the track"
+      ],
+      "use": "make a track compulsory for everyone",
+      "not": [
+        "applies only to people whose job role matches"
+      ],
+      "like": [
+        "The role tier",
+        "The growth tier"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "The role tier",
+      "tier": 2,
+      "says": [
+        "is required for the job roles listed on the track",
+        "applies to everyone in scope if the roles field is empty",
+        "matches the person's job role exactly"
+      ],
+      "use": "make a track compulsory for one job role",
+      "not": [
+        "is compulsory for everyone in the company"
+      ],
+      "like": [
+        "The mandatory tier",
+        "The growth tier"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "The growth tier",
+      "tier": 2,
+      "says": [
+        "is optional",
+        "is the default tier for a track",
+        "feeds promotion steps and not compliance"
+      ],
+      "use": "mark a track as nice to have",
+      "not": [
+        "is compulsory with a deadline"
+      ],
+      "like": [
+        "The mandatory tier",
+        "The role tier"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "Required level and due days",
+      "tier": 3,
+      "says": [
+        "default to level 5 and 30 days",
+        "are set per track at /admin/paths",
+        "start the clock from the first enrolment"
+      ],
+      "use": "set how far and how fast a required track must be passed",
+      "not": [
+        "default to level 20 and 7 days"
+      ],
+      "like": [
+        "The soft gate"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "The soft gate",
+      "tier": 2,
+      "says": [
+        "blocks nothing",
+        "shows what is due on the dashboard",
+        "makes /admin/compliance list who is overdue"
+      ],
+      "use": "wonder whether being overdue locks a person out",
+      "not": [
+        "blocks sign-in when a deadline passes"
+      ],
+      "like": [
+        "Required level and due days"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "Required learning",
+      "tier": 4,
+      "says": [
+        "is counted only from real exam passes",
+        "leaves out tracks too thin to reach the required level",
+        "is synced at joining, at login and when scopes or policy change"
+      ],
+      "use": "see why a placement result does not satisfy a requirement",
+      "not": [
+        "is satisfied by a placement guess"
+      ],
+      "like": [
+        "The soft gate"
+      ]
+    },
+    {
+      "group": "scope",
+      "subject": "A customer account",
+      "tier": 3,
+      "says": [
+        "is invited like staff with the audience customer",
+        "gets the brands or projects they bought as scope",
+        "sees only customer or both tracks"
+      ],
+      "use": "give a client access to getting-started material",
+      "not": [
+        "sees every staff track in its brand"
+      ],
+      "like": [
+        "An audience"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "A career ladder",
+      "tier": 2,
+      "says": [
+        "is one per job role",
+        "is a set of numbered rungs",
+        "starts people at level 1"
+      ],
+      "use": "see the promotion path for a role",
+      "not": [
+        "is a single track with 20 levels"
+      ],
+      "like": [
+        "A career step",
+        "A career goal"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "A career step",
+      "tier": 3,
+      "says": [
+        "is a pair of a track slug and the level to pass",
+        "belongs to one rung of a ladder",
+        "is skipped if the track is outside the person's scope"
+      ],
+      "use": "express what a rung asks of a person",
+      "not": [
+        "is a free-text task ticked by a manager"
+      ],
+      "like": [
+        "A career ladder"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "The three career measures",
+      "tier": 3,
+      "says": [
+        "are Knowledge, Delivery and Communication and leadership",
+        "describe what a manager should see at each level",
+        "are the same for every company"
+      ],
+      "use": "describe the dimensions of a role level",
+      "not": [
+        "are Skill, Speed and Seniority"
+      ],
+      "like": [
+        "A career ladder"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "A career overlay",
+      "tier": 4,
+      "says": [
+        "adds steps one company wants to the shared ladders for its own tracks",
+        "is stored under content/careers/overlays"
+      ],
+      "use": "add a company-specific step without editing the shared role file",
+      "not": [
+        "replaces the shared ladder for that company"
+      ],
+      "like": [
+        "A career bridge"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "A career bridge",
+      "tier": 4,
+      "says": [
+        "lets someone cross from one ladder to another",
+        "names a from-role, a from-level and a to-level",
+        "can be chained to make a longer route"
+      ],
+      "use": "plan a move such as Lead Developer into Engineering Manager",
+      "not": [
+        "promotes the person automatically"
+      ],
+      "like": [
+        "A career overlay"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "A sub-level",
+      "tier": 4,
+      "says": [
+        "is computed and never stored",
+        "is .0, .1 or .2 depending on how many of the next level's passable steps are met",
+        "is shown like L2.1"
+      ],
+      "use": "see why a person reads as L2.1",
+      "not": [
+        "is stored when a manager promotes someone"
+      ],
+      "like": [
+        "A career ladder"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "A promotion",
+      "tier": 2,
+      "says": [
+        "is a manager's decision recorded in the promotions table",
+        "is allowed when every passable step is met and required learning is not overdue"
+      ],
+      "use": "wonder who decides when someone moves up a rung",
+      "not": [
+        "happens automatically once the steps are met"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "A career goal",
+      "tier": 2,
+      "says": [
+        "is a role and level a person can reach plus a date",
+        "is set at /journey",
+        "can be removed by the person"
+      ],
+      "use": "state where you want to be and by when",
+      "not": [
+        "is assigned by a manager"
+      ],
+      "like": [
+        "The journey planner"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "The journey planner",
+      "tier": 4,
+      "says": [
+        "finds the shortest route through ladders and bridges",
+        "spreads dates across the route",
+        "compares the pace needed with levels passed in the last four weeks"
+      ],
+      "use": "turn a career goal into a dated plan",
+      "not": [
+        "decides whether the person is promoted"
+      ],
+      "like": [
+        "A career goal"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "A question mix",
+      "tier": 4,
+      "says": [
+        "is the share of exam questions per domain for a role and rung",
+        "is shown on /journey as out of every 100 questions",
+        "drifts from a start mix toward a top mix as people climb"
+      ],
+      "use": "see what a role will be asked",
+      "not": [
+        "is the same for every role"
+      ],
+      "like": [
+        "A domain"
+      ]
+    },
+    {
+      "group": "career",
+      "subject": "A domain",
+      "tier": 4,
+      "says": [
+        "is one of technology, tool, process, product, service, brand or leadership",
+        "is decided for a track by its kind unless domains.json overrides it",
+        "is the unit the question mix is spread over"
+      ],
+      "use": "work out which part of the mix a track counts toward",
+      "not": [
+        "is a company or brand"
+      ],
+      "like": [
+        "A question mix"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "The import:knowledge script",
+      "tier": 4,
+      "says": [
+        "loads knowledge items and their questions from JSON files",
+        "is idempotent, matching an item by track and title",
+        "can set study guides with a lessons key"
+      ],
+      "use": "load authored questions for a company track",
+      "not": [
+        "wipes the track before loading"
+      ],
+      "like": [
+        "The seed:ai script",
+        "The import:questions script"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "A review-status import",
+      "tier": 4,
+      "says": [
+        "saves questions as unpublished",
+        "is set with status review in the file",
+        "waits for an admin to publish at /admin/review"
+      ],
+      "use": "load company questions without making them live",
+      "not": [
+        "publishes questions as soon as the file is imported"
+      ],
+      "like": [
+        "The import:knowledge script"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "The seed:ai script",
+      "tier": 4,
+      "says": [
+        "builds the AI technology tracks from their card files",
+        "publishes questions immediately, not held for review",
+        "creates the facebook-marketing-titan and lead-generation-titan tracks"
+      ],
+      "use": "load generated technology tracks",
+      "not": [
+        "holds generated questions for review"
+      ],
+      "like": [
+        "The import:knowledge script",
+        "The generate:bank script"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "The import:questions script",
+      "tier": 4,
+      "says": [
+        "imports from the separate questions repository",
+        "dedupes and maps difficulty onto 20 levels",
+        "adds duplicates at shifted levels if run again on a track that has questions"
+      ],
+      "use": "bring in a track from the questions repo",
+      "not": [
+        "is safe to re-run on any track"
+      ],
+      "like": [
+        "The import:knowledge script"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "The generate:bank script",
+      "tier": 4,
+      "says": [
+        "authors questions with Claude from a track's knowledge items",
+        "runs a second blind pass to audit every answer key",
+        "saves questions as review unless told to activate",
+        "needs ANTHROPIC_API_KEY"
+      ],
+      "use": "write questions for a company track that cannot be computed",
+      "not": [
+        "is used for subjects with executable oracles"
+      ],
+      "like": [
+        "The seed:ai script"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "Dynamic questions",
+      "tier": 3,
+      "says": [
+        "are built fresh from a seed each time",
+        "have answers worked out in code",
+        "are saved as one-off snapshot rows that never enter stored pools"
+      ],
+      "use": "make an exam that is never the same twice",
+      "not": [
+        "are stored in the bank and reused"
+      ],
+      "like": [
+        "The duplicate-prompt index"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "A track's reach",
+      "tier": 4,
+      "says": [
+        "is the highest level a person can pass",
+        "stops at the first level with no questions",
+        "counts as every level for tracks with dynamic generators"
+      ],
+      "use": "see why a track with a gap at level 7 caps out below it",
+      "not": [
+        "is the number of enrolled learners"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "A material change",
+      "tier": 4,
+      "says": [
+        "asks everyone enrolled before the change to read the change within 7 days",
+        "is recorded with before and after text",
+        "does not rewrite linked exam questions"
+      ],
+      "use": "tell learners that a policy or moto changed",
+      "not": [
+        "rewrites every linked question automatically"
+      ],
+      "like": [
+        "A wording fix"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "A wording fix",
+      "tier": 4,
+      "says": [
+        "is recorded in the change log",
+        "asks nobody to re-read the text"
+      ],
+      "use": "correct a typo in company knowledge without bothering learners",
+      "not": [
+        "asks everyone enrolled to re-confirm"
+      ],
+      "like": [
+        "A material change"
+      ]
+    },
+    {
+      "group": "content",
+      "subject": "A card track",
+      "tier": 3,
+      "says": [
+        "is one JSON file of cards under content/cards",
+        "is expanded by the engine into about 20 multiple-choice questions per card",
+        "is checked with check:cards"
+      ],
+      "use": "author a track from short facts",
+      "not": [
+        "is a list of finished questions with no engine step"
+      ],
+      "like": [
+        "The import:knowledge script",
+        "The seed:ai script"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The production site",
+      "tier": 1,
+      "says": [
+        "is served at gglearn.gglink.co.uk",
+        "sits behind Apache with TLS from certbot",
+        "reverse-proxies to the app on 127.0.0.1:3400"
+      ],
+      "use": "need the address of the live GGLearn",
+      "not": [
+        "is served directly by Next.js on port 80"
+      ],
+      "like": [
+        "PM2"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "PM2",
+      "tier": 2,
+      "says": [
+        "runs the app as gglearn-web",
+        "restarts the app if memory passes 400M",
+        "starts the app with next start on port 3400"
+      ],
+      "use": "need the process manager that keeps the app up",
+      "not": [
+        "builds the app on the server"
+      ],
+      "like": [
+        "The production site"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The Node 20 limit",
+      "tier": 4,
+      "says": [
+        "means Node 21+ APIs such as Map.groupBy must be avoided",
+        "is why better-sqlite3 stays on a version with a Linux Node 20 prebuild"
+      ],
+      "use": "decide whether a new JavaScript API can be used",
+      "not": [
+        "lets any current Node feature be used"
+      ],
+      "like": [
+        "PM2"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The deploy.sh script",
+      "tier": 2,
+      "says": [
+        "rsyncs the code to the server",
+        "excludes node_modules, .next, .git, database files and .env files",
+        "installs, pushes the schema, builds and reloads PM2"
+      ],
+      "use": "ship the latest code to production",
+      "not": [
+        "pushes a Docker image to a registry"
+      ],
+      "like": [
+        "The deploy health check"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The schema push",
+      "tier": 5,
+      "says": [
+        "runs drizzle-kit push without --force",
+        "fails the deploy on a destructive change",
+        "avoids deleting rows when a NOT NULL column is added to a table with data"
+      ],
+      "use": "see why a risky schema change stops a deploy",
+      "not": [
+        "runs with --force to guarantee success"
+      ],
+      "like": [
+        "The deploy.sh script"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The deploy health check",
+      "tier": 4,
+      "says": [
+        "polls the local port up to 10 times, 3 seconds apart",
+        "fails the deploy unless it gets HTTP 200",
+        "prints the PM2 error log on failure"
+      ],
+      "use": "need to know whether a deploy came back healthy",
+      "not": [
+        "passes as soon as PM2 starts"
+      ],
+      "like": [
+        "The deploy.sh script"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The deploy workflow",
+      "tier": 3,
+      "says": [
+        "runs on every push to main",
+        "can also be started manually",
+        "needs the secrets DEPLOY_SSH_KEY, DEPLOY_HOST, DEPLOY_USER and DEPLOY_KNOWN_HOSTS"
+      ],
+      "use": "see what ships code automatically",
+      "not": [
+        "deploys only on tagged releases"
+      ],
+      "like": [
+        "The deploy.sh script"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The Cloudflare allow-list",
+      "tier": 4,
+      "says": [
+        "lets only Cloudflare and the machine itself reach the site",
+        "is regenerated by update-cloudflare-ips.sh",
+        "keeps X-Forwarded-For from being spoofed around Cloudflare"
+      ],
+      "use": "stop visitors bypassing Cloudflare",
+      "not": [
+        "blocks Cloudflare and allows direct traffic"
+      ],
+      "like": [
+        "The TRUSTED_PROXY_HOPS setting"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The TRUSTED_PROXY_HOPS setting",
+      "tier": 5,
+      "says": [
+        "defaults to 2 for Cloudflare plus Apache",
+        "decides how far from the end of X-Forwarded-For the real client sits"
+      ],
+      "use": "fix rate limiting that sees the wrong client address",
+      "not": [
+        "is the number of app servers behind the proxy"
+      ],
+      "like": [
+        "The Cloudflare allow-list"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The SESSION_SECRET setting",
+      "tier": 3,
+      "says": [
+        "must be at least 16 characters",
+        "signs every session cookie",
+        "signs everyone out when it is changed"
+      ],
+      "use": "keep sessions valid across restarts",
+      "not": [
+        "is optional in production"
+      ],
+      "like": [
+        "The ANTHROPIC_API_KEY setting"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The ANTHROPIC_API_KEY setting",
+      "tier": 3,
+      "says": [
+        "is optional",
+        "turns on AI grading of open and scenario answers",
+        "enables generate:bank"
+      ],
+      "use": "enable AI marking",
+      "not": [
+        "is required to start the app"
+      ],
+      "like": [
+        "The SESSION_SECRET setting"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The database",
+      "tier": 3,
+      "says": [
+        "is SQLite in data/gglearn.db for local development",
+        "is excluded from the deploy rsync",
+        "should move to Postgres before multi-user production use"
+      ],
+      "use": "wonder where learner data lives",
+      "not": [
+        "is overwritten on every deploy"
+      ]
+    },
+    {
+      "group": "admin",
+      "subject": "The /admin page",
+      "tier": 1,
+      "says": [
+        "runs the question-improvement loop",
+        "flags questions that are nearly always failed or never failed",
+        "lets a manager review or retire a flagged question"
+      ],
+      "use": "improve the question bank using real results",
+      "not": [
+        "lists who is overdue"
+      ],
+      "like": [
+        "/admin/compliance",
+        "/admin/people"
+      ]
+    },
+    {
+      "group": "admin",
+      "subject": "/admin/people",
+      "tier": 2,
+      "says": [
+        "onboards people and issues invites",
+        "shows checklists and handover notes",
+        "offboards leavers"
+      ],
+      "use": "bring someone in or take someone out",
+      "not": [
+        "sets tier and deadline per track"
+      ],
+      "like": [
+        "/admin/paths",
+        "/admin/compliance"
+      ]
+    },
+    {
+      "group": "admin",
+      "subject": "/admin/paths",
+      "tier": 3,
+      "says": [
+        "sets tier, audience, level and deadline per track",
+        "is where a track is made mandatory or role-required"
+      ],
+      "use": "make a track required for a role",
+      "not": [
+        "lists the people who are overdue"
+      ],
+      "like": [
+        "/admin/compliance"
+      ]
+    },
+    {
+      "group": "admin",
+      "subject": "/admin/compliance",
+      "tier": 3,
+      "says": [
+        "shows who is overdue on required learning",
+        "shows how many required tracks each person has done"
+      ],
+      "use": "see who has not done what is required",
+      "not": [
+        "promotes people"
+      ],
+      "like": [
+        "/admin/paths",
+        "/admin/careers"
+      ]
+    },
+    {
+      "group": "admin",
+      "subject": "/admin/careers",
+      "tier": 3,
+      "says": [
+        "is where managers record promotions",
+        "lets admins edit ladders"
+      ],
+      "use": "promote someone or change a ladder",
+      "not": [
+        "sets which tracks are mandatory"
+      ],
+      "like": [
+        "/admin/paths"
+      ]
+    },
+    {
+      "group": "admin",
+      "subject": "/admin/freshness",
+      "tier": 3,
+      "says": [
+        "records a change to company knowledge",
+        "shows who has and has not read each change"
+      ],
+      "use": "tell people the brand moto changed",
+      "not": [
+        "retires a flawed question"
+      ]
+    },
+    {
+      "group": "admin",
+      "subject": "/admin/review/[slug]",
+      "tier": 3,
+      "says": [
+        "is where an admin approves a track's questions held in review",
+        "enrols the people the track applies to when approved"
+      ],
+      "use": "make imported company questions live",
+      "not": [
+        "is open to every learner"
+      ],
+      "like": [
+        "/admin/paths"
+      ]
+    },
+    {
+      "group": "pm",
+      "subject": "A product backlog",
+      "tier": 1,
+      "says": [
+        "is the ordered list of work a product team may do next",
+        "is reordered as priorities change"
+      ],
+      "use": "need one place to see all candidate work",
+      "not": [
+        "is the list of released features"
+      ],
+      "like": [
+        "A product roadmap"
+      ]
+    },
+    {
+      "group": "pm",
+      "subject": "A product roadmap",
+      "tier": 2,
+      "says": [
+        "shows the direction of a product over time",
+        "communicates intent rather than a fixed delivery promise"
+      ],
+      "use": "explain where the product is heading to stakeholders",
+      "not": [
+        "lists every task a developer must do"
+      ],
+      "like": [
+        "A product backlog"
+      ]
+    },
+    {
+      "group": "pm",
+      "subject": "Acceptance criteria",
+      "tier": 2,
+      "says": [
+        "state the conditions a piece of work must meet to be accepted",
+        "are written before development starts"
+      ],
+      "use": "agree what done looks like for a story",
+      "not": [
+        "are written by testers after release"
+      ],
+      "like": [
+        "A definition of done"
+      ]
+    },
+    {
+      "group": "pm",
+      "subject": "A definition of done",
+      "tier": 3,
+      "says": [
+        "is a shared checklist that applies to every piece of work",
+        "covers things like tests, review and documentation"
+      ],
+      "use": "keep quality consistent across all stories",
+      "not": [
+        "differs for every story"
+      ],
+      "like": [
+        "Acceptance criteria"
+      ]
+    },
+    {
+      "group": "pm",
+      "subject": "A feature flag",
+      "tier": 3,
+      "says": [
+        "switches a feature on or off without redeploying",
+        "lets a release be separated from a launch"
+      ],
+      "use": "release code but hold back the feature",
+      "not": [
+        "permanently removes a feature"
+      ],
+      "like": [
+        "A staged rollout"
+      ]
+    },
+    {
+      "group": "pm",
+      "subject": "A staged rollout",
+      "tier": 3,
+      "says": [
+        "exposes a change to a small share of users first",
+        "limits the damage of a bad release"
+      ],
+      "use": "reduce the risk of shipping to everyone at once",
+      "not": [
+        "ships to all users in one step"
+      ],
+      "like": [
+        "A feature flag"
+      ]
+    },
+    {
+      "group": "pm",
+      "subject": "An activation metric",
+      "tier": 4,
+      "says": [
+        "measures whether a new user reaches the first moment of value",
+        "is more telling than sign-up counts"
+      ],
+      "use": "judge whether onboarding works",
+      "not": [
+        "counts total registered accounts"
+      ],
+      "like": [
+        "Cohort retention"
+      ]
+    },
+    {
+      "group": "pm",
+      "subject": "Cohort retention",
+      "tier": 5,
+      "says": [
+        "tracks a group of users who started in the same period",
+        "shows whether later cohorts stay longer than earlier ones"
+      ],
+      "use": "see if product changes improved stickiness",
+      "not": [
+        "averages all users together"
+      ],
+      "like": [
+        "An activation metric"
+      ]
+    },
+    {
+      "group": "learning",
+      "subject": "Retrieval practice",
+      "tier": 1,
+      "says": [
+        "strengthens memory by recalling material instead of rereading it",
+        "is the reason quizzes help learning"
+      ],
+      "use": "choose between rereading notes and testing yourself",
+      "not": [
+        "is rereading the same notes several times"
+      ],
+      "like": [
+        "Spaced practice"
+      ]
+    },
+    {
+      "group": "learning",
+      "subject": "Spaced practice",
+      "tier": 2,
+      "says": [
+        "spreads study over several days",
+        "usually beats cramming for long-term retention"
+      ],
+      "use": "plan revision for something to be remembered next month",
+      "not": [
+        "packs all study into one night"
+      ],
+      "like": [
+        "Retrieval practice"
+      ]
+    },
+    {
+      "group": "learning",
+      "subject": "Mastery learning",
+      "tier": 3,
+      "says": [
+        "asks a learner to meet a standard before moving on",
+        "matches a pass mark that unlocks the next level"
+      ],
+      "use": "stop weak foundations from carrying forward",
+      "not": [
+        "lets learners skip any level"
+      ],
+      "like": [
+        "Formative assessment"
+      ]
+    },
+    {
+      "group": "learning",
+      "subject": "Formative assessment",
+      "tier": 3,
+      "says": [
+        "checks understanding during learning so it can be corrected",
+        "is low-stakes feedback and not a final grade"
+      ],
+      "use": "give feedback while learning is still under way",
+      "not": [
+        "is a final exam that certifies"
+      ],
+      "like": [
+        "Summative assessment"
+      ]
+    },
+    {
+      "group": "learning",
+      "subject": "Summative assessment",
+      "tier": 3,
+      "says": [
+        "judges what was learned at the end",
+        "can award a pass or a certificate"
+      ],
+      "use": "decide whether someone has met the standard",
+      "not": [
+        "is a quick practice drill"
+      ],
+      "like": [
+        "Formative assessment"
+      ]
+    },
+    {
+      "group": "learning",
+      "subject": "Item difficulty",
+      "tier": 5,
+      "says": [
+        "is the share of test-takers who answer a question correctly",
+        "flags a question nearly everyone fails as possibly flawed"
+      ],
+      "use": "decide if a question is too hard or too easy",
+      "not": [
+        "is how long the question text is"
+      ],
+      "like": [
+        "A distractor"
+      ]
+    },
+    {
+      "group": "learning",
+      "subject": "A distractor",
+      "tier": 5,
+      "says": [
+        "is a wrong option that should look plausible",
+        "is weak if nobody ever chooses it"
+      ],
+      "use": "judge the quality of the wrong options in a multiple-choice question",
+      "not": [
+        "is the correct answer"
+      ],
+      "like": [
+        "Item difficulty"
+      ]
+    },
+    {
+      "group": "learning",
+      "subject": "Test validity",
+      "tier": 5,
+      "says": [
+        "is whether a test measures what it claims to measure",
+        "is not guaranteed by a high pass rate"
+      ],
+      "use": "wonder whether an exam measures job skill",
+      "not": [
+        "is the same as consistency across attempts"
+      ],
+      "like": [
+        "Test reliability"
+      ]
+    },
+    {
+      "group": "learning",
+      "subject": "Test reliability",
+      "tier": 5,
+      "says": [
+        "is how consistent a test's results are across attempts",
+        "does not by itself prove the test measures the right thing"
+      ],
+      "use": "wonder whether a test gives repeatable results",
+      "not": [
+        "is whether the test covers the right topics"
+      ],
+      "like": [
+        "Test validity"
+      ]
+    },
+    {
+      "group": "release",
+      "subject": "A rollback",
+      "tier": 2,
+      "says": [
+        "returns production to a previous known-good version",
+        "should be rehearsed before it is needed"
+      ],
+      "use": "recover quickly from a bad release",
+      "not": [
+        "rewrites the version history"
+      ],
+      "like": [
+        "A health check"
+      ]
+    },
+    {
+      "group": "release",
+      "subject": "A health check",
+      "tier": 2,
+      "says": [
+        "tests that a service answers correctly after a change",
+        "can fail a deploy automatically"
+      ],
+      "use": "know a service came back up",
+      "not": [
+        "measures traffic volume"
+      ],
+      "like": [
+        "A rollback"
+      ]
+    },
+    {
+      "group": "release",
+      "subject": "Idempotency",
+      "tier": 3,
+      "says": [
+        "means running an operation again leaves the same result",
+        "makes seed scripts safe to repeat"
+      ],
+      "use": "design a script that can be run twice safely",
+      "not": [
+        "means an operation fails the second time"
+      ],
+      "like": [
+        "A backup restore test"
+      ]
+    },
+    {
+      "group": "release",
+      "subject": "A backup restore test",
+      "tier": 4,
+      "says": [
+        "proves a backup can actually be restored",
+        "is the real check that a backup works"
+      ],
+      "use": "trust a backup before you need it",
+      "not": [
+        "confirms a backup file exists"
+      ],
+      "like": [
+        "Idempotency"
+      ]
+    },
+    {
+      "group": "release",
+      "subject": "Least privilege",
+      "tier": 3,
+      "says": [
+        "gives each person or process only the access it needs",
+        "limits the damage from a stolen credential"
+      ],
+      "use": "decide what access a new role needs",
+      "not": [
+        "gives everyone admin access for convenience"
+      ],
+      "like": [
+        "Rate limiting"
+      ]
+    },
+    {
+      "group": "release",
+      "subject": "Rate limiting",
+      "tier": 3,
+      "says": [
+        "caps how often a client may attempt an action",
+        "slows credential guessing"
+      ],
+      "use": "slow brute-force attacks on login",
+      "not": [
+        "encrypts the data in transit"
+      ],
+      "like": [
+        "Least privilege"
+      ]
+    },
+    {
+      "group": "release",
+      "subject": "Expand and contract",
+      "tier": 5,
+      "says": [
+        "splits a risky schema change into additive and removal steps",
+        "keeps old and new code working during the change"
+      ],
+      "use": "change a database column without breaking running code",
+      "not": [
+        "drops the old column first"
+      ],
+      "like": [
+        "A rollback"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "How many levels does a learner climb in a GGLearn track, and what is the last level called?",
+      "right": "20 levels, ending at Titan",
+      "wrong": [
+        "10 levels, ending at Master",
+        "20 levels, ending at Legend",
+        "15 levels, ending at Expert"
+      ],
+      "tier": 1,
+      "why": "The ladder runs from Novice at level 1 to Titan at level 20."
+    },
+    {
+      "q": "What pass mark does a level exam need?",
+      "right": "80 percent",
+      "wrong": [
+        "50 percent",
+        "60 percent",
+        "100 percent"
+      ],
+      "tier": 1,
+      "why": "A run passes at 0.8 or more and unlocks the next level."
+    },
+    {
+      "q": "How many questions does one exam run draw for a level?",
+      "right": "10",
+      "wrong": [
+        "5",
+        "20",
+        "50"
+      ],
+      "tier": 1,
+      "why": "Each attempt draws 10 questions for the level."
+    },
+    {
+      "q": "Which table holds the single source of truth for a track's content?",
+      "right": "knowledge_items",
+      "wrong": [
+        "lessons",
+        "runs",
+        "certificates"
+      ],
+      "tier": 2,
+      "why": "Authored questions link back to a knowledge_items row."
+    },
+    {
+      "q": "How does a person get a GGLearn account?",
+      "right": "A manager or admin issues a single-use invite link bound to their email",
+      "wrong": [
+        "They register themselves from the login page",
+        "They sign in with the company single sign-on",
+        "They are created when a track is seeded"
+      ],
+      "tier": 2,
+      "why": "Account creation is invite-only and there is no SSO."
+    },
+    {
+      "q": "Which levels issue a certificate automatically?",
+      "right": "5, 10, 15 and 20",
+      "wrong": [
+        "1, 10 and 20",
+        "Every fifth level and every contest win",
+        "Only level 20"
+      ],
+      "tier": 2,
+      "why": "Level certificates are issued on passing levels 5, 10, 15 and 20."
+    },
+    {
+      "q": "What is a drill?",
+      "right": "Five instant-feedback multiple-choice questions drawn from levels already passed",
+      "wrong": [
+        "A ten-question exam that unlocks the next level",
+        "A timed contest against a bot",
+        "A study guide with flip cards only"
+      ],
+      "tier": 2,
+      "why": "A drill draws only from levels the learner has passed, so it cannot reveal exam answers."
+    },
+    {
+      "q": "Which three things are the daily quests?",
+      "right": "Study the guide, a quick drill and take an exam",
+      "wrong": [
+        "Pass a level, join a contest and read an update",
+        "Log in, set a goal and invite a colleague",
+        "Take a placement check, a drill and a contest"
+      ],
+      "tier": 2,
+      "why": "They are worth 20, 30 and 40 XP."
+    },
+    {
+      "q": "How many XP equal one level on the rival scale?",
+      "right": "150",
+      "wrong": [
+        "50",
+        "100",
+        "500"
+      ],
+      "tier": 2,
+      "why": "A rival's level is its XP divided by 150."
+    },
+    {
+      "q": "What happens to the access of someone who is offboarded?",
+      "right": "It ends at once and a four-item offboarding checklist is added",
+      "wrong": [
+        "It ends at the end of the month",
+        "It continues until they sign out",
+        "Their account and results are deleted"
+      ],
+      "tier": 2,
+      "why": "Offboarding sets the status and bumps the session version so access ends immediately."
+    },
+    {
+      "q": "Where is the production site served from?",
+      "right": "gglearn.gglink.co.uk, reverse-proxied by Apache to a PM2 app",
+      "wrong": [
+        "A serverless platform with an edge cache",
+        "A Docker Swarm cluster behind a load balancer",
+        "A desktop app installed on each laptop"
+      ],
+      "tier": 2,
+      "why": "Apache terminates TLS and proxies to gglearn-web on 127.0.0.1:3400."
+    },
+    {
+      "q": "What kinds can a track be?",
+      "right": "Subject, product, service, tool, technology or process",
+      "wrong": [
+        "Beginner, intermediate or advanced",
+        "Staff, customer or both",
+        "Mandatory, role or growth"
+      ],
+      "tier": 2,
+      "why": "Those are the six track kinds."
+    },
+    {
+      "q": "Which sign-in method does GGLearn use?",
+      "right": "Email and password only",
+      "wrong": [
+        "Single sign-on with the company directory",
+        "Magic links sent by email",
+        "A shared team password"
+      ],
+      "tier": 1,
+      "why": "There is no SSO."
+    },
+    {
+      "q": "A new starter was invited a week ago but never opened the link. What is true of it now?",
+      "right": "It has expired, because an invite lasts 7 days",
+      "wrong": [
+        "It still works because invites never expire",
+        "It works once more after an admin reactivates the account",
+        "It turns into a customer invite"
+      ],
+      "tier": 3,
+      "why": "An invite fails if used or expired."
+    },
+    {
+      "q": "A learner passes 7 of 10 questions on a level exam. What follows?",
+      "right": "The run fails, because the pass mark is 80 percent",
+      "wrong": [
+        "The run passes and the next level opens",
+        "The run passes with a warning",
+        "The run is discarded and not recorded"
+      ],
+      "tier": 3,
+      "why": "Seven of ten is below 0.8, and the score is also weighted."
+    },
+    {
+      "q": "A learner wants to start level 9 after passing only level 5. What happens?",
+      "right": "They cannot; they may start only one level above the highest passed",
+      "wrong": [
+        "They can start any level they choose",
+        "They can start it if they have a drill streak",
+        "They can start it after a manager signs off"
+      ],
+      "tier": 3,
+      "why": "Levels unlock in order."
+    },
+    {
+      "q": "A learner places at level 6 in the placement check, then sees the same requirement show as not done. Why?",
+      "right": "A placement result never counts for required learning; only real exam passes do",
+      "wrong": [
+        "Placement results expire after a day",
+        "Placement only counts for customers",
+        "The requirement needs a manager sign-off first"
+      ],
+      "tier": 3,
+      "why": "Compliance and promotion use levels earned by real exams."
+    },
+    {
+      "q": "No ANTHROPIC_API_KEY is set. How are open answers scored?",
+      "right": "By a keyword-coverage fallback that never awards more than 0.9",
+      "wrong": [
+        "They all score zero",
+        "They score full marks automatically",
+        "They wait in a queue for a manager to mark"
+      ],
+      "tier": 3,
+      "why": "Without a key, or if the AI call fails, the fallback is used."
+    },
+    {
+      "q": "Why does a drill never include questions from the level about to be sat?",
+      "right": "So that practice cannot reveal exam answers",
+      "wrong": [
+        "Because those questions are not yet written",
+        "Because drills are limited to level 1",
+        "Because drills are timed and exams are not"
+      ],
+      "tier": 3,
+      "why": "Drills draw only from levels already passed."
+    },
+    {
+      "q": "Two people reach their competition goal. Who ranks higher?",
+      "right": "Whoever reached it first",
+      "wrong": [
+        "Whoever has more XP in total",
+        "Whoever started at a lower level",
+        "Whoever joined the contest last"
+      ],
+      "tier": 3,
+      "why": "Ranking is goal reached first, then levels gained, then XP in the window."
+    },
+    {
+      "q": "What does a contest baseline stop?",
+      "right": "A veteran winning only because they were already at a high level",
+      "wrong": [
+        "A learner joining two contests",
+        "A bot beating a human",
+        "A contest running longer than 90 days"
+      ],
+      "tier": 3,
+      "why": "Only levels newly passed after the baseline count."
+    },
+    {
+      "q": "A private contest is opened by someone who is not a member. What do they see?",
+      "right": "A 404, so the contest's existence is not revealed",
+      "wrong": [
+        "A read-only leaderboard",
+        "A login prompt naming the contest",
+        "A request-to-join button"
+      ],
+      "tier": 3,
+      "why": "Outsiders get a 404 for private contests."
+    },
+    {
+      "q": "Who pays the prize for a GGLearn contest?",
+      "right": "The organiser, who also records it",
+      "wrong": [
+        "GGLearn, from the academy balance",
+        "The winner's manager automatically",
+        "The brand's finance system via a webhook"
+      ],
+      "tier": 3,
+      "why": "GGLearn never holds or moves money."
+    },
+    {
+      "q": "What does the soft gate mean for a person with an overdue required track?",
+      "right": "Nothing is blocked, but compliance shows them as overdue",
+      "wrong": [
+        "They are locked out until they pass",
+        "Their account is offboarded",
+        "They are demoted a rung"
+      ],
+      "tier": 3,
+      "why": "Required learning never blocks work."
+    },
+    {
+      "q": "A job role is typed as 'Social Media Mgr' while the track says 'social media manager'. What follows?",
+      "right": "The role-required track does not match, because job roles are compared exactly in lower case",
+      "wrong": [
+        "It matches because spelling is fuzzy",
+        "The admin is emailed to fix it",
+        "Every role-required track is assigned instead"
+      ],
+      "tier": 3,
+      "why": "Job roles are free text matched exactly."
+    },
+    {
+      "q": "A manager wants to publish all of a track's questions held in review. What happens?",
+      "right": "Only an admin can do that",
+      "wrong": [
+        "Any learner can do it",
+        "It publishes itself after 7 days",
+        "A manager can do it from /admin"
+      ],
+      "tier": 3,
+      "why": "activateTrackQuestions is admin only."
+    },
+    {
+      "q": "Where do you record that the brand moto changed so staff re-read it?",
+      "right": "/admin/freshness",
+      "wrong": [
+        "/admin/people",
+        "/admin/careers",
+        "/cert"
+      ],
+      "tier": 3,
+      "why": "A material change asks everyone enrolled before the change to read it."
+    },
+    {
+      "q": "A deploy fails because the app did not return HTTP 200. What did the script do?",
+      "right": "Polled the local port 10 times, 3 seconds apart, then failed",
+      "wrong": [
+        "Rolled the database back automatically",
+        "Restarted Apache and tried again",
+        "Sent an email to the team"
+      ],
+      "tier": 3,
+      "why": "The health check fails the deploy and prints the PM2 error log."
+    },
+    {
+      "q": "A drill is opened but no questions are answered. How much XP does it earn?",
+      "right": "None, because XP needs enough distinct questions actually answered",
+      "wrong": [
+        "20 XP for opening it",
+        "30 XP, the drill value",
+        "5 XP per question shown"
+      ],
+      "tier": 4,
+      "why": "The server records which drill questions were really answered."
+    },
+    {
+      "q": "A learner has an exam run with score 0.9 that passes. What is the exam XP?",
+      "right": "140",
+      "wrong": [
+        "90",
+        "100",
+        "150"
+      ],
+      "tier": 4,
+      "why": "Exam XP is the score times 100, rounded, plus 50 if passed."
+    },
+    {
+      "q": "A schema change adds a NOT NULL column to a table with rows. Why does the deploy fail rather than proceed?",
+      "right": "drizzle-kit push is run without --force, so a destructive change stops it",
+      "wrong": [
+        "The lock refuses a second deploy",
+        "The health check rejects the new schema",
+        "PM2 refuses to restart"
+      ],
+      "tier": 4,
+      "why": "The deploy deliberately avoids --force so it cannot delete rows."
+    },
+    {
+      "q": "Why is the login rate limiter unreliable across restarts?",
+      "right": "It lives in process memory and resets when PM2 restarts the app",
+      "wrong": [
+        "It is stored in a cookie",
+        "It is stored in a file that is deployed",
+        "It depends on the Cloudflare cache"
+      ],
+      "tier": 4,
+      "why": "That is fine for one PM2 process but is not durable."
+    },
+    {
+      "q": "Two deploys are started at once. What happens to the second?",
+      "right": "It fails straight away because the first holds the deploy lock",
+      "wrong": [
+        "It waits and then runs",
+        "It cancels the first",
+        "It runs in parallel on a copy"
+      ],
+      "tier": 4,
+      "why": "deploy.sh takes a lock so only one deploy runs at a time."
+    },
+    {
+      "q": "A manager tries to offboard another admin. What happens?",
+      "right": "It is refused; managers can offboard only learners",
+      "wrong": [
+        "It succeeds after a confirmation",
+        "It succeeds but the admin keeps access",
+        "It asks the admin to approve"
+      ],
+      "tier": 4,
+      "why": "Admins can offboard anyone except themselves."
+    },
+    {
+      "q": "A career step names a track whose questions stop at level 8. A rung needs level 10 on it. What happens?",
+      "right": "It shows as coming soon and never blocks the promotion",
+      "wrong": [
+        "It blocks the promotion until level 10 exists",
+        "It is counted as failed",
+        "The rung is removed from the ladder"
+      ],
+      "tier": 4,
+      "why": "Steps the questions cannot reach are not countable."
+    },
+    {
+      "q": "Everything on a rung is met but the person has an overdue required track. What follows?",
+      "right": "Promotion is on hold unless an admin overrides with a reason",
+      "wrong": [
+        "Promotion happens automatically",
+        "A manager can promote without a reason",
+        "The overdue track is ignored for promotion"
+      ],
+      "tier": 4,
+      "why": "Promotion needs required learning not overdue."
+    },
+    {
+      "q": "A person has met 5 of 8 passable steps for the next level. What sub-level are they at?",
+      "right": "The .1 sub-level",
+      "wrong": [
+        "The .0 sub-level",
+        "The .2 sub-level",
+        "None; steps do not set a sub-level"
+      ],
+      "tier": 4,
+      "why": "Half or more met is .1; three quarters or more is .2; fewer than half is .0."
+    },
+    {
+      "q": "A rival's XP is 3,000. What level does the rival show?",
+      "right": "20",
+      "wrong": [
+        "15",
+        "30",
+        "200"
+      ],
+      "tier": 4,
+      "why": "Level is XP divided by 150, which gives 20."
+    },
+    {
+      "q": "A file imported with status review is run twice. What is the result?",
+      "right": "Items are matched by track and title and questions by track, level and prompt, so nothing is duplicated",
+      "wrong": [
+        "Every question is duplicated at a shifted level",
+        "The track is wiped and reloaded",
+        "The questions become active the second time"
+      ],
+      "tier": 4,
+      "why": "import:knowledge is idempotent."
+    },
+    {
+      "q": "A company policy wording changes but its meaning does not. How do you record it so nobody is asked to re-read?",
+      "right": "Record it as a non-material wording fix",
+      "wrong": [
+        "Delete and recreate the knowledge item",
+        "Add a changeNote and ask everyone to confirm",
+        "Retire all linked questions"
+      ],
+      "tier": 4,
+      "why": "Wording fixes are recorded but ask nobody."
+    },
+    {
+      "q": "A learner joins a track after a material change was recorded. Are they asked to read it?",
+      "right": "No, because only people enrolled before the change are asked",
+      "wrong": [
+        "Yes, within 7 days",
+        "Yes, before they can start",
+        "Only if they are a manager"
+      ],
+      "tier": 4,
+      "why": "Someone who joined later learned the current text from the start."
+    },
+    {
+      "q": "A team wants a client to take the getting-started track but not see staff tracks. What do you set?",
+      "right": "The person's audience to customer, with the brands or projects they bought",
+      "wrong": [
+        "Their role to learner only",
+        "A mandatory tier on the staff tracks",
+        "A job role of customer"
+      ],
+      "tier": 4,
+      "why": "Customers see only tracks whose audience is customer or both."
+    },
+    {
+      "q": "A new track has only 30 questions at levels 1 and 2 and its required level is 5. What does required learning do with it?",
+      "right": "Leaves it out, because nobody can be required to pass what cannot be taken",
+      "wrong": [
+        "Makes it required anyway and shows it as overdue",
+        "Requires level 2 instead",
+        "Marks it mandatory"
+      ],
+      "tier": 4,
+      "why": "Tracks that cannot reach the required level are not counted."
+    },
+    {
+      "q": "Someone says a customer is seeing a staff-only track through a direct link. Where is audience enforced?",
+      "right": "At enrolment, journeys, contests and the track page",
+      "wrong": [
+        "Only on the dashboard",
+        "Only in the Apache config",
+        "Only in the invite email"
+      ],
+      "tier": 5,
+      "why": "The audience check is applied in all those places."
+    },
+    {
+      "q": "A visitor sends a forged X-Forwarded-For header to dodge rate limiting. Which two measures defend against it?",
+      "right": "Reading the address from the end of the header by TRUSTED_PROXY_HOPS and allowing only Cloudflare to reach Apache",
+      "wrong": [
+        "Hashing the header with SHA-256 and storing it in a cookie",
+        "Rejecting any request with more than one forwarded address",
+        "Using the browser's user agent as the key"
+      ],
+      "tier": 5,
+      "why": "The real client sits TRUSTED_PROXY_HOPS entries from the end, and the allow-list stops direct access."
+    },
+    {
+      "q": "Login takes noticeably longer for registered emails than for unknown ones. What is wrong?",
+      "right": "The unknown-account path must also pay for a hash so timing does not reveal which emails exist",
+      "wrong": [
+        "Nothing; faster responses for unknown emails are expected",
+        "The session version must be bumped",
+        "The rate limit is too strict"
+      ],
+      "tier": 5,
+      "why": "Unknown or offboarded accounts still pay for a hash."
+    },
+    {
+      "q": "A new hire's invite email never arrives. What is the likely reason?",
+      "right": "The code has no mailer, so the admin must copy the join link and deliver it",
+      "wrong": [
+        "Invites are delivered only by SMS",
+        "Email invites are held for 24 hours",
+        "The role was entered in upper case"
+      ],
+      "tier": 5,
+      "why": "No email is sent by the application."
+    },
+    {
+      "q": "A goal's route no longer exists after a ladder edit. What should the person do?",
+      "right": "Ask an admin about career bridges or pick another goal",
+      "wrong": [
+        "Wait for the route to recreate itself",
+        "Pass the track again",
+        "Ask the manager to override a promotion"
+      ],
+      "tier": 5,
+      "why": "The journey shows the route is unreachable and offers to remove the goal."
+    },
+    {
+      "q": "A re-run of import:questions on a track that already has questions adds duplicates. What is the safe way?",
+      "right": "Clear the track's questions first, then import",
+      "wrong": [
+        "Run it again with --activate",
+        "Run seed:careers",
+        "Increase the weight of the questions"
+      ],
+      "tier": 5,
+      "why": "Re-running adds duplicates at shifted levels."
+    },
+    {
+      "q": "Which practice strengthens memory more: rereading notes or testing yourself?",
+      "right": "Testing yourself, because retrieval practice strengthens recall",
+      "wrong": [
+        "Rereading, because familiarity builds recall",
+        "Both equally, since memory is fixed",
+        "Neither; only sleep helps"
+      ],
+      "tier": 2,
+      "why": "Retrieval practice beats rereading."
+    },
+    {
+      "q": "A team wants to release code to production but keep the feature hidden until the launch day. What helps?",
+      "right": "A feature flag",
+      "wrong": [
+        "A rollback",
+        "A hotfix branch",
+        "A longer deploy lock"
+      ],
+      "tier": 3,
+      "why": "A flag separates release from launch."
+    },
+    {
+      "q": "A question is answered correctly by nearly every learner. What does an item analysis suggest?",
+      "right": "It may be too easy and worth reviewing or retiring",
+      "wrong": [
+        "It is the best question in the bank",
+        "It must be moved to a higher level",
+        "It should be given a larger weight"
+      ],
+      "tier": 4,
+      "why": "Questions never failed or nearly always failed are flagged for review."
+    },
+    {
+      "q": "A backup job reports success every night. What is the safest next step?",
+      "right": "Rehearse restoring it onto a copy",
+      "wrong": [
+        "Trust it since the job reports success",
+        "Delete older backups to save space",
+        "Run it more often"
+      ],
+      "tier": 4,
+      "why": "Only a restore test proves the backup works."
+    },
+    {
+      "q": "A script that seeds content is run twice by mistake. What property makes that safe?",
+      "right": "Idempotency",
+      "wrong": [
+        "Rate limiting",
+        "Least privilege",
+        "Throttling"
+      ],
+      "tier": 4,
+      "why": "Each seed step is additive and safe to repeat."
+    },
+    {
+      "q": "An exam has a high pass rate and consistent scores, but graduates do not perform on the job. Which is likely missing?",
+      "right": "Validity: it may not measure the job skill it claims to",
+      "wrong": [
+        "Reliability: the results are inconsistent",
+        "Weighting: the questions need larger weights",
+        "A higher pass mark"
+      ],
+      "tier": 5,
+      "why": "Consistent scores do not prove the test measures the right thing."
+    }
+  ]
+}

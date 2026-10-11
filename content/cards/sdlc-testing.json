@@ -1,0 +1,2568 @@
+{
+ "slug": "sdlc-testing",
+ "name": "8. Testing and QA",
+ "description": "Strategy, unit and e2e tests, coverage, performance, accessibility.",
+ "roles": "developer",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "level": "test level",
+  "plan": "test planning or release concept",
+  "design": "test design technique",
+  "double": "test double",
+  "practice": "testing practice",
+  "nonfunc": "non-functional test type",
+  "a11y": "accessibility check",
+  "sec": "security testing technique",
+  "defect": "defect management concept",
+  "metric": "test measure",
+  "env": "test data or environment concept",
+  "flaky": "cause of flaky tests",
+  "ci": "CI testing practice",
+  "gg": "GG testing fact"
+ },
+ "cards": [
+  {
+   "group": "level",
+   "subject": "A unit test",
+   "tier": 1,
+   "says": [
+    "checks a small piece of logic in isolation",
+    "runs in milliseconds because it needs no network or real database"
+   ],
+   "use": "want fast feedback on the rules inside one function",
+   "not": [
+    "needs a fully deployed environment to run"
+   ],
+   "like": [
+    "A component test",
+    "An integration test"
+   ]
+  },
+  {
+   "group": "level",
+   "subject": "An integration test",
+   "tier": 2,
+   "says": [
+    "checks that several parts work together, such as code and a real database",
+    "catches wiring and configuration mistakes that isolated tests cannot see"
+   ],
+   "use": "need to confirm that a query really runs against the database",
+   "not": [
+    "is always faster than a unit test"
+   ],
+   "like": [
+    "A component test",
+    "A contract test",
+    "A unit test"
+   ]
+  },
+  {
+   "group": "level",
+   "subject": "An end-to-end test",
+   "tier": 1,
+   "says": [
+    "drives the whole application through its real user interface",
+    "sits at the top of the pyramid and is kept to a small number"
+   ],
+   "use": "need proof that a critical journey such as sign-up works from browser to database",
+   "not": [
+    "is the cheapest way to pinpoint which function is broken"
+   ],
+   "like": [
+    "A system test",
+    "An acceptance test"
+   ]
+  },
+  {
+   "group": "level",
+   "subject": "A contract test",
+   "tier": 4,
+   "says": [
+    "checks that a consumer and a provider agree on the shape of requests and responses",
+    "lets two services be verified separately without a shared full environment"
+   ],
+   "use": "want to catch a breaking API change before the provider is deployed",
+   "not": [
+    "replaces all testing inside each service"
+   ],
+   "like": [
+    "An integration test"
+   ]
+  },
+  {
+   "group": "level",
+   "subject": "A smoke test",
+   "tier": 1,
+   "says": [
+    "runs a small set of checks to see whether a build is basically alive",
+    "stops deeper testing early when it fails"
+   ],
+   "use": "need a quick check right after a deploy that the app starts and the main page loads",
+   "not": [
+    "covers every feature in depth"
+   ],
+   "like": [
+    "A system test"
+   ]
+  },
+  {
+   "group": "level",
+   "subject": "An acceptance test",
+   "tier": 2,
+   "says": [
+    "checks that a feature meets the agreed business requirement",
+    "is often phrased in the customer's own terms"
+   ],
+   "use": "need to confirm that a feature does what the stakeholder asked for",
+   "not": [
+    "checks only the internal structure of the code"
+   ],
+   "like": [
+    "A system test",
+    "An end-to-end test"
+   ]
+  },
+  {
+   "group": "level",
+   "subject": "A component test",
+   "tier": 3,
+   "says": [
+    "exercises one module or service through its public interface with its dependencies replaced",
+    "sits between unit and integration in scope"
+   ],
+   "use": "want to test a whole service in-process without the network",
+   "like": [
+    "A unit test",
+    "An integration test"
+   ]
+  },
+  {
+   "group": "level",
+   "subject": "A snapshot test",
+   "tier": 3,
+   "says": [
+    "compares current output with a stored earlier output and fails on any difference",
+    "needs a person to review the stored output when it changes on purpose"
+   ],
+   "use": "need to notice unintended changes in rendered markup or serialised data",
+   "not": [
+    "proves the stored output was correct when it was first recorded"
+   ],
+   "like": [
+    "Visual regression testing"
+   ]
+  },
+  {
+   "group": "level",
+   "subject": "A system test",
+   "tier": 3,
+   "says": [
+    "verifies the complete integrated product against its specified requirements, not one part",
+    "is run on a full build before acceptance"
+   ],
+   "use": "need to verify the whole integrated build against its requirements before acceptance",
+   "like": [
+    "An end-to-end test",
+    "An acceptance test",
+    "A smoke test"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "The test pyramid",
+   "tier": 1,
+   "says": [
+    "puts many unit tests at the base and few end-to-end tests at the top",
+    "trades realism for speed and low cost as you move down"
+   ],
+   "use": "need a simple shape for balancing fast and realistic tests",
+   "not": [
+    "says end-to-end tests should outnumber unit tests"
+   ],
+   "like": [
+    "A test strategy"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A test strategy",
+   "tier": 2,
+   "says": [
+    "describes the overall approach to testing, including levels and what blocks a release",
+    "says what is deliberately not tested and why"
+   ],
+   "use": "need a shared answer to what we test, at what level and what blocks a release",
+   "like": [
+    "A test plan"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A test plan",
+   "tier": 1,
+   "says": [
+    "details the scope, schedule, resources and risks of one testing effort",
+    "lists the entry and exit criteria for that effort"
+   ],
+   "use": "need to organise who tests what, and when, for one release",
+   "like": [
+    "A test strategy",
+    "Entry criteria",
+    "Exit criteria"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Risk-based testing",
+   "tier": 2,
+   "says": [
+    "puts the most testing effort where a failure would cost the most",
+    "ranks areas by the likelihood and impact of failure"
+   ],
+   "use": "have limited time and must choose what to test first",
+   "not": [
+    "spreads effort equally across every feature"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Shift-left testing",
+   "tier": 3,
+   "says": [
+    "moves testing earlier in the lifecycle, such as reviewing requirements and running tests on every commit",
+    "lowers the cost of fixing defects by finding them sooner"
+   ],
+   "use": "want defects found while they are still cheap to fix",
+   "like": [
+    "Fail-fast pipeline ordering",
+    "A quality gate"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Entry criteria",
+   "tier": 3,
+   "says": [
+    "are conditions that must hold before testing can start, such as a stable build and a ready environment",
+    "stop a team wasting effort on a build that cannot run"
+   ],
+   "use": "need to agree when QA may begin testing a build",
+   "like": [
+    "Exit criteria",
+    "A test plan"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Exit criteria",
+   "tier": 3,
+   "says": [
+    "are conditions that must hold before testing can be declared complete",
+    "often include no open critical defects and an agreed pass rate"
+   ],
+   "use": "need a clear definition of done for a test cycle",
+   "like": [
+    "Entry criteria",
+    "A test plan"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A test summary report",
+   "tier": 1,
+   "says": [
+    "summarises what was tested, the results, open defects and risks at the end of a cycle",
+    "gives decision makers evidence about release readiness"
+   ],
+   "use": "need to tell stakeholders how testing went",
+   "like": [
+    "A known issues list",
+    "A go/no-go decision",
+    "A test report artifact"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A go/no-go decision",
+   "tier": 3,
+   "says": [
+    "is the explicit call, made with stakeholders, on whether to ship given the test evidence and risks",
+    "may knowingly accept some open issues"
+   ],
+   "use": "need an accountable decision on shipping a release candidate",
+   "like": [
+    "A test summary report"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A known issues list",
+   "tier": 3,
+   "says": [
+    "records defects that ship unfixed, with their impact and any workaround",
+    "means open problems are accepted knowingly rather than discovered by customers"
+   ],
+   "use": "must ship with defects that will not be fixed in time",
+   "like": [
+    "A test summary report",
+    "A go/no-go decision"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A rollback plan",
+   "tier": 2,
+   "says": [
+    "describes how to return to the previous working version if a release goes wrong",
+    "is prepared and checked before the release, not after the failure"
+   ],
+   "use": "want a safe way back if a deployment misbehaves"
+  },
+  {
+   "group": "plan",
+   "subject": "A release candidate",
+   "tier": 2,
+   "says": [
+    "is a build believed ready to ship that is tested as it is",
+    "is promoted unchanged if it passes and replaced only if a blocking defect is found"
+   ],
+   "use": "need to be sure that what was tested is exactly what ships",
+   "like": [
+    "Building once and promoting the same artifact"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A canary release",
+   "tier": 4,
+   "says": [
+    "sends a new version to a small share of traffic before everyone gets it",
+    "limits how many users are hurt by a defect that escaped testing"
+   ],
+   "use": "want real-traffic evidence before a full rollout",
+   "not": [
+    "removes the need for any pre-release testing"
+   ],
+   "like": [
+    "A feature flag",
+    "Chaos testing"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A feature flag",
+   "tier": 3,
+   "says": [
+    "lets code ship switched off and be enabled later without a new deploy",
+    "allows a misbehaving feature to be turned off quickly"
+   ],
+   "use": "want to separate deploying code from releasing a feature",
+   "not": [
+    "removes the need to test both the on and off paths"
+   ],
+   "like": [
+    "A canary release"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "Equivalence partitioning",
+   "tier": 2,
+   "says": [
+    "divides inputs into classes expected to behave the same",
+    "tests one representative value from each class"
+   ],
+   "use": "want to cut a huge input range down to a few representative cases",
+   "not": [
+    "tests every possible input value"
+   ],
+   "like": [
+    "Boundary value analysis"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "Boundary value analysis",
+   "tier": 2,
+   "says": [
+    "tests values at and next to the edges of each input range",
+    "targets off-by-one errors such as writing < where <= was meant"
+   ],
+   "use": "need to test a field that accepts values from 1 to 100",
+   "not": [
+    "picks only values from the middle of each range"
+   ],
+   "like": [
+    "Equivalence partitioning",
+    "A parameterised test"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "Decision table testing",
+   "tier": 3,
+   "says": [
+    "lists combinations of conditions with the action expected for each",
+    "suits rules where several conditions together decide the outcome"
+   ],
+   "use": "have business rules such as eligibility that combine several yes or no conditions",
+   "like": [
+    "State transition testing"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "State transition testing",
+   "tier": 4,
+   "says": [
+    "models the system as states and the events that move between them",
+    "finds invalid transitions such as paying for an already cancelled order"
+   ],
+   "use": "need to test a workflow whose behaviour depends on its current state",
+   "like": [
+    "Decision table testing"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "Pairwise testing",
+   "tier": 4,
+   "says": [
+    "covers every pair of parameter values in at least one test",
+    "cuts the number of combinations while still catching failures caused by two parameters interacting"
+   ],
+   "use": "face too many combinations of browser, operating system and setting to run them all",
+   "not": [
+    "guarantees finding every defect that needs three parameters to interact"
+   ],
+   "like": [
+    "Equivalence partitioning"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "Error guessing",
+   "tier": 3,
+   "says": [
+    "uses the tester's experience of common mistakes to choose cases",
+    "tries things like empty input, very long strings and special characters"
+   ],
+   "use": "want to use past defects to aim extra cases at likely weak spots",
+   "like": [
+    "Exploratory testing"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "Exploratory testing",
+   "tier": 2,
+   "says": [
+    "combines learning, test design and execution at the same time",
+    "relies on the tester's skill and curiosity rather than pre-written steps"
+   ],
+   "use": "need to find problems nobody thought to write a script for",
+   "not": [
+    "means clicking at random without taking any notes"
+   ],
+   "like": [
+    "Error guessing",
+    "Session-based test management",
+    "Usability testing"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "Session-based test management",
+   "tier": 4,
+   "says": [
+    "structures exploratory testing into time-boxed sessions with a charter and notes",
+    "ends each session with a short debrief"
+   ],
+   "use": "want exploratory testing that can be planned and reported",
+   "like": [
+    "Exploratory testing",
+    "A test charter"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "A test charter",
+   "tier": 4,
+   "says": [
+    "states the mission of one exploratory session, such as exploring checkout with declined cards",
+    "gives focus without prescribing every step"
+   ],
+   "use": "need to point an exploratory session at one area",
+   "like": [
+    "Session-based test management"
+   ]
+  },
+  {
+   "group": "design",
+   "subject": "Property-based testing",
+   "tier": 5,
+   "says": [
+    "checks that a stated property holds for many generated inputs",
+    "shrinks a failing input to a minimal example"
+   ],
+   "use": "want to find edge cases you would never have written by hand",
+   "not": [
+    "replaces every example-based test with a fixed list of inputs"
+   ],
+   "like": [
+    "Fuzzing"
+   ]
+  },
+  {
+   "group": "double",
+   "subject": "A dummy",
+   "tier": 3,
+   "says": [
+    "fills a required parameter and is never actually used",
+    "needs no behaviour at all"
+   ],
+   "use": "must pass an argument that the code under test never touches",
+   "like": [
+    "A stub",
+    "A spy",
+    "A mock",
+    "A fake",
+    "Service virtualisation",
+    "A recorded HTTP fixture"
+   ]
+  },
+  {
+   "group": "double",
+   "subject": "A stub",
+   "tier": 1,
+   "says": [
+    "returns canned answers to calls made by the code under test",
+    "lets a test control indirect inputs such as a fixed exchange rate"
+   ],
+   "use": "need a dependency to return a fixed value so the test is repeatable",
+   "not": [
+    "fails the test when it is not called"
+   ],
+   "like": [
+    "A dummy",
+    "A spy",
+    "A mock",
+    "A fake",
+    "Service virtualisation",
+    "A recorded HTTP fixture",
+    "Live network dependence"
+   ]
+  },
+  {
+   "group": "double",
+   "subject": "A spy",
+   "tier": 3,
+   "says": [
+    "records how it was called so the test can inspect the calls afterwards",
+    "can wrap a real object while still observing it"
+   ],
+   "use": "want to check afterwards what arguments a collaborator received",
+   "like": [
+    "A dummy",
+    "A stub",
+    "A mock",
+    "A fake",
+    "Service virtualisation",
+    "A recorded HTTP fixture"
+   ]
+  },
+  {
+   "group": "double",
+   "subject": "A mock",
+   "tier": 1,
+   "says": [
+    "is given expectations about calls and fails the test if they are not met",
+    "verifies behaviour such as an email being sent exactly once"
+   ],
+   "use": "need to verify that the code told a collaborator to do something",
+   "not": [
+    "contains a full working implementation"
+   ],
+   "like": [
+    "A dummy",
+    "A stub",
+    "A spy",
+    "A fake",
+    "Service virtualisation",
+    "A recorded HTTP fixture"
+   ]
+  },
+  {
+   "group": "double",
+   "subject": "A fake",
+   "tier": 2,
+   "says": [
+    "has a real but simplified working implementation, such as an in-memory database",
+    "is too lightweight for production yet behaves realistically"
+   ],
+   "use": "want a quick stand-in that actually stores and returns data",
+   "not": [
+    "only returns hard-coded values"
+   ],
+   "like": [
+    "A dummy",
+    "A stub",
+    "A spy",
+    "A mock",
+    "Service virtualisation",
+    "A recorded HTTP fixture",
+    "Live network dependence"
+   ]
+  },
+  {
+   "group": "double",
+   "subject": "Service virtualisation",
+   "tier": 5,
+   "says": [
+    "simulates the behaviour of a whole remote system, including latency and error responses",
+    "lets testing go on when the real dependency is unavailable or costly"
+   ],
+   "use": "must test against a third-party system that has no usable sandbox",
+   "like": [
+    "A dummy",
+    "A stub",
+    "A spy",
+    "A mock",
+    "A fake",
+    "A recorded HTTP fixture",
+    "Live network dependence"
+   ]
+  },
+  {
+   "group": "double",
+   "subject": "A recorded HTTP fixture",
+   "tier": 4,
+   "says": [
+    "replays responses captured earlier from the real service",
+    "goes stale if the real API changes, so it needs refreshing"
+   ],
+   "use": "want realistic responses without calling the live service on every run",
+   "like": [
+    "A dummy",
+    "A stub",
+    "A spy",
+    "A mock",
+    "A fake",
+    "Service virtualisation"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "Test-driven development",
+   "tier": 1,
+   "says": [
+    "writes a failing test before the code that makes it pass",
+    "repeats a red, green, refactor cycle"
+   ],
+   "use": "want small tests to drive a testable design",
+   "not": [
+    "writes all tests after the feature is finished"
+   ],
+   "like": [
+    "Behaviour-driven development",
+    "A characterisation test"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "Behaviour-driven development",
+   "tier": 2,
+   "says": [
+    "describes behaviour in a plain-language format that business people and developers both read",
+    "turns examples into executable specifications"
+   ],
+   "use": "want requirements, tests and documentation to share one readable form",
+   "like": [
+    "Test-driven development",
+    "Acceptance test-driven development"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "Acceptance test-driven development",
+   "tier": 5,
+   "says": [
+    "writes acceptance tests with the customer before the feature is built",
+    "uses those tests as the definition of done for the story"
+   ],
+   "use": "want the customer's examples to decide when a story is finished",
+   "like": [
+    "Behaviour-driven development",
+    "Test-driven development"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "Regression testing",
+   "tier": 1,
+   "says": [
+    "reruns existing tests to confirm that a change broke nothing that used to work",
+    "grows from bugs when each fix gets a test of its own"
+   ],
+   "use": "have just changed code and need to be sure old behaviour still works",
+   "not": [
+    "tests only brand new features"
+   ],
+   "like": [
+    "Confirmation testing"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "Arrange-Act-Assert",
+   "tier": 2,
+   "says": [
+    "structures a test into setup, one action and then checks",
+    "keeps each test focused on a single behaviour"
+   ],
+   "use": "want unit tests that read the same way every time",
+   "like": [
+    "Given-When-Then"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "Given-When-Then",
+   "tier": 2,
+   "says": [
+    "writes a scenario as a context, an event and an expected outcome in business language",
+    "is the scenario structure used by Gherkin in BDD"
+   ],
+   "use": "need a scenario format that a non-programmer can review",
+   "not": [
+    "is only usable for tests of private methods"
+   ],
+   "like": [
+    "Arrange-Act-Assert"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "Test isolation",
+   "tier": 2,
+   "says": [
+    "keeps each test independent so it can run alone or in any order",
+    "gives each test its own data instead of sharing state"
+   ],
+   "use": "see tests that pass alone but fail when the whole suite runs",
+   "like": [
+    "Shared mutable state",
+    "Order dependence",
+    "Per-test transaction rollback",
+    "Test parallelisation"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "A parameterised test",
+   "tier": 2,
+   "says": [
+    "runs the same test logic over a table of inputs and expected outputs",
+    "reports each row as a separate case"
+   ],
+   "use": "have many boundary cases that differ only in their data",
+   "like": [
+    "Boundary value analysis"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "A characterisation test",
+   "tier": 5,
+   "says": [
+    "records what legacy code currently does, right or wrong",
+    "gives a safety net before refactoring code that has no tests"
+   ],
+   "use": "must change untested legacy code and first need to know what it does",
+   "like": [
+    "Test-driven development",
+    "A snapshot test"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "A test oracle",
+   "tier": 5,
+   "says": [
+    "is the source of truth used to decide whether an output is correct",
+    "can be a specification, a reference implementation or an independent calculation"
+   ],
+   "use": "need an independent way to know the expected answer",
+   "like": [
+    "check:dynamic"
+   ]
+  },
+  {
+   "group": "practice",
+   "subject": "Testability",
+   "tier": 3,
+   "says": [
+    "describes how easily software can be put into a state and observed in a test",
+    "improves when dependencies are injected rather than created inside the code"
+   ],
+   "use": "find code that cannot be tested without a real network or clock",
+   "like": [
+    "Real clock dependence"
+   ]
+  },
+  {
+   "group": "nonfunc",
+   "subject": "Load testing",
+   "tier": 2,
+   "says": [
+    "applies the expected volume of concurrent users to measure response times and errors",
+    "checks behaviour at the traffic the system is meant to carry"
+   ],
+   "use": "need to know whether the site stays fast with the user numbers you expect",
+   "like": [
+    "Stress testing",
+    "Soak testing",
+    "Spike testing"
+   ]
+  },
+  {
+   "group": "nonfunc",
+   "subject": "Stress testing",
+   "tier": 3,
+   "says": [
+    "pushes the system beyond its expected capacity to find where and how it fails",
+    "checks that it fails gracefully and recovers afterwards"
+   ],
+   "use": "want to find the breaking point of a service",
+   "like": [
+    "Load testing",
+    "Soak testing",
+    "Spike testing",
+    "Recovery testing",
+    "Chaos testing"
+   ]
+  },
+  {
+   "group": "nonfunc",
+   "subject": "Soak testing",
+   "tier": 4,
+   "says": [
+    "runs a steady load for many hours to expose slow leaks such as growing memory",
+    "finds problems that appear only over time"
+   ],
+   "use": "suspect a memory leak that shows up only after days",
+   "like": [
+    "Load testing",
+    "Stress testing",
+    "Spike testing",
+    "PM2's max_memory_restart"
+   ]
+  },
+  {
+   "group": "nonfunc",
+   "subject": "Spike testing",
+   "tier": 4,
+   "says": [
+    "applies a sudden large jump in traffic and then drops it",
+    "checks how well the system absorbs and recovers from bursts"
+   ],
+   "use": "expect a promotional email to send a burst of visitors at one moment",
+   "like": [
+    "Load testing",
+    "Stress testing",
+    "Soak testing"
+   ]
+  },
+  {
+   "group": "nonfunc",
+   "subject": "Usability testing",
+   "tier": 1,
+   "says": [
+    "watches real users attempt tasks to find confusion and friction",
+    "measures how easy a product is to learn and use"
+   ],
+   "use": "need to know whether people can actually complete a task in the interface",
+   "like": [
+    "Exploratory testing"
+   ]
+  },
+  {
+   "group": "nonfunc",
+   "subject": "Compatibility testing",
+   "tier": 2,
+   "says": [
+    "checks behaviour across browsers, devices, operating systems and versions",
+    "uses the platforms your real users have to decide what to cover"
+   ],
+   "use": "need to confirm the site works on the browsers your users have"
+  },
+  {
+   "group": "nonfunc",
+   "subject": "Visual regression testing",
+   "tier": 4,
+   "says": [
+    "compares screenshots of rendered pages with approved baselines",
+    "flags unintended layout and styling changes that functional assertions miss"
+   ],
+   "use": "worry that a CSS change moved or hid something without any test failing",
+   "like": [
+    "A snapshot test"
+   ]
+  },
+  {
+   "group": "nonfunc",
+   "subject": "Chaos testing",
+   "tier": 5,
+   "says": [
+    "injects failures such as killed instances or slow dependencies on purpose",
+    "checks that resilience mechanisms work in practice, not only on paper"
+   ],
+   "use": "want evidence that the system survives an instance dying",
+   "like": [
+    "Recovery testing",
+    "Stress testing"
+   ]
+  },
+  {
+   "group": "nonfunc",
+   "subject": "Recovery testing",
+   "tier": 5,
+   "says": [
+    "forces a crash or outage and checks that the system comes back with its data intact",
+    "validates backup restore and failover procedures"
+   ],
+   "use": "need proof that a backup can really be restored",
+   "like": [
+    "Stress testing",
+    "Chaos testing"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Keyboard-only navigation",
+   "tier": 1,
+   "says": [
+    "checks that every control can be reached and used without a mouse",
+    "exposes missing focus handling and keyboard traps"
+   ],
+   "use": "want a quick first accessibility check with no tools",
+   "like": [
+    "A focus order check"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A colour contrast check",
+   "tier": 2,
+   "says": [
+    "measures text colour against its background against a required ratio",
+    "helps users with low vision read content"
+   ],
+   "use": "worry that grey text on a white page is hard to read"
+  },
+  {
+   "group": "a11y",
+   "subject": "Alt text on images",
+   "tier": 2,
+   "says": [
+    "gives a meaningful description of an image so a screen reader can convey it",
+    "is left empty for purely decorative images"
+   ],
+   "use": "need a screen reader user to understand a chart or photo",
+   "like": [
+    "aria-label on icon-only buttons"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A screen reader pass",
+   "tier": 3,
+   "says": [
+    "walks key journeys with assistive technology to hear what users actually get",
+    "finds problems that automated scanners cannot detect"
+   ],
+   "use": "want to know what a blind user experiences on the checkout flow",
+   "like": [
+    "An automated accessibility scan"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "An automated accessibility scan",
+   "tier": 3,
+   "says": [
+    "flags rule violations such as missing alt text or low contrast",
+    "detects only a portion of real accessibility problems"
+   ],
+   "use": "want fast accessibility checks on every pull request",
+   "not": [
+    "proves a page is fully accessible when it reports zero issues"
+   ],
+   "like": [
+    "A screen reader pass"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A focus order check",
+   "tier": 4,
+   "says": [
+    "verifies that tab order follows the visual and logical reading order",
+    "includes moving focus into and back out of dialogs"
+   ],
+   "use": "see keyboard focus jump around the page unpredictably",
+   "like": [
+    "Keyboard-only navigation"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "aria-hidden on decorative graphics",
+   "tier": 4,
+   "says": [
+    "hides decorative content from assistive technology",
+    "suits icons whose meaning is already given by nearby text"
+   ],
+   "use": "want a screen reader to skip a purely decorative SVG",
+   "not": [
+    "should be put on the main call-to-action button so it is read twice"
+   ],
+   "like": [
+    "aria-label on icon-only buttons"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "aria-label on icon-only buttons",
+   "tier": 3,
+   "says": [
+    "gives a button with no visible text an accessible name",
+    "is read by a screen reader instead of nothing"
+   ],
+   "use": "have a button showing only an icon that a screen reader announces as just button",
+   "like": [
+    "aria-hidden on decorative graphics",
+    "Alt text on images"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Static application security testing",
+   "tier": 3,
+   "says": [
+    "analyses source code without running it to find vulnerability patterns",
+    "can run early, even before the app can be built"
+   ],
+   "use": "want security findings on every commit before deployment",
+   "not": [
+    "needs a running application to probe"
+   ],
+   "like": [
+    "Dynamic application security testing"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Dynamic application security testing",
+   "tier": 3,
+   "says": [
+    "probes a running application from the outside like an attacker",
+    "finds issues that appear only at runtime, such as misconfigured headers"
+   ],
+   "use": "need to test a deployed staging site for runtime weaknesses",
+   "like": [
+    "Static application security testing",
+    "A penetration test"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Dependency vulnerability scanning",
+   "tier": 1,
+   "says": [
+    "checks third-party libraries against lists of known vulnerabilities",
+    "flags outdated packages that have published advisories"
+   ],
+   "use": "worry that a library you depend on has a known security hole"
+  },
+  {
+   "group": "sec",
+   "subject": "Secret scanning",
+   "tier": 1,
+   "says": [
+    "searches code and history for committed keys, tokens and passwords",
+    "can block a push that contains a credential"
+   ],
+   "use": "want to stop an API key reaching the repository"
+  },
+  {
+   "group": "sec",
+   "subject": "A penetration test",
+   "tier": 4,
+   "says": [
+    "has a skilled tester actively attempt to exploit the system within an agreed scope",
+    "chains weaknesses together the way a real attacker would"
+   ],
+   "use": "want a human attacker's view of how far an intruder could get",
+   "like": [
+    "Dynamic application security testing",
+    "Fuzzing"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Fuzzing",
+   "tier": 5,
+   "says": [
+    "feeds large volumes of malformed or random input to find crashes and hangs",
+    "finds parser and input-handling bugs people did not think to test"
+   ],
+   "use": "need to harden a file or protocol parser against hostile input",
+   "like": [
+    "Property-based testing",
+    "A penetration test"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "An authorisation test",
+   "tier": 3,
+   "says": [
+    "verifies that a user cannot act beyond their role, such as a manager offboarding an admin",
+    "checks that the server enforces permissions and not just the interface hiding buttons"
+   ],
+   "use": "need to prove one role cannot perform another role's actions"
+  },
+  {
+   "group": "sec",
+   "subject": "An input validation test",
+   "tier": 2,
+   "says": [
+    "sends hostile or malformed input such as script tags and SQL fragments",
+    "confirms the application rejects or safely encodes it"
+   ],
+   "use": "want to see how a form handles a script tag typed into a text field"
+  },
+  {
+   "group": "defect",
+   "subject": "Severity",
+   "tier": 1,
+   "says": [
+    "measures the technical or user impact of a defect",
+    "is set by what the defect does, not by when it must be fixed"
+   ],
+   "use": "need to describe how badly a bug hurts the system",
+   "not": [
+    "decides the order in which bugs are scheduled"
+   ],
+   "like": [
+    "Priority"
+   ]
+  },
+  {
+   "group": "defect",
+   "subject": "Priority",
+   "tier": 1,
+   "says": [
+    "sets the order in which defects should be fixed",
+    "reflects business urgency and can differ from severity"
+   ],
+   "use": "need to decide which bug the team fixes first",
+   "not": [
+    "is always the same as severity"
+   ],
+   "like": [
+    "Severity"
+   ]
+  },
+  {
+   "group": "defect",
+   "subject": "A bug report",
+   "tier": 1,
+   "says": [
+    "records a defect with a clear title, expected result, actual result and environment",
+    "lets someone else understand what went wrong without asking"
+   ],
+   "use": "have found a defect and must hand it to a developer",
+   "like": [
+    "Reproduction steps"
+   ]
+  },
+  {
+   "group": "defect",
+   "subject": "Reproduction steps",
+   "tier": 2,
+   "says": [
+    "list the exact ordered actions and data that trigger the defect",
+    "turn a vague complaint into something a developer can debug"
+   ],
+   "use": "hear a customer say it sometimes breaks and need to make it repeatable",
+   "like": [
+    "A bug report"
+   ]
+  },
+  {
+   "group": "defect",
+   "subject": "The defect lifecycle",
+   "tier": 1,
+   "says": [
+    "tracks a defect through states such as new, assigned, fixed, verified and closed",
+    "may reopen a defect when the fix fails verification"
+   ],
+   "use": "need to know what state a bug is in and who owns it next"
+  },
+  {
+   "group": "defect",
+   "subject": "Bug triage",
+   "tier": 3,
+   "says": [
+    "reviews new defects to confirm, prioritise and assign them",
+    "decides which defects will not be fixed"
+   ],
+   "use": "have a pile of new reports and need to sort them"
+  },
+  {
+   "group": "defect",
+   "subject": "Root cause analysis",
+   "tier": 4,
+   "says": [
+    "asks why a defect happened, not just what it is",
+    "aims to prevent the whole class of problem, for example with a new check"
+   ],
+   "use": "keep seeing the same kind of bug after fixes"
+  },
+  {
+   "group": "defect",
+   "subject": "An escaped defect",
+   "tier": 3,
+   "says": [
+    "is a defect found by customers or in production rather than by testing",
+    "prompts the question of which test would have caught it"
+   ],
+   "use": "learn about a bug from a customer complaint"
+  },
+  {
+   "group": "defect",
+   "subject": "Confirmation testing",
+   "tier": 2,
+   "says": [
+    "reruns the exact failing case to confirm that a fix worked",
+    "differs from regression testing, which checks that nothing else broke"
+   ],
+   "use": "have a fix for a bug and need to verify the fix itself",
+   "like": [
+    "Regression testing"
+   ]
+  },
+  {
+   "group": "defect",
+   "subject": "Defect clustering",
+   "tier": 5,
+   "says": [
+    "observes that a small number of modules tend to contain most of the defects",
+    "suggests concentrating extra testing on those areas"
+   ],
+   "use": "notice that most bugs come from one old module"
+  },
+  {
+   "group": "metric",
+   "subject": "Line coverage",
+   "tier": 1,
+   "says": [
+    "reports the percentage of code lines executed by tests",
+    "says nothing about whether those lines were checked by assertions"
+   ],
+   "use": "need to see which lines no test ever runs",
+   "not": [
+    "proves the tested lines are correct"
+   ],
+   "like": [
+    "Branch coverage",
+    "Mutation score"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Branch coverage",
+   "tier": 2,
+   "says": [
+    "reports whether each outcome of every decision, true and false, was taken",
+    "is stricter than line coverage"
+   ],
+   "use": "want to know whether the else paths are ever tested",
+   "like": [
+    "Line coverage"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Mutation score",
+   "tier": 5,
+   "says": [
+    "is the share of deliberately injected code changes that the tests detect",
+    "exposes tests that run code without checking its result"
+   ],
+   "use": "doubt that high coverage means the tests would catch real bugs",
+   "like": [
+    "Line coverage",
+    "Branch coverage"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Defect escape rate",
+   "tier": 4,
+   "says": [
+    "is the share of defects found after release rather than before",
+    "indicates how many defects testing let through to customers"
+   ],
+   "use": "want to judge how effective testing has been over several releases"
+  },
+  {
+   "group": "metric",
+   "subject": "Flaky rate",
+   "tier": 3,
+   "says": [
+    "is the share of runs that fail then pass on rerun with no code change",
+    "shows how far a suite can be trusted"
+   ],
+   "use": "want to know how much people can trust red builds"
+  },
+  {
+   "group": "metric",
+   "subject": "p95 latency",
+   "tier": 3,
+   "says": [
+    "is the response time that 95 percent of requests beat",
+    "reveals slow tails that an average hides"
+   ],
+   "use": "find that the average response time looks fine but some users still complain"
+  },
+  {
+   "group": "metric",
+   "subject": "Requirements coverage",
+   "tier": 4,
+   "says": [
+    "is the share of requirements that have at least one test",
+    "finds untested features that code coverage cannot show"
+   ],
+   "use": "want to know whether any specified feature has no test at all"
+  },
+  {
+   "group": "metric",
+   "subject": "Throughput",
+   "tier": 2,
+   "says": [
+    "is the number of requests or transactions handled per unit of time",
+    "usually flattens or drops once a system saturates"
+   ],
+   "use": "need to know how many orders per second the system can process"
+  },
+  {
+   "group": "metric",
+   "subject": "Test suite duration",
+   "tier": 2,
+   "says": [
+    "is the time developers wait for feedback from the whole suite",
+    "grows until people stop running tests before merging unless it is managed"
+   ],
+   "use": "find developers skipping tests because the run is slow"
+  },
+  {
+   "group": "env",
+   "subject": "Test data",
+   "tier": 1,
+   "says": [
+    "is the input and starting state that a test needs to run",
+    "should be created by the test or its setup, not left over from earlier runs"
+   ],
+   "use": "need known inputs and records so a test is repeatable"
+  },
+  {
+   "group": "env",
+   "subject": "A fixture",
+   "tier": 2,
+   "says": [
+    "sets up a known starting state before a test and cleans up after",
+    "can be shared by tests that need the same setup"
+   ],
+   "use": "have many tests that start from the same prepared state",
+   "like": [
+    "A test data builder",
+    "Seed data"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A test data builder",
+   "tier": 3,
+   "says": [
+    "creates valid objects with sensible defaults and lets a test override only the fields it cares about",
+    "keeps tests readable when entities have many required fields"
+   ],
+   "use": "find tests cluttered with long lists of irrelevant required fields",
+   "like": [
+    "A fixture"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "Seed data",
+   "tier": 2,
+   "says": [
+    "is a base set of records loaded into a database so it is usable",
+    "gives environments a predictable starting content"
+   ],
+   "use": "want every fresh environment to start with the same reference records",
+   "like": [
+    "A fixture"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "Data masking",
+   "tier": 3,
+   "says": [
+    "replaces sensitive values in copied production data with realistic stand-ins",
+    "lets testers use production-shaped data without exposing personal information"
+   ],
+   "use": "want production-shaped data in a test environment without exposing real people",
+   "like": [
+    "Synthetic data"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "Synthetic data",
+   "tier": 3,
+   "says": [
+    "is generated artificially instead of copied from real people",
+    "avoids privacy risk because no real record is involved"
+   ],
+   "use": "need large volumes of realistic records but must not use real customers",
+   "like": [
+    "Data masking"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A staging environment",
+   "tier": 2,
+   "says": [
+    "is a production-like place to verify a release before it goes live",
+    "reduces but cannot remove differences from production"
+   ],
+   "use": "want a final rehearsal of a release before customers see it",
+   "like": [
+    "An ephemeral environment"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "An ephemeral environment",
+   "tier": 4,
+   "says": [
+    "is created for one branch or pull request and destroyed afterwards",
+    "avoids testers queuing for one shared environment"
+   ],
+   "use": "want each pull request tested in its own clean copy of the app",
+   "like": [
+    "A staging environment"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "Environment drift",
+   "tier": 5,
+   "says": [
+    "is the gradual divergence of a test environment's configuration from production",
+    "lets a release pass in staging and still fail in production"
+   ],
+   "use": "see a release that passed staging break on a setting that differs in production"
+  },
+  {
+   "group": "env",
+   "subject": "Per-test transaction rollback",
+   "tier": 4,
+   "says": [
+    "wraps each database test in a transaction that is undone at the end",
+    "keeps a shared test database clean without slow rebuilds"
+   ],
+   "use": "want database tests isolated without recreating the schema each time",
+   "like": [
+    "Test isolation",
+    "A fixture"
+   ]
+  },
+  {
+   "group": "flaky",
+   "subject": "Shared mutable state",
+   "tier": 2,
+   "says": [
+    "lets one test change data that another test then reads",
+    "makes results depend on what ran before"
+   ],
+   "use": "find a test that passes alone but fails after another test",
+   "like": [
+    "Order dependence",
+    "Resource contention in parallel runs",
+    "Test isolation"
+   ]
+  },
+  {
+   "group": "flaky",
+   "subject": "Order dependence",
+   "tier": 3,
+   "says": [
+    "makes a test pass only when it runs after one particular other test",
+    "shows up when the suite is shuffled"
+   ],
+   "use": "see failures appear after the runner starts randomising test order",
+   "like": [
+    "Shared mutable state",
+    "Test isolation"
+   ]
+  },
+  {
+   "group": "flaky",
+   "subject": "Fixed sleep waits",
+   "tier": 3,
+   "says": [
+    "pause for a set time and hope the page or service is ready",
+    "fail on a slow machine and waste time on a fast one"
+   ],
+   "use": "find a browser test that sleeps two seconds before each check",
+   "like": [
+    "An async race condition"
+   ]
+  },
+  {
+   "group": "flaky",
+   "subject": "Real clock dependence",
+   "tier": 3,
+   "says": [
+    "makes results change with the time of day, the date or the timezone",
+    "is removed by injecting a controllable clock"
+   ],
+   "use": "see a test fail only just after midnight or at the end of a month",
+   "like": [
+    "Testability"
+   ]
+  },
+  {
+   "group": "flaky",
+   "subject": "Unseeded randomness",
+   "tier": 3,
+   "says": [
+    "produces different inputs each run so a failure cannot be repeated",
+    "is controlled by fixing or logging the seed"
+   ],
+   "use": "cannot reproduce a failure because the generated data differed"
+  },
+  {
+   "group": "flaky",
+   "subject": "Live network dependence",
+   "tier": 3,
+   "says": [
+    "lets a test fail because a real external service is slow or down",
+    "is avoided by replacing the service with a stub or fake"
+   ],
+   "use": "see a test fail whenever a third-party API has a bad afternoon",
+   "like": [
+    "A stub",
+    "A fake",
+    "Service virtualisation"
+   ]
+  },
+  {
+   "group": "flaky",
+   "subject": "An async race condition",
+   "tier": 4,
+   "says": [
+    "occurs when a test checks a result before an asynchronous operation has finished",
+    "passes or fails depending on which side finishes first"
+   ],
+   "use": "see an assertion run before a promise or callback completes",
+   "like": [
+    "Fixed sleep waits"
+   ]
+  },
+  {
+   "group": "flaky",
+   "subject": "Resource contention in parallel runs",
+   "tier": 4,
+   "says": [
+    "occurs when parallel tests fight over the same port, file or database row",
+    "appears only after the suite is split across workers"
+   ],
+   "use": "see failures that appear only after tests are run in parallel",
+   "like": [
+    "Shared mutable state",
+    "Test parallelisation"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Fail-fast pipeline ordering",
+   "tier": 2,
+   "says": [
+    "runs the cheapest, fastest checks first",
+    "stops the pipeline at the first failure to save time"
+   ],
+   "use": "want developers to hear about a typo in seconds, not after a long suite",
+   "like": [
+    "Shift-left testing"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A quality gate",
+   "tier": 2,
+   "says": [
+    "blocks a merge or release when defined checks fail",
+    "turns agreed standards into an automatic pass or fail"
+   ],
+   "use": "want standards enforced by the pipeline rather than by memory",
+   "not": [
+    "only warns and lets the pipeline continue"
+   ],
+   "like": [
+    "A required status check",
+    "ggmoney's bin/deploy.sh",
+    "ggsocial's deploy script"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A required status check",
+   "tier": 3,
+   "says": [
+    "is a branch protection rule that stops merging until named checks pass",
+    "stops a merge even when reviewers have approved it"
+   ],
+   "use": "want a pull request unmergeable while the test job is red",
+   "like": [
+    "A quality gate"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Test parallelisation",
+   "tier": 4,
+   "says": [
+    "splits tests across several workers or machines to cut wall-clock time",
+    "exposes hidden shared state between tests"
+   ],
+   "use": "have a suite that takes far too long to run on one machine",
+   "like": [
+    "Test isolation",
+    "Resource contention in parallel runs"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Test impact analysis",
+   "tier": 5,
+   "says": [
+    "runs only the tests affected by the changed code",
+    "risks missing a test if the dependency map is wrong"
+   ],
+   "use": "want a pull request to run only the tests its change can affect"
+  },
+  {
+   "group": "ci",
+   "subject": "Flaky test quarantine",
+   "tier": 3,
+   "says": [
+    "moves an unreliable test out of the blocking path while it is fixed",
+    "keeps the test visible and tracked rather than deleting it quietly"
+   ],
+   "use": "have a test that fails at random and blocks everyone's merge",
+   "like": [
+    "Automatic test retry"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Automatic test retry",
+   "tier": 4,
+   "says": [
+    "reruns a failed test to see whether it passes",
+    "can hide flakiness if the retries are not counted and reported"
+   ],
+   "use": "are tempted to rerun red builds until they go green",
+   "like": [
+    "Flaky test quarantine"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A nightly full run",
+   "tier": 3,
+   "says": [
+    "runs the slow, complete suite on a schedule rather than on every commit",
+    "gives broad coverage without slowing each pull request"
+   ],
+   "use": "have slow end-to-end tests that are too heavy for every commit"
+  },
+  {
+   "group": "ci",
+   "subject": "A test report artifact",
+   "tier": 3,
+   "says": [
+    "publishes results, logs and screenshots from a run so failures can be diagnosed",
+    "commonly uses a standard result format such as JUnit XML"
+   ],
+   "use": "find a red build and cannot tell why it failed after the runner is gone",
+   "like": [
+    "A test summary report"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Building once and promoting the same artifact",
+   "tier": 5,
+   "says": [
+    "tests the exact build that is later released",
+    "avoids a rebuild between staging and production that could change behaviour"
+   ],
+   "use": "want to be sure production runs the very bytes that passed testing",
+   "like": [
+    "A release candidate"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggmoney's bin/deploy.sh",
+   "tier": 2,
+   "says": [
+    "runs all of the test scripts before deploying",
+    "refuses to upload anything if one of them fails"
+   ],
+   "use": "want to know how ggmoney stops a broken build reaching customers",
+   "not": [
+    "uploads anyway and logs a warning when a test fails"
+   ],
+   "like": [
+    "A quality gate",
+    "ggsocial's deploy script"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggmoney's tests folder",
+   "tier": 2,
+   "says": [
+    "holds separate scripts for VAT, payroll, banking, compliance and CSRF",
+    "also holds a tests/stress folder of scenario runs for areas such as VAT, payroll and security"
+   ],
+   "use": "want to see where ggmoney concentrates its testing effort"
+  },
+  {
+   "group": "gg",
+   "subject": "ggmoney's csrf_test.php",
+   "tier": 3,
+   "says": [
+    "is a regression test born from a bug in which a JSON endpoint sent its CSRF token in a header",
+    "guards against the check reading only a form field, which had stopped every VAT submission"
+   ],
+   "use": "want an example of a regression test that came from a production bug"
+  },
+  {
+   "group": "gg",
+   "subject": "ggsocial's deploy script",
+   "tier": 3,
+   "says": [
+    "type-checks, lints and runs npm test before shipping",
+    "has a documented emergency override"
+   ],
+   "use": "want to know what ggsocial checks before it ships",
+   "like": [
+    "ggsocial's Vitest config",
+    "A quality gate",
+    "ggmoney's bin/deploy.sh",
+    "SKIP_TESTS=1"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "SKIP_TESTS=1",
+   "tier": 4,
+   "says": [
+    "is the documented emergency override in ggsocial's deploy script",
+    "skips the test step so an urgent fix can ship"
+   ],
+   "use": "must ship an urgent ggsocial fix and the test step cannot run",
+   "not": [
+    "is the normal way to speed up every ggsocial deploy"
+   ],
+   "like": [
+    "ggsocial's deploy script"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggsocial's Vitest config",
+   "tier": 3,
+   "says": [
+    "runs tests matching tests/**/*.test.ts in a node environment",
+    "stubs the server-only module that otherwise throws outside a Next build"
+   ],
+   "use": "want to know how ggsocial runs server code in tests",
+   "like": [
+    "ggsocial's deploy script"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's missing test script",
+   "tier": 2,
+   "says": [
+    "is the gap that package.json still has no test script",
+    "was first noted by the repo's earlier security review"
+   ],
+   "use": "want to know what automated testing GGLearn lacks today"
+  },
+  {
+   "group": "gg",
+   "subject": "check:dynamic",
+   "tier": 3,
+   "says": [
+    "re-derives each dynamic quiz answer by really running node, python, php, sqlite, git, npm semver and the TypeScript compiler",
+    "fails on any mismatch, acting as an independent oracle"
+   ],
+   "use": "want to know how GGLearn proves its generated answers are right",
+   "not": [
+    "asks a reviewer to approve each answer by hand"
+   ],
+   "like": [
+    "GGLearn's coverage script",
+    "A test oracle"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Dynamic families with no executable oracle",
+   "tier": 4,
+   "says": [
+    "get only a structure check, such as CSS maths or REST rules",
+    "must be reviewed by hand when changed"
+   ],
+   "use": "change a quiz family that nothing can actually execute"
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's coverage script",
+   "tier": 3,
+   "says": [
+    "reports how many distinct questions a learner can be asked for each track and level",
+    "takes --min and --fail options so a build can fail when a level is too thin"
+   ],
+   "use": "want to know whether any track or level has too few questions",
+   "like": [
+    "check:dynamic"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "PM2's max_memory_restart",
+   "tier": 4,
+   "says": [
+    "is set to 400M in GGLearn's ecosystem.config.cjs",
+    "is a safety net for memory growth, not a fix for a leak"
+   ],
+   "use": "want to know what GGLearn does when a process grows too large",
+   "like": [
+    "Soak testing"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's asynchronous password hashing",
+   "tier": 4,
+   "says": [
+    "replaced synchronous hashing that the review flagged",
+    "avoids stalling the whole Node process under a flood of logins"
+   ],
+   "use": "want to know why GGLearn's password hashing is not synchronous"
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's components",
+   "tier": 3,
+   "says": [
+    "mark decorative SVGs with aria-hidden",
+    "give the flashcard button an aria-label"
+   ],
+   "use": "want to see GGLearn's accessibility practices in its components"
+  }
+ ],
+ "qa": [
+  {
+   "q": "In a typical test pyramid, which kind of test should there be the most of?",
+   "right": "Unit tests",
+   "wrong": [
+    "End-to-end tests",
+    "Manual exploratory sessions",
+    "Load tests"
+   ],
+   "tier": 1,
+   "why": "Unit tests are the fastest and cheapest, so they form the wide base."
+  },
+  {
+   "q": "What does a regression test protect against?",
+   "right": "A change breaking behaviour that used to work",
+   "wrong": [
+    "A feature that was never built",
+    "Slow page loads under heavy traffic",
+    "A tester missing a deadline"
+   ],
+   "tier": 1,
+   "why": "Regression tests rerun known behaviour after changes."
+  },
+  {
+   "q": "Which pair of ages are the boundary values for this check?",
+   "right": "17 and 18",
+   "wrong": [
+    "0 and 100",
+    "10 and 25",
+    "30 and 40"
+   ],
+   "tier": 1,
+   "why": "The rule flips between 17 and 18, so boundary analysis tests both sides of that edge.",
+   "code": "function isAdult(age) { return age >= 18; }"
+  },
+  {
+   "q": "A typo in the company name appears in the header of the home page. It breaks nothing. How would you rate it?",
+   "right": "Low severity, high priority",
+   "wrong": [
+    "High severity, low priority",
+    "High severity, high priority",
+    "Low severity, low priority"
+   ],
+   "tier": 2,
+   "why": "Impact is tiny but the business wants it fixed quickly, so severity and priority differ."
+  },
+  {
+   "q": "Tests pass when run one at a time but fail when the whole suite runs. What should you look for first?",
+   "right": "Shared state or order dependence between tests",
+   "wrong": [
+    "A longer overall suite timeout",
+    "A way to retry each failing test",
+    "A reason to delete the failing tests"
+   ],
+   "tier": 2,
+   "why": "Passing alone and failing together points to tests sharing state."
+  },
+  {
+   "q": "A smoke test fails right after a deployment. What is the sensible next step?",
+   "right": "Stop deeper testing and investigate or roll back the build",
+   "wrong": [
+    "Run the full regression suite to collect more failures",
+    "Mark the build as passed and log the issue for later",
+    "Disable the smoke test for this release"
+   ],
+   "tier": 2,
+   "why": "A smoke test exists to say the build is not worth testing further."
+  },
+  {
+   "q": "What kind of test double is rates in this code?",
+   "right": "A stub, because it returns a canned value",
+   "wrong": [
+    "A mock, because it verifies calls",
+    "A spy, because it records its arguments",
+    "A fake, because it stores real data"
+   ],
+   "tier": 2,
+   "why": "It only returns a fixed answer to control the input; nothing is verified or recorded.",
+   "code": "const rates = { get: () => 1.2 };\nexpect(convert(100, rates)).toBe(120);"
+  },
+  {
+   "q": "What is this test verifying?",
+   "right": "That notify sent exactly one message through the send function",
+   "wrong": [
+    "That notify returns the number 1",
+    "That the real mail server accepted the message",
+    "That notify finishes in under a second"
+   ],
+   "tier": 3,
+   "why": "The mock's call count is the behaviour being verified.",
+   "code": "const send = jest.fn();\nnotify(user, send);\nexpect(send).toHaveBeenCalledTimes(1);"
+  },
+  {
+   "q": "What happens when this test runs?",
+   "right": "It fails, because the floating point sum is not exactly 0.3",
+   "wrong": [
+    "It passes, because 0.1 + 0.2 equals 0.3",
+    "It throws a TypeError",
+    "It passes only in Node, not in a browser"
+   ],
+   "tier": 3,
+   "why": "0.1 + 0.2 is 0.30000000000000004, so use a tolerance such as toBeCloseTo.",
+   "code": "it(\"adds\", () => {\n  expect(0.1 + 0.2).toBe(0.3);\n});"
+  },
+  {
+   "q": "A suite shows 90 percent line coverage, yet bugs keep escaping. What is the best next step?",
+   "right": "Check whether the tests assert outcomes, for example with mutation testing",
+   "wrong": [
+    "Raise the coverage target to 100 percent",
+    "Exclude untested files from the coverage report",
+    "Add end-to-end tests for every page"
+   ],
+   "tier": 3,
+   "why": "Coverage shows code ran, not that results were checked."
+  },
+  {
+   "q": "A discount applies only if the customer is a member and the order is over 50. How many rules does a full decision table for these two yes or no conditions have?",
+   "right": "4",
+   "wrong": [
+    "2",
+    "3",
+    "8"
+   ],
+   "tier": 3,
+   "why": "Two binary conditions give 2 x 2 = 4 combinations."
+  },
+  {
+   "q": "A field accepts whole numbers from 1 to 100. At minimum, how many equivalence classes are there?",
+   "right": "3",
+   "wrong": [
+    "1",
+    "2",
+    "5"
+   ],
+   "tier": 3,
+   "why": "Below the range, within it, and above it."
+  },
+  {
+   "q": "Which values best cover the boundaries of a field that accepts 1 to 100?",
+   "right": "0, 1, 100, 101",
+   "wrong": [
+    "1, 50, 100",
+    "0, 50, 101",
+    "10, 20, 30, 40"
+   ],
+   "tier": 3,
+   "why": "Boundary analysis tests on and just outside each edge."
+  },
+  {
+   "q": "An end-to-end test fails about one run in ten. The team wraps it in three automatic retries. What is the main risk?",
+   "right": "The retries hide a real cause, so it is never found",
+   "wrong": [
+    "Retries make the test slower than a unit test",
+    "Retries can only be used in unit tests",
+    "There is no risk, because retries are standard practice"
+   ],
+   "tier": 4,
+   "why": "Retries without counting or investigating turn flakiness into silent noise."
+  },
+  {
+   "q": "A load test reports a 200 ms average response time, but customers say the site is slow. What should you examine?",
+   "right": "Percentiles such as p95 and p99, because averages hide slow tails",
+   "wrong": [
+    "The unit test coverage report",
+    "Whether the test ran with fewer users",
+    "The mean once more over a longer period"
+   ],
+   "tier": 4,
+   "why": "A small share of very slow requests barely moves the mean but users feel them."
+  },
+  {
+   "q": "A release passes staging but fails in production because a setting differs. What is the best long-term fix?",
+   "right": "Define environments as code and promote the same build through them",
+   "wrong": [
+    "Skip staging in future",
+    "Add more unit tests that read the staging config",
+    "Test only in production"
+   ],
+   "tier": 4,
+   "why": "The cause is environment drift; shared definitions and one artifact reduce it."
+  },
+  {
+   "q": "A checkout flow uses a payment provider whose sandbox is rate limited. What is a sound approach?",
+   "right": "Stub or virtualise the provider for most tests and keep a few sandbox checks",
+   "wrong": [
+    "Call the live provider with real cards in every test",
+    "Skip testing the payment step",
+    "Replace the database with a mock"
+   ],
+   "tier": 3,
+   "why": "Isolating most tests from the provider keeps them fast and reliable, with a few real checks for fidelity."
+  },
+  {
+   "q": "What is the main point of writing the test first in TDD?",
+   "right": "It shows the test can fail and defines the behaviour before the code exists",
+   "wrong": [
+    "It guarantees 100 percent coverage",
+    "It lets QA sign off before development",
+    "It records known defects"
+   ],
+   "tier": 2,
+   "why": "A test never seen failing might not detect anything."
+  },
+  {
+   "q": "What is this text an example of?",
+   "right": "A BDD scenario in Given-When-Then form",
+   "wrong": [
+    "A property-based test",
+    "A load test script",
+    "A mutation testing configuration"
+   ],
+   "tier": 2,
+   "why": "Given, When and Then are the structure of Gherkin scenarios.",
+   "code": "Given a member with a cart total of 60\nWhen they check out\nThen a 10% discount is applied"
+  },
+  {
+   "q": "What is the main reliability problem with this test?",
+   "right": "The fixed two-second sleep fails on slow runs and wastes time on fast ones",
+   "wrong": [
+    "The click happens before the assertion",
+    "textContent is asynchronous",
+    "Toasts can only be tested at unit level"
+   ],
+   "tier": 3,
+   "why": "Waiting for the toast element itself removes the guess.",
+   "code": "await page.click(\"#save\");\nawait page.waitForTimeout(2000);\nexpect(await page.textContent(\".toast\")).toBe(\"Saved\");"
+  },
+  {
+   "q": "How should you make this function testable for expiry?",
+   "right": "Pass in the current time or use a fake clock",
+   "wrong": [
+    "Sleep in the test until the token expires",
+    "Set exp to a random number",
+    "Run the test only at midnight"
+   ],
+   "tier": 3,
+   "why": "Controlling time removes the dependence on the real clock.",
+   "code": "function isExpired(token) {\n  return token.exp < Date.now();\n}"
+  },
+  {
+   "q": "What is wrong with these two tests?",
+   "right": "test_b depends on whether test_a ran first because of shared mutable state",
+   "wrong": [
+    "test_a should use assertEqual",
+    "Lists cannot be shared between tests",
+    "Both tests should be one test"
+   ],
+   "tier": 4,
+   "why": "items is module-level, so test_a changes what test_b sees.",
+   "code": "items = []\n\ndef test_a():\n    items.append(1)\n    assert len(items) == 1\n\ndef test_b():\n    assert len(items) == 0"
+  },
+  {
+   "q": "A crash occurs in a feature scheduled for removal next week. How would you classify it?",
+   "right": "High severity, low priority",
+   "wrong": [
+    "Low severity, high priority",
+    "High severity, high priority",
+    "Low severity, low priority"
+   ],
+   "tier": 3,
+   "why": "The impact is serious but the business urgency is low."
+  },
+  {
+   "q": "What does a good bug report contain?",
+   "right": "Steps to reproduce, expected result, actual result and the environment",
+   "wrong": [
+    "Only a screenshot",
+    "A guess at the culprit commit and nothing else",
+    "A one-line title saying it is broken"
+   ],
+   "tier": 2,
+   "why": "Others must be able to reproduce and understand the problem."
+  },
+  {
+   "q": "A defect is found in production. What is the strongest response?",
+   "right": "Write a test that reproduces it, fix it, and ask why existing tests missed it",
+   "wrong": [
+    "Fix it quickly and skip the test since it was a one-off",
+    "Add automatic retries to the suite",
+    "Raise the coverage target to 100 percent"
+   ],
+   "tier": 3,
+   "why": "A regression test plus root cause analysis stops the class of problem returning."
+  },
+  {
+   "q": "Which security technique examines source code without running the application?",
+   "right": "Static application security testing",
+   "wrong": [
+    "Dynamic application security testing",
+    "A penetration test",
+    "Fuzzing"
+   ],
+   "tier": 2,
+   "why": "SAST analyses code at rest."
+  },
+  {
+   "q": "A security scan reports 300 findings. What should the team do first?",
+   "right": "Triage by exploitability and impact and fix the highest risks first",
+   "wrong": [
+    "Fix them in the order listed",
+    "Turn the scanner off",
+    "Mark them all as false positives"
+   ],
+   "tier": 4,
+   "why": "Triage focuses scarce time on what attackers could really use."
+  },
+  {
+   "q": "A manager calls the offboard endpoint for an admin. Which status is the best expectation?",
+   "right": "403",
+   "wrong": [
+    "200",
+    "401",
+    "500"
+   ],
+   "tier": 3,
+   "why": "The caller is authenticated but not permitted, which is 403 Forbidden.",
+   "code": "test(\"manager cannot offboard admin\", async () => {\n  const res = await api.as(\"manager\").post(\"/users/7/offboard\"); // 7 is an admin\n  expect(res.status).toBe(/* ? */);\n});"
+  },
+  {
+   "q": "An automated accessibility scanner reports zero issues. Can you call the page accessible?",
+   "right": "No, scanners find only some problems, so add keyboard and screen reader checks",
+   "wrong": [
+    "Yes, zero issues means fully accessible",
+    "Yes, if the scan ran on mobile",
+    "No, but only because scanners are always wrong"
+   ],
+   "tier": 3,
+   "why": "Many accessibility problems need human judgment to detect."
+  },
+  {
+   "q": "How do you fix this button for screen reader users?",
+   "right": "Add an aria-label to the button and aria-hidden to the icon",
+   "wrong": [
+    "Add a title attribute to the body",
+    "Set tabindex to -1",
+    "Add an alt attribute to the button"
+   ],
+   "tier": 2,
+   "why": "The button needs an accessible name, and the icon would add noise.",
+   "code": "<button>\n  <svg viewBox=\"0 0 24 24\">...</svg>\n</button>"
+  },
+  {
+   "q": "What alt value is right for a purely decorative image?",
+   "right": "An empty alt attribute",
+   "wrong": [
+    "alt=\"image\"",
+    "alt=\"decorative image\"",
+    "No alt attribute at all"
+   ],
+   "tier": 2,
+   "why": "Empty alt tells assistive technology to skip it; a missing attribute may make it read the filename."
+  },
+  {
+   "q": "What is the minimum WCAG AA contrast ratio for normal body text?",
+   "right": "4.5 to 1",
+   "wrong": [
+    "3 to 1",
+    "7 to 1",
+    "2 to 1"
+   ],
+   "tier": 3,
+   "why": "3 to 1 is for large text and 7 to 1 is the AAA level."
+  },
+  {
+   "q": "Which test is best for finding a memory leak that appears after days?",
+   "right": "A soak test",
+   "wrong": [
+    "A spike test",
+    "A smoke test",
+    "A usability test"
+   ],
+   "tier": 3,
+   "why": "Long steady load exposes slow resource growth."
+  },
+  {
+   "q": "Marketing will email a million customers at noon. Which test fits best?",
+   "right": "A spike test",
+   "wrong": [
+    "A soak test",
+    "A usability test",
+    "A snapshot test"
+   ],
+   "tier": 3,
+   "why": "The risk is a sudden burst of traffic."
+  },
+  {
+   "q": "A team wants to load test a new checkout during business hours in production. What is the best approach?",
+   "right": "Use a production-like environment or off-peak window with test accounts and safeguards",
+   "wrong": [
+    "Run it at peak for realism",
+    "Never load test",
+    "Use real customers' accounts"
+   ],
+   "tier": 4,
+   "why": "Load must not endanger real users or their data."
+  },
+  {
+   "q": "Which is a typical exit criterion for a test cycle?",
+   "right": "No open critical defects and the agreed pass rate reached",
+   "wrong": [
+    "A stable build is available",
+    "Every developer has gone home",
+    "The test plan has been written"
+   ],
+   "tier": 2,
+   "why": "Exit criteria define when testing may stop; build availability is an entry criterion."
+  },
+  {
+   "q": "It is Friday and the release has two open medium defects with workarounds. Pressure to ship is high. What is the best course?",
+   "right": "List them as known issues and get an explicit go/no-go decision from stakeholders",
+   "wrong": [
+    "Ship and say nothing",
+    "Delay until there are zero defects, however long",
+    "Reclassify them as low so the gate passes"
+   ],
+   "tier": 4,
+   "why": "The risk is accepted openly, with evidence, by those accountable."
+  },
+  {
+   "q": "Developers use the emergency test override on most deploys. What should the team do?",
+   "right": "Treat it as a process problem: find why the gate is slow or flaky, fix it and track each override",
+   "wrong": [
+    "Remove the gate so the override is unneeded",
+    "Stop asking for a reason when it is used",
+    "Nothing, since overrides are by design"
+   ],
+   "tier": 4,
+   "why": "Frequent overrides signal an untrusted gate."
+  },
+  {
+   "q": "What does ggmoney's csrf_test.php illustrate?",
+   "right": "A regression test written after a production bug and kept so it cannot return",
+   "wrong": [
+    "A load test of the VAT module",
+    "A snapshot test of the user interface",
+    "A replacement for code review"
+   ],
+   "tier": 3,
+   "why": "Its header describes the bug where a header token was not read by the check."
+  },
+  {
+   "q": "What does GGLearn's check:dynamic use to verify answers?",
+   "right": "It really runs node, python, php, sqlite, git, npm semver and the TypeScript compiler",
+   "wrong": [
+    "It rereads the stored answer key",
+    "It asks a model to vote on each answer",
+    "It compares against last release's output"
+   ],
+   "tier": 3,
+   "why": "Executing the real tools gives an independent source of truth."
+  },
+  {
+   "q": "What does ggmoney's bin/deploy.sh do when a test script fails?",
+   "right": "Refuses to upload anything",
+   "wrong": [
+    "Uploads anyway and logs a warning",
+    "Skips only that area",
+    "Retries the test three times and continues"
+   ],
+   "tier": 2,
+   "why": "Failing tests stop the deploy."
+  },
+  {
+   "q": "GGLearn has no test script in package.json. What is a sound first move?",
+   "right": "Test the riskiest logic first, such as session and permission rules, and make failures block the pipeline",
+   "wrong": [
+    "Aim for 100 percent coverage before anything else",
+    "Rely on check:dynamic alone as the test suite",
+    "Write end-to-end tests for every page first"
+   ],
+   "tier": 4,
+   "why": "Risk-based effort plus a gate that stops releases gives the most value early."
+  },
+  {
+   "q": "Why does ggsocial's Vitest config stub the server-only module?",
+   "right": "It throws outside a Next build, so tests would crash on import",
+   "wrong": [
+    "It speeds up the browser",
+    "It hides failing tests",
+    "It is required by the TypeScript compiler"
+   ],
+   "tier": 4,
+   "why": "The stub lets server code load in a plain node test environment."
+  },
+  {
+   "q": "A process under PM2 restarts at 400M. Is the memory problem solved?",
+   "right": "No, it is a safety net and the leak still needs finding, for example with a soak test",
+   "wrong": [
+    "Yes, restarts remove the need for further work",
+    "Yes, as long as it restarts quickly",
+    "No, because PM2 cannot restart processes"
+   ],
+   "tier": 3,
+   "why": "A restart cap contains the damage but does not fix the cause."
+  },
+  {
+   "q": "What does this setup do?",
+   "right": "Keeps tests isolated by undoing each test's database writes",
+   "wrong": [
+    "Commits every test's data permanently",
+    "Speeds up the suite by disabling assertions",
+    "Seeds the production database"
+   ],
+   "tier": 3,
+   "why": "Rolling back after each test leaves a clean database.",
+   "code": "beforeEach(() => db.begin());\nafterEach(() => db.rollback());"
+  },
+  {
+   "q": "What will line coverage and mutation testing report for this test?",
+   "right": "100 percent line coverage, but the mutation that changes a + b to a - b survives",
+   "wrong": [
+    "0 percent coverage and all mutants killed",
+    "100 percent coverage and all mutants killed",
+    "The test fails because it has no assertion"
+   ],
+   "tier": 4,
+   "why": "The code runs but nothing checks its result, so a mutant is not detected.",
+   "code": "function add(a, b) { return a + b; }\n\ntest(\"add\", () => {\n  add(2, 3);\n});"
+  },
+  {
+   "q": "Which property is most suited to a property-based test of a sort function?",
+   "right": "Sorting the output again gives the same list",
+   "wrong": [
+    "The output equals [1, 2, 3] for the input [3, 1, 2]",
+    "The output is shorter than the input",
+    "The first element is unchanged"
+   ],
+   "tier": 4,
+   "why": "Idempotence holds for any input, so generated inputs can check it."
+  },
+  {
+   "q": "Test selection skipped the tests that a config file change should have triggered, and a bug escaped. What is the right fix?",
+   "right": "Treat unmapped file changes as run everything, and keep a nightly full run",
+   "wrong": [
+    "Abandon test selection and run only end-to-end tests",
+    "Add the config file to the ignore list",
+    "Raise the coverage target"
+   ],
+   "tier": 5,
+   "why": "Selection must fail safe when the dependency map has gaps."
+  },
+  {
+   "q": "Parallelising a suite from 40 to 8 minutes causes 12 tests to fail intermittently. What is the likely cause?",
+   "right": "Hidden shared state or resource contention, such as ports, files or database rows",
+   "wrong": [
+    "Parallel runners are inherently broken",
+    "The tests were fine and the failures are random",
+    "The suite needs fixed sleeps"
+   ],
+   "tier": 5,
+   "why": "Parallel runs expose tests that were secretly relying on shared resources."
+  },
+  {
+   "q": "For three parameters with three values each, what is the minimum number of tests for pairwise coverage?",
+   "right": "9",
+   "wrong": [
+    "3",
+    "6",
+    "27"
+   ],
+   "tier": 4,
+   "why": "Two parameters alone have 9 value pairs, and each test covers one such pair, so at least 9 tests are needed."
+  },
+  {
+   "q": "A coverage target of 90 percent is enforced, and developers start adding tests with no assertions. Which principle explains this?",
+   "right": "Goodhart's law: a measure that becomes a target stops being a good measure",
+   "wrong": [
+    "Pareto's law: most defects come from few modules",
+    "Brooks's law: adding people slows a late project",
+    "Moore's law: hardware doubles regularly"
+   ],
+   "tier": 4,
+   "why": "Pair coverage with mutation score and review."
+  },
+  {
+   "q": "Developers refresh snapshot tests with the update flag whenever they fail. What does this cause?",
+   "right": "The snapshots stop verifying anything, so diffs must be reviewed",
+   "wrong": [
+    "Faster tests with the same safety",
+    "Higher mutation scores",
+    "Less need for code review"
+   ],
+   "tier": 4,
+   "why": "Blindly updating bakes in regressions."
+  },
+  {
+   "q": "An end-to-end suite takes three hours and every pull request waits. What is the best fix?",
+   "right": "Push checks down to unit and integration tests and keep end-to-end tests for critical journeys",
+   "wrong": [
+    "Add more end-to-end tests",
+    "Retry failures automatically",
+    "Run it less often and never on pull requests"
+   ],
+   "tier": 3,
+   "why": "The inverted pyramid is slow and fragile."
+  },
+  {
+   "q": "Which is the best exploratory charter?",
+   "right": "Explore checkout with expired and declined cards to find error-handling problems",
+   "wrong": [
+    "Click everything for a day",
+    "Run scripted cases TC-101 to TC-150",
+    "Check that the build compiles"
+   ],
+   "tier": 4,
+   "why": "A charter gives a mission without prescribing steps."
+  },
+  {
+   "q": "A 5 percent canary shows the error rate doubling. What should you do?",
+   "right": "Halt the rollout, roll back or switch the flag off, and investigate",
+   "wrong": [
+    "Increase to 50 percent for more data",
+    "Wait until the rollout finishes, then compare",
+    "Ignore it, because 5 percent is small"
+   ],
+   "tier": 3,
+   "why": "A canary exists to catch problems cheaply."
+  },
+  {
+   "q": "A team wants production-like data in staging. What is the best choice?",
+   "right": "Masked or synthetic data",
+   "wrong": [
+    "A raw copy of production data",
+    "Production data with only the surnames removed",
+    "Empty tables only"
+   ],
+   "tier": 3,
+   "why": "It protects real people while keeping realistic shape."
+  },
+  {
+   "q": "What is wrong with this test?",
+   "right": "It does not wait for the promise, so it can pass before the assertion runs",
+   "wrong": [
+    "toBe should be toEqual",
+    "It needs a sleep",
+    "then cannot be used in tests"
+   ],
+   "tier": 3,
+   "why": "Return or await the promise so the runner waits.",
+   "code": "test(\"loads\", () => {\n  fetchUser().then(u => expect(u.name).toBe(\"Ann\"));\n});"
+  },
+  {
+   "q": "When does this test pass?",
+   "right": "When parse_age raises a ValueError",
+   "wrong": [
+    "When parse_age returns None",
+    "When parse_age raises any other exception type",
+    "When parse_age never raises"
+   ],
+   "tier": 2,
+   "why": "pytest.raises passes only if the expected exception type is raised.",
+   "code": "with pytest.raises(ValueError):\n    parse_age(\"abc\")"
+  },
+  {
+   "q": "Which statement about test oracles is correct?",
+   "right": "A test is only as good as the independent source of expected results it uses",
+   "wrong": [
+    "The code under test is always a valid oracle",
+    "Coverage numbers act as oracle",
+    "Oracles are needed only for UI tests"
+   ],
+   "tier": 5,
+   "why": "Using the code's own output as the expected result proves nothing."
+  }
+ ]
+}

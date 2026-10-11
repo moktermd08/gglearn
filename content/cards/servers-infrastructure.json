@@ -1,0 +1,2680 @@
+{
+ "slug": "servers-infrastructure",
+ "name": "Servers and infrastructure",
+ "description": "Linux, web servers, Docker, backups, SSL, deploys, health checks.",
+ "roles": "developer",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "linux": "Linux server concept",
+  "cmd": "Linux command",
+  "web": "web server or proxy concept",
+  "status": "HTTP status code",
+  "tls": "TLS or certificate concept",
+  "dns": "DNS or email record",
+  "net": "server security control",
+  "proc": "process management concept",
+  "cont": "container concept",
+  "host": "hosting or scaling concept",
+  "bak": "backup concept",
+  "mon": "monitoring concept",
+  "edge": "edge and traffic concept",
+  "co": "company server practice"
+ },
+ "cards": [
+  {
+   "group": "linux",
+   "subject": "The root user",
+   "tier": 1,
+   "says": [
+    "has user ID 0 and unrestricted control of the system",
+    "bypasses the normal file permission checks"
+   ],
+   "use": "want to explain why daily work should not run under the all-powerful account",
+   "not": [
+    "is limited by the same file permissions as ordinary users"
+   ],
+   "like": [
+    "The sudo command"
+   ]
+  },
+  {
+   "group": "linux",
+   "subject": "The sudo command",
+   "tier": 1,
+   "says": [
+    "runs a single command with another user's privileges, usually root",
+    "is governed by a sudoers policy",
+    "can record which user ran which command"
+   ],
+   "use": "need one administrative command without staying logged in as root",
+   "not": [
+    "permanently turns the whole session into the root user"
+   ],
+   "like": [
+    "The root user"
+   ]
+  },
+  {
+   "group": "linux",
+   "subject": "A file mode",
+   "tier": 1,
+   "says": [
+    "is shown as read, write and execute bits for owner, group and others",
+    "can be written as an octal number such as 640",
+    "is changed with chmod"
+   ],
+   "use": "need to stop other users reading a file",
+   "not": [
+    "is stored inside the file's name"
+   ]
+  },
+  {
+   "group": "linux",
+   "subject": "A symbolic link",
+   "tier": 2,
+   "says": [
+    "is a file that holds the path of another file",
+    "breaks when its target is moved or deleted",
+    "is how an enabled Apache site normally points at its available config"
+   ],
+   "use": "want one file to appear at a second path without copying it",
+   "not": [
+    "is an independent full copy of its target"
+   ]
+  },
+  {
+   "group": "linux",
+   "subject": "Log rotation",
+   "tier": 2,
+   "says": [
+    "renames and compresses old log files on a schedule",
+    "deletes the oldest logs after a set number of rotations",
+    "is commonly handled by logrotate"
+   ],
+   "use": "need logs to stop filling the disk",
+   "not": [
+    "makes a log file larger so more history fits in it"
+   ]
+  },
+  {
+   "group": "linux",
+   "subject": "A cron job",
+   "tier": 2,
+   "says": [
+    "runs a command on a repeating time schedule",
+    "is defined by five time fields followed by the command",
+    "runs with a minimal environment, so absolute paths are safest"
+   ],
+   "use": "need a backup to run every night without anyone remembering",
+   "not": [
+    "runs only while a user is logged in"
+   ]
+  },
+  {
+   "group": "linux",
+   "subject": "Load average",
+   "tier": 3,
+   "says": [
+    "counts processes running or waiting to run, averaged over 1, 5 and 15 minutes",
+    "has to be read against the number of CPU cores"
+   ],
+   "use": "need to judge whether a busy server is saturated on CPU",
+   "not": [
+    "is the percentage of RAM currently in use"
+   ]
+  },
+  {
+   "group": "linux",
+   "subject": "An inode",
+   "tier": 5,
+   "says": [
+    "stores a file's owner, permissions and data location but not its name",
+    "exists in a limited number per filesystem",
+    "can run out while free space remains"
+   ],
+   "use": "see 'No space left on device' although df shows free space",
+   "not": [
+    "is a block of RAM reserved for one running process"
+   ]
+  },
+  {
+   "group": "linux",
+   "subject": "The OOM killer",
+   "tier": 5,
+   "says": [
+    "is a kernel mechanism that ends a process when memory runs out",
+    "chooses its victim by a score based on memory use",
+    "leaves a message in the kernel log"
+   ],
+   "use": "need to find out why a service vanished with no error of its own",
+   "not": [
+    "compresses memory pages so that no process ever has to end"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The df command",
+   "tier": 1,
+   "says": [
+    "reports used and free space for each mounted filesystem",
+    "is the usual first check when a disk is suspected full"
+   ],
+   "use": "need to see whether the disk is full",
+   "not": [
+    "lists which folder uses the most space"
+   ],
+   "like": [
+    "The du command"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The du command",
+   "tier": 2,
+   "says": [
+    "adds up the space used by directories and files",
+    "finds the heavy folder when run with a depth limit"
+   ],
+   "use": "need to find which folder is eating the disk",
+   "not": [
+    "shows free space for each filesystem"
+   ],
+   "like": [
+    "The df command"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The free command",
+   "tier": 1,
+   "says": [
+    "shows used, free and cached memory",
+    "reports swap usage alongside RAM"
+   ],
+   "use": "need to check whether the server is short of memory",
+   "not": [
+    "reports disk space on each filesystem"
+   ],
+   "like": [
+    "The df command",
+    "The top command"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The top command",
+   "tier": 1,
+   "says": [
+    "shows a live, refreshing list of processes, by default sorted by CPU use",
+    "displays the load average in its header"
+   ],
+   "use": "need to see which process is using the CPU right now",
+   "not": [
+    "prints one snapshot and exits"
+   ],
+   "like": [
+    "The free command"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The ss command",
+   "tier": 3,
+   "says": [
+    "lists listening and connected sockets",
+    "shows the owning process with the -p option when run with enough privilege"
+   ],
+   "use": "need to see which process is listening on a port",
+   "not": [
+    "lists every file a process has open, regular files included"
+   ],
+   "like": [
+    "The lsof command"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The lsof command",
+   "tier": 5,
+   "says": [
+    "lists open files, including sockets, for each process",
+    "can reveal a deleted file that a process still holds open"
+   ],
+   "use": "need to find what keeps disk space used after a log file was deleted",
+   "not": [
+    "lists only the TCP ports in the listening state"
+   ],
+   "like": [
+    "The ss command"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The journalctl command",
+   "tier": 2,
+   "says": [
+    "reads logs from the systemd journal",
+    "filters to one service with the -u option",
+    "can show only entries since a given time"
+   ],
+   "use": "need the recent logs of a systemd service",
+   "not": [
+    "rotates the log files under /var/log"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The tail -f command",
+   "tier": 1,
+   "says": [
+    "follows a file and prints new lines as they are appended",
+    "is the quick way to watch a log while requests arrive"
+   ],
+   "use": "need to watch a log live",
+   "not": [
+    "deletes the oldest lines from a file"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The rsync command",
+   "tier": 3,
+   "says": [
+    "copies only the differences between source and destination",
+    "removes files missing from the source when given --delete",
+    "uses a delta algorithm so unchanged parts of files are not re-sent"
+   ],
+   "use": "need to mirror a directory to a server efficiently",
+   "not": [
+    "re-sends every file in full on each run"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The curl command",
+   "tier": 1,
+   "says": [
+    "makes an HTTP request from the command line",
+    "shows only the response headers with -I",
+    "can print just the status code when given -w with the http_code variable"
+   ],
+   "use": "need to test a URL's status code without a browser",
+   "not": [
+    "edits the web server's configuration"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "A reverse proxy",
+   "tier": 1,
+   "says": [
+    "accepts client requests and forwards them to a backend server",
+    "hides the backend's address from clients",
+    "can terminate TLS on behalf of the backend"
+   ],
+   "use": "need public traffic to reach an app that listens only on localhost",
+   "not": [
+    "sits on the user's side and fetches pages on their behalf"
+   ],
+   "like": [
+    "An Apache virtual host",
+    "An Nginx server block"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "An Apache virtual host",
+   "tier": 2,
+   "says": [
+    "is declared in Apache with a VirtualHost block",
+    "lets one Apache install serve several sites chosen by hostname and port"
+   ],
+   "use": "need two domains served from one Apache install",
+   "not": [
+    "is declared with a server block containing listen and server_name"
+   ],
+   "like": [
+    "An Nginx server block"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "An Nginx server block",
+   "tier": 2,
+   "says": [
+    "is declared with a server block containing listen and server_name",
+    "selects the site to serve by matching server_name"
+   ],
+   "use": "need two domains served from one Nginx install",
+   "not": [
+    "is declared in Apache with a VirtualHost element"
+   ],
+   "like": [
+    "An Apache virtual host"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "The ProxyPass directive",
+   "tier": 3,
+   "says": [
+    "maps a URL path to a backend address in Apache",
+    "needs the Apache proxy modules enabled",
+    "is paired with ProxyPassReverse so that redirects from the backend are rewritten"
+   ],
+   "use": "need Apache to forward the whole site to a local app",
+   "not": [
+    "passes the original Host header on to the backend"
+   ],
+   "like": [
+    "The ProxyPreserveHost directive"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "The ProxyPreserveHost directive",
+   "tier": 4,
+   "says": [
+    "passes the original Host header on to the backend",
+    "stops the backend seeing its own address as the requested host"
+   ],
+   "use": "need the app behind Apache to see the public hostname",
+   "not": [
+    "chooses which backend receives the request"
+   ],
+   "like": [
+    "The ProxyPass directive"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "An .htaccess file",
+   "tier": 3,
+   "says": [
+    "holds per-directory Apache settings",
+    "is honoured only where AllowOverride permits it",
+    "is re-read on every request, unlike the main config"
+   ],
+   "use": "need per-directory rules on a host where you cannot edit the main config",
+   "not": [
+    "is read once when Apache starts"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "The prefork MPM",
+   "tier": 4,
+   "says": [
+    "uses a separate single-threaded process for each connection",
+    "suits code that is not thread-safe, such as classic mod_php"
+   ],
+   "use": "need an Apache processing model for non-thread-safe modules",
+   "not": [
+    "hands idle keep-alive connections off to a shared helper thread"
+   ],
+   "like": [
+    "The event MPM"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "The event MPM",
+   "tier": 5,
+   "says": [
+    "hands idle keep-alive connections off so they do not tie up a worker thread",
+    "is a threaded Apache processing model"
+   ],
+   "use": "want Apache to hold many idle keep-alive connections cheaply",
+   "not": [
+    "uses one single-threaded process for every connection"
+   ],
+   "like": [
+    "The prefork MPM"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "A 301 response",
+   "tier": 2,
+   "says": [
+    "tells clients a URL has moved permanently",
+    "may be cached by browsers for a long time"
+   ],
+   "use": "need to send http traffic to https for good",
+   "not": [
+    "marks a move as temporary and expects clients to keep the old URL"
+   ],
+   "like": [
+    "A 302 response"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "A 302 response",
+   "tier": 2,
+   "says": [
+    "tells clients a move is temporary",
+    "expects clients to keep using the original URL next time"
+   ],
+   "use": "need to send visitors elsewhere for now, such as during a trial",
+   "not": [
+    "tells search engines the page has permanently moved"
+   ],
+   "like": [
+    "A 301 response"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "A 403 response",
+   "tier": 2,
+   "says": [
+    "means the server understood the request and refuses it",
+    "is what an IP access rule returns to an address that is not allowed"
+   ],
+   "use": "need to explain why a blocked address gets a refusal rather than a missing page",
+   "not": [
+    "means the page does not exist"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "A 502 response",
+   "tier": 3,
+   "says": [
+    "means the proxy received an invalid reply or none from the backend",
+    "is typical when the app behind the proxy has crashed or stopped"
+   ],
+   "use": "see the proxy answer instantly with an error because the app is down",
+   "not": [
+    "means the proxy waited too long for the backend"
+   ],
+   "like": [
+    "A 503 response",
+    "A 504 response"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "A 503 response",
+   "tier": 3,
+   "says": [
+    "means the service is temporarily unavailable or overloaded",
+    "is the right code for planned maintenance, often with a Retry-After header"
+   ],
+   "use": "need to tell clients and crawlers to come back later during maintenance",
+   "not": [
+    "means the proxy could not parse the backend's reply"
+   ],
+   "like": [
+    "A 502 response",
+    "A 504 response"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "A 504 response",
+   "tier": 3,
+   "says": [
+    "means the proxy gave up waiting for the backend",
+    "points to a slow backend or a proxy timeout that is too short"
+   ],
+   "use": "see a proxy return an error only after a long pause",
+   "not": [
+    "means the backend crashed and refused the connection at once"
+   ],
+   "like": [
+    "A 502 response",
+    "A 503 response"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "TLS",
+   "tier": 1,
+   "says": [
+    "encrypts traffic between client and server",
+    "lets the client verify the server's identity",
+    "replaced the obsolete SSL protocols"
+   ],
+   "use": "need to protect data in transit across the internet",
+   "not": [
+    "encrypts the data stored on the server's disk"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "A TLS certificate",
+   "tier": 1,
+   "says": [
+    "binds a public key to a domain name",
+    "is signed by a certificate authority",
+    "has an expiry date"
+   ],
+   "use": "need browsers to trust that a server is who it claims to be",
+   "not": [
+    "contains the private key that visitors download to decrypt traffic"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "A certificate authority",
+   "tier": 1,
+   "says": [
+    "signs certificates to vouch for an identity",
+    "is trusted because its root sits in the browser and operating system trust stores"
+   ],
+   "use": "need to know who vouches for a certificate",
+   "not": [
+    "stores copies of every site's private key"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "Let's Encrypt",
+   "tier": 2,
+   "says": [
+    "is a free certificate authority",
+    "issues certificates through the automated ACME protocol"
+   ],
+   "use": "want free certificates that renew without manual steps",
+   "not": [
+    "sells only certificates that need paperwork about the company"
+   ],
+   "like": [
+    "Certbot"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "Certbot",
+   "tier": 2,
+   "says": [
+    "is an ACME client that obtains and renews certificates",
+    "can create the HTTPS virtual host in Apache for you",
+    "renews certificates from a scheduled timer"
+   ],
+   "use": "need to get a Let's Encrypt certificate onto an Apache server",
+   "not": [
+    "is the authority that signs the certificate"
+   ],
+   "like": [
+    "Let's Encrypt"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "A certificate chain",
+   "tier": 3,
+   "says": [
+    "links the server certificate to a trusted root through intermediates",
+    "breaks some clients when an intermediate is not served"
+   ],
+   "use": "see a site trusted in a browser but failing in curl or an older client",
+   "not": [
+    "is the list of every site that shares a certificate"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "SNI",
+   "tier": 5,
+   "says": [
+    "lets the client name the host it wants during the TLS handshake",
+    "allows one IP address to serve several certificates"
+   ],
+   "use": "need several HTTPS sites on one IP address",
+   "not": [
+    "is needed only for sites that use a wildcard certificate"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "HSTS",
+   "tier": 4,
+   "says": [
+    "is a response header telling browsers to use only HTTPS for a domain for a set time",
+    "makes browsers refuse to click through certificate errors on that domain"
+   ],
+   "use": "want browsers to refuse plain HTTP to your domain",
+   "not": [
+    "redirects HTTP to HTTPS on the server side"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "Cloudflare's Full (strict) mode",
+   "tier": 3,
+   "says": [
+    "encrypts the Cloudflare-to-origin leg and validates the origin certificate",
+    "rejects an origin certificate that is expired or issued for the wrong name"
+   ],
+   "use": "want the whole path from visitor to origin encrypted and verified",
+   "not": [
+    "sends traffic to the origin as plain HTTP"
+   ],
+   "like": [
+    "Cloudflare's Flexible mode"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "Cloudflare's Flexible mode",
+   "tier": 3,
+   "says": [
+    "encrypts only the visitor-to-Cloudflare leg",
+    "sends traffic to the origin as plain HTTP",
+    "can cause redirect loops when the origin forces HTTPS"
+   ],
+   "use": "have an origin that cannot serve HTTPS at all, accepting an unencrypted last hop",
+   "not": [
+    "validates the origin certificate before connecting"
+   ],
+   "like": [
+    "Cloudflare's Full (strict) mode"
+   ]
+  },
+  {
+   "group": "tls",
+   "subject": "Mutual TLS",
+   "tier": 5,
+   "says": [
+    "makes the client present a certificate as well as the server",
+    "authenticates machines to each other without passwords"
+   ],
+   "use": "need a service to prove which client is calling it",
+   "not": [
+    "is the default for ordinary browser visits to websites"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "An A record",
+   "tier": 1,
+   "says": [
+    "maps a hostname to an IPv4 address",
+    "is what a browser needs to find the server for a name"
+   ],
+   "use": "need a domain name to reach a server's IPv4 address",
+   "not": [
+    "maps a hostname to another hostname"
+   ],
+   "like": [
+    "A CNAME record",
+    "A PTR record"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "A CNAME record",
+   "tier": 2,
+   "says": [
+    "makes one name an alias of another name",
+    "cannot share a name with other record types",
+    "cannot sit at the zone apex under standard DNS"
+   ],
+   "use": "want www to follow whatever the main name points to",
+   "not": [
+    "maps a name straight to an IP address"
+   ],
+   "like": [
+    "An A record"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "An MX record",
+   "tier": 2,
+   "says": [
+    "names the mail servers for a domain",
+    "carries a priority number where the lowest is tried first"
+   ],
+   "use": "need email for a domain to arrive at a particular provider",
+   "not": [
+    "lists which hosts may send mail for the domain"
+   ],
+   "like": [
+    "An SPF record"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "A TXT record",
+   "tier": 2,
+   "says": [
+    "holds free-form text",
+    "is where SPF policies and domain-ownership tokens are published"
+   ],
+   "use": "need to prove to a provider that you control a domain",
+   "not": [
+    "maps a hostname to an IP address"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "A DNS TTL",
+   "tier": 2,
+   "says": [
+    "says how long resolvers may cache an answer",
+    "is best lowered ahead of a planned IP change"
+   ],
+   "use": "plan to move a site to a new IP and want the change to spread fast",
+   "not": [
+    "is the time a nameserver takes to answer one query"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "An NS record",
+   "tier": 3,
+   "says": [
+    "delegates a zone to its authoritative nameservers",
+    "is what the registrar publishes to point the world at your DNS provider"
+   ],
+   "use": "need to change which provider answers DNS for a domain",
+   "not": [
+    "names the mail servers for a domain"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "An SPF record",
+   "tier": 3,
+   "says": [
+    "lists the servers allowed to send mail for a domain",
+    "is published as a TXT record",
+    "checks the envelope sender, not the visible From address"
+   ],
+   "use": "need to say which servers may send your domain's email",
+   "not": [
+    "signs each message with a private key"
+   ],
+   "like": [
+    "A DKIM signature",
+    "A DMARC policy"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "A DKIM signature",
+   "tier": 3,
+   "says": [
+    "signs each outgoing message with a private key",
+    "publishes the verifying public key in DNS under a selector",
+    "survives forwarding if the signed parts are not modified"
+   ],
+   "use": "want receivers to verify that a message was not altered in transit",
+   "not": [
+    "lists the IP addresses allowed to send mail"
+   ],
+   "like": [
+    "An SPF record",
+    "A DMARC policy"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "A DMARC policy",
+   "tier": 5,
+   "says": [
+    "tells receivers what to do when a message fails SPF and DKIM alignment with the From domain",
+    "can send aggregate reports to an address",
+    "offers the policies none, quarantine and reject"
+   ],
+   "use": "want to see who sends mail in your domain's name and block spoofing",
+   "not": [
+    "signs messages with a private key"
+   ],
+   "like": [
+    "An SPF record",
+    "A DKIM signature"
+   ]
+  },
+  {
+   "group": "dns",
+   "subject": "A PTR record",
+   "tier": 4,
+   "says": [
+    "maps an IP address back to a hostname",
+    "is controlled by whoever owns the IP, usually the hosting provider",
+    "is often checked by receiving mail servers against the name the sender announces"
+   ],
+   "use": "see mail rejected because the sending IP has no reverse name",
+   "not": [
+    "maps a hostname to an IPv4 address"
+   ],
+   "like": [
+    "An A record"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A firewall",
+   "tier": 1,
+   "says": [
+    "allows or blocks traffic by address, port and protocol",
+    "works best with a default-deny stance for inbound traffic"
+   ],
+   "use": "need to close every port the server does not need",
+   "not": [
+    "encrypts traffic between the server and visitors"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "The ufw tool",
+   "tier": 2,
+   "says": [
+    "is a simplified front end for Linux firewall rules",
+    "takes commands such as ufw allow 22/tcp"
+   ],
+   "use": "want a simple way to set firewall rules on Ubuntu",
+   "not": [
+    "obtains and renews certificates"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "SSH key authentication",
+   "tier": 2,
+   "says": [
+    "proves identity with a private key whose public half is in authorized_keys",
+    "never sends the private key to the server"
+   ],
+   "use": "want logins that cannot be guessed like a password",
+   "not": [
+    "sends the private key to the server at login"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "Disabling SSH password login",
+   "tier": 3,
+   "says": [
+    "is done by setting PasswordAuthentication no",
+    "removes online password guessing as an attack path",
+    "can lock you out if no working key is installed first"
+   ],
+   "use": "have confirmed key login works and want to end password guessing",
+   "not": [
+    "also blocks key-based logins"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "The fail2ban tool",
+   "tier": 3,
+   "says": [
+    "watches logs for repeated failures",
+    "temporarily bans offending addresses through firewall rules"
+   ],
+   "use": "see thousands of failed logins from a few addresses",
+   "not": [
+    "encrypts the SSH connection"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "SSH port forwarding",
+   "tier": 4,
+   "says": [
+    "tunnels a local port to a remote service through the SSH connection",
+    "lets a laptop reach a database bound to the server's loopback address"
+   ],
+   "use": "need to query a database that listens only on 127.0.0.1 on the server",
+   "not": [
+    "opens the remote port to the whole internet"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A service bound to 127.0.0.1",
+   "tier": 2,
+   "says": [
+    "accepts connections only from the same machine",
+    "is unreachable from other hosts even with no firewall"
+   ],
+   "use": "want an app reachable only through the local proxy",
+   "not": [
+    "listens on every network interface"
+   ],
+   "like": [
+    "A service bound to 0.0.0.0"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A service bound to 0.0.0.0",
+   "tier": 2,
+   "says": [
+    "listens on every network interface",
+    "is reachable from outside unless a firewall blocks it"
+   ],
+   "use": "need to understand why a database is visible from the internet",
+   "not": [
+    "accepts connections only from the same machine"
+   ],
+   "like": [
+    "A service bound to 127.0.0.1"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A bastion host",
+   "tier": 4,
+   "says": [
+    "is one hardened host that is the only way into a private network",
+    "centralises and logs administrative access"
+   ],
+   "use": "want one audited entry point to servers with no public addresses",
+   "not": [
+    "stores the off-site backups"
+   ]
+  },
+  {
+   "group": "proc",
+   "subject": "The systemd service manager",
+   "tier": 2,
+   "says": [
+    "is the init system and service manager on most Linux distributions",
+    "starts services in dependency order at boot",
+    "is controlled with systemctl"
+   ],
+   "use": "want a service to start at boot and restart if it dies",
+   "not": [
+    "is a Node.js-specific process manager"
+   ],
+   "like": [
+    "PM2"
+   ]
+  },
+  {
+   "group": "proc",
+   "subject": "A systemd unit file",
+   "tier": 3,
+   "says": [
+    "declares how a service starts through ExecStart",
+    "can set the user, environment and restart policy",
+    "needs systemctl daemon-reload after it is edited"
+   ],
+   "use": "need to run your own app as a system service",
+   "not": [
+    "is read by PM2 to start Node apps"
+   ],
+   "like": [
+    "A PM2 ecosystem file"
+   ]
+  },
+  {
+   "group": "proc",
+   "subject": "PM2",
+   "tier": 2,
+   "says": [
+    "is a process manager for Node.js apps",
+    "restarts an app that crashes",
+    "lists its apps with pm2 list"
+   ],
+   "use": "need to keep a Node app running and restart it on a crash",
+   "not": [
+    "is Linux's own init system"
+   ],
+   "like": [
+    "The systemd service manager"
+   ]
+  },
+  {
+   "group": "proc",
+   "subject": "The pm2 save command",
+   "tier": 3,
+   "says": [
+    "writes the current process list to disk so it can be restored",
+    "only restores apps after a reboot when a startup hook is also set up"
+   ],
+   "use": "need PM2 apps to come back after a reboot",
+   "not": [
+    "starts every saved app immediately"
+   ]
+  },
+  {
+   "group": "proc",
+   "subject": "A PM2 ecosystem file",
+   "tier": 3,
+   "says": [
+    "describes apps, scripts, environment and instance counts in one config",
+    "is passed to pm2 start or startOrRestart"
+   ],
+   "use": "want PM2 app settings kept in one file in the repository",
+   "not": [
+    "declares ExecStart for systemd"
+   ],
+   "like": [
+    "A systemd unit file"
+   ]
+  },
+  {
+   "group": "proc",
+   "subject": "A graceful reload",
+   "tier": 4,
+   "says": [
+    "starts new workers before old ones stop so requests are not dropped",
+    "lets in-flight requests finish"
+   ],
+   "use": "need to deploy with no visible downtime",
+   "not": [
+    "kills the process immediately"
+   ]
+  },
+  {
+   "group": "proc",
+   "subject": "PM2 cluster mode",
+   "tier": 4,
+   "says": [
+    "runs several copies of a Node app sharing one port",
+    "uses more than one CPU core"
+   ],
+   "use": "need a single-threaded Node app to use all cores",
+   "not": [
+    "splits one request across several servers"
+   ]
+  },
+  {
+   "group": "proc",
+   "subject": "The SIGTERM signal",
+   "tier": 3,
+   "says": [
+    "asks a process to shut down cleanly",
+    "can be caught so the app finishes its work first"
+   ],
+   "use": "need a service to stop without losing in-flight work",
+   "not": [
+    "cannot be caught or ignored"
+   ],
+   "like": [
+    "The SIGKILL signal"
+   ]
+  },
+  {
+   "group": "proc",
+   "subject": "The SIGKILL signal",
+   "tier": 3,
+   "says": [
+    "ends a process immediately",
+    "cannot be caught or ignored"
+   ],
+   "use": "need to end a process that ignores polite stop requests",
+   "not": [
+    "lets the app finish its shutdown handlers first"
+   ],
+   "like": [
+    "The SIGTERM signal"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A container",
+   "tier": 1,
+   "says": [
+    "is an isolated process that shares the host's kernel",
+    "starts quickly because it carries no guest operating system"
+   ],
+   "use": "need to package an app with its dependencies so it runs the same anywhere",
+   "not": [
+    "includes its own full operating system kernel"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A Docker image",
+   "tier": 1,
+   "says": [
+    "is a read-only template that containers start from",
+    "is built in stacked layers"
+   ],
+   "use": "need a reproducible package to deploy",
+   "not": [
+    "is a running instance of an app"
+   ],
+   "like": [
+    "A container"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A Dockerfile",
+   "tier": 1,
+   "says": [
+    "is a text recipe of build steps for an image",
+    "starts from a base image with FROM"
+   ],
+   "use": "need to describe how to build an app image",
+   "not": [
+    "stores a container's runtime data"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A Docker volume",
+   "tier": 2,
+   "says": [
+    "stores data outside the container's writable layer",
+    "survives the container being removed"
+   ],
+   "use": "need a database's data to outlive container replacement",
+   "not": [
+    "is a backup of the data it holds"
+   ],
+   "like": [
+    "A bind mount"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A bind mount",
+   "tier": 3,
+   "says": [
+    "maps a specific host directory into the container",
+    "depends on the host path existing and having the right permissions"
+   ],
+   "use": "need a container to read config files from a host folder",
+   "not": [
+    "is managed entirely by Docker under its own storage area"
+   ],
+   "like": [
+    "A Docker volume"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A published port",
+   "tier": 2,
+   "says": [
+    "maps a host port to a container port",
+    "is set with -p, as in 127.0.0.1:5432:5432"
+   ],
+   "use": "need a container's service reachable from the host",
+   "not": [
+    "is reachable only from inside the container's own network"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "Docker layer caching",
+   "tier": 5,
+   "says": [
+    "reuses unchanged build steps from earlier builds",
+    "invalidates a step and every later one when its inputs change",
+    "rewards copying dependency manifests before source code"
+   ],
+   "use": "want faster image rebuilds when only source code changed",
+   "not": [
+    "rebuilds every layer on every build"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A container healthcheck",
+   "tier": 4,
+   "says": [
+    "runs a command on a schedule to mark the container healthy or unhealthy",
+    "is declared with HEALTHCHECK in a Dockerfile"
+   ],
+   "use": "need Docker to know whether the app inside works, not merely runs",
+   "not": [
+    "publishes the container port on the host"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A non-root container user",
+   "tier": 4,
+   "says": [
+    "limits the damage if the app inside is compromised",
+    "is set with the USER instruction"
+   ],
+   "use": "want to harden an image against a compromised app",
+   "not": [
+    "is required before a container can start"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "Shared hosting",
+   "tier": 1,
+   "says": [
+    "puts many customers' sites on one server",
+    "gives no root access",
+    "can slow your site when neighbours use many resources"
+   ],
+   "use": "need the cheapest way to run a small site with no admin work",
+   "not": [
+    "gives you a dedicated virtual machine with root"
+   ],
+   "like": [
+    "A VPS"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A VPS",
+   "tier": 1,
+   "says": [
+    "is a virtual machine slice of a physical host with root access",
+    "leaves OS patching and security to you"
+   ],
+   "use": "need root access and custom software for a modest site",
+   "not": [
+    "gives no root access and locks the software stack"
+   ],
+   "like": [
+    "Shared hosting"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A platform as a service",
+   "tier": 3,
+   "says": [
+    "runs your code while the provider manages the OS and scaling",
+    "trades control for less operational work"
+   ],
+   "use": "want to deploy code without patching or managing servers",
+   "not": [
+    "hands you a bare machine to configure from scratch"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A serverless function",
+   "tier": 4,
+   "says": [
+    "runs code per event and is billed by execution",
+    "can suffer a cold-start delay on a first call",
+    "has no server for you to patch"
+   ],
+   "use": "have spiky, occasional work and want to pay only when code runs",
+   "not": [
+    "keeps a process running continuously between requests"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "Vertical scaling",
+   "tier": 2,
+   "says": [
+    "adds CPU or memory to a single machine",
+    "hits a ceiling at the largest machine available"
+   ],
+   "use": "need a quick fix for one overloaded server",
+   "not": [
+    "adds more machines behind a load balancer"
+   ],
+   "like": [
+    "Horizontal scaling"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "Horizontal scaling",
+   "tier": 2,
+   "says": [
+    "adds more machines behind a load balancer",
+    "needs the app to be stateless or to share its state"
+   ],
+   "use": "need to grow capacity beyond what one machine can offer",
+   "not": [
+    "upgrades the CPU of one machine"
+   ],
+   "like": [
+    "Vertical scaling"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A single point of failure",
+   "tier": 3,
+   "says": [
+    "is one component whose failure takes the whole service down",
+    "is removed by adding redundancy"
+   ],
+   "use": "want to find what one failure could take offline",
+   "not": [
+    "is a server with the most traffic"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A stateless app server",
+   "tier": 4,
+   "says": [
+    "keeps no user session data in its own memory or disk",
+    "can be replaced or duplicated without losing user state"
+   ],
+   "use": "want any instance to be able to serve any request",
+   "not": [
+    "stores each user's session in local memory"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "Right-sizing",
+   "tier": 3,
+   "says": [
+    "matches instance size to measured usage",
+    "cuts cost without cutting capacity that is used"
+   ],
+   "use": "see servers running at a small fraction of capacity for months",
+   "not": [
+    "buys the largest instance to avoid ever scaling"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "Egress charges",
+   "tier": 4,
+   "says": [
+    "bill for data leaving a provider's network",
+    "grow with downloads, replication and off-provider backups"
+   ],
+   "use": "see a data-transfer line growing on the cloud bill",
+   "not": [
+    "bill for data entering the provider's network"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "The 3-2-1 rule",
+   "tier": 2,
+   "says": [
+    "calls for three copies, two kinds of storage and one copy off-site",
+    "is a rule of thumb for how many copies to keep and where"
+   ],
+   "use": "need a quick test of whether a backup plan is sound",
+   "not": [
+    "calls for one copy kept on the same disk as the data"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "An incremental backup",
+   "tier": 3,
+   "says": [
+    "copies only data changed since the previous backup",
+    "needs the chain back to the last full backup to restore"
+   ],
+   "use": "want small, fast nightly backups",
+   "not": [
+    "copies everything on every run"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "RPO",
+   "tier": 3,
+   "says": [
+    "is the maximum data loss, measured in time, that is acceptable",
+    "sets how often backups must run"
+   ],
+   "use": "need to decide how often to back up",
+   "not": [
+    "is the maximum acceptable time to restore service"
+   ],
+   "like": [
+    "RTO"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "RTO",
+   "tier": 3,
+   "says": [
+    "is the maximum acceptable time to get service back",
+    "drives the choice of restore method"
+   ],
+   "use": "need to state how long an outage can last",
+   "not": [
+    "is the maximum data loss measured in time"
+   ],
+   "like": [
+    "RPO"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "A restore test",
+   "tier": 2,
+   "says": [
+    "restores a backup into a scratch environment to prove it works",
+    "finds missing files or bad credentials before an emergency"
+   ],
+   "use": "want evidence that a backup is usable",
+   "not": [
+    "checks only that the backup file exists"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "The pg_dump tool",
+   "tier": 3,
+   "says": [
+    "makes a logical backup of one PostgreSQL database",
+    "can write a compressed file",
+    "is restored with psql or pg_restore depending on format"
+   ],
+   "use": "need a consistent backup of a PostgreSQL database while it runs",
+   "not": [
+    "copies the raw data directory file by file"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "The sqlite3 .backup command",
+   "tier": 4,
+   "says": [
+    "makes a consistent copy of a SQLite database that is in use",
+    "avoids the torn copy a plain file copy can produce"
+   ],
+   "use": "need a safe backup of a live SQLite file",
+   "not": [
+    "can only be used after the app is stopped"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "A disk snapshot",
+   "tier": 3,
+   "says": [
+    "captures a volume at a point in time",
+    "is fast to take",
+    "often lives with the same provider and account as the disk"
+   ],
+   "use": "need a quick rollback point before a risky change",
+   "not": [
+    "counts as the off-site copy by itself"
+   ]
+  },
+  {
+   "group": "bak",
+   "subject": "An immutable backup",
+   "tier": 5,
+   "says": [
+    "cannot be changed or deleted until its retention period ends",
+    "protects backups from ransomware or a compromised admin account"
+   ],
+   "use": "worry that an attacker with admin access could delete the backups",
+   "not": [
+    "is rewritten every night to stay current"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Uptime monitoring",
+   "tier": 1,
+   "says": [
+    "probes a site from outside on a schedule",
+    "alerts when requests fail"
+   ],
+   "use": "need to hear about an outage before customers do",
+   "not": [
+    "measures CPU use inside the server only"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A health check endpoint",
+   "tier": 2,
+   "says": [
+    "returns success when the app can serve requests",
+    "is polled by monitors and load balancers"
+   ],
+   "use": "need a URL that says whether the app is up",
+   "not": [
+    "lists the app's users"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A liveness check",
+   "tier": 4,
+   "says": [
+    "asks whether a process is stuck and should be restarted",
+    "triggers a restart when it fails"
+   ],
+   "use": "need stuck processes restarted automatically",
+   "not": [
+    "removes the instance from rotation without restarting it"
+   ],
+   "like": [
+    "A readiness check"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A readiness check",
+   "tier": 4,
+   "says": [
+    "asks whether an instance is ready to receive traffic",
+    "removes the instance from rotation without restarting it when it fails"
+   ],
+   "use": "need traffic held back while an app warms up or loses its database",
+   "not": [
+    "restarts the process when it fails"
+   ],
+   "like": [
+    "A liveness check"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "The four golden signals",
+   "tier": 4,
+   "says": [
+    "are latency, traffic, errors and saturation",
+    "give a compact view of service health"
+   ],
+   "use": "need a starter set of metrics for any service",
+   "not": [
+    "are CPU, RAM, disk and network totals only"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Alert fatigue",
+   "tier": 3,
+   "says": [
+    "happens when noisy alerts teach people to ignore them",
+    "is reduced by alerting only on actionable problems"
+   ],
+   "use": "see on-call staff muting pages",
+   "not": [
+    "is caused by having too few alerts"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "p99 latency",
+   "tier": 4,
+   "says": [
+    "is the time that 99 percent of requests beat",
+    "exposes slow outliers that an average hides"
+   ],
+   "use": "need to see how bad the slowest requests are",
+   "not": [
+    "is the average response time"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A service level objective",
+   "tier": 5,
+   "says": [
+    "is a target for reliability, such as a share of successful requests over a period",
+    "defines an error budget of allowed failure"
+   ],
+   "use": "need to decide how much unreliability is acceptable before work shifts to stability",
+   "not": [
+    "is a contract with penalty payments"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A symptom-based alert",
+   "tier": 4,
+   "says": [
+    "fires on user-visible problems such as error rate",
+    "avoids paging on causes that may do no harm"
+   ],
+   "use": "want pages that mean users are hurt, not that CPU was high for a minute",
+   "not": [
+    "fires whenever any resource crosses a threshold"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "A CDN",
+   "tier": 1,
+   "says": [
+    "caches content on servers close to users",
+    "reduces load on the origin",
+    "speeds up static files for distant visitors"
+   ],
+   "use": "need images and scripts to load faster for visitors worldwide",
+   "not": [
+    "replaces the origin's database"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "The Cache-Control header",
+   "tier": 3,
+   "says": [
+    "tells caches how long a response may be stored",
+    "uses directives such as max-age and no-store"
+   ],
+   "use": "need to say how long a response may be reused",
+   "not": [
+    "lists the hosts allowed to call the API"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "A cache purge",
+   "tier": 3,
+   "says": [
+    "removes cached copies from the edge before they expire",
+    "is how a changed file reaches visitors at once"
+   ],
+   "use": "have just fixed a file but visitors still get the old one",
+   "not": [
+    "extends how long old copies are kept"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "A load balancer",
+   "tier": 2,
+   "says": [
+    "spreads requests across several backends",
+    "stops sending traffic to backends that fail health checks"
+   ],
+   "use": "need more than one server to share traffic",
+   "not": [
+    "caches static files at locations near visitors"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "The round-robin method",
+   "tier": 2,
+   "says": [
+    "gives each backend a turn in order",
+    "ignores how busy each backend is"
+   ],
+   "use": "want the simplest way to spread requests evenly",
+   "not": [
+    "sends each request to the backend with the fewest active connections"
+   ],
+   "like": [
+    "The least-connections method"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "The least-connections method",
+   "tier": 3,
+   "says": [
+    "sends each request to the backend with the fewest active connections",
+    "suits requests that take very different times"
+   ],
+   "use": "have requests of very uneven length",
+   "not": [
+    "gives each backend a turn regardless of load"
+   ],
+   "like": [
+    "The round-robin method"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "A sticky session",
+   "tier": 5,
+   "says": [
+    "pins a client to the same backend across requests",
+    "is a workaround for apps that keep session state in server memory"
+   ],
+   "use": "have an app that cannot share session state between servers",
+   "not": [
+    "lets any backend serve any request equally"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "The X-Forwarded-For header",
+   "tier": 3,
+   "says": [
+    "carries the original client address through proxies",
+    "can be forged by clients unless the first trusted proxy sets it"
+   ],
+   "use": "need the real visitor IP behind a proxy",
+   "not": [
+    "encrypts the client address"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "Rate limiting",
+   "tier": 3,
+   "says": [
+    "caps requests per client in a time window",
+    "typically answers excess requests with 429"
+   ],
+   "use": "need to blunt scraping or password guessing",
+   "not": [
+    "speeds up responses by caching them"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "An exposed origin IP",
+   "tier": 5,
+   "says": [
+    "lets attackers bypass the CDN's protection by hitting the server directly",
+    "is mitigated by accepting traffic only from the CDN's address ranges"
+   ],
+   "use": "worry that the CDN's protection can be skipped",
+   "not": [
+    "is harmless when the CDN is enabled"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "A proxied DNS record",
+   "tier": 3,
+   "says": [
+    "answers with the CDN's addresses instead of the origin's",
+    "keeps the origin address out of ordinary lookups"
+   ],
+   "use": "want visitors to reach the CDN rather than the origin",
+   "not": [
+    "points the name straight at the origin's IP"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The deploy script's rsync step",
+   "tier": 2,
+   "says": [
+    "copies the project to the server directory with --delete",
+    "excludes node_modules, build output, git data, database files and env files",
+    "keeps server-only data and secrets from being wiped"
+   ],
+   "use": "need to explain why a deploy cannot erase the production database",
+   "not": [
+    "overwrites the SQLite database with the developer's copy"
+   ],
+   "like": [
+    "The deploy script's flock lock"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The deploy script's flock lock",
+   "tier": 3,
+   "says": [
+    "stops two deploys running on the server at once",
+    "fails the second deploy immediately with a message instead of waiting"
+   ],
+   "use": "worry about two overlapping deploys",
+   "not": [
+    "limits how many visitors can use the site"
+   ],
+   "like": [
+    "The deploy script's rsync step"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The deploy script's npm ci step",
+   "tier": 3,
+   "says": [
+    "installs exactly what the lockfile specifies",
+    "fails when the lockfile and package.json disagree"
+   ],
+   "use": "need a repeatable clean install on the server",
+   "not": [
+    "upgrades packages to the newest versions allowed"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The schema push without --force",
+   "tier": 5,
+   "says": [
+    "lets drizzle-kit stop when a change would delete rows",
+    "makes the deploy fail rather than silently run a delete"
+   ],
+   "use": "want a risky schema change to halt the deploy",
+   "not": [
+    "forces every change through even when data would be lost"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The deploy script's health loop",
+   "tier": 3,
+   "says": [
+    "polls the local app port up to ten times, three seconds apart",
+    "succeeds only when it sees HTTP 200",
+    "prints the recent PM2 error logs when it gives up"
+   ],
+   "use": "need proof the new version is serving before calling the deploy done",
+   "not": [
+    "waits a fixed minute and assumes success"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The PM2 restart step in the deploy",
+   "tier": 2,
+   "says": [
+    "runs pm2 startOrRestart with the ecosystem file",
+    "starts the app if it is not running and restarts it if it is",
+    "is followed by pm2 save"
+   ],
+   "use": "need the deploy to bring the new build live under PM2",
+   "not": [
+    "deletes the app from PM2 and recreates it by hand"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ssh bash -s pattern",
+   "tier": 3,
+   "says": [
+    "pipes the remote steps into bash on the server",
+    "keeps the fish login shell from parsing bash syntax"
+   ],
+   "use": "need bash-only syntax to run on a server whose login shell is fish",
+   "not": [
+    "makes ssh transfer files faster"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Cloudflare-only allow-list",
+   "tier": 4,
+   "says": [
+    "is an Apache file of Require ip lines for Cloudflare's ranges plus loopback",
+    "refuses requests that reach the origin from any other address",
+    "stops the client address taken from X-Forwarded-For being spoofed by bypassing Cloudflare"
+   ],
+   "use": "need to stop visitors bypassing Cloudflare to hit the origin directly",
+   "not": [
+    "lets any address reach the app directly"
+   ],
+   "like": [
+    "The plain Include of the allow-list",
+    "The update-cloudflare-ips script"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The plain Include of the allow-list",
+   "tier": 4,
+   "says": [
+    "is used instead of IncludeOptional on purpose",
+    "makes Apache refuse to load its config if the file is missing"
+   ],
+   "use": "want a missing security file to be a loud failure rather than silent exposure",
+   "not": [
+    "quietly skips the file when it is absent"
+   ],
+   "like": [
+    "The Cloudflare-only allow-list"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The update-cloudflare-ips script",
+   "tier": 4,
+   "says": [
+    "regenerates the allow-list from Cloudflare's published IPv4 and IPv6 ranges",
+    "refuses to write a list that looks too short",
+    "writes to a temporary file and moves it into place"
+   ],
+   "use": "need to refresh the allow-list when Cloudflare's ranges change",
+   "not": [
+    "reloads Apache on the server by itself"
+   ],
+   "like": [
+    "The Cloudflare-only allow-list"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The certbot-created 443 vhost",
+   "tier": 5,
+   "says": [
+    "is a copy of the port 80 virtual host made on the server",
+    "needs the same allow-list Include line as the port 80 one"
+   ],
+   "use": "worry that the HTTPS vhost has lost a protection added to the HTTP one",
+   "not": [
+    "inherits every later change to the port 80 file automatically"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The sites-enabled copy trap",
+   "tier": 4,
+   "says": [
+    "happens when the live file is a regular copy rather than a symlink",
+    "lets edits in sites-available pass configtest and reload yet change nothing",
+    "is found with apachectl -S"
+   ],
+   "use": "see an Apache change that has no effect after a clean reload",
+   "not": [
+    "is fixed by restarting the database"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "AllowOverride All on GG Money",
+   "tier": 4,
+   "says": [
+    "lets Apache honour the .htaccess file for that site",
+    "is needed because its security rules live in .htaccess",
+    "avoids exposing source and config for download"
+   ],
+   "use": "need to know why one site's virtual host needs an override that others do not",
+   "not": [
+    "is set so that visitors can edit the rules"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Node version mismatch trap",
+   "tier": 4,
+   "says": [
+    "came from a login bash loading nvm and putting Node 18 first",
+    "ran against PM2 using Node 20 from /usr/bin",
+    "is avoided by putting /usr/bin first in the deploy"
+   ],
+   "use": "see install, build and runtime disagree on the Node version",
+   "not": [
+    "came from PHP-FPM using the wrong pool"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The failed-build trap",
+   "tier": 4,
+   "says": [
+    "deleted the build directory before the build failed",
+    "left the running site without its files",
+    "is fixed by building into a fresh directory and swapping it in on success"
+   ],
+   "use": "need to avoid a failed build taking the live site down",
+   "not": [
+    "was caused by the lockfile being too new"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "GG Social's database container",
+   "tier": 3,
+   "says": [
+    "runs PostgreSQL in Docker, published only on 127.0.0.1",
+    "keeps its data in a named volume so it survives container replacement",
+    "is copied to a backups folder before a schema push"
+   ],
+   "use": "need to explain how the database is kept private yet persistent",
+   "not": [
+    "is exposed on a public port so the app can reach it"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The Mac lockfile trap",
+   "tier": 4,
+   "says": [
+    "came from a lockfile made on a Mac skipping the Linux build of a native Tailwind dependency",
+    "made the server build fail until the dependency was installed explicitly without saving"
+   ],
+   "use": "see a build pass on a laptop but die on the Linux server",
+   "not": [
+    "came from the server running out of inodes"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The GGLearn app listener",
+   "tier": 2,
+   "says": [
+    "listens only on 127.0.0.1, port 3400",
+    "is reached by the public only through Apache"
+   ],
+   "use": "wonder why the app port cannot be hit directly from the internet",
+   "not": [
+    "is published on a public interface for Cloudflare to reach"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "ProxyPreserveHost in the GGLearn vhost",
+   "tier": 4,
+   "says": [
+    "keeps the public hostname in the Host header the app sees",
+    "matters because Next compares the Origin with the Host on server actions"
+   ],
+   "use": "need server actions to pass their Origin check behind the proxy",
+   "not": [
+    "rewrites the Origin header to the app's local address"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Which command shows free and used disk space for each filesystem in human-readable units?",
+   "right": "df -h",
+   "wrong": [
+    "free -h",
+    "du -h --free",
+    "ls -d /"
+   ],
+   "tier": 1,
+   "why": "df reports filesystem usage; free reports memory.",
+   "code": "df -h"
+  },
+  {
+   "q": "Which TCP port does HTTPS use by default?",
+   "right": "443",
+   "wrong": [
+    "80",
+    "22",
+    "8443"
+   ],
+   "tier": 1,
+   "why": "HTTP is 80, SSH is 22; 443 is the HTTPS default."
+  },
+  {
+   "q": "Which TCP port does SSH use by default?",
+   "right": "22",
+   "wrong": [
+    "21",
+    "23",
+    "25"
+   ],
+   "tier": 1,
+   "why": "21 is FTP, 23 is Telnet and 25 is SMTP."
+  },
+  {
+   "q": "What does this command do?",
+   "right": "It lets only the owner read and write the file",
+   "wrong": [
+    "It makes the file executable by everyone",
+    "It lets everyone read it but only the owner write",
+    "It removes all access, including the owner's"
+   ],
+   "tier": 2,
+   "why": "600 means read and write for the owner and nothing for group or others.",
+   "code": "chmod 600 ~/.ssh/id_ed25519"
+  },
+  {
+   "q": "Given this listing, who can read the file?",
+   "right": "The owner and members of the group, but not other users",
+   "wrong": [
+    "Everyone on the system",
+    "Only the owner",
+    "Only members of the group"
+   ],
+   "tier": 2,
+   "why": "The mode rw-r----- gives the owner read-write, the group read-only and others nothing.",
+   "code": "-rw-r----- 1 www-data www-data 220 Jan 5 10:12 .env"
+  },
+  {
+   "q": "What does this command do?",
+   "right": "Creates a symbolic link so the site config is enabled without copying it",
+   "wrong": [
+    "Copies the file, so later edits to the original are not seen",
+    "Deletes the available config",
+    "Reloads Apache with the new site"
+   ],
+   "tier": 2,
+   "why": "A symlink points at the original, so edits to one are seen through the other.",
+   "code": "ln -s /etc/apache2/sites-available/app.conf /etc/apache2/sites-enabled/app.conf"
+  },
+  {
+   "q": "When does this cron entry run?",
+   "right": "Every day at 02:30",
+   "wrong": [
+    "Every 30 minutes during hour 2",
+    "Every 2 hours on the 30th of the month",
+    "At 30 seconds past 2 o'clock every day"
+   ],
+   "tier": 3,
+   "why": "The fields are minute, hour, day of month, month and day of week.",
+   "code": "30 2 * * * /usr/local/bin/backup.sh"
+  },
+  {
+   "q": "When does this cron entry run?",
+   "right": "At 03:00 every Sunday",
+   "wrong": [
+    "At 03:00 on the third of each month",
+    "Every 3 hours on weekdays",
+    "At midnight on 3 January"
+   ],
+   "tier": 3,
+   "why": "Day-of-week 0 is Sunday, with minute 0 and hour 3.",
+   "code": "0 3 * * 0 /usr/local/bin/weekly.sh"
+  },
+  {
+   "q": "What does this command show?",
+   "right": "Which process is listening on TCP port 3400",
+   "wrong": [
+    "It kills every process using port 3400",
+    "The firewall rules for port 3400",
+    "The HTTP response time of port 3400"
+   ],
+   "tier": 3,
+   "why": "ss -ltnp lists listening TCP sockets numerically with their processes.",
+   "code": "ss -ltnp | grep :3400"
+  },
+  {
+   "q": "What does the -I option do here?",
+   "right": "Fetches only the response headers",
+   "wrong": [
+    "Ignores TLS errors",
+    "Sends the request through a proxy",
+    "Downloads the body to a file"
+   ],
+   "tier": 2,
+   "why": "curl -I sends a HEAD request and prints the headers.",
+   "code": "curl -I https://example.com"
+  },
+  {
+   "q": "What does this command print?",
+   "right": "Only the HTTP status code of the response",
+   "wrong": [
+    "The response body without headers",
+    "The time the request took",
+    "The certificate's expiry date"
+   ],
+   "tier": 3,
+   "why": "-o /dev/null discards the body and -w prints the chosen variable.",
+   "code": "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3400/"
+  },
+  {
+   "q": "What does this command show?",
+   "right": "Logs of the nginx unit from the last hour",
+   "wrong": [
+    "The access log lines of every site for an hour",
+    "All system logs older than an hour",
+    "The users who ran nginx in the last hour"
+   ],
+   "tier": 3,
+   "why": "-u picks the unit and --since limits the time range.",
+   "code": "journalctl -u nginx --since \"1 hour ago\""
+  },
+  {
+   "q": "What is the safe order for changing an Apache configuration?",
+   "right": "Edit, run apachectl configtest, then reload",
+   "wrong": [
+    "Edit, reload, then run configtest",
+    "Edit, restart, then read the logs",
+    "Reload first so Apache validates the new file"
+   ],
+   "tier": 2,
+   "why": "A failed test stops a typo from taking every site down."
+  },
+  {
+   "q": "What does --delete do in this command?",
+   "right": "Removes files in the destination that are not in the source",
+   "wrong": [
+    "Deletes the source files after copying",
+    "Deletes destination files older than a day",
+    "Deletes the local copy after a successful transfer"
+   ],
+   "tier": 3,
+   "why": "It makes the destination mirror the source, which is why server-only data must be excluded.",
+   "code": "rsync -az --delete ./ host:/var/www/app/"
+  },
+  {
+   "q": "A remote server's firewall is default-deny for inbound traffic and has no rule for port 22. What is the likely effect on your next SSH login?",
+   "right": "New SSH connections are refused and you can be locked out",
+   "wrong": [
+    "SSH works because it is encrypted",
+    "SSH works because it is the default port",
+    "Only password logins are blocked"
+   ],
+   "tier": 3,
+   "why": "A default-deny firewall drops anything not explicitly allowed."
+  },
+  {
+   "q": "A site loads in desktop browsers but an API client fails with an unknown-issuer error. What is the most likely cause?",
+   "right": "The server does not send the intermediate certificate",
+   "wrong": [
+    "The certificate has expired",
+    "DNS points to the wrong IP",
+    "The HTTPS port is closed"
+   ],
+   "tier": 4,
+   "why": "Browsers can fetch missing intermediates; many clients cannot, so a chain gap fails there only."
+  },
+  {
+   "q": "Browsers show a full-page certificate warning on a site that worked yesterday, and auto-renewal was set up. What should you check first?",
+   "right": "The certificate's expiry date and the renewal timer's logs",
+   "wrong": [
+    "The DNS TTL",
+    "The database connection pool",
+    "The CDN cache rules"
+   ],
+   "tier": 3,
+   "why": "A silently failing renewal is the usual cause of a sudden expiry."
+  },
+  {
+   "q": "Users get 502 Bad Gateway from the Apache proxy right after a deploy. What do you check first?",
+   "right": "Whether the app process is running and answering on its local port",
+   "wrong": [
+    "The certificate's expiry date",
+    "The DNS TTL",
+    "The CDN's cache rules"
+   ],
+   "tier": 3,
+   "why": "A 502 means the proxy could not get a valid reply from the backend."
+  },
+  {
+   "q": "Disk usage reads 100 percent but du on / adds up to far less. A large log file was deleted while its service ran. What explains this?",
+   "right": "The service still holds the deleted file open, so the space is not freed until it closes or restarts",
+   "wrong": [
+    "du ignores log files",
+    "Deleted files move to a hidden trash on the same disk",
+    "The filesystem needs fsck"
+   ],
+   "tier": 4,
+   "why": "Space is released only when the last open handle closes; lsof can show it."
+  },
+  {
+   "q": "Writes fail with 'No space left on device' but df -h shows plenty of free space. What is the next check?",
+   "right": "Inode usage with df -i",
+   "wrong": [
+    "Swap usage with free -h",
+    "The DNS records",
+    "The certificate chain"
+   ],
+   "tier": 4,
+   "why": "Millions of tiny files can exhaust inodes before blocks.",
+   "code": "df -i"
+  },
+  {
+   "q": "A DNS change is planned for tomorrow. What should you do today to make the cutover faster?",
+   "right": "Lower the record's TTL so caches expire sooner",
+   "wrong": [
+    "Raise the TTL so more resolvers keep the record",
+    "Delete the record now",
+    "Change the NS records"
+   ],
+   "tier": 3,
+   "why": "Caches keep the old answer for the TTL that was in effect when they fetched it."
+  },
+  {
+   "q": "Outbound email from a new server lands in spam. SPF passes. What else should you check?",
+   "right": "DKIM signing, DMARC alignment and matching reverse DNS for the sending IP",
+   "wrong": [
+    "The HTTP keep-alive setting",
+    "A CNAME for the main domain",
+    "The speed of the DNS provider"
+   ],
+   "tier": 4,
+   "why": "Receivers weigh several signals beyond SPF."
+  },
+  {
+   "q": "A team sets Cloudflare to Flexible because the origin forces HTTPS, and the site now loops with too many redirects. What is the best fix?",
+   "right": "Install a valid certificate on the origin and use Full (strict)",
+   "wrong": [
+    "Add a second redirect at the origin",
+    "Lower the DNS TTL",
+    "Disable the CDN cache"
+   ],
+   "tier": 5,
+   "why": "Flexible talks to the origin over HTTP, which the origin keeps redirecting to HTTPS."
+  },
+  {
+   "q": "A database container is started with -p 5432:5432 on a host where ufw denies inbound traffic, yet a scan reaches port 5432. Why?",
+   "right": "Docker adds its own firewall rules that bypass ufw for published ports",
+   "wrong": [
+    "ufw does not understand port 5432",
+    "PostgreSQL ignores the host firewall",
+    "Published ports are only reachable from the local machine"
+   ],
+   "tier": 5,
+   "why": "Binding the publish to 127.0.0.1 avoids the exposure.",
+   "code": "docker run -d -p 5432:5432 postgres"
+  },
+  {
+   "q": "Your only backup is a nightly copy to another folder on the same disk. The disk fails. What does this show?",
+   "right": "It was not a real backup because it shared the failure with the original",
+   "wrong": [
+    "The copy should have been compressed",
+    "The job should have run hourly",
+    "The data is safe in the copy"
+   ],
+   "tier": 2,
+   "why": "A backup must survive the failure it protects against."
+  },
+  {
+   "q": "A backup job has shown green every night for a year and the database server is now lost. What is the biggest risk?",
+   "right": "The backups have never been restored, so they may be unusable",
+   "wrong": [
+    "The job ran too often",
+    "Compression made the files too small",
+    "A green status proves a restore will work"
+   ],
+   "tier": 4,
+   "why": "Only a restore test proves a backup works."
+  },
+  {
+   "q": "What is the danger of copying a live SQLite database with cp while the app writes to it?",
+   "right": "The copy can be torn or inconsistent",
+   "wrong": [
+    "cp locks the database permanently",
+    "SQLite files cannot be copied",
+    "The copy always loses its indexes only"
+   ],
+   "tier": 4,
+   "why": "Use the sqlite3 .backup command for a consistent copy.",
+   "code": "cp data/app.db backup.db"
+  },
+  {
+   "q": "A Node app crashes at 3 a.m. and stays down until morning. What is the fix?",
+   "right": "Run it under a process manager such as systemd or PM2 with a restart policy",
+   "wrong": [
+    "Raise the DNS TTL",
+    "Add more RAM",
+    "Restart it from a cron job every morning"
+   ],
+   "tier": 2,
+   "why": "A process manager restarts a crashed app automatically."
+  },
+  {
+   "q": "Why does a restart policy with backoff matter for a service that crashes at start?",
+   "right": "It avoids a tight crash loop that hammers the machine and floods the logs",
+   "wrong": [
+    "It removes the need to read logs",
+    "It stops the disk filling with images",
+    "It renews the certificate"
+   ],
+   "tier": 4,
+   "why": "Backoff spaces retries so a persistent fault does not consume the host."
+  },
+  {
+   "q": "Why is this Dockerfile order slow for rebuilds?",
+   "right": "Any source change invalidates the cache before npm ci, so dependencies reinstall every build",
+   "wrong": [
+    "npm ci cannot run after COPY",
+    "COPY . . deletes node_modules in the image",
+    "Docker cannot cache RUN steps"
+   ],
+   "tier": 4,
+   "why": "Copying the lockfile and installing first lets the install layer stay cached.",
+   "code": "COPY . .\nRUN npm ci"
+  },
+  {
+   "q": "What does this command list?",
+   "right": "The running containers",
+   "wrong": [
+    "All images on the host",
+    "All volumes",
+    "The build history"
+   ],
+   "tier": 1,
+   "why": "docker ps lists running containers; -a adds stopped ones.",
+   "code": "docker ps"
+  },
+  {
+   "q": "What does the -p part of this command do?",
+   "right": "Publishes the port on the host's loopback only, so only the host can connect",
+   "wrong": [
+    "Opens the port to the internet",
+    "Limits the container to one CPU",
+    "Makes the volume read-only"
+   ],
+   "tier": 3,
+   "why": "Prefixing the host side with 127.0.0.1 restricts who can reach it.",
+   "code": "docker run -d -p 127.0.0.1:5432:5432 -v pgdata:/var/lib/postgresql/data postgres"
+  },
+  {
+   "q": "What does the -v part of this command do?",
+   "right": "Mounts a named volume so the data survives removing the container",
+   "wrong": [
+    "Copies the database to a remote backup",
+    "Mounts /pgdata from the host read-only",
+    "Encrypts the data directory"
+   ],
+   "tier": 3,
+   "why": "A named volume lives outside the container's writable layer.",
+   "code": "docker run -d -p 127.0.0.1:5432:5432 -v pgdata:/var/lib/postgresql/data postgres"
+  },
+  {
+   "q": "Which of these is horizontal scaling?",
+   "right": "Adding a second server behind a load balancer",
+   "wrong": [
+    "Upgrading to a bigger machine",
+    "Adding RAM to the server",
+    "Tuning a slow query"
+   ],
+   "tier": 1,
+   "why": "Horizontal scaling adds machines rather than enlarging one."
+  },
+  {
+   "q": "You add a second app server behind a load balancer and users are randomly logged out. Sessions are kept in each server's memory. What is the best long-term fix?",
+   "right": "Move session state to a shared store or signed cookies so any server can handle any request",
+   "wrong": [
+    "Remove the load balancer",
+    "Increase the session timeout",
+    "Shorten the health check interval"
+   ],
+   "tier": 4,
+   "why": "Stateless servers make horizontal scaling work."
+  },
+  {
+   "q": "A monitor checks only that port 443 accepts connections, but the app crashed behind a working proxy. What is a better check?",
+   "right": "An HTTP request to a health endpoint that expects a 200 from the app",
+   "wrong": [
+    "Reading the CPU once an hour",
+    "Pinging the server's IP",
+    "Shortening the certificate lifetime"
+   ],
+   "tier": 3,
+   "why": "A connection check proves the proxy is up, not the app."
+  },
+  {
+   "q": "Average response time looks fine but customers complain of slowness. Which metric should you look at?",
+   "right": "A high percentile such as p99 latency",
+   "wrong": [
+    "Uptime percentage",
+    "Disk size",
+    "DNS TTL"
+   ],
+   "tier": 4,
+   "why": "Averages hide the slow tail that some users experience."
+  },
+  {
+   "q": "What does the first line of this script do?",
+   "right": "Stops at the first error, treats unset variables as errors and fails a pipeline if any stage fails",
+   "wrong": [
+    "Prints each command before it runs",
+    "Runs the script in the background",
+    "Makes the script ignore errors"
+   ],
+   "tier": 3,
+   "why": "These options make a script fail loudly instead of continuing in a bad state.",
+   "code": "set -euo pipefail"
+  },
+  {
+   "q": "If another deploy holds the lock, what does the second line do?",
+   "right": "Exits immediately instead of waiting",
+   "wrong": [
+    "Waits until the other deploy finishes",
+    "Kills the other deploy",
+    "Ignores the lock"
+   ],
+   "tier": 3,
+   "why": "flock -n is non-blocking and fails at once when the lock is taken.",
+   "code": "exec 9>/tmp/deploy.lock\nflock -n 9 || exit 1"
+  },
+  {
+   "q": "A teammate edited sites-available but nothing changed after a reload. Which command do you run first?",
+   "right": "apachectl -S",
+   "wrong": [
+    "certbot renew",
+    "pm2 save",
+    "df -h"
+   ],
+   "tier": 3,
+   "why": "It shows which config file each virtual host is really loaded from."
+  },
+  {
+   "q": "The allow-list file is loaded with a plain Include and is accidentally missing on a server. What happens?",
+   "right": "Apache refuses to load its configuration, which is the intended loud failure",
+   "wrong": [
+    "Apache starts and silently serves everyone",
+    "Apache starts and blocks everyone",
+    "Apache creates an empty file"
+   ],
+   "tier": 4,
+   "why": "IncludeOptional would have skipped the file silently."
+  },
+  {
+   "q": "A deploy step uses $(date) and, run through a fish login shell, silently produces nothing. What is the cure?",
+   "right": "Stream the commands into bash with ssh host bash -s",
+   "wrong": [
+    "Install nvm",
+    "Add more quotes around $()",
+    "Switch Apache to the prefork MPM"
+   ],
+   "tier": 4,
+   "why": "Fish cannot parse bash command substitution, so bash must parse the steps."
+  },
+  {
+   "q": "A build step deletes the old build directory first and then fails, leaving visitors with errors. What redesign prevents this?",
+   "right": "Build into a fresh directory and swap it in only when the build succeeds",
+   "wrong": [
+    "Restart PM2 before building",
+    "Delete the directory after the restart",
+    "Run the build twice"
+   ],
+   "tier": 4,
+   "why": "The old version should keep serving until the new one is proven."
+  },
+  {
+   "q": "What does this command do?",
+   "right": "Tests the Nginx configuration for syntax errors without applying it",
+   "wrong": [
+    "Starts Nginx in test mode with sample traffic",
+    "Prints the TLS version",
+    "Reloads the workers"
+   ],
+   "tier": 2,
+   "why": "nginx -t validates the config file.",
+   "code": "nginx -t"
+  },
+  {
+   "q": "What does the proxy_set_header line do?",
+   "right": "Passes the requested hostname to the backend instead of the backend's address",
+   "wrong": [
+    "Sets the browser's cookie domain",
+    "Redirects visitors to the host's IP",
+    "Caches the host name for an hour"
+   ],
+   "tier": 3,
+   "why": "It is the Nginx counterpart of Apache's ProxyPreserveHost.",
+   "code": "location / {\n  proxy_pass http://127.0.0.1:3000;\n  proxy_set_header Host $host;\n}"
+  },
+  {
+   "q": "What does this command return?",
+   "right": "The mail servers for example.com",
+   "wrong": [
+    "The IPv4 address of example.com",
+    "The nameservers of example.com",
+    "A test email"
+   ],
+   "tier": 2,
+   "why": "MX records name a domain's mail servers.",
+   "code": "dig +short MX example.com"
+  },
+  {
+   "q": "What does -all at the end of this SPF record mean?",
+   "right": "Mail from servers not listed should fail SPF",
+   "wrong": [
+    "All servers may send",
+    "Mail from unlisted servers is only marked suspicious",
+    "SPF is disabled"
+   ],
+   "tier": 4,
+   "why": "-all is a hard fail while ~all is a soft fail.",
+   "code": "example.com. TXT \"v=spf1 include:_spf.mailhost.example -all\""
+  },
+  {
+   "q": "Which redirect code do you use when moving a site permanently from http to https?",
+   "right": "301",
+   "wrong": [
+    "302",
+    "404",
+    "503"
+   ],
+   "tier": 2,
+   "why": "301 signals a permanent move; 302 is temporary."
+  },
+  {
+   "q": "A load balancer keeps sending traffic to a crashed backend for half a minute before noticing. What reduces this?",
+   "right": "A shorter health check interval and a lower failure threshold",
+   "wrong": [
+    "A longer DNS TTL",
+    "More RAM in the balancer",
+    "Sticky sessions"
+   ],
+   "tier": 4,
+   "why": "Faster detection removes the dead backend from rotation sooner."
+  },
+  {
+   "q": "Your origin is behind Cloudflare, but anyone who learns its IP can hit it directly and set a fake X-Forwarded-For. What is the best control?",
+   "right": "Accept traffic only from the CDN's published IP ranges at the origin",
+   "wrong": [
+    "Rename the server to hide it",
+    "Trust X-Forwarded-For from every client",
+    "Lower the DNS TTL"
+   ],
+   "tier": 5,
+   "why": "If only the CDN can connect, the header it sets can be trusted."
+  },
+  {
+   "q": "What does Restart=on-failure do in this unit file?",
+   "right": "Restarts the service after an unclean exit such as a crash",
+   "wrong": [
+    "Restarts the whole server",
+    "Restarts after every clean exit too",
+    "Reloads config when a file changes"
+   ],
+   "tier": 3,
+   "why": "on-failure restarts on error exits, signals and timeouts, not on a clean stop.",
+   "code": "[Service]\nExecStart=/usr/bin/node server.js\nRestart=on-failure"
+  },
+  {
+   "q": "After a reboot a server's PM2 apps are gone. What was missing?",
+   "right": "A startup hook (pm2 startup) together with pm2 save of the process list",
+   "wrong": [
+    "A higher TTL",
+    "An SSL certificate",
+    "A second app instance"
+   ],
+   "tier": 3,
+   "why": "The saved list is restored only if PM2 itself starts at boot."
+  },
+  {
+   "q": "A deploy fails safely because drizzle-kit push would delete rows after you added a NOT NULL column with no default to a table that has data. Should you add --force?",
+   "right": "No; make the change safe first, for example with a default or a backfill, so no rows are deleted",
+   "wrong": [
+    "Yes, force is always safe in production",
+    "Yes, but only on Fridays",
+    "Yes, then restore from the CDN"
+   ],
+   "tier": 5,
+   "why": "The failure is the safeguard working; force would turn it into data loss."
+  },
+  {
+   "q": "Uploads fail with permission denied. The web server runs as www-data and the folder is owned by root with mode 755. What is the right fix?",
+   "right": "Give the web server user ownership of just the uploads folder",
+   "wrong": [
+    "chmod -R 777 the whole site",
+    "Run the web server as root",
+    "Disable the firewall"
+   ],
+   "tier": 3,
+   "why": "Grant the narrowest access that works.",
+   "code": "sudo chown -R www-data:www-data /var/www/app/uploads"
+  }
+ ]
+}

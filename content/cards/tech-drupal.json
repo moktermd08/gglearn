@@ -1,0 +1,2860 @@
+{
+ "slug": "tech-drupal",
+ "name": "Technologies: Drupal",
+ "description": "Drupal as a CMS option for client builds.",
+ "roles": "developer",
+ "kind": "technology",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "model": "content modelling concept",
+  "build": "site-building component",
+  "ext": "code extension mechanism",
+  "theme": "theming concept",
+  "config": "configuration management concept",
+  "cmd": "Composer or Drush item",
+  "cache": "caching concept",
+  "access": "access control concept",
+  "secure": "security practice",
+  "i18n": "multilingual feature",
+  "api": "API or decoupling concept",
+  "migrate": "migration concept",
+  "ops": "operations practice",
+  "gg": "fact about Drupal at GGLink and Moksy",
+  "pick": "platform option for a client site"
+ },
+ "cards": [
+  {
+   "group": "model",
+   "subject": "A node",
+   "tier": 1,
+   "says": [
+    "is one piece of content such as an article or an event",
+    "is an entity of the node entity type",
+    "belongs to exactly one content type"
+   ],
+   "use": "need to publish a single page of editor-managed content",
+   "not": [
+    "is a configuration setting that holds no editor content"
+   ],
+   "like": [
+    "An entity"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A content type",
+   "tier": 1,
+   "says": [
+    "is the template that defines the fields of a kind of node",
+    "is the bundle of the node entity type",
+    "generates the form editors use to create its nodes"
+   ],
+   "use": "need a new kind of content with its own fields, such as an event",
+   "not": [
+    "is a single piece of published content"
+   ],
+   "like": [
+    "A node",
+    "A bundle"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A field",
+   "tier": 1,
+   "says": [
+    "holds one named piece of data on an entity, such as a date or an image",
+    "has a field type that decides how its value is stored",
+    "has a cardinality that sets how many values it may hold"
+   ],
+   "use": "need to capture one extra piece of data on every article",
+   "not": [
+    "is always a single plain text box"
+   ],
+   "like": [
+    "A configurable field"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "An entity",
+   "tier": 2,
+   "says": [
+    "is the general term for a data object that can be loaded by ID",
+    "comes in content entity and configuration entity varieties",
+    "is represented by an entity type such as node, user or taxonomy term"
+   ],
+   "use": "talk about nodes, users and terms with one common word",
+   "not": [
+    "is another word for a node and nothing else"
+   ],
+   "like": [
+    "A node"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A bundle",
+   "tier": 2,
+   "says": [
+    "is a subtype of an entity type with its own set of fields",
+    "is called a content type for nodes and a vocabulary for taxonomy terms",
+    "lets one entity type hold records of different shapes"
+   ],
+   "use": "need to explain how articles and events can both be nodes with different fields",
+   "not": [
+    "is a zipped download of a module"
+   ],
+   "like": [
+    "A content type"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "An entity reference field",
+   "tier": 2,
+   "says": [
+    "stores a link from one entity to another by its ID",
+    "is how a node points at taxonomy terms, users or other nodes",
+    "can limit its allowed targets to chosen bundles"
+   ],
+   "use": "need an article to point at its author profile or at its tags",
+   "not": [
+    "copies the full content of the target into the referencing node"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A field widget",
+   "tier": 2,
+   "says": [
+    "controls the form element editors use to enter a field value",
+    "is chosen on the manage form display screen",
+    "can differ between form modes for the same field"
+   ],
+   "use": "want editors to pick a date from a calendar instead of typing it",
+   "not": [
+    "controls how visitors see the stored value"
+   ],
+   "like": [
+    "A field formatter"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A field formatter",
+   "tier": 2,
+   "says": [
+    "controls how a stored field value is rendered for visitors",
+    "is chosen per view mode on the manage display screen",
+    "can show an entity reference as a label, a link or a rendered entity"
+   ],
+   "use": "want a date shown as March 5 to visitors but stored as a full timestamp",
+   "not": [
+    "controls the form element editors type into"
+   ],
+   "like": [
+    "A field widget"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A view mode",
+   "tier": 3,
+   "says": [
+    "is a named way to render an entity such as teaser or full",
+    "lets the same node look different in a list and on its own page",
+    "keeps separate field display settings for each bundle"
+   ],
+   "use": "want an article to show a small card in lists and every field on its own page",
+   "not": [
+    "is a saved Views configuration that lists content"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A revision",
+   "tier": 3,
+   "says": [
+    "is a saved version of an entity's field values",
+    "lets editors compare and roll back to an earlier version of a node",
+    "is created on save when the content type is set to create new revisions"
+   ],
+   "use": "need to restore a node to the text it had last week",
+   "not": [
+    "is a backup of the whole database"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "Content moderation",
+   "tier": 3,
+   "says": [
+    "adds workflow states such as draft and published to content",
+    "limits who may move content between states through transitions",
+    "keeps a draft revision separate from the live published revision"
+   ],
+   "use": "need editors to draft changes to a live article without publishing them",
+   "not": [
+    "translates content into other languages"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A configurable field",
+   "tier": 3,
+   "says": [
+    "is created and stored as configuration, usually through the field UI",
+    "can be deployed between environments with configuration management",
+    "can be added to or removed from a bundle without writing code"
+   ],
+   "use": "need a site builder to add a field without a developer",
+   "not": [
+    "is built into the entity type and cannot be removed"
+   ],
+   "like": [
+    "A base field",
+    "A field"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A base field",
+   "tier": 4,
+   "says": [
+    "is defined in code by the entity type itself",
+    "includes the node title and author",
+    "cannot be removed through the field UI"
+   ],
+   "use": "need to explain why the title field on every node cannot be deleted",
+   "not": [
+    "is created per bundle in the field UI and exported as configuration"
+   ],
+   "like": [
+    "A configurable field"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "A taxonomy vocabulary",
+   "tier": 1,
+   "says": [
+    "is a collection of terms used to classify content",
+    "can be flat like tags or hierarchical like categories",
+    "is the bundle of the taxonomy term entity type"
+   ],
+   "use": "need a controlled list of categories for articles",
+   "not": [
+    "is a dictionary module that translates text"
+   ],
+   "like": [
+    "A taxonomy term"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "A taxonomy term",
+   "tier": 1,
+   "says": [
+    "is one label such as a category or tag inside a vocabulary",
+    "can have a parent term to form a hierarchy",
+    "is referenced from nodes through a term reference field"
+   ],
+   "use": "need to tag an article with the topic it covers",
+   "not": [
+    "is the whole list of categories on the site"
+   ],
+   "like": [
+    "A taxonomy vocabulary"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "A block",
+   "tier": 1,
+   "says": [
+    "is a piece of output placed in a theme region",
+    "can be shown or hidden by conditions such as the page path or role",
+    "is either supplied by a plugin or created as custom block content"
+   ],
+   "use": "need a small box, such as a contact notice, in the sidebar of selected pages",
+   "not": [
+    "holds the main content of a single page and nothing else"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "Views",
+   "tier": 1,
+   "says": [
+    "builds lists and reports from content without writing SQL",
+    "can output a page, a block or a feed",
+    "lets you choose fields, filters and sort criteria in a UI"
+   ],
+   "use": "need a page that lists the latest events sorted by date",
+   "not": [
+    "is a module that generates theme templates from a design"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "A text format",
+   "tier": 2,
+   "says": [
+    "decides which HTML tags and filters are applied to formatted text",
+    "is chosen when an editor saves formatted text",
+    "is granted to roles by permission"
+   ],
+   "use": "need to stop most editors from entering arbitrary HTML",
+   "not": [
+    "is a field that stores dates in one chosen pattern"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "An image style",
+   "tier": 3,
+   "says": [
+    "defines a chain of effects such as scale or crop for an uploaded image",
+    "creates derivative images on demand without altering the original",
+    "is selected by an image formatter"
+   ],
+   "use": "need every thumbnail to be the same cropped size no matter what editors upload",
+   "not": [
+    "permanently overwrites the uploaded original"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "Layout Builder",
+   "tier": 3,
+   "says": [
+    "lets editors arrange sections and blocks visually on a page",
+    "can set a default layout for a content type and allow per-node overrides",
+    "builds layouts from sections that use a layout plugin with regions"
+   ],
+   "use": "need editors to rearrange blocks on a landing page without a developer",
+   "not": [
+    "is a replacement for the theme's Twig templates"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "A Views contextual filter",
+   "tier": 4,
+   "says": [
+    "narrows a view using a value taken from the URL or the page context",
+    "lets one view list the items for whichever term is in the path",
+    "is configured under advanced options in the view"
+   ],
+   "use": "need one view to list the articles for whichever term is in the URL",
+   "not": [
+    "adds a form that visitors use to change the filter"
+   ],
+   "like": [
+    "A Views exposed filter"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "A Views exposed filter",
+   "tier": 4,
+   "says": [
+    "gives visitors a form control to change the filter themselves",
+    "turns a fixed filter into a search or select box above the results",
+    "is submitted as query parameters in the page URL"
+   ],
+   "use": "need visitors to narrow a list of events by category with a dropdown",
+   "not": [
+    "takes its value silently from the URL path"
+   ],
+   "like": [
+    "A Views contextual filter"
+   ]
+  },
+  {
+   "group": "build",
+   "subject": "A Views relationship",
+   "tier": 4,
+   "says": [
+    "joins a view to related entities such as a node's author",
+    "makes fields of the related entity available in the view",
+    "is added in the advanced section of the view"
+   ],
+   "use": "need to show the author's profile field in a list of nodes",
+   "not": [
+    "limits which roles may see the view"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A module",
+   "tier": 1,
+   "says": [
+    "adds behaviour to a site and is enabled or uninstalled",
+    "is identified by a machine name and an info.yml file",
+    "is turned on from the Extend page"
+   ],
+   "use": "need to add a feature that Drupal core does not provide",
+   "not": [
+    "controls only the colours and layout of pages"
+   ],
+   "like": [
+    "A theme"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "An info.yml file",
+   "tier": 2,
+   "says": [
+    "declares the name and type of a module or theme",
+    "is what Drupal looks for to discover an extension",
+    "lists dependencies on other modules"
+   ],
+   "use": "need Drupal to recognise a new custom module",
+   "not": [
+    "holds the module's PHP classes"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A hook",
+   "tier": 2,
+   "says": [
+    "is a named extension point that lets modules react to or alter core behaviour",
+    "is traditionally implemented as a function named after the module and the hook",
+    "is called for each enabled module that implements it"
+   ],
+   "use": "need to alter a form that another module builds",
+   "not": [
+    "is a Symfony event class with a getSubscribedEvents method"
+   ],
+   "like": [
+    "An event subscriber",
+    "A plugin"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "An event subscriber",
+   "tier": 4,
+   "says": [
+    "reacts to events dispatched by the Symfony event dispatcher",
+    "is registered as a service tagged event_subscriber",
+    "declares its events by returning a map from getSubscribedEvents"
+   ],
+   "use": "need to react to a kernel request event, for example to add a redirect",
+   "not": [
+    "is a function named module_hookname in a .module file"
+   ],
+   "like": [
+    "A hook",
+    "A plugin"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A plugin",
+   "tier": 4,
+   "says": [
+    "is a swappable implementation of a defined plugin type, such as a block or a field formatter",
+    "is found by a plugin manager that scans a standard namespace",
+    "lets custom code add new options without changing core"
+   ],
+   "use": "need to add a new kind of block that site builders can place",
+   "not": [
+    "is a function that core calls on every module"
+   ],
+   "like": [
+    "A hook",
+    "An event subscriber"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A service",
+   "tier": 3,
+   "says": [
+    "is a reusable object defined in a services.yml file",
+    "is created by the container and shared by default",
+    "is requested by other code through its service ID"
+   ],
+   "use": "need one reusable object that several classes can share",
+   "not": [
+    "is a page route that returns HTML"
+   ],
+   "like": [
+    "A route"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "Dependency injection",
+   "tier": 4,
+   "says": [
+    "hands a class its collaborators instead of letting it call global helpers",
+    "is how controllers and plugins receive services through a create method",
+    "lets a class be tested with replacement collaborators"
+   ],
+   "use": "want a controller to get the entity type manager without calling a static helper",
+   "not": [
+    "fetches services from global static calls inside every method"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A route",
+   "tier": 3,
+   "says": [
+    "maps a URL path to a controller or form in a routing.yml file",
+    "carries access requirements such as a permission",
+    "has a machine name used for generating links"
+   ],
+   "use": "need a custom page at a new URL",
+   "not": [
+    "is the object that a service container creates"
+   ],
+   "like": [
+    "A service"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A controller",
+   "tier": 3,
+   "says": [
+    "is a class whose method returns a render array or response for a route",
+    "is named in the route's _controller default",
+    "usually extends ControllerBase"
+   ],
+   "use": "need to build the content of a custom page",
+   "not": [
+    "stores configuration in YAML files"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "The Form API",
+   "tier": 3,
+   "says": [
+    "builds forms from classes with buildForm, validateForm and submitForm methods",
+    "adds a form token to defend against cross-site request forgery",
+    "handles validation errors and redisplays the form"
+   ],
+   "use": "need to build a custom settings form with validation",
+   "not": [
+    "generates forms only from content type fields"
+   ]
+  },
+  {
+   "group": "ext",
+   "subject": "A render array",
+   "tier": 5,
+   "says": [
+    "is a nested PHP array that describes output and is turned into HTML later",
+    "uses keys prefixed with # such as #markup and #theme",
+    "carries cache metadata that bubbles up to its parents"
+   ],
+   "use": "need to return output from a controller without printing HTML directly",
+   "not": [
+    "is a finished HTML string ready to echo"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "A theme",
+   "tier": 1,
+   "says": [
+    "controls presentation through templates, styles and libraries",
+    "is separate from content so the same content can be restyled",
+    "declares its regions in its info.yml file"
+   ],
+   "use": "need to change how the whole site looks without touching the content",
+   "not": [
+    "adds new database tables and business logic"
+   ],
+   "like": [
+    "A module"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "A base theme",
+   "tier": 4,
+   "says": [
+    "supplies templates and assets that a sub-theme inherits",
+    "is named by a sub-theme in its info.yml base theme key",
+    "lets a sub-theme override only what it needs"
+   ],
+   "use": "want a custom theme that inherits most markup and overrides a few templates",
+   "not": [
+    "is a theme that is always used on the admin pages"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "Twig",
+   "tier": 1,
+   "says": [
+    "is the template engine Drupal themes use",
+    "escapes printed variables by default",
+    "prints a variable with double curly braces"
+   ],
+   "use": "need to change the HTML a theme produces for a node",
+   "not": [
+    "is a PHP library for sending email"
+   ],
+   "like": [
+    "Twig autoescaping"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "A template suggestion",
+   "tier": 4,
+   "says": [
+    "lets a more specific template file name override a general one",
+    "makes node--event.html.twig apply only to event nodes",
+    "is listed as candidate file names when Twig debug is on"
+   ],
+   "use": "need a different template for one content type only",
+   "not": [
+    "is a hint the editor sees in the node form"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "A preprocess function",
+   "tier": 4,
+   "says": [
+    "alters the variables passed to a template before it renders",
+    "is named after the theme or module and the theme hook",
+    "is where you add a computed variable for a Twig template"
+   ],
+   "use": "need a template variable that is computed from the entity",
+   "not": [
+    "runs after the page has been sent to the browser"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "A library",
+   "tier": 4,
+   "says": [
+    "declares CSS and JavaScript files in a libraries.yml file",
+    "is attached so its assets load only where needed",
+    "can depend on other libraries"
+   ],
+   "use": "need a script to load only on pages that use a slider",
+   "not": [
+    "is a Composer package installed under vendor"
+   ]
+  },
+  {
+   "group": "theme",
+   "subject": "The attach_library Twig function",
+   "tier": 4,
+   "says": [
+    "attaches a declared library from inside a template",
+    "makes the library's assets load whenever that template renders",
+    "takes the library name as extension/library"
+   ],
+   "use": "want a component template to bring its own CSS and JavaScript",
+   "not": [
+    "downloads a library from Composer when the page loads"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "Active configuration",
+   "tier": 3,
+   "says": [
+    "is the configuration the running site uses, stored in the database",
+    "changes when an admin saves a settings form",
+    "differs from the sync directory until an export or an import runs"
+   ],
+   "use": "need to say what settings the live site is actually using",
+   "not": [
+    "is the set of YAML files in the repository"
+   ],
+   "like": [
+    "The configuration sync directory"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "The configuration sync directory",
+   "tier": 3,
+   "says": [
+    "holds exported configuration as YAML files that are usually committed",
+    "is set by the config_sync_directory setting in settings.php",
+    "is read by an import and written by an export"
+   ],
+   "use": "need a place in version control for the site's configuration",
+   "not": [
+    "holds the site's uploaded images"
+   ],
+   "like": [
+    "Active configuration"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "A configuration export",
+   "tier": 2,
+   "says": [
+    "writes active configuration out as YAML files",
+    "records changes made in the admin UI so they can be reviewed in version control",
+    "does not include content such as nodes and users"
+   ],
+   "use": "need to capture a content type change made in the admin UI",
+   "not": [
+    "copies all nodes to the other environment"
+   ],
+   "like": [
+    "A configuration import",
+    "A content entity"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "A configuration import",
+   "tier": 2,
+   "says": [
+    "applies the YAML in the sync directory to the active configuration",
+    "is how staging and production receive configuration changed in development",
+    "shows a diff of what will change before it applies"
+   ],
+   "use": "need production to receive the field added in development",
+   "not": [
+    "uploads the contents of the content database"
+   ],
+   "like": [
+    "A configuration export"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "A configuration entity",
+   "tier": 3,
+   "says": [
+    "is a record stored as configuration, such as a content type, a view or a role",
+    "is exported to YAML and deployed with configuration management",
+    "is described by a configuration schema"
+   ],
+   "use": "need to know which things deploy through configuration management",
+   "not": [
+    "is a record created by visitors, such as a comment"
+   ],
+   "like": [
+    "A content entity"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "A content entity",
+   "tier": 3,
+   "says": [
+    "is a record created by users, such as a node, a comment or a user account",
+    "is not moved by configuration export",
+    "supports fields"
+   ],
+   "use": "need to know which data must be migrated rather than exported",
+   "not": [
+    "is exported to YAML and imported on every environment"
+   ],
+   "like": [
+    "A configuration entity",
+    "A configuration export"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "The site UUID",
+   "tier": 5,
+   "says": [
+    "identifies a site so configuration from another site is refused on import",
+    "is stored in the system.site configuration",
+    "must match across the environments of one project"
+   ],
+   "use": "see an import refused because configuration belongs to a different site",
+   "not": [
+    "is the identifier of the first administrator account"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "A configuration schema",
+   "tier": 5,
+   "says": [
+    "describes the structure and data types of configuration in a schema.yml file",
+    "lets translation and validation understand configuration objects",
+    "is shipped with a module next to its default configuration"
+   ],
+   "use": "need to describe the keys and types of a module's settings",
+   "not": [
+    "is the SQL schema of the database tables"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "Config Split",
+   "tier": 5,
+   "says": [
+    "is a contributed module that keeps environment-specific configuration in separate directories",
+    "lets a development-only module stay enabled locally but off on production",
+    "changes what an import applies depending on the active split"
+   ],
+   "use": "need a debug module enabled in development and never on production",
+   "not": [
+    "is a core module that splits the database in two"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "A settings.php configuration override",
+   "tier": 5,
+   "says": [
+    "sets a value at runtime through the $config array",
+    "leaves the stored and exported configuration unchanged",
+    "keeps secrets and per-environment values out of exported YAML"
+   ],
+   "use": "need a different API key on each environment without exporting it",
+   "not": [
+    "rewrites the exported YAML files on every request"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "The State API",
+   "tier": 5,
+   "says": [
+    "stores environment-specific values such as the last cron run",
+    "is not exported or imported with configuration",
+    "is read and written through the state service"
+   ],
+   "use": "need to remember a runtime value that should differ per environment",
+   "not": [
+    "is a configuration entity that is exported to YAML"
+   ]
+  },
+  {
+   "group": "config",
+   "subject": "The config/install directory",
+   "tier": 5,
+   "says": [
+    "ships a module's default configuration as YAML",
+    "is imported when the module is installed",
+    "does not change a site that already installed the module when edited later"
+   ],
+   "use": "need a custom module to ship a default view",
+   "not": [
+    "is where a site's exported configuration is normally stored"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "composer require",
+   "tier": 1,
+   "says": [
+    "adds a package to composer.json and installs it",
+    "records the resolved version in composer.lock",
+    "is how a contributed module is added to a Composer-based site"
+   ],
+   "use": "need to add a contributed module to the codebase",
+   "not": [
+    "enables the module in the site at the same time"
+   ],
+   "like": [
+    "composer install",
+    "composer update"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "composer install",
+   "tier": 1,
+   "says": [
+    "installs exactly the versions recorded in composer.lock",
+    "is what a deployment should run",
+    "does not pick up newer package versions"
+   ],
+   "use": "need a server to receive exactly the code that was tested",
+   "not": [
+    "resolves the newest allowed versions and rewrites composer.lock"
+   ],
+   "like": [
+    "composer update",
+    "composer require"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "composer update",
+   "tier": 2,
+   "says": [
+    "resolves the newest versions allowed by the constraints",
+    "rewrites composer.lock",
+    "should be run deliberately and tested before deployment"
+   ],
+   "use": "want to pull in available security fixes within the allowed version ranges",
+   "not": [
+    "installs only what composer.lock already records"
+   ],
+   "like": [
+    "composer install"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "The composer.lock file",
+   "tier": 2,
+   "says": [
+    "records the exact version of every installed package",
+    "is committed so every environment installs the same code",
+    "is rewritten by update and require, not by install"
+   ],
+   "use": "need every environment to run identical dependency versions",
+   "not": [
+    "lists only the packages you chose to install directly"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "drush cache:rebuild",
+   "tier": 1,
+   "says": [
+    "clears and rebuilds Drupal's caches",
+    "is run with the cr alias",
+    "is the first step when a new service or template does not take effect"
+   ],
+   "use": "add a new service and find the site cannot see it",
+   "not": [
+    "deletes all nodes so they can be rebuilt"
+   ],
+   "like": [
+    "drush updatedb"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "drush updatedb",
+   "tier": 2,
+   "says": [
+    "runs pending update hooks and post-update functions",
+    "is needed after deploying code that changes a module's schema",
+    "is run with the updb alias"
+   ],
+   "use": "deploy a module update that changes the database structure",
+   "not": [
+    "rebuilds only the render cache"
+   ],
+   "like": [
+    "drush cache:rebuild",
+    "drush config:import"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "drush config:export",
+   "tier": 1,
+   "says": [
+    "writes active configuration to the sync directory",
+    "is run with the cex alias",
+    "produces the YAML diff you commit"
+   ],
+   "use": "build a content type in the admin UI and need to commit it",
+   "not": [
+    "applies the sync directory to the database"
+   ],
+   "like": [
+    "drush config:import"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "drush config:import",
+   "tier": 2,
+   "says": [
+    "applies the sync directory to the active configuration",
+    "is run with the cim alias",
+    "is part of every deployment that carries configuration"
+   ],
+   "use": "need production to apply the configuration just deployed in code",
+   "not": [
+    "writes the database configuration out to YAML files"
+   ],
+   "like": [
+    "drush config:export"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "drush user:login",
+   "tier": 2,
+   "says": [
+    "prints a one-time login link",
+    "is run with the uli alias",
+    "regains admin access without knowing the password"
+   ],
+   "use": "get locked out of the admin account on a development copy",
+   "not": [
+    "resets the password to a default value on every account"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "drush deploy",
+   "tier": 4,
+   "says": [
+    "chains database updates, configuration import and cache rebuilds in one command",
+    "also runs deploy hooks",
+    "is meant to be the single command run after new code is in place"
+   ],
+   "use": "want one command in the pipeline after new code is deployed",
+   "not": [
+    "only pulls the latest code from the repository"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "drupal/core-recommended",
+   "tier": 4,
+   "says": [
+    "is the Composer package that requires Drupal core with a tested set of locked dependency versions",
+    "moves its dependency versions only when core itself is updated",
+    "keeps core's dependencies at the versions core was tested with"
+   ],
+   "use": "need Composer to install core with the dependency versions it was tested against",
+   "not": [
+    "scaffolds index.php into the web root"
+   ],
+   "like": [
+    "drupal/core-composer-scaffold"
+   ]
+  },
+  {
+   "group": "cmd",
+   "subject": "drupal/core-composer-scaffold",
+   "tier": 5,
+   "says": [
+    "copies files such as index.php and .htaccess from core into the web root",
+    "reruns when core is updated through Composer",
+    "can be told which files to skip or append to"
+   ],
+   "use": "need the web root files restored after a core update",
+   "not": [
+    "requires core with a locked set of tested dependencies"
+   ],
+   "like": [
+    "drupal/core-recommended"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A cache tag",
+   "tier": 3,
+   "says": [
+    "labels cached output with the data it depends on, such as node:5",
+    "lets saving a node invalidate every cached item that carries its tag",
+    "bubbles up from inner render arrays to the page"
+   ],
+   "use": "need cached output to refresh the moment one node changes",
+   "not": [
+    "varies the cached item per user role"
+   ],
+   "like": [
+    "A cache context",
+    "Max-age"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A cache context",
+   "tier": 3,
+   "says": [
+    "varies a cached item by a request condition such as role, language or URL",
+    "is named like user.roles or url.path",
+    "creates a separate cached variation for each distinct value"
+   ],
+   "use": "have a block that shows a different result for each role",
+   "not": [
+    "marks the cached item as depending on node 5"
+   ],
+   "like": [
+    "A cache tag",
+    "Max-age"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Max-age",
+   "tier": 3,
+   "says": [
+    "sets how long a cached item may be reused",
+    "uses 0 for output that must not be cached",
+    "is time-based, unlike invalidation by tags"
+   ],
+   "use": "have output that depends on the clock and should expire after an hour",
+   "not": [
+    "names the data an item depends on"
+   ],
+   "like": [
+    "A cache tag",
+    "A cache context"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Cache bubbling",
+   "tier": 5,
+   "says": [
+    "passes the cache metadata of inner elements up to every parent",
+    "combines tags and contexts and takes the lowest max-age of the children",
+    "makes a page cache as little as its least cacheable part"
+   ],
+   "use": "see a whole page become uncacheable because of one small block",
+   "not": [
+    "stores cached pages in the browser only"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "The Internal Page Cache",
+   "tier": 3,
+   "says": [
+    "stores whole responses for anonymous visitors",
+    "returns a stored response before most of Drupal has run",
+    "does not serve personalised pages for logged-in users"
+   ],
+   "use": "want fast delivery of full pages to visitors who are not logged in",
+   "not": [
+    "caches personalised pages with placeholders for logged-in users"
+   ],
+   "like": [
+    "The Dynamic Page Cache"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "The Dynamic Page Cache",
+   "tier": 4,
+   "says": [
+    "caches pages for all users and fills personalised parts in separately",
+    "relies on cache contexts to vary what it stores",
+    "works for logged-in users as well as anonymous ones"
+   ],
+   "use": "want logged-in users to benefit from caching of the shared parts of a page",
+   "not": [
+    "serves only anonymous visitors"
+   ],
+   "like": [
+    "The Internal Page Cache"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "BigPipe",
+   "tier": 5,
+   "says": [
+    "sends the cacheable page first and streams personalised parts afterwards",
+    "improves how fast a page feels for logged-in users",
+    "depends on placeholders for the personalised parts"
+   ],
+   "use": "want logged-in users to see the page shell before personalised blocks are ready",
+   "not": [
+    "is a CDN service for large files"
+   ],
+   "like": [
+    "A lazy builder"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A lazy builder",
+   "tier": 5,
+   "says": [
+    "is a callback that renders a personalised placeholder after the cached page",
+    "keeps one expensive or personalised element from making the page uncacheable",
+    "is named in a #lazy_builder render key"
+   ],
+   "use": "have a small cart count that differs per user inside an otherwise cacheable page",
+   "not": [
+    "decides when the page cache expires"
+   ],
+   "like": [
+    "BigPipe"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A cache bin",
+   "tier": 4,
+   "says": [
+    "is a named store such as render or config",
+    "can be backed by a different backend per bin",
+    "is cleared as part of a cache rebuild"
+   ],
+   "use": "need one cache area to use Redis while others stay in the database",
+   "not": [
+    "is a label attached to a single cached item"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A persistent cache backend",
+   "tier": 4,
+   "says": [
+    "stores cache bins in a service such as Redis or Memcache",
+    "reduces load on the database on a busy site",
+    "is enabled through settings.php"
+   ],
+   "use": "see the database busy with cache reads on a busy site",
+   "not": [
+    "replaces the need for any cache tags"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Tag-based CDN purging",
+   "tier": 4,
+   "says": [
+    "sends purge requests for the tags of changed content to the CDN or proxy",
+    "keeps edge caches fresh without waiting for max-age",
+    "is provided by contributed modules"
+   ],
+   "use": "need a CDN to drop a page the moment the editor saves it",
+   "not": [
+    "is only possible with the Internal Page Cache disabled"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "A role",
+   "tier": 1,
+   "says": [
+    "is a named set of permissions assigned to users",
+    "includes the anonymous and authenticated roles by default",
+    "can be given to many users at once"
+   ],
+   "use": "need to give a group of editors the same abilities",
+   "not": [
+    "is a single ability such as editing own content"
+   ],
+   "like": [
+    "A permission"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "A permission",
+   "tier": 1,
+   "says": [
+    "is a single granted ability such as editing own article content",
+    "is declared by modules in a permissions.yml file",
+    "is granted to roles rather than directly to users"
+   ],
+   "use": "need to allow editors to create articles but not pages",
+   "not": [
+    "is a named set of users"
+   ],
+   "like": [
+    "A role"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "The anonymous user",
+   "tier": 1,
+   "says": [
+    "represents any visitor who is not logged in",
+    "gets abilities through the anonymous role",
+    "cannot own content under a real account"
+   ],
+   "use": "need to decide what a visitor without an account may see",
+   "not": [
+    "is the account created first at installation"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "User 1",
+   "tier": 3,
+   "says": [
+    "is the first account created at installation",
+    "traditionally bypasses all permission checks",
+    "should not be used for day-to-day editing"
+   ],
+   "use": "find an account that can do everything and want to stop using it daily",
+   "not": [
+    "has the same limits as any other administrator role member"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "A restricted permission",
+   "tier": 3,
+   "says": [
+    "is marked with restrict access in its permissions.yml entry",
+    "is flagged on the permissions page as having security implications",
+    "should be granted only to trusted roles"
+   ],
+   "use": "grant an ability that could let a role take over the site",
+   "not": [
+    "is a permission that only user 1 can use"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "A route access requirement",
+   "tier": 3,
+   "says": [
+    "restricts a route by permission, role or access checker in routing.yml",
+    "is checked before the controller runs",
+    "can be a custom access checker service"
+   ],
+   "use": "need a custom page only for users with a chosen permission",
+   "not": [
+    "hides the page link in the menu but does not block the URL"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Entity access",
+   "tier": 4,
+   "says": [
+    "checks whether an account may view, update or delete a particular entity",
+    "runs through the entity's access control handler",
+    "can be altered by modules through hooks"
+   ],
+   "use": "need to decide if the current user may edit one specific node",
+   "not": [
+    "is the per-role list of enabled modules"
+   ]
+  },
+  {
+   "group": "access",
+   "subject": "Node access grants",
+   "tier": 5,
+   "says": [
+    "let a module restrict which users may view or edit individual nodes beyond role permissions",
+    "are stored in the node_access table",
+    "need a rebuild of permissions when the access rules change"
+   ],
+   "use": "need some nodes of one type visible only to members of a given group",
+   "not": [
+    "are granted by editing the content type's field list"
+   ]
+  },
+  {
+   "group": "secure",
+   "subject": "A security advisory",
+   "tier": 1,
+   "says": [
+    "is the public notice from the security team about a vulnerability and its fix",
+    "names the affected projects and the release that fixes them",
+    "gives a risk rating"
+   ],
+   "use": "see that a contributed module the site uses has a published vulnerability",
+   "not": [
+    "is a request for new features from a client"
+   ]
+  },
+  {
+   "group": "secure",
+   "subject": "Twig autoescaping",
+   "tier": 3,
+   "says": [
+    "escapes printed variables so markup is shown as text",
+    "protects against cross-site scripting by default",
+    "is turned off for a value only by marking it safe"
+   ],
+   "use": "print a user-supplied title in a template",
+   "not": [
+    "removes all HTML from every variable permanently in the database"
+   ],
+   "like": [
+    "Twig",
+    "The raw filter"
+   ]
+  },
+  {
+   "group": "secure",
+   "subject": "The raw filter",
+   "tier": 4,
+   "says": [
+    "turns off Twig escaping for a printed value",
+    "is dangerous with user-supplied data",
+    "should be reserved for already-sanitised markup"
+   ],
+   "use": "see a template print markup from a user without escaping",
+   "not": [
+    "is the filter that translates a string"
+   ],
+   "like": [
+    "Twig autoescaping"
+   ]
+  },
+  {
+   "group": "secure",
+   "subject": "t() placeholders",
+   "tier": 3,
+   "says": [
+    "use prefixes such as @variable that escape the inserted value",
+    "keep user-supplied values from injecting markup into translated strings",
+    "are filled from the second argument of t()"
+   ],
+   "use": "need to put a user name into a translatable string safely",
+   "not": [
+    "are filled by concatenating the value into the string before translation"
+   ]
+  },
+  {
+   "group": "secure",
+   "subject": "Database API placeholders",
+   "tier": 3,
+   "says": [
+    "send values separately from the query text",
+    "are written like :email in a condition",
+    "prevent SQL injection from user input"
+   ],
+   "use": "run a query that includes a value typed by a visitor",
+   "not": [
+    "are filled by concatenating the value into the SQL string"
+   ]
+  },
+  {
+   "group": "secure",
+   "subject": "Trusted host patterns",
+   "tier": 4,
+   "says": [
+    "restrict which Host header values the site accepts",
+    "are set in settings.php",
+    "defend against HTTP Host header spoofing"
+   ],
+   "use": "need to stop the site answering to arbitrary host names",
+   "not": [
+    "list the IP addresses allowed to log in"
+   ]
+  },
+  {
+   "group": "secure",
+   "subject": "A CSRF token",
+   "tier": 4,
+   "says": [
+    "is a per-session value checked on state-changing requests",
+    "stops another site from tricking a logged-in user into submitting an action",
+    "is required on a route marked _csrf_token"
+   ],
+   "use": "need a link that deletes content to work only when clicked from the site",
+   "not": [
+    "encrypts the password in transit"
+   ]
+  },
+  {
+   "group": "secure",
+   "subject": "The private file system",
+   "tier": 4,
+   "says": [
+    "stores files outside the publicly served web root",
+    "serves them through Drupal after an access check",
+    "needs a private path set in settings.php"
+   ],
+   "use": "need invoices to be downloaded only by their owner",
+   "not": [
+    "serves files directly from the web server without a check"
+   ]
+  },
+  {
+   "group": "secure",
+   "subject": "Removing unused modules",
+   "tier": 3,
+   "says": [
+    "reduces the code that can contain a vulnerability",
+    "means uninstalling and then deleting the code",
+    "shrinks what must be patched"
+   ],
+   "use": "want to cut the number of projects that need security updates",
+   "not": [
+    "is unnecessary because disabled code is never reachable"
+   ]
+  },
+  {
+   "group": "i18n",
+   "subject": "The Language module",
+   "tier": 1,
+   "says": [
+    "adds languages to the site",
+    "provides language detection settings",
+    "is required by the other multilingual modules"
+   ],
+   "use": "need to add a second language to the site",
+   "not": [
+    "translates node content"
+   ],
+   "like": [
+    "The Content Translation module"
+   ]
+  },
+  {
+   "group": "i18n",
+   "subject": "The Content Translation module",
+   "tier": 2,
+   "says": [
+    "lets entities such as nodes have translations per language",
+    "makes chosen fields translatable",
+    "keeps a translation of a node as part of the same node"
+   ],
+   "use": "need articles in English and French",
+   "not": [
+    "translates the built-in interface text"
+   ],
+   "like": [
+    "The Interface Translation module"
+   ]
+  },
+  {
+   "group": "i18n",
+   "subject": "The Interface Translation module",
+   "tier": 2,
+   "says": [
+    "translates the built-in interface text such as labels and messages",
+    "imports community translation strings",
+    "keeps the strings in the locale system"
+   ],
+   "use": "need the admin menus and form labels in the editor's language",
+   "not": [
+    "translates a node's body field"
+   ],
+   "like": [
+    "The Content Translation module"
+   ]
+  },
+  {
+   "group": "i18n",
+   "subject": "The Configuration Translation module",
+   "tier": 3,
+   "says": [
+    "translates configuration such as view labels, menu names and the site name",
+    "adds a translate tab to configuration pages",
+    "is separate from translating node content"
+   ],
+   "use": "need the site name and menu titles in each language",
+   "not": [
+    "translates the body of nodes"
+   ]
+  },
+  {
+   "group": "i18n",
+   "subject": "Language negotiation",
+   "tier": 4,
+   "says": [
+    "decides which language a request is served in",
+    "uses methods such as URL prefix, domain or user preference",
+    "tries its configured methods in order"
+   ],
+   "use": "need the site to pick the right language for each visitor",
+   "not": [
+    "translates strings automatically with machine translation"
+   ]
+  },
+  {
+   "group": "i18n",
+   "subject": "URL prefix negotiation",
+   "tier": 3,
+   "says": [
+    "puts the language code in the path, for example /fr/node/5",
+    "needs no extra domains",
+    "is one detection method among several"
+   ],
+   "use": "want one domain serving /en and /fr",
+   "not": [
+    "serves each language from its own domain"
+   ],
+   "like": [
+    "Domain-based negotiation"
+   ]
+  },
+  {
+   "group": "i18n",
+   "subject": "Domain-based negotiation",
+   "tier": 3,
+   "says": [
+    "serves each language from its own domain",
+    "maps a domain name to a language",
+    "needs DNS and web server setup for each domain"
+   ],
+   "use": "want example.fr and example.de to show different languages",
+   "not": [
+    "puts the language code in the path"
+   ],
+   "like": [
+    "URL prefix negotiation"
+   ]
+  },
+  {
+   "group": "i18n",
+   "subject": "A translatable field",
+   "tier": 3,
+   "says": [
+    "holds its own value in each translation of the entity",
+    "is chosen per field on the content type",
+    "shares one value across translations when left untranslatable"
+   ],
+   "use": "want the body translated but the same image used in every language",
+   "not": [
+    "is stored only in the default language"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "JSON:API",
+   "tier": 2,
+   "says": [
+    "exposes entities as resources following the JSON:API specification",
+    "follows the JSON:API specification's conventions for the filter, sort, page and include query parameters",
+    "derives resources from entity types and bundles"
+   ],
+   "use": "need a front end to read articles as JSON with little setup",
+   "not": [
+    "needs each resource written as a custom REST plugin"
+   ],
+   "like": [
+    "Core RESTful Web Services",
+    "GraphQL in Drupal"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "Core RESTful Web Services",
+   "tier": 4,
+   "says": [
+    "exposes resources through REST resource plugins",
+    "requires each resource and its methods to be enabled",
+    "lets a custom resource be written as a plugin"
+   ],
+   "use": "need a custom endpoint with its own logic",
+   "not": [
+    "derives every resource automatically from entity bundles"
+   ],
+   "like": [
+    "JSON:API"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "GraphQL in Drupal",
+   "tier": 4,
+   "says": [
+    "comes from contributed modules rather than core",
+    "lets a client ask for exactly the fields it needs in one query",
+    "is queried through a single endpoint"
+   ],
+   "use": "want a front end to fetch related data in one request",
+   "not": [
+    "is part of core and enabled by default"
+   ],
+   "like": [
+    "JSON:API"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "Decoupled Drupal",
+   "tier": 2,
+   "says": [
+    "uses Drupal as the content back end",
+    "renders pages in a separate front end",
+    "serves content through an API"
+   ],
+   "use": "want a JavaScript front end to render the site",
+   "not": [
+    "serves pages rendered by a Drupal theme"
+   ],
+   "like": [
+    "Progressively decoupled Drupal"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "Progressively decoupled Drupal",
+   "tier": 3,
+   "says": [
+    "keeps Drupal rendering pages",
+    "adds a JavaScript application to a part of the page",
+    "lets one widget be interactive without rebuilding the whole front end"
+   ],
+   "use": "want only a single interactive widget to be a JavaScript app",
+   "not": [
+    "replaces Drupal's rendering of the whole site"
+   ],
+   "like": [
+    "Decoupled Drupal"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "CORS configuration",
+   "tier": 4,
+   "says": [
+    "lets a browser app on another origin call the Drupal API",
+    "is set in the cors.config section of services.yml",
+    "lists allowed origins, methods and headers"
+   ],
+   "use": "see browser errors when a front end on another domain calls the API",
+   "not": [
+    "encrypts API traffic"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "Simple OAuth",
+   "tier": 4,
+   "says": [
+    "is a contributed module that adds OAuth 2 token authentication",
+    "issues access tokens to API clients",
+    "fits a decoupled front end that logs users in"
+   ],
+   "use": "need token-based authentication for a decoupled app",
+   "not": [
+    "is a core module that handles cookies for all logins"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "The JSON:API include parameter",
+   "tier": 4,
+   "says": [
+    "pulls related resources into the same response",
+    "is written like include=field_image",
+    "saves a second request for related data"
+   ],
+   "use": "want an article and its image in a single response",
+   "not": [
+    "limits the number of items returned"
+   ]
+  },
+  {
+   "group": "migrate",
+   "subject": "The Migrate API",
+   "tier": 2,
+   "says": [
+    "moves data into Drupal through source, process and destination plugins",
+    "is configured in migration YAML files",
+    "keeps track of what it has already imported"
+   ],
+   "use": "need to move content from an old system into Drupal",
+   "not": [
+    "deploys configuration between environments"
+   ],
+   "like": [
+    "The migrate ID map"
+   ]
+  },
+  {
+   "group": "migrate",
+   "subject": "A migration source plugin",
+   "tier": 4,
+   "says": [
+    "reads rows from the old system such as a database, a CSV or JSON",
+    "declares the unique IDs of each source row",
+    "supplies the raw values the process section maps"
+   ],
+   "use": "need to read the rows of a legacy table",
+   "not": [
+    "creates the entities in Drupal"
+   ],
+   "like": [
+    "A migration destination plugin"
+   ]
+  },
+  {
+   "group": "migrate",
+   "subject": "A migration process plugin",
+   "tier": 4,
+   "says": [
+    "transforms a source value into the value the destination field expects",
+    "can be chained into a pipeline for one field",
+    "includes plugins such as default_value and callback"
+   ],
+   "use": "need to convert a legacy date format on the way in",
+   "not": [
+    "reads the original rows"
+   ]
+  },
+  {
+   "group": "migrate",
+   "subject": "A migration destination plugin",
+   "tier": 4,
+   "says": [
+    "creates or updates the target entity or configuration",
+    "can be entity:node with a default bundle",
+    "receives the processed values"
+   ],
+   "use": "need migrated rows to become article nodes",
+   "not": [
+    "reads rows from the legacy database"
+   ],
+   "like": [
+    "A migration source plugin"
+   ]
+  },
+  {
+   "group": "migrate",
+   "subject": "The migrate ID map",
+   "tier": 5,
+   "says": [
+    "records which source ID became which destination ID",
+    "lets a re-run update items instead of duplicating them",
+    "makes rollback possible"
+   ],
+   "use": "need to run a migration again without duplicating content",
+   "not": [
+    "maps field names to labels in the form"
+   ],
+   "like": [
+    "The Migrate API",
+    "A migration rollback"
+   ]
+  },
+  {
+   "group": "migrate",
+   "subject": "A migration dependency",
+   "tier": 5,
+   "says": [
+    "makes one migration run only after another",
+    "lets references to migrated items be resolved",
+    "is declared under migration_dependencies"
+   ],
+   "use": "need articles migrated after their authors exist",
+   "not": [
+    "runs all migrations in parallel"
+   ]
+  },
+  {
+   "group": "migrate",
+   "subject": "A migration rollback",
+   "tier": 4,
+   "says": [
+    "removes the destination items a migration created",
+    "uses the ID map to find the items it created",
+    "leaves items that were not created by the migration"
+   ],
+   "use": "run a migration with a wrong mapping and need to undo it",
+   "not": [
+    "restores the whole site from a database backup"
+   ],
+   "like": [
+    "The migrate ID map"
+   ]
+  },
+  {
+   "group": "migrate",
+   "subject": "Migrate Drupal",
+   "tier": 3,
+   "says": [
+    "provides ready-made migrations from earlier Drupal sites",
+    "reads the old site's database",
+    "covers content and configuration of the old site"
+   ],
+   "use": "need to upgrade from an earlier major version of Drupal by migrating",
+   "not": [
+    "upgrades a site in place by running update scripts"
+   ]
+  },
+  {
+   "group": "migrate",
+   "subject": "The migration_lookup process plugin",
+   "tier": 5,
+   "says": [
+    "finds the destination ID created by another migration for a source value",
+    "turns a legacy reference into a Drupal reference",
+    "depends on the other migration's ID map"
+   ],
+   "use": "need an article's author reference to point at the migrated author",
+   "not": [
+    "looks up a translation string"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Update status",
+   "tier": 2,
+   "says": [
+    "reports available updates for core and contributed projects",
+    "marks which updates are security releases",
+    "compares installed project versions with the published release information"
+   ],
+   "use": "want to know which projects have new or security releases",
+   "not": [
+    "installs the updates automatically"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A staging environment",
+   "tier": 1,
+   "says": [
+    "is a copy of production where updates are tested before release",
+    "reveals module or theme conflicts before they reach visitors",
+    "uses a recent copy of production data"
+   ],
+   "use": "need to try the next module update before it reaches visitors",
+   "not": [
+    "is the same as a developer's laptop without any data"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Backups",
+   "tier": 1,
+   "says": [
+    "include both the database and the uploaded files",
+    "are only trustworthy when a restore has been tested",
+    "are taken before applying updates"
+   ],
+   "use": "worry that the database dump alone cannot restore the site",
+   "not": [
+    "are replaced by version control of the code"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Cron",
+   "tier": 2,
+   "says": [
+    "runs scheduled maintenance such as search indexing and cache cleanup",
+    "is triggered by an external scheduler or Drush",
+    "can be run on its own from the command line"
+   ],
+   "use": "see scheduled tasks pile up unprocessed",
+   "not": [
+    "is a content type for scheduled posts"
+   ],
+   "like": [
+    "drush cron"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "settings.local.php",
+   "tier": 4,
+   "says": [
+    "holds environment-specific settings that stay out of version control",
+    "is included from settings.php when it exists",
+    "is where a local database connection often lives"
+   ],
+   "use": "need developer-specific settings that must not be committed",
+   "not": [
+    "is committed so every environment shares it"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Web root separation",
+   "tier": 4,
+   "says": [
+    "keeps vendor, configuration and secrets outside the publicly served directory",
+    "is the purpose of the web subdirectory in the recommended project layout",
+    "means only the web directory is exposed by the server"
+   ],
+   "use": "need configuration and secrets that are never reachable by URL",
+   "not": [
+    "puts the whole project in the public directory for convenience"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "PHP opcache",
+   "tier": 4,
+   "says": [
+    "keeps compiled PHP code in memory between requests",
+    "speeds up every request on the server",
+    "is configured in PHP, not in Drupal"
+   ],
+   "use": "need to cut the time PHP spends compiling code on each request",
+   "not": [
+    "caches rendered pages for visitors"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A CDN or proxy in front of the site",
+   "tier": 3,
+   "says": [
+    "serves cached pages and files from edge servers",
+    "adds caching and some protection",
+    "does not replace applying security updates"
+   ],
+   "use": "want to cut load on the origin server",
+   "not": [
+    "removes the need to patch the CMS"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLink technologies section",
+   "tier": 2,
+   "says": [
+    "shows a Drupal logo link next to WordPress, CodeIgniter, Cloudflare and cPanel",
+    "presents Drupal as a technology the site works with",
+    "links Drupal as a placeholder, not as a case study"
+   ],
+   "use": "are asked where our website mentions Drupal",
+   "not": [
+    "describe a Drupal site we built for a client"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLink Drupal link",
+   "tier": 2,
+   "says": [
+    "is a placeholder hash rather than a real destination",
+    "shows Drupal as a capability",
+    "has alt text describing a free and open-source CMS written in PHP"
+   ],
+   "use": "need to judge what GGLink's Drupal logo proves to a client",
+   "not": [
+    "opens a Drupal case study"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Drupal inside our own products",
+   "tier": 2,
+   "says": [
+    "is absent: none of gglearn, ggsocial, ggmoney or the Moksy platform runs it",
+    "is a catalogue and sales-conversation topic for us",
+    "is not something we operate ourselves"
+   ],
+   "use": "get asked whether our own platforms run Drupal",
+   "not": [
+    "powers gglearn and ggsocial"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's early solution-family list",
+   "tier": 3,
+   "says": [
+    "names Drupal-based, WordPress-based and Laravel-based solutions as separate options",
+    "lists free, semi-free, paid, custom and enterprise cost levels",
+    "asks whether the catalogue has ready-made systems such as WordPress, Drupal and Moodle"
+   ],
+   "use": "need to explain why Drupal appears next to other solution families in Moksy's early list",
+   "not": [
+    "records a decision to build everything on Drupal"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Drupal maintenance in a client quote",
+   "tier": 3,
+   "says": [
+    "is part of the quote rather than an optional extra",
+    "adds a second patch stream, the CMS and its modules, to our own dependencies",
+    "needs someone to own it contractually"
+   ],
+   "use": "price a Drupal client build",
+   "not": [
+    "can be left out because a CDN protects the site"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Our own Next.js deployment",
+   "tier": 3,
+   "says": [
+    "runs under PM2 on a server",
+    "has dependencies we patch ourselves",
+    "has no CMS patch stream, unlike a Drupal client site"
+   ],
+   "use": "compare our own patching routine with a Drupal client site",
+   "not": [
+    "is hosted on shared cPanel hosting"
+   ]
+  },
+  {
+   "group": "pick",
+   "subject": "Drupal",
+   "tier": 2,
+   "says": [
+    "suits content-heavy sites with many content types, taxonomies and fine-grained roles",
+    "suits multilingual portals and workflow-heavy publishing",
+    "usually needs more developer skill to build and maintain"
+   ],
+   "use": "face a university-style portal with a rich content model and strict roles",
+   "not": [
+    "is the cheapest way to launch a five-page brochure site"
+   ],
+   "like": [
+    "WordPress",
+    "Laravel"
+   ]
+  },
+  {
+   "group": "pick",
+   "subject": "WordPress",
+   "tier": 2,
+   "says": [
+    "suits brochure sites, blogs and shops where editors want a familiar interface",
+    "has a large ecosystem of themes and plugins",
+    "carries the risk of plugin sprawl and uneven plugin quality"
+   ],
+   "use": "have a small clinic site with five pages and a blog, and a receptionist who edits text",
+   "not": [
+    "needs custom code for every page type from the start"
+   ],
+   "like": [
+    "Drupal",
+    "Laravel"
+   ]
+  },
+  {
+   "group": "pick",
+   "subject": "Laravel",
+   "tier": 2,
+   "says": [
+    "is a PHP framework, not a CMS",
+    "suits custom applications with business logic such as booking or invoicing",
+    "leaves you to build the admin and content features yourself"
+   ],
+   "use": "face a booking and invoicing portal with custom rules",
+   "not": [
+    "ships a finished editor interface for publishing pages"
+   ],
+   "like": [
+    "Drupal",
+    "WordPress"
+   ]
+  },
+  {
+   "group": "pick",
+   "subject": "A headless CMS",
+   "tier": 3,
+   "says": [
+    "stores and serves content over an API with no front end of its own",
+    "pairs with a separate front end application",
+    "can be combined with a custom application framework for the admin"
+   ],
+   "use": "need content managed in one place and delivered to a custom front end or app",
+   "not": [
+    "renders the pages with its own theme layer"
+   ],
+   "like": [
+    "Drupal",
+    "A static site generator"
+   ]
+  },
+  {
+   "group": "pick",
+   "subject": "A static site generator",
+   "tier": 3,
+   "says": [
+    "builds pages ahead of time into plain files",
+    "has no server-side CMS to patch for page requests",
+    "needs a rebuild for content changes to appear"
+   ],
+   "use": "have a mostly unchanging documentation site that must be cheap to host",
+   "not": [
+    "generates every page on the server when it is requested"
+   ],
+   "like": [
+    "A headless CMS"
+   ]
+  },
+  {
+   "group": "pick",
+   "subject": "A hosted site builder",
+   "tier": 3,
+   "says": [
+    "runs on the vendor's platform with patching handled by the vendor",
+    "limits custom back-end logic",
+    "trades flexibility for a faster start"
+   ],
+   "use": "have a small business wanting a simple site without maintaining servers",
+   "not": [
+    "gives full control of the server and its code"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is this file?",
+   "right": "A module's info.yml file, which lets Drupal discover the module",
+   "wrong": [
+    "A theme's libraries file that attaches scripts",
+    "A routing file that registers a page",
+    "A services file that defines a container service"
+   ],
+   "tier": 1,
+   "why": "An info.yml file declares the name and type of an extension and its dependencies.",
+   "code": "name: Event Tools\ntype: module\ndescription: 'Custom event helpers.'\npackage: Custom\ndependencies:\n  - drupal:node"
+  },
+  {
+   "q": "What does this command do?",
+   "right": "Clears and rebuilds Drupal's caches",
+   "wrong": [
+    "Deletes all nodes so they can be recreated",
+    "Exports configuration to the sync directory",
+    "Runs pending database updates"
+   ],
+   "tier": 1,
+   "why": "cr is the alias of cache:rebuild.",
+   "code": "drush cr"
+  },
+  {
+   "q": "A developer adds a Twig template change and nothing changes on the page. What is the most likely first fix?",
+   "right": "Rebuild the caches, because compiled templates and the theme registry are cached",
+   "wrong": [
+    "Reinstall the theme from scratch",
+    "Run a database update",
+    "Export the configuration"
+   ],
+   "tier": 1,
+   "why": "Template discovery is cached, so a cache rebuild is the first step."
+  },
+  {
+   "q": "A client asks whether gglearn or ggsocial run on Drupal. What is the accurate answer?",
+   "right": "No. None of our products run Drupal; GGLink lists it as a capability",
+   "wrong": [
+    "Yes, gglearn is built on Drupal",
+    "Yes, but only the Moksy platform",
+    "Only ggmoney, through a Drupal module"
+   ],
+   "tier": 1,
+   "why": "Our knowledge base states that none of our own platforms run Drupal."
+  },
+  {
+   "q": "An editor needs a new kind of content, an event with a date and a location. What does a site builder create?",
+   "right": "A new content type with date and location fields",
+   "wrong": [
+    "A new theme region",
+    "A new role with an event permission",
+    "A new image style"
+   ],
+   "tier": 1,
+   "why": "A content type defines the fields of a kind of node."
+  },
+  {
+   "q": "What does this routing definition do?",
+   "right": "Registers a page at that path, served by the controller method, only for users with the permission",
+   "wrong": [
+    "Creates the permission access site reports",
+    "Makes the page public to anonymous visitors",
+    "Places a block in a region of the theme"
+   ],
+   "tier": 2,
+   "why": "The requirements section restricts access; the permission must already be defined elsewhere.",
+   "code": "event_tools.report:\n  path: '/admin/reports/event-tools'\n  defaults:\n    _controller: '\\Drupal\\event_tools\\Controller\\ReportController::build'\n    _title: 'Event report'\n  requirements:\n    _permission: 'access site reports'"
+  },
+  {
+   "q": "What does the tag in this definition do?",
+   "right": "It registers the class with the event dispatcher so its getSubscribedEvents map is used",
+   "wrong": [
+    "It makes the class a plugin discovered by annotation",
+    "It marks the class as a hook implementation",
+    "It restricts the service to authenticated users"
+   ],
+   "tier": 2,
+   "why": "Services tagged event_subscriber are picked up by the Symfony event dispatcher.",
+   "code": "services:\n  event_tools.redirect_subscriber:\n    class: Drupal\\event_tools\\EventSubscriber\\RedirectSubscriber\n    tags:\n      - { name: event_subscriber }"
+  },
+  {
+   "q": "What happens when this hook implementation runs?",
+   "right": "It runs for every form but changes the title description only on the node_event_form",
+   "wrong": [
+    "It replaces the whole form with a new one",
+    "It runs only when the module declares the hook in services.yml",
+    "It creates a new content type called event"
+   ],
+   "tier": 2,
+   "why": "hook_form_alter is called for every form; the condition limits the change.",
+   "code": "function event_tools_form_alter(array &$form, \\Drupal\\Core\\Form\\FormStateInterface $form_state, string $form_id): void {\n  if ($form_id === 'node_event_form') {\n    $form['title']['#description'] = t('Use the public name.');\n  }\n}"
+  },
+  {
+   "q": "What does this command do?",
+   "right": "Adds the package to composer.json and composer.lock and downloads it, but does not enable the module",
+   "wrong": [
+    "Downloads and enables the module in one step",
+    "Enables an already downloaded module",
+    "Updates every package on the site"
+   ],
+   "tier": 2,
+   "why": "The module still has to be enabled separately.",
+   "code": "composer require drupal/pathauto"
+  },
+  {
+   "q": "A team made a content type change in the admin UI on development. How should it reach production?",
+   "right": "Export the configuration, commit the YAML, deploy the code and run a configuration import on production",
+   "wrong": [
+    "Copy the development database over the production database",
+    "Recreate the change by hand in production",
+    "Run drush updb on production"
+   ],
+   "tier": 2,
+   "why": "Configuration moves as exported YAML; copying the database would overwrite production content."
+  },
+  {
+   "q": "Which snippet is the better way to deploy to production?",
+   "right": "composer install, because it installs exactly what composer.lock records",
+   "wrong": [
+    "composer update, because it fetches the newest allowed versions",
+    "composer require on the server, to be sure of the latest versions",
+    "Copying the vendor directory from a laptop"
+   ],
+   "tier": 2,
+   "why": "Deployment should reproduce the tested versions from the committed lock file."
+  },
+  {
+   "q": "After a module update is deployed, the site errors on a missing database column. What step is missing?",
+   "right": "Running the database updates with drush updb",
+   "wrong": [
+    "Exporting the configuration",
+    "Reinstalling the theme",
+    "Running composer require again"
+   ],
+   "tier": 2,
+   "why": "Update hooks that alter the schema run through updb."
+  },
+  {
+   "q": "An editor must create articles but never pages. What gives that?",
+   "right": "Grant the role the create and edit permissions for article content only",
+   "wrong": [
+    "Make the editor user 1",
+    "Place a block that hides the pages",
+    "Disable the page content type's fields"
+   ],
+   "tier": 2,
+   "why": "Content permissions are granted per content type to a role."
+  },
+  {
+   "q": "What does Twig do with this expression by default?",
+   "right": "It prints the value escaped, so HTML characters appear as text",
+   "wrong": [
+    "It prints the raw HTML from the field",
+    "It removes the value from the page",
+    "It translates the value into the visitor's language"
+   ],
+   "tier": 2,
+   "why": "Autoescaping protects against cross-site scripting.",
+   "code": "{{ node.label }}"
+  },
+  {
+   "q": "What does the t filter do in this template?",
+   "right": "Passes the string through Drupal's translation system",
+   "wrong": [
+    "Trims whitespace from the string",
+    "Prints the string without escaping",
+    "Converts the string to a title case"
+   ],
+   "tier": 2,
+   "why": "The t filter translates strings.",
+   "code": "{{ 'Read more'|t }}"
+  },
+  {
+   "q": "A visitor reports the site's front page still shows a deleted article. The view is cached for anonymous users. Which feature should have invalidated the output?",
+   "right": "Cache tags on the view output",
+   "wrong": [
+    "A cache context on the language",
+    "A longer max-age",
+    "Twig autoescaping"
+   ],
+   "tier": 2,
+   "why": "The view output is tagged with the data it depends on; saving or deleting nodes invalidates the list tag."
+  },
+  {
+   "q": "What does this #cache setting mean?",
+   "right": "The output is invalidated when node 5 changes, varies by the user's roles, and expires after an hour",
+   "wrong": [
+    "The output is cached forever and ignores changes",
+    "The output is cached only for user 1",
+    "The output is never cached"
+   ],
+   "tier": 2,
+   "why": "tags, contexts and max-age together set invalidation, variation and expiry.",
+   "code": "$build['#cache'] = [\n  'tags' => ['node:5'],\n  'contexts' => ['user.roles'],\n  'max-age' => 3600,\n];"
+  },
+  {
+   "q": "What is the problem with this query?",
+   "right": "The value is joined into the SQL text, which allows SQL injection",
+   "wrong": [
+    "The braces around the table name are invalid",
+    "Drupal does not allow a WHERE clause",
+    "The query will always return no rows"
+   ],
+   "tier": 2,
+   "why": "Values must be sent as placeholders.",
+   "code": "\\Drupal::database()->query(\"SELECT nid FROM {node_field_data} WHERE title = '\" . $title . \"'\");"
+  },
+  {
+   "q": "What does the fix change?",
+   "right": "The value is sent separately from the SQL text as a placeholder",
+   "wrong": [
+    "The query is cached for later requests",
+    "The value is stored in the state",
+    "The table becomes read-only"
+   ],
+   "tier": 2,
+   "why": "A placeholder keeps data apart from code.",
+   "code": "\\Drupal::database()->query('SELECT nid FROM {node_field_data} WHERE title = :title', [':title' => $title]);"
+  },
+  {
+   "q": "What does the @ prefix do in this call?",
+   "right": "It escapes the inserted value for safe use in HTML",
+   "wrong": [
+    "It makes the string untranslatable",
+    "It marks the value as a URL",
+    "It prints the value in bold"
+   ],
+   "tier": 2,
+   "why": "@ placeholders are escaped before insertion.",
+   "code": "t('Hello @name', ['@name' => $name]);"
+  },
+  {
+   "q": "A client believes a CDN means the Drupal site no longer needs updates. What is the right correction?",
+   "right": "A CDN adds caching and some protection but does not replace applying security updates",
+   "wrong": [
+    "A CDN patches core automatically",
+    "A CDN makes contributed modules safe",
+    "Updates are needed only on the CDN"
+   ],
+   "tier": 2,
+   "why": "The origin still runs the vulnerable code."
+  },
+  {
+   "q": "Editors want a compact card in lists and the full article on its own page, from the same node. What is used?",
+   "right": "Different view modes such as teaser and full, each with its own field display",
+   "wrong": [
+    "Two separate content types",
+    "Two themes",
+    "Two taxonomy vocabularies"
+   ],
+   "tier": 3,
+   "why": "View modes render one entity in different ways."
+  },
+  {
+   "q": "Editors need to rearrange the blocks on one landing page without changing other pages of that type. What setup fits?",
+   "right": "Allow per-content layout overrides in Layout Builder and edit that node's layout",
+   "wrong": [
+    "Create a new theme region for that page",
+    "Change the content type's default layout",
+    "Delete and recreate the page as another type"
+   ],
+   "tier": 3,
+   "why": "Overrides apply to a single node and leave the default layout alone."
+  },
+  {
+   "q": "A single view must list the articles for whichever term is in the URL. Which feature does that?",
+   "right": "A contextual filter on the term",
+   "wrong": [
+    "An exposed filter on the term",
+    "A relationship to the user entity",
+    "An image style"
+   ],
+   "tier": 3,
+   "why": "A contextual filter takes the value from the URL."
+  },
+  {
+   "q": "An editor changes a published article and the changes must stay hidden until approved. What helps?",
+   "right": "Content moderation with a draft state that creates a draft revision",
+   "wrong": [
+    "Setting the node's cache max-age to 0",
+    "Unpublishing the content type",
+    "Using a different text format"
+   ],
+   "tier": 3,
+   "why": "Moderation keeps a draft revision separate from the live one."
+  },
+  {
+   "q": "A block shows 'Welcome back, Sam' and is then shown to other users from cache. What is missing?",
+   "right": "A cache context that varies the output per user",
+   "wrong": [
+    "A cache tag for the block's plugin ID",
+    "A longer max-age",
+    "A different text format"
+   ],
+   "tier": 3,
+   "why": "A context varies the cached item by user."
+  },
+  {
+   "q": "Why use a lazy builder for a cart count inside a mostly static page?",
+   "right": "It keeps the personalised element from making the whole page uncacheable",
+   "wrong": [
+    "It stores the cart in the database",
+    "It replaces cache tags",
+    "It turns off BigPipe"
+   ],
+   "tier": 3,
+   "why": "The placeholder is rendered separately from the cached page."
+  },
+  {
+   "q": "A production site with many logged-in users has a busy database mostly serving cache reads. Which change helps first?",
+   "right": "Move cache bins to a persistent backend such as Redis",
+   "wrong": [
+    "Disable the Dynamic Page Cache",
+    "Turn on maintenance mode",
+    "Export the configuration more often"
+   ],
+   "tier": 3,
+   "why": "A persistent cache backend takes cache load off the database."
+  },
+  {
+   "q": "What does this entity query return?",
+   "right": "Up to five IDs of published articles, newest first, filtered by the current user's access",
+   "wrong": [
+    "Five full node objects",
+    "All articles, regardless of status",
+    "The five oldest published articles"
+   ],
+   "tier": 3,
+   "why": "entityQuery returns IDs; accessCheck decides whether results are filtered by access.",
+   "code": "$ids = \\Drupal::entityQuery('node')\n  ->accessCheck(TRUE)\n  ->condition('type', 'article')\n  ->condition('status', 1)\n  ->sort('created', 'DESC')\n  ->range(0, 5)\n  ->execute();"
+  },
+  {
+   "q": "What does this library definition do?",
+   "right": "Declares a library named slider with a script and a stylesheet that depends on core/drupal",
+   "wrong": [
+    "Installs the script from Composer",
+    "Attaches the script to every page automatically",
+    "Defines a theme region named slider"
+   ],
+   "tier": 3,
+   "why": "A libraries.yml file only declares the library; it must be attached.",
+   "code": "slider:\n  js:\n    js/slider.js: {}\n  css:\n    theme:\n      css/slider.css: {}\n  dependencies:\n    - core/drupal"
+  },
+  {
+   "q": "What does this Twig line do?",
+   "right": "Attaches the slider library so its assets load when this template renders",
+   "wrong": [
+    "Downloads the library when the page loads",
+    "Prints the library name in the page",
+    "Removes the library from the page"
+   ],
+   "tier": 3,
+   "why": "attach_library attaches a declared library.",
+   "code": "{{ attach_library('mytheme/slider') }}"
+  },
+  {
+   "q": "What does this preprocess function achieve?",
+   "right": "It adds a variable available in node templates, true for event nodes",
+   "wrong": [
+    "It creates a new node of type event",
+    "It changes the node's content type",
+    "It saves the node when the page loads"
+   ],
+   "tier": 3,
+   "why": "A preprocess function alters template variables.",
+   "code": "function mytheme_preprocess_node(array &$variables): void {\n  $variables['is_event'] = $variables['node']->bundle() === 'event';\n}"
+  },
+  {
+   "q": "What does this JSON:API request return?",
+   "right": "Up to ten published articles, newest first, with their image resources included",
+   "wrong": [
+    "Ten articles of any status in random order",
+    "The tenth article only",
+    "All published articles, with no related data"
+   ],
+   "tier": 3,
+   "why": "filter, sort, page and include are standard JSON:API parameters.",
+   "code": "GET /jsonapi/node/article?filter[status]=1&sort=-created&page[limit]=10&include=field_image"
+  },
+  {
+   "q": "A JavaScript app on another domain calls the Drupal API and the browser blocks the response. What fixes this?",
+   "right": "Configure CORS allowed origins in services.yml",
+   "wrong": [
+    "Enable the Internal Page Cache",
+    "Add the origin to trusted host patterns",
+    "Export the configuration"
+   ],
+   "tier": 3,
+   "why": "CORS headers must allow the app's origin."
+  },
+  {
+   "q": "What does this configuration do?",
+   "right": "It allows a browser app at that origin to read the API with GET",
+   "wrong": [
+    "It encrypts API traffic",
+    "It authenticates the app with a token",
+    "It blocks the origin from the API"
+   ],
+   "tier": 3,
+   "why": "The cors.config setting lists allowed origins and methods.",
+   "code": "cors.config:\n  enabled: true\n  allowedOrigins: ['https://app.example.com']\n  allowedMethods: ['GET']"
+  },
+  {
+   "q": "What does 'restrict access: true' do on this permission?",
+   "right": "It flags the permission on the permissions page as having security implications",
+   "wrong": [
+    "It limits the permission to user 1",
+    "It hides the permission from administrators",
+    "It makes the permission apply to anonymous users"
+   ],
+   "tier": 3,
+   "why": "Restricted permissions are warned about on the permissions page.",
+   "code": "access event report:\n  title: 'Access event report'\n  restrict access: true"
+  },
+  {
+   "q": "What does this line do?",
+   "right": "Overrides the site name at runtime without changing stored or exported configuration",
+   "wrong": [
+    "Writes the new name into the exported YAML",
+    "Renames the site on every environment",
+    "Sets the name as a permanent database value"
+   ],
+   "tier": 3,
+   "why": "A $config override is applied at runtime only.",
+   "code": "$config['system.site']['name'] = 'Staging';"
+  },
+  {
+   "q": "Importing configuration on a new environment is refused because it belongs to a different site. What is the likely cause?",
+   "right": "The environment was installed separately, so its site UUID differs from the exported configuration",
+   "wrong": [
+    "The sync directory is empty",
+    "The theme is missing",
+    "The cache was not cleared"
+   ],
+   "tier": 3,
+   "why": "Environments of one project must share the site UUID, which is usually done by cloning the database."
+  },
+  {
+   "q": "A client wants a Drupal site quoted. The draft quote lists only the build. What should be added?",
+   "right": "Maintenance: updates, backups with tested restores, and a named owner for patching",
+   "wrong": [
+    "Nothing, because a CDN protects the site",
+    "A note that the client patches it themselves without any agreement",
+    "A second build phase"
+   ],
+   "tier": 3,
+   "why": "Maintenance is part of the quote, not an optional extra."
+  },
+  {
+   "q": "A university wants a multilingual portal with many content types and roles, and workflows. Which platform fits best?",
+   "right": "Drupal",
+   "wrong": [
+    "A hosted site builder",
+    "A static site generator",
+    "A plain Laravel app with no CMS"
+   ],
+   "tier": 3,
+   "why": "Drupal suits content-heavy sites with complex structure and fine-grained roles."
+  },
+  {
+   "q": "A clinic wants five pages and a blog on a small budget, edited by a receptionist. Which platform fits best?",
+   "right": "WordPress",
+   "wrong": [
+    "Drupal",
+    "A custom Laravel build",
+    "A static site generator with a hand-edited repository"
+   ],
+   "tier": 3,
+   "why": "WordPress suits simple sites and familiar editing."
+  },
+  {
+   "q": "A client needs booking and invoicing with custom rules. Which platform fits best?",
+   "right": "Laravel or another custom stack",
+   "wrong": [
+    "WordPress with many plugins only",
+    "A hosted site builder",
+    "A static site generator"
+   ],
+   "tier": 3,
+   "why": "The need is application logic, not content publishing."
+  },
+  {
+   "q": "Invoices uploaded to a Drupal site must be downloaded only by their owner. Which file setup fits?",
+   "right": "The private file system with an access check",
+   "wrong": [
+    "The public file system with a hard-to-guess name",
+    "A file stored in the theme folder",
+    "The default web root"
+   ],
+   "tier": 3,
+   "why": "Private files go through Drupal, which can check access."
+  },
+  {
+   "q": "A client on shared cPanel hosting runs Drupal. Who patches the CMS and its modules?",
+   "right": "Whoever the contract names, because ordinary shared hosting does not patch the CMS",
+   "wrong": [
+    "The hosting provider, automatically",
+    "Cloudflare",
+    "Nobody, because the site is public"
+   ],
+   "tier": 3,
+   "why": "Patching is a contractual responsibility."
+  },
+  {
+   "q": "A Drupal contributed module is the subject of a published highly critical advisory with a fixed release. What is the right first move?",
+   "right": "Update in staging, test and deploy promptly",
+   "wrong": [
+    "Wait for the next quarterly maintenance window",
+    "Disable the CDN",
+    "Uninstall every other module"
+   ],
+   "tier": 3,
+   "why": "Attackers scan for unpatched sites, so delay is risky."
+  },
+  {
+   "q": "What does this process configuration do?",
+   "right": "Sets the text format of every migrated body to basic_html",
+   "wrong": [
+    "Reads the format from the source column",
+    "Converts the body to plain text",
+    "Migrates only the rows whose format is basic_html"
+   ],
+   "tier": 3,
+   "why": "default_value supplies a constant.",
+   "code": "process:\n  body/value: text\n  body/format:\n    plugin: default_value\n    default_value: basic_html"
+  },
+  {
+   "q": "A migration was run with a wrong mapping. What is the cleanest way to undo it?",
+   "right": "Roll it back, which uses the ID map to remove only what it created",
+   "wrong": [
+    "Restore the whole production database",
+    "Delete all nodes of that type by hand",
+    "Re-run it with the same mapping"
+   ],
+   "tier": 4,
+   "why": "Rollback removes the destination items recorded in the ID map."
+  },
+  {
+   "q": "A developer wants a debug module on locally but never on production. What is the best approach?",
+   "right": "Use Config Split, with the module in a development split only",
+   "wrong": [
+    "Add it to the main sync directory and trust nobody enables it",
+    "Disable it in the theme",
+    "Edit the exported YAML on the server"
+   ],
+   "tier": 4,
+   "why": "Config Split separates environment-specific configuration."
+  },
+  {
+   "q": "An editor changed a field setting on production and the next deployment's import overwrote it. What practice prevents this?",
+   "right": "Make configuration changes only in development and deploy them, so production never drifts",
+   "wrong": [
+    "Never run an import",
+    "Run the import less often",
+    "Give editors the administer permission"
+   ],
+   "tier": 4,
+   "why": "Configuration should be treated as code and flow one way."
+  },
+  {
+   "q": "You added a service to a module's services.yml and the site reports that it cannot be found. What is the first step?",
+   "right": "Rebuild the caches so the container is rebuilt",
+   "wrong": [
+    "Run drush sql:dump",
+    "Run composer update",
+    "Run a configuration import"
+   ],
+   "tier": 4,
+   "why": "The container is cached and only rebuilds on cache rebuild."
+  },
+  {
+   "q": "One small block with max-age 0 makes many pages slow. What is the right design?",
+   "right": "Lazy-build the personalised part so the page around it stays cacheable",
+   "wrong": [
+    "Set max-age 0 on the whole page",
+    "Remove all cache tags",
+    "Disable the Dynamic Page Cache site-wide"
+   ],
+   "tier": 4,
+   "why": "Placeholdering contains the uncacheable part."
+  },
+  {
+   "q": "What do these lines mean for a custom module?",
+   "right": "Saving the data invalidates every cache entry carrying that tag",
+   "wrong": [
+    "The data is cached forever",
+    "Only anonymous cache entries are cleared",
+    "The node is unpublished"
+   ],
+   "tier": 4,
+   "why": "invalidateTags marks tagged entries as invalid.",
+   "code": "\\Drupal\\Core\\Cache\\Cache::invalidateTags(['node:5']);"
+  },
+  {
+   "q": "A CDN keeps showing an old page after an editor saves. What improves this most?",
+   "right": "Purge by the page's cache tags when content changes",
+   "wrong": [
+    "Lower the PHP memory limit",
+    "Disable the Internal Page Cache",
+    "Rebuild the theme registry"
+   ],
+   "tier": 4,
+   "why": "Tag-based purging keeps edge caches fresh."
+  },
+  {
+   "q": "What does this setting protect against?",
+   "right": "Requests that use an unexpected Host header",
+   "wrong": [
+    "SQL injection",
+    "Cross-site scripting in Twig",
+    "Slow database queries"
+   ],
+   "tier": 4,
+   "why": "Trusted host patterns restrict accepted host names.",
+   "code": "$settings['trusted_host_patterns'] = ['^www\\.example\\.com$'];"
+  },
+  {
+   "q": "A template prints user input with |raw. What is the risk?",
+   "right": "Markup and scripts in the value are not escaped, so cross-site scripting is possible",
+   "wrong": [
+    "The value is translated twice",
+    "The value is cached forever",
+    "The template stops compiling"
+   ],
+   "tier": 4,
+   "why": "The raw filter disables escaping.",
+   "code": "{{ comment_body|raw }}"
+  },
+  {
+   "q": "A French and an English version of a node must show the same image. How?",
+   "right": "Leave the image field untranslatable so one value is shared",
+   "wrong": [
+    "Create two content types",
+    "Make every field translatable",
+    "Use a different theme per language"
+   ],
+   "tier": 4,
+   "why": "An untranslatable field holds one shared value."
+  },
+  {
+   "q": "You need to update a custom module's default view for sites that already installed it. Is editing config/install enough?",
+   "right": "No. It applies only on new installs; existing sites need an update hook or an import",
+   "wrong": [
+    "Yes, the site picks it up on the next cache rebuild",
+    "Yes, saving the module's info.yml applies it",
+    "Yes, cron applies it automatically"
+   ],
+   "tier": 4,
+   "why": "Default configuration is imported only when the module installs."
+  },
+  {
+   "q": "A Drupal pipeline deploys new code. Which single Drush command covers updates, import and cache rebuild?",
+   "right": "drush deploy",
+   "wrong": [
+    "drush cron",
+    "drush sql:dump",
+    "drush user:login"
+   ],
+   "tier": 4,
+   "why": "drush deploy chains updatedb, config import and cache rebuilds."
+  },
+  {
+   "q": "A migration of articles must keep each author reference intact after authors were migrated first. What should the process do?",
+   "right": "Use migration_lookup on the author migration, and declare it as a dependency",
+   "wrong": [
+    "Copy the source author ID directly",
+    "Create the authors again in the process step",
+    "Run the articles first and fix the references by hand"
+   ],
+   "tier": 5,
+   "why": "migration_lookup uses the author migration's ID map."
+  }
+ ]
+}

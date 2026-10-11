@@ -1,0 +1,3022 @@
+{
+ "slug": "tools-business",
+ "name": "Tools: business and growth",
+ "description": "CRM, helpdesk, billing, marketing, scheduling, team chat, automation hubs.",
+ "roles": "sales,account manager,marketing,admin,accounting,hr manager,ceo",
+ "kind": "tool",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "growth",
+ "groups": {
+  "fam": "business tool family",
+  "crm": "CRM concept",
+  "sup": "helpdesk concept",
+  "pay": "payments and billing concept",
+  "fin": "finance and ERP concept",
+  "hr": "HR and recruiting concept",
+  "leg": "legal and e-signature concept",
+  "eco": "e-commerce concept",
+  "mkt": "email marketing concept",
+  "soc": "social and community practice",
+  "col": "scheduling and collaboration practice",
+  "int": "integration concept",
+  "gov": "tool governance practice",
+  "mok": "Moksy integration fact"
+ },
+ "cards": [
+  {
+   "group": "fam",
+   "subject": "A CRM",
+   "tier": 1,
+   "says": [
+    "owns the records of people, companies and deals",
+    "moves each opportunity through pipeline stages toward a close",
+    "forecasts expected revenue from the deals still open"
+   ],
+   "use": "need to know who the prospects are and where each deal stands",
+   "not": [
+    "owns invoices and payment events"
+   ],
+   "like": [
+    "A helpdesk",
+    "A marketing automation platform"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "A helpdesk",
+   "tier": 1,
+   "says": [
+    "owns tickets and the conversation on each one",
+    "assigns every customer request to an owner and tracks it until resolved",
+    "measures how quickly requests get a first answer"
+   ],
+   "use": "need every customer question to have an owner and a status",
+   "not": [
+    "owns the sales pipeline and deal forecast"
+   ],
+   "like": [
+    "A CRM",
+    "Team chat"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "A payments and billing tool",
+   "tier": 1,
+   "says": [
+    "owns invoices, subscriptions and payment events",
+    "collects money from customers by card or bank transfer",
+    "decides when a failed payment is retried"
+   ],
+   "use": "need to charge customers and keep a record of what was paid",
+   "not": [
+    "owns the general ledger and financial statements"
+   ],
+   "like": [
+    "Accounting software"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "A marketing automation platform",
+   "tier": 2,
+   "says": [
+    "owns contacts, campaigns and the consent to be emailed",
+    "sends campaigns to segments and tracks opens and clicks",
+    "starts a message sequence when a contact does something"
+   ],
+   "use": "need to send the right email to the right segment and prove permission",
+   "not": [
+    "owns tickets raised by customers"
+   ],
+   "like": [
+    "A CRM"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "A scheduling tool",
+   "tier": 1,
+   "says": [
+    "owns bookings and availability",
+    "reads calendars so that only free times are offered",
+    "lets an outsider pick a slot without emails back and forth"
+   ],
+   "use": "want prospects to book a call without an email chain",
+   "not": [
+    "owns the contract that a customer signs"
+   ],
+   "like": [
+    "Team chat"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "Team chat",
+   "tier": 1,
+   "says": [
+    "owns the live conversation between colleagues",
+    "organises talk into channels and direct messages",
+    "keeps quick discussion out of email"
+   ],
+   "use": "want a fast shared place for day-to-day discussion",
+   "not": [
+    "owns the official customer ticket history"
+   ],
+   "like": [
+    "A helpdesk"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "An automation hub",
+   "tier": 2,
+   "says": [
+    "owns no business data of its own",
+    "moves events between other tools using triggers and actions",
+    "offers ready-made connectors so little code is written"
+   ],
+   "use": "want two tools to talk to each other with little or no code",
+   "not": [
+    "is the system of record for customers"
+   ],
+   "like": [
+    "A CRM"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "Accounting software",
+   "tier": 2,
+   "says": [
+    "owns the general ledger and the books",
+    "produces financial statements from posted transactions",
+    "reconciles bank transactions against the books"
+   ],
+   "use": "need to close the month and report profit and loss",
+   "not": [
+    "owns the sales pipeline and deal stages"
+   ],
+   "like": [
+    "A payments and billing tool"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "An HRIS",
+   "tier": 2,
+   "says": [
+    "owns employee records, time off and organisation structure",
+    "is the source of truth for who works at the company",
+    "sends joiner and leaver events to other tools"
+   ],
+   "use": "need one trusted list of employees and their status",
+   "not": [
+    "owns candidates who have not been hired"
+   ],
+   "like": [
+    "An applicant tracking system"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "An applicant tracking system",
+   "tier": 2,
+   "says": [
+    "owns job openings, candidates and hiring stages",
+    "keeps the interview feedback for each applicant",
+    "publishes openings to job boards"
+   ],
+   "use": "need to run a hiring process with many candidates at once",
+   "not": [
+    "owns payroll and tax filings"
+   ],
+   "like": [
+    "An HRIS"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "An e-signature tool",
+   "tier": 2,
+   "says": [
+    "collects legally recognised signatures on documents online",
+    "records who signed, when and from where in an audit trail",
+    "sends a document to several signers in a set order"
+   ],
+   "use": "need a contract signed by someone in another city",
+   "not": [
+    "negotiates the wording of a clause"
+   ],
+   "like": [
+    "A contract lifecycle management tool"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "An e-commerce platform",
+   "tier": 2,
+   "says": [
+    "owns the product catalogue, the cart and online orders",
+    "runs the storefront and the checkout",
+    "tracks stock for items sold online"
+   ],
+   "use": "want to sell products directly to customers on the web",
+   "not": [
+    "owns the general ledger"
+   ],
+   "like": [
+    "A payments and billing tool"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "An ERP system",
+   "tier": 3,
+   "says": [
+    "keeps finance, inventory, purchasing and operations in one shared database",
+    "replaces separate departmental records with shared master data",
+    "enforces one process across departments"
+   ],
+   "use": "need finance, stock and purchasing to work from the same numbers",
+   "not": [
+    "is a lightweight tool that does a single job such as scheduling"
+   ],
+   "like": [
+    "Accounting software"
+   ]
+  },
+  {
+   "group": "fam",
+   "subject": "An office suite",
+   "tier": 2,
+   "says": [
+    "provides documents, spreadsheets, email and calendar under one account",
+    "lets several people edit one document at the same time",
+    "controls who may open, comment on or edit each file"
+   ],
+   "use": "want everyone to share files and calendars under one login",
+   "not": [
+    "owns the customer ticket history"
+   ],
+   "like": [
+    "Team chat"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "A lead",
+   "tier": 1,
+   "says": [
+    "is a person or company that may become a customer",
+    "has not yet been qualified as a real opportunity",
+    "is usually created from a form, an event or an import"
+   ],
+   "use": "capture someone who just filled in a contact form",
+   "not": [
+    "is a deal with an agreed price and close date"
+   ],
+   "like": [
+    "An opportunity",
+    "A contact"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "A contact",
+   "tier": 1,
+   "says": [
+    "is a person record with their details and history",
+    "can be linked to one company record",
+    "is the record that email and call activity attaches to"
+   ],
+   "use": "need to store a person and every interaction with them",
+   "not": [
+    "is always a paying customer"
+   ],
+   "like": [
+    "A lead",
+    "An account"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "An account",
+   "tier": 2,
+   "says": [
+    "is the company record that groups its contacts and deals",
+    "lets you see all activity for one organisation",
+    "holds details such as industry and size shared by its people"
+   ],
+   "use": "need to see everything that is happening with one customer company",
+   "not": [
+    "is the login of a CRM user"
+   ],
+   "like": [
+    "A contact"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "An opportunity",
+   "tier": 2,
+   "says": [
+    "is a qualified chance of a sale with a value and an expected close date",
+    "moves through the stages of a pipeline",
+    "is the unit that revenue forecasts add up"
+   ],
+   "use": "want to forecast what will close this quarter",
+   "not": [
+    "is an unqualified name from a purchased list"
+   ],
+   "like": [
+    "A lead"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "A pipeline stage",
+   "tier": 2,
+   "says": [
+    "marks how far a deal has progressed in the sales process",
+    "should have an exit rule that says what must be true to move on",
+    "lets managers count and value deals at each step"
+   ],
+   "use": "want a shared definition of how far along a deal is",
+   "not": [
+    "is chosen by each salesperson using their own meaning"
+   ],
+   "like": [
+    "Lead scoring"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "Lead scoring",
+   "tier": 3,
+   "says": [
+    "ranks leads by fit and behaviour using points",
+    "helps sales call the most promising leads first",
+    "needs its rules reviewed against the deals actually won"
+   ],
+   "use": "want reps to work the leads most likely to buy first",
+   "not": [
+    "guarantees that a high-scoring lead will buy"
+   ],
+   "like": [
+    "A pipeline stage"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "Activity logging",
+   "tier": 2,
+   "says": [
+    "records calls, emails and meetings against the contact or deal",
+    "depends on people or connected mailboxes capturing the activity",
+    "gives a manager evidence for how a deal progressed"
+   ],
+   "use": "want the next person to see what was already said to the customer",
+   "not": [
+    "is optional once a deal is closed won"
+   ],
+   "like": [
+    "A contact"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "A duplicate merge",
+   "tier": 3,
+   "says": [
+    "combines two records for the same person into one",
+    "must decide which values survive for each field",
+    "is much cheaper to prevent with matching rules than to repair later"
+   ],
+   "use": "find the same customer entered twice with different spellings",
+   "not": [
+    "restores records that were deleted last year"
+   ],
+   "like": [
+    "A custom field"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "A custom field",
+   "tier": 3,
+   "says": [
+    "stores a piece of information the standard fields do not cover",
+    "becomes part of reports and automations that depend on it",
+    "adds to the cost of moving to another CRM later"
+   ],
+   "use": "need to record something specific to your sales process",
+   "not": [
+    "can be added freely with no effect on data quality"
+   ],
+   "like": [
+    "A duplicate merge"
+   ]
+  },
+  {
+   "group": "crm",
+   "subject": "A forecast category",
+   "tier": 4,
+   "says": [
+    "tags a deal as likely, possible or unlikely to close in the period",
+    "turns pipeline value into a weighted expected result",
+    "is only as reliable as the discipline of the updates behind it"
+   ],
+   "use": "are asked how much revenue is realistically expected this quarter",
+   "not": [
+    "is calculated by the CRM with no human input"
+   ],
+   "like": [
+    "Lead scoring"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A ticket",
+   "tier": 1,
+   "says": [
+    "is one customer request with an owner, a status and a history",
+    "collects every reply on the issue in one thread",
+    "stays open until the issue is resolved or closed"
+   ],
+   "use": "need a customer question to be tracked until it is answered",
+   "not": [
+    "is a message that disappears once someone replies"
+   ],
+   "like": [
+    "A shared inbox"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A shared inbox",
+   "tier": 1,
+   "says": [
+    "lets a team read and answer one address together",
+    "shows who is handling each message to avoid double replies",
+    "is the simplest start before a full helpdesk"
+   ],
+   "use": "want a team to answer info@ mail without stepping on each other",
+   "not": [
+    "gives each member a private copy of every message"
+   ],
+   "like": [
+    "A ticket"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A service level agreement",
+   "tier": 3,
+   "says": [
+    "sets a target time for the first reply or for resolution",
+    "can pause while the team waits for the customer",
+    "is tracked by timers in the helpdesk"
+   ],
+   "use": "must answer urgent customers within a promised time",
+   "not": [
+    "is a rating the customer gives after a ticket"
+   ],
+   "like": [
+    "Customer satisfaction score"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A macro",
+   "tier": 2,
+   "says": [
+    "inserts a saved reply and can set fields in one click",
+    "keeps answers to common questions consistent",
+    "still needs a person to personalise it"
+   ],
+   "use": "keep typing the same answer to a frequent question",
+   "not": [
+    "answers a customer without any human involved"
+   ],
+   "like": [
+    "A knowledge base article"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "A knowledge base article",
+   "tier": 2,
+   "says": [
+    "answers a common question in a page customers can find themselves",
+    "reduces the number of repeat tickets",
+    "needs a named owner so it does not go stale"
+   ],
+   "use": "want customers to solve routine problems without contacting you",
+   "not": [
+    "replaces the need to ever speak to a customer"
+   ],
+   "like": [
+    "A macro"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "An internal note",
+   "tier": 2,
+   "says": [
+    "records information on a ticket that the customer cannot see",
+    "lets colleagues hand over context",
+    "is the right place to discuss the case with another team"
+   ],
+   "use": "need to tell a colleague something about a ticket the customer should not read",
+   "not": [
+    "is emailed to the customer with the next reply"
+   ],
+   "like": [
+    "A ticket"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "An escalation path",
+   "tier": 3,
+   "says": [
+    "defines who takes a ticket when the first line cannot solve it",
+    "names the trigger such as time, severity or customer tier",
+    "stops a hard case from bouncing between people"
+   ],
+   "use": "face a ticket the first line cannot solve",
+   "not": [
+    "means the first agent keeps the ticket until it is solved"
+   ],
+   "like": [
+    "A service level agreement"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "Customer satisfaction score",
+   "tier": 3,
+   "says": [
+    "asks the customer to rate a single interaction",
+    "is usually sent after a ticket is solved",
+    "is a signal about the handling, not the product as a whole"
+   ],
+   "use": "want to know whether customers were happy with a particular support case",
+   "not": [
+    "measures how likely the customer is to recommend the company overall"
+   ],
+   "like": [
+    "First response time"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "First response time",
+   "tier": 3,
+   "says": [
+    "measures the gap between a request arriving and its first human reply",
+    "can look good while the real problem stays unsolved",
+    "is reported per queue or per channel"
+   ],
+   "use": "want to see how quickly the team picks up new requests",
+   "not": [
+    "measures how long it takes to fully resolve the issue"
+   ],
+   "like": [
+    "Customer satisfaction score"
+   ]
+  },
+  {
+   "group": "sup",
+   "subject": "Ticket tagging",
+   "tier": 3,
+   "says": [
+    "labels tickets by topic so patterns show up in reports",
+    "only works if the team uses a small agreed list of tags",
+    "helps product teams hear what customers struggle with"
+   ],
+   "use": "want to report which problems generate the most contacts",
+   "not": [
+    "fixes the cause of the problem automatically"
+   ],
+   "like": [
+    "A macro"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "A payment gateway",
+   "tier": 2,
+   "says": [
+    "passes card details securely from the checkout to the payment network",
+    "returns approved or declined for each attempt",
+    "keeps raw card numbers away from the merchant systems"
+   ],
+   "use": "need to accept card payments on your site",
+   "not": [
+    "issues invoices on a schedule"
+   ],
+   "like": [
+    "A subscription"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "A subscription",
+   "tier": 1,
+   "says": [
+    "bills a customer repeatedly on a set interval",
+    "has a status such as active, past due or cancelled",
+    "needs a policy for what happens when payment fails"
+   ],
+   "use": "sell a service that renews every month",
+   "not": [
+    "charges the customer only once"
+   ],
+   "like": [
+    "An invoice"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "An invoice",
+   "tier": 1,
+   "says": [
+    "is a document that requests payment for goods or services",
+    "has a number, a date and the amounts due",
+    "moves from draft to sent, paid or void"
+   ],
+   "use": "must ask a client to pay for work already delivered",
+   "not": [
+    "moves money automatically without the customer acting"
+   ],
+   "like": [
+    "A credit note"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "A credit note",
+   "tier": 3,
+   "says": [
+    "reduces or cancels the amount owed on an earlier invoice",
+    "keeps the original invoice intact in the record",
+    "is the clean way to correct an invoice that was already issued"
+   ],
+   "use": "need to correct an invoice that was already sent",
+   "not": [
+    "deletes the original invoice from the system"
+   ],
+   "like": [
+    "A refund",
+    "An invoice"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "A refund",
+   "tier": 2,
+   "says": [
+    "returns money to the customer's original payment method",
+    "is a payment event that should be recorded in the books",
+    "can take days to appear on the customer's statement"
+   ],
+   "use": "need to give a customer their money back after a returned order",
+   "not": [
+    "is the same as cancelling the invoice on paper"
+   ],
+   "like": [
+    "A credit note",
+    "A chargeback"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "A chargeback",
+   "tier": 3,
+   "says": [
+    "is a dispute started by the cardholder with their bank",
+    "pulls the money back while the dispute is decided",
+    "is answered by the merchant with evidence such as delivery proof"
+   ],
+   "use": "get a notice that a customer's bank reversed a payment",
+   "not": [
+    "is a refund the merchant issues voluntarily"
+   ],
+   "like": [
+    "A refund"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "Dunning",
+   "tier": 3,
+   "says": [
+    "retries failed subscription payments and reminds the customer",
+    "limits how many involuntary cancellations a business suffers",
+    "should stop and change tone after a set number of attempts"
+   ],
+   "use": "see renewals failing because cards expired",
+   "not": [
+    "cancels every subscription at the first failed payment"
+   ],
+   "like": [
+    "A subscription"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "Proration",
+   "tier": 4,
+   "says": [
+    "charges only for the part of a period actually used",
+    "applies when a plan changes in the middle of a billing cycle",
+    "can produce a credit as well as an extra charge"
+   ],
+   "use": "see a customer upgrade their plan halfway through the month",
+   "not": [
+    "bills the full amount again for the new plan at once"
+   ],
+   "like": [
+    "A credit note"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "Tokenisation",
+   "tier": 3,
+   "says": [
+    "replaces a card number with a token that is useless elsewhere",
+    "lets a merchant charge again without storing the real number",
+    "reduces the scope of the card data rules the merchant must meet"
+   ],
+   "use": "want to charge a returning customer without keeping their card number",
+   "not": [
+    "encrypts the card number so the merchant can read it back"
+   ],
+   "like": [
+    "PCI DSS"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "PCI DSS",
+   "tier": 4,
+   "says": [
+    "is a security standard for handling card data",
+    "applies to anyone who stores, processes or transmits card numbers",
+    "is made far easier by never letting card numbers touch your servers"
+   ],
+   "use": "are asked whether your systems may store card numbers",
+   "not": [
+    "only applies to banks"
+   ],
+   "like": [
+    "Tokenisation"
+   ]
+  },
+  {
+   "group": "pay",
+   "subject": "An idempotency key",
+   "tier": 5,
+   "says": [
+    "lets a client repeat a request without creating a second charge",
+    "is sent with a payment request and remembered by the server",
+    "protects against double charging when a network call times out"
+   ],
+   "use": "retry a payment request after a timeout and must not charge twice",
+   "not": [
+    "encrypts the request body in transit"
+   ],
+   "like": [
+    "A webhook event"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "A general ledger",
+   "tier": 2,
+   "says": [
+    "is the master record of every financial transaction",
+    "feeds the trial balance and financial statements",
+    "is built from journal entries posted to accounts"
+   ],
+   "use": "need the single complete record behind the financial statements",
+   "not": [
+    "is a list of customers and their balances only"
+   ],
+   "like": [
+    "A chart of accounts"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "A chart of accounts",
+   "tier": 2,
+   "says": [
+    "lists every account that transactions can be posted to",
+    "groups accounts into assets, liabilities, equity, income and expenses",
+    "should be kept short and agreed before transactions are entered"
+   ],
+   "use": "are setting up the books for a new company",
+   "not": [
+    "is the list of employees allowed to approve payments"
+   ],
+   "like": [
+    "A general ledger"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "Bank reconciliation",
+   "tier": 2,
+   "says": [
+    "compares the bank statement with the books line by line",
+    "finds missing, duplicate or wrongly recorded transactions",
+    "is usually done every month and often more often"
+   ],
+   "use": "want to be sure the books match what the bank shows",
+   "not": [
+    "moves money between two bank accounts"
+   ],
+   "like": [
+    "An audit trail"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "Accounts receivable",
+   "tier": 2,
+   "says": [
+    "is money customers owe the company for invoices sent",
+    "is chased through reminders and an ageing report",
+    "is an asset on the balance sheet"
+   ],
+   "use": "need to see which customers have not paid yet",
+   "not": [
+    "is money the company owes its suppliers"
+   ],
+   "like": [
+    "Accounts payable"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "Accounts payable",
+   "tier": 2,
+   "says": [
+    "is money the company owes suppliers for bills received",
+    "is approved and scheduled for payment before it is due",
+    "is a liability on the balance sheet"
+   ],
+   "use": "need to manage supplier bills awaiting payment",
+   "not": [
+    "is money customers owe the company"
+   ],
+   "like": [
+    "Accounts receivable"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "Accrual basis accounting",
+   "tier": 3,
+   "says": [
+    "records income and expenses when they are earned or incurred",
+    "can show a profit before any cash arrives",
+    "gives a truer picture of performance than cash movements alone"
+   ],
+   "use": "must show revenue in the month the work was done",
+   "not": [
+    "records a sale only when the money is received"
+   ],
+   "like": [
+    "Cash basis accounting"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "Cash basis accounting",
+   "tier": 3,
+   "says": [
+    "records income and expenses when money moves",
+    "is simpler but can hide what is owed or owing",
+    "is allowed only in some places and for some businesses"
+   ],
+   "use": "run a very small business with simple cash movements",
+   "not": [
+    "records a sale when the invoice is raised"
+   ],
+   "like": [
+    "Accrual basis accounting"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "A period close",
+   "tier": 4,
+   "says": [
+    "locks a month after the books are reconciled and reviewed",
+    "stops later edits from silently changing reported numbers",
+    "is followed by adjusting entries only through a controlled process"
+   ],
+   "use": "want last month's reported numbers to stop changing",
+   "not": [
+    "deletes the transactions of the old period"
+   ],
+   "like": [
+    "Bank reconciliation"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "An audit trail",
+   "tier": 4,
+   "says": [
+    "records who created or changed each entry and when",
+    "lets a reviewer reconstruct how a number came about",
+    "is why entries are corrected by new entries, not overwritten"
+   ],
+   "use": "are asked to show who changed a posted entry",
+   "not": [
+    "is the list of payments made last month"
+   ],
+   "like": [
+    "Bank reconciliation"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "Master data",
+   "tier": 4,
+   "says": [
+    "is the shared reference data such as customers, items and suppliers",
+    "is entered once and used by every module",
+    "causes errors everywhere when it is wrong or duplicated"
+   ],
+   "use": "find the same supplier set up three times with different bank details",
+   "not": [
+    "is the daily transactions posted by users"
+   ],
+   "like": [
+    "A three-way match"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "A three-way match",
+   "tier": 5,
+   "says": [
+    "compares the purchase order, the goods receipt and the supplier invoice",
+    "blocks payment when quantities or amounts disagree",
+    "protects against paying for goods that never arrived"
+   ],
+   "use": "receive a supplier invoice for more items than were delivered",
+   "not": [
+    "compares three bank accounts before a transfer"
+   ],
+   "like": [
+    "Master data"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "Configuration versus customisation",
+   "tier": 5,
+   "says": [
+    "separates settings the vendor supports from custom code written for you",
+    "favours configuration because it survives upgrades",
+    "explains why heavy customisation makes later upgrades expensive"
+   ],
+   "use": "are tempted to change an ERP to match an old habit exactly",
+   "not": [
+    "says custom code is always cheaper to maintain"
+   ],
+   "like": [
+    "Master data"
+   ]
+  },
+  {
+   "group": "hr",
+   "subject": "An onboarding checklist",
+   "tier": 2,
+   "says": [
+    "lists the tasks that must be done when someone joins",
+    "assigns each task to HR, IT, the manager or the new hire",
+    "triggers accounts and equipment requests before day one"
+   ],
+   "use": "want every new starter to have accounts and a plan on the first day",
+   "not": [
+    "is the exit process for people who leave"
+   ],
+   "like": [
+    "An offboarding checklist"
+   ]
+  },
+  {
+   "group": "hr",
+   "subject": "An offboarding checklist",
+   "tier": 3,
+   "says": [
+    "lists the tasks that must be done when someone leaves",
+    "includes removing access to every connected tool",
+    "returns equipment and hands over the person's work"
+   ],
+   "use": "learn that an employee is leaving and their tool access must end",
+   "not": [
+    "is run only for people dismissed for misconduct"
+   ],
+   "like": [
+    "An onboarding checklist"
+   ]
+  },
+  {
+   "group": "hr",
+   "subject": "A hiring pipeline",
+   "tier": 2,
+   "says": [
+    "moves each candidate through defined stages such as screen and interview",
+    "shows how many candidates are at each stage",
+    "reveals the stage where good candidates are lost"
+   ],
+   "use": "want to see where candidates drop out of the hiring process",
+   "not": [
+    "keeps candidates in one stage until they decide to leave"
+   ],
+   "like": [
+    "A structured interview scorecard"
+   ]
+  },
+  {
+   "group": "hr",
+   "subject": "A structured interview scorecard",
+   "tier": 3,
+   "says": [
+    "rates every candidate on the same criteria",
+    "reduces the effect of first impressions and gut feel",
+    "is filled in by each interviewer before the group discusses"
+   ],
+   "use": "want comparable evidence about several candidates for one role",
+   "not": [
+    "lets each interviewer ask whatever they like and rate on a feeling"
+   ],
+   "like": [
+    "A hiring pipeline"
+   ]
+  },
+  {
+   "group": "hr",
+   "subject": "An offer approval workflow",
+   "tier": 3,
+   "says": [
+    "routes an offer through the people who must approve the terms",
+    "keeps the approved terms in one record",
+    "prevents an offer going out with figures nobody agreed"
+   ],
+   "use": "need sign-off on salary and start date before an offer is sent",
+   "not": [
+    "lets the recruiter set terms alone"
+   ],
+   "like": [
+    "A hiring pipeline"
+   ]
+  },
+  {
+   "group": "hr",
+   "subject": "Time-off accrual",
+   "tier": 3,
+   "says": [
+    "builds up leave entitlement over time by a rule",
+    "shows each person their remaining balance",
+    "depends on the policy being set up correctly in the system"
+   ],
+   "use": "want each employee to see how much leave they have left",
+   "not": [
+    "gives everyone the same balance regardless of the policy"
+   ],
+   "like": [
+    "An organisation chart"
+   ]
+  },
+  {
+   "group": "hr",
+   "subject": "An organisation chart",
+   "tier": 2,
+   "says": [
+    "shows who reports to whom",
+    "is generated from the manager field in the employee record",
+    "drives approval routing in many HR workflows"
+   ],
+   "use": "need to route a leave request to the right manager",
+   "not": [
+    "is the list of job openings"
+   ],
+   "like": [
+    "Time-off accrual"
+   ]
+  },
+  {
+   "group": "hr",
+   "subject": "Candidate data retention",
+   "tier": 4,
+   "says": [
+    "limits how long applicant data is kept after a hiring process ends",
+    "is set by the privacy rules that apply to the applicant",
+    "needs a way to delete or anonymise records on schedule"
+   ],
+   "use": "hold the details of rejected applicants from years ago",
+   "not": [
+    "lets you keep applicant data forever because it might be useful"
+   ],
+   "like": [
+    "A hiring pipeline"
+   ]
+  },
+  {
+   "group": "hr",
+   "subject": "A performance review cycle",
+   "tier": 3,
+   "says": [
+    "collects goals and feedback on a regular schedule",
+    "stores the written outcome in the employee record",
+    "works only when managers complete it on time"
+   ],
+   "use": "want a consistent yearly or half-yearly review for every employee",
+   "not": [
+    "is the same as a payroll run"
+   ],
+   "like": [
+    "A structured interview scorecard"
+   ]
+  },
+  {
+   "group": "leg",
+   "subject": "An electronic signature",
+   "tier": 2,
+   "says": [
+    "shows a person's intent to sign a document electronically",
+    "is backed by an audit trail of the signing event",
+    "is recognised in many places but not for every kind of document"
+   ],
+   "use": "need a signed agreement from a client abroad",
+   "not": [
+    "is always identical to a handwritten scan"
+   ],
+   "like": [
+    "A digital signature"
+   ]
+  },
+  {
+   "group": "leg",
+   "subject": "A digital signature",
+   "tier": 4,
+   "says": [
+    "uses cryptography to bind the signer to the exact content",
+    "shows if the document changed after signing",
+    "gives stronger proof of identity than a typed name"
+   ],
+   "use": "need to prove a document was not altered after it was signed",
+   "not": [
+    "is just an image of a handwritten name pasted in"
+   ],
+   "like": [
+    "An electronic signature"
+   ]
+  },
+  {
+   "group": "leg",
+   "subject": "A signing order",
+   "tier": 3,
+   "says": [
+    "fixes the sequence in which signers receive a document",
+    "lets an approver sign before the customer sees it",
+    "stops the next signer from starting until the previous one has finished"
+   ],
+   "use": "need an internal approval before the customer signs",
+   "not": [
+    "lets everyone sign at once"
+   ],
+   "like": [
+    "A template"
+   ]
+  },
+  {
+   "group": "leg",
+   "subject": "A document template",
+   "tier": 2,
+   "says": [
+    "holds standard wording with fields for the variable details",
+    "keeps agreements consistent between deals",
+    "should be approved by legal before the team uses it"
+   ],
+   "use": "send the same standard agreement to many customers",
+   "not": [
+    "lets each person rewrite the clauses freely each time"
+   ],
+   "like": [
+    "A clause library"
+   ]
+  },
+  {
+   "group": "leg",
+   "subject": "A clause library",
+   "tier": 4,
+   "says": [
+    "stores pre-approved wording and fallback positions for clauses",
+    "speeds up negotiation by offering alternatives that are already accepted",
+    "is maintained by legal rather than by each salesperson"
+   ],
+   "use": "hear a customer ask to change a clause and need approved fallback wording",
+   "not": [
+    "is the folder of signed contracts"
+   ],
+   "like": [
+    "A document template"
+   ]
+  },
+  {
+   "group": "leg",
+   "subject": "A contract lifecycle management tool",
+   "tier": 3,
+   "says": [
+    "tracks a contract from request through approval, signature and renewal",
+    "stores the signed contract with its key dates and terms",
+    "reminds owners before a renewal or notice deadline"
+   ],
+   "use": "keep missing renewal dates because contracts sit in email attachments",
+   "not": [
+    "only collects signatures and does nothing before or after"
+   ],
+   "like": [
+    "An e-signature tool"
+   ]
+  },
+  {
+   "group": "leg",
+   "subject": "A renewal notice date",
+   "tier": 4,
+   "says": [
+    "is the last day to give notice before a contract renews itself",
+    "is easy to miss when it is hidden inside a PDF",
+    "should be stored as a date field with a reminder"
+   ],
+   "use": "want to avoid being locked into another year by an auto-renewal",
+   "not": [
+    "is the day the contract was signed"
+   ],
+   "like": [
+    "A contract lifecycle management tool"
+   ]
+  },
+  {
+   "group": "leg",
+   "subject": "A signer authentication step",
+   "tier": 4,
+   "says": [
+    "checks who is signing, for example by code or ID check",
+    "raises confidence that the right person signed",
+    "is chosen according to the risk of the document"
+   ],
+   "use": "handle a high-value agreement that needs stronger proof of who signed",
+   "not": [
+    "is needed only when a signer forgot the link"
+   ],
+   "like": [
+    "A signing order"
+   ]
+  },
+  {
+   "group": "eco",
+   "subject": "A SKU",
+   "tier": 1,
+   "says": [
+    "is an internal code that identifies one sellable variant of a product",
+    "separates, for example, a red large item from a blue small one",
+    "lets stock be counted per variant"
+   ],
+   "use": "need to count stock for each size and colour separately",
+   "not": [
+    "is a customer's order number"
+   ],
+   "like": [
+    "A product feed"
+   ]
+  },
+  {
+   "group": "eco",
+   "subject": "Inventory sync",
+   "tier": 3,
+   "says": [
+    "keeps stock counts equal across the store, marketplaces and warehouse",
+    "prevents selling items that are no longer available",
+    "depends on one system being named the owner of stock"
+   ],
+   "use": "sell the same items on your site and on a marketplace",
+   "not": [
+    "copies the product description only"
+   ],
+   "like": [
+    "A SKU"
+   ]
+  },
+  {
+   "group": "eco",
+   "subject": "Cart abandonment",
+   "tier": 2,
+   "says": [
+    "happens when a shopper adds items but does not finish the purchase",
+    "is addressed with reminders only for shoppers who have given consent",
+    "often points to surprise costs or a long checkout"
+   ],
+   "use": "see many carts started but few orders finished",
+   "not": [
+    "means the shopper was charged and the order failed"
+   ],
+   "like": [
+    "A product feed"
+   ]
+  },
+  {
+   "group": "eco",
+   "subject": "An order management step",
+   "tier": 3,
+   "says": [
+    "moves an order through states such as paid, packed and shipped",
+    "triggers emails and warehouse tasks at each state",
+    "keeps one place where support can see the status"
+   ],
+   "use": "hear a customer ask where their order is",
+   "not": [
+    "is a payment that has been refunded"
+   ],
+   "like": [
+    "A returns authorisation"
+   ]
+  },
+  {
+   "group": "eco",
+   "subject": "A returns authorisation",
+   "tier": 3,
+   "says": [
+    "gives a customer permission and instructions to send an item back",
+    "links the return to the original order",
+    "triggers the refund or exchange after the item is checked"
+   ],
+   "use": "hear that a customer wants to return an item",
+   "not": [
+    "is a bank dispute raised by the customer"
+   ],
+   "like": [
+    "An order management step"
+   ]
+  },
+  {
+   "group": "eco",
+   "subject": "A product feed",
+   "tier": 3,
+   "says": [
+    "exports the product catalogue to a shopping channel in a defined format",
+    "needs accurate titles, identifiers and availability",
+    "is rejected by channels when required fields are missing"
+   ],
+   "use": "want products to appear on a comparison or marketplace site",
+   "not": [
+    "is the list of customer emails"
+   ],
+   "like": [
+    "A SKU"
+   ]
+  },
+  {
+   "group": "eco",
+   "subject": "Tax calculation at checkout",
+   "tier": 4,
+   "says": [
+    "works out sales tax or VAT from the item and the buyer's location",
+    "needs product tax categories and up-to-date rules",
+    "should be checked with the accountant for each place you sell to"
+   ],
+   "use": "start selling to buyers in a new country",
+   "not": [
+    "can be ignored until the end of the year"
+   ],
+   "like": [
+    "Inventory sync"
+   ]
+  },
+  {
+   "group": "eco",
+   "subject": "A headless storefront",
+   "tier": 5,
+   "says": [
+    "separates the shop front end from the commerce back end",
+    "reaches the back end through an API",
+    "gives design freedom at the cost of more building and maintenance"
+   ],
+   "use": "want a fully custom front end on top of an existing commerce back end",
+   "not": [
+    "removes the need for any commerce back end"
+   ],
+   "like": [
+    "Inventory sync"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "An email service provider",
+   "tier": 2,
+   "says": [
+    "sends large volumes of email on your behalf",
+    "handles bounces, unsubscribes and complaint reports",
+    "gives you sending infrastructure that already has a reputation"
+   ],
+   "use": "need to send newsletters to thousands of subscribers",
+   "not": [
+    "owns the sales pipeline"
+   ],
+   "like": [
+    "A marketing automation platform"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "Double opt-in",
+   "tier": 2,
+   "says": [
+    "asks a new subscriber to confirm by clicking a link",
+    "proves that the address belongs to the person who signed up",
+    "reduces fake and mistyped addresses on the list"
+   ],
+   "use": "want proof that a subscriber really asked to be on the list",
+   "not": [
+    "adds people to the list without asking them"
+   ],
+   "like": [
+    "A suppression list"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "A suppression list",
+   "tier": 3,
+   "says": [
+    "holds addresses that must not be emailed again",
+    "includes people who unsubscribed or whose addresses bounced",
+    "must be respected even when a new import contains the same address"
+   ],
+   "use": "import a purchased or old list that includes people who opted out",
+   "not": [
+    "is a list of your most engaged readers"
+   ],
+   "like": [
+    "Double opt-in"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "SPF",
+   "tier": 3,
+   "says": [
+    "lists which servers may send mail for a domain",
+    "is published as a DNS TXT record",
+    "lets receivers check the sending server against the domain"
+   ],
+   "use": "want receivers to know which servers are allowed to send your mail",
+   "not": [
+    "signs each message with a cryptographic key"
+   ],
+   "like": [
+    "DKIM",
+    "DMARC"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "DKIM",
+   "tier": 3,
+   "says": [
+    "signs each message with a key whose public part is in DNS",
+    "lets the receiver check the message was not altered in transit",
+    "ties a message to a signing domain"
+   ],
+   "use": "want receivers to verify that a message was signed by your domain",
+   "not": [
+    "lists the servers allowed to send for a domain"
+   ],
+   "like": [
+    "SPF",
+    "DMARC"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "DMARC",
+   "tier": 4,
+   "says": [
+    "tells receivers what to do when SPF and DKIM checks fail to align",
+    "sends reports about who is sending mail as your domain",
+    "moves from monitoring to quarantine to reject as confidence grows"
+   ],
+   "use": "want to stop others sending mail pretending to be your domain",
+   "not": [
+    "is a replacement for both SPF and DKIM"
+   ],
+   "like": [
+    "SPF",
+    "DKIM"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "Sender reputation",
+   "tier": 4,
+   "says": [
+    "is the standing a receiver gives your domain and sending address",
+    "falls with complaints, bounces and spam traps",
+    "is helped by sending only to people who asked for the mail"
+   ],
+   "use": "see your mail start landing in spam folders",
+   "not": [
+    "resets every month"
+   ],
+   "like": [
+    "A suppression list"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "Segmentation",
+   "tier": 2,
+   "says": [
+    "divides a list into groups by attributes or behaviour",
+    "lets a message match what each group cares about",
+    "depends on accurate and consistent contact data"
+   ],
+   "use": "want to send different content to customers and prospects",
+   "not": [
+    "sends every message to the whole list"
+   ],
+   "like": [
+    "An A/B test"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "An A/B test",
+   "tier": 3,
+   "says": [
+    "compares two versions of a message on random halves of a list",
+    "changes one thing at a time to learn what caused a difference",
+    "needs enough recipients to be more than noise"
+   ],
+   "use": "want to know whether a new subject line performs better",
+   "not": [
+    "sends version A to everyone first and then version B"
+   ],
+   "like": [
+    "Segmentation"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "A UTM parameter",
+   "tier": 3,
+   "says": [
+    "is a tag added to a link that names the source, medium or campaign",
+    "lets analytics attribute visits to a campaign",
+    "breaks reports when spellings and cases are inconsistent"
+   ],
+   "use": "want to know which campaign brought a visitor to the website",
+   "not": [
+    "encrypts a link so it cannot be read"
+   ],
+   "like": [
+    "An A/B test"
+   ]
+  },
+  {
+   "group": "mkt",
+   "subject": "A drip sequence",
+   "tier": 3,
+   "says": [
+    "sends a planned series of messages over time after a trigger",
+    "stops for a contact who has already taken the desired action",
+    "needs a clear exit rule"
+   ],
+   "use": "want new subscribers to receive a short series of welcome messages",
+   "not": [
+    "sends the same message to every contact on the same day"
+   ],
+   "like": [
+    "Segmentation"
+   ]
+  },
+  {
+   "group": "soc",
+   "subject": "A content calendar",
+   "tier": 2,
+   "says": [
+    "plans what is posted on each channel and when",
+    "shows gaps and clashes across campaigns",
+    "assigns an owner to every post"
+   ],
+   "use": "need to see everything scheduled across channels this month",
+   "not": [
+    "publishes posts without anyone approving them"
+   ],
+   "like": [
+    "A social approval workflow"
+   ]
+  },
+  {
+   "group": "soc",
+   "subject": "A social approval workflow",
+   "tier": 3,
+   "says": [
+    "routes a draft post to a reviewer before it is published",
+    "keeps a record of who approved what",
+    "prevents an unapproved post going out from the shared account"
+   ],
+   "use": "need legal or a manager to approve a post before it is live",
+   "not": [
+    "lets any intern publish directly"
+   ],
+   "like": [
+    "A content calendar"
+   ]
+  },
+  {
+   "group": "soc",
+   "subject": "A unified social inbox",
+   "tier": 3,
+   "says": [
+    "gathers comments and messages from several networks in one place",
+    "lets the team assign and reply without opening each network",
+    "still depends on what each network allows through its interface"
+   ],
+   "use": "get customer messages on several social networks",
+   "not": [
+    "replaces the need for a helpdesk"
+   ],
+   "like": [
+    "A moderation queue"
+   ]
+  },
+  {
+   "group": "soc",
+   "subject": "A moderation queue",
+   "tier": 3,
+   "says": [
+    "holds comments that need a human decision",
+    "applies the written community rules consistently",
+    "keeps abusive content from being left visible"
+   ],
+   "use": "have a community comment that may break the rules",
+   "not": [
+    "removes all negative comments automatically"
+   ],
+   "like": [
+    "A unified social inbox"
+   ]
+  },
+  {
+   "group": "soc",
+   "subject": "Social listening",
+   "tier": 4,
+   "says": [
+    "tracks mentions of a brand or topic across public posts",
+    "shows themes and sentiment over time",
+    "finds conversations where the brand was not tagged"
+   ],
+   "use": "want to know what people say about the company online",
+   "not": [
+    "only shows messages sent to your own account"
+   ],
+   "like": [
+    "A unified social inbox"
+   ]
+  },
+  {
+   "group": "soc",
+   "subject": "Community guidelines",
+   "tier": 2,
+   "says": [
+    "state what is allowed and what is removed in a community",
+    "give moderators a fair basis for decisions",
+    "should be public and linked where people join"
+   ],
+   "use": "need to justify removing a post in a community",
+   "not": [
+    "are written by each moderator separately"
+   ],
+   "like": [
+    "A moderation queue"
+   ]
+  },
+  {
+   "group": "col",
+   "subject": "A booking link",
+   "tier": 1,
+   "says": [
+    "shows only the times a person is free",
+    "creates the calendar event when a slot is chosen",
+    "removes the email back and forth of finding a time"
+   ],
+   "use": "want a prospect to choose a time for a call",
+   "not": [
+    "lets the invitee see all the details of the host's calendar"
+   ],
+   "like": [
+    "Round-robin assignment"
+   ]
+  },
+  {
+   "group": "col",
+   "subject": "Buffer time",
+   "tier": 2,
+   "says": [
+    "adds a gap before or after a booked meeting",
+    "gives time for notes or travel",
+    "stops back-to-back bookings"
+   ],
+   "use": "keep being booked into meetings with no break",
+   "not": [
+    "extends every meeting to fill the gap"
+   ],
+   "like": [
+    "A booking link"
+   ]
+  },
+  {
+   "group": "col",
+   "subject": "Round-robin assignment",
+   "tier": 3,
+   "says": [
+    "spreads bookings across a team in turn",
+    "lets a team share one booking link",
+    "can skip people who are unavailable"
+   ],
+   "use": "want inbound calls shared fairly across several salespeople",
+   "not": [
+    "sends every booking to one fixed person"
+   ],
+   "like": [
+    "A booking link"
+   ]
+  },
+  {
+   "group": "col",
+   "subject": "Time zone handling",
+   "tier": 2,
+   "says": [
+    "shows each person a meeting in their own local time",
+    "depends on the calendar storing the event with a time zone",
+    "is a common cause of missed calls around clock changes"
+   ],
+   "use": "invite someone who works in another country",
+   "not": [
+    "stores every time as plain text without a zone"
+   ],
+   "like": [
+    "Buffer time"
+   ]
+  },
+  {
+   "group": "col",
+   "subject": "A meeting agenda",
+   "tier": 1,
+   "says": [
+    "states the purpose and topics before the meeting",
+    "lets people prepare or decide not to attend",
+    "keeps the discussion on the decisions needed"
+   ],
+   "use": "call a meeting with several people",
+   "not": [
+    "is written after the meeting has ended"
+   ],
+   "like": [
+    "Recording consent"
+   ]
+  },
+  {
+   "group": "col",
+   "subject": "Recording consent",
+   "tier": 3,
+   "says": [
+    "means telling participants before a meeting is recorded",
+    "is required in some places before recording a call",
+    "is made clear by an announcement or an on-screen notice"
+   ],
+   "use": "want to record a customer call for training",
+   "not": [
+    "is unnecessary because the host owns the call"
+   ],
+   "like": [
+    "A meeting agenda"
+   ]
+  },
+  {
+   "group": "col",
+   "subject": "Shared drive permissions",
+   "tier": 3,
+   "says": [
+    "control who can view, comment on or edit each folder",
+    "are easiest to manage by group rather than person by person",
+    "should be reviewed when people change roles"
+   ],
+   "use": "find that an old contractor can still open the finance folder",
+   "not": [
+    "are set once and never need review"
+   ],
+   "like": [
+    "Link sharing"
+   ]
+  },
+  {
+   "group": "col",
+   "subject": "Link sharing",
+   "tier": 3,
+   "says": [
+    "lets anyone holding a URL open a file when set to anyone with the link",
+    "is convenient but harder to control once the link is forwarded",
+    "should be limited to named people for sensitive files"
+   ],
+   "use": "share a draft with an outside partner quickly",
+   "not": [
+    "checks the identity of every viewer"
+   ],
+   "like": [
+    "Shared drive permissions"
+   ]
+  },
+  {
+   "group": "col",
+   "subject": "Version history",
+   "tier": 2,
+   "says": [
+    "keeps earlier versions of a document",
+    "shows who changed what and when",
+    "lets you restore a previous version"
+   ],
+   "use": "someone overwrote a section of the proposal",
+   "not": [
+    "is lost as soon as the document is shared"
+   ],
+   "like": [
+    "Shared drive permissions"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "A webhook",
+   "tier": 2,
+   "says": [
+    "calls your URL when something happens in the source tool",
+    "delivers events faster than checking on a timer",
+    "needs an endpoint that can receive and handle failures"
+   ],
+   "use": "want to be told the moment a payment succeeds",
+   "not": [
+    "asks the source every few minutes whether anything is new"
+   ],
+   "like": [
+    "Polling"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "Polling",
+   "tier": 2,
+   "says": [
+    "asks the source on a timer whether anything is new",
+    "is simple but slow and wasteful",
+    "can run into the source's rate limits"
+   ],
+   "use": "use a source tool that offers no way to notify you of changes",
+   "not": [
+    "delivers events the instant they happen"
+   ],
+   "like": [
+    "A webhook"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "A webhook signature",
+   "tier": 3,
+   "says": [
+    "lets the receiver check an event really came from the sender",
+    "is a keyed hash over the timestamp and the raw body",
+    "must be verified before the payload is trusted"
+   ],
+   "use": "receive a call on your endpoint and need to know who sent it",
+   "not": [
+    "encrypts the payload so nobody can read it"
+   ],
+   "like": [
+    "OAuth state"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "Replay protection",
+   "tier": 4,
+   "says": [
+    "rejects events whose timestamp is too old",
+    "stops a captured valid request being sent again later",
+    "is used together with the signature check"
+   ],
+   "use": "worry that an attacker could resend a recorded valid event",
+   "not": [
+    "makes the sender stop retrying"
+   ],
+   "like": [
+    "Event deduplication"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "Event deduplication",
+   "tier": 4,
+   "says": [
+    "stores each event id and skips ones already seen",
+    "is needed because senders retry and may deliver twice",
+    "stops a repeated event from creating a second order or invoice"
+   ],
+   "use": "see the same payment event arrive twice",
+   "not": [
+    "drops events at random to reduce load"
+   ],
+   "like": [
+    "Replay protection"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "OAuth",
+   "tier": 2,
+   "says": [
+    "lets a user approve access to a tool without sharing a password",
+    "returns a code that the server swaps for an access token",
+    "limits access to the scopes the user approved"
+   ],
+   "use": "let a tool read your CRM contacts without handing over your login",
+   "not": [
+    "sends the user's password to the third party"
+   ],
+   "like": [
+    "An API key"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "An API key",
+   "tier": 2,
+   "says": [
+    "is a secret string that identifies the calling application",
+    "acts like a password and must be kept server-side",
+    "should be rotated when it may have been exposed"
+   ],
+   "use": "connect a script to a tool that offers key access only",
+   "not": [
+    "is safe to paste into a public page"
+   ],
+   "like": [
+    "OAuth"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "OAuth scopes",
+   "tier": 3,
+   "says": [
+    "name the specific permissions an app asks the user for",
+    "should be as narrow as the job allows",
+    "can be reviewed on the consent screen before approval"
+   ],
+   "use": "build a connection that only needs to read contacts",
+   "not": [
+    "are best set to the broadest permission to avoid errors later"
+   ],
+   "like": [
+    "OAuth state"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "OAuth state",
+   "tier": 4,
+   "says": [
+    "is a random value saved before the redirect and checked on return",
+    "defeats forged callbacks",
+    "is paired with PKCE for stronger protection"
+   ],
+   "use": "need to be sure a callback belongs to a sign-in you started",
+   "not": [
+    "carries the user's password in the redirect"
+   ],
+   "like": [
+    "A webhook signature",
+    "PKCE"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "PKCE",
+   "tier": 4,
+   "says": [
+    "adds a one-time secret to the code exchange",
+    "makes a stolen authorisation code useless on its own",
+    "is enforced by default in Moksy's auth service"
+   ],
+   "use": "want a stolen authorisation code to be of no use to an attacker",
+   "not": [
+    "replaces the need for a callback URL"
+   ],
+   "like": [
+    "OAuth state"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "A field mapping",
+   "tier": 3,
+   "says": [
+    "defines which field in one tool corresponds to which in another",
+    "must say how to treat values such as dates, lists and empties",
+    "goes wrong silently when a field is renamed"
+   ],
+   "use": "sync contacts between a CRM and an email platform",
+   "not": [
+    "moves data without any rules"
+   ],
+   "like": [
+    "A source of truth"
+   ]
+  },
+  {
+   "group": "int",
+   "subject": "A source of truth",
+   "tier": 2,
+   "says": [
+    "is the one system that owns a given kind of record",
+    "lets other tools read or sync from it",
+    "prevents duplicates and conflicting edits"
+   ],
+   "use": "find that two tools both claim to own the customer record",
+   "not": [
+    "is whichever tool was edited last"
+   ],
+   "like": [
+    "A field mapping"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Single sign-on",
+   "tier": 3,
+   "says": [
+    "lets people use one company login across many tools",
+    "lets the company turn off access in one place",
+    "reduces the number of passwords staff must manage"
+   ],
+   "use": "want staff to access many tools with one managed identity",
+   "not": [
+    "makes every tool share one common password"
+   ],
+   "like": [
+    "Role-based access"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Role-based access",
+   "tier": 2,
+   "says": [
+    "gives permissions by job role instead of person by person",
+    "makes it easy to give a new starter the right set",
+    "should follow least privilege"
+   ],
+   "use": "want a new salesperson to get the right access in one step",
+   "not": [
+    "gives everyone administrator rights"
+   ],
+   "like": [
+    "Single sign-on"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Least privilege",
+   "tier": 3,
+   "says": [
+    "gives each person only the access their job needs",
+    "limits the damage from a mistake or a stolen account",
+    "is reviewed again when roles change"
+   ],
+   "use": "decide how much access an assistant should have to the billing tool",
+   "not": [
+    "gives access to everything in case it is needed later"
+   ],
+   "like": [
+    "Role-based access"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A seat review",
+   "tier": 3,
+   "says": [
+    "compares paid user licences with people who actually use them",
+    "finds accounts of people who have left",
+    "is the quickest way to control per-user cost"
+   ],
+   "use": "find that the company pays for accounts nobody has opened for months",
+   "not": [
+    "raises the number of licences each quarter"
+   ],
+   "like": [
+    "An access review"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "An access review",
+   "tier": 4,
+   "says": [
+    "checks regularly who can reach which systems and data",
+    "removes access that is no longer needed",
+    "produces evidence for audits"
+   ],
+   "use": "need to show who has access to financial data",
+   "not": [
+    "counts how many seats are unused"
+   ],
+   "like": [
+    "A seat review"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Shadow IT",
+   "tier": 4,
+   "says": [
+    "is software used by staff without the company knowing",
+    "puts company data outside the controls the company relies on",
+    "is reduced by a quick, fair way to request new tools"
+   ],
+   "use": "discover a team paying for a tool nobody in IT knew about",
+   "not": [
+    "is software that the IT team installed and approved"
+   ],
+   "like": [
+    "A seat review"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A data export",
+   "tier": 3,
+   "says": [
+    "gets your records out of a tool in an open format such as CSV or JSON",
+    "should be tested before you depend on the tool",
+    "includes attachments and history, not only the main table"
+   ],
+   "use": "want to be sure you could leave a tool if you needed to",
+   "not": [
+    "is unnecessary because the vendor keeps your data safe"
+   ],
+   "like": [
+    "A switching cost"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A switching cost",
+   "tier": 3,
+   "says": [
+    "is the effort and risk of moving from one tool to another",
+    "grows with every custom field and automation built inside the tool",
+    "can be reduced by standard fields and documented processes"
+   ],
+   "use": "consider replacing a CRM with years of custom setup",
+   "not": [
+    "is only the difference in the subscription fee"
+   ],
+   "like": [
+    "A data export"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A pilot",
+   "tier": 3,
+   "says": [
+    "tests a tool with a small group before everyone moves",
+    "uses real tasks and defined success criteria",
+    "ends with a decision to adopt, change or stop"
+   ],
+   "use": "are choosing between two tools for the whole company",
+   "not": [
+    "rolls the tool out to everyone on the first day"
+   ],
+   "like": [
+    "A switching cost"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Usage-based cost control",
+   "tier": 4,
+   "says": [
+    "watches charges that grow with volume such as messages, contacts or records",
+    "sets alerts or caps before a bill surprises you",
+    "is reviewed against the value the usage creates"
+   ],
+   "use": "see costs rise each month as a list of contacts grows",
+   "not": [
+    "assumes the bill stays fixed"
+   ],
+   "like": [
+    "A seat review"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Data minimisation",
+   "tier": 4,
+   "says": [
+    "keeps personal data only in the tools that need it",
+    "reduces the number of places a leak can happen",
+    "keeps the list of vendors that hold personal data short"
+   ],
+   "use": "consider copying customer data into yet another tool",
+   "not": [
+    "copies all customer data to every tool for convenience"
+   ],
+   "like": [
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "An automation runbook",
+   "tier": 5,
+   "says": [
+    "documents what each automation does, who owns it and how to stop it",
+    "lets someone other than the builder fix a failing flow",
+    "is the cure for automations nobody dares touch"
+   ],
+   "use": "lose the person who built the automations",
+   "not": [
+    "is the code of the automation tool itself"
+   ],
+   "like": [
+    "A pilot"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "The Moksy integration catalogue",
+   "tier": 2,
+   "says": [
+    "groups roughly 1,165 apps into 41 families",
+    "gives each app a page and recipes",
+    "lists apps that are catalogued, not apps GGLink uses"
+   ],
+   "use": "read that an app appears in the Moksy catalogue",
+   "not": [
+    "proves GGLink runs that app in production"
+   ],
+   "like": [
+    "The Moksy integration labels"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "The Moksy integration labels",
+   "tier": 3,
+   "says": [
+    "sort each app by how it reaches Moksy",
+    "include live, through a hub, with a script, adapter planned and not yet",
+    "must be read with care because the master plan says exports and webhooks were mostly absent or partial"
+   ],
+   "use": "are asked whether Moksy integrates with a particular app",
+   "not": [
+    "all mean the integration is ready to use today"
+   ],
+   "like": [
+    "The Moksy integration catalogue"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's inbound Stripe webhook",
+   "tier": 4,
+   "says": [
+    "captures the raw body before parsing",
+    "checks the signature against configured secrets",
+    "writes a dedupe record per event before typed dispatch"
+   ],
+   "use": "want an example of safe webhook receiving at Moksy",
+   "not": [
+    "trusts the payload and checks the sender afterwards"
+   ],
+   "like": [
+    "Moksy's outbound webhooks"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's outbound webhooks",
+   "tier": 4,
+   "says": [
+    "are described in the plan as planned work",
+    "were held in memory and unsigned when the plan was read",
+    "should be treated as a design target, not a feature"
+   ],
+   "use": "promise a customer signed event delivery from Moksy",
+   "not": [
+    "are already signed and stored durably"
+   ],
+   "like": [
+    "Moksy's inbound Stripe webhook"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's auth service",
+   "tier": 4,
+   "says": [
+    "acts as an OAuth client for sign-in providers",
+    "enforces PKCE by default",
+    "keeps the state value for ten minutes"
+   ],
+   "use": "want to know how Moksy protects its sign-in callbacks",
+   "not": [
+    "lets every provider work before it is configured"
+   ],
+   "like": [
+    "Moksy's provider switches"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's provider switches",
+   "tier": 4,
+   "says": [
+    "leave each sign-in provider off until it is configured",
+    "keep provider secrets sealed rather than in plain text, according to the integrations plan",
+    "stop an unconfigured provider from being used by mistake"
+   ],
+   "use": "enable a new sign-in provider in Moksy",
+   "not": [
+    "turn every provider on by default"
+   ],
+   "like": [
+    "Moksy's auth service"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "The conflict between Moksy documents",
+   "tier": 5,
+   "says": [
+    "arises because the catalogue reports many apps as working while the master plan reports gaps",
+    "means the current build should be checked before a promise is made",
+    "reflects that the master plan was at a founder review gate"
+   ],
+   "use": "find that two Moksy documents disagree about an integration",
+   "not": [
+    "is settled by trusting whichever document is longer"
+   ],
+   "like": [
+    "The Moksy integration labels"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Which kind of tool is the system of record for support tickets?",
+   "right": "A helpdesk",
+   "wrong": [
+    "A scheduling tool",
+    "An automation hub",
+    "Accounting software"
+   ],
+   "tier": 1,
+   "why": "A helpdesk owns tickets and the conversation on each."
+  },
+  {
+   "q": "What does an automation hub own?",
+   "right": "No business data of its own; it moves events between other tools",
+   "wrong": [
+    "The customer record",
+    "The invoices",
+    "The bookings"
+   ],
+   "tier": 1,
+   "why": "A hub only passes events between tools that own the data."
+  },
+  {
+   "q": "What is the main job of a CRM?",
+   "right": "Tracking people, companies and deals through the sales process",
+   "wrong": [
+    "Calculating payroll",
+    "Hosting the company website",
+    "Sending signed contracts"
+   ],
+   "tier": 1,
+   "why": "A CRM owns contacts, accounts and opportunities."
+  },
+  {
+   "q": "Why is a booking link useful for a sales team?",
+   "right": "Prospects pick a free slot without an email chain",
+   "wrong": [
+    "It signs the contract for the prospect",
+    "It collects payment for the call",
+    "It writes the proposal"
+   ],
+   "tier": 1,
+   "why": "Scheduling tools read availability and create the event."
+  },
+  {
+   "q": "What is the safest way to correct an invoice that has already been sent to a customer?",
+   "right": "Issue a credit note and a new invoice",
+   "wrong": [
+    "Edit the sent invoice silently",
+    "Delete the invoice from the system",
+    "Ask the customer to ignore it"
+   ],
+   "tier": 2,
+   "why": "Credit notes keep the original record intact for the books."
+  },
+  {
+   "q": "Why does a company use double opt-in for a newsletter?",
+   "right": "To confirm the address belongs to the person who signed up",
+   "wrong": [
+    "To make emails look better",
+    "To speed up sending",
+    "To avoid needing unsubscribe links"
+   ],
+   "tier": 2,
+   "why": "The confirmation click proves control of the address."
+  },
+  {
+   "q": "Which statement about unsubscribed contacts is correct?",
+   "right": "They must stay on a suppression list so later imports do not email them",
+   "wrong": [
+    "They can be re-added by any import",
+    "They count only for newsletters, never for sales messages",
+    "They are removed from all records, including the CRM"
+   ],
+   "tier": 2,
+   "why": "Suppression survives re-imports so consent is respected."
+  },
+  {
+   "q": "What is bank reconciliation?",
+   "right": "Matching the bank statement to the books line by line",
+   "wrong": [
+    "Moving money between two bank accounts",
+    "Printing the bank statement",
+    "Setting up a payment gateway"
+   ],
+   "tier": 2,
+   "why": "Differences reveal missing or wrong entries."
+  },
+  {
+   "q": "Which is a good reason to use a shared inbox before buying a helpdesk?",
+   "right": "A small team can answer one address together without duplicate replies",
+   "wrong": [
+    "It tracks SLA breaches automatically",
+    "It replaces the knowledge base",
+    "It sends invoices"
+   ],
+   "tier": 2,
+   "why": "Shared inboxes show who is handling each message."
+  },
+  {
+   "q": "What does an HRIS own?",
+   "right": "Employee records, time off and organisation structure",
+   "wrong": [
+    "Candidates before they are hired",
+    "The sales pipeline",
+    "Customer tickets"
+   ],
+   "tier": 2,
+   "why": "It is the source of truth for who works at the company."
+  },
+  {
+   "q": "Which is the best reason to name one source of truth for each type of record?",
+   "right": "Two owners lead to duplicates and conflicting edits",
+   "wrong": [
+    "It makes the tools cheaper",
+    "It removes the need for integrations",
+    "It lets you skip permissions"
+   ],
+   "tier": 3,
+   "why": "One owner per object, with others reading from it, keeps data consistent."
+  },
+  {
+   "q": "A webhook arrives at your endpoint. What should you do first?",
+   "right": "Verify the signature against the raw body",
+   "wrong": [
+    "Process the payload and verify later",
+    "Reply with an error to see if it is retried",
+    "Store the payload in the CRM"
+   ],
+   "tier": 3,
+   "why": "Never trust the payload until the signature is checked."
+  },
+  {
+   "q": "Why must a webhook receiver skip events it has already seen?",
+   "right": "Senders retry and the same event can arrive twice",
+   "wrong": [
+    "Events arrive in alphabetical order",
+    "The signature changes each time",
+    "Duplicates speed up processing"
+   ],
+   "tier": 3,
+   "why": "Event ids let you ignore repeats."
+  },
+  {
+   "q": "What does the Authorization-code flow of OAuth return to your callback?",
+   "right": "A short code that your server swaps for tokens",
+   "wrong": [
+    "The user's password",
+    "A permanent API key",
+    "The list of all user data"
+   ],
+   "tier": 3,
+   "why": "The code is exchanged server-side for an access token."
+  },
+  {
+   "q": "What is the purpose of the state value in OAuth?",
+   "right": "To defeat forged callbacks by matching the return to the request",
+   "wrong": [
+    "To encrypt the access token",
+    "To set the token lifetime",
+    "To list the scopes"
+   ],
+   "tier": 3,
+   "why": "State is saved before the redirect and checked when the user returns."
+  },
+  {
+   "q": "Which is a sign that a chart of accounts needs work?",
+   "right": "The same type of cost is posted to several different accounts",
+   "wrong": [
+    "Each account has a clear owner",
+    "Accounts are grouped by type",
+    "New accounts are agreed before use"
+   ],
+   "tier": 3,
+   "why": "Inconsistent posting makes reports unreliable."
+  },
+  {
+   "q": "What is the difference between accrual and cash accounting?",
+   "right": "Accrual records income when earned; cash records it when money moves",
+   "wrong": [
+    "Accrual ignores unpaid invoices",
+    "Cash accounting records income at order time",
+    "They differ only in the report layout"
+   ],
+   "tier": 3,
+   "why": "Accrual matches revenue to the period of the work."
+  },
+  {
+   "q": "Which tool property reduces card data risk the most?",
+   "right": "Using tokenisation so card numbers never touch your servers",
+   "wrong": [
+    "Storing the numbers encrypted in your database",
+    "Emailing card details to finance",
+    "Keeping card numbers in a spreadsheet"
+   ],
+   "tier": 3,
+   "why": "Tokens reduce the scope of card data obligations."
+  },
+  {
+   "q": "What does a chargeback start with?",
+   "right": "The cardholder disputing a charge with their bank",
+   "wrong": [
+    "The merchant refunding the customer",
+    "The gateway changing the price",
+    "The accountant closing the month"
+   ],
+   "tier": 3,
+   "why": "The merchant answers with evidence."
+  },
+  {
+   "q": "What is the role of a suppression list in email marketing?",
+   "right": "It holds addresses that must not be emailed again",
+   "wrong": [
+    "It lists top customers",
+    "It stores email templates",
+    "It records link clicks"
+   ],
+   "tier": 3,
+   "why": "It protects unsubscribed and bounced addresses."
+  },
+  {
+   "q": "Which DNS-based record lists the servers allowed to send mail for your domain?",
+   "right": "SPF",
+   "wrong": [
+    "DKIM",
+    "DMARC",
+    "MX"
+   ],
+   "tier": 3,
+   "why": "SPF is a TXT record of authorised senders.",
+   "code": "v=spf1 include:_spf.example.com ~all"
+  },
+  {
+   "q": "In this DMARC record, what does p=none do?",
+   "right": "Asks for reports without telling receivers to block failing mail",
+   "wrong": [
+    "Rejects all failing mail",
+    "Quarantines all failing mail",
+    "Disables SPF"
+   ],
+   "tier": 4,
+   "why": "None is the monitoring policy before moving to quarantine or reject.",
+   "code": "_dmarc.example.com TXT \"v=DMARC1; p=none; rua=mailto:dmarc@example.com\""
+  },
+  {
+   "q": "What does this code do?",
+   "right": "Compares a computed keyed hash of the raw body with the signature header",
+   "wrong": [
+    "Encrypts the body",
+    "Parses JSON and trusts it",
+    "Retries the request"
+   ],
+   "tier": 4,
+   "why": "Verification uses the exact raw bytes received.",
+   "code": "const expected = hmac(secret, timestamp + \".\" + rawBody);\nif (!safeEqual(expected, header.signature)) return 401;"
+  },
+  {
+   "q": "Which of these is a business reason to prefer standard fields over many custom fields?",
+   "right": "It lowers the cost of moving to another tool later",
+   "wrong": [
+    "It makes reports slower",
+    "It stops people saving data",
+    "It removes the need for exports"
+   ],
+   "tier": 1,
+   "why": "Custom fields increase lock-in."
+  },
+  {
+   "q": "A sales rep and a marketing manager both keep a separate spreadsheet of customers, and the numbers differ. What should the company do first?",
+   "right": "Decide which system owns the customer record and sync the others from it",
+   "wrong": [
+    "Buy a third tool to combine both",
+    "Ask each person to check their sheet more often",
+    "Delete the older spreadsheet"
+   ],
+   "tier": 3,
+   "why": "A single owner prevents drift."
+  },
+  {
+   "q": "A customer emails support twice about the same issue and gets two different answers from two agents. What fix helps most?",
+   "right": "Keep the history on one ticket and use a macro or article for the standard answer",
+   "wrong": [
+    "Ask the customer to write only once",
+    "Move the conversation to team chat",
+    "Send the customer an invoice"
+   ],
+   "tier": 3,
+   "why": "One thread plus one agreed answer gives consistency."
+  },
+  {
+   "q": "A paying customer's card fails on renewal and the subscription is cancelled at once. Many cancellations happen this way. What should you review?",
+   "right": "The dunning settings: retries, reminders and when to cancel",
+   "wrong": [
+    "The price of the plan",
+    "The colour of the invoice",
+    "The SPF record"
+   ],
+   "tier": 4,
+   "why": "Dunning limits involuntary cancellations."
+  },
+  {
+   "q": "Finance says the numbers for last month changed after the board saw them. What control is missing?",
+   "right": "A period close that locks the month after review",
+   "wrong": [
+    "A longer chart of accounts",
+    "A faster bank feed",
+    "More SKU variants"
+   ],
+   "tier": 4,
+   "why": "Locking prevents silent changes to reported numbers."
+  },
+  {
+   "q": "A new starter is waiting for accounts on day one. What is the best fix?",
+   "right": "An onboarding checklist that assigns each task before the start date",
+   "wrong": [
+    "Ask the new starter to chase IT",
+    "Give them a shared login",
+    "Delay the start date"
+   ],
+   "tier": 3,
+   "why": "Tasks should trigger ahead of day one."
+  },
+  {
+   "q": "An employee has left but can still open the client folder in the shared drive. What process failed?",
+   "right": "The offboarding checklist and access review",
+   "wrong": [
+    "The content calendar",
+    "The A/B test",
+    "The proration rule"
+   ],
+   "tier": 4,
+   "why": "Leavers must lose access to every tool."
+  },
+  {
+   "q": "An outsider needs one file today. Which is the safest sharing choice?",
+   "right": "Share it with that person's email only, with view access",
+   "wrong": [
+    "Make it public to anyone with the link and edit rights",
+    "Send the whole folder",
+    "Share your own login"
+   ],
+   "tier": 3,
+   "why": "Named, limited access is easiest to control."
+  },
+  {
+   "q": "You import an old list of 5,000 email addresses and send a newsletter. Complaints rise and mail begins landing in spam. What is the likely cause?",
+   "right": "Sending to people who never agreed damaged the sender reputation",
+   "wrong": [
+    "The subject line was too short",
+    "The list was too small",
+    "The DKIM key was too long"
+   ],
+   "tier": 4,
+   "why": "Reputation falls with complaints and bounces."
+  },
+  {
+   "q": "A webhook receiver does heavy work before replying, and the sender keeps retrying. What should change?",
+   "right": "Reply with success quickly and do the heavy work afterwards",
+   "wrong": [
+    "Ignore retries",
+    "Remove the signature check",
+    "Make the sender poll instead"
+   ],
+   "tier": 4,
+   "why": "Slow replies cause timeouts and repeat deliveries."
+  },
+  {
+   "q": "A payment event is delivered twice and two orders are created. What would have prevented it?",
+   "right": "Storing the event id and skipping events already seen",
+   "wrong": [
+    "Using a longer secret",
+    "Responding more slowly",
+    "Disabling retries on the receiver"
+   ],
+   "tier": 4,
+   "why": "Deduplication makes handling safe to repeat."
+  },
+  {
+   "q": "An integration asks for permission to read, edit and delete all contacts, but it only displays names. What should you do?",
+   "right": "Ask for the narrowest read-only scope that does the job",
+   "wrong": [
+    "Accept the broadest scope to avoid errors",
+    "Share your password instead",
+    "Give it admin rights"
+   ],
+   "tier": 3,
+   "why": "Least privilege limits damage if the token leaks."
+  },
+  {
+   "q": "A vendor offers a great price but no way to export your data. What is the main risk?",
+   "right": "High lock-in, because leaving would mean losing your records or rebuilding them",
+   "wrong": [
+    "The software will be slower",
+    "The invoices will be wrong",
+    "The login will expire"
+   ],
+   "tier": 4,
+   "why": "Check export and API access before adopting."
+  },
+  {
+   "q": "The bill for a messaging tool doubles because the contact list grew. What would help?",
+   "right": "Usage alerts and a regular clean-up of inactive contacts",
+   "wrong": [
+    "Disable reporting",
+    "Add more custom fields",
+    "Move all contacts to a spreadsheet by hand"
+   ],
+   "tier": 4,
+   "why": "Usage-based costs follow volume."
+  },
+  {
+   "q": "The only person who built the company's automations leaves, and a flow starts failing. What was missing?",
+   "right": "A runbook that documents each automation, its owner and how to stop it",
+   "wrong": [
+    "A faster computer",
+    "More seats",
+    "A second CRM"
+   ],
+   "tier": 4,
+   "why": "Documentation lets others fix and stop flows."
+  },
+  {
+   "q": "A supplier invoice lists 120 items, but the goods receipt shows 100. What control should stop payment?",
+   "right": "A three-way match of order, receipt and invoice",
+   "wrong": [
+    "A bank reconciliation",
+    "A credit note",
+    "A booking link"
+   ],
+   "tier": 4,
+   "why": "Quantities must agree before payment."
+  },
+  {
+   "q": "You want to see which campaign brought visitors to a landing page, but reports show many spellings of the same source. What is the cause?",
+   "right": "Inconsistent UTM values",
+   "wrong": [
+    "Weak DMARC settings",
+    "Too many SKUs",
+    "A broken refund policy"
+   ],
+   "tier": 3,
+   "why": "Agree a naming convention for campaign tags."
+  },
+  {
+   "q": "You need an internal approval before a customer signs. Which feature fits?",
+   "right": "A signing order with the approver first",
+   "wrong": [
+    "A shared inbox",
+    "A returns authorisation",
+    "Round-robin assignment"
+   ],
+   "tier": 3,
+   "why": "Order controls who receives the document and when."
+  },
+  {
+   "q": "Two salespeople contact the same prospect because the CRM has the company twice under different names. What should you do?",
+   "right": "Merge the duplicates and add matching rules to prevent new ones",
+   "wrong": [
+    "Delete the newer record",
+    "Add a custom field to mark duplicates",
+    "Ask the prospect which one is correct"
+   ],
+   "tier": 3,
+   "why": "Prevention is cheaper than repeated repair."
+  },
+  {
+   "q": "A team wants to buy a new tool for a task that already has an owner system. What should be asked first?",
+   "right": "Does a real, repeated job lack an owner today?",
+   "wrong": [
+    "Which logo looks best",
+    "How many colours the app has",
+    "Whether the vendor has a podcast"
+   ],
+   "tier": 3,
+   "why": "Buy a new category only for a job with no owner."
+  },
+  {
+   "q": "A hiring manager wants to make an offer outside the approved range. What process helps?",
+   "right": "An offer approval workflow that routes the terms to the approvers",
+   "wrong": [
+    "Sending the offer by chat",
+    "Skipping the scorecard",
+    "Waiting until the contract is signed"
+   ],
+   "tier": 4,
+   "why": "Approval before the offer avoids unauthorised terms."
+  },
+  {
+   "q": "Your finance team is asked for a list of everyone who could view payroll last quarter. What do they need?",
+   "right": "An access review and the audit log",
+   "wrong": [
+    "A content calendar",
+    "A product feed",
+    "A booking link"
+   ],
+   "tier": 4,
+   "why": "Access evidence supports audits."
+  },
+  {
+   "q": "A customer wants to return an item bought online. What starts the process?",
+   "right": "A returns authorisation linked to the order",
+   "wrong": [
+    "A chargeback",
+    "A new SKU",
+    "A DMARC report"
+   ],
+   "tier": 3,
+   "why": "The authorisation links the return to the order."
+  },
+  {
+   "q": "A high-value contract is signed by a link emailed to a shared address that several people can read. What is the main risk?",
+   "right": "Someone other than the intended signer could sign",
+   "wrong": [
+    "The contract will be too long",
+    "The PDF will print badly",
+    "The signing order will reverse"
+   ],
+   "tier": 5,
+   "why": "Signer authentication raises confidence in identity."
+  },
+  {
+   "q": "Your team is asked to promise a customer a specific integration because the Moksy catalogue lists the app. What is the best response?",
+   "right": "Check the current build and the integration label first, because a listing only means the app is catalogued",
+   "wrong": [
+    "Promise it, because the catalogue proves GGLink uses the app",
+    "Refuse all integrations",
+    "Ask the customer to build it"
+   ],
+   "tier": 5,
+   "why": "The catalogue and the master plan disagree about readiness."
+  },
+  {
+   "q": "A company customises its ERP heavily to match every old habit. What is the likely effect?",
+   "right": "Upgrades become costly because custom code must be reworked",
+   "wrong": [
+    "Upgrades become automatic",
+    "Master data fixes itself",
+    "Licences become cheaper"
+   ],
+   "tier": 5,
+   "why": "Configuration survives upgrades better than customisation."
+  },
+  {
+   "q": "An engineer proposes that your payment retry code add an idempotency key. What problem does this solve?",
+   "right": "A timed-out retry no longer creates a second charge",
+   "wrong": [
+    "Cards are encrypted",
+    "Webhooks are signed",
+    "Refunds are faster"
+   ],
+   "tier": 5,
+   "why": "The server returns the original result for a repeated key."
+  },
+  {
+   "q": "A customer's refresh token stops working after they change their password. What design is best?",
+   "right": "Show a clear reconnect state instead of failing silently",
+   "wrong": [
+    "Retry forever in the background",
+    "Ask them for their password",
+    "Hide the error"
+   ],
+   "tier": 4,
+   "why": "Tokens can be revoked; show the user what to do."
+  },
+  {
+   "q": "Which statement about a lead and an opportunity is correct?",
+   "right": "An opportunity is a qualified chance of a sale; a lead is not yet qualified",
+   "wrong": [
+    "They are the same record with different names",
+    "A lead has a close date; an opportunity does not",
+    "An opportunity always has a signed contract"
+   ],
+   "tier": 2,
+   "why": "Qualification separates the two."
+  },
+  {
+   "q": "Which tool would you use to publish the same set of posts to several social networks on a schedule?",
+   "right": "A social media management tool",
+   "wrong": [
+    "An ATS",
+    "A general ledger",
+    "An ERP"
+   ],
+   "tier": 2,
+   "why": "It schedules posts and gathers replies."
+  },
+  {
+   "q": "Why do teams set a time zone on a calendar event?",
+   "right": "So each invitee sees it in local time",
+   "wrong": [
+    "To speed up the call",
+    "To reduce storage",
+    "To lock the event"
+   ],
+   "tier": 2,
+   "why": "Events without a zone cause confusion."
+  },
+  {
+   "q": "What does an e-commerce platform's checkout do?",
+   "right": "Collects the order details and takes payment",
+   "wrong": [
+    "Issues payslips",
+    "Reconciles the bank",
+    "Moderates comments"
+   ],
+   "tier": 1,
+   "why": "Checkout turns a cart into an order."
+  },
+  {
+   "q": "Everyone agrees an e-signature is valid, yet one document type is refused in your region. What should you do?",
+   "right": "Ask legal whether that document type requires another form of signing",
+   "wrong": [
+    "Sign it electronically anyway",
+    "Skip the document",
+    "Use a scanned image of a signature"
+   ],
+   "tier": 5,
+   "why": "Rules vary by place and by document type."
+  }
+ ]
+}

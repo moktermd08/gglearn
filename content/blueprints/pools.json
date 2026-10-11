@@ -1,0 +1,69 @@
+{
+  "_about": "Which company-wide tracks a role's ladder may draw on, per domain, when scripts/blueprint-fit.ts fits a ladder to its blueprint. Only tracks every brand can see belong here; a track for one brand goes in content/careers/overlays. product, service and brand have one company-wide track each and are open to every role.",
+  "tech": {
+    "frontend": ["html-titan","css-titan","javascript-titan","react-titan","tech-tailwind","foundations-typescript","tech-graphql","git-titan","foundations-nextjs","tech-testing","foundations-restapi"],
+    "backend": ["nodejs-titan","mysql-titan","python-titan","php-titan","laravel-titan","tech-data-stores","tech-graphql","foundations-restapi","git-titan","javascript-titan","foundations-docker","tech-cloud-devops","vec-databases-titan","agent-mcp-titan"],
+    "engineer": ["git-titan","javascript-titan","mysql-titan","nodejs-titan","react-titan","python-titan","html-titan","css-titan","foundations-typescript","tech-data-stores","tech-cloud-devops","tech-testing","ai-llm-practice","llm-prompting-titan","foundations-restapi"],
+    "devops": ["foundations-linux","foundations-docker","tech-cloud-devops","git-titan","foundations-apache","foundations-aws","nodejs-titan","python-titan","tech-data-stores","foundations-github"],
+    "security": ["foundations-linux","tech-cloud-devops","foundations-restapi","git-titan","python-titan","eval-safety-titan","foundations-docker"],
+    "tester": ["tech-testing","javascript-titan","git-titan","foundations-restapi","python-titan","html-titan","css-titan","mysql-titan"],
+    "architect": ["tech-data-stores","tech-cloud-devops","tech-graphql","foundations-restapi","ai-llm-practice","rag-pipelines-titan","agent-mcp-titan","vec-databases-titan","javascript-titan","git-titan"],
+    "cto": ["tech-cloud-devops","tech-data-stores","ai-llm-practice","llm-fundamentals-titan","agent-mcp-titan","eval-safety-titan"],
+    "data": ["foundations-analytics","mysql-titan","python-titan","foundations-json","ml-sklearn-titan","tech-data-stores"],
+    "design": ["html-titan","css-titan","tech-tailwind","image-diffusion-titan","image-midjourney-titan","llm-prompting-titan","foundations-bootstrap","javascript-titan"],
+    "video": ["image-diffusion-titan","image-midjourney-titan","llm-prompting-titan","chatgpt-titan"],
+    "content": ["foundations-wordpress","wordpress-titan","llm-prompting-titan","chatgpt-titan","foundations-analytics","linkedin-titan","foundations-html","image-midjourney-titan","llm-aisearch-titan"],
+    "marketing": ["foundations-analytics","linkedin-titan","foundations-linkedin","dynamics-titan","wordpress-titan","llm-prompting-titan","chatgpt-titan"],
+    "social": ["linkedin-titan","foundations-linkedin","foundations-analytics","chatgpt-titan","llm-prompting-titan","image-midjourney-titan"],
+    "sales": ["dynamics-titan","linkedin-titan","foundations-linkedin","chatgpt-titan","llm-prompting-titan","foundations-analytics"],
+    "office": ["chatgpt-titan","foundations-analytics","llm-prompting-titan","foundations-linkedin"],
+    "management": ["ai-llm-practice","chatgpt-titan","llm-prompting-titan","foundations-analytics","tech-cloud-devops"]
+  },
+  "tool": {
+    "eng": ["tools-build-ship","tools-plan-design"],
+    "biz": ["tools-business","tools-plan-design","data-analytics"],
+    "design": ["tools-plan-design","tools-business"],
+    "data": ["data-analytics","tools-business","tools-plan-design"]
+  },
+  "process": {
+    "eng": ["sdlc-architecture","sdlc-backend","sdlc-database","sdlc-devops","sdlc-discovery","sdlc-frontend","sdlc-launch","sdlc-requirements","sdlc-security","sdlc-testing","governance-compliance","security-operations","servers-infrastructure","delivery-management"],
+    "biz": ["governance-compliance","delivery-management","communications-email","sdlc-discovery","sdlc-requirements","sdlc-launch","security-operations"],
+    "design": ["governance-compliance","delivery-management","communications-email","sdlc-discovery","sdlc-requirements","sdlc-frontend","sdlc-launch","sdlc-testing"]
+  },
+  "leadership": {
+    "eng": ["engineering-leadership","executive-communication","tech-strategy-roadmap","risk-resilience-leadership","people-operations","finance-for-leaders"],
+    "biz": ["executive-communication","people-operations","finance-for-leaders","risk-resilience-leadership","payments-billing"],
+    "finance": ["finance-for-leaders","payments-billing","risk-resilience-leadership","executive-communication","people-operations"],
+    "people": ["people-operations","executive-communication","risk-resilience-leadership","finance-for-leaders","engineering-leadership"]
+  },
+  "roles": {
+    "account manager":      { "tech": "sales",      "tool": "biz",    "process": "biz",    "leadership": "biz" },
+    "accounting":           { "tech": "office",     "tool": "biz",    "process": "biz",    "leadership": "finance" },
+    "admin":                { "tech": "office",     "tool": "biz",    "process": "biz",    "leadership": "biz" },
+    "architect":            { "tech": "architect",  "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "backend developer":    { "tech": "backend",    "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "ceo":                  { "tech": "management", "tool": "biz",    "process": "biz",    "leadership": "biz" },
+    "content":              { "tech": "content",    "tool": "biz",    "process": "design", "leadership": "biz" },
+    "cto":                  { "tech": "cto",        "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "data analyst":         { "tech": "data",       "tool": "data",   "process": "biz",    "leadership": "biz" },
+    "delivery manager":     { "tech": "management", "tool": "biz",    "process": "eng",    "leadership": "eng" },
+    "designer":             { "tech": "design",     "tool": "design", "process": "design", "leadership": "biz" },
+    "developer":            { "tech": "engineer",   "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "devops":               { "tech": "devops",     "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "engineer":             { "tech": "engineer",   "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "frontend developer":   { "tech": "frontend",   "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "full stack developer": { "tech": "engineer",   "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "graphics designer":    { "tech": "design",     "tool": "design", "process": "design", "leadership": "biz" },
+    "hr manager":           { "tech": "office",     "tool": "biz",    "process": "biz",    "leadership": "people" },
+    "interaction designer": { "tech": "design",     "tool": "design", "process": "design", "leadership": "biz" },
+    "manager":              { "tech": "management", "tool": "biz",    "process": "biz",    "leadership": "biz" },
+    "marketing":            { "tech": "marketing",  "tool": "biz",    "process": "biz",    "leadership": "biz" },
+    "product designer":     { "tech": "design",     "tool": "design", "process": "design", "leadership": "biz" },
+    "project manager":      { "tech": "management", "tool": "biz",    "process": "eng",    "leadership": "biz" },
+    "sales":                { "tech": "sales",      "tool": "biz",    "process": "biz",    "leadership": "biz" },
+    "security":             { "tech": "security",   "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "social media manager": { "tech": "social",     "tool": "biz",    "process": "biz",    "leadership": "biz" },
+    "tester":               { "tech": "tester",     "tool": "eng",    "process": "eng",    "leadership": "eng" },
+    "video editor":         { "tech": "video",      "tool": "design", "process": "design", "leadership": "biz" }
+  }
+}

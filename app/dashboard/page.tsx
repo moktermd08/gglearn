@@ -12,6 +12,7 @@ import { SubjectArt } from "@/components/SubjectArt";
 import { Ring } from "@/components/Ring";
 import { requirementsFor, scopesOf } from "@/lib/paths";
 import { careerFor } from "@/lib/careers";
+import { goalOf, roleLabel } from "@/lib/journey";
 import { pendingFor } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath } from "@/lib/roles";
 import { enroll, toggleChecklist } from "@/app/actions";
@@ -33,6 +34,7 @@ export default async function Dashboard() {
   const required = requirementsFor(user, scopesOf(user.id));
   const requiredOpen = required.filter((r) => !r.done), overdue = requiredOpen.filter((r) => r.overdue);
   const career = careerFor(user);
+  const goal = goalOf(user.id);
   const unread = pendingFor(user.id);
   const noRolePath = user.audience === "staff" && hasNoRolePath(coverageFor(user.jobRole));
   const enrolledIds = new Set(mine.map((m) => m.t.id));
@@ -109,7 +111,10 @@ export default async function Dashboard() {
         <section className="card p-4">
           <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
             <h2 className="flex items-center gap-2 font-semibold"><Climb size={18} className="text-violet-300" />Your career</h2>
-            <span className="text-xs text-slate-400">{career.current.title}{career.next && <> <ArrowUpRight size={12} className="inline" /> {career.next.title}</>}</span>
+            <span className="flex items-center gap-3 text-xs text-slate-400">
+              <span>{career.current.title}{career.next && <> <ArrowUpRight size={12} className="inline" /> {career.next.title}</>}</span>
+              <Link href="/journey" className="text-sky-300 underline">{goal ? `Goal: ${goal.targetRole === career.role ? "" : roleLabel(goal.targetRole) + ", "}${new Date(goal.targetDate * 1000).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}` : "Set a career goal"}</Link>
+            </span>
           </div>
           {!career.next ? (
             <p className="text-sm text-slate-300">You are at the top of the {career.role} path: {career.current.title}. Keep sharpening, and help others climb.</p>

@@ -16,7 +16,12 @@ export type Step = {
   countable: boolean;
 };
 
-export type Rung = { id: number; level: number; title: string; summary: string; steps: Step[] };
+export type Rung = {
+  id: number; level: number; title: string; summary: string;
+  /** what the level looks like in the framework's three measures (content/careers/framework.json); blank until written */
+  knowledge: string; delivery: string; leadership: string;
+  steps: Step[];
+};
 
 export type Career = {
   role: string;
@@ -44,7 +49,7 @@ export function ladderFor(role: string, catalogRows = catalog()): Rung[] {
   const reqs = db.select().from(careerRequirements).where(inArray(careerRequirements.careerLevelId, levels.map((l) => l.id))).all();
   const byId = new Map(catalogRows.map((t) => [t.id, t]));
   return levels.map((l) => ({
-    id: l.id, level: l.level, title: l.title, summary: l.summary,
+    id: l.id, level: l.level, title: l.title, summary: l.summary, knowledge: l.knowledge, delivery: l.delivery, leadership: l.leadership,
     steps: reqs.filter((r) => r.careerLevelId === l.id).flatMap((r) => {
       const track = byId.get(r.trackId);
       return track ? [{ reqId: r.id, track, need: r.requiredLevel, passed: 0, met: false, countable: track.reach >= r.requiredLevel }] : [];

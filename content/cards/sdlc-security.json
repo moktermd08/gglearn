@@ -1,0 +1,2839 @@
+{
+ "slug": "sdlc-security",
+ "name": "7. Security and authentication",
+ "description": "Auth flows, encryption, RBAC, MFA, audit logging, privacy.",
+ "roles": "developer",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "authn": "authentication concept",
+  "session": "session security concept",
+  "authz": "access control concept",
+  "vuln": "web vulnerability",
+  "defence": "web hardening control",
+  "secrets": "secrets management practice",
+  "crypto": "encryption concept",
+  "abuse": "abuse and rate-limiting concept",
+  "logging": "logging practice",
+  "supply": "dependency and supply chain risk",
+  "threat": "threat modelling term",
+  "sdlc": "secure development practice",
+  "privacy": "privacy principle",
+  "gg": "GGLearn security mechanism"
+ },
+ "cards": [
+  {
+   "group": "authn",
+   "subject": "Password hashing",
+   "tier": 1,
+   "says": [
+    "turns a password into a fixed-size value that cannot be reversed to the password",
+    "lets a system check a password without storing it"
+   ],
+   "use": "need to store user passwords safely",
+   "not": [
+    "can be undone with the right key to recover the password"
+   ],
+   "like": [
+    "A salt",
+    "Key stretching"
+   ]
+  },
+  {
+   "group": "authn",
+   "subject": "A salt",
+   "tier": 2,
+   "says": [
+    "is a random value added to each password before hashing",
+    "makes identical passwords produce different hashes",
+    "defeats precomputed rainbow tables"
+   ],
+   "use": "want two users with the same password to have different stored hashes",
+   "not": [
+    "must be kept secret in the way an encryption key is"
+   ],
+   "like": [
+    "A pepper",
+    "Password hashing"
+   ]
+  },
+  {
+   "group": "authn",
+   "subject": "A pepper",
+   "tier": 5,
+   "says": [
+    "is a secret value mixed into password hashes and kept outside the database",
+    "protects hashes when only the database leaks"
+   ],
+   "use": "want a stolen database alone to be insufficient for cracking passwords",
+   "not": [
+    "is stored beside the hash in the same row"
+   ],
+   "like": [
+    "A salt"
+   ]
+  },
+  {
+   "group": "authn",
+   "subject": "Key stretching",
+   "tier": 3,
+   "says": [
+    "makes every password guess deliberately expensive",
+    "uses a tunable work factor that can be raised over time",
+    "slows down offline brute force after a database leak"
+   ],
+   "use": "want guessing millions of passwords a second to be impractical",
+   "not": [
+    "makes the password itself longer for the user"
+   ],
+   "like": [
+    "Password hashing",
+    "A memory-hard hash"
+   ]
+  },
+  {
+   "group": "authn",
+   "subject": "A memory-hard hash",
+   "tier": 4,
+   "says": [
+    "needs a large amount of memory for every guess",
+    "makes cracking on GPUs and custom hardware costlier",
+    "is exemplified by scrypt and Argon2"
+   ],
+   "use": "choose an algorithm for storing new passwords",
+   "not": [
+    "is a fast general-purpose digest suited to file checksums"
+   ],
+   "like": [
+    "Key stretching"
+   ]
+  },
+  {
+   "group": "authn",
+   "subject": "Multi-factor authentication",
+   "tier": 1,
+   "says": [
+    "requires a second kind of proof beyond the password",
+    "limits the damage when a password is stolen or guessed"
+   ],
+   "use": "want a stolen password alone to be useless to an attacker",
+   "not": [
+    "replaces the password completely"
+   ],
+   "like": [
+    "A passkey"
+   ]
+  },
+  {
+   "group": "authn",
+   "subject": "A passkey",
+   "tier": 4,
+   "says": [
+    "uses a public and private key pair for each site",
+    "keeps the private key on the user's device",
+    "resists phishing because the credential is bound to the genuine site"
+   ],
+   "use": "want sign-in that a fake login page cannot capture",
+   "not": [
+    "is a longer password stored in a password manager"
+   ],
+   "like": [
+    "Multi-factor authentication"
+   ]
+  },
+  {
+   "group": "authn",
+   "subject": "OAuth 2.0",
+   "tier": 2,
+   "says": [
+    "lets an app obtain limited access to a resource on a user's behalf",
+    "issues access tokens so the user's password is never shared with the app",
+    "is fundamentally a delegated authorisation framework"
+   ],
+   "use": "want a third-party app to read a user's calendar without their password",
+   "not": [
+    "proves who the user is on its own"
+   ],
+   "like": [
+    "OpenID Connect"
+   ]
+  },
+  {
+   "group": "authn",
+   "subject": "OpenID Connect",
+   "tier": 3,
+   "says": [
+    "adds an identity layer on top of OAuth 2.0",
+    "returns an ID token that describes who signed in",
+    "is the usual basis for single sign-on"
+   ],
+   "use": "need single sign-on that tells the app who the user is",
+   "not": [
+    "is an older replacement for TLS"
+   ],
+   "like": [
+    "OAuth 2.0"
+   ]
+  },
+  {
+   "group": "authn",
+   "subject": "PKCE",
+   "tier": 5,
+   "says": [
+    "binds the authorisation code exchange to a secret the client created",
+    "stops an intercepted authorisation code being redeemed by an attacker",
+    "protects clients that cannot keep a client secret, such as mobile and single-page apps"
+   ],
+   "use": "build a public client that cannot hold a secret",
+   "not": [
+    "encrypts the access token while it sits in storage"
+   ],
+   "like": [
+    "OAuth 2.0"
+   ]
+  },
+  {
+   "group": "session",
+   "subject": "A session token",
+   "tier": 1,
+   "says": [
+    "identifies a signed-in browser on later requests",
+    "should be long, random and unguessable",
+    "must be treated like a password while it is valid"
+   ],
+   "use": "need the server to recognise a user after login",
+   "not": [
+    "can safely be a sequential number such as the user id"
+   ]
+  },
+  {
+   "group": "session",
+   "subject": "The HttpOnly cookie flag",
+   "tier": 2,
+   "says": [
+    "hides the cookie from JavaScript",
+    "limits what an injected script can read directly"
+   ],
+   "use": "want a cookie that page scripts cannot read",
+   "not": [
+    "stops the cookie being sent over plain HTTP"
+   ],
+   "like": [
+    "The Secure cookie flag"
+   ]
+  },
+  {
+   "group": "session",
+   "subject": "The Secure cookie flag",
+   "tier": 2,
+   "says": [
+    "tells the browser to send the cookie only over HTTPS",
+    "keeps the cookie off unencrypted connections"
+   ],
+   "use": "want a cookie never sent over plain HTTP",
+   "not": [
+    "hides the cookie from JavaScript"
+   ],
+   "like": [
+    "The HttpOnly cookie flag"
+   ]
+  },
+  {
+   "group": "session",
+   "subject": "The SameSite cookie attribute",
+   "tier": 4,
+   "says": [
+    "limits when the browser attaches a cookie to cross-site requests",
+    "reduces the risk of CSRF",
+    "has Lax and Strict modes with different strictness"
+   ],
+   "use": "want to blunt cross-site request forgery with a cookie setting",
+   "not": [
+    "encrypts the cookie value"
+   ],
+   "like": [
+    "The Secure cookie flag"
+   ]
+  },
+  {
+   "group": "session",
+   "subject": "Session fixation",
+   "tier": 5,
+   "says": [
+    "happens when an attacker sets the session identifier before the victim signs in",
+    "is prevented by issuing a fresh identifier at login"
+   ],
+   "use": "issue a new session identifier when a user authenticates",
+   "not": [
+    "is stopped by making the session cookie HttpOnly"
+   ],
+   "like": [
+    "A session token"
+   ]
+  },
+  {
+   "group": "session",
+   "subject": "Server-side session revocation",
+   "tier": 4,
+   "says": [
+    "lets the server invalidate a token before it expires",
+    "supports signing a user out of every device",
+    "relies on state the server keeps, such as a per-user version"
+   ],
+   "use": "need to cut off a stolen session immediately",
+   "not": [
+    "is unnecessary when the cookie has an expiry date"
+   ]
+  },
+  {
+   "group": "session",
+   "subject": "A JSON Web Token",
+   "tier": 4,
+   "says": [
+    "is a signed token that carries claims",
+    "is verified by checking its signature and its claims",
+    "cannot be revoked before expiry without server-side state"
+   ],
+   "use": "hand a signed set of claims between services",
+   "not": [
+    "is encrypted by default so its payload is secret"
+   ],
+   "like": [
+    "A session token"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "Authentication",
+   "tier": 1,
+   "says": [
+    "proves who a user is",
+    "happens before authorisation in a request"
+   ],
+   "use": "need to confirm the identity of the caller",
+   "not": [
+    "decides which records the caller may edit"
+   ],
+   "like": [
+    "Authorisation",
+    "Role-based access control",
+    "Attribute-based access control",
+    "An ownership check",
+    "Least privilege",
+    "Deny by default"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "Authorisation",
+   "tier": 1,
+   "says": [
+    "decides what an identified user may do",
+    "is checked on the server for each sensitive action"
+   ],
+   "use": "decide whether a signed-in user may delete a record",
+   "not": [
+    "proves who the user is"
+   ],
+   "like": [
+    "Authentication",
+    "Role-based access control",
+    "Attribute-based access control",
+    "An ownership check",
+    "Least privilege",
+    "Deny by default"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "Role-based access control",
+   "tier": 3,
+   "says": [
+    "grants permissions through roles",
+    "assigns each user to a role such as learner, manager or admin"
+   ],
+   "use": "want permissions managed per job function and not per person",
+   "not": [
+    "decides using only the time of day and location"
+   ],
+   "like": [
+    "Attribute-based access control",
+    "Authentication",
+    "Authorisation",
+    "An ownership check",
+    "Least privilege",
+    "Deny by default"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "Attribute-based access control",
+   "tier": 4,
+   "says": [
+    "decides using attributes of the user, the resource and the context",
+    "can express a rule such as same department and office hours only"
+   ],
+   "use": "need rules that depend on the record and the situation, not only the role",
+   "not": [
+    "is limited to a fixed list of roles"
+   ],
+   "like": [
+    "Role-based access control",
+    "Authentication",
+    "Authorisation",
+    "An ownership check",
+    "Least privilege",
+    "Deny by default"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "Least privilege",
+   "tier": 1,
+   "says": [
+    "gives an account only the access its job needs",
+    "limits the damage when an account is compromised"
+   ],
+   "use": "grant a new service account permissions",
+   "not": [
+    "gives everyone admin rights to avoid support tickets"
+   ],
+   "like": [
+    "Authentication",
+    "Authorisation",
+    "Role-based access control",
+    "Attribute-based access control",
+    "An ownership check",
+    "Deny by default"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "Deny by default",
+   "tier": 2,
+   "says": [
+    "refuses every request that no rule explicitly allows",
+    "makes a forgotten rule fail safe"
+   ],
+   "use": "design a new permission check",
+   "not": [
+    "allows everything until a rule blocks it"
+   ],
+   "like": [
+    "Authentication",
+    "Authorisation",
+    "Role-based access control",
+    "Attribute-based access control",
+    "An ownership check",
+    "Least privilege"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "An ownership check",
+   "tier": 3,
+   "says": [
+    "confirms the record being accessed belongs to the caller",
+    "stops one user reading another's data by changing an id"
+   ],
+   "use": "accept a record id from the request",
+   "not": [
+    "is satisfied by checking that the user is signed in"
+   ],
+   "like": [
+    "Role-based access control",
+    "Authentication",
+    "Authorisation",
+    "Attribute-based access control",
+    "Least privilege",
+    "Deny by default"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "Horizontal privilege escalation",
+   "tier": 3,
+   "says": [
+    "gives a user access to another user's data at the same level",
+    "is what a missing ownership check allows"
+   ],
+   "use": "see a user read a peer's record by editing an id",
+   "not": [
+    "lets an ordinary user gain admin powers"
+   ],
+   "like": [
+    "Vertical privilege escalation"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "Vertical privilege escalation",
+   "tier": 3,
+   "says": [
+    "gives an ordinary user the abilities of a higher role",
+    "can happen when a role field is accepted from the request body"
+   ],
+   "use": "see a learner reach an admin-only function",
+   "not": [
+    "lets a user read a peer's record at the same role"
+   ],
+   "like": [
+    "Horizontal privilege escalation"
+   ]
+  },
+  {
+   "group": "authz",
+   "subject": "Separation of duties",
+   "tier": 4,
+   "says": [
+    "splits a sensitive task so no single person can complete it alone",
+    "reduces the risk of insider fraud"
+   ],
+   "use": "stop one person both requesting and approving a payment",
+   "not": [
+    "gives one trusted admin control of the whole process"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "SQL injection",
+   "tier": 1,
+   "says": [
+    "lets attacker input change the structure of a database query",
+    "is reliably prevented by parameterised queries"
+   ],
+   "use": "see user input joined into a query string",
+   "not": [
+    "is fixed reliably by hiding database error messages"
+   ],
+   "like": [
+    "Command injection"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Command injection",
+   "tier": 4,
+   "says": [
+    "passes untrusted input to an operating system shell",
+    "is avoided by not invoking a shell and by passing arguments as a list"
+   ],
+   "use": "see user input placed inside a shell command",
+   "not": [
+    "only affects databases"
+   ],
+   "like": [
+    "SQL injection"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Cross-site scripting",
+   "tier": 1,
+   "says": [
+    "runs attacker script in a victim's browser within the site's origin",
+    "is prevented mainly by context-aware output encoding"
+   ],
+   "use": "see user input written into a page without encoding",
+   "not": [
+    "is the same thing as CSRF"
+   ],
+   "like": [
+    "Cross-site request forgery",
+    "Server-side request forgery"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Stored XSS",
+   "tier": 4,
+   "says": [
+    "saves the malicious script on the server so every viewer receives it",
+    "can hit users who never clicked a crafted link"
+   ],
+   "use": "find a comment field that shows other users' text to all visitors",
+   "not": [
+    "needs the victim to follow a crafted link each time"
+   ],
+   "like": [
+    "Reflected XSS",
+    "DOM-based XSS",
+    "Cross-site scripting"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Reflected XSS",
+   "tier": 4,
+   "says": [
+    "bounces a script from the request straight into the response",
+    "usually needs the victim to follow a crafted link"
+   ],
+   "use": "see a search term echoed into the results page",
+   "not": [
+    "persists in the database until it is removed"
+   ],
+   "like": [
+    "Stored XSS",
+    "DOM-based XSS",
+    "Cross-site scripting"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "DOM-based XSS",
+   "tier": 5,
+   "says": [
+    "arises when client-side code writes untrusted data into the page, such as through innerHTML",
+    "can occur even when the server response is clean"
+   ],
+   "use": "see front-end code pass location.hash to innerHTML",
+   "not": [
+    "always requires the server to store the payload"
+   ],
+   "like": [
+    "Stored XSS",
+    "Reflected XSS",
+    "Cross-site scripting"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Cross-site request forgery",
+   "tier": 2,
+   "says": [
+    "makes a victim's browser send an unwanted authenticated request",
+    "relies on the browser attaching cookies automatically",
+    "is mitigated by anti-forgery tokens and SameSite cookies"
+   ],
+   "use": "worry that a malicious page could trigger a state-changing request on a logged-in site",
+   "not": [
+    "lets the attacker read the victim's responses"
+   ],
+   "like": [
+    "Cross-site scripting",
+    "Server-side request forgery"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Server-side request forgery",
+   "tier": 4,
+   "says": [
+    "makes the server fetch a URL the attacker chose",
+    "can reach internal services and cloud metadata endpoints",
+    "is mitigated by allow-listing destinations"
+   ],
+   "use": "build a feature that fetches a URL supplied by the user",
+   "not": [
+    "runs script in the visitor's browser"
+   ],
+   "like": [
+    "Cross-site request forgery",
+    "Cross-site scripting"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Insecure direct object reference",
+   "tier": 2,
+   "says": [
+    "exposes a record when changing an identifier in a request is not checked against the caller",
+    "is a form of broken access control"
+   ],
+   "use": "find that changing /orders/41 to /orders/42 shows someone else's order",
+   "not": [
+    "is prevented by making identifiers longer"
+   ],
+   "like": [
+    "An ownership check"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Security misconfiguration",
+   "tier": 3,
+   "says": [
+    "leaves defaults, debug modes or open services exposed",
+    "includes default credentials left unchanged"
+   ],
+   "use": "find a debug console reachable in production",
+   "not": [
+    "is always caused by a flaw in application code"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Path traversal",
+   "tier": 4,
+   "says": [
+    "uses sequences such as ../ to reach files outside the intended directory",
+    "is prevented by resolving the path and confirming it stays inside the base directory"
+   ],
+   "use": "let a user name a file to download",
+   "not": [
+    "lets the attacker run SQL"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "An open redirect",
+   "tier": 4,
+   "says": [
+    "sends users to an attacker-chosen URL from a trusted domain",
+    "makes phishing links look genuine"
+   ],
+   "use": "see a login page redirect to a next parameter without checking it",
+   "not": [
+    "injects script into the page"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Mass assignment",
+   "tier": 4,
+   "says": [
+    "binds every request field onto an object, including ones the user should not set",
+    "can let a user set their own role"
+   ],
+   "use": "see a framework create a record straight from the request body",
+   "not": [
+    "is caused by weak password hashing"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "Account enumeration",
+   "tier": 4,
+   "says": [
+    "reveals whether an account exists through different messages or response times",
+    "helps attackers target real users"
+   ],
+   "use": "see login fail faster for unknown emails than for known ones",
+   "not": [
+    "guesses the password of one account"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "A race condition",
+   "tier": 5,
+   "says": [
+    "exploits the gap between a check and the action that relies on it",
+    "can let a one-use coupon be redeemed twice"
+   ],
+   "use": "see two simultaneous requests both pass the same check",
+   "not": [
+    "only occurs on single-threaded servers"
+   ]
+  },
+  {
+   "group": "vuln",
+   "subject": "A timing attack",
+   "tier": 5,
+   "says": [
+    "infers a secret from how long an operation takes",
+    "is countered by constant-time comparison"
+   ],
+   "use": "compare a secret token supplied by the caller",
+   "not": [
+    "needs the attacker to read the server's memory"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "A parameterised query",
+   "tier": 1,
+   "says": [
+    "sends the SQL and the data separately so data is never parsed as code",
+    "is the primary defence against SQL injection"
+   ],
+   "use": "need to put user input into a database query",
+   "not": [
+    "works by stripping the word SELECT from input"
+   ],
+   "like": [
+    "Output encoding"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "Output encoding",
+   "tier": 2,
+   "says": [
+    "converts special characters so the browser treats data as text",
+    "must match the context, such as HTML body, attribute or JavaScript"
+   ],
+   "use": "need to show user-supplied text in a page",
+   "not": [
+    "is performed once on input and then trusted everywhere"
+   ],
+   "like": [
+    "A parameterised query"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "Input validation",
+   "tier": 1,
+   "says": [
+    "checks that incoming data matches the expected type, length and format",
+    "runs on the server, whatever the browser already checked",
+    "is a layer of defence and not a substitute for encoding"
+   ],
+   "use": "receive a field from a form or API call",
+   "not": [
+    "makes output encoding unnecessary"
+   ],
+   "like": [
+    "Allow-list validation"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "Allow-list validation",
+   "tier": 3,
+   "says": [
+    "accepts only values known to be good",
+    "is safer than trying to list every bad input"
+   ],
+   "use": "accept a sort column name that must be one of a few fields",
+   "not": [
+    "rejects a few known bad strings and accepts the rest"
+   ],
+   "like": [
+    "Input validation"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "A Content Security Policy",
+   "tier": 4,
+   "says": [
+    "tells the browser which sources of script and content are allowed",
+    "limits the damage of an XSS bug"
+   ],
+   "use": "want a second line of defence against injected script",
+   "not": [
+    "replaces the need to encode output"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "HTTP Strict Transport Security",
+   "tier": 4,
+   "says": [
+    "tells the browser to use only HTTPS for the site for a stated period",
+    "defeats downgrade and SSL-stripping attacks"
+   ],
+   "use": "want browsers never to try plain HTTP for the site",
+   "not": [
+    "blocks the page from being framed"
+   ],
+   "like": [
+    "A Content Security Policy"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "Referrer-Policy",
+   "tier": 3,
+   "says": [
+    "controls how much of the URL is sent in the Referer header",
+    "keeps sensitive URL details from leaking to other sites"
+   ],
+   "use": "want to stop a link click leaking the current page's address",
+   "not": [
+    "decides which sites may embed the page"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "The frame-ancestors directive",
+   "tier": 4,
+   "says": [
+    "controls which sites may embed the page in a frame",
+    "defends against clickjacking"
+   ],
+   "use": "want to stop the page being framed by another site",
+   "not": [
+    "lists the origins that may run scripts"
+   ],
+   "like": [
+    "A Content Security Policy"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "An anti-CSRF token",
+   "tier": 4,
+   "says": [
+    "is an unpredictable value the server checks on state-changing requests",
+    "cannot be read by an attacker's cross-site page"
+   ],
+   "use": "protect a form that changes data with cookie authentication",
+   "not": [
+    "is the same as the session cookie"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "CORS",
+   "tier": 4,
+   "says": [
+    "relaxes the browser's same-origin policy for named origins",
+    "is enforced by the browser and not by the server",
+    "does not stop non-browser clients from calling the API"
+   ],
+   "use": "let a browser app on one origin read responses from an API on another",
+   "not": [
+    "is an authentication mechanism"
+   ]
+  },
+  {
+   "group": "defence",
+   "subject": "Generic error messages",
+   "tier": 3,
+   "says": [
+    "show users a general failure while details go to server logs",
+    "avoid leaking stack traces and query text"
+   ],
+   "use": "decide what an error page should reveal",
+   "not": [
+    "help attackers by hiding the real cause from developers"
+   ]
+  },
+  {
+   "group": "secrets",
+   "subject": "A secrets manager",
+   "tier": 2,
+   "says": [
+    "stores secrets centrally with access control and audit",
+    "can rotate secrets and hand out short-lived credentials"
+   ],
+   "use": "want to keep credentials out of code and config files",
+   "not": [
+    "is a public repository where teams share keys"
+   ],
+   "like": [
+    "Envelope encryption",
+    "Key rotation"
+   ]
+  },
+  {
+   "group": "secrets",
+   "subject": "Secret scanning",
+   "tier": 2,
+   "says": [
+    "searches commits and files for leaked credentials",
+    "can run as a pre-commit hook and in the CI pipeline"
+   ],
+   "use": "want to catch a committed key before it is pushed",
+   "not": [
+    "encrypts any secret it finds"
+   ]
+  },
+  {
+   "group": "secrets",
+   "subject": "Key rotation",
+   "tier": 4,
+   "says": [
+    "replaces a key on a schedule or after a suspected leak",
+    "limits how long a stolen key stays useful"
+   ],
+   "use": "suspect a key may have been exposed",
+   "not": [
+    "makes old data permanently unreadable"
+   ],
+   "like": [
+    "A secrets manager",
+    "Envelope encryption"
+   ]
+  },
+  {
+   "group": "secrets",
+   "subject": "A secret committed to git",
+   "tier": 4,
+   "says": [
+    "stays recoverable from history after a later commit deletes the file",
+    "must be revoked and replaced, not just removed"
+   ],
+   "use": "discover a live key in an old commit",
+   "not": [
+    "is fixed by deleting the file in the next commit"
+   ]
+  },
+  {
+   "group": "secrets",
+   "subject": "Short-lived credentials",
+   "tier": 4,
+   "says": [
+    "expire automatically after minutes or hours",
+    "shrink the window in which a leaked value can be used"
+   ],
+   "use": "want a leak to be harmless after a short time",
+   "not": [
+    "never need to be rotated because they are permanent"
+   ]
+  },
+  {
+   "group": "secrets",
+   "subject": "Envelope encryption",
+   "tier": 5,
+   "says": [
+    "encrypts data with a data key that is itself encrypted by a master key",
+    "lets the master key be rotated without re-encrypting all the data"
+   ],
+   "use": "need to encrypt large volumes of data under a managed master key",
+   "not": [
+    "uses one password to encrypt every file separately"
+   ],
+   "like": [
+    "A secrets manager",
+    "Key rotation"
+   ]
+  },
+  {
+   "group": "secrets",
+   "subject": "Per-environment secrets",
+   "tier": 2,
+   "says": [
+    "use different values in development, staging and production",
+    "stop a leaked development key opening production"
+   ],
+   "use": "set up configuration for several deployment environments",
+   "not": [
+    "share one production key with every developer laptop"
+   ]
+  },
+  {
+   "group": "secrets",
+   "subject": "A secret in a frontend bundle",
+   "tier": 3,
+   "says": [
+    "is readable by every visitor",
+    "cannot be hidden by minification or obfuscation"
+   ],
+   "use": "consider putting an API key in browser JavaScript",
+   "not": [
+    "is safe because the source is compiled"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "Symmetric encryption",
+   "tier": 1,
+   "says": [
+    "uses the same key to encrypt and decrypt",
+    "is fast enough for bulk data"
+   ],
+   "use": "need to encrypt a large file quickly",
+   "not": [
+    "uses a public key to encrypt and a private key to decrypt"
+   ],
+   "like": [
+    "Asymmetric encryption",
+    "AES-GCM",
+    "ECB mode"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "Asymmetric encryption",
+   "tier": 2,
+   "says": [
+    "uses a public and private key pair",
+    "lets strangers send protected data without a shared secret"
+   ],
+   "use": "need two parties with no prior shared key to communicate securely",
+   "not": [
+    "uses a single shared key for both directions"
+   ],
+   "like": [
+    "Symmetric encryption"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "TLS",
+   "tier": 1,
+   "says": [
+    "protects data in transit between client and server",
+    "authenticates the server with a certificate",
+    "provides confidentiality and integrity for the connection"
+   ],
+   "use": "need to protect traffic between a browser and a site",
+   "not": [
+    "encrypts data stored on the server's disk"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "Encryption at rest",
+   "tier": 2,
+   "says": [
+    "protects stored data if disks or backups are stolen",
+    "does not stop an authorised application from reading the data"
+   ],
+   "use": "worry about a stolen backup tape",
+   "not": [
+    "protects data travelling across the network"
+   ],
+   "like": [
+    "TLS"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "A digital signature",
+   "tier": 3,
+   "says": [
+    "proves who produced data and that it was not altered",
+    "is created with a private key and checked with the public key"
+   ],
+   "use": "need to prove a release came from the publisher",
+   "not": [
+    "is made with a shared secret known to both sides"
+   ],
+   "like": [
+    "An HMAC"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "An HMAC",
+   "tier": 3,
+   "says": [
+    "authenticates a message using a shared secret key",
+    "lets the receiver detect tampering with the message"
+   ],
+   "use": "need two services holding the same secret to verify each other's messages",
+   "not": [
+    "can be verified by anyone holding only a public key"
+   ],
+   "like": [
+    "A digital signature"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "AES-GCM",
+   "tier": 4,
+   "says": [
+    "is authenticated encryption giving confidentiality and integrity",
+    "needs a unique nonce for every encryption under one key"
+   ],
+   "use": "want encryption that also detects tampering",
+   "not": [
+    "is a hash algorithm used to store passwords"
+   ],
+   "like": [
+    "Symmetric encryption",
+    "ECB mode"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "ECB mode",
+   "tier": 5,
+   "says": [
+    "encrypts identical plaintext blocks to identical ciphertext blocks",
+    "leaks patterns in the data"
+   ],
+   "use": "see a block cipher used with no IV or nonce",
+   "not": [
+    "is the recommended mode for encrypting images"
+   ],
+   "like": [
+    "Symmetric encryption",
+    "AES-GCM"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "A cryptographically secure random generator",
+   "tier": 3,
+   "says": [
+    "produces unpredictable values suitable for tokens and keys",
+    "should replace Math.random for anything secret"
+   ],
+   "use": "generate a password reset token",
+   "not": [
+    "is too slow to be used for session tokens"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "Base64",
+   "tier": 2,
+   "says": [
+    "is a reversible encoding with no key",
+    "provides no confidentiality"
+   ],
+   "use": "see a credential that looks scrambled but is only Base64",
+   "not": [
+    "is a form of encryption"
+   ]
+  },
+  {
+   "group": "abuse",
+   "subject": "Rate limiting",
+   "tier": 1,
+   "says": [
+    "caps how many requests a client may make in a time window",
+    "blunts password guessing and scraping"
+   ],
+   "use": "want to slow repeated login attempts",
+   "not": [
+    "permanently bans any visitor who fails once"
+   ],
+   "like": [
+    "A token bucket",
+    "Account lockout",
+    "A web application firewall",
+    "X-Forwarded-For spoofing",
+    "Password spraying",
+    "Credential stuffing"
+   ]
+  },
+  {
+   "group": "abuse",
+   "subject": "Credential stuffing",
+   "tier": 3,
+   "says": [
+    "replays username and password pairs leaked from other sites",
+    "succeeds because people reuse passwords"
+   ],
+   "use": "see many logins succeed with valid pairs from a past breach elsewhere",
+   "not": [
+    "tries every possible password for one account"
+   ],
+   "like": [
+    "Password spraying",
+    "Rate limiting",
+    "A token bucket",
+    "Account lockout",
+    "A web application firewall",
+    "X-Forwarded-For spoofing"
+   ]
+  },
+  {
+   "group": "abuse",
+   "subject": "Password spraying",
+   "tier": 3,
+   "says": [
+    "tries a few common passwords across many accounts",
+    "avoids per-account lockout"
+   ],
+   "use": "see one common password tried against every account",
+   "not": [
+    "replays pairs leaked from another service"
+   ],
+   "like": [
+    "Credential stuffing",
+    "Rate limiting",
+    "A token bucket",
+    "Account lockout",
+    "A web application firewall",
+    "X-Forwarded-For spoofing"
+   ]
+  },
+  {
+   "group": "abuse",
+   "subject": "Account lockout",
+   "tier": 3,
+   "says": [
+    "blocks sign-in after repeated failures",
+    "can itself be abused to lock real users out"
+   ],
+   "use": "weigh stopping guessing against denying service to a user",
+   "not": [
+    "has no downside for the legitimate user"
+   ],
+   "like": [
+    "Rate limiting",
+    "A token bucket",
+    "A web application firewall",
+    "X-Forwarded-For spoofing",
+    "Password spraying",
+    "Credential stuffing"
+   ]
+  },
+  {
+   "group": "abuse",
+   "subject": "X-Forwarded-For spoofing",
+   "tier": 5,
+   "says": [
+    "lets a client fake its address when the app trusts the header blindly",
+    "defeats per-IP rate limits"
+   ],
+   "use": "sit behind proxies and need the real client address",
+   "not": [
+    "only affects the TLS handshake"
+   ],
+   "like": [
+    "Rate limiting",
+    "A token bucket",
+    "Account lockout",
+    "A web application firewall",
+    "Password spraying",
+    "Credential stuffing"
+   ]
+  },
+  {
+   "group": "abuse",
+   "subject": "A token bucket",
+   "tier": 4,
+   "says": [
+    "allows short bursts up to a bucket size while enforcing an average rate",
+    "refills at a steady rate"
+   ],
+   "use": "want a limiter that tolerates brief bursts but caps the average",
+   "not": [
+    "resets its counter to zero at fixed clock boundaries"
+   ],
+   "like": [
+    "Rate limiting",
+    "Account lockout",
+    "A web application firewall",
+    "X-Forwarded-For spoofing",
+    "Password spraying",
+    "Credential stuffing"
+   ]
+  },
+  {
+   "group": "abuse",
+   "subject": "A web application firewall",
+   "tier": 3,
+   "says": [
+    "filters HTTP requests against rules for known attack patterns",
+    "is a layer and not a substitute for fixing the code"
+   ],
+   "use": "want a stopgap filter in front of a vulnerable app",
+   "not": [
+    "makes input validation in the application unnecessary"
+   ],
+   "like": [
+    "Rate limiting",
+    "A token bucket",
+    "Account lockout",
+    "X-Forwarded-For spoofing",
+    "Password spraying",
+    "Credential stuffing"
+   ]
+  },
+  {
+   "group": "logging",
+   "subject": "An audit log",
+   "tier": 1,
+   "says": [
+    "records who did what to which target and when",
+    "covers sensitive actions such as sign-ins, role changes and exports"
+   ],
+   "use": "need to answer who changed this setting",
+   "not": [
+    "is the same thing as debug output for developers"
+   ]
+  },
+  {
+   "group": "logging",
+   "subject": "Append-only log storage",
+   "tier": 3,
+   "says": [
+    "prevents past entries being edited or deleted",
+    "is kept apart from the system it records"
+   ],
+   "use": "want an attacker unable to erase their trail",
+   "not": [
+    "lets administrators tidy old entries freely"
+   ]
+  },
+  {
+   "group": "logging",
+   "subject": "Sensitive data in logs",
+   "tier": 2,
+   "says": [
+    "turns a log file into a credential leak",
+    "is avoided by redacting passwords and tokens before writing"
+   ],
+   "use": "see a request body written to the log verbatim",
+   "not": [
+    "is acceptable because logs are internal"
+   ]
+  },
+  {
+   "group": "logging",
+   "subject": "Structured logging",
+   "tier": 3,
+   "says": [
+    "writes events as key-value fields rather than free text",
+    "makes searching and alerting reliable"
+   ],
+   "use": "want to query logs by user or action",
+   "not": [
+    "is only useful for human reading"
+   ]
+  },
+  {
+   "group": "logging",
+   "subject": "Security alerting",
+   "tier": 3,
+   "says": [
+    "notifies a person when events cross a defined threshold",
+    "can fire on many failed sign-ins from one source"
+   ],
+   "use": "want to learn about an attack while it is happening",
+   "not": [
+    "replaces the need for logs"
+   ]
+  },
+  {
+   "group": "logging",
+   "subject": "Log injection",
+   "tier": 4,
+   "says": [
+    "forges log lines by placing newlines in untrusted input",
+    "is prevented by encoding input or using structured logging"
+   ],
+   "use": "see user input written straight into a plain-text log line",
+   "not": [
+    "gives the attacker a shell on the server"
+   ]
+  },
+  {
+   "group": "supply",
+   "subject": "A known dependency vulnerability",
+   "tier": 1,
+   "says": [
+    "is a published flaw in a library you include",
+    "is found by scanning against vulnerability databases"
+   ],
+   "use": "learn that a library you use has a CVE",
+   "not": [
+    "only matters for code you wrote yourself"
+   ]
+  },
+  {
+   "group": "supply",
+   "subject": "A transitive dependency",
+   "tier": 2,
+   "says": [
+    "is pulled in by a package you chose and not by you directly",
+    "can carry flaws that never appear in your manifest"
+   ],
+   "use": "audit what a project really includes",
+   "not": [
+    "is always listed explicitly in your own package file"
+   ]
+  },
+  {
+   "group": "supply",
+   "subject": "A lockfile",
+   "tier": 2,
+   "says": [
+    "pins exact dependency versions",
+    "gives repeatable builds across machines"
+   ],
+   "use": "want every build to install the same versions",
+   "not": [
+    "upgrades every dependency to the newest release automatically"
+   ]
+  },
+  {
+   "group": "supply",
+   "subject": "A software bill of materials",
+   "tier": 3,
+   "says": [
+    "lists the components and versions inside a build",
+    "lets you find affected products quickly when a flaw is announced"
+   ],
+   "use": "need to know which products contain a newly disclosed vulnerable library",
+   "not": [
+    "is a financial invoice for licences"
+   ]
+  },
+  {
+   "group": "supply",
+   "subject": "Typosquatting",
+   "tier": 3,
+   "says": [
+    "publishes a malicious package with a name close to a popular one",
+    "relies on a developer mistyping an install command"
+   ],
+   "use": "see a package named almost like a well-known library",
+   "not": [
+    "compromises the real maintainer's account"
+   ],
+   "like": [
+    "Dependency confusion"
+   ]
+  },
+  {
+   "group": "supply",
+   "subject": "Dependency confusion",
+   "tier": 5,
+   "says": [
+    "tricks a build into fetching a public package in place of an internal one with the same name",
+    "is reduced by scoped namespaces and pinning registries"
+   ],
+   "use": "worry that a build might pull a public package named like a private one",
+   "not": [
+    "relies on a typing mistake in the install command"
+   ],
+   "like": [
+    "Typosquatting"
+   ]
+  },
+  {
+   "group": "supply",
+   "subject": "Artifact signing",
+   "tier": 4,
+   "says": [
+    "lets consumers verify an artifact came from the expected publisher",
+    "detects tampering after the build"
+   ],
+   "use": "want users to confirm a release was not altered",
+   "not": [
+    "encrypts the artifact so only the publisher can open it"
+   ]
+  },
+  {
+   "group": "supply",
+   "subject": "Automated dependency updates",
+   "tier": 2,
+   "says": [
+    "open pull requests for newer versions",
+    "make patching a routine and not a crisis"
+   ],
+   "use": "want upgrades to arrive as small regular changes",
+   "not": [
+    "merge every update without any tests"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Threat modelling",
+   "tier": 1,
+   "says": [
+    "identifies what can go wrong in a design before it is built",
+    "asks what are we building, what can go wrong and what will we do about it"
+   ],
+   "use": "want to find design flaws before writing code",
+   "not": [
+    "is carried out only after a penetration test finds a bug"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "A data flow diagram",
+   "tier": 2,
+   "says": [
+    "shows processes, data stores, external entities and the flows between them",
+    "is the usual input to a STRIDE review"
+   ],
+   "use": "need a picture to review a system for threats",
+   "not": [
+    "lists every vulnerability found in a scan"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "A trust boundary",
+   "tier": 2,
+   "says": [
+    "marks where data passes between different levels of trust",
+    "is where authentication and validation checks belong"
+   ],
+   "use": "decide where to validate incoming data",
+   "not": [
+    "is the outer wall of the office building"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "The attack surface",
+   "tier": 2,
+   "says": [
+    "is the sum of the points where an attacker can try to get in or extract data",
+    "grows with each endpoint, feature and exposed service"
+   ],
+   "use": "want to reduce what an attacker can reach by removing unused endpoints",
+   "not": [
+    "is measured only by the number of lines of code"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Defence in depth",
+   "tier": 2,
+   "says": [
+    "layers several controls so one failure does not expose everything",
+    "assumes any single layer may be bypassed"
+   ],
+   "use": "design protection that survives one control failing",
+   "not": [
+    "relies on one very strong perimeter control"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Zero trust",
+   "tier": 5,
+   "says": [
+    "treats network location as no proof of trust",
+    "verifies every request regardless of where it originates"
+   ],
+   "use": "stop assuming everything inside the office network is safe",
+   "not": [
+    "trusts any request that arrives from the internal network"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Risk",
+   "tier": 3,
+   "says": [
+    "combines the likelihood of a threat with its impact",
+    "guides which threats to treat first"
+   ],
+   "use": "need to rank which threat to fix first",
+   "not": [
+    "is zero once a control exists"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Spoofing",
+   "tier": 2,
+   "says": [
+    "pretends to be another user or system",
+    "violates authentication"
+   ],
+   "use": "see an attacker send requests as someone else",
+   "not": [
+    "violates availability"
+   ],
+   "like": [
+    "Tampering",
+    "Elevation of privilege"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Tampering",
+   "tier": 2,
+   "says": [
+    "alters data or code without permission",
+    "violates integrity"
+   ],
+   "use": "see an attacker modify a price in transit",
+   "not": [
+    "violates confidentiality"
+   ],
+   "like": [
+    "Spoofing",
+    "Information disclosure"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Repudiation",
+   "tier": 3,
+   "says": [
+    "lets someone deny an action when no reliable record exists",
+    "is countered by trustworthy audit logs"
+   ],
+   "use": "hear a user claim they never approved a transfer",
+   "not": [
+    "is an attacker reading data they should not"
+   ],
+   "like": [
+    "Tampering"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Information disclosure",
+   "tier": 2,
+   "says": [
+    "exposes data to someone not authorised to see it",
+    "violates confidentiality"
+   ],
+   "use": "find a verbose error leaking internal details",
+   "not": [
+    "violates integrity"
+   ],
+   "like": [
+    "Tampering"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Denial of service",
+   "tier": 2,
+   "says": [
+    "exhausts capacity so legitimate users cannot be served",
+    "violates availability"
+   ],
+   "use": "see an attacker flood an endpoint until it stops responding",
+   "not": [
+    "violates authorisation"
+   ],
+   "like": [
+    "Elevation of privilege"
+   ]
+  },
+  {
+   "group": "threat",
+   "subject": "Elevation of privilege",
+   "tier": 2,
+   "says": [
+    "gains abilities beyond those granted",
+    "violates authorisation"
+   ],
+   "use": "see a normal user reach an admin function",
+   "not": [
+    "violates non-repudiation"
+   ],
+   "like": [
+    "Spoofing"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "Shifting left",
+   "tier": 1,
+   "says": [
+    "moves security checks earlier in the lifecycle",
+    "makes flaws cheaper to fix"
+   ],
+   "use": "want to find security flaws at design and coding time",
+   "not": [
+    "delays security testing until after release"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "Secure code review",
+   "tier": 3,
+   "says": [
+    "has a second person examine changes for security flaws",
+    "focuses on authentication, input handling and secrets"
+   ],
+   "use": "want a human to spot logic flaws that scanners miss",
+   "not": [
+    "is replaced entirely by a linter"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "Static application security testing",
+   "tier": 3,
+   "says": [
+    "analyses source code without running it",
+    "can flag injection patterns early",
+    "produces false positives that need triage"
+   ],
+   "use": "want automated scanning of code on every pull request",
+   "not": [
+    "tests a running site from outside with no source access"
+   ],
+   "like": [
+    "Dynamic application security testing",
+    "A penetration test",
+    "Fuzzing"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "Dynamic application security testing",
+   "tier": 3,
+   "says": [
+    "tests a running application from the outside",
+    "finds runtime and configuration issues without seeing source lines"
+   ],
+   "use": "want to probe a deployed staging site like an attacker",
+   "not": [
+    "reads the source code for patterns"
+   ],
+   "like": [
+    "Static application security testing",
+    "A penetration test",
+    "Fuzzing"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "A penetration test",
+   "tier": 3,
+   "says": [
+    "has skilled testers attempt to breach a system within an agreed scope",
+    "is a point-in-time assessment"
+   ],
+   "use": "want an expert to try to break in under agreed rules",
+   "not": [
+    "proves that no vulnerabilities remain"
+   ],
+   "like": [
+    "Static application security testing",
+    "Dynamic application security testing",
+    "Fuzzing"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "Fuzzing",
+   "tier": 5,
+   "says": [
+    "feeds large volumes of malformed or random input to a program",
+    "finds crashes and parsing flaws"
+   ],
+   "use": "want to stress a parser with unexpected input",
+   "not": [
+    "reviews the design for threats"
+   ],
+   "like": [
+    "Static application security testing",
+    "Dynamic application security testing",
+    "A penetration test"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "Security requirements",
+   "tier": 2,
+   "says": [
+    "state the protections a feature must provide",
+    "are written before the design is settled"
+   ],
+   "use": "begin a new feature that handles personal data",
+   "not": [
+    "are added after the penetration test"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "Secure by default",
+   "tier": 2,
+   "says": [
+    "ships with the safest settings enabled",
+    "makes users opt out of protection and not opt in"
+   ],
+   "use": "choose the default value for a risky setting",
+   "not": [
+    "ships with every feature enabled for convenience"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "A CVE identifier",
+   "tier": 2,
+   "says": [
+    "is a public identifier for a specific known vulnerability",
+    "lets tools and teams refer to the same flaw"
+   ],
+   "use": "need to look up a published flaw in a library",
+   "not": [
+    "is a score from 0 to 10"
+   ],
+   "like": [
+    "A CVSS score"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "A CVSS score",
+   "tier": 3,
+   "says": [
+    "rates the technical severity of a vulnerability",
+    "does not by itself reflect your own business context"
+   ],
+   "use": "need to rank vulnerabilities by severity before triage",
+   "not": [
+    "identifies a vulnerability uniquely"
+   ],
+   "like": [
+    "A CVE identifier"
+   ]
+  },
+  {
+   "group": "sdlc",
+   "subject": "A security regression test",
+   "tier": 3,
+   "says": [
+    "keeps a fixed flaw from coming back",
+    "encodes the original exploit as an automated test"
+   ],
+   "use": "have just fixed an access control bug",
+   "not": [
+    "is run once by hand before release"
+   ]
+  },
+  {
+   "group": "privacy",
+   "subject": "Privacy by design",
+   "tier": 1,
+   "says": [
+    "builds privacy protection into the design from the start",
+    "makes the privacy-friendly option the default"
+   ],
+   "use": "plan a new feature that handles personal data",
+   "not": [
+    "adds privacy notices after launch"
+   ]
+  },
+  {
+   "group": "privacy",
+   "subject": "Data minimisation",
+   "tier": 1,
+   "says": [
+    "collects only what the purpose needs",
+    "reduces what a breach can expose"
+   ],
+   "use": "decide which fields a signup form needs",
+   "not": [
+    "collects everything in case it proves useful later"
+   ]
+  },
+  {
+   "group": "privacy",
+   "subject": "Purpose limitation",
+   "tier": 3,
+   "says": [
+    "uses personal data only for the reasons stated when it was collected",
+    "requires a new basis before data is reused for a different purpose"
+   ],
+   "use": "consider reusing support emails for marketing",
+   "not": [
+    "permits any reuse as long as the data is stored securely"
+   ]
+  },
+  {
+   "group": "privacy",
+   "subject": "A retention limit",
+   "tier": 2,
+   "says": [
+    "deletes data when it is no longer needed",
+    "is set deliberately for each type of data"
+   ],
+   "use": "decide how long to keep old records",
+   "not": [
+    "keeps data forever in case it is useful"
+   ]
+  },
+  {
+   "group": "privacy",
+   "subject": "Pseudonymisation",
+   "tier": 3,
+   "says": [
+    "replaces identifiers with a token while the mapping is held separately",
+    "still counts as personal data because it can be reversed with the extra information"
+   ],
+   "use": "want analysts to work with data without seeing names",
+   "not": [
+    "makes re-identification impossible"
+   ],
+   "like": [
+    "Anonymisation"
+   ]
+  },
+  {
+   "group": "privacy",
+   "subject": "Anonymisation",
+   "tier": 5,
+   "says": [
+    "removes the link to a person irreversibly",
+    "is hard to achieve because combined fields can re-identify people"
+   ],
+   "use": "want data to fall outside personal-data rules",
+   "not": [
+    "is achieved by replacing a name with a user id"
+   ],
+   "like": [
+    "Pseudonymisation"
+   ]
+  },
+  {
+   "group": "privacy",
+   "subject": "Personal data in URLs",
+   "tier": 3,
+   "says": [
+    "ends up in browser history, proxy logs and server logs",
+    "is avoided by sending it in the request body"
+   ],
+   "use": "consider putting an email address in a query string",
+   "not": [
+    "is safe because HTTPS encrypts the URL in logs"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's password storage",
+   "tier": 2,
+   "says": [
+    "stores values shaped scrypt$N$r$p$salt$hash",
+    "keeps the cost settings inside each stored hash",
+    "upgrades old salt:hash values the next time the person signs in",
+    "compares hashes with timingSafeEqual and hashes asynchronously"
+   ],
+   "use": "need to know how GGLearn keeps a password",
+   "not": [
+    "stores passwords encrypted so an admin can recover them"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLearn session cookie",
+   "tier": 2,
+   "says": [
+    "holds the user id, issued-at time, version and an HMAC signature",
+    "is httpOnly, sameSite lax and secure in production",
+    "has its 30-day lifetime enforced by the server and not by the cookie expiry"
+   ],
+   "use": "need to know what GGLearn puts in a session cookie",
+   "not": [
+    "holds the user's password hash so the server can re-verify it"
+   ],
+   "like": [
+    "GGLearn's session_version",
+    "GGLearn's requireUser guard",
+    "GGLearn's rank rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's session_version",
+   "tier": 3,
+   "says": [
+    "lets the server revoke every older session of a user at once",
+    "is used for Sign out everywhere and when someone is offboarded"
+   ],
+   "use": "need to log a user out of all devices in GGLearn",
+   "not": [
+    "makes logins faster"
+   ],
+   "like": [
+    "GGLearn's requireUser guard",
+    "GGLearn's rank rule",
+    "The GGLearn session cookie"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's requireUser guard",
+   "tier": 2,
+   "says": [
+    "re-reads the user from the database on each request",
+    "makes offboarding and role changes take effect immediately"
+   ],
+   "use": "want a role change in GGLearn to apply without waiting for a new login",
+   "not": [
+    "trusts the role stored inside the cookie"
+   ],
+   "like": [
+    "GGLearn's session_version",
+    "GGLearn's rank rule",
+    "The GGLearn session cookie"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's rank rule",
+   "tier": 3,
+   "says": [
+    "stops a caller acting on someone of equal or higher rank",
+    "was added after a manager could offboard an admin"
+   ],
+   "use": "see a GGLearn manager try to offboard an admin",
+   "not": [
+    "lets a manager act on any user except themselves"
+   ],
+   "like": [
+    "GGLearn's session_version",
+    "GGLearn's requireUser guard",
+    "The GGLearn session cookie"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLearn drillCheck gap",
+   "tier": 3,
+   "says": [
+    "returned the answer to any exam question for any signed-in user",
+    "was broken access control because enrolment and level were not checked"
+   ],
+   "use": "recall the GGLearn flaw that could reveal exam answers",
+   "not": [
+    "was a SQL injection in the login form"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's invite-only signup",
+   "tier": 2,
+   "says": [
+    "replaced open self-signup",
+    "creates accounts through invite tokens at a join link"
+   ],
+   "use": "learn how a new person gets a GGLearn account",
+   "not": [
+    "lets anyone on the internet register"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's rate limiter",
+   "tier": 3,
+   "says": [
+    "lives in process memory",
+    "assumes a single PM2 process",
+    "resets when the process restarts"
+   ],
+   "use": "scale GGLearn to several processes and ask what breaks the login limit",
+   "not": [
+    "is stored in a shared database table"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "TRUSTED_PROXY_HOPS",
+   "tier": 5,
+   "says": [
+    "sets how many hops from the end of X-Forwarded-For hold the client address",
+    "defaults to 2 behind Cloudflare and Apache",
+    "ignores anything a visitor added to the header"
+   ],
+   "use": "need the real client address behind Cloudflare and Apache",
+   "not": [
+    "takes the first entry of X-Forwarded-For as the client"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's Apache Cloudflare-only rule",
+   "tier": 5,
+   "says": [
+    "restricts Apache to Cloudflare's published address ranges",
+    "stops direct requests that forge X-Forwarded-For",
+    "is regenerated by a script that refuses to write a suspicious address list"
+   ],
+   "use": "want nobody to reach the origin without passing Cloudflare",
+   "not": [
+    "is applied automatically as soon as the file exists, with no vhost change"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggmoney's Cloudflare SSL mode",
+   "tier": 3,
+   "says": [
+    "is Full (strict)",
+    "avoids Flexible mode, which would send tokens unencrypted to the origin"
+   ],
+   "use": "choose the Cloudflare SSL mode for ggmoney",
+   "not": [
+    "is Flexible so that the origin needs no certificate"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "ggsocial's stored platform tokens",
+   "tier": 3,
+   "says": [
+    "are encrypted with APP_SECRET",
+    "become unreadable if that key is lost"
+   ],
+   "use": "ask what happens to saved platform tokens if APP_SECRET changes",
+   "not": [
+    "are stored as plain text in the database"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's security headers",
+   "tier": 3,
+   "says": [
+    "include HSTS, Referrer-Policy and Permissions-Policy",
+    "add a CSP covering frame, form, base-uri and object sources",
+    "switch off the X-Powered-By header"
+   ],
+   "use": "check which browser protections GGLearn already sends",
+   "not": [
+    "include a complete script-src CSP with nonces"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLearn's open security items",
+   "tier": 3,
+   "says": [
+    "include multi-factor authentication, which is not built",
+    "include a breached-password check left open by choice",
+    "include a full script-src CSP that needs nonces"
+   ],
+   "use": "ask what the GGLearn review still lists as unfinished",
+   "not": [
+    "have all been fixed in the latest review"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the main reason to store a salted slow hash of a password instead of the password itself?",
+   "right": "A leaked database does not directly reveal the passwords",
+   "wrong": [
+    "It lets support staff read forgotten passwords",
+    "It makes the login page load faster",
+    "It removes the need for HTTPS"
+   ],
+   "tier": 1,
+   "why": "A hash cannot be reversed, so a leak does not hand attackers the passwords."
+  },
+  {
+   "q": "Where must an access control check be enforced to be trustworthy?",
+   "right": "On the server, for every sensitive request",
+   "wrong": [
+    "In the browser, by hiding the button",
+    "In the page's CSS",
+    "Only at login time"
+   ],
+   "tier": 1,
+   "why": "Anything in the client can be bypassed by calling the server directly."
+  },
+  {
+   "q": "Which of these is the strongest primary defence against SQL injection?",
+   "right": "Parameterised queries",
+   "wrong": [
+    "Removing single quotes from input",
+    "Hiding database errors",
+    "Making the database port private only"
+   ],
+   "tier": 1,
+   "why": "Separating SQL from data stops data being parsed as code."
+  },
+  {
+   "q": "Why should secrets not be committed to source control?",
+   "right": "History keeps them even after the file is deleted, and many people can read the repository",
+   "wrong": [
+    "Git cannot store text with symbols",
+    "They make builds slower",
+    "Secrets are only valid for one commit"
+   ],
+   "tier": 1,
+   "why": "A committed secret must be treated as leaked."
+  },
+  {
+   "q": "Which cookie flag stops page JavaScript from reading a session cookie?",
+   "right": "HttpOnly",
+   "wrong": [
+    "Secure",
+    "SameSite",
+    "Path"
+   ],
+   "tier": 2,
+   "why": "HttpOnly hides the cookie from scripts; Secure restricts it to HTTPS."
+  },
+  {
+   "q": "A teammate says Base64-encoding a token makes it safe to put in a public URL. What is the problem?",
+   "right": "Base64 is a reversible encoding, so it hides nothing",
+   "wrong": [
+    "Base64 is too slow",
+    "Base64 output is too long for URLs",
+    "Base64 only works on numbers"
+   ],
+   "tier": 2,
+   "why": "Anyone can decode it with no key."
+  },
+  {
+   "q": "What should a login error message say when the password is wrong?",
+   "right": "A generic message that does not reveal whether the email exists",
+   "wrong": [
+    "Tell the user the email is not registered",
+    "Tell the user which characters were correct",
+    "Include the database error to help debugging"
+   ],
+   "tier": 2,
+   "why": "Different messages allow account enumeration."
+  },
+  {
+   "q": "What is the purpose of an audit log?",
+   "right": "To record who did what, to which target and when, for sensitive actions",
+   "wrong": [
+    "To store application passwords for recovery",
+    "To speed up database queries",
+    "To replace backups"
+   ],
+   "tier": 2,
+   "why": "Audit logs give accountability and support investigation."
+  },
+  {
+   "q": "Which is a sound reason to keep dependency versions pinned in a lockfile?",
+   "right": "Builds are repeatable and an unexpected new version cannot slip in silently",
+   "wrong": [
+    "It guarantees the dependencies have no vulnerabilities",
+    "It makes the dependencies smaller",
+    "It removes the need to update them"
+   ],
+   "tier": 2,
+   "why": "Pinning gives repeatability, not safety; you still need to update deliberately."
+  },
+  {
+   "q": "A JWT is signed with HS256 and stored in localStorage with a 30-day expiry. A user's device is stolen. What is the real limitation?",
+   "right": "The server cannot revoke the token before expiry without keeping extra state",
+   "wrong": [
+    "The signature stops working after the device is stolen",
+    "JWTs cannot be sent over HTTPS",
+    "The payload is encrypted so it cannot be inspected"
+   ],
+   "tier": 3,
+   "why": "Stateless tokens need a revocation mechanism such as a version or deny list."
+  },
+  {
+   "q": "Why is CORS not an access control mechanism?",
+   "right": "The browser enforces it, so non-browser clients ignore it",
+   "wrong": [
+    "It only works for GET requests",
+    "It requires a login",
+    "It encrypts the response"
+   ],
+   "tier": 3,
+   "why": "CORS relaxes a browser rule; the server still has to authorise each request."
+  },
+  {
+   "q": "A search page shows the query back to the user inside the HTML. Which fix is most appropriate?",
+   "right": "Encode the output for the HTML context",
+   "wrong": [
+    "Strip the word script from the input",
+    "Convert the query to lower case",
+    "Make the page POST only"
+   ],
+   "tier": 3,
+   "why": "Context-aware output encoding is the main XSS defence."
+  },
+  {
+   "q": "What does SSRF let an attacker do?",
+   "right": "Make the server request a URL of the attacker's choosing, such as an internal service",
+   "wrong": [
+    "Run script in another user's browser",
+    "Read another user's cookies directly",
+    "Guess a password"
+   ],
+   "tier": 3,
+   "why": "The server's network position becomes the attacker's."
+  },
+  {
+   "q": "Which design choice best limits SSRF risk in a feature that fetches a user-supplied URL?",
+   "right": "Allow-list the destinations and block private and metadata address ranges",
+   "wrong": [
+    "Remove the http:// prefix",
+    "Fetch the URL from the browser and not the server",
+    "Only check the URL ends in .com"
+   ],
+   "tier": 3,
+   "why": "Deny lists and string checks are easy to bypass; allow-listing is stronger."
+  },
+  {
+   "q": "What does STRIDE stand for in threat modelling?",
+   "right": "Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege",
+   "wrong": [
+    "Secrets, Tokens, Roles, Injection, Defaults, Encryption",
+    "Scanning, Testing, Review, Isolation, Detection, Escalation",
+    "Sessions, Transport, Rotation, Integrity, Disclosure, Exposure"
+   ],
+   "tier": 3,
+   "why": "It is a category checklist applied to a data flow diagram."
+  },
+  {
+   "q": "Why can a successful password reset email flow become an account takeover path?",
+   "right": "Whoever controls the mailbox or can guess or reuse the reset token controls the account",
+   "wrong": [
+    "Reset emails are never encrypted by TLS",
+    "Resetting always deletes the old password hash",
+    "Email cannot carry links"
+   ],
+   "tier": 3,
+   "why": "Reset tokens must be random, single-use and short-lived."
+  },
+  {
+   "q": "Why should a login handler compare a submitted token with the expected one using a constant-time function?",
+   "right": "Ordinary comparison can leak how many leading characters matched through timing",
+   "wrong": [
+    "Constant-time functions are faster",
+    "Ordinary comparison cannot compare strings",
+    "It stops the token being logged"
+   ],
+   "tier": 4,
+   "why": "Timing differences can be measured and used to recover secrets."
+  },
+  {
+   "q": "Why is ECB mode a poor choice for encrypting structured data?",
+   "right": "Identical plaintext blocks give identical ciphertext blocks, which reveals patterns",
+   "wrong": [
+    "It only supports 64-bit keys",
+    "It cannot decrypt",
+    "It requires a public key"
+   ],
+   "tier": 4,
+   "why": "Use an authenticated mode such as GCM with a unique nonce."
+  },
+  {
+   "q": "What goes wrong when AES-GCM reuses a nonce under the same key?",
+   "right": "Confidentiality and authentication can both be broken",
+   "wrong": [
+    "Nothing; the nonce is only decorative",
+    "Decryption becomes slower",
+    "The key is automatically rotated"
+   ],
+   "tier": 4,
+   "why": "A unique nonce per encryption is a hard requirement."
+  },
+  {
+   "q": "Why does PKCE help a mobile app using the authorisation code flow?",
+   "right": "An intercepted authorisation code cannot be redeemed without the secret the app created",
+   "wrong": [
+    "It encrypts the user's password",
+    "It removes the need for TLS",
+    "It extends the access token lifetime"
+   ],
+   "tier": 4,
+   "why": "PKCE ties the code exchange to the client that started it."
+  },
+  {
+   "q": "A coupon endpoint checks the coupon is unused, then marks it used in a separate step. What attack does this invite?",
+   "right": "A race condition, where two parallel requests both pass the check",
+   "wrong": [
+    "SQL injection",
+    "Session fixation",
+    "Clickjacking"
+   ],
+   "tier": 4,
+   "why": "Make the check and the update one atomic operation."
+  },
+  {
+   "q": "What does a Content Security Policy chiefly add?",
+   "right": "A browser-side limit on where scripts and content may load from, reducing XSS damage",
+   "wrong": [
+    "Encryption of cookies",
+    "Server-side input validation",
+    "Protection against SQL injection"
+   ],
+   "tier": 4,
+   "why": "CSP is defence in depth, not a replacement for encoding."
+  },
+  {
+   "q": "Why is a per-IP login limit alone not enough against a botnet?",
+   "right": "The attack is spread across many addresses, so each stays under the limit",
+   "wrong": [
+    "IP addresses cannot be recorded",
+    "Limits only work on GET requests",
+    "Botnets never use passwords"
+   ],
+   "tier": 4,
+   "why": "Also limit per account and watch for patterns."
+  },
+  {
+   "q": "Which is the best fix for a production API key found in an old commit?",
+   "right": "Revoke and replace the key, then investigate use, and scrub history as a secondary step",
+   "wrong": [
+    "Delete the file in a new commit",
+    "Rename the repository",
+    "Make the repository private only"
+   ],
+   "tier": 4,
+   "why": "The secret is compromised once exposed; removal alone does not undo that."
+  },
+  {
+   "q": "What attack does JWT algorithm confusion exploit?",
+   "right": "A verifier that trusts the algorithm named in the token header, such as accepting none",
+   "wrong": [
+    "A server that stores tokens in cookies",
+    "A token that expires too soon",
+    "A client that sends tokens over HTTP"
+   ],
+   "tier": 5,
+   "why": "The server must fix the accepted algorithms itself."
+  },
+  {
+   "q": "What does envelope encryption let you do that single-key encryption does not?",
+   "right": "Rotate the master key by re-wrapping data keys without re-encrypting all the data",
+   "wrong": [
+    "Skip key management entirely",
+    "Use the same key for every customer safely",
+    "Make ciphertext shorter"
+   ],
+   "tier": 5,
+   "why": "Data keys are encrypted under the master key."
+  },
+  {
+   "q": "Why can anonymisation be harder than it looks?",
+   "right": "Combinations of ordinary fields such as postcode, birth date and sex can re-identify people",
+   "wrong": [
+    "Names cannot be removed from databases",
+    "Anonymised data cannot be stored",
+    "It requires a licence"
+   ],
+   "tier": 5,
+   "why": "Quasi-identifiers combine into unique fingerprints."
+  },
+  {
+   "q": "What makes a dependency confusion attack possible?",
+   "right": "A build tool preferring a public package over an internal one with the same name",
+   "wrong": [
+    "A package with a typo in its name",
+    "A lockfile that is missing",
+    "A repository that is public"
+   ],
+   "tier": 5,
+   "why": "Scoped names and registry pinning prevent it."
+  },
+  {
+   "q": "Why pin a CI action to a full commit hash rather than a tag?",
+   "right": "A tag can be moved to different code, while a hash cannot",
+   "wrong": [
+    "Hashes download faster",
+    "Tags are not supported in CI",
+    "Hashes include the licence"
+   ],
+   "tier": 5,
+   "why": "Pinning protects against a moved or hijacked tag."
+  },
+  {
+   "q": "What is wrong with this query?",
+   "right": "It builds SQL by joining user input, which allows SQL injection",
+   "wrong": [
+    "It selects every column",
+    "It uses double quotes",
+    "It compares email with an equals sign"
+   ],
+   "tier": 2,
+   "why": "Use a placeholder and pass the value separately.",
+   "code": "const sql = \"SELECT * FROM users WHERE email = '\" + req.body.email + \"'\";\ndb.query(sql);"
+  },
+  {
+   "q": "Which change fixes the injection safely?",
+   "right": "db.query(\"SELECT * FROM users WHERE email = $1\", [email])",
+   "wrong": [
+    "db.query(\"SELECT * FROM users WHERE email = '\" + email.replace(\"'\", \"\") + \"'\")",
+    "db.query(\"SELECT * FROM users WHERE email = '\" + email.toLowerCase() + \"'\")",
+    "db.query(`SELECT * FROM users WHERE email = '${email}'`)"
+   ],
+   "tier": 2,
+   "why": "Placeholders separate code from data; quote stripping is bypassable.",
+   "code": "const email = req.body.email;"
+  },
+  {
+   "q": "What is the vulnerability in this route?",
+   "right": "Any signed-in user can read any invoice by changing the id, because ownership is not checked",
+   "wrong": [
+    "The route should use POST",
+    "The id is too short",
+    "The route returns JSON"
+   ],
+   "tier": 3,
+   "why": "Add a check that the invoice belongs to the caller.",
+   "code": "app.get(\"/invoices/:id\", requireLogin, async (req, res) => {\n  const inv = await db.invoices.findById(req.params.id);\n  res.json(inv);\n});"
+  },
+  {
+   "q": "What risk does this code carry?",
+   "right": "The user-controlled name can contain ../ and read files outside the uploads folder",
+   "wrong": [
+    "The file may be too large",
+    "readFile blocks forever",
+    "The response lacks a status code"
+   ],
+   "tier": 3,
+   "why": "Resolve the path and confirm it stays inside the base directory.",
+   "code": "app.get(\"/download\", (req, res) => {\n  const file = fs.readFileSync(\"/srv/uploads/\" + req.query.name);\n  res.send(file);\n});"
+  },
+  {
+   "q": "What is the most serious problem here?",
+   "right": "The host is concatenated into a shell command, enabling command injection",
+   "wrong": [
+    "ping needs root",
+    "The callback has no error handling",
+    "exec is deprecated in all languages"
+   ],
+   "tier": 3,
+   "why": "Avoid the shell and validate the host against a strict format.",
+   "code": "exec(\"ping -c 1 \" + req.query.host, (err, out) => res.send(out));"
+  },
+  {
+   "q": "What does this code allow an attacker to do?",
+   "right": "Set their own role (for example admin) by adding it to the request body",
+   "wrong": [
+    "Read other users' passwords",
+    "Bypass TLS",
+    "Run SQL"
+   ],
+   "tier": 3,
+   "why": "Pick the allowed fields explicitly instead of passing the whole body.",
+   "code": "app.post(\"/signup\", async (req, res) => {\n  const user = await User.create(req.body);\n  res.json(user);\n});"
+  },
+  {
+   "q": "Why is this password storage insecure?",
+   "right": "SHA-256 is fast and unsalted, so stolen hashes can be cracked at scale",
+   "wrong": [
+    "SHA-256 cannot be computed in Node",
+    "hex encoding is reversible",
+    "The password is too short"
+   ],
+   "tier": 3,
+   "why": "Use a salted, slow algorithm such as scrypt, bcrypt or Argon2.",
+   "code": "const hash = crypto.createHash(\"sha256\").update(password).digest(\"hex\");\nawait db.users.insert({ email, hash });"
+  },
+  {
+   "q": "Why is this reset token generation weak?",
+   "right": "Math.random is not cryptographically secure, so tokens can be predicted",
+   "wrong": [
+    "The token is too long",
+    "toString cannot take a base",
+    "Tokens must be numbers"
+   ],
+   "tier": 3,
+   "why": "Use crypto.randomBytes or an equivalent secure generator.",
+   "code": "const token = Math.random().toString(36).slice(2);\nawait saveResetToken(user.id, token);"
+  },
+  {
+   "q": "What does this redirect handler allow?",
+   "right": "An open redirect, sending victims from a trusted domain to an attacker's site",
+   "wrong": [
+    "SQL injection",
+    "Session fixation",
+    "A buffer overflow"
+   ],
+   "tier": 4,
+   "why": "Only redirect to relative paths or an allow-list of destinations.",
+   "code": "app.get(\"/login/done\", (req, res) => {\n  res.redirect(req.query.next);\n});"
+  },
+  {
+   "q": "Which cookie flags are missing from this session cookie?",
+   "right": "HttpOnly, Secure and a SameSite attribute",
+   "wrong": [
+    "Domain and Path only",
+    "Expires only",
+    "Content-Type"
+   ],
+   "tier": 3,
+   "why": "Set all three so scripts, plain HTTP and cross-site sends are limited.",
+   "code": "res.cookie(\"sid\", sessionId);"
+  },
+  {
+   "q": "What is the risk in this front-end code?",
+   "right": "Untrusted data is written as HTML, enabling DOM-based XSS",
+   "wrong": [
+    "The hash cannot be read",
+    "querySelector is slow",
+    "The element id is invalid"
+   ],
+   "tier": 3,
+   "why": "Use textContent or encode before inserting.",
+   "code": "const name = location.hash.slice(1);\ndocument.getElementById(\"greeting\").innerHTML = \"Welcome \" + name;"
+  },
+  {
+   "q": "What is the risk when a logger writes this line?",
+   "right": "The credential ends up in the log files",
+   "wrong": [
+    "The log becomes append-only",
+    "The email is encrypted twice",
+    "The log level is wrong"
+   ],
+   "tier": 4,
+   "why": "Log the event and the user id; never passwords or tokens.",
+   "code": "logger.info(\"login attempt\", { email, password });"
+  },
+  {
+   "q": "Why is this fetch endpoint dangerous?",
+   "right": "It requests any URL the caller gives, including internal addresses, which is SSRF",
+   "wrong": [
+    "fetch does not support HTTPS",
+    "It returns text instead of JSON",
+    "It lacks caching headers"
+   ],
+   "tier": 4,
+   "why": "Allow-list destinations and block private ranges.",
+   "code": "app.get(\"/preview\", async (req, res) => {\n  const r = await fetch(req.query.url);\n  res.send(await r.text());\n});"
+  },
+  {
+   "q": "What does this Python code expose?",
+   "right": "Remote code execution, since unpickling untrusted data can run attacker-chosen code",
+   "wrong": [
+    "A memory leak",
+    "Weak hashing",
+    "A timing side channel"
+   ],
+   "tier": 5,
+   "why": "Never deserialise untrusted data with pickle; use a data-only format.",
+   "code": "import pickle\nobj = pickle.loads(request.data)"
+  },
+  {
+   "q": "What is the flaw in this CORS configuration?",
+   "right": "Reflecting any origin while allowing credentials lets any site read authenticated responses",
+   "wrong": [
+    "It blocks all cross-origin calls",
+    "It only affects image requests",
+    "It disables cookies"
+   ],
+   "tier": 4,
+   "why": "Allow only named trusted origins when credentials are involved.",
+   "code": "res.setHeader(\"Access-Control-Allow-Origin\", req.headers.origin);\nres.setHeader(\"Access-Control-Allow-Credentials\", \"true\");"
+  },
+  {
+   "q": "What is the risk in how this token is checked?",
+   "right": "String comparison can leak timing information about the expected token",
+   "wrong": [
+    "Strict equality is deprecated",
+    "The token is compared as a number",
+    "The header name is wrong"
+   ],
+   "tier": 4,
+   "why": "Use a constant-time comparison such as crypto.timingSafeEqual on equal-length buffers.",
+   "code": "if (req.headers[\"x-api-token\"] === process.env.API_TOKEN) next();"
+  },
+  {
+   "q": "What is the flaw in using jwt.decode for authentication here?",
+   "right": "decode does not verify the signature, so a forged token is accepted",
+   "wrong": [
+    "decode is slower than verify",
+    "decode only works with RS256",
+    "decode removes the expiry"
+   ],
+   "tier": 4,
+   "why": "Use verify with a fixed algorithm and key.",
+   "code": "const claims = jwt.decode(token);\nif (claims.role === \"admin\") allow();"
+  },
+  {
+   "q": "A team is adding a feature that lets users upload profile photos. What should they do first?",
+   "right": "Validate type and size on the server, store files outside the web root under generated names",
+   "wrong": [
+    "Trust the file extension the browser sends",
+    "Store files in the web root under their original names",
+    "Accept any type to avoid user complaints"
+   ],
+   "tier": 3,
+   "why": "Original names and extensions invite path and execution problems."
+  },
+  {
+   "q": "A developer says client-side form validation is enough. What is the best reply?",
+   "right": "Validate on the server too, because requests can bypass the browser",
+   "wrong": [
+    "Agree; the browser is the trusted tool",
+    "Move validation to a CSS rule",
+    "Validate only in the database"
+   ],
+   "tier": 3,
+   "why": "Client checks are for usability, not security."
+  },
+  {
+   "q": "Logins start succeeding from many accounts with valid password pairs, each account tried once from different IPs. What is most likely happening?",
+   "right": "Credential stuffing using pairs leaked from another service",
+   "wrong": [
+    "A SQL injection attack",
+    "A denial of service attack",
+    "Session fixation"
+   ],
+   "tier": 4,
+   "why": "Reused passwords and one attempt per account fit credential stuffing."
+  },
+  {
+   "q": "A manager can promote anyone to admin through a form field the server accepts as-is. Which control would have prevented this?",
+   "right": "Server-side checks that the caller outranks the target and may set that role",
+   "wrong": [
+    "Hiding the field in the form",
+    "Making the field read-only in CSS",
+    "Logging the change"
+   ],
+   "tier": 4,
+   "why": "Role changes must be authorised on the server."
+  },
+  {
+   "q": "A security scanner reports 200 findings on the first run. What is the best way to start?",
+   "right": "Triage by exposure and impact, fix the highest risks first, and tune out false positives",
+   "wrong": [
+    "Fix them in alphabetical order",
+    "Disable the scanner",
+    "Treat every finding as critical and stop releases"
+   ],
+   "tier": 4,
+   "why": "Triage by real risk avoids both paralysis and neglect."
+  },
+  {
+   "q": "A developer wants to store API keys in the frontend config because the app is private. What is the best advice?",
+   "right": "Keep keys on the server; anything shipped to the browser is readable by any user",
+   "wrong": [
+    "Obfuscate the bundle",
+    "Rename the variable",
+    "Base64-encode the key"
+   ],
+   "tier": 4,
+   "why": "A secret in a client bundle is not a secret."
+  },
+  {
+   "q": "A shared service account has been used by five teams and its key has leaked. What should happen first?",
+   "right": "Rotate the key and issue separate least-privilege credentials per team",
+   "wrong": [
+    "Wait to see if the key is misused",
+    "Delete the logs to avoid confusion",
+    "Share the new key in chat"
+   ],
+   "tier": 4,
+   "why": "Containment first, then reduce sharing."
+  },
+  {
+   "q": "A user says they never approved a payment and the system has no record of who clicked. Which STRIDE category is the gap?",
+   "right": "Repudiation",
+   "wrong": [
+    "Spoofing",
+    "Elevation of privilege",
+    "Denial of service"
+   ],
+   "tier": 4,
+   "why": "Without trustworthy audit logs, actions can be denied."
+  },
+  {
+   "q": "After a bug fix, the same access control flaw returns three releases later. What would best prevent a repeat?",
+   "right": "An automated regression test that reproduces the original exploit",
+   "wrong": [
+    "A reminder email to developers",
+    "A longer code freeze",
+    "A new CSS rule"
+   ],
+   "tier": 4,
+   "why": "Tests make a fix durable."
+  },
+  {
+   "q": "A team puts a rate limit in application memory and then scales to four processes. What happens to the limit?",
+   "right": "Each process counts separately, so the effective limit is roughly four times higher",
+   "wrong": [
+    "The limit stops working entirely",
+    "The limit becomes stricter",
+    "Nothing changes because counters are shared automatically"
+   ],
+   "tier": 5,
+   "why": "In-memory state is per process; use shared storage for multi-process limits."
+  },
+  {
+   "q": "An app trusts the first entry of X-Forwarded-For for rate limiting. Why is that unsafe?",
+   "right": "A client can send its own value, which proxies append to, so the attacker controls the first entry",
+   "wrong": [
+    "The header is encrypted",
+    "The first entry is always the proxy",
+    "The header is only sent on POST"
+   ],
+   "tier": 5,
+   "why": "Count trusted hops from the end of the chain."
+  },
+  {
+   "q": "A team enables a strict CSP but still uses inline event handlers. What is the likely outcome?",
+   "right": "The inline handlers are blocked unless the policy allows them, so features break",
+   "wrong": [
+    "The policy ignores inline scripts",
+    "The handlers run faster",
+    "The CSP automatically rewrites them"
+   ],
+   "tier": 5,
+   "why": "A strict script-src needs nonces or hashes and no inline handlers."
+  }
+ ]
+}

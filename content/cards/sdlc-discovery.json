@@ -1,0 +1,2711 @@
+{
+ "slug": "sdlc-discovery",
+ "name": "1. Discovery and planning",
+ "description": "Problem, audience, goals, scope, budget, timeline.",
+ "roles": "",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "growth",
+ "groups": {
+  "frame": "problem-framing concept",
+  "aud": "stakeholder or audience concept",
+  "res": "research method",
+  "bias": "research pitfall",
+  "goal": "goal or measure concept",
+  "scope": "scope concept",
+  "prio": "prioritisation technique",
+  "est": "estimation concept",
+  "risk": "risk or assumption concept",
+  "feas": "feasibility check",
+  "bvb": "build-or-buy factor",
+  "doc": "planning document",
+  "kick": "kickoff practice",
+  "co": "company planning practice"
+ },
+ "cards": [
+  {
+   "group": "frame",
+   "subject": "A problem statement",
+   "tier": 1,
+   "says": [
+    "names who has the problem, what they are trying to do and what gets in the way",
+    "is short enough for everyone on the team to repeat from memory"
+   ],
+   "use": "need the whole team to share one view of why the project exists",
+   "not": [
+    "lists the features that will be built"
+   ],
+   "like": [
+    "A pain point"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "A pain point",
+   "tier": 1,
+   "says": [
+    "is a specific frustration a person meets while doing a task",
+    "is found by watching or asking people rather than by guessing"
+   ],
+   "use": "hear users complain about the same step again and again",
+   "not": [
+    "is the same thing as a requested feature"
+   ],
+   "like": [
+    "A problem statement"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "A current workaround",
+   "tier": 2,
+   "says": [
+    "shows how people cope today without the new product",
+    "is evidence that the problem is real enough for people to spend effort on it",
+    "reveals the true cost of the problem in time or errors"
+   ],
+   "use": "need to check that a problem is real before proposing a project",
+   "not": [
+    "is a sign that the problem can safely be ignored"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "The problem space",
+   "tier": 2,
+   "says": [
+    "describes the needs and constraints before any answer is chosen",
+    "is explored through research with the people who have the problem"
+   ],
+   "use": "want to understand a need without committing to an answer",
+   "not": [
+    "lists the possible technologies for the build"
+   ],
+   "like": [
+    "The solution space"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "The solution space",
+   "tier": 2,
+   "says": [
+    "holds the possible ways of meeting a need",
+    "is narrowed by constraints such as budget, time and skills"
+   ],
+   "use": "have a clear problem and need to compare options",
+   "not": [
+    "is explored before the problem is understood"
+   ],
+   "like": [
+    "The problem space"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "Jobs to be done",
+   "tier": 3,
+   "says": [
+    "frames demand as the progress a person is trying to make in a circumstance",
+    "explains why people switch to a product by the situation they were in"
+   ],
+   "use": "find that demographics do not explain why people choose a product",
+   "not": [
+    "segments customers mainly by age and job title"
+   ],
+   "like": [
+    "A persona"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "Root cause analysis",
+   "tier": 3,
+   "says": [
+    "looks for the underlying reason a problem happens rather than its visible symptom",
+    "aims to stop the problem recurring instead of patching one instance"
+   ],
+   "use": "keep fixing the same problem and it keeps coming back",
+   "not": [
+    "stops at the first cause that anyone suggests"
+   ],
+   "like": [
+    "The five whys"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "The five whys",
+   "tier": 2,
+   "says": [
+    "asks why repeatedly, usually about five times, to move from symptom to cause",
+    "needs no tools beyond a conversation"
+   ],
+   "use": "want a quick way to dig below a symptom in a short meeting",
+   "not": [
+    "guarantees that exactly one root cause exists"
+   ],
+   "like": [
+    "Root cause analysis"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "Solution bias",
+   "tier": 3,
+   "says": [
+    "is jumping to a favoured answer before the problem is understood",
+    "often appears as a request phrased as a specific screen or tool"
+   ],
+   "use": "hear a stakeholder ask for a particular feature without describing the need behind it",
+   "not": [
+    "happens only when a team has too little technical skill"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "The opportunity cost of doing nothing",
+   "tier": 3,
+   "says": [
+    "is the loss that keeps accumulating if no project is started",
+    "gives a baseline to compare every option against"
+   ],
+   "use": "need to justify a project that looks optional",
+   "not": [
+    "is always zero when no money is spent"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "Impact mapping",
+   "tier": 4,
+   "says": [
+    "links a goal to the actors, the changes in their behaviour and the deliverables that might cause them",
+    "helps remove deliverables that do not trace back to a goal"
+   ],
+   "use": "suspect that half the proposed features do not serve the stated goal",
+   "not": [
+    "ranks backlog items by their estimated effort alone"
+   ]
+  },
+  {
+   "group": "frame",
+   "subject": "A how-might-we question",
+   "tier": 3,
+   "says": [
+    "turns a problem into an open question that invites several answers",
+    "avoids naming a solution inside the question"
+   ],
+   "use": "want a workshop to generate options instead of defending one idea",
+   "not": [
+    "is a closed question answered with yes or no"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "The user",
+   "tier": 1,
+   "says": [
+    "is the person who touches the product in daily work",
+    "feels friction in the workflow before anyone else does"
+   ],
+   "use": "need to learn what the daily task is really like",
+   "not": [
+    "is always the person who pays for the product"
+   ],
+   "like": [
+    "The buyer",
+    "The administrator"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "The buyer",
+   "tier": 1,
+   "says": [
+    "is the person or group that pays for the product",
+    "cares about cost, risk and evidence of return"
+   ],
+   "use": "must convince the person holding the budget",
+   "not": [
+    "necessarily uses the product every day"
+   ],
+   "like": [
+    "The user",
+    "The administrator"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "The administrator",
+   "tier": 2,
+   "says": [
+    "controls access, settings and accounts for other people",
+    "is easy to forget in discovery even though the rollout depends on them"
+   ],
+   "use": "find that setup and permissions are someone else's job",
+   "not": [
+    "is the same person as the sponsor"
+   ],
+   "like": [
+    "The user",
+    "The buyer"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "A stakeholder",
+   "tier": 1,
+   "says": [
+    "is anyone who is affected by the project or can affect it",
+    "is wider than the people who attend the project meetings"
+   ],
+   "use": "need to list everyone with an interest in the outcome",
+   "not": [
+    "is limited to the people who fund the project"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "A project sponsor",
+   "tier": 2,
+   "says": [
+    "provides funding and senior authority for the project",
+    "removes blockers that the team cannot clear alone"
+   ],
+   "use": "need a decision that is above the project manager's authority",
+   "not": [
+    "writes the code and tests it"
+   ],
+   "like": [
+    "A stakeholder"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "A persona",
+   "tier": 2,
+   "says": [
+    "is a composite profile built from research on real users",
+    "gives the team a shared picture of a type of user"
+   ],
+   "use": "want the team to design for a type of user rather than for themselves",
+   "not": [
+    "is a real named customer who signed a contract"
+   ],
+   "like": [
+    "Jobs to be done"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "A power and interest grid",
+   "tier": 3,
+   "says": [
+    "plots stakeholders by their influence and their interest",
+    "suggests whom to manage closely, keep satisfied, keep informed or monitor"
+   ],
+   "use": "have more stakeholders than time and must decide where to spend effort",
+   "not": [
+    "measures how satisfied each stakeholder is with the product"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "A RACI chart",
+   "tier": 3,
+   "says": [
+    "assigns responsible, accountable, consulted and informed roles",
+    "allows only one accountable person for each task"
+   ],
+   "use": "find that two people each assume the other owns a decision",
+   "not": [
+    "ranks stakeholders by their budget"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "A hidden stakeholder",
+   "tier": 4,
+   "says": [
+    "is a group affected by the outcome that never appears in the meetings",
+    "is often a team such as support or operations that will run the result"
+   ],
+   "use": "realise that the team that will run the system was never asked",
+   "not": [
+    "is a user who deliberately avoids the product"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "A gatekeeper",
+   "tier": 4,
+   "says": [
+    "can block a launch without owning the project",
+    "is typically a function such as security, legal or procurement"
+   ],
+   "use": "find that a late review can stop a finished project",
+   "not": [
+    "supplies the funding for the project"
+   ],
+   "like": [
+    "A project sponsor"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "A champion",
+   "tier": 3,
+   "says": [
+    "is an internal advocate who helps others adopt the change",
+    "gives the team credibility with the people they want to reach"
+   ],
+   "use": "need a trusted voice inside the user group to help the rollout",
+   "not": [
+    "is paid by the vendor to promote the product"
+   ]
+  },
+  {
+   "group": "aud",
+   "subject": "An anti-persona",
+   "tier": 4,
+   "says": [
+    "describes who the product is deliberately not built for",
+    "helps the team refuse requests that pull the product away from its audience"
+   ],
+   "use": "keep receiving feature requests from people outside the target audience",
+   "not": [
+    "is a user who dislikes the product"
+   ],
+   "like": [
+    "A persona"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A user interview",
+   "tier": 1,
+   "says": [
+    "is a one-to-one conversation that explores a person's experience and reasons",
+    "is best used to learn why people behave as they do"
+   ],
+   "use": "need to understand the reasons behind behaviour",
+   "not": [
+    "produces statistically reliable counts of how many people agree"
+   ],
+   "like": [
+    "A survey"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A survey",
+   "tier": 2,
+   "says": [
+    "collects answers from many people with the same fixed questions",
+    "gives numbers but little depth about reasons"
+   ],
+   "use": "need to measure how common an attitude is across a large group",
+   "not": [
+    "reveals the unexpected reasons behind a single person's behaviour"
+   ],
+   "like": [
+    "A user interview"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Contextual inquiry",
+   "tier": 3,
+   "says": [
+    "observes people doing the task in their own setting",
+    "reveals steps and workarounds that people forget to mention"
+   ],
+   "use": "suspect that what people say differs from what they do at their desks",
+   "not": [
+    "is carried out in a meeting room with a question list"
+   ],
+   "like": [
+    "A diary study"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Support ticket analysis",
+   "tier": 2,
+   "says": [
+    "mines existing requests for recurring problems and the words customers use",
+    "gives evidence without a new round of fieldwork"
+   ],
+   "use": "want evidence of real problems quickly and cheaply",
+   "not": [
+    "shows what people who never contact support think"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Competitor analysis",
+   "tier": 2,
+   "says": [
+    "compares how other products and substitutes meet the same need",
+    "includes the spreadsheet or manual process as a competitor"
+   ],
+   "use": "need to know what people use today and what they would switch from",
+   "not": [
+    "copies a rival's feature list into the scope"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "An analytics review",
+   "tier": 2,
+   "says": [
+    "looks at recorded behaviour such as drop-off points and frequency",
+    "shows what people do but not why"
+   ],
+   "use": "have a live product and want to find where users give up",
+   "not": [
+    "explains the motivation behind each click"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A prototype test",
+   "tier": 3,
+   "says": [
+    "puts a rough version in front of users to see if they can complete a task",
+    "is cheaper than building the real feature first"
+   ],
+   "use": "want evidence about a design before committing build time",
+   "not": [
+    "proves the system will scale to production load"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A diary study",
+   "tier": 4,
+   "says": [
+    "asks participants to record their experiences over days or weeks",
+    "captures events that are too infrequent or private to observe directly"
+   ],
+   "use": "need to understand a habit that unfolds over weeks",
+   "not": [
+    "is finished in a single one-hour session"
+   ],
+   "like": [
+    "Contextual inquiry"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A focus group",
+   "tier": 3,
+   "says": [
+    "gathers several people to discuss a topic together",
+    "can be dominated by the loudest voice in the room"
+   ],
+   "use": "want to hear how people react to ideas in conversation with each other",
+   "not": [
+    "is the best way to observe individual task behaviour"
+   ],
+   "like": [
+    "A user interview"
+   ]
+  },
+  {
+   "group": "bias",
+   "subject": "A leading question",
+   "tier": 3,
+   "says": [
+    "suggests the answer the asker hopes to hear",
+    "can be avoided by asking about past behaviour instead of opinions"
+   ],
+   "use": "notice that interview answers keep agreeing with your idea",
+   "not": [
+    "is a question with no right answer"
+   ]
+  },
+  {
+   "group": "bias",
+   "subject": "Confirmation bias",
+   "tier": 3,
+   "says": [
+    "makes people notice the evidence that supports what they already believe",
+    "is reduced by actively looking for evidence that disproves the idea"
+   ],
+   "use": "catch yourself counting only the interviews that agree with the plan",
+   "not": [
+    "affects only inexperienced researchers"
+   ]
+  },
+  {
+   "group": "bias",
+   "subject": "Sampling bias",
+   "tier": 3,
+   "says": [
+    "occurs when the people studied do not represent the real audience",
+    "happens when you only talk to the users who are easy to reach"
+   ],
+   "use": "realise all your interviewees were colleagues or friendly customers",
+   "not": [
+    "is removed by increasing the number of similar participants"
+   ]
+  },
+  {
+   "group": "bias",
+   "subject": "Survivorship bias",
+   "tier": 4,
+   "says": [
+    "comes from studying only those who stayed and ignoring those who left",
+    "hides why people abandoned the product"
+   ],
+   "use": "have feedback only from current customers and want to understand churn",
+   "not": [
+    "means the sample was chosen at random"
+   ],
+   "like": [
+    "Sampling bias"
+   ]
+  },
+  {
+   "group": "bias",
+   "subject": "The say-do gap",
+   "tier": 4,
+   "says": [
+    "is the difference between what people claim they will do and what they do",
+    "is why observed behaviour is trusted above stated intent"
+   ],
+   "use": "hear that 80 percent say they would pay but nobody has yet",
+   "not": [
+    "only occurs when participants are lying on purpose"
+   ]
+  },
+  {
+   "group": "bias",
+   "subject": "The HiPPO effect",
+   "tier": 3,
+   "says": [
+    "lets the highest paid person's opinion override evidence",
+    "is countered by agreeing the decision criteria before the discussion"
+   ],
+   "use": "find that the senior person's view settles every debate",
+   "not": [
+    "describes a decision made by averaging everyone's votes"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "An outcome",
+   "tier": 1,
+   "says": [
+    "is a change in behaviour or results that people experience",
+    "is what the project is ultimately judged on"
+   ],
+   "use": "need to describe the result you want rather than the thing you build",
+   "not": [
+    "is something the team ships"
+   ],
+   "like": [
+    "An output"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "An output",
+   "tier": 1,
+   "says": [
+    "is something the team produces, such as a dashboard",
+    "can be delivered without anyone's situation improving"
+   ],
+   "use": "report what was built rather than what changed",
+   "not": [
+    "is the measured change in user behaviour"
+   ],
+   "like": [
+    "An outcome"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "A baseline",
+   "tier": 2,
+   "says": [
+    "is the measured starting value before any change",
+    "is what makes an improvement provable"
+   ],
+   "use": "cannot tell whether the project improved anything",
+   "not": [
+    "is the target value the team hopes to reach"
+   ],
+   "like": [
+    "A target"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "A target",
+   "tier": 2,
+   "says": [
+    "is the value the measure should reach by a stated time",
+    "is set against a baseline"
+   ],
+   "use": "need to say how much improvement counts as success",
+   "not": [
+    "is the starting value recorded before the project"
+   ],
+   "like": [
+    "A baseline"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "A KPI",
+   "tier": 2,
+   "says": [
+    "is a key indicator tracked over time against an objective",
+    "should be collected in a way the team has agreed in advance"
+   ],
+   "use": "need a small number of measures to report progress regularly",
+   "not": [
+    "is any number that can be pulled from a database"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "OKRs",
+   "tier": 3,
+   "says": [
+    "pair an inspiring objective with a few measurable key results",
+    "separate what you want to achieve from how it is measured"
+   ],
+   "use": "want a goal framework that links ambition to measurable results",
+   "not": [
+    "list the tasks that each person will complete"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "A leading indicator",
+   "tier": 3,
+   "says": [
+    "moves early and predicts a later result",
+    "can be influenced by the team soon enough to act on it"
+   ],
+   "use": "cannot wait months for the real result to see whether you are on track",
+   "not": [
+    "reports what has already happened"
+   ],
+   "like": [
+    "A lagging indicator"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "A lagging indicator",
+   "tier": 3,
+   "says": [
+    "reports a result after it has happened",
+    "confirms success but arrives too late to steer"
+   ],
+   "use": "need to confirm whether the goal was reached",
+   "not": [
+    "predicts results before they occur"
+   ],
+   "like": [
+    "A leading indicator"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "A vanity metric",
+   "tier": 3,
+   "says": [
+    "looks impressive but does not guide any decision",
+    "tends to rise whatever the team does, such as total sign-ups"
+   ],
+   "use": "notice that a number only ever goes up and nobody acts on it",
+   "not": [
+    "is an actionable measure tied to a decision"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "A guardrail metric",
+   "tier": 4,
+   "says": [
+    "is a measure that must not get worse while the target improves",
+    "catches harm caused by chasing a single goal"
+   ],
+   "use": "worry that speeding up a process may reduce its quality",
+   "not": [
+    "is the main success target of the project"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "A north star metric",
+   "tier": 4,
+   "says": [
+    "is the one measure that best captures the value delivered to users",
+    "aligns several teams on a single direction"
+   ],
+   "use": "want every team to pull toward one shared measure of value",
+   "not": [
+    "is always a revenue figure"
+   ]
+  },
+  {
+   "group": "goal",
+   "subject": "Goodhart's law",
+   "tier": 5,
+   "says": [
+    "says a measure stops being a good measure once it becomes a target",
+    "explains why people begin to game a number they are rewarded for"
+   ],
+   "use": "see staff closing tickets quickly without solving them",
+   "not": [
+    "says that every target improves performance"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Scope",
+   "tier": 1,
+   "says": [
+    "is the list of what is in and what is out of the project",
+    "gives the team an agreed boundary to check requests against"
+   ],
+   "use": "need to agree what the project will and will not deliver",
+   "not": [
+    "is the same as the budget of the project"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "An MVP",
+   "tier": 2,
+   "says": [
+    "is the smallest complete version that lets real users do the main job",
+    "is built to teach the team something as well as to deliver value"
+   ],
+   "use": "want to release the smallest thing that lets users complete the core journey",
+   "not": [
+    "is a half-finished version of the full product"
+   ],
+   "like": [
+    "A prototype",
+    "A walking skeleton"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A non-goal",
+   "tier": 2,
+   "says": [
+    "is something the project deliberately will not do",
+    "protects the team when someone asks for one more feature"
+   ],
+   "use": "need a ready answer when asked to add an extra capability",
+   "not": [
+    "is a goal the team failed to reach"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Scope creep",
+   "tier": 2,
+   "says": [
+    "is uncontrolled growth of the scope after it was agreed",
+    "usually arrives as many small requests that each look reasonable"
+   ],
+   "use": "find that the deliverables keep growing while the deadline stays fixed",
+   "not": [
+    "is a deliberate, approved addition to the scope"
+   ],
+   "like": [
+    "Gold plating"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A change request",
+   "tier": 3,
+   "says": [
+    "is a formal proposal to alter agreed scope, cost or timeline",
+    "forces the trade-off to be seen before the change is accepted"
+   ],
+   "use": "get a late request that would move the date",
+   "not": [
+    "is a defect report on delivered work"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A work breakdown structure",
+   "tier": 3,
+   "says": [
+    "divides the project into smaller deliverables until each can be estimated",
+    "is organised by deliverable rather than by calendar date"
+   ],
+   "use": "cannot estimate a large piece of work as one number",
+   "not": [
+    "is a calendar of tasks against dates"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A user story map",
+   "tier": 3,
+   "says": [
+    "arranges user activities across the top and the details beneath",
+    "helps choose a thin slice that covers the whole journey"
+   ],
+   "use": "need to see the whole journey while deciding what to build first",
+   "not": [
+    "lists backlog items in a single ranked column"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A vertical slice",
+   "tier": 4,
+   "says": [
+    "delivers a thin piece that runs through every layer from interface to data",
+    "shows real working behaviour early"
+   ],
+   "use": "want working software that touches every layer, even if narrow",
+   "not": [
+    "completes one entire layer before touching the next"
+   ],
+   "like": [
+    "A walking skeleton"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A walking skeleton",
+   "tier": 4,
+   "says": [
+    "is a minimal implementation of the architecture that connects the main components end to end",
+    "lets the team test deployment and integration very early"
+   ],
+   "use": "want to prove the main pieces connect before building features",
+   "not": [
+    "delivers the finished user experience for one feature"
+   ],
+   "like": [
+    "A vertical slice",
+    "An MVP"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Gold plating",
+   "tier": 3,
+   "says": [
+    "is adding polish or features nobody asked for",
+    "adds cost and risk without clear value"
+   ],
+   "use": "see a developer improve something the user never requested",
+   "not": [
+    "is the agreed process of delivering requested work"
+   ],
+   "like": [
+    "Scope creep"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "MoSCoW",
+   "tier": 2,
+   "says": [
+    "sorts requirements into must, should, could and will not have",
+    "makes the must-haves the line below which the project fails"
+   ],
+   "use": "need a quick way to agree what is essential for the first release",
+   "not": [
+    "scores items using reach, impact, confidence and effort"
+   ],
+   "like": [
+    "RICE scoring"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "RICE scoring",
+   "tier": 4,
+   "says": [
+    "scores items on reach, impact, confidence and effort",
+    "divides expected benefit by the effort"
+   ],
+   "use": "must compare many ideas with a repeatable numerical score",
+   "not": [
+    "sorts items into four named buckets without scores"
+   ],
+   "like": [
+    "MoSCoW"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "The Kano model",
+   "tier": 4,
+   "says": [
+    "separates basic expectations, performance features and delighters",
+    "shows that some features only avoid dissatisfaction rather than add delight"
+   ],
+   "use": "wonder whether a feature is a basic expectation or a delighter",
+   "not": [
+    "scores items by cost of delay divided by job size"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Weighted shortest job first",
+   "tier": 5,
+   "says": [
+    "divides the cost of delay by the job size",
+    "favours short high-value items to reduce the total delay cost"
+   ],
+   "use": "have items of different sizes and want the order that cuts the total delay cost",
+   "not": [
+    "groups requirements as must, should, could and will not"
+   ],
+   "like": [
+    "Cost of delay"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Cost of delay",
+   "tier": 4,
+   "says": [
+    "is the value lost for each period a feature is not available",
+    "makes timing an input to prioritisation rather than an afterthought"
+   ],
+   "use": "need to compare a small urgent item against a large valuable one",
+   "not": [
+    "is the money spent on development"
+   ],
+   "like": [
+    "Weighted shortest job first"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "A value and effort matrix",
+   "tier": 2,
+   "says": [
+    "plots items by the value they give and the effort they need",
+    "highlights quick wins as high value for low effort"
+   ],
+   "use": "want a simple visual way of picking quick wins",
+   "not": [
+    "gives a single number for each idea"
+   ]
+  },
+  {
+   "group": "prio",
+   "subject": "Stack ranking",
+   "tier": 3,
+   "says": [
+    "puts every item into a single ordered list",
+    "forces a choice because no two items can tie"
+   ],
+   "use": "find that everything is called high priority",
+   "not": [
+    "allows several items to share the top priority"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "An estimate range",
+   "tier": 1,
+   "says": [
+    "states a lower and upper bound with its assumptions",
+    "communicates uncertainty honestly"
+   ],
+   "use": "are asked for a number when much is still unknown",
+   "not": [
+    "promises a single committed date"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "A three-point estimate",
+   "tier": 2,
+   "says": [
+    "uses best, likely and worst case values for each piece of work",
+    "shows how wide the uncertainty is"
+   ],
+   "use": "need to estimate a task whose duration varies a lot",
+   "not": [
+    "uses only the most likely value"
+   ],
+   "like": [
+    "PERT"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "PERT",
+   "tier": 3,
+   "says": [
+    "weights the likely case more heavily when combining three estimates",
+    "uses the formula of optimistic plus four times likely plus pessimistic, divided by six"
+   ],
+   "use": "want a weighted average from three estimates",
+   "not": [
+    "takes the plain average of the best and worst cases"
+   ],
+   "like": [
+    "A three-point estimate"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Planning poker",
+   "tier": 2,
+   "says": [
+    "has team members reveal estimates at the same time",
+    "discussion follows when the cards differ widely"
+   ],
+   "use": "want to avoid one person anchoring everyone's estimate",
+   "not": [
+    "lets the most senior person announce the figure first"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "T-shirt sizing",
+   "tier": 2,
+   "says": [
+    "uses sizes such as small, medium and large for a rough relative estimate",
+    "is suited to early stages when precise numbers are not possible"
+   ],
+   "use": "need a quick rough order of magnitude for many items",
+   "not": [
+    "gives hour-level precision"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Analogous estimation",
+   "tier": 3,
+   "says": [
+    "bases an estimate on similar past work",
+    "is quick but only as good as the similarity"
+   ],
+   "use": "have little detail but have completed something similar before",
+   "not": [
+    "builds the total by adding up every small task"
+   ],
+   "like": [
+    "Bottom-up estimation"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Bottom-up estimation",
+   "tier": 3,
+   "says": [
+    "adds together estimates of the smallest tasks",
+    "needs a work breakdown first"
+   ],
+   "use": "have detailed scope and need an accurate figure",
+   "not": [
+    "compares the project to one finished earlier"
+   ],
+   "like": [
+    "Analogous estimation"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "The cone of uncertainty",
+   "tier": 3,
+   "says": [
+    "shows the estimate range narrowing as the project progresses",
+    "explains why early estimates carry a wide range"
+   ],
+   "use": "have to explain why the estimate was far off at the start",
+   "not": [
+    "says that estimates are always accurate after approval"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Reference class forecasting",
+   "tier": 4,
+   "says": [
+    "uses the outcomes of many similar past projects to set expectations",
+    "corrects the optimism of a plan built only from the inside view"
+   ],
+   "use": "suspect that your plan is more optimistic than similar projects have been",
+   "not": [
+    "relies on the team's own detailed task list"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "The planning fallacy",
+   "tier": 3,
+   "says": [
+    "is the tendency to underestimate time even when past projects overran",
+    "is partly countered by looking at similar past projects"
+   ],
+   "use": "see that every previous project ran late yet the new plan assumes it will not",
+   "not": [
+    "is a mistake only beginners make"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "A contingency buffer",
+   "tier": 3,
+   "says": [
+    "is time or money reserved for the risks you can name",
+    "is held and released by someone accountable"
+   ],
+   "use": "need room for known risks without padding every task",
+   "not": [
+    "is hidden inside each task estimate"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "The critical path",
+   "tier": 4,
+   "says": [
+    "is the longest chain of dependent tasks",
+    "sets the shortest possible project duration"
+   ],
+   "use": "need to know which delays will move the end date",
+   "not": [
+    "is the list of the most important features"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Parkinson's law",
+   "tier": 4,
+   "says": [
+    "says work expands to fill the time available",
+    "explains why padding every task rarely produces early finishes"
+   ],
+   "use": "see that a task given a generous deadline is finished exactly on it",
+   "not": [
+    "says that tasks are always completed early"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A risk",
+   "tier": 1,
+   "says": [
+    "is an uncertain event that could affect the project, for good or ill",
+    "has a probability and an impact"
+   ],
+   "use": "need to describe something that might happen",
+   "not": [
+    "is a problem that has already happened"
+   ],
+   "like": [
+    "An issue"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "An issue",
+   "tier": 2,
+   "says": [
+    "is a problem that has already happened",
+    "needs action now rather than monitoring"
+   ],
+   "use": "find that a supplier has already missed its delivery",
+   "not": [
+    "is something that might happen in future"
+   ],
+   "like": [
+    "A risk"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "An assumption",
+   "tier": 1,
+   "says": [
+    "is something taken as true without proof",
+    "should be written down so it can be tested"
+   ],
+   "use": "are planning on the basis of something you have not checked",
+   "not": [
+    "is a verified fact backed by evidence"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A constraint",
+   "tier": 2,
+   "says": [
+    "is a fixed limit such as a deadline, a budget or a rule",
+    "is not up for negotiation within the project"
+   ],
+   "use": "have a launch date fixed by an external event",
+   "not": [
+    "is an uncertain event that might happen"
+   ],
+   "like": [
+    "An assumption"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A dependency",
+   "tier": 2,
+   "says": [
+    "is a task or deliverable that relies on something outside the team",
+    "should be listed early so slow ones can start first"
+   ],
+   "use": "need an approval or credentials that someone else controls",
+   "not": [
+    "is a risk with a low probability"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A risk register",
+   "tier": 2,
+   "says": [
+    "lists risks with their probability, impact, owner and response",
+    "is reviewed regularly rather than written once"
+   ],
+   "use": "need a shared record of what could go wrong and who is watching it",
+   "not": [
+    "is a list of defects found in testing"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A probability and impact matrix",
+   "tier": 3,
+   "says": [
+    "rates each risk on likelihood and consequence",
+    "helps decide which risks need action first"
+   ],
+   "use": "have a long risk list and need to decide where to look first",
+   "not": [
+    "records which person owns each risk"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk mitigation",
+   "tier": 3,
+   "says": [
+    "reduces the probability or the impact of a risk",
+    "works by changing the plan, the design or the process so the exposure is smaller"
+   ],
+   "use": "can take a step now that makes a risk less likely or less damaging",
+   "not": [
+    "decides to live with the risk"
+   ],
+   "like": [
+    "Risk acceptance",
+    "Risk transference"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk acceptance",
+   "tier": 3,
+   "says": [
+    "is the conscious decision to live with a risk and its consequences",
+    "is sensible when the cost of a response exceeds the risk"
+   ],
+   "use": "face a small risk where the response costs more than the loss",
+   "not": [
+    "means the risk was never noticed"
+   ],
+   "like": [
+    "Risk mitigation"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk transference",
+   "tier": 4,
+   "says": [
+    "shifts the impact of a risk to a third party, for example through insurance or a contract",
+    "does not remove the risk, only who bears the cost"
+   ],
+   "use": "want a supplier or insurer to carry the financial consequences",
+   "not": [
+    "makes the risk less likely to occur"
+   ],
+   "like": [
+    "Risk mitigation"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A premortem",
+   "tier": 4,
+   "says": [
+    "asks the team to imagine the project has failed and explain why",
+    "brings out concerns that people hold back in optimistic planning"
+   ],
+   "use": "want the team to name its worries before the project starts",
+   "not": [
+    "reviews the causes of a failure after it happened"
+   ],
+   "like": [
+    "A retrospective"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "The riskiest assumption test",
+   "tier": 4,
+   "says": [
+    "tests the belief that would sink the project if it were false",
+    "is done first, with the cheapest experiment possible"
+   ],
+   "use": "have a long assumption list and must decide what to test first",
+   "not": [
+    "tests the easiest assumption first"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Residual risk",
+   "tier": 5,
+   "says": [
+    "is the risk that remains after the response has been applied",
+    "needs to be accepted explicitly by someone"
+   ],
+   "use": "have applied controls and still see some exposure",
+   "not": [
+    "is the risk before any action is taken"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "A feasibility study",
+   "tier": 2,
+   "says": [
+    "assesses whether a project can be done before full commitment",
+    "covers technical, economic, operational, legal and schedule questions"
+   ],
+   "use": "need to decide whether an idea is worth pursuing before funding it",
+   "not": [
+    "plans the day-by-day tasks of the build"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "Technical feasibility",
+   "tier": 3,
+   "says": [
+    "asks whether the team can build it with the skills and technology available",
+    "is checked by experiments on the hardest parts"
+   ],
+   "use": "doubt that the team's tools can do what the idea needs",
+   "not": [
+    "asks whether the benefits outweigh the costs"
+   ],
+   "like": [
+    "Economic feasibility"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "Economic feasibility",
+   "tier": 3,
+   "says": [
+    "asks whether the benefits justify the costs",
+    "compares the cost of build and operation with the value gained"
+   ],
+   "use": "need to confirm the project makes financial sense",
+   "not": [
+    "asks whether the technology exists"
+   ],
+   "like": [
+    "Technical feasibility"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "Operational feasibility",
+   "tier": 3,
+   "says": [
+    "asks whether the organisation can run and adopt the result",
+    "includes training, support and changes to working processes"
+   ],
+   "use": "worry that the team will build it but nobody can run it",
+   "not": [
+    "checks that the code compiles"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "Legal feasibility",
+   "tier": 3,
+   "says": [
+    "asks whether the project complies with laws, contracts and regulations",
+    "can prevent a project from proceeding at all"
+   ],
+   "use": "suspect that the idea touches personal data or a regulated activity",
+   "not": [
+    "checks whether the schedule is achievable"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "Schedule feasibility",
+   "tier": 3,
+   "says": [
+    "asks whether the work can be completed by the required date",
+    "tests whether the deadline is consistent with the estimates and dependencies"
+   ],
+   "use": "have a fixed date and must check that it is achievable",
+   "not": [
+    "checks that the licence terms are acceptable"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "A proof of concept",
+   "tier": 3,
+   "says": [
+    "shows that an idea can work in principle",
+    "is usually thrown away once the question is answered"
+   ],
+   "use": "need to prove a risky technical idea works before committing to it",
+   "not": [
+    "is the first release delivered to customers"
+   ],
+   "like": [
+    "A technical spike"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "A technical spike",
+   "tier": 3,
+   "says": [
+    "is a short time-boxed investigation to answer a specific technical question",
+    "produces knowledge, not production code"
+   ],
+   "use": "need an answer on an unfamiliar technology within a day or two",
+   "not": [
+    "delivers a shippable feature"
+   ],
+   "like": [
+    "A proof of concept"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "A go or no-go decision",
+   "tier": 3,
+   "says": [
+    "is the point where sponsors decide whether to proceed with the project",
+    "is made on the evidence gathered in discovery"
+   ],
+   "use": "reach the end of discovery and must decide whether to fund the build",
+   "not": [
+    "is made after the product has launched"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "A cost-benefit analysis",
+   "tier": 3,
+   "says": [
+    "compares total expected costs with total expected benefits",
+    "expresses both in the same units, usually money"
+   ],
+   "use": "need to compare the value of an option with what it costs",
+   "not": [
+    "lists every feature the project will deliver"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "A payback period",
+   "tier": 4,
+   "says": [
+    "is the time taken for the benefits to recover the initial cost",
+    "ignores what happens after the break-even point"
+   ],
+   "use": "want to know how soon an investment pays for itself",
+   "not": [
+    "discounts future cash flows to today's value"
+   ],
+   "like": [
+    "Net present value"
+   ]
+  },
+  {
+   "group": "feas",
+   "subject": "Net present value",
+   "tier": 5,
+   "says": [
+    "discounts future benefits and costs to today's value",
+    "is positive when discounted benefits exceed discounted costs"
+   ],
+   "use": "must compare options with benefits that arrive in different years",
+   "not": [
+    "measures the months until break-even"
+   ],
+   "like": [
+    "A payback period"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "A build-or-buy decision",
+   "tier": 1,
+   "says": [
+    "chooses between developing a solution and acquiring one",
+    "should consider the lifetime cost, not only the starting price"
+   ],
+   "use": "must decide whether to write software or purchase a product",
+   "not": [
+    "is made once and never revisited"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "Total cost of ownership",
+   "tier": 3,
+   "says": [
+    "includes purchase, integration, operation, support and eventual replacement",
+    "is usually larger than the licence or build cost alone"
+   ],
+   "use": "find that the cheapest price on the page is not the cheapest option",
+   "not": [
+    "is the price quoted on the vendor's website"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "Vendor lock-in",
+   "tier": 3,
+   "says": [
+    "makes switching supplier costly because of proprietary formats or integrations",
+    "is weighed when choosing a platform"
+   ],
+   "use": "worry that leaving a supplier later would be very expensive",
+   "not": [
+    "guarantees the best price over time"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "A core capability",
+   "tier": 4,
+   "says": [
+    "is what differentiates the organisation, so it is usually worth building",
+    "is not something to hand to a supplier whose roadmap you cannot influence"
+   ],
+   "use": "consider building something that competitors cannot copy by buying it",
+   "not": [
+    "is a commodity function such as payroll"
+   ],
+   "like": [
+    "A commodity capability"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "A commodity capability",
+   "tier": 4,
+   "says": [
+    "is a function that many organisations need in the same way",
+    "is usually cheaper to buy than to build"
+   ],
+   "use": "consider a feature that gives no advantage over competitors",
+   "not": [
+    "is the source of the organisation's unique advantage"
+   ],
+   "like": [
+    "A core capability"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "Integration cost",
+   "tier": 3,
+   "says": [
+    "is the effort of connecting a bought product to existing systems and data",
+    "is often underestimated at the buying stage"
+   ],
+   "use": "find that the bought product still needs weeks of connecting work",
+   "not": [
+    "is the licence fee for the product"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "Data portability",
+   "tier": 4,
+   "says": [
+    "is the ability to export your data in a usable form",
+    "is checked before signing, as part of an exit plan"
+   ],
+   "use": "want to be sure you can leave a supplier with your data",
+   "not": [
+    "means the supplier hosts the data in your region"
+   ],
+   "like": [
+    "Vendor lock-in"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "A vendor trial",
+   "tier": 3,
+   "says": [
+    "tests a bought product against real tasks before commitment",
+    "produces evidence rather than relying on a sales demonstration"
+   ],
+   "use": "are shown an impressive demo and want proof it fits your work",
+   "not": [
+    "replaces the contract negotiation"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "The sunk cost fallacy",
+   "tier": 3,
+   "says": [
+    "lets money already spent push a team to continue a failing path",
+    "is avoided by deciding on future costs and benefits only"
+   ],
+   "use": "hear \"we have already spent so much\" as the reason to carry on",
+   "not": [
+    "means that earlier spending should always decide the next step"
+   ]
+  },
+  {
+   "group": "bvb",
+   "subject": "The maintenance burden",
+   "tier": 2,
+   "says": [
+    "is the ongoing cost of fixing, patching and supporting what you build",
+    "falls on your own team when you choose to build"
+   ],
+   "use": "are tempted by a build option and forget who looks after it later",
+   "not": [
+    "falls entirely on the vendor when you build"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A project charter",
+   "tier": 2,
+   "says": [
+    "is a short document that authorises the project and names its sponsor",
+    "records the purpose, goals, scope, high-level risks and key stakeholders"
+   ],
+   "use": "need a one-page agreement on why the project exists and who backs it",
+   "not": [
+    "lists the detailed technical design"
+   ],
+   "like": [
+    "A statement of work"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A statement of work",
+   "tier": 3,
+   "says": [
+    "defines the work, deliverables and terms agreed with a supplier",
+    "is the document a contract refers to for what is delivered"
+   ],
+   "use": "engage an external supplier and need the deliverables written down",
+   "not": [
+    "authorises the internal project without a contract"
+   ],
+   "like": [
+    "A project charter"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A business case",
+   "tier": 3,
+   "says": [
+    "justifies the investment with costs, benefits, options and risks",
+    "supports the go or no-go decision"
+   ],
+   "use": "must persuade the funders that the project is worth the money",
+   "not": [
+    "describes how the software will be tested"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A product brief",
+   "tier": 2,
+   "says": [
+    "summarises the problem, audience, goals and scope on one or two pages",
+    "is short enough that everyone actually reads it"
+   ],
+   "use": "want a short common reference at the start of a project",
+   "not": [
+    "lists the full technical requirements"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A project plan",
+   "tier": 2,
+   "says": [
+    "sets out tasks, owners, dependencies and dates",
+    "is revised as the work and the knowledge change"
+   ],
+   "use": "need to show who does what and by when",
+   "not": [
+    "is fixed for the life of the project"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A product roadmap",
+   "tier": 2,
+   "says": [
+    "shows the planned direction in themes over time",
+    "is a statement of intent rather than a promise"
+   ],
+   "use": "want to communicate direction without committing to exact dates",
+   "not": [
+    "is a detailed list of tasks per developer"
+   ],
+   "like": [
+    "A project plan"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A communication plan",
+   "tier": 3,
+   "says": [
+    "states who needs what information, how often and through which channel",
+    "reduces surprises for stakeholders"
+   ],
+   "use": "find that some stakeholders hear news only when it is too late",
+   "not": [
+    "is a list of the project risks"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A Gantt chart",
+   "tier": 3,
+   "says": [
+    "shows tasks as bars against a calendar",
+    "makes dependencies and overlaps visible"
+   ],
+   "use": "need to see how tasks overlap over time",
+   "not": [
+    "ranks tasks by value"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A milestone",
+   "tier": 2,
+   "says": [
+    "marks a significant point or checkpoint in the project",
+    "has no duration of its own"
+   ],
+   "use": "want a checkpoint to see if the project is on track",
+   "not": [
+    "is a task that takes several weeks"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A decision log",
+   "tier": 3,
+   "says": [
+    "records what was decided, by whom, when and why",
+    "stops the same debate from being repeated months later"
+   ],
+   "use": "hear a decision questioned and nobody remembers the reason",
+   "not": [
+    "is a list of open issues awaiting action"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A discovery report",
+   "tier": 3,
+   "says": [
+    "summarises what research found, what is still assumed and what is recommended",
+    "gives the funders what they need to decide on the build"
+   ],
+   "use": "finish discovery and must hand the findings to the decision makers",
+   "not": [
+    "is the final user manual of the product"
+   ]
+  },
+  {
+   "group": "kick",
+   "subject": "A kickoff meeting",
+   "tier": 1,
+   "says": [
+    "brings the team and stakeholders together at the start of delivery",
+    "confirms the goals, scope, roles and ways of working"
+   ],
+   "use": "want everyone to start from the same understanding",
+   "not": [
+    "is held after the product has launched"
+   ]
+  },
+  {
+   "group": "kick",
+   "subject": "A kickoff agenda",
+   "tier": 2,
+   "says": [
+    "covers the problem, goals, scope, roles, risks and next steps",
+    "ends with named owners and dates for the first actions"
+   ],
+   "use": "need a kickoff that leaves everyone knowing what happens next",
+   "not": [
+    "consists only of a presentation by the sponsor"
+   ]
+  },
+  {
+   "group": "kick",
+   "subject": "A working agreement",
+   "tier": 3,
+   "says": [
+    "records how the team will communicate, decide and handle disagreement",
+    "is created by the team rather than imposed"
+   ],
+   "use": "want the team to agree its own rules of working",
+   "not": [
+    "is a contract with an external supplier"
+   ]
+  },
+  {
+   "group": "kick",
+   "subject": "A definition of done",
+   "tier": 3,
+   "says": [
+    "is the shared checklist a piece of work must meet to count as complete",
+    "stops different people using different standards"
+   ],
+   "use": "find that people argue about whether something is finished",
+   "not": [
+    "lists what is ready to be started"
+   ],
+   "like": [
+    "A definition of ready"
+   ]
+  },
+  {
+   "group": "kick",
+   "subject": "A definition of ready",
+   "tier": 4,
+   "says": [
+    "is the shared checklist an item meets before the team accepts it",
+    "avoids starting work that is unclear or blocked"
+   ],
+   "use": "find that the team starts items that are missing key information",
+   "not": [
+    "states when work is considered finished"
+   ],
+   "like": [
+    "A definition of done"
+   ]
+  },
+  {
+   "group": "kick",
+   "subject": "An escalation path",
+   "tier": 3,
+   "says": [
+    "says who to go to when a problem cannot be resolved at the team level",
+    "is agreed before it is needed"
+   ],
+   "use": "hit a blocker that no one in the team can remove",
+   "not": [
+    "is a list of the risks the team has accepted"
+   ]
+  },
+  {
+   "group": "kick",
+   "subject": "A single source of truth",
+   "tier": 3,
+   "says": [
+    "is one agreed place where the current plan and decisions live",
+    "avoids conflicting copies of documents"
+   ],
+   "use": "find that people are working from different versions of the plan",
+   "not": [
+    "is a backup of every document"
+   ]
+  },
+  {
+   "group": "kick",
+   "subject": "Discovery exit criteria",
+   "tier": 4,
+   "says": [
+    "state what must be known before the project moves from discovery to delivery",
+    "prevent discovery from continuing without end"
+   ],
+   "use": "want to know when discovery is finished",
+   "not": [
+    "are the acceptance tests for the product"
+   ]
+  },
+  {
+   "group": "kick",
+   "subject": "A communication cadence",
+   "tier": 2,
+   "says": [
+    "sets a regular rhythm for updates and reviews",
+    "keeps stakeholders informed without asking each time"
+   ],
+   "use": "want stakeholders to know when the next update will arrive",
+   "not": [
+    "is a single announcement at launch"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggmoney status table",
+   "tier": 2,
+   "says": [
+    "marks each capability as working, needs credentials or not built",
+    "lets a reader see at once what exists today"
+   ],
+   "use": "want stakeholders to see exactly what is built and what is not",
+   "not": [
+    "hides unfinished capabilities until they are ready"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Corporation Tax in ggmoney",
+   "tier": 2,
+   "says": [
+    "is marked Not built and planned for a later phase",
+    "is stated plainly rather than hinted at"
+   ],
+   "use": "need an example of labelling a missing feature honestly",
+   "not": [
+    "is described as working but needing credentials"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The gglearn Known gaps section",
+   "tier": 1,
+   "says": [
+    "lists the limits of the project, including thin high levels in the legacy question bank",
+    "gives a ready answer when someone asks what is missing"
+   ],
+   "use": "want the limits written down early to stop stakeholders assuming features exist",
+   "not": [
+    "is a list of defects fixed in the last release"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "SQLite in gglearn",
+   "tier": 3,
+   "says": [
+    "is used for local development",
+    "is to be replaced by Postgres before multi-user production use"
+   ],
+   "use": "want to delay a bigger commitment until it is needed",
+   "not": [
+    "is the chosen production database for many users"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Mark planned as planned",
+   "tier": 2,
+   "says": [
+    "means anything planned is labelled planned and never as done",
+    "protects trust when stakeholders read the status"
+   ],
+   "use": "are tempted to describe a future feature as if it exists",
+   "not": [
+    "allows rounding a half-built feature up to done"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The two-sentence problem statement",
+   "tier": 2,
+   "says": [
+    "fits in two sentences so everyone can repeat it",
+    "is the company's test of whether the team shares one view"
+   ],
+   "use": "need a quick test of whether the team understands the problem",
+   "not": [
+    "is written as a full page of background"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Facts and assumptions kept apart",
+   "tier": 3,
+   "says": [
+    "records what was learned as facts and keeps assumptions on a separate list",
+    "lets the assumptions be tested later"
+   ],
+   "use": "find that a project plan mixes known facts with guesses",
+   "not": [
+    "merges every note into one undifferentiated list"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The onboarding example goal",
+   "tier": 3,
+   "says": [
+    "cuts new-starter onboarding from five days to two",
+    "shows an outcome with a baseline and a target"
+   ],
+   "use": "need an example of a goal with a measure, a baseline and a target",
+   "not": [
+    "says to build an onboarding dashboard"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Cut scope, not testing",
+   "tier": 3,
+   "says": [
+    "is the rule of reducing work instead of quality when time is short",
+    "keeps testing and review in the plan under deadline pressure"
+   ],
+   "use": "are told the date cannot move and quality is tempting to trim",
+   "not": [
+    "says to skip review so the date is met"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Start the slow dependencies first",
+   "tier": 3,
+   "says": [
+    "begins waits such as approvals, credentials and suppliers early",
+    "puts the longest external delays at the front of the plan"
+   ],
+   "use": "depend on an external approval that takes weeks",
+   "not": [
+    "leaves approvals until just before launch"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "A review at launch and again weeks later",
+   "tier": 4,
+   "says": [
+    "checks the goals at launch and again after a few weeks",
+    "shows whether early enthusiasm turned into real use"
+   ],
+   "use": "want to know whether launch excitement became lasting use",
+   "not": [
+    "is a single review on launch day"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What should discovery start with?",
+   "right": "A problem, not a solution",
+   "wrong": [
+    "A list of features",
+    "A technology choice",
+    "A launch date"
+   ],
+   "tier": 1,
+   "why": "Discovery explores the problem and the people who have it before any answer is picked."
+  },
+  {
+   "q": "Which statement best describes an MVP?",
+   "right": "The smallest complete version that lets real users do the main job",
+   "wrong": [
+    "A half-finished version of the full product",
+    "A prototype that is discarded after one demo",
+    "The version with every planned feature but no polish"
+   ],
+   "tier": 1,
+   "why": "An MVP is small but complete for the core journey."
+  },
+  {
+   "q": "What is an assumption in a project plan?",
+   "right": "Something taken as true without proof, to be tested",
+   "wrong": [
+    "A verified fact",
+    "A fixed limit such as a deadline",
+    "A problem that has already occurred"
+   ],
+   "tier": 1,
+   "why": "Assumptions need to be written down so they can be tested."
+  },
+  {
+   "q": "Who are stakeholders?",
+   "right": "Anyone affected by the project or able to affect it",
+   "wrong": [
+    "Only the people who fund it",
+    "Only the developers",
+    "Only the paying customers"
+   ],
+   "tier": 1,
+   "why": "The group is wider than the people who attend meetings."
+  },
+  {
+   "q": "Which is an outcome rather than an output?",
+   "right": "People spot problems a day earlier",
+   "wrong": [
+    "A dashboard was shipped",
+    "Five reports were written",
+    "The new screen was released"
+   ],
+   "tier": 1,
+   "why": "Outcomes are changes in behaviour or results; outputs are things produced."
+  },
+  {
+   "q": "Why give an early estimate as a range?",
+   "right": "Because uncertainty is high and the range shows it honestly",
+   "wrong": [
+    "Because ranges are easier to calculate",
+    "Because stakeholders dislike exact figures",
+    "Because developers cannot count"
+   ],
+   "tier": 1,
+   "why": "Early information is limited, so a single number implies false precision."
+  },
+  {
+   "q": "Which pair describes the difference between a risk and an issue?",
+   "right": "A risk might happen; an issue has already happened",
+   "wrong": [
+    "A risk is technical; an issue is financial",
+    "A risk is internal; an issue is external",
+    "A risk is permanent; an issue is temporary"
+   ],
+   "tier": 2,
+   "why": "Risks are uncertain; issues are current problems."
+  },
+  {
+   "q": "What does a baseline make possible?",
+   "right": "Proving that a measure improved",
+   "wrong": [
+    "Setting the project budget",
+    "Choosing the technology",
+    "Finding the root cause"
+   ],
+   "tier": 2,
+   "why": "Without a starting value, you cannot tell whether anything changed."
+  },
+  {
+   "q": "What is the best use of a user interview?",
+   "right": "Learning why people behave as they do",
+   "wrong": [
+    "Measuring how many people hold an opinion",
+    "Replacing analytics",
+    "Testing server performance"
+   ],
+   "tier": 2,
+   "why": "Interviews give depth about reasons, not reliable counts."
+  },
+  {
+   "q": "Which technique has team members reveal estimates at the same moment?",
+   "right": "Planning poker",
+   "wrong": [
+    "PERT",
+    "The critical path method",
+    "A Gantt chart"
+   ],
+   "tier": 2,
+   "why": "Simultaneous reveal prevents anchoring on the first number spoken."
+  },
+  {
+   "q": "What does MoSCoW sort requirements into?",
+   "right": "Must, should, could and will not have",
+   "wrong": [
+    "Mandatory, scheduled, completed and waiting",
+    "Low, medium, high and critical",
+    "Basic, performance, delighter and indifferent"
+   ],
+   "tier": 2,
+   "why": "MoSCoW is a four-bucket prioritisation method."
+  },
+  {
+   "q": "What is a non-goal?",
+   "right": "Something the project deliberately will not do",
+   "wrong": [
+    "A goal that was missed",
+    "A goal with no measure",
+    "A goal owned by another team"
+   ],
+   "tier": 2,
+   "why": "Non-goals protect the team from one-more-feature requests."
+  },
+  {
+   "q": "A project charter mainly does what?",
+   "right": "Authorises the project and records its purpose, goals, scope and sponsor",
+   "wrong": [
+    "Lists every technical task and its estimate",
+    "Defines acceptance tests for each feature",
+    "Describes how the system is deployed"
+   ],
+   "tier": 2,
+   "why": "A charter is a short agreement on why the project exists and who backs it."
+  },
+  {
+   "q": "Which formula does PERT use for the expected duration?",
+   "right": "(optimistic + 4 x likely + pessimistic) / 6",
+   "wrong": [
+    "(optimistic + pessimistic) / 2",
+    "optimistic x likely x pessimistic",
+    "likely + pessimistic - optimistic"
+   ],
+   "tier": 3,
+   "why": "PERT weights the likely case four times."
+  },
+  {
+   "q": "A team is told that 80 percent of surveyed customers would pay for a feature, but nobody has paid yet. Which concept applies?",
+   "right": "The say-do gap",
+   "wrong": [
+    "Survivorship bias",
+    "The cone of uncertainty",
+    "Scope creep"
+   ],
+   "tier": 3,
+   "why": "Stated intent often differs from actual behaviour."
+  },
+  {
+   "q": "Which describes a leading indicator?",
+   "right": "A measure that moves early and predicts a later result",
+   "wrong": [
+    "A measure reported after results are final",
+    "A measure of revenue only",
+    "A measure that never changes"
+   ],
+   "tier": 3,
+   "why": "Leading indicators give the team time to act."
+  },
+  {
+   "q": "What is the main purpose of a technical spike?",
+   "right": "To answer a specific technical question within a short time box",
+   "wrong": [
+    "To deliver a shippable feature",
+    "To replace the design phase",
+    "To train junior developers"
+   ],
+   "tier": 3,
+   "why": "A spike produces knowledge rather than production code."
+  },
+  {
+   "q": "Which best describes a proof of concept?",
+   "right": "A demonstration that an idea can work in principle",
+   "wrong": [
+    "The first release to customers",
+    "A complete product with fewer features",
+    "A final test before launch"
+   ],
+   "tier": 3,
+   "why": "A proof of concept answers feasibility and is often discarded."
+  },
+  {
+   "q": "What does a RACI chart allow for each task?",
+   "right": "Only one accountable person",
+   "wrong": [
+    "Only one responsible person",
+    "Only one consulted person",
+    "Only one informed person"
+   ],
+   "tier": 3,
+   "why": "Multiple people can be responsible, but accountability sits with one."
+  },
+  {
+   "q": "What does a probability and impact matrix help you decide?",
+   "right": "Which risks need attention first",
+   "wrong": [
+    "Who owns each risk",
+    "How much budget the project needs",
+    "Which tasks are on the critical path"
+   ],
+   "tier": 3,
+   "why": "It rates risks on likelihood and consequence to rank them."
+  },
+  {
+   "q": "What does total cost of ownership include?",
+   "right": "Purchase, integration, operation, support and replacement",
+   "wrong": [
+    "Only the licence fee",
+    "Only the cost of developer time",
+    "Only the first year's cost"
+   ],
+   "tier": 3,
+   "why": "Lifetime costs often exceed the headline price."
+  },
+  {
+   "q": "Which is a commodity capability for most organisations?",
+   "right": "Payroll processing",
+   "wrong": [
+    "The algorithm behind a unique product",
+    "The customer experience that sets the brand apart",
+    "A proprietary pricing engine that wins customers"
+   ],
+   "tier": 3,
+   "why": "Commodity functions are needed in the same way by many and are usually bought."
+  },
+  {
+   "q": "Which of these is a correct use of a change request?",
+   "right": "Making the trade-off of a late scope change visible before accepting it",
+   "wrong": [
+    "Recording a bug found in testing",
+    "Replacing the project plan",
+    "Recording a stakeholder's complaint"
+   ],
+   "tier": 3,
+   "why": "Change requests force a conscious trade-off."
+  },
+  {
+   "q": "In the five whys technique, what are you trying to move from?",
+   "right": "A symptom toward an underlying cause",
+   "wrong": [
+    "A cause toward a symptom",
+    "A problem toward a solution",
+    "A feature toward a requirement"
+   ],
+   "tier": 3,
+   "why": "Repeated why questions dig beneath the visible problem."
+  },
+  {
+   "q": "Which risk response describes buying insurance against a loss?",
+   "right": "Transference",
+   "wrong": [
+    "Mitigation",
+    "Acceptance",
+    "Avoidance"
+   ],
+   "tier": 4,
+   "why": "Transference moves the cost of impact to a third party without removing the risk."
+  },
+  {
+   "q": "What does reference class forecasting correct?",
+   "right": "The optimism of a plan built only from the inside view",
+   "wrong": [
+    "Mistakes in the work breakdown",
+    "Poor stakeholder communication",
+    "Errors in the budget arithmetic"
+   ],
+   "tier": 4,
+   "why": "It anchors on outcomes of similar past projects."
+  },
+  {
+   "q": "What is the key difference between a walking skeleton and an MVP?",
+   "right": "A walking skeleton proves the architecture connects end to end; an MVP delivers value to real users",
+   "wrong": [
+    "A walking skeleton is bigger than an MVP",
+    "An MVP never reaches users",
+    "A walking skeleton includes every feature"
+   ],
+   "tier": 4,
+   "why": "The skeleton tests integration and deployment early with minimal behaviour."
+  },
+  {
+   "q": "Which of these is a guardrail metric for a project to speed up support responses?",
+   "right": "Customer satisfaction with the answers",
+   "wrong": [
+    "Number of tickets closed",
+    "Average first response time",
+    "Number of agents"
+   ],
+   "tier": 4,
+   "why": "A guardrail must not worsen while the target improves."
+  },
+  {
+   "q": "Which discount-based measure compares options with benefits in different years?",
+   "right": "Net present value",
+   "wrong": [
+    "Payback period",
+    "Gantt chart",
+    "Planning poker"
+   ],
+   "tier": 4,
+   "why": "NPV discounts future cash flows to today's value."
+  },
+  {
+   "q": "Which method would you choose to rank many ideas with a repeatable numeric score?",
+   "right": "RICE scoring",
+   "wrong": [
+    "MoSCoW",
+    "A power and interest grid",
+    "A premortem"
+   ],
+   "tier": 4,
+   "why": "RICE scores reach, impact, confidence and effort."
+  },
+  {
+   "q": "A bonus is paid for closing support tickets quickly and staff begin closing them without solving them. Which law describes this?",
+   "right": "Goodhart's law",
+   "wrong": [
+    "Parkinson's law",
+    "Hofstadter's law",
+    "The cone of uncertainty"
+   ],
+   "tier": 5,
+   "why": "A measure that becomes a target stops being a good measure."
+  },
+  {
+   "q": "Which residual risk statement is correct?",
+   "right": "It is the risk that remains after the response has been applied",
+   "wrong": [
+    "It is the risk before any action is taken",
+    "It is a risk that has been transferred completely",
+    "It is a risk with zero probability"
+   ],
+   "tier": 5,
+   "why": "Residual risk is what is left after controls."
+  },
+  {
+   "q": "A stakeholder says \"we need a dashboard\". What should you do first?",
+   "right": "Ask what decision or problem the dashboard is meant to help with",
+   "wrong": [
+    "Estimate the dashboard and start building",
+    "Ask which charting library they prefer",
+    "Add it to the backlog as a must-have"
+   ],
+   "tier": 3,
+   "why": "A request phrased as a solution hides the need; discovery starts with the problem."
+  },
+  {
+   "q": "A team is asked for a delivery date when only a few sentences of scope exist. What is the most useful reply?",
+   "right": "Give a range with the assumptions, and say when it will narrow",
+   "wrong": [
+    "Give the most optimistic single date",
+    "Refuse to estimate until all the detail is known",
+    "Double the developers' first guess and call it firm"
+   ],
+   "tier": 3,
+   "why": "Ranges with assumptions are honest about uncertainty."
+  },
+  {
+   "q": "All of your interviewees are colleagues who like the idea. What is the problem?",
+   "right": "Sampling bias, because they do not represent the real audience",
+   "wrong": [
+    "Survivorship bias, because they stayed",
+    "Scope creep, because the sample keeps growing",
+    "The cone of uncertainty, because the number is small"
+   ],
+   "tier": 3,
+   "why": "The sample is unrepresentative, so it cannot confirm demand."
+  },
+  {
+   "q": "A project needs credentials from a third party that normally take three weeks. What should the plan do?",
+   "right": "Request them at the start so the wait does not block later work",
+   "wrong": [
+    "Leave the request until the code is ready",
+    "Assume they will arrive on time",
+    "Remove the dependency from the plan"
+   ],
+   "tier": 3,
+   "why": "Slow external dependencies should be started first."
+  },
+  {
+   "q": "A sales leader insists the product needs a feature because a prospect asked for it. You have no other evidence. What is the best response?",
+   "right": "Treat it as an assumption, test how common the need is and decide on evidence",
+   "wrong": [
+    "Add it to the scope because the request is senior",
+    "Reject it because it was not in the original plan",
+    "Ask the prospect to design the feature"
+   ],
+   "tier": 4,
+   "why": "One request is not evidence of demand; test the assumption."
+  },
+  {
+   "q": "Halfway through, a stakeholder adds a small request that would move the date. How should you handle it?",
+   "right": "Raise a change request that shows the cost and schedule trade-off before deciding",
+   "wrong": [
+    "Absorb it quietly to keep the stakeholder happy",
+    "Refuse all changes after the kickoff",
+    "Move the date without telling anyone"
+   ],
+   "tier": 4,
+   "why": "A visible trade-off lets the sponsor choose."
+  },
+  {
+   "q": "A team's plan has every task padded and the project still finishes on the last day. What best explains this?",
+   "right": "Parkinson's law, work expands to fill the time available",
+   "wrong": [
+    "The planning fallacy",
+    "The cone of uncertainty",
+    "The sunk cost fallacy"
+   ],
+   "tier": 4,
+   "why": "Padding each task hides slack that is then consumed."
+  },
+  {
+   "q": "A vendor product costs less to buy than to build but needs a year of integration work. What should the team compare?",
+   "right": "The total cost of ownership of each option",
+   "wrong": [
+    "Only the licence price against the build cost",
+    "Only the number of features offered",
+    "The vendor's marketing claims"
+   ],
+   "tier": 4,
+   "why": "Integration and operation costs belong in the comparison."
+  },
+  {
+   "q": "The team keeps arguing about whether a ticket is finished. What would help?",
+   "right": "A shared definition of done",
+   "wrong": [
+    "A longer sprint",
+    "A stricter deadline",
+    "A larger team"
+   ],
+   "tier": 4,
+   "why": "A common checklist stops people using different standards."
+  },
+  {
+   "q": "You hear \"we have already spent six months, we cannot stop now\". What is the best response?",
+   "right": "Decide using the future costs and benefits only, because the past spending cannot be recovered",
+   "wrong": [
+    "Continue because stopping wastes the money",
+    "Double the budget to finish quickly",
+    "Ask the vendor for a refund"
+   ],
+   "tier": 4,
+   "why": "This is the sunk cost fallacy."
+  },
+  {
+   "q": "Customer feedback comes only from people who are still subscribed. What does that miss?",
+   "right": "The reasons why people left",
+   "wrong": [
+    "The reasons loyal users stay",
+    "The price of the product",
+    "The team's velocity"
+   ],
+   "tier": 4,
+   "why": "Studying only survivors hides the cause of churn."
+  },
+  {
+   "q": "A discovery report shows the biggest risk is that users will not trust automated advice. Which action addresses the riskiest assumption first?",
+   "right": "Run a cheap prototype test of whether users act on the advice",
+   "wrong": [
+    "Build the full system and see",
+    "Write the architecture design",
+    "Hire more developers"
+   ],
+   "tier": 5,
+   "why": "Test the belief that would sink the project, with the cheapest experiment."
+  },
+  {
+   "q": "Sponsors want one number to track a service improvement project. The team fears a single target will be gamed. What is a sound approach?",
+   "right": "Pair the target with a guardrail metric",
+   "wrong": [
+    "Remove all measures",
+    "Pick a measure that cannot be counted",
+    "Use only a lagging indicator"
+   ],
+   "tier": 5,
+   "why": "A guardrail catches harm caused by chasing a single number."
+  },
+  {
+   "q": "A premortem is run and the team names a risk nobody voiced before. What should happen next?",
+   "right": "Add it to the risk register with an owner and a response",
+   "wrong": [
+    "Ignore it because the project has not failed",
+    "Cancel the project immediately",
+    "Record it only in the minutes"
+   ],
+   "tier": 5,
+   "why": "The point is to bring concerns out and assign action."
+  },
+  {
+   "q": "A sponsor reads a plan and sees that Corporation Tax is not shown. Another report marks it as Not built, planned for a later phase. Which habit does the second report show?",
+   "right": "Honest scoping: planned items are labelled planned, not done",
+   "wrong": [
+    "Padding the estimate",
+    "Gold plating",
+    "Hiding scope to avoid questions"
+   ],
+   "tier": 5,
+   "why": "Writing limits down early stops stakeholders assuming features exist."
+  },
+  {
+   "q": "In the gglearn project, which statement fits the README's Known gaps approach?",
+   "right": "Limits are recorded in writing so stakeholders do not assume missing features exist",
+   "wrong": [
+    "Gaps are left out so that the product looks complete",
+    "Gaps are discussed only after launch",
+    "Gaps are fixed before the README is written"
+   ],
+   "tier": 2,
+   "why": "Writing limits down early gives a ready answer when someone asks."
+  },
+  {
+   "q": "The gglearn project uses SQLite for local development and says to move to Postgres before multi-user production use. What planning idea does this show?",
+   "right": "Deferring a costlier commitment until it is needed",
+   "wrong": [
+    "Choosing the final database before discovery",
+    "Avoiding all database decisions",
+    "Gold plating"
+   ],
+   "tier": 3,
+   "why": "Deferring costly choices can be sensible if the trigger for change is written down."
+  },
+  {
+   "q": "Deadlines are fixed and the team is behind. Following the company's approach, what do you cut?",
+   "right": "Scope, not testing",
+   "wrong": [
+    "Testing, not scope",
+    "Review and documentation together",
+    "Nothing, the date moves automatically"
+   ],
+   "tier": 3,
+   "why": "Reduce the work rather than the quality when time is short."
+  },
+  {
+   "q": "What is the best test of a goal such as \"reduce onboarding from five days to two\"?",
+   "right": "It has a measure, a baseline and a target",
+   "wrong": [
+    "It lists the features to be built",
+    "It has no number so it cannot fail",
+    "It is owned by a vendor"
+   ],
+   "tier": 4,
+   "why": "A useful goal is an outcome with a baseline and a target."
+  },
+  {
+   "q": "A team has a charter, a plan and a risk register but finds nobody agrees who decides trade-offs. Which artefact would fix it?",
+   "right": "A RACI chart with one accountable person per decision",
+   "wrong": [
+    "A longer Gantt chart",
+    "A bigger contingency buffer",
+    "A prototype test"
+   ],
+   "tier": 5,
+   "why": "Accountability must be assigned to one person per task."
+  },
+  {
+   "q": "Two stakeholders each believe the other will approve the security review. Which concept explains the gap?",
+   "right": "No single accountable owner was assigned",
+   "wrong": [
+    "Scope creep",
+    "Sampling bias",
+    "Gold plating"
+   ],
+   "tier": 5,
+   "why": "RACI assigns exactly one accountable person."
+  }
+ ]
+}

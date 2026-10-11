@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { currentUser } from "@/lib/auth";
-import { BookMarked, Database, LayoutDashboard, LogIn, LogOut, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users } from "lucide-react";
+import { BookMarked, Database, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users } from "lucide-react";
 import { logout, logoutEverywhere } from "./actions";
 
 export const metadata: Metadata = {
@@ -19,6 +19,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3 text-sm [&_a]:whitespace-nowrap [&_button]:whitespace-nowrap">
             <Link href="/" className="flex items-center gap-1.5 text-lg font-extrabold"><span className="gradient-text">gglearn</span> <Swords size={18} className="text-pink-300" aria-hidden /></Link>
             {user && <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><LayoutDashboard size={15} />My quest</Link>}
+            {user && <Link href="/journey" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><Mountain size={15} />My career</Link>}
             {user && <Link href="/start" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><Rocket size={15} />Start a journey</Link>}
             <Link href="/competitions" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><Trophy size={15} />Compete</Link>
             {user && user.role !== "learner" && <Link href="/admin" className="inline-flex items-center gap-1.5 text-slate-300 transition hover:text-white"><Database size={15} />Question bank</Link>}

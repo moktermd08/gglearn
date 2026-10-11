@@ -1,0 +1,2845 @@
+{
+ "slug": "engineering-leadership",
+ "name": "Engineering Leadership",
+ "description": "Engineering organisation design, hiring, onboarding, performance and feedback, career ladders, coaching, delegation, culture, metrics and their misuse, predictability, on-call and incident culture, conflict and exits, inclusion, and planning with product for CTOs and engineering managers.",
+ "roles": "cto,manager,delivery manager,architect",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "topo": "team topology or organisation-design concept",
+  "hire": "hiring and interviewing concept",
+  "onb": "onboarding concept",
+  "perf": "feedback or performance-management concept",
+  "ladder": "career-ladder level or promotion concept",
+  "coach": "one-to-one or coaching concept",
+  "deleg": "delegation or management concept",
+  "culture": "engineering culture or psychological-safety concept",
+  "metric": "engineering metric or measurement concept",
+  "predict": "delivery predictability or estimation concept",
+  "ops": "on-call or incident-culture concept",
+  "people": "conflict, underperformance or exit concept",
+  "plan": "planning, budget or product-partnership concept",
+  "remote": "remote, hybrid or inclusion concept"
+ },
+ "cards": [
+  {
+   "group": "topo",
+   "subject": "Stream-aligned team",
+   "tier": 1,
+   "says": [
+    "delivers a continuous flow of change for a single business stream",
+    "owns its slice of the product end to end without handoffs"
+   ],
+   "use": "want a team to ship user-facing change without waiting on others",
+   "not": [
+    "exists only to maintain shared tooling for other teams"
+   ],
+   "like": [
+    "Platform team",
+    "Enabling team"
+   ]
+  },
+  {
+   "group": "topo",
+   "subject": "Platform team",
+   "tier": 2,
+   "says": [
+    "offers internal services that other teams consume self-service",
+    "treats its platform as a product and other teams as its customers"
+   ],
+   "use": "need to lift infrastructure burden off the product teams",
+   "not": [
+    "approves every release made by product teams"
+   ],
+   "like": [
+    "Enabling team",
+    "Stream-aligned team",
+    "Complicated-subsystem team"
+   ]
+  },
+  {
+   "group": "topo",
+   "subject": "Enabling team",
+   "tier": 3,
+   "says": [
+    "coaches other teams in a capability they lack for a limited time",
+    "withdraws once the supported team is self-sufficient"
+   ],
+   "use": "need several teams to adopt a practice such as test automation",
+   "not": [
+    "takes over permanent operation of the capability it teaches"
+   ],
+   "like": [
+    "Platform team",
+    "Complicated-subsystem team"
+   ]
+  },
+  {
+   "group": "topo",
+   "subject": "Complicated-subsystem team",
+   "tier": 3,
+   "says": [
+    "owns a component that needs rare specialist knowledge",
+    "spares stream-aligned teams from learning a deep technical specialty"
+   ],
+   "use": "have a part of the system that very few people can safely change",
+   "not": [
+    "coaches teams for a few weeks and then disbands"
+   ],
+   "like": [
+    "Enabling team",
+    "Platform team"
+   ]
+  },
+  {
+   "group": "topo",
+   "subject": "Conway's law",
+   "tier": 2,
+   "says": [
+    "observes that system design mirrors the communication structure of the organisation",
+    "explains why architecture boundaries tend to follow team boundaries"
+   ],
+   "use": "wonder why three separate teams produced three separate services",
+   "not": [
+    "says the codebase size determines how many teams are needed"
+   ],
+   "like": [
+    "Inverse Conway manoeuvre"
+   ]
+  },
+  {
+   "group": "topo",
+   "subject": "Inverse Conway manoeuvre",
+   "tier": 4,
+   "says": [
+    "shapes team structure on purpose to produce a wanted architecture",
+    "starts from the target design and then arranges the teams"
+   ],
+   "use": "want a modular architecture while your teams are split by technical layer",
+   "not": [
+    "mandates a new architecture while leaving the teams unchanged"
+   ],
+   "like": [
+    "Conway's law"
+   ]
+  },
+  {
+   "group": "topo",
+   "subject": "Cognitive load",
+   "tier": 3,
+   "says": [
+    "limits how much one team can own before quality and speed degrade",
+    "guides how many domains or services a team should take on"
+   ],
+   "use": "see a team drowning in on-call, tooling and several unrelated domains",
+   "not": [
+    "is reduced by adding more meetings to share context"
+   ],
+   "like": [
+    "Span of control"
+   ]
+  },
+  {
+   "group": "topo",
+   "subject": "Interaction mode",
+   "tier": 4,
+   "says": [
+    "states whether two teams collaborate, facilitate or use a service from each other",
+    "makes the expected duration and intensity of cooperation explicit"
+   ],
+   "use": "need to clarify whether two teams will pair closely or simply consume an API",
+   "not": [
+    "is fixed once at company founding and never changes"
+   ]
+  },
+  {
+   "group": "topo",
+   "subject": "Span of control",
+   "tier": 2,
+   "says": [
+    "counts the direct reports a single manager has",
+    "leaves people without coaching when it grows too wide"
+   ],
+   "use": "ask how many engineers one manager can realistically support",
+   "not": [
+    "measures the number of services a team runs"
+   ],
+   "like": [
+    "Cognitive load"
+   ]
+  },
+  {
+   "group": "topo",
+   "subject": "Reorganisation",
+   "tier": 5,
+   "says": [
+    "costs weeks of momentum while ownership and relationships reset",
+    "should be tied to a named problem rather than made out of habit"
+   ],
+   "use": "are tempted to redraw the org chart after one missed deadline",
+   "not": [
+    "improves delivery immediately because lines are clearer"
+   ],
+   "like": [
+    "Inverse Conway manoeuvre"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Structured interview",
+   "tier": 2,
+   "says": [
+    "asks every candidate the same questions in the same order",
+    "scores answers against a predefined rubric"
+   ],
+   "use": "want comparable evidence across candidates",
+   "not": [
+    "lets each interviewer improvise to follow instinct"
+   ],
+   "like": [
+    "Interview rubric",
+    "Work-sample test"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Hiring scorecard",
+   "tier": 2,
+   "says": [
+    "lists the competencies a role needs before any interview happens",
+    "keeps the panel judging the same criteria"
+   ],
+   "use": "find interviewers disagreeing about what the role even requires",
+   "not": [
+    "is written after the final candidate is chosen"
+   ],
+   "like": [
+    "Interview rubric"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Interview rubric",
+   "tier": 3,
+   "says": [
+    "describes what weak, acceptable and strong answers look like per question",
+    "reduces differences between interviewers' standards"
+   ],
+   "use": "see two interviewers rate the same answer very differently",
+   "not": [
+    "lists the salary band for each level"
+   ],
+   "like": [
+    "Hiring scorecard",
+    "Structured interview"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Work-sample test",
+   "tier": 3,
+   "says": [
+    "has the candidate do a small piece of realistic work",
+    "tends to predict job performance better than unstructured conversation"
+   ],
+   "use": "need evidence of how a candidate actually builds or reviews code",
+   "not": [
+    "is valid only when it takes several unpaid days"
+   ],
+   "like": [
+    "Live pairing interview",
+    "Structured interview"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Live pairing interview",
+   "tier": 3,
+   "says": [
+    "shows how a candidate collaborates and reasons out loud with an interviewer",
+    "exposes communication habits that a solo exercise hides"
+   ],
+   "use": "want to see how a candidate handles hints and disagreement while coding",
+   "not": [
+    "is best run with the candidate alone and unobserved"
+   ],
+   "like": [
+    "Work-sample test"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Independent scoring",
+   "tier": 3,
+   "says": [
+    "has each interviewer record a rating before hearing the others",
+    "prevents anchoring on the most senior or loudest voice"
+   ],
+   "use": "notice debriefs where the first speaker sways everyone",
+   "not": [
+    "is done by averaging the scores after a group discussion"
+   ],
+   "like": [
+    "Debrief meeting"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Debrief meeting",
+   "tier": 2,
+   "says": [
+    "brings the panel together to weigh written evidence and reach a decision",
+    "is where disagreements between interviewers get resolved"
+   ],
+   "use": "need to decide hire or no hire after all interviews are done",
+   "not": [
+    "replaces written feedback with verbal impressions"
+   ],
+   "like": [
+    "Independent scoring"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Bar raiser",
+   "tier": 4,
+   "says": [
+    "is an interviewer from outside the hiring team who guards the hiring standard",
+    "resists pressure to lower the bar when a role has been open a long time"
+   ],
+   "use": "see a manager ready to accept a weak candidate because the role is urgent",
+   "not": [
+    "is the hiring manager's closest friend on the team"
+   ],
+   "like": [
+    "Cost of a bad hire"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Culture-fit screening",
+   "tier": 3,
+   "says": [
+    "risks favouring candidates who resemble the current team",
+    "needs defining in terms of behaviours and values to be defensible"
+   ],
+   "use": "hear an interviewer reject someone because 'I would not grab a beer with them'",
+   "not": [
+    "is the most reliable predictor of job performance"
+   ],
+   "like": [
+    "Halo effect"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Halo effect",
+   "tier": 4,
+   "says": [
+    "lets one impressive trait colour judgment of every other competency",
+    "is countered by scoring each competency separately"
+   ],
+   "use": "notice a candidate with a famous employer is rated well on everything",
+   "not": [
+    "is a bias that only affects unqualified candidates"
+   ],
+   "like": [
+    "Culture-fit screening"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "Cost of a bad hire",
+   "tier": 4,
+   "says": [
+    "includes manager time, team morale and delayed delivery as well as salary",
+    "usually exceeds the cost of passing on a good candidate"
+   ],
+   "use": "need to justify a slower and more rigorous hiring process",
+   "not": [
+    "is limited to the recruiter's fee"
+   ],
+   "like": [
+    "Bar raiser"
+   ]
+  },
+  {
+   "group": "onb",
+   "subject": "30-60-90 plan",
+   "tier": 2,
+   "says": [
+    "sets expectations for a new hire's first three months in stages",
+    "moves from learning to contributing to owning"
+   ],
+   "use": "are preparing the first quarter of a new engineer",
+   "not": [
+    "fixes the hire's performance rating for the year"
+   ],
+   "like": [
+    "First-commit goal",
+    "Onboarding buddy"
+   ]
+  },
+  {
+   "group": "onb",
+   "subject": "Onboarding buddy",
+   "tier": 1,
+   "says": [
+    "pairs a new hire with a peer for day-to-day questions",
+    "lets the manager stay out of small how-do-I queries"
+   ],
+   "use": "want a new hire to have a safe place to ask basic questions",
+   "not": [
+    "is the new hire's line manager"
+   ],
+   "like": [
+    "Mentor",
+    "30-60-90 plan"
+   ]
+  },
+  {
+   "group": "onb",
+   "subject": "First-commit goal",
+   "tier": 1,
+   "says": [
+    "gets a new engineer's first change to production in the first days",
+    "proves that the build, review and deploy path works for them"
+   ],
+   "use": "want a new hire to have shipped something by the end of week one",
+   "not": [
+    "requires a large feature before the hire counts as onboarded"
+   ],
+   "like": [
+    "30-60-90 plan"
+   ]
+  },
+  {
+   "group": "onb",
+   "subject": "Pre-boarding",
+   "tier": 1,
+   "says": [
+    "completes accounts, equipment and welcome contact before the start date",
+    "prevents a first day wasted on waiting for access"
+   ],
+   "use": "see new hires spend day one without a laptop or logins",
+   "not": [
+    "starts only on the morning of the first day"
+   ]
+  },
+  {
+   "group": "onb",
+   "subject": "Time to first meaningful contribution",
+   "tier": 3,
+   "says": [
+    "measures how quickly a new hire does work that the team values",
+    "points to slow environments or poor documentation when it is long"
+   ],
+   "use": "want a single indicator of how well onboarding works",
+   "not": [
+    "counts the hours a hire spends in training sessions"
+   ],
+   "like": [
+    "First-commit goal"
+   ]
+  },
+  {
+   "group": "onb",
+   "subject": "Onboarding retrospective",
+   "tier": 4,
+   "says": [
+    "asks recent hires after a few weeks what slowed them down",
+    "feeds fixes straight back into the onboarding process"
+   ],
+   "use": "want honest feedback while the new-hire view is still fresh",
+   "not": [
+    "is held only with long-tenured engineers"
+   ],
+   "like": [
+    "Time to first meaningful contribution"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "SBI feedback",
+   "tier": 1,
+   "says": [
+    "describes the situation, the behaviour and the impact",
+    "keeps feedback on observable facts rather than character"
+   ],
+   "use": "need a simple structure for giving specific feedback",
+   "not": [
+    "opens with the person's personality traits"
+   ],
+   "like": [
+    "Radical candor"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Radical candor",
+   "tier": 3,
+   "says": [
+    "combines caring personally with challenging directly",
+    "names the failure of being nice and saying nothing"
+   ],
+   "use": "see a manager avoiding a hard message to protect feelings",
+   "not": [
+    "says feedback should be blunt whether or not the relationship is good"
+   ],
+   "like": [
+    "SBI feedback"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Performance review cycle",
+   "tier": 2,
+   "says": [
+    "summarises results and growth over a fixed period",
+    "should contain no surprises because feedback was given throughout"
+   ],
+   "use": "find that a person is shocked by their half-year review",
+   "not": [
+    "is the only moment feedback is given"
+   ],
+   "like": [
+    "Calibration session"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Calibration session",
+   "tier": 5,
+   "says": [
+    "compares ratings across managers to keep standards consistent",
+    "catches managers who rate too leniently or too harshly"
+   ],
+   "use": "suspect one manager's 'meets expectations' means something different from another's",
+   "not": [
+    "lets each manager decide ratings in complete isolation"
+   ],
+   "like": [
+    "Performance review cycle"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Recency bias",
+   "tier": 3,
+   "says": [
+    "overweights the last few weeks when judging a whole period",
+    "is reduced by keeping notes of achievements through the year"
+   ],
+   "use": "see a review dominated by an incident from last month",
+   "not": [
+    "gives extra credit to work finished long ago"
+   ],
+   "like": [
+    "Halo effect",
+    "Brag document"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Brag document",
+   "tier": 3,
+   "says": [
+    "records an engineer's accomplishments and impact over time",
+    "gives a manager evidence for reviews and promotion cases"
+   ],
+   "use": "want evidence ready when review season arrives",
+   "not": [
+    "is written by the manager without input"
+   ],
+   "like": [
+    "Recency bias"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Performance improvement plan",
+   "tier": 4,
+   "says": [
+    "sets specific expectations and a time frame for recovery",
+    "should be used honestly rather than as paperwork before a dismissal"
+   ],
+   "use": "have repeated, documented gaps after clear coaching",
+   "not": [
+    "is a surprise announcement of dismissal"
+   ],
+   "like": [
+    "Coaching conversation"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "360 review",
+   "tier": 4,
+   "says": [
+    "collects feedback from managers, peers and reports",
+    "is best used for development rather than ratings alone"
+   ],
+   "use": "want a manager to see how their direct reports perceive them",
+   "not": [
+    "asks only the person's own manager"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Objective and key results",
+   "tier": 3,
+   "says": [
+    "pairs an ambitious objective with measurable key results",
+    "works poorly when tied directly to individual pay"
+   ],
+   "use": "want a team to focus on a few outcomes in the quarter",
+   "not": [
+    "lists every task a team will do"
+   ],
+   "like": [
+    "Impact over activity"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Impact over activity",
+   "tier": 4,
+   "says": [
+    "judges engineers by the outcomes they enabled, not hours or lines written",
+    "guards against rewarding visible busyness"
+   ],
+   "use": "hear that someone is a top performer because they always look busy",
+   "not": [
+    "counts commits per week as the main signal"
+   ],
+   "like": [
+    "Objective and key results"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Career ladder",
+   "tier": 1,
+   "says": [
+    "defines the expectations of each engineering level",
+    "gives people a shared view of what growth looks like"
+   ],
+   "use": "are asked what an engineer must do to progress",
+   "not": [
+    "fixes salaries for each level"
+   ],
+   "like": [
+    "Promotion packet",
+    "Dual-track ladder"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Dual-track ladder",
+   "tier": 3,
+   "says": [
+    "lets engineers advance as individual contributors or as managers",
+    "keeps senior technical people from being pushed into management"
+   ],
+   "use": "worry about losing a great senior engineer who does not want to manage",
+   "not": [
+    "makes management a higher level than any individual contributor role"
+   ],
+   "like": [
+    "Career ladder"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Promotion packet",
+   "tier": 3,
+   "says": [
+    "collects evidence that a person already works at the next level",
+    "is reviewed by people beyond the direct manager"
+   ],
+   "use": "need to make a promotion case defensible and consistent",
+   "not": [
+    "is based on time served at the current level"
+   ],
+   "like": [
+    "Career ladder",
+    "Sustained performance"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Sustained performance",
+   "tier": 3,
+   "says": [
+    "requires evidence of operating at the next level over time",
+    "stops a single big project from triggering a promotion"
+   ],
+   "use": "consider promoting someone after one good quarter",
+   "not": [
+    "is satisfied by one standout project"
+   ],
+   "like": [
+    "Promotion packet"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Staff engineer",
+   "tier": 4,
+   "says": [
+    "influences technical direction across several teams without managing them",
+    "is judged on scope and leverage, not only code output"
+   ],
+   "use": "discuss what a senior individual contributor does beyond coding",
+   "not": [
+    "is a manager with a larger team"
+   ],
+   "like": [
+    "Tech lead",
+    "Engineering manager"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Tech lead",
+   "tier": 1,
+   "says": [
+    "guides the technical decisions of one team day to day",
+    "often combines delivery work with design leadership"
+   ],
+   "use": "need someone to set technical direction for one team without managing people",
+   "not": [
+    "handles the team's pay and performance reviews"
+   ],
+   "like": [
+    "Staff engineer",
+    "Engineering manager"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Engineering manager",
+   "tier": 1,
+   "says": [
+    "owns the people, team health and delivery of a group",
+    "hires, develops and removes obstacles for the team"
+   ],
+   "use": "need someone accountable for team growth and outcomes",
+   "not": [
+    "spends most of the week as the main committer"
+   ],
+   "like": [
+    "Tech lead",
+    "Staff engineer"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Sponsorship",
+   "tier": 4,
+   "says": [
+    "has a senior person use their influence to advocate for someone's advancement",
+    "speaks for a person in rooms where they are absent"
+   ],
+   "use": "see a capable engineer overlooked in promotion discussions",
+   "not": [
+    "is the same as meeting for advice every month"
+   ],
+   "like": [
+    "Mentor"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Promotion before readiness",
+   "tier": 5,
+   "says": [
+    "sets someone up to struggle in a role they are not yet performing",
+    "damages trust when peers see it as favouritism"
+   ],
+   "use": "feel pressure to promote a flight-risk who is not yet operating at the next level",
+   "not": [
+    "is the safest way to retain a strong performer"
+   ],
+   "like": [
+    "Sustained performance"
+   ]
+  },
+  {
+   "group": "ladder",
+   "subject": "Level inflation",
+   "tier": 5,
+   "says": [
+    "lowers the meaning of each level when promotions are given too easily",
+    "makes hiring and compensation harder to calibrate"
+   ],
+   "use": "notice that most of the team has been promoted within two years",
+   "not": [
+    "happens only when ladders are too strict"
+   ],
+   "like": [
+    "Calibration session"
+   ]
+  },
+  {
+   "group": "coach",
+   "subject": "One-to-one",
+   "tier": 1,
+   "says": [
+    "gives each report a regular private conversation with their manager",
+    "belongs to the report, who sets much of the agenda"
+   ],
+   "use": "want a standing space to hear problems before they grow",
+   "not": [
+    "is mainly a status report from the engineer"
+   ],
+   "like": [
+    "Skip-level meeting",
+    "Coaching conversation"
+   ]
+  },
+  {
+   "group": "coach",
+   "subject": "Skip-level meeting",
+   "tier": 3,
+   "says": [
+    "has a manager meet the reports of their own reports",
+    "gives a view of team health without the middle manager's filter"
+   ],
+   "use": "want to hear directly how a team feels about its manager",
+   "not": [
+    "replaces the manager's own one-to-ones"
+   ],
+   "like": [
+    "One-to-one"
+   ]
+  },
+  {
+   "group": "coach",
+   "subject": "Coaching conversation",
+   "tier": 3,
+   "says": [
+    "asks questions that help the person find their own solution",
+    "resists handing over the answer too early"
+   ],
+   "use": "want a report to build judgment rather than depend on you",
+   "not": [
+    "tells the person exactly what to do"
+   ],
+   "like": [
+    "Mentor",
+    "One-to-one"
+   ]
+  },
+  {
+   "group": "coach",
+   "subject": "Mentor",
+   "tier": 2,
+   "says": [
+    "shares experience and advice from a wider career",
+    "does not have to sit in the mentee's reporting line"
+   ],
+   "use": "want someone outside the chain for career advice",
+   "not": [
+    "decides the mentee's performance rating"
+   ],
+   "like": [
+    "Sponsorship",
+    "Onboarding buddy"
+   ]
+  },
+  {
+   "group": "coach",
+   "subject": "GROW model",
+   "tier": 3,
+   "says": [
+    "structures coaching as goal, reality, options and will",
+    "moves a conversation from description to commitment"
+   ],
+   "use": "need a simple structure for a coaching conversation",
+   "not": [
+    "is a way to score performance reviews"
+   ],
+   "like": [
+    "Coaching conversation"
+   ]
+  },
+  {
+   "group": "coach",
+   "subject": "Growth plan",
+   "tier": 2,
+   "says": [
+    "links a person's aspirations to specific projects and skills",
+    "is reviewed regularly in one-to-ones"
+   ],
+   "use": "want to link someone's ambition to concrete development steps",
+   "not": [
+    "is only written when someone is underperforming"
+   ],
+   "like": [
+    "Career ladder"
+   ]
+  },
+  {
+   "group": "coach",
+   "subject": "Manager as a shield",
+   "tier": 5,
+   "says": [
+    "absorbs pressure from above so the team can work",
+    "fails if it hides context the team needs for their decisions"
+   ],
+   "use": "are tempted to hide a reorganisation rumour 'to protect the team'",
+   "not": [
+    "is the best way to keep a team informed"
+   ],
+   "like": [
+    "Skip-level meeting"
+   ]
+  },
+  {
+   "group": "deleg",
+   "subject": "Delegation",
+   "tier": 1,
+   "says": [
+    "hands a task and its authority to another person",
+    "keeps accountability with the delegator"
+   ],
+   "use": "are doing work that someone else could grow by owning",
+   "not": [
+    "transfers all accountability along with the task"
+   ],
+   "like": [
+    "Situational leadership",
+    "Micromanagement"
+   ]
+  },
+  {
+   "group": "deleg",
+   "subject": "Situational leadership",
+   "tier": 3,
+   "says": [
+    "adjusts how directive a manager is to the person's skill and confidence on the task",
+    "uses more direction for a novice and more autonomy for an expert"
+   ],
+   "use": "need to manage a strong engineer new to a particular technology",
+   "not": [
+    "applies one style to everyone for consistency"
+   ],
+   "like": [
+    "Delegation"
+   ]
+  },
+  {
+   "group": "deleg",
+   "subject": "Micromanagement",
+   "tier": 2,
+   "says": [
+    "checks every detail of how work is done",
+    "erodes trust and ownership in capable people"
+   ],
+   "use": "find yourself rewriting your team's pull-request descriptions",
+   "not": [
+    "builds a team's confidence over time"
+   ],
+   "like": [
+    "Delegation"
+   ]
+  },
+  {
+   "group": "deleg",
+   "subject": "Manager of managers",
+   "tier": 4,
+   "says": [
+    "leads through other managers instead of through the work itself",
+    "shifts the job to hiring, coaching and setting context for managers"
+   ],
+   "use": "move from leading one team to leading several teams with their own managers",
+   "not": [
+    "continues to review every technical decision directly"
+   ],
+   "like": [
+    "Skip-level meeting",
+    "Span of control"
+   ]
+  },
+  {
+   "group": "deleg",
+   "subject": "Decision-rights table",
+   "tier": 3,
+   "says": [
+    "states who decides, who is consulted and who is informed",
+    "speeds up work by removing ambiguity about authority"
+   ],
+   "use": "see a decision stall because nobody knows who can make it",
+   "not": [
+    "requires consensus from every stakeholder"
+   ],
+   "like": [
+    "RACI",
+    "Two-way door decision"
+   ]
+  },
+  {
+   "group": "deleg",
+   "subject": "RACI",
+   "tier": 3,
+   "says": [
+    "assigns responsible, accountable, consulted and informed roles",
+    "gives exactly one accountable owner for each outcome"
+   ],
+   "use": "need to clarify roles on a cross-team initiative",
+   "not": [
+    "names several accountable owners to share blame"
+   ],
+   "like": [
+    "Decision-rights table"
+   ]
+  },
+  {
+   "group": "deleg",
+   "subject": "Two-way door decision",
+   "tier": 4,
+   "says": [
+    "can be reversed cheaply, so it should be decided quickly",
+    "is delegated to the people closest to the work"
+   ],
+   "use": "see senior leaders slowed by approvals of easily undone choices",
+   "not": [
+    "deserves the full committee review that one-way decisions get"
+   ],
+   "like": [
+    "Decision-rights table"
+   ]
+  },
+  {
+   "group": "deleg",
+   "subject": "Leader's intent",
+   "tier": 4,
+   "says": [
+    "states the purpose and constraints of a task but not the method",
+    "lets people adapt when circumstances change"
+   ],
+   "use": "want a team to improvise sensibly when plans break",
+   "not": [
+    "lists the exact steps the team must follow"
+   ],
+   "like": [
+    "Delegation"
+   ]
+  },
+  {
+   "group": "deleg",
+   "subject": "Management debt",
+   "tier": 5,
+   "says": [
+    "builds up when a manager avoids hiring, feedback or clarity work",
+    "shows up later as slow delivery and attrition"
+   ],
+   "use": "notice a manager who always chooses coding over people work",
+   "not": [
+    "is solved by hiring a senior engineer"
+   ],
+   "like": [
+    "Manager of managers"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Psychological safety",
+   "tier": 1,
+   "says": [
+    "is a shared belief that speaking up will not be punished or humiliated",
+    "lets people raise mistakes and doubts early"
+   ],
+   "use": "see engineers hide errors until they become outages",
+   "not": [
+    "means the team never disagrees or gives critical feedback"
+   ],
+   "like": [
+    "Blameless postmortem",
+    "Fear of conflict"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Blameless postmortem",
+   "tier": 3,
+   "says": [
+    "examines how a system allowed a failure rather than who caused it",
+    "produces follow-up actions that change process or tooling"
+   ],
+   "use": "need to learn from an outage without making someone the scapegoat",
+   "not": [
+    "excuses people from accountability for their own work"
+   ],
+   "like": [
+    "Psychological safety",
+    "Five whys"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Team charter",
+   "tier": 2,
+   "says": [
+    "records a team's purpose, working agreements and ways of deciding",
+    "is written with the team rather than imposed on it"
+   ],
+   "use": "want a new team to agree how it will work together",
+   "not": [
+    "is a legal contract between departments"
+   ],
+   "like": [
+    "Working agreement"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Working agreement",
+   "tier": 2,
+   "says": [
+    "sets concrete rules for how the team collaborates, such as review times",
+    "is revisited when the team finds it no longer fits"
+   ],
+   "use": "find reviews sitting for days with no shared expectation",
+   "not": [
+    "is dictated by HR for the whole company"
+   ],
+   "like": [
+    "Team charter"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Engineering principles document",
+   "tier": 3,
+   "says": [
+    "expresses a company's tie-breaker values for technical trade-offs",
+    "helps autonomous teams decide consistently without asking"
+   ],
+   "use": "want teams to make similar trade-offs without central approval",
+   "not": [
+    "lists the approved programming languages"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Trust equation",
+   "tier": 4,
+   "says": [
+    "builds trust from credibility, reliability and intimacy, reduced by self-interest",
+    "explains why dependable follow-through matters as much as expertise"
+   ],
+   "use": "ask why a brilliant but unreliable lead struggles to earn trust",
+   "not": [
+    "says trust grows mainly with technical skill"
+   ],
+   "like": [
+    "Psychological safety"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Fear of conflict",
+   "tier": 4,
+   "says": [
+    "is a dysfunction where teams avoid honest debate to keep peace",
+    "produces artificial harmony and weak decisions"
+   ],
+   "use": "see meetings end in polite agreement and then quiet resistance",
+   "not": [
+    "is a sign of a healthy and aligned team"
+   ],
+   "like": [
+    "Psychological safety"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Hero culture",
+   "tier": 5,
+   "says": [
+    "rewards individuals who rescue failing systems at the last minute",
+    "hides the fragile process that created the crisis"
+   ],
+   "use": "notice the same engineer praised for weekend firefighting every month",
+   "not": [
+    "encourages sustainable, preventive engineering"
+   ],
+   "like": [
+    "Blameless postmortem"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Leading by example",
+   "tier": 1,
+   "says": [
+    "shapes culture through what leaders visibly do, not what they say",
+    "undermines stated values when behaviour contradicts them"
+   ],
+   "use": "hear a leader praise work-life balance while sending midnight messages",
+   "not": [
+    "is secondary to the values written on a poster"
+   ],
+   "like": [
+    "Blameless postmortem"
+   ]
+  },
+  {
+   "group": "culture",
+   "subject": "Rewarding the messenger",
+   "tier": 4,
+   "says": [
+    "responds to bad news with thanks and a plan, not blame",
+    "encourages people to bring problems up early"
+   ],
+   "use": "want teams to report slipping projects while there is time to act",
+   "not": [
+    "publicly criticises the person who raised the problem"
+   ],
+   "like": [
+    "Psychological safety"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Deployment frequency",
+   "tier": 1,
+   "says": [
+    "counts how often a team releases to production",
+    "rises as batches shrink and releases become routine"
+   ],
+   "use": "want to see how often a team gets changes in front of users",
+   "not": [
+    "measures how long an outage lasts"
+   ],
+   "like": [
+    "Lead time for changes",
+    "Change failure rate"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Lead time for changes",
+   "tier": 2,
+   "says": [
+    "measures time from code commit to running in production",
+    "shows how long finished work waits in the pipeline"
+   ],
+   "use": "want to see how quickly a committed change reaches users",
+   "not": [
+    "measures time from idea to approved budget"
+   ],
+   "like": [
+    "Cycle time",
+    "Deployment frequency"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Change failure rate",
+   "tier": 3,
+   "says": [
+    "is the share of releases that cause a degradation needing a fix",
+    "is read alongside speed to check that quality has not dropped"
+   ],
+   "use": "want to check that faster releases are not producing more incidents",
+   "not": [
+    "counts every bug found before release"
+   ],
+   "like": [
+    "Deployment frequency",
+    "Time to restore service"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Time to restore service",
+   "tier": 3,
+   "says": [
+    "measures how long it takes to recover from a production failure",
+    "rewards quick detection, rollback and clear runbooks"
+   ],
+   "use": "want a delivery measure of resilience when things break",
+   "not": [
+    "is the time to fix the root cause permanently"
+   ],
+   "like": [
+    "Change failure rate"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Cycle time",
+   "tier": 3,
+   "says": [
+    "measures how long work takes from start to done",
+    "reveals queues and handoffs when it is much longer than active work time"
+   ],
+   "use": "suspect tickets spend most of their life waiting",
+   "not": [
+    "counts the hours engineers spend typing"
+   ],
+   "like": [
+    "Lead time for changes",
+    "Work in progress limit"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Work in progress limit",
+   "tier": 3,
+   "says": [
+    "caps how many items a team has open at once",
+    "shortens cycle time by forcing the team to finish before starting"
+   ],
+   "use": "see everyone busy yet little work completed",
+   "not": [
+    "raises throughput by starting more items in parallel"
+   ],
+   "like": [
+    "Cycle time"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "SPACE framework",
+   "tier": 4,
+   "says": [
+    "views developer productivity across satisfaction, performance, activity, communication and efficiency",
+    "warns that no single metric describes productivity"
+   ],
+   "use": "want a broader view than counting commits",
+   "not": [
+    "reduces productivity to one velocity number"
+   ],
+   "like": [
+    "DORA metrics"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "DORA metrics",
+   "tier": 2,
+   "says": [
+    "group four measures of software delivery speed and stability",
+    "correlate with organisational performance in the research behind them"
+   ],
+   "use": "need an evidence-based set of delivery measures",
+   "not": [
+    "rank individual engineers for pay decisions"
+   ],
+   "like": [
+    "SPACE framework"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Goodhart's law",
+   "tier": 4,
+   "says": [
+    "warns that a measure used as a target stops being a good measure",
+    "explains why teams game metrics tied to rewards"
+   ],
+   "use": "watch a team split tickets to inflate a throughput number",
+   "not": [
+    "says more measurement always improves behaviour"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Developer experience survey",
+   "tier": 3,
+   "says": [
+    "asks engineers how easily they can do their work",
+    "finds friction that delivery data alone does not show"
+   ],
+   "use": "want to learn why builds and reviews feel slow",
+   "not": [
+    "measures individual lines of code written"
+   ],
+   "like": [
+    "SPACE framework"
+   ]
+  },
+  {
+   "group": "metric",
+   "subject": "Flow efficiency",
+   "tier": 4,
+   "says": [
+    "compares time work is actively worked on with total elapsed time",
+    "is low when items sit waiting between teams"
+   ],
+   "use": "find work is active for two days in a six-week journey",
+   "not": [
+    "measures how busy every engineer is"
+   ],
+   "like": [
+    "Cycle time"
+   ]
+  },
+  {
+   "group": "predict",
+   "subject": "Story point",
+   "tier": 2,
+   "says": [
+    "expresses relative effort and complexity rather than hours",
+    "is only meaningful within one team's own scale"
+   ],
+   "use": "need a rough relative sizing for backlog items",
+   "not": [
+    "converts directly into calendar days across teams"
+   ],
+   "like": [
+    "Velocity",
+    "Planning poker"
+   ]
+  },
+  {
+   "group": "predict",
+   "subject": "Velocity",
+   "tier": 2,
+   "says": [
+    "reports how many story points a team completes per iteration",
+    "helps a team plan its own capacity and is not a productivity score"
+   ],
+   "use": "want to forecast how much a team will finish next sprint",
+   "not": [
+    "is a fair way to compare two teams"
+   ],
+   "like": [
+    "Story point",
+    "Throughput"
+   ]
+  },
+  {
+   "group": "predict",
+   "subject": "Throughput",
+   "tier": 3,
+   "says": [
+    "counts how many work items are finished per time period",
+    "supports forecasting without estimating each item"
+   ],
+   "use": "want to forecast without sizing every ticket",
+   "not": [
+    "depends on story point totals"
+   ],
+   "like": [
+    "Velocity",
+    "Monte Carlo forecast"
+   ]
+  },
+  {
+   "group": "predict",
+   "subject": "Monte Carlo forecast",
+   "tier": 4,
+   "says": [
+    "simulates many outcomes from past throughput to give a range of dates",
+    "expresses delivery as a probability rather than a single date"
+   ],
+   "use": "want to tell a stakeholder 'eighty-five percent likely by this date'",
+   "not": [
+    "promises one exact delivery date"
+   ],
+   "like": [
+    "Throughput",
+    "Cone of uncertainty"
+   ]
+  },
+  {
+   "group": "predict",
+   "subject": "Cone of uncertainty",
+   "tier": 3,
+   "says": [
+    "shows estimates narrowing as a project learns more",
+    "warns against fixed commitments at the very start"
+   ],
+   "use": "are asked for an exact date before the problem is understood",
+   "not": [
+    "says estimates are equally accurate at the beginning and end"
+   ],
+   "like": [
+    "Monte Carlo forecast"
+   ]
+  },
+  {
+   "group": "predict",
+   "subject": "Planning poker",
+   "tier": 1,
+   "says": [
+    "has each team member privately propose an estimate and then compare",
+    "surfaces differing assumptions through discussion"
+   ],
+   "use": "want the team to expose hidden assumptions while sizing",
+   "not": [
+    "lets the loudest person set the final estimate"
+   ],
+   "like": [
+    "Story point"
+   ]
+  },
+  {
+   "group": "predict",
+   "subject": "Small batch size",
+   "tier": 3,
+   "says": [
+    "makes work easier to estimate and to finish",
+    "exposes problems earlier and lowers the cost of change"
+   ],
+   "use": "see large tasks regularly slipping with surprises at the end",
+   "not": [
+    "increases risk because every release is bigger"
+   ],
+   "like": [
+    "Work in progress limit"
+   ]
+  },
+  {
+   "group": "predict",
+   "subject": "Estimate versus commitment",
+   "tier": 4,
+   "says": [
+    "separates a forecast of likely effort from a promise to deliver",
+    "stops stakeholders turning a guess into a deadline"
+   ],
+   "use": "hear a sales team quote an engineer's rough guess to a customer as a date",
+   "not": [
+    "treats the two as the same thing"
+   ],
+   "like": [
+    "Cone of uncertainty"
+   ]
+  },
+  {
+   "group": "predict",
+   "subject": "Dependency mapping",
+   "tier": 3,
+   "says": [
+    "identifies work that waits on other teams",
+    "exposes cross-team risks before planning is committed"
+   ],
+   "use": "find a project blocked by another team's unfinished component",
+   "not": [
+    "is done once all coding has finished"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "On-call rotation",
+   "tier": 1,
+   "says": [
+    "shares responsibility for responding to production alerts across engineers",
+    "needs fair scheduling and clear handover"
+   ],
+   "use": "need someone available to respond to production problems out of hours",
+   "not": [
+    "assigns the same engineer permanently to every incident"
+   ],
+   "like": [
+    "Follow-the-sun rotation",
+    "Escalation policy"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Follow-the-sun rotation",
+   "tier": 3,
+   "says": [
+    "hands on-call duty between regions so that nobody works at night",
+    "depends on good handover notes between time zones"
+   ],
+   "use": "have engineers in several time zones and want to avoid night pages",
+   "not": [
+    "has one region cover every night shift"
+   ],
+   "like": [
+    "On-call rotation"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Escalation policy",
+   "tier": 2,
+   "says": [
+    "defines who is alerted next if a page goes unanswered",
+    "stops a single missed alert from becoming a long outage"
+   ],
+   "use": "need to guarantee that a missed page reaches somebody else",
+   "not": [
+    "decides who is blamed for the incident"
+   ],
+   "like": [
+    "On-call rotation",
+    "Incident commander"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Incident commander",
+   "tier": 3,
+   "says": [
+    "coordinates the response without necessarily fixing the problem",
+    "keeps one person responsible for decisions and communication"
+   ],
+   "use": "see an outage where six engineers talk at once and nobody leads",
+   "not": [
+    "is the engineer who wrote the failing code"
+   ],
+   "like": [
+    "Escalation policy"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Severity level",
+   "tier": 2,
+   "says": [
+    "classifies an incident by its impact on users and the business",
+    "sets the urgency and who must be woken"
+   ],
+   "use": "need to decide whether a problem justifies waking people at night",
+   "not": [
+    "is a rating of the responder's performance"
+   ],
+   "like": [
+    "Escalation policy"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Alert fatigue",
+   "tier": 3,
+   "says": [
+    "desensitises responders when pages are frequent or not actionable",
+    "is reduced by removing noisy alerts and tuning thresholds"
+   ],
+   "use": "hear on-call engineers ignore pages because most are false alarms",
+   "not": [
+    "improves response because alerts feel routine"
+   ],
+   "like": [
+    "Toil"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Toil",
+   "tier": 3,
+   "says": [
+    "is repetitive manual work that grows with the service and adds no lasting value",
+    "should be capped so on-call time includes improvement work"
+   ],
+   "use": "see on-call engineers spend their week restarting the same service by hand",
+   "not": [
+    "is the creative design work done by senior engineers"
+   ],
+   "like": [
+    "Alert fatigue"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Error budget",
+   "tier": 5,
+   "says": [
+    "is the amount of unreliability a service may spend before releases slow",
+    "turns the balance between speed and stability into an agreed number"
+   ],
+   "use": "want an objective rule for when to pause features and fix reliability",
+   "not": [
+    "is a financial budget for incident costs"
+   ],
+   "like": [
+    "Service level objective"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Service level objective",
+   "tier": 3,
+   "says": [
+    "sets a target for reliability measured against a defined indicator",
+    "is chosen below one hundred percent on purpose"
+   ],
+   "use": "need a shared target for how reliable a service must be",
+   "not": [
+    "promises compensation to customers when missed"
+   ],
+   "like": [
+    "Error budget"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Runbook",
+   "tier": 1,
+   "says": [
+    "gives step-by-step instructions for handling a known alert",
+    "reduces the knowledge needed to respond at 3am"
+   ],
+   "use": "want a new on-call engineer to handle a known alert safely",
+   "not": [
+    "replaces the need for any monitoring"
+   ],
+   "like": [
+    "Escalation policy"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Five whys",
+   "tier": 4,
+   "says": [
+    "asks why repeatedly to move from a symptom toward a systemic cause",
+    "can wrongly stop at a single human error if used carelessly"
+   ],
+   "use": "find a postmortem concluding 'an engineer made a typo'",
+   "not": [
+    "is a requirement to find exactly five causes"
+   ],
+   "like": [
+    "Blameless postmortem"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Underperformance diagnosis",
+   "tier": 3,
+   "says": [
+    "separates lack of skill, lack of will and lack of clarity before choosing a response",
+    "decides whether the fix is training, motivation or expectations"
+   ],
+   "use": "must decide what to do about an engineer who keeps missing targets",
+   "not": [
+    "assumes poor motivation as the default cause"
+   ],
+   "like": [
+    "Performance improvement plan"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Expectation-setting conversation",
+   "tier": 2,
+   "says": [
+    "puts what is expected in writing and agrees it before performance is judged",
+    "makes later feedback fair and specific"
+   ],
+   "use": "hear someone say they never knew what was expected of them",
+   "not": [
+    "relies on the job title alone"
+   ],
+   "like": [
+    "Underperformance diagnosis"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Documented feedback",
+   "tier": 3,
+   "says": [
+    "records conversations and agreed actions in writing",
+    "protects both the employee and the company if the case escalates"
+   ],
+   "use": "are having a second conversation about the same problem",
+   "not": [
+    "replaces speaking to the person directly"
+   ],
+   "like": [
+    "Performance improvement plan"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Dismissal conversation",
+   "tier": 4,
+   "says": [
+    "is short, clear and respectful, with the decision already made",
+    "leaves out debate or fresh warnings"
+   ],
+   "use": "are about to tell an employee their employment is ending",
+   "not": [
+    "opens a long negotiation about whether the decision should stand"
+   ],
+   "like": [
+    "Layoff communication"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Layoff communication",
+   "tier": 5,
+   "says": [
+    "explains the business reason plainly and treats affected people with dignity",
+    "must reach the remaining team promptly to rebuild trust"
+   ],
+   "use": "have to announce redundancies to the whole engineering organisation",
+   "not": [
+    "lets rumours spread so people can prepare"
+   ],
+   "like": [
+    "Dismissal conversation"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Exit interview",
+   "tier": 1,
+   "says": [
+    "asks a departing employee why they leave and what could improve",
+    "gives data on patterns only if answers are collected and acted on"
+   ],
+   "use": "want to learn why valuable engineers keep resigning",
+   "not": [
+    "is the same as a performance review"
+   ],
+   "like": [
+    "Stay interview"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Stay interview",
+   "tier": 3,
+   "says": [
+    "asks current high performers what keeps them and what would make them leave",
+    "finds retention risks before a resignation arrives"
+   ],
+   "use": "want to learn what would make a valued engineer stay",
+   "not": [
+    "is held only after someone resigns"
+   ],
+   "like": [
+    "Exit interview"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Counter-offer",
+   "tier": 5,
+   "says": [
+    "tries to retain a resigning employee with extra pay or title",
+    "often fails to fix the underlying reason they wanted to leave"
+   ],
+   "use": "have a strong engineer who resigned for a better offer",
+   "not": [
+    "usually solves the reason for resignation"
+   ],
+   "like": [
+    "Stay interview"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Conflict mediation",
+   "tier": 3,
+   "says": [
+    "brings both parties to talk through the issue with a neutral facilitator",
+    "aims at a working agreement, not at deciding who is right"
+   ],
+   "use": "have two engineers who stopped speaking after an argument over design",
+   "not": [
+    "picks a winner after hearing the louder side"
+   ],
+   "like": [
+    "Disagree and commit"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Disagree and commit",
+   "tier": 3,
+   "says": [
+    "asks people to support a decision wholeheartedly after voicing disagreement",
+    "works only after everyone has had a real chance to be heard"
+   ],
+   "use": "need the team to move forward after a heated technical debate",
+   "not": [
+    "requires every person to be convinced first"
+   ],
+   "like": [
+    "Conflict mediation"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Brilliant jerk",
+   "tier": 5,
+   "says": [
+    "delivers strong individual output while damaging the people around them",
+    "costs the team more than the output is worth when left unaddressed"
+   ],
+   "use": "have a top coder who regularly belittles reviewers",
+   "not": [
+    "should be protected because of their output"
+   ],
+   "like": [
+    "Hero culture"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Tolerated low performance",
+   "tier": 5,
+   "says": [
+    "shifts extra load onto peers who stay productive",
+    "damages team morale the longer it continues"
+   ],
+   "use": "see the team quietly covering for one colleague for months",
+   "not": [
+    "is kind to the rest of the team when it is postponed"
+   ],
+   "like": [
+    "Underperformance diagnosis"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Headcount plan",
+   "tier": 2,
+   "says": [
+    "links hiring numbers to the work the business needs delivered",
+    "accounts for attrition and the time new hires need to become productive"
+   ],
+   "use": "must propose how many engineers to hire for next year",
+   "not": [
+    "adds engineers whenever a deadline is missed"
+   ],
+   "like": [
+    "Capacity planning",
+    "Brooks's law"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Capacity planning",
+   "tier": 3,
+   "says": [
+    "estimates the work a team can absorb after leave, on-call and meetings",
+    "stops the roadmap from assuming full availability"
+   ],
+   "use": "find the roadmap assumes every engineer is free all week",
+   "not": [
+    "counts every working day as productive time"
+   ],
+   "like": [
+    "Headcount plan"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Brooks's law",
+   "tier": 4,
+   "says": [
+    "observes that adding people to a late project makes it later",
+    "stems from onboarding and communication overhead"
+   ],
+   "use": "are asked to add ten engineers to a project three weeks before its date",
+   "not": [
+    "says more people always shorten the schedule"
+   ],
+   "like": [
+    "Headcount plan"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Build, buy or partner",
+   "tier": 3,
+   "says": [
+    "compares own development, purchase and partnership as sourcing choices",
+    "weighs differentiation against total cost of ownership"
+   ],
+   "use": "need to decide whether to write a payments feature or license one",
+   "not": [
+    "always favours writing everything in-house"
+   ],
+   "like": [
+    "Total cost of ownership"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Total cost of ownership",
+   "tier": 3,
+   "says": [
+    "includes maintenance, operations and staffing as well as purchase price",
+    "prevents choosing an option that is cheap only on day one"
+   ],
+   "use": "compare a free open-source tool with a paid service",
+   "not": [
+    "is the licence price alone"
+   ],
+   "like": [
+    "Build, buy or partner"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Engineering budget",
+   "tier": 1,
+   "says": [
+    "covers people, tools, cloud and training for the year",
+    "is easier to defend when tied to outcomes the business values"
+   ],
+   "use": "must defend an annual budget to the finance team",
+   "not": [
+    "is only the cost of salaries"
+   ],
+   "like": [
+    "Headcount plan"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Technical debt backlog",
+   "tier": 3,
+   "says": [
+    "tracks known shortcuts together with their cost to the business",
+    "lets managers weigh repayment against features openly"
+   ],
+   "use": "keep arguing about refactoring without any shared list",
+   "not": [
+    "is hidden from product managers to avoid friction"
+   ],
+   "like": [
+    "Technical debt allowance"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Technical debt allowance",
+   "tier": 4,
+   "says": [
+    "reserves a steady share of capacity for repaying debt",
+    "avoids negotiating every cleanup against every feature"
+   ],
+   "use": "want debt repayment to survive deadline pressure",
+   "not": [
+    "is spent only after all features ship"
+   ],
+   "like": [
+    "Technical debt backlog"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Debt interest",
+   "tier": 4,
+   "says": [
+    "is the extra effort every future change costs because of an old shortcut",
+    "guides which debt to repay first"
+   ],
+   "use": "need to decide which of several shortcuts to fix first",
+   "not": [
+    "is zero until the system fails"
+   ],
+   "like": [
+    "Technical debt allowance"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Product trio",
+   "tier": 3,
+   "says": [
+    "brings product, design and engineering leads together to shape work",
+    "finds feasibility and design problems before delivery starts"
+   ],
+   "use": "find designs reaching engineers with no technical input",
+   "not": [
+    "has engineering receive finished specifications and build them"
+   ],
+   "like": [
+    "Dual-track discovery"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Dual-track discovery",
+   "tier": 4,
+   "says": [
+    "runs learning about problems alongside building the delivery work",
+    "keeps the backlog fed with validated ideas"
+   ],
+   "use": "see teams run out of well-understood work or build unvalidated features",
+   "not": [
+    "finishes all discovery before any build starts"
+   ],
+   "like": [
+    "Product trio"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Engineering pushback",
+   "tier": 4,
+   "says": [
+    "explains cost, risk and alternatives to product rather than a flat no",
+    "offers options so decisions rest on trade-offs"
+   ],
+   "use": "are asked to commit to an unrealistic deadline from product",
+   "not": [
+    "refuses all requests that exceed capacity without explanation"
+   ],
+   "like": [
+    "Estimate versus commitment"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Roadmap",
+   "tier": 1,
+   "says": [
+    "communicates planned direction and priorities over time",
+    "is a statement of intent and not a delivery contract"
+   ],
+   "use": "are asked for a plan stakeholders can follow for the next two quarters",
+   "not": [
+    "is a fixed commitment to exact dates"
+   ],
+   "like": [
+    "Capacity planning"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Asynchronous communication",
+   "tier": 2,
+   "says": [
+    "lets people respond on their own schedule instead of live",
+    "relies on written context that stands alone"
+   ],
+   "use": "need to work across several time zones without constant meetings",
+   "not": [
+    "requires everyone to be online simultaneously"
+   ],
+   "like": [
+    "Written decision record"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Written decision record",
+   "tier": 3,
+   "says": [
+    "captures a decision and its reasoning for later readers",
+    "spares remote teams from repeating the same debate"
+   ],
+   "use": "keep re-debating a choice that was settled months ago",
+   "not": [
+    "is written only for the decider"
+   ],
+   "like": [
+    "Asynchronous communication"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Core-hours window",
+   "tier": 2,
+   "says": [
+    "sets a period when everyone is available for live collaboration",
+    "balances flexibility with the need for shared time"
+   ],
+   "use": "have hybrid staff in several cities who need some overlap",
+   "not": [
+    "requires every person to work identical hours"
+   ],
+   "like": [
+    "Asynchronous communication"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Proximity bias",
+   "tier": 4,
+   "says": [
+    "favours people seen in the office when promotions and projects are handed out",
+    "is countered by judging on outcomes and by deliberate fairness"
+   ],
+   "use": "notice remote engineers are passed over for interesting work",
+   "not": [
+    "helps remote employees get recognition"
+   ],
+   "like": [
+    "Recency bias"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Remote-first",
+   "tier": 3,
+   "says": [
+    "designs every process as if all staff were remote",
+    "stops office attendees from getting hidden advantages"
+   ],
+   "use": "want remote and office staff to have the same access to decisions",
+   "not": [
+    "treats the office as the real place decisions happen"
+   ],
+   "like": [
+    "Core-hours window"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Inclusive job description",
+   "tier": 3,
+   "says": [
+    "removes unnecessary requirements and exclusionary wording",
+    "widens the pool of qualified applicants"
+   ],
+   "use": "find that few women or career changers apply to your roles",
+   "not": [
+    "lists every possible skill to deter weak applicants"
+   ],
+   "like": [
+    "Diverse slate"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Diverse slate",
+   "tier": 3,
+   "says": [
+    "requires a qualified shortlist that includes under-represented candidates before deciding",
+    "widens the candidate pool without lowering the standard"
+   ],
+   "use": "see shortlists drawn almost entirely from one network",
+   "not": [
+    "fills a quota with candidates who do not meet the bar"
+   ],
+   "like": [
+    "Inclusive job description",
+    "Blind screening"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Blind screening",
+   "tier": 3,
+   "says": [
+    "hides names and similar details when first reviewing applications",
+    "reduces the chance that first impressions rest on irrelevant traits"
+   ],
+   "use": "want to limit unconscious bias at the résumé stage",
+   "not": [
+    "removes the need for structured interviews"
+   ],
+   "like": [
+    "Diverse slate"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Pay equity review",
+   "tier": 4,
+   "says": [
+    "compares compensation for similar roles across groups to find unexplained gaps",
+    "corrects differences that cannot be justified by role or level"
+   ],
+   "use": "discover that two engineers at the same level have an unexplained pay gap",
+   "not": [
+    "is needed only when an employee complains"
+   ],
+   "like": [
+    "Level inflation"
+   ]
+  },
+  {
+   "group": "remote",
+   "subject": "Inclusive meeting",
+   "tier": 2,
+   "says": [
+    "gives quieter people an agenda and a chance to speak",
+    "stops a few voices from dominating a discussion"
+   ],
+   "use": "notice that the same three people speak in every design review",
+   "not": [
+    "rewards the person who talks the most"
+   ],
+   "like": [
+    "Psychological safety"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "A team of eight builds, deploys and operates a checkout flow and keeps waiting on a separate infrastructure group for environments. What change best reduces the waiting?",
+   "right": "Provide self-service environments through an internal platform team",
+   "wrong": [
+    "Move the infrastructure group's approval step earlier in the process",
+    "Add a weekly meeting where both groups review the environment queue",
+    "Hire two more people into the infrastructure group's approval queue"
+   ],
+   "tier": 3,
+   "why": "A platform team removes the handoff by turning infrastructure into a self-service product; faster approvals keep the dependency."
+  },
+  {
+   "q": "A new service was split across three teams and now every feature needs all three to coordinate. Which idea most directly explains this?",
+   "right": "System structure tends to copy the communication structure of the teams",
+   "wrong": [
+    "Larger teams always produce larger codebases",
+    "Microservices must always have one team each",
+    "Coordination cost falls as the number of services grows"
+   ],
+   "tier": 2,
+   "why": "Conway's law: architecture mirrors team communication paths."
+  },
+  {
+   "q": "You manage 14 engineers directly and one-to-ones keep being cancelled. Which action is the best first move?",
+   "right": "Appoint team leads or managers to bring direct reports to a workable number",
+   "wrong": [
+    "Shorten every one-to-one to ten minutes",
+    "Move all one-to-ones to a group meeting",
+    "Ask engineers to send written updates instead of meeting"
+   ],
+   "tier": 3,
+   "why": "A span that wide cannot be coached well; restructuring reporting lines restores real one-to-ones."
+  },
+  {
+   "q": "A candidate from a famous employer interviews well, but no interviewer probed testing. How should the panel handle testing in the debrief?",
+   "right": "Score each competency on its own evidence and mark testing as not assessed",
+   "wrong": [
+    "Give testing the same score as the other areas",
+    "Treat testing as a strength because of the employer",
+    "Ask the candidate's former employer for a general opinion instead"
+   ],
+   "tier": 4,
+   "why": "Scoring each competency separately counters the halo effect; unassessed areas should not be filled in by assumption."
+  },
+  {
+   "q": "Three interviewers disagree about a candidate. The most senior spoke first in the debrief and the rest then agreed with him. What process change fixes this?",
+   "right": "Have everyone submit written ratings before the discussion starts",
+   "wrong": [
+    "Let the most senior person speak last but keep the same format",
+    "Add one more interviewer to each panel",
+    "Ask the recruiter to chair the debrief"
+   ],
+   "tier": 3,
+   "why": "Independent scoring prevents anchoring on whoever speaks first."
+  },
+  {
+   "q": "A hiring manager wants to drop the coding exercise for an urgent role because the person seems smart. What is the strongest response?",
+   "right": "Keep the same assessment so candidates are compared on the same evidence",
+   "wrong": [
+    "Waive it for this candidate only because the role is urgent",
+    "Replace it with a longer informal chat about their last job",
+    "Let the candidate pick whichever stage they prefer"
+   ],
+   "tier": 3,
+   "why": "Consistent evidence matters most under pressure; shortcuts raise the risk of a costly bad hire."
+  },
+  {
+   "q": "A new engineer joined three weeks ago and still has not shipped anything. Which cause should you check first?",
+   "right": "Whether the setup, access and review path actually let them make a change",
+   "wrong": [
+    "Whether the engineer lacks motivation",
+    "Whether the engineer should move to a different team",
+    "Whether their salary was set too low"
+   ],
+   "tier": 2,
+   "why": "Slow first contribution usually points to onboarding friction before personal causes."
+  },
+  {
+   "q": "Every new starter asks you the same five questions about local setup. What is the best long-term fix?",
+   "right": "Write the answers into maintained documentation and improve it with each new hire",
+   "wrong": [
+    "Answer faster by pinning a message in chat",
+    "Ask each new hire to figure it out alone to learn",
+    "Assign a senior engineer to answer for the next year"
+   ],
+   "tier": 2,
+   "why": "Documentation fixes the cause once; answering individually repeats the cost."
+  },
+  {
+   "q": "An engineer who heard nothing negative all year receives a low rating at review. What is the main failure?",
+   "right": "Feedback was not given in time for the person to act on it",
+   "wrong": [
+    "The rating scale was too coarse",
+    "The engineer was not on a performance plan",
+    "The review should have been done by a peer"
+   ],
+   "tier": 2,
+   "why": "Reviews should hold no surprises; feedback has to be continuous."
+  },
+  {
+   "q": "You must tell an engineer that her pull requests often arrive without tests. Which wording follows the situation-behaviour-impact model?",
+   "right": "In yesterday's billing PR there were no tests, so the reviewer had to check behaviour by hand and the release slipped a day",
+   "wrong": [
+    "You are careless about testing and should try harder",
+    "Everyone says your work has quality problems",
+    "I'd like you to be a better engineer in general"
+   ],
+   "tier": 2,
+   "why": "SBI names a specific situation, the observable behaviour and its impact."
+  },
+  {
+   "q": "Two managers rate nearly everyone 'exceeds expectations', while a third rarely does. What should the calibration session do?",
+   "right": "Compare evidence across the three and align what each rating means",
+   "wrong": [
+    "Average the three managers' ratings into a single distribution",
+    "Ask the strictest manager to rate everyone",
+    "Cancel ratings for the year"
+   ],
+   "tier": 4,
+   "why": "Calibration exists to align standards by comparing evidence, not by averaging."
+  },
+  {
+   "q": "Your review draft is dominated by an incident from last month although the engineer delivered well all year. What bias is at work and what helps?",
+   "right": "Recency bias; keep notes of achievements through the year",
+   "wrong": [
+    "Halo effect; add more peer reviewers",
+    "Proximity bias; hold reviews in person",
+    "Confirmation bias; remove the manager's input"
+   ],
+   "tier": 3,
+   "why": "Reviewers overweight recent events; ongoing notes counter it."
+  },
+  {
+   "q": "An engineer has missed deadlines for three months. She has the skills but says she is unsure what the priorities are. What is the best next step?",
+   "right": "Clarify the priorities and expectations in writing and check progress soon",
+   "wrong": [
+    "Place her on a formal performance plan immediately",
+    "Reassign her work without telling her",
+    "Wait until the next review cycle"
+   ],
+   "tier": 3,
+   "why": "Diagnosing the cause first shows it is a clarity problem, not skill or will."
+  },
+  {
+   "q": "An engineer delivers one outstanding project and asks for promotion, but his level behaviours elsewhere are inconsistent. What is the best answer?",
+   "right": "Explain the gap and agree what evidence over time would support the case",
+   "wrong": [
+    "Promote now to keep him from leaving",
+    "Decline without explanation",
+    "Promote him but with a probation period"
+   ],
+   "tier": 3,
+   "why": "Promotion rests on sustained performance at the next level, with transparent criteria."
+  },
+  {
+   "q": "A senior engineer says she has no wish to manage people but wants to keep growing. Which structure helps most?",
+   "right": "A parallel individual-contributor track with senior levels of equal standing",
+   "wrong": [
+    "Making her team lead and keeping her title the same",
+    "A one-off bonus instead of a new level",
+    "Moving her into management for the pay"
+   ],
+   "tier": 3,
+   "why": "A dual-track ladder lets technical staff progress without becoming managers."
+  },
+  {
+   "q": "A capable engineer is repeatedly passed over in promotion talks because senior leaders do not know her work. What would a sponsor do?",
+   "right": "Advocate for her work in rooms where she is not present",
+   "wrong": [
+    "Give her feedback on her presentation style",
+    "Suggest she network more",
+    "Meet her monthly for career advice"
+   ],
+   "tier": 4,
+   "why": "Sponsorship is active advocacy; mentoring gives advice."
+  },
+  {
+   "q": "In a one-to-one, a report asks you which of two designs to choose. You want him to build judgment. What is the best response?",
+   "right": "Ask what trade-offs he sees and which option he would pick and why",
+   "wrong": [
+    "Tell him the answer to save time",
+    "Say it is his job to decide and leave",
+    "Suggest asking the tech lead"
+   ],
+   "tier": 3,
+   "why": "Coaching questions build judgment rather than dependency."
+  },
+  {
+   "q": "A middle manager's team reports through her, and you hear problems only after they have grown. Which step gives the most direct view?",
+   "right": "Hold skip-level meetings with her team while keeping her informed",
+   "wrong": [
+    "Join her team's stand-ups daily",
+    "Send an anonymous survey every week",
+    "Ask her to report more often"
+   ],
+   "tier": 3,
+   "why": "Skip-levels give an unfiltered view while respecting the manager's role."
+  },
+  {
+   "q": "You just became a manager of managers and still review every pull request personally. What is the most likely consequence?",
+   "right": "You become a bottleneck and your managers do not grow",
+   "wrong": [
+    "The teams ship faster",
+    "Your span of control shrinks",
+    "Technical quality becomes less consistent"
+   ],
+   "tier": 4,
+   "why": "The job moves to setting context and developing managers; staying in the detail blocks delegation."
+  },
+  {
+   "q": "You delegated a migration to an engineer and she is making slower progress than you expected. You are accountable for the result. What is best?",
+   "right": "Check in on agreed milestones, ask what is blocking her and offer help without taking over",
+   "wrong": [
+    "Take the task back and finish it yourself",
+    "Check every commit each day",
+    "Tell her you are no longer responsible"
+   ],
+   "tier": 3,
+   "why": "Delegation keeps accountability with the manager; support should match the person's need."
+  },
+  {
+   "q": "A decision about renaming an internal API field is waiting on four approvals across teams. What principle applies?",
+   "right": "Decide quickly with those closest, because the choice is easy to reverse",
+   "wrong": [
+    "Require consensus from all teams for traceability",
+    "Escalate to the CTO so the decision is final",
+    "Postpone until a full design review is possible"
+   ],
+   "tier": 4,
+   "why": "Two-way door decisions should be made fast by those closest to the work."
+  },
+  {
+   "q": "After an outage, the report says a developer pushed a bad config. What is the best postmortem response?",
+   "right": "Ask how the system allowed a bad config to reach production and what will prevent a repeat",
+   "wrong": [
+    "Record the developer's name so the pattern is visible",
+    "Close the report as human error",
+    "Add a rule telling developers to be more careful"
+   ],
+   "tier": 3,
+   "why": "Blameless postmortems look for system causes and fix the process."
+  },
+  {
+   "q": "Engineers stay silent in design reviews and mistakes appear only in production. What is the likely underlying issue?",
+   "right": "Low psychological safety",
+   "wrong": [
+    "Too many senior engineers",
+    "Reviews held too early",
+    "Weak documentation tools"
+   ],
+   "tier": 2,
+   "why": "Silence and hidden errors are signs that speaking up feels unsafe."
+  },
+  {
+   "q": "A manager praises work-life balance in town halls but sends messages at midnight and expects replies. What will the team most likely follow?",
+   "right": "The behaviour they see",
+   "wrong": [
+    "The statement made in town halls",
+    "The written values",
+    "The HR policy"
+   ],
+   "tier": 1,
+   "why": "Culture follows what leaders visibly do."
+  },
+  {
+   "q": "A team's dashboard shows 90 commits a week per engineer and leaders celebrate it. Which concern is most valid?",
+   "right": "Commit counts are a vanity metric that can be gamed and tell little about outcomes",
+   "wrong": [
+    "Commits are too hard to count",
+    "The team needs more engineers to raise the number",
+    "Commits should be measured per day"
+   ],
+   "tier": 3,
+   "why": "Activity counts are easily inflated; outcome measures matter more."
+  },
+  {
+   "q": "Your CEO wants to rank engineers by story points completed. What is the best reply?",
+   "right": "Points are relative to each team, so they cannot fairly compare people",
+   "wrong": [
+    "Points are accurate enough if everyone estimates carefully",
+    "Rank by commits instead",
+    "Rank by hours logged"
+   ],
+   "tier": 3,
+   "why": "Story points are a team-level planning tool; comparing individuals invites gaming."
+  },
+  {
+   "q": "A team doubles its deployment frequency but its change failure rate also rises sharply. What is the right reading?",
+   "right": "Speed has outrun quality and practices such as testing and rollout need attention",
+   "wrong": [
+    "The team is performing better overall",
+    "The failure rate figure is irrelevant",
+    "Deployment frequency should be cut back without further review"
+   ],
+   "tier": 4,
+   "why": "DORA measures are read together; speed and stability should both improve."
+  },
+  {
+   "q": "A ticket takes 30 days from start to done but only 3 days of hands-on work. Which measure and fix fit best?",
+   "right": "Flow efficiency is low; look for queues and handoffs",
+   "wrong": [
+    "Velocity is low; add more engineers",
+    "Change failure rate is high; add tests",
+    "Deployment frequency is high; reduce releases"
+   ],
+   "tier": 4,
+   "why": "Most of the elapsed time is waiting, so find queues, not effort."
+  },
+  {
+   "q": "Management starts rewarding teams for lowering the number of reported bugs, and soon bug reports drop while customer complaints rise. Which law explains this?",
+   "right": "Goodhart's law",
+   "wrong": [
+    "Brooks's law",
+    "Conway's law",
+    "Parkinson's law"
+   ],
+   "tier": 4,
+   "why": "A measure that becomes a target stops measuring reliably."
+  },
+  {
+   "q": "A stakeholder asks for an exact date for a project that has only been outlined. What is the best way to respond?",
+   "right": "Give a probabilistic range and refine it as the team learns",
+   "wrong": [
+    "Give a single date with padding",
+    "Refuse to estimate",
+    "Quote the earliest possible date"
+   ],
+   "tier": 3,
+   "why": "Early estimates carry wide uncertainty; ranges convey that honestly."
+  },
+  {
+   "q": "A project is already late and your director proposes adding eight engineers. What is the likely effect?",
+   "right": "The project gets later for a while because of onboarding and communication overhead",
+   "wrong": [
+    "The project finishes sooner immediately",
+    "Quality improves with more reviewers",
+    "The schedule is unaffected"
+   ],
+   "tier": 4,
+   "why": "Brooks's law: adding people to a late project slows it."
+  },
+  {
+   "q": "A sales lead tells a customer 'engineering said about June' after a quick conversation. What practice would have prevented this?",
+   "right": "Separating a rough estimate from a commitment and sharing it only as a forecast",
+   "wrong": [
+    "Banning conversations with sales",
+    "Providing exact estimates to sales instantly",
+    "Adding buffer to every estimate secretly"
+   ],
+   "tier": 4,
+   "why": "Forecasts and commitments are different, and the difference has to be explicit."
+  },
+  {
+   "q": "A team sizes every task in hours but regularly finishes at about twice the estimate. Which approach gives the best forecast?",
+   "right": "Use historical throughput to forecast, rather than adjusting each estimate",
+   "wrong": [
+    "Double every estimate",
+    "Estimate in smaller units of minutes",
+    "Ask engineers to work faster"
+   ],
+   "tier": 4,
+   "why": "Historical data forecasts more reliably than adjusting individual guesses."
+  },
+  {
+   "q": "An on-call engineer is paged about 15 times each night and most pages need no action. What is the first priority?",
+   "right": "Remove or tune non-actionable alerts",
+   "wrong": [
+    "Rotate more engineers into the schedule",
+    "Pay a bonus for night work",
+    "Tell the team to respond faster"
+   ],
+   "tier": 3,
+   "why": "Alert fatigue is solved by making alerts actionable."
+  },
+  {
+   "q": "During a major outage six engineers are talking at once and executives keep asking for updates in the same channel. What roles are missing?",
+   "right": "An incident commander with a communications lead",
+   "wrong": [
+    "A developer manager to assign blame",
+    "An extra engineer to write the fix",
+    "A product owner to prioritise features"
+   ],
+   "tier": 3,
+   "why": "Clear coordination and separate communications let responders focus."
+  },
+  {
+   "q": "The service has exhausted its error budget for the quarter. What should the policy say?",
+   "right": "Slow feature releases and invest in reliability until the budget recovers",
+   "wrong": [
+    "Ignore the budget until customers complain",
+    "Raise the reliability target to 100 percent",
+    "Add more on-call engineers only"
+   ],
+   "tier": 4,
+   "why": "Error budgets give an objective rule to rebalance speed and stability."
+  },
+  {
+   "q": "A critical engineer is always praised for rescuing releases at the last minute. What should a thoughtful manager worry about?",
+   "right": "The fragile process that keeps producing the crisis",
+   "wrong": [
+    "That other engineers will get jealous",
+    "That the engineer will ask for a raise",
+    "That the rescues cost too much overtime pay"
+   ],
+   "tier": 4,
+   "why": "Hero culture hides systemic problems and creates single points of failure."
+  },
+  {
+   "q": "Two senior engineers have stopped communicating after a design dispute, and the team is picking sides. What should you do first?",
+   "right": "Meet each privately and then facilitate a conversation between them focused on a working agreement",
+   "wrong": [
+    "Let them sort it out",
+    "Pick the technically better design and tell them to comply",
+    "Move one of them to another team"
+   ],
+   "tier": 3,
+   "why": "Early facilitation aims at a workable agreement before the split deepens."
+  },
+  {
+   "q": "The team debated a decision for weeks and it was finally taken, but one engineer still disagrees. What do you ask of her?",
+   "right": "Voice her view fully, then support the decision wholeheartedly",
+   "wrong": [
+    "Keep objecting until she is convinced",
+    "Stay silent and avoid the work",
+    "Wait for the decision to be reversed"
+   ],
+   "tier": 3,
+   "why": "Disagree and commit works after a genuine hearing."
+  },
+  {
+   "q": "A top-performing engineer regularly belittles colleagues in code review, and two juniors are considering leaving. What is the right action?",
+   "right": "Address the behaviour directly with clear expectations and consequences",
+   "wrong": [
+    "Ignore it because the output is valuable",
+    "Move the juniors to other teams",
+    "Raise the engineer's pay to keep him"
+   ],
+   "tier": 5,
+   "why": "Output does not justify behaviour that damages the team; delay costs more people."
+  },
+  {
+   "q": "A strong engineer hands in her notice and your director suggests a counter-offer with extra pay. What is the biggest risk?",
+   "right": "The reasons she wanted to leave remain, so she may leave later anyway",
+   "wrong": [
+    "She will refuse the offer",
+    "It will cause legal problems",
+    "Other employees will not hear about it"
+   ],
+   "tier": 4,
+   "why": "Counter-offers rarely address the underlying reason for leaving."
+  },
+  {
+   "q": "A colleague on the team has underperformed for months and others quietly cover for her. What is the cost of waiting?",
+   "right": "Peers carry extra load and lose trust in the manager",
+   "wrong": [
+    "Nothing, as the work still gets done",
+    "The colleague will improve with time alone",
+    "The company saves salary costs"
+   ],
+   "tier": 4,
+   "why": "Delay harms the rest of the team more than most managers expect."
+  },
+  {
+   "q": "You are told to cut a tenth of the engineers. How should you speak to the remaining team?",
+   "right": "Explain the reason plainly and quickly and set out what happens next",
+   "wrong": [
+    "Wait until the rumour settles",
+    "Say the cuts are over without being sure",
+    "Let managers decide what to say individually"
+   ],
+   "tier": 5,
+   "why": "Prompt, honest communication rebuilds trust after layoffs."
+  },
+  {
+   "q": "Finance asks why the engineering budget is rising while delivery has not. What helps most when defending it?",
+   "right": "Linking spend to outcomes the business values and being open about trade-offs",
+   "wrong": [
+    "Showing the headcount list",
+    "Pointing out that peers spend more",
+    "Promising to cut it next year"
+   ],
+   "tier": 3,
+   "why": "Budgets are defended with outcomes, not totals."
+  },
+  {
+   "q": "Product wants to ship a feature that ignores a known weakness in the billing code. You believe the risk is real. What is the best approach?",
+   "right": "Present the cost and risk with options and let the decision rest on trade-offs",
+   "wrong": [
+    "Refuse to start until the weakness is fixed",
+    "Agree silently and note it privately",
+    "Ask the CEO to overrule product"
+   ],
+   "tier": 4,
+   "why": "Pushback works when it offers choices and consequences, not a flat no."
+  },
+  {
+   "q": "Teams argue every sprint about whether to spend time on refactoring. Which arrangement fixes the argument?",
+   "right": "Reserve a fixed share of capacity for debt and track the cost of key items",
+   "wrong": [
+    "Allow refactoring only after releases",
+    "Let each engineer decide alone",
+    "Stop all refactoring for the year"
+   ],
+   "tier": 4,
+   "why": "A standing allowance removes repeated negotiation."
+  },
+  {
+   "q": "Designs arrive after a three-month design phase and engineers say they cannot build them in time. What practice would help?",
+   "right": "Involve engineering in discovery alongside product and design",
+   "wrong": [
+    "Add a design review before release",
+    "Let engineers redesign the screens",
+    "Skip the design phase"
+   ],
+   "tier": 3,
+   "why": "A product trio finds feasibility problems before delivery starts."
+  },
+  {
+   "q": "Remote engineers rarely get high-visibility projects although their results are strong. What is the most likely problem?",
+   "right": "Proximity bias in how work is assigned",
+   "wrong": [
+    "A weaker internet connection",
+    "Lower performance in remote roles",
+    "Lack of mentoring programmes"
+   ],
+   "tier": 4,
+   "why": "Teams favour people they see; deliberate processes counter it."
+  },
+  {
+   "q": "Your hiring shortlist is drawn almost entirely from employees' personal networks. What is the strongest step?",
+   "right": "Require a qualified, diverse slate and widen sourcing before deciding",
+   "wrong": [
+    "Lower the bar for under-represented candidates",
+    "Stop employee referrals",
+    "Drop the job description"
+   ],
+   "tier": 3,
+   "why": "Widening sourcing keeps the bar and widens the pool."
+  },
+  {
+   "q": "Which description is the best fit for a staff engineer?",
+   "right": "Sets technical direction across teams through influence rather than line management",
+   "wrong": [
+    "Manages a team of engineers",
+    "Handles the build pipeline",
+    "Is a senior developer with a new title"
+   ],
+   "tier": 4,
+   "why": "The role is judged on scope and leverage, not people management."
+  },
+  {
+   "q": "What is the main purpose of a working agreement?",
+   "right": "To make the team's collaboration rules explicit and revisable",
+   "wrong": [
+    "To bind the team legally",
+    "To rate individual performance",
+    "To fix individual workloads"
+   ],
+   "tier": 2,
+   "why": "It captures team-owned rules such as review expectations."
+  },
+  {
+   "q": "What does a platform team treat as its customers?",
+   "right": "The internal teams that use its services",
+   "wrong": [
+    "The company's executives",
+    "External auditors",
+    "The finance department"
+   ],
+   "tier": 2,
+   "why": "Platform teams treat the platform as a product for internal users."
+  }
+ ]
+}

@@ -1,0 +1,3047 @@
+{
+ "slug": "finance-for-leaders",
+ "name": "Finance for Technology and Business Leaders",
+ "description": "Budgets and forecasting, financial statements, margins, subscription unit economics, pricing, capex and opex, build and run cost, FinOps, vendor contracts, investment appraisal, headcount and project costing, working capital, controls and tax awareness, fundraising and board reporting for leaders who own budgets and decisions.",
+ "roles": "cto,ceo,manager,accounting,delivery manager",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "budget": "budgeting or forecasting practice",
+  "stmt": "financial statement or accounting concept",
+  "margin": "margin or cost-behaviour concept",
+  "saas": "subscription metric",
+  "price": "pricing model",
+  "cap": "cost treatment concept",
+  "cost": "cost concept",
+  "finops": "cloud cost practice",
+  "vendor": "vendor contract term or negotiation concept",
+  "invest": "investment appraisal concept",
+  "people": "headcount or project-costing concept",
+  "wc": "working capital or collection concept",
+  "ctrl": "control, audit or tax concept",
+  "fund": "fundraising, runway or board-reporting concept"
+ },
+ "cards": [
+  {
+   "group": "budget",
+   "subject": "The annual budget",
+   "tier": 1,
+   "says": [
+    "sets planned revenue and spending for the coming financial year",
+    "gives each budget owner a spending envelope to manage against",
+    "is the baseline that actual results are later compared with"
+   ],
+   "use": "need a fixed yardstick to judge results against at year end",
+   "not": [
+    "is updated every month to reflect the latest outlook"
+   ]
+  },
+  {
+   "group": "budget",
+   "subject": "A rolling forecast",
+   "tier": 2,
+   "says": [
+    "is re-projected every period so it always looks a fixed number of periods ahead",
+    "replaces a fixed year-end horizon with a moving one",
+    "lets leaders react to new information without waiting for the next budget cycle"
+   ],
+   "use": "need the outlook to stay current as conditions change",
+   "not": [
+    "is frozen once the board approves it"
+   ],
+   "like": [
+    "The annual budget"
+   ]
+  },
+  {
+   "group": "budget",
+   "subject": "Zero-based budgeting",
+   "tier": 3,
+   "says": [
+    "requires every cost line to be justified from nothing each cycle",
+    "does not treat last year's spend as the starting point",
+    "exposes legacy spending that nobody can defend"
+   ],
+   "use": "suspect that old costs persist only out of habit",
+   "not": [
+    "adds a fixed percentage to last year's figures"
+   ],
+   "like": [
+    "Incremental budgeting"
+   ]
+  },
+  {
+   "group": "budget",
+   "subject": "Incremental budgeting",
+   "tier": 2,
+   "says": [
+    "starts from last period's figures and adjusts them up or down",
+    "is quick to prepare but can carry old waste forward",
+    "assumes the existing cost base is broadly right"
+   ],
+   "use": "need a fast, low-effort budget round",
+   "not": [
+    "justifies every cost line from scratch"
+   ],
+   "like": [
+    "Zero-based budgeting"
+   ]
+  },
+  {
+   "group": "budget",
+   "subject": "Variance analysis",
+   "tier": 2,
+   "says": [
+    "compares actual results with the budget or forecast and explains the gap",
+    "labels a gap favourable or unfavourable depending on its effect on profit",
+    "looks for causes such as price, volume or timing"
+   ],
+   "use": "see actual spend differ from plan and must explain why",
+   "not": [
+    "predicts next year's revenue from market trends"
+   ]
+  },
+  {
+   "group": "budget",
+   "subject": "A driver-based forecast",
+   "tier": 3,
+   "says": [
+    "builds revenue and cost from operational drivers such as headcount, customers or usage",
+    "changes automatically when a driver assumption is changed",
+    "links the finance model to what the business actually does"
+   ],
+   "use": "want the forecast to move when sales volume or hiring plans change",
+   "not": [
+    "extrapolates last year's totals by a flat percentage"
+   ],
+   "like": [
+    "Incremental budgeting"
+   ]
+  },
+  {
+   "group": "budget",
+   "subject": "Bottom-up budgeting",
+   "tier": 3,
+   "says": [
+    "builds the budget from detailed estimates supplied by each team",
+    "tends to give accurate detail but can inflate the total",
+    "needs consolidation and challenge before it fits the company target"
+   ],
+   "use": "need owners to commit to figures they helped build",
+   "not": [
+    "starts from a company-wide target handed down from leadership"
+   ],
+   "like": [
+    "Top-down budgeting"
+   ]
+  },
+  {
+   "group": "budget",
+   "subject": "Top-down budgeting",
+   "tier": 3,
+   "says": [
+    "starts from a company-level target and allocates it to departments",
+    "reflects strategic priorities but may ignore operational detail",
+    "is quick but can feel imposed on the teams"
+   ],
+   "use": "must fit spending to a fixed funding envelope",
+   "not": [
+    "asks each team to estimate its own costs first"
+   ],
+   "like": [
+    "Bottom-up budgeting"
+   ]
+  },
+  {
+   "group": "budget",
+   "subject": "Scenario planning",
+   "tier": 4,
+   "says": [
+    "models several possible futures such as base, upside and downside",
+    "shows which assumptions the plan is most sensitive to",
+    "prepares triggers for action before a scenario occurs"
+   ],
+   "use": "face uncertain demand and want to pre-agree responses",
+   "not": [
+    "picks a single most likely forecast and ignores alternatives"
+   ],
+   "like": [
+    "Sensitivity analysis"
+   ]
+  },
+  {
+   "group": "budget",
+   "subject": "A contingency reserve",
+   "tier": 4,
+   "says": [
+    "holds budget back for risks that are expected but not yet specific",
+    "is released only under a defined approval",
+    "prevents every small overrun from becoming a budget change request"
+   ],
+   "use": "expect some unplanned cost but cannot name it yet",
+   "not": [
+    "is extra money spread into every team's normal spending"
+   ],
+   "like": [
+    "Project contingency"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "The income statement",
+   "tier": 1,
+   "says": [
+    "reports revenue, costs and profit over a period of time",
+    "is also called the profit and loss account or P&L",
+    "ends with net income as the bottom line"
+   ],
+   "use": "need to know whether the business made a profit last quarter",
+   "not": [
+    "lists what the company owns and owes on one date"
+   ],
+   "like": [
+    "The balance sheet",
+    "The cash flow statement"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "The balance sheet",
+   "tier": 1,
+   "says": [
+    "shows assets, liabilities and equity at a single point in time",
+    "must balance so that assets equal liabilities plus equity",
+    "shows what the company owns and what it owes"
+   ],
+   "use": "need to see the financial position on the last day of the month",
+   "not": [
+    "reports revenue and costs across a period"
+   ],
+   "like": [
+    "The income statement"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "The cash flow statement",
+   "tier": 1,
+   "says": [
+    "reports cash moving in and out across operating, investing and financing activities",
+    "reconciles profit to the change in the cash balance",
+    "explains why cash and profit differ"
+   ],
+   "use": "see profit rise but the bank balance fall",
+   "not": [
+    "measures profit using accruals only"
+   ],
+   "like": [
+    "The income statement"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "Accrual accounting",
+   "tier": 2,
+   "says": [
+    "records revenue when earned and costs when incurred",
+    "matches costs to the period in which they help earn revenue",
+    "can show a profit before any cash has been received"
+   ],
+   "use": "need results to reflect work done rather than payments made",
+   "not": [
+    "records an item only when cash changes hands"
+   ],
+   "like": [
+    "Cash-basis accounting"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "Cash-basis accounting",
+   "tier": 2,
+   "says": [
+    "records income and expense only when cash is received or paid",
+    "is simple but can distort results across periods",
+    "is mostly used by very small businesses"
+   ],
+   "use": "want the simplest record of money in and out",
+   "not": [
+    "recognises revenue as soon as a contract is signed"
+   ],
+   "like": [
+    "Accrual accounting"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "Revenue recognition",
+   "tier": 3,
+   "says": [
+    "decides when and how much revenue can be recorded as earned",
+    "spreads subscription revenue across the service period",
+    "depends on delivery of the promised service rather than on invoicing"
+   ],
+   "use": "sell an annual subscription and must book it correctly",
+   "not": [
+    "records the full contract value as revenue on the invoice date"
+   ],
+   "like": [
+    "Deferred revenue"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "Deferred revenue",
+   "tier": 3,
+   "says": [
+    "is cash received for service not yet delivered",
+    "sits on the balance sheet as a liability",
+    "turns into revenue as the service is delivered"
+   ],
+   "use": "get paid for the full year up front",
+   "not": [
+    "counts immediately as profit for the period"
+   ],
+   "like": [
+    "Revenue recognition"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "EBITDA",
+   "tier": 3,
+   "says": [
+    "is earnings before interest, tax, depreciation and amortisation",
+    "is used to compare operating performance without financing and accounting effects",
+    "ignores the cost of capital spending"
+   ],
+   "use": "want a view of operating profit before financing and non-cash charges",
+   "not": [
+    "equals the cash generated by the business"
+   ],
+   "like": [
+    "Net income",
+    "Operating margin"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "Net income",
+   "tier": 1,
+   "says": [
+    "is revenue minus all expenses including interest and tax",
+    "is the bottom line of the income statement",
+    "is the amount that flows into retained earnings if not paid out"
+   ],
+   "use": "need the profit remaining after every cost",
+   "not": [
+    "excludes tax and interest"
+   ],
+   "like": [
+    "EBITDA"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "Accounts receivable",
+   "tier": 1,
+   "says": [
+    "are amounts customers owe for work already invoiced",
+    "are an asset on the balance sheet",
+    "turn into cash when the customer pays"
+   ],
+   "use": "have invoiced a client who has not paid yet",
+   "not": [
+    "are amounts the company owes to suppliers"
+   ],
+   "like": [
+    "Accounts payable"
+   ]
+  },
+  {
+   "group": "stmt",
+   "subject": "Accounts payable",
+   "tier": 1,
+   "says": [
+    "are amounts the company owes suppliers for goods or services received",
+    "are a liability on the balance sheet",
+    "delay cash leaving the business until the bill is paid"
+   ],
+   "use": "have received a supplier invoice that is not yet paid",
+   "not": [
+    "are amounts customers owe the company"
+   ],
+   "like": [
+    "Accounts receivable"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Gross margin",
+   "tier": 1,
+   "says": [
+    "is revenue minus the direct cost of delivering the product or service, as a share of revenue",
+    "shows how much of each unit of revenue remains to cover overhead",
+    "is calculated before operating expenses"
+   ],
+   "use": "want to know how profitable delivery itself is",
+   "not": [
+    "subtracts all overheads and tax"
+   ],
+   "like": [
+    "Operating margin",
+    "Contribution margin"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Contribution margin",
+   "tier": 2,
+   "says": [
+    "is revenue minus variable costs",
+    "shows what each sale adds towards fixed costs and profit",
+    "is used to find the break-even point"
+   ],
+   "use": "decide whether one more unit or customer is worth serving",
+   "not": [
+    "includes fixed overheads in the cost"
+   ],
+   "like": [
+    "Gross margin"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Operating margin",
+   "tier": 2,
+   "says": [
+    "is operating profit as a share of revenue",
+    "includes operating expenses such as sales, marketing and admin",
+    "is measured before interest and tax"
+   ],
+   "use": "want to see profitability after running costs but before financing",
+   "not": [
+    "stops at direct delivery costs"
+   ],
+   "like": [
+    "Gross margin"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Cost of goods sold",
+   "tier": 2,
+   "says": [
+    "is the direct cost of producing what was sold in the period",
+    "for software businesses is often called cost of revenue and includes hosting and support",
+    "is subtracted from revenue to give gross profit"
+   ],
+   "use": "need to separate delivery cost from overhead",
+   "not": [
+    "includes the marketing budget"
+   ],
+   "like": [
+    "Gross margin"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "The break-even point",
+   "tier": 3,
+   "says": [
+    "is the volume at which total revenue equals total cost",
+    "is fixed costs divided by contribution margin per unit",
+    "shows how many sales are needed before profit begins"
+   ],
+   "use": "need to know how much must be sold to cover fixed costs",
+   "not": [
+    "is the point at which cash is fully paid back by investors"
+   ],
+   "like": [
+    "Contribution margin"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "A fixed cost",
+   "tier": 2,
+   "says": [
+    "stays the same in total when volume changes within a normal range",
+    "includes items such as rent and salaried staff",
+    "has to be covered whether or not anything is sold"
+   ],
+   "use": "are costing an item that does not rise with each sale",
+   "not": [
+    "rises in direct proportion to units sold"
+   ],
+   "like": [
+    "A variable cost"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "A variable cost",
+   "tier": 2,
+   "says": [
+    "changes in proportion to the volume produced or sold",
+    "includes items such as payment fees and per-unit hosting",
+    "is subtracted from price to get contribution margin"
+   ],
+   "use": "are costing an item that rises with each sale",
+   "not": [
+    "is the same whatever the volume"
+   ],
+   "like": [
+    "A fixed cost"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Markup",
+   "tier": 3,
+   "says": [
+    "is the amount added to cost, expressed as a percentage of cost",
+    "is always larger than the margin on the same sale",
+    "is the figure used when setting prices as cost plus an addition"
+   ],
+   "use": "price from cost and must not confuse the percentage with margin",
+   "not": [
+    "is expressed as a percentage of the selling price"
+   ],
+   "like": [
+    "Gross margin"
+   ]
+  },
+  {
+   "group": "margin",
+   "subject": "Operating leverage",
+   "tier": 5,
+   "says": [
+    "describes how a high share of fixed costs magnifies profit swings as volume changes",
+    "means profit grows faster than revenue once fixed costs are covered",
+    "also means profit falls faster than revenue when volume drops"
+   ],
+   "use": "want to judge how risky a fixed-cost-heavy model is in a downturn",
+   "not": [
+    "means variable costs are the largest part of the cost base"
+   ],
+   "like": [
+    "The break-even point"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "MRR",
+   "tier": 1,
+   "says": [
+    "is the predictable subscription revenue normalised to a month",
+    "excludes one-off fees such as setup charges",
+    "is the building block that multiplies by twelve to give ARR"
+   ],
+   "use": "track monthly recurring subscription income",
+   "not": [
+    "includes one-off consulting fees"
+   ],
+   "like": [
+    "ARR"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "ARR",
+   "tier": 1,
+   "says": [
+    "is the annualised value of recurring subscription revenue",
+    "excludes one-off and non-recurring fees",
+    "is monthly recurring revenue multiplied by twelve"
+   ],
+   "use": "need one headline figure for the yearly recurring revenue base",
+   "not": [
+    "is the total cash collected in the year"
+   ],
+   "like": [
+    "MRR"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "CAC",
+   "tier": 2,
+   "says": [
+    "is the cost of sales and marketing needed to win one new customer",
+    "is total acquisition spend divided by new customers won",
+    "is compared with customer value to judge growth efficiency"
+   ],
+   "use": "want to know what it costs to win one customer",
+   "not": [
+    "is the revenue a customer brings over their lifetime"
+   ],
+   "like": [
+    "LTV"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "LTV",
+   "tier": 3,
+   "says": [
+    "estimates the gross profit a customer generates over their relationship",
+    "is commonly approximated as margin-adjusted revenue per period divided by churn rate",
+    "should use margin rather than revenue to be meaningful"
+   ],
+   "use": "want to know how much a customer is worth before deciding how much to spend winning one",
+   "not": [
+    "is the cost of acquiring the customer"
+   ],
+   "like": [
+    "CAC"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "CAC payback",
+   "tier": 3,
+   "says": [
+    "is the time for a customer's gross profit to recover the cost of acquiring them",
+    "is CAC divided by monthly gross profit per customer",
+    "is shorter when acquisition is efficient"
+   ],
+   "use": "need to know how quickly acquisition spend returns as cash",
+   "not": [
+    "is the time until the contract renews"
+   ],
+   "like": [
+    "LTV"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "Logo churn",
+   "tier": 2,
+   "says": [
+    "is the percentage of customers lost in a period",
+    "counts each customer equally regardless of size",
+    "is customers lost divided by customers at the start"
+   ],
+   "use": "want to know how many customers leave regardless of their spend",
+   "not": [
+    "measures lost revenue weighted by contract value"
+   ],
+   "like": [
+    "Revenue churn"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "Revenue churn",
+   "tier": 3,
+   "says": [
+    "is the percentage of recurring revenue lost to cancellations and downgrades",
+    "weights each customer by what they pay",
+    "can be high even when few customers leave"
+   ],
+   "use": "fear that your biggest accounts are leaving",
+   "not": [
+    "counts every customer equally"
+   ],
+   "like": [
+    "Logo churn"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "Net revenue retention",
+   "tier": 5,
+   "says": [
+    "measures revenue from existing customers after expansion, contraction and churn",
+    "exceeds 100 percent when expansion outweighs losses",
+    "excludes revenue from new customers"
+   ],
+   "use": "want to know whether the existing base grows by itself",
+   "not": [
+    "includes new logos won in the period"
+   ],
+   "like": [
+    "Gross revenue retention"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "Gross revenue retention",
+   "tier": 4,
+   "says": [
+    "measures revenue kept from existing customers after churn and contraction only",
+    "cannot exceed 100 percent",
+    "ignores expansion revenue"
+   ],
+   "use": "want to see how leaky the base is without upsell hiding it",
+   "not": [
+    "can rise above 100 percent through upsell"
+   ],
+   "like": [
+    "Net revenue retention"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "The LTV to CAC ratio",
+   "tier": 5,
+   "says": [
+    "compares the lifetime value of a customer with the cost of winning them",
+    "signals unprofitable growth when it is low",
+    "signals possible under-investment in growth when it is very high"
+   ],
+   "use": "need a single ratio for acquisition efficiency",
+   "not": [
+    "measures how fast the cost is repaid"
+   ],
+   "like": [
+    "CAC payback"
+   ]
+  },
+  {
+   "group": "saas",
+   "subject": "Expansion revenue",
+   "tier": 3,
+   "says": [
+    "is extra recurring revenue from existing customers through upsell or cross-sell",
+    "feeds net revenue retention",
+    "is cheaper to win than a new customer in many models"
+   ],
+   "use": "sell more seats or modules to current customers",
+   "not": [
+    "is revenue from first-time customers"
+   ],
+   "like": [
+    "Net revenue retention"
+   ]
+  },
+  {
+   "group": "price",
+   "subject": "Per-seat pricing",
+   "tier": 2,
+   "says": [
+    "charges according to the number of named or active users",
+    "scales revenue with customer headcount",
+    "can discourage adoption if customers limit users to save cost"
+   ],
+   "use": "sell a tool whose value grows with each user",
+   "not": [
+    "charges for the amount consumed"
+   ],
+   "like": [
+    "Usage-based pricing"
+   ]
+  },
+  {
+   "group": "price",
+   "subject": "Usage-based pricing",
+   "tier": 2,
+   "says": [
+    "charges according to consumption such as calls, storage or transactions",
+    "ties revenue to the value or load the customer creates",
+    "makes revenue and bills less predictable"
+   ],
+   "use": "sell something where cost to serve rises with use",
+   "not": [
+    "charges one fixed fee regardless of use"
+   ],
+   "like": [
+    "Per-seat pricing"
+   ]
+  },
+  {
+   "group": "price",
+   "subject": "Tiered pricing",
+   "tier": 2,
+   "says": [
+    "offers several packages at different prices and feature levels",
+    "lets customers self-select by need and budget",
+    "relies on clear differences between tiers"
+   ],
+   "use": "serve customers of very different sizes",
+   "not": [
+    "offers a single package at a single price"
+   ]
+  },
+  {
+   "group": "price",
+   "subject": "Cost-plus pricing",
+   "tier": 2,
+   "says": [
+    "sets price by adding a margin to the cost",
+    "guarantees a margin if costs are estimated correctly",
+    "ignores what the customer values the output at"
+   ],
+   "use": "price from known cost with no market reference",
+   "not": [
+    "sets price by the benefit the customer receives"
+   ],
+   "like": [
+    "Value-based pricing"
+   ]
+  },
+  {
+   "group": "price",
+   "subject": "Value-based pricing",
+   "tier": 3,
+   "says": [
+    "sets price by the benefit the customer receives",
+    "can earn more than cost-plus when the value is high",
+    "requires understanding the customer's economics"
+   ],
+   "use": "deliver a result worth far more to the customer than it costs to produce",
+   "not": [
+    "sets price by adding a margin to cost"
+   ],
+   "like": [
+    "Cost-plus pricing"
+   ]
+  },
+  {
+   "group": "price",
+   "subject": "Time-and-materials pricing",
+   "tier": 2,
+   "says": [
+    "bills actual hours worked at agreed rates plus expenses",
+    "places the budget risk mostly on the client",
+    "suits work whose scope cannot be fixed in advance"
+   ],
+   "use": "cannot define the scope well enough to quote a fixed price",
+   "not": [
+    "fixes the total fee before work starts"
+   ],
+   "like": [
+    "Fixed-price pricing"
+   ]
+  },
+  {
+   "group": "price",
+   "subject": "Fixed-price pricing",
+   "tier": 2,
+   "says": [
+    "agrees a total fee for a defined scope before work starts",
+    "places overrun risk on the supplier",
+    "relies on clear scope and change control"
+   ],
+   "use": "have a well-defined scope and the client wants cost certainty",
+   "not": [
+    "bills for every hour worked regardless of the quote"
+   ],
+   "like": [
+    "Time-and-materials pricing"
+   ]
+  },
+  {
+   "group": "price",
+   "subject": "A retainer",
+   "tier": 3,
+   "says": [
+    "is a recurring fee for reserved capacity or ongoing availability",
+    "gives the supplier predictable income",
+    "can lose value for the client if the capacity goes unused"
+   ],
+   "use": "need predictable monthly income from a long-term client",
+   "not": [
+    "bills only for completed deliverables"
+   ],
+   "like": [
+    "Time-and-materials pricing"
+   ]
+  },
+  {
+   "group": "price",
+   "subject": "Outcome-based pricing",
+   "tier": 5,
+   "says": [
+    "links the fee to a measured result achieved for the customer",
+    "shares performance risk between supplier and customer",
+    "needs an agreed and attributable measure of success"
+   ],
+   "use": "are confident of delivering a measurable result and want to be paid for it",
+   "not": [
+    "charges for hours regardless of result"
+   ],
+   "like": [
+    "Value-based pricing"
+   ]
+  },
+  {
+   "group": "cap",
+   "subject": "Capex",
+   "tier": 1,
+   "says": [
+    "is spending on assets that provide benefit over several periods",
+    "is recorded on the balance sheet and spread over time",
+    "is the category for spending that creates or extends a long-lived asset"
+   ],
+   "use": "buy something that will serve the business for years",
+   "not": [
+    "is fully charged to the income statement in the year of purchase"
+   ],
+   "like": [
+    "Opex"
+   ]
+  },
+  {
+   "group": "cap",
+   "subject": "Opex",
+   "tier": 1,
+   "says": [
+    "is spending on the day-to-day running of the business",
+    "is charged to the income statement in the period it occurs",
+    "includes items such as salaries and subscriptions"
+   ],
+   "use": "pay a cost that is consumed within the period",
+   "not": [
+    "is spread over the useful life of an asset"
+   ],
+   "like": [
+    "Capex"
+   ]
+  },
+  {
+   "group": "cap",
+   "subject": "Capitalised software development",
+   "tier": 4,
+   "says": [
+    "records qualifying development cost as an asset rather than an expense",
+    "generally applies once a project is viable and the company intends to complete it",
+    "excludes maintenance and research-phase work in most frameworks"
+   ],
+   "use": "build software that will bring benefit over several years",
+   "not": [
+    "treats every engineer's salary as an asset"
+   ],
+   "like": [
+    "Opex"
+   ]
+  },
+  {
+   "group": "cap",
+   "subject": "Depreciation",
+   "tier": 2,
+   "says": [
+    "spreads the cost of a tangible asset over its useful life",
+    "reduces profit without any cash leaving",
+    "applies to equipment rather than intangible assets"
+   ],
+   "use": "own equipment that wears out over several years",
+   "not": [
+    "is a cash payment to the supplier"
+   ],
+   "like": [
+    "Amortisation"
+   ]
+  },
+  {
+   "group": "cap",
+   "subject": "Amortisation",
+   "tier": 2,
+   "says": [
+    "spreads the cost of an intangible asset over its useful life",
+    "applies to items such as capitalised software and licences",
+    "reduces profit without any cash leaving"
+   ],
+   "use": "hold a capitalised software asset that will be used for several years",
+   "not": [
+    "applies only to physical equipment"
+   ],
+   "like": [
+    "Depreciation"
+   ]
+  },
+  {
+   "group": "cap",
+   "subject": "Impairment",
+   "tier": 4,
+   "says": [
+    "writes an asset down when its value falls below its recorded amount",
+    "is recognised as a charge to profit",
+    "is triggered by events such as abandoning a product"
+   ],
+   "use": "cancel a project whose capitalised cost can no longer be recovered",
+   "not": [
+    "is the normal scheduled spreading of cost"
+   ],
+   "like": [
+    "Amortisation"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Build cost",
+   "tier": 1,
+   "says": [
+    "is the one-off cost of creating a system or product",
+    "includes design, development and testing effort",
+    "is only part of the total cost of owning a system"
+   ],
+   "use": "are quoting what it takes to deliver the first release",
+   "not": [
+    "is the recurring cost of operating the system"
+   ],
+   "like": [
+    "Run cost"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Run cost",
+   "tier": 1,
+   "says": [
+    "is the recurring cost of operating and supporting a system once live",
+    "includes hosting, licences, support and maintenance",
+    "often exceeds the build cost over a long life"
+   ],
+   "use": "have launched and must budget to keep the service going",
+   "not": [
+    "is the one-off cost of creating the system"
+   ],
+   "like": [
+    "Build cost"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Total cost of ownership",
+   "tier": 3,
+   "says": [
+    "adds acquisition, operation, support and exit costs over the whole life",
+    "exposes costs that a purchase price alone hides",
+    "is used to compare options fairly"
+   ],
+   "use": "compare two options with different up-front and running costs",
+   "not": [
+    "is the up-front purchase price only"
+   ],
+   "like": [
+    "Build cost"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Opportunity cost",
+   "tier": 3,
+   "says": [
+    "is the value of the next best alternative given up",
+    "does not appear as a line in the accounts",
+    "applies to scarce resources such as engineering time"
+   ],
+   "use": "commit a team to one project and must name what is forgone",
+   "not": [
+    "is the cash paid for the chosen option"
+   ],
+   "like": [
+    "A sunk cost"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "A sunk cost",
+   "tier": 3,
+   "says": [
+    "is money already spent that cannot be recovered",
+    "should not drive a decision about future spending",
+    "is often wrongly used to justify continuing a failing project"
+   ],
+   "use": "hesitate to stop a project because so much has been spent",
+   "not": [
+    "is a future cost that can still be avoided"
+   ],
+   "like": [
+    "Opportunity cost"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Marginal cost",
+   "tier": 3,
+   "says": [
+    "is the extra cost of producing one more unit",
+    "is low for software with little extra cost per customer",
+    "guides pricing floors for additional volume"
+   ],
+   "use": "decide whether to accept one more order at a lower price",
+   "not": [
+    "is the average cost across all units"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Cost of delay",
+   "tier": 5,
+   "says": [
+    "is the value lost for each period a deliverable is late",
+    "helps prioritise by comparing delay costs of competing work",
+    "turns urgency into a number"
+   ],
+   "use": "must decide which of two projects to start first",
+   "not": [
+    "is the budget overrun on a late project"
+   ],
+   "like": [
+    "Opportunity cost"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Technical debt interest",
+   "tier": 5,
+   "says": [
+    "is the extra ongoing cost caused by shortcuts left in the system",
+    "shows up as slower delivery and more incidents",
+    "grows if the underlying shortcut is not repaid"
+   ],
+   "use": "must explain to finance why slow delivery has a financial cost",
+   "not": [
+    "is the interest on a bank loan used to buy software"
+   ],
+   "like": [
+    "Run cost"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "FinOps",
+   "tier": 1,
+   "says": [
+    "is the practice of bringing financial accountability to cloud spending",
+    "brings engineering, finance and business teams together on cost",
+    "aims to improve value from cloud rather than to cut spending blindly"
+   ],
+   "use": "want engineering and finance to share responsibility for cloud cost",
+   "not": [
+    "is a tool that automatically buys cheaper servers"
+   ],
+   "like": [
+    "Showback"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "Showback",
+   "tier": 2,
+   "says": [
+    "reports to teams what their usage costs without billing them",
+    "builds cost awareness without moving money",
+    "relies on accurate cost allocation"
+   ],
+   "use": "want teams to see their spend before any internal charging",
+   "not": [
+    "transfers the cost to the team's budget"
+   ],
+   "like": [
+    "Chargeback"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "Chargeback",
+   "tier": 3,
+   "says": [
+    "bills each team's budget for the cloud cost they incur",
+    "makes teams financially accountable for their use",
+    "needs trustworthy allocation or it causes disputes"
+   ],
+   "use": "want cloud cost to land in the budget of the team that incurred it",
+   "not": [
+    "only reports cost for information"
+   ],
+   "like": [
+    "Showback"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "Cost allocation tags",
+   "tier": 2,
+   "says": [
+    "are labels on resources that attribute their cost to a team or product",
+    "fail to attribute spend when resources are left untagged",
+    "make showback and chargeback possible"
+   ],
+   "use": "cannot tell which team caused a growing bill",
+   "not": [
+    "compress data to reduce storage fees"
+   ],
+   "like": [
+    "Shared cost allocation"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "Rightsizing",
+   "tier": 2,
+   "says": [
+    "matches resource size to the actual workload",
+    "reduces waste from over-provisioned capacity",
+    "is usually done before buying a commitment"
+   ],
+   "use": "find servers running far below capacity",
+   "not": [
+    "buys a long-term discount on current capacity"
+   ],
+   "like": [
+    "A commitment discount"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "A commitment discount",
+   "tier": 3,
+   "says": [
+    "offers a lower rate in exchange for committing to a level of usage over a term",
+    "wastes money if the committed usage is not used",
+    "suits steady, predictable workloads"
+   ],
+   "use": "have a stable baseline of usage that will last",
+   "not": [
+    "gives a discount for interruptible spare capacity"
+   ],
+   "like": [
+    "Spot capacity",
+    "Rightsizing"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "Spot capacity",
+   "tier": 4,
+   "says": [
+    "offers spare capacity at a lower price that the provider can reclaim",
+    "suits fault-tolerant or interruptible workloads",
+    "is unsuitable for work that cannot tolerate sudden loss"
+   ],
+   "use": "run batch jobs that can restart safely",
+   "not": [
+    "guarantees capacity for a fixed term"
+   ],
+   "like": [
+    "A commitment discount"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "Cloud unit economics",
+   "tier": 4,
+   "says": [
+    "relates cloud cost to a business measure such as cost per order or per customer",
+    "shows whether cost grows faster than the business",
+    "separates healthy growth from waste"
+   ],
+   "use": "see the bill grow and need to know whether that is fine",
+   "not": [
+    "tracks the total bill without any business measure"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "Cost anomaly detection",
+   "tier": 4,
+   "says": [
+    "alerts on unexpected spikes in spend",
+    "helps catch misconfiguration or runaway workloads early",
+    "complements budgets by watching patterns not totals"
+   ],
+   "use": "want to hear about a spend spike within days, not at month end",
+   "not": [
+    "allocates shared cost to teams"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "Data egress charges",
+   "tier": 5,
+   "says": [
+    "are fees for moving data out of a cloud provider or across regions",
+    "can make architecture choices or migrations costly",
+    "are easy to overlook when designing data-heavy systems"
+   ],
+   "use": "plan a design that moves large volumes of data between regions",
+   "not": [
+    "are fees for storing data at rest"
+   ],
+   "like": [
+    "Shared cost allocation"
+   ]
+  },
+  {
+   "group": "finops",
+   "subject": "Shared cost allocation",
+   "tier": 4,
+   "says": [
+    "splits the cost of shared platform items among the teams that benefit",
+    "needs an agreed fair basis such as usage or headcount",
+    "avoids leaving untagged shared spend with nobody"
+   ],
+   "use": "must charge teams for a shared cluster or network",
+   "not": [
+    "attributes each cost to one team through tags"
+   ],
+   "like": [
+    "Cost allocation tags"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "A master services agreement",
+   "tier": 2,
+   "says": [
+    "sets the general terms that govern all later work orders with a supplier",
+    "lets individual projects be agreed quickly under standing terms",
+    "separates long-lived legal terms from project-specific scope"
+   ],
+   "use": "expect to buy several pieces of work from the same supplier",
+   "not": [
+    "fixes the price and scope of one single project"
+   ],
+   "like": [
+    "A statement of work"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "A statement of work",
+   "tier": 2,
+   "says": [
+    "defines the scope, deliverables, timeline and price of a specific piece of work",
+    "sits under a master agreement",
+    "is where acceptance criteria are normally written down"
+   ],
+   "use": "need to define exactly what a supplier will deliver this time",
+   "not": [
+    "sets the general legal terms for the whole relationship"
+   ],
+   "like": [
+    "A master services agreement"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "A service level agreement",
+   "tier": 2,
+   "says": [
+    "states measurable service commitments such as availability or response time",
+    "usually pairs commitments with remedies when they are missed",
+    "is only useful if the measure is clearly defined"
+   ],
+   "use": "depend on a supplier and need a measurable promise",
+   "not": [
+    "describes the commercial price of the service"
+   ],
+   "like": [
+    "A service credit"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "A service credit",
+   "tier": 4,
+   "says": [
+    "is a remedy that reduces future charges when an SLA is missed",
+    "is often the main financial remedy a supplier offers",
+    "rarely covers the real business loss from an outage"
+   ],
+   "use": "want to know what you receive when a supplier misses its uptime promise",
+   "not": [
+    "is a payment covering all losses from the outage"
+   ],
+   "like": [
+    "A service level agreement"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "An auto-renewal clause",
+   "tier": 3,
+   "says": [
+    "renews the contract automatically unless notice is given within a window",
+    "can lock in another term if the deadline is missed",
+    "makes the notice date an important diary item"
+   ],
+   "use": "hold a contract that continues unless someone acts before a date",
+   "not": [
+    "ends the contract automatically on the expiry date"
+   ],
+   "like": [
+    "Termination for convenience"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Termination for convenience",
+   "tier": 3,
+   "says": [
+    "allows one party to end the contract without proving a breach",
+    "usually requires notice and may involve a fee",
+    "gives flexibility that fixed-term contracts lack"
+   ],
+   "use": "want to leave the contract early without the supplier having failed",
+   "not": [
+    "allows exit only after a material breach"
+   ],
+   "like": [
+    "An auto-renewal clause"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "A price escalator",
+   "tier": 3,
+   "says": [
+    "sets how the price rises over the contract term",
+    "may be fixed, or linked to an index",
+    "should be capped so future cost is predictable"
+   ],
+   "use": "sign a multi-year contract and fear later price increases",
+   "not": [
+    "is a discount that grows with volume"
+   ],
+   "like": [
+    "A volume discount"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "A minimum commitment",
+   "tier": 3,
+   "says": [
+    "obliges the customer to pay for a set volume or spend even if it is not used",
+    "trades flexibility for a lower unit price",
+    "creates risk when demand falls below the commitment"
+   ],
+   "use": "are offered a lower rate for guaranteeing spend",
+   "not": [
+    "lets you pay only for what is consumed"
+   ],
+   "like": [
+    "A volume discount"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "A volume discount",
+   "tier": 2,
+   "says": [
+    "reduces the unit price as quantity or spend increases",
+    "is earned by consumption rather than promised in advance",
+    "rewards scale"
+   ],
+   "use": "expect to buy increasingly large quantities",
+   "not": [
+    "requires a fixed prepaid commitment"
+   ],
+   "like": [
+    "A minimum commitment"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "A data portability clause",
+   "tier": 4,
+   "says": [
+    "secures the customer's right to retrieve their data in a usable format",
+    "reduces lock-in when leaving a supplier",
+    "should state format and timeframe"
+   ],
+   "use": "worry about getting data back if you leave the supplier",
+   "not": [
+    "extends the supplier's right to keep the data"
+   ],
+   "like": [
+    "Termination for convenience"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "An indemnification clause",
+   "tier": 5,
+   "says": [
+    "makes one party compensate the other for specified third-party claims or losses",
+    "allocates risk for matters such as intellectual property infringement",
+    "is a risk-allocation term to be reviewed by legal counsel"
+   ],
+   "use": "want to know who bears the cost if a third party sues over the supplier's product",
+   "not": [
+    "lets either party leave without penalty"
+   ],
+   "like": [
+    "A service credit"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "BATNA",
+   "tier": 4,
+   "says": [
+    "is the best alternative to a negotiated agreement",
+    "sets the walk-away point in a negotiation",
+    "is strengthened by having credible other suppliers"
+   ],
+   "use": "enter a negotiation and need to know your fallback if talks fail",
+   "not": [
+    "is the opening price the supplier proposes"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "Return on investment",
+   "tier": 2,
+   "says": [
+    "is the gain from an investment minus its cost, divided by its cost",
+    "is expressed as a percentage",
+    "ignores the timing of the cash flows"
+   ],
+   "use": "want a quick measure of how much an investment returns relative to cost",
+   "not": [
+    "discounts future cash flows to present value"
+   ],
+   "like": [
+    "Net present value"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "The payback period",
+   "tier": 2,
+   "says": [
+    "is the time taken for cumulative cash inflows to recover the initial investment",
+    "ignores cash flows after recovery",
+    "favours quick returns"
+   ],
+   "use": "need to know how soon the money is recovered",
+   "not": [
+    "measures total value created over the whole life"
+   ],
+   "like": [
+    "Net present value"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "Net present value",
+   "tier": 4,
+   "says": [
+    "is the sum of future cash flows discounted to today minus the initial outlay",
+    "approves an investment only when it is positive at the chosen discount rate",
+    "is stated as a currency amount rather than a percentage"
+   ],
+   "use": "must compare investments with different timing of cash flows",
+   "not": [
+    "ignores when cash arrives"
+   ],
+   "like": [
+    "Return on investment",
+    "Internal rate of return"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "Internal rate of return",
+   "tier": 5,
+   "says": [
+    "is the discount rate at which an investment's net present value is zero",
+    "is compared with the hurdle rate to accept or reject",
+    "can mislead when cash flows change sign several times"
+   ],
+   "use": "want a single percentage return that includes timing",
+   "not": [
+    "is the cost of the loan funding the project"
+   ],
+   "like": [
+    "Net present value"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "The time value of money",
+   "tier": 2,
+   "says": [
+    "is the principle that money today is worth more than the same amount later",
+    "is the reason future cash flows are discounted",
+    "reflects the chance to earn a return and the risk of waiting"
+   ],
+   "use": "must explain why delayed benefits are worth less",
+   "not": [
+    "says inflation is always zero"
+   ],
+   "like": [
+    "The discount rate"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "The discount rate",
+   "tier": 2,
+   "says": [
+    "converts future cash flows into present value",
+    "rises to reflect greater risk or cost of capital",
+    "lowers the present value of distant cash flows when it increases"
+   ],
+   "use": "must pick the rate used to value future benefits",
+   "not": [
+    "is the price reduction offered to a customer"
+   ],
+   "like": [
+    "The time value of money"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "The hurdle rate",
+   "tier": 4,
+   "says": [
+    "is the minimum return a project must achieve to be approved",
+    "is usually based on the cost of capital plus a risk allowance",
+    "is the benchmark an internal rate of return is compared with"
+   ],
+   "use": "must set the bar a proposed project has to clear",
+   "not": [
+    "is the highest return the company has ever earned"
+   ],
+   "like": [
+    "Internal rate of return"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "The discounted payback period",
+   "tier": 4,
+   "says": [
+    "is the time to recover the investment using discounted cash flows",
+    "is longer than the simple payback period for the same project",
+    "recovers the investment only after each period's cash flow has been discounted"
+   ],
+   "use": "want a payback test that respects the time value of money",
+   "not": [
+    "ignores the discount rate"
+   ],
+   "like": [
+    "The payback period"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "Sensitivity analysis",
+   "tier": 4,
+   "says": [
+    "changes one assumption at a time to see its effect on the result",
+    "shows which assumptions the answer depends on most",
+    "helps focus validation effort on the shaky inputs"
+   ],
+   "use": "doubt the assumptions behind a business case",
+   "not": [
+    "models several full scenarios at once"
+   ],
+   "like": [
+    "Scenario planning"
+   ]
+  },
+  {
+   "group": "invest",
+   "subject": "A business case",
+   "tier": 2,
+   "says": [
+    "sets out costs, benefits, risks and options to justify a decision",
+    "compares doing something with doing nothing",
+    "should state its assumptions so they can be challenged"
+   ],
+   "use": "must persuade leadership to approve funding",
+   "not": [
+    "is a record of completed project spending"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Fully loaded cost",
+   "tier": 2,
+   "says": [
+    "is the full cost of an employee including salary, benefits, taxes and overhead",
+    "is higher than salary alone",
+    "is the correct basis for project costing"
+   ],
+   "use": "need the true cost of a team member to price work",
+   "not": [
+    "is the salary printed on the contract"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Utilisation rate",
+   "tier": 2,
+   "says": [
+    "is billable hours as a share of available hours",
+    "measures how much of capacity earns revenue",
+    "can be pushed so high that there is no time for training or sales"
+   ],
+   "use": "want to know how much of a team's time is billed",
+   "not": [
+    "is revenue divided by headcount"
+   ],
+   "like": [
+    "Realisation rate"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Realisation rate",
+   "tier": 4,
+   "says": [
+    "compares revenue actually billed with the revenue at standard rates for the time worked",
+    "drops when time is written off or discounted",
+    "shows leakage between work done and money collected"
+   ],
+   "use": "see hours worked but less revenue billed than expected",
+   "not": [
+    "measures hours billed against hours available"
+   ],
+   "like": [
+    "Utilisation rate"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "A billable rate",
+   "tier": 2,
+   "says": [
+    "is the price charged per hour or day of a person's time",
+    "must cover cost, overhead and margin",
+    "differs from the cost rate paid for the same person"
+   ],
+   "use": "must set what a client pays for an hour of a role",
+   "not": [
+    "is what the employer pays the person per hour"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "A blended rate",
+   "tier": 4,
+   "says": [
+    "is the average rate across a mix of roles weighted by hours",
+    "hides differences between senior and junior effort",
+    "changes if the team mix changes"
+   ],
+   "use": "quote one rate for a team of mixed seniority",
+   "not": [
+    "is the rate for a single named person"
+   ],
+   "like": [
+    "A billable rate"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Project contingency",
+   "tier": 4,
+   "says": [
+    "is an allowance added to an estimate for uncertainty in the work",
+    "is higher when scope or technology is less understood",
+    "should be explicit rather than hidden in task estimates"
+   ],
+   "use": "estimate work with real unknowns",
+   "not": [
+    "is the profit margin on the project"
+   ],
+   "like": [
+    "A contingency reserve"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Estimate at completion",
+   "tier": 4,
+   "says": [
+    "forecasts the total project cost once finished",
+    "can be projected from spend so far and the work completed",
+    "warns early that a project will exceed its budget"
+   ],
+   "use": "are partway through a project and must forecast its final cost",
+   "not": [
+    "is the original approved budget"
+   ],
+   "like": [
+    "Earned value"
+   ]
+  },
+  {
+   "group": "people",
+   "subject": "Earned value",
+   "tier": 5,
+   "says": [
+    "measures the budgeted value of the work actually completed",
+    "compares progress with spend to reveal cost and schedule performance",
+    "avoids reading spend as if it were progress"
+   ],
+   "use": "want to know whether spend corresponds to real progress",
+   "not": [
+    "measures only the amount invoiced to the client"
+   ],
+   "like": [
+    "Estimate at completion"
+   ]
+  },
+  {
+   "group": "wc",
+   "subject": "Working capital",
+   "tier": 2,
+   "says": [
+    "is current assets minus current liabilities",
+    "shows the short-term funds available to run the business",
+    "is tied up as receivables grow faster than payables"
+   ],
+   "use": "need to know the cash tied up in day-to-day operations",
+   "not": [
+    "is the cash raised from investors"
+   ],
+   "like": [
+    "The cash conversion cycle"
+   ]
+  },
+  {
+   "group": "wc",
+   "subject": "Days sales outstanding",
+   "tier": 3,
+   "says": [
+    "measures the average number of days to collect payment after a sale",
+    "is receivables divided by sales, multiplied by the days in the period",
+    "rises when customers pay slowly"
+   ],
+   "use": "want to know how quickly customers pay",
+   "not": [
+    "measures how long the company takes to pay suppliers"
+   ],
+   "like": [
+    "Days payable outstanding"
+   ]
+  },
+  {
+   "group": "wc",
+   "subject": "Days payable outstanding",
+   "tier": 3,
+   "says": [
+    "measures the average number of days the company takes to pay suppliers",
+    "is payables divided by cost of sales, multiplied by the days in the period",
+    "helps cash when it is longer, within agreed terms"
+   ],
+   "use": "want to know how long suppliers wait for payment",
+   "not": [
+    "measures how long customers take to pay"
+   ],
+   "like": [
+    "Days sales outstanding"
+   ]
+  },
+  {
+   "group": "wc",
+   "subject": "The cash conversion cycle",
+   "tier": 5,
+   "says": [
+    "measures the days between paying out cash and getting it back from customers",
+    "combines days sales outstanding, days inventory and days payable",
+    "is shortened by faster collection and longer supplier terms"
+   ],
+   "use": "want to understand how long cash is tied up in operations",
+   "not": [
+    "measures the days a project takes to deliver"
+   ],
+   "like": [
+    "Working capital"
+   ]
+  },
+  {
+   "group": "wc",
+   "subject": "A cash flow forecast",
+   "tier": 2,
+   "says": [
+    "projects cash receipts and payments over coming weeks or months",
+    "shows when the bank balance could run short",
+    "focuses on timing rather than profit"
+   ],
+   "use": "fear a cash shortfall before the next big payment arrives",
+   "not": [
+    "projects profit over the year using accruals"
+   ],
+   "like": [
+    "A rolling forecast"
+   ]
+  },
+  {
+   "group": "wc",
+   "subject": "Invoice factoring",
+   "tier": 4,
+   "says": [
+    "sells unpaid invoices to a third party for immediate cash",
+    "brings cash forward at a cost",
+    "shortens collection time without waiting for the customer"
+   ],
+   "use": "need cash now and have large invoices outstanding",
+   "not": [
+    "extends supplier payment terms"
+   ]
+  },
+  {
+   "group": "wc",
+   "subject": "A milestone billing schedule",
+   "tier": 4,
+   "says": [
+    "splits a fee into payments tied to project stages",
+    "improves cash flow compared with billing only at the end",
+    "reduces the supplier's exposure to non-payment"
+   ],
+   "use": "deliver a long project and want to avoid funding it all yourself",
+   "not": [
+    "bills the whole fee when the project is finished"
+   ],
+   "like": [
+    "A retainer"
+   ]
+  },
+  {
+   "group": "wc",
+   "subject": "Overtrading",
+   "tier": 5,
+   "says": [
+    "is growing sales faster than the cash available to fund them",
+    "can happen to a profitable company",
+    "is driven by working capital growing with sales"
+   ],
+   "use": "see rapid growth but a shrinking bank balance",
+   "not": [
+    "is trading too slowly to cover costs"
+   ],
+   "like": [
+    "Working capital"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "Internal control",
+   "tier": 1,
+   "says": [
+    "is a process that safeguards assets and keeps financial records reliable",
+    "includes approvals, reconciliations and access limits",
+    "reduces the risk of error and fraud"
+   ],
+   "use": "want confidence that money is handled properly",
+   "not": [
+    "guarantees that fraud can never occur"
+   ],
+   "like": [
+    "An audit trail",
+    "A three-way match",
+    "Segregation of duties",
+    "Approval limits"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "Segregation of duties",
+   "tier": 2,
+   "says": [
+    "splits key steps of a process between different people",
+    "prevents one person from both initiating and approving a payment",
+    "reduces the risk of fraud and uncaught error"
+   ],
+   "use": "want to stop one person controlling a payment from start to finish",
+   "not": [
+    "lets one person create, approve and pay invoices"
+   ],
+   "like": [
+    "Approval limits"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "An audit trail",
+   "tier": 2,
+   "says": [
+    "is a traceable record of who did what and when",
+    "lets a transaction be followed from source to ledger",
+    "supports review and investigation"
+   ],
+   "use": "need to trace a transaction back to who approved it",
+   "not": [
+    "is the final opinion of the auditor"
+   ],
+   "like": [
+    "Internal control"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "Approval limits",
+   "tier": 2,
+   "says": [
+    "set the maximum amount a role may approve alone",
+    "send larger spend to higher authority",
+    "are documented in a delegation of authority"
+   ],
+   "use": "want larger payments to need more senior sign-off",
+   "not": [
+    "stop anyone approving anything"
+   ],
+   "like": [
+    "Segregation of duties"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "A three-way match",
+   "tier": 3,
+   "says": [
+    "compares the purchase order, goods receipt and supplier invoice before payment",
+    "catches overbilling and duplicate invoices",
+    "is a standard control in accounts payable"
+   ],
+   "use": "want to pay only for what was ordered and received",
+   "not": [
+    "compares three quotes from different suppliers"
+   ],
+   "like": [
+    "Approval limits"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "An external audit",
+   "tier": 4,
+   "says": [
+    "is an independent examination of the financial statements",
+    "gives an opinion on whether they present a true and fair view",
+    "is performed by an auditor independent of management"
+   ],
+   "use": "need an independent opinion on the accounts for investors or lenders",
+   "not": [
+    "is a review run by the company's own staff"
+   ],
+   "like": [
+    "An internal audit"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "An internal audit",
+   "tier": 4,
+   "says": [
+    "is a review by the organisation's own function of controls and risk",
+    "reports to management and the board on control weaknesses",
+    "can look at any process, not only financial reporting"
+   ],
+   "use": "want an internal view of whether controls actually operate",
+   "not": [
+    "is the legally required opinion on the annual accounts"
+   ],
+   "like": [
+    "An external audit"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "Materiality",
+   "tier": 4,
+   "says": [
+    "is the size of error or omission that could change a reader's decisions",
+    "guides how much audit effort a matter deserves",
+    "is judged by both size and nature"
+   ],
+   "use": "must decide which errors are worth correcting or reporting",
+   "not": [
+    "is the total value of the company's assets"
+   ],
+   "like": [
+    "An external audit"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "Value added tax",
+   "tier": 2,
+   "says": [
+    "is a consumption tax charged on sales and collected by businesses on behalf of the tax authority",
+    "is not a cost to a business that can reclaim it",
+    "is separate from income or profit tax"
+   ],
+   "use": "invoice customers in a jurisdiction that charges a sales tax on supply",
+   "not": [
+    "is a tax on company profit"
+   ],
+   "like": [
+    "Input VAT",
+    "Corporate income tax"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "Input VAT",
+   "tier": 3,
+   "says": [
+    "is the tax a business pays on its purchases",
+    "may be reclaimed against tax collected on sales if the rules allow",
+    "depends on local recovery rules"
+   ],
+   "use": "pay supplier invoices that carry sales tax",
+   "not": [
+    "is the tax charged to customers on sales"
+   ],
+   "like": [
+    "Value added tax"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "Corporate income tax",
+   "tier": 3,
+   "says": [
+    "is a tax charged on a company's taxable profit",
+    "is calculated under local rules that differ from accounting profit",
+    "is separate from VAT"
+   ],
+   "use": "need to understand the tax on profit as distinct from sales taxes",
+   "not": [
+    "is collected on each sale and passed to the authority"
+   ],
+   "like": [
+    "Value added tax"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "Withholding tax",
+   "tier": 5,
+   "says": [
+    "is tax deducted at source from a payment to another party",
+    "is paid to the tax authority by the payer",
+    "can arise on cross-border payments depending on local rules and treaties"
+   ],
+   "use": "pay a supplier or licensor in another country and must check deductions",
+   "not": [
+    "is a tax charged only on domestic retail sales"
+   ],
+   "like": [
+    "Transfer pricing"
+   ]
+  },
+  {
+   "group": "ctrl",
+   "subject": "Transfer pricing",
+   "tier": 4,
+   "says": [
+    "sets the prices charged between related companies in a group",
+    "is reviewed by tax authorities for arm's-length fairness",
+    "affects where profit is reported in a group"
+   ],
+   "use": "charge another company in the same group for services",
+   "not": [
+    "sets the price charged to external customers"
+   ],
+   "like": [
+    "Withholding tax"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "Runway",
+   "tier": 1,
+   "says": [
+    "is the number of months the company can operate before running out of cash",
+    "is cash divided by net monthly burn",
+    "shortens as burn grows or cash falls"
+   ],
+   "use": "want to know how long the cash will last",
+   "not": [
+    "is the forecast of next year's revenue"
+   ],
+   "like": [
+    "Burn rate"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "Burn rate",
+   "tier": 1,
+   "says": [
+    "is the speed at which the company spends cash",
+    "net burn subtracts incoming revenue from outgoing cash",
+    "is usually quoted per month"
+   ],
+   "use": "want to know how fast cash is being used",
+   "not": [
+    "is the total cash held at the bank"
+   ],
+   "like": [
+    "Runway"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "Equity financing",
+   "tier": 2,
+   "says": [
+    "raises money by selling ownership shares",
+    "has no repayment schedule but dilutes existing owners",
+    "gives investors a claim on future value"
+   ],
+   "use": "want funding without a fixed repayment obligation",
+   "not": [
+    "requires repaying principal and interest on a schedule"
+   ],
+   "like": [
+    "Debt financing"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "Debt financing",
+   "tier": 2,
+   "says": [
+    "raises money that must be repaid with interest",
+    "does not dilute ownership",
+    "creates fixed obligations that stay whether or not the business does well"
+   ],
+   "use": "want funding without giving up ownership",
+   "not": [
+    "gives the lender a share of ownership"
+   ],
+   "like": [
+    "Equity financing"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "Dilution",
+   "tier": 3,
+   "says": [
+    "reduces existing owners' percentage when new shares are issued",
+    "does not by itself reduce the value of an owner's stake if value grows",
+    "is calculated from the new shares relative to the total"
+   ],
+   "use": "are issuing shares to a new investor",
+   "not": [
+    "happens when the company repays a loan"
+   ],
+   "like": [
+    "A cap table"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "A cap table",
+   "tier": 2,
+   "says": [
+    "lists who owns how much of the company and in what form",
+    "is updated by each financing round",
+    "shows the effect of new shares on every holder"
+   ],
+   "use": "need to see how ownership is split among founders and investors",
+   "not": [
+    "lists the company's customers"
+   ],
+   "like": [
+    "Dilution"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "Pre-money valuation",
+   "tier": 3,
+   "says": [
+    "is the value of the company before new investment is added",
+    "plus the new money gives the post-money valuation",
+    "sets the price per share for the round"
+   ],
+   "use": "negotiate the value placed on the company before the investor's cash arrives",
+   "not": [
+    "includes the new investment"
+   ],
+   "like": [
+    "Post-money valuation"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "Post-money valuation",
+   "tier": 4,
+   "says": [
+    "is the pre-money valuation plus the new investment",
+    "determines the investor's percentage as their money divided by the post-money figure",
+    "is the figure used to compute dilution in the round"
+   ],
+   "use": "need to work out the percentage a new investor will own",
+   "not": [
+    "is the value before the investment"
+   ],
+   "like": [
+    "Pre-money valuation"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "A convertible note",
+   "tier": 4,
+   "says": [
+    "is a loan that converts into shares at a later financing",
+    "defers setting a valuation",
+    "often carries a discount or cap on the conversion price"
+   ],
+   "use": "want to raise quickly without agreeing a valuation yet",
+   "not": [
+    "is repaid in cash with no conversion"
+   ],
+   "like": [
+    "Debt financing"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "A term sheet",
+   "tier": 3,
+   "says": [
+    "summarises the main terms of an investment before final contracts",
+    "is generally non-binding on the main terms",
+    "sets items such as valuation, investment size and investor rights"
+   ],
+   "use": "have an investor interested and want terms agreed before lawyers draft contracts",
+   "not": [
+    "is the final signed shareholders' agreement"
+   ],
+   "like": [
+    "A cap table"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "Management accounts",
+   "tier": 2,
+   "says": [
+    "are internal financial reports prepared monthly for decision making",
+    "are not the audited statutory accounts",
+    "give leaders timely profit, cash and balance sheet figures"
+   ],
+   "use": "need timely numbers between annual audits",
+   "not": [
+    "are the audited annual accounts filed publicly"
+   ],
+   "like": [
+    "A board pack"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "A board pack",
+   "tier": 3,
+   "says": [
+    "is the set of papers sent to directors before a board meeting",
+    "includes financial results, budget comparison, cash and key metrics",
+    "should lead with the decisions and exceptions that need attention"
+   ],
+   "use": "must report finances to directors before a meeting",
+   "not": [
+    "is the audited annual accounts"
+   ],
+   "like": [
+    "Management accounts"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "Budget-versus-actual reporting",
+   "tier": 2,
+   "says": [
+    "compares planned figures with real results for the period",
+    "explains the main variances with commentary",
+    "shows directors where performance departs from plan"
+   ],
+   "use": "want the board to see how results compare with plan",
+   "not": [
+    "compares this year's results with a competitor's"
+   ],
+   "like": [
+    "Variance analysis"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "A debt covenant",
+   "tier": 5,
+   "says": [
+    "is a condition in a loan agreement that the borrower must keep to",
+    "may set limits on ratios such as debt to earnings",
+    "can allow the lender to act if broken"
+   ],
+   "use": "hold a loan that sets financial conditions on the business",
+   "not": [
+    "is the interest rate of the loan"
+   ],
+   "like": [
+    "Debt financing"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "A company has revenue of 200,000 and direct delivery costs of 80,000. What is its gross margin percentage?",
+   "right": "60 percent",
+   "wrong": [
+    "40 percent",
+    "80 percent",
+    "120 percent"
+   ],
+   "tier": 1,
+   "why": "Gross profit is 200,000 minus 80,000, which is 120,000, and 120,000 divided by 200,000 is 60 percent."
+  },
+  {
+   "q": "Monthly recurring revenue is 25,000. What is the annual recurring revenue?",
+   "right": "300,000",
+   "wrong": [
+    "25,000",
+    "150,000",
+    "30,000"
+   ],
+   "tier": 1,
+   "why": "ARR is MRR multiplied by twelve."
+  },
+  {
+   "q": "A company holds 1,200,000 in cash and its net burn is 100,000 a month. What is its runway?",
+   "right": "12 months",
+   "wrong": [
+    "10 months",
+    "120 months",
+    "1.2 months"
+   ],
+   "tier": 1,
+   "why": "Runway is cash divided by net monthly burn."
+  },
+  {
+   "q": "A project costs 120,000 and saves 5,000 a month. What is the simple payback period?",
+   "right": "24 months",
+   "wrong": [
+    "12 months",
+    "60 months",
+    "2.4 months"
+   ],
+   "tier": 1,
+   "why": "120,000 divided by 5,000 is 24 months."
+  },
+  {
+   "q": "A product sells for 100 and has a variable cost of 40. What is the contribution margin per unit?",
+   "right": "60",
+   "wrong": [
+    "40",
+    "140",
+    "0.6"
+   ],
+   "tier": 2,
+   "why": "Contribution per unit is price minus variable cost."
+  },
+  {
+   "q": "A company loses 10 of its 200 customers in a month. What is the monthly logo churn rate?",
+   "right": "5 percent",
+   "wrong": [
+    "10 percent",
+    "20 percent",
+    "0.5 percent"
+   ],
+   "tier": 2,
+   "why": "10 divided by 200 is 5 percent."
+  },
+  {
+   "q": "A consultant works 30 billable hours in a 40-hour week. What is the utilisation rate?",
+   "right": "75 percent",
+   "wrong": [
+    "30 percent",
+    "133 percent",
+    "25 percent"
+   ],
+   "tier": 2,
+   "why": "Billable hours divided by available hours is 30 divided by 40."
+  },
+  {
+   "q": "An item costs 80 to make and is sold with a 25 percent markup on cost. What is the selling price?",
+   "right": "100",
+   "wrong": [
+    "105",
+    "120",
+    "110"
+   ],
+   "tier": 2,
+   "why": "A 25 percent markup on 80 adds 20."
+  },
+  {
+   "q": "A sale with a 25 percent markup on cost has what margin on selling price?",
+   "right": "20 percent",
+   "wrong": [
+    "25 percent",
+    "75 percent",
+    "30 percent"
+   ],
+   "tier": 2,
+   "why": "Cost 80, price 100: profit 20 is 20 percent of the price."
+  },
+  {
+   "q": "A budget line was 50,000 and the actual spend was 56,000. How is the variance described?",
+   "right": "6,000 unfavourable, 12 percent over budget",
+   "wrong": [
+    "6,000 favourable",
+    "56,000 unfavourable",
+    "12,000 unfavourable"
+   ],
+   "tier": 2,
+   "why": "Spending above budget reduces profit, so it is unfavourable; 6,000 divided by 50,000 is 12 percent."
+  },
+  {
+   "q": "A customer pays 1,200 for a twelve-month subscription on 1 January. How much revenue is recognised by the end of March?",
+   "right": "300",
+   "wrong": [
+    "1,200",
+    "100",
+    "0"
+   ],
+   "tier": 2,
+   "why": "Revenue is recognised across the service period: three months at 100 each."
+  },
+  {
+   "q": "An equipment purchase of 30,000 has a five-year useful life and no residual value. What is the annual straight-line depreciation?",
+   "right": "6,000",
+   "wrong": [
+    "30,000",
+    "5,000",
+    "15,000"
+   ],
+   "tier": 2,
+   "why": "30,000 divided by 5 years is 6,000."
+  },
+  {
+   "q": "Capitalised software costing 240,000 is amortised over four years. What is the yearly charge?",
+   "right": "60,000",
+   "wrong": [
+    "240,000",
+    "40,000",
+    "80,000"
+   ],
+   "tier": 2,
+   "why": "240,000 divided by 4 is 60,000."
+  },
+  {
+   "q": "A supplier contract rises by 5 percent a year. The first year costs 100,000. What does the second year cost?",
+   "right": "105,000",
+   "wrong": [
+    "110,000",
+    "100,500",
+    "95,000"
+   ],
+   "tier": 2,
+   "why": "5 percent of 100,000 is 5,000."
+  },
+  {
+   "q": "Which cost is a variable cost for an online service?",
+   "right": "Payment processing fee per transaction",
+   "wrong": [
+    "Annual office rent",
+    "Salary of the finance manager",
+    "Annual accounting software licence"
+   ],
+   "tier": 2,
+   "why": "It rises with each transaction."
+  },
+  {
+   "q": "Why can a profitable company run out of cash?",
+   "right": "Profit is recorded on accruals, so customers may not yet have paid",
+   "wrong": [
+    "Profit and cash are always identical",
+    "Tax is never paid",
+    "Depreciation is a cash cost"
+   ],
+   "tier": 2,
+   "why": "Profit counts earned revenue, cash counts money received."
+  },
+  {
+   "q": "A customer pays 100 a month, gross margin is 60 percent and the acquisition cost is 1,200. What is the CAC payback?",
+   "right": "20 months",
+   "wrong": [
+    "12 months",
+    "8 months",
+    "16 months"
+   ],
+   "tier": 3,
+   "why": "Monthly gross profit is 60, and 1,200 divided by 60 is 20 months."
+  },
+  {
+   "q": "A customer pays 100 a month at an 80 percent gross margin with 4 percent monthly churn. What is the approximate LTV?",
+   "right": "2,000",
+   "wrong": [
+    "2,500",
+    "8,000",
+    "3,200"
+   ],
+   "tier": 3,
+   "why": "LTV is 100 multiplied by 0.8 divided by 0.04."
+  },
+  {
+   "q": "A product sells for 50 with variable cost of 20 per unit and fixed costs of 6,000. How many units are needed to break even?",
+   "right": "200",
+   "wrong": [
+    "120",
+    "300",
+    "100"
+   ],
+   "tier": 3,
+   "why": "Contribution per unit is 30, and 6,000 divided by 30 is 200."
+  },
+  {
+   "q": "A fixed-price project is quoted at 90,000 with an estimated cost of 63,000. What is the expected project margin?",
+   "right": "30 percent",
+   "wrong": [
+    "27 percent",
+    "70 percent",
+    "43 percent"
+   ],
+   "tier": 3,
+   "why": "Profit 27,000 divided by 90,000 is 30 percent."
+  },
+  {
+   "q": "Receivables are 60,000 and annual sales are 730,000. Using a 365-day year, what are the days sales outstanding?",
+   "right": "30 days",
+   "wrong": [
+    "12 days",
+    "60 days",
+    "8 days"
+   ],
+   "tier": 3,
+   "why": "60,000 divided by 730,000 multiplied by 365 is 30."
+  },
+  {
+   "q": "A cloud bill of 50,000 served 25 million requests. What is the cost per 1,000 requests?",
+   "right": "2",
+   "wrong": [
+    "20",
+    "0.2",
+    "5"
+   ],
+   "tier": 3,
+   "why": "50,000 divided by 25,000 thousand-request units is 2."
+  },
+  {
+   "q": "A salary of 80,000 carries on-costs of 25 percent of salary, plus 5,000 of equipment. What is the fully loaded annual cost?",
+   "right": "105,000",
+   "wrong": [
+    "100,000",
+    "85,000",
+    "110,000"
+   ],
+   "tier": 3,
+   "why": "80,000 plus 20,000 on-costs plus 5,000 equipment."
+  },
+  {
+   "q": "A company raises 2 million at an 8 million pre-money valuation. What share do the new investors own?",
+   "right": "20 percent",
+   "wrong": [
+    "25 percent",
+    "16 percent",
+    "2 percent"
+   ],
+   "tier": 3,
+   "why": "Post-money is 10 million, and 2 divided by 10 is 20 percent."
+  },
+  {
+   "q": "Revenue is 150,000 a month and cash spending is 400,000. With 1.5 million in cash, what is the runway?",
+   "right": "6 months",
+   "wrong": [
+    "3.75 months",
+    "10 months",
+    "12 months"
+   ],
+   "tier": 3,
+   "why": "Net burn is 250,000 and 1,500,000 divided by 250,000 is 6."
+  },
+  {
+   "q": "A team has 2 seniors billed at 150 an hour and 3 juniors billed at 100 an hour. What is the blended rate?",
+   "right": "120",
+   "wrong": [
+    "125",
+    "130",
+    "250"
+   ],
+   "tier": 3,
+   "why": "(2 times 150 plus 3 times 100) divided by 5 is 600 divided by 5."
+  },
+  {
+   "q": "Customers pay in 45 days on average and the company pays suppliers in 30 days, with no inventory. What is the cash conversion cycle?",
+   "right": "15 days",
+   "wrong": [
+    "75 days",
+    "45 days",
+    "-15 days"
+   ],
+   "tier": 3,
+   "why": "45 minus 30 gives 15 days of cash tied up."
+  },
+  {
+   "q": "A project has a budget of 100,000. 60,000 is spent and the work is 50 percent complete. At the same efficiency, what is the estimate at completion?",
+   "right": "120,000",
+   "wrong": [
+    "100,000",
+    "110,000",
+    "160,000"
+   ],
+   "tier": 4,
+   "why": "60,000 spent for half the work implies 120,000 in total."
+  },
+  {
+   "q": "An investment of 100 returns 110 in exactly one year. At a 10 percent discount rate, what is its net present value?",
+   "right": "Zero",
+   "wrong": [
+    "10",
+    "Minus 10",
+    "110"
+   ],
+   "tier": 4,
+   "why": "110 divided by 1.1 is 100, which equals the outlay."
+  },
+  {
+   "q": "Net benefit is 70,000 against an investment cost of 50,000. What is the ROI?",
+   "right": "40 percent",
+   "wrong": [
+    "140 percent",
+    "70 percent",
+    "28 percent"
+   ],
+   "tier": 4,
+   "why": "Gain of 20,000 over cost of 50,000 is 40 percent."
+  },
+  {
+   "q": "Starting recurring revenue is 1,000, with 150 expansion, 50 contraction and 100 churn. What is net revenue retention?",
+   "right": "100 percent",
+   "wrong": [
+    "85 percent",
+    "115 percent",
+    "90 percent"
+   ],
+   "tier": 4,
+   "why": "1,000 plus 150 minus 50 minus 100 is 1,000."
+  },
+  {
+   "q": "With the same figures as 1,000 start, 150 expansion, 50 contraction and 100 churn, what is gross revenue retention?",
+   "right": "85 percent",
+   "wrong": [
+    "100 percent",
+    "115 percent",
+    "90 percent"
+   ],
+   "tier": 4,
+   "why": "Only churn and contraction count: 1,000 minus 150 divided by 1,000."
+  },
+  {
+   "q": "On-demand usage costs 10,000 a month. A commitment gives 30 percent off for the committed amount. What is the monthly cost if all of it is committed and used?",
+   "right": "7,000",
+   "wrong": [
+    "3,000",
+    "9,700",
+    "13,000"
+   ],
+   "tier": 4,
+   "why": "30 percent off 10,000 leaves 7,000."
+  },
+  {
+   "q": "A project has a budget of 100,000 and you earned 40 percent of the planned value while spending 55,000. What does this indicate?",
+   "right": "Cost is running ahead of progress",
+   "wrong": [
+    "It is under budget",
+    "Progress is ahead of spending",
+    "Nothing, because spending is below budget"
+   ],
+   "tier": 4,
+   "why": "Spending 55,000 for work worth 40,000 means more cost than progress."
+  },
+  {
+   "q": "Which measure includes one-off setup fees?",
+   "right": "Total revenue",
+   "wrong": [
+    "MRR",
+    "ARR",
+    "Net revenue retention"
+   ],
+   "tier": 2,
+   "why": "Recurring metrics exclude one-off fees; total revenue does not."
+  },
+  {
+   "q": "Why is a gross margin figure for a software company reduced by hosting and support costs?",
+   "right": "They are direct costs of delivering the service",
+   "wrong": [
+    "They are marketing costs",
+    "They are financing costs",
+    "They are tax charges"
+   ],
+   "tier": 3,
+   "why": "Cost of revenue includes the direct cost of delivering the service."
+  },
+  {
+   "q": "Which cost is normally expensed rather than capitalised?",
+   "right": "Routine maintenance and bug fixing on a live product",
+   "wrong": [
+    "Building a new, viable product that will be used for years",
+    "Purchasing servers for own data centre",
+    "A purchased perpetual software licence"
+   ],
+   "tier": 3,
+   "why": "Maintenance generally keeps the asset working rather than creating a new one."
+  },
+  {
+   "q": "A company's net revenue retention is 120 percent but its gross revenue retention is 70 percent. What does this suggest?",
+   "right": "A small number of expanding accounts are masking a leaky base",
+   "wrong": [
+    "The base is healthy because both numbers are high",
+    "Churn is zero",
+    "New customers are driving the figure"
+   ],
+   "tier": 5,
+   "why": "Large expansion hides heavy churn and contraction."
+  },
+  {
+   "q": "The cloud bill grew 40 percent but traffic was flat. What should you check first?",
+   "right": "Which teams or resources the new spend belongs to, using tags and cost reports",
+   "wrong": [
+    "Whether to switch cloud provider",
+    "Whether to cut every team's budget by 40 percent",
+    "Whether to buy a three-year commitment immediately"
+   ],
+   "tier": 3,
+   "why": "Attribution shows where the growth is before any remedy is chosen."
+  },
+  {
+   "q": "Sales offers a 10 percent discount for paying a year up front. Finance asks how the cash will be reported. What is correct?",
+   "right": "Cash is received at once but revenue is recognised over the year, with the rest held as deferred revenue",
+   "wrong": [
+    "All the revenue is recognised on the day of payment",
+    "No revenue is recognised until the year ends",
+    "The cash is recorded as profit when it arrives"
+   ],
+   "tier": 3,
+   "why": "Revenue follows delivery, so prepaid amounts begin as a liability."
+  },
+  {
+   "q": "A key supplier contract auto-renews unless notice is given in 60 days, and nobody owns the date. What should you do first?",
+   "right": "Record the notice deadline, assign an owner and decide whether to renegotiate or exit",
+   "wrong": [
+    "Wait for the supplier to remind you",
+    "Assume you can cancel after the renewal",
+    "Let it renew and review it next year"
+   ],
+   "tier": 3,
+   "why": "The notice window is what preserves your options."
+  },
+  {
+   "q": "An engineering lead wants to capitalise the salaries of all engineers, including those fixing bugs on a live product. What is the best response?",
+   "right": "Capitalise only effort that creates a qualifying new asset and expense maintenance, following the accounting policy",
+   "wrong": [
+    "Approve it because salaries are always capital",
+    "Refuse all capitalisation of salaries",
+    "Capitalise whatever improves reported profit"
+   ],
+   "tier": 4,
+   "why": "Capitalisation depends on the nature of the work, not on who does it."
+  },
+  {
+   "q": "A fixed-price project is 80 percent through its budget but only 50 percent complete. What should the delivery manager do?",
+   "right": "Re-estimate the cost to complete, raise it with the sponsor now and address scope or change control",
+   "wrong": [
+    "Wait until the budget is exhausted",
+    "Hide the overrun to keep the margin",
+    "Ask the team to work unrecorded hours"
+   ],
+   "tier": 4,
+   "why": "Early re-forecasting preserves options and trust."
+  },
+  {
+   "q": "A growing agency shows a profit every month but its bank balance keeps falling. What is the most likely cause?",
+   "right": "Receivables and work in progress are growing faster than cash is collected",
+   "wrong": [
+    "Depreciation is paid in cash each month",
+    "Profit is overstated by exactly the bank fees",
+    "Revenue is not being recorded"
+   ],
+   "tier": 4,
+   "why": "Working capital absorbs cash even while accruals show profit."
+  },
+  {
+   "q": "A SaaS company has strong new-customer growth but net revenue retention of 85 percent. What is the concern?",
+   "right": "The existing base shrinks each year, so acquisition spend is partly refilling a leaking bucket",
+   "wrong": [
+    "Growth is healthy because new customers are increasing",
+    "Retention above 80 percent is irrelevant",
+    "It is a sign of too much expansion revenue"
+   ],
+   "tier": 4,
+   "why": "Net retention below 100 percent means the base loses revenue on its own."
+  },
+  {
+   "q": "An employee can create a supplier, approve its invoice and release payment. Which control is missing?",
+   "right": "Segregation of duties",
+   "wrong": [
+    "A three-way match",
+    "A cash flow forecast",
+    "A rolling forecast"
+   ],
+   "tier": 4,
+   "why": "One person controlling the whole chain creates fraud risk."
+  },
+  {
+   "q": "A utilisation target of 95 percent is proposed for a delivery team. What is the main risk?",
+   "right": "No time for training, sales support or absorbing variation, leading to burnout and weaker quality",
+   "wrong": [
+    "Margins will fall because hours are too few",
+    "Billable rates will have to be reduced",
+    "The team will be under-utilised"
+   ],
+   "tier": 4,
+   "why": "Very high utilisation leaves no slack."
+  },
+  {
+   "q": "A vendor offers a big discount for a three-year minimum commitment, but the product roadmap is uncertain. What is the best approach?",
+   "right": "Weigh the saving against the exit risk, test volume scenarios and seek flexibility such as termination rights or a lower commitment",
+   "wrong": [
+    "Sign because discounts always win",
+    "Reject any commitment ever",
+    "Sign and plan to reduce use later"
+   ],
+   "tier": 4,
+   "why": "A discount is only valuable if the commitment will actually be used."
+  },
+  {
+   "q": "A founder wants to start fundraising when cash will last four months. What is the main problem?",
+   "right": "A raise often takes months, so short runway weakens negotiating position",
+   "wrong": [
+    "Investors prefer companies with less cash",
+    "Fundraising can be completed in days",
+    "Runway has no effect on valuation"
+   ],
+   "tier": 4,
+   "why": "Needing money quickly reduces leverage."
+  },
+  {
+   "q": "The LTV calculation uses revenue per customer instead of gross profit. What is the effect?",
+   "right": "It overstates the value of a customer",
+   "wrong": [
+    "It understates it",
+    "It has no effect",
+    "It only changes the CAC"
+   ],
+   "tier": 4,
+   "why": "Revenue ignores the cost of serving the customer."
+  },
+  {
+   "q": "A usage-based product has seen its hosting costs spike. Which pricing check is most useful?",
+   "right": "Whether price per unit still covers cost per unit with margin",
+   "wrong": [
+    "Whether competitors have more seats",
+    "Whether the contract term is long enough",
+    "Whether the discount rate has changed"
+   ],
+   "tier": 3,
+   "why": "Unit price must exceed unit cost for usage-based growth to be profitable."
+  },
+  {
+   "q": "Budget owners habitually spend everything left in November. Which change best addresses this?",
+   "right": "Review budgets by outcomes and allow justified carry-over or rolling forecasts",
+   "wrong": [
+    "Cut all budgets by a fixed percentage",
+    "Reward the highest spenders",
+    "Announce that overspend will be ignored"
+   ],
+   "tier": 4,
+   "why": "The behaviour is created by use-it-or-lose-it rules."
+  },
+  {
+   "q": "Forecasts keep missing because the team extrapolates last year. Which approach is most helpful?",
+   "right": "Build a driver-based forecast using hiring, customer and usage assumptions",
+   "wrong": [
+    "Add a fixed 10 percent to last year",
+    "Remove the forecast",
+    "Forecast only in annual totals"
+   ],
+   "tier": 4,
+   "why": "Drivers connect the numbers to the business."
+  },
+  {
+   "q": "A team asks to buy a long-term cloud commitment for a service it has not yet rightsized. What should you advise?",
+   "right": "Rightsize first and then commit to the confirmed baseline",
+   "wrong": [
+    "Commit now to a bigger size to be safe",
+    "Skip commitments forever",
+    "Commit to double the current use"
+   ],
+   "tier": 4,
+   "why": "Committing to waste locks the waste in."
+  },
+  {
+   "q": "A project has a positive NPV but the board prefers one with a faster payback. Which statement is most accurate?",
+   "right": "NPV measures total value created and payback measures speed of recovery, so they answer different questions",
+   "wrong": [
+    "Payback is always better than NPV",
+    "NPV ignores risk entirely",
+    "The two measures always rank projects identically"
+   ],
+   "tier": 5,
+   "why": "Each metric has a purpose and a blind spot."
+  },
+  {
+   "q": "A supplier's SLA credit is capped at a fraction of the monthly fee, yet an outage costs the business far more. What does this show?",
+   "right": "Service credits compensate poorly for real loss, so resilience planning cannot rely on them",
+   "wrong": [
+    "The SLA is irrelevant",
+    "The supplier is in breach of law",
+    "Credits fully cover consequential loss"
+   ],
+   "tier": 5,
+   "why": "The remedy is limited by design."
+  },
+  {
+   "q": "A board pack contains forty pages of detailed ledgers. What is the best improvement?",
+   "right": "Lead with a short summary of results, variances, risks and decisions needed, with detail in appendices",
+   "wrong": [
+    "Add more tables",
+    "Remove all commentary",
+    "Send it the evening before the meeting"
+   ],
+   "tier": 5,
+   "why": "Board reporting should direct attention to decisions."
+  },
+  {
+   "q": "Two options have the same build cost. One needs far more support and licences. What should the comparison use?",
+   "right": "Total cost of ownership over the expected life",
+   "wrong": [
+    "Build cost only",
+    "Licence price only",
+    "The lowest first-year cost"
+   ],
+   "tier": 5,
+   "why": "Run cost often dominates over a long life."
+  },
+  {
+   "q": "A company cancels a product after capitalising its development cost. What accounting consequence normally follows?",
+   "right": "An impairment charge for the unrecoverable capitalised amount",
+   "wrong": [
+    "Nothing is recorded",
+    "The cost becomes revenue",
+    "The cost moves to deferred revenue"
+   ],
+   "tier": 5,
+   "why": "Assets that will not generate benefit are written down."
+  },
+  {
+   "q": "A manager treats a markup of 30 percent as a 30 percent margin when quoting. What is the result?",
+   "right": "Margin is actually lower than 30 percent, about 23 percent",
+   "wrong": [
+    "Margin is higher than 30 percent",
+    "Margin is exactly 30 percent",
+    "Margin is 130 percent"
+   ],
+   "tier": 3,
+   "why": "A 30 percent markup on cost 100 gives price 130 and margin 30/130, about 23 percent."
+  }
+ ]
+}

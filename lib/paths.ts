@@ -1,9 +1,10 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
-import { brands, companies, db, enrollments, projects, questions, tracks, userScopes, users } from "@/lib/db";
+import { brands, companies, db, enrollments, pillars, projects, questions, tracks, userScopes, users } from "@/lib/db";
 import { levelsEarned } from "@/lib/progress";
 import { MAX_LEVEL } from "@/lib/levels";
 import { tagsFor } from "@/lib/dynamic/tags";
 import { hiddenTrackIds } from "@/lib/tracks";
+import { pillarStance } from "@/lib/blueprint";
 
 export type Audience = "staff" | "customer";
 export type ScopeKind = "company" | "brand" | "project";
@@ -50,7 +51,7 @@ export function setScopes(tx: Tx, userId: number, scopes: Scope[]) {
 export const openTo = (audience: Audience, trackAudience: "staff" | "customer" | "both") => trackAudience === "both" || trackAudience === audience;
 
 /** `reach` = the highest level a person can actually pass: levels unlock in order, so it stops at the first level with no questions. */
-type CatalogTrack = typeof tracks.$inferSelect & { brand: typeof brands.$inferSelect; questions: number; reach: number };
+type CatalogTrack = typeof tracks.$inferSelect & { brand: typeof brands.$inferSelect; questions: number; reach: number; pillar: string | null };
 
 /** Every visible track with its brand and how many active questions it has. Load once, reuse for many people. */
 export function catalog(): CatalogTrack[] {
@@ -69,8 +70,12 @@ export function catalog(): CatalogTrack[] {
     while (have?.has(l + 1)) l++;
     return l;
   };
+  const pillarSlug = new Map(db.select({ id: pillars.id, slug: pillars.slug }).from(pillars).all().map((p) => [p.id, p.slug]));
   return db.select({ t: tracks, b: brands }).from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).all()
-    .filter((r) => !hidden.has(r.t.id)).map((r) => ({ ...r.t, brand: r.b, questions: counts.get(r.t.id) ?? 0, reach: reachOf(r.t.id, r.t.slug) }));
+    .filter((r) => !hidden.has(r.t.id)).map((r) => ({
+      ...r.t, brand: r.b, questions: counts.get(r.t.id) ?? 0, reach: reachOf(r.t.id, r.t.slug),
+      pillar: r.t.pillarId == null ? null : pillarSlug.get(r.t.pillarId) ?? null,
+    }));
 }
 
 /** Is this track part of the knowledge this person's companies, brands and projects share? */
@@ -113,8 +118,11 @@ export function requirementsFor(person: Person, scopes: Scope[], cat = catalog()
   const mine = cat.filter((t) => t.reach >= t.requiredLevel && inScope(t, person.audience, scopes))
     .filter((t) => company || t.brand.kind !== "shared").filter((t) => {
     if (t.tier === "mandatory") return true;
+    if (person.audience !== "staff") return false;
     const roles = rolesOf(t);
-    return person.audience === "staff" && t.tier === "role" && (!roles.length || roles.includes(person.jobRole.toLowerCase()));
+    if (t.tier === "role" && (!roles.length || roles.includes(person.jobRole.toLowerCase()))) return true;
+    // the role x pillar matrix (content/blueprints/pillars.json) adds requirements, unless an admin has set this track's policy by hand
+    return t.policySource !== "admin" && pillarStance(person.jobRole, t.pillar) === "required";
   });
   if (!mine.length) return [];
   const started = new Map(

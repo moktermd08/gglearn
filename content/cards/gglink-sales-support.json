@@ -1,0 +1,2747 @@
+{
+  "slug": "gglink-sales-support",
+  "name": "Sales and support",
+  "description": "Discovery calls, quoting, support runbooks.",
+  "roles": "sales",
+  "kind": "process",
+  "brand": "gglink",
+  "audience": "staff",
+  "tier": "role",
+  "scope": "brand",
+  "groups": {
+    "discovery": "discovery-call concept",
+    "qualify": "qualification concept",
+    "quote": "quoting or pricing concept",
+    "proposal": "proposal element",
+    "objection": "objection type or handling technique",
+    "onboard": "client onboarding practice",
+    "support": "support concept",
+    "sla": "service-level concept",
+    "escalation": "escalation concept",
+    "renewal": "renewal or upsell concept",
+    "comms": "client communication practice",
+    "gglink-crm": "GGLink CRM or enquiry term",
+    "gglink-claims": "GGLink published-claim rule"
+  },
+  "cards": [
+    {
+      "group": "discovery",
+      "subject": "A discovery call",
+      "tier": 1,
+      "says": [
+        "is the first structured conversation held to learn the buyer's situation before anything is proposed",
+        "spends most of its time on the buyer's problems rather than on the seller's service"
+      ],
+      "use": "need to find out what a prospect is actually trying to fix",
+      "not": [
+        "is a full product demonstration delivered from the first minute"
+      ],
+      "like": [
+        "Pitching before diagnosing"
+      ]
+    },
+    {
+      "group": "discovery",
+      "subject": "An open question",
+      "tier": 1,
+      "says": [
+        "begins with words such as what, how or tell me about",
+        "invites a full answer in the buyer's own words"
+      ],
+      "use": "want the buyer to explain their situation rather than just confirm it",
+      "not": [
+        "can be fully answered with a single word"
+      ],
+      "like": [
+        "A closed question"
+      ]
+    },
+    {
+      "group": "discovery",
+      "subject": "A closed question",
+      "tier": 1,
+      "says": [
+        "can be answered with yes, no or a single fact",
+        "confirms a detail once the wider picture is already clear"
+      ],
+      "use": "need to confirm a specific date, number or name",
+      "not": [
+        "draws out the buyer's full story better than any other form"
+      ],
+      "like": [
+        "An open question"
+      ]
+    },
+    {
+      "group": "discovery",
+      "subject": "A pain point",
+      "tier": 2,
+      "says": [
+        "is a specific problem that costs the buyer time, money or risk",
+        "gives the buyer a reason to act now rather than later"
+      ],
+      "use": "hear a buyer describe something that keeps going wrong",
+      "not": [
+        "is a feature the seller wants to highlight"
+      ],
+      "like": [
+        "A desired outcome"
+      ]
+    },
+    {
+      "group": "discovery",
+      "subject": "A desired outcome",
+      "tier": 2,
+      "says": [
+        "describes the result the buyer wants to see once the work is done",
+        "is best stated by the buyer in measurable terms"
+      ],
+      "use": "need to know what success looks like for this buyer",
+      "not": [
+        "is a list of the seller's deliverables"
+      ],
+      "like": [
+        "A pain point"
+      ]
+    },
+    {
+      "group": "discovery",
+      "subject": "An impact question",
+      "tier": 4,
+      "says": [
+        "asks what a problem costs the buyer if it carries on",
+        "turns a vague annoyance into a case with a figure attached"
+      ],
+      "use": "need to size the cost of a problem the buyer has only mentioned in passing",
+      "not": [
+        "asks the buyer to rank the seller's features"
+      ],
+      "like": [
+        "A decision-process question"
+      ]
+    },
+    {
+      "group": "discovery",
+      "subject": "Summarising back",
+      "tier": 2,
+      "says": [
+        "repeats the buyer's situation in the seller's own words to confirm it",
+        "shows the buyer they were understood before any solution is offered"
+      ],
+      "use": "want to check you have understood a long explanation correctly",
+      "not": [
+        "moves straight to quoting a price"
+      ]
+    },
+    {
+      "group": "discovery",
+      "subject": "A decision-process question",
+      "tier": 4,
+      "says": [
+        "asks how the buyer's organisation reaches a yes and who signs it off",
+        "brings approvals to light that would otherwise appear at the last minute"
+      ],
+      "use": "need to learn who else must agree before a purchase can happen",
+      "not": [
+        "asks which package the buyer prefers"
+      ],
+      "like": [
+        "An impact question"
+      ]
+    },
+    {
+      "group": "discovery",
+      "subject": "A next-step agreement",
+      "tier": 2,
+      "says": [
+        "ends the call with a dated action for both sides",
+        "prevents a call from ending in a vague promise to be in touch"
+      ],
+      "use": "are about to end a call that went well but has no follow-up booked",
+      "not": [
+        "is left to the buyer to propose after the call"
+      ],
+      "like": [
+        "Summarising back"
+      ]
+    },
+    {
+      "group": "discovery",
+      "subject": "Pitching before diagnosing",
+      "tier": 3,
+      "says": [
+        "presents a solution before the buyer's problem is understood",
+        "pushes the buyer into comparing features and then price"
+      ],
+      "use": "notice a seller describing features in the first minutes of a call",
+      "not": [
+        "builds trust faster than asking questions"
+      ],
+      "like": [
+        "A discovery call"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "A qualified lead",
+      "tier": 1,
+      "says": [
+        "has a real need, the means to pay and a reason to act within a realistic time",
+        "deserves a seller's time more than a casual enquiry does"
+      ],
+      "use": "must decide whether an enquiry is worth a proposal",
+      "not": [
+        "is any person who has filled in a contact form"
+      ],
+      "like": [
+        "A sales opportunity"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "A sales opportunity",
+      "tier": 2,
+      "says": [
+        "is a qualified lead with a defined need and a possible deal value in the pipeline",
+        "is tracked through stages until it is won or lost"
+      ],
+      "use": "need to record a qualified prospect and its likely value",
+      "not": [
+        "is an unvetted name on a purchased list"
+      ],
+      "like": [
+        "A qualified lead"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "BANT",
+      "tier": 2,
+      "says": [
+        "checks budget, authority, need and timeline",
+        "is a four-part checklist for deciding whether a lead is worth pursuing"
+      ],
+      "use": "want a quick checklist for a first qualification call",
+      "not": [
+        "scores a lead only on how much it has engaged with emails"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "Budget",
+      "tier": 1,
+      "says": [
+        "asks whether the buyer has money set aside or can get it approved",
+        "is the BANT letter that deals with the ability to pay"
+      ],
+      "use": "wonder whether the prospect can afford what you are discussing",
+      "not": [
+        "asks who makes the final decision"
+      ],
+      "like": [
+        "Authority"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "Authority",
+      "tier": 1,
+      "says": [
+        "asks whether the person on the call can decide or strongly influence the purchase",
+        "is the BANT letter that deals with who decides"
+      ],
+      "use": "suspect the contact is passing messages to someone more senior",
+      "not": [
+        "asks when the result must be delivered"
+      ],
+      "like": [
+        "Budget",
+        "An economic buyer"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "An economic buyer",
+      "tier": 3,
+      "says": [
+        "holds the budget and can say yes without asking anyone else",
+        "may never attend the early calls yet decides the outcome"
+      ],
+      "use": "have a friendly contact who cannot sign anything",
+      "not": [
+        "is always the person who uses the service day to day"
+      ],
+      "like": [
+        "A champion",
+        "Authority"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "A champion",
+      "tier": 3,
+      "says": [
+        "is an internal advocate who sells on the seller's behalf when the seller is absent",
+        "needs ammunition such as a short summary and proof to make the case internally"
+      ],
+      "use": "have a contact inside the buyer who wants the project to succeed",
+      "not": [
+        "is the person who signs the contract"
+      ],
+      "like": [
+        "An economic buyer"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "Disqualifying a lead",
+      "tier": 3,
+      "says": [
+        "ends the pursuit of a prospect who cannot or will not buy",
+        "frees time for prospects with a better chance"
+      ],
+      "use": "realise the prospect has no budget, no urgency and no authority",
+      "not": [
+        "shows that the seller has failed at selling"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "A stage exit checklist",
+      "tier": 5,
+      "says": [
+        "defines the evidence required before a deal moves to the next pipeline stage",
+        "stops a hopeful deal from inflating the forecast"
+      ],
+      "use": "see deals sitting in a late stage with no agreed next step",
+      "not": [
+        "lets each seller move a deal whenever they feel optimistic"
+      ]
+    },
+    {
+      "group": "qualify",
+      "subject": "A no-decision outcome",
+      "tier": 5,
+      "says": [
+        "is a lost deal where the buyer chooses to do nothing",
+        "is often a bigger loss than losing to a competitor"
+      ],
+      "use": "review why qualified deals keep stalling with no competitor named",
+      "not": [
+        "always means the price was too high"
+      ],
+      "like": [
+        "Disqualifying a lead"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "A fixed-price quote",
+      "tier": 1,
+      "says": [
+        "commits to one price for a defined scope",
+        "moves the risk of overruns to the supplier"
+      ],
+      "use": "need a price the buyer can budget exactly for a clearly bounded job",
+      "not": [
+        "bills for every hour worked whatever the scope"
+      ],
+      "like": [
+        "Time and materials"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "Time and materials",
+      "tier": 3,
+      "says": [
+        "bills for the time actually worked at an agreed rate",
+        "moves the risk of scope growth to the buyer"
+      ],
+      "use": "must start work whose scope cannot yet be defined",
+      "not": [
+        "guarantees the final cost to the buyer"
+      ],
+      "like": [
+        "A fixed-price quote",
+        "A day rate"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "A day rate",
+      "tier": 1,
+      "says": [
+        "prices one person's working day at an agreed figure",
+        "is the unit used to estimate and bill time-based work"
+      ],
+      "use": "need to price consultancy or build work by the day",
+      "not": [
+        "covers a monthly allocation of unspecified work"
+      ],
+      "like": [
+        "Time and materials",
+        "A retainer"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "A retainer",
+      "tier": 2,
+      "says": [
+        "bills a regular amount for ongoing availability or an allocation of work",
+        "gives the supplier predictable income and the client priority access"
+      ],
+      "use": "serve a client who needs continuing help rather than a single project",
+      "not": [
+        "is paid only once a project is delivered"
+      ],
+      "like": [
+        "A day rate"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "Tiered pricing",
+      "tier": 1,
+      "says": [
+        "offers several packages at rising prices with more included at each step",
+        "lets the buyer pick the level that suits them"
+      ],
+      "use": "sell to clients whose needs range from basic to demanding",
+      "not": [
+        "charges the same price to every buyer for the same work"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "A scope statement",
+      "tier": 2,
+      "says": [
+        "lists what is included and what is excluded from the price",
+        "is the document that settles later arguments about whether something was covered"
+      ],
+      "use": "need to avoid a client assuming extra work is part of the price",
+      "not": [
+        "states only the total price"
+      ],
+      "like": [
+        "An assumptions list",
+        "A change request"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "An assumptions list",
+      "tier": 4,
+      "says": [
+        "records the conditions the price depends on, such as content arriving on time",
+        "gives the supplier grounds to reprice if a condition proves false"
+      ],
+      "use": "know the estimate relies on the client supplying material",
+      "not": [
+        "lists the features the supplier hopes to add later"
+      ],
+      "like": [
+        "A scope statement"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "A change request",
+      "tier": 4,
+      "says": [
+        "prices extra work outside the agreed scope before it begins",
+        "keeps scope growth visible and agreed in writing"
+      ],
+      "use": "hear a client ask for something that was not in the quote",
+      "not": [
+        "is absorbed quietly to keep the client happy"
+      ],
+      "like": [
+        "A scope statement"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "Value-based pricing",
+      "tier": 5,
+      "says": [
+        "sets the price from the worth of the outcome to the buyer",
+        "needs the discovery work to establish what the problem costs"
+      ],
+      "use": "know a small piece of work removes a very large cost for the client",
+      "not": [
+        "multiplies hours by a standard rate"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "A payment terms clause",
+      "tier": 2,
+      "says": [
+        "states when invoices fall due and any deposit or milestone payments",
+        "sets out the cash-flow expectations for both sides"
+      ],
+      "use": "need to say when the client pays and in what stages",
+      "not": [
+        "lists what the client will receive"
+      ]
+    },
+    {
+      "group": "quote",
+      "subject": "A conditional discount",
+      "tier": 3,
+      "says": [
+        "is offered in exchange for something such as a longer commitment or a faster decision",
+        "protects the supplier's price by tying any reduction to a return"
+      ],
+      "use": "are asked for a discount by a buyer who is ready to proceed",
+      "not": [
+        "is given freely whenever a buyer asks"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "An executive summary",
+      "tier": 1,
+      "says": [
+        "gives the decision-maker the problem, solution, price and next step in a page or less",
+        "is the part of a proposal most likely to be read in full"
+      ],
+      "use": "write for a senior reader who will not read the whole document",
+      "not": [
+        "lists every task in the project plan"
+      ],
+      "like": [
+        "A problem statement"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "A problem statement",
+      "tier": 2,
+      "says": [
+        "restates the buyer's problem in their own terms",
+        "proves to the buyer that the seller listened in discovery"
+      ],
+      "use": "begin a proposal and want the buyer to recognise their own situation",
+      "not": [
+        "describes the supplier's history and awards"
+      ],
+      "like": [
+        "An executive summary",
+        "A proposed solution"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "A proposed solution",
+      "tier": 2,
+      "says": [
+        "explains how the work will resolve the buyer's problem",
+        "ties each part of the offer to a need the buyer raised"
+      ],
+      "use": "need to show that the work follows from the buyer's own priorities",
+      "not": [
+        "lists generic services the supplier offers every client"
+      ],
+      "like": [
+        "A problem statement"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "A deliverables list",
+      "tier": 2,
+      "says": [
+        "names the concrete things the buyer will receive",
+        "lets the buyer check later whether the work was delivered"
+      ],
+      "use": "need to say exactly what is handed over at the end",
+      "not": [
+        "describes the supplier's working method in general"
+      ],
+      "like": [
+        "A scope statement",
+        "An acceptance criterion"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "A timeline with milestones",
+      "tier": 2,
+      "says": [
+        "sets out the order of the work and the dates by which key points are reached",
+        "shows where the buyer's own input is needed"
+      ],
+      "use": "need to show when the work will happen and what each side must supply",
+      "not": [
+        "states only the final delivery date"
+      ],
+      "like": [
+        "A mutual action plan"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "A pricing section",
+      "tier": 2,
+      "says": [
+        "shows the cost options and what each includes",
+        "sits beside the scope so that price and content are read together"
+      ],
+      "use": "present the cost of the work in the proposal",
+      "not": [
+        "is placed before the problem is described"
+      ],
+      "like": [
+        "A payment terms clause"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "A case study",
+      "tier": 3,
+      "says": [
+        "backs up claims with a real, evidenced example of earlier work",
+        "reduces the buyer's perceived risk"
+      ],
+      "use": "meet a buyer who doubts the supplier can deliver",
+      "not": [
+        "can include invented results if they sound plausible"
+      ],
+      "like": [
+        "A problem statement"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "A risks and assumptions section",
+      "tier": 3,
+      "says": [
+        "lists what could go wrong and what the plan takes for granted",
+        "sets expectations before the work starts rather than after a problem appears"
+      ],
+      "use": "know the plan depends on factors outside the supplier's control",
+      "not": [
+        "is left out so the proposal appears more confident"
+      ],
+      "like": [
+        "An assumptions list"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "An acceptance criterion",
+      "tier": 4,
+      "says": [
+        "states the condition under which a deliverable counts as complete",
+        "turns a subjective view of quality into something checkable"
+      ],
+      "use": "want to avoid a dispute over whether a deliverable is finished",
+      "not": [
+        "describes the supplier's preferred working hours"
+      ],
+      "like": [
+        "A deliverables list"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "A mutual action plan",
+      "tier": 5,
+      "says": [
+        "lists the steps both buyer and seller will take to reach a decision and start",
+        "gives dates to the buyer's internal approvals as well as the seller's tasks"
+      ],
+      "use": "need to keep a long deal moving through the buyer's internal steps",
+      "not": [
+        "lists only the supplier's tasks"
+      ],
+      "like": [
+        "A timeline with milestones"
+      ]
+    },
+    {
+      "group": "proposal",
+      "subject": "Signed acceptance",
+      "tier": 2,
+      "says": [
+        "turns a proposal into an agreement",
+        "records that the buyer agrees to the scope, price and terms"
+      ],
+      "use": "need written confirmation before any work begins",
+      "not": [
+        "is implied whenever the client replies politely"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "An objection",
+      "tier": 1,
+      "says": [
+        "is a concern a buyer raises that stands between them and a decision",
+        "is often a sign of real engagement rather than rejection"
+      ],
+      "use": "need the general term for any concern a prospect raises before deciding",
+      "not": [
+        "means the buyer has decided not to buy"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "Arguing with the buyer",
+      "tier": 1,
+      "says": [
+        "wins the point and loses the relationship",
+        "puts the buyer on the defensive"
+      ],
+      "use": "feel the urge to prove that the buyer is wrong",
+      "not": [
+        "is a reliable way to resolve an objection"
+      ],
+      "like": [
+        "Acknowledge and clarify"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "Acknowledge and clarify",
+      "tier": 2,
+      "says": [
+        "repeats the concern and asks what is behind it before answering",
+        "stops the seller from answering the wrong question"
+      ],
+      "use": "hear an objection and are about to launch an answer",
+      "not": [
+        "answers immediately with a prepared script"
+      ],
+      "like": [
+        "Isolating the objection"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "A price objection",
+      "tier": 2,
+      "says": [
+        "is answered by returning to the cost of the problem and the value of the fix",
+        "is not met by cutting the figure at once"
+      ],
+      "use": "hear that the quote is too expensive",
+      "not": [
+        "is solved by an immediate discount"
+      ],
+      "like": [
+        "A timing objection"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "A timing objection",
+      "tier": 2,
+      "says": [
+        "is explored by asking what would need to change and what waiting costs",
+        "often hides an unaddressed budget or priority problem"
+      ],
+      "use": "hear that now is not a good time",
+      "not": [
+        "is a final refusal to be accepted"
+      ],
+      "like": [
+        "A price objection"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "Isolating the objection",
+      "tier": 4,
+      "says": [
+        "asks whether this concern is the only thing standing in the way",
+        "prevents a new objection appearing as soon as one is resolved"
+      ],
+      "use": "have answered a concern and want to know whether a deal is now possible",
+      "not": [
+        "ignores the buyer's other concerns"
+      ],
+      "like": [
+        "Acknowledge and clarify"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "A stall such as we will think about it",
+      "tier": 3,
+      "says": [
+        "is explored by asking what specifically needs thinking about",
+        "ends with a follow-up date agreed on the call"
+      ],
+      "use": "hear a polite non-answer at the end of a proposal call",
+      "not": [
+        "is accepted as a final answer and logged as lost"
+      ],
+      "like": [
+        "An objection"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "A competitor comparison",
+      "tier": 3,
+      "says": [
+        "is handled by asking what the buyer values and showing fit",
+        "avoids criticising the competitor"
+      ],
+      "use": "learn that the buyer is also talking to another supplier",
+      "not": [
+        "is answered by criticising the rival's weaknesses"
+      ],
+      "like": [
+        "A trust objection"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "A trust objection",
+      "tier": 3,
+      "says": [
+        "is answered with evidence such as references, real results and a clear process",
+        "cannot be argued away with assurances alone"
+      ],
+      "use": "meet a buyer who doubts the supplier will deliver",
+      "not": [
+        "is dismissed as the buyer being difficult"
+      ],
+      "like": [
+        "A competitor comparison"
+      ]
+    },
+    {
+      "group": "objection",
+      "subject": "An authority objection",
+      "tier": 4,
+      "says": [
+        "is handled by offering to join the conversation or to equip the buyer with a summary for the decision-maker",
+        "turns I need to check with my boss into a planned next step"
+      ],
+      "use": "hear that someone else has to approve the purchase",
+      "not": [
+        "is a reason to stop talking to the contact"
+      ],
+      "like": [
+        "A champion"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "A kickoff meeting",
+      "tier": 1,
+      "says": [
+        "brings client and delivery team together at the start to agree goals, roles and the plan",
+        "sets the tone for the working relationship"
+      ],
+      "use": "have just won a project and need to start well",
+      "not": [
+        "is held after the first deliverable"
+      ],
+      "like": [
+        "A welcome pack"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "A welcome pack",
+      "tier": 1,
+      "says": [
+        "tells the new client who to contact, how to ask for help and what happens next",
+        "reduces the client's uncertainty in the first days"
+      ],
+      "use": "want a new client to know how everything works from day one",
+      "not": [
+        "is the contract the client signs"
+      ],
+      "like": [
+        "A kickoff meeting"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "An onboarding checklist",
+      "tier": 2,
+      "says": [
+        "lists every step from signature to a working service so none is forgotten",
+        "is used the same way for every client"
+      ],
+      "use": "need to make the start of every engagement consistent",
+      "not": [
+        "is rewritten from memory for each client"
+      ],
+      "like": [
+        "A go-live checklist"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "Access and asset collection",
+      "tier": 3,
+      "says": [
+        "gathers logins, content, brand files and approvals the delivery team needs",
+        "is a common source of delay when left until late"
+      ],
+      "use": "know the project cannot progress without material from the client",
+      "not": [
+        "is requested only after the build is finished"
+      ],
+      "like": [
+        "A kickoff meeting"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "A single point of contact",
+      "tier": 2,
+      "says": [
+        "gives the client one named person to ask for anything",
+        "prevents requests being lost between team members"
+      ],
+      "use": "see a client emailing three different colleagues about the same issue",
+      "not": [
+        "is replaced by a shared inbox nobody owns"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "Setting expectations",
+      "tier": 3,
+      "says": [
+        "agrees what the client can expect and by when, before anything goes wrong",
+        "prevents disappointment by naming limits and timescales early"
+      ],
+      "use": "know the client assumes a quicker turnaround than the supplier can offer",
+      "not": [
+        "promises the fastest outcome to win goodwill"
+      ],
+      "like": [
+        "A success criterion"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "A sales-to-delivery handover note",
+      "tier": 4,
+      "says": [
+        "records what was discussed, promised and agreed in the sales process",
+        "prevents the delivery team from having to rediscover the client's priorities"
+      ],
+      "use": "pass a newly won client from the seller to the delivery team",
+      "not": [
+        "contains only the signed price"
+      ],
+      "like": [
+        "A single point of contact"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "A success criterion",
+      "tier": 3,
+      "says": [
+        "states how the client will judge whether the engagement worked",
+        "is agreed during onboarding and revisited at reviews"
+      ],
+      "use": "want to know in advance how the client will measure the result",
+      "not": [
+        "is decided by the supplier alone after delivery"
+      ],
+      "like": [
+        "Setting expectations"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "A go-live checklist",
+      "tier": 3,
+      "says": [
+        "confirms every item that must be true before the service or site is switched on",
+        "includes testing, backups and a rollback route"
+      ],
+      "use": "are about to launch the client's work to the public",
+      "not": [
+        "is written after launch"
+      ],
+      "like": [
+        "An onboarding checklist"
+      ]
+    },
+    {
+      "group": "onboard",
+      "subject": "An early churn signal",
+      "tier": 4,
+      "says": [
+        "shows up as missed meetings, slow replies or unused features in the first weeks",
+        "gives the team time to rescue a relationship before cancellation"
+      ],
+      "use": "see a new client going quiet shortly after signing",
+      "not": [
+        "only appears at renewal time"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A support ticket",
+      "tier": 1,
+      "says": [
+        "records one client request or problem with an owner and a status",
+        "is the single record that follows an issue to resolution"
+      ],
+      "use": "receive a problem report that must not be lost",
+      "not": [
+        "is a private note kept in one person's inbox"
+      ],
+      "like": [
+        "An incident"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "Triage",
+      "tier": 1,
+      "says": [
+        "sorts incoming requests by urgency, impact and owner",
+        "decides what is handled first and by whom"
+      ],
+      "use": "face a queue of new requests of mixed importance",
+      "not": [
+        "resolves every request in the order it arrived"
+      ],
+      "like": [
+        "Severity"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "Severity",
+      "tier": 2,
+      "says": [
+        "describes how badly the issue affects the client's service",
+        "is set by impact, not by how loudly the client asks"
+      ],
+      "use": "need to rate how serious a fault is",
+      "not": [
+        "sets the order in which the team works through the queue"
+      ],
+      "like": [
+        "Priority"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "Priority",
+      "tier": 3,
+      "says": [
+        "sets the order in which the team will work, taking impact and urgency into account",
+        "can differ from severity when a lesser fault has a hard deadline"
+      ],
+      "use": "have to decide which of several open issues to do first",
+      "not": [
+        "is the technical measure of damage alone"
+      ],
+      "like": [
+        "Severity"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A runbook",
+      "tier": 3,
+      "says": [
+        "gives step-by-step instructions for a known task or fault",
+        "lets any trained team member perform the task the same way"
+      ],
+      "use": "meet a recurring problem that has a known fix",
+      "not": [
+        "records only the cause after the event"
+      ],
+      "like": [
+        "A knowledge base article"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A knowledge base article",
+      "tier": 2,
+      "says": [
+        "explains a question or fix in a form clients can find and follow themselves",
+        "lowers the number of tickets for common questions"
+      ],
+      "use": "see the same how-do-I question arriving every week",
+      "not": [
+        "is an internal record of staff disciplinary actions"
+      ],
+      "like": [
+        "A runbook"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A workaround",
+      "tier": 3,
+      "says": [
+        "restores the client's ability to work without fixing the underlying cause",
+        "buys time while a lasting fix is arranged"
+      ],
+      "use": "cannot yet fix the root of the fault but the client is blocked",
+      "not": [
+        "is the permanent solution"
+      ],
+      "like": [
+        "Root cause analysis"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A set of reproduction steps",
+      "tier": 2,
+      "says": [
+        "describes the exact actions that make a fault appear",
+        "lets a second person see the same fault"
+      ],
+      "use": "need to pass a defect to a developer who cannot see the client's screen",
+      "not": [
+        "states only that something is broken"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "An incident",
+      "tier": 3,
+      "says": [
+        "is an unplanned interruption to a service or a drop in its quality",
+        "is handled first to restore service, not to find blame"
+      ],
+      "use": "see a client's site go down unexpectedly",
+      "not": [
+        "is the hidden cause behind a series of faults"
+      ],
+      "like": [
+        "A problem record"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A problem record",
+      "tier": 4,
+      "says": [
+        "tracks the underlying cause of one or more incidents",
+        "exists so that the cause is fixed rather than the symptom repeatedly patched"
+      ],
+      "use": "see the same incident recurring every few weeks",
+      "not": [
+        "is closed as soon as service is restored"
+      ],
+      "like": [
+        "An incident"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "Root cause analysis",
+      "tier": 4,
+      "says": [
+        "seeks the underlying reason a fault happened rather than the visible trigger",
+        "asks why repeatedly until a fixable cause is reached"
+      ],
+      "use": "want to stop a failure returning after it has been fixed once",
+      "not": [
+        "names the person responsible for the error"
+      ],
+      "like": [
+        "A workaround"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A blameless post-incident review",
+      "tier": 5,
+      "says": [
+        "studies what happened and how the system allowed it, without assigning blame to a person",
+        "produces actions to prevent or detect the same failure"
+      ],
+      "use": "have just resolved a serious incident and want the team to learn from it",
+      "not": [
+        "identifies who should be disciplined"
+      ],
+      "like": [
+        "Root cause analysis"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "A service level agreement",
+      "tier": 1,
+      "says": [
+        "is a written commitment to defined service levels between supplier and client",
+        "states what the client can expect and what happens if it is missed"
+      ],
+      "use": "need to agree in writing how quickly a supplier will respond and resolve",
+      "not": [
+        "is a marketing slogan"
+      ],
+      "like": [
+        "A service level objective"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "First response time",
+      "tier": 2,
+      "says": [
+        "measures how long a client waits for a meaningful first reply",
+        "counts a real reply, not an automatic acknowledgement"
+      ],
+      "use": "want to measure how quickly the client hears from a person",
+      "not": [
+        "measures how long the fix takes"
+      ],
+      "like": [
+        "Resolution time"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "Resolution time",
+      "tier": 2,
+      "says": [
+        "measures how long the issue takes to be resolved",
+        "is usually longer than the first response time"
+      ],
+      "use": "want to measure how long the client's problem stays open",
+      "not": [
+        "measures how quickly the first reply arrives"
+      ],
+      "like": [
+        "First response time"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "Business hours cover",
+      "tier": 3,
+      "says": [
+        "counts only the agreed working hours toward a response target",
+        "means a request sent out of hours waits until the next working period starts"
+      ],
+      "use": "see a ticket raised on a Friday evening for a service with working-hours support",
+      "not": [
+        "covers every hour of every day"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "Uptime",
+      "tier": 3,
+      "says": [
+        "measures the share of time a service is available",
+        "is expressed as a percentage over a stated period"
+      ],
+      "use": "need a figure for how reliably a service is running",
+      "not": [
+        "measures how fast pages load"
+      ],
+      "like": [
+        "A service level indicator"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "A service level indicator",
+      "tier": 3,
+      "says": [
+        "is the measured quantity such as latency or the proportion of successful requests",
+        "provides the data a target is judged against"
+      ],
+      "use": "need to decide what exactly to measure for a service",
+      "not": [
+        "is the target the team sets itself"
+      ],
+      "like": [
+        "A service level objective"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "A service level objective",
+      "tier": 4,
+      "says": [
+        "is the internal target set for an indicator",
+        "is usually set tighter than any promise made to the client"
+      ],
+      "use": "want an internal target that leaves room before the contractual commitment is at risk",
+      "not": [
+        "is the contractual promise to the client"
+      ],
+      "like": [
+        "A service level agreement",
+        "A service level indicator"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "A service credit",
+      "tier": 4,
+      "says": [
+        "compensates the client with a reduction when agreed levels are missed",
+        "is the usual remedy written into the agreement"
+      ],
+      "use": "need to define what the client receives when the supplier misses a target",
+      "not": [
+        "is a gift offered at renewal"
+      ],
+      "like": [
+        "An SLA exclusion"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "An SLA exclusion",
+      "tier": 3,
+      "says": [
+        "lists the events that do not count against the target, such as planned maintenance or client-caused faults",
+        "must be written clearly to avoid disputes"
+      ],
+      "use": "need to say that a client's own change that breaks the site is not a breach",
+      "not": [
+        "lets the supplier ignore any missed target it chooses"
+      ],
+      "like": [
+        "A service credit"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "Pausing the clock",
+      "tier": 3,
+      "says": [
+        "stops the response timer while the team is waiting on the client",
+        "reflects that the supplier cannot progress without information"
+      ],
+      "use": "wait for a client to provide logins before a fix can start",
+      "not": [
+        "hides slow work from the client"
+      ],
+      "like": [
+        "Business hours cover"
+      ]
+    },
+    {
+      "group": "sla",
+      "subject": "A percentile response target",
+      "tier": 5,
+      "says": [
+        "states the time within which a stated share of tickets, such as nine in ten, will be answered",
+        "is more honest than an average that hides slow outliers"
+      ],
+      "use": "see an average response time that looks good while some clients wait for days",
+      "not": [
+        "promises every single ticket will meet the target"
+      ],
+      "like": [
+        "First response time"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "Functional escalation",
+      "tier": 2,
+      "says": [
+        "passes a ticket to a specialist with deeper technical skill",
+        "is used when the first-line agent has reached the limit of their knowledge"
+      ],
+      "use": "meet a fault that needs a developer or a systems engineer",
+      "not": [
+        "brings in a manager to authorise a refund"
+      ],
+      "like": [
+        "Hierarchical escalation"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "Hierarchical escalation",
+      "tier": 2,
+      "says": [
+        "brings in a more senior person for authority, resources or a decision",
+        "is used when the client's concern needs a decision beyond the agent's remit"
+      ],
+      "use": "need approval beyond your own authority",
+      "not": [
+        "transfers the ticket to a technical specialist"
+      ],
+      "like": [
+        "Functional escalation"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "An escalation rule",
+      "tier": 2,
+      "says": [
+        "defines in advance when a ticket must be passed on",
+        "stops escalation depending on one person's judgement or nerve"
+      ],
+      "use": "see agents sitting on difficult tickets rather than asking for help",
+      "not": [
+        "is decided only after a client complains"
+      ],
+      "like": [
+        "An escalation trigger"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "An escalation trigger",
+      "tier": 4,
+      "says": [
+        "is a specific condition such as an at-risk response target or a repeated contact that starts the escalation",
+        "makes escalation automatic rather than discretionary"
+      ],
+      "use": "want a ticket to move up when its response target is about to be missed",
+      "not": [
+        "is a client's request to speak to someone senior"
+      ],
+      "like": [
+        "An escalation rule"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "A warm handoff",
+      "tier": 3,
+      "says": [
+        "introduces the client to the next person and passes the full context",
+        "spares the client from explaining the problem again"
+      ],
+      "use": "pass a distressed client to a specialist",
+      "not": [
+        "transfers the ticket without a word to either party"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "A single accountable owner",
+      "tier": 4,
+      "says": [
+        "keeps one named person responsible for the client even when many contribute",
+        "prevents everyone assuming someone else is handling it"
+      ],
+      "use": "see a serious issue with five people involved and no one updating the client",
+      "not": [
+        "is replaced by a committee decision"
+      ],
+      "like": [
+        "A single point of contact"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "A major incident",
+      "tier": 4,
+      "says": [
+        "is a serious service failure that justifies a coordinated response outside the normal ticket flow",
+        "has a named coordinator and regular updates to the clients affected"
+      ],
+      "use": "see several clients' services fail together",
+      "not": [
+        "is any ticket marked urgent by a client"
+      ],
+      "like": [
+        "An incident commander"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "An incident commander",
+      "tier": 5,
+      "says": [
+        "coordinates the response, assigns tasks and keeps the clients informed",
+        "does not usually do the hands-on fixing"
+      ],
+      "use": "need one person to run the response to a major failure",
+      "not": [
+        "is the engineer who finds the root cause"
+      ],
+      "like": [
+        "A major incident"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "An update cadence",
+      "tier": 3,
+      "says": [
+        "promises the client a fresh update at regular intervals until the issue is closed",
+        "is kept even when the update says nothing has changed"
+      ],
+      "use": "have a long-running issue where the client keeps asking for news",
+      "not": [
+        "updates the client only when the fix is ready"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "A renewal",
+      "tier": 1,
+      "says": [
+        "continues a service for another term",
+        "is easiest when the client has seen clear value throughout the term"
+      ],
+      "use": "approach the end of a client's agreed term",
+      "not": [
+        "is an automatic event requiring no effort from the supplier"
+      ],
+      "like": [
+        "Churn"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "Churn",
+      "tier": 1,
+      "says": [
+        "is the loss of a client who stops buying",
+        "is measured as the share of clients or revenue lost over a period"
+      ],
+      "use": "want to measure how many clients are leaving",
+      "not": [
+        "is the growth in new clients"
+      ],
+      "like": [
+        "A renewal"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "An upsell",
+      "tier": 2,
+      "says": [
+        "sells a higher tier or more of the same service to an existing client",
+        "is justified by a need the client has already shown"
+      ],
+      "use": "see a client outgrowing the package they bought",
+      "not": [
+        "sells a different product to a new client"
+      ],
+      "like": [
+        "A cross-sell"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "A cross-sell",
+      "tier": 2,
+      "says": [
+        "sells a different product or service to an existing client",
+        "builds on the trust already earned in the first relationship"
+      ],
+      "use": "know a client has a need that a second service could meet",
+      "not": [
+        "sells a bigger version of the same package"
+      ],
+      "like": [
+        "An upsell"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "A scheduled account review",
+      "tier": 2,
+      "says": [
+        "meets the client at regular intervals to review results and plan ahead",
+        "gives a natural place to raise renewal and new needs"
+      ],
+      "use": "want a routine to keep a client relationship healthy",
+      "not": [
+        "takes place only when the client is threatening to leave"
+      ],
+      "like": [
+        "A value recap"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "A value recap",
+      "tier": 3,
+      "says": [
+        "reminds the client of the results delivered during the term",
+        "is prepared before the renewal conversation starts"
+      ],
+      "use": "need evidence that the service has been worth the cost",
+      "not": [
+        "lists the supplier's costs"
+      ],
+      "like": [
+        "A scheduled account review"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "An early renewal conversation",
+      "tier": 3,
+      "says": [
+        "starts well before the term ends so there is time to fix any concerns",
+        "avoids discussing renewal for the first time when the client is already deciding"
+      ],
+      "use": "have an account whose term ends in three months",
+      "not": [
+        "waits until the notice period has passed"
+      ],
+      "like": [
+        "A renewal"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "An expansion trigger",
+      "tier": 3,
+      "says": [
+        "is an event such as growth in traffic or new staff that signals a need for more",
+        "makes the upsell conversation timely and relevant"
+      ],
+      "use": "notice a client's usage nearing the limits of its package",
+      "not": [
+        "is a calendar date for a sales campaign"
+      ],
+      "like": [
+        "An upsell"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "Auto-renewal",
+      "tier": 4,
+      "says": [
+        "continues the agreement unless the client gives notice within a set period",
+        "calls for a clear reminder to the client before the notice date"
+      ],
+      "use": "have an agreement that rolls on from term to term",
+      "not": [
+        "ends the agreement when the term finishes"
+      ],
+      "like": [
+        "A renewal"
+      ]
+    },
+    {
+      "group": "renewal",
+      "subject": "Net revenue retention",
+      "tier": 5,
+      "says": [
+        "compares revenue from the same group of clients at the start and end of a period, including upgrades and losses",
+        "can exceed 100 percent when expansion outweighs churn"
+      ],
+      "use": "want one figure that combines churn with upsell",
+      "not": [
+        "counts only newly won clients"
+      ],
+      "like": [
+        "Churn"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "Prompt acknowledgement",
+      "tier": 1,
+      "says": [
+        "tells the client straight away that their message has been received and who has it",
+        "reduces anxiety even before an answer is ready"
+      ],
+      "use": "receive a message you cannot answer fully today",
+      "not": [
+        "waits until the full answer is ready"
+      ],
+      "like": [
+        "A meeting summary"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "Plain language",
+      "tier": 1,
+      "says": [
+        "replaces jargon with words the client uses themselves",
+        "makes sure the reader can act on the message"
+      ],
+      "use": "write to a client who is not technical",
+      "not": [
+        "shows the supplier's expertise by using technical terms"
+      ],
+      "like": [
+        "A meeting summary"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "A meeting summary",
+      "tier": 2,
+      "says": [
+        "records the decisions, actions and owners straight after a call",
+        "is the written record that settles later disagreements about what was agreed"
+      ],
+      "use": "have just finished a call where several things were agreed",
+      "not": [
+        "is sent only if a dispute arises later"
+      ],
+      "like": [
+        "Recording decisions"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "Telling bad news early",
+      "tier": 2,
+      "says": [
+        "gives the client time to react and plan",
+        "is accompanied by what is being done and a revised date"
+      ],
+      "use": "know a deadline will be missed",
+      "not": [
+        "waits until the deadline passes in the hope of catching up"
+      ],
+      "like": [
+        "An apology that names the fix"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "An apology that names the fix",
+      "tier": 3,
+      "says": [
+        "acknowledges the specific mistake, states its effect and says what is being done",
+        "does not shift blame onto the client"
+      ],
+      "use": "have made an error that affected a client's business",
+      "not": [
+        "says sorry for any inconvenience without naming what went wrong"
+      ],
+      "like": [
+        "Telling bad news early"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "Saying no with an alternative",
+      "tier": 3,
+      "says": [
+        "declines a request while offering something the supplier can do",
+        "keeps the conversation going where a bare refusal ends it"
+      ],
+      "use": "are asked for something outside scope or capability",
+      "not": [
+        "agrees to everything to avoid conflict"
+      ],
+      "like": [
+        "A change request"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "A single email thread per issue",
+      "tier": 2,
+      "says": [
+        "keeps the history of one matter in one place",
+        "keeps the history of one matter in a single email conversation"
+      ],
+      "use": "see one issue spread across many unrelated email chains",
+      "not": [
+        "starts a new thread for every reply"
+      ],
+      "like": [
+        "Recording decisions"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "Choosing call over email",
+      "tier": 3,
+      "says": [
+        "is the better channel when a matter is emotional, complex or going back and forth",
+        "is followed by a written summary"
+      ],
+      "use": "have exchanged six emails and the misunderstanding is growing",
+      "not": [
+        "is chosen because it avoids a written record"
+      ],
+      "like": [
+        "A meeting summary"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "Recording decisions",
+      "tier": 3,
+      "says": [
+        "notes what was decided, by whom and on what date",
+        "stops a verbal agreement being remembered differently by each party"
+      ],
+      "use": "hear a client approve a change by phone",
+      "not": [
+        "trusts memory for important agreements"
+      ],
+      "like": [
+        "A meeting summary"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "A status report",
+      "tier": 3,
+      "says": [
+        "tells the client what was done, what is next and what needs their input",
+        "is sent on a regular rhythm that the client knows in advance"
+      ],
+      "use": "run a project that lasts weeks and want the client informed without asking",
+      "not": [
+        "is sent only when problems arise"
+      ],
+      "like": [
+        "An update cadence"
+      ]
+    },
+    {
+      "group": "comms",
+      "subject": "Not over-promising",
+      "tier": 2,
+      "says": [
+        "commits only to what can be delivered and says so openly",
+        "builds a reputation for doing what is said"
+      ],
+      "use": "feel pressure to promise a date you are unsure of",
+      "not": [
+        "agrees to the client's date to keep them happy"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "The Qualified deal stage",
+      "tier": 2,
+      "says": [
+        "is the first stage in the GGLink CRM pipeline",
+        "carries a default win probability of 25 percent"
+      ],
+      "use": "need the GGLink pipeline stage with a default probability of 25 percent",
+      "not": [
+        "carries a default probability of 50 percent"
+      ],
+      "like": [
+        "The Proposal sent deal stage",
+        "The Negotiation deal stage"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "The Proposal sent deal stage",
+      "tier": 2,
+      "says": [
+        "follows Qualified in the GGLink CRM pipeline",
+        "carries a default win probability of 50 percent"
+      ],
+      "use": "need the GGLink stage for a deal once a proposal has gone out",
+      "not": [
+        "carries a default probability of 75 percent"
+      ],
+      "like": [
+        "The Qualified deal stage",
+        "The Negotiation deal stage"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "The Negotiation deal stage",
+      "tier": 2,
+      "says": [
+        "comes after Proposal sent in the GGLink CRM pipeline",
+        "carries a default win probability of 75 percent"
+      ],
+      "use": "need the GGLink stage for a deal where terms are being agreed",
+      "not": [
+        "carries a default probability of 25 percent"
+      ],
+      "like": [
+        "The Qualified deal stage",
+        "The Proposal sent deal stage"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "The Won deal stage",
+      "tier": 2,
+      "says": [
+        "closes a GGLink deal as a success",
+        "carries a default win probability of 100 percent"
+      ],
+      "use": "need the GGLink stage whose default probability is 100 percent",
+      "not": [
+        "carries a default probability of 75 percent"
+      ],
+      "like": [
+        "The Lost deal stage",
+        "The Negotiation deal stage"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "The Lost deal stage",
+      "tier": 2,
+      "says": [
+        "closes a GGLink deal as a failure",
+        "carries a default win probability of 0 percent"
+      ],
+      "use": "need the GGLink stage whose default probability is 0 percent",
+      "not": [
+        "carries a default probability of 25 percent"
+      ],
+      "like": [
+        "The Won deal stage",
+        "The Qualified deal stage"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "The weighted pipeline",
+      "tier": 3,
+      "says": [
+        "is the sum of each deal's value multiplied by its probability, divided by 100",
+        "gives a more realistic forecast than the raw total of open deal values"
+      ],
+      "use": "want a forecast figure that reflects how likely each GGLink deal is to close",
+      "not": [
+        "adds up the full value of every open deal"
+      ],
+      "like": [
+        "The Qualified deal stage"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "Contact consent",
+      "tier": 3,
+      "says": [
+        "is stored on every GGLink contact as consent, consent_date and consent_source",
+        "is a first-class field, not an afterthought"
+      ],
+      "use": "need to know where a GGLink contact's permission to be emailed is recorded",
+      "not": [
+        "is recorded only in the nurture campaign settings"
+      ],
+      "like": [
+        "A mailable contact"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "A mailable contact",
+      "tier": 3,
+      "says": [
+        "has consent of consented, soft or legitimate, a status that is not unsubscribed or bounced, and an email address",
+        "is the only kind of GGLink contact included in a bulk email"
+      ],
+      "use": "decide whether a contact may be included in a GGLink bulk email",
+      "not": [
+        "is any contact with an email address"
+      ],
+      "like": [
+        "Contact consent"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "A contact with unknown or withdrawn consent",
+      "tier": 3,
+      "says": [
+        "is not mailable in a GGLink bulk email",
+        "is excluded whatever the contact's deal history"
+      ],
+      "use": "find a contact whose consent is unknown or opted out",
+      "not": [
+        "may be emailed if they have an open deal"
+      ],
+      "like": [
+        "A mailable contact"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "A nurture sequence send log",
+      "tier": 3,
+      "says": [
+        "records what a GGLink nurture sequence has sent to each contact",
+        "ensures nobody is emailed the same step twice"
+      ],
+      "use": "worry that a contact could receive the same nurture email twice",
+      "not": [
+        "replaces the need for consent records"
+      ],
+      "like": [
+        "Contact consent"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "A product interest tag",
+      "tier": 4,
+      "says": [
+        "is stored in the GGLink CRM inside a comma-wrapped string such as ,crm,ecommerce,",
+        "allows exact matching so one tag cannot half-match another"
+      ],
+      "use": "need to filter GGLink contacts by a product interest without false matches",
+      "not": [
+        "is a free-text note that cannot be filtered"
+      ],
+      "like": [
+        "Contact consent"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "The GGLink enquiry flow",
+      "tier": 2,
+      "says": [
+        "sends a website contact form to the Enquiries section of the admin and sends a notification email",
+        "is protected from spam by reCAPTCHA"
+      ],
+      "use": "need to follow what happens when a visitor submits the GGLink contact form",
+      "not": [
+        "posts the enquiry to a public page"
+      ],
+      "like": [
+        "Enquiry email deliverability"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "Enquiry email deliverability",
+      "tier": 3,
+      "says": [
+        "depends on verifying the whole GGLink domain in SendGrid so SPF and DKIM are set up",
+        "fails if the sender in SENDGRID_FROM is not a verified sender"
+      ],
+      "use": "find that GGLink enquiry notifications go to spam or are rejected",
+      "not": [
+        "is fixed by turning off the reCAPTCHA"
+      ],
+      "like": [
+        "The GGLink enquiry flow"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "The GGLink CRM size design",
+      "tier": 5,
+      "says": [
+        "was built for about 100,000 contacts",
+        "indexes every filtered or sorted column and paginates lists on the server"
+      ],
+      "use": "ask how the GGLink CRM copes with very large contact lists",
+      "not": [
+        "loads the whole contact table into the browser"
+      ],
+      "like": [
+        "A product interest tag"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "The GGLink admin roles",
+      "tier": 3,
+      "says": [
+        "are owner and editor",
+        "never allow the last owner to be removed or demoted"
+      ],
+      "use": "need to know which roles GGLink's admin has",
+      "not": [
+        "are admin, manager and viewer"
+      ],
+      "like": [
+        "The GGLink enquiry flow"
+      ]
+    },
+    {
+      "group": "gglink-crm",
+      "subject": "One source of truth per customer object",
+      "tier": 4,
+      "says": [
+        "names a single tool as the owner of each object such as the customer record",
+        "avoids two tools both believing they own the record"
+      ],
+      "use": "are choosing CRM, scheduling, helpdesk and chat tools for an agency's sales and support",
+      "not": [
+        "lets each tool keep its own copy of the customer to save time"
+      ],
+      "like": [
+        "The GGLink enquiry flow"
+      ]
+    },
+    {
+      "group": "gglink-claims",
+      "subject": "The GG_PRICING_LIVE switch",
+      "tier": 3,
+      "says": [
+        "keeps GGLink prices hidden until they are real",
+        "is one of two master switches in gg-sales-config.php"
+      ],
+      "use": "need to know how GGLink stops unreal prices appearing publicly",
+      "not": [
+        "controls client results rather than prices"
+      ],
+      "like": [
+        "The GG_RESULTS_LIVE switch"
+      ]
+    },
+    {
+      "group": "gglink-claims",
+      "subject": "The GG_RESULTS_LIVE switch",
+      "tier": 3,
+      "says": [
+        "keeps GGLink client results hidden until they are real",
+        "is one of two master switches in gg-sales-config.php"
+      ],
+      "use": "need to know how GGLink stops unreal outcomes appearing publicly",
+      "not": [
+        "controls published prices rather than results"
+      ],
+      "like": [
+        "The GG_PRICING_LIVE switch"
+      ]
+    },
+    {
+      "group": "gglink-claims",
+      "subject": "A published price",
+      "tier": 3,
+      "says": [
+        "is a claim the business can be held to",
+        "falls under the CAP Code for advertising"
+      ],
+      "use": "ask why GGLink does not show prices before they are real",
+      "not": [
+        "is only an estimate that need not be honoured"
+      ],
+      "like": [
+        "A published result"
+      ]
+    },
+    {
+      "group": "gglink-claims",
+      "subject": "A published result",
+      "tier": 3,
+      "says": [
+        "must be a real, anonymised number the business could evidence",
+        "falls under the DMCC Act 2024 where it is a testimonial or customer result"
+      ],
+      "use": "ask what GGLink needs before showing a client result",
+      "not": [
+        "can be rounded up to look more impressive"
+      ],
+      "like": [
+        "A published price"
+      ]
+    },
+    {
+      "group": "gglink-claims",
+      "subject": "Evidence for a result",
+      "tier": 4,
+      "says": [
+        "is what GGLink must be able to produce if a customer or the ASA asks",
+        "means any result that cannot be backed up should be deleted"
+      ],
+      "use": "find a result on the site that nobody can back up",
+      "not": [
+        "is optional when the result is anonymised"
+      ],
+      "like": [
+        "A published result"
+      ]
+    },
+    {
+      "group": "gglink-claims",
+      "subject": "A published service level",
+      "tier": 4,
+      "says": [
+        "such as a response time, uptime or backup retention is published only if it can be evidenced and met",
+        "is not committed to in advance of real capacity"
+      ],
+      "use": "feel tempted to quote a response time to a prospect that has never been checked",
+      "not": [
+        "can be copied from a competitor to look competitive"
+      ]
+    },
+    {
+      "group": "gglink-claims",
+      "subject": "The Pricing section of the GGLink admin",
+      "tier": 3,
+      "says": [
+        "holds care plans and day rates",
+        "stays hidden on the public site until it has real values"
+      ],
+      "use": "need to know where GGLink's care plans and day rates are entered",
+      "not": [
+        "publishes placeholder values automatically"
+      ],
+      "like": [
+        "The Credentials section of the GGLink admin"
+      ]
+    },
+    {
+      "group": "gglink-claims",
+      "subject": "The Credentials section of the GGLink admin",
+      "tier": 3,
+      "says": [
+        "holds certificate numbers",
+        "stays hidden on the public site until it has real values"
+      ],
+      "use": "need to know where GGLink's certificate numbers are entered",
+      "not": [
+        "holds day rates and care plans"
+      ],
+      "like": [
+        "The Pricing section of the GGLink admin"
+      ]
+    },
+    {
+      "group": "gglink-claims",
+      "subject": "A placeholder in the repository sales config",
+      "tier": 5,
+      "says": [
+        "for a GGLink price or service level is a TODO marker rather than a real figure",
+        "means no price or support commitment should be quoted from the repository copy"
+      ],
+      "use": "see a TODO in the sales config where a price should be",
+      "not": [
+        "is a real price waiting to go live"
+      ],
+      "like": [
+        "The GG_PRICING_LIVE switch"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "In a discovery call, which opening question is most likely to draw out the buyer's real situation?",
+      "right": "Can you tell me what led you to get in touch?",
+      "wrong": [
+        "Do you have a budget for this?",
+        "Would you like to see our prices?",
+        "Are you ready to start next month?"
+      ],
+      "tier": 1,
+      "why": "An open question invites a full answer; the others are closed and jump ahead."
+    },
+    {
+      "q": "What is the main purpose of qualifying a lead?",
+      "right": "To decide whether the prospect has the need, means and reason to buy so effort goes to the right deals",
+      "wrong": [
+        "To make the prospect feel special before the quote",
+        "To collect contact details for the mailing list",
+        "To prove to the prospect that the seller's product is best"
+      ],
+      "tier": 1,
+      "why": "Qualification protects the seller's time and the accuracy of the forecast."
+    },
+    {
+      "q": "A client asks for a price on a clearly defined job that will not change. Which quote type suits it?",
+      "right": "A fixed-price quote",
+      "wrong": [
+        "An open-ended time-and-materials estimate",
+        "A retainer billed monthly",
+        "A day rate with no scope"
+      ],
+      "tier": 1,
+      "why": "A well-bounded scope is what fixed pricing needs."
+    },
+    {
+      "q": "Which of these best describes tiered pricing?",
+      "right": "Several packages at rising prices, with more included at each step",
+      "wrong": [
+        "One price that is negotiated separately for each client",
+        "A discount that rises the longer a client waits",
+        "A price quoted in a different currency for each region"
+      ],
+      "tier": 1,
+      "why": "Tiers let buyers choose the level that fits them."
+    },
+    {
+      "q": "Why should a support ticket have a single named owner?",
+      "right": "So that the client and the team know who is responsible for the next step",
+      "wrong": [
+        "So the other team members can ignore the ticket",
+        "So the client is charged per person involved",
+        "So the ticket can be closed without a reply"
+      ],
+      "tier": 1,
+      "why": "An unowned ticket is the one that gets dropped."
+    },
+    {
+      "q": "What is the first thing a good support agent does when a message cannot be answered fully today?",
+      "right": "Acknowledge receipt and say who is working on it",
+      "wrong": [
+        "Wait until the full answer is ready",
+        "Forward it to a manager",
+        "Ask the client to resend it tomorrow"
+      ],
+      "tier": 1,
+      "why": "A prompt acknowledgement reduces anxiety even before an answer exists."
+    },
+    {
+      "q": "What does a renewal conversation depend on most?",
+      "right": "The client having seen clear value during the term",
+      "wrong": [
+        "The supplier sending the invoice early",
+        "The client having no alternatives",
+        "The supplier offering a large discount first"
+      ],
+      "tier": 1,
+      "why": "Value delivered and recorded is what makes renewal easy."
+    },
+    {
+      "q": "A prospect says, 'The price is too high.' What should the seller do first?",
+      "right": "Acknowledge the concern and ask what they are comparing it with",
+      "wrong": [
+        "Offer 10 percent off immediately",
+        "Explain that competitors charge more",
+        "End the call and send a shorter quote"
+      ],
+      "tier": 2,
+      "why": "Clarifying shows what the objection really is; an instant discount teaches the buyer to haggle."
+    },
+    {
+      "q": "A ticket describes a total outage of a client's site, but the client is relaxed in tone. How should it be rated?",
+      "right": "High severity, because severity follows impact rather than tone",
+      "wrong": [
+        "Low severity, because the client is not worried",
+        "Medium, because it is the client's first ticket",
+        "Unrated until the client raises their voice"
+      ],
+      "tier": 2,
+      "why": "Severity measures effect on the service, not the client's manner."
+    },
+    {
+      "q": "Which pair of measures does a service level agreement usually set?",
+      "right": "First response time and resolution time",
+      "wrong": [
+        "Number of staff and office opening hours",
+        "Page count and word count",
+        "Price and discount level"
+      ],
+      "tier": 2,
+      "why": "These are the standard commitments in a support agreement."
+    },
+    {
+      "q": "A sales call ends with 'Great, I will be in touch.' What is missing?",
+      "right": "A dated next step agreed by both sides",
+      "wrong": [
+        "A final price discount",
+        "A signed contract",
+        "A summary of competitors"
+      ],
+      "tier": 2,
+      "why": "A vague ending lets deals drift."
+    },
+    {
+      "q": "A proposal starts with a page about the supplier's history. The buyer is a busy director. What change helps most?",
+      "right": "Open with an executive summary of the buyer's problem, the solution, the price and the next step",
+      "wrong": [
+        "Move the history to the end and delete the price",
+        "Add more case studies at the front",
+        "Make the font smaller to fit more content"
+      ],
+      "tier": 2,
+      "why": "A senior reader decides from the first page."
+    },
+    {
+      "q": "Which statement about upselling is correct?",
+      "right": "It is strongest when it responds to a need the client has already shown",
+      "wrong": [
+        "It works best at the first meeting before any need is shown",
+        "It means selling a different product to a new client",
+        "It should be avoided because it harms trust"
+      ],
+      "tier": 2,
+      "why": "Relevant upsells grow from usage and outcomes."
+    },
+    {
+      "q": "A new client has paid the deposit but has not provided logins or content, and the project has stalled. Which onboarding step would have prevented this?",
+      "right": "Collecting access and assets at kickoff, with dates",
+      "wrong": [
+        "Offering a discount for early payment",
+        "Sending a longer welcome email",
+        "Raising the price to cover delays"
+      ],
+      "tier": 2,
+      "why": "Client dependencies need dates agreed at the start."
+    },
+    {
+      "q": "What is a mailable contact in the GGLink CRM?",
+      "right": "A contact with consent of consented, soft or legitimate, a status that is not unsubscribed or bounced, and an email address",
+      "wrong": [
+        "Any contact who has opened an email in the last year",
+        "Any contact who has an open deal",
+        "Any contact imported from a spreadsheet"
+      ],
+      "tier": 2,
+      "why": "Consent and status together decide mailability."
+    },
+    {
+      "q": "In the GGLink CRM, which stage carries a default probability of 50 percent?",
+      "right": "Proposal sent",
+      "wrong": [
+        "Qualified",
+        "Negotiation",
+        "Lost"
+      ],
+      "tier": 2,
+      "why": "Qualified is 25, Proposal sent 50, Negotiation 75, Won 100 and Lost 0."
+    },
+    {
+      "q": "Three GGLink deals are open: 10,000 at Qualified, 20,000 at Proposal sent and 8,000 at Negotiation. What is the weighted pipeline?",
+      "right": "18,500",
+      "wrong": [
+        "38,000",
+        "9,500",
+        "28,500"
+      ],
+      "tier": 3,
+      "why": "Weighted pipeline is value times probability divided by 100: 2,500 + 10,000 + 6,000 = 18,500.",
+      "code": "Qualified: 10000 * 25 / 100\nProposal sent: 20000 * 50 / 100\nNegotiation: 8000 * 75 / 100"
+    },
+    {
+      "q": "A support agreement promises a first response within 4 business hours, with business hours 09:00 to 17:00 Monday to Friday. A ticket arrives on Friday at 16:00. By when must the first response be sent?",
+      "right": "Monday at 12:00",
+      "wrong": [
+        "Friday at 20:00",
+        "Saturday at 16:00",
+        "Monday at 09:00"
+      ],
+      "tier": 3,
+      "why": "One hour is used on Friday and three remain from Monday 09:00, ending Monday 12:00."
+    },
+    {
+      "q": "A client asks for a feature during build that is not in the scope statement. What should the account manager do?",
+      "right": "Price it as a change request and agree it in writing before starting",
+      "wrong": [
+        "Add it quietly to keep the client happy",
+        "Refuse to discuss anything outside the quote",
+        "Include it and raise the price of the next project"
+      ],
+      "tier": 3,
+      "why": "A change request keeps the scope visible and agreed."
+    },
+    {
+      "q": "A buyer says, 'We will think about it.' Which reply is best?",
+      "right": "Ask what in particular they need to think about and agree a date to speak again",
+      "wrong": [
+        "Say thanks and wait for them to call",
+        "Offer an immediate discount to prompt a decision",
+        "Send three further case studies the same day"
+      ],
+      "tier": 3,
+      "why": "The real objection is hidden until it is asked about."
+    },
+    {
+      "q": "A friendly contact keeps telling you the project is a great idea but cannot sign off anything. What should you do?",
+      "right": "Identify the economic buyer and ask the contact to help arrange access",
+      "wrong": [
+        "Send the contract to the contact and wait",
+        "Treat the deal as won because the contact is positive",
+        "Stop contacting them and look for a new lead"
+      ],
+      "tier": 3,
+      "why": "A champion needs to be connected to a person who holds budget and decides."
+    },
+    {
+      "q": "Your team keeps solving the same recurring fault with a workaround. What should be opened?",
+      "right": "A problem record to find and fix the underlying cause",
+      "wrong": [
+        "A new incident each time with no link to the others",
+        "A service credit for the client",
+        "A note saying the fault is normal"
+      ],
+      "tier": 3,
+      "why": "Incidents are restored; problems are fixed at the cause."
+    },
+    {
+      "q": "A client sends an angry message about repeated downtime. What should the first reply do?",
+      "right": "Acknowledge the impact, say who owns it and when the next update will come",
+      "wrong": [
+        "Defend the team with the uptime figures",
+        "Wait until a fix is ready before replying",
+        "Copy in the client's senior colleagues to show seriousness"
+      ],
+      "tier": 3,
+      "why": "Acknowledge and commit to an update before anything else."
+    },
+    {
+      "q": "You must decide between a warm handoff and a cold transfer for a client who has already explained the fault twice. Which should you choose, and why?",
+      "right": "A warm handoff, because the next person receives the full context and the client does not repeat themselves",
+      "wrong": [
+        "A cold transfer, because it is faster for the first agent",
+        "A cold transfer, because it protects the specialist from interruption",
+        "Neither: tell the client to open a new ticket"
+      ],
+      "tier": 3,
+      "why": "Context should travel with the client."
+    },
+    {
+      "q": "A prospect asks a GGLink seller for the support response time. The repository config still holds TODO placeholders for service levels. What is the right answer?",
+      "right": "Do not quote a figure; service levels are published only if they can be evidenced and met",
+      "wrong": [
+        "Quote a typical industry response time",
+        "Quote the fastest time you think is achievable",
+        "Quote four business hours as a standard"
+      ],
+      "tier": 3,
+      "why": "Unevidenced service-level claims are not to be made."
+    },
+    {
+      "q": "A GGLink seller wants to add a customer outcome to the website, 'We doubled their enquiries', but cannot find the numbers. What should happen?",
+      "right": "It should not be published until it is a real, anonymised result that can be evidenced",
+      "wrong": [
+        "Publish it with a small disclaimer",
+        "Round the number to the nearest convenient figure",
+        "Publish it if the client agrees verbally"
+      ],
+      "tier": 3,
+      "why": "Published results are claims; the GG_RESULTS_LIVE switch exists to hold them back until they are real."
+    },
+    {
+      "q": "Which contact would the GGLink CRM include in a bulk email?",
+      "right": "A contact with soft consent, status active and an email address",
+      "wrong": [
+        "A contact with unknown consent and an open deal",
+        "A contact who has unsubscribed but is a past client",
+        "A contact with consent but an empty email field"
+      ],
+      "tier": 3,
+      "why": "Consent, status and email all have to qualify."
+    },
+    {
+      "q": "A renewal is due in ninety days and the account's usage has dropped. What should the account manager do first?",
+      "right": "Contact the client to understand the drop and offer help before discussing renewal terms",
+      "wrong": [
+        "Wait until the last month and then send the renewal invoice",
+        "Offer a discount on the renewal immediately",
+        "Mark the account as lost"
+      ],
+      "tier": 3,
+      "why": "Usage falls are an early churn signal; fix the cause first."
+    },
+    {
+      "q": "A support team measures only the average time to first response. It looks fine, but some clients wait days. What would help?",
+      "right": "Report a percentile target so slow outliers are visible",
+      "wrong": [
+        "Switch to measuring only the fastest reply",
+        "Remove the slowest tickets from the data",
+        "Raise the target average"
+      ],
+      "tier": 3,
+      "why": "An average hides outliers; a percentile exposes them."
+    },
+    {
+      "q": "A team is quoting a project with many unknowns. The client wants a fixed price. What is the most sound approach?",
+      "right": "Run a paid discovery phase first, then fix the price for the defined scope",
+      "wrong": [
+        "Quote a fixed price with a large hidden margin",
+        "Quote a low fixed price and recover the cost through changes",
+        "Decline because fixed prices are never appropriate"
+      ],
+      "tier": 4,
+      "why": "Reducing uncertainty before fixing a price shares risk fairly."
+    },
+    {
+      "q": "Your deals often sit in Negotiation for months and then vanish with no competitor named. What should you examine first?",
+      "right": "Whether the stage exit criteria, stakeholder map and decision process were established before reaching Negotiation",
+      "wrong": [
+        "Whether the quote font was too small",
+        "Whether the discount authority needs raising",
+        "Whether more leads could be added to the top of the pipeline"
+      ],
+      "tier": 4,
+      "why": "These deals are no-decision outcomes caused by weak qualification."
+    },
+    {
+      "q": "A client on a three-year agreement asks for a refund after a series of outages. The agreement's service level exclusion covers planned maintenance, and two of the outages were planned. What is the fair way to proceed?",
+      "right": "Check each outage against the exclusions, apply the service credit only to the unplanned ones and explain the result clearly",
+      "wrong": [
+        "Refund everything to avoid conflict",
+        "Refuse any credit because the contract is long",
+        "Apply a credit to planned outages as well and hide the reasoning"
+      ],
+      "tier": 4,
+      "why": "Apply the agreement as written and communicate it openly."
+    },
+    {
+      "q": "A major incident hits several clients at once. Who should coordinate the response and communicate with affected clients?",
+      "right": "An incident commander, separate from the engineers doing the fix",
+      "wrong": [
+        "The engineer who is finding the cause",
+        "Whoever receives the first complaint",
+        "The salesperson for each client, independently"
+      ],
+      "tier": 4,
+      "why": "Separating coordination from fixing keeps both effective."
+    },
+    {
+      "q": "A seller wants to give a 15 percent discount to close a deal. What is the best response from the sales manager?",
+      "right": "Agree only if the client gives something in return, such as a longer term or a quicker decision",
+      "wrong": [
+        "Agree because winning is more important",
+        "Refuse any discount whatever the circumstances",
+        "Give 5 percent now and 10 percent later regardless"
+      ],
+      "tier": 4,
+      "why": "A conditional discount protects value."
+    },
+    {
+      "q": "A prospect objects that the supplier is smaller than a rival. What is the most effective response?",
+      "right": "Ask what concerns the size raises, then answer with evidence such as references and a clear delivery process",
+      "wrong": [
+        "Point out the rival's recent failures",
+        "Offer to match the rival's price",
+        "Say size does not matter"
+      ],
+      "tier": 4,
+      "why": "A trust objection is answered with evidence, not defensiveness or criticism of others."
+    },
+    {
+      "q": "You are choosing tools for an agency's sales and support. Which question should you answer first?",
+      "right": "Which tool is the single source of truth for each object, such as the customer record",
+      "wrong": [
+        "Which tool has the most integrations",
+        "Which tool has the most users",
+        "Which tool is cheapest per seat"
+      ],
+      "tier": 4,
+      "why": "Two tools that both believe they own the customer record are the most common source of trouble."
+    },
+    {
+      "q": "A seller notices a lead has opened every email but never replies, has no budget holder involved and has no date in mind. How should the lead be handled?",
+      "right": "Keep it in nurture with light contact, and do not forecast it as a live opportunity",
+      "wrong": [
+        "Mark it Proposal sent to encourage progress",
+        "Offer a discount to provoke a reply",
+        "Delete it from the CRM"
+      ],
+      "tier": 4,
+      "why": "Engagement alone is not qualification."
+    },
+    {
+      "q": "A client's contract auto-renews unless notice is given 30 days before the end of the term. Which action best protects the relationship?",
+      "right": "Remind the client well before the notice date and review value with them",
+      "wrong": [
+        "Say nothing so the contract rolls on",
+        "Send the reminder after the notice date",
+        "Offer a discount only to clients who cancel"
+      ],
+      "tier": 4,
+      "why": "Auto-renewal should never depend on the client forgetting."
+    },
+    {
+      "q": "A GGLink seller is told a contact's consent is 'unknown'. The contact has an open deal in Negotiation. May they be added to a bulk email?",
+      "right": "No; unknown consent is not mailable regardless of an open deal",
+      "wrong": [
+        "Yes; an open deal implies consent",
+        "Yes; once they have opened a previous email",
+        "Yes, but only if the email has an unsubscribe link"
+      ],
+      "tier": 4,
+      "why": "Mailability depends on consent and status, not deal stage."
+    },
+    {
+      "q": "After a site deploy for a GGLink client, the support agent finds the enquiry form submits but no notification email arrives. The enquiry does appear in the admin. What is the most likely area to check?",
+      "right": "SendGrid: the verified sender in SENDGRID_FROM and domain verification for SPF and DKIM",
+      "wrong": [
+        "The weighted pipeline settings",
+        "The nurture sequence send log",
+        "The admin owner and editor roles"
+      ],
+      "tier": 4,
+      "why": "The enquiry was stored, so the form worked; the problem is mail delivery."
+    },
+    {
+      "q": "A large account has five stakeholders, and the sponsor has just left the company. Renewal is due in two months. What is the strongest plan?",
+      "right": "Map the remaining stakeholders, find a new sponsor, run a value recap and involve senior people on both sides",
+      "wrong": [
+        "Send the renewal invoice and wait",
+        "Offer a large discount to all stakeholders",
+        "Assume the account is lost and stop investing"
+      ],
+      "tier": 5,
+      "why": "A lost champion is a major renewal risk and calls for coordinated action."
+    },
+    {
+      "q": "Two options: a lower price now with a three-year term, or the standard price with a one-year term. The buyer asks you to decide. What question matters most?",
+      "right": "What each option does to the supplier's margin, cash flow and capacity to serve over the whole term",
+      "wrong": [
+        "Which option is easier to explain",
+        "Which option the buyer would like to hear first",
+        "Which option makes the first invoice largest"
+      ],
+      "tier": 5,
+      "why": "Evaluate the full-term effect, not only the headline."
+    },
+    {
+      "q": "A service level objective is set equal to the contractual SLA. What risk does this create?",
+      "right": "Any miss against the objective is already a breach, leaving no early warning",
+      "wrong": [
+        "The client will receive too many service credits automatically",
+        "The team will overperform consistently",
+        "The measurements will become less accurate"
+      ],
+      "tier": 5,
+      "why": "Objectives are usually tighter than promises so there is margin."
+    },
+    {
+      "q": "A seller argues for publishing a client result because it is 'roughly true'. What is the most important point to make?",
+      "right": "A published result is a claim that must be real and evidenced, or the business risks breaching advertising rules and losing trust",
+      "wrong": [
+        "Rounded results are always acceptable if flattering",
+        "Only large numbers need evidence",
+        "Evidence is only needed if the client objects"
+      ],
+      "tier": 5,
+      "why": "Gating results behind a switch protects the business from claims it cannot support."
+    },
+    {
+      "q": "Revenue from existing clients rose 112 percent of last year's figure after upgrades, cancellations and downgrades. What does this say?",
+      "right": "Net revenue retention is above 100 percent, so expansion outweighed churn",
+      "wrong": [
+        "Churn was zero",
+        "New clients drove the whole increase",
+        "Upsell revenue was lower than lost revenue"
+      ],
+      "tier": 5,
+      "why": "NRR counts upgrades and losses from the same group of clients."
+    },
+    {
+      "q": "A support team solves every ticket quickly, yet the number of tickets rises each month. What does this suggest?",
+      "right": "Recurring causes are not being fixed, so problem management and knowledge articles are needed",
+      "wrong": [
+        "The team should answer even faster",
+        "The clients are using the service too much",
+        "The severity ratings should be raised"
+      ],
+      "tier": 5,
+      "why": "Speed in handling symptoms does not reduce demand caused by unfixed causes."
+    },
+    {
+      "q": "Why does a mutual action plan help on a long enterprise deal?",
+      "right": "It puts dates on the buyer's internal approvals as well as the seller's tasks, exposing delays early",
+      "wrong": [
+        "It forces the buyer to sign sooner",
+        "It replaces the proposal",
+        "It lets the seller control the buyer's calendar"
+      ],
+      "tier": 5,
+      "why": "It makes the path to a decision shared and visible."
+    }
+  ]
+}

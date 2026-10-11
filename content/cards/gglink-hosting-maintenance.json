@@ -1,0 +1,3321 @@
+{
+  "slug": "gglink-hosting-maintenance",
+  "name": "Hosting and maintenance",
+  "description": "Hosting, backups, SSL, updates, uptime and support.",
+  "roles": "developer",
+  "kind": "service",
+  "brand": "gglink",
+  "audience": "staff",
+  "tier": "role",
+  "groups": {
+    "model": "hosting model",
+    "backup": "backup concept",
+    "patch": "updates and patching concept",
+    "monitor": "monitoring concept",
+    "tls": "SSL and TLS concept",
+    "dns": "DNS or email-authentication concept",
+    "harden": "security hardening measure",
+    "malware": "malware response step",
+    "perf": "performance technique",
+    "care": "care plan or service-level concept",
+    "report": "client report item",
+    "migrate": "migration step",
+    "deploy": "GGLink site deployment practice",
+    "server": "GGLink server or hosting practice"
+  },
+  "cards": [
+    {
+      "group": "model",
+      "subject": "Shared hosting",
+      "tier": 1,
+      "says": [
+        "places many customers' sites on one server and shares its CPU, memory and disk",
+        "gives the customer a control panel but no root access",
+        "is the cheapest-to-run model and suffers when a neighbouring site uses too many resources"
+      ],
+      "use": "have a small brochure site with modest traffic and no special server needs",
+      "not": [
+        "gives each site its own guaranteed slice of CPU and memory"
+      ],
+      "like": [
+        "Virtual private server",
+        "Managed hosting"
+      ]
+    },
+    {
+      "group": "model",
+      "subject": "A virtual private server",
+      "tier": 1,
+      "says": [
+        "is a virtual machine with its own operating system and root access on a shared physical host",
+        "lets the administrator install any software stack but makes them responsible for patching it",
+        "gives dedicated memory and CPU allocations inside a larger machine"
+      ],
+      "use": "need root access and your own software stack without renting a whole machine",
+      "not": [
+        "leaves server patching to the hosting provider by default"
+      ],
+      "like": [
+        "Shared hosting",
+        "A dedicated server"
+      ]
+    },
+    {
+      "group": "model",
+      "subject": "A dedicated server",
+      "tier": 2,
+      "says": [
+        "reserves one whole physical machine for a single customer",
+        "removes noisy-neighbour effects because no other tenant shares the hardware",
+        "leaves a hardware fault as a single point of failure unless a second machine exists"
+      ],
+      "use": "need all of a physical machine's resources for one workload or for compliance isolation",
+      "not": [
+        "shares its CPU with other customers' virtual machines"
+      ],
+      "like": [
+        "A virtual private server",
+        "Colocation"
+      ]
+    },
+    {
+      "group": "model",
+      "subject": "Managed hosting",
+      "tier": 2,
+      "says": [
+        "has the provider patch, monitor and back up the server on the customer's behalf",
+        "puts operating-system administration inside the hosting contract instead of on the customer",
+        "suits clients who have no in-house person to run a server"
+      ],
+      "use": "have a client with no technical staff who still needs a patched, monitored server",
+      "not": [
+        "leaves operating-system patching entirely to the customer"
+      ],
+      "like": [
+        "A virtual private server",
+        "Shared hosting"
+      ]
+    },
+    {
+      "group": "model",
+      "subject": "Cloud infrastructure hosting",
+      "tier": 3,
+      "says": [
+        "rents virtual machines, storage and networks by usage from a large provider",
+        "lets capacity be added or removed in minutes through an API",
+        "still leaves operating-system patching and application security with the customer"
+      ],
+      "use": "need capacity that can scale up and down with demand",
+      "not": [
+        "patches the guest operating system on the customer's behalf"
+      ],
+      "like": [
+        "Platform as a service",
+        "A virtual private server"
+      ]
+    },
+    {
+      "group": "model",
+      "subject": "Platform as a service",
+      "tier": 3,
+      "says": [
+        "runs the customer's code on a provider-managed runtime without the customer managing servers",
+        "takes care of the operating system and runtime patching",
+        "restricts the customer to the languages, versions and add-ons the platform offers"
+      ],
+      "use": "want to deploy application code without administering any servers",
+      "not": [
+        "gives the customer root access to the underlying machine"
+      ],
+      "like": [
+        "Cloud infrastructure hosting",
+        "Container hosting"
+      ]
+    },
+    {
+      "group": "model",
+      "subject": "Static site hosting",
+      "tier": 3,
+      "says": [
+        "serves pre-built HTML, CSS and JavaScript files without running server-side code per request",
+        "reduces the attack surface because there is no application server or database to compromise",
+        "usually pairs with a content delivery network for global speed"
+      ],
+      "use": "have a site whose pages can be built ahead of time and served as plain files",
+      "not": [
+        "executes PHP on every page request"
+      ],
+      "like": [
+        "Shared hosting",
+        "Platform as a service"
+      ]
+    },
+    {
+      "group": "model",
+      "subject": "Container hosting",
+      "tier": 4,
+      "says": [
+        "runs the application as an image together with its dependencies, so the same artefact runs in test and production",
+        "makes rollback a matter of starting the previous image",
+        "adds an orchestration and image-patching responsibility of its own"
+      ],
+      "use": "want the identical packaged artefact to run in staging and production",
+      "not": [
+        "removes the need to patch software inside the image"
+      ],
+      "like": [
+        "Platform as a service",
+        "Cloud infrastructure hosting"
+      ]
+    },
+    {
+      "group": "model",
+      "subject": "Colocation",
+      "tier": 4,
+      "says": [
+        "places the customer's own hardware in a provider's data centre",
+        "supplies power, cooling and network connectivity but not the machine",
+        "leaves hardware replacement and servicing with the customer"
+      ],
+      "use": "already own servers and only need a data centre's power and connectivity",
+      "not": [
+        "supplies the server hardware as part of the monthly fee"
+      ],
+      "like": [
+        "A dedicated server"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "A full backup",
+      "tier": 1,
+      "says": [
+        "copies every selected file and database regardless of earlier backups",
+        "restores on its own without needing any other backup set",
+        "takes the most time and storage of the standard backup types"
+      ],
+      "use": "need a self-contained copy that restores without other files",
+      "not": [
+        "copies only what changed since the previous backup"
+      ],
+      "like": [
+        "An incremental backup",
+        "A differential backup"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "An incremental backup",
+      "tier": 2,
+      "says": [
+        "copies only what changed since the previous backup of any kind",
+        "needs the last full backup plus every incremental after it to restore",
+        "is the fastest and smallest backup type to take"
+      ],
+      "use": "need the smallest and quickest nightly backup",
+      "not": [
+        "needs only the last full backup to restore"
+      ],
+      "like": [
+        "A full backup",
+        "A differential backup"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "A differential backup",
+      "tier": 3,
+      "says": [
+        "copies everything that changed since the last full backup",
+        "needs only the last full backup plus the latest differential to restore",
+        "grows larger each day until the next full backup"
+      ],
+      "use": "want a restore that needs only two backup sets",
+      "not": [
+        "copies only changes since the previous backup of any kind"
+      ],
+      "like": [
+        "A full backup",
+        "An incremental backup"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "The 3-2-1 rule",
+      "tier": 2,
+      "says": [
+        "keeps three copies of the data on two different media with one copy off-site",
+        "protects against the loss of a single disk, machine or building",
+        "counts the live data as one of the three copies"
+      ],
+      "use": "are asked how many copies and where a sound backup plan keeps them",
+      "not": [
+        "keeps three copies in the same data centre"
+      ],
+      "like": [
+        "An off-site copy"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "An off-site copy",
+      "tier": 2,
+      "says": [
+        "sits in a different location or provider from the live server",
+        "survives the loss of the host's whole account or data centre",
+        "is the copy that still exists if the hosting account is suspended or compromised"
+      ],
+      "use": "must survive the hosting account itself being lost",
+      "not": [
+        "is stored on the same disk in a different folder"
+      ],
+      "like": [
+        "The 3-2-1 rule",
+        "A snapshot"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "A recovery point objective",
+      "tier": 3,
+      "says": [
+        "states how much recent data the business can afford to lose",
+        "sets how often backups must be taken",
+        "is measured as time between the last good copy and the failure"
+      ],
+      "use": "must decide how often backups run for a client",
+      "not": [
+        "states how long the restore may take"
+      ],
+      "like": [
+        "A recovery time objective"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "A recovery time objective",
+      "tier": 3,
+      "says": [
+        "states how long the site may be down before restore must be complete",
+        "drives the choice between a quick snapshot restore and a slow rebuild",
+        "is measured from the moment of failure to service being back"
+      ],
+      "use": "must decide how fast a restore has to finish",
+      "not": [
+        "states how much recent data may be lost"
+      ],
+      "like": [
+        "A recovery point objective"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "A restore test",
+      "tier": 2,
+      "says": [
+        "proves a backup can actually be restored into a working site",
+        "finds corrupt, partial or password-protected backups before an emergency",
+        "is the only evidence that a backup job is worth trusting"
+      ],
+      "use": "hear that backups report success every night but have never been opened",
+      "not": [
+        "is satisfied by the backup job's success message"
+      ],
+      "like": [
+        "A snapshot"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "A retention policy",
+      "tier": 3,
+      "says": [
+        "sets how long each backup is kept before it is deleted",
+        "balances restore choices against storage cost",
+        "decides whether a problem discovered weeks later can still be undone"
+      ],
+      "use": "must decide how many days or weeks of copies to hold",
+      "not": [
+        "decides how often the backup job runs"
+      ],
+      "like": [
+        "A recovery point objective"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "An immutable backup",
+      "tier": 4,
+      "says": [
+        "cannot be altered or deleted for a set period, even by an administrator",
+        "survives ransomware or an attacker who has stolen the backup credentials",
+        "uses write-once storage or object lock features"
+      ],
+      "use": "worry that an attacker with admin access could delete the backups too",
+      "not": [
+        "can be edited by anyone holding the backup credentials"
+      ],
+      "like": [
+        "An off-site copy"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "A server snapshot",
+      "tier": 3,
+      "says": [
+        "captures a disk image at a point in time on the same provider",
+        "lets a whole machine be reverted quickly before a risky change",
+        "is lost if the provider account or storage fails, so it does not replace an off-site backup"
+      ],
+      "use": "want a fast way back before a risky change on one server",
+      "not": [
+        "is stored in a separate provider by definition"
+      ],
+      "like": [
+        "An off-site copy",
+        "A full backup"
+      ]
+    },
+    {
+      "group": "backup",
+      "subject": "A database dump",
+      "tier": 3,
+      "says": [
+        "exports a database as a consistent set of statements or a file",
+        "must be taken in a way that avoids a half-written state",
+        "is copied alongside the site files because files alone do not hold the content"
+      ],
+      "use": "need a portable, consistent copy of the database",
+      "not": [
+        "is complete once the site's files are copied"
+      ],
+      "like": [
+        "A full backup"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "A security patch",
+      "tier": 1,
+      "says": [
+        "fixes a known vulnerability in software",
+        "should be applied promptly because attackers study published fixes",
+        "usually carries lower risk of breaking things than a major upgrade"
+      ],
+      "use": "see an advisory for software that a client's site runs",
+      "not": [
+        "adds new features without changing security"
+      ],
+      "like": [
+        "A major upgrade"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "A minor update",
+      "tier": 2,
+      "says": [
+        "delivers bug fixes and small improvements within the same major version",
+        "rarely breaks compatibility if the vendor follows semantic versioning",
+        "is safe to batch into the routine monthly maintenance visit"
+      ],
+      "use": "have a routine fix release within the same major version",
+      "not": [
+        "is expected to remove old features"
+      ],
+      "like": [
+        "A major upgrade"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "A major upgrade",
+      "tier": 3,
+      "says": [
+        "may remove or change features and break compatibility with plugins or custom code",
+        "should be tried on a staging copy first",
+        "needs a rollback plan and a planned window"
+      ],
+      "use": "face a move to a new major version of the CMS or of PHP",
+      "not": [
+        "can be applied blind to production because it is only a patch"
+      ],
+      "like": [
+        "A minor update",
+        "A security patch"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "A staging environment",
+      "tier": 2,
+      "says": [
+        "is a copy of the live site used to test changes before release",
+        "should match production software versions closely to be a meaningful test",
+        "must not send real emails or take real payments"
+      ],
+      "use": "must test an update without touching visitors",
+      "not": [
+        "is the live site itself"
+      ],
+      "like": [
+        "A rollback plan"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "A maintenance window",
+      "tier": 3,
+      "says": [
+        "is an agreed time slot when planned changes may cause disruption",
+        "is announced to the client beforehand",
+        "is picked for the period of lowest traffic"
+      ],
+      "use": "must schedule a change that might briefly interrupt the site",
+      "not": [
+        "is a period when no monitoring runs"
+      ],
+      "like": [
+        "A rollback plan"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "A rollback plan",
+      "tier": 3,
+      "says": [
+        "states how to return to the previous working state if a change fails",
+        "relies on a backup or the previous release taken before the change",
+        "includes a decision point for when to give up and revert"
+      ],
+      "use": "are about to change a production site and need a way back",
+      "not": [
+        "is written after the change fails"
+      ],
+      "like": [
+        "A staging environment"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "Automatic updates",
+      "tier": 3,
+      "says": [
+        "apply patches without an administrator pressing a button",
+        "reduce the window of exposure to known flaws",
+        "carry the risk that an untested update breaks the site unnoticed, so monitoring must follow them"
+      ],
+      "use": "want security fixes applied without waiting for the next visit",
+      "not": [
+        "remove any need to monitor the site afterwards"
+      ],
+      "like": [
+        "A staging environment"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "End-of-life software",
+      "tier": 4,
+      "says": [
+        "no longer receives security fixes from its maker",
+        "leaves every newly found flaw permanently unpatched",
+        "should be on a planned upgrade path before it ends, not after"
+      ],
+      "use": "find the site runs a language version the maker has stopped supporting",
+      "not": [
+        "still receives security fixes if the host promises to be careful"
+      ],
+      "like": [
+        "A security patch"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "A vulnerability advisory",
+      "tier": 3,
+      "says": [
+        "names an affected product, the versions affected and the fixed version",
+        "may be tracked by a CVE identifier",
+        "is what a maintainer reads to decide how urgent a patch is"
+      ],
+      "use": "need to decide how urgently a reported flaw must be fixed",
+      "not": [
+        "is a vendor's marketing announcement"
+      ],
+      "like": [
+        "A security patch"
+      ]
+    },
+    {
+      "group": "patch",
+      "subject": "A lock file",
+      "tier": 4,
+      "says": [
+        "pins the exact versions of dependencies the build used",
+        "makes two installs on different machines resolve the same versions",
+        "should be committed so a deploy reproduces the tested build"
+      ],
+      "use": "need two installs to resolve identical dependency versions",
+      "not": [
+        "lets every install pick the newest version of each dependency"
+      ],
+      "like": [
+        "A major upgrade"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "An uptime check",
+      "tier": 1,
+      "says": [
+        "requests a page at a regular interval from outside the server",
+        "alerts when the response fails or times out",
+        "sees the site as a visitor does, unlike a check running on the same machine"
+      ],
+      "use": "need to know quickly that a site has gone down",
+      "not": [
+        "measures how long a visitor's browser takes to render the page"
+      ],
+      "like": [
+        "A synthetic transaction"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "A status code check",
+      "tier": 2,
+      "says": [
+        "compares the HTTP response code with the expected value",
+        "catches a 500 or 503 error page that a plain ping would call healthy",
+        "treats a 200 response as success only if that is the expected page"
+      ],
+      "use": "want an alert when the server answers but with an error page",
+      "not": [
+        "only tests whether the server answers ping"
+      ],
+      "like": [
+        "An uptime check",
+        "A keyword check"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "A keyword check",
+      "tier": 3,
+      "says": [
+        "searches the returned page for expected text",
+        "catches a page that returns 200 but shows an error message or a blank body",
+        "can detect a defaced page when the expected text has vanished"
+      ],
+      "use": "worry that the page returns 200 yet shows an error or is defaced",
+      "not": [
+        "only checks the status code"
+      ],
+      "like": [
+        "A status code check",
+        "A synthetic transaction"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "A synthetic transaction",
+      "tier": 4,
+      "says": [
+        "scripts a journey such as submitting a form or adding to basket",
+        "finds failures in a flow that a simple page check cannot see",
+        "runs on a schedule as a robot visitor"
+      ],
+      "use": "need to know the enquiry form still works end to end",
+      "not": [
+        "only loads the home page"
+      ],
+      "like": [
+        "An uptime check",
+        "A keyword check"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "A heartbeat check",
+      "tier": 4,
+      "says": [
+        "expects a scheduled job to ping a URL on schedule",
+        "alerts when the ping stops arriving",
+        "detects a cron job that silently stopped running"
+      ],
+      "use": "need to detect a scheduled job that has silently stopped",
+      "not": [
+        "probes the public home page from outside"
+      ],
+      "like": [
+        "An uptime check"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "An alert threshold",
+      "tier": 3,
+      "says": [
+        "sets the value at which a metric triggers a notification",
+        "must balance catching real problems against false alarms",
+        "is often combined with a short delay or repeat count before alerting"
+      ],
+      "use": "keep getting woken by one-off blips and need alerts to mean something",
+      "not": [
+        "turns notifications off for a metric"
+      ],
+      "like": [
+        "An escalation path"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "An escalation path",
+      "tier": 3,
+      "says": [
+        "names who is told next if the first person does not respond",
+        "includes times after which the alert moves up a level",
+        "prevents an alert from sitting unread overnight"
+      ],
+      "use": "must decide who is contacted when the on-call person does not answer",
+      "not": [
+        "is the rule for how often backups run"
+      ],
+      "like": [
+        "An alert threshold"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "A public status page",
+      "tier": 3,
+      "says": [
+        "tells customers the current state of a service and any incident",
+        "reduces repeat enquiries during an outage",
+        "should be hosted separately from the service it reports on"
+      ],
+      "use": "want customers to see an outage without having to email",
+      "not": [
+        "is hosted on the same server it reports on"
+      ],
+      "like": [
+        "An incident report"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "Disk space monitoring",
+      "tier": 3,
+      "says": [
+        "warns before storage fills",
+        "prevents the database and logs from failing when the disk reaches 100 percent",
+        "should alert early enough for someone to act"
+      ],
+      "use": "see logs and backups growing on a small server disk",
+      "not": [
+        "only measures network latency"
+      ],
+      "like": [
+        "An alert threshold"
+      ]
+    },
+    {
+      "group": "monitor",
+      "subject": "Log monitoring",
+      "tier": 4,
+      "says": [
+        "reads server and application logs for errors and unusual patterns",
+        "reveals repeated failed logins or unusual requests",
+        "gives evidence for an incident report after the event"
+      ],
+      "use": "need evidence of what happened on the server before an outage",
+      "not": [
+        "checks whether a page loads from outside"
+      ],
+      "like": [
+        "An uptime check"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "A TLS certificate",
+      "tier": 1,
+      "says": [
+        "proves the site's identity to the browser",
+        "lets the browser and server encrypt traffic between them",
+        "is shown by the padlock and the https address"
+      ],
+      "use": "need the https padlock on a site",
+      "not": [
+        "hides the site from search engines"
+      ],
+      "like": [
+        "A certificate authority"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "A certificate authority",
+      "tier": 2,
+      "says": [
+        "is the trusted organisation that issues and signs certificates",
+        "is trusted because its root certificate ships with browsers and operating systems",
+        "checks that the requester controls the domain before issuing"
+      ],
+      "use": "ask who vouches for a certificate in the browser's eyes",
+      "not": [
+        "hosts the website's files"
+      ],
+      "like": [
+        "A TLS certificate"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "The ACME protocol",
+      "tier": 3,
+      "says": [
+        "lets software request and renew certificates automatically",
+        "proves control of a domain through a file or a DNS record challenge",
+        "is the mechanism behind automatic free certificates"
+      ],
+      "use": "want certificates to renew without anyone remembering to do it",
+      "not": [
+        "is an old manual process of emailing a CSR"
+      ],
+      "like": [
+        "Certificate expiry"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "Certificate expiry",
+      "tier": 2,
+      "says": [
+        "makes browsers show a full-page warning once the date passes",
+        "is the most common reason a secure site suddenly appears broken",
+        "should be monitored with an alert days before the date"
+      ],
+      "use": "find a site showing a security warning for a lapsed certificate",
+      "not": [
+        "has no effect on visitors"
+      ],
+      "like": [
+        "The ACME protocol"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "A wildcard certificate",
+      "tier": 4,
+      "says": [
+        "covers every one-level subdomain of a domain with a single certificate",
+        "needs a DNS challenge to prove control when issued by an automatic authority",
+        "makes one leaked private key a bigger exposure than a single-name certificate"
+      ],
+      "use": "need one certificate for many subdomains of the same domain",
+      "not": [
+        "covers the bare domain and every level of nested subdomain"
+      ],
+      "like": [
+        "A TLS certificate"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "A certificate chain",
+      "tier": 4,
+      "says": [
+        "links the site's certificate through intermediates to a trusted root",
+        "breaks in some clients when the intermediate certificate is missing from the server",
+        "must be served complete by the web server"
+      ],
+      "use": "find that some devices reject a certificate that works in a desktop browser",
+      "not": [
+        "consists of the site's certificate alone"
+      ],
+      "like": [
+        "A certificate authority"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "HTTP Strict Transport Security",
+      "tier": 3,
+      "says": [
+        "tells browsers to use https only for the domain for a stated time",
+        "stops downgrade attacks to plain http after the first visit",
+        "is risky to set for a long time before every sub-service is on https"
+      ],
+      "use": "must stop browsers from ever using plain http for the domain",
+      "not": [
+        "redirects visitors from www to the bare domain"
+      ],
+      "like": [
+        "Mixed content"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "Mixed content",
+      "tier": 3,
+      "says": [
+        "is an https page that loads some resources over plain http",
+        "makes browsers block or warn about the insecure items",
+        "is typically fixed by updating hard-coded http links after a migration"
+      ],
+      "use": "see the padlock turn into a warning right after moving a site to https",
+      "not": [
+        "is caused by an expired certificate"
+      ],
+      "like": [
+        "HTTP Strict Transport Security"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "Cloudflare Full (strict) mode",
+      "tier": 4,
+      "says": [
+        "encrypts the hop between the proxy and the origin and validates the origin's certificate",
+        "is needed when tokens or personal data cross the proxy-to-origin link",
+        "requires a valid certificate on the origin server"
+      ],
+      "use": "must make sure sensitive data is encrypted all the way to the origin",
+      "not": [
+        "sends the proxy-to-origin traffic over plain http"
+      ],
+      "like": [
+        "Cloudflare Flexible mode"
+      ]
+    },
+    {
+      "group": "tls",
+      "subject": "Cloudflare Flexible mode",
+      "tier": 4,
+      "says": [
+        "encrypts visitor-to-proxy traffic but sends proxy-to-origin traffic over plain http",
+        "can cause a redirect loop if the origin itself forces https without reading the forwarded protocol header",
+        "gives visitors the padlock while the last hop stays unencrypted"
+      ],
+      "use": "have an origin with no certificate that sits behind a proxy",
+      "not": [
+        "validates the origin's certificate"
+      ],
+      "like": [
+        "Cloudflare Full (strict) mode"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "An A record",
+      "tier": 1,
+      "says": [
+        "maps a name to an IPv4 address",
+        "is what makes a domain name lead to a server",
+        "is replaced when a site moves to a server with a different IPv4 address"
+      ],
+      "use": "need a name to point at a server's IPv4 address",
+      "not": [
+        "maps a name to another name"
+      ],
+      "like": [
+        "A CNAME record",
+        "An AAAA record"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "An AAAA record",
+      "tier": 3,
+      "says": [
+        "maps a name to an IPv6 address",
+        "is the IPv6 counterpart of the A record",
+        "needs to be updated or removed on migration as well, or visitors on IPv6 reach the old host"
+      ],
+      "use": "need a name to point at a server's IPv6 address",
+      "not": [
+        "maps a name to an IPv4 address"
+      ],
+      "like": [
+        "An A record"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "A CNAME record",
+      "tier": 2,
+      "says": [
+        "makes one name an alias of another name",
+        "follows the target's addresses as they change",
+        "cannot coexist with other records on the same name"
+      ],
+      "use": "want www to follow whatever address the main name resolves to",
+      "not": [
+        "maps a name directly to an IP address"
+      ],
+      "like": [
+        "An A record"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "An MX record",
+      "tier": 2,
+      "says": [
+        "names the mail server that accepts email for the domain",
+        "carries a priority number so a lower value is tried first",
+        "is what must be preserved when a website moves host but the email stays"
+      ],
+      "use": "need to say where email for the domain is delivered",
+      "not": [
+        "names the server that hosts the website"
+      ],
+      "like": [
+        "A TXT record"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "A TXT record",
+      "tier": 2,
+      "says": [
+        "holds free-form text for a name",
+        "carries SPF, DKIM and DMARC policy and domain-verification strings",
+        "is how many services ask you to prove control of a domain"
+      ],
+      "use": "must add a verification string or a mail policy to a domain",
+      "not": [
+        "names the mail server"
+      ],
+      "like": [
+        "An MX record"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "An NS record",
+      "tier": 3,
+      "says": [
+        "names the authoritative servers for a domain",
+        "is changed at the registrar to move DNS to a different provider",
+        "decides which provider's records the world sees"
+      ],
+      "use": "must move the domain's DNS to a different provider",
+      "not": [
+        "points the website name to an IP address"
+      ],
+      "like": [
+        "An A record"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "DNS TTL",
+      "tier": 3,
+      "says": [
+        "states how many seconds a resolver may cache a record",
+        "is lowered ahead of a migration so the change takes effect quickly",
+        "is raised again after the change to cut lookups"
+      ],
+      "use": "plan a server move and want visitors to see the change fast",
+      "not": [
+        "states how long the domain is registered"
+      ],
+      "like": [
+        "DNS propagation"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "DNS propagation",
+      "tier": 3,
+      "says": [
+        "is the period during which resolvers around the world still serve the old record",
+        "depends on the old record's TTL",
+        "is why some people reach the new site while others still reach the old one"
+      ],
+      "use": "find that colleagues see the new site while a client still sees the old",
+      "not": [
+        "is a delay caused only by the new web server starting up"
+      ],
+      "like": [
+        "DNS TTL"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "SPF",
+      "tier": 3,
+      "says": [
+        "lists the servers allowed to send email for the domain",
+        "is published as a TXT record",
+        "lets receivers reject or flag mail from unlisted servers"
+      ],
+      "use": "must say which servers may send mail for the domain",
+      "not": [
+        "adds a cryptographic signature to each message"
+      ],
+      "like": [
+        "DKIM",
+        "DMARC"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "DKIM",
+      "tier": 3,
+      "says": [
+        "adds a cryptographic signature to outgoing mail",
+        "publishes the public key in DNS for receivers to verify with",
+        "lets receivers detect that a message was altered in transit"
+      ],
+      "use": "must prove outgoing messages were signed by the domain",
+      "not": [
+        "lists the servers allowed to send mail"
+      ],
+      "like": [
+        "SPF",
+        "DMARC"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "DMARC",
+      "tier": 4,
+      "says": [
+        "tells receivers what to do when SPF and DKIM checks fail and aligned",
+        "can request reports about who sends mail as the domain",
+        "is introduced with a monitoring policy before a strict one is enforced"
+      ],
+      "use": "want receivers to reject spoofed mail from your domain",
+      "not": [
+        "signs each message with a private key"
+      ],
+      "like": [
+        "SPF",
+        "DKIM"
+      ]
+    },
+    {
+      "group": "dns",
+      "subject": "A PTR record",
+      "tier": 5,
+      "says": [
+        "maps an IP address back to a name",
+        "is set by the owner of the IP address, usually the hosting provider",
+        "is checked by some receiving mail servers when judging a sender"
+      ],
+      "use": "find that the mail server's address has no reverse name",
+      "not": [
+        "maps a name to an IPv4 address"
+      ],
+      "like": [
+        "An A record"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "Least privilege",
+      "tier": 2,
+      "says": [
+        "gives each account only the access its job needs",
+        "limits the damage when one account or key is compromised",
+        "is why an API key should be restricted to the one action it performs"
+      ],
+      "use": "must decide how much access to give a new key or account",
+      "not": [
+        "gives staff the same admin access to avoid delays"
+      ],
+      "like": [
+        "Two-factor authentication"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "Two-factor authentication",
+      "tier": 1,
+      "says": [
+        "asks for a second proof, such as a code, besides the password",
+        "stops a stolen password alone from logging in",
+        "should be turned on for hosting, registrar and CMS admin accounts"
+      ],
+      "use": "worry that a leaked password would give attackers admin access",
+      "not": [
+        "makes the password longer"
+      ],
+      "like": [
+        "Least privilege",
+        "A login lockout"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "A login lockout",
+      "tier": 3,
+      "says": [
+        "blocks further attempts after repeated failures for a period",
+        "slows password guessing",
+        "should apply per source address or account so a single attacker cannot keep trying"
+      ],
+      "use": "see a flood of failed logins against the admin page",
+      "not": [
+        "asks for a second proof besides the password"
+      ],
+      "like": [
+        "Two-factor authentication",
+        "A web application firewall"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "A web application firewall",
+      "tier": 3,
+      "says": [
+        "filters web requests for known attack patterns before the application sees them",
+        "can block common injection and scanning attempts",
+        "does not replace patching the application"
+      ],
+      "use": "want known attack patterns blocked before they reach the site",
+      "not": [
+        "replaces the need for updates"
+      ],
+      "like": [
+        "A login lockout"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "Security headers",
+      "tier": 3,
+      "says": [
+        "are response headers that tell the browser which protective behaviours to apply",
+        "include content-type sniffing, framing and referrer rules",
+        "cost almost nothing to add but must be tested for broken pages"
+      ],
+      "use": "want browsers to enforce protective rules for the site",
+      "not": [
+        "encrypt the page content"
+      ],
+      "like": [
+        "HTTP Strict Transport Security"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "A content security policy",
+      "tier": 4,
+      "says": [
+        "limits which sources scripts, styles and images may load from",
+        "reduces the damage of an injected script",
+        "can break a page if a legitimate third-party source is not allowed"
+      ],
+      "use": "want to restrict which origins a page may load scripts from",
+      "not": [
+        "forces all links to use https"
+      ],
+      "like": [
+        "Security headers"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "File permissions",
+      "tier": 2,
+      "says": [
+        "decide which accounts can read, write or run each file",
+        "should leave only upload and data folders writable by the web server",
+        "are a common cause of both breakages and compromises when set to 777"
+      ],
+      "use": "must decide which folders the web server may write to",
+      "not": [
+        "are set to 777 for convenience on a production site"
+      ],
+      "like": [
+        "Least privilege"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "Keeping secrets out of the web root",
+      "tier": 3,
+      "says": [
+        "stores credentials and keys outside folders that the web server can serve",
+        "stops a misconfiguration from exposing configuration files to the public",
+        "keeps secrets out of version control as well"
+      ],
+      "use": "must store a database password or an API key for a site",
+      "not": [
+        "places the configuration file in the public folder with a hard-to-guess name"
+      ],
+      "like": [
+        "File permissions"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "Removing unused plugins",
+      "tier": 2,
+      "says": [
+        "reduces the code that can contain vulnerabilities",
+        "avoids leaving an unmaintained component installed",
+        "is cheaper than patching something that is not needed"
+      ],
+      "use": "find several deactivated plugins sitting on a CMS",
+      "not": [
+        "is unnecessary as long as the plugin is deactivated"
+      ],
+      "like": [
+        "A security patch"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "Blocking directory listing",
+      "tier": 3,
+      "says": [
+        "stops the server from displaying a folder's contents when no index file exists",
+        "prevents visitors from browsing uploaded and backup files",
+        "is a server configuration option"
+      ],
+      "use": "find that visitors can browse a folder's file list in the browser",
+      "not": [
+        "hides the folder from search engines only"
+      ],
+      "like": [
+        "File permissions"
+      ]
+    },
+    {
+      "group": "harden",
+      "subject": "A downloadable database file",
+      "tier": 4,
+      "says": [
+        "is a breach if a web request can fetch it",
+        "can contain personal data and password hashes",
+        "should be tested for with a request that must return forbidden or not found"
+      ],
+      "use": "need to confirm that a data file inside the site folder cannot be fetched",
+      "not": [
+        "is safe because the file name is hard to guess"
+      ],
+      "like": [
+        "Keeping secrets out of the web root"
+      ]
+    },
+    {
+      "group": "malware",
+      "subject": "Containing a compromised site",
+      "tier": 2,
+      "says": [
+        "takes the site offline or behind a maintenance page",
+        "stops further damage to visitors while the cause is found",
+        "is done before cleaning begins"
+      ],
+      "use": "learn that a site is serving malicious content to visitors",
+      "not": [
+        "starts by deleting files at random"
+      ],
+      "like": [
+        "Taking a forensic copy"
+      ]
+    },
+    {
+      "group": "malware",
+      "subject": "Taking a forensic copy",
+      "tier": 3,
+      "says": [
+        "preserves the compromised files and logs before cleaning",
+        "gives evidence for finding the entry point afterwards",
+        "means the clean-up does not destroy the trail"
+      ],
+      "use": "must keep evidence of what the attacker did before changing anything",
+      "not": [
+        "replaces the clean backup"
+      ],
+      "like": [
+        "Containing a compromised site"
+      ]
+    },
+    {
+      "group": "malware",
+      "subject": "Finding the entry point",
+      "tier": 4,
+      "says": [
+        "identifies how the attacker got in, such as an old plugin or a stolen password",
+        "prevents the same hole from being used again after the clean-up",
+        "uses access logs, file change times and the list of installed components"
+      ],
+      "use": "have cleaned a site and want to stop it being hacked again the same way",
+      "not": [
+        "is skipped because cleaning is enough"
+      ],
+      "like": [
+        "Rotating credentials"
+      ]
+    },
+    {
+      "group": "malware",
+      "subject": "Restoring from a known-clean backup",
+      "tier": 3,
+      "says": [
+        "replaces compromised files with a copy taken before the infection",
+        "is more reliable than hunting through files for every change",
+        "only helps if the backup predates the compromise and the entry point is closed"
+      ],
+      "use": "need to be sure no hidden files remain on a compromised site",
+      "not": [
+        "is safe to run without closing the entry point"
+      ],
+      "like": [
+        "Finding the entry point"
+      ]
+    },
+    {
+      "group": "malware",
+      "subject": "Rotating credentials",
+      "tier": 3,
+      "says": [
+        "changes every password, key and token that might have been exposed",
+        "covers hosting, database, CMS, email, FTP and API keys",
+        "is required even after the files are clean because the attacker may hold the old ones"
+      ],
+      "use": "have cleaned a hacked site and the attacker may have seen the passwords",
+      "not": [
+        "is unnecessary once the malware is removed"
+      ],
+      "like": [
+        "Finding the entry point"
+      ]
+    },
+    {
+      "group": "malware",
+      "subject": "Hunting for persistence",
+      "tier": 4,
+      "says": [
+        "looks for backdoors, new admin users and scheduled tasks left by the attacker",
+        "explains why a site gets re-infected after a clean-up",
+        "checks places such as uploads folders, cron entries and user lists"
+      ],
+      "use": "find the same malware coming back a day after it was removed",
+      "not": [
+        "is finished when the visible defacement is gone"
+      ],
+      "like": [
+        "Restoring from a known-clean backup"
+      ]
+    },
+    {
+      "group": "malware",
+      "subject": "Requesting a blocklist review",
+      "tier": 4,
+      "says": [
+        "asks a search engine or safe-browsing service to re-check a cleaned site",
+        "removes the browser warning for visitors once approved",
+        "should be done only after the site is truly clean"
+      ],
+      "use": "find browsers still warning visitors after the site is cleaned",
+      "not": [
+        "should be requested before cleaning to speed things up"
+      ],
+      "like": [
+        "Containing a compromised site"
+      ]
+    },
+    {
+      "group": "malware",
+      "subject": "Notifying the client about a data breach",
+      "tier": 4,
+      "says": [
+        "tells the client promptly if personal data may have been exposed",
+        "lets the client meet its own legal duty to report to the regulator, normally within 72 hours of becoming aware under UK GDPR",
+        "gives plain facts and next steps without guessing"
+      ],
+      "use": "discover that customer data on a client's site may have been taken",
+      "not": [
+        "waits until the investigation is fully complete"
+      ],
+      "like": [
+        "Containing a compromised site"
+      ]
+    },
+    {
+      "group": "malware",
+      "subject": "A post-incident review",
+      "tier": 4,
+      "says": [
+        "records what happened, the timeline and the root cause",
+        "turns the incident into concrete changes such as monitoring or patching",
+        "is blameless and aimed at preventing recurrence"
+      ],
+      "use": "have just resolved an incident and want to stop it happening again",
+      "not": [
+        "assigns blame to the person who made the mistake"
+      ],
+      "like": [
+        "Finding the entry point"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Page caching",
+      "tier": 2,
+      "says": [
+        "stores a finished HTML page so it need not be rebuilt for every visitor",
+        "cuts server work on content that rarely changes",
+        "must be purged when content changes"
+      ],
+      "use": "have a content site whose pages are rebuilt by PHP on every visit",
+      "not": [
+        "caches only images and style sheets in the visitor's browser"
+      ],
+      "like": [
+        "Browser caching",
+        "Object caching"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Browser caching",
+      "tier": 2,
+      "says": [
+        "tells the visitor's browser how long it may reuse a file without asking again",
+        "is controlled by cache headers such as Cache-Control",
+        "speeds up repeat visits for images, scripts and styles"
+      ],
+      "use": "want repeat visitors not to download static files again",
+      "not": [
+        "stores the rendered page on the server"
+      ],
+      "like": [
+        "Page caching",
+        "A content delivery network"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "A content delivery network",
+      "tier": 3,
+      "says": [
+        "serves copies of static files from locations near the visitor",
+        "reduces load on the origin server",
+        "can also absorb traffic spikes and some attacks"
+      ],
+      "use": "have visitors in many countries and want files to come from a nearby location",
+      "not": [
+        "makes the origin server faster to boot"
+      ],
+      "like": [
+        "Browser caching"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Image optimisation",
+      "tier": 1,
+      "says": [
+        "resizes and compresses images before serving them",
+        "is often the largest single saving on a page",
+        "uses modern formats and correct dimensions"
+      ],
+      "use": "find that a page weighs several megabytes because of photos",
+      "not": [
+        "lowers the number of database queries"
+      ],
+      "like": [
+        "Lazy loading"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Lazy loading",
+      "tier": 3,
+      "says": [
+        "delays loading images below the fold until the visitor scrolls near them",
+        "cuts initial page weight",
+        "should not be applied to the main image at the top of the page"
+      ],
+      "use": "want below-the-fold images not to slow the first view",
+      "not": [
+        "compresses the image file"
+      ],
+      "like": [
+        "Image optimisation"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Text compression",
+      "tier": 3,
+      "says": [
+        "shrinks HTML, CSS and JavaScript responses with gzip or Brotli",
+        "reduces transfer size without changing the content",
+        "gives little benefit on files that are already compressed, such as JPEG"
+      ],
+      "use": "want text responses to be smaller on the wire",
+      "not": [
+        "resizes JPEG photos"
+      ],
+      "like": [
+        "Image optimisation"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Database indexing",
+      "tier": 4,
+      "says": [
+        "lets the database find rows without scanning the whole table",
+        "speeds filtered and sorted queries",
+        "costs extra storage and slows writes slightly"
+      ],
+      "use": "see queries slowing as a table grows to many thousands of rows",
+      "not": [
+        "caches the finished page"
+      ],
+      "like": [
+        "Object caching"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Opcode caching",
+      "tier": 4,
+      "says": [
+        "keeps compiled PHP in memory between requests",
+        "avoids reparsing the scripts on every request",
+        "is a server-side setting rather than a site change"
+      ],
+      "use": "want PHP not to recompile its scripts on every request",
+      "not": [
+        "stores database results"
+      ],
+      "like": [
+        "Object caching",
+        "Page caching"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Object caching",
+      "tier": 4,
+      "says": [
+        "keeps results of expensive queries or computations in memory",
+        "reduces repeated database work on dynamic pages",
+        "needs an in-memory store and careful invalidation"
+      ],
+      "use": "have a dynamic page that repeats the same costly query for every visitor",
+      "not": [
+        "stores the compiled PHP"
+      ],
+      "like": [
+        "Opcode caching",
+        "Page caching"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Core Web Vitals",
+      "tier": 3,
+      "says": [
+        "measure loading, interactivity and visual stability as real visitors experience them",
+        "include largest contentful paint, interaction to next paint and cumulative layout shift",
+        "can influence search ranking as a signal"
+      ],
+      "use": "need a standard set of user-experience measures for page speed",
+      "not": [
+        "measure only the server's CPU load"
+      ],
+      "like": [
+        "Time to first byte"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Time to first byte",
+      "tier": 3,
+      "says": [
+        "measures how long the server takes to start responding",
+        "points to slow hosting, uncached pages or heavy queries when high",
+        "is separate from how long the page takes to render"
+      ],
+      "use": "want to tell a slow server from a slow page",
+      "not": [
+        "measures how stable the layout is while loading"
+      ],
+      "like": [
+        "Core Web Vitals"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "A care plan",
+      "tier": 1,
+      "says": [
+        "is a recurring agreement to keep a site updated, backed up, monitored and supported",
+        "sets out what is included and what is not",
+        "turns ad hoc fixes into planned, predictable work"
+      ],
+      "use": "want a client's site looked after every month rather than only when it breaks",
+      "not": [
+        "is a one-off build project"
+      ],
+      "like": [
+        "A service level agreement"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "A service level agreement",
+      "tier": 2,
+      "says": [
+        "is a written commitment on measurable service levels",
+        "may state response times, uptime and what happens when they are missed",
+        "should only promise what the provider can evidence and meet"
+      ],
+      "use": "must put a measurable commitment in writing",
+      "not": [
+        "is a marketing slogan"
+      ],
+      "like": [
+        "A care plan"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "Response time",
+      "tier": 2,
+      "says": [
+        "is how long until the provider acknowledges and begins on a request",
+        "is a different promise from how long a fix takes",
+        "may differ by severity"
+      ],
+      "use": "are asked how quickly someone will start looking at a report",
+      "not": [
+        "is how long the fix takes to finish"
+      ],
+      "like": [
+        "Resolution time"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "Resolution time",
+      "tier": 3,
+      "says": [
+        "is how long until the problem is actually fixed",
+        "is harder to promise than response time because causes vary",
+        "should usually be given as a target, not a guarantee, except for simple cases"
+      ],
+      "use": "are asked how long it will take to fix a problem",
+      "not": [
+        "is how long until the first reply"
+      ],
+      "like": [
+        "Response time"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "A severity level",
+      "tier": 3,
+      "says": [
+        "classifies how serious a problem is for the client",
+        "decides which response target and who is woken",
+        "treats a whole site down as more urgent than a cosmetic glitch"
+      ],
+      "use": "must decide whether to work on a problem tonight or on Monday",
+      "not": [
+        "is decided by who complained loudest"
+      ],
+      "like": [
+        "An escalation path"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "Support hours",
+      "tier": 2,
+      "says": [
+        "state when requests are staffed",
+        "must be clear about whether weekends and bank holidays are covered",
+        "set client expectations for when a reply can be expected"
+      ],
+      "use": "need to tell a client when someone will be available",
+      "not": [
+        "are the same as the monitoring hours by default"
+      ],
+      "like": [
+        "Response time"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "A scope exclusion",
+      "tier": 3,
+      "says": [
+        "states work that the plan does not cover",
+        "stops disputes by naming extras such as redesigns or new features",
+        "is listed in the agreement so both sides agree"
+      ],
+      "use": "have a client ask for a new page under the monthly plan",
+      "not": [
+        "is hidden in the footer to avoid confusing the client"
+      ],
+      "like": [
+        "A change request"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "An uptime percentage",
+      "tier": 3,
+      "says": [
+        "states the share of time a site is available over a period",
+        "translates into a downtime allowance, so a higher number leaves a smaller allowance",
+        "should state how planned maintenance is counted"
+      ],
+      "use": "are asked to promise a figure for availability",
+      "not": [
+        "guarantees that the site will never go down"
+      ],
+      "like": [
+        "A service credit"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "A service credit",
+      "tier": 4,
+      "says": [
+        "is the remedy offered when a promised level is missed",
+        "is usually a reduction on a future invoice",
+        "is only meaningful when the measurement method is agreed"
+      ],
+      "use": "need to define what happens if an uptime promise is missed",
+      "not": [
+        "is a free upgrade given for any complaint"
+      ],
+      "like": [
+        "An uptime percentage"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "A change request",
+      "tier": 3,
+      "says": [
+        "is a formal ask for work beyond the agreed scope",
+        "is quoted and approved before work begins",
+        "keeps the plan from quietly turning into unpaid project work"
+      ],
+      "use": "have a client ask for a feature that is not in the plan",
+      "not": [
+        "is silently done to keep the client happy"
+      ],
+      "like": [
+        "A scope exclusion"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "A runbook",
+      "tier": 4,
+      "says": [
+        "gives step-by-step instructions for a known task or incident",
+        "lets any trained person handle a recurring problem the same way",
+        "is kept next to the on-call process and updated after incidents"
+      ],
+      "use": "want any trained person to handle a recurring incident the same way",
+      "not": [
+        "is a list of passwords"
+      ],
+      "like": [
+        "A rollback plan"
+      ]
+    },
+    {
+      "group": "care",
+      "subject": "An escalation to a developer",
+      "tier": 4,
+      "says": [
+        "moves a problem the support person cannot solve to a more senior engineer",
+        "carries the evidence gathered so far",
+        "follows the severity and the agreed path"
+      ],
+      "use": "face a fault that first-line support cannot fix",
+      "not": [
+        "happens by asking the client to find a developer"
+      ],
+      "like": [
+        "An escalation path"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "A monthly maintenance report",
+      "tier": 1,
+      "says": [
+        "summarises what was done for the site over the month",
+        "shows updates applied, backups taken and issues handled",
+        "makes invisible work visible to the client"
+      ],
+      "use": "must show a client what their monthly plan delivered",
+      "not": [
+        "is sent only when something breaks"
+      ],
+      "like": [
+        "An update log"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "An update log",
+      "tier": 2,
+      "says": [
+        "lists each component updated with the old and new versions and the date",
+        "supports tracing a fault to a particular change",
+        "is part of the evidence in a maintenance report"
+      ],
+      "use": "need to trace when a plugin version changed",
+      "not": [
+        "lists visitors by country"
+      ],
+      "like": [
+        "A monthly maintenance report"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "An uptime report",
+      "tier": 2,
+      "says": [
+        "shows availability over the period and each outage with its length",
+        "should state the measurement method",
+        "gives the client an honest figure for the promise made"
+      ],
+      "use": "must show a client how available the site was last month",
+      "not": [
+        "shows only the number of page views"
+      ],
+      "like": [
+        "A traffic summary"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "A backup verification record",
+      "tier": 3,
+      "says": [
+        "records the date a restore test was run and what was restored",
+        "shows that backups were proven rather than assumed",
+        "includes any failure and the fix"
+      ],
+      "use": "must prove that the backups actually work",
+      "not": [
+        "lists the file names in the backup"
+      ],
+      "like": [
+        "A monthly maintenance report"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "An incident report",
+      "tier": 3,
+      "says": [
+        "describes an outage or security event in plain words with times",
+        "states cause, impact, fix and what changes to prevent a repeat",
+        "avoids jargon and blame"
+      ],
+      "use": "have an outage and the client wants to know what happened",
+      "not": [
+        "is a log dump sent without explanation"
+      ],
+      "like": [
+        "A post-incident review"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "A security scan summary",
+      "tier": 3,
+      "says": [
+        "lists issues found by a malware or vulnerability scan with the action taken",
+        "separates real findings from false positives",
+        "states what was fixed and what remains for the client to decide"
+      ],
+      "use": "ran a scan and must tell the client what it found",
+      "not": [
+        "states only that the scan ran"
+      ],
+      "like": [
+        "An incident report"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "A traffic summary",
+      "tier": 2,
+      "says": [
+        "shows visits, popular pages and traffic sources over the period",
+        "belongs to marketing analysis rather than server health",
+        "can explain a performance problem when a spike coincides with it"
+      ],
+      "use": "must show how many people visited the site",
+      "not": [
+        "proves the server was available"
+      ],
+      "like": [
+        "An uptime report"
+      ]
+    },
+    {
+      "group": "report",
+      "subject": "A plain-language summary",
+      "tier": 2,
+      "says": [
+        "opens a report with the overall state of the site in a few lines",
+        "translates technical items into their effect on the client's business",
+        "lets a non-technical owner act without reading the detail"
+      ],
+      "use": "send a report to a client who is not technical",
+      "not": [
+        "replaces the detailed records"
+      ],
+      "like": [
+        "A monthly maintenance report"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "A pre-migration audit",
+      "tier": 2,
+      "says": [
+        "inventories the site's files, databases, domains, email and integrations before a move",
+        "finds hidden dependencies such as cron jobs and mail accounts",
+        "defines what must be tested afterwards"
+      ],
+      "use": "are asked to move a site and do not yet know everything it depends on",
+      "not": [
+        "starts with changing the DNS"
+      ],
+      "like": [
+        "A staging migration"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "A staging migration",
+      "tier": 3,
+      "says": [
+        "builds the site on the new host first without switching visitors over",
+        "lets problems be fixed before launch",
+        "is tested by pointing a hosts file at the new server"
+      ],
+      "use": "want to prove the site works on the new server before visitors see it",
+      "not": [
+        "moves the site live straight away"
+      ],
+      "like": [
+        "A pre-migration audit"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "Lowering the TTL",
+      "tier": 3,
+      "says": [
+        "shortens DNS caching in the days before a move",
+        "lets the switch take effect quickly",
+        "is done at least one old-TTL period before cutover"
+      ],
+      "use": "plan a DNS switch and want it to take effect quickly",
+      "not": [
+        "is done after the cutover"
+      ],
+      "like": [
+        "DNS TTL"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "A content freeze",
+      "tier": 3,
+      "says": [
+        "stops edits and new orders on the old site for a short period",
+        "avoids losing changes made between copying and cutover",
+        "is announced to the client in advance"
+      ],
+      "use": "must stop orders or enquiries being lost between the final copy and cutover",
+      "not": [
+        "lets the client edit the old site during the move"
+      ],
+      "like": [
+        "The cutover"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "The cutover",
+      "tier": 3,
+      "says": [
+        "is the moment traffic moves from the old host to the new one",
+        "happens by changing DNS or a proxy setting",
+        "is done at a quiet time with a rollback ready"
+      ],
+      "use": "are ready to switch visitors to the new server",
+      "not": [
+        "is the first copy of the files"
+      ],
+      "like": [
+        "A content freeze"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "Testing with a hosts file",
+      "tier": 4,
+      "says": [
+        "overrides name resolution on one computer to reach the new server",
+        "lets the real domain be tested before DNS changes",
+        "affects only the machine whose file was edited"
+      ],
+      "use": "need to see the real domain on the new server before the DNS change",
+      "not": [
+        "changes DNS for every visitor"
+      ],
+      "like": [
+        "A staging migration"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "Keeping the old host live",
+      "tier": 3,
+      "says": [
+        "leaves the old server running for a period after cutover",
+        "gives a fallback if the new site has a problem",
+        "covers visitors whose DNS still points to the old address"
+      ],
+      "use": "have switched DNS and want a safety net during propagation",
+      "not": [
+        "cancels the old host the same day"
+      ],
+      "like": [
+        "The cutover"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "Post-migration checks",
+      "tier": 3,
+      "says": [
+        "verify forms, email delivery, redirects, SSL and key pages on the new host",
+        "include checking the scheduled jobs and the backups on the new server",
+        "close the migration only when they pass"
+      ],
+      "use": "have just moved a site and need to confirm everything works",
+      "not": [
+        "end once the home page loads"
+      ],
+      "like": [
+        "A staging migration"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "Preserving email during a move",
+      "tier": 4,
+      "says": [
+        "keeps the MX records pointing at the existing mail provider when only the website moves",
+        "avoids losing mail because the DNS zone was recreated incompletely",
+        "checks the full set of existing DNS records before nameservers are changed"
+      ],
+      "use": "move a website whose email runs elsewhere",
+      "not": [
+        "lets mail follow the website automatically"
+      ],
+      "like": [
+        "An MX record"
+      ]
+    },
+    {
+      "group": "migrate",
+      "subject": "A migration rollback",
+      "tier": 4,
+      "says": [
+        "returns DNS to the old host if the new site fails after cutover",
+        "is possible because the old host was kept live",
+        "is decided by criteria agreed before the cutover"
+      ],
+      "use": "find a serious fault soon after the cutover",
+      "not": [
+        "requires rebuilding the old site from scratch"
+      ],
+      "like": [
+        "Keeping the old host live"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "deploy-check.php",
+      "tier": 1,
+      "says": [
+        "only reports and changes nothing on the GGLink site",
+        "exits non-zero if anything would break the site",
+        "refuses to run over HTTP, so it is safe to leave on the server"
+      ],
+      "use": "need to check the GGLink site before and after uploading a release",
+      "not": [
+        "repairs permissions and uploads vendor/ for you"
+      ],
+      "like": [
+        "config.local.php"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "config.local.php",
+      "tier": 1,
+      "says": [
+        "holds the GGLink site's secrets such as the SendGrid key",
+        "is gitignored and created from config.local.php.example",
+        "is set to permissions 644 in the deploy guide"
+      ],
+      "use": "need to find where the GGLink site's secrets live",
+      "not": [
+        "is committed to the repository so everyone has the same keys"
+      ],
+      "like": [
+        "deploy-check.php",
+        "The storage/gglink.sqlite file"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The storage/gglink.sqlite file",
+      "tier": 1,
+      "says": [
+        "holds the GGLink CMS content, blog posts, enquiries and contacts",
+        "must never be overwritten on a re-deploy",
+        "is gitignored and recreated automatically on first run"
+      ],
+      "use": "need to know which GGLink file must survive every deployment",
+      "not": [
+        "is regenerated from the PHP files on each deploy"
+      ],
+      "like": [
+        "config.local.php",
+        "vendor/"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The vendor folder",
+      "tier": 2,
+      "says": [
+        "must be uploaded to the GGLink server because there is no Composer there",
+        "ships the dependency tree with the site",
+        "is uploaded with everything except .git/, node_modules/ and the database file"
+      ],
+      "use": "wonder why the GGLink deployment includes the dependency folder",
+      "not": [
+        "is installed on the server by running composer install"
+      ],
+      "like": [
+        "The storage/gglink.sqlite file"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The pre-release database backup",
+      "tier": 2,
+      "says": [
+        "copies storage/gglink.sqlite before every GGLink release",
+        "is made with a command such as cp to a dated backup file",
+        "gives a copy to compare against or recover from if data is damaged"
+      ],
+      "use": "are about to release a new version of the GGLink site",
+      "not": [
+        "is done only when a release changes the schema"
+      ],
+      "like": [
+        "The code rollback"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The code rollback",
+      "tier": 3,
+      "says": [
+        "restores the previous files and leaves storage/ alone",
+        "is not combined with restoring the database, because enquiries and contacts keep arriving after the release",
+        "works because content and data live in the database, not in files"
+      ],
+      "use": "have a bad GGLink code release to undo",
+      "not": [
+        "restores the database over live data to undo the change"
+      ],
+      "like": [
+        "The pre-release database backup"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The writable folders",
+      "tier": 3,
+      "says": [
+        "are limited to storage/ and assets/images/uploads/ on the GGLink site",
+        "are set with chmod 755",
+        "are the only places the web server needs to write"
+      ],
+      "use": "must set permissions on the GGLink site after upload",
+      "not": [
+        "include every folder so the CMS can edit any file"
+      ],
+      "like": [
+        "config.local.php"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The first-run admin account",
+      "tier": 2,
+      "says": [
+        "is created by visiting /admin/ the first time",
+        "disappears as a page once an account exists",
+        "is the account that later admin users are added after"
+      ],
+      "use": "have just deployed the GGLink site for the first time",
+      "not": [
+        "is created by a SQL command run on the server"
+      ],
+      "like": [
+        "The owner and editor roles"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The owner and editor roles",
+      "tier": 3,
+      "says": [
+        "are the two roles in the GGLink admin",
+        "keep the last owner from being removed or demoted",
+        "were added after launch as a role column"
+      ],
+      "use": "need to know the roles the GGLink admin supports",
+      "not": [
+        "include a read-only auditor role"
+      ],
+      "like": [
+        "The first-run admin account"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The public-site check after deploy",
+      "tier": 3,
+      "says": [
+        "confirms the home page loads and the logo appears",
+        "includes submitting the contact form to the thank-you page and finding the enquiry in the admin",
+        "requires /storage/gglink.sqlite to return 403 or 404"
+      ],
+      "use": "have just uploaded a GGLink release and need to confirm it works",
+      "not": [
+        "ends when deploy-check.php prints its first line"
+      ],
+      "like": [
+        "deploy-check.php"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The GG_PRICING_LIVE switch",
+      "tier": 3,
+      "says": [
+        "keeps GGLink pricing hidden until real values are entered",
+        "exists because published prices are claims a business can be held to",
+        "sits in gg-sales-config.php with GG_RESULTS_LIVE"
+      ],
+      "use": "must decide when the GGLink pricing section may appear publicly",
+      "not": [
+        "is switched on once placeholder text is written"
+      ],
+      "like": [
+        "The GG_RESULTS_LIVE switch"
+      ]
+    },
+    {
+      "group": "deploy",
+      "subject": "The GG_RESULTS_LIVE switch",
+      "tier": 3,
+      "says": [
+        "keeps client results hidden until they are real",
+        "applies to outcomes that must be real, anonymised and evidenced if challenged",
+        "falls under rules on testimonials such as the DMCC Act 2024"
+      ],
+      "use": "must decide when GGLink client results may be published",
+      "not": [
+        "lets illustrative results be published as examples"
+      ],
+      "like": [
+        "The GG_PRICING_LIVE switch"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "The GGLink site's .htaccess",
+      "tier": 2,
+      "says": [
+        "forces HTTPS, canonicalises non-www to www and sets the security headers",
+        "denies secret and source file types and returns 404 for /vendor/ and /storage/",
+        "removes the PHP version banner"
+      ],
+      "use": "need to know what protects the GGLink site's files on Apache",
+      "not": [
+        "works on any web server without extra steps"
+      ],
+      "like": [
+        "AllowOverride"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "AllowOverride on the GGLink site",
+      "tier": 3,
+      "says": [
+        "must be enabled for the .htaccess rules to take effect",
+        "decides whether the database file is protected on Apache",
+        "does not exist on nginx, where the rules must be reproduced manually"
+      ],
+      "use": "wonder why the database downloads even though .htaccess blocks it",
+      "not": [
+        "is irrelevant once the .htaccess file is uploaded"
+      ],
+      "like": [
+        "The GGLink site's .htaccess"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "X-Forwarded-Proto behind Cloudflare",
+      "tier": 4,
+      "says": [
+        "is the header the GGLink HTTPS redirect keys off",
+        "avoids a redirect loop when Cloudflare Flexible SSL reaches the origin over plain HTTP",
+        "lets direct hits fall back to the %{HTTPS} variable"
+      ],
+      "use": "see the GGLink site loop between redirects behind Cloudflare",
+      "not": [
+        "is ignored in favour of %{HTTPS} only"
+      ],
+      "like": [
+        "HSTS on the GGLink site"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "HSTS on the GGLink site",
+      "tier": 4,
+      "says": [
+        "starts with a short max-age of 86400",
+        "is raised to 31536000 once nothing is served over plain HTTP",
+        "is one of the security headers the site sends"
+      ],
+      "use": "need to decide when to lengthen the GGLink HSTS lifetime",
+      "not": [
+        "is set to a year from the first day"
+      ],
+      "like": [
+        "X-Forwarded-Proto behind Cloudflare"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "crm.gglink.co.uk",
+      "tier": 4,
+      "says": [
+        "serves the GGLink admin from a separate host so its session cookie is isolated from the public site",
+        "means a cross-site scripting bug on the marketing pages cannot reach the CRM session",
+        "relies on the host-scoped session cookie"
+      ],
+      "use": "want a bug on the marketing pages not to reach the CRM",
+      "not": [
+        "shares the same cookie as www.gglink.co.uk"
+      ],
+      "like": [
+        "The GGLink site's .htaccess"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "Domain verification in SendGrid",
+      "tier": 3,
+      "says": [
+        "is advised for the whole gglink.co.uk domain rather than a single sender",
+        "sets up SPF and DKIM to keep notifications out of spam",
+        "is paired with a SENDGRID_FROM that is a verified sender"
+      ],
+      "use": "find enquiry notification emails landing in spam",
+      "not": [
+        "is done by verifying only one sender address"
+      ],
+      "like": [
+        "SPF",
+        "DKIM"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "The reCAPTCHA secret",
+      "tier": 2,
+      "says": [
+        "is set as RECAPTCHA_SECRET in config.local.php",
+        "turns spam filtering on for the GGLink form",
+        "leaves spam filtering off when it is missing"
+      ],
+      "use": "see spam arriving through the GGLink enquiry form",
+      "not": [
+        "causes enquiries to be rejected when missing"
+      ],
+      "like": [
+        "config.local.php"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "The blog feed timeout",
+      "tier": 4,
+      "says": [
+        "gives the WordPress blog request 3 seconds",
+        "keeps the last good response for 900 seconds",
+        "stops a slow or failing blog from blocking a page render"
+      ],
+      "use": "wonder how a failing blog avoids stopping GGLink pages",
+      "not": [
+        "fails the page if the blog does not answer"
+      ],
+      "like": [
+        "The GGLink site's .htaccess"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "The GGLink PHP version",
+      "tier": 3,
+      "says": [
+        "must be 7.4 or newer, which deploy-check.php enforces",
+        "is already end-of-life, with support ended in November 2022",
+        "needs an upgrade plan"
+      ],
+      "use": "wonder which PHP version the GGLink site is checked against",
+      "not": [
+        "is a currently supported release"
+      ],
+      "like": [
+        "End-of-life software"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "The GGLink server's mod_php and PHP 8.1 FPM",
+      "tier": 4,
+      "says": [
+        "runs mod_php 7.4 globally for older PHP sites",
+        "runs GGMoney alone through PHP 8.1 FPM via a SetHandler per virtual host",
+        "lets one server host apps needing different PHP versions"
+      ],
+      "use": "need to know how the GGLink server hosts apps needing different PHP versions",
+      "not": [
+        "runs every site on PHP 8.1"
+      ],
+      "like": [
+        "pm2 on the GGLink server"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "pm2 on the GGLink server",
+      "tier": 3,
+      "says": [
+        "runs the Node apps as processes bound to 127.0.0.1",
+        "survives reboots because the pm2-root service is enabled and the list is saved",
+        "is reached through Apache as a reverse proxy"
+      ],
+      "use": "need to know how GGLink's Node apps keep running after a reboot",
+      "not": [
+        "exposes each Node app directly on a public port"
+      ],
+      "like": [
+        "The GGLink server's mod_php and PHP 8.1 FPM"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "Certbot on the GGLink server",
+      "tier": 3,
+      "says": [
+        "gets Let's Encrypt certificates with the webroot method",
+        "renews automatically through a timer",
+        "copies the :80 vhost into the :443 one, which must carry the same Include line"
+      ],
+      "use": "wonder who renews the GGLink server's certificates",
+      "not": [
+        "needs someone to renew the certificates by hand"
+      ],
+      "like": [
+        "Cloudflare Full (strict) for GGMoney"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "Cloudflare Full (strict) for GGMoney",
+      "tier": 4,
+      "says": [
+        "is required because HMRC OAuth tokens cross the Cloudflare-to-origin hop",
+        "would be undermined by Flexible mode sending those tokens in the clear",
+        "depends on a valid certificate at the origin"
+      ],
+      "use": "must pick the Cloudflare SSL mode for GGMoney",
+      "not": [
+        "is the same as Flexible mode"
+      ],
+      "like": [
+        "Certbot on the GGLink server"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "apache-cloudflare-only.conf",
+      "tier": 4,
+      "says": [
+        "allows Cloudflare's published IP ranges plus localhost",
+        "stops the client address derived from X-Forwarded-For from being spoofed by bypassing Cloudflare",
+        "is pulled in with a plain Include, so Apache refuses to load if the file is missing"
+      ],
+      "use": "need GGLearn reachable only through Cloudflare",
+      "not": [
+        "is pulled in with IncludeOptional so a missing file is ignored"
+      ],
+      "like": [
+        "update-cloudflare-ips.sh"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "update-cloudflare-ips.sh",
+      "tier": 4,
+      "says": [
+        "regenerates the Cloudflare allow-list from Cloudflare's published ranges",
+        "refuses to write a list that looks wrong, so a bad fetch cannot lock everyone out",
+        "is followed by reviewing the diff, committing, deploying and reloading Apache"
+      ],
+      "use": "need to refresh the Cloudflare allow-list for GGLearn",
+      "not": [
+        "writes an empty list when the fetch fails"
+      ],
+      "like": [
+        "apache-cloudflare-only.conf"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "The GGLearn deploy script",
+      "tier": 4,
+      "says": [
+        "rsyncs the repo excluding node_modules, .next, .git, data/*.db* and .env*",
+        "streams the remote steps into bash because the server's login shell is fish",
+        "polls http://127.0.0.1:3400/ up to ten times and fails unless it gets HTTP 200"
+      ],
+      "use": "need to know how GGLearn reaches production safely",
+      "not": [
+        "overwrites the production database on every push"
+      ],
+      "like": [
+        "The GGLearn deploy lock"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "The GGLearn deploy lock",
+      "tier": 4,
+      "says": [
+        "is a flock on /tmp/gglearn-deploy.lock",
+        "stops two deploys running at once",
+        "fails the second deploy with a clear message"
+      ],
+      "use": "worry about two pushes deploying at the same time",
+      "not": [
+        "is a database transaction lock"
+      ],
+      "like": [
+        "The GGLearn deploy script"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "drizzle-kit push without --force",
+      "tier": 5,
+      "says": [
+        "stops and fails the deploy when a schema change would delete rows",
+        "is deliberate so a NOT NULL column added to a table with data cannot trigger a delete",
+        "keeps production data safe from automatic destructive changes"
+      ],
+      "use": "see a schema change that would delete rows in GGLearn",
+      "not": [
+        "is run with --force so deploys never block"
+      ],
+      "like": [
+        "The GGLearn deploy script"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "The GGLearn WAL snapshot",
+      "tier": 5,
+      "says": [
+        "is taken with better-sqlite3's backup because the database runs in WAL mode",
+        "gives a consistent copy that a plain file copy of the .db would not",
+        "is made by deploy/seed-content.sh before content steps run"
+      ],
+      "use": "need to copy GGLearn's SQLite database safely",
+      "not": [
+        "is made by copying the .db file alone"
+      ],
+      "like": [
+        "The pre-release database backup"
+      ]
+    },
+    {
+      "group": "server",
+      "subject": "The GGSocial rsync --delete trap",
+      "tier": 5,
+      "says": [
+        "deletes the server-only .env if it is not excluded",
+        "can log everyone out and make stored platform tokens undecryptable when APP_SECRET is lost",
+        "is why the deploy excludes .env and keeps copies in /root/ggsocial-backups/"
+      ],
+      "use": "wonder why GGSocial's deploy excludes .env from rsync",
+      "not": [
+        "is harmless because .env is in the repository"
+      ],
+      "like": [
+        "The GGLearn deploy script"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "Which hosting model gives a customer root access on a virtual machine but leaves operating-system patching to the customer?",
+      "right": "A virtual private server",
+      "wrong": [
+        "Shared hosting",
+        "Managed hosting",
+        "Static site hosting"
+      ],
+      "tier": 1,
+      "why": "A VPS gives root access; patching it is the customer's job unless the plan is managed."
+    },
+    {
+      "q": "Why is a nightly backup job that reports success not enough on its own?",
+      "right": "Only a restore test proves the backup can be turned back into a working site",
+      "wrong": [
+        "Success messages are always wrong",
+        "Backups cannot be restored on a different day",
+        "Nightly jobs never include the database"
+      ],
+      "tier": 1,
+      "why": "A job can finish while the archive is empty, partial or unreadable."
+    },
+    {
+      "q": "What does the padlock in the browser address bar show about a connection?",
+      "right": "Traffic between the browser and server is encrypted and the certificate matched the domain",
+      "wrong": [
+        "The website has been checked for malware",
+        "The business behind the site is trustworthy",
+        "The server is fully patched"
+      ],
+      "tier": 1,
+      "why": "TLS covers encryption and identity of the domain, not the safety of the site."
+    },
+    {
+      "q": "Which DNS record type tells the world where to deliver email for a domain?",
+      "right": "MX",
+      "wrong": [
+        "A",
+        "CNAME",
+        "NS"
+      ],
+      "tier": 1,
+      "why": "MX names the mail servers and their priorities."
+    },
+    {
+      "q": "A client's site shows a full-page security warning this morning and was fine last week. What is the most likely cause to check first?",
+      "right": "The TLS certificate has expired",
+      "wrong": [
+        "The CSS file is too large",
+        "The domain's MX record changed",
+        "The browser cache is full"
+      ],
+      "tier": 1,
+      "why": "Expiry is the most common cause of a sudden certificate warning."
+    },
+    {
+      "q": "Which of these should be switched on for hosting and CMS admin accounts first because it blunts stolen passwords?",
+      "right": "Two-factor authentication",
+      "wrong": [
+        "A longer page title",
+        "Directory listing",
+        "A lower DNS TTL"
+      ],
+      "tier": 1,
+      "why": "A second factor stops a stolen password from being enough."
+    },
+    {
+      "q": "A client wants to lose no more than an hour of orders if the server fails. Which figure is that?",
+      "right": "The recovery point objective",
+      "wrong": [
+        "The recovery time objective",
+        "The uptime percentage",
+        "The response time"
+      ],
+      "tier": 2,
+      "why": "RPO is how much data loss is tolerable, and it dictates backup frequency."
+    },
+    {
+      "q": "What does the 3-2-1 backup rule describe?",
+      "right": "Three copies on two kinds of media with one copy off-site",
+      "wrong": [
+        "Three servers in two data centres with one spare",
+        "Three daily, two weekly and one monthly backup",
+        "Three passwords, two people and one vault"
+      ],
+      "tier": 2,
+      "why": "It is the standard minimum for surviving a disk, machine or site loss."
+    },
+    {
+      "q": "A site is on shared hosting and slows at the same time each evening although its own traffic is flat. What is the likely cause?",
+      "right": "Another tenant on the same server is using the shared resources",
+      "wrong": [
+        "The TLS certificate is too short",
+        "The DNS TTL is too high",
+        "The backups are encrypted"
+      ],
+      "tier": 2,
+      "why": "Noisy neighbours are the classic shared-hosting problem."
+    },
+    {
+      "q": "A monitor pings the server and reports healthy, yet visitors see a 503 error page. What check would have caught it?",
+      "right": "An HTTP status code or keyword check on the page",
+      "wrong": [
+        "A longer DNS TTL",
+        "A bigger backup retention",
+        "A second nameserver"
+      ],
+      "tier": 2,
+      "why": "A ping only proves the machine answers; a status or keyword check tests the page."
+    },
+    {
+      "q": "When should a security patch for a widely used plugin be applied compared with a routine minor update?",
+      "right": "Promptly, because attackers study published fixes",
+      "wrong": [
+        "Only at the next quarterly review",
+        "Never until a major version exists",
+        "Only after the client asks"
+      ],
+      "tier": 2,
+      "why": "Exposure begins as soon as the fix is published."
+    },
+    {
+      "q": "Which header-only measure tells browsers to always use https for a domain for a stated period?",
+      "right": "HTTP Strict Transport Security",
+      "wrong": [
+        "A content security policy",
+        "X-Frame-Options",
+        "Cache-Control"
+      ],
+      "tier": 2,
+      "why": "HSTS sets the https-only period."
+    },
+    {
+      "q": "A client with no technical staff wants someone else to patch and monitor the server. Which hosting model fits?",
+      "right": "Managed hosting",
+      "wrong": [
+        "Colocation",
+        "A dedicated server on an unmanaged plan",
+        "Static site hosting"
+      ],
+      "tier": 2,
+      "why": "Managed hosting puts administration into the contract."
+    },
+    {
+      "q": "Which of these does a response time in a support agreement describe?",
+      "right": "How long until the provider acknowledges and starts on the request",
+      "wrong": [
+        "How long until the problem is fixed",
+        "How long the site stays up in a year",
+        "How long backups are kept"
+      ],
+      "tier": 2,
+      "why": "That is the difference between response and resolution time."
+    },
+    {
+      "q": "You are planning a server move on Friday. The DNS TTL is 86400. What should you do first?",
+      "right": "Lower the TTL several days ahead, at least one old-TTL period before the cutover",
+      "wrong": [
+        "Raise the TTL so records are cached longer",
+        "Change the nameservers and then lower the TTL",
+        "Delete the old A record before the move"
+      ],
+      "tier": 3,
+      "why": "Resolvers hold the old value for the old TTL; lowering it early shortens the switch."
+    },
+    {
+      "q": "A site moves host and the contact form emails stop arriving. The domain's email runs at a separate provider. What is the likely cause?",
+      "right": "The MX records were lost when the DNS zone was recreated",
+      "wrong": [
+        "The site's A record points at the old IP",
+        "The TLS certificate has expired",
+        "The TTL is too low"
+      ],
+      "tier": 3,
+      "why": "Recreating a zone without copying MX, TXT and other records breaks mail."
+    },
+    {
+      "q": "A backup uses a full backup on Sunday and an incremental every other night. A failure happens on Thursday. What is needed to restore?",
+      "right": "Sunday's full backup plus Monday, Tuesday and Wednesday's incrementals",
+      "wrong": [
+        "Only Wednesday's incremental",
+        "Only Sunday's full backup",
+        "Only Monday's and Wednesday's incrementals"
+      ],
+      "tier": 3,
+      "why": "Each incremental depends on the previous ones back to the full."
+    },
+    {
+      "q": "The same plan uses a differential on weekdays instead. What is needed to restore on Thursday?",
+      "right": "Sunday's full backup plus Wednesday's differential",
+      "wrong": [
+        "Every differential since Sunday",
+        "Only Wednesday's differential",
+        "Only Sunday's full backup"
+      ],
+      "tier": 3,
+      "why": "A differential holds all changes since the last full backup."
+    },
+    {
+      "q": "A plugin update on the live site breaks the checkout page. What should the maintenance plan have had ready?",
+      "right": "A rollback plan relying on a backup or previous version taken before the change",
+      "wrong": [
+        "A bigger DNS TTL",
+        "A status page on the same server",
+        "A longer certificate chain"
+      ],
+      "tier": 3,
+      "why": "Changes to production need a defined way back."
+    },
+    {
+      "q": "Which is the better place to test a major CMS upgrade first?",
+      "right": "A staging copy of the live site",
+      "wrong": [
+        "The live site during a quiet hour",
+        "The client's laptop",
+        "A fresh blank install with no content"
+      ],
+      "tier": 3,
+      "why": "Staging tests the upgrade with the real content and plugins without risk to visitors."
+    },
+    {
+      "q": "Why would a runbook help a part-time support person during a night-time incident?",
+      "right": "It gives step-by-step instructions for known incidents so they can act the same way as an expert",
+      "wrong": [
+        "It lists every password for the client",
+        "It removes the need for monitoring",
+        "It replaces the severity levels"
+      ],
+      "tier": 3,
+      "why": "Runbooks capture how to handle repeat incidents."
+    },
+    {
+      "q": "A client pays for a monthly plan and asks you to add a new booking feature. What is the right response?",
+      "right": "Treat it as a change request: quote it and get approval before starting",
+      "wrong": [
+        "Build it silently to keep the client happy",
+        "Refuse all further contact",
+        "Add it and raise the monthly price afterwards"
+      ],
+      "tier": 3,
+      "why": "Work beyond the scope needs a quote and approval."
+    },
+    {
+      "q": "After moving to https, a page shows a warning although the certificate is valid. What is the likely cause?",
+      "right": "Mixed content from a hard-coded http image or script",
+      "wrong": [
+        "The certificate has expired",
+        "The DNS TTL is too long",
+        "The site has too few backups"
+      ],
+      "tier": 3,
+      "why": "Resources still loaded over http make browsers warn."
+    },
+    {
+      "q": "A page returns 200 but shows an error message in the body. Which monitor would detect it?",
+      "right": "A keyword check for expected text",
+      "wrong": [
+        "A ping check",
+        "A DNS check",
+        "A certificate expiry check"
+      ],
+      "tier": 3,
+      "why": "A status code alone looks healthy."
+    },
+    {
+      "q": "Which report line best belongs in a monthly maintenance report for a non-technical client?",
+      "right": "Updates applied, backup restore test result and outages, in plain language",
+      "wrong": [
+        "The full web server configuration",
+        "Every line of the access log",
+        "The server's root password"
+      ],
+      "tier": 3,
+      "why": "Reports translate technical work into effect for the client."
+    },
+    {
+      "q": "Which statement about response and resolution times is the one a provider can safely promise?",
+      "right": "A response time target, because the start of work is within the provider's control",
+      "wrong": [
+        "A fixed resolution time for every fault",
+        "A guarantee that no outage will occur",
+        "That every fix takes under an hour"
+      ],
+      "tier": 3,
+      "why": "Resolution depends on causes the provider may not control."
+    },
+    {
+      "q": "A migration has finished and DNS is switched. Why keep the old host running for a few days?",
+      "right": "Visitors whose resolvers still hold the old address reach it, and it is a fallback",
+      "wrong": [
+        "It costs nothing to keep so it is always done",
+        "The certificate will not work otherwise",
+        "Email cannot be delivered without it"
+      ],
+      "tier": 3,
+      "why": "Propagation is not instant, and a rollback needs a live old host."
+    },
+    {
+      "q": "A hosting account is suspended after a dispute. The only backups were stored on the same account. What rule was broken?",
+      "right": "The off-site copy of the 3-2-1 rule",
+      "wrong": [
+        "The retention policy",
+        "The change request process",
+        "The staging rule"
+      ],
+      "tier": 4,
+      "why": "A backup that shares fate with the host is not off-site."
+    },
+    {
+      "q": "Ransomware encrypted a server and the attacker had the backup credentials. Which backup type would have survived?",
+      "right": "An immutable backup",
+      "wrong": [
+        "An incremental backup on the same disk",
+        "A server snapshot on the same provider account",
+        "A database dump in the web root"
+      ],
+      "tier": 4,
+      "why": "Immutable copies cannot be altered or deleted for the retention period."
+    },
+    {
+      "q": "A site has been cleaned, then the same malware appears again the next day. What most likely was missed?",
+      "right": "A backdoor, new admin user or scheduled task left by the attacker",
+      "wrong": [
+        "The DNS TTL",
+        "The CDN settings",
+        "The image sizes"
+      ],
+      "tier": 4,
+      "why": "Persistence mechanisms and the entry point must be removed."
+    },
+    {
+      "q": "You have cleaned a hacked site. Which step must come before restoring service?",
+      "right": "Rotate every credential that the attacker may have seen and close the entry point",
+      "wrong": [
+        "Raise the DNS TTL",
+        "Delete the access logs",
+        "Switch the CDN off"
+      ],
+      "tier": 4,
+      "why": "Otherwise the attacker returns with the old keys."
+    },
+    {
+      "q": "A client's customer data may have been taken from their site. What do you do first about the client?",
+      "right": "Tell them promptly with plain facts so they can meet their own reporting duty",
+      "wrong": [
+        "Wait until the investigation is complete",
+        "Delete the logs to avoid confusion",
+        "Report it to the press"
+      ],
+      "tier": 4,
+      "why": "Under UK GDPR the controller normally has 72 hours from becoming aware."
+    },
+    {
+      "q": "Which migration approach lets you test the real domain on the new server before DNS changes?",
+      "right": "Edit the hosts file on your own machine to point the domain at the new server",
+      "wrong": [
+        "Change the nameservers and watch",
+        "Lower the TTL to zero",
+        "Delete the old A record"
+      ],
+      "tier": 4,
+      "why": "A hosts file overrides resolution locally."
+    },
+    {
+      "q": "A deployment behind a proxy loops forever between http and https. The proxy talks to the origin over plain http. What is the likely fix?",
+      "right": "Make the origin's redirect use the forwarded protocol header instead of its own https variable",
+      "wrong": [
+        "Raise the HSTS lifetime",
+        "Remove the certificate",
+        "Switch off the CDN cache"
+      ],
+      "tier": 4,
+      "why": "The origin sees http on the proxy hop and keeps redirecting."
+    },
+    {
+      "q": "An alert fires at 03:00 and the on-call person does not respond. What should have happened?",
+      "right": "The escalation path moves it to the next named person after a stated time",
+      "wrong": [
+        "The alert is silently dropped until morning",
+        "The monitoring is switched off",
+        "The client is told to call their own developer"
+      ],
+      "tier": 4,
+      "why": "Escalation prevents unread alerts."
+    },
+    {
+      "q": "A client asks for 100 percent uptime in writing. What is the sound response?",
+      "right": "Explain that no provider can guarantee it and offer a measurable figure with a defined method",
+      "wrong": [
+        "Agree, because it is only a number",
+        "Refuse to work with the client",
+        "Promise it but exclude every outage"
+      ],
+      "tier": 4,
+      "why": "Only promise what can be evidenced and met."
+    },
+    {
+      "q": "A shared hosting server blocks your .htaccess rules. What is the first thing to check?",
+      "right": "Whether AllowOverride is enabled for the site's directory",
+      "wrong": [
+        "Whether the TTL is low",
+        "Whether the backup retention is long",
+        "Whether the CDN is on"
+      ],
+      "tier": 4,
+      "why": "Without AllowOverride, .htaccess rules are ignored."
+    },
+    {
+      "q": "A site's slow pages have a high time to first byte but small page weight. Where should you look first?",
+      "right": "The server: caching, slow queries and hosting capacity",
+      "wrong": [
+        "Image compression",
+        "Browser cache headers on fonts",
+        "Lazy loading"
+      ],
+      "tier": 4,
+      "why": "TTFB measures the server's response, not front-end weight."
+    },
+    {
+      "q": "A restore test succeeds but takes six hours. The client expects a restore within one hour. Which gap is this?",
+      "right": "The recovery time objective is not met",
+      "wrong": [
+        "The recovery point objective is not met",
+        "The backup retention is too short",
+        "The certificate chain is incomplete"
+      ],
+      "tier": 5,
+      "why": "The test shows the time to restore exceeds the target."
+    },
+    {
+      "q": "You set a DMARC policy to reject on a domain whose newsletter provider is not in SPF or DKIM. What will happen?",
+      "right": "Legitimate newsletter mail will be rejected",
+      "wrong": [
+        "Nothing, because DMARC is advisory only",
+        "All mail will be delivered with a warning",
+        "The MX records will be removed"
+      ],
+      "tier": 5,
+      "why": "Enforcement should follow a monitoring period to discover legitimate senders."
+    },
+    {
+      "q": "A wildcard certificate's private key is copied to four servers. What is the second-order effect?",
+      "right": "One leaked key now exposes every subdomain at once",
+      "wrong": [
+        "Renewals no longer work",
+        "The padlock disappears",
+        "The DNS TTL doubles"
+      ],
+      "tier": 5,
+      "why": "Wider coverage widens the blast radius of a leak."
+    },
+    {
+      "q": "A hardening change adds a strict content security policy and the checkout stops working. What is the most likely cause?",
+      "right": "A legitimate third-party script source was not allowed by the policy",
+      "wrong": [
+        "The certificate expired",
+        "The DNS record for www was removed",
+        "The backup ran during the change"
+      ],
+      "tier": 5,
+      "why": "A CSP blocks any source not listed."
+    },
+    {
+      "q": "Automatic updates are enabled for a client site. What must accompany them?",
+      "right": "Monitoring that detects breakage soon after an update",
+      "wrong": [
+        "Removal of the backups",
+        "A longer TTL",
+        "A lower severity level"
+      ],
+      "tier": 5,
+      "why": "Untested updates can silently break the site."
+    },
+    {
+      "q": "A staging site sends real customer emails during testing. What was missing?",
+      "right": "Controls that stop staging from sending live email or taking real payments",
+      "wrong": [
+        "A lower DNS TTL",
+        "A CDN",
+        "A larger backup"
+      ],
+      "tier": 5,
+      "why": "Staging must be isolated from real side effects."
+    },
+    {
+      "q": "What does deploy-check.php do on the GGLink site?",
+      "right": "It only reports, changes nothing, and exits non-zero if anything would break the site",
+      "wrong": [
+        "It uploads the vendor folder",
+        "It restores the latest backup",
+        "It creates the first admin account"
+      ],
+      "tier": 2,
+      "why": "It is a report-only check and refuses to run over HTTP."
+    },
+    {
+      "q": "A GGLink release has broken a page. Content is in the database. What does the deploy guide say to do?",
+      "right": "Restore the previous files and leave storage/ alone",
+      "wrong": [
+        "Restore storage/gglink.sqlite over the live one",
+        "Delete storage/ so it is recreated",
+        "Run composer install on the server"
+      ],
+      "tier": 3,
+      "why": "Enquiries keep arriving, so the database is not rolled back for a code fault."
+    },
+    {
+      "q": "After a GGLink deploy, https://www.gglink.co.uk/storage/gglink.sqlite downloads a file. What does that mean?",
+      "right": "The .htaccess rules are not being honoured and must be fixed before going live",
+      "wrong": [
+        "The deploy succeeded",
+        "The backup was created",
+        "The cache was warmed"
+      ],
+      "tier": 3,
+      "why": "It should return 403 or 404; a download is a possible data breach."
+    },
+    {
+      "q": "Which line backs up the GGLink database before a release, per the deploy guide?",
+      "code": "cp storage/gglink.sqlite storage/backup-$(date +%F).sqlite",
+      "right": "cp storage/gglink.sqlite storage/backup-$(date +%F).sqlite",
+      "wrong": [
+        "rm storage/gglink.sqlite",
+        "composer update --no-dev",
+        "chmod 777 storage/gglink.sqlite"
+      ],
+      "tier": 4,
+      "why": "A dated copy gives something to compare against or recover from."
+    },
+    {
+      "q": "The GGLearn deploy script excludes certain paths from rsync. Which one protects the production database?",
+      "code": "rsync -az --delete \\\n  --exclude node_modules --exclude .next --exclude .git \\\n  --exclude 'data/*.db*' --exclude '.env*' \\\n  ./ \"$HOST:$DIR/\"",
+      "right": "data/*.db*",
+      "wrong": [
+        "node_modules",
+        ".next",
+        "deploy/"
+      ],
+      "tier": 4,
+      "why": "Excluding the database files prevents a deploy from overwriting production data."
+    },
+    {
+      "q": "In deploy/update-cloudflare-ips.sh, what is the purpose of the check on the number of matching lines before writing the file?",
+      "code": "[ \"$(printf '%s\\n' \"$V4\" | grep -cE '^[0-9.]+/[0-9]+$')\" -ge 5 ] || { echo \"unexpected IPv4 list, not writing\" >&2; exit 1; }",
+      "right": "To avoid writing an empty or broken allow-list that would lock everyone out",
+      "wrong": [
+        "To speed up the download",
+        "To compress the file",
+        "To rotate the certificate"
+      ],
+      "tier": 4,
+      "why": "A bad fetch must never produce an empty allow-list."
+    },
+    {
+      "q": "GGLearn's Apache vhost uses a plain Include for apache-cloudflare-only.conf. What happens if the file is missing?",
+      "code": "Include /var/www/gglearn.gglink.co.uk/deploy/apache-cloudflare-only.conf",
+      "right": "Apache refuses to load the configuration instead of serving the site to everyone",
+      "wrong": [
+        "Apache serves the site to everyone silently",
+        "Apache skips the line and warns",
+        "Cloudflare blocks the requests"
+      ],
+      "tier": 4,
+      "why": "A plain Include fails loudly, unlike IncludeOptional."
+    },
+    {
+      "q": "GGSocial's .env exists only on the server and a deploy uses rsync --delete without excluding it. What is the outcome?",
+      "right": "The .env is deleted, everyone is logged out and stored platform tokens cannot be decrypted",
+      "wrong": [
+        "Nothing, because rsync ignores dotfiles",
+        "The .env is copied back from git",
+        "Only the logs are removed"
+      ],
+      "tier": 5,
+      "why": "Losing APP_SECRET invalidates sessions and encrypted tokens."
+    },
+    {
+      "q": "On the GGLink server the live GGSocial :443 vhost is a regular file in sites-enabled that has drifted from sites-available. You edit the sites-available copy and run apachectl configtest. What happens?",
+      "right": "The test passes, Apache reloads, and nothing changes",
+      "wrong": [
+        "The change takes effect immediately",
+        "Apache refuses to reload",
+        "The sites-enabled file is overwritten"
+      ],
+      "tier": 5,
+      "why": "Edit the enabled copy, check with apachectl -S, back it up and then reload."
+    },
+    {
+      "q": "The GGLearn database runs in WAL mode. Why does a plain copy of the .db file risk a bad backup?",
+      "right": "Recent writes may still be in the write-ahead log and be missed",
+      "wrong": [
+        "WAL mode encrypts the file",
+        "The file is locked by the kernel",
+        "WAL mode deletes the database on copy"
+      ],
+      "tier": 5,
+      "why": "deploy/seed-content.sh uses better-sqlite3's backup for a consistent snapshot."
+    },
+    {
+      "q": "A drizzle-kit push would add a NOT NULL column to a table that has rows. How does GGLearn's deploy behave?",
+      "right": "It stops and fails the deploy because --force is deliberately not used",
+      "wrong": [
+        "It runs a delete on the table and continues",
+        "It adds the column with random values",
+        "It skips the deploy silently"
+      ],
+      "tier": 5,
+      "why": "Failing is preferable to deleting production rows."
+    }
+  ]
+}

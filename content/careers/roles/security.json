@@ -1,0 +1,99 @@
+{
+  "role": "security",
+  "name": "Security",
+  "bridges": [
+    {
+      "from": "developer",
+      "fromLevel": 2,
+      "toLevel": 2
+    },
+    {
+      "from": "devops",
+      "fromLevel": 2,
+      "toLevel": 2
+    },
+    {
+      "from": "tester",
+      "fromLevel": 3,
+      "toLevel": 2
+    }
+  ],
+  "rungs": [
+    {
+      "title": "Security Analyst",
+      "summary": "Learning to watch, triage and escalate.",
+      "knowledge": "Knows common threats, the company's controls and the monitoring tools.",
+      "delivery": "Triages alerts and follows runbooks, escalating what they cannot close.",
+      "leadership": "Reports calmly and clearly, including when it is their own mistake.",
+      "steps": []
+    },
+    {
+      "title": "Security Engineer",
+      "summary": "Builds and operates security controls and finds weaknesses.",
+      "knowledge": "Fluent in secure development, vulnerability management and security operations.",
+      "delivery": "Fixes and prevents weaknesses and responds to incidents with a written account.",
+      "leadership": "Helps developers fix issues without blame; explains risk in plain words.",
+      "steps": [
+        ["governance-compliance", 8],
+        ["sdlc-security", 5],
+        ["security-operations", 8],
+        ["foundations-linux", 5],
+        ["tech-cloud-devops", 5],
+        ["foundations-restapi", 5],
+        ["git-titan", 5],
+        ["tools-build-ship", 5],
+        ["tools-plan-design", 5],
+        ["product-management-core", 5],
+        ["engineering-leadership", 5]
+      ]
+    },
+    {
+      "title": "Senior Security Engineer",
+      "summary": "Owns security for a platform and leads incident response.",
+      "knowledge": "Deep in threat modelling, cloud security and AI risk.",
+      "delivery": "Owns the security of a platform and leads incidents end to end.",
+      "leadership": "Mentors and builds the relationships that make people report problems early.",
+      "steps": [
+        ["sdlc-security", 12],
+        ["security-operations", 12],
+        ["tech-cloud-devops", 8],
+        ["eval-safety-titan", 8],
+        ["service-design-pricing", 5],
+        ["executive-communication", 5]
+      ]
+    },
+    {
+      "title": "Security Lead",
+      "summary": "Leads the security programme and the team.",
+      "knowledge": "Balances risk, cost and compliance across the company.",
+      "delivery": "Owns the security roadmap, audits and incident readiness.",
+      "leadership": "Leads a team and advises leaders on risk they would rather not hear about.",
+      "steps": [
+        ["security-operations", 16],
+        ["governance-compliance", 10],
+        ["people-operations", 5],
+        ["payments-billing", 5],
+        ["tools-build-ship", 8],
+        ["sdlc-security", 14],
+        ["product-management-core", 8]
+      ]
+    },
+    {
+      "title": "Head of Security",
+      "summary": "Owns security strategy and accountability to the board.",
+      "knowledge": "Sees security as business risk, regulation and customer trust.",
+      "delivery": "Owns security strategy, budget and the response to a serious breach.",
+      "leadership": "Leads leaders and reports risk to the executive team and board.",
+      "steps": [
+        ["security-operations", 18],
+        ["governance-compliance", 12],
+        ["people-operations", 8],
+        ["delivery-management", 8],
+        ["tech-cloud-devops", 10],
+        ["tools-plan-design", 8],
+        ["brand-positioning-voice", 5],
+        ["tech-strategy-roadmap", 8]
+      ]
+    }
+  ]
+}

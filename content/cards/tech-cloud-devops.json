@@ -1,0 +1,3038 @@
+{
+ "slug": "tech-cloud-devops",
+ "name": "Technologies: cloud and DevOps",
+ "description": "Kubernetes, Terraform, Nginx, GitHub Actions.",
+ "roles": "developer",
+ "kind": "technology",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "model": "cloud model or characteristic",
+  "resp": "shared-responsibility item",
+  "compute": "compute option",
+  "storage": "cloud storage concept",
+  "net": "cloud networking concept",
+  "iam": "identity and access concept",
+  "data": "managed data service concept",
+  "geo": "resilience concept",
+  "k8s": "Kubernetes concept",
+  "cont": "container concept",
+  "iac": "Terraform concept",
+  "ci": "CI workflow concept",
+  "obs": "observability tool or concept",
+  "cost": "cost control practice",
+  "ours": "fact about our production setup"
+ },
+ "cards": [
+  {
+   "group": "model",
+   "subject": "Infrastructure as a service",
+   "tier": 1,
+   "says": [
+    "rents virtual machines, storage and networks that the customer configures",
+    "leaves the guest operating system and everything above it to the customer",
+    "gives the customer the most control of the three classic service models"
+   ],
+   "use": "need full control of the operating system and the software installed on it",
+   "not": [
+    "hides the operating system and runtime from the customer"
+   ],
+   "like": [
+    "Platform as a service",
+    "Software as a service"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "Platform as a service",
+   "tier": 1,
+   "says": [
+    "runs customer application code without the customer managing servers or the operating system",
+    "patches the runtime and handles scaling on the customer's behalf",
+    "trades some control for less operational work"
+   ],
+   "use": "want to push code and let the platform run it",
+   "not": [
+    "gives the customer root access to the underlying host"
+   ],
+   "like": [
+    "Infrastructure as a service",
+    "Software as a service",
+    "Function as a service"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "Software as a service",
+   "tier": 1,
+   "says": [
+    "delivers a finished application over the internet",
+    "leaves the customer to manage only users, configuration and their own data",
+    "needs no installation or servers from the customer"
+   ],
+   "use": "need a ready-made business tool such as email or a CRM without running anything",
+   "not": [
+    "lets the customer choose the operating system it runs on"
+   ],
+   "like": [
+    "Infrastructure as a service",
+    "Platform as a service"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "Function as a service",
+   "tier": 2,
+   "says": [
+    "runs short pieces of code in response to events",
+    "scales to zero when no events arrive",
+    "is billed by how much code actually executes rather than by idle servers"
+   ],
+   "use": "have spiky, event-driven work and no wish to keep a server idle",
+   "not": [
+    "keeps a dedicated server warm between requests by design"
+   ],
+   "like": [
+    "Platform as a service"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A public cloud",
+   "tier": 1,
+   "says": [
+    "shares provider-owned data centres among many customers on demand",
+    "lets customers rent capacity with no hardware purchase",
+    "isolates tenants logically rather than by giving each its own building"
+   ],
+   "use": "want capacity on demand without owning hardware",
+   "not": [
+    "dedicates all hardware to a single organisation"
+   ],
+   "like": [
+    "A hybrid cloud"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A hybrid cloud",
+   "tier": 2,
+   "says": [
+    "connects on-premises infrastructure with a public cloud",
+    "lets workloads and data move between the two environments",
+    "needs reliable network links and consistent identity across both sides"
+   ],
+   "use": "must keep some systems on site while using cloud services for the rest",
+   "not": [
+    "uses two different public providers at once"
+   ],
+   "like": [
+    "A public cloud",
+    "Multi-cloud"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "Multi-cloud",
+   "tier": 4,
+   "says": [
+    "uses more than one public cloud provider",
+    "lowers dependence on a single vendor",
+    "raises operational complexity and the range of skills a team needs"
+   ],
+   "use": "want to avoid reliance on one provider or use a service only another provider offers",
+   "not": [
+    "keeps some systems on site and others in the cloud"
+   ],
+   "like": [
+    "A hybrid cloud",
+    "Vendor lock-in"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "Vendor lock-in",
+   "tier": 3,
+   "says": [
+    "makes leaving a provider costly because of proprietary services and data formats",
+    "grows as more provider-specific managed services are adopted",
+    "is reduced by open standards and portable tooling, though never to zero"
+   ],
+   "use": "weigh the convenience of a proprietary managed service against future portability",
+   "not": [
+    "is removed entirely by running on virtual machines"
+   ],
+   "like": [
+    "Multi-cloud"
+   ]
+  },
+  {
+   "group": "model",
+   "subject": "A landing zone",
+   "tier": 4,
+   "says": [
+    "provides a pre-configured, multi-account cloud baseline with guardrails",
+    "sets up shared identity, logging and networking before teams deploy workloads",
+    "lets new accounts start compliant instead of being hardened afterwards"
+   ],
+   "use": "onboard many teams and want each to start from a secure, consistent base",
+   "not": [
+    "is a single virtual machine image used by all teams"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "The shared responsibility model",
+   "tier": 1,
+   "says": [
+    "splits security duties between the cloud provider and the customer",
+    "moves the dividing line depending on the service model used",
+    "never leaves the customer with zero responsibility"
+   ],
+   "use": "need to decide who must patch, configure or monitor a layer",
+   "not": [
+    "makes the provider responsible for the customer's data and access settings"
+   ],
+   "like": [
+    "Security of the cloud",
+    "Security in the cloud"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Security of the cloud",
+   "tier": 2,
+   "says": [
+    "covers the physical data centres, hosts and virtualisation layer",
+    "is the provider's duty under the shared responsibility model",
+    "is evidenced to customers through independent audit reports"
+   ],
+   "use": "ask who protects the buildings and hypervisors",
+   "not": [
+    "covers how a customer configures their own storage buckets"
+   ],
+   "like": [
+    "Security in the cloud"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Security in the cloud",
+   "tier": 2,
+   "says": [
+    "covers the customer's data, identities, access settings and configuration",
+    "stays with the customer in every service model",
+    "includes deciding who may read a storage bucket"
+   ],
+   "use": "ask who must set permissions and protect the data",
+   "not": [
+    "is handled entirely by the provider on managed services"
+   ],
+   "like": [
+    "Security of the cloud"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Guest operating system patching",
+   "tier": 4,
+   "says": [
+    "is the customer's job on infrastructure-as-a-service virtual machines",
+    "passes to the provider when the customer uses a platform or serverless service",
+    "leaves known vulnerabilities open if the customer ignores it"
+   ],
+   "use": "run virtual machines and must keep their operating system current",
+   "not": [
+    "is always done by the provider whatever service model is chosen"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "A publicly exposed storage bucket",
+   "tier": 3,
+   "says": [
+    "is usually a customer configuration error rather than a provider failure",
+    "lets anyone with the address read the contents",
+    "is prevented by account-wide block-public-access guardrails"
+   ],
+   "use": "investigate a data leak from cloud storage",
+   "not": [
+    "happens only when the provider's data centre is breached"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Encryption at rest",
+   "tier": 2,
+   "says": [
+    "protects stored data if the underlying disks or backups are accessed",
+    "is applied to volumes, buckets and databases",
+    "is separate from protecting data while it travels"
+   ],
+   "use": "worry about stolen disks or leaked backups",
+   "not": [
+    "protects data while it crosses the network"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Customer-managed keys",
+   "tier": 5,
+   "says": [
+    "let the customer control the lifecycle of the key that encrypts provider-stored data",
+    "allow access to be cut off by disabling the key",
+    "add key-rotation and permission duties to the customer"
+   ],
+   "use": "must prove you can revoke the provider's access to your data",
+   "not": [
+    "remove the need to protect the key at all"
+   ],
+   "like": [
+    "Encryption at rest"
+   ]
+  },
+  {
+   "group": "compute",
+   "subject": "A virtual machine",
+   "tier": 1,
+   "says": [
+    "emulates a complete computer with its own operating system on shared hardware",
+    "boots from an image and is billed while it runs",
+    "lets an existing application move to the cloud with few changes"
+   ],
+   "use": "need to lift an existing application over unchanged",
+   "not": [
+    "shares the host's operating system kernel with other guests"
+   ],
+   "like": [
+    "A serverless function",
+    "A bare-metal server"
+   ]
+  },
+  {
+   "group": "compute",
+   "subject": "An auto scaling group",
+   "tier": 3,
+   "says": [
+    "keeps the number of instances between a minimum and a maximum",
+    "replaces instances that fail their health check",
+    "adds or removes instances based on a metric or schedule"
+   ],
+   "use": "need a fleet to grow under load and heal itself",
+   "not": [
+    "resizes the CPU of one running instance in place"
+   ]
+  },
+  {
+   "group": "compute",
+   "subject": "A spot instance",
+   "tier": 3,
+   "says": [
+    "uses spare provider capacity at a discount",
+    "can be reclaimed with short notice",
+    "suits fault-tolerant, interruptible work"
+   ],
+   "use": "run a checkpointed batch job that can be restarted",
+   "not": [
+    "is guaranteed to run until you stop it"
+   ],
+   "like": [
+    "A bare-metal server"
+   ]
+  },
+  {
+   "group": "compute",
+   "subject": "A bare-metal server",
+   "tier": 4,
+   "says": [
+    "gives one tenant the whole physical machine with no shared hypervisor",
+    "allows direct access to hardware features",
+    "suits licences tied to physical cores"
+   ],
+   "use": "need direct hardware access or core-based licensing",
+   "not": [
+    "is a virtual machine sharing a host with strangers"
+   ],
+   "like": [
+    "A virtual machine"
+   ]
+  },
+  {
+   "group": "compute",
+   "subject": "A serverless function",
+   "tier": 2,
+   "says": [
+    "runs stateless code in response to an event",
+    "is started and scaled by the platform with no server to manage",
+    "has a time limit on each invocation"
+   ],
+   "use": "want code to run only when an upload or message arrives",
+   "not": [
+    "keeps local state on disk between invocations"
+   ],
+   "like": [
+    "A virtual machine",
+    "Serverless containers"
+   ]
+  },
+  {
+   "group": "compute",
+   "subject": "A cold start",
+   "tier": 4,
+   "says": [
+    "delays the first invocation while a fresh execution environment is prepared",
+    "adds latency to functions that have been idle",
+    "can be reduced by keeping some environments warm"
+   ],
+   "use": "see occasional slow responses from a rarely used function",
+   "not": [
+    "is a failure to restart a crashed server"
+   ]
+  },
+  {
+   "group": "compute",
+   "subject": "Serverless containers",
+   "tier": 3,
+   "says": [
+    "run container images without the customer managing nodes",
+    "scale with requests, often down to zero",
+    "suit stateless web services packaged as images"
+   ],
+   "use": "have a containerised web service and no wish to run a cluster",
+   "not": [
+    "require the customer to patch the host operating system"
+   ],
+   "like": [
+    "A serverless function",
+    "A virtual machine"
+   ]
+  },
+  {
+   "group": "compute",
+   "subject": "The instance metadata service",
+   "tier": 4,
+   "says": [
+    "serves an instance's own details and temporary role credentials on a link-local address",
+    "is a target in server-side request forgery attacks",
+    "is hardened by requiring a session token before answering"
+   ],
+   "use": "want an instance to read its role credentials without stored keys",
+   "not": [
+    "is a public endpoint that lists every instance in the account"
+   ]
+  },
+  {
+   "group": "storage",
+   "subject": "Object storage",
+   "tier": 1,
+   "says": [
+    "stores data as objects addressed by a key in a flat namespace",
+    "is accessed through an HTTP API rather than mounted as a disk",
+    "scales to very large amounts of data without managing volumes"
+   ],
+   "use": "keep user uploads, backups or static website assets",
+   "not": [
+    "is mounted as a disk and formatted with a file system"
+   ],
+   "like": [
+    "Block storage",
+    "File storage"
+   ]
+  },
+  {
+   "group": "storage",
+   "subject": "Block storage",
+   "tier": 1,
+   "says": [
+    "presents a raw volume that the operating system formats like a disk",
+    "is normally attached to one instance at a time",
+    "gives low-latency reads and writes suited to databases and boot disks"
+   ],
+   "use": "need a fast disk for a database server",
+   "not": [
+    "is addressed by object keys over HTTP"
+   ],
+   "like": [
+    "Object storage",
+    "File storage"
+   ]
+  },
+  {
+   "group": "storage",
+   "subject": "File storage",
+   "tier": 2,
+   "says": [
+    "shares a network file system that many servers can mount at once",
+    "supports ordinary directories and file locking",
+    "suits applications that expect a shared path"
+   ],
+   "use": "need several servers to read and write the same directory tree",
+   "not": [
+    "is attached to exactly one instance at a time"
+   ],
+   "like": [
+    "Object storage",
+    "Block storage"
+   ]
+  },
+  {
+   "group": "storage",
+   "subject": "A bucket",
+   "tier": 1,
+   "says": [
+    "is the named top-level container that holds objects",
+    "carries its own access policy and settings",
+    "cannot be nested inside another bucket"
+   ],
+   "use": "need a place to group objects with one access policy",
+   "not": [
+    "is a disk volume attached to a server"
+   ]
+  },
+  {
+   "group": "storage",
+   "subject": "A volume snapshot",
+   "tier": 2,
+   "says": [
+    "captures a point-in-time copy of a block volume",
+    "is stored independently of the instance it came from",
+    "can be used to create a new volume"
+   ],
+   "use": "need a restorable copy of a disk before a risky change",
+   "not": [
+    "keeps updating itself as the volume changes"
+   ],
+   "like": [
+    "Object versioning"
+   ]
+  },
+  {
+   "group": "storage",
+   "subject": "Object versioning",
+   "tier": 4,
+   "says": [
+    "keeps earlier versions of an object after it is overwritten or deleted",
+    "lets an accidentally deleted object be restored",
+    "increases storage use because old versions are kept"
+   ],
+   "use": "want to undo an accidental overwrite of a stored file",
+   "not": [
+    "compresses objects to save space"
+   ],
+   "like": [
+    "A volume snapshot"
+   ]
+  },
+  {
+   "group": "storage",
+   "subject": "A storage lifecycle rule",
+   "tier": 3,
+   "says": [
+    "moves or expires objects automatically as they age",
+    "cuts cost by shifting cold data to cheaper classes",
+    "can delete incomplete uploads and old versions"
+   ],
+   "use": "want logs to move to cold storage after a month and be deleted after a year",
+   "not": [
+    "encrypts objects when they are first written"
+   ]
+  },
+  {
+   "group": "storage",
+   "subject": "A presigned URL",
+   "tier": 3,
+   "says": [
+    "grants time-limited access to one private object",
+    "avoids sharing the account's credentials",
+    "stops working once its expiry passes"
+   ],
+   "use": "let a browser upload or download one private file directly",
+   "not": [
+    "makes the whole bucket public"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A virtual private cloud",
+   "tier": 1,
+   "says": [
+    "provides a logically isolated virtual network with its own address range",
+    "contains subnets, route tables and gateways",
+    "is where most cloud resources are placed"
+   ],
+   "use": "need a private network for your cloud resources",
+   "not": [
+    "is a physical network in the provider's building"
+   ],
+   "like": [
+    "A subnet"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A subnet",
+   "tier": 1,
+   "says": [
+    "divides a virtual network's address range into a smaller block",
+    "is usually tied to a single availability zone",
+    "is public or private depending on its routes"
+   ],
+   "use": "want to separate tiers of an application inside one network",
+   "not": [
+    "spans several regions at once"
+   ],
+   "like": [
+    "A virtual private cloud"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A public subnet",
+   "tier": 2,
+   "says": [
+    "has a route to an internet gateway",
+    "hosts internet-facing load balancers or bastion hosts",
+    "needs instances to hold public addresses to be reached directly"
+   ],
+   "use": "place a load balancer that must be reachable from the internet",
+   "not": [
+    "has no route to the internet at all"
+   ],
+   "like": [
+    "A private subnet"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A private subnet",
+   "tier": 2,
+   "says": [
+    "has no direct inbound route from the internet",
+    "hosts databases and application servers",
+    "reaches the internet only through a NAT gateway or endpoint"
+   ],
+   "use": "place a database that only the application should reach",
+   "not": [
+    "is the place for the internet-facing load balancer"
+   ],
+   "like": [
+    "A public subnet"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A NAT gateway",
+   "tier": 4,
+   "says": [
+    "lets private resources start outbound connections to the internet",
+    "blocks unsolicited inbound connections",
+    "translates private addresses to a public one"
+   ],
+   "use": "let private servers download updates without being reachable",
+   "not": [
+    "makes private instances directly reachable from the internet"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A route table",
+   "tier": 3,
+   "says": [
+    "decides where traffic from a subnet is sent based on its destination",
+    "contains a local route for the network's own addresses",
+    "is associated with one or more subnets"
+   ],
+   "use": "send traffic for an on-premises range through a VPN",
+   "not": [
+    "filters traffic by allowing or denying ports"
+   ],
+   "like": [
+    "A security group"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A private endpoint",
+   "tier": 4,
+   "says": [
+    "gives a managed service a private address inside your network",
+    "keeps traffic off the public internet",
+    "lets access be limited to the network that holds the endpoint"
+   ],
+   "use": "reach a storage service without sending traffic across the internet",
+   "not": [
+    "opens the service to the whole internet"
+   ],
+   "like": [
+    "A NAT gateway"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A security group",
+   "tier": 2,
+   "says": [
+    "acts as a stateful firewall attached to a resource's network interface",
+    "allows return traffic for an allowed connection automatically",
+    "is typically written as allow rules rather than deny rules"
+   ],
+   "use": "limit a database to connections from the application servers",
+   "not": [
+    "is stateless and needs a rule for return traffic"
+   ],
+   "like": [
+    "A network ACL"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "A network ACL",
+   "tier": 4,
+   "says": [
+    "filters traffic at the subnet boundary",
+    "is stateless, so return traffic needs its own rule",
+    "evaluates numbered rules in order and can deny"
+   ],
+   "use": "add a coarse subnet-wide deny for a hostile address range",
+   "not": [
+    "tracks connections so replies are allowed automatically"
+   ],
+   "like": [
+    "A security group"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "An application load balancer",
+   "tier": 2,
+   "says": [
+    "routes requests by host name, path or header",
+    "terminates TLS and understands HTTP",
+    "can send different paths to different backend groups"
+   ],
+   "use": "route /api and /static to different services",
+   "not": [
+    "forwards raw TCP without reading HTTP"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "An access policy",
+   "tier": 2,
+   "says": [
+    "lists which actions are allowed or denied on which resources",
+    "attaches to an identity or a resource",
+    "is a document evaluated on every request"
+   ],
+   "use": "grant read-only access to one bucket",
+   "not": [
+    "stores the password for an account"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "An IAM role",
+   "tier": 2,
+   "says": [
+    "grants temporary permissions to whoever assumes it",
+    "has no long-lived password or key of its own",
+    "is assumed by people, services or workloads"
+   ],
+   "use": "give a virtual machine access to storage without storing keys",
+   "not": [
+    "is a fixed login with a permanent password"
+   ],
+   "like": [
+    "A long-lived access key"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "A long-lived access key",
+   "tier": 3,
+   "says": [
+    "is a static credential that stays valid until rotated or deleted",
+    "is often leaked through code repositories",
+    "should be replaced by roles where possible"
+   ],
+   "use": "find a credential that was committed to a repository",
+   "not": [
+    "expires automatically after a few hours"
+   ],
+   "like": [
+    "Temporary credentials"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Temporary credentials",
+   "tier": 3,
+   "says": [
+    "expire automatically after a short period",
+    "are issued when a role is assumed",
+    "limit the damage if they leak"
+   ],
+   "use": "grant a build job access for the duration of one run",
+   "not": [
+    "remain valid until someone deletes them"
+   ],
+   "like": [
+    "A long-lived access key"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "Workload identity",
+   "tier": 5,
+   "says": [
+    "lets a running workload obtain cloud credentials from its platform identity",
+    "removes the need to store a secret in the application",
+    "ties permissions to the workload rather than to a person"
+   ],
+   "use": "let a pod call a cloud API with no stored key",
+   "not": [
+    "relies on a shared admin password in an environment variable"
+   ],
+   "like": [
+    "An IAM role"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "A permission boundary",
+   "tier": 5,
+   "says": [
+    "caps the maximum permissions an identity can ever be granted",
+    "applies even when attached policies grant more",
+    "lets delegated admins create roles without exceeding a limit"
+   ],
+   "use": "allow developers to create roles but never beyond a set ceiling",
+   "not": [
+    "grants permissions to an identity"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "A privilege escalation path",
+   "tier": 5,
+   "says": [
+    "lets a limited identity gain more rights through permitted actions",
+    "often arises from permission to attach policies or pass roles",
+    "is found by reviewing which permissions can modify permissions"
+   ],
+   "use": "review whether a developer role can make itself an administrator",
+   "not": [
+    "is an authorised increase approved in a ticket"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A managed relational database",
+   "tier": 1,
+   "says": [
+    "automates patching, backups and failover for a SQL engine",
+    "leaves schema design and query tuning to the customer",
+    "does not normally give the customer access to the host operating system"
+   ],
+   "use": "want a SQL database without administering the server",
+   "not": [
+    "lets the customer log in to the host as root"
+   ],
+   "like": [
+    "A managed NoSQL store"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A read replica",
+   "tier": 4,
+   "says": [
+    "serves read queries from a copy of the primary's data",
+    "lags the primary slightly because it replicates asynchronously",
+    "scales reads but not writes"
+   ],
+   "use": "relieve a primary database overloaded by reporting queries",
+   "not": [
+    "accepts writes that are merged back automatically"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "Point-in-time recovery",
+   "tier": 5,
+   "says": [
+    "restores a database to any moment within the retention window",
+    "works by replaying logged changes on top of a backup",
+    "is the way to undo a bad delete issued minutes ago"
+   ],
+   "use": "recover from an accidental DELETE without a WHERE clause",
+   "not": [
+    "restores only the most recent nightly backup"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A managed NoSQL store",
+   "tier": 2,
+   "says": [
+    "scales horizontally by spreading items across partitions",
+    "trades joins and flexible queries for scale and speed",
+    "is queried mainly by key"
+   ],
+   "use": "need huge throughput with simple lookups by key",
+   "not": [
+    "supports arbitrary multi-table joins by design"
+   ],
+   "like": [
+    "A managed relational database"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "An in-memory cache",
+   "tier": 2,
+   "says": [
+    "keeps hot data in RAM to cut latency and database load",
+    "can lose its contents on restart",
+    "needs an expiry or invalidation strategy"
+   ],
+   "use": "serve repeated reads faster than the database can",
+   "not": [
+    "is the durable system of record"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A message queue",
+   "tier": 2,
+   "says": [
+    "holds each message until one consumer processes it",
+    "decouples how fast producers send from how fast consumers work",
+    "smooths bursts of work"
+   ],
+   "use": "let a web request hand slow work to background workers",
+   "not": [
+    "delivers every message to all subscribers at once"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "A dead-letter queue",
+   "tier": 4,
+   "says": [
+    "collects messages that repeatedly fail processing",
+    "keeps poison messages from blocking the main queue",
+    "lets engineers inspect and replay failures"
+   ],
+   "use": "stop one malformed message from being retried forever",
+   "not": [
+    "is where successfully processed messages are archived"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "At-least-once delivery",
+   "tier": 5,
+   "says": [
+    "may deliver a message more than once",
+    "requires consumers to be idempotent",
+    "is a common default in queues"
+   ],
+   "use": "design a consumer that must not charge a customer twice",
+   "not": [
+    "guarantees exactly one delivery with no duplicates"
+   ]
+  },
+  {
+   "group": "geo",
+   "subject": "A region",
+   "tier": 1,
+   "says": [
+    "is a geographic area containing several data centres",
+    "is chosen for latency, data residency and available services",
+    "keeps its services independent of other regions"
+   ],
+   "use": "decide where to place a workload near its users",
+   "not": [
+    "is a single data centre room"
+   ],
+   "like": [
+    "An availability zone"
+   ]
+  },
+  {
+   "group": "geo",
+   "subject": "An availability zone",
+   "tier": 1,
+   "says": [
+    "is one or more isolated data centres inside a region",
+    "has independent power, cooling and networking",
+    "is linked to its siblings by fast, low-latency networks"
+   ],
+   "use": "spread a service so one building failure does not stop it",
+   "not": [
+    "is a separate country-level region"
+   ],
+   "like": [
+    "A region"
+   ]
+  },
+  {
+   "group": "geo",
+   "subject": "A multi-zone deployment",
+   "tier": 2,
+   "says": [
+    "spreads instances across availability zones",
+    "survives the loss of one zone",
+    "needs a load balancer to share traffic between zones"
+   ],
+   "use": "want a service to survive a data centre outage",
+   "not": [
+    "protects against the loss of an entire region"
+   ],
+   "like": [
+    "Active-passive failover"
+   ]
+  },
+  {
+   "group": "geo",
+   "subject": "Active-passive failover",
+   "tier": 4,
+   "says": [
+    "keeps a standby environment in a second region",
+    "sends traffic there only after the primary fails",
+    "costs less than running both regions at once"
+   ],
+   "use": "want regional disaster recovery without double running cost",
+   "not": [
+    "serves users from both regions simultaneously"
+   ],
+   "like": [
+    "Active-active"
+   ]
+  },
+  {
+   "group": "geo",
+   "subject": "Active-active",
+   "tier": 5,
+   "says": [
+    "serves users from several regions at the same time",
+    "must resolve data replication conflicts",
+    "gives the fastest recovery when one region fails"
+   ],
+   "use": "need near-zero downtime across regional failure",
+   "not": [
+    "keeps the second region idle until a disaster"
+   ],
+   "like": [
+    "Active-passive failover"
+   ]
+  },
+  {
+   "group": "geo",
+   "subject": "Recovery time objective",
+   "tier": 3,
+   "says": [
+    "states how long a service may be down after a failure",
+    "guides how much to spend on standby capacity",
+    "is measured in time to restore service"
+   ],
+   "use": "agree with the business how fast service must return",
+   "not": [
+    "states how much recent data may be lost"
+   ],
+   "like": [
+    "Recovery point objective"
+   ]
+  },
+  {
+   "group": "geo",
+   "subject": "Recovery point objective",
+   "tier": 3,
+   "says": [
+    "states how much recent data may be lost, measured in time",
+    "drives how often data is backed up or replicated",
+    "is near zero only with continuous replication"
+   ],
+   "use": "agree how much work could be lost in a disaster",
+   "not": [
+    "states how long the outage may last"
+   ],
+   "like": [
+    "Recovery time objective"
+   ]
+  },
+  {
+   "group": "geo",
+   "subject": "A backup",
+   "tier": 2,
+   "says": [
+    "is a separate point-in-time copy used to recover from deletion or corruption",
+    "lets you return to a state before a mistake",
+    "should be tested by restoring it"
+   ],
+   "use": "need to undo corruption that happened last week",
+   "not": [
+    "mirrors every change instantly, including mistakes"
+   ],
+   "like": [
+    "Replication"
+   ]
+  },
+  {
+   "group": "geo",
+   "subject": "Replication",
+   "tier": 2,
+   "says": [
+    "copies changes continuously to another location",
+    "improves availability and read capacity",
+    "propagates a deletion or corruption too"
+   ],
+   "use": "keep a second copy ready for failover",
+   "not": [
+    "lets you roll back to last Tuesday"
+   ],
+   "like": [
+    "A backup"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A pod",
+   "tier": 1,
+   "says": [
+    "is the smallest deployable unit in Kubernetes",
+    "groups one or more containers that share a network address and volumes",
+    "is replaced rather than repaired when it fails"
+   ],
+   "use": "need containers to run together and share localhost",
+   "not": [
+    "is a physical or virtual machine in the cluster"
+   ],
+   "like": [
+    "A node",
+    "A deployment"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A deployment",
+   "tier": 2,
+   "says": [
+    "manages ReplicaSets to roll out and roll back changes to stateless pods",
+    "declares the desired number of replicas",
+    "supports rolling updates by default"
+   ],
+   "use": "run a stateless web app with several replicas and safe updates",
+   "not": [
+    "gives each pod a stable identity and its own volume"
+   ],
+   "like": [
+    "A stateful set"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A service",
+   "tier": 2,
+   "says": [
+    "gives a set of pods a stable virtual address and DNS name",
+    "selects pods by label and balances traffic across them",
+    "keeps working as pods come and go"
+   ],
+   "use": "let other workloads reach pods whose IP addresses change",
+   "not": [
+    "routes external HTTP requests by host and path"
+   ],
+   "like": [
+    "An ingress"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "An ingress",
+   "tier": 3,
+   "says": [
+    "routes external HTTP and HTTPS requests to services by host and path",
+    "needs an ingress controller to take effect",
+    "can terminate TLS for several hosts"
+   ],
+   "use": "expose several web services behind one entry point",
+   "not": [
+    "gives pods a cluster-internal virtual address"
+   ],
+   "like": [
+    "A service"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A config map",
+   "tier": 2,
+   "says": [
+    "holds non-secret configuration as key-value data",
+    "is injected as environment variables or files",
+    "lets the same image run with different settings"
+   ],
+   "use": "change an app setting without rebuilding the image",
+   "not": [
+    "is intended for passwords and tokens"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A stateful set",
+   "tier": 3,
+   "says": [
+    "gives each pod a stable name and its own persistent volume",
+    "starts and stops pods in a defined order",
+    "suits databases and other clustered stateful software"
+   ],
+   "use": "run a clustered database whose members need fixed identities",
+   "not": [
+    "treats all pods as interchangeable"
+   ],
+   "like": [
+    "A deployment"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A persistent volume claim",
+   "tier": 3,
+   "says": [
+    "requests storage for a pod without naming the underlying disk",
+    "is matched to a persistent volume or created from a storage class",
+    "keeps data when the pod is rescheduled"
+   ],
+   "use": "give a pod storage that outlives it",
+   "not": [
+    "is a temporary scratch directory deleted with the pod"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A network policy",
+   "tier": 4,
+   "says": [
+    "restricts which pods may talk to which",
+    "takes effect only if the network plugin enforces it",
+    "moves a namespace from open to default-deny when applied"
+   ],
+   "use": "allow only the web tier to reach the database pods",
+   "not": [
+    "encrypts traffic between pods"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "The control plane",
+   "tier": 2,
+   "says": [
+    "makes global decisions and holds the cluster's desired state",
+    "includes the API server, scheduler and controllers",
+    "does not normally run the application workloads"
+   ],
+   "use": "ask which part of the cluster decides where pods run",
+   "not": [
+    "runs on every worker node to start containers"
+   ],
+   "like": [
+    "A node"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A node",
+   "tier": 1,
+   "says": [
+    "is a worker machine that runs pods",
+    "runs a kubelet and a container runtime",
+    "is virtual or physical"
+   ],
+   "use": "ask which machines actually run the pods",
+   "not": [
+    "is the component that schedules pods"
+   ],
+   "like": [
+    "The control plane",
+    "A pod"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A reconciliation loop",
+   "tier": 3,
+   "says": [
+    "compares the desired state with the observed state",
+    "acts to close any difference it finds",
+    "is how controllers heal failed pods"
+   ],
+   "use": "explain why a deleted pod comes back by itself",
+   "not": [
+    "applies each change once and never checks again"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A readiness probe",
+   "tier": 3,
+   "says": [
+    "tells Kubernetes when a pod can receive traffic",
+    "removes a failing pod from service endpoints without restarting it",
+    "keeps traffic away while the app is still starting"
+   ],
+   "use": "hold traffic back until the app has loaded its data",
+   "not": [
+    "restarts the container when it fails"
+   ],
+   "like": [
+    "A liveness probe"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A liveness probe",
+   "tier": 3,
+   "says": [
+    "tells Kubernetes whether a container is stuck and needs a restart",
+    "causes the kubelet to restart the container on repeated failure",
+    "should not depend on slow downstream services"
+   ],
+   "use": "restart a container that has deadlocked",
+   "not": [
+    "only removes the pod from load balancing"
+   ],
+   "like": [
+    "A readiness probe"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A resource request",
+   "tier": 3,
+   "says": [
+    "tells the scheduler how much CPU and memory a container needs",
+    "is used to decide which node has room",
+    "is the basis for autoscaling on utilisation"
+   ],
+   "use": "help the scheduler place pods on nodes with enough capacity",
+   "not": [
+    "kills the container when usage goes above it"
+   ],
+   "like": [
+    "A resource limit"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "A resource limit",
+   "tier": 3,
+   "says": [
+    "caps the CPU or memory a container may use",
+    "throttles CPU use above the limit",
+    "gets a container killed when it exceeds its memory limit"
+   ],
+   "use": "stop one container from starving its neighbours",
+   "not": [
+    "only influences where the pod is scheduled"
+   ],
+   "like": [
+    "A resource request"
+   ]
+  },
+  {
+   "group": "k8s",
+   "subject": "An operator",
+   "tier": 5,
+   "says": [
+    "encodes an application's operational knowledge in a custom controller",
+    "manages custom resources such as a database cluster",
+    "automates tasks such as backup and failover"
+   ],
+   "use": "automate the day-two operation of a complex stateful application",
+   "not": [
+    "is a human on-call engineer"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A Dockerfile",
+   "tier": 1,
+   "says": [
+    "lists the instructions for building a container image",
+    "is read from top to bottom, each instruction forming a step",
+    "starts with a FROM line naming the base image"
+   ],
+   "use": "need a repeatable recipe for an image",
+   "not": [
+    "is the running container itself"
+   ],
+   "like": [
+    "A base image"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A base image",
+   "tier": 2,
+   "says": [
+    "supplies the starting filesystem and tools for a new image",
+    "is named in the FROM instruction",
+    "determines much of an image's size and attack surface"
+   ],
+   "use": "choose what a new image is built on",
+   "not": [
+    "is the registry where images are stored"
+   ],
+   "like": [
+    "A Dockerfile"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A multi-stage build",
+   "tier": 3,
+   "says": [
+    "uses several FROM stages in one Dockerfile",
+    "copies only the needed outputs into the final image",
+    "keeps compilers and build tools out of the runtime image"
+   ],
+   "use": "ship a small image without the build toolchain",
+   "not": [
+    "runs several containers at once"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "An image tag",
+   "tier": 2,
+   "says": [
+    "is a human-readable label that points at an image version",
+    "can be moved to a different image later",
+    "is not a guarantee of identical content over time"
+   ],
+   "use": "refer to a build such as 1.4 or latest",
+   "not": [
+    "is a content hash that never changes"
+   ],
+   "like": [
+    "An image digest"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "An image digest",
+   "tier": 4,
+   "says": [
+    "is a content hash that identifies exactly one image",
+    "never points at different content",
+    "lets a deployment pin the exact bytes that were tested"
+   ],
+   "use": "make sure production runs the very image that passed testing",
+   "not": [
+    "can be re-pointed at a new build"
+   ],
+   "like": [
+    "An image tag"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A container registry",
+   "tier": 2,
+   "says": [
+    "stores and serves container images by repository and tag",
+    "is where build pipelines push and nodes pull",
+    "can enforce access control and scanning"
+   ],
+   "use": "share an image between a build job and the servers that run it",
+   "not": [
+    "runs the containers it stores"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A Linux namespace",
+   "tier": 4,
+   "says": [
+    "isolates what a process can see, such as processes, network or mounts",
+    "is one of the kernel features that makes containers possible",
+    "limits visibility rather than resource use"
+   ],
+   "use": "explain why a container sees its own process list",
+   "not": [
+    "caps the memory a process may use"
+   ],
+   "like": [
+    "A control group"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A control group",
+   "tier": 4,
+   "says": [
+    "limits and accounts for the CPU, memory and I/O a set of processes can use",
+    "is the kernel feature behind container resource limits",
+    "is what ends a container that exceeds its memory limit"
+   ],
+   "use": "explain how a container is held to a memory limit",
+   "not": [
+    "hides other processes from view"
+   ],
+   "like": [
+    "A Linux namespace"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "Docker Compose",
+   "tier": 2,
+   "says": [
+    "defines and runs several containers from one YAML file",
+    "creates networks and volumes for the services it declares",
+    "suits a single host better than a large cluster"
+   ],
+   "use": "run an app, its database and a cache together on one machine",
+   "not": [
+    "schedules containers across a fleet of nodes"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A rootless container",
+   "tier": 5,
+   "says": [
+    "runs the container engine and containers without root privileges on the host",
+    "limits the damage of a container escape",
+    "has restrictions around low ports and some storage features"
+   ],
+   "use": "reduce the impact if an attacker breaks out of a container",
+   "not": [
+    "gives the container full root on the host"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "HCL",
+   "tier": 1,
+   "says": [
+    "is the configuration language used to write Terraform",
+    "describes resources in blocks with arguments",
+    "is declarative rather than a script of commands"
+   ],
+   "use": "read or write a Terraform file",
+   "not": [
+    "is a state storage service"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "A Terraform provider",
+   "tier": 2,
+   "says": [
+    "is a plugin that talks to an external API such as a cloud",
+    "defines the resource types that can be managed",
+    "is downloaded during terraform init"
+   ],
+   "use": "manage resources of a particular cloud or service",
+   "not": [
+    "is the file that records what exists"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "A Terraform resource",
+   "tier": 1,
+   "says": [
+    "declares one infrastructure object to be created and managed",
+    "is identified by its type and name",
+    "is changed by editing its arguments and applying"
+   ],
+   "use": "declare a bucket or server in code",
+   "not": [
+    "only reads information about existing objects"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "An input variable",
+   "tier": 2,
+   "says": [
+    "lets a configuration or module take values from outside",
+    "can have a type, a default and a description",
+    "avoids hard-coding values that differ per environment"
+   ],
+   "use": "use the same code for staging and production with different sizes",
+   "not": [
+    "exposes a result to other configurations"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "The Terraform state file",
+   "tier": 2,
+   "says": [
+    "records the real objects mapped to the configuration",
+    "is how Terraform knows what to change",
+    "can contain sensitive values in plain text"
+   ],
+   "use": "understand why Terraform knows an object already exists",
+   "not": [
+    "is the configuration you write by hand"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "A remote backend",
+   "tier": 3,
+   "says": [
+    "stores the state in shared storage rather than on one laptop",
+    "lets a team work from the same state",
+    "commonly supports encryption and access control"
+   ],
+   "use": "let several engineers and a pipeline share one state",
+   "not": [
+    "keeps state in a local file in the working directory"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "A Terraform plan",
+   "tier": 2,
+   "says": [
+    "previews the changes Terraform would make",
+    "compares configuration, state and real infrastructure",
+    "changes nothing by itself"
+   ],
+   "use": "review a change before it touches production",
+   "not": [
+    "creates the resources immediately"
+   ],
+   "like": [
+    "Terraform apply"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "Terraform apply",
+   "tier": 2,
+   "says": [
+    "carries out the changes in a plan",
+    "updates the state with the results",
+    "can be run from a saved plan so exactly what was reviewed is applied"
+   ],
+   "use": "make the reviewed changes real",
+   "not": [
+    "only shows what would happen"
+   ],
+   "like": [
+    "A Terraform plan"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "A Terraform module",
+   "tier": 3,
+   "says": [
+    "packages a group of resources for reuse",
+    "takes input variables and returns outputs",
+    "reduces repetition between environments"
+   ],
+   "use": "reuse the same network layout in several environments",
+   "not": [
+    "is a single resource definition"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "Configuration drift",
+   "tier": 3,
+   "says": [
+    "is when real infrastructure no longer matches the declared code",
+    "is often caused by manual changes in the console",
+    "is revealed by a plan that shows unexpected changes"
+   ],
+   "use": "notice a firewall rule edited by hand outside the code",
+   "not": [
+    "is a deliberate change made through the pipeline"
+   ],
+   "like": [
+    "The Terraform state file"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "The for_each argument",
+   "tier": 4,
+   "says": [
+    "creates one instance per element of a map or set",
+    "keys instances by name so removing one leaves the others alone",
+    "avoids index shifting"
+   ],
+   "use": "create several buckets from a named collection safely",
+   "not": [
+    "creates a fixed number of identical copies indexed by position"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "The Terraform moved block",
+   "tier": 5,
+   "says": [
+    "records that a resource has been renamed or relocated in code",
+    "lets Terraform update the state instead of destroying and recreating",
+    "helps refactor into modules safely"
+   ],
+   "use": "rename a resource without replacing it",
+   "not": [
+    "imports a resource from outside"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A CI runner",
+   "tier": 1,
+   "says": [
+    "is the machine or container that executes a pipeline job",
+    "picks up queued jobs from the CI service",
+    "provides the environment the job's steps run in"
+   ],
+   "use": "ask where the build commands actually execute",
+   "not": [
+    "is the file that defines the pipeline"
+   ],
+   "like": [
+    "A workflow file"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A workflow file",
+   "tier": 1,
+   "says": [
+    "defines a pipeline as triggers, jobs and steps in YAML",
+    "lives in the repository alongside the code",
+    "is stored under .github/workflows for GitHub Actions"
+   ],
+   "use": "change what the pipeline does through a pull request",
+   "not": [
+    "is the machine that runs the jobs"
+   ],
+   "like": [
+    "A CI runner"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A provider-hosted runner",
+   "tier": 2,
+   "says": [
+    "is a fresh virtual machine supplied and maintained by the CI provider",
+    "needs no server administration by the team",
+    "is discarded after the job"
+   ],
+   "use": "avoid operating build machines",
+   "not": [
+    "is a machine the team installs and patches itself"
+   ],
+   "like": [
+    "A self-hosted runner"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A self-hosted runner",
+   "tier": 3,
+   "says": [
+    "runs on machines the team owns and maintains",
+    "can reach private networks and use special hardware",
+    "becomes a security risk if untrusted code runs on it"
+   ],
+   "use": "build on hardware inside a private network",
+   "not": [
+    "is created fresh by the provider for every job"
+   ],
+   "like": [
+    "A provider-hosted runner",
+    "An ephemeral runner"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "An ephemeral runner",
+   "tier": 5,
+   "says": [
+    "handles one job and is destroyed afterwards",
+    "stops state or secrets leaking from one job to the next",
+    "is the safer pattern for self-hosted fleets"
+   ],
+   "use": "prevent a malicious job from leaving a backdoor on the build machine",
+   "not": [
+    "is reused for many jobs so caches stay warm"
+   ],
+   "like": [
+    "A self-hosted runner"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A matrix build",
+   "tier": 3,
+   "says": [
+    "runs the same job across combinations of values such as versions or operating systems",
+    "expands one definition into several parallel jobs",
+    "can fail fast or continue when one combination fails"
+   ],
+   "use": "test a library on three runtime versions",
+   "not": [
+    "runs different jobs in a fixed order"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A build cache",
+   "tier": 3,
+   "says": [
+    "stores downloaded dependencies or build outputs between runs",
+    "is looked up by a key built from files such as a lock file",
+    "speeds up pipelines but can serve stale content if keys are poor"
+   ],
+   "use": "avoid downloading the same packages on every run",
+   "not": [
+    "is the final deliverable of a build"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "OIDC authentication from CI",
+   "tier": 4,
+   "says": [
+    "exchanges a short-lived token issued to the job for cloud credentials",
+    "removes the need to store long-lived cloud keys as secrets",
+    "lets the cloud restrict access to a specific repository and branch"
+   ],
+   "use": "let a pipeline deploy without a stored access key",
+   "not": [
+    "stores a permanent key in the repository settings"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A concurrency group",
+   "tier": 3,
+   "says": [
+    "allows only one run of a named set of workflows at a time",
+    "can queue or cancel older runs",
+    "prevents two deployments overlapping"
+   ],
+   "use": "stop two deploys to the same environment running together",
+   "not": [
+    "splits a job into parallel copies"
+   ],
+   "like": [
+    "A matrix build"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Pinning an action to a commit SHA",
+   "tier": 5,
+   "says": [
+    "fixes a third-party step to one exact version of its code",
+    "stops a moved tag from changing what runs",
+    "is a supply-chain protection for pipelines"
+   ],
+   "use": "defend against a compromised third-party action tag",
+   "not": [
+    "always uses the newest release automatically"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A pull request from a fork",
+   "tier": 5,
+   "says": [
+    "comes from code outside the repository's trust boundary",
+    "should not be given repository secrets by default",
+    "is a risk when a privileged trigger checks out the submitted code"
+   ],
+   "use": "decide how much trust to give a contributor's workflow run",
+   "not": [
+    "is always safe to run with full secrets"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Prometheus",
+   "tier": 2,
+   "says": [
+    "scrapes metrics from targets over HTTP on an interval",
+    "stores samples as time series identified by labels",
+    "is queried with PromQL"
+   ],
+   "use": "collect numeric metrics from many services",
+   "not": [
+    "indexes the full text of log lines"
+   ],
+   "like": [
+    "Loki",
+    "Grafana"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "High cardinality",
+   "tier": 5,
+   "says": [
+    "means a metric has very many distinct label combinations",
+    "inflates storage and memory use",
+    "is triggered by labels such as user ID or full URL"
+   ],
+   "use": "explain why a metric labelled with the user ID overloads the system",
+   "not": [
+    "makes queries faster by spreading them out"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A counter metric",
+   "tier": 3,
+   "says": [
+    "only increases, apart from resets to zero",
+    "is read as a rate over time rather than as a raw total",
+    "suits requests served and errors seen"
+   ],
+   "use": "measure how many requests have been handled",
+   "not": [
+    "goes up and down to show the current value"
+   ],
+   "like": [
+    "A histogram metric"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A histogram metric",
+   "tier": 4,
+   "says": [
+    "counts observations in buckets of value ranges",
+    "lets percentiles be estimated from the buckets",
+    "can be aggregated across instances"
+   ],
+   "use": "measure request latency distribution across many servers",
+   "not": [
+    "records only a single current value"
+   ],
+   "like": [
+    "A counter metric"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A latency percentile",
+   "tier": 4,
+   "says": [
+    "states the value below which a given share of requests fall",
+    "shows tail latency that an average hides",
+    "cannot be correctly obtained by averaging per-server percentiles"
+   ],
+   "use": "find how slow the slowest users' requests are",
+   "not": [
+    "is the mean of all request times"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Alertmanager",
+   "tier": 4,
+   "says": [
+    "groups, deduplicates and routes alerts to receivers",
+    "applies silences and inhibition",
+    "does not evaluate the alerting rules itself"
+   ],
+   "use": "send related alerts as one page to the on-call engineer",
+   "not": [
+    "scrapes metrics from targets"
+   ],
+   "like": [
+    "Prometheus"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Grafana",
+   "tier": 2,
+   "says": [
+    "visualises data from many data sources in dashboards",
+    "does not store the metrics itself",
+    "can show metrics, logs and traces together"
+   ],
+   "use": "build a dashboard over metrics and logs",
+   "not": [
+    "is the database that holds the time series"
+   ],
+   "like": [
+    "Prometheus",
+    "Loki"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Loki",
+   "tier": 3,
+   "says": [
+    "indexes only the labels of log streams, not the full text",
+    "stores compressed log chunks cheaply",
+    "is queried with LogQL"
+   ],
+   "use": "keep logs cheaply and find them by service and environment",
+   "not": [
+    "builds a full-text index of every word"
+   ],
+   "like": [
+    "Grafana",
+    "Prometheus"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "OpenTelemetry",
+   "tier": 2,
+   "says": [
+    "is a vendor-neutral standard and toolkit for traces, metrics and logs",
+    "lets applications be instrumented once and exported to many backends",
+    "defines a common wire protocol"
+   ],
+   "use": "instrument services without tying them to a monitoring vendor",
+   "not": [
+    "is a single commercial monitoring product"
+   ],
+   "like": [
+    "Prometheus"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Trace context propagation",
+   "tier": 5,
+   "says": [
+    "passes trace identifiers between services in request headers",
+    "is what lets spans from different services join one trace",
+    "breaks if a service fails to forward the headers"
+   ],
+   "use": "find why a trace stops at one service",
+   "not": [
+    "samples a fraction of traces to save cost"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "A budget alert",
+   "tier": 1,
+   "says": [
+    "notifies people when spend passes a set threshold",
+    "can fire on actual or forecast cost",
+    "warns but does not stop spending by itself"
+   ],
+   "use": "get warned before a bill grows out of control",
+   "not": [
+    "blocks all new resources at the threshold"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Resource tagging",
+   "tier": 2,
+   "says": [
+    "attaches key-value labels such as team or environment to resources",
+    "lets costs be grouped and attributed",
+    "works only if tags are applied consistently"
+   ],
+   "use": "find out which team owns a cost",
+   "not": [
+    "encrypts the labelled resource"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Rightsizing",
+   "tier": 3,
+   "says": [
+    "matches resource size to observed usage",
+    "cuts waste from over-provisioned servers",
+    "relies on utilisation metrics over a representative period"
+   ],
+   "use": "shrink servers that run at a tiny fraction of capacity",
+   "not": [
+    "buys a long-term commitment"
+   ],
+   "like": [
+    "A commitment discount"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "A commitment discount",
+   "tier": 3,
+   "says": [
+    "trades a promise of steady usage for a lower rate",
+    "suits stable baseline workloads",
+    "wastes money if the commitment goes unused"
+   ],
+   "use": "cover the predictable base load of production",
+   "not": [
+    "is the cheapest option for short experiments"
+   ],
+   "like": [
+    "Rightsizing",
+    "Spot capacity"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Spot capacity",
+   "tier": 3,
+   "says": [
+    "trades possible interruption for a lower rate",
+    "suits stateless or checkpointed work",
+    "is a poor fit for a single database server"
+   ],
+   "use": "run fault-tolerant batch workers cheaply",
+   "not": [
+    "is guaranteed to stay running"
+   ],
+   "like": [
+    "A commitment discount"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Data egress charges",
+   "tier": 3,
+   "says": [
+    "bill for data leaving a provider or crossing regions",
+    "can make chatty cross-region designs costly",
+    "are reduced by keeping traffic close and caching at the edge"
+   ],
+   "use": "explain a surprise bill from moving data between regions",
+   "not": [
+    "apply to data uploaded into the cloud"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Orphaned resources",
+   "tier": 3,
+   "says": [
+    "are items such as unattached disks and old snapshots still billing",
+    "remain after the server that used them was deleted",
+    "are found by regular cleanup reviews"
+   ],
+   "use": "explain why a bill stays high after servers were removed",
+   "not": [
+    "are resources in active use by a running service"
+   ]
+  },
+  {
+   "group": "cost",
+   "subject": "Unit cost",
+   "tier": 4,
+   "says": [
+    "relates cloud spend to a business measure such as cost per order",
+    "shows whether efficiency is improving as the business grows",
+    "is more informative than total spend alone"
+   ],
+   "use": "tell whether a rising bill is just growth in usage",
+   "not": [
+    "is the price of a single virtual machine"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "PM2 on our VPS",
+   "tier": 2,
+   "says": [
+    "restarts a Node app if it dies",
+    "brings the apps back after a reboot once pm2 save has been run",
+    "starts our Next.js apps behind the proxy"
+   ],
+   "use": "want the apps to survive crashes and reboots on the production VPS",
+   "not": [
+    "acts as the reverse proxy in front of the apps"
+   ],
+   "like": [
+    "Apache on our VPS"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "Apache on our VPS",
+   "tier": 2,
+   "says": [
+    "acts as the reverse proxy for the live apps",
+    "forwards requests to a local port with ProxyPass and ProxyPassReverse",
+    "also serves ggmoney's PHP"
+   ],
+   "use": "ask which program receives public traffic on the production server",
+   "not": [
+    "is the process manager that restarts the apps"
+   ],
+   "like": [
+    "PM2 on our VPS"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "Certbot on our VPS",
+   "tier": 2,
+   "says": [
+    "obtains Let's Encrypt certificates",
+    "creates the port-443 vhost file",
+    "renews the certificates"
+   ],
+   "use": "ask how the sites get and keep HTTPS certificates",
+   "not": [
+    "manages the Node processes"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "gglearn's Cloudflare-only allow-list",
+   "tier": 4,
+   "says": [
+    "is generated by update-cloudflare-ips.sh from Cloudflare's published address ranges",
+    "stops anyone bypassing Cloudflare and spoofing X-Forwarded-For",
+    "is refused by the script if the list looks implausible"
+   ],
+   "use": "explain why only Cloudflare and the machine itself may connect to the origin",
+   "not": [
+    "issues the TLS certificate for the site"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "gglearn's deploy workflow",
+   "tier": 3,
+   "says": [
+    "runs on every push to main and can be started by hand",
+    "uses a concurrency group named deploy with cancel-in-progress set to false",
+    "runs no tests or lint"
+   ],
+   "use": "ask what happens when someone pushes to main in gglearn",
+   "not": [
+    "cancels a running deploy as soon as a newer push arrives"
+   ],
+   "like": [
+    "Moksy's ci workflow"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "gglearn's post-deploy health poll",
+   "tier": 4,
+   "says": [
+    "polls the local app up to ten times",
+    "fails the deploy if the app never returns 200",
+    "runs at the end of deploy.sh after pm2 save"
+   ],
+   "use": "ask how gglearn's deploy notices a broken release",
+   "not": [
+    "rolls the app back automatically"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "Moksy's moksy-internal network",
+   "tier": 3,
+   "says": [
+    "is marked internal: true in Docker Compose",
+    "gives its containers no route to the outside world",
+    "is separate from moksy-public"
+   ],
+   "use": "ask how Moksy keeps some containers off the internet",
+   "not": [
+    "is the network that exposes services publicly"
+   ],
+   "like": [
+    "Moksy's restart policy"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "Moksy's restart policy",
+   "tier": 3,
+   "says": [
+    "is restart: unless-stopped",
+    "brings back a process that exits with code 0",
+    "was chosen because on-failure would never restart a clean exit"
+   ],
+   "use": "ask why a container that exits cleanly still comes back",
+   "not": [
+    "restarts a container only after a non-zero exit"
+   ],
+   "like": [
+    "Moksy's moksy-internal network"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "Moksy's dashboard image",
+   "tier": 3,
+   "says": [
+    "is built in stages: a node stage compiles the Vite app",
+    "copies only the compiled dist into a small nginx image",
+    "uses nginx purely as a static file server in a container"
+   ],
+   "use": "ask where we use Nginx",
+   "not": [
+    "runs nginx as the reverse proxy on the VPS"
+   ],
+   "like": [
+    "Apache on our VPS"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "Moksy's ci workflow",
+   "tier": 3,
+   "says": [
+    "runs on pushes and pull requests with a real Mongo service container",
+    "includes a Compose config check and a Trivy image scan",
+    "also runs lint, unit, integration and smoke jobs"
+   ],
+   "use": "ask what checks protect Moksy's main branch",
+   "not": [
+    "builds images and pushes them to GHCR by hand"
+   ],
+   "like": [
+    "gglearn's deploy workflow"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "Moksy's k8s/base folder",
+   "tier": 4,
+   "says": [
+    "holds a gateway Deployment, an autoscaler, an Ingress, a NetworkPolicy and a PodDisruptionBudget",
+    "exists as configuration with no sign that a cluster runs it",
+    "is not how Moksy is actually deployed today"
+   ],
+   "use": "ask whether Moksy runs on Kubernetes",
+   "not": [
+    "is the production deployment method for gglearn"
+   ],
+   "like": [
+    "Terraform in our repositories"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "Terraform in our repositories",
+   "tier": 2,
+   "says": [
+    "is absent, because no .tf files exist in any repo searched",
+    "is named only as a catalogued Moksy integration",
+    "is not something we operate"
+   ],
+   "use": "ask whether our infrastructure is managed with Terraform",
+   "not": [
+    "is used to build the VPS for the Next.js apps"
+   ],
+   "like": [
+    "Moksy's k8s/base folder"
+   ]
+  },
+  {
+   "group": "ours",
+   "subject": "The run, configured, catalogued or absent rule",
+   "tier": 5,
+   "says": [
+    "gives four honest answers to whether we use a tool",
+    "separates what runs from what only exists as config or as a listed integration",
+    "avoids claiming Kubernetes or Terraform as part of our stack"
+   ],
+   "use": "are asked in an interview whether we use Kubernetes",
+   "not": [
+    "says every tool in a repository folder is in production"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Which cloud service model leaves the customer responsible for the guest operating system?",
+   "right": "Infrastructure as a service",
+   "wrong": [
+    "Software as a service",
+    "Platform as a service",
+    "Function as a service"
+   ],
+   "tier": 1,
+   "why": "With virtual machines the customer patches and configures the operating system; higher-level models move that to the provider."
+  },
+  {
+   "q": "Which storage type suits user-uploaded images that are served over HTTP and never edited in place?",
+   "right": "Object storage",
+   "wrong": [
+    "Block storage attached to a database server",
+    "A shared network file system",
+    "An in-memory cache"
+   ],
+   "tier": 1,
+   "why": "Object storage holds whole objects addressed by key and is accessed through an HTTP API."
+  },
+  {
+   "q": "What is an availability zone?",
+   "right": "One or more isolated data centres within a region",
+   "wrong": [
+    "A country-level group of regions",
+    "A single server rack",
+    "A content delivery location near users"
+   ],
+   "tier": 1,
+   "why": "Zones have independent power and networking and are connected by fast links inside a region."
+  },
+  {
+   "q": "In a container Dockerfile, what does the FROM line specify?",
+   "right": "The base image the new image is built on",
+   "wrong": [
+    "The registry to push to",
+    "The command to run at start-up",
+    "The ports to publish"
+   ],
+   "tier": 1,
+   "why": "Every Dockerfile starts from a base image, named in FROM."
+  },
+  {
+   "q": "A web tier must be reachable from the internet while the database must not be. Where should each be placed?",
+   "right": "Web tier in a public subnet, database in a private subnet",
+   "wrong": [
+    "Both in a public subnet with a strict firewall",
+    "Web tier in a private subnet, database in a public subnet",
+    "Both in the same subnet with no rules"
+   ],
+   "tier": 2,
+   "why": "Public subnets route to an internet gateway; private subnets have no direct inbound route."
+  },
+  {
+   "q": "What does a Kubernetes service provide?",
+   "right": "A stable address and DNS name in front of a changing set of pods",
+   "wrong": [
+    "A way to build container images",
+    "Persistent storage for a pod",
+    "A schedule for recurring jobs"
+   ],
+   "tier": 2,
+   "why": "Pods are replaced and change IP addresses; a service selects them by label and gives clients one stable endpoint."
+  },
+  {
+   "q": "Which part of the shared responsibility model always stays with the customer?",
+   "right": "Their data, identities and access configuration",
+   "wrong": [
+    "The physical data centre",
+    "The hypervisor",
+    "The power and cooling"
+   ],
+   "tier": 2,
+   "why": "The provider secures the cloud; the customer secures what they put in it."
+  },
+  {
+   "q": "What is the main benefit of a CI runner being provider-hosted?",
+   "right": "The team does not have to build and patch the build machines",
+   "wrong": [
+    "It can reach the team's private network by default",
+    "It keeps caches between all jobs forever",
+    "It is exempt from using secrets"
+   ],
+   "tier": 2,
+   "why": "Hosted runners are maintained by the provider and are fresh for each job."
+  },
+  {
+   "q": "What does Prometheus do by default to collect metrics?",
+   "right": "It scrapes HTTP endpoints on targets at an interval",
+   "wrong": [
+    "Targets push every sample to it using email",
+    "It reads application log files",
+    "It queries the database of each service"
+   ],
+   "tier": 2,
+   "why": "Prometheus uses a pull model: it fetches metrics from each target."
+  },
+  {
+   "q": "Which Kubernetes object suits a clustered database whose members need stable names and their own disks?",
+   "right": "StatefulSet",
+   "wrong": [
+    "Deployment",
+    "DaemonSet",
+    "CronJob"
+   ],
+   "tier": 3,
+   "why": "A StatefulSet gives each pod a stable identity and its own persistent volume."
+  },
+  {
+   "q": "A Deployment's pods keep being killed and restarted with the reason OOMKilled. What is the most likely cause?",
+   "right": "The container exceeded its memory limit",
+   "wrong": [
+    "The readiness probe path returned 404",
+    "The image tag is wrong",
+    "The service selector does not match any pod"
+   ],
+   "tier": 3,
+   "why": "Exceeding a memory limit gets a container killed; a failed readiness probe only removes a pod from traffic."
+  },
+  {
+   "q": "What is the main difference between a backup and replication?",
+   "right": "A backup is a separate point-in-time copy; replication copies changes continuously, including mistakes",
+   "wrong": [
+    "Replication is slower and cheaper than a backup",
+    "A backup mirrors every change instantly",
+    "Replication can restore data from last week"
+   ],
+   "tier": 3,
+   "why": "Replication propagates deletions and corruption, which is why it is not a substitute for backups."
+  },
+  {
+   "q": "Why does a team add a NAT gateway to a VPC?",
+   "right": "So private instances can start outbound connections while staying unreachable from the internet",
+   "wrong": [
+    "So the internet can reach private instances directly",
+    "To encrypt traffic between subnets",
+    "To balance traffic across zones"
+   ],
+   "tier": 3,
+   "why": "NAT lets private resources reach out, for example for updates, without inbound exposure."
+  },
+  {
+   "q": "What distinguishes an image tag from an image digest?",
+   "right": "A tag can be moved to different content; a digest identifies exactly one image",
+   "wrong": [
+    "A digest can be changed later; a tag cannot",
+    "A tag is a content hash; a digest is a label",
+    "They are two names for the same thing"
+   ],
+   "tier": 3,
+   "why": "Tags are mutable labels; a digest is a content hash."
+  },
+  {
+   "q": "Which is the best reason to use a multi-stage Docker build?",
+   "right": "Keep compilers and build tools out of the final runtime image",
+   "wrong": [
+    "Run the container on several hosts",
+    "Speed up the container's network",
+    "Allow root access in production"
+   ],
+   "tier": 3,
+   "why": "Only the needed output is copied into the last stage, so the final image stays small and has fewer tools to abuse."
+  },
+  {
+   "q": "A function-based service answers rarely used requests slowly the first time and quickly afterwards. What is this called?",
+   "right": "A cold start",
+   "wrong": [
+    "A hot partition",
+    "Replication lag",
+    "Alert fatigue"
+   ],
+   "tier": 3,
+   "why": "A fresh execution environment must be initialised for the first invocation after idle time."
+  },
+  {
+   "q": "In Terraform, what does the state file let the tool do?",
+   "right": "Map the configuration to the real objects it manages",
+   "wrong": [
+    "Store the cloud provider's credentials",
+    "Run provisioners after apply",
+    "Format the configuration files"
+   ],
+   "tier": 3,
+   "why": "Without state Terraform would not know which real objects belong to which resources."
+  },
+  {
+   "q": "Why should Terraform state live in a remote backend with locking when a team applies changes?",
+   "right": "To share one state and stop two applies changing it at the same time",
+   "wrong": [
+    "To make plan run faster",
+    "To avoid writing the configuration in code",
+    "To hide the provider versions"
+   ],
+   "tier": 4,
+   "why": "Local state is not shared, and concurrent applies could corrupt it."
+  },
+  {
+   "q": "What is the effect of this workflow setting?",
+   "code": "concurrency:\n  group: deploy\n  cancel-in-progress: false",
+   "right": "Only one deploy runs at a time and a running deploy is not cancelled by a newer one",
+   "wrong": [
+    "Every push cancels the running deploy",
+    "Deploys run in parallel for speed",
+    "The workflow is skipped on weekends"
+   ],
+   "tier": 4,
+   "why": "The group name serialises runs; cancel-in-progress false keeps the running one."
+  },
+  {
+   "q": "Which setting makes a Kubernetes container get throttled rather than killed when it uses too much CPU?",
+   "right": "A CPU limit",
+   "wrong": [
+    "A memory limit",
+    "A liveness probe",
+    "A pod disruption budget"
+   ],
+   "tier": 4,
+   "why": "CPU over the limit is throttled; memory over the limit gets the container killed."
+  },
+  {
+   "q": "What does this IAM-style policy allow?",
+   "code": "{\n  \"Effect\": \"Allow\",\n  \"Action\": \"s3:GetObject\",\n  \"Resource\": \"arn:aws:s3:::reports/*\"\n}",
+   "right": "Reading objects from one bucket, and nothing else",
+   "wrong": [
+    "Deleting the bucket",
+    "Reading every bucket in the account",
+    "Writing objects to the bucket"
+   ],
+   "tier": 4,
+   "why": "Only the GetObject action is allowed, on objects within that single bucket."
+  },
+  {
+   "q": "What is the safest way for a CI job to deploy to a cloud account?",
+   "right": "Exchange the job's short-lived OIDC token for temporary cloud credentials",
+   "wrong": [
+    "Store an admin access key as a repository secret",
+    "Commit a key file to a private repository",
+    "Run the job on the root account"
+   ],
+   "tier": 4,
+   "why": "Federation removes long-lived keys and can be restricted to one repository and branch."
+  },
+  {
+   "q": "What does a readiness probe failure do?",
+   "right": "Removes the pod from the service's endpoints without restarting it",
+   "wrong": [
+    "Restarts the container immediately",
+    "Deletes the deployment",
+    "Moves the pod to another namespace"
+   ],
+   "tier": 4,
+   "why": "Readiness controls traffic; liveness controls restarts."
+  },
+  {
+   "q": "A trace shows the front end and the first service, but the rest of the request is missing. What is the most likely cause?",
+   "right": "A service is not forwarding the trace context headers",
+   "wrong": [
+    "The metrics have too many labels",
+    "The histogram buckets are too wide",
+    "The log shipper is down"
+   ],
+   "tier": 5,
+   "why": "Context propagation joins spans across services; a break loses everything downstream."
+  },
+  {
+   "q": "Why is averaging per-server 99th percentile latencies misleading?",
+   "right": "Percentiles cannot be combined by averaging; the result does not equal the overall percentile",
+   "wrong": [
+    "The mean of percentiles is always higher",
+    "Percentiles only work on counters",
+    "Servers do not report percentiles"
+   ],
+   "tier": 5,
+   "why": "You need to aggregate the underlying distributions, for example histogram buckets."
+  },
+  {
+   "q": "What does a permission boundary do?",
+   "right": "Sets the maximum permissions an identity can have, whatever its policies grant",
+   "wrong": [
+    "Grants the identity extra permissions",
+    "Encrypts the identity's credentials",
+    "Replaces its password with a token"
+   ],
+   "tier": 5,
+   "why": "It is a ceiling, not a grant."
+  },
+  {
+   "q": "What does this Terraform block do?",
+   "code": "resource \"aws_db_instance\" \"main\" {\n  # ...\n  lifecycle {\n    prevent_destroy = true\n  }\n}",
+   "right": "Refuses any plan that would destroy the database",
+   "wrong": [
+    "Backs up the database before destroy",
+    "Makes the database read-only",
+    "Prevents the database being updated"
+   ],
+   "tier": 5,
+   "why": "prevent_destroy makes Terraform error on a plan that destroys the resource."
+  },
+  {
+   "q": "A team's nightly job reads from the primary database and slows the website. What should they do first?",
+   "right": "Point the reporting job at a read replica",
+   "wrong": [
+    "Add a second primary that accepts writes",
+    "Switch the database to object storage",
+    "Turn off backups during the day"
+   ],
+   "tier": 3,
+   "why": "A read replica serves reads from a copy and keeps reporting load off the primary, accepting a little lag."
+  },
+  {
+   "q": "A developer commits a cloud access key to a repository by mistake. What should they do first?",
+   "right": "Revoke or rotate the key, then remove it from use",
+   "wrong": [
+    "Delete the commit and keep the key",
+    "Rename the repository",
+    "Wait to see whether it is used"
+   ],
+   "tier": 3,
+   "why": "A key in history must be treated as leaked; rotation ends its usefulness, and cleaning history alone does not."
+  },
+  {
+   "q": "A team's website must stay up if one data centre building fails. What is the minimum design?",
+   "right": "Run instances in at least two availability zones behind a load balancer",
+   "wrong": [
+    "Run two instances in one availability zone",
+    "Take hourly snapshots only",
+    "Move the site to a larger instance"
+   ],
+   "tier": 3,
+   "why": "Zones fail independently; instances in one zone share its fate."
+  },
+  {
+   "q": "A pull request changes a Terraform security group. The plan also shows the production database will be destroyed and recreated. What should the reviewer do?",
+   "right": "Stop and find out why before anyone applies it",
+   "wrong": [
+    "Approve because plan output is always right",
+    "Apply it, then check the data afterwards",
+    "Ignore it because the change is only a security group"
+   ],
+   "tier": 4,
+   "why": "A surprise destroy usually means a renamed resource or changed immutable argument; investigate before applying."
+  },
+  {
+   "q": "A pod stays in CrashLoopBackOff. Which command shows why it last exited?",
+   "code": "kubectl logs web-7d9c --previous",
+   "right": "kubectl logs <pod> --previous",
+   "wrong": [
+    "kubectl get nodes",
+    "kubectl scale deployment",
+    "kubectl delete namespace"
+   ],
+   "tier": 4,
+   "why": "The previous container's logs usually show the crash cause."
+  },
+  {
+   "q": "A service's p99 latency is high but its average looks fine. Which is the most useful next step?",
+   "right": "Look at the latency histogram and traces for the slow requests",
+   "wrong": [
+    "Ignore p99 because the mean is good",
+    "Increase the scrape interval",
+    "Add more labels to every metric"
+   ],
+   "tier": 4,
+   "why": "Averages hide tail latency; histograms and traces show where slow requests spend time."
+  },
+  {
+   "q": "A storage bucket was found public. The team removed the public access. What else should they do?",
+   "right": "Check audit logs for access during the exposure and add a guardrail to block public buckets",
+   "wrong": [
+    "Nothing; closing it fixes everything",
+    "Delete all logs to be safe",
+    "Make the bucket public again to compare"
+   ],
+   "tier": 4,
+   "why": "Closing the hole does not tell you what was read; guardrails prevent a repeat."
+  },
+  {
+   "q": "A cloud bill jumps overnight. Cost anomaly detection points at data transfer. Which cause should be checked first?",
+   "right": "A job or service moving large amounts of data across regions or out of the cloud",
+   "wrong": [
+    "A smaller instance type",
+    "A lower number of subnets",
+    "A tag added to a server"
+   ],
+   "tier": 4,
+   "why": "Egress and cross-region transfer are common causes of sudden cost spikes."
+  },
+  {
+   "q": "A team runs one pipeline job on a self-hosted runner that is reused for every pull request, including ones from forks. What is the main risk?",
+   "right": "Untrusted code can leave malware or steal secrets on a long-lived machine",
+   "wrong": [
+    "Builds will be slower than on hosted runners",
+    "Pull requests will fail to merge",
+    "The cache will be too small"
+   ],
+   "tier": 4,
+   "why": "Persistent self-hosted runners should not execute untrusted code; use ephemeral runners and restrict fork builds."
+  },
+  {
+   "q": "A Terraform pipeline sometimes fails with a lock error after a cancelled run. What is the right response?",
+   "right": "Confirm no run is active, then release the stale lock deliberately",
+   "wrong": [
+    "Delete the state file",
+    "Disable locking permanently",
+    "Run apply twice at once"
+   ],
+   "tier": 4,
+   "why": "A stale lock should be released with care after checking nobody is running; removing locking invites corruption."
+  },
+  {
+   "q": "A company must recover its service in another region within 15 minutes with near-zero data loss. Which design fits best?",
+   "right": "Active-active or hot standby with continuous replication and a tested failover",
+   "wrong": [
+    "Nightly backups copied to cold storage",
+    "A pilot light with data restored from last week",
+    "A single large instance in one zone"
+   ],
+   "tier": 5,
+   "why": "Tight recovery time and point objectives need running capacity and continuous replication in the second region."
+  },
+  {
+   "q": "A team wants engineers to create IAM roles for their own apps without being able to make themselves administrators. Which control fits?",
+   "right": "Require a permission boundary on every role they create",
+   "wrong": [
+    "Give them the administrator policy and trust them",
+    "Share one admin role among all engineers",
+    "Ban role creation and use access keys"
+   ],
+   "tier": 5,
+   "why": "The boundary caps what any role they create can do."
+  },
+  {
+   "q": "A Kubernetes node is being drained for maintenance and all replicas of one service sit on it. What would have protected availability?",
+   "right": "A pod disruption budget and anti-affinity spreading replicas across nodes",
+   "wrong": [
+    "A larger resource limit",
+    "A CronJob",
+    "An additional ConfigMap"
+   ],
+   "tier": 5,
+   "why": "A PDB limits simultaneous voluntary disruption and spreading keeps replicas off one node."
+  },
+  {
+   "q": "Metrics storage is growing fast after a developer added a request path label to a metric. What is the underlying problem?",
+   "right": "High cardinality from a label with many distinct values",
+   "wrong": [
+    "The counter type is wrong",
+    "The scrape target is too fast",
+    "Prometheus cannot store labels"
+   ],
+   "tier": 5,
+   "why": "Each distinct label value creates a new series; unbounded values such as raw URLs multiply storage."
+  },
+  {
+   "q": "A vendor offers a unique managed database that would save months of work but exists only on one cloud. What is the sound decision approach?",
+   "right": "Weigh the delivery benefit against exit cost and record the lock-in as an accepted risk",
+   "wrong": [
+    "Reject any proprietary service on principle",
+    "Adopt it without considering exit",
+    "Build the same service yourself on virtual machines"
+   ],
+   "tier": 5,
+   "why": "Lock-in is a trade-off to be chosen deliberately, not an absolute."
+  },
+  {
+   "q": "What does this Dockerfile instruction do?",
+   "code": "COPY . /app",
+   "right": "Copies the files from the build context into the image's /app directory",
+   "wrong": [
+    "Runs the app at container start",
+    "Pulls an image from the registry",
+    "Mounts the host's /app directory at runtime"
+   ],
+   "tier": 2,
+   "why": "COPY adds files to the image at build time."
+  },
+  {
+   "q": "What does this Kubernetes manifest declare?",
+   "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: web\nspec:\n  replicas: 3\n  selector:\n    matchLabels: { app: web }\n  template:\n    metadata:\n      labels: { app: web }\n    spec:\n      containers:\n        - name: web\n          image: example/web:1.0",
+   "right": "A deployment keeping three identical pods running",
+   "wrong": [
+    "A job that runs three times",
+    "A service with three ports",
+    "A stateful set with three disks"
+   ],
+   "tier": 3,
+   "why": "replicas sets the desired pod count; the controller maintains it."
+  },
+  {
+   "q": "What is the effect of this container setting?",
+   "code": "resources:\n  requests:\n    cpu: 250m\n    memory: 256Mi\n  limits:\n    memory: 512Mi",
+   "right": "The scheduler uses it to place the pod, while the limit caps usage",
+   "wrong": [
+    "It reserves the resources only for other pods",
+    "It caps CPU at 250 millicores",
+    "It grants the pod a stable name"
+   ],
+   "tier": 3,
+   "why": "A request guides scheduling; the limit is the cap."
+  },
+  {
+   "q": "What does this PromQL expression compute?",
+   "code": "rate(http_requests_total[5m])",
+   "right": "The per-second rate of requests over the last five minutes",
+   "wrong": [
+    "The total number of requests ever",
+    "The current memory use",
+    "The 99th percentile latency"
+   ],
+   "tier": 3,
+   "why": "rate() on a counter gives the per-second increase averaged over the window."
+  },
+  {
+   "q": "A Terraform file uses this block. What does it do?",
+   "code": "resource \"aws_s3_bucket\" \"b\" {\n  for_each = toset([\"logs\", \"assets\"])\n  bucket   = \"acme-${each.key}\"\n}",
+   "right": "Creates one resource per entry, keyed by name",
+   "wrong": [
+    "Creates a single resource with five copies",
+    "Reads existing resources",
+    "Runs a script on the server"
+   ],
+   "tier": 4,
+   "why": "for_each keys instances by name, so removing one leaves the others untouched."
+  },
+  {
+   "q": "A GitHub Actions job needs a database for integration tests. What does this configuration provide?",
+   "code": "jobs:\n  test:\n    runs-on: ubuntu-latest\n    services:\n      db:\n        image: postgres\n        ports: [\"5432:5432\"]",
+   "right": "A Postgres service container available to the job for its duration",
+   "wrong": [
+    "A permanent production database",
+    "A cache of the test results",
+    "A secret containing the database password"
+   ],
+   "tier": 4,
+   "why": "Service containers start alongside the job and are discarded afterwards."
+  },
+  {
+   "q": "Which line pins this third-party action to an exact version of its code?",
+   "right": "uses: org/action@a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+   "wrong": [
+    "uses: org/action@main",
+    "uses: org/action@v1",
+    "uses: org/action@latest"
+   ],
+   "tier": 4,
+   "why": "A full commit SHA cannot be moved; branches and tags can."
+  },
+  {
+   "q": "What does this security-group style rule allow?",
+   "code": "ingress:\n  protocol: tcp\n  port: 443\n  source: 0.0.0.0/0",
+   "right": "Inbound HTTPS from anywhere",
+   "wrong": [
+    "Outbound traffic only",
+    "SSH from one office address",
+    "All inbound ports"
+   ],
+   "tier": 4,
+   "why": "Port 443 over TCP from 0.0.0.0/0 is open to the internet."
+  },
+  {
+   "q": "What does this ingress-like rule risk if applied to a database?",
+   "code": "ingress:\n  protocol: tcp\n  port: 5432\n  source: 0.0.0.0/0",
+   "right": "Exposing the database port to the entire internet",
+   "wrong": [
+    "Blocking the application",
+    "Encrypting traffic twice",
+    "Disabling replication"
+   ],
+   "tier": 5,
+   "why": "Database ports should be limited to the application's security group, not open to the world."
+  },
+  {
+   "q": "This Kubernetes policy is applied in a namespace. What does it do?",
+   "code": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: default-deny\nspec:\n  podSelector: {}\n  policyTypes: [Ingress]",
+   "right": "Denies all inbound traffic to every pod in the namespace",
+   "wrong": [
+    "Allows all inbound traffic",
+    "Blocks only outbound traffic",
+    "Encrypts pod traffic"
+   ],
+   "tier": 5,
+   "why": "An empty pod selector with no ingress rules is a default-deny for ingress; other policies then add allowances."
+  },
+  {
+   "q": "On our production VPS, which program restarts a crashed Node app?",
+   "right": "PM2",
+   "wrong": [
+    "Cloudflare",
+    "certbot",
+    "Apache"
+   ],
+   "tier": 2,
+   "why": "PM2 supervises the process and revives it after a reboot once pm2 save has been run."
+  },
+  {
+   "q": "Why does gglearn only allow Cloudflare to connect to its origin?",
+   "right": "To stop anyone bypassing Cloudflare and spoofing the X-Forwarded-For header",
+   "wrong": [
+    "To speed up certificate renewal",
+    "To remove the need for Apache",
+    "To make PM2 restart faster"
+   ],
+   "tier": 3,
+   "why": "The app reads the client address from X-Forwarded-For, which is trustworthy only when traffic comes through Cloudflare."
+  },
+  {
+   "q": "A teammate says our infrastructure is managed with Terraform. What is accurate?",
+   "right": "No .tf files exist in the repos searched; Terraform is only a catalogued integration",
+   "wrong": [
+    "Terraform builds the VPS for gglearn",
+    "Terraform provisions the Moksy cluster",
+    "Terraform runs the gglearn deploy workflow"
+   ],
+   "tier": 4,
+   "why": "The rule is to say run, configured, catalogued or absent; Terraform is absent."
+  },
+  {
+   "q": "A Moksy container exits with code 0 and stays down. Which restart policy would have prevented that?",
+   "right": "restart: unless-stopped",
+   "wrong": [
+    "restart: on-failure",
+    "restart: no",
+    "restart: never"
+   ],
+   "tier": 4,
+   "why": "on-failure only restarts after non-zero exit codes, so a clean exit is never retried."
+  },
+  {
+   "q": "gglearn's deploy.sh polls the local app after restarting it. What happens if it never returns 200?",
+   "right": "The deploy is marked as failed",
+   "wrong": [
+    "The deploy rolls back automatically",
+    "The workflow ignores it and succeeds",
+    "PM2 is uninstalled"
+   ],
+   "tier": 4,
+   "why": "The script polls up to ten times and fails the deploy; it does not roll back by itself."
+  },
+  {
+   "q": "Someone proposes moving three small apps from the single VPS to Kubernetes because it is standard. What is the best response?",
+   "right": "Keep Compose and PM2 for now and revisit when service count or scaling needs grow",
+   "wrong": [
+    "Move immediately because Kubernetes is always better",
+    "Move only the database to Kubernetes",
+    "Rewrite the apps first, then decide"
+   ],
+   "tier": 5,
+   "why": "Kubernetes pays off with many services needing automatic scaling and healing; for a few apps it adds operating cost."
+  },
+  {
+   "q": "gglearn's deploy workflow has no tests. Which improvement gives the largest safety gain with the least change?",
+   "right": "Add lint and test steps before the deploy step",
+   "wrong": [
+    "Raise the number of health-poll attempts",
+    "Remove the concurrency group",
+    "Run deploys on a schedule"
+   ],
+   "tier": 5,
+   "why": "A failing check before deploy stops bad code reaching production."
+  },
+  {
+   "q": "Where do we use Nginx?",
+   "right": "Inside Moksy's dashboard container as a static file server",
+   "wrong": [
+    "As the reverse proxy on the VPS",
+    "In front of ggmoney's PHP",
+    "As the load balancer for Kubernetes"
+   ],
+   "tier": 3,
+   "why": "The VPS uses Apache; Nginx appears only in the dashboard image."
+  }
+ ]
+}

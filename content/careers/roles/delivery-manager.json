@@ -1,0 +1,74 @@
+{
+  "role": "delivery manager",
+  "name": "Delivery Manager",
+  "bridges": [
+    {
+      "from": "project manager",
+      "fromLevel": 2,
+      "toLevel": 2
+    },
+    {
+      "from": "developer",
+      "fromLevel": 3,
+      "toLevel": 2
+    }
+  ],
+  "rungs": [
+    {
+      "title": "Delivery Coordinator",
+      "summary": "Learning how teams plan, ship and improve.",
+      "knowledge": "Knows the team's process, boards and release steps.",
+      "delivery": "Keeps boards, releases and reports accurate for a delivery manager.",
+      "leadership": "Facilitates simple ceremonies and writes clear updates.",
+      "steps": []
+    },
+    {
+      "title": "Delivery Manager",
+      "summary": "Gets a team to ship reliably and keeps improving how.",
+      "knowledge": "Fluent in agile practice, estimation, release management and the SDLC.",
+      "delivery": "Owns a team's flow of work: plans, removes blockers and shows the evidence.",
+      "leadership": "Facilitates the team, manages up and across, and resolves conflict early.",
+      "steps": [
+        ["governance-compliance", 5],
+        ["delivery-management", 8],
+        ["tools-plan-design", 5],
+        ["ai-llm-practice", 5],
+        ["product-management-core", 5],
+        ["service-design-pricing", 5],
+        ["engineering-leadership", 5]
+      ]
+    },
+    {
+      "title": "Senior Delivery Manager",
+      "summary": "Owns delivery across several teams.",
+      "knowledge": "Deep in metrics, risk and dependency management; understands the technical constraints.",
+      "delivery": "Owns delivery across several teams and the health of how they work.",
+      "leadership": "Coaches other delivery managers and negotiates scope with leadership.",
+      "steps": [
+        ["delivery-management", 12],
+        ["sdlc-devops", 5],
+        ["people-operations", 8],
+        ["data-analytics", 5],
+        ["product-management-core", 8],
+        ["brand-positioning-voice", 5],
+        ["engineering-leadership", 8]
+      ]
+    },
+    {
+      "title": "Head of Delivery",
+      "summary": "Owns the delivery system for the company.",
+      "knowledge": "Connects delivery capacity to strategy, budget and customers.",
+      "delivery": "Owns delivery performance, capacity planning and the delivery budget.",
+      "leadership": "Leads leaders and reports delivery risk to executives.",
+      "steps": [
+        ["delivery-management", 14],
+        ["people-operations", 10],
+        ["payments-billing", 5],
+        ["governance-compliance", 8],
+        ["product-management-core", 10],
+        ["service-design-pricing", 8],
+        ["engineering-leadership", 10]
+      ]
+    }
+  ]
+}

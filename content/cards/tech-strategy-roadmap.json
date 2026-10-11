@@ -1,0 +1,2916 @@
+{
+ "slug": "tech-strategy-roadmap",
+ "name": "Technology Strategy and Roadmaps",
+ "description": "Technology vision, build-buy-partner choices, platform and architecture strategy, roadmapping, technical debt, vendor and migration decisions, innovation balance, outcome measures, AI adoption and M&A due diligence for technology leaders.",
+ "roles": "cto,architect,ceo,manager",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "vision": "technology strategy concept",
+  "sourcing": "build-buy-partner consideration",
+  "arch": "platform and architecture strategy principle",
+  "road": "roadmapping or prioritisation method",
+  "debt": "technical debt practice",
+  "radar": "technology adoption practice",
+  "vendor": "vendor and lock-in concept",
+  "mig": "modernisation and migration pattern",
+  "balance": "innovation and run-the-business practice",
+  "okr": "goal and outcome-measure concept",
+  "ai": "AI adoption strategy concept",
+  "dd": "technical due diligence check",
+  "opmodel": "technology operating-model choice",
+  "anti": "technology strategy anti-pattern"
+ },
+ "cards": [
+  {
+   "group": "vision",
+   "subject": "Technology vision",
+   "tier": 1,
+   "says": [
+    "describes the future state technology should enable for the business",
+    "gives teams a long-lived direction to align decisions to",
+    "stays stable across several planning cycles"
+   ],
+   "use": "need teams to make consistent choices without asking leadership each time",
+   "not": [
+    "lists the projects planned for next quarter"
+   ],
+   "like": [
+    "Technology strategy"
+   ]
+  },
+  {
+   "group": "vision",
+   "subject": "Technology strategy",
+   "tier": 1,
+   "says": [
+    "sets the choices and trade-offs that connect technology to business goals",
+    "states what the organisation will do and deliberately not do",
+    "turns the vision into a coherent set of bets and constraints"
+   ],
+   "use": "need to explain why some options are chosen and others are refused",
+   "not": [
+    "is a list of every system the company owns"
+   ],
+   "like": [
+    "Technology vision",
+    "Roadmap"
+   ]
+  },
+  {
+   "group": "vision",
+   "subject": "Strategy kernel",
+   "tier": 3,
+   "says": [
+    "combines a diagnosis, guiding policy and coherent actions",
+    "starts by naming the specific challenge that the strategy must overcome",
+    "rejects goals-only documents that name no obstacle"
+   ],
+   "use": "want a test for whether a strategy document is a real strategy",
+   "not": [
+    "is satisfied by a list of aspirational goals"
+   ],
+   "like": [
+    "Wardley mapping"
+   ]
+  },
+  {
+   "group": "vision",
+   "subject": "Wardley mapping",
+   "tier": 3,
+   "says": [
+    "places components on a value chain against their evolution stage",
+    "shows which parts are genesis, custom, product or commodity",
+    "helps decide where to build, buy or outsource by showing maturity"
+   ],
+   "use": "need a shared picture of landscape and movement before choosing sourcing",
+   "not": [
+    "scores projects by return on investment"
+   ],
+   "like": [
+    "Strategy kernel",
+    "Technology radar"
+   ]
+  },
+  {
+   "group": "vision",
+   "subject": "Business-technology alignment",
+   "tier": 2,
+   "says": [
+    "links technology investments to named business outcomes",
+    "requires the technology leader to understand how the company earns money",
+    "is tested by whether business leaders can explain why a system exists"
+   ],
+   "use": "notice that funding for technology work is questioned as a cost centre",
+   "not": [
+    "means technology builds whatever the business requests"
+   ]
+  },
+  {
+   "group": "vision",
+   "subject": "Capability map",
+   "tier": 2,
+   "says": [
+    "lists what the business must be able to do independent of systems or org charts",
+    "reveals which capabilities are differentiating and which are commodity",
+    "is a stable reference for mapping investments and applications"
+   ],
+   "use": "need to see where technology spend sits against business capabilities",
+   "not": [
+    "shows the network topology of the data centre"
+   ],
+   "like": [
+    "Wardley mapping"
+   ]
+  },
+  {
+   "group": "vision",
+   "subject": "Strategic differentiator",
+   "tier": 2,
+   "says": [
+    "is a capability that customers choose the company for",
+    "deserves the best engineers and custom investment",
+    "is a candidate for building rather than buying"
+   ],
+   "use": "decide which systems merit in-house engineering",
+   "not": [
+    "is any system that is expensive to run"
+   ],
+   "like": [
+    "Commodity capability"
+   ]
+  },
+  {
+   "group": "vision",
+   "subject": "Commodity capability",
+   "tier": 2,
+   "says": [
+    "is needed by every company in the sector but does not win customers",
+    "is usually better bought or consumed as a service",
+    "should receive standard solutions rather than bespoke engineering"
+   ],
+   "use": "hear a team propose custom building of payroll or email",
+   "not": [
+    "is always the lowest-risk area to cut"
+   ],
+   "like": [
+    "Strategic differentiator"
+   ]
+  },
+  {
+   "group": "vision",
+   "subject": "Strategy cascade",
+   "tier": 3,
+   "says": [
+    "translates company goals into technology objectives and then team-level bets",
+    "lets each level see the goal above it",
+    "breaks when teams cannot trace work back to a company goal"
+   ],
+   "use": "notice that teams complain that priorities seem arbitrary",
+   "not": [
+    "sends detailed instructions down without any feedback"
+   ]
+  },
+  {
+   "group": "sourcing",
+   "subject": "Build",
+   "tier": 1,
+   "says": [
+    "creates the capability in-house with the company's own engineers",
+    "gives the most control over behaviour and roadmap",
+    "carries ongoing ownership of maintenance, security and staffing"
+   ],
+   "use": "judge that the capability is a strategic differentiator",
+   "not": [
+    "has no cost once the first release ships"
+   ],
+   "like": [
+    "Buy",
+    "Partner"
+   ]
+  },
+  {
+   "group": "sourcing",
+   "subject": "Buy",
+   "tier": 1,
+   "says": [
+    "acquires a ready product or service from a vendor",
+    "shortens time to value for non-differentiating capability",
+    "trades control and customisation for speed and shared maintenance"
+   ],
+   "use": "find that the need is common and a mature product fits most of it",
+   "not": [
+    "removes the need for any internal ownership"
+   ],
+   "like": [
+    "Build",
+    "Partner"
+   ]
+  },
+  {
+   "group": "sourcing",
+   "subject": "Partner",
+   "tier": 2,
+   "says": [
+    "shares delivery or capability with another organisation under an agreement",
+    "can provide skills or reach the company lacks",
+    "creates dependence on the partner's priorities and continuity"
+   ],
+   "use": "need a capability fast and want shared risk or channel access",
+   "not": [
+    "gives full control of the partner's roadmap"
+   ],
+   "like": [
+    "Build",
+    "Buy"
+   ]
+  },
+  {
+   "group": "sourcing",
+   "subject": "Total cost of ownership",
+   "tier": 2,
+   "says": [
+    "counts run, support, integration, staffing and exit costs as well as purchase price",
+    "is the basis for comparing build and buy fairly",
+    "grows over years rather than appearing in the first quote"
+   ],
+   "use": "notice that build and buy proposals compare only licence against initial development",
+   "not": [
+    "equals the licence fee in the vendor quote"
+   ]
+  },
+  {
+   "group": "sourcing",
+   "subject": "Fit-gap analysis",
+   "tier": 3,
+   "says": [
+    "compares the requirements to what a product does out of the box",
+    "identifies the gaps that need configuration, custom code or process change",
+    "exposes how much customisation a buy decision hides"
+   ],
+   "use": "hear a vendor claim their product meets all requirements",
+   "not": [
+    "scores vendors on brand reputation"
+   ]
+  },
+  {
+   "group": "sourcing",
+   "subject": "Core versus context",
+   "tier": 3,
+   "says": [
+    "separates activities that differentiate the business from those that merely must work",
+    "directs scarce engineering effort to the core",
+    "treats context as a candidate for buying or outsourcing"
+   ],
+   "use": "notice that engineering time is spent on non-differentiating systems",
+   "not": [
+    "names the parts of the stack with the most users"
+   ],
+   "like": [
+    "Strategic differentiator"
+   ]
+  },
+  {
+   "group": "sourcing",
+   "subject": "Hidden cost of customising bought software",
+   "tier": 4,
+   "says": [
+    "makes every vendor upgrade a project",
+    "erodes the speed advantage that justified buying",
+    "turns a product into a bespoke system with none of the control of building"
+   ],
+   "use": "inherit a bought package that has been heavily modified over many releases",
+   "not": [
+    "is avoided by customising only through direct database changes"
+   ]
+  },
+  {
+   "group": "sourcing",
+   "subject": "Acqui-hire or acquisition as sourcing",
+   "tier": 4,
+   "says": [
+    "buys a team and capability instead of building or licensing them",
+    "carries integration and retention risk of key people",
+    "needs a plan for what happens to the acquired product"
+   ],
+   "use": "need a capability that would take years to hire for",
+   "not": [
+    "transfers knowledge permanently on signing the deal"
+   ],
+   "like": [
+    "Partner"
+   ]
+  },
+  {
+   "group": "sourcing",
+   "subject": "Open-source adoption",
+   "tier": 3,
+   "says": [
+    "avoids licence fees but not support and maintenance cost",
+    "requires a plan for security updates and upstream contribution",
+    "needs a licence review before use in a product"
+   ],
+   "use": "see a team adopt a free library at the heart of a product",
+   "not": [
+    "carries no legal obligations"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Platform strategy",
+   "tier": 2,
+   "says": [
+    "builds shared capabilities that many product teams reuse",
+    "aims to lower the cost and time of delivering each product",
+    "succeeds only when product teams choose to use the platform"
+   ],
+   "use": "notice that several teams are rebuilding the same plumbing",
+   "not": [
+    "forces every team onto one tool regardless of need"
+   ],
+   "like": [
+    "Paved road"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Paved road",
+   "tier": 3,
+   "says": [
+    "offers a supported, easy default path for common needs",
+    "lets teams leave the path if they accept the extra ownership",
+    "reduces cognitive load without banning alternatives"
+   ],
+   "use": "want consistency without a central approval board",
+   "not": [
+    "bans every approach other than the default"
+   ],
+   "like": [
+    "Platform strategy",
+    "Golden path template"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Golden path template",
+   "tier": 3,
+   "says": [
+    "gives a working starter that bakes in standards, security and observability",
+    "gets a new service to production in minimal steps",
+    "encodes the paved road into reusable scaffolding"
+   ],
+   "use": "notice that new services keep being created with inconsistent setup",
+   "not": [
+    "is a document teams read once a year"
+   ],
+   "like": [
+    "Paved road"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Platform as a product",
+   "tier": 3,
+   "says": [
+    "treats internal teams as customers with needs and feedback",
+    "measures adoption and satisfaction rather than mandate",
+    "gives the platform team its own roadmap and product owner"
+   ],
+   "use": "see teams work around a platform that already exists",
+   "not": [
+    "relies on a mandate to guarantee usage"
+   ],
+   "like": [
+    "Platform strategy"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Conway's law",
+   "tier": 2,
+   "says": [
+    "says system structure mirrors the communication structure of the organisation",
+    "means team boundaries shape architecture boundaries",
+    "implies architecture change may need an organisation change"
+   ],
+   "use": "watch an intended architecture keep being undermined by team structure",
+   "not": [
+    "states that systems get faster as teams grow"
+   ],
+   "like": [
+    "Inverse Conway manoeuvre"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Inverse Conway manoeuvre",
+   "tier": 4,
+   "says": [
+    "designs the team structure to produce the target architecture",
+    "aligns teams to desired service boundaries before building them",
+    "uses organisation change as a tool for architecture change"
+   ],
+   "use": "want a modular architecture but teams are organised by technical layer",
+   "not": [
+    "redraws the architecture diagram and leaves teams alone"
+   ],
+   "like": [
+    "Conway's law"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Architecture principle",
+   "tier": 2,
+   "says": [
+    "is a durable rule guiding design choices across projects",
+    "is stated with rationale and implications",
+    "helps teams decide consistently without central review"
+   ],
+   "use": "notice that architecture review is a bottleneck",
+   "not": [
+    "is a mandatory technology brand list"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Enterprise architecture",
+   "tier": 2,
+   "says": [
+    "describes how business, data, application and technology layers fit together",
+    "supports planning across many teams and systems",
+    "fails if it becomes documentation disconnected from delivery"
+   ],
+   "use": "need a coherent view across many programmes",
+   "not": [
+    "is the detailed design of a single application"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Architecture decision record",
+   "tier": 2,
+   "says": [
+    "records a significant decision with its context and consequences",
+    "keeps a history of why the system looks as it does",
+    "is short and kept with the code or in a shared repository"
+   ],
+   "use": "notice that new joiners keep reversing past decisions without knowing the reasons",
+   "not": [
+    "is a ticket describing a bug fix"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Reversible versus irreversible decision",
+   "tier": 3,
+   "says": [
+    "separates choices that are cheap to undo from those that are costly",
+    "allows fast decisions on the reversible kind",
+    "calls for more deliberation on the irreversible kind"
+   ],
+   "use": "notice that leadership debates every choice with equal ceremony",
+   "not": [
+    "treats all decisions as needing full committee review"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Modular monolith",
+   "tier": 4,
+   "says": [
+    "keeps one deployable unit with enforced internal module boundaries",
+    "avoids distributed-system costs while preserving modularity",
+    "can later split into services along the existing boundaries"
+   ],
+   "use": "want clean boundaries in a small organisation without microservice overhead",
+   "not": [
+    "is the same as an unstructured big ball of mud"
+   ],
+   "like": [
+    "Microservices"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Microservices",
+   "tier": 3,
+   "says": [
+    "split a system into independently deployable services",
+    "let teams release on their own cadence",
+    "add network, data consistency and operational cost"
+   ],
+   "use": "notice that many autonomous teams are blocked by a shared deployment",
+   "not": [
+    "always cost less to run than a single deployable"
+   ],
+   "like": [
+    "Modular monolith"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "Fitness function",
+   "tier": 5,
+   "says": [
+    "is an automated check that an architectural characteristic still holds",
+    "turns an architectural intent into a measurable test",
+    "guards against gradual drift in a system's structure"
+   ],
+   "use": "notice that architectural rules are written down but regularly violated",
+   "not": [
+    "is a quarterly survey of developer happiness"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Roadmap",
+   "tier": 1,
+   "says": [
+    "communicates planned direction and priorities over time",
+    "is a statement of intent rather than a contract",
+    "changes as learning and conditions change"
+   ],
+   "use": "notice that stakeholders ask where the product or platform is heading",
+   "not": [
+    "promises exact dates for every feature"
+   ],
+   "like": [
+    "Technology strategy"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Outcome-based roadmap",
+   "tier": 3,
+   "says": [
+    "frames items as problems to solve or results to achieve",
+    "leaves room for teams to choose the solution",
+    "avoids committing to a feature list in advance"
+   ],
+   "use": "notice that feature-date roadmaps keep breaking",
+   "not": [
+    "lists named features with delivery dates"
+   ],
+   "like": [
+    "Now-next-later roadmap"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Now-next-later roadmap",
+   "tier": 2,
+   "says": [
+    "groups work by horizon rather than by dated release",
+    "signals decreasing certainty for further horizons",
+    "avoids false precision about dates"
+   ],
+   "use": "notice that leadership wants direction without a dated commitment",
+   "not": [
+    "lists work in strict calendar order"
+   ],
+   "like": [
+    "Outcome-based roadmap"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "RICE scoring",
+   "tier": 3,
+   "says": [
+    "scores reach, impact, confidence and effort to rank items",
+    "divides the benefit factors by effort",
+    "includes a confidence factor to discount weak estimates"
+   ],
+   "use": "need a repeatable way to compare many small initiatives",
+   "not": [
+    "multiplies cost by time to deliver"
+   ],
+   "like": [
+    "WSJF",
+    "MoSCoW"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "WSJF",
+   "tier": 3,
+   "says": [
+    "ranks work by cost of delay divided by job size",
+    "favours small items with high urgency",
+    "comes from lean and scaled agile practice"
+   ],
+   "use": "notice that delay on some items is much more costly than on others",
+   "not": [
+    "ranks work by the loudest sponsor"
+   ],
+   "like": [
+    "RICE scoring",
+    "Cost of delay"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Cost of delay",
+   "tier": 3,
+   "says": [
+    "quantifies the value lost for each unit of time an item waits",
+    "differs between items with the same total value",
+    "shows when speed matters more than size of benefit"
+   ],
+   "use": "see two projects of equal value compete for the same team",
+   "not": [
+    "is the project budget overrun"
+   ],
+   "like": [
+    "WSJF"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "MoSCoW",
+   "tier": 2,
+   "says": [
+    "sorts requirements into must, should, could and will not",
+    "fixes scope by dropping lower categories first when time runs out",
+    "forces explicit agreement on what is not included"
+   ],
+   "use": "face a fixed deadline with variable scope",
+   "not": [
+    "scores items on a numeric weighted scale"
+   ],
+   "like": [
+    "RICE scoring",
+    "Kano model"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Kano model",
+   "tier": 4,
+   "says": [
+    "classifies features as basic, performance or delighters",
+    "shows that some features only avoid dissatisfaction",
+    "predicts that delighters become expectations over time"
+   ],
+   "use": "notice that adding features is no longer raising satisfaction",
+   "not": [
+    "ranks items by engineering effort"
+   ],
+   "like": [
+    "MoSCoW"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Opportunity solution tree",
+   "tier": 4,
+   "says": [
+    "maps a desired outcome to opportunities and then candidate solutions",
+    "makes the reasoning behind a roadmap item visible",
+    "supports comparing several solutions for one opportunity"
+   ],
+   "use": "notice that teams jump straight from a goal to a single solution",
+   "not": [
+    "is a hierarchy of the organisation's teams"
+   ],
+   "like": [
+    "Outcome-based roadmap"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Capacity planning",
+   "tier": 3,
+   "says": [
+    "balances planned work against the actual availability of teams",
+    "reserves capacity for incidents, maintenance and debt",
+    "exposes that adding items means removing others"
+   ],
+   "use": "notice that roadmaps are always overcommitted",
+   "not": [
+    "assumes every team member is fully allocated to features"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Dependency mapping",
+   "tier": 3,
+   "says": [
+    "reveals which teams and systems must deliver for others to proceed",
+    "identifies critical-path cross-team work",
+    "helps sequence work to reduce waiting"
+   ],
+   "use": "notice that programme delays keep being caused by other teams",
+   "not": [
+    "lists only the external vendors"
+   ]
+  },
+  {
+   "group": "road",
+   "subject": "Three-horizon model",
+   "tier": 4,
+   "says": [
+    "labels horizons as core, emerging and future options",
+    "expects different return profiles in each horizon",
+    "stops the core from starving the new bets"
+   ],
+   "use": "notice that leaders need to explain why some bets lack near-term return",
+   "not": [
+    "divides projects into three equal budgets"
+   ],
+   "like": [
+    "Multi-horizon planning"
+   ]
+  },
+  {
+   "group": "debt",
+   "subject": "Technical debt",
+   "tier": 1,
+   "says": [
+    "is the future cost created by shortcuts or outdated design choices",
+    "slows later change and raises risk until it is repaid",
+    "can be a deliberate trade-off when taken knowingly"
+   ],
+   "use": "notice that delivery speed has dropped as the code base aged",
+   "not": [
+    "is any bug in the system"
+   ],
+   "like": [
+    "Technical debt quadrant"
+   ]
+  },
+  {
+   "group": "debt",
+   "subject": "Technical debt quadrant",
+   "tier": 3,
+   "says": [
+    "classifies debt as deliberate or inadvertent and prudent or reckless",
+    "separates conscious trade-offs from ignorance",
+    "helps decide whether a fix is policy, training or repayment"
+   ],
+   "use": "notice that team disagrees about whether debt was a failure or a choice",
+   "not": [
+    "divides debt by the programming language involved"
+   ],
+   "like": [
+    "Technical debt"
+   ]
+  },
+  {
+   "group": "debt",
+   "subject": "Debt register",
+   "tier": 3,
+   "says": [
+    "lists known debt items with impact, cost and affected area",
+    "lets leaders compare debt with feature work",
+    "only helps if items are reviewed and prioritised"
+   ],
+   "use": "notice that debt is discussed but nobody can quantify it",
+   "not": [
+    "is a log of production incidents"
+   ]
+  },
+  {
+   "group": "debt",
+   "subject": "Capacity allocation for debt",
+   "tier": 3,
+   "says": [
+    "reserves a standing share of capacity for repayment",
+    "prevents debt work from being deferred indefinitely",
+    "avoids the need to renegotiate for each item"
+   ],
+   "use": "notice that debt is always cut when deadlines tighten",
+   "not": [
+    "schedules a single big clean-up project at year end"
+   ],
+   "like": [
+    "Boy scout rule"
+   ]
+  },
+  {
+   "group": "debt",
+   "subject": "Boy scout rule",
+   "tier": 2,
+   "says": [
+    "leaves code a little better than it was found",
+    "pays small amounts of debt during normal work",
+    "does not replace planned work on large structural debt"
+   ],
+   "use": "want steady small improvements in areas being changed",
+   "not": [
+    "requires stopping feature work for a rewrite"
+   ],
+   "like": [
+    "Capacity allocation for debt"
+   ]
+  },
+  {
+   "group": "debt",
+   "subject": "Interest on debt",
+   "tier": 3,
+   "says": [
+    "is the ongoing extra cost of working around the shortcut",
+    "is paid every time the affected area changes",
+    "makes debt in rarely touched code cheap to leave"
+   ],
+   "use": "notice that you must decide which debt to repay first",
+   "not": [
+    "is a fee charged by the cloud provider"
+   ]
+  },
+  {
+   "group": "debt",
+   "subject": "Architectural debt",
+   "tier": 4,
+   "says": [
+    "lies in structure and boundaries rather than individual lines",
+    "is costlier to repay than code-level debt",
+    "shows up as changes that touch many modules at once"
+   ],
+   "use": "notice that small changes need coordinated edits in many places",
+   "not": [
+    "is fixed by running a code formatter"
+   ],
+   "like": [
+    "Technical debt"
+   ]
+  },
+  {
+   "group": "debt",
+   "subject": "Deliberate prudent debt",
+   "tier": 5,
+   "says": [
+    "is taken knowingly to hit a market window with a plan to repay",
+    "is recorded with an owner and trigger for repayment",
+    "becomes reckless when the repayment plan is never honoured"
+   ],
+   "use": "judge that a launch date matters more than code quality for a defined period",
+   "not": [
+    "is created by developers who do not know better"
+   ],
+   "like": [
+    "Technical debt quadrant"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Technology radar",
+   "tier": 1,
+   "says": [
+    "visualises technologies in rings by adoption stance",
+    "is a living view reviewed on a regular cadence",
+    "shows which technologies are encouraged and which are being phased out"
+   ],
+   "use": "want a shared view of which technologies teams should choose",
+   "not": [
+    "is a list of vendor contract end dates"
+   ],
+   "like": [
+    "Wardley mapping"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Adopt ring",
+   "tier": 2,
+   "says": [
+    "marks technologies that are proven and recommended for general use",
+    "signals default choice for new work",
+    "comes after evaluation in real use"
+   ],
+   "use": "notice that teams need a clear default for a common need",
+   "not": [
+    "marks technologies that are being retired"
+   ],
+   "like": [
+    "Hold ring",
+    "Trial ring"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Trial ring",
+   "tier": 2,
+   "says": [
+    "marks technologies worth using on a real project with contained risk",
+    "gathers evidence before broad adoption",
+    "is for technologies that have shown promise"
+   ],
+   "use": "want real-world evidence from a low-risk project",
+   "not": [
+    "marks technologies approved for every team"
+   ],
+   "like": [
+    "Adopt ring",
+    "Assess ring"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Assess ring",
+   "tier": 2,
+   "says": [
+    "marks technologies worth exploring to understand their potential",
+    "does not yet recommend production use",
+    "involves reading, prototypes or spikes rather than commitment"
+   ],
+   "use": "notice that a new technology looks interesting but is untested here",
+   "not": [
+    "marks technologies recommended as defaults"
+   ],
+   "like": [
+    "Trial ring"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Hold ring",
+   "tier": 2,
+   "says": [
+    "marks technologies that new projects should not start with",
+    "applies both to immature and to declining technologies",
+    "does not demand immediate removal of existing use"
+   ],
+   "use": "want to stop spread of a technology the company is moving away from",
+   "not": [
+    "demands immediate replacement of every instance"
+   ],
+   "like": [
+    "Adopt ring"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Innovation token",
+   "tier": 4,
+   "says": [
+    "treats unusual technology choices as a limited budget",
+    "encourages boring technology for most of the stack",
+    "reserves novelty for where it creates real advantage"
+   ],
+   "use": "notice that a team wants a new database, language and framework in one project",
+   "not": [
+    "rewards using the newest option wherever possible"
+   ],
+   "like": [
+    "Boring technology"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Boring technology",
+   "tier": 3,
+   "says": [
+    "favours well understood, proven tools for most needs",
+    "has known failure modes and plentiful skills",
+    "lowers operational risk and onboarding cost"
+   ],
+   "use": "notice that a straightforward need is being solved with an unproven stack",
+   "not": [
+    "avoids all change regardless of benefit"
+   ],
+   "like": [
+    "Innovation token"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Proof of concept",
+   "tier": 2,
+   "says": [
+    "tests technical feasibility of an idea in limited scope",
+    "has a defined question and a time limit",
+    "is not meant to become the production system"
+   ],
+   "use": "need to answer whether an approach can work at all",
+   "not": [
+    "delivers a production-ready release"
+   ],
+   "like": [
+    "Pilot"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Pilot",
+   "tier": 3,
+   "says": [
+    "tests a solution with real users in a limited setting",
+    "measures value and adoption before scaling",
+    "needs defined success criteria and exit decision"
+   ],
+   "use": "want evidence of real-world value before wider roll-out",
+   "not": [
+    "is an unlimited trial with no end date"
+   ],
+   "like": [
+    "Proof of concept"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Technology lifecycle management",
+   "tier": 3,
+   "says": [
+    "tracks each technology from introduction through support to retirement",
+    "sets end-of-life dates early enough to plan replacement",
+    "prevents unsupported software from silently accumulating"
+   ],
+   "use": "notice that nobody knows which components are close to end of support",
+   "not": [
+    "tracks only hardware warranties"
+   ]
+  },
+  {
+   "group": "radar",
+   "subject": "Technology rationalisation",
+   "tier": 4,
+   "says": [
+    "reduces the number of overlapping tools and platforms",
+    "lowers support, licence and skills cost",
+    "needs migration funding to deliver the saving"
+   ],
+   "use": "notice that the estate has many tools for the same job",
+   "not": [
+    "adds new tools to cover every team's preference"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Vendor lock-in",
+   "tier": 1,
+   "says": [
+    "makes leaving a supplier costly in money, time or risk",
+    "grows with proprietary features and accumulated data",
+    "is a trade-off against the speed gained from deep integration"
+   ],
+   "use": "notice that leaving a platform would require a rewrite",
+   "not": [
+    "only occurs with open-source software"
+   ],
+   "like": [
+    "Exit strategy"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Exit strategy",
+   "tier": 3,
+   "says": [
+    "defines in advance how the company would leave a supplier",
+    "covers data export, replacement options and transition time",
+    "is part of the decision to adopt, not an afterthought"
+   ],
+   "use": "are signing a multi-year contract with a critical supplier",
+   "not": [
+    "is written when the supplier raises its prices"
+   ],
+   "like": [
+    "Vendor lock-in"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Abstraction layer",
+   "tier": 4,
+   "says": [
+    "hides a supplier behind a company-owned interface",
+    "lowers switching cost for the abstracted features",
+    "adds build cost and may hide useful vendor capabilities"
+   ],
+   "use": "want the option to change suppliers for a narrow capability",
+   "not": [
+    "removes lock-in completely at no cost"
+   ],
+   "like": [
+    "Multi-cloud"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Multi-cloud",
+   "tier": 4,
+   "says": [
+    "spreads workloads over more than one cloud provider",
+    "reduces dependence on one provider",
+    "adds complexity and reduces use of provider-specific services"
+   ],
+   "use": "notice that regulation or risk policy requires provider diversity",
+   "not": [
+    "is cheaper than single-provider by default"
+   ],
+   "like": [
+    "Abstraction layer"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Data portability",
+   "tier": 3,
+   "says": [
+    "is the ability to extract data in a usable open format",
+    "should be tested before the contract ends",
+    "directly sets how painful an exit will be"
+   ],
+   "use": "are evaluating a software-as-a-service product",
+   "not": [
+    "is guaranteed by the vendor's marketing page"
+   ],
+   "like": [
+    "Exit strategy"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Concentration risk",
+   "tier": 4,
+   "says": [
+    "arises when many critical services depend on one supplier",
+    "makes a single outage or dispute a company-wide event",
+    "is assessed across the whole estate rather than per project"
+   ],
+   "use": "notice that many separate teams have independently chosen the same provider",
+   "not": [
+    "is eliminated by negotiating a lower price"
+   ],
+   "like": [
+    "Vendor lock-in"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Service level agreement",
+   "tier": 2,
+   "says": [
+    "commits a supplier to measurable service levels",
+    "usually offers credits rather than compensation for loss",
+    "covers only what is written in the agreement"
+   ],
+   "use": "notice that outages at a supplier hurt the business",
+   "not": [
+    "guarantees zero downtime"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Escrow agreement",
+   "tier": 5,
+   "says": [
+    "places source code with a neutral third party",
+    "releases it if the supplier fails or defaults",
+    "protects continuity for a bespoke or critical system"
+   ],
+   "use": "notice that a small supplier maintains a critical bespoke system",
+   "not": [
+    "gives the customer ownership of the supplier's product"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Vendor scorecard",
+   "tier": 3,
+   "says": [
+    "evaluates suppliers against weighted criteria set before demos",
+    "reduces the influence of presentations on the decision",
+    "includes fit, cost, risk and exit factors"
+   ],
+   "use": "notice that selection is driven by whoever gave the best demonstration",
+   "not": [
+    "compares suppliers on logo recognition"
+   ]
+  },
+  {
+   "group": "vendor",
+   "subject": "Negotiating leverage",
+   "tier": 4,
+   "says": [
+    "is strongest before commitment and weakest after deep integration",
+    "comes from credible alternatives",
+    "declines as switching cost rises"
+   ],
+   "use": "notice that renewal pricing from a deeply embedded supplier rises sharply",
+   "not": [
+    "is highest once the product is in production"
+   ],
+   "like": [
+    "Vendor lock-in"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Strangler fig pattern",
+   "tier": 3,
+   "says": [
+    "grows a new system around the old one gradually",
+    "routes functions to the new system one slice at a time",
+    "retires the old system once nothing depends on it"
+   ],
+   "use": "notice that a large legacy system cannot be switched off in one go",
+   "not": [
+    "replaces the whole system in one release"
+   ],
+   "like": [
+    "Big-bang migration"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Big-bang migration",
+   "tier": 3,
+   "says": [
+    "switches all users to the new system at a single cutover",
+    "concentrates risk in one event",
+    "needs a tested rollback plan"
+   ],
+   "use": "notice that the old and new systems cannot run side by side",
+   "not": [
+    "moves functions across gradually"
+   ],
+   "like": [
+    "Strangler fig pattern",
+    "Parallel run"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Parallel run",
+   "tier": 4,
+   "says": [
+    "operates old and new systems together on the same inputs",
+    "compares outputs to confirm the new system is correct",
+    "increases workload and cost during the overlap"
+   ],
+   "use": "notice that results of a critical calculation must be proven identical",
+   "not": [
+    "switches users with no overlap period"
+   ],
+   "like": [
+    "Big-bang migration"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Rehost",
+   "tier": 2,
+   "says": [
+    "moves an application to new infrastructure with minimal change",
+    "is the quickest cloud migration approach",
+    "captures few of the benefits of cloud-native design"
+   ],
+   "use": "notice that a data centre exit deadline is close",
+   "not": [
+    "rewrites the application for cloud services"
+   ],
+   "like": [
+    "Refactor",
+    "Replatform"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Replatform",
+   "tier": 3,
+   "says": [
+    "moves an application with modest changes to use managed services",
+    "keeps the core architecture",
+    "balances effort against some cloud benefit"
+   ],
+   "use": "want managed database benefits without a rewrite",
+   "not": [
+    "rebuilds the application from scratch"
+   ],
+   "like": [
+    "Rehost",
+    "Refactor"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Refactor for the cloud",
+   "tier": 4,
+   "says": [
+    "redesigns an application to use cloud-native capabilities",
+    "has the highest effort of the migration approaches",
+    "delivers the most elasticity and operational benefit"
+   ],
+   "use": "notice that an application must scale far beyond its current design",
+   "not": [
+    "moves virtual machines unchanged"
+   ],
+   "like": [
+    "Rehost",
+    "Replatform"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Retire",
+   "tier": 2,
+   "says": [
+    "switches off applications that are no longer needed",
+    "avoids spending migration effort on unused systems",
+    "often reveals more candidates than expected in an application review"
+   ],
+   "use": "notice that portfolio assessment finds applications with almost no users",
+   "not": [
+    "moves the application to the cloud first"
+   ],
+   "like": [
+    "Retain"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Retain",
+   "tier": 3,
+   "says": [
+    "leaves an application where it is for now",
+    "is a valid outcome of a portfolio assessment",
+    "applies when migration cost exceeds benefit or constraints block a move"
+   ],
+   "use": "notice that an application has regulatory or technical constraints",
+   "not": [
+    "means the application is forgotten"
+   ],
+   "like": [
+    "Retire"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Migration wave planning",
+   "tier": 4,
+   "says": [
+    "groups applications into ordered batches by dependency and risk",
+    "starts with simpler, lower-risk applications to build experience",
+    "sequences tightly coupled systems to move together"
+   ],
+   "use": "notice that hundreds of applications must be migrated",
+   "not": [
+    "migrates the most critical system first for the signal"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Anti-corruption layer",
+   "tier": 5,
+   "says": [
+    "translates between a legacy model and a new model",
+    "stops legacy concepts from leaking into the new design",
+    "is dropped when the legacy system is retired"
+   ],
+   "use": "notice that a new system must integrate with a legacy system whose model is poor",
+   "not": [
+    "exposes the legacy data model directly to new code"
+   ],
+   "like": [
+    "Strangler fig pattern"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "Data migration risk",
+   "tier": 4,
+   "says": [
+    "is a leading cause of failed or delayed cutovers",
+    "needs reconciliation checks between source and target",
+    "is reduced by rehearsing the migration repeatedly"
+   ],
+   "use": "notice that a cutover depends on moving years of data",
+   "not": [
+    "is handled once on the night of cutover"
+   ]
+  },
+  {
+   "group": "balance",
+   "subject": "Run-the-business spend",
+   "tier": 2,
+   "says": [
+    "covers keeping existing services reliable and supported",
+    "is the base load of the technology budget",
+    "tends to grow if debt and complexity are not managed"
+   ],
+   "use": "notice that most of the budget is consumed by keeping systems alive",
+   "not": [
+    "is investment in new products"
+   ],
+   "like": [
+    "Change-the-business spend"
+   ]
+  },
+  {
+   "group": "balance",
+   "subject": "Change-the-business spend",
+   "tier": 2,
+   "says": [
+    "funds new capabilities and transformation",
+    "competes with run costs for the same budget",
+    "includes transformation programmes and new product investment"
+   ],
+   "use": "notice that leadership asks how much goes to new capability",
+   "not": [
+    "pays for operating existing systems"
+   ],
+   "like": [
+    "Run-the-business spend"
+   ]
+  },
+  {
+   "group": "balance",
+   "subject": "Ambidextrous organisation",
+   "tier": 4,
+   "says": [
+    "exploits existing business while exploring new opportunities",
+    "gives exploration its own metrics and protection",
+    "avoids judging new bets by the standards of the core"
+   ],
+   "use": "notice that innovation projects keep dying in the core process",
+   "not": [
+    "applies identical governance to every initiative"
+   ]
+  },
+  {
+   "group": "balance",
+   "subject": "Innovation portfolio",
+   "tier": 3,
+   "says": [
+    "spreads investment across many bets of different risk",
+    "expects some bets to fail",
+    "stops bets early on evidence rather than sunk cost"
+   ],
+   "use": "notice that a single large innovation project holds all the budget",
+   "not": [
+    "funds only the most likely winner"
+   ]
+  },
+  {
+   "group": "balance",
+   "subject": "Stage-gate funding",
+   "tier": 4,
+   "says": [
+    "releases funding in steps as evidence is gathered",
+    "limits loss on bets that do not work",
+    "needs gate criteria set in advance"
+   ],
+   "use": "notice that large bets are approved on a plan alone",
+   "not": [
+    "funds the full cost up front"
+   ]
+  },
+  {
+   "group": "balance",
+   "subject": "Lighthouse project",
+   "tier": 4,
+   "says": [
+    "demonstrates a new way of working or technology on a visible project",
+    "builds credibility and learning for wider adoption",
+    "should be representative enough to teach lessons that transfer"
+   ],
+   "use": "need to show a new approach works before scaling",
+   "not": [
+    "is a secret side project"
+   ],
+   "like": [
+    "Pilot"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "OKR",
+   "tier": 1,
+   "says": [
+    "pairs an objective with measurable key results",
+    "sets ambitious goals reviewed on a short cycle",
+    "measures outcomes more than activity"
+   ],
+   "use": "want goals that teams can track and align to",
+   "not": [
+    "is a list of tasks with owners"
+   ],
+   "like": [
+    "KPI"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "KPI",
+   "tier": 2,
+   "says": [
+    "tracks the ongoing health of a business or system area",
+    "is monitored continuously rather than set per cycle",
+    "signals when something has moved away from normal"
+   ],
+   "use": "need to watch steady-state performance",
+   "not": [
+    "is a time-boxed stretch goal"
+   ],
+   "like": [
+    "OKR"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "Output versus outcome",
+   "tier": 2,
+   "says": [
+    "separates what was delivered from the change it caused",
+    "shows that shipping features is not the same as creating value",
+    "makes outcome the primary measure of success"
+   ],
+   "use": "notice that a team reports many releases but no business change",
+   "not": [
+    "treats number of releases as proof of value"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "Key result",
+   "tier": 2,
+   "says": [
+    "states a measurable result that shows the objective is met",
+    "has a baseline and a target",
+    "is not a task or deliverable"
+   ],
+   "use": "notice that an objective needs evidence of progress",
+   "not": [
+    "lists activities to be completed"
+   ],
+   "like": [
+    "OKR"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "Leading indicator",
+   "tier": 3,
+   "says": [
+    "moves before the outcome it predicts",
+    "lets teams act early",
+    "must be shown to correlate with the result"
+   ],
+   "use": "notice that results lag so far behind that teams cannot steer",
+   "not": [
+    "reports final results after the period ends"
+   ],
+   "like": [
+    "Lagging indicator"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "Lagging indicator",
+   "tier": 3,
+   "says": [
+    "reports results after the fact",
+    "confirms whether an outcome was achieved",
+    "is too late to steer in-period work alone"
+   ],
+   "use": "need confirmation that goals were reached",
+   "not": [
+    "predicts future results"
+   ],
+   "like": [
+    "Leading indicator"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "DORA metrics",
+   "tier": 3,
+   "says": [
+    "measure software delivery throughput and stability",
+    "include deployment frequency and change failure rate",
+    "are used to track delivery capability rather than individual performance"
+   ],
+   "use": "want evidence of delivery performance beyond opinion",
+   "not": [
+    "rank individual developers"
+   ],
+   "like": [
+    "SPACE framework"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "SPACE framework",
+   "tier": 5,
+   "says": [
+    "considers satisfaction, performance, activity, communication and efficiency",
+    "warns against measuring developer productivity with one metric",
+    "combines several dimensions at different levels"
+   ],
+   "use": "notice that a leader asks for a single productivity number",
+   "not": [
+    "recommends counting lines of code"
+   ],
+   "like": [
+    "DORA metrics"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "Goodhart's law",
+   "tier": 4,
+   "says": [
+    "says a measure ceases to be useful once it becomes a target",
+    "explains gaming of metrics",
+    "argues for pairing metrics so that gaming one shows up in another"
+   ],
+   "use": "notice that a metric improved but the underlying goal did not",
+   "not": [
+    "says targets always improve performance"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "North star metric",
+   "tier": 3,
+   "says": [
+    "is a single measure that best captures the value delivered to customers",
+    "aligns teams around one customer-centred outcome",
+    "is supported by input metrics that teams can influence"
+   ],
+   "use": "notice that teams optimise local numbers that do not add up",
+   "not": [
+    "is a revenue target set by finance"
+   ]
+  },
+  {
+   "group": "okr",
+   "subject": "Benefits realisation",
+   "tier": 4,
+   "says": [
+    "checks after delivery whether the expected benefits materialised",
+    "assigns an owner to each benefit",
+    "feeds learning into later investment decisions"
+   ],
+   "use": "notice that projects are closed at go-live with no follow-up on value",
+   "not": [
+    "ends at project closure"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI use-case prioritisation",
+   "tier": 3,
+   "says": [
+    "scores candidate uses by value, feasibility, data readiness and risk",
+    "starts with problems and not with the technology",
+    "avoids launching many disconnected experiments"
+   ],
+   "use": "notice that many teams propose AI ideas at once",
+   "not": [
+    "picks the use case with the most impressive demonstration"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Data readiness",
+   "tier": 3,
+   "says": [
+    "determines whether an AI use case can work at all",
+    "covers availability, quality, access rights and lineage",
+    "is often the real constraint rather than model choice"
+   ],
+   "use": "notice that a promising use case depends on messy or siloed data",
+   "not": [
+    "is solved by choosing a stronger model"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI governance",
+   "tier": 3,
+   "says": [
+    "sets policies for approved uses, data handling, review and accountability",
+    "assigns named owners for AI systems",
+    "scales oversight with the risk of each use"
+   ],
+   "use": "notice that staff are using unapproved AI tools with company data",
+   "not": [
+    "bans all AI use across the company"
+   ],
+   "like": [
+    "Human in the loop"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Human in the loop",
+   "tier": 3,
+   "says": [
+    "keeps a person reviewing or approving AI output before consequences",
+    "is applied more strictly to high-impact decisions",
+    "needs reviewers with time and ability to challenge the output"
+   ],
+   "use": "notice that AI output could affect customers or legal obligations",
+   "not": [
+    "means the model needs no oversight once tested"
+   ],
+   "like": [
+    "AI governance"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Model risk management",
+   "tier": 4,
+   "says": [
+    "covers validation, monitoring and limits for models in use",
+    "tracks drift and performance after deployment",
+    "extends to third-party models the company does not control"
+   ],
+   "use": "notice that a model in production has not been reviewed since launch",
+   "not": [
+    "ends once the model passes launch tests"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI build versus buy",
+   "tier": 4,
+   "says": [
+    "weighs differentiating data and workflow against using vendor models and tools",
+    "often combines bought models with company data and workflow",
+    "depends on whether the AI capability itself is the differentiator"
+   ],
+   "use": "are deciding whether to train a custom model",
+   "not": [
+    "always favours training a proprietary model"
+   ],
+   "like": [
+    "Build"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Evaluation harness",
+   "tier": 4,
+   "says": [
+    "measures AI system quality on a representative test set",
+    "lets changes of model or prompt be compared objectively",
+    "is built before scaling a use case"
+   ],
+   "use": "notice that changing the model breaks things nobody notices",
+   "not": [
+    "is replaced by trying a few prompts by hand"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Shadow AI",
+   "tier": 3,
+   "says": [
+    "is the use of unsanctioned AI tools by staff",
+    "creates data leakage and compliance risk",
+    "is reduced by offering approved alternatives as well as rules"
+   ],
+   "use": "notice that employees paste customer data into public chat tools",
+   "not": [
+    "is AI that runs only at night"
+   ],
+   "like": [
+    "AI governance"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI total cost",
+   "tier": 4,
+   "says": [
+    "includes usage fees, integration, evaluation, monitoring and change effort",
+    "can scale with volume in a way fixed licences do not",
+    "should be modelled at production volume not pilot volume"
+   ],
+   "use": "notice that a pilot looked cheap but production usage is large",
+   "not": [
+    "is the licence price of the model"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Pilot-to-production gap",
+   "tier": 4,
+   "says": [
+    "describes the many AI pilots that never reach daily use",
+    "stems from missing integration, data, ownership and change management",
+    "is narrowed by planning production needs at the start"
+   ],
+   "use": "notice that a demo impressed leadership six months ago and nothing shipped",
+   "not": [
+    "is caused only by weak models"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI augmentation versus automation",
+   "tier": 3,
+   "says": [
+    "augmentation supports people while automation replaces a task",
+    "augmentation is lower risk when errors are costly",
+    "the choice depends on error tolerance and the cost of review"
+   ],
+   "use": "are deciding how much autonomy to give an AI workflow",
+   "not": [
+    "treats both as the same level of risk"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Technical due diligence",
+   "tier": 1,
+   "says": [
+    "assesses the technology, team and risks of an acquisition target",
+    "tests claims made in the sales process",
+    "feeds valuation and integration planning"
+   ],
+   "use": "notice that the company is about to acquire another business",
+   "not": [
+    "is the financial audit of the target"
+   ],
+   "like": [
+    "Integration plan"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Code and architecture review",
+   "tier": 2,
+   "says": [
+    "inspects structure, quality, test coverage and maintainability",
+    "indicates how costly the system will be to extend",
+    "is sampled and focused when the code base is large"
+   ],
+   "use": "need to know how healthy the target's product is",
+   "not": [
+    "counts developers to estimate quality"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Open-source licence audit",
+   "tier": 3,
+   "says": [
+    "scans the code base for third-party and copyleft licences",
+    "finds obligations that could affect ownership or distribution",
+    "is a standard check before an acquisition"
+   ],
+   "use": "notice that the target ships software built from many libraries",
+   "not": [
+    "only checks the target's own source files"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Security and compliance assessment",
+   "tier": 3,
+   "says": [
+    "reviews breaches, controls, certifications and vulnerabilities",
+    "identifies liabilities the buyer would inherit",
+    "checks data handling against regulation"
+   ],
+   "use": "notice that the target holds customer personal data",
+   "not": [
+    "accepts a certificate as complete proof of security"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Key-person dependency",
+   "tier": 3,
+   "says": [
+    "is the risk that critical knowledge sits with a few individuals",
+    "needs retention and knowledge-transfer plans",
+    "is assessed through interviews as well as documents"
+   ],
+   "use": "notice that one engineer built and understands the core platform",
+   "not": [
+    "is reduced by buying out the founders"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Scalability and infrastructure review",
+   "tier": 3,
+   "says": [
+    "tests whether systems can handle projected growth",
+    "examines cloud use, resilience and cost per customer",
+    "reveals hidden spending needed after the deal"
+   ],
+   "use": "notice that the deal case assumes much higher volumes",
+   "not": [
+    "accepts the target's capacity claims on trust"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Integration plan",
+   "tier": 4,
+   "says": [
+    "sets how systems, teams and data will combine after the deal",
+    "decides what to merge, keep separate or retire",
+    "starts during diligence rather than after close"
+   ],
+   "use": "notice that two overlapping platforms will exist after acquisition",
+   "not": [
+    "is written after the deal has closed"
+   ],
+   "like": [
+    "Technical due diligence"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Synergy validation",
+   "tier": 4,
+   "says": [
+    "tests whether the promised technology savings are achievable",
+    "challenges assumptions behind cost and revenue synergies",
+    "often finds integration costs higher than first expected"
+   ],
+   "use": "notice that the deal rationale relies on consolidating platforms",
+   "not": [
+    "accepts deal-model synergies as given"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Red flag finding",
+   "tier": 3,
+   "says": [
+    "is an issue that could change price, structure or the decision itself",
+    "is escalated to deal leaders promptly",
+    "is separated from minor issues in the report"
+   ],
+   "use": "notice that diligence uncovers unlicensed code in the core product",
+   "not": [
+    "is listed with the other findings in an appendix"
+   ]
+  },
+  {
+   "group": "dd",
+   "subject": "Technology debt valuation",
+   "tier": 5,
+   "says": [
+    "estimates the cost of bringing the target's systems to an acceptable standard",
+    "may be used to adjust price or agree remediation commitments",
+    "is a view on future spend not a historical figure"
+   ],
+   "use": "notice that the target has outdated systems and the price assumes none",
+   "not": [
+    "is ignored because the price is already agreed"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Technology operating model",
+   "tier": 2,
+   "says": [
+    "describes how technology is organised, funded, governed and delivered",
+    "covers structure, process, funding and sourcing together",
+    "needs to change when the strategy changes"
+   ],
+   "use": "notice that strategy has shifted and delivery still follows the old structure",
+   "not": [
+    "is the list of systems in the estate"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Project-to-product shift",
+   "tier": 3,
+   "says": [
+    "funds enduring teams around products instead of time-boxed projects",
+    "keeps ownership after release",
+    "measures outcomes over the life of the product"
+   ],
+   "use": "notice that systems degrade after each project team disbands",
+   "not": [
+    "funds each initiative as a separate temporary project"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Centralised technology organisation",
+   "tier": 2,
+   "says": [
+    "keeps all technology staff in a central department",
+    "gives consistent standards and efficient shared skills",
+    "can be slow to respond to individual business units"
+   ],
+   "use": "need consistency and shared specialist skills",
+   "not": [
+    "places engineers inside each business team"
+   ],
+   "like": [
+    "Embedded technology teams",
+    "Federated model"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Embedded technology teams",
+   "tier": 2,
+   "says": [
+    "place engineers inside business or product teams",
+    "give close alignment and fast response",
+    "risk inconsistent standards and duplicated work"
+   ],
+   "use": "notice that business units need speed and context",
+   "not": [
+    "pool all engineers in one central group"
+   ],
+   "like": [
+    "Centralised technology organisation",
+    "Federated model"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Federated model",
+   "tier": 3,
+   "says": [
+    "combines a central core with technology teams in business units",
+    "sets common standards while allowing local ownership",
+    "needs clear rules on which decisions are central"
+   ],
+   "use": "want both consistency and local responsiveness",
+   "not": [
+    "removes the need for any central governance"
+   ],
+   "like": [
+    "Centralised technology organisation",
+    "Embedded technology teams"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Team Topologies",
+   "tier": 4,
+   "says": [
+    "defines stream-aligned, platform, enabling and complicated-subsystem teams",
+    "limits cognitive load on each team",
+    "uses defined interaction modes between teams"
+   ],
+   "use": "notice that team boundaries and interactions are unclear",
+   "not": [
+    "prescribes one standard team size for all cases"
+   ],
+   "like": [
+    "Conway's law"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Centre of excellence",
+   "tier": 3,
+   "says": [
+    "gathers specialists to set practice and support other teams",
+    "speeds up adoption of a new capability",
+    "risks becoming a bottleneck if it does the work instead of enabling"
+   ],
+   "use": "notice that a new capability such as data engineering needs to spread",
+   "not": [
+    "owns all delivery of the capability"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Insourcing versus outsourcing",
+   "tier": 3,
+   "says": [
+    "weighs control and knowledge retention against flexibility and cost",
+    "depends on whether the capability is core",
+    "needs governance and exit planning when outsourced"
+   ],
+   "use": "are deciding who should run an operational function",
+   "not": [
+    "is settled by the lowest hourly rate"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Build-operate-transfer",
+   "tier": 5,
+   "says": [
+    "has a partner build and run a capability then hand it to the company",
+    "moves ownership once the company is ready",
+    "needs agreed transfer terms and knowledge handover"
+   ],
+   "use": "want a new captive capability without building it from nothing",
+   "not": [
+    "keeps the partner as permanent operator"
+   ],
+   "like": [
+    "Insourcing versus outsourcing"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Skills strategy",
+   "tier": 3,
+   "says": [
+    "plans which skills to hire, train or buy against future needs",
+    "links workforce plans to the technology roadmap",
+    "accepts that hiring alone cannot close every gap"
+   ],
+   "use": "notice that the roadmap needs skills the company does not have",
+   "not": [
+    "assumes the market will supply any skill on demand"
+   ]
+  },
+  {
+   "group": "opmodel",
+   "subject": "Governance model",
+   "tier": 2,
+   "says": [
+    "defines who decides what in technology investment and standards",
+    "should be light for low-risk and strict for high-risk decisions",
+    "becomes a bottleneck if every decision needs central approval"
+   ],
+   "use": "notice that decision rights are unclear across teams",
+   "not": [
+    "requires committee approval for every change"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Resume-driven development",
+   "tier": 4,
+   "says": [
+    "selects technology to build the team's CVs rather than to fit the need",
+    "adds unneeded complexity and skills risk",
+    "is countered by clear selection criteria and decision records"
+   ],
+   "use": "notice that a team picks a fashionable stack for a simple problem",
+   "not": [
+    "describes choosing proven tools after a fair comparison"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Not-invented-here syndrome",
+   "tier": 3,
+   "says": [
+    "rejects external solutions simply because they are not built in-house",
+    "wastes effort on non-differentiating work",
+    "is balanced by core-versus-context thinking"
+   ],
+   "use": "notice that a team builds its own version of a commodity tool",
+   "not": [
+    "describes preferring external products to bespoke code"
+   ],
+   "like": [
+    "Shiny object syndrome"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Shiny object syndrome",
+   "tier": 3,
+   "says": [
+    "chases new technologies before value is shown",
+    "fragments the stack and splits attention",
+    "is limited by an adoption process with evidence gates"
+   ],
+   "use": "notice that strategy changes direction whenever a new trend appears",
+   "not": [
+    "describes keeping to proven technology"
+   ],
+   "like": [
+    "Not-invented-here syndrome"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Big-bang rewrite",
+   "tier": 4,
+   "says": [
+    "replaces a working system in one large effort",
+    "delays value until the end and often underestimates hidden behaviour",
+    "is usually safer replaced by incremental modernisation"
+   ],
+   "use": "notice that leadership proposes rewriting the platform from scratch",
+   "not": [
+    "is a low-risk way to remove debt"
+   ],
+   "like": [
+    "Strangler fig pattern"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Ivory-tower architecture",
+   "tier": 4,
+   "says": [
+    "produces designs without involvement from the delivering teams",
+    "is ignored or worked around in practice",
+    "is avoided by shared ownership of decisions"
+   ],
+   "use": "notice that architects publish standards that teams do not follow",
+   "not": [
+    "describes architects working within delivery teams"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Strategy as a list of projects",
+   "tier": 3,
+   "says": [
+    "names initiatives without stating choices or reasons",
+    "cannot guide trade-offs",
+    "is not a strategy under the kernel test"
+   ],
+   "use": "notice that the strategy document is a long plan of programmes",
+   "not": [
+    "makes explicit what the company will not do"
+   ],
+   "like": [
+    "Strategy kernel"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Roadmap as a commitment trap",
+   "tier": 4,
+   "says": [
+    "treats dates on a roadmap as promises",
+    "leads to teams shipping features to meet dates regardless of value",
+    "is avoided by communicating confidence and horizons"
+   ],
+   "use": "notice that stakeholders hold teams to dated features set a year earlier",
+   "not": [
+    "treats the roadmap as a statement of intent"
+   ]
+  },
+  {
+   "group": "anti",
+   "subject": "Sunk cost fallacy",
+   "tier": 3,
+   "says": [
+    "continues a failing initiative because of past spend",
+    "ignores that past cost cannot be recovered",
+    "is countered by deciding on future costs and benefits"
+   ],
+   "use": "notice that a programme is far behind but leadership says too much is already spent",
+   "not": [
+    "describes stopping a project when evidence turns against it"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the main purpose of a technology roadmap?",
+   "right": "To communicate planned direction and priorities over time",
+   "wrong": [
+    "To record every defect found in the last release",
+    "To commit to exact delivery dates for each feature",
+    "To list the licences the company holds"
+   ],
+   "tier": 2,
+   "why": "A roadmap communicates intent and direction; it is not a contract or an inventory."
+  },
+  {
+   "q": "Which question best separates a strategy from a list of goals?",
+   "right": "What obstacle does it address and what will we do about it?",
+   "wrong": [
+    "How many goals does it contain?",
+    "Which team wrote it?",
+    "How long is the document?"
+   ],
+   "tier": 2,
+   "why": "A real strategy diagnoses a challenge and sets a policy and actions."
+  },
+  {
+   "q": "For which capability is building in-house most justified?",
+   "right": "One that customers choose the company for",
+   "wrong": [
+    "Payroll processing",
+    "Staff email",
+    "Office printing"
+   ],
+   "tier": 2,
+   "why": "Differentiating capability deserves custom investment; commodity capability is usually bought."
+  },
+  {
+   "q": "Which ring on a technology radar tells teams not to start new work with a technology?",
+   "right": "Hold",
+   "wrong": [
+    "Adopt",
+    "Trial",
+    "Assess"
+   ],
+   "tier": 3,
+   "why": "Hold means do not start new projects with it; existing use is not necessarily removed at once."
+  },
+  {
+   "q": "Which factors does RICE scoring combine?",
+   "right": "Reach, impact, confidence and effort",
+   "wrong": [
+    "Risk, income, cost and enablement",
+    "Revenue, integration, complexity and ease",
+    "Reach, investment, compliance and estimate"
+   ],
+   "tier": 3,
+   "why": "RICE is reach times impact times confidence divided by effort."
+  },
+  {
+   "q": "A company compares build against buy by looking only at the first-year licence and initial development cost. What is missing?",
+   "right": "Run, support, integration, staffing and exit costs over several years",
+   "wrong": [
+    "The logo of the vendor",
+    "The number of features in the demo",
+    "The age of the vendor"
+   ],
+   "tier": 3,
+   "why": "Total cost of ownership covers the full life, not just the first-year price."
+  },
+  {
+   "q": "What does the inverse Conway manoeuvre do?",
+   "right": "Shapes team structure to produce the target architecture",
+   "wrong": [
+    "Draws the architecture to match the current org chart",
+    "Merges all teams into one",
+    "Forbids teams from owning services"
+   ],
+   "tier": 3,
+   "why": "Since structure mirrors communication, change the teams to change the system."
+  },
+  {
+   "q": "What is the best description of a paved road in platform strategy?",
+   "right": "A supported default path teams can leave if they accept extra ownership",
+   "wrong": [
+    "A mandatory standard with no exceptions",
+    "A list of banned tools",
+    "A diagram of the network"
+   ],
+   "tier": 3,
+   "why": "Paved roads make the right way the easy way without banning alternatives."
+  },
+  {
+   "q": "Which measure group covers deployment frequency and change failure rate?",
+   "right": "DORA metrics",
+   "wrong": [
+    "OKRs",
+    "Kano categories",
+    "MoSCoW priorities"
+   ],
+   "tier": 3,
+   "why": "DORA measures software delivery throughput and stability."
+  },
+  {
+   "q": "What does WSJF divide by job size?",
+   "right": "Cost of delay",
+   "wrong": [
+    "Reach",
+    "Total budget",
+    "Number of dependencies"
+   ],
+   "tier": 3,
+   "why": "WSJF ranks by cost of delay over size, favouring short urgent items."
+  },
+  {
+   "q": "Which statement about a key result is correct?",
+   "right": "It is a measurable result with a baseline and a target",
+   "wrong": [
+    "It is a task assigned to a team",
+    "It is the title of the objective",
+    "It cannot be changed during the quarter"
+   ],
+   "tier": 2,
+   "why": "Key results show the objective is met; tasks are not key results."
+  },
+  {
+   "q": "What does Goodhart's law warn about?",
+   "right": "A measure used as a target stops being a good measure",
+   "wrong": [
+    "Targets always improve results",
+    "Metrics should be reviewed yearly",
+    "Leading indicators are unreliable"
+   ],
+   "tier": 3,
+   "why": "People optimise the number, not what it was meant to represent."
+  },
+  {
+   "q": "Which approach reduces the risk of replacing a large legacy system?",
+   "right": "Strangler fig: move slices behind a stable interface over time",
+   "wrong": [
+    "Freeze all change for a year and rewrite",
+    "Replace everything on one cutover weekend with no rollback",
+    "Rewrite the least critical part first and stop there"
+   ],
+   "tier": 4,
+   "why": "Incremental replacement delivers value earlier and limits the blast radius."
+  },
+  {
+   "q": "Why is data readiness often the real constraint in AI adoption?",
+   "right": "Without accessible, good-quality, permitted data the use case cannot work, whatever the model",
+   "wrong": [
+    "Models cannot be bought",
+    "Data is always more expensive than models",
+    "Regulators forbid all AI"
+   ],
+   "tier": 4,
+   "why": "The model is rarely the limiting factor; the data usually is."
+  },
+  {
+   "q": "Which migration option moves an application with almost no change?",
+   "right": "Rehost",
+   "wrong": [
+    "Refactor",
+    "Replatform",
+    "Retire"
+   ],
+   "tier": 3,
+   "why": "Rehost, or lift and shift, changes the infrastructure and little else."
+  },
+  {
+   "q": "A pilot of an AI assistant was cheap, but production costs are many times higher. What was most likely missed?",
+   "right": "Modelling cost at production volume, including integration and monitoring",
+   "wrong": [
+    "Choosing a different colour theme",
+    "Using a larger pilot team",
+    "Hiring a new vendor"
+   ],
+   "tier": 4,
+   "why": "Pilot cost does not scale linearly; usage-based pricing and operations grow with volume."
+  },
+  {
+   "q": "Which risk is specific to heavy customisation of a bought package?",
+   "right": "Every vendor upgrade becomes a project",
+   "wrong": [
+    "The vendor can no longer be paid",
+    "The licence automatically expires",
+    "The package stops running on any hardware"
+   ],
+   "tier": 4,
+   "why": "Customisation erodes the speed benefit of buying."
+  },
+  {
+   "q": "What is the purpose of an architecture decision record?",
+   "right": "To capture why a significant decision was made and its consequences",
+   "wrong": [
+    "To track bugs",
+    "To list team members",
+    "To store passwords"
+   ],
+   "tier": 3,
+   "why": "Context and consequences preserve reasoning for later teams."
+  },
+  {
+   "q": "What distinguishes a proof of concept from a pilot?",
+   "right": "A proof of concept tests feasibility; a pilot tests value with real users",
+   "wrong": [
+    "A pilot has no time limit",
+    "A proof of concept is always in production",
+    "They are the same thing"
+   ],
+   "tier": 3,
+   "why": "Feasibility first, then value in real use."
+  },
+  {
+   "q": "Which is run-the-business spend?",
+   "right": "Keeping existing systems supported and reliable",
+   "wrong": [
+    "Launching a new product line",
+    "Funding a hackathon prize",
+    "Building a new market entry"
+   ],
+   "tier": 2,
+   "why": "Run spend maintains what exists; change spend creates new capability."
+  },
+  {
+   "q": "What is an advantage of the federated technology model?",
+   "right": "Common standards with local ownership in business units",
+   "wrong": [
+    "No central governance is needed",
+    "All engineers sit in one department",
+    "Each unit picks any tool with no limits"
+   ],
+   "tier": 3,
+   "why": "Federation combines a central core with local responsiveness."
+  },
+  {
+   "q": "What does the Team Topologies idea of limiting cognitive load imply?",
+   "right": "Each team should own only as much as it can understand and run effectively",
+   "wrong": [
+    "Teams should be as large as possible",
+    "Every team should own the full stack of the company",
+    "Platform teams should avoid helping other teams"
+   ],
+   "tier": 4,
+   "why": "Team scope should fit what the team can hold in its head."
+  },
+  {
+   "q": "What is the purpose of an exit strategy in a vendor decision?",
+   "right": "To define how the company would leave, including data export and replacement, before committing",
+   "wrong": [
+    "To plan the vendor's own departure",
+    "To guarantee lower prices",
+    "To avoid reading the contract"
+   ],
+   "tier": 4,
+   "why": "Exit planning is done at adoption, when leverage is highest."
+  },
+  {
+   "q": "Which technical due diligence finding most directly affects ownership of the product?",
+   "right": "Copyleft-licensed code embedded in the core product",
+   "wrong": [
+    "A slow build server",
+    "Mixed code formatting",
+    "An old office network"
+   ],
+   "tier": 3,
+   "why": "Licence obligations can affect distribution and ownership, unlike style issues."
+  },
+  {
+   "q": "What does a fitness function do?",
+   "right": "Automatically tests that an architectural characteristic still holds",
+   "wrong": [
+    "Measures employee wellness",
+    "Estimates project cost",
+    "Draws dependency diagrams for the board"
+   ],
+   "tier": 4,
+   "why": "It turns architectural intent into an automated check."
+  },
+  {
+   "q": "What does an escrow agreement protect?",
+   "right": "Continuity for a critical system if the supplier fails",
+   "wrong": [
+    "Lower subscription prices",
+    "The supplier's trade secrets",
+    "The buyer's staff data"
+   ],
+   "tier": 5,
+   "why": "Source code is released to the customer on defined triggers."
+  },
+  {
+   "q": "What distinguishes a leading from a lagging indicator?",
+   "right": "A leading indicator moves before the outcome and allows early action",
+   "wrong": [
+    "A leading indicator is always more accurate",
+    "A lagging indicator predicts future results",
+    "They are both reported after the period"
+   ],
+   "tier": 3,
+   "why": "Lagging indicators confirm results; leading ones help steer."
+  },
+  {
+   "q": "Which tool shows components by evolution from genesis to commodity?",
+   "right": "Wardley map",
+   "wrong": [
+    "Kano model",
+    "RICE table",
+    "DORA dashboard"
+   ],
+   "tier": 3,
+   "why": "Wardley maps position components on a value chain against evolution."
+  },
+  {
+   "q": "Which statement about deliberate prudent technical debt is correct?",
+   "right": "It is acceptable only with an owner and a plan for repayment",
+   "wrong": [
+    "It is always reckless",
+    "It should never be recorded",
+    "It repays itself over time"
+   ],
+   "tier": 5,
+   "why": "The plan and owner are what make it prudent."
+  },
+  {
+   "q": "Why do roadmaps framed as outcomes help?",
+   "right": "They define the problem and leave teams to choose the solution",
+   "wrong": [
+    "They remove the need for priorities",
+    "They guarantee delivery dates",
+    "They make estimates unnecessary"
+   ],
+   "tier": 3,
+   "why": "Outcomes allow learning to shape solutions."
+  },
+  {
+   "q": "A CTO sees that three teams have each built their own deployment tooling. Teams say the central platform is hard to use. What should the CTO do first?",
+   "right": "Treat the platform as a product: find out why teams avoid it and fix those gaps",
+   "wrong": [
+    "Mandate the platform by policy and punish workarounds",
+    "Let each team keep its own tooling permanently",
+    "Replace the platform team with an external vendor immediately"
+   ],
+   "tier": 4,
+   "why": "Adoption problems are product problems; mandate hides them."
+  },
+  {
+   "q": "A board member asks the CTO to rewrite the legacy order system from scratch in 18 months because it is slow to change. What is the best response?",
+   "right": "Propose incremental replacement of slices with value delivered along the way",
+   "wrong": [
+    "Agree and halt all other work on it",
+    "Refuse any change to the system",
+    "Outsource the rewrite with a fixed price and no gates"
+   ],
+   "tier": 4,
+   "why": "Incremental modernisation keeps value flowing and exposes hidden behaviour early."
+  },
+  {
+   "q": "A critical SaaS supplier proposes a three-year renewal with a large price rise. Data export is difficult and no alternative has been assessed. What was the earlier mistake?",
+   "right": "No exit strategy or credible alternative was kept, so negotiating leverage was lost",
+   "wrong": [
+    "Using SaaS at all",
+    "Not buying the supplier",
+    "Using too many users"
+   ],
+   "tier": 5,
+   "why": "Leverage disappears as switching cost rises; alternatives and portability must be maintained."
+  },
+  {
+   "q": "Teams are asked to deliver every committed roadmap item by date, and quality is dropping. What is the likely cause?",
+   "right": "The roadmap is being treated as a commitment rather than as intent",
+   "wrong": [
+    "Teams are too small",
+    "The roadmap uses horizons",
+    "Debt work is funded"
+   ],
+   "tier": 4,
+   "why": "Date commitments push teams to ship regardless of value and quality."
+  },
+  {
+   "q": "Delivery speed has fallen and engineers blame old code. Leadership wants a figure for the cost. What is the best first step?",
+   "right": "Build a debt register linking items to the extra cost they add to upcoming work",
+   "wrong": [
+    "Order a code formatter run across the repository",
+    "Ask engineers to estimate lines of code",
+    "Stop all feature work for a quarter"
+   ],
+   "tier": 4,
+   "why": "Quantifying interest against planned work enables prioritisation."
+  },
+  {
+   "q": "A company with an acquisition due to close finds the target's core product depends on one engineer who plans to leave. What should the buyer do?",
+   "right": "Raise it as a red flag and secure retention and knowledge transfer before close",
+   "wrong": [
+    "Ignore it because the code is documented",
+    "Reduce diligence scope",
+    "Wait until after integration to discuss it"
+   ],
+   "tier": 4,
+   "why": "Key-person dependency can change price and structure."
+  },
+  {
+   "q": "Staff are pasting customer records into public AI chat tools. What is the best response?",
+   "right": "Provide approved tools and clear policy with monitoring, rather than relying on a ban alone",
+   "wrong": [
+    "Ban all AI and stop there",
+    "Ignore it until an incident",
+    "Move all staff to a single public tool"
+   ],
+   "tier": 4,
+   "why": "Bans without alternatives drive more shadow use."
+  },
+  {
+   "q": "A promising AI pilot impressed executives, yet nothing has reached daily use after six months. What is the most probable gap?",
+   "right": "No plan for integration, data, ownership and change management for production",
+   "wrong": [
+    "The model is too small",
+    "The pilot used too few prompts",
+    "The executives changed office"
+   ],
+   "tier": 5,
+   "why": "Pilots fail to scale mainly for operational reasons."
+  },
+  {
+   "q": "A team wants a new language, database and message broker for a simple internal tool. How should the CTO respond?",
+   "right": "Ask which choice is needed for advantage and steer the rest to proven technology",
+   "wrong": [
+    "Approve all three because the team is motivated",
+    "Reject the tool entirely",
+    "Make the team write a rewrite proposal for existing systems"
+   ],
+   "tier": 4,
+   "why": "Innovation tokens should be spent where novelty creates real advantage."
+  },
+  {
+   "q": "Two equally valuable projects compete for one team. One loses a large revenue stream for each month of delay; the other does not. How do you decide?",
+   "right": "Do the one with the higher cost of delay first",
+   "wrong": [
+    "Do the larger one first",
+    "Flip a coin",
+    "Do the one with more sponsors"
+   ],
+   "tier": 5,
+   "why": "Cost of delay shows the price of waiting."
+  },
+  {
+   "q": "A company wants a modular architecture but its teams are organised by layer: front end, back end, database. What is the most effective step?",
+   "right": "Reorganise into stream-aligned teams owning end-to-end slices",
+   "wrong": [
+    "Document the target architecture more thoroughly",
+    "Add an architecture review board",
+    "Buy a new architecture tool"
+   ],
+   "tier": 4,
+   "why": "Structure mirrors communication, so team design must change."
+  },
+  {
+   "q": "After a merger, two platforms provide the same service. The deal model assumes savings by next year. What should the CTO check first?",
+   "right": "Whether the integration plan and migration cost really support the synergy timing",
+   "wrong": [
+    "Which platform has the nicer interface",
+    "Which team is bigger",
+    "Whether the logos match"
+   ],
+   "tier": 5,
+   "why": "Synergy claims often ignore migration cost and sequencing."
+  },
+  {
+   "q": "A team proposes to build its own email and calendar system for security reasons. What principle applies?",
+   "right": "Commodity capabilities should be bought unless a specific requirement cannot be met",
+   "wrong": [
+    "Always build security-related systems",
+    "Never consider unique requirements",
+    "Email is a strategic differentiator for all firms"
+   ],
+   "tier": 4,
+   "why": "Core versus context directs effort away from commodity."
+  },
+  {
+   "q": "A programme is behind and over budget, but leaders say stopping would waste money already spent. What is the best decision basis?",
+   "right": "Expected future cost and benefit from this point",
+   "wrong": [
+    "Total spend to date",
+    "Number of staff assigned",
+    "Sponsor's preference"
+   ],
+   "tier": 4,
+   "why": "Past spend is sunk and should not drive the decision."
+  },
+  {
+   "q": "Product teams report metrics going up, but customers see no improvement. What should the CTO suspect?",
+   "right": "Metrics are being gamed or measure outputs instead of outcomes",
+   "wrong": [
+    "Customers are mistaken",
+    "Metrics need to be higher",
+    "Teams need more targets"
+   ],
+   "tier": 4,
+   "why": "Goodhart's law and output focus are common causes."
+  },
+  {
+   "q": "A regulated firm must show it can survive the failure of its main cloud provider. What is a fitting response?",
+   "right": "Assess concentration risk and plan an exit or fallback for critical services",
+   "wrong": [
+    "Sign a longer contract",
+    "Buy more services from that provider",
+    "Document that failure is unlikely"
+   ],
+   "tier": 5,
+   "why": "Concentration risk requires tested exit and fallback."
+  },
+  {
+   "q": "A Hackathon produced many prototypes, but none have gone further. What would help most?",
+   "right": "A defined path and funding route for promising ideas",
+   "wrong": [
+    "More hackathons",
+    "Larger prizes",
+    "Removing the event"
+   ],
+   "tier": 4,
+   "why": "Ideas need somewhere to go."
+  },
+  {
+   "q": "The estate has five overlapping monitoring tools and rising support cost. What is the best approach?",
+   "right": "Rationalise to a few tools, funding the migration",
+   "wrong": [
+    "Add a sixth tool to unify them",
+    "Let teams choose freely",
+    "Cancel monitoring"
+   ],
+   "tier": 4,
+   "why": "Savings need migration funding."
+  },
+  {
+   "q": "A migration of 400 applications is planned. Which sequencing is best?",
+   "right": "Start with simple, low-risk applications and move tightly coupled ones together in waves",
+   "wrong": [
+    "Migrate the most critical systems first",
+    "Migrate in random order",
+    "Migrate one team at a time regardless of dependencies"
+   ],
+   "tier": 5,
+   "why": "Early waves build experience; dependencies determine groupings."
+  },
+  {
+   "q": "A team wants to build a custom model for a task that a bought model with company data could handle. What should the CTO ask?",
+   "right": "Is the model itself a differentiator or is the data and workflow?",
+   "wrong": [
+    "Which model has the most parameters?",
+    "How many engineers are idle?",
+    "Can we name it after the company?"
+   ],
+   "tier": 4,
+   "why": "Often differentiation lies in data and workflow."
+  },
+  {
+   "q": "A new CTO finds that many decisions are escalated to a central committee, slowing delivery. What is an appropriate change?",
+   "right": "Separate reversible decisions for teams to take from irreversible ones for review",
+   "wrong": [
+    "Add more committee members",
+    "Remove all governance",
+    "Require sign-off for all decisions"
+   ],
+   "tier": 4,
+   "why": "Reversibility determines the right level of ceremony."
+  },
+  {
+   "q": "A strategy document lists 40 projects but no trade-offs or reasons. What is wrong with it?",
+   "right": "It lacks a diagnosis, guiding policy and coherent actions",
+   "wrong": [
+    "It is too short",
+    "It uses too many verbs",
+    "It is missing a logo"
+   ],
+   "tier": 5,
+   "why": "This is a list of projects, not a strategy."
+  },
+  {
+   "q": "A vendor claims its product meets every requirement. How can the CTO test it?",
+   "right": "Run a fit-gap analysis against requirements with a scripted demonstration",
+   "wrong": [
+    "Accept the claim",
+    "Check the vendor's size",
+    "Wait for references from the vendor only"
+   ],
+   "tier": 4,
+   "why": "Fit-gap exposes hidden customisation."
+  },
+  {
+   "q": "A platform team measures success by the number of services on the platform, but satisfaction is low. What is wrong?",
+   "right": "The measure rewards mandate and adoption count, not value to users",
+   "wrong": [
+    "Satisfaction should not be measured",
+    "The platform has too few features",
+    "The measure is perfect"
+   ],
+   "tier": 5,
+   "why": "Platform success is value delivered to internal customers."
+  },
+  {
+   "q": "Engineers spend most of their time on maintenance. Which measure will best track the problem?",
+   "right": "The keeping-the-lights-on ratio over time",
+   "wrong": [
+    "Number of meetings",
+    "Total lines of code",
+    "Number of tickets closed"
+   ],
+   "tier": 4,
+   "why": "It shows how much capacity remains for change."
+  },
+  {
+   "q": "A company is deciding whether to outsource its service desk. Which factor should come first?",
+   "right": "Whether the function is core to its advantage and what exit would look like",
+   "wrong": [
+    "Lowest hourly rate",
+    "The vendor's office location",
+    "The number of languages offered"
+   ],
+   "tier": 5,
+   "why": "Sourcing follows capability importance, plus exit planning."
+  },
+  {
+   "q": "A new technology looks promising but untested in the company. Which radar ring is right?",
+   "right": "Assess",
+   "wrong": [
+    "Adopt",
+    "Hold",
+    "Trial on every team"
+   ],
+   "tier": 4,
+   "why": "Assess is for exploring before committing to use."
+  },
+  {
+   "q": "Which roadmap format avoids false precision about dates?",
+   "right": "Now-next-later",
+   "wrong": [
+    "Gantt chart with fixed dates",
+    "Release train calendar",
+    "Contract schedule"
+   ],
+   "tier": 3,
+   "why": "It groups by horizon."
+  },
+  {
+   "q": "A company runs two systems in parallel for months during migration and the overlap is expensive. When is this still justified?",
+   "right": "When output correctness of a critical function must be proven before cutover",
+   "wrong": [
+    "Always",
+    "When nobody wants to decide",
+    "To keep staff busy"
+   ],
+   "tier": 5,
+   "why": "Parallel runs trade cost for proof."
+  }
+ ]
+}

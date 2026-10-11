@@ -1,0 +1,2826 @@
+{
+ "slug": "gglink-seo-content",
+ "name": "SEO and content",
+ "description": "Content operations, SEO, localisation.",
+ "roles": "",
+ "kind": "service",
+ "brand": "gglink",
+ "audience": "staff",
+ "tier": "growth",
+ "groups": {
+  "intent": "search-intent concept",
+  "kw": "keyword research concept",
+  "onpage": "on-page SEO element",
+  "tech": "technical SEO concept",
+  "struct": "site-structure concept",
+  "schema": "structured-data concept",
+  "cwv": "page-experience concept",
+  "plan": "content-planning concept",
+  "link": "link-building concept",
+  "local": "local SEO concept",
+  "meas": "analytics or reporting concept",
+  "quality": "content-quality concept",
+  "ai": "AI-assisted content risk or safeguard",
+  "gg": "GGLink or Moksy SEO fact"
+ },
+ "cards": [
+  {
+   "group": "intent",
+   "subject": "Informational intent",
+   "tier": 1,
+   "says": [
+    "seeks an answer or an explanation rather than a purchase",
+    "is typical of queries that begin with how, what or why"
+   ],
+   "use": "need to serve a searcher who wants to learn something",
+   "not": [
+    "signals that the searcher is ready to pay today"
+   ],
+   "like": [
+    "Transactional intent",
+    "Commercial investigation intent"
+   ]
+  },
+  {
+   "group": "intent",
+   "subject": "Navigational intent",
+   "tier": 1,
+   "says": [
+    "aims to reach one particular site or page",
+    "is shown by a brand or product name in the query"
+   ],
+   "use": "see searchers typing a brand name to get to a known page",
+   "not": [
+    "signals a wish to compare several unrelated suppliers"
+   ],
+   "like": [
+    "Transactional intent"
+   ]
+  },
+  {
+   "group": "intent",
+   "subject": "Transactional intent",
+   "tier": 1,
+   "says": [
+    "signals the searcher is ready to act, such as buying, booking or signing up",
+    "suits product, pricing and booking pages"
+   ],
+   "use": "need to serve a searcher who is ready to complete an action",
+   "not": [
+    "is best served by a long essay with no way to act"
+   ],
+   "like": [
+    "Commercial investigation intent",
+    "Informational intent"
+   ]
+  },
+  {
+   "group": "intent",
+   "subject": "Commercial investigation intent",
+   "tier": 2,
+   "says": [
+    "compares options before a decision is made",
+    "is shown by queries such as best, versus or reviews",
+    "suits comparison pages and honest reviews"
+   ],
+   "use": "want to serve a searcher weighing several options before choosing",
+   "not": [
+    "means the searcher already knows exactly which supplier to use"
+   ],
+   "like": [
+    "Transactional intent",
+    "Informational intent"
+   ]
+  },
+  {
+   "group": "intent",
+   "subject": "Local intent",
+   "tier": 2,
+   "says": [
+    "wants a nearby business, service or place",
+    "is shown by a place name or near me in the query"
+   ],
+   "use": "see searchers who want something close to where they are",
+   "not": [
+    "is always a request for a how-to guide"
+   ],
+   "like": [
+    "Navigational intent"
+   ]
+  },
+  {
+   "group": "intent",
+   "subject": "SERP analysis",
+   "tier": 3,
+   "says": [
+    "inspects what already ranks for a query to learn its intent",
+    "shows which page formats searchers are being given, such as guides, lists or product pages"
+   ],
+   "use": "want evidence of what searchers expect before planning a page",
+   "not": [
+    "replaces the need to read the content that ranks"
+   ],
+   "like": [
+    "Intent mismatch"
+   ]
+  },
+  {
+   "group": "intent",
+   "subject": "Intent mismatch",
+   "tier": 4,
+   "says": [
+    "occurs when a page's format does not suit what searchers want for the query",
+    "explains why a well-written page can still fail to attract visits for a term"
+   ],
+   "use": "find a polished page that gets impressions but few visits because it answers a different need",
+   "not": [
+    "is fixed by repeating the keyword more often"
+   ],
+   "like": [
+    "SERP analysis"
+   ]
+  },
+  {
+   "group": "intent",
+   "subject": "Mixed intent",
+   "tier": 4,
+   "says": [
+    "describes a query where searchers want different things",
+    "may justify separate pages for each reading of the query"
+   ],
+   "use": "meet an ambiguous query where results show both guides and product pages",
+   "not": [
+    "means the query can be ignored in planning"
+   ],
+   "like": [
+    "Intent mismatch"
+   ]
+  },
+  {
+   "group": "intent",
+   "subject": "Intent drift",
+   "tier": 5,
+   "says": [
+    "happens when the dominant reading of a query changes over time",
+    "is why an old page needs its format and angle reviewed, not only its facts"
+   ],
+   "use": "notice that a page that once suited a query now sits among very different result types",
+   "not": [
+    "only affects brand new queries"
+   ],
+   "like": [
+    "Intent mismatch"
+   ]
+  },
+  {
+   "group": "kw",
+   "subject": "Seed keyword",
+   "tier": 1,
+   "says": [
+    "is a broad starting term used to generate more ideas",
+    "is expanded with tools and real query data into a longer list"
+   ],
+   "use": "need a starting term to begin keyword research from",
+   "not": [
+    "is the final term that a page must be built around"
+   ],
+   "like": []
+  },
+  {
+   "group": "kw",
+   "subject": "Long-tail keyword",
+   "tier": 1,
+   "says": [
+    "is a longer and more specific phrase",
+    "usually has lower search volume than a broad term",
+    "tends to reveal clearer intent"
+   ],
+   "use": "want specific queries with a clear need and less competition",
+   "not": [
+    "always has higher volume than the head term it came from"
+   ],
+   "like": []
+  },
+  {
+   "group": "kw",
+   "subject": "Search volume",
+   "tier": 2,
+   "says": [
+    "estimates how often a term is searched in a period",
+    "is an estimate from a tool and not an exact count"
+   ],
+   "use": "need a rough sense of demand for a term",
+   "not": [
+    "is a precise count supplied by the search engine for every term"
+   ],
+   "like": [
+    "Keyword difficulty"
+   ]
+  },
+  {
+   "group": "kw",
+   "subject": "Keyword difficulty",
+   "tier": 2,
+   "says": [
+    "is a tool's score for how hard a term may be to rank for",
+    "uses a scale that differs from one tool to another"
+   ],
+   "use": "want a rough sense of the competition before choosing a term",
+   "not": [
+    "is a standard number published by search engines"
+   ],
+   "like": [
+    "Search volume"
+   ]
+  },
+  {
+   "group": "kw",
+   "subject": "Keyword mapping",
+   "tier": 2,
+   "says": [
+    "assigns each target query to one page",
+    "shows where a new page is needed and where one already exists"
+   ],
+   "use": "need to record which page is meant to serve which query",
+   "not": [
+    "lists every keyword on the home page"
+   ],
+   "like": [
+    "Keyword clustering"
+   ]
+  },
+  {
+   "group": "kw",
+   "subject": "Keyword clustering",
+   "tier": 3,
+   "says": [
+    "groups related queries that one page can satisfy together",
+    "is often checked against what ranks for the queries"
+   ],
+   "use": "find many close variants of one need and want a single page to cover them",
+   "not": [
+    "splits each variant onto a separate thin page"
+   ],
+   "like": [
+    "Keyword mapping"
+   ]
+  },
+  {
+   "group": "kw",
+   "subject": "Keyword cannibalisation",
+   "tier": 3,
+   "says": [
+    "occurs when several pages of one site compete for the same query",
+    "is addressed by merging, redirecting or differentiating the pages"
+   ],
+   "use": "find two pages on your own site swapping places for the same query",
+   "not": [
+    "happens only when a competitor copies your page"
+   ],
+   "like": [
+    "Keyword clustering"
+   ]
+  },
+  {
+   "group": "kw",
+   "subject": "Keyword gap analysis",
+   "tier": 3,
+   "says": [
+    "compares the terms a competitor appears for with your own",
+    "finds topics worth covering that your site has not addressed"
+   ],
+   "use": "want to see which relevant terms rivals cover and you do not",
+   "not": [
+    "measures the number of backlinks a competitor owns"
+   ],
+   "like": [
+    "Content gap analysis"
+   ]
+  },
+  {
+   "group": "kw",
+   "subject": "Keyword value scoring",
+   "tier": 4,
+   "says": [
+    "weighs a term by its likely value to the business and not by volume alone",
+    "combines intent, relevance and ability to convert"
+   ],
+   "use": "must choose between a high-volume term and a smaller term closer to a sale",
+   "not": [
+    "ranks terms by search volume only"
+   ],
+   "like": [
+    "Keyword difficulty"
+   ]
+  },
+  {
+   "group": "onpage",
+   "subject": "Title tag",
+   "tier": 1,
+   "says": [
+    "is the HTML title element that names a page in results and browser tabs",
+    "should describe the page and differ from the title of every other page"
+   ],
+   "use": "need to name a page clearly for people scanning results",
+   "not": [
+    "is shown only to screen reader users"
+   ],
+   "like": [
+    "Meta description",
+    "Heading hierarchy"
+   ]
+  },
+  {
+   "group": "onpage",
+   "subject": "Meta description",
+   "tier": 1,
+   "says": [
+    "summarises a page in the snippet area of a result",
+    "may be replaced by text the search engine chooses instead",
+    "is written to help a searcher decide whether to click"
+   ],
+   "use": "want to write the short summary a searcher might read under a result",
+   "not": [
+    "is a guaranteed way to raise a page's position"
+   ],
+   "like": [
+    "Title tag"
+   ]
+  },
+  {
+   "group": "onpage",
+   "subject": "Heading hierarchy",
+   "tier": 1,
+   "says": [
+    "gives a page one main heading and orders subheadings by level",
+    "lets readers and assistive technology scan the structure of a page"
+   ],
+   "use": "need to organise a long page so readers can scan it",
+   "not": [
+    "uses heading tags only to make text look bigger"
+   ],
+   "like": [
+    "Title tag"
+   ]
+  },
+  {
+   "group": "onpage",
+   "subject": "Image alt text",
+   "tier": 1,
+   "says": [
+    "describes an image for people who cannot see it",
+    "is shown when an image fails to load",
+    "helps search engines understand what an image shows"
+   ],
+   "use": "need to describe an image for a screen reader user",
+   "not": [
+    "is a place to list as many keywords as possible"
+   ],
+   "like": [
+    "Image optimisation"
+   ]
+  },
+  {
+   "group": "onpage",
+   "subject": "Internal anchor text",
+   "tier": 2,
+   "says": [
+    "tells readers and crawlers what the linked page is about",
+    "is more helpful written as a description than as click here"
+   ],
+   "use": "link to another page on the same site and want the link to be meaningful",
+   "not": [
+    "should always be identical on every link to a page"
+   ],
+   "like": [
+    "Backlink"
+   ]
+  },
+  {
+   "group": "onpage",
+   "subject": "Direct-answer formatting",
+   "tier": 3,
+   "says": [
+    "answers a question briefly near a relevant heading",
+    "uses lists or tables where the answer is a set of steps or comparisons"
+   ],
+   "use": "want a page to give a quick answer before the detail",
+   "not": [
+    "hides the answer deep in the page to keep readers longer"
+   ],
+   "like": [
+    "Heading hierarchy"
+   ]
+  },
+  {
+   "group": "onpage",
+   "subject": "Image optimisation",
+   "tier": 3,
+   "says": [
+    "reduces image weight by right-sizing, compressing and choosing a suitable format",
+    "supports faster loading"
+   ],
+   "use": "find a page weighed down by oversized photographs",
+   "not": [
+    "is done by adding keywords to the file contents"
+   ],
+   "like": [
+    "Image alt text",
+    "Lazy loading"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "Crawling",
+   "tier": 1,
+   "says": [
+    "is the process of fetching pages by following links and sitemaps",
+    "happens before a page can be indexed"
+   ],
+   "use": "want to understand how a search engine first finds a page",
+   "not": [
+    "stores a page so it can be returned for queries"
+   ],
+   "like": [
+    "Indexing"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "Indexing",
+   "tier": 1,
+   "says": [
+    "stores and organises a fetched page so it can be returned for queries",
+    "is not guaranteed for every page that is crawled"
+   ],
+   "use": "need to explain why a crawled page may still not appear in results",
+   "not": [
+    "is the act of fetching pages by following links"
+   ],
+   "like": [
+    "Crawling"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "robots.txt",
+   "tier": 1,
+   "says": [
+    "tells crawlers which paths they may fetch",
+    "sits at the root of a host",
+    "does not by itself guarantee that a URL stays out of results"
+   ],
+   "use": "need to tell crawlers to keep out of a section such as internal search results",
+   "not": [
+    "is a secure way to hide private pages"
+   ],
+   "like": [
+    "Noindex directive",
+    "XML sitemap"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "XML sitemap",
+   "tier": 1,
+   "says": [
+    "lists the URLs a site wants discovered",
+    "can carry last-modified dates for each URL",
+    "helps crawlers find pages that internal links miss"
+   ],
+   "use": "want to give crawlers a list of the pages that matter",
+   "not": [
+    "guarantees every listed URL will be indexed"
+   ],
+   "like": [
+    "robots.txt"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "Canonical tag",
+   "tier": 3,
+   "says": [
+    "names the preferred URL among duplicate or near-duplicate versions",
+    "is a hint to the search engine and not a command"
+   ],
+   "use": "have the same page reachable at several addresses and want to name the preferred one",
+   "not": [
+    "permanently moves visitors to another address"
+   ],
+   "like": [
+    "301 redirect"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "Noindex directive",
+   "tier": 3,
+   "says": [
+    "asks search engines to keep a page out of their index",
+    "must be crawlable to be read, so it fails if robots.txt blocks the page"
+   ],
+   "use": "want a page reachable by visitors but not listed in results",
+   "not": [
+    "is set by listing the page in robots.txt"
+   ],
+   "like": [
+    "robots.txt",
+    "Canonical tag"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "301 redirect",
+   "tier": 2,
+   "says": [
+    "signals a permanent move from one URL to another",
+    "sends visitors and crawlers to the new address"
+   ],
+   "use": "have moved a page for good and want the old address to lead to the new one",
+   "not": [
+    "tells crawlers the move is temporary"
+   ],
+   "like": [
+    "Canonical tag"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "Soft 404",
+   "tier": 3,
+   "says": [
+    "returns a success status code for a page that says the content is missing",
+    "confuses crawlers about whether the page exists"
+   ],
+   "use": "find a missing-page message served with a 200 status",
+   "not": [
+    "is a correctly configured not found page"
+   ],
+   "like": [
+    "301 redirect"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "503 response",
+   "tier": 4,
+   "says": [
+    "tells crawlers an outage is temporary",
+    "suits planned maintenance when sent with a retry hint"
+   ],
+   "use": "are taking a site down briefly for maintenance and want crawlers to return later",
+   "not": [
+    "tells crawlers the page is gone for good"
+   ],
+   "like": [
+    "Soft 404"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "Crawl budget",
+   "tier": 4,
+   "says": [
+    "limits how many URLs a crawler fetches from a site in a given time",
+    "matters mainly for very large or fast-changing sites"
+   ],
+   "use": "run a very large site where many low-value URLs may absorb crawler requests",
+   "not": [
+    "is a concern mainly for a five page brochure site"
+   ],
+   "like": [
+    "Log file analysis"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "JavaScript rendering",
+   "tier": 4,
+   "says": [
+    "requires a crawler to run scripts to see content missing from the first HTML",
+    "adds a step between fetching and indexing"
+   ],
+   "use": "find that important text appears only after scripts run in the browser",
+   "not": [
+    "means scripts are never an issue for crawlers"
+   ],
+   "like": [
+    "Crawling"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "An hreflang annotation",
+   "tier": 4,
+   "says": [
+    "tells search engines which language or regional version of a page to show",
+    "should point back reciprocally between the versions"
+   ],
+   "use": "run the same page in several languages and want each audience to get the right one",
+   "not": [
+    "merges all language versions into one page"
+   ],
+   "like": [
+    "Content localisation"
+   ]
+  },
+  {
+   "group": "tech",
+   "subject": "Log file analysis",
+   "tier": 5,
+   "says": [
+    "shows which URLs crawlers actually requested",
+    "reveals crawl waste that site-based tools cannot show"
+   ],
+   "use": "need proof of what crawlers really fetch on a large site",
+   "not": [
+    "reports how many people searched for a term"
+   ],
+   "like": [
+    "Crawl budget"
+   ]
+  },
+  {
+   "group": "struct",
+   "subject": "Site architecture",
+   "tier": 1,
+   "says": [
+    "organises pages into a hierarchy that users and crawlers can follow",
+    "reflects how topics relate to one another"
+   ],
+   "use": "are planning how the pages of a site fit together",
+   "not": [
+    "is the visual style of the pages"
+   ],
+   "like": [
+    "Internal linking"
+   ]
+  },
+  {
+   "group": "struct",
+   "subject": "Internal linking",
+   "tier": 2,
+   "says": [
+    "connects pages within one site",
+    "helps crawlers discover pages and readers move on"
+   ],
+   "use": "want readers and crawlers to move from one related page to the next",
+   "not": [
+    "is a link from another website to yours"
+   ],
+   "like": [
+    "Backlink"
+   ]
+  },
+  {
+   "group": "struct",
+   "subject": "Click depth",
+   "tier": 2,
+   "says": [
+    "counts the clicks needed to reach a page from the home page",
+    "grows when important pages are buried deep in menus"
+   ],
+   "use": "find an important page that takes six clicks to reach",
+   "not": [
+    "counts how many visitors click a page"
+   ],
+   "like": [
+    "Internal linking"
+   ]
+  },
+  {
+   "group": "struct",
+   "subject": "Orphan page",
+   "tier": 2,
+   "says": [
+    "has no internal links pointing to it",
+    "may be found only through a sitemap or an outside link"
+   ],
+   "use": "find a page that no other page on the site links to",
+   "not": [
+    "is a page that links out to many others"
+   ],
+   "like": [
+    "Click depth"
+   ]
+  },
+  {
+   "group": "struct",
+   "subject": "Topic cluster",
+   "tier": 3,
+   "says": [
+    "links a broad pillar page with detailed pages on its subtopics",
+    "shows depth on a subject through connected pages"
+   ],
+   "use": "plan one broad guide supported by several detailed pages",
+   "not": [
+    "puts every subtopic on one very long page"
+   ],
+   "like": [
+    "Internal linking"
+   ]
+  },
+  {
+   "group": "struct",
+   "subject": "A URL parameter",
+   "tier": 4,
+   "says": [
+    "adds a filter, sort or tracking value to an address",
+    "can create many duplicate URLs for the same content"
+   ],
+   "use": "find many addresses that differ only by sort order or tracking values",
+   "not": [
+    "is always harmless for crawling"
+   ],
+   "like": [
+    "Faceted navigation"
+   ]
+  },
+  {
+   "group": "struct",
+   "subject": "Faceted navigation",
+   "tier": 5,
+   "says": [
+    "lets visitors filter by attributes such as size or colour",
+    "can generate vast numbers of near-duplicate filter URLs"
+   ],
+   "use": "run a catalogue with filters whose combinations create thousands of URLs",
+   "not": [
+    "creates a single URL for each product"
+   ],
+   "like": [
+    "A URL parameter"
+   ]
+  },
+  {
+   "group": "struct",
+   "subject": "Site migration redirect map",
+   "tier": 5,
+   "says": [
+    "pairs each old URL with its new equivalent",
+    "is prepared before launch and tested after it"
+   ],
+   "use": "are moving a site to new URLs and must keep visitors and signals with the right pages",
+   "not": [
+    "points every old URL to the new home page"
+   ],
+   "like": [
+    "301 redirect"
+   ]
+  },
+  {
+   "group": "schema",
+   "subject": "Structured data",
+   "tier": 1,
+   "says": [
+    "adds machine-readable labels describing page content",
+    "does not change how the page looks to visitors"
+   ],
+   "use": "want to label what a page contains in a form machines can read",
+   "not": [
+    "is text hidden from visitors to attract searches"
+   ],
+   "like": [
+    "Schema.org vocabulary"
+   ]
+  },
+  {
+   "group": "schema",
+   "subject": "Schema.org vocabulary",
+   "tier": 2,
+   "says": [
+    "provides shared types and properties for describing things on the web",
+    "is used by several search engines"
+   ],
+   "use": "need an agreed set of type names to describe a page's content",
+   "not": [
+    "is a ranking score assigned to pages"
+   ],
+   "like": [
+    "Structured data"
+   ]
+  },
+  {
+   "group": "schema",
+   "subject": "JSON-LD",
+   "tier": 2,
+   "says": [
+    "places structured data in a script block apart from the visible HTML",
+    "is written as JSON with an @context and @type"
+   ],
+   "use": "want to add structured data without changing the page's visible markup",
+   "not": [
+    "is written with HTML attributes on each visible element"
+   ],
+   "like": [
+    "Schema.org vocabulary"
+   ]
+  },
+  {
+   "group": "schema",
+   "subject": "Article markup",
+   "tier": 3,
+   "says": [
+    "describes a piece's headline, author and publication dates",
+    "suits news, blog and guide pages"
+   ],
+   "use": "are marking up a blog post or guide",
+   "not": [
+    "describes the price and availability of a product"
+   ],
+   "like": [
+    "Product markup"
+   ]
+  },
+  {
+   "group": "schema",
+   "subject": "Product markup",
+   "tier": 3,
+   "says": [
+    "describes a product's name, price and availability",
+    "must match the details visible on the page"
+   ],
+   "use": "are marking up a product page that shows a price and stock status",
+   "not": [
+    "describes the dates of a blog post"
+   ],
+   "like": [
+    "Article markup"
+   ]
+  },
+  {
+   "group": "schema",
+   "subject": "LocalBusiness markup",
+   "tier": 3,
+   "says": [
+    "describes a place of business with an address, phone number and opening hours",
+    "suits a location page"
+   ],
+   "use": "are marking up a page for a shop or office that customers visit",
+   "not": [
+    "suits a business with no physical presence at all"
+   ],
+   "like": []
+  },
+  {
+   "group": "schema",
+   "subject": "BreadcrumbList markup",
+   "tier": 3,
+   "says": [
+    "describes a page's position in the site hierarchy",
+    "mirrors the breadcrumb trail that visitors see"
+   ],
+   "use": "want to state the page's place in the hierarchy in structured form",
+   "not": [
+    "describes the author of an article"
+   ],
+   "like": []
+  },
+  {
+   "group": "schema",
+   "subject": "Visible-content rule for markup",
+   "tier": 4,
+   "says": [
+    "requires marked-up facts to appear on the page for visitors",
+    "is breached by markup describing content users cannot see"
+   ],
+   "use": "are tempted to mark up a rating that the page does not display",
+   "not": [
+    "allows any claim as long as the syntax is valid"
+   ],
+   "like": [
+    "Rich result eligibility"
+   ]
+  },
+  {
+   "group": "schema",
+   "subject": "Rich result eligibility",
+   "tier": 4,
+   "says": [
+    "is not guaranteed by valid markup",
+    "depends on the search engine's own guidelines and policies"
+   ],
+   "use": "must tell a client that correct markup does not promise an enhanced result",
+   "not": [
+    "is granted automatically once markup validates"
+   ],
+   "like": [
+    "Visible-content rule for markup"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "The Core Web Vitals set",
+   "tier": 1,
+   "says": [
+    "is a set of user-experience measurements for loading, interactivity and visual stability",
+    "is measured from real visits as well as in tests"
+   ],
+   "use": "need a shared vocabulary for page speed and stability from the visitor's side",
+   "not": [
+    "measures how many backlinks a page has"
+   ],
+   "like": [
+    "Lab data"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "Largest Contentful Paint",
+   "tier": 2,
+   "says": [
+    "measures how long the largest visible content element takes to render",
+    "is often affected by a hero image or main heading"
+   ],
+   "use": "want to measure how quickly the main content appears",
+   "not": [
+    "measures unexpected movement of content"
+   ],
+   "like": [
+    "Cumulative Layout Shift",
+    "Interaction to Next Paint"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "Interaction to Next Paint",
+   "tier": 2,
+   "says": [
+    "measures how quickly a page visibly responds to user interactions during a visit",
+    "is hurt by long tasks that block the main thread"
+   ],
+   "use": "want to measure how responsive a page feels when users tap or click",
+   "not": [
+    "measures how long the first byte takes to arrive"
+   ],
+   "like": [
+    "Largest Contentful Paint",
+    "Time to First Byte"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "Cumulative Layout Shift",
+   "tier": 2,
+   "says": [
+    "measures unexpected movement of visible content",
+    "is reduced by reserving space for images, ads and embeds"
+   ],
+   "use": "see text jump down the page after an image loads",
+   "not": [
+    "measures how fast the largest element renders"
+   ],
+   "like": [
+    "Largest Contentful Paint"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "Field data",
+   "tier": 3,
+   "says": [
+    "comes from real visitors using their own devices and networks",
+    "reflects the spread of real conditions"
+   ],
+   "use": "need to know how real users experience a page",
+   "not": [
+    "is a repeatable test run in a controlled environment"
+   ],
+   "like": [
+    "Lab data"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "Lab data",
+   "tier": 3,
+   "says": [
+    "comes from a controlled test run",
+    "is repeatable and well suited to debugging a change"
+   ],
+   "use": "want a repeatable test to check whether a fix helped",
+   "not": [
+    "reflects every device and network that real visitors use"
+   ],
+   "like": [
+    "Field data"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "Setting image width and height",
+   "tier": 3,
+   "says": [
+    "lets the browser reserve space for an image before it loads",
+    "reduces layout shift"
+   ],
+   "use": "want an image's space held open so text does not jump",
+   "not": [
+    "makes the image load faster by itself"
+   ],
+   "like": [
+    "Image optimisation"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "Lazy loading",
+   "tier": 3,
+   "says": [
+    "defers offscreen images until a visitor scrolls near them",
+    "should not be applied to the main image at the top of the page"
+   ],
+   "use": "want below-the-fold images to wait until needed",
+   "not": [
+    "is a good choice for the largest image visible on first load"
+   ],
+   "like": [
+    "Image optimisation"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "Time to First Byte",
+   "tier": 4,
+   "says": [
+    "measures the wait before the first byte of a response arrives",
+    "reflects server and network time and not rendering"
+   ],
+   "use": "suspect slow server response rather than slow rendering",
+   "not": [
+    "measures how much content shifts while loading"
+   ],
+   "like": [
+    "Interaction to Next Paint"
+   ]
+  },
+  {
+   "group": "cwv",
+   "subject": "A third-party script",
+   "tier": 4,
+   "says": [
+    "adds requests and main-thread work that the site does not control",
+    "can slow loading and responsiveness"
+   ],
+   "use": "find tag managers, chat widgets and ad code adding delay to every page",
+   "not": [
+    "is always faster than first-party code"
+   ],
+   "like": []
+  },
+  {
+   "group": "cwv",
+   "subject": "Performance budget",
+   "tier": 5,
+   "says": [
+    "sets limits on page weight or timings that each release must meet",
+    "stops speed from eroding as features are added"
+   ],
+   "use": "want a release to fail when a page becomes too heavy",
+   "not": [
+    "is a financial budget for paid advertising"
+   ],
+   "like": [
+    "The Core Web Vitals set"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Content strategy",
+   "tier": 1,
+   "says": [
+    "ties content to audience needs and business goals",
+    "decides what to create, for whom and why"
+   ],
+   "use": "need a plan that links content to goals rather than just filling a calendar",
+   "not": [
+    "is a list of keywords with no audience in mind"
+   ],
+   "like": [
+    "Editorial calendar"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Editorial calendar",
+   "tier": 1,
+   "says": [
+    "schedules what is published, by whom and when",
+    "makes deadlines and gaps visible"
+   ],
+   "use": "need to see what is due and who owns it for the coming weeks",
+   "not": [
+    "records only what has already been published"
+   ],
+   "like": [
+    "Content strategy"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Content audit",
+   "tier": 3,
+   "says": [
+    "inventories existing pages and judges each one",
+    "ends with a decision to keep, update, merge or remove each page"
+   ],
+   "use": "inherit a site with hundreds of pages and no record of their value",
+   "not": [
+    "is a count of the words on the home page"
+   ],
+   "like": [
+    "Content refresh",
+    "Content pruning"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Content brief",
+   "tier": 2,
+   "says": [
+    "tells a writer the target query, intent, audience and outline",
+    "lists sources and the points the piece must make"
+   ],
+   "use": "need to hand a writer clear instructions for a new piece",
+   "not": [
+    "is the finished article"
+   ],
+   "like": [
+    "Keyword mapping"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Style guide",
+   "tier": 2,
+   "says": [
+    "records tone, terminology and formatting rules",
+    "keeps writers consistent"
+   ],
+   "use": "need many writers to produce consistent copy",
+   "not": [
+    "lists the keywords for each page"
+   ],
+   "like": []
+  },
+  {
+   "group": "plan",
+   "subject": "Content gap analysis",
+   "tier": 3,
+   "says": [
+    "finds topics the audience needs that the site does not cover",
+    "starts from audience questions as well as competitor coverage"
+   ],
+   "use": "want to find questions readers ask that the site never answers",
+   "not": [
+    "lists terms that a page already ranks for"
+   ],
+   "like": [
+    "Keyword gap analysis"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Content refresh",
+   "tier": 3,
+   "says": [
+    "updates an existing page with accurate and current information",
+    "keeps the URL so that existing links and history remain"
+   ],
+   "use": "find an older page that still draws visits but has outdated facts",
+   "not": [
+    "publishes the material at a new address"
+   ],
+   "like": [
+    "Content pruning"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Editorial workflow",
+   "tier": 3,
+   "says": [
+    "moves a draft through writing, editing, fact check, approval and publishing",
+    "gives each stage a named owner"
+   ],
+   "use": "need clear handoffs so nothing goes live unchecked",
+   "not": [
+    "lets the writer publish without any review"
+   ],
+   "like": [
+    "Editorial calendar"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Content pruning",
+   "tier": 4,
+   "says": [
+    "removes or merges thin or outdated pages",
+    "redirects retired URLs where a relevant replacement exists"
+   ],
+   "use": "find many low-value pages diluting a section of the site",
+   "not": [
+    "updates every page with new dates and nothing else"
+   ],
+   "like": [
+    "Content refresh",
+    "Content audit"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Content localisation",
+   "tier": 4,
+   "says": [
+    "adapts content for a language and culture beyond word-for-word translation",
+    "covers units, currency, examples and legal wording"
+   ],
+   "use": "are taking content to a new market and need it to read naturally there",
+   "not": [
+    "is the same as running text through a translator unchanged"
+   ],
+   "like": [
+    "An hreflang annotation"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Content-to-product bridge",
+   "tier": 4,
+   "says": [
+    "connects a piece of content to the next step a reader can take",
+    "uses one clear call to action"
+   ],
+   "use": "want an informational guide to lead honestly to a service",
+   "not": [
+    "buries the next step so readers cannot find it"
+   ],
+   "like": []
+  },
+  {
+   "group": "link",
+   "subject": "Backlink",
+   "tier": 1,
+   "says": [
+    "is a link from another website to yours",
+    "is treated by search engines as a signal about a page"
+   ],
+   "use": "want to count links that point to your site from elsewhere",
+   "not": [
+    "is a link between two pages of your own site"
+   ],
+   "like": [
+    "Internal linking"
+   ]
+  },
+  {
+   "group": "link",
+   "subject": "Digital PR",
+   "tier": 3,
+   "says": [
+    "creates newsworthy material to win coverage and links from publications",
+    "depends on relevance to a publication's audience"
+   ],
+   "use": "have original data that journalists may want to cite",
+   "not": [
+    "buys links from directories in bulk"
+   ],
+   "like": []
+  },
+  {
+   "group": "link",
+   "subject": "Broken link building",
+   "tier": 4,
+   "says": [
+    "offers a working resource to replace a dead link on another site",
+    "starts with finding broken outbound links"
+   ],
+   "use": "find a relevant page elsewhere linking to a dead resource you could replace",
+   "not": [
+    "deletes links on your own site"
+   ],
+   "like": [
+    "Unlinked brand mention"
+   ]
+  },
+  {
+   "group": "link",
+   "subject": "Unlinked brand mention",
+   "tier": 3,
+   "says": [
+    "names a brand without linking to it",
+    "can be turned into a link with a polite request"
+   ],
+   "use": "find an article that names the business but does not link",
+   "not": [
+    "is a link with a nofollow attribute"
+   ],
+   "like": [
+    "Broken link building"
+   ]
+  },
+  {
+   "group": "link",
+   "subject": "Sponsored link attribute",
+   "tier": 3,
+   "says": [
+    "marks a link as paid or as an advertisement",
+    "uses rel=\"sponsored\""
+   ],
+   "use": "place a paid link and need to label it correctly",
+   "not": [
+    "marks links left in comments by visitors"
+   ],
+   "like": []
+  },
+  {
+   "group": "link",
+   "subject": "Link scheme",
+   "tier": 4,
+   "says": [
+    "buys, trades or automates links to manipulate rankings",
+    "risks manual action or lost trust"
+   ],
+   "use": "are offered a package of hundreds of links for a fixed fee",
+   "not": [
+    "is the same as earning a citation through quality"
+   ],
+   "like": []
+  },
+  {
+   "group": "link",
+   "subject": "Link audit",
+   "tier": 4,
+   "says": [
+    "reviews incoming links to find unnatural or harmful ones",
+    "looks at relevance and patterns and not only counts"
+   ],
+   "use": "inherit a site that previously bought links",
+   "not": [
+    "counts the links on one page"
+   ],
+   "like": [
+    "Disavow file"
+   ]
+  },
+  {
+   "group": "link",
+   "subject": "Disavow file",
+   "tier": 5,
+   "says": [
+    "asks a search engine to ignore a listed set of links",
+    "is a last resort and not a routine task"
+   ],
+   "use": "face a clear pattern of manipulative links that cannot be removed",
+   "not": [
+    "is used to remove your own internal links"
+   ],
+   "like": [
+    "Link audit"
+   ]
+  },
+  {
+   "group": "local",
+   "subject": "Business profile listing",
+   "tier": 1,
+   "says": [
+    "is a free listing in which a business states its details for maps and local results",
+    "needs accurate name, address, hours and category"
+   ],
+   "use": "want to appear on maps when people search nearby",
+   "not": [
+    "is a paid advertisement slot"
+   ],
+   "like": [
+    "Local citation"
+   ]
+  },
+  {
+   "group": "local",
+   "subject": "Local pack",
+   "tier": 2,
+   "says": [
+    "is the map-based block of nearby business results",
+    "is shown for searches with local intent"
+   ],
+   "use": "see a map with three businesses above ordinary results",
+   "not": [
+    "is a list of pages on one site"
+   ],
+   "like": [
+    "Business profile listing"
+   ]
+  },
+  {
+   "group": "local",
+   "subject": "NAP consistency",
+   "tier": 2,
+   "says": [
+    "keeps name, address and phone identical wherever they are listed",
+    "avoids confusing both searchers and search engines"
+   ],
+   "use": "find the company address spelled three different ways across sites",
+   "not": [
+    "changes the name on each directory to include a keyword"
+   ],
+   "like": [
+    "Local citation"
+   ]
+  },
+  {
+   "group": "local",
+   "subject": "Local citation",
+   "tier": 2,
+   "says": [
+    "is a mention of a business's name, address and phone number on another site",
+    "may appear without any link"
+   ],
+   "use": "find the business listed in a directory or on a chamber website",
+   "not": [
+    "is a customer review"
+   ],
+   "like": [
+    "NAP consistency",
+    "Business profile listing"
+   ]
+  },
+  {
+   "group": "local",
+   "subject": "Service area business",
+   "tier": 3,
+   "says": [
+    "serves customers at their location and not at a premises they visit",
+    "may hide its address on a listing where platform rules allow"
+   ],
+   "use": "run a plumbing firm that travels to customers' homes",
+   "not": [
+    "must show a street address to every visitor"
+   ],
+   "like": [
+    "LocalBusiness markup"
+   ]
+  },
+  {
+   "group": "local",
+   "subject": "Local landing page",
+   "tier": 3,
+   "says": [
+    "targets one town or area with content that is useful there",
+    "fails when it is a copy of another page with the place name swapped"
+   ],
+   "use": "want a page for a specific area where the business operates",
+   "not": [
+    "repeats identical text with only the town name changed"
+   ],
+   "like": [
+    "Multi-location structure"
+   ]
+  },
+  {
+   "group": "local",
+   "subject": "Review management",
+   "tier": 3,
+   "says": [
+    "asks real customers for honest reviews and replies to them",
+    "never involves writing reviews on a customer's behalf"
+   ],
+   "use": "want a steady flow of genuine reviews",
+   "not": [
+    "buys positive reviews"
+   ],
+   "like": [
+    "Review gating"
+   ]
+  },
+  {
+   "group": "local",
+   "subject": "Multi-location structure",
+   "tier": 4,
+   "says": [
+    "gives each location its own page with its own details",
+    "links the location pages from a store locator or index"
+   ],
+   "use": "run branches in several towns and need a page for each",
+   "not": [
+    "shows every address on a single page only"
+   ],
+   "like": [
+    "Local landing page"
+   ]
+  },
+  {
+   "group": "local",
+   "subject": "Review gating",
+   "tier": 5,
+   "says": [
+    "asks only satisfied customers to leave a review",
+    "breaches platform guidelines"
+   ],
+   "use": "are asked to screen customers before sending them to the review page",
+   "not": [
+    "is the recommended way to collect balanced feedback"
+   ],
+   "like": [
+    "Review management"
+   ]
+  },
+  {
+   "group": "meas",
+   "subject": "Organic traffic",
+   "tier": 1,
+   "says": [
+    "counts visits that arrive from unpaid search results",
+    "is separate from paid and direct traffic"
+   ],
+   "use": "want to count visitors who found the site through unpaid search",
+   "not": [
+    "counts visits from paid advertisements"
+   ],
+   "like": [
+    "An impression"
+   ]
+  },
+  {
+   "group": "meas",
+   "subject": "An impression",
+   "tier": 1,
+   "says": [
+    "is one showing of a result in search",
+    "does not mean the result was clicked"
+   ],
+   "use": "want to know how often a page was shown",
+   "not": [
+    "counts visits to a page"
+   ],
+   "like": []
+  },
+  {
+   "group": "meas",
+   "subject": "Click-through rate",
+   "tier": 2,
+   "says": [
+    "divides clicks by impressions",
+    "shows how appealing a result looks for its position"
+   ],
+   "use": "want to know how often a shown result is chosen",
+   "not": [
+    "divides conversions by clicks"
+   ],
+   "like": [
+    "Conversion rate"
+   ]
+  },
+  {
+   "group": "meas",
+   "subject": "Search performance report",
+   "tier": 2,
+   "says": [
+    "shows the queries, pages, clicks and impressions a site receives from search",
+    "is first-party data from the search engine"
+   ],
+   "use": "need real query data for your own site",
+   "not": [
+    "reveals the exact traffic of a competitor"
+   ],
+   "like": [
+    "Organic traffic"
+   ]
+  },
+  {
+   "group": "meas",
+   "subject": "Conversion rate",
+   "tier": 2,
+   "says": [
+    "divides the number of completed goals by the number of visits",
+    "needs the goal to be defined first"
+   ],
+   "use": "want to know what share of visits complete a sign-up",
+   "not": [
+    "divides clicks by impressions"
+   ],
+   "like": [
+    "Click-through rate"
+   ]
+  },
+  {
+   "group": "meas",
+   "subject": "Reporting baseline",
+   "tier": 2,
+   "says": [
+    "records starting figures before work begins",
+    "makes change measurable afterwards"
+   ],
+   "use": "start an engagement and need figures to compare later results against",
+   "not": [
+    "is set after the results are in"
+   ],
+   "like": []
+  },
+  {
+   "group": "meas",
+   "subject": "The branded and non-branded split",
+   "tier": 3,
+   "says": [
+    "separates searches containing the brand name from the rest",
+    "shows that non-branded searches reflect discovery by new audiences"
+   ],
+   "use": "want to know whether visitors found the business without already knowing its name",
+   "not": [
+    "is combined so that the totals look larger"
+   ],
+   "like": [
+    "Navigational intent"
+   ]
+  },
+  {
+   "group": "meas",
+   "subject": "Average position",
+   "tier": 3,
+   "says": [
+    "is an average across queries and devices",
+    "can mislead when read without the queries behind it"
+   ],
+   "use": "are tempted to report one position figure for a whole page",
+   "not": [
+    "is the exact rank every searcher sees"
+   ],
+   "like": [
+    "An impression"
+   ]
+  },
+  {
+   "group": "meas",
+   "subject": "SEO result lag",
+   "tier": 4,
+   "says": [
+    "means changes can take weeks to show in the data",
+    "is why judging too early measures timing and not quality"
+   ],
+   "use": "are asked for results a few days after publishing a page",
+   "not": [
+    "means results always appear within a day"
+   ],
+   "like": [
+    "Reporting baseline"
+   ]
+  },
+  {
+   "group": "meas",
+   "subject": "Attribution model",
+   "tier": 4,
+   "says": [
+    "assigns credit for a conversion across touchpoints",
+    "is a modelling choice and not a fact about customers"
+   ],
+   "use": "must explain why two reports credit different channels for the same sale",
+   "not": [
+    "records exactly what persuaded each customer"
+   ],
+   "like": [
+    "Conversion rate"
+   ]
+  },
+  {
+   "group": "meas",
+   "subject": "Consent effect on analytics",
+   "tier": 4,
+   "says": [
+    "means measured visits can fall short of real visits",
+    "arises when visitors decline tracking"
+   ],
+   "use": "find that analytics shows fewer visits than server logs",
+   "not": [
+    "means analytics is exact whatever visitors choose"
+   ],
+   "like": [
+    "Attribution model"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "People-first content",
+   "tier": 2,
+   "says": [
+    "is written to help the reader and not to attract traffic first",
+    "answers the question the searcher actually has"
+   ],
+   "use": "must decide whether a piece exists for the reader or for a search term",
+   "not": [
+    "is written around the keyword and little else"
+   ],
+   "like": [
+    "Thin content"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Thin content",
+   "tier": 2,
+   "says": [
+    "offers little original value to the reader",
+    "is not always short and not always a spam page"
+   ],
+   "use": "find pages that repeat common knowledge and add nothing",
+   "not": [
+    "is any page under a fixed word count"
+   ],
+   "like": [
+    "Duplicate content"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Duplicate content",
+   "tier": 2,
+   "says": [
+    "appears at more than one URL",
+    "is handled with canonical tags, redirects or merging"
+   ],
+   "use": "find the same text reachable at several addresses",
+   "not": [
+    "is only a problem when copied from another site"
+   ],
+   "like": [
+    "Thin content"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Keyword stuffing",
+   "tier": 2,
+   "says": [
+    "repeats a phrase unnaturally in the text",
+    "harms readability"
+   ],
+   "use": "find a page repeating its target phrase in every sentence",
+   "not": [
+    "is the right way to show relevance"
+   ],
+   "like": [
+    "People-first content"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Author byline and bio",
+   "tier": 3,
+   "says": [
+    "shows who wrote a piece",
+    "gives readers a way to judge the author's background"
+   ],
+   "use": "want readers to see who wrote advice and why they are qualified",
+   "not": [
+    "is hidden to avoid showing any accountability"
+   ],
+   "like": [
+    "Fact-checking and citations"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Fact-checking and citations",
+   "tier": 3,
+   "says": [
+    "traces each claim to a primary source",
+    "lets readers verify a statement"
+   ],
+   "use": "must publish a statistic and need to show where it comes from",
+   "not": [
+    "adds a link to any page that mentions the number"
+   ],
+   "like": [
+    "Author byline and bio"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Content depth",
+   "tier": 3,
+   "says": [
+    "means completeness for the reader's question and not a word count",
+    "covers the follow-up questions a reader is likely to have"
+   ],
+   "use": "are asked to make a page longer to rank better",
+   "not": [
+    "is measured by the number of words"
+   ],
+   "like": []
+  },
+  {
+   "group": "quality",
+   "subject": "E-E-A-T",
+   "tier": 4,
+   "says": [
+    "stands for experience, expertise, authoritativeness and trust",
+    "is a set of qualities described in search quality guidance and not one score"
+   ],
+   "use": "hear a colleague describe a single E-E-A-T number to raise",
+   "not": [
+    "is a numeric score published for each page"
+   ],
+   "like": [
+    "Author byline and bio"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A doorway page",
+   "tier": 4,
+   "says": [
+    "is one of many near-identical pages made to rank for variants of a query",
+    "funnels visitors to one destination"
+   ],
+   "use": "find dozens of pages that differ only by a place or product name",
+   "not": [
+    "is a well-designed location page with unique details"
+   ],
+   "like": [
+    "Local landing page"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Cloaking",
+   "tier": 4,
+   "says": [
+    "shows crawlers different content from visitors",
+    "breaches search engine spam policies"
+   ],
+   "use": "find a page that serves one version to crawlers and another to people",
+   "not": [
+    "is serving the right language to each visitor"
+   ],
+   "like": [
+    "An hreflang annotation"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Original research",
+   "tier": 4,
+   "says": [
+    "adds data, experience or insight not found elsewhere",
+    "gives other writers a reason to cite the page"
+   ],
+   "use": "want content that cannot be copied from existing pages",
+   "not": [
+    "summarises the top results in new words"
+   ],
+   "like": [
+    "Digital PR"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A mass-produced low-value page",
+   "tier": 5,
+   "says": [
+    "is published in bulk with little value to readers",
+    "is treated as spam however it is produced"
+   ],
+   "use": "are asked to publish thousands of pages quickly to gain visibility",
+   "not": [
+    "is a fine way to cover long-tail queries cheaply"
+   ],
+   "like": [
+    "A doorway page"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI hallucination",
+   "tier": 1,
+   "says": [
+    "states invented facts fluently",
+    "can include names, figures and references that do not exist"
+   ],
+   "use": "find a draft that cites a study you cannot locate",
+   "not": [
+    "is a deliberate lie from the writer"
+   ],
+   "like": [
+    "A fabricated citation"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Human review of AI drafts",
+   "tier": 2,
+   "says": [
+    "has a qualified person check a draft before it is published",
+    "verifies facts and adds real expertise"
+   ],
+   "use": "need a safeguard before AI-assisted copy goes live",
+   "not": [
+    "is skipped when the draft reads well"
+   ],
+   "like": []
+  },
+  {
+   "group": "ai",
+   "subject": "A fabricated citation",
+   "tier": 3,
+   "says": [
+    "is a reference that looks real but does not exist",
+    "is caught only by opening the source"
+   ],
+   "use": "find a reference whose link leads nowhere",
+   "not": [
+    "is always safe because it looks formal"
+   ],
+   "like": [
+    "AI hallucination"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Interchangeable AI copy",
+   "tier": 3,
+   "says": [
+    "is bland text that could appear on any competitor's site",
+    "comes from prompts that supply no original input"
+   ],
+   "use": "find several pages with the same generic points as every rival",
+   "not": [
+    "shows a distinctive point of view"
+   ],
+   "like": []
+  },
+  {
+   "group": "ai",
+   "subject": "Source-grounded prompt",
+   "tier": 4,
+   "says": [
+    "supplies verified material for the draft to draw on",
+    "limits the model to facts you provide"
+   ],
+   "use": "want an AI draft to reflect your own approved facts",
+   "not": [
+    "asks the model for facts from memory"
+   ],
+   "like": [
+    "AI hallucination"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Confidential data in prompts",
+   "tier": 4,
+   "says": [
+    "risks sending client or personal information to a third-party tool",
+    "is avoided by checking the tool's data terms and removing identifiers"
+   ],
+   "use": "are about to paste a client's customer list into a public AI tool",
+   "not": [
+    "is safe whenever the answer is useful"
+   ],
+   "like": [
+    "Source-grounded prompt"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Stale model knowledge",
+   "tier": 4,
+   "says": [
+    "gives outdated figures because model knowledge stops at a training date",
+    "needs current facts to be supplied and checked"
+   ],
+   "use": "find a draft quoting a rule or figure that has since changed",
+   "not": [
+    "is always up to date at the moment of writing"
+   ],
+   "like": [
+    "Source-grounded prompt"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Unreviewed bulk publishing",
+   "tier": 4,
+   "says": [
+    "publishes large volumes of AI output with no checking",
+    "multiplies errors and can fall under mass-produced low-value content"
+   ],
+   "use": "are offered a tool that creates and posts hundreds of articles automatically",
+   "not": [
+    "is a safe way to scale quality"
+   ],
+   "like": [
+    "A mass-produced low-value page"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "Review checklist for AI copy",
+   "tier": 4,
+   "says": [
+    "lists the claims, numbers, names, quotations and links to verify",
+    "records who checked each item"
+   ],
+   "use": "want a repeatable way to check an AI draft before publication",
+   "not": [
+    "confirms only that spelling is correct"
+   ],
+   "like": [
+    "Human review of AI drafts"
+   ]
+  },
+  {
+   "group": "ai",
+   "subject": "AI-detector reliance",
+   "tier": 5,
+   "says": [
+    "is unreliable as proof of who wrote a text",
+    "can wrongly flag human writing"
+   ],
+   "use": "are told to prove a draft is human using a detection score",
+   "not": [
+    "is a dependable test of authorship"
+   ],
+   "like": [
+    "Human review of AI drafts"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's content-and-search motion",
+   "tier": 2,
+   "says": [
+    "treats growth as a content and search problem",
+    "relies on guides as its landing pages"
+   ],
+   "use": "need to describe how Moksy's own SEO document says it will grow",
+   "not": [
+    "relies on outbound sales to reach subscriber targets"
+   ],
+   "like": []
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's per-guide tracking",
+   "tier": 3,
+   "says": [
+    "tracks free Blueprint started and Pro upgrade by landing page",
+    "uses the two numbers that show whether a guide earns its place"
+   ],
+   "use": "need the two events Moksy tracks for each guide",
+   "not": [
+    "tracks page views and social shares only"
+   ],
+   "like": [
+    "Moksy's review schedule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's review schedule",
+   "tier": 3,
+   "says": [
+    "reviews results at 4, 8 and 12 weeks",
+    "follows the chain impressions, clicks, Blueprints and Pro"
+   ],
+   "use": "need the points at which Moksy reviews a guide's performance",
+   "not": [
+    "judges a guide the day after it is published"
+   ],
+   "like": [
+    "Moksy's wait before judging"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's wait before judging",
+   "tier": 3,
+   "says": [
+    "expects nothing for four to eight weeks",
+    "treats earlier judgement as measuring the crawler's schedule and not the content"
+   ],
+   "use": "are asked to judge a new Moksy guide a few days after publishing",
+   "not": [
+    "expects full results within a week"
+   ],
+   "like": [
+    "Moksy's review schedule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's impressions-without-clicks rule",
+   "tier": 3,
+   "says": [
+    "says a guide with impressions but no clicks needs a better title"
+   ],
+   "use": "find a Moksy guide that is shown often but is rarely chosen",
+   "not": [
+    "says the guide needs a better close"
+   ],
+   "like": [
+    "Moksy's clicks-without-Blueprints rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's clicks-without-Blueprints rule",
+   "tier": 3,
+   "says": [
+    "says a guide with clicks but no Blueprints needs a better close"
+   ],
+   "use": "find a Moksy guide that readers open but that starts no Blueprints",
+   "not": [
+    "says the guide needs a better title"
+   ],
+   "like": [
+    "Moksy's impressions-without-clicks rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's neutrality position",
+   "tier": 4,
+   "says": [
+    "makes Moksy the voice in the results that is not selling the build",
+    "is described by the SEO document as its entire advantage"
+   ],
+   "use": "need the advantage the SEO document gives Moksy over agencies that rank for cost questions",
+   "not": [
+    "recommends a builder, including a sister company"
+   ],
+   "like": [
+    "Moksy's ranges rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's ranges rule",
+   "tier": 5,
+   "says": [
+    "labels a range as a range and as agency marketing",
+    "states only figures that appear in a source"
+   ],
+   "use": "are drafting a Moksy cost guide and tempted to calculate a precise figure",
+   "not": [
+    "interpolates figures so that the answer looks exact"
+   ],
+   "like": [
+    "Moksy's guide ending"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's guide ending",
+   "tier": 3,
+   "says": [
+    "closes every guide by saying a range is not your number",
+    "points to the free Blueprint as the way to get your own"
+   ],
+   "use": "need the standard close of every Moksy guide",
+   "not": [
+    "closes by recommending a specific agency"
+   ],
+   "like": [
+    "Moksy's ranges rule"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Moksy's winnable ground",
+   "tier": 4,
+   "says": [
+    "lies in the gap between having an idea and having signed an agency",
+    "favours high-intent questions with weak current answers"
+   ],
+   "use": "need to explain where the SEO document says Moksy can win",
+   "not": [
+    "is the saturated head term that agencies already hold"
+   ],
+   "like": []
+  },
+  {
+   "group": "gg",
+   "subject": "GGLink's host canonicalisation",
+   "tier": 2,
+   "says": [
+    "redirects the non-www address to the www host",
+    "forces HTTPS and collapses /index.php to the site root"
+   ],
+   "use": "need to explain how the GGLink site avoids several addresses for the same page",
+   "not": [
+    "serves the site on both www and non-www addresses"
+   ],
+   "like": [
+    "GGLink's blog storage"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "GGLink's blog storage",
+   "tier": 2,
+   "says": [
+    "keeps blog posts in the CMS database and not in files",
+    "holds posts in the same database as the page content, enquiries and contacts"
+   ],
+   "use": "need to know where the GGLink site's blog posts live",
+   "not": [
+    "stores each post as a static file in the code repository"
+   ],
+   "like": [
+    "GGLink's host canonicalisation"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does a title tag do?",
+   "right": "Names a page in search results and browser tabs",
+   "wrong": [
+    "Hides the page from search results",
+    "Sets the colour scheme of the page",
+    "Lists every keyword the page targets"
+   ],
+   "tier": 1,
+   "why": "The title element names the page for people scanning results and for browser tabs."
+  },
+  {
+   "q": "A page needs to be reachable by visitors but kept out of search results. Which directive fits?",
+   "right": "A noindex directive",
+   "wrong": [
+    "A longer meta description",
+    "A 301 redirect to the home page",
+    "An XML sitemap entry"
+   ],
+   "tier": 1,
+   "why": "Noindex asks search engines not to keep the page in their index."
+  },
+  {
+   "q": "What is a backlink?",
+   "right": "A link from another website to yours",
+   "wrong": [
+    "A link from your page to another page on your site",
+    "A link to the previous page in the browser",
+    "A link inside your sitemap"
+   ],
+   "tier": 1,
+   "why": "A backlink points to your site from elsewhere."
+  },
+  {
+   "q": "Which search intent does the query how does a sitemap work show?",
+   "right": "Informational",
+   "wrong": [
+    "Navigational",
+    "Transactional",
+    "Local"
+   ],
+   "tier": 1,
+   "why": "The searcher wants an explanation, not a purchase."
+  },
+  {
+   "q": "Which word best describes SEO results timing?",
+   "right": "Gradual, with changes taking weeks to show",
+   "wrong": [
+    "Instant, within minutes",
+    "Guaranteed within seven days",
+    "Fixed by the day of the week"
+   ],
+   "tier": 1,
+   "why": "Crawling, indexing and measurement take time, so results are not immediate."
+  },
+  {
+   "q": "Which file tells crawlers which paths they may fetch?",
+   "right": "robots.txt",
+   "wrong": [
+    "sitemap.xml",
+    "manifest.json",
+    "humans.txt"
+   ],
+   "tier": 2,
+   "why": "robots.txt sits at the root of a host and sets crawl rules."
+  },
+  {
+   "q": "What does this robots.txt rule do?",
+   "code": "User-agent: *\nDisallow: /search/",
+   "right": "Asks all crawlers not to fetch URLs under /search/",
+   "wrong": [
+    "Hides /search/ from every visitor",
+    "Redirects /search/ to the home page",
+    "Marks /search/ as the preferred version"
+   ],
+   "tier": 2,
+   "why": "Disallow controls fetching by crawlers; it is not access control."
+  },
+  {
+   "q": "What does this tag in a page head do?",
+   "code": "<link rel=\"canonical\" href=\"https://www.example.com/guide/\">",
+   "right": "Names the preferred URL for this content",
+   "wrong": [
+    "Redirects visitors permanently",
+    "Blocks the page from indexing",
+    "Sets the language of the page"
+   ],
+   "tier": 2,
+   "why": "A canonical link is a hint naming the preferred version."
+  },
+  {
+   "q": "A query is best handled by which page type if the searcher is ready to book a service?",
+   "right": "A service page with a clear booking action",
+   "wrong": [
+    "A long background essay with no action",
+    "A glossary entry",
+    "An archive of old news"
+   ],
+   "tier": 2,
+   "why": "Transactional intent is served by a page where the action is easy."
+  },
+  {
+   "q": "What does a click-through rate show?",
+   "right": "The share of impressions that became clicks",
+   "wrong": [
+    "The share of visits that became sales",
+    "The number of links to a page",
+    "The speed of a page"
+   ],
+   "tier": 2,
+   "why": "CTR is clicks divided by impressions."
+  },
+  {
+   "q": "Which is the better anchor text for an internal link to a pricing guide?",
+   "right": "pricing guide",
+   "wrong": [
+    "click here",
+    "https",
+    "read more"
+   ],
+   "tier": 2,
+   "why": "Descriptive anchor text tells readers and crawlers what the target is."
+  },
+  {
+   "q": "Why should every page have a unique title tag?",
+   "right": "So each page can be told apart in results and tabs",
+   "wrong": [
+    "Because duplicates are illegal",
+    "Because titles set page speed",
+    "Because titles are hidden from visitors"
+   ],
+   "tier": 2,
+   "why": "Unique titles help searchers distinguish pages."
+  },
+  {
+   "q": "What is an orphan page?",
+   "right": "A page with no internal links pointing to it",
+   "wrong": [
+    "A page with no images",
+    "A page with no title",
+    "A page with a noindex tag"
+   ],
+   "tier": 2,
+   "why": "Nothing on the site links to it, so it is hard to discover."
+  },
+  {
+   "q": "Which metric measures unexpected movement of content during loading?",
+   "right": "Cumulative Layout Shift",
+   "wrong": [
+    "Largest Contentful Paint",
+    "Time to First Byte",
+    "Click depth"
+   ],
+   "tier": 2,
+   "why": "CLS measures visual stability."
+  },
+  {
+   "q": "A team sees two pages on its own site swapping positions for the same query. What is the best first step?",
+   "right": "Check intent and decide to merge, differentiate or redirect one page",
+   "wrong": [
+    "Add the keyword to both titles again",
+    "Delete both pages immediately",
+    "Block both in robots.txt"
+   ],
+   "tier": 3,
+   "why": "This is cannibalisation, which is resolved by giving each page a distinct purpose or combining them."
+  },
+  {
+   "q": "What does this snippet do?",
+   "code": "<img src=\"hero.jpg\" width=\"1200\" height=\"630\" alt=\"Team at work\">",
+   "right": "Gives the image reserved space so content does not jump",
+   "wrong": [
+    "Makes the image load first",
+    "Adds alternative text for screen readers",
+    "Blocks the image from search"
+   ],
+   "tier": 3,
+   "why": "Width and height let the browser reserve space before the image loads."
+  },
+  {
+   "q": "What type of structured data format is this?",
+   "code": "<script type=\"application/ld+json\">\n{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"Example Ltd\"}\n</script>",
+   "right": "JSON-LD",
+   "wrong": [
+    "Microdata",
+    "A sitemap",
+    "An RSS feed"
+   ],
+   "tier": 3,
+   "why": "JSON-LD is a script block with @context and @type."
+  },
+  {
+   "q": "Which attribute marks a paid link?",
+   "right": "rel=\"sponsored\"",
+   "wrong": [
+    "rel=\"ugc\"",
+    "rel=\"canonical\"",
+    "rel=\"alternate\""
+   ],
+   "tier": 3,
+   "why": "Sponsored identifies paid or advertisement links."
+  },
+  {
+   "q": "Which statement about the meta description is correct?",
+   "right": "It may be replaced by text chosen by the search engine",
+   "wrong": [
+    "It is guaranteed to display as written",
+    "It sets the title of the page",
+    "It is required for a page to be indexed"
+   ],
+   "tier": 3,
+   "why": "Search engines may choose their own snippet text."
+  },
+  {
+   "q": "What does this sitemap entry provide?",
+   "code": "<url>\n  <loc>https://www.example.com/guide/</loc>\n  <lastmod>2026-03-01</lastmod>\n</url>",
+   "right": "The URL and its last-modified date",
+   "wrong": [
+    "The page's keyword",
+    "A redirect target",
+    "A noindex instruction"
+   ],
+   "tier": 3,
+   "why": "The sitemap lists the URL and optionally a date it was last changed."
+  },
+  {
+   "q": "Lab data and field data differ because:",
+   "right": "Lab data is a controlled test and field data comes from real visitors",
+   "wrong": [
+    "Lab data comes from real visitors and field data is a test",
+    "They are the same thing",
+    "Field data is only for mobile"
+   ],
+   "tier": 3,
+   "why": "Lab suits debugging; field shows real experience."
+  },
+  {
+   "q": "An .htaccess rule sends /old-guide/ to /new-guide/. Which status should it use for a permanent move?",
+   "code": "Redirect 301 /old-guide/ https://www.example.com/new-guide/",
+   "right": "301",
+   "wrong": [
+    "302",
+    "404",
+    "503"
+   ],
+   "tier": 3,
+   "why": "A 301 signals a permanent move."
+  },
+  {
+   "q": "A page ranks nowhere because the searcher expects a comparison table and the page is a long essay. What is this?",
+   "right": "An intent mismatch",
+   "wrong": [
+    "A canonical error",
+    "A soft 404",
+    "A crawl budget problem"
+   ],
+   "tier": 3,
+   "why": "The format does not match what searchers want for the query."
+  },
+  {
+   "q": "Which content brief element prevents a writer from drifting off topic?",
+   "right": "The target query, intent and outline",
+   "wrong": [
+    "The publishing time of day",
+    "The page's colour palette",
+    "The number of social shares wanted"
+   ],
+   "tier": 3,
+   "why": "A brief states what the piece must answer and for whom."
+  },
+  {
+   "q": "What is the safest way to describe SEO to a client who wants a guaranteed position?",
+   "right": "Positions cannot be guaranteed because search engines decide results",
+   "wrong": [
+    "Guarantee page one within three months",
+    "Guarantee position one if the fee is high",
+    "Guarantee position by publishing daily"
+   ],
+   "tier": 3,
+   "why": "No supplier controls search engine results."
+  },
+  {
+   "q": "Which is a branded query?",
+   "right": "One that includes the company's name",
+   "wrong": [
+    "One with more than five words",
+    "One that ends in near me",
+    "One that has no clicks"
+   ],
+   "tier": 3,
+   "why": "Branded queries contain the brand name."
+  },
+  {
+   "q": "What does the lazy loading attribute do?",
+   "code": "<img src=\"photo.jpg\" width=\"800\" height=\"600\" alt=\"Office\" loading=\"lazy\">",
+   "right": "Defers an offscreen image until the visitor scrolls near it",
+   "wrong": [
+    "Loads the image before everything else",
+    "Compresses the image",
+    "Blocks the image in search"
+   ],
+   "tier": 3,
+   "why": "Lazy loading delays offscreen images."
+  },
+  {
+   "q": "A page has a noindex tag and is also disallowed in robots.txt, yet it still appears in results with no description. What is the likely cause?",
+   "right": "The crawler cannot fetch the page, so it cannot read the noindex tag",
+   "wrong": [
+    "The noindex tag is too short",
+    "The sitemap has the wrong date",
+    "The title is duplicated"
+   ],
+   "tier": 4,
+   "why": "A blocked page cannot be read, so its noindex directive is not seen."
+  },
+  {
+   "q": "A site launches with the largest hero image set to lazy loading. What is the likely effect?",
+   "right": "The main content may appear later than necessary",
+   "wrong": [
+    "The page will always rank lower",
+    "The image will never load",
+    "Layout shift is eliminated"
+   ],
+   "tier": 4,
+   "why": "The main visible image should load promptly."
+  },
+  {
+   "q": "A team plans a site migration. Which preparation matters most?",
+   "right": "A redirect map pairing each old URL with its new equivalent",
+   "wrong": [
+    "Redirecting every old URL to the home page",
+    "Changing the logo first",
+    "Deleting the old sitemap"
+   ],
+   "tier": 4,
+   "why": "Each old URL should lead to the closest new match."
+  },
+  {
+   "q": "A client asks you to buy 500 links for a fixed fee. What do you recommend?",
+   "right": "Decline, since buying links to manipulate rankings is a link scheme",
+   "wrong": [
+    "Accept and label them as editorial",
+    "Accept if the links are cheap",
+    "Accept if they are all nofollow"
+   ],
+   "tier": 4,
+   "why": "Paid manipulation risks manual action."
+  },
+  {
+   "q": "A product page's JSON-LD shows a rating that does not appear on the page. What is the problem?",
+   "right": "Marked-up content must be visible to users",
+   "wrong": [
+    "JSON-LD cannot hold ratings",
+    "Ratings need microdata",
+    "Only articles can have ratings"
+   ],
+   "tier": 4,
+   "why": "The markup must match what visitors can see."
+  },
+  {
+   "q": "A shop's filters create thousands of near-duplicate URLs. What should be reviewed first?",
+   "right": "How filter and parameter URLs are linked, canonicalised or blocked",
+   "wrong": [
+    "The colour of the filter buttons",
+    "The meta keywords tag",
+    "The footer text"
+   ],
+   "tier": 4,
+   "why": "Faceted navigation can waste crawling on duplicates."
+  },
+  {
+   "q": "A recently launched guide has no traffic after three days. What is the right response?",
+   "right": "Wait, check it is crawlable and indexed, and review at set intervals",
+   "wrong": [
+    "Rewrite it daily",
+    "Buy links immediately",
+    "Add the keyword ten more times"
+   ],
+   "tier": 4,
+   "why": "Early judgement measures timing and not quality."
+  },
+  {
+   "q": "A report says average position improved from 12 to 9. What should you check before celebrating?",
+   "right": "Which queries and devices the average covers",
+   "wrong": [
+    "Only the colour of the chart",
+    "Whether the date label is bold",
+    "Nothing, since averages are exact"
+   ],
+   "tier": 4,
+   "why": "Averages across queries can hide movement."
+  },
+  {
+   "q": "An AI draft cites a study with a convincing link. What do you do?",
+   "right": "Open the source and confirm it says what the draft claims",
+   "wrong": [
+    "Publish since it has a link",
+    "Remove the link and keep the claim",
+    "Add more citations of the same kind"
+   ],
+   "tier": 4,
+   "why": "AI tools can fabricate references."
+  },
+  {
+   "q": "A freelance writer wants to paste a client's customer list into a public AI tool to personalise copy. What is the best response?",
+   "right": "Do not paste personal data; use anonymised or approved material",
+   "wrong": [
+    "Paste it since the tool is helpful",
+    "Paste only half of it",
+    "Paste it if the client is not told"
+   ],
+   "tier": 4,
+   "why": "Personal data should not go into tools without clear data terms."
+  },
+  {
+   "q": "A local business wants a page for each of 40 towns it does not serve. What is the risk?",
+   "right": "Doorway pages that offer visitors little value",
+   "wrong": [
+    "No risk since each page has a different title",
+    "Faster loading",
+    "Stronger NAP consistency"
+   ],
+   "tier": 4,
+   "why": "Near-identical pages for the sake of ranking are doorway pages."
+  },
+  {
+   "q": "A report shows organic visits up but leads flat. What should you check first?",
+   "right": "Whether the pages that gained visits match the intent of buyers",
+   "wrong": [
+    "The width of the logo",
+    "The number of sitemaps",
+    "Nothing; visits are the goal"
+   ],
+   "tier": 4,
+   "why": "Visits only matter if they connect to goals."
+  },
+  {
+   "q": "Two language versions of a page exist. What helps search engines serve the right one?",
+   "right": "hreflang annotations that point to each other",
+   "wrong": [
+    "A single canonical for both",
+    "Noindex on one language",
+    "A shorter title"
+   ],
+   "tier": 4,
+   "why": "hreflang annotations should be reciprocal."
+  },
+  {
+   "q": "A new site's pages are not indexed. The sitemap lists them and robots.txt blocks the whole site. What is the first fix?",
+   "right": "Remove the site-wide disallow so crawlers can fetch the pages",
+   "wrong": [
+    "Add more keywords",
+    "Submit again without changing robots.txt",
+    "Add a noindex tag"
+   ],
+   "tier": 5,
+   "why": "A site-wide block prevents fetching."
+  },
+  {
+   "q": "A migration finds that old URLs redirect to the home page. What is the likely consequence?",
+   "right": "Visitors and signals may not reach the matching content",
+   "wrong": [
+    "All traffic is preserved",
+    "Rankings improve",
+    "Pages gain more links"
+   ],
+   "tier": 5,
+   "why": "Redirects should pair each page with its closest match."
+  },
+  {
+   "q": "A team is asked to publish 2,000 AI-written articles in a week with no editor. What is the main risk?",
+   "right": "Mass-produced low-value pages and unchecked errors",
+   "wrong": [
+    "No risk if the grammar is correct",
+    "Faster indexing for all pages",
+    "Higher trust automatically"
+   ],
+   "tier": 5,
+   "why": "Bulk, unreviewed publishing is a quality and policy risk."
+  },
+  {
+   "q": "A review-gating plan asks only happy customers to leave a public review. What is wrong?",
+   "right": "It breaches platform guidelines and gives a misleading picture",
+   "wrong": [
+    "It is fine if the wording is polite",
+    "It saves time with no downside",
+    "It is required for a business profile"
+   ],
+   "tier": 5,
+   "why": "Selective soliciting is discouraged by platforms."
+  },
+  {
+   "q": "A traffic drop coincides with a release. How do you test whether the release is the cause?",
+   "right": "Compare against the annotated change date and the affected page groups",
+   "wrong": [
+    "Assume the algorithm changed",
+    "Delete the new pages",
+    "Wait a year"
+   ],
+   "tier": 5,
+   "why": "Annotations and segmentation help isolate the cause."
+  },
+  {
+   "q": "An AI-detector reports that a freelancer's article is 80 percent AI. What is the best next step?",
+   "right": "Treat it as one weak signal and review the draft's sources and quality",
+   "wrong": [
+    "Reject the article on the score alone",
+    "Publish without review",
+    "Report the writer for fraud"
+   ],
+   "tier": 5,
+   "why": "Detectors are unreliable as proof."
+  },
+  {
+   "q": "A Moksy guide has impressions but no clicks. According to the SEO document, what does it need?",
+   "right": "A better title",
+   "wrong": [
+    "A better close",
+    "More impressions",
+    "A longer sitemap"
+   ],
+   "tier": 3,
+   "why": "The document links no clicks to the title and no Blueprints to the close."
+  },
+  {
+   "q": "A Moksy guide gets clicks but no Blueprints. What does the SEO document say it needs?",
+   "right": "A better close",
+   "wrong": [
+    "A better title",
+    "A new domain",
+    "More paid ads"
+   ],
+   "tier": 3,
+   "why": "Clicks without Blueprints point to the end of the guide."
+  },
+  {
+   "q": "Which two events does Moksy's SEO document track by landing page?",
+   "right": "Free Blueprint started and Pro upgrade",
+   "wrong": [
+    "Page views and shares",
+    "Logins and logouts",
+    "Impressions and position"
+   ],
+   "tier": 3,
+   "why": "These are the two numbers that show whether a guide earns its place."
+  },
+  {
+   "q": "Why does Moksy's SEO document say neutrality is its advantage?",
+   "right": "Pages ranking for cost questions mostly belong to agencies that want the build, and Moksy sells none",
+   "wrong": [
+    "Moksy has the most backlinks",
+    "Moksy ranks first for every term",
+    "Moksy writes the longest guides"
+   ],
+   "tier": 4,
+   "why": "Neutrality is the entire advantage in the document."
+  },
+  {
+   "q": "What does the GGLink site's .htaccess do with non-www addresses?",
+   "right": "Redirects them to the www host",
+   "wrong": [
+    "Serves them as a separate site",
+    "Blocks them",
+    "Redirects them to the admin area"
+   ],
+   "tier": 2,
+   "why": "The site canonicalises non-www to www."
+  },
+  {
+   "q": "Where do the GGLink site's blog posts live?",
+   "right": "In the CMS database",
+   "wrong": [
+    "In static files in the repository",
+    "In the sitemap",
+    "In the .htaccess file"
+   ],
+   "tier": 2,
+   "why": "The CMS stores blog posts in its database."
+  },
+  {
+   "q": "A Moksy guide ends with a range. What does the SEO document say it should state about the range?",
+   "right": "That a range is not your number, and the free Blueprint gives yours",
+   "wrong": [
+    "That the range is exact",
+    "That the range is guaranteed",
+    "That the range is the best price"
+   ],
+   "tier": 3,
+   "why": "Every guide ends in the same place."
+  }
+ ]
+}

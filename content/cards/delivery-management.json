@@ -1,0 +1,2658 @@
+{
+ "slug": "delivery-management",
+ "name": "Project delivery management",
+ "description": "Estimates, handover, client continuity.",
+ "roles": "manager",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "req": "requirements concept",
+  "est": "estimation concept",
+  "plan": "planning concept",
+  "agile": "agile practice",
+  "flow": "flow metric or chart",
+  "kanban": "kanban practice",
+  "raid": "RAID log entry type",
+  "risk": "risk management concept",
+  "scope": "scope and change control concept",
+  "status": "status reporting practice",
+  "done": "quality and completion concept",
+  "retro": "retrospective and improvement practice",
+  "resource": "resourcing concept",
+  "handover": "handover and acceptance item",
+  "cont": "client continuity concept"
+ },
+ "cards": [
+  {
+   "group": "req",
+   "subject": "A user story",
+   "tier": 1,
+   "says": [
+    "describes a need from the viewpoint of the person who wants it",
+    "is commonly phrased as who, what and why",
+    "is kept small enough to finish within one iteration"
+   ],
+   "use": "want to capture a need without prescribing the solution",
+   "not": [
+    "is a detailed technical specification of how to build the feature"
+   ],
+   "like": [
+    "A use case"
+   ]
+  },
+  {
+   "group": "req",
+   "subject": "A use case",
+   "tier": 3,
+   "says": [
+    "describes the steps of an interaction between an actor and a system",
+    "lists a main success path and alternative flows",
+    "names the actor who starts the interaction"
+   ],
+   "use": "need to spell out the error and alternative paths of an interaction",
+   "not": [
+    "is always a single sentence"
+   ],
+   "like": [
+    "A user story"
+   ]
+  },
+  {
+   "group": "req",
+   "subject": "A problem statement",
+   "tier": 1,
+   "says": [
+    "says who has the problem, what happens today and what outcome is wanted",
+    "is kept separate from any proposed solution",
+    "is agreed before a solution is priced"
+   ],
+   "use": "hear a client describe a solution before describing the need",
+   "not": [
+    "names the technology the team will use"
+   ]
+  },
+  {
+   "group": "req",
+   "subject": "MoSCoW prioritisation",
+   "tier": 3,
+   "says": [
+    "sorts requirements into must, should, could and won't have",
+    "makes the won't-have-this-time list explicit",
+    "keeps must-haves to the minimum a release cannot do without"
+   ],
+   "use": "need to agree what to cut first when time runs short",
+   "not": [
+    "ranks every requirement with a unique number from one to n"
+   ]
+  },
+  {
+   "group": "req",
+   "subject": "A non-functional requirement",
+   "tier": 3,
+   "says": [
+    "describes how well the system must behave rather than what it does",
+    "covers qualities such as performance, security and availability",
+    "is often missed because nobody asks for it"
+   ],
+   "use": "need to state how fast or how available the system must be",
+   "not": [
+    "is optional once the functional requirements are met"
+   ]
+  },
+  {
+   "group": "req",
+   "subject": "An out-of-scope list",
+   "tier": 2,
+   "says": [
+    "names what the project will not deliver",
+    "protects both sides by making a clear no visible",
+    "is agreed alongside what is in scope"
+   ],
+   "use": "want to prevent assumptions about work that was never promised",
+   "not": [
+    "is only needed once the project is late"
+   ]
+  },
+  {
+   "group": "req",
+   "subject": "A requirements traceability matrix",
+   "tier": 4,
+   "says": [
+    "links each requirement to its design, test and delivery items",
+    "shows which requirements have no test",
+    "helps assess which items a change would touch"
+   ],
+   "use": "must prove that every requirement was built and tested",
+   "not": [
+    "lists only the tasks assigned to each person"
+   ]
+  },
+  {
+   "group": "req",
+   "subject": "The Kano model",
+   "tier": 5,
+   "says": [
+    "separates basic expectations, performance needs and delighters",
+    "shows that today's delighter tends to become tomorrow's expectation"
+   ],
+   "use": "want to decide which features create delight and which only avoid complaints",
+   "not": [
+    "scores features strictly by development cost"
+   ]
+  },
+  {
+   "group": "req",
+   "subject": "Moksy's discovery",
+   "tier": 3,
+   "says": [
+    "aims to understand the problem before a solution is priced",
+    "starts by confirming the problem statement",
+    "comes before an estimate rather than after it"
+   ],
+   "use": "want to know why Moksy confirms the problem before quoting",
+   "not": [
+    "prices the solution first and refines the problem afterwards"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "An estimate",
+   "tier": 1,
+   "says": [
+    "is a forecast rather than a promise",
+    "is most useful when it says how sure you are",
+    "should follow the requirements rather than a one-line idea"
+   ],
+   "use": "are asked for a number on work that is still vague",
+   "not": [
+    "is a commitment that must never be revised"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "A three-point estimate",
+   "tier": 3,
+   "says": [
+    "gives a best case, a most likely case and a worst case",
+    "can be combined into a weighted expected value",
+    "shows the spread of uncertainty instead of one number"
+   ],
+   "use": "want to express uncertainty for a single task",
+   "not": [
+    "averages the guesses of three different teams"
+   ],
+   "like": [
+    "An analogous estimate"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "A bottom-up estimate",
+   "tier": 3,
+   "says": [
+    "sums the estimates of small work packages",
+    "needs the work broken down first",
+    "benefits from individual errors tending to average out"
+   ],
+   "use": "have a detailed breakdown and want a total you can defend",
+   "not": [
+    "starts from a fixed budget and divides it among the parts"
+   ],
+   "like": [
+    "An analogous estimate"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "An analogous estimate",
+   "tier": 2,
+   "says": [
+    "starts from the actual size of a similar past project",
+    "is quick but only as good as the similarity",
+    "suits early stages when little detail exists"
+   ],
+   "use": "need a rough figure fast from a comparable earlier job",
+   "not": [
+    "is built from a full task breakdown"
+   ],
+   "like": [
+    "A bottom-up estimate",
+    "Reference class forecasting",
+    "A three-point estimate"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Planning poker",
+   "tier": 2,
+   "says": [
+    "has each person reveal an estimate card at the same time",
+    "exposes disagreement so it can be discussed",
+    "reduces anchoring on the first number spoken"
+   ],
+   "use": "want the whole team to size backlog items without anyone dominating",
+   "not": [
+    "lets the product owner set the final number"
+   ],
+   "like": [
+    "Story points"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Story points",
+   "tier": 2,
+   "says": [
+    "measure relative size rather than hours",
+    "combine effort, complexity and uncertainty",
+    "are meaningful mainly within one team"
+   ],
+   "use": "want to size backlog items without committing to hours",
+   "not": [
+    "convert to a fixed number of hours that applies to every team"
+   ],
+   "like": [
+    "Planning poker"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Contingency",
+   "tier": 4,
+   "says": [
+    "is an explicit allowance for uncertainty",
+    "is shown openly rather than padded into every line",
+    "grows when requirements are vague"
+   ],
+   "use": "want to cover unknowns without hiding padding",
+   "not": [
+    "is a secret buffer the client is not told about"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "The cone of uncertainty",
+   "tier": 5,
+   "says": [
+    "shows estimate error narrowing as the project progresses",
+    "explains why early estimates need wide ranges",
+    "is widest at the very start of a project"
+   ],
+   "use": "must explain why a day-one estimate cannot be tight",
+   "not": [
+    "says early estimates are the most accurate"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Effort",
+   "tier": 2,
+   "says": [
+    "is the amount of work measured in person-hours or person-days",
+    "excludes the time the work spends waiting",
+    "adds up across people working in parallel"
+   ],
+   "use": "need to say how much work is involved, not how long it takes",
+   "not": [
+    "is the elapsed calendar time between start and finish"
+   ],
+   "like": [
+    "Duration"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Duration",
+   "tier": 2,
+   "says": [
+    "is the elapsed calendar time from start to finish",
+    "stretches when work waits for client feedback",
+    "can be much longer than the effort it contains"
+   ],
+   "use": "need to tell the client when the work will be done",
+   "not": [
+    "is the sum of person-hours on a task"
+   ],
+   "like": [
+    "Effort"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Commonly forgotten work items",
+   "tier": 2,
+   "says": [
+    "include testing, review rounds, deployment and handover",
+    "include client content and project management",
+    "explain why an estimate built only from coding is too low"
+   ],
+   "use": "check an estimate for pieces nobody listed",
+   "not": [
+    "are covered automatically by the build estimate"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "The planning fallacy",
+   "tier": 4,
+   "says": [
+    "is the tendency to underestimate time even when similar tasks overran before",
+    "is countered by comparing earlier estimates with actuals"
+   ],
+   "use": "see a plan that ignores how long similar work took last time",
+   "not": [
+    "affects only inexperienced people"
+   ]
+  },
+  {
+   "group": "est",
+   "subject": "Reference class forecasting",
+   "tier": 5,
+   "says": [
+    "bases a forecast on the outcomes of many similar past projects",
+    "corrects optimism by taking an outside view",
+    "adjusts the baseline figure using the spread of past results"
+   ],
+   "use": "must counter a sponsor's optimistic view of a single project",
+   "not": [
+    "relies only on the team's detailed plan for this project"
+   ],
+   "like": [
+    "An analogous estimate",
+    "The planning fallacy"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A project charter",
+   "tier": 2,
+   "says": [
+    "authorises the project",
+    "names the objectives, the sponsor and the project manager",
+    "gives the manager authority to use resources"
+   ],
+   "use": "need formal permission and a mandate to begin",
+   "not": [
+    "is the detailed task-by-task schedule"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A work breakdown structure",
+   "tier": 2,
+   "says": [
+    "decomposes the deliverables into smaller work packages",
+    "is organised by deliverable rather than by date",
+    "covers the whole scope, with children adding up to the parent"
+   ],
+   "use": "need to be sure no part of the scope is missed when planning",
+   "not": [
+    "is a calendar of when each person works"
+   ],
+   "like": [
+    "A Gantt chart"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A Gantt chart",
+   "tier": 1,
+   "says": [
+    "shows tasks as bars along a timeline",
+    "can display dependencies between tasks",
+    "makes overlapping work visible at a glance"
+   ],
+   "use": "want to show tasks against calendar dates",
+   "not": [
+    "breaks the deliverables into a hierarchy without dates"
+   ],
+   "like": [
+    "A work breakdown structure"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A milestone",
+   "tier": 1,
+   "says": [
+    "marks a significant point in the plan",
+    "has zero duration",
+    "is a checkpoint for review and decisions"
+   ],
+   "use": "want a visible checkpoint to review progress",
+   "not": [
+    "is a task that takes several weeks"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A baseline",
+   "tier": 4,
+   "says": [
+    "is the approved scope, schedule and cost that progress is measured against",
+    "changes only through change control",
+    "lets variance be calculated"
+   ],
+   "use": "need a fixed reference to measure drift",
+   "not": [
+    "is updated silently whenever the plan slips"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "The critical path",
+   "tier": 3,
+   "says": [
+    "is the longest chain of dependent tasks",
+    "sets the shortest possible project duration",
+    "has no float"
+   ],
+   "use": "need to know which delays will move the end date",
+   "not": [
+    "is the list of the most expensive tasks"
+   ],
+   "like": [
+    "Float"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Float",
+   "tier": 4,
+   "says": [
+    "is how long a task can slip without moving the project end date",
+    "is also called slack in scheduling",
+    "is the difference between a task's earliest and latest start"
+   ],
+   "use": "want to know which tasks can absorb a delay",
+   "not": [
+    "is extra budget held for risks"
+   ],
+   "like": [
+    "The critical path"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Finish-to-start",
+   "tier": 2,
+   "says": [
+    "means the successor cannot start until the predecessor finishes",
+    "is the most common dependency type",
+    "fits testing that must follow a finished build"
+   ],
+   "use": "need one task to wait until another is done",
+   "not": [
+    "lets two tasks run completely in parallel"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A hard dependency",
+   "tier": 4,
+   "says": [
+    "is inherent in the nature of the work",
+    "cannot be reordered, such as testing a feature before it exists",
+    "is also called mandatory"
+   ],
+   "use": "see an order that logic forces on the tasks",
+   "not": [
+    "is a preference the team can change freely"
+   ],
+   "like": [
+    "A soft dependency"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "A soft dependency",
+   "tier": 4,
+   "says": [
+    "is an order chosen by preference or good practice",
+    "can be changed to compress the schedule",
+    "is also called discretionary"
+   ],
+   "use": "want to know which sequence can be reordered when time is short",
+   "not": [
+    "is forced by the nature of the work"
+   ],
+   "like": [
+    "A hard dependency"
+   ]
+  },
+  {
+   "group": "plan",
+   "subject": "Rolling-wave planning",
+   "tier": 5,
+   "says": [
+    "plans near-term work in detail and later work at a high level",
+    "refines later phases as understanding grows"
+   ],
+   "use": "face a long project where the later work is still unclear",
+   "not": [
+    "fixes every task of the whole project in detail on day one"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A sprint",
+   "tier": 1,
+   "says": [
+    "is a fixed-length iteration",
+    "produces a usable increment by its end",
+    "is followed immediately by the next one"
+   ],
+   "use": "want a regular rhythm of delivery and feedback",
+   "not": [
+    "ends only when all planned work is finished, however long that takes"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "Sprint planning",
+   "tier": 2,
+   "says": [
+    "selects the work for the coming sprint",
+    "agrees a sprint goal",
+    "lets the team decide how much it can take on"
+   ],
+   "use": "start a sprint and must decide what fits",
+   "not": [
+    "is where the product owner assigns tasks to individuals"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "The daily stand-up",
+   "tier": 1,
+   "says": [
+    "is a short daily sync of the team",
+    "focuses on coordinating work toward the sprint goal",
+    "is not a status report to a manager"
+   ],
+   "use": "want the team to spot blockers each day",
+   "not": [
+    "is held weekly for stakeholders"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "The sprint review",
+   "tier": 2,
+   "says": [
+    "demonstrates the increment to stakeholders",
+    "collects feedback that shapes the backlog",
+    "looks at the product rather than the team's process"
+   ],
+   "use": "want stakeholder feedback on working software",
+   "not": [
+    "inspects how the team works together"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "The product backlog",
+   "tier": 1,
+   "says": [
+    "is an ordered list of what might be needed in the product",
+    "is never complete and changes as understanding grows",
+    "has its ordering owned by one person"
+   ],
+   "use": "need a single place for all upcoming work",
+   "not": [
+    "is frozen at the start of the project"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "Backlog refinement",
+   "tier": 3,
+   "says": [
+    "clarifies, splits and orders upcoming items",
+    "prepares items so they are ready for planning",
+    "is ongoing rather than a single event"
+   ],
+   "use": "find upcoming stories too big or vague to start",
+   "not": [
+    "happens only after the sprint ends"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "The product owner",
+   "tier": 2,
+   "says": [
+    "orders the backlog by value",
+    "decides what is built next",
+    "speaks for the stakeholders"
+   ],
+   "use": "need someone accountable for what the team builds",
+   "not": [
+    "assigns individual tasks to developers"
+   ],
+   "like": [
+    "The scrum master"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "The scrum master",
+   "tier": 2,
+   "says": [
+    "coaches the team on the process",
+    "removes impediments",
+    "does not assign tasks or manage the people"
+   ],
+   "use": "need someone to help the team follow its agreed way of working",
+   "not": [
+    "decides the order of the backlog"
+   ],
+   "like": [
+    "The product owner"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A spike",
+   "tier": 3,
+   "says": [
+    "is a time-boxed investigation to reduce uncertainty",
+    "produces knowledge rather than a shippable feature",
+    "ends with a decision or a better estimate"
+   ],
+   "use": "must find out whether an approach is feasible before committing",
+   "not": [
+    "is a feature delivered to users at the end of the sprint"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A minimum viable product",
+   "tier": 3,
+   "says": [
+    "is the smallest release that tests a key assumption with real users",
+    "exists to learn whether the idea works"
+   ],
+   "use": "want to learn whether the idea works before building the full thing",
+   "not": [
+    "includes every feature planned for the first year"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Velocity",
+   "tier": 2,
+   "says": [
+    "is the amount of work a team completes per sprint",
+    "is used to forecast how much will fit in future sprints",
+    "should not be compared between teams"
+   ],
+   "use": "need a basis to forecast how many sprints the backlog needs",
+   "not": [
+    "measures each individual's productivity"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "A burndown chart",
+   "tier": 2,
+   "says": [
+    "plots remaining work against time",
+    "slopes down toward zero as work is finished",
+    "does not show added scope separately"
+   ],
+   "use": "want to see whether the sprint is on track to finish",
+   "not": [
+    "shows the cumulative amount of work completed against a total scope line"
+   ],
+   "like": [
+    "A burnup chart"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "A burnup chart",
+   "tier": 3,
+   "says": [
+    "shows completed work rising toward a total scope line",
+    "makes changes in scope visible as the scope line moving"
+   ],
+   "use": "must show the client that the target moved, not that the team slowed",
+   "not": [
+    "hides scope growth because the total is fixed"
+   ],
+   "like": [
+    "A burndown chart"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Cycle time",
+   "tier": 2,
+   "says": [
+    "is measured from when work starts on an item to when it is done",
+    "is the part of lead time that the team directly controls"
+   ],
+   "use": "want to know how long the team takes once it begins an item",
+   "not": [
+    "starts when the customer first makes the request"
+   ],
+   "like": [
+    "Lead time"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Lead time",
+   "tier": 2,
+   "says": [
+    "is measured from the request arriving to delivery",
+    "includes the time spent waiting in the queue",
+    "is what the customer experiences"
+   ],
+   "use": "want to know how long a customer waits from asking to receiving",
+   "not": [
+    "starts only when a developer picks the item up"
+   ],
+   "like": [
+    "Cycle time"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Throughput",
+   "tier": 3,
+   "says": [
+    "counts the items finished per unit of time",
+    "can feed a forecast of how many items will be done by a date"
+   ],
+   "use": "need to know how many items the team finishes each week",
+   "not": [
+    "measures how long each item took"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Work in progress",
+   "tier": 2,
+   "says": [
+    "counts items started but not yet finished",
+    "rises when people begin new work before finishing old work",
+    "pushes cycle time up as it grows"
+   ],
+   "use": "see many items open and few completed",
+   "not": [
+    "counts the items completed per week"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "A cumulative flow diagram",
+   "tier": 4,
+   "says": [
+    "stacks the number of items in each state over time",
+    "shows a widening band where work is piling up",
+    "can show lead time and work in progress as distances on the chart"
+   ],
+   "use": "want to spot a bottleneck forming across states",
+   "not": [
+    "plots remaining story points against days left in a sprint"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Little's Law",
+   "tier": 5,
+   "says": [
+    "relates average work in progress, throughput and cycle time",
+    "says average cycle time equals average work in progress divided by average throughput",
+    "explains why cutting work in progress shortens cycle time"
+   ],
+   "use": "must show why limiting work in progress makes delivery faster",
+   "not": [
+    "predicts exactly how many defects a release will have"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "Monte Carlo forecasting",
+   "tier": 5,
+   "says": [
+    "runs many simulations sampled from historical throughput",
+    "gives the probability of finishing by a date rather than a single date",
+    "needs reasonably stable historical data"
+   ],
+   "use": "must give a date with a stated confidence rather than one number",
+   "not": [
+    "relies on a single expert's guess of the end date"
+   ]
+  },
+  {
+   "group": "kanban",
+   "subject": "A kanban board",
+   "tier": 1,
+   "says": [
+    "visualises work as cards in columns by state",
+    "shows where work is queued and blocked"
+   ],
+   "use": "want everyone to see what is in progress",
+   "not": [
+    "assigns every card to a fixed sprint"
+   ]
+  },
+  {
+   "group": "kanban",
+   "subject": "A WIP limit",
+   "tier": 2,
+   "says": [
+    "caps the number of items allowed in a column or stage",
+    "forces the team to finish work before starting new work",
+    "exposes bottlenecks when a column fills"
+   ],
+   "use": "see work piling up half-done",
+   "not": [
+    "sets the maximum hours any one person may log per day"
+   ]
+  },
+  {
+   "group": "kanban",
+   "subject": "A pull system",
+   "tier": 4,
+   "says": [
+    "starts new work only when capacity frees up",
+    "contrasts with pushing work in on a schedule"
+   ],
+   "use": "want to avoid overloading a stage",
+   "not": [
+    "assigns work to people the moment it arrives"
+   ]
+  },
+  {
+   "group": "kanban",
+   "subject": "A swimlane",
+   "tier": 3,
+   "says": [
+    "separates types of work or teams in horizontal rows",
+    "lets urgent work be told apart from regular work at a glance"
+   ],
+   "use": "need to show different kinds of work on one board",
+   "not": [
+    "divides the board into vertical state columns"
+   ]
+  },
+  {
+   "group": "kanban",
+   "subject": "A class of service",
+   "tier": 5,
+   "says": [
+    "gives different types of work different handling rules",
+    "may allow an expedite class with special rules"
+   ],
+   "use": "must handle both urgent fixes and normal work on one board",
+   "not": [
+    "gives every item the same priority"
+   ]
+  },
+  {
+   "group": "kanban",
+   "subject": "A bottleneck",
+   "tier": 3,
+   "says": [
+    "is the stage whose capacity limits the throughput of the whole flow",
+    "shows as a queue building in front of it",
+    "is where improvement raises output the most"
+   ],
+   "use": "see items waiting in front of one stage while later stages sit idle",
+   "not": [
+    "is the stage with the most staff"
+   ]
+  },
+  {
+   "group": "kanban",
+   "subject": "Work item age",
+   "tier": 4,
+   "says": [
+    "measures how long an item has been in progress so far",
+    "highlights items at risk of exceeding typical cycle time"
+   ],
+   "use": "want to catch stuck items before they finish late",
+   "not": [
+    "measures how long finished items took"
+   ]
+  },
+  {
+   "group": "raid",
+   "subject": "A risk",
+   "tier": 1,
+   "says": [
+    "is something that might happen and affect the project",
+    "has a probability and an impact",
+    "is managed before it happens"
+   ],
+   "use": "spot a possible event that has not occurred yet",
+   "not": [
+    "is a problem that has already occurred"
+   ]
+  },
+  {
+   "group": "raid",
+   "subject": "An assumption",
+   "tier": 1,
+   "says": [
+    "is something believed true but not yet confirmed",
+    "becomes a risk or an issue if it proves false",
+    "is written down so that its failure gives a basis for a change request"
+   ],
+   "use": "plan around a fact the client has promised but not yet delivered",
+   "not": [
+    "is a requirement that has been verified"
+   ]
+  },
+  {
+   "group": "raid",
+   "subject": "An issue",
+   "tier": 1,
+   "says": [
+    "is a problem that has already happened",
+    "needs action now rather than monitoring"
+   ],
+   "use": "find that a blocker is already stopping work",
+   "not": [
+    "has a probability of occurring"
+   ]
+  },
+  {
+   "group": "raid",
+   "subject": "A dependency",
+   "tier": 1,
+   "says": [
+    "is something the project needs from outside the team",
+    "can block progress when the other party is late",
+    "is recorded with the date by which the other party must deliver"
+   ],
+   "use": "wait on a supplier's delivery or on client content",
+   "not": [
+    "is a task the team fully controls"
+   ]
+  },
+  {
+   "group": "raid",
+   "subject": "A decision",
+   "tier": 2,
+   "says": [
+    "records what was decided, by whom and when",
+    "prevents the same question being reopened without reason"
+   ],
+   "use": "need a traceable record of a choice",
+   "not": [
+    "tracks a problem awaiting resolution"
+   ]
+  },
+  {
+   "group": "raid",
+   "subject": "A constraint",
+   "tier": 3,
+   "says": [
+    "is a fixed limit on the project such as a deadline or budget",
+    "limits the options the plan can use"
+   ],
+   "use": "plan around a hard launch date set by an external event",
+   "not": [
+    "is an uncertain event that might happen"
+   ]
+  },
+  {
+   "group": "raid",
+   "subject": "An action",
+   "tier": 2,
+   "says": [
+    "is a specific follow-up with an owner and a due date",
+    "comes out of a meeting or a review"
+   ],
+   "use": "leave a meeting with a task that has no owner yet",
+   "not": [
+    "records a choice that has already been made"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A RAID log",
+   "tier": 1,
+   "says": [
+    "tracks risks, assumptions, issues and dependencies in one place",
+    "is reviewed regularly rather than filled in once"
+   ],
+   "use": "need one shared list of what could derail delivery",
+   "not": [
+    "is a log of every code change made"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A risk register",
+   "tier": 2,
+   "says": [
+    "records each risk with probability, impact, owner and response",
+    "shows the status of each risk over time"
+   ],
+   "use": "must track each risk to its owner and response",
+   "not": [
+    "records only problems that have already happened"
+   ],
+   "like": [
+    "A RAID log"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A probability and impact matrix",
+   "tier": 2,
+   "says": [
+    "ranks risks by combining likelihood and consequence",
+    "plots probability on one axis and impact on the other",
+    "helps decide which risks need action first"
+   ],
+   "use": "have a long risk list and must choose where to act first",
+   "not": [
+    "records who is responsible for each risk"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A risk trigger",
+   "tier": 3,
+   "says": [
+    "is an early warning sign that a risk is about to occur",
+    "tells you when to start the contingency plan"
+   ],
+   "use": "want a signal that a risk is becoming real",
+   "not": [
+    "is the owner assigned to a risk"
+   ],
+   "like": [
+    "A contingency plan"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk avoidance",
+   "tier": 3,
+   "says": [
+    "changes the plan so the risk cannot occur",
+    "removes the threat, for example by dropping a risky feature"
+   ],
+   "use": "can remove the feature that creates the risk",
+   "not": [
+    "moves the financial impact to a third party"
+   ],
+   "like": [
+    "Risk mitigation",
+    "Risk transfer",
+    "Risk acceptance"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk mitigation",
+   "tier": 3,
+   "says": [
+    "reduces the probability or the impact of a risk",
+    "acts before the risk happens, for example by building an early prototype"
+   ],
+   "use": "want to lower the likelihood of a risk without removing its cause",
+   "not": [
+    "removes the risk entirely by changing the scope"
+   ],
+   "like": [
+    "Risk avoidance",
+    "Risk transfer",
+    "Risk acceptance"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk transfer",
+   "tier": 3,
+   "says": [
+    "shifts the impact to a third party such as an insurer or a supplier",
+    "moves who bears the consequence without removing the risk"
+   ],
+   "use": "want a supplier or insurer to carry the consequence",
+   "not": [
+    "removes the cause of the risk"
+   ],
+   "like": [
+    "Risk avoidance",
+    "Risk mitigation",
+    "Risk acceptance"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "Risk acceptance",
+   "tier": 3,
+   "says": [
+    "acknowledges the risk and takes no action unless it occurs",
+    "is chosen when the cost of a response exceeds the exposure"
+   ],
+   "use": "decide that the cost of responding is greater than the exposure",
+   "not": [
+    "lowers the probability before it occurs"
+   ],
+   "like": [
+    "Risk avoidance",
+    "Risk mitigation",
+    "Risk transfer"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A contingency plan",
+   "tier": 3,
+   "says": [
+    "is carried out only if a trigger occurs",
+    "is prepared in advance of the risk happening"
+   ],
+   "use": "want a ready response to run if a risk materialises",
+   "not": [
+    "is the action taken to reduce likelihood before the risk occurs"
+   ],
+   "like": [
+    "A risk trigger"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "A pre-mortem",
+   "tier": 4,
+   "says": [
+    "imagines the project has already failed and asks why",
+    "surfaces risks people hesitate to raise",
+    "is run before work starts"
+   ],
+   "use": "want to find risks before committing to a plan",
+   "not": [
+    "analyses the causes of a failure that already happened"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Scope creep",
+   "tier": 2,
+   "says": [
+    "is uncontrolled growth in scope without a matching change in time or cost",
+    "often arrives as many small agreed yeses"
+   ],
+   "use": "see small requests absorbed one by one",
+   "not": [
+    "is a formally approved increase in scope"
+   ],
+   "like": [
+    "Gold plating"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A change request",
+   "tier": 1,
+   "says": [
+    "describes a proposed change to the agreed scope",
+    "carries an estimate of its effect on cost and date"
+   ],
+   "use": "need a request to change what was agreed to be assessed",
+   "not": [
+    "is raised only by the delivery team"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A change log",
+   "tier": 2,
+   "says": [
+    "is a visible record of every requested change and its decision",
+    "makes it possible to show how and why scope moved"
+   ],
+   "use": "must show how scope moved over the project",
+   "not": [
+    "lists the code changes in each release"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "An impact assessment",
+   "tier": 4,
+   "says": [
+    "estimates the effect of a change on cost, time, quality and risk",
+    "is done before approval, not after"
+   ],
+   "use": "are asked to approve a change without knowing its cost",
+   "not": [
+    "is written after the change has been delivered"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A change control board",
+   "tier": 3,
+   "says": [
+    "reviews proposed changes and approves or rejects them",
+    "includes people who can commit budget and priorities"
+   ],
+   "use": "need a body that can approve changes above a threshold",
+   "not": [
+    "writes the code for approved changes"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Gold plating",
+   "tier": 3,
+   "says": [
+    "adds features nobody asked for",
+    "is done by the delivery team on its own initiative"
+   ],
+   "use": "find the team polishing extras the client never requested",
+   "not": [
+    "is growth in scope requested by the client"
+   ],
+   "like": [
+    "Scope creep"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "Written client approval",
+   "tier": 4,
+   "says": [
+    "makes decisions traceable",
+    "confirms in writing what was agreed"
+   ],
+   "use": "need evidence of what the client agreed",
+   "not": [
+    "is unnecessary when the conversation was friendly"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A fixed-price contract",
+   "tier": 4,
+   "says": [
+    "fixes the price for an agreed scope",
+    "puts the cost of overruns mainly on the supplier",
+    "makes change control essential"
+   ],
+   "use": "want the price known up front for a well-defined scope",
+   "not": [
+    "bills for the actual effort spent"
+   ],
+   "like": [
+    "A time-and-materials contract"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "A time-and-materials contract",
+   "tier": 4,
+   "says": [
+    "bills for the actual effort spent",
+    "puts the cost of overruns mainly on the client",
+    "suits work whose scope cannot be fixed up front"
+   ],
+   "use": "face scope that cannot be defined before work begins",
+   "not": [
+    "fixes the price for an agreed scope"
+   ],
+   "like": [
+    "A fixed-price contract"
+   ]
+  },
+  {
+   "group": "scope",
+   "subject": "The iron triangle",
+   "tier": 2,
+   "says": [
+    "links scope, time and cost so a change to one affects the others",
+    "is also called the triple constraint"
+   ],
+   "use": "must explain why a bigger scope cannot keep the same date and cost",
+   "not": [
+    "says scope, time and cost can each be changed independently"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "RAG status",
+   "tier": 1,
+   "says": [
+    "uses red, amber and green to summarise health",
+    "treats amber as at risk but recoverable"
+   ],
+   "use": "want a quick traffic-light summary of project health",
+   "not": [
+    "shows the percentage of tasks completed"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "A status report",
+   "tier": 1,
+   "says": [
+    "tells stakeholders where the project stands, what is next and what needs a decision",
+    "is short and regular"
+   ],
+   "use": "must update stakeholders on a regular rhythm",
+   "not": [
+    "is written only when the project ends"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Watermelon reporting",
+   "tier": 4,
+   "says": [
+    "shows green on the outside while the detail underneath is red",
+    "hides trouble until it is too late to fix cheaply"
+   ],
+   "use": "see a project reported green for weeks and then missing a date",
+   "not": [
+    "reports every minor variance to the board"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "Exception reporting",
+   "tier": 3,
+   "says": [
+    "reports only deviations beyond an agreed tolerance",
+    "reduces noise for senior readers"
+   ],
+   "use": "want senior readers to hear only when something is outside tolerance",
+   "not": [
+    "reports every task every week"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "An escalation path",
+   "tier": 4,
+   "says": [
+    "defines who to go to when an issue cannot be solved at the current level",
+    "names the next person before the problem arises"
+   ],
+   "use": "cannot resolve a blocker at team level",
+   "not": [
+    "is a list of everyone who receives the status report"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "A steering committee",
+   "tier": 4,
+   "says": [
+    "provides senior governance",
+    "unblocks decisions the project manager cannot make",
+    "reviews progress against objectives at intervals"
+   ],
+   "use": "need senior sponsors to unblock a decision",
+   "not": [
+    "does the day-to-day tasks of the project"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "An early warning",
+   "tier": 3,
+   "says": [
+    "raises a slip as soon as it is known",
+    "leaves time to respond before the date is missed"
+   ],
+   "use": "learn of a slip and must decide when to tell the sponsor",
+   "not": [
+    "waits for the next milestone before mentioning a slip"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "The schedule performance index",
+   "tier": 5,
+   "says": [
+    "is earned value divided by planned value",
+    "below 1 means the project is behind schedule"
+   ],
+   "use": "want to know whether progress matches the plan",
+   "not": [
+    "is earned value divided by actual cost"
+   ],
+   "like": [
+    "The cost performance index"
+   ]
+  },
+  {
+   "group": "status",
+   "subject": "The cost performance index",
+   "tier": 5,
+   "says": [
+    "is earned value divided by actual cost",
+    "below 1 means the project is over budget"
+   ],
+   "use": "want to know whether money is being spent efficiently for the work done",
+   "not": [
+    "is earned value divided by planned value"
+   ],
+   "like": [
+    "The schedule performance index"
+   ]
+  },
+  {
+   "group": "done",
+   "subject": "The definition of done",
+   "tier": 1,
+   "says": [
+    "is a shared checklist every item must meet to count as complete",
+    "applies to all items rather than to a single story",
+    "includes the team's common quality bar such as reviewed and tested"
+   ],
+   "use": "need one common standard for finished work",
+   "not": [
+    "is written separately for each story by the client"
+   ],
+   "like": [
+    "An acceptance criterion"
+   ]
+  },
+  {
+   "group": "done",
+   "subject": "An acceptance criterion",
+   "tier": 1,
+   "says": [
+    "is a testable condition a single story must satisfy to be accepted",
+    "is specific to one item",
+    "is agreed before the work starts"
+   ],
+   "use": "need to agree how one story will be judged complete",
+   "not": [
+    "applies unchanged to every item the team delivers"
+   ],
+   "like": [
+    "The definition of done"
+   ]
+  },
+  {
+   "group": "done",
+   "subject": "User acceptance testing",
+   "tier": 2,
+   "says": [
+    "is done by the client or end users",
+    "confirms the solution meets their real needs",
+    "happens before final acceptance"
+   ],
+   "use": "need the client to confirm the solution works for them",
+   "not": [
+    "is done only by the developers who built it"
+   ]
+  },
+  {
+   "group": "done",
+   "subject": "Given-When-Then",
+   "tier": 3,
+   "says": [
+    "writes a criterion as a context, an action and an expected outcome",
+    "can be turned directly into automated tests"
+   ],
+   "use": "want acceptance criteria that read as scenarios",
+   "not": [
+    "lists tasks and their owners"
+   ]
+  },
+  {
+   "group": "done",
+   "subject": "A quality gate",
+   "tier": 4,
+   "says": [
+    "blocks progress until the agreed checks pass",
+    "is applied at a defined point such as before a release"
+   ],
+   "use": "want a release blocked until the checks pass",
+   "not": [
+    "is advisory and can be skipped under pressure"
+   ]
+  },
+  {
+   "group": "done",
+   "subject": "Technical debt",
+   "tier": 4,
+   "says": [
+    "is the future cost of shortcuts taken now",
+    "accrues interest as it is ignored"
+   ],
+   "use": "see quick fixes piling up that will slow later work",
+   "not": [
+    "is money owed to a supplier"
+   ]
+  },
+  {
+   "group": "done",
+   "subject": "Defect severity",
+   "tier": 3,
+   "says": [
+    "describes the impact of a defect on the system or user",
+    "is set by assessing the harm caused"
+   ],
+   "use": "must rate how much damage a defect does",
+   "not": [
+    "describes how soon a defect should be fixed"
+   ],
+   "like": [
+    "Defect priority"
+   ]
+  },
+  {
+   "group": "done",
+   "subject": "Defect priority",
+   "tier": 3,
+   "says": [
+    "describes how soon a defect should be fixed",
+    "can differ from severity, such as a harmless typo on the home page"
+   ],
+   "use": "must decide the order in which defects are fixed",
+   "not": [
+    "describes the harm a defect does to the system"
+   ],
+   "like": [
+    "Defect severity"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "A retrospective",
+   "tier": 1,
+   "says": [
+    "is a regular meeting where the team inspects its own way of working",
+    "ends with a small number of agreed improvements",
+    "looks at the process rather than the product"
+   ],
+   "use": "want the team to improve how it works",
+   "not": [
+    "demonstrates the finished increment to stakeholders"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "Start-stop-continue",
+   "tier": 2,
+   "says": [
+    "sorts feedback into things to start, stop and keep doing"
+   ],
+   "use": "want a simple format for a first retrospective",
+   "not": [
+    "rates each team member's performance"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "The five whys",
+   "tier": 4,
+   "says": [
+    "asks why repeatedly to move from symptom to root cause",
+    "stops at a cause the team can act on"
+   ],
+   "use": "need the root cause behind a recurring problem",
+   "not": [
+    "lists the five most senior stakeholders"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "A blameless post-mortem",
+   "tier": 4,
+   "says": [
+    "examines an incident's causes in systems and process rather than in individuals",
+    "produces follow-up actions with owners"
+   ],
+   "use": "must learn from an outage without punishing people",
+   "not": [
+    "names the person at fault in the report"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "A lessons-learned register",
+   "tier": 2,
+   "says": [
+    "records what to repeat or avoid on later projects",
+    "is reviewed at the start of new projects"
+   ],
+   "use": "want the next project to benefit from this one",
+   "not": [
+    "is filled in once and archived unread"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "Psychological safety",
+   "tier": 5,
+   "says": [
+    "is the belief that you can speak up without being punished",
+    "is a precondition for honest retrospectives"
+   ],
+   "use": "see a team that stays silent in retrospectives",
+   "not": [
+    "means nobody ever disagrees"
+   ]
+  },
+  {
+   "group": "retro",
+   "subject": "A retrospective action",
+   "tier": 3,
+   "says": [
+    "has an owner and a date",
+    "is reviewed at the next retrospective",
+    "is kept to a few so that they get done"
+   ],
+   "use": "find that the same problem is raised in retrospective after retrospective",
+   "not": [
+    "is a list of every complaint raised"
+   ]
+  },
+  {
+   "group": "resource",
+   "subject": "Capacity",
+   "tier": 2,
+   "says": [
+    "is the amount of work a person or team can take on in a period",
+    "is reduced by leave, meetings and support work"
+   ],
+   "use": "must plan how much work fits in a sprint or month",
+   "not": [
+    "is the total number of people on the payroll"
+   ]
+  },
+  {
+   "group": "resource",
+   "subject": "Utilisation",
+   "tier": 4,
+   "says": [
+    "is the share of available time spent on planned work",
+    "is a measure of how busy people are rather than of what they achieve"
+   ],
+   "use": "want to know how busy a team is",
+   "not": [
+    "is the amount of work completed per sprint"
+   ]
+  },
+  {
+   "group": "resource",
+   "subject": "Resource levelling",
+   "tier": 3,
+   "says": [
+    "adjusts the schedule to resolve overallocated people",
+    "may push out the end date"
+   ],
+   "use": "find a person booked at more than their capacity",
+   "not": [
+    "adds people to the project to finish earlier"
+   ]
+  },
+  {
+   "group": "resource",
+   "subject": "The bus factor",
+   "tier": 3,
+   "says": [
+    "counts how many people could be lost before the project stalls",
+    "is low when one person alone holds critical knowledge"
+   ],
+   "use": "worry that one person alone knows how to deploy",
+   "not": [
+    "measures how many vehicles a team uses"
+   ]
+  },
+  {
+   "group": "resource",
+   "subject": "Brooks's law",
+   "tier": 4,
+   "says": [
+    "says adding people to a late software project makes it later",
+    "arises from training and communication overhead"
+   ],
+   "use": "are asked to add developers to a late project",
+   "not": [
+    "says more people always shorten delivery"
+   ]
+  },
+  {
+   "group": "resource",
+   "subject": "Context switching",
+   "tier": 4,
+   "says": [
+    "wastes capacity when one person splits attention across several tasks",
+    "grows with the number of concurrent items"
+   ],
+   "use": "see people spread thinly across many tasks",
+   "not": [
+    "improves throughput by keeping everyone busy"
+   ]
+  },
+  {
+   "group": "resource",
+   "subject": "A RACI matrix",
+   "tier": 2,
+   "says": [
+    "assigns each task a Responsible, Accountable, Consulted and Informed party",
+    "has exactly one Accountable party per task"
+   ],
+   "use": "need clarity on who decides and who does",
+   "not": [
+    "lists the risks by probability and impact"
+   ]
+  },
+  {
+   "group": "resource",
+   "subject": "Slack capacity",
+   "tier": 4,
+   "says": [
+    "leaves headroom for unplanned work",
+    "keeps queues from growing sharply as load rises"
+   ],
+   "use": "must absorb urgent requests without derailing planned work",
+   "not": [
+    "is wasted time that should be scheduled away"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "A handover",
+   "tier": 1,
+   "says": [
+    "is the planned transfer of knowledge, access and responsibility",
+    "is complete when the client can operate the system",
+    "applies to people leaving as well as to projects"
+   ],
+   "use": "finish building and must leave the client able to run it",
+   "not": [
+    "is finished when the code is deployed"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "A handover package",
+   "tier": 2,
+   "says": [
+    "lists where things live, such as hosting, domains and repositories",
+    "explains how to deploy and roll back",
+    "records how backups work, who to contact and the known issues"
+   ],
+   "use": "prepare what the client needs to run the system without you",
+   "not": [
+    "contains only the source code"
+   ],
+   "like": [
+    "A rollback plan",
+    "A runbook"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "A runbook",
+   "tier": 2,
+   "says": [
+    "is a short guide to common jobs and failures",
+    "gives step-by-step instructions for the person on duty"
+   ],
+   "use": "want the client to handle routine jobs and failures alone",
+   "not": [
+    "describes the full product vision"
+   ],
+   "like": [
+    "A handover package"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "Account ownership transfer",
+   "tier": 2,
+   "says": [
+    "moves accounts to the client rather than the supplier's personal login",
+    "avoids the client depending on an individual's account"
+   ],
+   "use": "find the client's domain registered under a developer's personal login",
+   "not": [
+    "leaves accounts under the supplier so support is easier"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "Secure credential transfer",
+   "tier": 2,
+   "says": [
+    "sends credentials through a secure channel",
+    "keeps secrets out of plain email and chat"
+   ],
+   "use": "must give the client access to hosting",
+   "not": [
+    "pastes passwords into the project chat"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "A walkthrough session",
+   "tier": 2,
+   "says": [
+    "shows the people who will use or maintain the system how it works",
+    "is held with the real users, not only the sponsor"
+   ],
+   "use": "want the people who will run the system to see it working",
+   "not": [
+    "replaces the written handover notes entirely"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "A support statement",
+   "tier": 4,
+   "says": [
+    "states what ongoing support covers",
+    "states the response times that apply"
+   ],
+   "use": "need the client to know what to expect after handover",
+   "not": [
+    "promises unlimited changes at no charge"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "Acceptance sign-off",
+   "tier": 4,
+   "says": [
+    "is the client's formal confirmation that deliverables meet the agreed criteria",
+    "marks the point at which the deliverables are accepted"
+   ],
+   "use": "need written proof that the client accepted the work",
+   "not": [
+    "is given automatically when the code is deployed"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "A rollback plan",
+   "tier": 3,
+   "says": [
+    "defines how to return to the previous state if a release fails",
+    "is tested before it is needed"
+   ],
+   "use": "must be able to undo a release within minutes",
+   "not": [
+    "describes how to add new features after launch"
+   ],
+   "like": [
+    "A handover package",
+    "A runbook"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "A post-implementation review",
+   "tier": 3,
+   "says": [
+    "checks some time after go-live whether the intended benefits were realised",
+    "feeds lessons into future projects"
+   ],
+   "use": "want to know whether the project delivered what was promised",
+   "not": [
+    "happens on the day of go-live"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "gglearn's handovers table",
+   "tier": 2,
+   "says": [
+    "holds handover notes per person",
+    "can tie a note to a learning track"
+   ],
+   "use": "want to know where gglearn keeps handover notes",
+   "not": [
+    "stores customer invoices"
+   ]
+  },
+  {
+   "group": "handover",
+   "subject": "gglearn's offboarding checklist",
+   "tier": 2,
+   "says": [
+    "starts with writing handover notes for each area you own",
+    "includes transferring ownership of accounts, files and customers",
+    "includes recording the answers to the ten questions only you know",
+    "includes returning equipment and revoking tool access"
+   ],
+   "use": "want to know what a leaver does in gglearn",
+   "not": [
+    "leaves tool access in place so the leaver can help later"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "Client continuity",
+   "tier": 1,
+   "says": [
+    "keeps a record above the single project",
+    "avoids restarting each project from zero",
+    "remembers who the client is, what they do and what was decided"
+   ],
+   "use": "find a returning client being asked the same questions again",
+   "not": [
+    "ends when the first project is delivered"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A holder",
+   "tier": 2,
+   "says": [
+    "is the person or organisation above the project",
+    "carries a profile of what is known about them"
+   ],
+   "use": "want to know what the continuity brief calls the person or business above a project",
+   "not": [
+    "is a confirmed problem lifted off a project"
+   ],
+   "like": [
+    "A challenge",
+    "A profile"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A profile",
+   "tier": 2,
+   "says": [
+    "holds what is known about the holder",
+    "records each fact with an origin and an age"
+   ],
+   "use": "want to tell which facts about a client are stale",
+   "not": [
+    "is the person or organisation above the project"
+   ],
+   "like": [
+    "A holder",
+    "A challenge"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A challenge",
+   "tier": 2,
+   "says": [
+    "is a confirmed problem lifted off the project",
+    "is versioned",
+    "has the projects tackling it joined to it"
+   ],
+   "use": "get a second project on the same problem",
+   "not": [
+    "is a person or organisation above the project"
+   ],
+   "like": [
+    "A holder",
+    "A profile"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "The origin of a fact",
+   "tier": 3,
+   "says": [
+    "records where a fact came from and when",
+    "shows which facts have become stale"
+   ],
+   "use": "must decide whether to trust an old fact about a client",
+   "not": [
+    "is the date the client signed the contract"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A read-back",
+   "tier": 3,
+   "says": [
+    "plays the problem back to the client field by field",
+    "happens before anything is priced"
+   ],
+   "use": "want to confirm the problem was understood before quoting",
+   "not": [
+    "sends the client the final invoice"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "The nine problem fields",
+   "tier": 3,
+   "says": [
+    "exist on the project in the continuity brief",
+    "carry the origin of each statement, the quote and a confidence"
+   ],
+   "use": "want to see where each statement about a problem came from",
+   "not": [
+    "list the nine phases of a delivery project"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "The customer-continuity brief",
+   "tier": 3,
+   "says": [
+    "is at founder review",
+    "describes a design rather than built behaviour",
+    "lists stages including attach, recall and confirm"
+   ],
+   "use": "are asked whether Moksy's continuity design is live",
+   "not": [
+    "is already running in production for every customer"
+   ]
+  },
+  {
+   "group": "cont",
+   "subject": "A client's ask",
+   "tier": 3,
+   "says": [
+    "is not the same as the problem behind it",
+    "can hide a different problem, such as a website request hiding a lead-generation problem"
+   ],
+   "use": "hear a client ask for a website",
+   "not": [
+    "is always the real problem to price"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does RAID stand for in a project log?",
+   "right": "Risks, assumptions, issues and dependencies",
+   "wrong": [
+    "Requirements, approvals, incidents and deliverables",
+    "Resources, actions, interfaces and decisions",
+    "Reviews, audits, inspections and deadlines"
+   ],
+   "tier": 1,
+   "why": "A RAID log tracks the four things that can derail delivery."
+  },
+  {
+   "q": "Which statement best describes an estimate?",
+   "right": "A forecast that is most useful when it says how sure you are",
+   "wrong": [
+    "A promise of the exact date and cost",
+    "A number agreed once and never revisited",
+    "The client's budget restated as hours"
+   ],
+   "tier": 1,
+   "why": "An estimate is a forecast with stated uncertainty, not a commitment."
+  },
+  {
+   "q": "Who owns the ordering of the product backlog?",
+   "right": "The product owner",
+   "wrong": [
+    "The scrum master",
+    "The most senior developer",
+    "The project sponsor"
+   ],
+   "tier": 1,
+   "why": "The product owner orders the backlog by value."
+  },
+  {
+   "q": "What is the main effect of a WIP limit on a kanban board?",
+   "right": "It forces the team to finish work before starting new work",
+   "wrong": [
+    "It caps the hours each person may work",
+    "It stops new requests from being accepted at all",
+    "It sets the number of sprints in a release"
+   ],
+   "tier": 1,
+   "why": "Limiting work in progress shortens queues and exposes bottlenecks."
+  },
+  {
+   "q": "What is scope creep?",
+   "right": "Uncontrolled growth in scope without a matching change in time or cost",
+   "wrong": [
+    "A formally approved addition to scope",
+    "The team delivering less than agreed",
+    "A delay caused by late client feedback"
+   ],
+   "tier": 1,
+   "why": "Scope creep happens when changes are absorbed without being assessed."
+  },
+  {
+   "q": "In a RAG status report, what does amber normally mean?",
+   "right": "At risk but recoverable with action",
+   "wrong": [
+    "Complete and awaiting sign-off",
+    "Cancelled",
+    "Waiting for budget approval"
+   ],
+   "tier": 1,
+   "why": "Amber warns that the project is drifting but can still be recovered."
+  },
+  {
+   "q": "Which meeting is for the team to inspect its own way of working?",
+   "right": "The retrospective",
+   "wrong": [
+    "The sprint review",
+    "Sprint planning",
+    "The steering committee"
+   ],
+   "tier": 1,
+   "why": "The sprint review inspects the product; the retrospective inspects the process."
+  },
+  {
+   "q": "A task needs 20 hours of work, but the only reviewer is available for two hours each Friday. Which statement is true?",
+   "right": "Effort is 20 hours, but duration is much longer because of waiting",
+   "wrong": [
+    "Duration is 20 hours because duration equals effort",
+    "Effort is longer than duration because of waiting",
+    "Both are one week because the work is done on Fridays"
+   ],
+   "tier": 2,
+   "why": "Effort is work content; duration is elapsed calendar time, which includes waiting."
+  },
+  {
+   "q": "What is this format used for?",
+   "right": "Writing an acceptance criterion as a context, an action and an expected outcome",
+   "wrong": [
+    "Recording a risk with its probability and impact",
+    "Defining the sprint backlog",
+    "Logging a change request"
+   ],
+   "tier": 2,
+   "why": "Given-When-Then expresses criteria as testable scenarios.",
+   "code": "Given a customer with an empty basket\nWhen they add one item\nThen the basket count shows 1"
+  },
+  {
+   "q": "A team's average work in progress is 12 items and its average throughput is 3 items per week. By Little's Law, what is the average cycle time?",
+   "right": "4 weeks",
+   "wrong": [
+    "36 weeks",
+    "0.25 weeks",
+    "15 weeks"
+   ],
+   "tier": 2,
+   "why": "Cycle time equals work in progress divided by throughput: 12 / 3 = 4."
+  },
+  {
+   "q": "Earned value is 80, planned value is 100 and actual cost is 90. What are the schedule and cost performance indices?",
+   "right": "SPI 0.8 (behind schedule) and CPI about 0.89 (over budget)",
+   "wrong": [
+    "SPI 1.25 and CPI 1.12, ahead of schedule and under budget",
+    "SPI 0.8 and CPI 1.12",
+    "SPI 0.89 and CPI 0.8"
+   ],
+   "tier": 2,
+   "why": "SPI is earned value over planned value; CPI is earned value over actual cost.",
+   "code": "EV = 80\nPV = 100\nAC = 90\nSPI = EV / PV\nCPI = EV / AC"
+  },
+  {
+   "q": "Tasks: A (3 days) then C (4 days); B (5 days) then C; C then D (2 days). What is the project duration and the critical path?",
+   "right": "11 days, along B, C, D",
+   "wrong": [
+    "9 days, along A, C, D",
+    "14 days, because all tasks are summed",
+    "11 days, along A, C, D"
+   ],
+   "tier": 2,
+   "why": "The longest chain, B 5 + C 4 + D 2, sets the duration. A has 2 days of float.",
+   "code": "A(3) -> C(4)\nB(5) -> C(4)\nC(4) -> D(2)"
+  },
+  {
+   "q": "In the previous schedule, how much float does task A have?",
+   "right": "2 days",
+   "wrong": [
+    "0 days",
+    "3 days",
+    "5 days"
+   ],
+   "tier": 2,
+   "why": "A (3 days) can slip until it equals B (5 days) before delaying C, so it has 2 days of float.",
+   "code": "A(3) -> C(4)\nB(5) -> C(4)\nC(4) -> D(2)"
+  },
+  {
+   "q": "A client asks in week 6 for 'just one more button'. What should you do first?",
+   "right": "Describe the change, estimate its effect on cost and date, and get approval before doing it",
+   "wrong": [
+    "Add it quietly to keep the client happy",
+    "Refuse all changes after kickoff",
+    "Add it and mention the cost in the final invoice"
+   ],
+   "tier": 2,
+   "why": "Every change goes through assessment and approval, even small ones."
+  },
+  {
+   "q": "Which is a non-functional requirement?",
+   "right": "The checkout page must respond within two seconds under normal load",
+   "wrong": [
+    "A user can add an item to the basket",
+    "An administrator can export orders as a spreadsheet",
+    "A customer receives a confirmation email"
+   ],
+   "tier": 2,
+   "why": "Non-functional requirements describe how well the system behaves, not what it does."
+  },
+  {
+   "q": "What does a story point measure?",
+   "right": "Relative size, combining effort, complexity and uncertainty",
+   "wrong": [
+    "A fixed number of hours",
+    "The business value of the story",
+    "The number of people needed"
+   ],
+   "tier": 2,
+   "why": "Points are relative to a team's own scale."
+  },
+  {
+   "q": "Management wants to rank two teams by sprint velocity. What is the main problem?",
+   "right": "Story points are relative to each team, so velocities are not comparable",
+   "wrong": [
+    "Velocity is only valid for teams of ten or more",
+    "Velocity is measured in hours, which differ by team",
+    "Velocity can only be measured once a quarter"
+   ],
+   "tier": 3,
+   "why": "Velocity is for a team's own forecasting, not for comparing teams."
+  },
+  {
+   "q": "The burndown chart stays flat although the team is clearly working. New items were added mid-sprint. Which chart would show this most clearly?",
+   "right": "A burnup chart",
+   "wrong": [
+    "A Gantt chart",
+    "A RACI matrix",
+    "A risk register"
+   ],
+   "tier": 3,
+   "why": "A burnup chart shows completed work and the total scope line separately."
+  },
+  {
+   "q": "A board has a WIP limit of 3 for Review and 9 cards in Review. What should the team do?",
+   "right": "Stop starting new work and help clear Review",
+   "wrong": [
+    "Raise the limit to 9",
+    "Start more development to keep everyone busy",
+    "Remove the limit for this week"
+   ],
+   "tier": 3,
+   "why": "The limit exists to push the team to finish work first."
+  },
+  {
+   "q": "The estimate assumed the client would supply content by the 1st. It is now three weeks late. What is the best action?",
+   "right": "Raise it as an issue, cite the assumption and raise a change request for date and cost",
+   "wrong": [
+    "Absorb the delay and compress testing",
+    "Wait to see whether the content arrives",
+    "Quietly drop the pages that need the content"
+   ],
+   "tier": 3,
+   "why": "A written assumption gives a clear basis for a change request instead of an argument."
+  },
+  {
+   "q": "An integration with a new provider has never been tried, and the team builds a small prototype in the first week. Which risk response is this?",
+   "right": "Mitigation",
+   "wrong": [
+    "Avoidance",
+    "Transfer",
+    "Acceptance"
+   ],
+   "tier": 3,
+   "why": "A prototype reduces the likelihood of late failure without removing the integration."
+  },
+  {
+   "q": "A team plans to buy insurance against a supplier failing. Which risk response is this?",
+   "right": "Transfer",
+   "wrong": [
+    "Avoidance",
+    "Mitigation",
+    "Acceptance"
+   ],
+   "tier": 3,
+   "why": "Transfer moves the consequence to a third party without removing the risk."
+  },
+  {
+   "q": "The staging server crashed this morning and testing is blocked. How should this be logged?",
+   "right": "As an issue, because it has already happened",
+   "wrong": [
+    "As a risk, because it might happen again",
+    "As an assumption, because the server was assumed stable",
+    "As a decision"
+   ],
+   "tier": 3,
+   "why": "Issues are problems that have already occurred; risks have not happened yet."
+  },
+  {
+   "q": "A project was reported green for eight weeks and then missed its launch date. Which reporting pattern is the likely cause?",
+   "right": "Watermelon reporting",
+   "wrong": [
+    "Exception reporting",
+    "Outcome-based reporting",
+    "Rolling-wave reporting"
+   ],
+   "tier": 3,
+   "why": "Watermelon reporting is green on the outside and red underneath."
+  },
+  {
+   "q": "Which item belongs in a team's definition of done rather than in one story's acceptance criteria?",
+   "right": "Code is peer reviewed and passes the automated tests",
+   "wrong": [
+    "A user can reset a password using the emailed link",
+    "The report can be exported as a spreadsheet",
+    "A discount code is applied at checkout"
+   ],
+   "tier": 3,
+   "why": "The definition of done applies to every item; acceptance criteria are specific to one story."
+  },
+  {
+   "q": "At handover, the client's domain is registered under a developer's personal login. What should happen?",
+   "right": "Ownership is transferred to an account in the client's name",
+   "wrong": [
+    "Nothing, because the developer can manage it for them",
+    "The developer shares the password by email",
+    "The domain is moved to the supplier's company account"
+   ],
+   "tier": 3,
+   "why": "Account ownership should move to the client, not stay with an individual."
+  },
+  {
+   "q": "What is the best way to give a client the credentials for their hosting?",
+   "right": "Through a secure channel such as a shared password manager",
+   "wrong": [
+    "In a plain email",
+    "In the project chat channel",
+    "Printed in the handover document"
+   ],
+   "tier": 3,
+   "why": "Credentials move through a secure channel and never in plain text."
+  },
+  {
+   "q": "On a fixed-price project the client keeps asking for small extras. What is the best protection?",
+   "right": "A change control process with written approval",
+   "wrong": [
+    "Doing the extras to keep the relationship friendly",
+    "Raising the contingency every week",
+    "Refusing all requests"
+   ],
+   "tier": 3,
+   "why": "Change control keeps the price tied to the agreed scope."
+  },
+  {
+   "q": "In planning poker, one person shows 2 and another shows 13 for the same story. What next?",
+   "right": "Have the highest and lowest explain their reasoning, then vote again",
+   "wrong": [
+    "Average the two to get 7.5",
+    "Take the higher number to be safe",
+    "Let the product owner pick one"
+   ],
+   "tier": 3,
+   "why": "Disagreement reveals different assumptions; discussion fixes the understanding."
+  },
+  {
+   "q": "A client labels 80 percent of their requirements as Must. What is a good first step?",
+   "right": "Test each one by asking whether the release has any value without it",
+   "wrong": [
+    "Accept the labels and plan for everything",
+    "Remove half of them at random",
+    "Move everything to Should"
+   ],
+   "tier": 3,
+   "why": "A true must-have is one the release cannot do without."
+  },
+  {
+   "q": "The same problem is raised in three retrospectives in a row. What is the most likely cause?",
+   "right": "The improvement action had no owner, date or follow-up",
+   "wrong": [
+    "The team is too small",
+    "Retrospectives should only be held quarterly",
+    "The scrum master should assign blame"
+   ],
+   "tier": 3,
+   "why": "Actions need an owner and a review at the next retrospective."
+  },
+  {
+   "q": "A team does not know whether a third-party API supports bulk updates. What suits best?",
+   "right": "A time-boxed spike that ends with a decision or a better estimate",
+   "wrong": [
+    "Estimating the story at the largest size",
+    "Starting the story and finding out later",
+    "Removing the story from the backlog"
+   ],
+   "tier": 3,
+   "why": "A spike reduces uncertainty before committing."
+  },
+  {
+   "q": "A team has 100 percent utilisation planned for every person. What is the likely effect?",
+   "right": "Any unplanned work delays everything because there is no slack",
+   "wrong": [
+    "Throughput is at its maximum with no downsides",
+    "Cycle time falls",
+    "Defect rates fall"
+   ],
+   "tier": 3,
+   "why": "Without headroom, queues grow sharply as soon as any extra work arrives."
+  },
+  {
+   "q": "According to Moksy's customer-continuity brief, what is a challenge?",
+   "right": "A confirmed problem lifted off the project, versioned, with the projects joined to it",
+   "wrong": [
+    "A difficult stakeholder on a project",
+    "A risk entry in the RAID log",
+    "A quote the client gave in a meeting"
+   ],
+   "tier": 3,
+   "why": "A second project on the same problem is joined to the same challenge."
+  },
+  {
+   "q": "What is the status of Moksy's customer-continuity design?",
+   "right": "It is at founder review and nothing is built yet",
+   "wrong": [
+    "It is live for all customers",
+    "It has been retired",
+    "It is built but disabled"
+   ],
+   "tier": 3,
+   "why": "The brief is a design, not live behaviour."
+  },
+  {
+   "q": "A client asks Moksy for a new website. What does the continuity brief say to do before pricing?",
+   "right": "Play the problem back field by field in a read-back",
+   "wrong": [
+    "Quote the site straight away",
+    "Ask for the budget first",
+    "Copy the previous project's profile"
+   ],
+   "tier": 3,
+   "why": "The ask is never the harm; it may hide a problem such as generating leads."
+  },
+  {
+   "q": "Which is an item on gglearn's offboarding checklist?",
+   "right": "Record the answers to the ten questions only you know",
+   "wrong": [
+    "Archive your chat history",
+    "Sign a new contract",
+    "Update your emergency contacts"
+   ],
+   "tier": 3,
+   "why": "The checklist covers handover notes, ownership transfer, recorded answers and revoking access."
+  },
+  {
+   "q": "In a cumulative flow diagram, the 'In test' band widens while 'Done' stays flat. What does this suggest?",
+   "right": "Work is piling up at testing, which is a bottleneck",
+   "wrong": [
+    "Testing is faster than development",
+    "The team is delivering more than before",
+    "Scope has been cut"
+   ],
+   "tier": 4,
+   "why": "A widening band means more items are entering the state than leaving it."
+  },
+  {
+   "q": "A team of five is planned at full utilisation and lead times keep rising. What is the most useful change?",
+   "right": "Reduce work in progress and leave some capacity free",
+   "wrong": [
+    "Add more items to keep everyone busy",
+    "Ask people to work faster",
+    "Remove the board"
+   ],
+   "tier": 4,
+   "why": "Queues grow sharply near full load; limiting WIP shortens them."
+  },
+  {
+   "q": "A team is rewarded for velocity and the points per story start to rise. Which principle explains it?",
+   "right": "Goodhart's law: a measure used as a target stops being a good measure",
+   "wrong": [
+    "Brooks's law",
+    "Little's Law",
+    "The planning fallacy"
+   ],
+   "tier": 4,
+   "why": "Targeting velocity encourages inflating the points."
+  },
+  {
+   "q": "A project is late and the sponsor asks to add four developers in the final month. What is the likely effect?",
+   "right": "The project may get later, because new people need onboarding and add communication",
+   "wrong": [
+    "The project finishes four times faster",
+    "Nothing changes",
+    "Quality improves automatically"
+   ],
+   "tier": 4,
+   "why": "This is Brooks's law."
+  },
+  {
+   "q": "A sponsor demands a single number on day one. What is the best response?",
+   "right": "Give a range with its assumptions and say when it will be narrowed",
+   "wrong": [
+    "Give the lowest number you can",
+    "Refuse to estimate",
+    "Give the average of past projects without comment"
+   ],
+   "tier": 4,
+   "why": "Early estimates must be wide, and the range shrinks as unknowns are resolved."
+  },
+  {
+   "q": "Only one developer knows how to deploy. Which action reduces the bus factor risk most directly?",
+   "right": "Cross-train a second person and write a runbook",
+   "wrong": [
+    "Give the developer a bonus",
+    "Freeze deployments",
+    "Ask the developer to avoid holidays"
+   ],
+   "tier": 4,
+   "why": "Spreading the knowledge removes the single point of failure."
+  },
+  {
+   "q": "This RAID entry has no owner. What is still missing before it can be managed?",
+   "right": "An owner and a planned response",
+   "wrong": [
+    "A resolved date",
+    "An issue number",
+    "Client sign-off"
+   ],
+   "tier": 4,
+   "why": "A risk is managed by a named owner with a response.",
+   "code": "{\n  \"id\": \"R-14\",\n  \"type\": \"risk\",\n  \"text\": \"Payment provider sandbox may be unavailable during UAT\",\n  \"probability\": \"medium\",\n  \"impact\": \"high\",\n  \"trigger\": \"Sandbox keys not issued by week 3\"\n}"
+  },
+  {
+   "q": "A sponsor asks for weekly reports of hours spent. What is a better basis for reporting?",
+   "right": "What was achieved against goals, with risks and decisions needed",
+   "wrong": [
+    "Hours per person in more detail",
+    "Screenshots of the task board",
+    "A count of meetings held"
+   ],
+   "tier": 4,
+   "why": "Outcome-based reporting tells stakeholders what they need to act on."
+  },
+  {
+   "q": "A project is behind schedule on the critical path and the team overlaps tasks planned in sequence. What is this technique and its main downside?",
+   "right": "Fast tracking, which adds the risk of rework",
+   "wrong": [
+    "Crashing, which always lowers cost",
+    "Resource levelling, which always shortens the project",
+    "Rolling-wave planning, which removes risk"
+   ],
+   "tier": 4,
+   "why": "Fast tracking overlaps tasks; crashing adds resources."
+  },
+  {
+   "q": "The contractor leaves tomorrow. What is the most valuable thing to capture first?",
+   "right": "The knowledge that exists only in their head",
+   "wrong": [
+    "The files already in the repository",
+    "A list of the meetings they attended",
+    "Their holiday history"
+   ],
+   "tier": 4,
+   "why": "Handover notes should be written while the knowledge is still in someone's head."
+  },
+  {
+   "q": "Why use a Monte Carlo forecast rather than a single end date?",
+   "right": "It gives the probability of finishing by each date from historical throughput",
+   "wrong": [
+    "It guarantees the date will be met",
+    "It removes the need for historical data",
+    "It replaces the backlog"
+   ],
+   "tier": 4,
+   "why": "The result is a range of dates with confidence levels."
+  },
+  {
+   "q": "Budget at completion is 200 person-days, CPI is 0.8 and the trend is expected to hold. What is the estimate at completion?",
+   "right": "250 person-days",
+   "wrong": [
+    "160 person-days",
+    "240 person-days",
+    "200 person-days"
+   ],
+   "tier": 5,
+   "why": "Estimate at completion is budget at completion divided by CPI: 200 / 0.8 = 250.",
+   "code": "BAC = 200\nCPI = 0.8\nEAC = BAC / CPI"
+  },
+  {
+   "q": "A sponsor insists the plan is detailed and the team is the best, so a past-projects overrun does not apply. Which technique counters this view?",
+   "right": "Reference class forecasting",
+   "wrong": [
+    "Planning poker",
+    "Rolling-wave planning",
+    "A burnup chart"
+   ],
+   "tier": 5,
+   "why": "It adopts an outside view based on many similar projects."
+  },
+  {
+   "q": "A team says 85 percent of items finish within 8 days. An item has been in progress for 7 days. What is the best action?",
+   "right": "Swarm on it now, since it is about to exceed the typical cycle time",
+   "wrong": [
+    "Wait, since 8 days is still normal",
+    "Add it to the next sprint",
+    "Remove the WIP limit"
+   ],
+   "tier": 5,
+   "why": "Item age flags items at risk before they finish late."
+  },
+  {
+   "q": "A mitigation for a delivery risk adds a contract with a new vendor. What can arise?",
+   "right": "A secondary risk created by the response itself",
+   "wrong": [
+    "A residual issue that cancels the risk",
+    "A dependency that cannot be logged",
+    "A reduction in all other risks"
+   ],
+   "tier": 5,
+   "why": "Responses can create new risks and dependencies."
+  },
+  {
+   "q": "At kickoff a sponsor asks for a fixed end date and cost with only a one-line idea. Which concept explains why this is unsafe?",
+   "right": "The cone of uncertainty",
+   "wrong": [
+    "The iron triangle",
+    "Brooks's law",
+    "Little's Law"
+   ],
+   "tier": 5,
+   "why": "Estimates at the start are the least certain."
+  }
+ ]
+}

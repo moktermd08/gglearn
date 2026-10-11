@@ -1,0 +1,2767 @@
+{
+ "slug": "tools-build-ship",
+ "name": "Tools: build and ship",
+ "description": "Code hosting, CI, issue trackers, cloud, monitoring, identity.",
+ "roles": "developer",
+ "kind": "tool",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "groups": {
+  "vcs": "version control concept",
+  "host": "code hosting feature",
+  "ci": "CI/CD concept",
+  "check": "automated check",
+  "deploy": "deployment practice",
+  "tracker": "issue tracking concept",
+  "cloud": "cloud service type",
+  "mon": "monitoring concept",
+  "idp": "identity and access concept",
+  "sec": "pipeline security practice",
+  "gg": "gglearn deploy step",
+  "edge": "origin protection concept",
+  "ggs": "ggsocial deploy fact",
+  "mok": "Moksy pipeline fact"
+ },
+ "cards": [
+  {
+   "group": "vcs",
+   "subject": "A commit",
+   "tier": 1,
+   "says": [
+    "records a snapshot of the staged changes with a message",
+    "is identified by a hash",
+    "is normally undone by adding a new commit rather than by deleting it"
+   ],
+   "use": "want a named, reviewable point in history",
+   "not": [
+    "stores only the lines that changed and no snapshot of the project at all"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A branch",
+   "tier": 1,
+   "says": [
+    "is a movable pointer to a commit",
+    "lets work proceed in isolation from the main line",
+    "is cheap to create in Git because it copies no files"
+   ],
+   "use": "want to try a change without disturbing the main line",
+   "not": [
+    "is a full copy of every file in the repository"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A merge",
+   "tier": 2,
+   "says": [
+    "combines the histories of two branches",
+    "can create a merge commit with two parents",
+    "stops and asks for help when both sides edited the same lines"
+   ],
+   "use": "want to bring a finished branch into the main line and keep its history intact",
+   "not": [
+    "always rewrites the commits of the branch being merged"
+   ],
+   "like": [
+    "A rebase",
+    "A squash merge"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A rebase",
+   "tier": 3,
+   "says": [
+    "replays commits on top of a different base commit",
+    "gives the replayed commits new hashes",
+    "produces a linear history without merge commits"
+   ],
+   "use": "want your branch to sit on the latest main before review",
+   "not": [
+    "is safe to run on a branch other people have already pulled"
+   ],
+   "like": [
+    "A merge",
+    "A cherry-pick"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A cherry-pick",
+   "tier": 3,
+   "says": [
+    "applies one chosen commit onto the current branch",
+    "creates a new commit with a different hash from the original",
+    "suits carrying a single fix onto a release branch"
+   ],
+   "use": "need one fix from another branch and not the rest of its work",
+   "not": [
+    "merges the whole of another branch into the current one"
+   ],
+   "like": [
+    "A merge",
+    "A rebase"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A squash merge",
+   "tier": 3,
+   "says": [
+    "collapses all of a branch's commits into one commit on the target",
+    "keeps the target's history short and one-commit-per-change",
+    "discards the individual commits from the target branch's history"
+   ],
+   "use": "want one tidy commit per pull request on main",
+   "not": [
+    "keeps every original commit as it was on the target branch"
+   ],
+   "like": [
+    "A merge",
+    "A rebase"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A merge conflict",
+   "tier": 2,
+   "says": [
+    "happens when two changes touch the same lines",
+    "is shown in the file with conflict markers",
+    "must be resolved by a person choosing the final content"
+   ],
+   "use": "see conflict markers after pulling",
+   "not": [
+    "means the repository is corrupted and must be recloned"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "git stash",
+   "tier": 2,
+   "says": [
+    "shelves uncommitted changes and leaves a clean working tree",
+    "lets you switch branch without committing half-done work",
+    "stores the shelved work so it can be applied again later"
+   ],
+   "use": "need to switch branch but are not ready to commit",
+   "not": [
+    "pushes your uncommitted changes to the remote"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "git revert",
+   "tier": 3,
+   "says": [
+    "creates a new commit that undoes an earlier commit",
+    "leaves the earlier commit in history",
+    "is the safe way to back out a change that is already shared"
+   ],
+   "use": "must undo a commit that others have already pulled",
+   "not": [
+    "deletes the earlier commit from the history"
+   ],
+   "like": [
+    "git reset --hard"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "git reset --hard",
+   "tier": 4,
+   "says": [
+    "moves the branch pointer and overwrites the working tree",
+    "discards uncommitted changes with no undo from Git",
+    "rewrites history when used on commits that were already shared"
+   ],
+   "use": "deliberately want to throw away local work and match a commit exactly",
+   "not": [
+    "keeps your uncommitted changes safe in the stash"
+   ],
+   "like": [
+    "git revert"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "git reflog",
+   "tier": 5,
+   "says": [
+    "records where HEAD has pointed over recent history",
+    "lets you find a commit that no branch points to any more",
+    "can recover work after a bad reset or rebase"
+   ],
+   "use": "lost commits after a rebase and need to find them",
+   "not": [
+    "is a log kept on the remote server for every user"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "git bisect",
+   "tier": 4,
+   "says": [
+    "binary-searches the history for the commit that introduced a bug",
+    "needs a known good commit and a known bad commit to start",
+    "finds the culprit in a number of steps that grows with the logarithm of the commits"
+   ],
+   "use": "know a bug is new but not which of many commits caused it",
+   "not": [
+    "lists every file changed in the last commit"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A pull request",
+   "tier": 1,
+   "says": [
+    "proposes merging one branch into another",
+    "hosts review comments and discussion beside the diff",
+    "is where automated checks report their status"
+   ],
+   "use": "want a teammate to review a change before it joins main",
+   "not": [
+    "pushes the change straight to main without review"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A draft pull request",
+   "tier": 2,
+   "says": [
+    "signals that the change is not ready for review",
+    "can be marked ready when the author is done",
+    "lets CI run while review has not yet been requested"
+   ],
+   "use": "want early feedback and CI results on unfinished work",
+   "not": [
+    "cannot be updated with new commits"
+   ],
+   "like": [
+    "A pull request"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "Branch protection",
+   "tier": 3,
+   "says": [
+    "blocks direct pushes to a chosen branch",
+    "can require reviews and passing checks before merging",
+    "can stop force pushes and branch deletion"
+   ],
+   "use": "want to guarantee nothing reaches main without passing checks",
+   "not": [
+    "only affects people with read access"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A required status check",
+   "tier": 3,
+   "says": [
+    "must pass before a pull request can be merged",
+    "is reported to the pull request by CI",
+    "blocks the merge button while it is failing or missing"
+   ],
+   "use": "want the merge button disabled until tests pass",
+   "not": [
+    "is optional information that never blocks a merge"
+   ],
+   "like": [
+    "Branch protection"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A CODEOWNERS file",
+   "tier": 4,
+   "says": [
+    "maps file paths to the people or teams who own them",
+    "requests review automatically from the owners of changed files",
+    "can be enforced so owners must approve changes to their paths"
+   ],
+   "use": "want changes to the payments folder always reviewed by the payments team",
+   "not": [
+    "controls who may read the repository"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A fork",
+   "tier": 2,
+   "says": [
+    "is a server-side copy of a repository under another account",
+    "lets outside contributors propose changes through pull requests",
+    "does not give the contributor write access to the original"
+   ],
+   "use": "are contributing to a project where you have no write access",
+   "not": [
+    "is the same thing as a branch of the original repository"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A webhook",
+   "tier": 3,
+   "says": [
+    "sends an HTTP request to a URL when an event happens",
+    "lets another system react to pushes or pull request events",
+    "pushes events out, where polling would repeatedly ask for them"
+   ],
+   "use": "want an external system told the moment code is pushed",
+   "not": [
+    "pulls code from the server on a timer"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A deploy key",
+   "tier": 4,
+   "says": [
+    "is an SSH key that grants access to a single repository",
+    "is usually read-only unless write is explicitly enabled",
+    "suits a server that only needs to pull one project's code"
+   ],
+   "use": "have a server that must clone just one private repository",
+   "not": [
+    "gives the holder access to every repository the owner can see"
+   ],
+   "like": [
+    "A personal access token"
+   ]
+  },
+  {
+   "group": "host",
+   "subject": "A personal access token",
+   "tier": 3,
+   "says": [
+    "acts with the permissions of the user who created it",
+    "should be scoped narrowly and given an expiry",
+    "can be revoked without changing the account password"
+   ],
+   "use": "need a script to call the hosting API as yourself",
+   "not": [
+    "is safe to commit to the repository if it is short-lived"
+   ],
+   "like": [
+    "A deploy key"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Continuous integration",
+   "tier": 1,
+   "says": [
+    "merges changes into the shared branch often",
+    "builds and tests every change automatically",
+    "surfaces integration problems while they are small"
+   ],
+   "use": "want every push checked automatically",
+   "not": [
+    "means releasing to customers on every commit"
+   ],
+   "like": [
+    "Continuous delivery",
+    "Continuous deployment"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Continuous delivery",
+   "tier": 2,
+   "says": [
+    "keeps every change in a releasable state",
+    "automates the path to production but leaves the final release as a human decision",
+    "makes releases routine and low-drama"
+   ],
+   "use": "want to be able to ship at any time but choose the moment",
+   "not": [
+    "pushes every passing commit to production with no human step"
+   ],
+   "like": [
+    "Continuous integration",
+    "Continuous deployment"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "Continuous deployment",
+   "tier": 3,
+   "says": [
+    "releases every change that passes the pipeline to production automatically",
+    "removes the manual approval step",
+    "depends heavily on trustworthy automated tests and monitoring"
+   ],
+   "use": "want no human gate between a green build and production",
+   "not": [
+    "waits for a manual release sign-off after each green build"
+   ],
+   "like": [
+    "Continuous delivery",
+    "Continuous integration"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A pipeline",
+   "tier": 1,
+   "says": [
+    "is a sequence of automated stages such as build, test and deploy",
+    "stops at the first stage that fails by default",
+    "is defined in a configuration file kept with the code"
+   ],
+   "use": "want build, test and deploy to run in a fixed order",
+   "not": [
+    "is a manual checklist a person follows"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A workflow trigger",
+   "tier": 2,
+   "says": [
+    "decides which events start a pipeline run",
+    "can be a push, a pull request, a schedule or a manual dispatch",
+    "controls whether a run happens at all"
+   ],
+   "use": "want a pipeline to run only on pushes to main and by hand",
+   "not": [
+    "is the secret that authorises the deploy"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A CI runner",
+   "tier": 2,
+   "says": [
+    "is the machine that executes the pipeline's jobs",
+    "can be hosted by the CI vendor or run on your own server",
+    "starts each job with a fresh environment on hosted runners"
+   ],
+   "use": "are choosing where pipeline jobs actually run",
+   "not": [
+    "is the test framework that decides pass or fail"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A build artifact",
+   "tier": 2,
+   "says": [
+    "is a file or package produced by a build",
+    "can be passed from one job to a later job",
+    "lets the thing that was tested be the thing that is deployed"
+   ],
+   "use": "want the deploy stage to use exactly what the test stage verified",
+   "not": [
+    "is the log of a failed test run"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A matrix build",
+   "tier": 3,
+   "says": [
+    "runs the same job across combinations of settings",
+    "can test several language versions or operating systems at once",
+    "multiplies the number of job runs with each added dimension"
+   ],
+   "use": "must prove the code works on three Node versions",
+   "not": [
+    "runs the jobs one after another on a single machine"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A build cache",
+   "tier": 3,
+   "says": [
+    "stores dependencies or build output between runs",
+    "speeds up pipelines by skipping repeated work",
+    "can serve stale results if its key does not change when inputs do"
+   ],
+   "use": "want npm installs to stop dominating pipeline time",
+   "not": [
+    "guarantees a clean build every run"
+   ]
+  },
+  {
+   "group": "ci",
+   "subject": "A concurrency group",
+   "tier": 4,
+   "says": [
+    "limits how many runs of a workflow execute together",
+    "can queue new runs instead of cancelling one in progress",
+    "prevents two deploys from overlapping"
+   ],
+   "use": "must stop two deploy runs from racing each other",
+   "not": [
+    "splits a job across several runners"
+   ]
+  },
+  {
+   "group": "check",
+   "subject": "A linter",
+   "tier": 1,
+   "says": [
+    "flags style problems and suspicious code patterns",
+    "analyses source without running it",
+    "can often fix simple issues automatically"
+   ],
+   "use": "want consistent style and early warnings before tests",
+   "not": [
+    "checks the running service for uptime"
+   ],
+   "like": [
+    "A type checker"
+   ]
+  },
+  {
+   "group": "check",
+   "subject": "A type checker",
+   "tier": 2,
+   "says": [
+    "verifies that values are used consistently with their declared types",
+    "catches mismatches before the code runs",
+    "runs on source without executing it"
+   ],
+   "use": "want mistakes like passing a string where a number is expected caught early",
+   "not": [
+    "measures how much code the tests execute"
+   ],
+   "like": [
+    "A linter"
+   ]
+  },
+  {
+   "group": "check",
+   "subject": "A unit test",
+   "tier": 1,
+   "says": [
+    "exercises one small piece of code in isolation",
+    "runs quickly and without outside services",
+    "points to a precise failing function when it breaks"
+   ],
+   "use": "want fast feedback on one function's logic",
+   "not": [
+    "drives the whole product through a real browser"
+   ],
+   "like": [
+    "An integration test",
+    "An end-to-end test"
+   ]
+  },
+  {
+   "group": "check",
+   "subject": "An integration test",
+   "tier": 2,
+   "says": [
+    "checks that several components work together",
+    "often runs against a real database or service",
+    "is slower and needs more setup than a unit test"
+   ],
+   "use": "need to prove the app and its real database agree",
+   "not": [
+    "mocks out every dependency so none is used"
+   ],
+   "like": [
+    "A unit test",
+    "An end-to-end test"
+   ]
+  },
+  {
+   "group": "check",
+   "subject": "An end-to-end test",
+   "tier": 3,
+   "says": [
+    "drives the whole system the way a user would",
+    "covers the full path from interface to storage",
+    "is the slowest and most fragile layer of the test pyramid"
+   ],
+   "use": "want to confirm the sign-up journey works from the browser down",
+   "not": [
+    "tests one function with no dependencies"
+   ],
+   "like": [
+    "A unit test",
+    "An integration test"
+   ]
+  },
+  {
+   "group": "check",
+   "subject": "A smoke test",
+   "tier": 2,
+   "says": [
+    "runs a few basic checks that the deployed system is alive",
+    "fails fast when something fundamental is broken",
+    "is a shallow check run right after a deploy"
+   ],
+   "use": "want a quick yes or no that the release is not obviously broken",
+   "not": [
+    "proves every feature works exhaustively"
+   ]
+  },
+  {
+   "group": "check",
+   "subject": "A container image scan",
+   "tier": 4,
+   "says": [
+    "inspects an image's packages for known vulnerabilities",
+    "can fail a pipeline when serious findings appear",
+    "only knows about vulnerabilities that are already published"
+   ],
+   "use": "want known-vulnerable packages caught before an image ships",
+   "not": [
+    "proves the image contains no vulnerabilities at all"
+   ]
+  },
+  {
+   "group": "check",
+   "subject": "A flaky test",
+   "tier": 3,
+   "says": [
+    "passes and fails on the same code without any change",
+    "erodes trust in the pipeline when left alone",
+    "is often caused by timing, shared state or outside services"
+   ],
+   "use": "see a test fail once and pass on rerun with no code change",
+   "not": [
+    "is a sign the test is perfectly reliable"
+   ]
+  },
+  {
+   "group": "check",
+   "subject": "A health check probe",
+   "tier": 2,
+   "says": [
+    "asks the running service whether it is up",
+    "expects a success status such as HTTP 200",
+    "lets a deploy fail when the app does not come back"
+   ],
+   "use": "want a deploy to prove the app actually answers",
+   "not": [
+    "measures how much of the code is tested"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A rolling deployment",
+   "tier": 2,
+   "says": [
+    "replaces instances with the new version a few at a time",
+    "keeps some capacity serving traffic throughout",
+    "runs the old and new versions side by side for a while"
+   ],
+   "use": "have several instances and want no full outage",
+   "not": [
+    "switches all traffic at once to a complete second environment"
+   ],
+   "like": [
+    "A blue-green deployment",
+    "A canary release"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A blue-green deployment",
+   "tier": 3,
+   "says": [
+    "keeps two full production environments, one live and one idle",
+    "switches traffic from one to the other when ready",
+    "makes rollback a matter of switching back"
+   ],
+   "use": "want an instant switch-over and an instant way back",
+   "not": [
+    "sends the new version to a small percentage of users first"
+   ],
+   "like": [
+    "A rolling deployment",
+    "A canary release"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A canary release",
+   "tier": 3,
+   "says": [
+    "sends the new version to a small share of traffic first",
+    "watches metrics before widening the rollout",
+    "limits the number of users hurt by a bad release"
+   ],
+   "use": "want real traffic to test the release before everyone gets it",
+   "not": [
+    "replaces every instance simultaneously"
+   ],
+   "like": [
+    "A rolling deployment",
+    "A blue-green deployment"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A feature flag",
+   "tier": 3,
+   "says": [
+    "turns a feature on or off without a new deploy",
+    "separates deploying code from releasing a feature",
+    "lets unfinished code ship hidden"
+   ],
+   "use": "want to merge unfinished work to main without users seeing it",
+   "not": [
+    "is a pull request label that marks urgent work"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A rollback",
+   "tier": 2,
+   "says": [
+    "returns production to a previous known-good version",
+    "is the fastest response to a release that breaks things",
+    "needs the old version or build to still be available"
+   ],
+   "use": "released a version that is failing and need the last good one back",
+   "not": [
+    "adds a new commit that fixes the bug going forward"
+   ],
+   "like": [
+    "Rolling forward"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "Rolling forward",
+   "tier": 4,
+   "says": [
+    "fixes a bad release by shipping a new corrected version",
+    "is often the only choice after a data migration that cannot be undone",
+    "needs a fast, trusted pipeline to be safe"
+   ],
+   "use": "cannot go back because the database schema already changed",
+   "not": [
+    "restores the previous version from backup"
+   ],
+   "like": [
+    "A rollback"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A staging environment",
+   "tier": 2,
+   "says": [
+    "mirrors production closely for final checks",
+    "lets a release be tried without affecting real users",
+    "is only as useful as it is similar to production"
+   ],
+   "use": "want to try a release somewhere that looks like production",
+   "not": [
+    "is the live environment customers use"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A database migration",
+   "tier": 2,
+   "says": [
+    "changes the database schema in a controlled, repeatable way",
+    "is kept as code and applied in order",
+    "runs as part of the deploy"
+   ],
+   "use": "need a new column in the production database",
+   "not": [
+    "is a copy of the database taken for backup"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "Expand and contract",
+   "tier": 5,
+   "says": [
+    "adds a new schema element alongside the old before removing the old",
+    "lets old and new code versions run against the same database",
+    "splits a breaking change into several safe releases"
+   ],
+   "use": "must rename a column with no downtime",
+   "not": [
+    "drops the old column in the same release that adds the new one"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "Infrastructure as code",
+   "tier": 3,
+   "says": [
+    "describes servers and services in version-controlled files",
+    "makes environments reproducible and reviewable",
+    "reduces drift between what is documented and what exists"
+   ],
+   "use": "want server setup recorded, reviewed and repeatable",
+   "not": [
+    "means configuring each server by hand and documenting it afterwards"
+   ]
+  },
+  {
+   "group": "tracker",
+   "subject": "An issue",
+   "tier": 1,
+   "says": [
+    "represents one unit of work or one problem",
+    "has an owner and a state",
+    "gives code changes something to link back to"
+   ],
+   "use": "want a piece of work to be visible and owned",
+   "not": [
+    "is a commit message"
+   ]
+  },
+  {
+   "group": "tracker",
+   "subject": "A backlog",
+   "tier": 2,
+   "says": [
+    "holds work that is not yet scheduled",
+    "is ordered so the most valuable work sits at the top",
+    "needs regular grooming or it becomes a graveyard"
+   ],
+   "use": "want one ordered list of work waiting to be done",
+   "not": [
+    "lists only the items in the current sprint"
+   ]
+  },
+  {
+   "group": "tracker",
+   "subject": "Triage",
+   "tier": 2,
+   "says": [
+    "sorts new issues by validity, severity and owner",
+    "decides what to do with a report before work starts",
+    "separates duplicates and noise from real work"
+   ],
+   "use": "face a stream of new reports and must decide which matter",
+   "not": [
+    "fixes the bug the moment it is reported"
+   ]
+  },
+  {
+   "group": "tracker",
+   "subject": "Acceptance criteria",
+   "tier": 3,
+   "says": [
+    "state the conditions that must hold for the work to be accepted",
+    "are written before the work begins",
+    "make done a testable claim"
+   ],
+   "use": "want a shared, checkable meaning of finished for one issue",
+   "not": [
+    "list the people who must approve the release"
+   ],
+   "like": [
+    "The definition of done"
+   ]
+  },
+  {
+   "group": "tracker",
+   "subject": "The definition of done",
+   "tier": 3,
+   "says": [
+    "applies to every item the team finishes",
+    "sets common standards such as tested, reviewed and documented",
+    "does not change from one issue to the next"
+   ],
+   "use": "want one quality bar shared across all work",
+   "not": [
+    "describes the specific outcome of a single issue"
+   ],
+   "like": [
+    "Acceptance criteria"
+   ]
+  },
+  {
+   "group": "tracker",
+   "subject": "A work-in-progress limit",
+   "tier": 4,
+   "says": [
+    "caps how many items can be in a state at once",
+    "pushes the team to finish work before starting more",
+    "exposes bottlenecks when a column fills up"
+   ],
+   "use": "see many half-finished items and nothing shipping",
+   "not": [
+    "raises the number of tasks each person starts"
+   ]
+  },
+  {
+   "group": "tracker",
+   "subject": "Severity",
+   "tier": 3,
+   "says": [
+    "measures how much damage a defect does",
+    "describes impact, such as data loss versus a cosmetic flaw",
+    "is separate from the order in which work is scheduled"
+   ],
+   "use": "must describe how bad a defect is",
+   "not": [
+    "says when the team will schedule the fix"
+   ],
+   "like": [
+    "Priority"
+   ]
+  },
+  {
+   "group": "tracker",
+   "subject": "Priority",
+   "tier": 3,
+   "says": [
+    "says how soon something should be dealt with",
+    "reflects business context as well as damage",
+    "can differ from severity, for example a cosmetic flaw on the home page"
+   ],
+   "use": "must decide what the team works on first",
+   "not": [
+    "measures how much technical damage a defect causes"
+   ],
+   "like": [
+    "Severity"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "Infrastructure as a service",
+   "tier": 2,
+   "says": [
+    "rents virtual machines, storage and networks",
+    "leaves the operating system and everything above it to the customer",
+    "gives the most control among the cloud service models"
+   ],
+   "use": "want a raw virtual machine you manage yourself",
+   "not": [
+    "hides the operating system and runs your code for you"
+   ],
+   "like": [
+    "Platform as a service",
+    "A serverless function"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "Platform as a service",
+   "tier": 2,
+   "says": [
+    "runs your application without you managing the servers",
+    "handles the operating system and runtime for you",
+    "takes the code or a container and gives back a running app"
+   ],
+   "use": "want to push code and let the provider run it",
+   "not": [
+    "gives you only a bare virtual machine"
+   ],
+   "like": [
+    "Infrastructure as a service",
+    "A serverless function"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A serverless function",
+   "tier": 3,
+   "says": [
+    "runs code in response to an event",
+    "scales with demand and can scale to zero",
+    "bills for execution rather than for idle servers"
+   ],
+   "use": "have small event-driven code that is idle most of the time",
+   "not": [
+    "keeps a long-lived server always running for you to manage"
+   ],
+   "like": [
+    "Platform as a service"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "Object storage",
+   "tier": 2,
+   "says": [
+    "stores files as objects addressed by a key in a bucket",
+    "scales to very large amounts of data",
+    "is suited to images, backups and static assets rather than databases"
+   ],
+   "use": "need cheap, durable storage for uploads and backups",
+   "not": [
+    "is a low-latency block device attached to one machine"
+   ],
+   "like": [
+    "Block storage"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "Block storage",
+   "tier": 3,
+   "says": [
+    "provides a disk volume attached to a virtual machine",
+    "behaves like a local drive with a filesystem",
+    "is what databases on a virtual machine typically sit on"
+   ],
+   "use": "need a disk for a database running on a virtual machine",
+   "not": [
+    "stores objects behind web URLs addressed by key"
+   ],
+   "like": [
+    "Object storage"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A managed database",
+   "tier": 2,
+   "says": [
+    "is run by the provider, who handles patching and backups",
+    "reduces the operational work of running a database",
+    "still needs the customer to design schema and access"
+   ],
+   "use": "want a database without maintaining the server",
+   "not": [
+    "needs you to install and patch the database engine"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A container registry",
+   "tier": 3,
+   "says": [
+    "stores and serves container images",
+    "is where a deploy pulls an image by name and tag",
+    "lets the same image move from CI to production"
+   ],
+   "use": "need somewhere to publish images that servers can pull",
+   "not": [
+    "runs containers on a cluster"
+   ],
+   "like": [
+    "A container orchestrator"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A container orchestrator",
+   "tier": 4,
+   "says": [
+    "schedules containers across a cluster of machines",
+    "restarts failed containers and scales their number",
+    "handles service discovery and rolling updates"
+   ],
+   "use": "run many containers and need them kept alive and spread out",
+   "not": [
+    "only stores container images"
+   ],
+   "like": [
+    "A container registry"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A content delivery network",
+   "tier": 3,
+   "says": [
+    "caches content at locations close to visitors",
+    "reduces load on the origin server",
+    "can also provide protection and TLS in front of the origin"
+   ],
+   "use": "want static assets served fast worldwide and less traffic on the origin",
+   "not": [
+    "stores your primary database"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A load balancer",
+   "tier": 3,
+   "says": [
+    "spreads incoming requests across several instances",
+    "uses health checks to avoid unhealthy instances",
+    "removes a single instance as a single point of failure"
+   ],
+   "use": "have several app instances and one public address",
+   "not": [
+    "stores the application's secrets"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A managed secrets store",
+   "tier": 4,
+   "says": [
+    "keeps credentials encrypted and access-controlled",
+    "lets applications fetch secrets at runtime",
+    "records who read each secret"
+   ],
+   "use": "want secrets out of code and config files",
+   "not": [
+    "is a text file in the repository listing keys"
+   ]
+  },
+  {
+   "group": "cloud",
+   "subject": "A virtual private server",
+   "tier": 1,
+   "says": [
+    "is a rented virtual machine with root access",
+    "runs one operating system that the customer maintains",
+    "is how a small app is often hosted behind a reverse proxy"
+   ],
+   "use": "host a small app on one machine you fully control",
+   "not": [
+    "scales automatically to zero when idle"
+   ],
+   "like": [
+    "A serverless function"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "An uptime check",
+   "tier": 1,
+   "says": [
+    "asks from outside whether a service responds",
+    "raises an alert when requests fail",
+    "answers whether the service is up and not whether it is healthy inside"
+   ],
+   "use": "want to know the moment the site stops answering",
+   "not": [
+    "explains why a request was slow"
+   ],
+   "like": [
+    "A metric"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A metric",
+   "tier": 2,
+   "says": [
+    "is a numeric measurement sampled over time",
+    "suits trends, dashboards and alert thresholds",
+    "is cheap to store compared with raw events"
+   ],
+   "use": "want to chart request rate or memory use over weeks",
+   "not": [
+    "is a record of one individual event with its details"
+   ],
+   "like": [
+    "A log line",
+    "A trace"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A log line",
+   "tier": 2,
+   "says": [
+    "records one event with its context",
+    "is what you search when you need the detail of a failure",
+    "grows in volume as traffic grows"
+   ],
+   "use": "need to see exactly what happened in one failed request",
+   "not": [
+    "is a number sampled at regular intervals"
+   ],
+   "like": [
+    "A metric",
+    "A trace"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A trace",
+   "tier": 4,
+   "says": [
+    "follows one request across several services",
+    "breaks the request into timed spans",
+    "shows which hop made a request slow"
+   ],
+   "use": "need to find which service in a chain adds the latency",
+   "not": [
+    "counts total requests per minute"
+   ],
+   "like": [
+    "A metric",
+    "A log line"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Log aggregation",
+   "tier": 3,
+   "says": [
+    "collects logs from many machines into one searchable place",
+    "lets you search across services at once",
+    "depends on shippers that forward logs from each host"
+   ],
+   "use": "have logs scattered across servers and need to search them together",
+   "not": [
+    "deletes old logs to save space"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "An alert threshold",
+   "tier": 2,
+   "says": [
+    "sets the value at which a metric raises an alert",
+    "decides when a person is paged",
+    "is too tight when it produces many alerts that need no action"
+   ],
+   "use": "want to be told when error rate crosses a limit",
+   "not": [
+    "is the time period logs are kept for"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Alert fatigue",
+   "tier": 4,
+   "says": [
+    "happens when too many alerts train people to ignore them",
+    "hides the one alert that matters among noise",
+    "is cured by alerting on symptoms and removing alerts nobody acts on"
+   ],
+   "use": "find the team has stopped reading the alert channel",
+   "not": [
+    "is caused by having too few alerts"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A service level objective",
+   "tier": 4,
+   "says": [
+    "sets a target for reliability such as a share of successful requests",
+    "is measured over a defined time window",
+    "gives a number to argue about instead of a feeling"
+   ],
+   "use": "need an agreed target for how reliable a service must be",
+   "not": [
+    "is the contract that pays customers back when missed"
+   ],
+   "like": [
+    "An error budget"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "An error budget",
+   "tier": 5,
+   "says": [
+    "is the amount of unreliability an objective allows",
+    "shrinks as failures use it up",
+    "can justify slowing releases when it is spent"
+   ],
+   "use": "must decide whether to ship risky changes or focus on stability",
+   "not": [
+    "is the money set aside for fixing outages"
+   ],
+   "like": [
+    "A service level objective"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A runbook",
+   "tier": 3,
+   "says": [
+    "gives step-by-step instructions for handling a known alert",
+    "reduces guesswork during an incident",
+    "should be updated after each incident that taught something new"
+   ],
+   "use": "want the person paged at night to know what to check first",
+   "not": [
+    "is the record of why an incident happened"
+   ],
+   "like": [
+    "A postmortem"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "A blameless postmortem",
+   "tier": 4,
+   "says": [
+    "examines what happened and why after an incident",
+    "focuses on the system and process rather than individuals",
+    "ends with agreed follow-up actions"
+   ],
+   "use": "want learning from an outage and not a hunt for someone to blame",
+   "not": [
+    "names the engineer responsible so they can be disciplined"
+   ],
+   "like": [
+    "A runbook"
+   ]
+  },
+  {
+   "group": "mon",
+   "subject": "Observability",
+   "tier": 5,
+   "says": [
+    "lets you ask new questions about a system from the data it emits",
+    "combines metrics, logs and traces",
+    "goes beyond checking known failure modes with set dashboards"
+   ],
+   "use": "need to debug failures nobody predicted",
+   "not": [
+    "is just having a dashboard of CPU use"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "Single sign-on",
+   "tier": 1,
+   "says": [
+    "lets one login give access to many applications",
+    "centralises authentication in one identity provider",
+    "means removing a person once cuts their access everywhere"
+   ],
+   "use": "want staff to log in once for all work tools",
+   "not": [
+    "gives every application its own separate password"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "An identity provider",
+   "tier": 2,
+   "says": [
+    "holds user identities and authenticates them",
+    "issues proof of login to other applications",
+    "is the central system behind single sign-on"
+   ],
+   "use": "need one trusted place that says who a person is",
+   "not": [
+    "is the application the user is trying to use"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "SAML",
+   "tier": 3,
+   "says": [
+    "exchanges signed XML assertions between identity provider and application",
+    "is common in older enterprise single sign-on",
+    "is browser-based and redirects the user to log in"
+   ],
+   "use": "integrate with an enterprise identity provider that expects XML assertions",
+   "not": [
+    "is a JSON-based protocol designed for mobile apps"
+   ],
+   "like": [
+    "OpenID Connect",
+    "OAuth 2.0"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "OpenID Connect",
+   "tier": 3,
+   "says": [
+    "adds an identity layer on top of OAuth 2.0",
+    "returns an ID token describing who logged in",
+    "uses JSON and JSON Web Tokens"
+   ],
+   "use": "want users to log in with an identity provider and learn who they are",
+   "not": [
+    "replaces OAuth 2.0 as a separate protocol"
+   ],
+   "like": [
+    "SAML",
+    "OAuth 2.0"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "OAuth 2.0",
+   "tier": 3,
+   "says": [
+    "lets an application act on a user's behalf without their password",
+    "issues access tokens with limited scopes",
+    "is about delegated authorisation rather than proving identity"
+   ],
+   "use": "want a third party app to read some of a user's data without handing over the password",
+   "not": [
+    "is mainly an authentication standard that identifies the user"
+   ],
+   "like": [
+    "OpenID Connect",
+    "SAML"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "Multi-factor authentication",
+   "tier": 1,
+   "says": [
+    "requires more than one kind of proof to log in",
+    "combines something you know with something you have or are",
+    "limits the damage from a stolen password"
+   ],
+   "use": "want a stolen password alone to be useless",
+   "not": [
+    "means typing the password twice"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "Role-based access control",
+   "tier": 3,
+   "says": [
+    "grants permissions through roles rather than to individuals",
+    "makes access easier to review and change in bulk",
+    "assigns people to roles that match their job"
+   ],
+   "use": "want access based on job function",
+   "not": [
+    "gives each person a hand-picked list of permissions"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "Least privilege",
+   "tier": 2,
+   "says": [
+    "gives an identity only the access it needs",
+    "limits the harm from a mistake or a stolen credential",
+    "applies to people, services and tokens alike"
+   ],
+   "use": "are deciding how much access a new deploy token should have",
+   "not": [
+    "gives everyone admin access so work is never blocked"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "SCIM provisioning",
+   "tier": 5,
+   "says": [
+    "automates creating, updating and removing user accounts across applications",
+    "reads from the identity provider as the source of truth",
+    "closes the gap where leavers keep accounts in tools"
+   ],
+   "use": "want accounts in every tool created and removed automatically",
+   "not": [
+    "authenticates the user at login"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "A service account",
+   "tier": 3,
+   "says": [
+    "is an identity used by software and not a person",
+    "should hold only the permissions its job needs",
+    "should have its credentials rotated and stored as secrets"
+   ],
+   "use": "need a pipeline to act without a person's login",
+   "not": [
+    "is the personal account of the team lead shared with the pipeline"
+   ]
+  },
+  {
+   "group": "idp",
+   "subject": "An access review",
+   "tier": 4,
+   "says": [
+    "checks periodically who has access to what",
+    "removes access that is no longer needed",
+    "catches leavers and role changes that were missed"
+   ],
+   "use": "want to find stale accounts and excess permissions",
+   "not": [
+    "is a one-time check when an account is created"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "CI-only dummy secrets",
+   "tier": 3,
+   "says": [
+    "let pipelines run without production credentials",
+    "are values that work only inside the test run",
+    "remove the risk of a leaked CI log exposing something real"
+   ],
+   "use": "need a test job to start with credentials it will not misuse",
+   "not": [
+    "are copies of production secrets stored for convenience"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Secret scoping",
+   "tier": 3,
+   "says": [
+    "limits a secret to the jobs or environments that need it",
+    "keeps a production credential away from pull request builds",
+    "reduces the blast radius if one job is compromised"
+   ],
+   "use": "want only the deploy job to see the production key",
+   "not": [
+    "shares every secret with every job"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Secret rotation",
+   "tier": 4,
+   "says": [
+    "replaces a credential with a new one on a schedule or after exposure",
+    "shortens how long a leaked secret stays useful",
+    "is easier when secrets are fetched at runtime"
+   ],
+   "use": "suspect a key was exposed and need it dead",
+   "not": [
+    "adds a second copy of the same key"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Secret scanning",
+   "tier": 3,
+   "says": [
+    "searches code and history for committed credentials",
+    "can block a push or alert the owner",
+    "does not remove a credential that has already leaked"
+   ],
+   "use": "want to catch an accidentally committed token",
+   "not": [
+    "encrypts secrets stored in the repository"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A leaked secret in history",
+   "tier": 5,
+   "says": [
+    "remains in git history after a later commit deletes the file",
+    "must be treated as compromised and rotated",
+    "is not fixed by removing the line in a new commit"
+   ],
+   "use": "found a password in an old commit",
+   "not": [
+    "is safe once the file is deleted in the latest commit"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Pinning third-party actions",
+   "tier": 4,
+   "says": [
+    "fixes a pipeline step to a specific immutable version or commit",
+    "stops a changed upstream action from altering your pipeline unseen",
+    "makes builds reproducible"
+   ],
+   "use": "want protection from a compromised or changed third-party step",
+   "not": [
+    "always picks up the newest release automatically"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A lockfile",
+   "tier": 2,
+   "says": [
+    "records the exact resolved versions of every dependency",
+    "makes installs repeatable across machines",
+    "is committed alongside the manifest"
+   ],
+   "use": "want CI to install exactly the versions you tested",
+   "not": [
+    "is a file that stops two deploys running together"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A restore test",
+   "tier": 4,
+   "says": [
+    "proves a backup can actually be restored",
+    "finds a broken backup before the disaster",
+    "checks how long recovery really takes"
+   ],
+   "use": "have backups and no evidence they work",
+   "not": [
+    "counts how many backups were taken"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "An approval gate",
+   "tier": 4,
+   "says": [
+    "pauses a pipeline until a named person approves",
+    "is often placed before a production deploy",
+    "adds a human check to an otherwise automated path"
+   ],
+   "use": "want a person to confirm before production changes",
+   "not": [
+    "skips the pipeline's tests"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The deploy.sh script",
+   "tier": 1,
+   "says": [
+    "is the single script that deploys gglearn",
+    "is run by the GitHub Actions workflow on every push to main",
+    "syncs the code and then runs the server-side steps over ssh"
+   ],
+   "use": "want to know what deploys gglearn",
+   "not": [
+    "is a script run by hand only on the developer's laptop"
+   ],
+   "like": [
+    "The GitHub Actions deploy workflow"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GitHub Actions deploy workflow",
+   "tier": 2,
+   "says": [
+    "runs deploy.sh on every push to main",
+    "can also be started by hand with workflow_dispatch",
+    "checks that four repository secrets exist before deploying"
+   ],
+   "use": "want to know what starts a gglearn deploy",
+   "not": [
+    "runs only on a nightly schedule"
+   ],
+   "like": [
+    "The deploy.sh script"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The four repository secrets",
+   "tier": 3,
+   "says": [
+    "hold an ssh key, a host, a user and known-hosts for the server",
+    "are checked by the workflow before it does anything",
+    "let the workflow write the ssh config for the alias gglink-live"
+   ],
+   "use": "are wondering what credentials the gglearn workflow needs",
+   "not": [
+    "hold the application's database password and app secret"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The workflow's concurrency setting",
+   "tier": 3,
+   "says": [
+    "queues deploys instead of cancelling one that is half-way",
+    "stops a newer push from interrupting a running deploy",
+    "protects the server from a deploy being cut off in the middle"
+   ],
+   "use": "push twice in quick succession and wonder what the first run does",
+   "not": [
+    "cancels the older run as soon as a newer one starts"
+   ],
+   "like": [
+    "The flock on the server"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The rsync step with --delete",
+   "tier": 3,
+   "says": [
+    "copies the code to /var/www/gglearn.gglink.co.uk",
+    "removes server files not present in the source unless excluded",
+    "excludes node_modules, .next, .git, the SQLite files and .env files"
+   ],
+   "use": "want to know why the database survives each deploy",
+   "not": [
+    "copies the SQLite database to the server on every deploy"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The flock on the server",
+   "tier": 4,
+   "says": [
+    "is taken so two deploys cannot overlap",
+    "covers the remote steps run on the server",
+    "makes a second deploy wait instead of running together with the first"
+   ],
+   "use": "want to know what prevents overlapping deploys on the server itself",
+   "not": [
+    "encrypts the database file while the build runs"
+   ],
+   "like": [
+    "The workflow's concurrency setting"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "npm ci in the deploy",
+   "tier": 3,
+   "says": [
+    "installs exactly what the lockfile specifies",
+    "runs on the server before the build",
+    "fails rather than silently updating the lockfile"
+   ],
+   "use": "need to know how the server gets its dependencies",
+   "not": [
+    "updates dependencies to their newest versions"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "drizzle-kit push in the deploy",
+   "tier": 4,
+   "says": [
+    "applies the schema to the SQLite database",
+    "deliberately runs without --force",
+    "stops the deploy when a change would delete rows"
+   ],
+   "use": "are adding a column and want to know how the deploy updates the schema",
+   "not": [
+    "always accepts destructive schema changes"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "next build in the deploy",
+   "tier": 2,
+   "says": [
+    "builds the production version of the app on the server",
+    "runs after the dependencies and schema step",
+    "is one of the only checks in the gglearn workflow, with the health probe"
+   ],
+   "use": "want to know which gglearn deploy step can catch a compile error",
+   "not": [
+    "runs the full unit test suite"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "pm2 startOrRestart and pm2 save",
+   "tier": 3,
+   "says": [
+    "starts the app from the ecosystem file or restarts it if it is already running",
+    "is followed by saving the process list",
+    "keeps the app supervised on the server"
+   ],
+   "use": "want to know how the new gglearn build begins serving",
+   "not": [
+    "reloads Apache with the new virtual host"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn health poll",
+   "tier": 3,
+   "says": [
+    "requests http://127.0.0.1:3400/ up to ten times",
+    "fails the deploy unless it receives HTTP 200",
+    "prints recent pm2 error logs when it fails"
+   ],
+   "use": "want to know how gglearn knows a deploy worked",
+   "not": [
+    "only checks that the build command exited"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "No test or lint step in the gglearn workflow",
+   "tier": 5,
+   "says": [
+    "leaves the build and the health probe as the only checks",
+    "means a failing test would not stop a deploy",
+    "is a gap compared with a pipeline that runs tests first"
+   ],
+   "use": "are asked what protects gglearn from a logic bug",
+   "not": [
+    "is covered by the vitest suite that runs in the workflow"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "The X-Forwarded-For header",
+   "tier": 3,
+   "says": [
+    "carries the visitor's address when a proxy sits in front",
+    "can be forged if clients reach the origin directly",
+    "is trusted only when all traffic really passes through the proxy"
+   ],
+   "use": "want to know where the app reads the visitor address from",
+   "not": [
+    "is added by the visitor's browser and can always be trusted"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "Origin lockdown",
+   "tier": 3,
+   "says": [
+    "restricts the origin server to accept traffic only from Cloudflare",
+    "stops people bypassing the proxy and its protections",
+    "protects rate limiting and logging from spoofed addresses"
+   ],
+   "use": "want to stop attackers hitting the server directly",
+   "not": [
+    "hides the origin server's address with no firewall rule"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "apache-cloudflare-only.conf",
+   "tier": 4,
+   "says": [
+    "is a Location block that allows localhost and Cloudflare's published ranges",
+    "is pulled into the vhost with an Include",
+    "denies every other address"
+   ],
+   "use": "want to know where the gglearn allow-list lives",
+   "not": [
+    "is the file that holds Cloudflare's API token"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "Include instead of IncludeOptional",
+   "tier": 5,
+   "says": [
+    "makes Apache refuse to start if the file is missing",
+    "avoids quietly serving everyone when the allow-list is lost",
+    "fails loudly rather than open"
+   ],
+   "use": "are asked why a missing file should stop Apache",
+   "not": [
+    "lets Apache start without the file and continue"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "update-cloudflare-ips.sh",
+   "tier": 4,
+   "says": [
+    "regenerates the allow-list from Cloudflare's published lists",
+    "refuses to write if the fetched lists look wrong",
+    "avoids producing an empty allow-list that locks everyone out"
+   ],
+   "use": "need to refresh the list of Cloudflare addresses",
+   "not": [
+    "edits Apache's config and reloads it in one step"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "The certbot port 80 vhost copy",
+   "tier": 5,
+   "says": [
+    "is made into the port 443 vhost",
+    "can drop the allow-list unless the Include line is also present",
+    "needs the same Include line in both vhosts"
+   ],
+   "use": "added TLS with certbot and need the lockdown preserved",
+   "not": [
+    "links the 443 vhost to the 80 vhost, so edits always carry over"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "Full (strict) SSL mode",
+   "tier": 4,
+   "says": [
+    "encrypts traffic between Cloudflare and the origin and validates the certificate",
+    "is required for ggmoney according to its DEPLOY.md",
+    "protects tokens on the Cloudflare-to-origin hop"
+   ],
+   "use": "need the Cloudflare to origin hop encrypted and verified",
+   "not": [
+    "leaves the Cloudflare to origin hop unencrypted"
+   ],
+   "like": [
+    "Flexible SSL mode"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "Flexible SSL mode",
+   "tier": 4,
+   "says": [
+    "encrypts only the visitor-to-Cloudflare hop",
+    "sends traffic from Cloudflare to the origin unencrypted",
+    "would expose OAuth tokens on the origin hop"
+   ],
+   "use": "are asked why Flexible is wrong for sites that handle OAuth tokens",
+   "not": [
+    "validates the certificate on the origin"
+   ],
+   "like": [
+    "Full (strict) SSL mode"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "Let's Encrypt and certbot's timer",
+   "tier": 3,
+   "says": [
+    "issue and renew the origin certificates",
+    "renew automatically on a timer",
+    "give the origin a certificate Cloudflare can validate"
+   ],
+   "use": "want to know how origin certificates stay valid",
+   "not": [
+    "require manual renewal by an administrator each year"
+   ]
+  },
+  {
+   "group": "edge",
+   "subject": "Apache as reverse proxy",
+   "tier": 2,
+   "says": [
+    "forwards requests to a local Node process",
+    "sits behind Cloudflare on the origin",
+    "terminates TLS on the origin for the vhost"
+   ],
+   "use": "want to know what receives requests before the Node app",
+   "not": [
+    "serves the app's pages by running the Next code itself"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "ggsocial's two pm2 processes",
+   "tier": 2,
+   "says": [
+    "are ggsocial-web and ggsocial-scheduler",
+    "split serving the site from sending scheduled posts",
+    "include a scheduler that calls cron endpoints"
+   ],
+   "use": "want to know what keeps ggsocial's scheduled posts going out",
+   "not": [
+    "are two copies of the web server for load sharing"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "ggsocial's Postgres in Docker",
+   "tier": 3,
+   "says": [
+    "is the database, running in a Docker container",
+    "is backed up by the deploy script before changes",
+    "has backups that are not scheduled automatically"
+   ],
+   "use": "want to know where ggsocial keeps its data",
+   "not": [
+    "is a SQLite file excluded from rsync"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "npm run deploy",
+   "tier": 2,
+   "says": [
+    "is run from a laptop to deploy ggsocial",
+    "warns about uncommitted changes first",
+    "runs the server half over ssh after the local checks"
+   ],
+   "use": "want to know how a ggsocial deploy starts",
+   "not": [
+    "is triggered by a push to main"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "ggsocial's local pre-flight checks",
+   "tier": 3,
+   "says": [
+    "run tsc, lint and the vitest tests on the laptop",
+    "stop the deploy if any of them fails",
+    "depend on the deployer running the script"
+   ],
+   "use": "want to know where ggsocial's tests run",
+   "not": [
+    "run in a remote CI job on every pull request"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "The server-side .env",
+   "tier": 3,
+   "says": [
+    "holds ggsocial's secrets only on the server",
+    "must be excluded from rsync --delete",
+    "is checked for existence by the server half"
+   ],
+   "use": "want to know where ggsocial's secrets live",
+   "not": [
+    "is committed to the repository so deploys can copy it"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "Deleting .env through rsync",
+   "tier": 4,
+   "says": [
+    "happens if rsync --delete does not exclude it",
+    "loses the app secret",
+    "logs everyone out and makes stored tokens unreadable"
+   ],
+   "use": "are asked what goes wrong without the exclusion",
+   "not": [
+    "is harmless because the file is recreated from the repository"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "ggsocial's fresh-directory build",
+   "tier": 4,
+   "says": [
+    "builds into a new directory and then swaps it in",
+    "keeps the old build serving while the new one compiles",
+    "shortens the time the site shows a broken state"
+   ],
+   "use": "want to know how ggsocial avoids downtime during a build",
+   "not": [
+    "stops the app before building in place"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "ggsocial's schema push before restart",
+   "tier": 4,
+   "says": [
+    "applies the database schema before restarting the app",
+    "stops new code starting against an old schema",
+    "comes after the database backup"
+   ],
+   "use": "want to know the order of schema and restart",
+   "not": [
+    "restarts the processes before pushing the schema"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "The fish login shell trap",
+   "tier": 4,
+   "says": [
+    "cannot parse some bash syntax",
+    "is why the script streams commands into bash -s",
+    "makes plain ssh commands behave unexpectedly"
+   ],
+   "use": "saw a deploy command fail on the server with a syntax error",
+   "not": [
+    "is solved by installing a newer Node version"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "The wrong-Node trap",
+   "tier": 4,
+   "says": [
+    "comes from a login shell picking a different Node version",
+    "is avoided by putting the system Node first",
+    "can break builds with version mismatches"
+   ],
+   "use": "found the server building with an unexpected Node version",
+   "not": [
+    "is fixed by committing node_modules"
+   ]
+  },
+  {
+   "group": "ggs",
+   "subject": "The Apache vhost copy trap",
+   "tier": 5,
+   "says": [
+    "means the live HTTPS vhost is a copy and not a symlink",
+    "lets edits to sites-available pass configtest yet change nothing",
+    "needs the live file edited too"
+   ],
+   "use": "edited sites-available and saw no change on the live site",
+   "not": [
+    "is avoided because the live vhost links to sites-available"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's CI triggers",
+   "tier": 2,
+   "says": [
+    "run on pushes and pull requests",
+    "cover several jobs in one workflow",
+    "start lint, tests, image scan and smoke tests"
+   ],
+   "use": "want to know when Moksy's CI runs",
+   "not": [
+    "run only when a release is tagged"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's integration tests",
+   "tier": 3,
+   "says": [
+    "run against a real MongoDB service container",
+    "exercise the services with a real database",
+    "sit alongside the unit tests"
+   ],
+   "use": "want to know how Moksy tests against a database",
+   "not": [
+    "mock the database in every test"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's gateway smoke tests",
+   "tier": 3,
+   "says": [
+    "check the gateway as a shallow liveness test",
+    "are one of the jobs in the CI workflow",
+    "belong to the same workflow as lint and the image scan"
+   ],
+   "use": "want to know what checks the gateway in CI",
+   "not": [
+    "run the entire integration suite"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's container image scan",
+   "tier": 3,
+   "says": [
+    "is a CI job that scans images",
+    "looks for known vulnerabilities in the image",
+    "runs along the lint and test jobs"
+   ],
+   "use": "want to know which job checks image security in Moksy",
+   "not": [
+    "scans the source for style problems"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's shared top-level secrets",
+   "tier": 4,
+   "says": [
+    "are declared once at the top of the CI workflow",
+    "prevent drift between jobs",
+    "replaced a copy-per-job approach that once left a secret too short"
+   ],
+   "use": "want to know why Moksy declares CI secrets once",
+   "not": [
+    "are copied into every job for independence"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's CI dummy values",
+   "tier": 4,
+   "says": [
+    "are CI-only values and not real secrets",
+    "follow the habit of never reusing real secrets in CI",
+    "mean a leaked log reveals nothing real"
+   ],
+   "use": "want to know what secrets Moksy CI uses",
+   "not": [
+    "are the production credentials copied for tests"
+   ]
+  },
+  {
+   "group": "mok",
+   "subject": "Moksy's observability folders",
+   "tier": 4,
+   "says": [
+    "include Loki, Promtail and an alert dispatcher",
+    "hold logging and alerting setup in the Moksy repo",
+    "are not what the small Next apps use, which rely on pm2 and Apache logs"
+   ],
+   "use": "want to know what monitoring Moksy's repo contains",
+   "not": [
+    "are what gglearn and ggsocial also use"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the main purpose of continuous integration?",
+   "right": "To build and test every change automatically so integration problems show up early",
+   "wrong": [
+    "To deploy every change to customers with no checks",
+    "To store the source code on a server",
+    "To replace code review with automated approval"
+   ],
+   "tier": 1,
+   "why": "CI runs automated builds and tests on each change."
+  },
+  {
+   "q": "Which command shows the state of your working tree in Git?",
+   "right": "git status",
+   "wrong": [
+    "git state",
+    "git tree",
+    "git inspect"
+   ],
+   "tier": 1,
+   "why": "git status lists staged, unstaged and untracked files.",
+   "code": "git status"
+  },
+  {
+   "q": "What does a pull request ask for?",
+   "right": "A review and merge of one branch into another",
+   "wrong": [
+    "A copy of the repository on another account",
+    "A rollback of production",
+    "A new issue tracker project"
+   ],
+   "tier": 1,
+   "why": "A pull request proposes a merge and hosts review."
+  },
+  {
+   "q": "What does multi-factor authentication add to a password login?",
+   "right": "A second, different kind of proof",
+   "wrong": [
+    "A longer password",
+    "A second copy of the same password",
+    "Automatic password rotation"
+   ],
+   "tier": 1,
+   "why": "MFA combines different kinds of factor."
+  },
+  {
+   "q": "Why do teams keep work in an issue tracker?",
+   "right": "So work has an owner, a state and something code changes can link to",
+   "wrong": [
+    "So commits can be deleted later",
+    "So the tests run faster",
+    "So no one needs to communicate"
+   ],
+   "tier": 1,
+   "why": "Trackers make work visible and traceable."
+  },
+  {
+   "q": "What is a deploy health check for?",
+   "right": "To confirm the app actually answers after it is released",
+   "wrong": [
+    "To measure developer productivity",
+    "To count the lines of code changed",
+    "To lock the database during a release"
+   ],
+   "tier": 1,
+   "why": "A failing probe should fail the deploy."
+  },
+  {
+   "q": "A developer runs git revert on a commit that is already on main. What happens?",
+   "right": "A new commit is added that undoes the earlier one",
+   "wrong": [
+    "The earlier commit is erased from history",
+    "The branch is deleted",
+    "All later commits are lost"
+   ],
+   "tier": 2,
+   "why": "Revert is history-preserving."
+  },
+  {
+   "q": "In the gglearn deploy script, why is rsync run with --delete while excluding the SQLite files and .env?",
+   "right": "Anything not in the source and not excluded would be removed from the server, so the data and secrets must be excluded",
+   "wrong": [
+    "--delete copies the database to the server, so it needs excluding",
+    "The exclusions make rsync faster",
+    "rsync cannot copy files starting with a dot unless excluded"
+   ],
+   "tier": 2,
+   "why": "Exclusions protect server-only state from --delete."
+  },
+  {
+   "q": "What does the flock step in the gglearn server commands prevent?",
+   "right": "Two deploys running on the server at the same time",
+   "wrong": [
+    "The database being read during a build",
+    "Cloudflare from caching the site",
+    "The app from restarting twice"
+   ],
+   "tier": 2,
+   "why": "flock serialises deploys on the server."
+  },
+  {
+   "q": "Which Cloudflare SSL mode does ggmoney's DEPLOY.md require?",
+   "right": "Full (strict)",
+   "wrong": [
+    "Flexible",
+    "Off",
+    "Any mode, since the origin is on localhost"
+   ],
+   "tier": 2,
+   "why": "Flexible would leave the origin hop unencrypted."
+  },
+  {
+   "q": "Which statement about OAuth 2.0 and OpenID Connect is correct?",
+   "right": "OpenID Connect adds an identity layer on top of OAuth 2.0",
+   "wrong": [
+    "OAuth 2.0 is built on top of OpenID Connect",
+    "They are two names for the same protocol",
+    "OpenID Connect uses XML assertions like SAML"
+   ],
+   "tier": 2,
+   "why": "OIDC returns an ID token saying who logged in."
+  },
+  {
+   "q": "Which Git concept is a movable pointer to a commit?",
+   "right": "A branch",
+   "wrong": [
+    "A tag",
+    "A stash",
+    "A remote"
+   ],
+   "tier": 2,
+   "why": "Tags are fixed names; branches move as you commit."
+  },
+  {
+   "q": "A team ships a change that passes tests but the site is down after release. Which deploy check catches this?",
+   "right": "A health probe that expects HTTP 200 from the running app",
+   "wrong": [
+    "Linting the source",
+    "Running unit tests again",
+    "Checking the pull request description"
+   ],
+   "tier": 2,
+   "why": "Only a check against the running app proves it came back."
+  },
+  {
+   "q": "Which monitoring signal is a numeric measurement sampled over time?",
+   "right": "A metric",
+   "wrong": [
+    "A log line",
+    "A trace span",
+    "A runbook"
+   ],
+   "tier": 2,
+   "why": "Metrics suit charts and thresholds."
+  },
+  {
+   "q": "A team's pull request builds are failing only on Fridays, passing on rerun with no code change. What is the best description?",
+   "right": "A flaky test or environment dependency that should be found and fixed",
+   "wrong": [
+    "A reliable test that should be ignored",
+    "A sign the linter is misconfigured",
+    "Evidence the branch needs rebasing"
+   ],
+   "tier": 3,
+   "why": "Intermittent results with no change are flakiness."
+  },
+  {
+   "q": "A developer rebased a branch other people had already pulled and pushed with force. What is the likely consequence?",
+   "right": "Others have diverging history and may lose or duplicate commits",
+   "wrong": [
+    "Nothing, since rebase never changes hashes",
+    "The remote refuses all later pushes permanently",
+    "Their local branches update automatically without conflict"
+   ],
+   "tier": 3,
+   "why": "Rebase rewrites hashes, so shared branches should not be rebased."
+  },
+  {
+   "q": "gglearn's deploy runs drizzle-kit push without --force. What is the effect on a change that would drop a column with data?",
+   "right": "The deploy stops instead of deleting rows",
+   "wrong": [
+    "The column is dropped silently",
+    "The column is dropped after a backup",
+    "The deploy ignores the change and continues"
+   ],
+   "tier": 3,
+   "why": "No --force means destructive changes need a person."
+  },
+  {
+   "q": "After a gglearn deploy, which step decides whether the deploy is reported as successful?",
+   "right": "Polling http://127.0.0.1:3400/ for HTTP 200",
+   "wrong": [
+    "rsync exiting with status zero",
+    "pm2 save finishing",
+    "next build producing a .next folder"
+   ],
+   "tier": 3,
+   "why": "The final poll proves the app returned."
+  },
+  {
+   "q": "What is the difference between severity and priority on an issue?",
+   "right": "Severity measures the damage; priority says how soon to act",
+   "wrong": [
+    "Severity says when; priority measures the damage",
+    "They are two names for one field",
+    "Severity is set by customers; priority by developers only"
+   ],
+   "tier": 3,
+   "why": "A cosmetic issue on the home page can be low severity yet high priority."
+  },
+  {
+   "q": "Which is the best reason to use a lockfile in CI?",
+   "right": "Every run installs the same dependency versions that were tested",
+   "wrong": [
+    "It speeds up git clone",
+    "It encrypts dependencies",
+    "It removes the need for tests"
+   ],
+   "tier": 3,
+   "why": "Lockfiles make installs repeatable."
+  },
+  {
+   "q": "A production credential is needed by one deploy job only. How should it be handled?",
+   "right": "Scope it to that job or environment so other jobs cannot read it",
+   "wrong": [
+    "Make it available to every job for simplicity",
+    "Commit it to the repository in an encrypted file with the key beside it",
+    "Print it in logs so deploys can be debugged"
+   ],
+   "tier": 3,
+   "why": "Scoping limits the blast radius."
+  },
+  {
+   "q": "Which fits a canary release?",
+   "right": "Sending the new version to a small share of traffic and watching metrics before widening",
+   "wrong": [
+    "Switching all traffic to a second identical environment at once",
+    "Replacing every instance simultaneously",
+    "Deploying only to the staging environment"
+   ],
+   "tier": 3,
+   "why": "A canary limits the number of users affected by a bad release."
+  },
+  {
+   "q": "Moksy's CI declares shared secrets once at the top. Why?",
+   "right": "A copy-per-job approach drifted and one job failed with a too-short secret",
+   "wrong": [
+    "GitHub does not allow secrets inside jobs",
+    "Secrets declared once are encrypted more strongly",
+    "To make the secrets available to production"
+   ],
+   "tier": 3,
+   "why": "Declaring once avoids drift."
+  },
+  {
+   "q": "Which describes SSO most accurately?",
+   "right": "One login gives access to many applications through a central identity provider",
+   "wrong": [
+    "Every application stores its own password",
+    "Passwords are shared among team members",
+    "Users log in with a hardware key only"
+   ],
+   "tier": 3,
+   "why": "SSO centralises authentication."
+  },
+  {
+   "q": "Which Apache directive choice makes the gglearn vhost fail closed if the allow-list file is missing?",
+   "right": "Include (not IncludeOptional)",
+   "wrong": [
+    "IncludeOptional",
+    "Listen",
+    "ServerAlias"
+   ],
+   "tier": 3,
+   "why": "A missing file then stops Apache starting, rather than serving everyone."
+  },
+  {
+   "q": "A team renamed a database column in one release by adding the new column and dropping the old. Rollback now fails. What practice would have avoided this?",
+   "right": "Expand and contract: add the new column, migrate code, then remove the old in a later release",
+   "wrong": [
+    "Make rollback faster",
+    "Run the migration with --force",
+    "Skip staging"
+   ],
+   "tier": 4,
+   "why": "Keeping both versions compatible makes each step reversible."
+  },
+  {
+   "q": "A server accepts traffic directly from the internet as well as via Cloudflare, and rate limiting is easy to evade. What is the root cause?",
+   "right": "Clients can reach the origin and send a forged X-Forwarded-For",
+   "wrong": [
+    "Cloudflare's cache is too small",
+    "The certificate has expired",
+    "The app uses Node"
+   ],
+   "tier": 4,
+   "why": "Origin lockdown makes the header trustworthy."
+  },
+  {
+   "q": "A developer runs git reset --hard and loses commits. What should they try first?",
+   "right": "Look in git reflog for the commit and recover it",
+   "wrong": [
+    "Reclone the repository from scratch",
+    "Run git gc to repair history",
+    "Delete the branch and recreate it"
+   ],
+   "tier": 4,
+   "why": "Reflog remembers where HEAD pointed."
+  },
+  {
+   "q": "A cloud account is used by a pipeline and its key leaks into a public log. What is the right immediate response?",
+   "right": "Revoke and rotate the credential, then review what it could access",
+   "wrong": [
+    "Delete the log line only",
+    "Wait to see whether it is used",
+    "Change the repository name"
+   ],
+   "tier": 4,
+   "why": "A leaked secret must be treated as compromised."
+  },
+  {
+   "q": "An on-call engineer receives dozens of alerts every night that need no action. What problem is this?",
+   "right": "Alert fatigue, to be fixed by removing or tuning alerts nobody acts on",
+   "wrong": [
+    "Healthy monitoring",
+    "A shortage of dashboards",
+    "A need for more alert channels"
+   ],
+   "tier": 4,
+   "why": "Noise hides real alerts."
+  },
+  {
+   "q": "A company wants to ship to production on every green build without a human step. Which practice is that?",
+   "right": "Continuous deployment",
+   "wrong": [
+    "Continuous delivery",
+    "Continuous integration",
+    "Blue-green deployment"
+   ],
+   "tier": 4,
+   "why": "Delivery keeps the final release a human decision."
+  },
+  {
+   "q": "Which service type would suit a small event-driven function that is idle most of the time?",
+   "right": "A serverless function",
+   "wrong": [
+    "A virtual private server",
+    "Block storage",
+    "A container registry"
+   ],
+   "tier": 4,
+   "why": "Serverless bills for execution and can scale to zero."
+  },
+  {
+   "q": "You choose a hosted monitoring tool. Which criteria does the track recommend checking?",
+   "right": "Export, API access, permissions and alert noise",
+   "wrong": [
+    "Brand and logo",
+    "Number of dashboards shipped by default",
+    "Whether the vendor uses the same cloud"
+   ],
+   "tier": 4,
+   "why": "These keep you from lock-in and noisy alerts."
+  },
+  {
+   "q": "ggsocial's deploy builds into a fresh directory and swaps it in. What is the benefit?",
+   "right": "The old build keeps serving while the new one compiles",
+   "wrong": [
+    "The database is backed up",
+    "Dependencies are never reinstalled",
+    "The schema push is skipped"
+   ],
+   "tier": 5,
+   "why": "A failed build leaves the old one running."
+  },
+  {
+   "q": "Which control gives a pipeline step supply-chain protection against a changed third-party action?",
+   "right": "Pin it to a specific immutable commit",
+   "wrong": [
+    "Use the latest tag",
+    "Run it without secrets only on Fridays",
+    "Rename it in the workflow"
+   ],
+   "tier": 5,
+   "why": "Pinning prevents silent upstream changes."
+  },
+  {
+   "q": "An engineer commits a password, notices, and deletes the file in the next commit. What is the state of the password?",
+   "right": "Still in history; treat it as compromised and rotate it",
+   "wrong": [
+    "Removed",
+    "Only visible to admins",
+    "Encrypted by git"
+   ],
+   "tier": 5,
+   "why": "History keeps the old commit."
+  },
+  {
+   "q": "A team has an error budget nearly spent. What is the sensible action?",
+   "right": "Slow risky releases and focus on reliability until the budget recovers",
+   "wrong": [
+    "Release faster to catch up",
+    "Lower the objective",
+    "Delete the alerts"
+   ],
+   "tier": 5,
+   "why": "Spent budget means reliability should take priority."
+  },
+  {
+   "q": "Why can edits to sites-available leave a live HTTPS site unchanged in ggsocial's setup?",
+   "right": "The live vhost is a copy, not a symlink, so the copy must be edited too",
+   "wrong": [
+    "Apache caches config for a year",
+    "configtest ignores sites-available",
+    "The edits need a database push"
+   ],
+   "tier": 5,
+   "why": "Configtest passes because the live file is untouched."
+  },
+  {
+   "q": "A new teammate pushes a fix straight to main and it breaks the build. What control would have prevented it?",
+   "right": "Branch protection requiring a pull request and passing checks",
+   "wrong": [
+    "A longer commit message",
+    "A bigger CI runner",
+    "Deleting the branch afterwards"
+   ],
+   "tier": 3,
+   "why": "Protection blocks direct pushes."
+  },
+  {
+   "q": "A deploy script fails halfway because someone started a second deploy at the same moment. What should the script have used?",
+   "right": "A lock so deploys cannot overlap",
+   "wrong": [
+    "A faster network",
+    "More rsync exclusions",
+    "A different commit message"
+   ],
+   "tier": 3,
+   "why": "flock serialises deploys."
+  },
+  {
+   "q": "A team's staging environment passes but production breaks because staging uses a different database engine. What lesson applies?",
+   "right": "Staging is only useful if it mirrors production closely",
+   "wrong": [
+    "Staging should be removed",
+    "Production should be treated as staging",
+    "Use mocks everywhere"
+   ],
+   "tier": 3,
+   "why": "Differences create untested paths."
+  },
+  {
+   "q": "A developer needs one bugfix from a feature branch on the release branch, without the other work. What should they use?",
+   "right": "git cherry-pick of that commit",
+   "wrong": [
+    "git merge of the whole feature branch",
+    "git reset --hard",
+    "git stash pop"
+   ],
+   "tier": 3,
+   "why": "Cherry-pick applies a single commit."
+  },
+  {
+   "q": "A team's pipeline is green but customers report errors. Tests all use mocks. What gap is likely?",
+   "right": "Missing integration and end-to-end coverage against real dependencies",
+   "wrong": [
+    "The linter is too strict",
+    "Too many unit tests",
+    "The build cache is too small"
+   ],
+   "tier": 4,
+   "why": "Mocks hide real interactions."
+  },
+  {
+   "q": "A leaver still has access to three tools weeks after leaving. What process would have closed this?",
+   "right": "Provisioning through SCIM and periodic access reviews",
+   "wrong": [
+    "Longer passwords",
+    "More dashboards",
+    "Rotating the VPN"
+   ],
+   "tier": 4,
+   "why": "Central provisioning removes access in every tool."
+  },
+  {
+   "q": "A deploy removed the server's .env file and everyone was logged out. What was probably missing?",
+   "right": "An rsync exclusion for .env when using --delete",
+   "wrong": [
+    "A larger server",
+    "A newer Node version",
+    "An extra pm2 process"
+   ],
+   "tier": 4,
+   "why": "With --delete, anything not excluded and absent from source is removed."
+  },
+  {
+   "q": "A project has a backup job but has never restored from one. What risk remains?",
+   "right": "The backup may be unusable and nobody would know until a disaster",
+   "wrong": [
+    "Backups cost too much",
+    "Restores need no testing",
+    "The database is encrypted twice"
+   ],
+   "tier": 4,
+   "why": "Only a restore test proves a backup works."
+  },
+  {
+   "q": "A CI log shows a value from a test secret. The team used dummy CI-only values. What is the impact?",
+   "right": "Minimal, since the value is not a real credential",
+   "wrong": [
+    "Full compromise of production",
+    "The repository must be deleted",
+    "All users must change passwords"
+   ],
+   "tier": 4,
+   "why": "Dummy values are the point of the habit."
+  },
+  {
+   "q": "A team can only fix a bad release by shipping a new version because the schema has already changed irreversibly. What is this called?",
+   "right": "Rolling forward",
+   "wrong": [
+    "Rolling back",
+    "Blue-green switching",
+    "Canary rollback"
+   ],
+   "tier": 5,
+   "why": "A forward fix is the only option."
+  },
+  {
+   "q": "After adding TLS with certbot, the gglearn site is reachable directly from the internet again. What is the most likely cause?",
+   "right": "The port 443 vhost copy lacks the Include line for the Cloudflare-only block",
+   "wrong": [
+    "The certificate is too short",
+    "Cloudflare is down",
+    "pm2 restarted twice"
+   ],
+   "tier": 5,
+   "why": "Certbot copies the 80 vhost, and the copy must carry the Include."
+  },
+  {
+   "q": "A trace shows the request spent most of its time in one downstream service. What would you check next?",
+   "right": "That service's own metrics and logs for the slow period",
+   "wrong": [
+    "The linter configuration",
+    "The repository branch names",
+    "The pull request template"
+   ],
+   "tier": 5,
+   "why": "Traces locate the hop; its metrics and logs explain it."
+  },
+  {
+   "q": "A team is tempted to run drizzle-kit push with --force to get past a failing deploy. What should they ask first?",
+   "right": "Which rows the change would delete, and whether a backup exists",
+   "wrong": [
+    "Whether the deploy is faster with --force",
+    "Whether pm2 is running",
+    "Whether the lockfile is current"
+   ],
+   "tier": 5,
+   "why": "Force skips the safeguard against data loss."
+  },
+  {
+   "q": "A script fetches Cloudflare IP lists and writes the allow-list. The fetch returns an empty list. What should the script do?",
+   "right": "Refuse to write, so an empty allow-list cannot lock everyone out",
+   "wrong": [
+    "Write the empty list anyway",
+    "Delete the vhost",
+    "Allow all traffic"
+   ],
+   "tier": 5,
+   "why": "update-cloudflare-ips.sh checks the lists before writing."
+  }
+ ]
+}

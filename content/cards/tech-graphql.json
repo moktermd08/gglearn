@@ -1,0 +1,2792 @@
+{
+ "slug": "tech-graphql",
+ "name": "Technologies: GraphQL",
+ "description": "GraphQL schemas, queries, mutations, and when to choose it over REST.",
+ "roles": "developer",
+ "kind": "technology",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "sdl": "schema language construct",
+  "op": "GraphQL operation concept",
+  "exec": "execution concept",
+  "perf": "performance technique",
+  "page": "pagination concept",
+  "err": "error handling concept",
+  "sec": "security concern",
+  "cache": "caching approach",
+  "fed": "federation concept",
+  "evo": "schema evolution practice",
+  "cmp": "API design consideration",
+  "client": "client concept",
+  "tool": "tooling or testing item",
+  "co": "GraphQL fact from our stack"
+ },
+ "cards": [
+  {
+   "group": "sdl",
+   "subject": "An object type",
+   "tier": 1,
+   "says": [
+    "declares a named set of fields, each with its own type",
+    "is the main building block of a schema"
+   ],
+   "use": "want to describe an entity such as a User with its fields",
+   "not": [
+    "stores rows of data inside the schema itself"
+   ],
+   "like": [
+    "An input object type",
+    "An interface"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "A scalar type",
+   "tier": 1,
+   "says": [
+    "is a leaf value that has no sub-fields",
+    "includes the built-ins Int, Float, String, Boolean and ID"
+   ],
+   "use": "need a field that returns a plain value rather than an object",
+   "not": [
+    "must be queried with a nested selection set"
+   ],
+   "like": [
+    "A custom scalar",
+    "An enum"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "The non-null marker",
+   "tier": 1,
+   "says": [
+    "is written as an exclamation mark after a type",
+    "promises the server will never return null at that position",
+    "makes a field required when placed on an argument that has no default"
+   ],
+   "use": "want to guarantee that a field always has a value",
+   "not": [
+    "checks the value against a database constraint"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "The list modifier",
+   "tier": 2,
+   "says": [
+    "wraps a type in square brackets to return many values",
+    "can be combined with non-null on the items, the list, or both"
+   ],
+   "use": "need a field that returns several values of one type",
+   "not": [
+    "limits the list to ten items by default"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "An enum",
+   "tier": 2,
+   "says": [
+    "restricts a field or argument to a fixed set of named values",
+    "is serialised as the value name in a JSON response"
+   ],
+   "use": "want a field limited to values such as ACTIVE or CLOSED",
+   "not": [
+    "can hold values of different types at once"
+   ],
+   "like": [
+    "A scalar type"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "An interface",
+   "tier": 3,
+   "says": [
+    "declares fields that every implementing object type must include",
+    "lets a field return different object types that share a set of fields"
+   ],
+   "use": "want several types to share fields and still be returned from one field",
+   "not": [
+    "lets implementing types leave out declared fields"
+   ],
+   "like": [
+    "A union type"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "A union type",
+   "tier": 3,
+   "says": [
+    "groups object types that need not share any fields",
+    "can only contain object types as members",
+    "needs an inline fragment to select fields of a member"
+   ],
+   "use": "want a search field to return either a User or a Post with nothing in common",
+   "not": [
+    "can include scalar types as members"
+   ],
+   "like": [
+    "An interface"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "An input object type",
+   "tier": 2,
+   "says": [
+    "groups several arguments into one structured value",
+    "can only contain fields that are scalars, enums or other input types"
+   ],
+   "use": "want a mutation to accept one structured argument",
+   "not": [
+    "can be returned from a query field"
+   ],
+   "like": [
+    "An object type"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "A custom scalar",
+   "tier": 3,
+   "says": [
+    "adds a leaf type such as DateTime with its own parsing and serialising rules",
+    "keeps its validation logic in server code instead of in the SDL"
+   ],
+   "use": "need a leaf value such as a timestamp that the built-in scalars cannot express",
+   "not": [
+    "is validated automatically by the SDL declaration alone"
+   ],
+   "like": [
+    "A scalar type"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "The Query root type",
+   "tier": 1,
+   "says": [
+    "holds every entry point for reading data",
+    "is the only root type a schema must define"
+   ],
+   "use": "want to know where all read operations begin",
+   "not": [
+    "is optional in a schema"
+   ],
+   "like": [
+    "The Mutation root type"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "The Mutation root type",
+   "tier": 2,
+   "says": [
+    "holds the entry points that change data",
+    "is optional in a schema"
+   ],
+   "use": "want to find where write operations are declared",
+   "not": [
+    "is required in every schema"
+   ],
+   "like": [
+    "The Query root type"
+   ]
+  },
+  {
+   "group": "sdl",
+   "subject": "A field argument",
+   "tier": 2,
+   "says": [
+    "is declared in parentheses after a field name in the SDL",
+    "can carry a default value in the schema"
+   ],
+   "use": "want a field to accept a filter or an id",
+   "not": [
+    "can only be placed on root fields"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "A query",
+   "tier": 1,
+   "says": [
+    "reads data and is not meant to cause side effects",
+    "may have its sibling root fields resolved in parallel"
+   ],
+   "use": "want to fetch a user together with their posts",
+   "not": [
+    "executes its top-level fields strictly one after another"
+   ],
+   "like": [
+    "A mutation"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "A mutation",
+   "tier": 1,
+   "says": [
+    "changes data on the server",
+    "executes its top-level fields serially, in the order written"
+   ],
+   "use": "need to create, update or delete a record",
+   "not": [
+    "runs its top-level fields in parallel for speed"
+   ],
+   "like": [
+    "A query"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "A subscription",
+   "tier": 2,
+   "says": [
+    "keeps a connection open so the server can push events",
+    "is commonly carried over WebSocket or server-sent events"
+   ],
+   "use": "want the client to be told when new messages arrive",
+   "not": [
+    "is answered with one response and then closed"
+   ],
+   "like": [
+    "A query"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "A variable",
+   "tier": 1,
+   "says": [
+    "is declared in the operation with a dollar sign and a type",
+    "is sent in a JSON map separate from the query text"
+   ],
+   "use": "want to reuse one query with different values safely",
+   "not": [
+    "must be spliced into the query string before sending"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "A fragment",
+   "tier": 2,
+   "says": [
+    "names a reusable set of fields on a given type",
+    "is included in a selection with three dots and its name"
+   ],
+   "use": "repeat the same fields in several places in a document",
+   "not": [
+    "is sent to the server as a separate request"
+   ],
+   "like": [
+    "An inline fragment"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "An inline fragment",
+   "tier": 3,
+   "says": [
+    "applies a type condition inside a selection set without a name",
+    "is how fields of one union member are selected"
+   ],
+   "use": "need to read fields that exist only on one member of a union",
+   "not": [
+    "must be declared as a separate named definition"
+   ],
+   "like": [
+    "A fragment"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "An alias",
+   "tier": 2,
+   "says": [
+    "renames a field in the response",
+    "lets one field be requested twice with different arguments"
+   ],
+   "use": "want two results from the same field in one query",
+   "not": [
+    "renames the field in the schema"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "An operation name",
+   "tier": 2,
+   "says": [
+    "labels a query for logs and tooling",
+    "selects which operation runs when a document contains several"
+   ],
+   "use": "want to identify a query in server traces",
+   "not": [
+    "is required for every anonymous shorthand query"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "The @include directive",
+   "tier": 3,
+   "says": [
+    "adds a field only when its if argument is true",
+    "takes a Boolean that is often supplied by a variable"
+   ],
+   "use": "want to fetch an expensive field only when a flag is set",
+   "not": [
+    "removes the field when its if argument is true"
+   ],
+   "like": [
+    "The @skip directive"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "The @skip directive",
+   "tier": 3,
+   "says": [
+    "leaves a field out when its if argument is true",
+    "is the inverse of the include directive"
+   ],
+   "use": "want to omit a field when a flag is set",
+   "not": [
+    "adds the field only when its if argument is true"
+   ],
+   "like": [
+    "The @include directive"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "A selection set",
+   "tier": 1,
+   "says": [
+    "lists the wanted fields inside curly braces",
+    "is required on any field that returns an object type"
+   ],
+   "use": "need to name the fields the response should contain",
+   "not": [
+    "is optional on object-valued fields"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "A variable default value",
+   "tier": 3,
+   "says": [
+    "is used when the client does not send that variable",
+    "is declared next to the variable's type in the operation"
+   ],
+   "use": "want an optional page size to fall back to a safe number",
+   "not": [
+    "overrides a value the client did send"
+   ]
+  },
+  {
+   "group": "op",
+   "subject": "The __typename meta field",
+   "tier": 2,
+   "says": [
+    "returns the name of the object type at that position",
+    "tells apart members of a union or interface in a response"
+   ],
+   "use": "need to know which concrete type came back",
+   "not": [
+    "must be declared in the SDL of each type"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "A resolver",
+   "tier": 1,
+   "says": [
+    "is the function that produces the value of one field",
+    "runs per field while the response tree is built"
+   ],
+   "use": "need a field to read from a database or another service",
+   "not": [
+    "produces the whole response for the entire query"
+   ],
+   "like": [
+    "The default resolver"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "The parent argument",
+   "tier": 3,
+   "says": [
+    "holds the value returned by the enclosing field's resolver",
+    "is the root value for fields on the root types"
+   ],
+   "use": "need a nested field to use data already loaded by its parent",
+   "not": [
+    "contains the arguments sent by the client"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "The context object",
+   "tier": 2,
+   "says": [
+    "is created once per request and shared by all resolvers in it",
+    "is the usual home of the authenticated user and data loaders"
+   ],
+   "use": "want every resolver to see the caller identity",
+   "not": [
+    "is built separately for each field"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "The info argument",
+   "tier": 4,
+   "says": [
+    "carries the parsed operation and schema details for the current field",
+    "exposes the selected sub-fields for look-ahead optimisations"
+   ],
+   "use": "want a resolver to see which columns the client asked for",
+   "not": [
+    "holds the authenticated user"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "The default resolver",
+   "tier": 3,
+   "says": [
+    "reads the property named like the field from the parent object",
+    "means trivial fields need no resolver code"
+   ],
+   "use": "have a field whose name matches a property of the returned object",
+   "not": [
+    "is replaced by an error when no resolver is given"
+   ],
+   "like": [
+    "A resolver"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "The validation phase",
+   "tier": 2,
+   "says": [
+    "checks a parsed document against the schema before any resolver runs",
+    "rejects unknown fields and wrong argument types"
+   ],
+   "use": "want malformed queries rejected without touching data",
+   "not": [
+    "runs after the resolvers have finished"
+   ],
+   "like": [
+    "The execution phase"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "The execution phase",
+   "tier": 3,
+   "says": [
+    "walks the selection set and calls resolvers",
+    "coerces each resolved value to its declared type"
+   ],
+   "use": "want to see where resolver errors are collected",
+   "not": [
+    "rejects documents that mention unknown fields"
+   ],
+   "like": [
+    "The validation phase"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "Null propagation",
+   "tier": 3,
+   "says": [
+    "turns a null in a non-null field into a null of the nearest nullable parent",
+    "can null an entire list item or object"
+   ],
+   "use": "see a whole parent object vanish after one non-null field failed",
+   "not": [
+    "always fails the whole request with no data"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "Abstract type resolution",
+   "tier": 4,
+   "says": [
+    "decides which concrete object type an interface or union value is",
+    "is needed whenever a field returns an interface or union"
+   ],
+   "use": "need the server to name the concrete type of a returned value",
+   "not": [
+    "is skipped when the client uses a fragment"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "Variable coercion",
+   "tier": 4,
+   "says": [
+    "converts the JSON variable values to the declared input types",
+    "fails the request before execution when a variable has the wrong type"
+   ],
+   "use": "see an error for a variable sent as the wrong type",
+   "not": [
+    "is performed separately by each resolver"
+   ],
+   "like": [
+    "The validation phase"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "The N+1 problem",
+   "tier": 2,
+   "says": [
+    "runs one query for a list and one more query per item for a nested field",
+    "appears when each resolver loads its own data independently"
+   ],
+   "use": "see fifty author lookups after loading fifty posts",
+   "not": [
+    "is caused by using too many mutations"
+   ],
+   "like": [
+    "A DataLoader"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "A DataLoader",
+   "tier": 3,
+   "says": [
+    "collects the keys requested within one tick and fetches them in one batch",
+    "memoises results per key for the lifetime of the instance"
+   ],
+   "use": "need to turn many single-key lookups into one batched call",
+   "not": [
+    "splits one large batch into many single lookups"
+   ],
+   "like": [
+    "The N+1 problem"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "A per-request DataLoader",
+   "tier": 4,
+   "says": [
+    "is created inside the context for each request",
+    "prevents cached data from leaking between users"
+   ],
+   "use": "must avoid sharing cached results across different callers",
+   "not": [
+    "is shared by all requests for speed"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "A query depth limit",
+   "tier": 3,
+   "says": [
+    "rejects documents nested deeper than a set number of levels",
+    "blocks cyclic queries such as author, posts, author, posts"
+   ],
+   "use": "face clients writing deeply nested cyclic queries",
+   "not": [
+    "measures how many fields a query selects in total"
+   ],
+   "like": [
+    "Query complexity analysis"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Query complexity analysis",
+   "tier": 4,
+   "says": [
+    "assigns a cost to each field and rejects queries above a budget",
+    "can multiply cost by list-size arguments such as first"
+   ],
+   "use": "need to stop a shallow query that still asks for huge lists",
+   "not": [
+    "counts only how deep the query is nested"
+   ],
+   "like": [
+    "A query depth limit"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Persisted queries",
+   "tier": 3,
+   "says": [
+    "replace the query text with an identifier the server already knows",
+    "reduce request size and permit GET requests"
+   ],
+   "use": "want small requests that a CDN can cache",
+   "not": [
+    "require the client to send the full query every time"
+   ],
+   "like": [
+    "Automatic persisted queries"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Automatic persisted queries",
+   "tier": 4,
+   "says": [
+    "register a query hash when the server reports it missing",
+    "retry the request with the full text on a cache miss"
+   ],
+   "use": "want persisted queries without a build-time registration step",
+   "not": [
+    "need all queries to be registered before deployment"
+   ],
+   "like": [
+    "Persisted queries"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Query batching",
+   "tier": 4,
+   "says": [
+    "sends several operations in one HTTP request as an array",
+    "can hide the real operation count from per-request rate limits"
+   ],
+   "use": "want to cut round trips by combining unrelated operations",
+   "not": [
+    "merges the operations into one query with shared variables"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Cost-based rate limiting",
+   "tier": 4,
+   "says": [
+    "limits clients by the computed cost of their queries",
+    "treats a small cheap request and a huge nested one differently"
+   ],
+   "use": "find request counts a poor measure of load",
+   "not": [
+    "counts every request as identical"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Resolver tracing",
+   "tier": 4,
+   "says": [
+    "records timings per resolver to reveal slow fields",
+    "helps find which field causes a slow query"
+   ],
+   "use": "need to find which field makes one query slow",
+   "not": [
+    "changes how resolvers are executed"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Look-ahead fetching",
+   "tier": 5,
+   "says": [
+    "uses the selected sub-fields to join or select needed columns in one query",
+    "can remove an N+1 without a loader"
+   ],
+   "use": "want the parent resolver to load related rows in a single database call",
+   "not": [
+    "ignores which fields the client selected"
+   ],
+   "like": [
+    "A DataLoader"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "Offset pagination",
+   "tier": 1,
+   "says": [
+    "uses skip and limit or page numbers",
+    "can skip or repeat items when rows are inserted between requests",
+    "usually gets slower as the offset grows"
+   ],
+   "use": "need simple numbered pages over data that rarely changes",
+   "not": [
+    "stays stable while new items are inserted"
+   ],
+   "like": [
+    "Cursor pagination"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "Cursor pagination",
+   "tier": 2,
+   "says": [
+    "uses a position marker to fetch the next page",
+    "stays stable when items are inserted or removed during paging"
+   ],
+   "use": "page through a feed that changes while the user scrolls",
+   "not": [
+    "identifies a page by its number"
+   ],
+   "like": [
+    "Offset pagination"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "A connection",
+   "tier": 3,
+   "says": [
+    "wraps a list in edges and page information",
+    "is the standard Relay shape for paginated fields"
+   ],
+   "use": "want a list field that pages by cursor",
+   "not": [
+    "is a plain array of nodes"
+   ],
+   "like": [
+    "An edge"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "An edge",
+   "tier": 3,
+   "says": [
+    "pairs a node with its cursor",
+    "can hold extra data about the relationship"
+   ],
+   "use": "need to attach the cursor or relationship data to one list item",
+   "not": [
+    "reports whether more pages exist"
+   ],
+   "like": [
+    "PageInfo"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "PageInfo",
+   "tier": 3,
+   "says": [
+    "reports hasNextPage, hasPreviousPage, startCursor and endCursor",
+    "tells the client whether to request another page"
+   ],
+   "use": "need to know if there is another page to load",
+   "not": [
+    "holds the list items themselves"
+   ],
+   "like": [
+    "An edge"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "The first and after arguments",
+   "tier": 3,
+   "says": [
+    "request the first N items after a given cursor",
+    "are used to move forward through a connection"
+   ],
+   "use": "want the next ten items following the last cursor received",
+   "not": [
+    "page backwards from a cursor"
+   ],
+   "like": [
+    "The last and before arguments"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "The last and before arguments",
+   "tier": 4,
+   "says": [
+    "request the last N items before a given cursor",
+    "are used to move backward through a connection"
+   ],
+   "use": "need to page backwards from a known cursor",
+   "not": [
+    "move forward through a connection"
+   ],
+   "like": [
+    "The first and after arguments"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "An opaque cursor",
+   "tier": 4,
+   "says": [
+    "should be treated by clients as a meaningless string",
+    "lets the server change its encoding without breaking clients"
+   ],
+   "use": "want freedom to change how positions are encoded",
+   "not": [
+    "is a number the client may compute"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "A totalCount field",
+   "tier": 4,
+   "says": [
+    "is a common extra on connections but not part of the standard shape",
+    "can be expensive to compute on large tables"
+   ],
+   "use": "must show the number of matches next to a paged list",
+   "not": [
+    "is required by the connection specification"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "Keyset pagination",
+   "tier": 5,
+   "says": [
+    "turns a cursor into a WHERE clause on an indexed sort key",
+    "avoids the cost of scanning skipped rows"
+   ],
+   "use": "need fast deep paging over a large indexed table",
+   "not": [
+    "counts and discards the skipped rows"
+   ],
+   "like": [
+    "Offset pagination"
+   ]
+  },
+  {
+   "group": "page",
+   "subject": "Global object identification",
+   "tier": 5,
+   "says": [
+    "gives every object an id unique across types",
+    "adds a node field that fetches any object by that id"
+   ],
+   "use": "want clients to refetch any object using only its id",
+   "not": [
+    "uses a separate endpoint for each type"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "The errors array",
+   "tier": 1,
+   "says": [
+    "lists problems found while processing a request",
+    "sits at the top level beside data in the response"
+   ],
+   "use": "want to see why a field failed",
+   "not": [
+    "is returned inside each field's value"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A partial response",
+   "tier": 3,
+   "says": [
+    "carries data for some fields and null with errors for others",
+    "occurs when a nullable field's resolver fails"
+   ],
+   "use": "see a response that is part data and part errors",
+   "not": [
+    "occurs only when the whole request failed"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "An HTTP 200 carrying errors",
+   "tier": 2,
+   "says": [
+    "means the transport succeeded while one or more fields failed",
+    "is why clients must inspect the errors key and not only the status code"
+   ],
+   "use": "find a monitoring dashboard showing success while users see failures",
+   "not": [
+    "always signals a successful operation"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "An error path",
+   "tier": 3,
+   "says": [
+    "points to the response field that failed",
+    "contains field names and list indexes"
+   ],
+   "use": "need to locate which list item caused an error",
+   "not": [
+    "names the resolver file and line"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "Error extensions",
+   "tier": 3,
+   "says": [
+    "carry machine-readable details such as a code",
+    "are the place for custom data on an error"
+   ],
+   "use": "want clients to react to an error code rather than parse a message",
+   "not": [
+    "replace the error message field"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A validation error",
+   "tier": 2,
+   "says": [
+    "is returned before execution when the document does not match the schema",
+    "usually comes with no data key"
+   ],
+   "use": "send a query that selects a field that does not exist",
+   "not": [
+    "is raised by the resolver of the failed field"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "Errors as data",
+   "tier": 4,
+   "says": [
+    "models expected failures as types such as a union of success and error objects",
+    "lets clients branch on a type with a fragment"
+   ],
+   "use": "want clients to handle email-already-taken without parsing strings",
+   "not": [
+    "puts every failure in the top-level errors array"
+   ],
+   "like": [
+    "A mutation payload with user errors"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A mutation payload with user errors",
+   "tier": 4,
+   "says": [
+    "returns the changed object together with a list of domain errors",
+    "leaves the errors array for unexpected failures"
+   ],
+   "use": "need a mutation to report which input fields were invalid",
+   "not": [
+    "throws on every invalid input"
+   ],
+   "like": [
+    "Errors as data"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "Error masking",
+   "tier": 4,
+   "says": [
+    "hides internal exception details from clients in production",
+    "logs the original error on the server"
+   ],
+   "use": "find stack traces or database messages appearing in responses",
+   "not": [
+    "adds more detail to client-visible messages"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "A nullable field as error boundary",
+   "tier": 4,
+   "says": [
+    "limits how far a failure's null spreads",
+    "lets the rest of the response survive a failing field"
+   ],
+   "use": "want a flaky downstream service to fail only its own field",
+   "not": [
+    "makes any failure remove the whole response"
+   ],
+   "like": [
+    "Null propagation"
+   ]
+  },
+  {
+   "group": "err",
+   "subject": "Retrying a mutation",
+   "tier": 5,
+   "says": [
+    "is unsafe unless the operation is idempotent or carries an idempotency key",
+    "can create duplicates after a timeout"
+   ],
+   "use": "see a client retry a create after a network timeout",
+   "not": [
+    "is always safe because mutations are atomic"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Introspection",
+   "tier": 1,
+   "says": [
+    "lets clients query the schema through the __schema and __type fields",
+    "powers docs and autocomplete in developer tools"
+   ],
+   "use": "want a tool to list the types and fields of a server",
+   "not": [
+    "is a separate endpoint on the server"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Turning off introspection",
+   "tier": 3,
+   "says": [
+    "reduces schema discovery but is not access control",
+    "does not stop attackers who can guess field names"
+   ],
+   "use": "hear that hiding the schema is enough to protect it",
+   "not": [
+    "makes unauthorised queries impossible"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Field suggestions",
+   "tier": 4,
+   "says": [
+    "leak schema names through did-you-mean validation messages",
+    "can reveal fields even when introspection is off"
+   ],
+   "use": "find field names leaking from error messages with introspection disabled",
+   "not": [
+    "only appear when introspection is on"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Authentication",
+   "tier": 2,
+   "says": [
+    "identifies the caller, usually from a token header read when building the context",
+    "happens before the resolvers run"
+   ],
+   "use": "need to know who is making the request",
+   "not": [
+    "is decided separately by each field"
+   ],
+   "like": [
+    "Authorization in resolvers"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Authorization in resolvers",
+   "tier": 3,
+   "says": [
+    "checks whether the caller may see a field or object",
+    "must cover every path that reaches the data, not only the top-level field"
+   ],
+   "use": "need to restrict a field to its owner",
+   "not": [
+    "is satisfied by checking only the root query"
+   ],
+   "like": [
+    "Authorization in the business layer"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Authorization in the business layer",
+   "tier": 4,
+   "says": [
+    "keeps permission rules in one place shared by every resolver and other entry point",
+    "avoids copying checks into each resolver"
+   ],
+   "use": "want the same rules for GraphQL, REST and background jobs",
+   "not": [
+    "is repeated by hand inside each resolver"
+   ],
+   "like": [
+    "Authorization in resolvers"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Alias-based abuse",
+   "tier": 4,
+   "says": [
+    "repeats an expensive field or login attempt many times in one request using aliases",
+    "bypasses limits that count requests"
+   ],
+   "use": "see hundreds of guesses inside a single HTTP request",
+   "not": [
+    "requires many separate HTTP requests"
+   ],
+   "like": [
+    "Query batching"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "CSRF on a GraphQL endpoint",
+   "tier": 4,
+   "says": [
+    "is possible when the server accepts GET or form-encoded POSTs with cookie authentication",
+    "is reduced by requiring a JSON content type"
+   ],
+   "use": "run a GraphQL endpoint that authenticates with cookies",
+   "not": [
+    "is impossible because all requests are POST"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "SQL injection in a resolver",
+   "tier": 3,
+   "says": [
+    "still happens when a resolver concatenates an argument into SQL",
+    "is prevented by parameterised queries"
+   ],
+   "use": "find user input spliced into a database query in resolver code",
+   "not": [
+    "is blocked by the GraphQL type system"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A persisted query allowlist",
+   "tier": 4,
+   "says": [
+    "executes only registered documents and rejects arbitrary ones",
+    "shrinks the attack surface for first-party clients"
+   ],
+   "use": "serve only your own apps and want to refuse unknown queries",
+   "not": [
+    "is the same as turning off introspection"
+   ],
+   "like": [
+    "Persisted queries"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Broken object-level authorization",
+   "tier": 4,
+   "says": [
+    "occurs when a lookup by id returns any object whose id the caller guesses",
+    "is checked per object, not per field type"
+   ],
+   "use": "see node(id) return another user's record",
+   "not": [
+    "is prevented by making ids long and random"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A bearer token header",
+   "tier": 3,
+   "says": [
+    "carries the credential in the Authorization header",
+    "keeps secrets out of query text and logs"
+   ],
+   "use": "must send a credential to a GraphQL API safely",
+   "not": [
+    "is placed in a query variable named token"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "HTTP caching of POST queries",
+   "tier": 2,
+   "says": [
+    "is generally not applied by browsers and CDNs by default",
+    "is why URL-keyed caching helps little with a single endpoint"
+   ],
+   "use": "find the CDN not caching a GraphQL API",
+   "not": [
+    "works automatically for every request"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "GET queries",
+   "tier": 3,
+   "says": [
+    "put the query and variables in the URL so caches can key them",
+    "are limited by URL length unless persisted queries are used"
+   ],
+   "use": "want a CDN to cache a read-only operation",
+   "not": [
+    "are used for mutations as well"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A normalized client cache",
+   "tier": 3,
+   "says": [
+    "stores objects by type and id and shares them across queries",
+    "updates every view that shows an object after one fetch"
+   ],
+   "use": "want one edit to refresh the same object everywhere on screen",
+   "not": [
+    "stores each query result as an isolated blob"
+   ],
+   "like": [
+    "A document cache"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A document cache",
+   "tier": 3,
+   "says": [
+    "stores each whole query result keyed by query and variables",
+    "does not share objects between different queries"
+   ],
+   "use": "want a simple client cache without identity rules",
+   "not": [
+    "merges objects by id across queries"
+   ],
+   "like": [
+    "A normalized client cache"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Server response caching",
+   "tier": 3,
+   "says": [
+    "stores whole responses keyed by query and variables",
+    "must be partitioned per user for private data"
+   ],
+   "use": "serve many identical public queries quickly",
+   "not": [
+    "is safe to share between users for private data"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Cache control hints",
+   "tier": 4,
+   "says": [
+    "set a max-age on types or fields",
+    "produce a response policy equal to the lowest value among fields returned"
+   ],
+   "use": "want the server to emit a Cache-Control header for a response",
+   "not": [
+    "use the highest max-age of the fields returned"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "Field-level caching",
+   "tier": 4,
+   "says": [
+    "caches the result of one resolver, for example in Redis",
+    "helps when one field is slow but its parent is not"
+   ],
+   "use": "have one costly field reused by many queries",
+   "not": [
+    "stores whole HTTP responses"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A mutation that returns the changed object",
+   "tier": 3,
+   "says": [
+    "updates normalized cache entries by id automatically",
+    "avoids a manual refetch"
+   ],
+   "use": "want the UI to update after an edit without extra queries",
+   "not": [
+    "leaves cached copies stale until a page reload"
+   ]
+  },
+  {
+   "group": "cache",
+   "subject": "A private cache scope",
+   "tier": 4,
+   "says": [
+    "keeps personalised responses out of shared caches",
+    "is set when a response depends on the caller"
+   ],
+   "use": "cache a response that includes the current user's data",
+   "not": [
+    "allows a CDN to serve it to everyone"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "Federation",
+   "tier": 2,
+   "says": [
+    "composes several services' graphs into one unified schema",
+    "lets teams own separate parts of one graph"
+   ],
+   "use": "want many teams to contribute to one client-facing graph",
+   "not": [
+    "merges all services into a single deployable"
+   ],
+   "like": [
+    "Schema stitching"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "A subgraph",
+   "tier": 2,
+   "says": [
+    "is one service that owns part of the overall graph",
+    "publishes its own schema to be composed"
+   ],
+   "use": "need to describe a single team's service in a federated graph",
+   "not": [
+    "is what clients query directly"
+   ],
+   "like": [
+    "A supergraph"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "A supergraph",
+   "tier": 3,
+   "says": [
+    "is the composed schema clients see",
+    "is produced by combining all subgraph schemas"
+   ],
+   "use": "want the unified schema that front-end teams use",
+   "not": [
+    "is a single service that holds all data"
+   ],
+   "like": [
+    "A subgraph"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "A router",
+   "tier": 3,
+   "says": [
+    "receives client queries and plans how to fetch them from subgraphs",
+    "combines the subgraph results into one response"
+   ],
+   "use": "need a front door that fans a query out to services",
+   "not": [
+    "stores the business data itself"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "A query plan",
+   "tier": 4,
+   "says": [
+    "lists the subgraph fetches and the order they depend on",
+    "is produced by the router for each operation"
+   ],
+   "use": "want to understand why one query calls several services",
+   "not": [
+    "is written by hand for each client"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "An entity",
+   "tier": 3,
+   "says": [
+    "is an object type shared across subgraphs and identified by key fields",
+    "can have fields contributed by more than one subgraph"
+   ],
+   "use": "need a User type with data owned by different teams",
+   "not": [
+    "is limited to a single subgraph"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "The @key directive",
+   "tier": 3,
+   "says": [
+    "declares the fields that uniquely identify an entity",
+    "lets other subgraphs reference the entity"
+   ],
+   "use": "want to share a type across services using its id",
+   "not": [
+    "marks a field as deprecated"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "A reference resolver",
+   "tier": 4,
+   "says": [
+    "loads an entity from its key representation inside the owning subgraph",
+    "is called when the router asks for entity fields"
+   ],
+   "use": "need a subgraph to resolve a User given only an id",
+   "not": [
+    "resolves the root Query fields of the router"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "Schema stitching",
+   "tier": 4,
+   "says": [
+    "merges schemas at a gateway through hand-written configuration",
+    "puts the merge logic in the gateway rather than in each service"
+   ],
+   "use": "combine existing schemas without changes to the services",
+   "not": [
+    "relies on directives declared by each service"
+   ],
+   "like": [
+    "Federation"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "Composition",
+   "tier": 4,
+   "says": [
+    "checks that subgraph schemas fit together",
+    "fails when subgraphs define conflicting types"
+   ],
+   "use": "find out whether independent subgraph schemas can be merged",
+   "not": [
+    "runs on every client request"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "The @external directive",
+   "tier": 5,
+   "says": [
+    "marks a field as owned by another subgraph but referenced locally",
+    "is used together with requires or provides"
+   ],
+   "use": "need a subgraph to mention a field it does not own",
+   "not": [
+    "hides a field from clients"
+   ]
+  },
+  {
+   "group": "fed",
+   "subject": "A GraphQL BFF",
+   "tier": 3,
+   "says": [
+    "sits in front of existing REST services to give one client-facing graph",
+    "adapts several back ends to one frontend's needs"
+   ],
+   "use": "have many REST services and one app needing a single graph",
+   "not": [
+    "replaces the REST services entirely"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "An additive change",
+   "tier": 2,
+   "says": [
+    "adds new fields, types or optional arguments",
+    "does not break existing clients"
+   ],
+   "use": "want to ship a schema change with no client impact",
+   "not": [
+    "removes an existing field"
+   ],
+   "like": [
+    "A breaking change"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "The @deprecated directive",
+   "tier": 2,
+   "says": [
+    "marks a field or enum value as obsolete with a reason",
+    "keeps the field working while tools warn about it"
+   ],
+   "use": "need to retire a field without breaking clients today",
+   "not": [
+    "deletes the field from responses"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "A breaking change",
+   "tier": 3,
+   "says": [
+    "removes or renames a field, or makes an argument required",
+    "can fail existing client queries"
+   ],
+   "use": "must decide whether a change is safe for deployed apps",
+   "not": [
+    "adds an optional field"
+   ],
+   "like": [
+    "An additive change"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Versionless evolution",
+   "tier": 3,
+   "says": [
+    "evolves one schema continuously instead of publishing v2 URLs",
+    "relies on additive changes and deprecation"
+   ],
+   "use": "want to avoid numbered API versions",
+   "not": [
+    "requires a new endpoint for each change"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Field usage tracking",
+   "tier": 4,
+   "says": [
+    "shows which clients still request a deprecated field",
+    "tells you when a field is safe to remove"
+   ],
+   "use": "need evidence before removing a deprecated field",
+   "not": [
+    "lists fields no schema defines"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Changing nullability",
+   "tier": 4,
+   "says": [
+    "can break clients when an output field loosens or an input argument tightens",
+    "must be reviewed like a type change"
+   ],
+   "use": "plan to turn a non-null output field into a nullable one",
+   "not": [
+    "is always backward compatible"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Adding an enum value",
+   "tier": 5,
+   "says": [
+    "can break clients that switch exhaustively over the enum",
+    "is additive in the schema but not always in client code"
+   ],
+   "use": "add a new status to an enum used by mobile apps",
+   "not": [
+    "is always safe for every client"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Schema checks in CI",
+   "tier": 4,
+   "says": [
+    "diff a proposed schema against the registry and observed traffic",
+    "flag breaking changes before merge"
+   ],
+   "use": "want builds to fail on unsafe schema changes",
+   "not": [
+    "run only after deployment"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Schema-first design",
+   "tier": 3,
+   "says": [
+    "starts from SDL and then writes resolvers to match",
+    "makes the schema a contract reviewed separately from code"
+   ],
+   "use": "want product and front-end teams to review the API before code exists",
+   "not": [
+    "generates the schema from resolver classes"
+   ],
+   "like": [
+    "Code-first design"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "Code-first design",
+   "tier": 3,
+   "says": [
+    "builds the schema from definitions written in the host language",
+    "generates the SDL as an output"
+   ],
+   "use": "want types and schema to come from one set of code definitions",
+   "not": [
+    "starts from a hand-written SDL file"
+   ],
+   "like": [
+    "Schema-first design"
+   ]
+  },
+  {
+   "group": "evo",
+   "subject": "GraphQL naming conventions",
+   "tier": 2,
+   "says": [
+    "use camelCase for fields, PascalCase for types and uppercase snake case for enum values",
+    "keep schemas readable for every consuming team"
+   ],
+   "use": "need a consistent style for a new schema",
+   "not": [
+    "require snake_case for fields"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "Over-fetching",
+   "tier": 1,
+   "says": [
+    "means receiving more fields than the client uses",
+    "is reduced in GraphQL because clients choose the fields"
+   ],
+   "use": "find a mobile screen downloading unused fields",
+   "not": [
+    "means asking for too few fields"
+   ],
+   "like": [
+    "Under-fetching"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "Under-fetching",
+   "tier": 2,
+   "says": [
+    "forces multiple round trips to assemble one screen",
+    "is a common reason to move to GraphQL"
+   ],
+   "use": "need several REST calls to render one page",
+   "not": [
+    "returns too many fields in one call"
+   ],
+   "like": [
+    "Over-fetching"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "The single GraphQL endpoint",
+   "tier": 1,
+   "says": [
+    "routes every operation through one URL, typically over POST",
+    "puts the operation in the request body"
+   ],
+   "use": "look for the URL of a GraphQL API",
+   "not": [
+    "uses a different URL for each resource"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "A typed schema contract",
+   "tier": 2,
+   "says": [
+    "documents and validates every operation",
+    "lets tools generate types and docs"
+   ],
+   "use": "want clients and servers to agree on exact shapes",
+   "not": [
+    "is optional and unchecked by the server"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "HTTP status codes in GraphQL",
+   "tier": 3,
+   "says": [
+    "mostly report transport problems, not field-level outcomes",
+    "are less expressive than REST codes such as 404 or 409"
+   ],
+   "use": "see a failed record lookup returning 200",
+   "not": [
+    "map one-to-one to every field error"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "File upload in GraphQL",
+   "tier": 3,
+   "says": [
+    "is not defined by the core specification",
+    "is often handled by a multipart extension or signed URLs"
+   ],
+   "use": "need to send a file through an API",
+   "not": [
+    "is built into the query language as a scalar"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "REST resource URLs",
+   "tier": 3,
+   "says": [
+    "let HTTP caches and CDNs key responses by URL",
+    "are shaped by the server for each resource"
+   ],
+   "use": "want standard HTTP caching with no extra machinery",
+   "not": [
+    "need a persisted query to be cached"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "Many clients with differing data needs",
+   "tier": 3,
+   "says": [
+    "favour GraphQL when web, mobile and partners want different slices",
+    "benefit from clients choosing their own fields"
+   ],
+   "use": "serve web, mobile and partner apps from one API",
+   "not": [
+    "favour a fixed REST payload"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "Simple CRUD with one client",
+   "tier": 3,
+   "says": [
+    "often favours REST for its simplicity and caching",
+    "needs less machinery than a GraphQL server"
+   ],
+   "use": "build a small internal service with a single consuming app",
+   "not": [
+    "requires GraphQL for typed contracts"
+   ]
+  },
+  {
+   "group": "cmp",
+   "subject": "Server-side complexity",
+   "tier": 4,
+   "says": [
+    "shifts to the server in GraphQL through resolvers, batching and cost limits",
+    "is the price paid for client flexibility"
+   ],
+   "use": "weigh the operational cost of running a GraphQL server",
+   "not": [
+    "disappears when clients choose their own fields"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "Apollo Client",
+   "tier": 2,
+   "says": [
+    "is a GraphQL client with a normalized in-memory cache",
+    "offers hooks such as useQuery for React"
+   ],
+   "use": "want a full-featured React client with a normalized cache",
+   "not": [
+    "is a GraphQL server implementation"
+   ],
+   "like": [
+    "urql",
+    "Relay"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "urql",
+   "tier": 3,
+   "says": [
+    "is a lighter GraphQL client built around a pipeline of exchanges",
+    "caches whole documents by default with an optional normalized cache"
+   ],
+   "use": "want a small, extensible client where caching is a pluggable exchange",
+   "not": [
+    "requires a compiler step for every query"
+   ],
+   "like": [
+    "Apollo Client",
+    "Relay"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "Relay",
+   "tier": 4,
+   "says": [
+    "expects fragments colocated with components and a compiler step",
+    "uses connections and global ids by convention"
+   ],
+   "use": "build a large React app with strict data-masking conventions",
+   "not": [
+    "works with any schema shape without conventions"
+   ],
+   "like": [
+    "Apollo Client",
+    "urql"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "A fetch policy",
+   "tier": 3,
+   "says": [
+    "chooses between cache and network for each query",
+    "includes options such as cache-first and network-only"
+   ],
+   "use": "need a screen to always show fresh data",
+   "not": [
+    "is set once for the whole schema on the server"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "Fragment colocation",
+   "tier": 4,
+   "says": [
+    "keeps each component's data needs next to the component",
+    "lets a parent compose children's fragments into one query"
+   ],
+   "use": "want components to declare exactly the data they use",
+   "not": [
+    "puts every query in one central file"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "An optimistic response",
+   "tier": 3,
+   "says": [
+    "shows the expected result in the UI before the server confirms",
+    "rolls back if the mutation fails"
+   ],
+   "use": "want instant feedback when a user likes a post",
+   "not": [
+    "waits for the server before updating the UI"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "Polling",
+   "tier": 3,
+   "says": [
+    "re-runs a query on a fixed interval",
+    "needs no persistent connection"
+   ],
+   "use": "want periodic refresh without WebSockets",
+   "not": [
+    "pushes updates from the server instantly"
+   ],
+   "like": [
+    "A subscription"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "Network error versus GraphQL error",
+   "tier": 3,
+   "says": [
+    "separates a failed transport from field errors in a response",
+    "needs different handling in the client"
+   ],
+   "use": "need to tell offline from a resolver failure",
+   "not": [
+    "are the same thing in all clients"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "Query deduplication",
+   "tier": 4,
+   "says": [
+    "sends one network request when identical queries fire at once",
+    "shares the result with all waiting components"
+   ],
+   "use": "see many components asking for the same data on mount",
+   "not": [
+    "merges different queries into one"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "A cache merge function",
+   "tier": 5,
+   "says": [
+    "tells the client how to combine pages of a list into one cache field",
+    "is needed for infinite scroll with cursors"
+   ],
+   "use": "load more pages and see the cache replacing earlier items",
+   "not": [
+    "replaces the earlier items with each new page"
+   ]
+  },
+  {
+   "group": "client",
+   "subject": "Server-sent events",
+   "tier": 4,
+   "says": [
+    "carry one-way server push over plain HTTP",
+    "can serve as a transport for subscriptions"
+   ],
+   "use": "want subscriptions without WebSockets",
+   "not": [
+    "offer two-way messaging on one socket"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "GraphiQL",
+   "tier": 1,
+   "says": [
+    "is an in-browser IDE for writing and running queries",
+    "uses introspection for docs and autocomplete"
+   ],
+   "use": "want to try queries against a server from the browser",
+   "not": [
+    "is a production client library"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "A plain HTTP POST request",
+   "tier": 1,
+   "says": [
+    "carries JSON with query, variables and an optional operation name",
+    "works from curl or any HTTP library"
+   ],
+   "use": "need to call a GraphQL server without a client library",
+   "not": [
+    "sends the query as a form field named document"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "GraphQL Code Generator",
+   "tier": 3,
+   "says": [
+    "generates typed code from the schema and operations",
+    "keeps client types in step with the schema"
+   ],
+   "use": "want TypeScript types derived from queries",
+   "not": [
+    "hosts the GraphQL server"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Schema linting",
+   "tier": 3,
+   "says": [
+    "enforces naming, description and style rules on the schema",
+    "runs in CI beside schema checks"
+   ],
+   "use": "need to keep a large schema consistent across teams",
+   "not": [
+    "executes queries against test data"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "graphql-js",
+   "tier": 3,
+   "says": [
+    "is the reference implementation in JavaScript",
+    "exposes a graphql function that executes a query against a schema"
+   ],
+   "use": "need to run a query against a schema inside a test",
+   "not": [
+    "is a React client library"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "A resolver unit test",
+   "tier": 2,
+   "says": [
+    "calls a resolver directly with mock parent, args and context",
+    "runs fast with no HTTP"
+   ],
+   "use": "want to check one resolver's logic alone",
+   "not": [
+    "boots the full HTTP server"
+   ],
+   "like": [
+    "An end-to-end HTTP test"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "A schema execution test",
+   "tier": 3,
+   "says": [
+    "runs a real query document against the schema with test data",
+    "covers resolvers wired together"
+   ],
+   "use": "verify that fields, arguments and resolvers work together",
+   "not": [
+    "calls the resolver function with no schema"
+   ],
+   "like": [
+    "A resolver unit test"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "An end-to-end HTTP test",
+   "tier": 4,
+   "says": [
+    "posts to the real endpoint to cover auth middleware and context creation",
+    "catches wiring that schema-level tests skip"
+   ],
+   "use": "need to confirm headers and context reach resolvers",
+   "not": [
+    "calls resolvers directly"
+   ],
+   "like": [
+    "A resolver unit test"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "A schema snapshot test",
+   "tier": 4,
+   "says": [
+    "prints the SDL and fails on unplanned changes",
+    "makes schema edits visible in review"
+   ],
+   "use": "want an unintended type change to fail a test",
+   "not": [
+    "checks resolver outputs"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Schema mocking",
+   "tier": 3,
+   "says": [
+    "returns generated fake data for each type from the schema alone",
+    "lets front-end teams work before the back end exists"
+   ],
+   "use": "want a front-end team to build against a not-yet-implemented API",
+   "not": [
+    "calls the real database"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "gglearn and ggsocial APIs",
+   "tier": 1,
+   "says": [
+    "are REST-style Next.js route handlers, not GraphQL",
+    "are validated per route with a schema library"
+   ],
+   "use": "look for a GraphQL server in our apps",
+   "not": [
+    "serve a single GraphQL endpoint"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The ggsocial GitHub adapter",
+   "tier": 2,
+   "says": [
+    "consumes GitHub's GraphQL endpoint to create Discussions",
+    "sends a POST whose JSON holds a query and variables",
+    "authenticates with a fine-grained personal access token sent as Bearer"
+   ],
+   "use": "see how our code calls a GraphQL API",
+   "not": [
+    "exposes a GraphQL schema of its own"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "GitHub node IDs",
+   "tier": 3,
+   "says": [
+    "are required for the repository and category in createDiscussion",
+    "are the reason the adapter's form asks the operator for them"
+   ],
+   "use": "configure the GitHub Discussions adapter",
+   "not": [
+    "are optional because names are accepted instead"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The createDiscussion mutation",
+   "tier": 3,
+   "says": [
+    "takes a CreateDiscussionInput with repository, category, title and body",
+    "asks back only the new discussion's id and url"
+   ],
+   "use": "see what the adapter requests back from GitHub",
+   "not": [
+    "returns the full discussion thread"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "The adapter's errors check",
+   "tier": 3,
+   "says": [
+    "reads the errors array and throws instead of trusting the HTTP status",
+    "exists because GraphQL can answer 200 with errors"
+   ],
+   "use": "find why the adapter inspects the response body",
+   "not": [
+    "relies on 4xx and 5xx codes alone"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Moksy's integration catalogue entries",
+   "tier": 2,
+   "says": [
+    "list GraphQL among API styles",
+    "note that products such as monday.com and Upwork offer GraphQL APIs"
+   ],
+   "use": "check what Moksy docs say about GraphQL",
+   "not": [
+    "describe Moksy as a GraphQL provider"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Our REST-or-GraphQL choice",
+   "tier": 3,
+   "says": [
+    "favours route handlers because the clients are our own UI and a few agents",
+    "treats GraphQL as a topic for integration, not for serving"
+   ],
+   "use": "explain why our stack avoids a GraphQL server",
+   "not": [
+    "follows from a lack of typed schemas"
+   ]
+  },
+  {
+   "group": "co",
+   "subject": "Checking for a REST alternative",
+   "tier": 3,
+   "says": [
+    "comes before wiring a GraphQL call, as GitHub offers REST for issues and releases",
+    "often gives a simpler and safer integration"
+   ],
+   "use": "plan to integrate with a third-party GraphQL API",
+   "not": [
+    "is unnecessary when a provider has GraphQL"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does the exclamation mark mean in this field?",
+   "right": "The server promises never to return null for email",
+   "wrong": [
+    "The field is deprecated",
+    "The argument must be sent as a variable",
+    "The field is computed by a mutation"
+   ],
+   "tier": 1,
+   "why": "A trailing ! marks the type as non-null.",
+   "code": "type User {\n  id: ID!\n  email: String!\n}"
+  },
+  {
+   "q": "What is the shape of the JSON a server returns for this query on success?",
+   "right": "An object with a data key whose user object holds only name",
+   "wrong": [
+    "An object with a user key holding every field of User",
+    "An array of rows, one per column of the users table",
+    "Plain text containing the name"
+   ],
+   "tier": 1,
+   "why": "The response mirrors the shape of the selection set under a data key.",
+   "code": "{\n  user(id: 4) {\n    name\n  }\n}"
+  },
+  {
+   "q": "Which three kinds of operation does GraphQL define?",
+   "right": "Query, mutation and subscription",
+   "wrong": [
+    "Get, post and delete",
+    "Query, command and event",
+    "Read, write and stream, each at its own endpoint"
+   ],
+   "tier": 1,
+   "why": "The spec defines query, mutation and subscription operations."
+  },
+  {
+   "q": "How does a client usually send a GraphQL operation over HTTP?",
+   "right": "A POST to a single endpoint with JSON holding query and variables",
+   "wrong": [
+    "A PUT to /graphql/query with the SDL as the body",
+    "A GET to a different URL for each field",
+    "A POST to one URL per type with form fields named by column"
+   ],
+   "tier": 1,
+   "why": "The standard transport is one endpoint carrying a JSON body.",
+   "code": "POST /graphql\nContent-Type: application/json\n\n{\"query\":\"query($id: ID!){ user(id:$id){ name } }\",\"variables\":{\"id\":\"4\"}}"
+  },
+  {
+   "q": "What is wrong with how this client builds the request?",
+   "right": "User input is spliced into the query text, which allows injection and defeats caching",
+   "wrong": [
+    "Template strings are not allowed in JavaScript",
+    "The id must be sent as a number",
+    "Queries must always be sent with GET"
+   ],
+   "tier": 2,
+   "why": "Declare variables and send them in the variables map instead of gluing strings.",
+   "code": "const query = `{ user(id: \"${userInput}\") { name } }`;\nawait fetch(\"/graphql\", { method: \"POST\", body: JSON.stringify({ query }) });"
+  },
+  {
+   "q": "What does the type of the field posts mean?",
+   "right": "The list may not be null and no item in it may be null",
+   "wrong": [
+    "The list may be null but its items may not",
+    "Each item may be null but the list itself may not",
+    "Both the list and the items may be null"
+   ],
+   "tier": 2,
+   "why": "[Post!]! is a non-null list of non-null Post items.",
+   "code": "type User {\n  posts: [Post!]!\n}"
+  },
+  {
+   "q": "Why does this query need aliases?",
+   "right": "Two selections of the same field with different arguments would otherwise clash in the response",
+   "wrong": [
+    "Aliases make the query run in parallel",
+    "Aliases are needed whenever a field has an argument",
+    "Aliases hide the fields from introspection"
+   ],
+   "tier": 2,
+   "why": "The response key defaults to the field name, so a second selection needs a different key.",
+   "code": "{\n  admin: user(id: 1) { name }\n  guest: user(id: 2) { name }\n}"
+  },
+  {
+   "q": "What does the fragment spread do?",
+   "right": "Includes the fields from UserBits in that selection",
+   "wrong": [
+    "Sends UserBits as a separate request",
+    "Makes the user field nullable",
+    "Imports the UserBits type from another schema"
+   ],
+   "tier": 2,
+   "why": "A fragment names a reusable set of fields that is spread with three dots.",
+   "code": "fragment UserBits on User { id name }\n\n{\n  me { ...UserBits }\n}"
+  },
+  {
+   "q": "What does this response tell you?",
+   "right": "The user field failed and is null, while the request itself was processed and reported the error",
+   "wrong": [
+    "The query had a syntax error and nothing ran",
+    "The user was found but has no name",
+    "The server crashed and retried"
+   ],
+   "tier": 2,
+   "why": "Execution errors appear in the errors array next to data, often with HTTP 200.",
+   "code": "{\n  \"data\": { \"user\": null },\n  \"errors\": [{ \"message\": \"Not found\", \"path\": [\"user\"] }]\n}"
+  },
+  {
+   "q": "Why does this mutation take one input object?",
+   "right": "It keeps the mutation signature stable as fields are added and groups related arguments",
+   "wrong": [
+    "A mutation cannot take scalar arguments",
+    "Input objects are required to make the mutation run serially",
+    "It lets the mutation return a list"
+   ],
+   "tier": 2,
+   "why": "One input type and one payload type allow additive evolution.",
+   "code": "type Mutation {\n  createPost(input: CreatePostInput!): CreatePostPayload!\n}"
+  },
+  {
+   "q": "What is this introspection query asking?",
+   "right": "For the names of the types in the schema",
+   "wrong": [
+    "For the rows stored in the database",
+    "For the server's version number",
+    "For the list of running subscriptions"
+   ],
+   "tier": 2,
+   "why": "__schema is the entry point of the schema's self-description.",
+   "code": "{\n  __schema { types { name } }\n}"
+  },
+  {
+   "q": "What value does limit take when the client sends no variables?",
+   "right": "10",
+   "wrong": [
+    "null",
+    "0",
+    "The query fails validation"
+   ],
+   "tier": 2,
+   "why": "A variable default is used when the client does not supply the variable.",
+   "code": "query Posts($limit: Int = 10) {\n  posts(first: $limit) { id }\n}"
+  },
+  {
+   "q": "A page of 50 posts shows 51 database queries in the log. What is happening and what fixes it?",
+   "right": "N+1 from a per-post author resolver; batch the author lookups with a DataLoader",
+   "wrong": [
+    "The query is too deep; add a depth limit",
+    "The cache is cold; enable response caching",
+    "Mutations are running serially; make them parallel"
+   ],
+   "tier": 3,
+   "why": "One list query plus one lookup per item is the N+1 pattern, solved by batching keys.",
+   "code": "const resolvers = {\n  Post: {\n    author: (post) => db.users.findById(post.authorId),\n  },\n};"
+  },
+  {
+   "q": "How should the author resolver use the loader?",
+   "right": "Call the loader per post and let it batch all keys of the tick into one lookup",
+   "wrong": [
+    "Create a new loader inside the resolver for each post",
+    "Call the batch function directly for each post",
+    "Await each loader call before starting the next post"
+   ],
+   "tier": 3,
+   "why": "Calls made in the same tick are collected and sent to the batch function once.",
+   "code": "const resolvers = {\n  Post: {\n    author: (post, _args, ctx) => ctx.loaders.user.load(post.authorId),\n  },\n};"
+  },
+  {
+   "q": "What must this batch function return for the loader to work?",
+   "right": "An array of users in the same order and length as the keys, with null or an error for missing ones",
+   "wrong": [
+    "Only the users that were found, in database order",
+    "A single object keyed by id",
+    "A promise that resolves after the first key"
+   ],
+   "tier": 3,
+   "why": "A DataLoader batch function maps the keys array to a values array positionally.",
+   "code": "const userLoader = new DataLoader(async (ids) => {\n  const rows = await db.users.findMany({ id: ids });\n  return ids.map((id) => rows.find((r) => r.id === id));\n});"
+  },
+  {
+   "q": "How do you read the title of a SearchResult that may be a Post or a User?",
+   "right": "Use an inline fragment per member type",
+   "wrong": [
+    "Select title directly because every union shares it",
+    "Add an @include directive on the union",
+    "Query SearchResult twice with two aliases"
+   ],
+   "tier": 3,
+   "why": "Fields of union members are only selectable inside a type condition.",
+   "code": "{\n  search(text: \"gql\") {\n    __typename\n    ... on Post { title }\n    ... on User { name }\n  }\n}"
+  },
+  {
+   "q": "What cursor should the client send to load the next page?",
+   "right": "The endCursor from pageInfo of the last page",
+   "wrong": [
+    "The cursor of the first edge",
+    "The page number plus one",
+    "The total count returned by the server"
+   ],
+   "tier": 3,
+   "why": "Forward paging uses after with the last page's end cursor.",
+   "code": "{\n  posts(first: 10, after: $cursor) {\n    edges { cursor node { id } }\n    pageInfo { hasNextPage endCursor }\n  }\n}"
+  },
+  {
+   "q": "A feed using skip and limit shows repeated items when new posts arrive while the user scrolls. What should the team do?",
+   "right": "Move to cursor-based pagination so the position does not shift",
+   "wrong": [
+    "Increase the page size",
+    "Disable caching on the client",
+    "Add a depth limit to the query"
+   ],
+   "tier": 3,
+   "why": "Offset pages shift when rows are inserted; a cursor anchors to an item."
+  },
+  {
+   "q": "Monitoring shows only 200 responses but customers report failures. What should you check first?",
+   "right": "Whether the errors array in the response bodies is being counted",
+   "wrong": [
+    "Whether the CDN is returning stale GET responses",
+    "Whether the schema uses too many unions",
+    "Whether introspection is enabled"
+   ],
+   "tier": 3,
+   "why": "GraphQL execution errors are normally returned with HTTP 200."
+  },
+  {
+   "q": "What does this directive do for clients?",
+   "right": "Marks the field as obsolete while keeping it working and shows the reason in tooling",
+   "wrong": [
+    "Removes the field from responses",
+    "Makes the field nullable",
+    "Blocks queries that use it"
+   ],
+   "tier": 3,
+   "why": "@deprecated is a signal, not a removal.",
+   "code": "type User {\n  fullName: String @deprecated(reason: \"Use name\")\n  name: String!\n}"
+  },
+  {
+   "q": "The team wants a CDN to cache read-only queries. What is the usual approach?",
+   "right": "Use persisted query ids sent with GET so the URL is cacheable",
+   "wrong": [
+    "Switch all queries to mutations",
+    "Enable introspection",
+    "Remove the operation names"
+   ],
+   "tier": 3,
+   "why": "A short id in the URL avoids URL length limits and lets caches key the request."
+  },
+  {
+   "q": "A public API is slowed by queries nesting friends of friends many levels deep. What controls fit?",
+   "right": "A depth limit plus query cost analysis",
+   "wrong": [
+    "Turning off introspection only",
+    "Switching to subscriptions",
+    "Adding more aliases"
+   ],
+   "tier": 3,
+   "why": "Depth and cost limits bound how much work one query can request.",
+   "code": "{ me { friends { friends { friends { name } } } } }"
+  },
+  {
+   "q": "Where should the authenticated user be placed so every resolver can use it?",
+   "right": "On the context created once per request",
+   "wrong": [
+    "In a global variable shared by all requests",
+    "In each resolver's arguments sent by the client",
+    "In the schema's SDL"
+   ],
+   "tier": 3,
+   "why": "The context is per request and shared by resolvers.",
+   "code": "const server = new ApolloServer({ schema });\n// context: async ({ req }) => ({ user: await auth(req.headers.authorization) })"
+  },
+  {
+   "q": "The author field is non-null and its resolver throws. What does the client get?",
+   "right": "The nearest nullable parent becomes null and an error is reported",
+   "wrong": [
+    "The whole response is replaced by an HTTP 500",
+    "The field alone is null",
+    "The error is swallowed with no entry in errors"
+   ],
+   "tier": 3,
+   "why": "A null from a non-null field propagates up to the first nullable ancestor.",
+   "code": "type Post {\n  author: User!\n}"
+  },
+  {
+   "q": "A developer says the schema is secure because introspection is disabled in production. What is the right response?",
+   "right": "It only hides discovery; field-level authorization and cost limits are still required",
+   "wrong": [
+    "Correct, guessing field names is impractical",
+    "Correct, validation rejects unknown fields so no data can leak",
+    "Incorrect, because introspection must stay on for tokens to work"
+   ],
+   "tier": 3,
+   "why": "Hiding the schema is not access control."
+  },
+  {
+   "q": "Your code must call a third-party GraphQL API. Which practice is right?",
+   "right": "Send variables, use a scoped token in a header, and check the errors array",
+   "wrong": [
+    "Build the query by concatenating user input",
+    "Put the token in the query text",
+    "Trust the HTTP status and ignore the body"
+   ],
+   "tier": 3,
+   "why": "Treat it like any third-party API and do not trust a 200."
+  },
+  {
+   "q": "A small internal tool has one front end and simple CRUD. What is the sensible API style?",
+   "right": "REST route handlers are likely enough",
+   "wrong": [
+    "GraphQL is required for typed APIs",
+    "gRPC is required for browsers",
+    "A federated supergraph"
+   ],
+   "tier": 3,
+   "why": "Choose by the problem; simple needs favour less machinery."
+  },
+  {
+   "q": "A client sends a variable declared as ID! but omits it. What happens?",
+   "right": "The request is rejected with an error before any resolver runs",
+   "wrong": [
+    "The resolver receives null and runs",
+    "The server substitutes an empty string",
+    "The field is skipped silently"
+   ],
+   "tier": 3,
+   "why": "Required variables are checked when variables are coerced."
+  },
+  {
+   "q": "Resolvers check the role only on the top-level adminReport field. A customer can read the same data through user -> reports. What is the flaw?",
+   "right": "Authorization is not applied on every path to the data",
+   "wrong": [
+    "Introspection is enabled",
+    "The context is shared",
+    "The schema has too many types"
+   ],
+   "tier": 4,
+   "why": "Checks belong on the data or in a shared layer so every path is covered."
+  },
+  {
+   "q": "Why does this request evade a limit of five login attempts per request count?",
+   "right": "Aliases repeat the mutation many times inside one HTTP request",
+   "wrong": [
+    "Mutations are never rate-limited",
+    "The variables hide the password",
+    "The operation is a subscription"
+   ],
+   "tier": 4,
+   "why": "Rate limit by operation cost or count executed fields, not just requests.",
+   "code": "mutation {\n  a: login(user: \"x\", pass: \"1\") { token }\n  b: login(user: \"x\", pass: \"2\") { token }\n  c: login(user: \"x\", pass: \"3\") { token }\n}"
+  },
+  {
+   "q": "What does @key tell a federated router?",
+   "right": "Which fields identify an entity so other subgraphs can reference it",
+   "wrong": [
+    "Which fields are deprecated",
+    "Which fields are cached",
+    "Which client may query the type"
+   ],
+   "tier": 4,
+   "why": "The key is how entities are looked up across subgraphs.",
+   "code": "type Product @key(fields: \"id\") {\n  id: ID!\n  name: String\n}"
+  },
+  {
+   "q": "A mobile app still uses the field fullName. What should you do before removing it?",
+   "right": "Deprecate it, track usage and remove it only when no clients request it",
+   "wrong": [
+    "Delete it and rely on validation errors",
+    "Rename it and keep the old name in the docs",
+    "Make it nullable"
+   ],
+   "tier": 4,
+   "why": "Removal is breaking; deprecation plus usage tracking makes it safe."
+  },
+  {
+   "q": "After the team added a PENDING enum value, an older client crashes. Why?",
+   "right": "Its code switched exhaustively over the enum and has no case for the new value",
+   "wrong": [
+    "Enum values cannot be added",
+    "The schema is now invalid",
+    "The server renamed the old values"
+   ],
+   "tier": 4,
+   "why": "An additive schema change can still break exhaustive client logic.",
+   "code": "enum Status {\n  ACTIVE\n  CLOSED\n  PENDING\n}"
+  },
+  {
+   "q": "How should a signup mutation report that the email is already taken?",
+   "right": "Return an error type or userErrors field the client can branch on",
+   "wrong": [
+    "Throw an exception and let the client parse the message",
+    "Return HTTP 500",
+    "Return null for the whole payload"
+   ],
+   "tier": 4,
+   "why": "Expected failures are better modelled as data than as top-level errors.",
+   "code": "type SignupPayload {\n  user: User\n  userErrors: [UserError!]!\n}"
+  },
+  {
+   "q": "Users sometimes see each other's cached rows. What is the likely bug?",
+   "right": "The DataLoader is created at module scope and shared across requests",
+   "wrong": [
+    "The loader batch function returns too many values",
+    "Introspection is on",
+    "The schema lacks interfaces"
+   ],
+   "tier": 4,
+   "why": "Create loaders per request so their cache does not cross users.",
+   "code": "const userLoader = new DataLoader(batchUsers);\nexport const context = async () => ({ userLoader });"
+  },
+  {
+   "q": "Why is a first value of 100 on both nesting levels dangerous?",
+   "right": "It can request up to ten thousand comments in one query",
+   "wrong": [
+    "It always fails validation",
+    "It forces serial execution",
+    "It bypasses the context"
+   ],
+   "tier": 4,
+   "why": "Cost multiplies across nested lists, so a cost analysis must multiply by first.",
+   "code": "{\n  posts(first: 100) {\n    comments(first: 100) { id }\n  }\n}"
+  },
+  {
+   "q": "A server accepts GET queries and form-encoded POSTs and authenticates by cookie. What risk does this create?",
+   "right": "Cross-site request forgery from another site",
+   "wrong": [
+    "SQL injection in every resolver",
+    "Over-fetching",
+    "Loss of introspection"
+   ],
+   "tier": 4,
+   "why": "Requiring a JSON content type or custom header blocks simple cross-site requests."
+  },
+  {
+   "q": "After an edit mutation, the item list in the UI still shows old data. What is the usual cause with a normalized cache?",
+   "right": "The mutation did not return the changed object with its id and type",
+   "wrong": [
+    "The query used too many aliases",
+    "The schema has a union",
+    "The server disabled introspection"
+   ],
+   "tier": 4,
+   "why": "The normalized cache updates entries by id when the response includes them.",
+   "code": "mutation {\n  renamePost(id: 7, title: \"New\") { id __typename title }\n}"
+  },
+  {
+   "q": "A single call to the schema is made in a test. Which test level is this?",
+   "right": "A schema execution test that runs a real document against the schema",
+   "wrong": [
+    "A resolver unit test",
+    "An end-to-end HTTP test",
+    "A snapshot test of the SDL"
+   ],
+   "tier": 4,
+   "why": "graphql() executes the document through validation and resolvers without HTTP.",
+   "code": "const result = await graphql({\n  schema,\n  source: \"{ me { name } }\",\n  contextValue: { user: testUser },\n});"
+  },
+  {
+   "q": "Which tool helps you find why one query is slow?",
+   "right": "Per-resolver tracing",
+   "wrong": [
+    "A schema linter",
+    "Introspection",
+    "A fragment"
+   ],
+   "tier": 4,
+   "why": "Tracing records timing per field."
+  },
+  {
+   "q": "Two mutations are written in one document. In what order do they run?",
+   "right": "One after the other, in the order written",
+   "wrong": [
+    "In parallel",
+    "In the order the server prefers",
+    "The second runs only if the first fails"
+   ],
+   "tier": 4,
+   "why": "Top-level mutation fields execute serially."
+  },
+  {
+   "q": "A team has many REST services and a new app needs one graph. What is a reasonable first step?",
+   "right": "Build a GraphQL layer that wraps the REST services",
+   "wrong": [
+    "Rewrite every service as GraphQL",
+    "Federate nothing and call REST directly",
+    "Move the data to the client"
+   ],
+   "tier": 4,
+   "why": "A GraphQL BFF can adapt existing services without rewriting them."
+  },
+  {
+   "q": "An unauthenticated connection to a subscription should be handled how?",
+   "right": "Validate the token when the connection is made and reject if invalid",
+   "wrong": [
+    "Accept it and check once the first event arrives",
+    "Ignore authentication for subscriptions",
+    "Authenticate only on mutations"
+   ],
+   "tier": 4,
+   "why": "Authentication must be checked at connection time and enforced per event."
+  },
+  {
+   "q": "Why can node(id:) be risky?",
+   "right": "It can return any object whose id is guessed unless each object is authorised",
+   "wrong": [
+    "It disables the cache",
+    "It changes the schema",
+    "It runs queries in parallel"
+   ],
+   "tier": 5,
+   "why": "Lookups by id need object-level authorization.",
+   "code": "{\n  node(id: \"VXNlcjoy\") { ... on User { email } }\n}"
+  },
+  {
+   "q": "A client of a federated graph is slow because the router calls the products subgraph once per item. What is the likely cause and fix?",
+   "right": "The reference resolver loads each entity separately; batch entity lookups with a loader",
+   "wrong": [
+    "The router lacks a cache; add a depth limit",
+    "The key is missing; remove it",
+    "Subscriptions are enabled"
+   ],
+   "tier": 5,
+   "why": "Entity resolution is another N+1 point and needs batching."
+  },
+  {
+   "q": "A public API wants to accept only the company's own apps. What control fits best?",
+   "right": "A persisted query allowlist",
+   "wrong": [
+    "Disabling suggestions",
+    "Adding aliases",
+    "Renaming types"
+   ],
+   "tier": 5,
+   "why": "Only registered documents are executed."
+  },
+  {
+   "q": "A totalCount field times out on a 50 million row table. What should be done?",
+   "right": "Make it optional, approximate or separate, or drop it",
+   "wrong": [
+    "Add a depth limit",
+    "Convert the connection to an offset list",
+    "Move it to a mutation"
+   ],
+   "tier": 5,
+   "why": "Counts are costly; offer them only when affordable."
+  },
+  {
+   "q": "A schema returns an unbounded list. Which design fix is best?",
+   "right": "Return a connection with a maximum page size",
+   "wrong": [
+    "Add an alias",
+    "Make the list non-null",
+    "Add a union"
+   ],
+   "tier": 5,
+   "why": "Unbounded lists invite abuse."
+  },
+  {
+   "q": "Which type allows null items but not a null list?",
+   "right": "[Post]!",
+   "wrong": [
+    "[Post!]",
+    "[Post!]!",
+    "[Post]"
+   ],
+   "tier": 5,
+   "why": "The outer ! applies to the list; the inner type is nullable."
+  },
+  {
+   "q": "A mutation timed out and the client retries it automatically. What is the risk?",
+   "right": "Duplicate side effects unless the mutation is idempotent or uses a key",
+   "wrong": [
+    "The schema changes",
+    "The cache is cleared",
+    "The token is revoked"
+   ],
+   "tier": 5,
+   "why": "Retries need idempotency."
+  },
+  {
+   "q": "A query is rejected because the cursor was edited by a client. What design principle was violated?",
+   "right": "Cursors should be treated as opaque",
+   "wrong": [
+    "Cursors must be integers",
+    "Cursors must be sent as headers",
+    "Cursors may only be used with mutations"
+   ],
+   "tier": 5,
+   "why": "Clients must not interpret or build cursors."
+  },
+  {
+   "q": "A response for a personalised page is cached on the CDN. What went wrong?",
+   "right": "The response lacked a private cache scope",
+   "wrong": [
+    "The query used a fragment",
+    "The enum was added",
+    "The edge was missing"
+   ],
+   "tier": 5,
+   "why": "Personalised data must not be stored in shared caches."
+  }
+ ]
+}

@@ -1,0 +1,2779 @@
+{
+  "slug": "ggmoney-product",
+  "name": "GGMoney",
+  "description": "Money flows, ledger, compliance, support.",
+  "roles": "",
+  "kind": "product",
+  "brand": "gglink",
+  "audience": "staff",
+  "tier": "growth",
+  "groups": {
+    "what": "GG Money scope item",
+    "stack": "architecture or hosting choice",
+    "money": "money or ledger rule",
+    "bank": "bank-connection or bank-data concept",
+    "hmrc": "VAT or HMRC connection concept",
+    "pay": "payroll concept",
+    "appr": "compliance-calendar or approval rule",
+    "perf": "brand-performance or API concept",
+    "sec": "security or access-control control",
+    "ops": "deploy or operations step",
+    "support": "support or quality practice",
+    "acct": "accounting concept",
+    "eng": "fintech engineering concept",
+    "reg": "fintech compliance concept"
+  },
+  "cards": [
+    {
+      "group": "what",
+      "subject": "The GG Money application",
+      "tier": 1,
+      "says": [
+        "is an in-house bookkeeping, VAT and payroll application",
+        "files directly to HMRC",
+        "was built to replace a QuickBooks subscription"
+      ],
+      "use": "need the system that keeps the books for Gurugraphics Limited and Moksy Limited",
+      "not": [
+        "is sold as a service to any UK company that signs up"
+      ],
+      "like": [
+        "The live site"
+      ]
+    },
+    {
+      "group": "what",
+      "subject": "The GG Money user base",
+      "tier": 1,
+      "says": [
+        "is two limited companies, Gurugraphics Limited and Moksy Limited",
+        "has one owner according to the 5 October 2026 roadmap",
+        "is described in that roadmap as not multi-tenant"
+      ],
+      "use": "are asked who the application is built for",
+      "not": [
+        "is open to any customer who registers"
+      ],
+      "like": [
+        "The GG Money application"
+      ]
+    },
+    {
+      "group": "what",
+      "subject": "The live site",
+      "tier": 1,
+      "says": [
+        "is served at ggmoney.gglink.co.uk",
+        "runs on the existing Apache VPS",
+        "sits behind Cloudflare"
+      ],
+      "use": "need to say where the application is hosted",
+      "not": [
+        "runs on a new dedicated cloud platform built for it"
+      ],
+      "like": [
+        "The GG Money application"
+      ]
+    },
+    {
+      "group": "what",
+      "subject": "Sandbox mode",
+      "tier": 1,
+      "says": [
+        "means nothing has yet been filed for real through the live install",
+        "is selected through APP_ENV",
+        "stays until production credentials exist and a parallel run has matched"
+      ],
+      "use": "hear that the live install files real returns today",
+      "not": [
+        "lets the live install file real VAT returns while credentials are pending"
+      ],
+      "like": [
+        "Production approval from HMRC"
+      ]
+    },
+    {
+      "group": "what",
+      "subject": "Corporation Tax filing",
+      "tier": 2,
+      "says": [
+        "is marked not built and left to a later phase",
+        "includes the CT600 and iXBRL accounts in that gap",
+        "leaves year-end accounts to an accountant or a filing tool for now"
+      ],
+      "use": "are asked which major filing the application cannot yet do",
+      "not": [
+        "is fully built and tested alongside VAT"
+      ],
+      "like": [
+        "Self Assessment under MTD ITSA"
+      ]
+    },
+    {
+      "group": "what",
+      "subject": "Self Assessment under MTD ITSA",
+      "tier": 3,
+      "says": [
+        "has a personal profile, HMRC-box costs, quarterly update preparation and a tax calculator",
+        "has no connected HMRC API submission yet",
+        "concerns sole traders and landlords rather than the limited companies"
+      ],
+      "use": "need to know why quarterly income-tax updates cannot yet be sent from the app",
+      "not": [
+        "is filed directly to HMRC once the quarterly update is prepared"
+      ],
+      "like": [
+        "Corporation Tax filing"
+      ]
+    },
+    {
+      "group": "what",
+      "subject": "The README status table",
+      "tier": 2,
+      "says": [
+        "lists each area as working, needing credentials or not built",
+        "marks Open Banking feeds as working but needing provider credentials",
+        "marks VAT submission as working but needing HMRC credentials"
+      ],
+      "use": "want the first source for what is built",
+      "not": [
+        "is generated from the compliance task list"
+      ],
+      "like": [
+        "The 5 October 2026 roadmap"
+      ]
+    },
+    {
+      "group": "what",
+      "subject": "The 5 October 2026 roadmap",
+      "tier": 3,
+      "says": [
+        "adds caveats to items the README marks working",
+        "says nothing in the web layer calls the FPS and EPS builders",
+        "says there is no EPS builder and credit notes are missing"
+      ],
+      "use": "need a more cautious view than the README status table",
+      "not": [
+        "confirms every working item in the README as production ready"
+      ],
+      "like": [
+        "The README status table",
+        "Phase 0 of the roadmap"
+      ]
+    },
+    {
+      "group": "what",
+      "subject": "Phase 0 of the roadmap",
+      "tier": 5,
+      "says": [
+        "is called trust",
+        "begins with tenant isolation, bank CSV import bugs and VAT and payroll finalise issues",
+        "ends with all tests re-run on MySQL as well as SQLite"
+      ],
+      "use": "are asked what must be fixed before anything else is built",
+      "not": [
+        "is the phase that builds Corporation Tax and the CT600"
+      ],
+      "like": [
+        "The 5 October 2026 roadmap"
+      ]
+    },
+    {
+      "group": "stack",
+      "subject": "The no-dependency rule",
+      "tier": 1,
+      "says": [
+        "means the app uses no Composer, no npm and no third-party packages",
+        "requires PHP 8.1 or later",
+        "leaves the application as plain PHP plus a database"
+      ],
+      "use": "need to explain why the project has no package manager files",
+      "not": [
+        "pulls the HTTP client from Composer"
+      ]
+    },
+    {
+      "group": "stack",
+      "subject": "SQLite",
+      "tier": 1,
+      "says": [
+        "is the default for local development and the test suite",
+        "stores money in 64-bit INTEGER columns",
+        "is backed up with VACUUM INTO"
+      ],
+      "use": "want the database used by the test suite",
+      "not": [
+        "is the database the live server uses"
+      ],
+      "like": [
+        "MySQL"
+      ]
+    },
+    {
+      "group": "stack",
+      "subject": "MySQL",
+      "tier": 1,
+      "says": [
+        "is what the live server uses",
+        "uses BIGINT money columns because INT overflows at 21.5 million pounds",
+        "runs in STRICT sql_mode so a truncated money value errors",
+        "was chosen because MySQL 8 and a PHP 8.1 driver were already installed"
+      ],
+      "use": "need the database behind the live site",
+      "not": [
+        "is used only for local development"
+      ],
+      "like": [
+        "SQLite"
+      ]
+    },
+    {
+      "group": "stack",
+      "subject": "The migrations directory",
+      "tier": 3,
+      "says": [
+        "keeps a separate schema for each database driver",
+        "avoids translating SQL at run time",
+        "tracks applied migrations in schema_migrations"
+      ],
+      "use": "wonder why schema files are duplicated for two databases",
+      "not": [
+        "translates MySQL statements to SQLite on the fly"
+      ]
+    },
+    {
+      "group": "stack",
+      "subject": "PHP 8.1 FPM",
+      "tier": 3,
+      "says": [
+        "runs GG Money alone while other sites stay on mod_php 7.4",
+        "is chosen per virtual host",
+        "receives .php requests through a handler on a Unix socket"
+      ],
+      "use": "need to explain how one site runs a newer PHP than the rest of the server",
+      "not": [
+        "replaces mod_php 7.4 for every site on the server"
+      ]
+    },
+    {
+      "group": "stack",
+      "subject": "config.local.php",
+      "tier": 2,
+      "says": [
+        "holds the secrets and overrides the defaults in config.php",
+        "is gitignored",
+        "is never touched by the deploy script"
+      ],
+      "use": "need to know where database passwords and API keys live",
+      "not": [
+        "is committed to the repository with the code"
+      ],
+      "like": [
+        "config.php"
+      ]
+    },
+    {
+      "group": "stack",
+      "subject": "Cloudflare",
+      "tier": 3,
+      "says": [
+        "sits in front of the origin server",
+        "must be set to Full (strict) for this hostname",
+        "would send HMRC tokens in the clear to the origin in Flexible mode"
+      ],
+      "use": "need to explain a required SSL mode for the hostname",
+      "not": [
+        "is bypassed entirely so requests reach the origin directly"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "Integer pence",
+      "tier": 1,
+      "says": [
+        "stores every monetary value as a whole number of pence",
+        "bans floats for money everywhere in the app",
+        "makes 480000 stand for £4,800.00 in the API"
+      ],
+      "use": "need to know how an amount is held in the database",
+      "not": [
+        "stores amounts as decimal pounds with two places"
+      ],
+      "like": [
+        "A basis point"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "A basis point",
+      "tier": 1,
+      "says": [
+        "is one hundredth of a percentage point",
+        "turns 20 percent into the integer 2000",
+        "lets rates be stored without floating point"
+      ],
+      "use": "need to store a percentage as a whole number",
+      "not": [
+        "turns 20 percent into the integer 20"
+      ],
+      "like": [
+        "Integer pence"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "Core\\Money",
+      "tier": 3,
+      "says": [
+        "is the only place where money conversion happens",
+        "converts between pounds and pence",
+        "was found by the 4 October stress run to misread typed amounts such as 1e3"
+      ],
+      "use": "need the single class that converts money",
+      "not": [
+        "is called by each controller to run its own parsing"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "A posted journal",
+      "tier": 2,
+      "says": [
+        "is never edited or deleted once posted",
+        "keeps the ledger history intact even after a bad code deploy"
+      ],
+      "use": "are asked whether a posted entry can be changed",
+      "not": [
+        "can be edited by an accountant until the month closes"
+      ],
+      "like": [
+        "A reversal"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "A reversal",
+      "tier": 2,
+      "says": [
+        "is a new journal that offsets an earlier one",
+        "leaves both the error and the fix visible",
+        "is how a mistake in a posted journal is corrected"
+      ],
+      "use": "need to correct a wrong posted journal",
+      "not": [
+        "removes the original journal from the ledger"
+      ],
+      "like": [
+        "A posted journal"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "PAYE rounding",
+      "tier": 4,
+      "says": [
+        "rounds free pay up",
+        "rounds taxable pay down to whole pounds",
+        "rounds the tax itself down to the penny"
+      ],
+      "use": "need the rule that rounds taxable pay down to whole pounds",
+      "not": [
+        "rounds an exact half penny down"
+      ],
+      "like": [
+        "NI rounding",
+        "Student loan rounding"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "NI rounding",
+      "tier": 4,
+      "says": [
+        "rounds to the nearest penny",
+        "sends an exact half penny down",
+        "is handled by NiCalculator::niRound()"
+      ],
+      "use": "need the rule that sends an exact half penny down",
+      "not": [
+        "truncates to whole pounds"
+      ],
+      "like": [
+        "PAYE rounding",
+        "Student loan rounding"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "Student loan rounding",
+      "tier": 4,
+      "says": [
+        "truncates the threshold to whole pounds",
+        "truncates the deduction to whole pounds",
+        "drops pence rather than rounding to the nearest"
+      ],
+      "use": "need the rule that truncates both threshold and deduction to whole pounds",
+      "not": [
+        "rounds free pay up"
+      ],
+      "like": [
+        "PAYE rounding",
+        "NI rounding"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "VAT box rounding",
+      "tier": 4,
+      "says": [
+        "rounds boxes 6 to 9 down to whole pounds",
+        "reports those four boxes in whole pounds rather than pence"
+      ],
+      "use": "need the rule that gives whole pounds on four boxes of the return",
+      "not": [
+        "rounds those boxes to the nearest penny"
+      ]
+    },
+    {
+      "group": "money",
+      "subject": "A single rounding rule",
+      "tier": 5,
+      "says": [
+        "would put a penny wrong on roughly one payslip in two hundred",
+        "is deliberately not used for all taxes",
+        "ignores that HMRC sets a different rounding direction for each tax"
+      ],
+      "use": "hear a proposal to use one rounding function for PAYE, NI and student loans",
+      "not": [
+        "is recommended by the README to keep the code simple"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "An Open Banking feed",
+      "tier": 1,
+      "says": [
+        "reads the bank directly for day-to-day use",
+        "needs no statement download to remember",
+        "writes to the same place as a CSV import"
+      ],
+      "use": "want transactions to arrive without downloading statements",
+      "not": [
+        "can move money between accounts"
+      ],
+      "like": [
+        "CSV import"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "CSV import",
+      "tier": 1,
+      "says": [
+        "covers a bank no provider supports, a closed account or older history",
+        "detects the statement columns automatically",
+        "is duplicate-safe"
+      ],
+      "use": "need to load history older than the feed reaches",
+      "not": [
+        "needs a provider redirect URI registered first"
+      ],
+      "like": [
+        "An Open Banking feed"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "The BankConnector interface",
+      "tier": 4,
+      "says": [
+        "lets three providers sit behind one contract",
+        "makes switching provider a config change rather than a rewrite",
+        "is what a fourth provider adapter must implement"
+      ],
+      "use": "want to add another bank provider without touching the rest of the app",
+      "not": [
+        "is a class that only GoCardless implements"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "GoCardless Bank Account Data",
+      "tier": 2,
+      "says": [
+        "is the recommended starting provider",
+        "is documented as free to 50 accounts a month",
+        "shows the bank picker inside GG Money",
+        "is documented as allowing four transaction calls per account per day"
+      ],
+      "use": "need the provider the documentation recommends starting with",
+      "not": [
+        "needs a commercial agreement and a sales call"
+      ],
+      "like": [
+        "TrueLayer",
+        "Plaid"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "TrueLayer",
+      "tier": 4,
+      "says": [
+        "needs an application review before live data",
+        "works in its sandbox immediately",
+        "shows its own bank-picker page"
+      ],
+      "use": "need the provider that sends the user to its own hosted bank page and reviews applications for live data",
+      "not": [
+        "shows its picker as a JavaScript widget"
+      ],
+      "like": [
+        "GoCardless Bank Account Data",
+        "Plaid"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Plaid",
+      "tier": 4,
+      "says": [
+        "has an adapter that negates its amounts because its sign is the opposite way round",
+        "shows its picker as a JavaScript widget",
+        "is documented as the provider that reports withdrawn transactions",
+        "is documented as having thinner UK coverage than the other two"
+      ],
+      "use": "need the provider whose picker is a JavaScript widget",
+      "not": [
+        "is free to 50 accounts a month"
+      ],
+      "like": [
+        "GoCardless Bank Account Data",
+        "TrueLayer"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "The banking callback URI",
+      "tier": 2,
+      "says": [
+        "is https://ggmoney.gglink.co.uk/banking/callback",
+        "must be registered exactly with every bank provider",
+        "is the most common failure point when one character differs"
+      ],
+      "use": "need the redirect value to register with a bank provider",
+      "not": [
+        "is the same address used for the HMRC OAuth callback"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Feed-to-account mapping",
+      "tier": 4,
+      "says": [
+        "must be chosen before anything syncs",
+        "is never guessed because a wrong one puts a whole period in the wrong place",
+        "is refused when two feeds would write to one bank account"
+      ],
+      "use": "connect a feed and see nothing sync",
+      "not": [
+        "is filled in automatically from the first transaction"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "The first sync",
+      "tier": 4,
+      "says": [
+        "asks for everything the bank allows",
+        "skips anything dated before the bank account's opening date",
+        "reports the rows it skipped"
+      ],
+      "use": "need to know why old transactions did not appear after connecting",
+      "not": [
+        "re-reads only the last week"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "A reconciled bank row",
+      "tier": 5,
+      "says": [
+        "is never changed or deleted by a sync",
+        "may sit inside a filed VAT return",
+        "is listed on screen for handling by hand when a feed correction arrives"
+      ],
+      "use": "see a feed correction arrive months after a VAT return was filed",
+      "not": [
+        "is overwritten by the bank's latest figure on every sync"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "The transaction merge rule",
+      "tier": 5,
+      "says": [
+        "requires the same account, date and amount",
+        "merges only when exactly one candidate exists",
+        "prefers a visible duplicate to a lost real transaction"
+      ],
+      "use": "see three identical card payments of the same amount in one week",
+      "not": [
+        "merges any two transactions with the same amount"
+      ]
+    },
+    {
+      "group": "bank",
+      "subject": "Open Banking consent",
+      "tier": 3,
+      "says": [
+        "lasts at most 90 days under UK rules",
+        "can run to 180 days for GoCardless agreements",
+        "triggers a warning from 14 days out",
+        "marks the connection expired after an authorisation error"
+      ],
+      "use": "find that a feed has gone quiet after about three months",
+      "not": [
+        "lasts a year and renews silently"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "MTD for VAT",
+      "tier": 2,
+      "says": [
+        "is the route by which GG Money submits VAT returns",
+        "uses OAuth for authorisation",
+        "requires fraud prevention headers"
+      ],
+      "use": "need to name the HMRC channel used for VAT returns",
+      "not": [
+        "sends VAT returns as GovTalk XML to the Transaction Engine"
+      ],
+      "like": [
+        "RTI"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "Finalising a VAT return",
+      "tier": 3,
+      "says": [
+        "locks the numbers",
+        "records exactly which transactions produced them",
+        "posts the journal"
+      ],
+      "use": "want to freeze a return's figures without sending anything to HMRC",
+      "not": [
+        "sends the return to HMRC"
+      ],
+      "like": [
+        "Submitting a VAT return"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "Submitting a VAT return",
+      "tier": 3,
+      "says": [
+        "is a separate explicit act with its own declaration",
+        "cannot be undone because HMRC has no facility to withdraw a return",
+        "follows finalising"
+      ],
+      "use": "need the step that actually sends the return to HMRC",
+      "not": [
+        "can be withdrawn from HMRC later if a mistake is found"
+      ],
+      "like": [
+        "Finalising a VAT return"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "The VAT scheme setting",
+      "tier": 4,
+      "says": [
+        "supports standard, cash accounting and flat rate",
+        "is covered by tests for all three schemes",
+        "was found by the 4 October audit to count VAT twice if switched between returns"
+      ],
+      "use": "change a company's VAT scheme between two returns",
+      "not": [
+        "also supports the annual accounting and margin schemes"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "vat_return_items",
+      "tier": 4,
+      "says": [
+        "stores the individual transactions behind every box",
+        "lets any figure be traced to the journal that produced it"
+      ],
+      "use": "need to trace a box figure back to its transactions",
+      "not": [
+        "holds only the nine box totals"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "The fraud prevention header set",
+      "tier": 5,
+      "says": [
+        "is sent on every call to every HMRC endpoint",
+        "is what HMRC checks before approving production credentials",
+        "includes the Cloudflare hop in Gov-Vendor-Forwarded",
+        "is validated on the sandbox against the Test Fraud Prevention Headers API"
+      ],
+      "use": "hear that HMRC rejected an application over its headers",
+      "not": [
+        "is sent only when a return is submitted"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "WEB_APP_VIA_SERVER",
+      "tier": 5,
+      "says": [
+        "declares that a browser talks to our server and our server calls HMRC",
+        "omits Gov-Client-Local-IPs and Gov-Client-MAC-Addresses",
+        "is corrected, when the validator asks for desktop headers, by fixing the declared method"
+      ],
+      "use": "need the connection method declared in the fraud prevention headers",
+      "not": [
+        "is the method for desktop software that reads the local MAC address"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "Government Gateway sign-in",
+      "tier": 4,
+      "says": [
+        "binds the token to the VAT enrolment behind the account used",
+        "must be that company's own login, once per company",
+        "would file against the wrong VRN if the wrong company's login is used"
+      ],
+      "use": "are connecting the second company to HMRC",
+      "not": [
+        "can use any director's personal login for both companies"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "The HMRC callback URI",
+      "tier": 2,
+      "says": [
+        "is https://ggmoney.gglink.co.uk/settings/hmrc/callback",
+        "must match character for character with no trailing slash",
+        "is reported by HMRC only as an invalid request when it mismatches"
+      ],
+      "use": "need the redirect value to register in the HMRC Developer Hub",
+      "not": [
+        "is the same address used for the bank provider callback"
+      ]
+    },
+    {
+      "group": "hmrc",
+      "subject": "Production approval from HMRC",
+      "tier": 4,
+      "says": [
+        "was not granted as of the 5 October 2026 sources",
+        "is requested after sandbox testing, within two weeks of finishing it",
+        "is followed by a Production Approvals Checklist"
+      ],
+      "use": "are asked whether GG Money may file real VAT returns yet",
+      "not": [
+        "was granted when the sandbox tests passed"
+      ],
+      "like": [
+        "Sandbox mode"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "Payroll calculation",
+      "tier": 3,
+      "says": [
+        "covers PAYE, National Insurance, student loans, pensions and statutory pay",
+        "still runs for a year whose rates are unverified",
+        "was checked against hand-computed figures"
+      ],
+      "use": "want to compare payroll output with QuickBooks before filing",
+      "not": [
+        "is blocked for any year not listed as verified"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "A payslip",
+      "tier": 1,
+      "says": [
+        "shows its full workings",
+        "is produced by PayslipEngine",
+        "exists whether or not email is set up"
+      ],
+      "use": "need the document an employee receives for a pay run",
+      "not": [
+        "can only be created after an FPS is accepted"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "A tax year file",
+      "tier": 4,
+      "says": [
+        "holds every rate, threshold and band for one year",
+        "keeps rates out of the calculation logic",
+        "lives at db/taxyears/<year>.php"
+      ],
+      "use": "need to change a rate without editing the calculators",
+      "not": [
+        "is generated from HMRC's website on each pay run"
+      ],
+      "like": [
+        "TAX_YEARS_VERIFIED"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "TAX_YEARS_VERIFIED",
+      "tier": 3,
+      "says": [
+        "is the config list that makes a year fileable",
+        "stays empty until the rates have been checked against HMRC's tables",
+        "blocks RTI for any year not listed"
+      ],
+      "use": "need to allow payroll filing for a checked tax year",
+      "not": [
+        "is filled in automatically when a pay run is finalised"
+      ],
+      "like": [
+        "A tax year file",
+        "The needs_verification list"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "The needs_verification list",
+      "tier": 4,
+      "says": [
+        "names every figure HMRC uprates each April",
+        "was copied forward from 2025/26 as placeholders",
+        "is to be treated as wrong until each figure is checked"
+      ],
+      "use": "open the 2026-27 rates file and see figures that may be stale",
+      "not": [
+        "lists the figures already confirmed with HMRC"
+      ],
+      "like": [
+        "TAX_YEARS_VERIFIED"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "RTI",
+      "tier": 3,
+      "says": [
+        "goes to HMRC's Transaction Engine as GovTalk XML",
+        "does not use the MTD REST APIs",
+        "authenticates with Government Gateway credentials rather than OAuth"
+      ],
+      "use": "need the channel used for payroll filings",
+      "not": [
+        "authenticates with OAuth like VAT"
+      ],
+      "like": [
+        "MTD for VAT"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "An FPS",
+      "tier": 3,
+      "says": [
+        "is the Full Payment Submission for a pay run",
+        "carries an IRmark",
+        "is built by FpsBuilder",
+        "is not called from any web screen according to the 5 October roadmap"
+      ],
+      "use": "need the submission that reports each pay run to HMRC",
+      "not": [
+        "is an annual summary sent once after the tax year ends"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "The IRmark",
+      "tier": 5,
+      "says": [
+        "is attached to RTI submissions as an integrity check",
+        "is described in the deploy guide as correct and self-verifying",
+        "cannot confirm the element set, which only HMRC's validator can"
+      ],
+      "use": "are asked what proves an RTI message was not altered",
+      "not": [
+        "replaces the need to validate the XML against HMRC's schema"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "The RTI vendor ID",
+      "tier": 4,
+      "says": [
+        "is a 4-digit ID",
+        "is issued by HMRC's Software Developer Support Team after the Test Service is passed",
+        "is stored as HMRC_RTI_VENDOR_ID"
+      ],
+      "use": "need the identifier HMRC issues to software developers for RTI",
+      "not": [
+        "is the employer's own Government Gateway sender ID"
+      ],
+      "like": [
+        "Employer RTI credentials"
+      ]
+    },
+    {
+      "group": "pay",
+      "subject": "Employer RTI credentials",
+      "tier": 5,
+      "says": [
+        "are the employer's own Government Gateway sender ID and password",
+        "are not issued to developers",
+        "need one gateway account carrying both companies' PAYE enrolments while the app stores a single sender ID"
+      ],
+      "use": "hear that the second company's payroll is on a separate gateway account",
+      "not": [
+        "are issued to the developer by the Software Developer Support Team"
+      ],
+      "like": [
+        "The RTI vendor ID"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "The compliance calendar",
+      "tier": 1,
+      "says": [
+        "treats duties as first-class records",
+        "refreshes simply by opening the app",
+        "does not roll deadlines over weekends or bank holidays according to the roadmap"
+      ],
+      "use": "want duties tracked in the app instead of in someone's head",
+      "not": [
+        "is a static page edited by hand each year"
+      ],
+      "like": [
+        "The master task list"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "The master task list",
+      "tier": 3,
+      "says": [
+        "is the one file the calendar, reminder emails and written checklist are generated from",
+        "records each duty's frequency, due date, signer, consequence and governing rule",
+        "lives at db/compliance/tasks.php"
+      ],
+      "use": "need the single source for what the app chases",
+      "not": [
+        "is generated from the calendar page"
+      ],
+      "like": [
+        "The generated calendar document"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "The generated calendar document",
+      "tier": 3,
+      "says": [
+        "is rendered by php bin/compliance.php --doc",
+        "is changed by editing the catalogue, not directly",
+        "states that dates are reminders, not advice"
+      ],
+      "use": "need the written checklist that cannot drift from what the app chases",
+      "not": [
+        "is the file the calendar reads its tasks from"
+      ],
+      "like": [
+        "The master task list"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "Two-person sign-off",
+      "tier": 1,
+      "says": [
+        "applies to filings",
+        "means a second person must approve before the task closes",
+        "makes the app refuse self-approval"
+      ],
+      "use": "need to know who closes a VAT or payroll filing task",
+      "not": [
+        "lets the person who did the filing mark it done"
+      ],
+      "like": [
+        "One-person sign-off"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "One-person sign-off",
+      "tier": 2,
+      "says": [
+        "applies to routine housekeeping",
+        "needs only the person who did the work"
+      ],
+      "use": "are asked who approves filing the day's receipts",
+      "not": [
+        "requires a second person to review"
+      ],
+      "like": [
+        "Two-person sign-off"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "An automatic check",
+      "tier": 4,
+      "says": [
+        "runs and reports before a person approves",
+        "never signs anything off",
+        "cannot tell whether the figures were right"
+      ],
+      "use": "want data-driven evidence before a person approves a task",
+      "not": [
+        "approves a task once its test passes"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "VAT tasks",
+      "tier": 2,
+      "says": [
+        "take HMRC's own obligation dates",
+        "cover preparing, checking and filing the return each VAT period"
+      ],
+      "use": "need to know where VAT deadlines come from",
+      "not": [
+        "follow the company's accounting reference date"
+      ],
+      "like": [
+        "Payroll tasks",
+        "Accounting-date tasks"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "Payroll tasks",
+      "tier": 2,
+      "says": [
+        "follow your pay runs",
+        "include sending the Full Payment Submission for each pay run"
+      ],
+      "use": "need to know where payroll deadlines come from",
+      "not": [
+        "take HMRC's VAT obligation dates"
+      ],
+      "like": [
+        "VAT tasks",
+        "Accounting-date tasks"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "Accounting-date tasks",
+      "tier": 2,
+      "says": [
+        "come off the company's accounting reference date",
+        "include the year-end accounts and CT600 reminders"
+      ],
+      "use": "need to know where year-end deadlines come from",
+      "not": [
+        "follow the pay runs"
+      ],
+      "like": [
+        "VAT tasks",
+        "Payroll tasks"
+      ]
+    },
+    {
+      "group": "appr",
+      "subject": "Back-filling",
+      "tier": 4,
+      "says": [
+        "is not done for routine daily work",
+        "avoids a list nobody can face",
+        "is why duties that do not apply are never raised"
+      ],
+      "use": "hear that months of daily tasks should be created retroactively",
+      "not": [
+        "is done for every daily task since the company was added"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Brand performance",
+      "tier": 1,
+      "says": [
+        "measures each brand against a plan",
+        "can cover a period from a day to all time",
+        "takes its actuals from the ledger"
+      ],
+      "use": "want to see whether a trading line earns what the plan expected",
+      "not": [
+        "is entered by hand each month as a spreadsheet"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "A brand",
+      "tier": 1,
+      "says": [
+        "is a trading line inside a company",
+        "has a code such as moksy-studio",
+        "is managed under Settings, then Brands"
+      ],
+      "use": "need the unit that costs and earnings are measured by",
+      "not": [
+        "is a separate legal company"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "The master template",
+      "tier": 2,
+      "says": [
+        "lists fixed and variable costs and earnings with how often each comes round",
+        "is adopted line by line by each brand",
+        "lets a variable cost be a percentage of earnings"
+      ],
+      "use": "need the single list every brand plan starts from",
+      "not": [
+        "holds each brand's actual figures"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Plan history",
+      "tier": 4,
+      "says": [
+        "ends the old line and starts a new one when an amount changes",
+        "keeps last quarter measured against last quarter's plan"
+      ],
+      "use": "change a plan amount but want past periods judged by the old plan",
+      "not": [
+        "overwrites the old amount in place"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "Unplanned postings",
+      "tier": 3,
+      "says": [
+        "are postings no plan line claims",
+        "are never dropped",
+        "should be looked at first in a review"
+      ],
+      "use": "see ledger postings that no plan line accounts for",
+      "not": [
+        "are discarded from the performance figures"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "A brand review",
+      "tier": 3,
+      "says": [
+        "freezes a period's figures with a fingerprint",
+        "needs someone else to approve it",
+        "is chased by a monthly compliance task"
+      ],
+      "use": "need the sign-off record for a brand's month",
+      "not": [
+        "is approved by the person who submitted it"
+      ],
+      "like": [
+        "A stale review"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "A stale review",
+      "tier": 5,
+      "says": [
+        "happens when the live fingerprint differs from the stored one",
+        "cannot be approved until it is submitted again"
+      ],
+      "use": "find the ledger moved after a review was put up",
+      "not": [
+        "can still be approved because the earlier figures were checked"
+      ],
+      "like": [
+        "A brand review"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "The fingerprint",
+      "tier": 4,
+      "says": [
+        "is a hash of every figure in the view",
+        "is stored with a review at submission"
+      ],
+      "use": "need to detect that figures changed after submission",
+      "not": [
+        "is a password that signs the review"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "The performance API",
+      "tier": 2,
+      "says": [
+        "lets AI agents and services read brand figures and leave notes",
+        "lives under /api/v1",
+        "cannot post to the ledger, change the plan or sign anything off"
+      ],
+      "use": "want an agent to review brand figures without letting it change anything",
+      "not": [
+        "lets a service post journals to the ledger"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "A performance API token",
+      "tier": 2,
+      "says": [
+        "is made under Settings, then API tokens",
+        "is shown once and stored only as a SHA-256",
+        "belongs to one company"
+      ],
+      "use": "need credentials for one agent that can be revoked on its own",
+      "not": [
+        "is stored in clear text so it can be shown again"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "The review scope",
+      "tier": 3,
+      "says": [
+        "also allows posting notes on reviews",
+        "is separate from read, which is always granted"
+      ],
+      "use": "need an agent to leave a note but not just read",
+      "not": [
+        "lets the token approve a review"
+      ]
+    },
+    {
+      "group": "perf",
+      "subject": "A review note",
+      "tier": 4,
+      "says": [
+        "carries a verdict of comment, looks_right, concern or question",
+        "never changes a review's status",
+        "is shown under the token's name"
+      ],
+      "use": "want an agent to flag a concern about a brand's month",
+      "not": [
+        "approves the review when the verdict is looks_right"
+      ]
+    },
+    {
+      "group": "sec",
+      "subject": "CSRF protection",
+      "tier": 3,
+      "says": [
+        "issues a random token per session",
+        "rejects a POST whose token, sent as a form field or X-CSRF-Token header, does not match",
+        "compares tokens in constant time",
+        "matters because a forged POST could file a VAT return that cannot be withdrawn"
+      ],
+      "use": "need to stop another site making a logged-in user submit a form",
+      "not": [
+        "relies on the session cookie alone to prove intent"
+      ]
+    },
+    {
+      "group": "sec",
+      "subject": "The session cookie",
+      "tier": 3,
+      "says": [
+        "is HttpOnly",
+        "uses SameSite Lax because of the HMRC OAuth callback",
+        "has its session id regenerated"
+      ],
+      "use": "need to explain why SameSite is not Strict",
+      "not": [
+        "uses SameSite Strict"
+      ]
+    },
+    {
+      "group": "sec",
+      "subject": "Password verification",
+      "tier": 2,
+      "says": [
+        "uses password_verify",
+        "rehashes the password when needed"
+      ],
+      "use": "need the function that checks a stored password hash",
+      "not": [
+        "compares the stored password to the typed one as plain text"
+      ]
+    },
+    {
+      "group": "sec",
+      "subject": "The tenant check",
+      "tier": 4,
+      "says": [
+        "checks that account, contact and pension scheme ids belong to the company before use",
+        "was reported bypassed by forged ids in audit items 1 and 5"
+      ],
+      "use": "need protection against a forged account or contact id from another company",
+      "not": [
+        "trusts the ids in the submitted form"
+      ]
+    },
+    {
+      "group": "sec",
+      "subject": "The .htaccess file",
+      "tier": 2,
+      "says": [
+        "blocks the storage, src, db, views, bin, tests and docs directories",
+        "forces HTTPS",
+        "blocks the config files"
+      ],
+      "use": "need to explain why src/Core/Db.php must return 403",
+      "not": [
+        "lets directories be listed for debugging"
+      ],
+      "like": [
+        "AllowOverride All"
+      ]
+    },
+    {
+      "group": "sec",
+      "subject": "AllowOverride All",
+      "tier": 4,
+      "says": [
+        "is mandatory because every security rule lives in .htaccess",
+        "leaves config.local.php downloadable if it is off",
+        "would make database and HMRC secrets public if missing"
+      ],
+      "use": "find config.local.php downloads in a browser test",
+      "not": [
+        "is optional on the live server"
+      ],
+      "like": [
+        "The .htaccess file"
+      ]
+    },
+    {
+      "group": "sec",
+      "subject": "Company roles",
+      "tier": 3,
+      "says": [
+        "are owner, accountant or viewer",
+        "are carried on the user_companies link",
+        "are checked through Auth::requireRole"
+      ],
+      "use": "need to know what controls what a person can do in a company",
+      "not": [
+        "are set once per user for the whole installation"
+      ]
+    },
+    {
+      "group": "sec",
+      "subject": "The audit_log table",
+      "tier": 4,
+      "says": [
+        "is the table behind Auth::audit",
+        "has only five call sites writing to it according to the roadmap",
+        "swallows errors when a write fails"
+      ],
+      "use": "need the record of who did what in the app",
+      "not": [
+        "records every page view"
+      ]
+    },
+    {
+      "group": "sec",
+      "subject": "The 5 October security gaps",
+      "tier": 5,
+      "says": [
+        "include no MFA and no login throttling",
+        "include no password reset and no encryption at rest",
+        "include an unauthenticated deploy-check.php"
+      ],
+      "use": "are asked what the audit said was missing from security and should be re-checked before relying on it",
+      "not": [
+        "were all fixed by the same date"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "Running locally",
+      "tier": 1,
+      "says": [
+        "starts by copying config.local.php.example to config.local.php",
+        "applies the schema with php bin/migrate.php",
+        "serves the app with php -S 127.0.0.1:8765 -t . bin/dev-server.php"
+      ],
+      "use": "want to try the app on a laptop",
+      "not": [
+        "needs Composer and npm install first"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The setup page",
+      "tier": 2,
+      "says": [
+        "is at /setup",
+        "creates the first user and both companies with a standard chart of accounts",
+        "disappears for good once an account exists"
+      ],
+      "use": "are starting a new install with no account yet",
+      "not": [
+        "stays open so more owners can register later"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "bin/deploy.sh",
+      "tier": 1,
+      "says": [
+        "syntax-checks, tests, syncs, migrates and verifies",
+        "refuses to upload if a file fails to parse or a test fails",
+        "never touches config.local.php, storage or the database"
+      ],
+      "use": "want to ship a new version and be stopped if anything is broken",
+      "not": [
+        "uploads first and runs the tests afterwards"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "deploy-check.php",
+      "tier": 3,
+      "says": [
+        "reports only and changes nothing",
+        "refuses to run over plain HTTP",
+        "asserts STRICT mode, InnoDB tables and applied migrations on MySQL",
+        "is run before and after uploading"
+      ],
+      "use": "want a read-only verdict on whether the install would break or expose data",
+      "not": [
+        "repairs problems it finds"
+      ],
+      "like": [
+        "migration-check.sh"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "migration-check.sh",
+      "tier": 4,
+      "says": [
+        "applies the MySQL migrations to a scratch database",
+        "drops that scratch database again",
+        "is run before deploying a migration"
+      ],
+      "use": "worry that a migration passes SQLite tests but MySQL may refuse it",
+      "not": [
+        "runs the VAT test suite against production"
+      ],
+      "like": [
+        "deploy-check.php"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "APP_DEBUG",
+      "tier": 2,
+      "says": [
+        "must be false in production",
+        "prints stack traces to the browser when on"
+      ],
+      "use": "are asked which setting leaks stack traces",
+      "not": [
+        "selects the sandbox or live hosts"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "MAIL_REDIRECT",
+      "tier": 3,
+      "says": [
+        "sends every email to one address",
+        "adds a banner naming the intended recipient",
+        "keeps a test run from emailing a real employee"
+      ],
+      "use": "need to test payslip email without reaching real people",
+      "not": [
+        "is required for production sending"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "bin/backup.php",
+      "tier": 2,
+      "says": [
+        "runs mysqldump with --single-transaction",
+        "keeps 30 gzipped daily copies",
+        "fails loudly if the dump is suspiciously small"
+      ],
+      "use": "need the daily database backup",
+      "not": [
+        "locks tables while it runs so it can block a pay run"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "Rolling back a bad code deploy",
+      "tier": 3,
+      "says": [
+        "redeploys the previous commit",
+        "leaves the database alone",
+        "relies on journals being immutable so history survives"
+      ],
+      "use": "need to undo a bad release",
+      "not": [
+        "restores the latest database backup first"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The QuickBooks cutover order",
+      "tier": 3,
+      "says": [
+        "starts with opening balances and a full QuickBooks export",
+        "runs one VAT quarter in parallel, then two payroll months",
+        "cancels QuickBooks only after the parallel runs match"
+      ],
+      "use": "are asked when QuickBooks can be cancelled",
+      "not": [
+        "cancels QuickBooks once the README lists VAT as working"
+      ]
+    },
+    {
+      "group": "ops",
+      "subject": "The cron schedule",
+      "tier": 4,
+      "says": [
+        "runs bin/compliance.php, bin/alerts.php and bin/backup.php",
+        "runs compliance first so the calendar is current before the alert digest goes out"
+      ],
+      "use": "need the scheduled jobs on the server",
+      "not": [
+        "is the web request that opens the app"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "bank_api_log",
+      "tier": 4,
+      "says": [
+        "records every provider request and response with tokens redacted",
+        "is the first place to look when a feed returns nothing"
+      ],
+      "use": "find a feed that returns nothing and want the provider's actual answer",
+      "not": [
+        "stores each user's banking password"
+      ],
+      "like": [
+        "hmrc_api_log"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "hmrc_api_log",
+      "tier": 4,
+      "says": [
+        "records every HMRC request and response with the header values sent",
+        "lets the team show HMRC exactly what went out"
+      ],
+      "use": "are asked by HMRC what headers were sent",
+      "not": [
+        "records bank provider calls"
+      ],
+      "like": [
+        "bank_api_log"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "email_log",
+      "tier": 3,
+      "says": [
+        "records every send, success or failure",
+        "omits the message body on purpose",
+        "shows who, what, when and what SendGrid said"
+      ],
+      "use": "want proof of what the mailer sent",
+      "not": [
+        "stores the full text of every payslip email"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "The in-house support model",
+      "tier": 2,
+      "says": [
+        "has the developer as the user",
+        "has no external support desk",
+        "sends HMRC deprecation notices to the address that maintains the code"
+      ],
+      "use": "are asked who supports GG Money",
+      "not": [
+        "relies on a paid vendor helpdesk"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A dead bank feed",
+      "tier": 3,
+      "says": [
+        "is silent when it stops",
+        "is usually consent that has lapsed",
+        "is fixed by reconnecting, which loses no imported transactions"
+      ],
+      "use": "find transactions have stopped arriving",
+      "not": [
+        "is signalled by an email from the provider every time"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "A banking link left too long",
+      "tier": 3,
+      "says": [
+        "produces the message that it could not be matched to a connection",
+        "is fixed by starting again",
+        "happens after more than 30 minutes"
+      ],
+      "use": "see the could not be matched to a connection message",
+      "not": [
+        "is fixed by reconnecting consent"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "The unit-test scripts",
+      "tier": 2,
+      "says": [
+        "are plain PHP files run directly with php",
+        "run on SQLite by default",
+        "include vat_test.php, payroll_test.php and csrf_test.php"
+      ],
+      "use": "want to run the checks that deploy.sh runs",
+      "not": [
+        "are run through PHPUnit installed by Composer"
+      ]
+    },
+    {
+      "group": "support",
+      "subject": "The 4 October stress run",
+      "tier": 5,
+      "says": [
+        "used 192,602 cases across 124 activities",
+        "produced 138 proposed issues",
+        "ran on throwaway databases only",
+        "did not cover MySQL, live channels or bank providers"
+      ],
+      "use": "need the size and limits of the stress run",
+      "not": [
+        "found no critical issues"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "Double-entry bookkeeping",
+      "tier": 1,
+      "says": [
+        "records every transaction as equal debits and credits",
+        "keeps total debits equal to total credits in every posting",
+        "lets errors surface through a trial balance"
+      ],
+      "use": "need the system where each posting touches at least two accounts",
+      "not": [
+        "records each transaction once in a single account"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "A chart of accounts",
+      "tier": 1,
+      "says": [
+        "is the structured list of accounts a ledger posts to",
+        "groups accounts into assets, liabilities, equity, income and expenses",
+        "gives each account a code"
+      ],
+      "use": "need the list that decides where each posting can go",
+      "not": [
+        "is the list of customers"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "A trial balance",
+      "tier": 2,
+      "says": [
+        "lists every account balance at a date",
+        "has debit and credit totals that must agree",
+        "does not by itself prove each posting was correct"
+      ],
+      "use": "want a check that a ledger is in balance",
+      "not": [
+        "is a profit forecast"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "Accrual accounting",
+      "tier": 3,
+      "says": [
+        "records income and costs when earned or incurred",
+        "separates profit from cash",
+        "needs debtors and creditors tracked"
+      ],
+      "use": "want income and costs matched to the period they belong to",
+      "not": [
+        "records income only when the money arrives"
+      ],
+      "like": [
+        "Cash accounting"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "Cash accounting",
+      "tier": 3,
+      "says": [
+        "records income and costs when money moves",
+        "ignores unpaid invoices and bills until they are settled"
+      ],
+      "use": "want the simplest basis that follows the bank",
+      "not": [
+        "records costs when they are incurred whether paid or not"
+      ],
+      "like": [
+        "Accrual accounting"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "Bank reconciliation",
+      "tier": 2,
+      "says": [
+        "compares the ledger's bank account with the bank's own record",
+        "explains differences such as timing items",
+        "finds missing or duplicated bank lines"
+      ],
+      "use": "need to show the ledger agrees with the bank",
+      "not": [
+        "compares the ledger with the tax authority's records"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "A debtor",
+      "tier": 2,
+      "says": [
+        "owes the business money for goods or services supplied",
+        "appears as a sales invoice not yet paid"
+      ],
+      "use": "need the person who owes you money",
+      "not": [
+        "is owed money by the business"
+      ],
+      "like": [
+        "A creditor"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "A creditor",
+      "tier": 2,
+      "says": [
+        "is owed money by the business",
+        "appears as a purchase bill not yet paid"
+      ],
+      "use": "need the person you owe money to",
+      "not": [
+        "owes the business money for goods supplied"
+      ],
+      "like": [
+        "A debtor"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "A period close",
+      "tier": 3,
+      "says": [
+        "stops postings into a finished period",
+        "makes a later correction a visible adjustment in a later period"
+      ],
+      "use": "want figures for a finished month to stop moving",
+      "not": [
+        "deletes the period's entries after reporting"
+      ]
+    },
+    {
+      "group": "acct",
+      "subject": "A suspense account",
+      "tier": 5,
+      "says": [
+        "holds items that cannot yet be classified",
+        "should be cleared back to zero",
+        "hides errors if allowed to grow"
+      ],
+      "use": "find a posting that cannot be coded to a real account yet",
+      "not": [
+        "is where profit is stored at year end"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "A minor-unit integer",
+      "tier": 1,
+      "says": [
+        "stores money as a count of the smallest currency unit",
+        "avoids floating-point rounding error",
+        "needs the currency's exponent to display correctly"
+      ],
+      "use": "need to hold £4.20 exactly",
+      "not": [
+        "stores money as a binary fraction"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "Floating-point error",
+      "tier": 2,
+      "says": [
+        "makes 0.1 plus 0.2 differ from 0.3 in binary arithmetic",
+        "is why money should not be stored as floats",
+        "can accumulate across many additions"
+      ],
+      "use": "hear that totals drift by a fraction of a penny",
+      "not": [
+        "happens only with very large amounts"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "An idempotency key",
+      "tier": 3,
+      "says": [
+        "lets a retried request be recognised as the same request",
+        "prevents a repeated payment call from charging twice",
+        "is supplied by the caller and stored with the result"
+      ],
+      "use": "need a timed-out payment call to be retried safely",
+      "not": [
+        "makes each retry create a new payment"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "A database transaction",
+      "tier": 2,
+      "says": [
+        "makes a group of writes succeed or fail together",
+        "rolls back on error",
+        "needs a storage engine that supports it, such as InnoDB"
+      ],
+      "use": "need a journal's debit and credit lines to be written together or not at all",
+      "not": [
+        "commits each statement independently as it runs"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "OAuth 2.0 authorization code grant",
+      "tier": 3,
+      "says": [
+        "sends the user to the provider to sign in and consent",
+        "returns a code to a registered redirect URI",
+        "exchanges the code for tokens on the server"
+      ],
+      "use": "need a user to authorise access without sharing a password",
+      "not": [
+        "asks the user to type the provider password into the app"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "A least-privilege scope",
+      "tier": 3,
+      "says": [
+        "limits a token to what the integration needs",
+        "is why a bank connection asks only for read access"
+      ],
+      "use": "want a leaked token to be able to do as little as possible",
+      "not": [
+        "grants the token full account rights"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "Exponential backoff",
+      "tier": 3,
+      "says": [
+        "spaces out retries with growing delays",
+        "helps when a provider answers with a rate limit"
+      ],
+      "use": "face a provider rate-limit response",
+      "not": [
+        "retries immediately in a tight loop"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "A webhook signature",
+      "tier": 5,
+      "says": [
+        "lets the receiver verify the sender with a shared secret",
+        "guards against forged callbacks",
+        "is checked before acting on the payload"
+      ],
+      "use": "receive a callback that claims to come from a provider",
+      "not": [
+        "is optional once the endpoint URL is kept secret"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "An insecure direct object reference",
+      "tier": 3,
+      "says": [
+        "lets a user reach another user's record by changing an id",
+        "is prevented by checking ownership on the server for every request"
+      ],
+      "use": "see a forged account id in a request return another company's data",
+      "not": [
+        "is prevented by hiding the id in a form field"
+      ]
+    },
+    {
+      "group": "eng",
+      "subject": "Token hashing",
+      "tier": 3,
+      "says": [
+        "stores only a one-way hash of a token",
+        "means a database leak does not reveal usable tokens",
+        "requires showing the token once at creation"
+      ],
+      "use": "need to store API tokens so a database leak is not enough to use them",
+      "not": [
+        "stores the token so it can be shown again"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "Know your customer",
+      "tier": 2,
+      "says": [
+        "verifies who a customer is before service",
+        "is a core part of onboarding in regulated finance"
+      ],
+      "use": "need to confirm identity before opening an account",
+      "not": [
+        "checks a customer's credit score only"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "Anti-money-laundering monitoring",
+      "tier": 3,
+      "says": [
+        "watches transactions for suspicious patterns",
+        "leads to reports to authorities when suspicion arises"
+      ],
+      "use": "spot payments that look structured to avoid detection",
+      "not": [
+        "is limited to onboarding checks"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "PCI DSS",
+      "tier": 3,
+      "says": [
+        "is the security standard for handling payment card data",
+        "applies to anyone who stores, processes or transmits card data"
+      ],
+      "use": "are asked which standard governs card data",
+      "not": [
+        "is the standard for tax-return software recognition"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "Open Banking",
+      "tier": 2,
+      "says": [
+        "lets customers share account data with authorised third parties",
+        "works through regulated APIs and customer consent"
+      ],
+      "use": "need the regime behind a read-only bank feed",
+      "not": [
+        "lets any app read an account with only the account number"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "Segregation of duties",
+      "tier": 3,
+      "says": [
+        "splits a task so one person cannot both do and approve it",
+        "reduces the risk of fraud and error",
+        "is implemented as a four-eyes check"
+      ],
+      "use": "want to stop a single person completing and approving a filing",
+      "not": [
+        "lets the preparer also approve if they are senior"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "An audit trail",
+      "tier": 2,
+      "says": [
+        "records who did what and when",
+        "should itself resist tampering",
+        "is expected by auditors and regulators"
+      ],
+      "use": "need evidence of who changed a financial record",
+      "not": [
+        "may be edited later to fix typing mistakes"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "Data minimisation",
+      "tier": 3,
+      "says": [
+        "keeps only the personal data needed for a purpose",
+        "is a GDPR principle",
+        "is practised by not storing message bodies in an email log"
+      ],
+      "use": "are asked why a debug table should not copy salaries",
+      "not": [
+        "says to keep all data in case it is useful later"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "Record retention",
+      "tier": 3,
+      "says": [
+        "requires financial records to be kept for a legally set period",
+        "is six years for the records this app is built around, per the deploy guide"
+      ],
+      "use": "need to know why backups must be kept off the server and for years",
+      "not": [
+        "lets records be purged after one year"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "Strong customer authentication",
+      "tier": 5,
+      "says": [
+        "requires two independent factors for many online payments and account access",
+        "is a feature of the PSD2 rules"
+      ],
+      "use": "hear that a payment needs a second independent factor",
+      "not": [
+        "is satisfied by a single password"
+      ]
+    },
+    {
+      "group": "reg",
+      "subject": "Making Tax Digital",
+      "tier": 2,
+      "says": [
+        "requires digital record keeping and software-based filing",
+        "is the regime that VAT returns follow in GG Money"
+      ],
+      "use": "need the UK programme behind digital VAT filing",
+      "not": [
+        "allows returns to be filed by paper only"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "Which two companies is GG Money built for?",
+      "right": "Gurugraphics Limited and Moksy Limited",
+      "wrong": [
+        "Moksy Limited and any customer company that signs up",
+        "Gurugraphics Limited only, with Moksy staying on QuickBooks",
+        "Every limited company registered at the same address"
+      ],
+      "tier": 1,
+      "why": "The README says it is built for those two companies and is not sold."
+    },
+    {
+      "q": "Which database does the live GG Money server use?",
+      "right": "MySQL 8, because the server already had it and a PHP 8.1 driver",
+      "wrong": [
+        "SQLite, the same as local development",
+        "PostgreSQL on a managed service",
+        "MongoDB behind a PHP extension"
+      ],
+      "tier": 1,
+      "why": "SQLite is the default for local development and tests; the live server uses MySQL."
+    },
+    {
+      "q": "What does it mean that the app has no Composer or npm dependency?",
+      "right": "The whole application is plain PHP 8.1 or later plus a database",
+      "wrong": [
+        "It loads its libraries from a CDN at run time",
+        "It vendors a single framework in the repository",
+        "It uses Composer only on the live server"
+      ],
+      "tier": 1,
+      "why": "The README states no third-party packages at all."
+    },
+    {
+      "q": "What is the stated status of Corporation Tax, the CT600 and iXBRL accounts?",
+      "right": "Not built and left to a later phase",
+      "wrong": [
+        "Built but untested",
+        "Built for Moksy Limited only",
+        "Built and filed through the live install"
+      ],
+      "tier": 1,
+      "why": "The README marks them Phase 3, not built."
+    },
+    {
+      "q": "What does it mean that the live install is in sandbox mode?",
+      "right": "Nothing has yet been filed for real through it",
+      "wrong": [
+        "Only VAT is filed for real",
+        "Only payroll is filed for real",
+        "Real filings happen but are marked as tests"
+      ],
+      "tier": 1,
+      "why": "Production approval from HMRC had not been granted and APP_ENV stays sandbox until a parallel run matches."
+    },
+    {
+      "q": "How does GG Money store the amount £4,800.00?",
+      "right": "As the integer 480000 pence",
+      "wrong": [
+        "As the float 4800.00",
+        "As the string \"4,800.00\"",
+        "As the integer 4800"
+      ],
+      "tier": 2,
+      "why": "Every monetary value is an integer number of pence; floats are banned."
+    },
+    {
+      "q": "How is a 20 percent rate stored?",
+      "right": "As 2000 basis points",
+      "wrong": [
+        "As the float 0.2",
+        "As the integer 20",
+        "As the integer 200"
+      ],
+      "tier": 2,
+      "why": "Percentages are basis points, so 20 percent is 2000."
+    },
+    {
+      "q": "A new local install shows no users. Where should the first account be created?",
+      "right": "At /setup, which disappears once an account exists",
+      "wrong": [
+        "At /register, which stays open for more owners",
+        "By inserting a row into users with SQL",
+        "At /admin/users after logging in as admin"
+      ],
+      "tier": 2,
+      "why": "The setup page creates the first user and both companies, then goes away."
+    },
+    {
+      "q": "A posted journal has the wrong amount. What is the correct fix?",
+      "right": "Post a reversal and then the correct journal",
+      "wrong": [
+        "Edit the journal line in place",
+        "Delete the journal and re-enter it",
+        "Update the amount directly in the database"
+      ],
+      "tier": 2,
+      "why": "Posted journals are never edited or deleted; a correction is a reversal so both error and fix stay visible."
+    },
+    {
+      "q": "Who must approve a filing task in the compliance calendar?",
+      "right": "A second person, because the app refuses self-approval",
+      "wrong": [
+        "The person who did the filing",
+        "Nobody, the automatic check approves it",
+        "Only the company accountant role"
+      ],
+      "tier": 2,
+      "why": "Filings need a second person; routine tasks need one."
+    },
+    {
+      "q": "What can an automatic compliance check do?",
+      "right": "Report on the data before a person approves, but never sign off",
+      "wrong": [
+        "Sign off the task when the data looks right",
+        "Approve filings for the second person",
+        "Delete tasks that do not apply"
+      ],
+      "tier": 2,
+      "why": "A check cannot tell whether the figures were right."
+    },
+    {
+      "q": "Why is the schema kept separately for SQLite and MySQL instead of translated at run time?",
+      "right": "A silent translation bug in a finance app is worse than some duplication",
+      "wrong": [
+        "MySQL cannot run the SQLite SQL at all",
+        "Translation is too slow for payroll runs",
+        "The two databases are never used together"
+      ],
+      "tier": 2,
+      "why": "The README states this reason."
+    },
+    {
+      "q": "How does GG Money round PAYE tax?",
+      "right": "Down to the penny, after taxable pay is rounded down to whole pounds",
+      "wrong": [
+        "To the nearest penny with halves going up",
+        "Up to the next whole pound",
+        "To the nearest whole pound"
+      ],
+      "tier": 3,
+      "why": "PAYE: free pay up, taxable pay down to pounds, tax down to the penny."
+    },
+    {
+      "q": "An employee's NI works out at exactly half a penny. What does the NI rule do?",
+      "right": "Rounds down",
+      "wrong": [
+        "Rounds up",
+        "Rounds to the nearest even penny",
+        "Truncates to whole pounds"
+      ],
+      "tier": 3,
+      "why": "NI rounds to the nearest penny with an exact half going down."
+    },
+    {
+      "q": "How are VAT boxes 6 to 9 reported?",
+      "right": "In whole pounds, rounded down",
+      "wrong": [
+        "In pence, rounded to nearest",
+        "In whole pounds, rounded up",
+        "In thousands of pounds"
+      ],
+      "tier": 3,
+      "why": "VAT boxes 6 to 9 are whole pounds, rounded down."
+    },
+    {
+      "q": "A developer proposes one rounding function for PAYE, NI and student loans. What does the README say?",
+      "right": "It would put a penny wrong on roughly one payslip in two hundred",
+      "wrong": [
+        "It is preferred to reduce code",
+        "It is fine because HMRC allows any rounding",
+        "It is fine for NI but not student loans"
+      ],
+      "tier": 3,
+      "why": "HMRC sets a different rule for each tax."
+    },
+    {
+      "q": "Why does the MySQL schema use BIGINT for money columns?",
+      "right": "INT overflows at 21.5 million pounds when counting pence",
+      "wrong": [
+        "BIGINT is required by STRICT mode",
+        "BIGINT stores decimals exactly",
+        "INT cannot hold negative amounts"
+      ],
+      "tier": 3,
+      "why": "The README gives this reason."
+    },
+    {
+      "q": "After connecting a bank, nothing syncs. What is the most likely cause?",
+      "right": "The feed has not been pointed at one of your bank accounts",
+      "wrong": [
+        "The cron job for alerts is missing",
+        "The HMRC token has expired",
+        "The VAT scheme is set to cash accounting"
+      ],
+      "tier": 3,
+      "why": "Nothing syncs until each feed is mapped, and the mapping is never guessed."
+    },
+    {
+      "q": "A feed stops delivering after about three months and sync returns 401 or 403. What is the first thing to do?",
+      "right": "Reconnect, because consent has expired",
+      "wrong": [
+        "Restart PHP-FPM",
+        "Re-run all migrations",
+        "Delete the bank account and re-import the CSV history"
+      ],
+      "tier": 3,
+      "why": "UK Open Banking consent lasts at most 90 days; reconnecting loses nothing."
+    },
+    {
+      "q": "A bank corrects an amount on a row you have already reconciled. What does the sync do?",
+      "right": "Leaves it alone and lists it on screen for you to handle by hand",
+      "wrong": [
+        "Overwrites it with the bank's figure",
+        "Deletes the row and re-imports it",
+        "Merges it into a similar row"
+      ],
+      "tier": 3,
+      "why": "The row may be inside a filed VAT return."
+    },
+    {
+      "q": "Three identical £4.20 payments arrive in one week from a feed and a CSV. What does the merge rule do?",
+      "right": "Merges only where account, date and amount match with exactly one candidate",
+      "wrong": [
+        "Merges every pair with the same amount",
+        "Drops all but one",
+        "Always keeps the CSV row and deletes the feed rows"
+      ],
+      "tier": 3,
+      "why": "A visible duplicate can be deleted; merging two real transactions loses one."
+    },
+    {
+      "q": "What is the exact bank callback address to register with every provider?",
+      "right": "https://ggmoney.gglink.co.uk/banking/callback",
+      "wrong": [
+        "https://ggmoney.gglink.co.uk/settings/hmrc/callback",
+        "https://ggmoney.gglink.co.uk/banking/return",
+        "https://gglink.co.uk/callback"
+      ],
+      "tier": 3,
+      "why": "HMRC uses a different callback."
+    },
+    {
+      "q": "In what order does a VAT return move through its states?",
+      "right": "Draft, finalised, submitted",
+      "wrong": [
+        "Draft, submitted, finalised",
+        "Finalised, draft, submitted",
+        "Draft, approved, filed, locked"
+      ],
+      "tier": 3,
+      "why": "Finalising locks the numbers; submitting is a separate act."
+    },
+    {
+      "q": "Why are finalising and submitting separate acts?",
+      "right": "HMRC has no facility to withdraw a submitted return",
+      "wrong": [
+        "Finalising needs a second company",
+        "HMRC requires two weeks between them",
+        "Submission is optional once finalised"
+      ],
+      "tier": 3,
+      "why": "Submitting has its own declaration."
+    },
+    {
+      "q": "A user connects Gurugraphics but signs in with Moksy's Government Gateway account. What happens?",
+      "right": "The token binds to Moksy's VAT enrolment, so figures would be filed against the wrong VRN",
+      "wrong": [
+        "HMRC rejects it before saving any token",
+        "The app silently swaps to the correct company",
+        "Nothing, the token works for both companies"
+      ],
+      "tier": 3,
+      "why": "The token binds to whichever enrolment sits behind the login."
+    },
+    {
+      "q": "Which command creates a sandbox VAT test business?",
+      "right": "php8.1 bin/hmrc-test-user.php",
+      "wrong": [
+        "php bin/migrate.php --sandbox",
+        "./bin/deploy.sh --test-user",
+        "php deploy-check.php --sandbox"
+      ],
+      "tier": 3,
+      "why": "It prints a gateway ID, password and VRN once."
+    },
+    {
+      "q": "When can payroll for a tax year be filed through RTI?",
+      "right": "Once the year is listed in TAX_YEARS_VERIFIED after checking its rates",
+      "wrong": [
+        "As soon as the pay run is finalised",
+        "When APP_DEBUG is false",
+        "When the year's rates file exists"
+      ],
+      "tier": 3,
+      "why": "Payroll calculates regardless but RTI is blocked until verified."
+    },
+    {
+      "q": "Which statement about RTI is true?",
+      "right": "It goes to the Transaction Engine as GovTalk XML using Government Gateway credentials",
+      "wrong": [
+        "It uses the MTD REST API with OAuth",
+        "It uses SendGrid as its transport",
+        "It is filed through the bank provider"
+      ],
+      "tier": 3,
+      "why": "RTI does not use the MTD REST APIs."
+    },
+    {
+      "q": "How is a performance API token stored?",
+      "right": "Only a SHA-256 of it is stored, and the token is shown once",
+      "wrong": [
+        "In clear text so it can be re-shown",
+        "Encrypted with the company password",
+        "In the browser session only"
+      ],
+      "tier": 3,
+      "why": "This is a token-hashing design."
+    },
+    {
+      "q": "An AI agent with the review scope finds a concern in a brand review. What can it do?",
+      "right": "Post a note with a verdict and flags, without changing the review's status",
+      "wrong": [
+        "Approve the review",
+        "Edit the plan line",
+        "Post a correcting journal"
+      ],
+      "tier": 3,
+      "why": "Notes advise; only a person approves."
+    },
+    {
+      "q": "What makes a brand review stale?",
+      "right": "The live fingerprint differs from the one stored at submission",
+      "wrong": [
+        "Thirty days have passed",
+        "The brand was archived",
+        "The reviewer left the company"
+      ],
+      "tier": 3,
+      "why": "A stale review has to be put up again."
+    },
+    {
+      "q": "You are about to deploy a change that adds a migration. What should you run first?",
+      "right": "./bin/migration-check.sh",
+      "wrong": [
+        "php bin/backup.php --restore",
+        "php deploy-check.php over plain HTTP",
+        "./bin/deploy.sh --force"
+      ],
+      "tier": 3,
+      "why": "Tests run on SQLite, and MySQL can still refuse a migration."
+    },
+    {
+      "q": "What does bin/deploy.sh never touch?",
+      "right": "config.local.php, storage and the database",
+      "wrong": [
+        "The views directory",
+        "The tests directory",
+        "The migrations directory"
+      ],
+      "tier": 3,
+      "why": "It still applies migrations as part of the deploy."
+    },
+    {
+      "q": "A bad release must be undone. What is the rollback?",
+      "right": "Redeploy the previous commit and leave the database alone",
+      "wrong": [
+        "Restore last night's backup",
+        "Re-run every migration in reverse",
+        "Edit the journals back by hand"
+      ],
+      "tier": 3,
+      "why": "Code and data are separate, and posted journals are immutable."
+    },
+    {
+      "q": "A sandbox install has no MAIL_REDIRECT set. What happens to payslip emails?",
+      "right": "Nothing is sent",
+      "wrong": [
+        "They go to the real employees",
+        "They go to the owner automatically",
+        "They are queued until production"
+      ],
+      "tier": 3,
+      "why": "A sandbox install must not email real employees their salaries."
+    },
+    {
+      "q": "When MAIL_REDIRECT is set, where does an email go?",
+      "right": "To that one address with a banner naming the intended recipient",
+      "wrong": [
+        "To both the recipient and that address",
+        "Nowhere, it only logs",
+        "To the original recipient with a banner"
+      ],
+      "tier": 3,
+      "why": "You receive exactly what the recipient would have."
+    },
+    {
+      "q": "The README lists RTI FPS generation as working but the 5 October roadmap disagrees. Which reading matches the roadmap?",
+      "right": "The FPS builder exists but nothing in the web layer calls it, and there is no EPS builder",
+      "wrong": [
+        "The FPS is filed daily and the EPS is built",
+        "Both builders are wired and tested",
+        "The builders do not exist"
+      ],
+      "tier": 4,
+      "why": "Several items marked working still need credentials, wiring or fixes."
+    },
+    {
+      "q": "A colleague says QuickBooks can be cancelled because the README lists VAT as working. What do the sources say?",
+      "right": "Wait until one VAT quarter matches to the penny and two payroll months match exactly in parallel",
+      "wrong": [
+        "Cancel once the sandbox test passes",
+        "Cancel once the first return is filed",
+        "Cancel once the backup cron is running"
+      ],
+      "tier": 4,
+      "why": "The parallel run earns the cutover."
+    },
+    {
+      "q": "What is the 5 October 2026 audit's description of OAuth token storage, and how should it be treated?",
+      "right": "Stored and logged in clear text (item 83); re-check before relying on it",
+      "wrong": [
+        "Encrypted at rest",
+        "Stored only in the session",
+        "Never stored"
+      ],
+      "tier": 4,
+      "why": "A draft production checklist says tokens are never logged; the audit reports otherwise."
+    },
+    {
+      "q": "Cloudflare is set to Flexible for the GG Money hostname. What is the risk?",
+      "right": "HMRC tokens would travel in the clear between Cloudflare and the origin",
+      "wrong": [
+        "Browsers will not load the site",
+        "VAT returns are filed twice",
+        "Session cookies lose HttpOnly"
+      ],
+      "tier": 4,
+      "why": "Full (strict) is required."
+    },
+    {
+      "q": "A test shows https://ggmoney.gglink.co.uk/config.local.php downloads. What is most likely wrong?",
+      "right": "AllowOverride is off, so .htaccess is ignored and the secrets are public",
+      "wrong": [
+        "Cloudflare caching is on",
+        "PHP 8.1 FPM is down",
+        "The migrations have not run"
+      ],
+      "tier": 4,
+      "why": "Fix before anything else."
+    },
+    {
+      "q": "Why does CSRF protection matter especially in GG Money?",
+      "right": "A forged POST could file a VAT return that cannot be withdrawn",
+      "wrong": [
+        "It stops brute-force logins",
+        "It encrypts the cookie",
+        "It prevents SQL injection"
+      ],
+      "tier": 4,
+      "why": "The code comment says exactly this."
+    },
+    {
+      "q": "Why are session cookies SameSite Lax rather than Strict?",
+      "right": "The HMRC OAuth callback needs the cookie sent on the redirect back",
+      "wrong": [
+        "Strict is not supported by PHP",
+        "Lax encrypts the cookie",
+        "Lax blocks CSRF better"
+      ],
+      "tier": 4,
+      "why": "The callback is a cross-site top-level navigation."
+    },
+    {
+      "q": "A sync finds the bank has withdrawn a transaction you have not reconciled. What happens?",
+      "right": "It is deleted",
+      "wrong": [
+        "It is kept and flagged for the owner",
+        "It is moved into suspense",
+        "It is reversed with a journal"
+      ],
+      "tier": 4,
+      "why": "A withdrawn unreconciled transaction is deleted; reconciled ones are left."
+    },
+    {
+      "q": "A new provider returns debits as positive amounts. What must its adapter do?",
+      "right": "Negate them so amountPence is positive for money in",
+      "wrong": [
+        "Leave them, the importer fixes the sign",
+        "Store them as floats",
+        "Reject the provider"
+      ],
+      "tier": 4,
+      "why": "Plaid is the opposite way round and negates; a test pins this."
+    },
+    {
+      "q": "A month-end agent reads a submitted review. What is the right first step?",
+      "right": "Skip it if stale, then read the unplanned postings first",
+      "wrong": [
+        "Approve it",
+        "Post looks_right",
+        "Read variances smallest first"
+      ],
+      "tier": 4,
+      "why": "The API guide's outline."
+    },
+    {
+      "q": "A manager says the 4 October stress run proves the system on MySQL. Why is that wrong?",
+      "right": "It ran on SQLite only and did not cover MySQL, live channels or bank providers",
+      "wrong": [
+        "It ran only 124 cases",
+        "It covered MySQL but not SQLite",
+        "It found no issues"
+      ],
+      "tier": 5,
+      "why": "The audit says nothing had been fixed."
+    },
+    {
+      "q": "Which items of the 4 October audit did the 5 October roadmap say were fixed?",
+      "right": "Only #139, #140 and #143",
+      "wrong": [
+        "All critical items",
+        "All tenant isolation items",
+        "None of them"
+      ],
+      "tier": 5,
+      "why": "Tests had not been run."
+    },
+    {
+      "q": "An engineer wants to make a feed sync idempotent by deleting and re-importing the last month. Why is this unsafe?",
+      "right": "It could alter reconciled rows that sit inside a filed VAT return",
+      "wrong": [
+        "The provider forbids it",
+        "It would exceed the rate limit only",
+        "It breaks the Y-m-d date format"
+      ],
+      "tier": 5,
+      "why": "Reconciled rows are never changed."
+    },
+    {
+      "q": "Moksy's PAYE enrolment sits on a different gateway account from Gurugraphics. What limits filing for the second company?",
+      "right": "The app stores one RTI sender ID, so storage would need to become per-company",
+      "wrong": [
+        "HMRC allows only one company per vendor ID",
+        "TAX_YEARS_VERIFIED is global",
+        "Fraud prevention headers differ"
+      ],
+      "tier": 5,
+      "why": "Noted in the RUNBOOK."
+    },
+    {
+      "q": "Why should money not be stored as floating point?",
+      "right": "Binary floats cannot represent many decimal fractions exactly",
+      "wrong": [
+        "Floats are slower",
+        "Floats cannot hold large amounts",
+        "Floats are not supported in MySQL"
+      ],
+      "tier": 2,
+      "why": "0.1 plus 0.2 is the classic example."
+    },
+    {
+      "q": "A client retries a payment request after a timeout. How do you avoid charging twice?",
+      "right": "Send an idempotency key so the retry is recognised as the same request",
+      "wrong": [
+        "Retry immediately in a loop",
+        "Add a longer timeout",
+        "Delete the earlier request"
+      ],
+      "tier": 3,
+      "why": "The server stores the result against the key."
+    },
+    {
+      "q": "What does double-entry bookkeeping guarantee in a posting?",
+      "right": "Total debits equal total credits",
+      "wrong": [
+        "Every posting has a single line",
+        "Every posting is tax-free",
+        "Every posting affects the bank account"
+      ],
+      "tier": 1,
+      "why": "It keeps the books in balance."
+    },
+    {
+      "q": "A suspense account balance keeps growing. What should happen?",
+      "right": "Investigate and clear the items to real accounts",
+      "wrong": [
+        "Leave it, it will net off",
+        "Write it off at year end",
+        "Hide it from reports"
+      ],
+      "tier": 4,
+      "why": "Suspense hides errors."
+    },
+    {
+      "q": "What does this cron line do?",
+      "code": "5  7 * * *    cd /var/www/ggmoney.gglink.co.uk && php8.1 bin/compliance.php >> storage/compliance.log 2>&1",
+      "right": "Generates missing compliance tasks, runs the automatic checks and prints what is overdue, before the alert digest",
+      "wrong": [
+        "Emails each owner the deadline digest",
+        "Takes the daily database backup",
+        "Files the day's VAT return"
+      ],
+      "tier": 3,
+      "why": "bin/compliance.php files nothing and emails nobody."
+    },
+    {
+      "q": "What does this config line mean for a 2026-27 pay run?",
+      "code": "define('TAX_YEARS_VERIFIED', ['2025-26']);",
+      "right": "Payroll calculates for 2026-27 but RTI is blocked, because only 2025-26 is verified",
+      "wrong": [
+        "Payroll for 2026-27 is blocked entirely",
+        "RTI is allowed for 2026-27 using placeholder rates",
+        "Both years are filed automatically"
+      ],
+      "tier": 3,
+      "why": "A year is fileable only once it is listed in TAX_YEARS_VERIFIED."
+    },
+    {
+      "q": "What does this query show?",
+      "code": "SELECT created_at, to_email, subject, status, error FROM email_log ORDER BY id DESC LIMIT 20;",
+      "right": "The twenty most recent email sends with status and any error, but not message bodies",
+      "wrong": [
+        "The full text of the latest payslip emails",
+        "Every HMRC request header sent",
+        "Employees' bank details"
+      ],
+      "tier": 3,
+      "why": "email_log omits the body deliberately."
+    },
+    {
+      "q": "What does this request return?",
+      "code": "curl -H \"Authorization: Bearer $TOKEN\" \"https://ggmoney.gglink.co.uk/api/v1/performance?scope=brand:moksy-studio&period=month&date=2026-08-01\"",
+      "right": "Performance figures for the moksy-studio brand for the month containing 1 August 2026",
+      "wrong": [
+        "A list of all brands",
+        "The ledger journals for August",
+        "A new review for the brand"
+      ],
+      "tier": 3,
+      "why": "scope, period and date select the view."
+    },
+    {
+      "q": "What does this POST do to the review?",
+      "code": "POST /api/v1/reviews/12/notes\n{\"verdict\":\"concern\",\"body\":\"Card fees are 5.1% of sales against a plan of 2.9%.\",\"flags\":[\"7900\",\"cost.payment_fees\"]}",
+      "right": "Adds a concern note with flags, without changing the review's status",
+      "wrong": [
+        "Approves the review",
+        "Marks the review stale",
+        "Edits the plan line for account 7900"
+      ],
+      "tier": 4,
+      "why": "It needs the review scope and notes only advise."
+    },
+    {
+      "q": "What does this command do?",
+      "code": "./bin/deploy.sh --dry-run",
+      "right": "Previews what a deploy would change without uploading",
+      "wrong": [
+        "Deploys and then runs the tests",
+        "Rolls back the last release",
+        "Applies pending migrations to production"
+      ],
+      "tier": 2,
+      "why": "The real deploy omits --dry-run."
+    }
+  ]
+}

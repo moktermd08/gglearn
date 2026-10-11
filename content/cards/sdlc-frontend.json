@@ -1,0 +1,2387 @@
+{
+ "slug": "sdlc-frontend",
+ "name": "Frontend development",
+ "description": "UI framework, design system, responsive, accessibility, theming.",
+ "roles": "developer",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "comp": "component concept",
+  "ds": "design system concept",
+  "resp": "responsive design technique",
+  "a11y": "accessibility practice",
+  "perf": "performance concept",
+  "state": "state management concept",
+  "form": "form practice",
+  "render": "rendering strategy",
+  "pwa": "web platform practice",
+  "test": "frontend testing practice",
+  "sec": "frontend security concept",
+  "seo": "SEO practice",
+  "gg": "gglearn UI rule"
+ },
+ "cards": [
+  {
+   "group": "comp",
+   "subject": "A component",
+   "tier": 1,
+   "says": [
+    "is a reusable piece of UI that owns its markup, styling and behaviour",
+    "is combined with other components to build pages"
+   ],
+   "use": "want to reuse the same card layout on many pages",
+   "not": [
+    "must be a full page of its own"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "Props",
+   "tier": 1,
+   "says": [
+    "pass data from a parent component down to a child",
+    "are read-only inside the child that receives them"
+   ],
+   "use": "need to give a child component its title and click handler",
+   "not": [
+    "let a child edit the parent's data directly"
+   ],
+   "like": [
+    "Local state",
+    "The children prop"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "The children prop",
+   "tier": 2,
+   "says": [
+    "lets a parent place arbitrary content inside a wrapper component",
+    "makes layout wrappers such as cards and modals reusable"
+   ],
+   "use": "build a card whose body differs on every page",
+   "like": [
+    "Props"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A presentational component",
+   "tier": 2,
+   "says": [
+    "renders UI purely from the props it receives",
+    "has no knowledge of where its data comes from",
+    "is easy to test and reuse because it fetches nothing"
+   ],
+   "use": "want a button list that can be reused with any data",
+   "not": [
+    "fetches its own data and applies business rules"
+   ],
+   "like": [
+    "A container component"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A container component",
+   "tier": 4,
+   "says": [
+    "fetches or prepares data and passes it to presentational children",
+    "keeps data loading and business rules out of the visual layer"
+   ],
+   "use": "need to load a user's data and hand it to a profile card",
+   "not": [
+    "contains only styling and no logic"
+   ],
+   "like": [
+    "A presentational component"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A controlled component",
+   "tier": 4,
+   "says": [
+    "gets the current value of a form field from state through props",
+    "updates that state on every change event",
+    "keeps React state as the single source of truth for the input"
+   ],
+   "use": "need to validate or reformat input on every keystroke",
+   "like": [
+    "An uncontrolled component"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "An uncontrolled component",
+   "tier": 4,
+   "says": [
+    "lets the DOM hold the current value of a form field",
+    "reads the value through a ref only when needed"
+   ],
+   "use": "want a simple form where you read the value once on submit",
+   "like": [
+    "A controlled component"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A list key",
+   "tier": 3,
+   "says": [
+    "gives each rendered list item a stable identity",
+    "helps the framework match items between renders",
+    "should not be the array index when items can be reordered"
+   ],
+   "use": "render a list of rows that users can sort and delete",
+   "not": [
+    "must be unique across the whole page"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "An error boundary",
+   "tier": 5,
+   "says": [
+    "catches errors thrown while rendering its children",
+    "shows a fallback UI instead of a blank page",
+    "does not catch errors inside event handlers"
+   ],
+   "use": "want one broken widget not to take down the whole page",
+   "not": [
+    "catches every error including those in async code and handlers"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "Compound components",
+   "tier": 5,
+   "says": [
+    "share implicit state between a parent and its related children",
+    "let you write Tabs with Tabs.List and Tabs.Panel pieces",
+    "give consumers flexible composition instead of a long props list"
+   ],
+   "use": "build a tabs widget whose pieces consumers arrange freely",
+   "like": [
+    "The children prop"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A server component",
+   "tier": 3,
+   "says": [
+    "renders on the server and sends no component code to the browser",
+    "can read data directly on the server",
+    "cannot use browser-only features such as click handlers or local state"
+   ],
+   "use": "want a page section that only displays data and needs no interactivity",
+   "not": [
+    "can attach an onClick handler"
+   ],
+   "like": [
+    "A client component"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A client component",
+   "tier": 3,
+   "says": [
+    "is marked with the use client directive",
+    "runs in the browser and can hold state and handle events",
+    "adds its code to the JavaScript bundle sent to users"
+   ],
+   "use": "need a form with local state and click handlers",
+   "not": [
+    "is rendered only once on the server and never in the browser"
+   ],
+   "like": [
+    "A server component"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "A design system",
+   "tier": 1,
+   "says": [
+    "is a shared set of rules, tokens and components with usage guidance",
+    "makes products consistent and speeds up design and development"
+   ],
+   "use": "want designers and developers to stop reinventing buttons"
+  },
+  {
+   "group": "ds",
+   "subject": "A design token",
+   "tier": 1,
+   "says": [
+    "is a named value such as a colour, spacing step or corner radius",
+    "lets one change update every component that uses it"
+   ],
+   "use": "want to change the brand colour in one place",
+   "not": [
+    "is a login credential for the design tool"
+   ],
+   "like": [
+    "A CSS custom property",
+    "A semantic token",
+    "A primitive token"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "A semantic token",
+   "tier": 2,
+   "says": [
+    "is named by purpose such as surface or text-muted",
+    "can point to a different value in each theme"
+   ],
+   "use": "need a muted text colour that works in both light and dark themes",
+   "not": [
+    "is named after its colour such as light-grey"
+   ],
+   "like": [
+    "A primitive token",
+    "A design token",
+    "A CSS custom property"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "A primitive token",
+   "tier": 4,
+   "says": [
+    "holds a raw value such as a specific shade of blue",
+    "sits underneath semantic tokens as the base palette"
+   ],
+   "use": "need the raw palette that semantic tokens map onto",
+   "like": [
+    "A semantic token"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "A spacing scale",
+   "tier": 2,
+   "says": [
+    "limits margins and padding to a small set of steps",
+    "keeps gaps consistent across screens"
+   ],
+   "use": "want gaps to look consistent without arguing about pixels"
+  },
+  {
+   "group": "ds",
+   "subject": "Theming",
+   "tier": 3,
+   "says": [
+    "swaps token values to change the look without changing components",
+    "supports variants such as light, dark or a partner brand"
+   ],
+   "use": "need the same components to carry a second brand",
+   "like": [
+    "Dark mode"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "Dark mode",
+   "tier": 2,
+   "says": [
+    "is the same components with a second set of token values",
+    "can follow the operating system preference or a user switch"
+   ],
+   "use": "want the interface to follow the user's system appearance setting",
+   "not": [
+    "needs a separate copy of every component"
+   ],
+   "like": [
+    "Theming"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "A CSS custom property",
+   "tier": 3,
+   "says": [
+    "holds a value declared with a double dash name and read with var()",
+    "can be overridden for a subtree or a theme at runtime"
+   ],
+   "use": "want to change a colour by switching a class on the page root",
+   "like": [
+    "A design token",
+    "A semantic token",
+    "A primitive token"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "Design drift",
+   "tier": 4,
+   "says": [
+    "happens when product screens slowly diverge from the design system",
+    "is reduced by regular reviews and by removing unused parts"
+   ],
+   "use": "find three slightly different blues across the product",
+   "like": [
+    "A component variant"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Mobile-first design",
+   "tier": 1,
+   "says": [
+    "starts with the small-screen layout and adds rules as space grows",
+    "usually writes min-width media queries"
+   ],
+   "use": "want the phone experience to be the baseline"
+  },
+  {
+   "group": "resp",
+   "subject": "A media query",
+   "tier": 1,
+   "says": [
+    "applies CSS only when a condition such as viewport width is met",
+    "can also test preferences such as reduced motion or colour scheme"
+   ],
+   "use": "want a different layout on wide screens",
+   "like": [
+    "A container query"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "A breakpoint",
+   "tier": 3,
+   "says": [
+    "is the width at which the layout changes",
+    "should be chosen where the content starts to break, not by device name"
+   ],
+   "use": "see a sidebar squash the text at tablet width",
+   "like": [
+    "A media query"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "The viewport meta tag",
+   "tier": 3,
+   "says": [
+    "tells mobile browsers to match the layout width to the device width",
+    "is needed for media queries to behave properly on phones"
+   ],
+   "use": "find that a mobile page shows as a tiny zoomed-out desktop layout"
+  },
+  {
+   "group": "resp",
+   "subject": "Flexbox",
+   "tier": 2,
+   "says": [
+    "lays items out along one axis, in a row or a column",
+    "distributes free space and aligns items within a single line or wrap"
+   ],
+   "use": "need a toolbar whose items sit in a row and share space",
+   "not": [
+    "places items in rows and columns at once by default"
+   ],
+   "like": [
+    "CSS Grid"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "CSS Grid",
+   "tier": 2,
+   "says": [
+    "lays items out in rows and columns at the same time",
+    "lets items span several tracks"
+   ],
+   "use": "need a dashboard with named areas across rows and columns",
+   "like": [
+    "Flexbox"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Relative units",
+   "tier": 3,
+   "says": [
+    "size things such as text and spacing from a root or parent value",
+    "let layouts respect the user's chosen font size"
+   ],
+   "use": "want text to scale when the user raises the browser font size",
+   "not": [
+    "are fixed pixel sizes"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Responsive images",
+   "tier": 3,
+   "says": [
+    "offer several image sizes through srcset and sizes",
+    "let the browser pick a file that fits the screen"
+   ],
+   "use": "want phones to avoid downloading a desktop-sized hero photo"
+  },
+  {
+   "group": "resp",
+   "subject": "A container query",
+   "tier": 4,
+   "says": [
+    "styles a component based on the size of its container",
+    "lets one card adapt differently in a sidebar and in a wide column"
+   ],
+   "use": "need a card that adapts to the space it is placed in rather than the screen",
+   "like": [
+    "A media query"
+   ]
+  },
+  {
+   "group": "resp",
+   "subject": "Fluid typography",
+   "tier": 4,
+   "says": [
+    "scales text smoothly between a minimum and maximum size",
+    "is commonly written with the clamp() function"
+   ],
+   "use": "want headings to grow gradually with the viewport instead of in jumps"
+  },
+  {
+   "group": "a11y",
+   "subject": "WCAG",
+   "tier": 1,
+   "says": [
+    "is the W3C standard of testable accessibility success criteria",
+    "has conformance levels A, AA and AAA",
+    "is organised around being perceivable, operable, understandable and robust"
+   ],
+   "use": "need a standard to measure accessibility against"
+  },
+  {
+   "group": "a11y",
+   "subject": "Semantic HTML",
+   "tier": 1,
+   "says": [
+    "uses elements such as button, nav and h1 for their meaning",
+    "gives assistive technology roles and keyboard behaviour for free"
+   ],
+   "use": "want a clickable control that works with a keyboard without extra code",
+   "not": [
+    "is only for search engines and has no accessibility value"
+   ],
+   "like": [
+    "ARIA"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Alternative text",
+   "tier": 1,
+   "says": [
+    "gives a text equivalent of a meaningful image",
+    "should be empty for purely decorative images"
+   ],
+   "use": "add a chart image that carries information",
+   "like": [
+    "An aria-label",
+    "A form label",
+    "ARIA"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Keyboard navigation",
+   "tier": 2,
+   "says": [
+    "lets users reach and operate every control without a mouse",
+    "follows an order that matches the visual reading order"
+   ],
+   "use": "have users who cannot use a pointing device"
+  },
+  {
+   "group": "a11y",
+   "subject": "A focus indicator",
+   "tier": 2,
+   "says": [
+    "shows which element currently has keyboard focus",
+    "must not be removed unless replaced by something equally visible"
+   ],
+   "use": "see designers asking to remove the outline because it looks ugly"
+  },
+  {
+   "group": "a11y",
+   "subject": "Colour contrast",
+   "tier": 2,
+   "says": [
+    "compares the lightness of text against its background",
+    "requires at least 4.5 to 1 for normal text at level AA"
+   ],
+   "use": "check that grey text is readable on a white card",
+   "not": [
+    "is satisfied by any colour pair that looks pleasant"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A form label",
+   "tier": 2,
+   "says": [
+    "is programmatically tied to its input",
+    "gives the field an accessible name and a bigger click area"
+   ],
+   "use": "find that a screen reader says only edit text for a field",
+   "not": [
+    "can be replaced by placeholder text alone"
+   ],
+   "like": [
+    "Alternative text",
+    "An aria-label",
+    "ARIA"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "ARIA",
+   "tier": 3,
+   "says": [
+    "adds roles, states and properties to improve the accessibility tree",
+    "should be used only when no native element does the job",
+    "does not add keyboard behaviour by itself"
+   ],
+   "use": "build a custom widget with no native HTML equivalent",
+   "not": [
+    "makes a div behave like a button in every way once the role is added"
+   ],
+   "like": [
+    "An aria-label",
+    "Semantic HTML"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "An aria-label",
+   "tier": 3,
+   "says": [
+    "gives an element an accessible name that is not visible text",
+    "is typical for an icon-only button"
+   ],
+   "use": "have a button showing only a magnifier icon",
+   "like": [
+    "Alternative text",
+    "A form label",
+    "ARIA"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A skip link",
+   "tier": 3,
+   "says": [
+    "lets keyboard users jump past repeated navigation to the main content",
+    "is usually the first focusable element on the page"
+   ],
+   "use": "see keyboard users tabbing through forty menu links on every page"
+  },
+  {
+   "group": "a11y",
+   "subject": "A reduced motion preference",
+   "tier": 3,
+   "says": [
+    "is a user setting that asks for less animation",
+    "is read with the prefers-reduced-motion media query"
+   ],
+   "use": "want to tone down parallax or confetti for users who get dizzy"
+  },
+  {
+   "group": "a11y",
+   "subject": "A live region",
+   "tier": 4,
+   "says": [
+    "announces dynamic changes to a screen reader without moving focus",
+    "is created with aria-live or roles such as status and alert"
+   ],
+   "use": "show a toast saying the save succeeded"
+  },
+  {
+   "group": "a11y",
+   "subject": "A focus trap",
+   "tier": 5,
+   "says": [
+    "keeps keyboard focus inside an open modal dialog",
+    "returns focus to the opener when the dialog closes"
+   ],
+   "use": "open a modal where Tab must not reach the page behind"
+  },
+  {
+   "group": "a11y",
+   "subject": "A positive tabindex",
+   "tier": 5,
+   "says": [
+    "forces an element earlier in the tab order than natural order",
+    "is usually avoided because it makes order hard to maintain"
+   ],
+   "use": "are tempted to reorder tab stops with numbers greater than zero",
+   "like": [
+    "A skip link"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Core Web Vitals",
+   "tier": 2,
+   "says": [
+    "are Google's user-centred metrics for loading, responsiveness and visual stability",
+    "are measured on real users in the field and in lab tools"
+   ],
+   "use": "need a shared set of metrics for page experience"
+  },
+  {
+   "group": "perf",
+   "subject": "Largest Contentful Paint",
+   "tier": 3,
+   "says": [
+    "measures how long the largest visible content element takes to render",
+    "is often a hero image or a main heading"
+   ],
+   "use": "want to know how fast the main content appears",
+   "not": [
+    "measures layout movement after load"
+   ],
+   "like": [
+    "Cumulative Layout Shift",
+    "Interaction to Next Paint"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Cumulative Layout Shift",
+   "tier": 3,
+   "says": [
+    "measures unexpected movement of visible content",
+    "is reduced by reserving space for images and ads"
+   ],
+   "use": "see a button jump as an image finishes loading",
+   "like": [
+    "Largest Contentful Paint"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Interaction to Next Paint",
+   "tier": 3,
+   "says": [
+    "measures how quickly the page responds visually to user input",
+    "gets worse when long tasks block the main thread"
+   ],
+   "use": "find that clicks feel sluggish on a busy page",
+   "like": [
+    "Largest Contentful Paint"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Bundle size",
+   "tier": 2,
+   "says": [
+    "is the amount of JavaScript and CSS users must download",
+    "grows with every dependency you add"
+   ],
+   "use": "see that a date library doubled the download size"
+  },
+  {
+   "group": "perf",
+   "subject": "Code splitting",
+   "tier": 3,
+   "says": [
+    "breaks the bundle into chunks loaded when needed",
+    "is usually done at route or dynamic import boundaries"
+   ],
+   "use": "want the admin screens not to slow the home page",
+   "like": [
+    "Lazy loading"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Lazy loading",
+   "tier": 2,
+   "says": [
+    "delays loading images or components until they are about to be needed",
+    "is enabled for images with the loading attribute set to lazy"
+   ],
+   "use": "have a long page with many images far below the fold",
+   "not": [
+    "should be applied to the main hero image"
+   ],
+   "like": [
+    "Code splitting"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Tree shaking",
+   "tier": 4,
+   "says": [
+    "removes unused exports from the final bundle",
+    "works best with ES module imports"
+   ],
+   "use": "import one function from a large utility library",
+   "not": [
+    "removes unused CSS from the page by itself"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Image optimisation",
+   "tier": 2,
+   "says": [
+    "uses modern formats, right sizes and compression",
+    "gives width and height so the browser can reserve space"
+   ],
+   "use": "need the page images to weigh less"
+  },
+  {
+   "group": "perf",
+   "subject": "A CDN",
+   "tier": 4,
+   "says": [
+    "serves static assets from locations close to users",
+    "lowers latency and offloads traffic from the origin"
+   ],
+   "use": "serve users in many countries with the same files"
+  },
+  {
+   "group": "perf",
+   "subject": "Cache-Control",
+   "tier": 4,
+   "says": [
+    "is an HTTP header that tells browsers and caches how long to keep a response",
+    "allows fingerprinted assets to be cached for a long time"
+   ],
+   "use": "need hashed bundles to be reused across visits"
+  },
+  {
+   "group": "perf",
+   "subject": "A render-blocking resource",
+   "tier": 3,
+   "says": [
+    "delays first paint until it has downloaded and been processed",
+    "is typically CSS in the head or a synchronous script"
+   ],
+   "use": "see a blank screen while a big script loads",
+   "like": [
+    "A preload hint"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Debouncing",
+   "tier": 4,
+   "says": [
+    "waits until activity stops before running a function",
+    "avoids firing a search request on every keystroke"
+   ],
+   "use": "want to call the search API only after typing pauses"
+  },
+  {
+   "group": "perf",
+   "subject": "List virtualization",
+   "tier": 4,
+   "says": [
+    "renders only the rows currently visible in the viewport",
+    "keeps the DOM small for lists with thousands of items"
+   ],
+   "use": "need to show a table with fifty thousand rows"
+  },
+  {
+   "group": "perf",
+   "subject": "A performance budget",
+   "tier": 5,
+   "says": [
+    "sets a limit for bundle size or a metric that builds must respect",
+    "can fail the pipeline when a limit is exceeded"
+   ],
+   "use": "want to stop the app silently getting heavier each sprint"
+  },
+  {
+   "group": "perf",
+   "subject": "Real user monitoring",
+   "tier": 5,
+   "says": [
+    "collects performance data from actual visitors",
+    "reveals slow devices and networks lab tests miss"
+   ],
+   "use": "see good lab scores but complaints from users in slow regions"
+  },
+  {
+   "group": "perf",
+   "subject": "A preload hint",
+   "tier": 5,
+   "says": [
+    "tells the browser to fetch a critical resource early",
+    "is suited to the hero image or a font used on first paint"
+   ],
+   "use": "know that the largest image is discovered late by the browser",
+   "like": [
+    "A render-blocking resource",
+    "Lazy loading"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "Local state",
+   "tier": 1,
+   "says": [
+    "belongs to one component and lives only while it is mounted",
+    "suits things such as an open dropdown or an input draft"
+   ],
+   "use": "track whether a menu is open",
+   "like": [
+    "Global state"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "Lifting state up",
+   "tier": 2,
+   "says": [
+    "moves shared state to the nearest common parent",
+    "lets sibling components stay in sync"
+   ],
+   "use": "need two sibling components to show the same selection"
+  },
+  {
+   "group": "state",
+   "subject": "Global state",
+   "tier": 2,
+   "says": [
+    "is available to many distant components through a store or context",
+    "is easy to overuse for data only one screen needs"
+   ],
+   "use": "need the signed-in user in the header and on many pages",
+   "like": [
+    "Local state",
+    "Server state"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "Prop drilling",
+   "tier": 2,
+   "says": [
+    "passes props through many layers that do not use them",
+    "makes refactoring harder as the tree grows"
+   ],
+   "use": "see a theme value handed through five wrapper components"
+  },
+  {
+   "group": "state",
+   "subject": "Server state",
+   "tier": 4,
+   "says": [
+    "is data owned by the backend and cached in the client",
+    "needs handling for loading, errors and staleness"
+   ],
+   "use": "show a list of records fetched from an API",
+   "like": [
+    "Global state",
+    "URL state"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "URL state",
+   "tier": 3,
+   "says": [
+    "stores filters, sorting or a page number in the address",
+    "makes a view linkable, bookmarkable and shareable"
+   ],
+   "use": "want a filtered list to survive a refresh and be sent to a colleague",
+   "like": [
+    "Server state"
+   ]
+  },
+  {
+   "group": "state",
+   "subject": "Derived state",
+   "tier": 3,
+   "says": [
+    "is computed from existing state instead of being stored again",
+    "avoids copies that fall out of sync"
+   ],
+   "use": "need the total price of items already in a cart"
+  },
+  {
+   "group": "state",
+   "subject": "A reducer",
+   "tier": 4,
+   "says": [
+    "computes the next state from the current state and an action",
+    "centralises state transitions in one testable function"
+   ],
+   "use": "have many related updates that must follow strict rules"
+  },
+  {
+   "group": "state",
+   "subject": "An optimistic update",
+   "tier": 4,
+   "says": [
+    "shows the expected result before the server confirms",
+    "rolls back if the request fails"
+   ],
+   "use": "want a like button to feel instant"
+  },
+  {
+   "group": "state",
+   "subject": "Cache invalidation of fetched data",
+   "tier": 5,
+   "says": [
+    "marks cached server data as stale after a change",
+    "triggers a refetch so the screen shows current values"
+   ],
+   "use": "see old data after saving an edit on another screen"
+  },
+  {
+   "group": "form",
+   "subject": "Client-side validation",
+   "tier": 1,
+   "says": [
+    "runs checks in the browser before the request is sent",
+    "is a convenience that a user can bypass"
+   ],
+   "use": "want a friendly message for an empty email field",
+   "not": [
+    "makes server checks unnecessary"
+   ],
+   "like": [
+    "Server-side validation"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "Server-side validation",
+   "tier": 1,
+   "says": [
+    "checks every submitted value again on the server",
+    "is the authority that cannot be bypassed by editing the page"
+   ],
+   "use": "must trust only what an attacker cannot change",
+   "like": [
+    "Client-side validation"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "An inline error message",
+   "tier": 2,
+   "says": [
+    "appears next to the field that failed",
+    "explains the problem in plain words"
+   ],
+   "use": "want users to see which field is wrong and why"
+  },
+  {
+   "group": "form",
+   "subject": "Double-submit protection",
+   "tier": 2,
+   "says": [
+    "disables the submit button or ignores repeats while a request is in flight",
+    "prevents duplicate orders or records"
+   ],
+   "use": "find users clicking Pay twice on a slow connection"
+  },
+  {
+   "group": "form",
+   "subject": "The autocomplete attribute",
+   "tier": 3,
+   "says": [
+    "tells the browser what kind of value a field expects",
+    "lets browsers and password managers fill the field accurately"
+   ],
+   "use": "want address and email fields to fill automatically"
+  },
+  {
+   "group": "form",
+   "subject": "The accept attribute on a file input",
+   "tier": 3,
+   "says": [
+    "filters the file picker by type",
+    "is only a hint and does not enforce anything"
+   ],
+   "use": "want the picker to show only images",
+   "not": [
+    "guarantees that every uploaded file is an image"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "A content-based file type check",
+   "tier": 4,
+   "says": [
+    "inspects the file bytes to identify the real format",
+    "does not trust the extension or the declared type"
+   ],
+   "use": "must be sure an uploaded file is truly a PNG",
+   "not": [
+    "trusts the file name ending"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "An idempotency key",
+   "tier": 5,
+   "says": [
+    "is a unique value sent with a request so a repeat is processed once",
+    "lets a retry after a timeout avoid creating a duplicate"
+   ],
+   "use": "must retry a payment request safely after a network failure",
+   "like": [
+    "Double-submit protection"
+   ]
+  },
+  {
+   "group": "render",
+   "subject": "Client-side rendering",
+   "tier": 1,
+   "says": [
+    "builds the page in the browser from JavaScript",
+    "shows little useful HTML until the script runs"
+   ],
+   "use": "build a logged-in dashboard where SEO does not matter",
+   "not": [
+    "delivers complete HTML for crawlers on first response"
+   ]
+  },
+  {
+   "group": "render",
+   "subject": "Server-side rendering",
+   "tier": 2,
+   "says": [
+    "generates HTML on the server for each request",
+    "sends content users and crawlers see right away"
+   ],
+   "use": "need fresh, personalised content that crawlers can read",
+   "like": [
+    "Static site generation",
+    "Incremental static regeneration",
+    "Streaming rendering"
+   ]
+  },
+  {
+   "group": "render",
+   "subject": "Static site generation",
+   "tier": 2,
+   "says": [
+    "builds pages to HTML once at build time",
+    "serves pre-built pages cheaply from a CDN"
+   ],
+   "use": "have a marketing page that changes rarely",
+   "not": [
+    "renders again on every request"
+   ],
+   "like": [
+    "Server-side rendering"
+   ]
+  },
+  {
+   "group": "render",
+   "subject": "Client-side routing",
+   "tier": 2,
+   "says": [
+    "swaps views in the browser without a full page reload",
+    "keeps the shell loaded between navigations"
+   ],
+   "use": "want fast navigation between screens of an app"
+  },
+  {
+   "group": "render",
+   "subject": "Hydration",
+   "tier": 4,
+   "says": [
+    "attaches event handlers to HTML that the server already rendered",
+    "makes server-rendered markup interactive"
+   ],
+   "use": "see a server-rendered button that does nothing until scripts load",
+   "like": [
+    "Partial hydration",
+    "A hydration mismatch"
+   ]
+  },
+  {
+   "group": "render",
+   "subject": "A hydration mismatch",
+   "tier": 5,
+   "says": [
+    "happens when server HTML differs from the first client render",
+    "is often caused by values such as the current time or random numbers"
+   ],
+   "use": "see a warning after rendering a timestamp on the server",
+   "like": [
+    "Hydration"
+   ]
+  },
+  {
+   "group": "render",
+   "subject": "Incremental static regeneration",
+   "tier": 5,
+   "says": [
+    "rebuilds a static page in the background after a set interval",
+    "serves the old page until the new one is ready"
+   ],
+   "use": "want mostly static pages that refresh every few minutes",
+   "like": [
+    "Static site generation",
+    "Server-side rendering"
+   ]
+  },
+  {
+   "group": "render",
+   "subject": "Streaming rendering",
+   "tier": 5,
+   "says": [
+    "sends parts of the page as they become ready",
+    "lets slow sections show a fallback while fast ones appear"
+   ],
+   "use": "have one slow data call blocking an otherwise fast page",
+   "like": [
+    "Server-side rendering"
+   ]
+  },
+  {
+   "group": "render",
+   "subject": "Partial hydration",
+   "tier": 5,
+   "says": [
+    "hydrates only the interactive parts of a page",
+    "ships less JavaScript for mostly static content"
+   ],
+   "use": "want a content page with a couple of interactive widgets",
+   "like": [
+    "Hydration"
+   ]
+  },
+  {
+   "group": "pwa",
+   "subject": "A progressive web app",
+   "tier": 1,
+   "says": [
+    "is a website that can be installed and work with poor connectivity",
+    "combines HTTPS, a manifest and a service worker"
+   ],
+   "use": "want a web app that can be added to the home screen"
+  },
+  {
+   "group": "pwa",
+   "subject": "A service worker",
+   "tier": 4,
+   "says": [
+    "is a script that runs separately from the page and intercepts network requests",
+    "enables offline support and caching strategies",
+    "is registered by the page through navigator.serviceWorker.register"
+   ],
+   "use": "need the app to open without a network",
+   "not": [
+    "can read and change the page DOM directly"
+   ]
+  },
+  {
+   "group": "pwa",
+   "subject": "A web app manifest",
+   "tier": 2,
+   "says": [
+    "is a JSON file with the app's name, icons and display mode",
+    "makes a site installable"
+   ],
+   "use": "want a custom icon and standalone window when installed"
+  },
+  {
+   "group": "pwa",
+   "subject": "Progressive enhancement",
+   "tier": 3,
+   "says": [
+    "starts from working HTML and layers features on top",
+    "keeps core content usable when scripts fail"
+   ],
+   "use": "want the basic task to work on any browser",
+   "like": [
+    "Graceful degradation"
+   ]
+  },
+  {
+   "group": "pwa",
+   "subject": "Graceful degradation",
+   "tier": 4,
+   "says": [
+    "builds the full experience first and plans a fallback",
+    "reduces features when something is unsupported"
+   ],
+   "use": "must keep an advanced design usable in an old browser",
+   "like": [
+    "Progressive enhancement"
+   ]
+  },
+  {
+   "group": "pwa",
+   "subject": "Feature detection",
+   "tier": 4,
+   "says": [
+    "tests whether a capability exists before using it",
+    "is preferred over guessing from the browser name"
+   ],
+   "use": "want to use an API only where it is supported",
+   "not": [
+    "reads the user agent string to identify the browser"
+   ]
+  },
+  {
+   "group": "pwa",
+   "subject": "A polyfill",
+   "tier": 3,
+   "says": [
+    "adds a missing browser feature using JavaScript",
+    "should be loaded only for browsers that need it"
+   ],
+   "use": "need a newer API on an older browser"
+  },
+  {
+   "group": "pwa",
+   "subject": "A stale-while-revalidate strategy",
+   "tier": 4,
+   "says": [
+    "serves a cached copy immediately and refreshes it in the background",
+    "balances speed with freshness"
+   ],
+   "use": "want a quick response but updated data next time",
+   "like": [
+    "A cache-first strategy"
+   ]
+  },
+  {
+   "group": "pwa",
+   "subject": "A cache-first strategy",
+   "tier": 4,
+   "says": [
+    "answers from the cache and goes to the network only on a miss",
+    "suits versioned static assets"
+   ],
+   "use": "serve fingerprinted files that never change",
+   "like": [
+    "A stale-while-revalidate strategy"
+   ]
+  },
+  {
+   "group": "pwa",
+   "subject": "A browserslist target",
+   "tier": 4,
+   "says": [
+    "declares which browsers the build must support",
+    "drives how much code is transpiled and polyfilled"
+   ],
+   "use": "want to decide how far back to support old browsers"
+  },
+  {
+   "group": "test",
+   "subject": "Linting",
+   "tier": 1,
+   "says": [
+    "flags suspicious code and style problems without running it",
+    "can enforce accessibility rules in JSX"
+   ],
+   "use": "want to catch unused variables before review"
+  },
+  {
+   "group": "test",
+   "subject": "A unit test",
+   "tier": 1,
+   "says": [
+    "checks a small piece such as a function or component in isolation",
+    "runs fast and pinpoints a failure"
+   ],
+   "use": "verify a price formatting function",
+   "like": [
+    "A component test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "Type checking",
+   "tier": 3,
+   "says": [
+    "catches wrong data shapes and calls before the code runs",
+    "documents what components accept"
+   ],
+   "use": "want a mistyped prop name caught while coding"
+  },
+  {
+   "group": "test",
+   "subject": "A component test",
+   "tier": 2,
+   "says": [
+    "renders one component and checks what the user would see",
+    "interacts through clicks and typing"
+   ],
+   "use": "verify a form shows an error after a bad submit",
+   "like": [
+    "An end-to-end test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "An end-to-end test",
+   "tier": 3,
+   "says": [
+    "drives a real browser through a whole user journey",
+    "is slower and more fragile than unit tests"
+   ],
+   "use": "verify that a user can sign in and finish a purchase",
+   "like": [
+    "A component test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "Testing by accessible role",
+   "tier": 3,
+   "says": [
+    "finds elements the way users and assistive technology do",
+    "fails when markup loses its semantics"
+   ],
+   "use": "want tests that do not break on class name changes",
+   "not": [
+    "relies on generated CSS class names"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "Network mocking",
+   "tier": 3,
+   "says": [
+    "replaces real API calls with controlled responses",
+    "makes tests fast and repeatable"
+   ],
+   "use": "need a test to see a server error without a real server"
+  },
+  {
+   "group": "test",
+   "subject": "An automated accessibility check",
+   "tier": 3,
+   "says": [
+    "scans a page for detectable issues such as missing labels",
+    "finds only part of the real problems"
+   ],
+   "use": "want every pull request scanned for obvious accessibility errors",
+   "not": [
+    "proves a page is fully accessible"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A visual regression test",
+   "tier": 4,
+   "says": [
+    "compares screenshots against an approved baseline",
+    "flags unintended layout or style changes"
+   ],
+   "use": "worry that a CSS change broke some other screen"
+  },
+  {
+   "group": "test",
+   "subject": "A flaky test",
+   "tier": 4,
+   "says": [
+    "passes and fails without a code change",
+    "erodes trust in the suite until fixed or removed"
+   ],
+   "use": "see a test failing on every tenth run"
+  },
+  {
+   "group": "sec",
+   "subject": "Cross-site scripting",
+   "tier": 2,
+   "says": [
+    "injects attacker script into a page that other users view",
+    "can steal sessions or act as the victim"
+   ],
+   "use": "find that a comment field shows script tags as live code",
+   "like": [
+    "Output encoding",
+    "A Content Security Policy",
+    "dangerouslySetInnerHTML"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Output encoding",
+   "tier": 3,
+   "says": [
+    "turns special characters into harmless text before display",
+    "is the main defence against injection into HTML"
+   ],
+   "use": "must show user-supplied names inside a page safely",
+   "like": [
+    "Cross-site scripting",
+    "A Content Security Policy"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "dangerouslySetInnerHTML",
+   "tier": 4,
+   "says": [
+    "inserts raw HTML strings into the DOM in React",
+    "bypasses automatic escaping, so input must be sanitised"
+   ],
+   "use": "are tempted to render rich text from a user",
+   "not": [
+    "escapes the content for you"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A Content Security Policy",
+   "tier": 3,
+   "says": [
+    "is a response header that limits where scripts and other resources may load from",
+    "reduces the damage from injected script"
+   ],
+   "use": "want a second layer of defence against XSS",
+   "not": [
+    "replaces output encoding"
+   ],
+   "like": [
+    "Output encoding",
+    "An HttpOnly cookie",
+    "Cross-site scripting"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Cross-site request forgery",
+   "tier": 3,
+   "says": [
+    "tricks a logged-in browser into sending an unwanted request",
+    "is countered by anti-forgery tokens and by restricting cross-site cookies"
+   ],
+   "use": "worry that another site can submit a form as the user",
+   "like": [
+    "A SameSite cookie"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "An HttpOnly cookie",
+   "tier": 5,
+   "says": [
+    "cannot be read by JavaScript",
+    "limits what an XSS attack can steal"
+   ],
+   "use": "store a session identifier safely",
+   "like": [
+    "A SameSite cookie",
+    "A Content Security Policy",
+    "Cross-site scripting"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A SameSite cookie",
+   "tier": 5,
+   "says": [
+    "is not sent on most cross-site requests",
+    "is set with the SameSite attribute using Lax or Strict"
+   ],
+   "use": "want to limit cookies sent from other sites",
+   "like": [
+    "An HttpOnly cookie",
+    "Cross-site request forgery"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "CORS",
+   "tier": 4,
+   "says": [
+    "lets a server say which other origins may read its responses in browsers",
+    "is enforced by the browser, not the server"
+   ],
+   "use": "see a browser block a call to another domain's API",
+   "not": [
+    "protects the server from non-browser clients"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Subresource Integrity",
+   "tier": 5,
+   "says": [
+    "checks a hash of a third-party file before running it",
+    "blocks a script that was tampered with on a CDN"
+   ],
+   "use": "load a library from a CDN you do not control"
+  },
+  {
+   "group": "sec",
+   "subject": "Secrets in client code",
+   "tier": 3,
+   "says": [
+    "are visible to anyone who opens the browser tools",
+    "must therefore stay on the server"
+   ],
+   "use": "are about to put a private API key into a front-end variable",
+   "not": [
+    "are safe if the variable name is hard to guess"
+   ]
+  },
+  {
+   "group": "seo",
+   "subject": "The title tag",
+   "tier": 1,
+   "says": [
+    "names the page in search results and browser tabs",
+    "should be unique for each page"
+   ],
+   "use": "want each page to have a clear name in search",
+   "like": [
+    "A meta description"
+   ]
+  },
+  {
+   "group": "seo",
+   "subject": "A meta description",
+   "tier": 1,
+   "says": [
+    "summarises the page for the search result snippet",
+    "does not directly raise rankings"
+   ],
+   "use": "want to control the text under a search result",
+   "like": [
+    "The title tag"
+   ]
+  },
+  {
+   "group": "seo",
+   "subject": "Heading structure",
+   "tier": 2,
+   "says": [
+    "uses one clear h1 and ordered subheadings",
+    "helps both crawlers and screen readers understand the outline"
+   ],
+   "use": "find a page that skips from h1 to h5 for styling"
+  },
+  {
+   "group": "seo",
+   "subject": "A sitemap",
+   "tier": 3,
+   "says": [
+    "lists the URLs you want crawlers to find",
+    "helps discovery of pages with few inbound links"
+   ],
+   "use": "launch a large site with deep pages"
+  },
+  {
+   "group": "seo",
+   "subject": "The robots.txt file",
+   "tier": 2,
+   "says": [
+    "asks crawlers not to fetch certain paths",
+    "does not hide a page that other sites link to"
+   ],
+   "use": "want crawlers to skip an internal search results area",
+   "like": [
+    "A noindex directive"
+   ]
+  },
+  {
+   "group": "seo",
+   "subject": "A canonical URL",
+   "tier": 3,
+   "says": [
+    "names the preferred address among duplicate pages",
+    "consolidates ranking signals onto one URL"
+   ],
+   "use": "have the same page reachable with several query strings",
+   "like": [
+    "A noindex directive"
+   ]
+  },
+  {
+   "group": "seo",
+   "subject": "Open Graph tags",
+   "tier": 2,
+   "says": [
+    "control the title and image when a link is shared on social platforms",
+    "are placed in the page head"
+   ],
+   "use": "want a good preview when a link is pasted into chat"
+  },
+  {
+   "group": "seo",
+   "subject": "A noindex directive",
+   "tier": 3,
+   "says": [
+    "asks search engines to keep a page out of results",
+    "must stay crawlable to be seen"
+   ],
+   "use": "have a thank-you page that should not be searchable",
+   "like": [
+    "The robots.txt file"
+   ]
+  },
+  {
+   "group": "seo",
+   "subject": "Structured data",
+   "tier": 5,
+   "says": [
+    "describes page content in a machine-readable vocabulary",
+    "can make results eligible for rich snippets"
+   ],
+   "use": "want a recipe or product to show extra detail in search"
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn web stack",
+   "tier": 1,
+   "says": [
+    "uses Next.js, which is built on React",
+    "is shared with the company's other web apps"
+   ],
+   "use": "need to know which framework the gglearn screens are built with"
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn components folder",
+   "tier": 1,
+   "says": [
+    "holds the visuals such as avatars, rank shields, race track, score rings and confetti",
+    "contains no image assets"
+   ],
+   "use": "look for where gglearn's drawn visuals live"
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn avatars and rank shields",
+   "tier": 2,
+   "says": [
+    "are drawn as SVG components rather than image files",
+    "stay tiny and scale to any screen"
+   ],
+   "use": "wonder why gglearn needs no downloaded pictures for ranks"
+  },
+  {
+   "group": "gg",
+   "subject": "gglearn confetti",
+   "tier": 2,
+   "says": [
+    "is a celebration animation that should respect the reduced motion setting",
+    "is drawn in the components folder"
+   ],
+   "use": "want to calm gglearn's celebration for motion-sensitive users"
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn bot label",
+   "tier": 2,
+   "says": [
+    "names bots in words as Bot and simulated on the competitions leaderboard",
+    "avoids relying on colour alone to show who is a bot"
+   ],
+   "use": "wonder why a leaderboard row says Bot instead of only using a different colour"
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn photo format rule",
+   "tier": 2,
+   "says": [
+    "allows JPEG, PNG or WebP for profile photos",
+    "rejects other formats"
+   ],
+   "use": "need to know what a user may upload as a profile photo"
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn photo size limit",
+   "tier": 2,
+   "says": [
+    "caps a profile photo at 300 KB",
+    "applies to every JPEG, PNG or WebP profile photo"
+   ],
+   "use": "need the biggest profile photo gglearn accepts"
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn photo type check",
+   "tier": 3,
+   "says": [
+    "identifies the format from the file bytes",
+    "ignores what the file name says"
+   ],
+   "use": "want to see how gglearn decides an upload is really a JPEG, PNG or WebP"
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn SVG upload ban",
+   "tier": 3,
+   "says": [
+    "rejects SVG uploads because SVG can carry scripts",
+    "is part of the profile photo checks"
+   ],
+   "use": "wonder why a vector file cannot be a gglearn profile photo"
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn upload checks location",
+   "tier": 3,
+   "says": [
+    "run on the server and not only in the screen",
+    "cannot be skipped by editing the page"
+   ],
+   "use": "ask where gglearn enforces its photo rules"
+  },
+  {
+   "group": "gg",
+   "subject": "The gglearn Next.js docs rule",
+   "tier": 2,
+   "says": [
+    "says to read the bundled docs in node_modules/next/dist/docs before coding",
+    "exists because this Next.js version has breaking changes"
+   ],
+   "use": "are about to write a Next.js API from memory"
+  },
+  {
+   "group": "gg",
+   "subject": "The framework choice rule",
+   "tier": 3,
+   "says": [
+    "says to choose a framework for team fit and longevity",
+    "warns against choosing by novelty"
+   ],
+   "use": "are asked how the company picks a UI framework"
+  }
+ ],
+ "qa": [
+  {
+   "q": "Which HTML element should you use for a control that performs an action when clicked?",
+   "right": "button",
+   "wrong": [
+    "div with a click handler",
+    "span with role text",
+    "a without an href"
+   ],
+   "tier": 1,
+   "why": "A native button brings keyboard activation and semantics for free."
+  },
+  {
+   "q": "What does this tag do?",
+   "right": "It tells mobile browsers to match the layout width to the device width",
+   "wrong": [
+    "It disables zooming on every device",
+    "It loads a mobile-only stylesheet",
+    "It forces desktop layout on phones"
+   ],
+   "tier": 1,
+   "why": "The viewport meta tag controls the layout viewport on mobile.",
+   "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+  },
+  {
+   "q": "What is the purpose of alt text on a meaningful image?",
+   "right": "To give screen reader users a text equivalent",
+   "wrong": [
+    "To make the image load faster",
+    "To set the image tooltip colour",
+    "To improve rendering in old printers"
+   ],
+   "tier": 1,
+   "why": "Alt text is the accessible text alternative."
+  },
+  {
+   "q": "Why does a browser-side check not replace a server check?",
+   "right": "Users can bypass the browser and send requests directly",
+   "wrong": [
+    "Browsers cannot read form values",
+    "Servers cannot receive form data without it",
+    "It is slower than the server check"
+   ],
+   "tier": 1,
+   "why": "Only server checks are authoritative."
+  },
+  {
+   "q": "What does this CSS rule express?",
+   "right": "Apply the style from 600px wide upward",
+   "wrong": [
+    "Hide the element below 600px",
+    "Apply the style only on printers",
+    "Set the width to exactly 600px"
+   ],
+   "tier": 1,
+   "why": "A min-width query is the mobile-first pattern.",
+   "code": "@media (min-width: 600px) { .nav { display: flex; } }"
+  },
+  {
+   "q": "Which statement about design tokens is correct?",
+   "right": "They are named values such as colours and spacing reused by components",
+   "wrong": [
+    "They are secret keys for the design tool",
+    "They are cookies set by the browser",
+    "They are paid licences for fonts"
+   ],
+   "tier": 1,
+   "why": "Tokens are the base layer of a design system."
+  },
+  {
+   "q": "What does this code render?",
+   "right": "The text from the title variable, escaped as plain text",
+   "wrong": [
+    "The title as raw HTML markup",
+    "Nothing, because braces are invalid",
+    "Only the first character of the title"
+   ],
+   "tier": 2,
+   "why": "JSX escapes text interpolated in braces.",
+   "code": "function Card({ title }) {\n  return <h2>{title}</h2>;\n}"
+  },
+  {
+   "q": "What is wrong with this input?",
+   "right": "It has no associated label for assistive technology",
+   "wrong": [
+    "It uses the wrong input type",
+    "It cannot be focused with the keyboard",
+    "It will always submit empty"
+   ],
+   "tier": 2,
+   "why": "A placeholder is not a label.",
+   "code": "<input type=\"email\" placeholder=\"Email\">"
+  },
+  {
+   "q": "What does this attribute do for a below-the-fold image?",
+   "right": "Delays loading until the image is near the viewport",
+   "wrong": [
+    "Loads it before anything else",
+    "Converts it to a smaller format",
+    "Prevents it from being cached"
+   ],
+   "tier": 2,
+   "why": "The loading lazy attribute defers offscreen images.",
+   "code": "<img src=\"photo.jpg\" alt=\"Team photo\" width=\"800\" height=\"600\" loading=\"lazy\">"
+  },
+  {
+   "q": "Which colour contrast ratio is the minimum for normal text at level AA?",
+   "right": "4.5 to 1",
+   "wrong": [
+    "2 to 1",
+    "3 to 1 for all text",
+    "10 to 1"
+   ],
+   "tier": 2,
+   "why": "AA asks for 4.5:1, with 3:1 for large text."
+  },
+  {
+   "q": "What is the benefit of giving an img width and height attributes?",
+   "right": "The browser can reserve space and avoid layout shift",
+   "wrong": [
+    "The image becomes lossless",
+    "The image is cached forever",
+    "The server resizes it on request"
+   ],
+   "tier": 2,
+   "why": "Reserved space reduces Cumulative Layout Shift."
+  },
+  {
+   "q": "Where does data fetched for a read-only page section best live in a framework with server components?",
+   "right": "In a server component that renders it",
+   "wrong": [
+    "In a client component with a global store",
+    "In a cookie on every request",
+    "In an inline script tag"
+   ],
+   "tier": 2,
+   "why": "Server components keep code and data access off the client."
+  },
+  {
+   "q": "What does the prefers-color-scheme media query detect?",
+   "right": "The operating system light or dark preference",
+   "wrong": [
+    "The monitor brightness",
+    "The browser version",
+    "The current time of day"
+   ],
+   "tier": 2,
+   "why": "It lets CSS follow the user's setting.",
+   "code": "@media (prefers-color-scheme: dark) { :root { --surface: #111; } }"
+  },
+  {
+   "q": "Why is the key prop given to list items?",
+   "right": "It lets the framework match items between renders",
+   "wrong": [
+    "It sets the item's CSS class",
+    "It makes the item focusable",
+    "It encrypts the item data"
+   ],
+   "tier": 2,
+   "why": "Stable keys avoid wrong reuse of rows."
+  },
+  {
+   "q": "What does this snippet do for users who ask for less motion?",
+   "right": "It disables the animation for them",
+   "wrong": [
+    "It speeds up the animation",
+    "It adds more animation",
+    "It hides the element completely"
+   ],
+   "tier": 3,
+   "why": "The query matches the reduced motion setting.",
+   "code": "@media (prefers-reduced-motion: reduce) {\n  .confetti { animation: none; }\n}"
+  },
+  {
+   "q": "What is the problem with this code?",
+   "right": "Using the array index as key breaks identity when rows are reordered",
+   "wrong": [
+    "The map call cannot return elements",
+    "The li element cannot hold text",
+    "The items variable must be a string"
+   ],
+   "tier": 3,
+   "why": "Index keys cause state to attach to the wrong row.",
+   "code": "{items.map((item, i) => <li key={i}>{item.name}</li>)}"
+  },
+  {
+   "q": "What does a useEffect with an empty dependency array do?",
+   "right": "It runs once after the first render",
+   "wrong": [
+    "It runs on every render",
+    "It never runs",
+    "It runs before the first render"
+   ],
+   "tier": 3,
+   "why": "An empty array means no dependencies change.",
+   "code": "useEffect(() => { loadUser(); }, []);"
+  },
+  {
+   "q": "What is the risk in this code?",
+   "right": "If html contains user input, it can run script and enable XSS",
+   "wrong": [
+    "It always escapes html",
+    "It cannot render anything",
+    "It only works on the server"
+   ],
+   "tier": 3,
+   "why": "Raw HTML insertion skips escaping.",
+   "code": "<div dangerouslySetInnerHTML={{ __html: html }} />"
+  },
+  {
+   "q": "Which role does aria-label serve in this markup?",
+   "right": "It gives the icon-only button an accessible name",
+   "wrong": [
+    "It adds a visible tooltip",
+    "It makes the button keyboard focusable",
+    "It disables the button"
+   ],
+   "tier": 3,
+   "why": "Without it, a screen reader has nothing to read.",
+   "code": "<button aria-label=\"Search\"><svg aria-hidden=\"true\">...</svg></button>"
+  },
+  {
+   "q": "Which header would you set to reduce damage from injected scripts by limiting script sources?",
+   "right": "Content-Security-Policy",
+   "wrong": [
+    "Cache-Control",
+    "Accept-Language",
+    "Content-Length"
+   ],
+   "tier": 3,
+   "why": "CSP restricts where scripts may load from."
+  },
+  {
+   "q": "Why are long-lived Cache-Control headers safe on hashed bundle files?",
+   "right": "The file name changes whenever the content changes",
+   "wrong": [
+    "Browsers ignore the header for scripts",
+    "The server deletes old files hourly",
+    "Hashing encrypts the file"
+   ],
+   "tier": 3,
+   "why": "A new hash gives a new URL."
+  },
+  {
+   "q": "What does this code do on user input?",
+   "right": "It waits until typing pauses before calling search",
+   "wrong": [
+    "It calls search on every keystroke",
+    "It blocks typing for 300 ms",
+    "It cancels the form submission"
+   ],
+   "tier": 3,
+   "why": "This is debouncing.",
+   "code": "let t;\ninput.addEventListener('input', () => {\n  clearTimeout(t);\n  t = setTimeout(() => search(input.value), 300);\n});"
+  },
+  {
+   "q": "Which metric measures unexpected movement of content while the page loads?",
+   "right": "Cumulative Layout Shift",
+   "wrong": [
+    "Largest Contentful Paint",
+    "Time to first byte",
+    "Interaction to Next Paint"
+   ],
+   "tier": 3,
+   "why": "CLS measures visual stability."
+  },
+  {
+   "q": "What does a dynamic import enable?",
+   "right": "Loading a chunk only when it is needed",
+   "wrong": [
+    "Running code on the server only",
+    "Removing all dependencies",
+    "Compressing images"
+   ],
+   "tier": 3,
+   "why": "Dynamic import is the code splitting boundary.",
+   "code": "const Chart = await import('./Chart');"
+  },
+  {
+   "q": "Which file type check is the safest for an upload on the server?",
+   "right": "Inspect the file bytes to identify the format",
+   "wrong": [
+    "Trust the file extension",
+    "Trust the declared content type header",
+    "Trust the accept attribute on the input"
+   ],
+   "tier": 3,
+   "why": "Names and headers are supplied by the client."
+  },
+  {
+   "q": "What does the accept attribute on a file input guarantee?",
+   "right": "Nothing; it only filters the file picker",
+   "wrong": [
+    "That the server will refuse other types",
+    "That the file is virus-free",
+    "That the file is under a size limit"
+   ],
+   "tier": 3,
+   "why": "It is a hint, so validate on the server.",
+   "code": "<input type=\"file\" accept=\"image/png,image/jpeg\">"
+  },
+  {
+   "q": "Why does gglearn reject SVG profile photos?",
+   "right": "SVG can carry scripts",
+   "wrong": [
+    "SVG files are always larger than 300 KB",
+    "SVG cannot be displayed in browsers",
+    "SVG is a paid format"
+   ],
+   "tier": 3,
+   "why": "The company source gives this reason: an SVG can include script."
+  },
+  {
+   "q": "What is the maximum profile photo size in gglearn?",
+   "right": "300 KB",
+   "wrong": [
+    "3 MB",
+    "30 KB",
+    "1 GB"
+   ],
+   "tier": 3,
+   "why": "The size limit comes from the competitions document."
+  },
+  {
+   "q": "Which formats does gglearn accept for profile photos?",
+   "right": "JPEG, PNG or WebP",
+   "wrong": [
+    "GIF, BMP or SVG",
+    "SVG, PNG or TIFF",
+    "Only PNG"
+   ],
+   "tier": 3,
+   "why": "These are the allowed types."
+  },
+  {
+   "q": "What does gglearn use to draw avatars and rank shields?",
+   "right": "SVG components",
+   "wrong": [
+    "Animated GIF files",
+    "Embedded photographs",
+    "A third-party icon font"
+   ],
+   "tier": 3,
+   "why": "The README says visuals are drawn without image assets."
+  },
+  {
+   "q": "A Next.js team member writes API code from memory. What does the gglearn project instruct?",
+   "right": "Read the bundled docs first",
+   "wrong": [
+    "Copy examples from old tutorials",
+    "Disable type checking",
+    "Pin the version and never read docs"
+   ],
+   "tier": 3,
+   "why": "The project says this version has breaking changes."
+  },
+  {
+   "q": "Which test finds elements the way a user would?",
+   "right": "Query by accessible role and name",
+   "wrong": [
+    "Query by generated CSS class",
+    "Query by position in the DOM tree",
+    "Query by internal component name"
+   ],
+   "tier": 3,
+   "why": "Role queries survive restyling and verify semantics.",
+   "code": "screen.getByRole('button', { name: 'Save' })"
+  },
+  {
+   "q": "A team removes the focus outline because designers dislike it. What should they do?",
+   "right": "Replace it with a clear custom focus style",
+   "wrong": [
+    "Leave nothing, since users have mice",
+    "Show focus only on hover",
+    "Make focus invisible but keep tab order"
+   ],
+   "tier": 4,
+   "why": "Keyboard users need a visible indicator."
+  },
+  {
+   "q": "A page scores well in lab tests, but field data shows poor responsiveness on cheap phones. What is the best first step?",
+   "right": "Profile long tasks and reduce JavaScript on the main thread",
+   "wrong": [
+    "Add more images to the hero",
+    "Raise the server CPU",
+    "Disable the lab tests"
+   ],
+   "tier": 4,
+   "why": "Slow devices expose main thread cost."
+  },
+  {
+   "q": "A product page needs fresh prices on every request and good SEO. Which rendering is the best fit?",
+   "right": "Server-side rendering",
+   "wrong": [
+    "Client-side rendering only",
+    "Static generation at build with no refresh",
+    "A single static file"
+   ],
+   "tier": 4,
+   "why": "SSR sends current HTML to crawlers."
+  },
+  {
+   "q": "A blog's pages change a few times a day and must be fast and cheap to serve. What fits?",
+   "right": "Static generation with periodic regeneration",
+   "wrong": [
+    "Client-side rendering for every visitor",
+    "Rendering on every request with no caching",
+    "Hand-edited HTML files"
+   ],
+   "tier": 4,
+   "why": "Regeneration keeps pages static but fresh."
+  },
+  {
+   "q": "A server-rendered page logs a hydration mismatch after printing the current time. What is the likely cause?",
+   "right": "The server and the client render different times",
+   "wrong": [
+    "The browser lacks JavaScript",
+    "The CSS file is too large",
+    "The images have no alt text"
+   ],
+   "tier": 4,
+   "why": "Values that vary between renders must be handled after mount."
+  },
+  {
+   "q": "A modal opens, but pressing Tab moves focus to the page behind it. What is missing?",
+   "right": "A focus trap",
+   "wrong": [
+    "A larger font",
+    "A skip link",
+    "A media query"
+   ],
+   "tier": 4,
+   "why": "Modals must keep focus inside until closed."
+  },
+  {
+   "q": "A team puts an API key in a front-end environment variable exposed to the browser. What is the problem?",
+   "right": "Anyone can read it in the bundle or network tools",
+   "wrong": [
+    "It slows the build",
+    "It breaks hot reload",
+    "It changes colours"
+   ],
+   "tier": 4,
+   "why": "Secrets must live on the server."
+  },
+  {
+   "q": "A designer asks for a new almost-blue for one screen. What does a healthy design system process do?",
+   "right": "Check whether an existing token fits, and add one only for a real need",
+   "wrong": [
+    "Add a new hex value inline",
+    "Duplicate the component",
+    "Ignore the request forever"
+   ],
+   "tier": 4,
+   "why": "This prevents design drift."
+  },
+  {
+   "q": "A like button waits for the server before changing. Users say it feels slow. What can improve it?",
+   "right": "An optimistic update with rollback on failure",
+   "wrong": [
+    "Removing the error handling",
+    "Disabling the button forever",
+    "Polling every second"
+   ],
+   "tier": 4,
+   "why": "Show the expected state immediately and reconcile."
+  },
+  {
+   "q": "A search page calls the API on each keystroke and shows results out of order. What is the best fix?",
+   "right": "Debounce input and ignore stale responses",
+   "wrong": [
+    "Increase the timeout",
+    "Disable the input",
+    "Cache nothing"
+   ],
+   "tier": 4,
+   "why": "Debouncing plus cancellation avoids races."
+  },
+  {
+   "q": "A long product list of 20,000 rows freezes the browser. What helps most?",
+   "right": "List virtualization",
+   "wrong": [
+    "More CSS classes",
+    "Bigger images",
+    "A longer title tag"
+   ],
+   "tier": 4,
+   "why": "Rendering only visible rows keeps the DOM small."
+  },
+  {
+   "q": "A team wants a custom dropdown with div elements. What is the best approach?",
+   "right": "Use a native select unless a custom widget is truly needed, then follow ARIA patterns",
+   "wrong": [
+    "Add role button to every div and stop",
+    "Use colour alone for the selected item",
+    "Disable keyboard handling"
+   ],
+   "tier": 4,
+   "why": "Native elements first, ARIA when needed."
+  },
+  {
+   "q": "A pull request adds a 200 KB date library for one format call. What do you ask?",
+   "right": "Whether a smaller alternative or native API will do",
+   "wrong": [
+    "Whether it has a nice logo",
+    "Whether it can be placed in the head",
+    "Whether the bundle can be ignored"
+   ],
+   "tier": 4,
+   "why": "Dependencies cost bundle size."
+  },
+  {
+   "q": "The leaderboard shows bots only by a grey colour. What accessibility change fits gglearn's own approach?",
+   "right": "Label them in words as Bot",
+   "wrong": [
+    "Make the grey lighter",
+    "Remove bots",
+    "Add a tooltip only for mouse users"
+   ],
+   "tier": 4,
+   "why": "Do not use colour alone to carry meaning."
+  },
+  {
+   "q": "A user's long form fails on the server and the fields clear. What should happen?",
+   "right": "Keep what they typed and show errors by the fields",
+   "wrong": [
+    "Clear the form to be safe",
+    "Show one alert and nothing else",
+    "Reload the page"
+   ],
+   "tier": 4,
+   "why": "Forgiving forms retain input."
+  },
+  {
+   "q": "A team adds tabindex values 1, 2, 3 to force a tab order. What is the issue?",
+   "right": "Positive tabindex breaks natural order and is hard to maintain",
+   "wrong": [
+    "Tabindex cannot be numeric",
+    "It makes elements invisible",
+    "It disables the mouse"
+   ],
+   "tier": 5,
+   "why": "Fix DOM order instead."
+  },
+  {
+   "q": "A payment request times out and the client retries. What prevents a double charge?",
+   "right": "An idempotency key on the request",
+   "wrong": [
+    "A longer timeout",
+    "A disabled button after the retry",
+    "A bigger server"
+   ],
+   "tier": 5,
+   "why": "The server processes a repeated key once."
+  },
+  {
+   "q": "A page loads a library from a CDN. What protects against a tampered file?",
+   "right": "Subresource Integrity",
+   "wrong": [
+    "A larger bundle",
+    "A meta description",
+    "A sitemap"
+   ],
+   "tier": 5,
+   "why": "SRI verifies a hash of the file.",
+   "code": "<script src=\"https://cdn.example.com/lib.js\" integrity=\"sha384-...\" crossorigin=\"anonymous\"></script>"
+  },
+  {
+   "q": "A content page needs two interactive widgets and little else. Which approach minimises shipped JavaScript?",
+   "right": "Partial hydration or isolating client components",
+   "wrong": [
+    "Hydrating the entire page",
+    "Client-side rendering everything",
+    "Bundling all widgets on every route"
+   ],
+   "tier": 5,
+   "why": "Hydrating only what is interactive saves JavaScript."
+  },
+  {
+   "q": "A report says all automated accessibility checks passed. What is the sensible conclusion?",
+   "right": "Manual keyboard and screen reader testing is still required",
+   "wrong": [
+    "The page is fully accessible",
+    "No further testing is needed ever",
+    "Contrast no longer matters"
+   ],
+   "tier": 5,
+   "why": "Automation finds only part of the issues."
+  },
+  {
+   "q": "A security review finds script injected through a comment. Which pair gives the best defence in depth?",
+   "right": "Output encoding plus a Content Security Policy",
+   "wrong": [
+    "A larger font plus a sitemap",
+    "CSS resets plus a robots.txt",
+    "A canonical URL plus caching"
+   ],
+   "tier": 5,
+   "why": "Encoding prevents injection, CSP limits damage."
+  },
+  {
+   "q": "A service worker caches the HTML shell forever and users never see new releases. What should change?",
+   "right": "Version the cache and use a revalidating strategy for the shell",
+   "wrong": [
+    "Delete all caching",
+    "Disable HTTPS",
+    "Remove the manifest"
+   ],
+   "tier": 5,
+   "why": "Stale shells need an update path."
+  },
+  {
+   "q": "A team sets a rule that fails the build when the main bundle exceeds a limit. What is this?",
+   "right": "A performance budget",
+   "wrong": [
+    "A hydration mismatch",
+    "A flaky test",
+    "A design token"
+   ],
+   "tier": 5,
+   "why": "Budgets turn performance into a gate."
+  }
+ ]
+}

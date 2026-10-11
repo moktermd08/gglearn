@@ -1,0 +1,91 @@
+{
+  "role": "architect",
+  "name": "Architect",
+  "bridges": [
+    {
+      "from": "developer",
+      "fromLevel": 3,
+      "toLevel": 1
+    },
+    {
+      "from": "backend developer",
+      "fromLevel": 3,
+      "toLevel": 1
+    },
+    {
+      "from": "engineer",
+      "fromLevel": 3,
+      "toLevel": 1
+    },
+    {
+      "from": "devops",
+      "fromLevel": 3,
+      "toLevel": 1
+    }
+  ],
+  "rungs": [
+    {
+      "title": "Associate Architect",
+      "summary": "Learning to design systems and write down why.",
+      "knowledge": "Knows the common patterns and the company's systems; learns to see trade-offs.",
+      "delivery": "Drafts designs for well-bounded problems and updates the architecture records.",
+      "leadership": "Takes review comments well and explains designs to the engineers who build them.",
+      "steps": []
+    },
+    {
+      "title": "Solution Architect",
+      "summary": "Designs a whole solution and gets it built the way it was drawn.",
+      "knowledge": "Fluent in architecture, data, security and DevOps; chooses technology for reasons they can state.",
+      "delivery": "Designs and hands over a complete solution, then follows it through delivery.",
+      "leadership": "Builds trust with product, delivery and engineering; runs design reviews.",
+      "steps": [
+        ["sdlc-database", 5],
+        ["sdlc-security", 8],
+        ["sdlc-devops", 8],
+        ["tech-data-stores", 5],
+        ["tech-cloud-devops", 5],
+        ["tech-graphql", 5],
+        ["foundations-restapi", 5],
+        ["ai-llm-practice", 5],
+        ["rag-pipelines-titan", 5],
+        ["tools-build-ship", 5],
+        ["product-management-core", 5],
+        ["service-design-pricing", 5],
+        ["brand-positioning-voice", 5],
+        ["engineering-leadership", 5]
+      ]
+    },
+    {
+      "title": "Senior Architect",
+      "summary": "Owns the architecture of a product or domain.",
+      "knowledge": "Weighs cost, risk and operability across infrastructure, security operations and AI.",
+      "delivery": "Owns a product's architecture, its roadmap and its technical debt.",
+      "leadership": "Leads projects across teams and mentors solution architects.",
+      "steps": [
+        ["sdlc-architecture", 12],
+        ["tech-cloud-devops", 8],
+        ["agent-mcp-titan", 5],
+        ["vec-databases-titan", 5],
+        ["product-management-core", 8],
+        ["executive-communication", 5],
+        ["tech-strategy-roadmap", 5]
+      ]
+    },
+    {
+      "title": "Principal Architect",
+      "summary": "Sets the technical direction across products.",
+      "knowledge": "Sees how every system, vendor and risk fits together over years.",
+      "delivery": "Sets standards and settles the hard cross-product decisions.",
+      "leadership": "Advises the executive team; others come to them before they decide.",
+      "steps": [
+        ["sdlc-architecture", 16],
+        ["delivery-management", 5],
+        ["people-operations", 8],
+        ["payments-billing", 5],
+        ["agent-mcp-titan", 8],
+        ["product-management-core", 14],
+        ["service-design-pricing", 8]
+      ]
+    }
+  ]
+}

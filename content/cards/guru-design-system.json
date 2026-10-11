@@ -1,0 +1,2956 @@
+{
+ "slug": "guru-design-system",
+ "name": "Design systems and UI/UX",
+ "description": "Components, accessibility, responsive design.",
+ "roles": "designer",
+ "kind": "process",
+ "brand": "guru-graphics",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "token": "design-token concept or tool",
+  "comp": "component concept",
+  "ui": "UI component",
+  "form": "form control",
+  "layout": "layout concept",
+  "type": "typography concept",
+  "color": "colour concept",
+  "a11y": "accessibility concept",
+  "gov": "governance or versioning practice",
+  "doc": "documentation practice",
+  "hand": "design-to-dev handoff practice",
+  "ux": "UX principle",
+  "res": "research method",
+  "studio": "Guru Graphics Brand System element"
+ },
+ "cards": [
+  {
+   "group": "token",
+   "subject": "A design token",
+   "tier": 1,
+   "says": [
+    "stores one named design decision such as a colour, spacing or radius value",
+    "replaces a hard-coded value with a name that design and code both use",
+    "can be exported from one source to several platforms"
+   ],
+   "use": "need one source of truth for a brand colour across web and mobile",
+   "not": [
+    "is a security credential that signs users in"
+   ],
+   "like": [
+    "A CSS custom property"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "A primitive token",
+   "tier": 2,
+   "says": [
+    "holds a raw value such as a hex colour or a pixel size",
+    "is named for what the value is, not where it is used"
+   ],
+   "use": "define the full list of raw colours before deciding how they are used",
+   "not": [
+    "is named for the component that consumes it"
+   ],
+   "like": [
+    "A semantic token",
+    "A component token"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "A semantic token",
+   "tier": 2,
+   "says": [
+    "is named for its purpose, such as text-primary or surface-error",
+    "points at a primitive token",
+    "lets a theme change meaning-based values without editing components"
+   ],
+   "use": "need the same text colour role to differ between light and dark themes",
+   "not": [
+    "holds a raw hex value with no alias"
+   ],
+   "like": [
+    "A primitive token",
+    "A component token",
+    "Token aliasing"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "A component token",
+   "tier": 4,
+   "says": [
+    "scopes a value to a single component, such as button-background",
+    "usually aliases a semantic token",
+    "lets one component be restyled without affecting others"
+   ],
+   "use": "need one component to differ slightly from the system default",
+   "not": [
+    "replaces the need for semantic tokens entirely"
+   ],
+   "like": [
+    "A primitive token",
+    "A semantic token",
+    "Token aliasing"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "Token aliasing",
+   "tier": 4,
+   "says": [
+    "lets one token reference another instead of repeating its value",
+    "builds the layers from primitive to semantic to component",
+    "means a single edit upstream flows to every dependent token"
+   ],
+   "use": "need a change to a base colour to reach every token built on it",
+   "like": [
+    "A hard-coded value",
+    "A semantic token",
+    "A component token"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "A hard-coded value",
+   "tier": 3,
+   "says": [
+    "is a literal colour or size written directly into a component",
+    "makes a rebrand require edits in many places",
+    "is the main cause of drift between design and code"
+   ],
+   "use": "spot why a global colour change missed several screens",
+   "not": [
+    "is the recommended way to store brand colours"
+   ],
+   "like": [
+    "Token aliasing"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "A spacing scale",
+   "tier": 1,
+   "says": [
+    "offers a fixed set of steps such as 4, 8, 16 and 24 pixels",
+    "replaces arbitrary one-off margins and paddings",
+    "makes spacing predictable across screens"
+   ],
+   "use": "want gaps between elements to look consistent everywhere",
+   "not": [
+    "lets each designer pick any value per screen"
+   ],
+   "like": [
+    "A modular type scale"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "A CSS custom property",
+   "tier": 2,
+   "says": [
+    "is declared with a double-dash name such as --space-4",
+    "is read with the var() function",
+    "can be overridden inside a subtree so themes cascade"
+   ],
+   "use": "need to expose a token to CSS so a theme can override it",
+   "not": [
+    "is compiled away at build time so it cannot change at runtime"
+   ],
+   "like": [
+    "A design token"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "A token naming convention",
+   "tier": 3,
+   "says": [
+    "makes tokens predictable by following a pattern such as category, property, variant and state",
+    "lets people guess a token name without searching for it"
+   ],
+   "use": "agree how colour tokens for hover states should be named",
+   "not": [
+    "encodes the current raw value in the name of semantic tokens"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "Style Dictionary",
+   "tier": 4,
+   "says": [
+    "transforms token source files into platform outputs such as CSS variables",
+    "applies per-platform transforms to units and colour formats",
+    "keeps one token source for several codebases"
+   ],
+   "use": "need web and native apps to build from the same token file",
+   "not": [
+    "draws components on a design canvas"
+   ],
+   "like": [
+    "The DTCG token format"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "The DTCG token format",
+   "tier": 4,
+   "says": [
+    "is a draft format from the W3C Design Tokens Community Group",
+    "stores each token with a $value and a $type in JSON",
+    "aims to let tools exchange tokens without custom converters"
+   ],
+   "use": "want token files that different design and build tools can read",
+   "not": [
+    "is a CSS-only syntax for variables"
+   ],
+   "like": [
+    "Style Dictionary"
+   ]
+  },
+  {
+   "group": "token",
+   "subject": "A theme",
+   "tier": 3,
+   "says": [
+    "is a set of token values applied together",
+    "changes the look of an interface without changing component code",
+    "can be switched at runtime by overriding custom properties"
+   ],
+   "use": "need a high-contrast variant of a product",
+   "not": [
+    "requires rewriting every component"
+   ],
+   "like": [
+    "Dark mode"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A design system",
+   "tier": 1,
+   "says": [
+    "is a shared set of tokens, components, patterns and guidelines",
+    "gives design and engineering a common language",
+    "is a product that needs owners and maintenance"
+   ],
+   "use": "want several teams to build consistent interfaces without redrawing buttons",
+   "not": [
+    "is a single Figma file of logos"
+   ],
+   "like": [
+    "A pattern library"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A component variant",
+   "tier": 1,
+   "says": [
+    "is a defined version of a component that differs along one property such as size or emphasis",
+    "keeps a family of similar versions in one component"
+   ],
+   "use": "need a button in small, medium and large sizes",
+   "not": [
+    "is a separate unrelated component"
+   ],
+   "like": [
+    "A component state"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A component state",
+   "tier": 1,
+   "says": [
+    "describes how a component looks at a moment, such as hover, focus, pressed or disabled",
+    "needs a design for each interactive moment, not only the default"
+   ],
+   "use": "need to show a user that a control is currently unavailable",
+   "not": [
+    "is a permanent size option chosen by the designer"
+   ],
+   "like": [
+    "A component variant"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A component prop",
+   "tier": 2,
+   "says": [
+    "configures one instance of a component, such as size or disabled",
+    "forms the public API a consumer uses"
+   ],
+   "use": "want a consumer to change a component's label without editing its code",
+   "not": [
+    "lets a consumer rewrite the internals of a component"
+   ],
+   "like": [
+    "A slot"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A slot",
+   "tier": 3,
+   "says": [
+    "is a named place where a consumer supplies content",
+    "lets one component host different icons or text without extra options"
+   ],
+   "use": "need a card whose header area can hold an icon, a badge or nothing",
+   "not": [
+    "is a fixed value that cannot be replaced"
+   ],
+   "like": [
+    "A component prop"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "Composition",
+   "tier": 3,
+   "says": [
+    "builds complex UI by combining small components",
+    "avoids adding an option to one component for every new case",
+    "keeps each part simple to test"
+   ],
+   "use": "find a way to avoid one card component with twenty options",
+   "not": [
+    "means copying a component and editing the copy"
+   ],
+   "like": [
+    "Boolean prop explosion"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "Boolean prop explosion",
+   "tier": 5,
+   "says": [
+    "adds a true-or-false flag for each new case",
+    "creates combinations that are impossible to test or document",
+    "is usually solved with variants or composition"
+   ],
+   "use": "explain why a component with many flags became hard to maintain",
+   "not": [
+    "keeps a component API small"
+   ],
+   "like": [
+    "Composition"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "Atomic design",
+   "tier": 3,
+   "says": [
+    "organises UI into atoms, molecules, organisms, templates and pages",
+    "was described by Brad Frost",
+    "gives a shared vocabulary for building up from small parts"
+   ],
+   "use": "need a way to name levels from a single input to a full page layout",
+   "not": [
+    "is a method for reducing file size"
+   ],
+   "like": [
+    "A pattern"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A pattern",
+   "tier": 3,
+   "says": [
+    "solves a recurring user problem by combining several components",
+    "describes when and how to use the combination, such as a search form"
+   ],
+   "use": "document how a filter bar, chips and results list work together",
+   "not": [
+    "is a single indivisible control"
+   ],
+   "like": [
+    "Atomic design"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A headless component",
+   "tier": 5,
+   "says": [
+    "provides behaviour and accessibility without any styling",
+    "lets each team apply its own visual design on top",
+    "handles keyboard and focus logic for the consumer"
+   ],
+   "use": "need to reuse menu behaviour under a different visual brand",
+   "not": [
+    "ships with fixed colours and spacing"
+   ],
+   "like": [
+    "A compound component",
+    "A polymorphic component"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A compound component",
+   "tier": 4,
+   "says": [
+    "splits a component into cooperating parts that share implicit state",
+    "is seen in Tabs with a list, tab and panel",
+    "lets consumers arrange the parts freely"
+   ],
+   "use": "want a tabs component where the consumer controls the markup order",
+   "not": [
+    "is one flat component that takes a long props list"
+   ],
+   "like": [
+    "A headless component",
+    "A polymorphic component"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "An escape hatch",
+   "tier": 5,
+   "says": [
+    "lets a consumer override a component beyond its official API",
+    "trades some consistency for flexibility",
+    "should be tracked, because many uses signal a missing variant"
+   ],
+   "use": "decide how to let a team style a component outside its options",
+   "not": [
+    "improves consistency by allowing any override"
+   ]
+  },
+  {
+   "group": "comp",
+   "subject": "A polymorphic component",
+   "tier": 5,
+   "says": [
+    "renders as a different HTML element through a prop such as as",
+    "keeps the same styling while changing the underlying tag",
+    "needs care so semantics stay correct"
+   ],
+   "use": "want a button style applied to a link without duplicating the component",
+   "not": [
+    "always renders a div"
+   ],
+   "like": [
+    "A headless component",
+    "A compound component"
+   ]
+  },
+  {
+   "group": "ui",
+   "subject": "A primary button",
+   "tier": 1,
+   "says": [
+    "marks the single most important action in a view",
+    "has the strongest visual emphasis of the button set"
+   ],
+   "use": "need to highlight the main call to action on a form",
+   "not": [
+    "should appear many times in one view to give equal emphasis"
+   ],
+   "like": [
+    "A destructive button"
+   ]
+  },
+  {
+   "group": "ui",
+   "subject": "A destructive button",
+   "tier": 3,
+   "says": [
+    "is styled distinctly for an action that deletes or cannot be undone",
+    "is usually backed by a confirmation or an undo"
+   ],
+   "use": "need to signal that clicking will remove data",
+   "not": [
+    "is styled identically to every other button"
+   ],
+   "like": [
+    "A primary button"
+   ]
+  },
+  {
+   "group": "ui",
+   "subject": "A modal dialog",
+   "tier": 2,
+   "says": [
+    "blocks interaction with the page behind it until dismissed",
+    "must move focus inside and return it on close",
+    "is overused when the task could happen inline"
+   ],
+   "use": "need the user to confirm a decision before continuing",
+   "not": [
+    "leaves the rest of the page fully usable"
+   ],
+   "like": [
+    "A toast",
+    "An inline alert"
+   ]
+  },
+  {
+   "group": "ui",
+   "subject": "A toast",
+   "tier": 3,
+   "says": [
+    "shows a brief non-blocking message that fades after a short time",
+    "suits low-importance confirmation",
+    "can be missed, so it should not carry critical information"
+   ],
+   "use": "want to confirm that a draft was saved without interrupting the user",
+   "not": [
+    "blocks the page until dismissed"
+   ],
+   "like": [
+    "An inline alert",
+    "A modal dialog"
+   ]
+  },
+  {
+   "group": "ui",
+   "subject": "An inline alert",
+   "tier": 3,
+   "says": [
+    "stays visible next to the content it concerns",
+    "persists until the issue is fixed or dismissed"
+   ],
+   "use": "need to show a form-level problem that must not disappear on its own",
+   "not": [
+    "disappears automatically after a few seconds"
+   ],
+   "like": [
+    "A toast"
+   ]
+  },
+  {
+   "group": "ui",
+   "subject": "A tabbed interface",
+   "tier": 2,
+   "says": [
+    "switches between related panels shown one at a time in the same space",
+    "keeps peer sections of equal importance side by side in a tab list"
+   ],
+   "use": "need to show profile, billing and security settings in one place",
+   "not": [
+    "stack every section open at the same time"
+   ],
+   "like": [
+    "An accordion"
+   ]
+  },
+  {
+   "group": "ui",
+   "subject": "An accordion",
+   "tier": 2,
+   "says": [
+    "expands and collapses sections under headings",
+    "lets users scan headings before opening detail"
+   ],
+   "use": "want a long FAQ that can be scanned by question",
+   "not": [
+    "shows exactly one panel and hides all other headings"
+   ],
+   "like": [
+    "A tabbed interface"
+   ]
+  },
+  {
+   "group": "ui",
+   "subject": "A skeleton screen",
+   "tier": 2,
+   "says": [
+    "shows grey placeholder shapes laid out like the coming content",
+    "reduces the sense of waiting and layout shift"
+   ],
+   "use": "want to show page structure while data loads",
+   "not": [
+    "is a final error page"
+   ],
+   "like": [
+    "An empty state"
+   ]
+  },
+  {
+   "group": "ui",
+   "subject": "An empty state",
+   "tier": 2,
+   "says": [
+    "explains why nothing is shown",
+    "offers a clear next step, such as creating the first item"
+   ],
+   "use": "design what a new user sees on a list with no items",
+   "not": [
+    "shows only a blank area with no message"
+   ],
+   "like": [
+    "A skeleton screen"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "A radio button group",
+   "tier": 2,
+   "says": [
+    "presents a few mutually exclusive options all visible at once",
+    "allows exactly one choice in the group"
+   ],
+   "use": "need the user to choose one of three shipping speeds",
+   "not": [
+    "allow any number of options to be selected"
+   ],
+   "like": [
+    "Checkboxes",
+    "A select menu"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "A checkbox group",
+   "tier": 2,
+   "says": [
+    "allows zero or more independent choices",
+    "lets each box be toggled without affecting the others"
+   ],
+   "use": "want a user to tick several notification types",
+   "not": [
+    "allow only one choice from a group"
+   ],
+   "like": [
+    "Radio buttons",
+    "A toggle switch"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "A select menu",
+   "tier": 2,
+   "says": [
+    "hides a longer list of mutually exclusive options until opened",
+    "saves space when there are too many options to show"
+   ],
+   "use": "need a country field with many options",
+   "not": [
+    "shows every option at all times"
+   ],
+   "like": [
+    "A radio button group"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "A toggle switch",
+   "tier": 2,
+   "says": [
+    "applies a setting immediately as it is flipped",
+    "represents an on or off state"
+   ],
+   "use": "want a setting that takes effect without a save button",
+   "not": [
+    "is submitted later with the rest of a form"
+   ],
+   "like": [
+    "A checkbox group"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "A form label",
+   "tier": 1,
+   "says": [
+    "names a field in visible text that stays on screen",
+    "is linked to its input so clicking it focuses the field",
+    "gives the field its accessible name"
+   ],
+   "use": "need every input to be understandable to a screen reader",
+   "not": [
+    "can be replaced by placeholder text alone"
+   ],
+   "like": [
+    "A placeholder",
+    "Helper text"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "A placeholder",
+   "tier": 2,
+   "says": [
+    "shows example text inside an empty field",
+    "disappears when the user types",
+    "is not a substitute for a label"
+   ],
+   "use": "want to hint at the format, such as a sample date",
+   "not": [
+    "is announced as the permanent label by every assistive technology"
+   ],
+   "like": [
+    "A form label"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "Helper text",
+   "tier": 2,
+   "says": [
+    "stays near a field to explain what is expected",
+    "is read to users when tied to the input"
+   ],
+   "use": "need to state a password rule before the user types",
+   "not": [
+    "appears only after an error occurs"
+   ],
+   "like": [
+    "A validation message",
+    "A form label"
+   ]
+  },
+  {
+   "group": "form",
+   "subject": "A validation message",
+   "tier": 3,
+   "says": [
+    "tells the user what went wrong and how to fix it",
+    "appears next to the field in error",
+    "is linked to the field so assistive technology announces it"
+   ],
+   "use": "want a failed field to explain the problem in words",
+   "not": [
+    "only changes the field border colour"
+   ],
+   "like": [
+    "Helper text"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "A layout grid",
+   "tier": 1,
+   "says": [
+    "divides a page into columns with consistent gutters and margins",
+    "helps align elements and creates rhythm"
+   ],
+   "use": "need elements across pages to line up",
+   "not": [
+    "fixes the exact pixel position of every element"
+   ],
+   "like": [
+    "A baseline grid",
+    "A column grid"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "A column grid",
+   "tier": 2,
+   "says": [
+    "is often twelve columns because twelve divides evenly by 2, 3, 4 and 6",
+    "lets content span a chosen number of columns"
+   ],
+   "use": "need a flexible layout that supports halves, thirds and quarters",
+   "not": [
+    "must always have exactly 24 columns"
+   ],
+   "like": [
+    "A baseline grid",
+    "A layout grid"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "A gutter",
+   "tier": 2,
+   "says": [
+    "is the space between columns",
+    "keeps adjacent content from touching"
+   ],
+   "use": "need breathing room between two cards in a row",
+   "not": [
+    "is the space around the outside of the page"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "A breakpoint",
+   "tier": 2,
+   "says": [
+    "is a viewport width at which the layout changes",
+    "is usually chosen where the content starts to break, not for particular devices"
+   ],
+   "use": "decide when a sidebar should drop below the content",
+   "not": [
+    "is a debugging pause in code"
+   ],
+   "like": [
+    "A container query"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "Mobile-first design",
+   "tier": 3,
+   "says": [
+    "starts from the smallest layout and adds complexity at wider sizes",
+    "uses min-width media queries",
+    "forces a priority order for content"
+   ],
+   "use": "want a layout where small screens get the simplest rules",
+   "not": [
+    "designs for large screens first and removes things later"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "A container query",
+   "tier": 4,
+   "says": [
+    "styles a component based on the size of its container rather than the viewport",
+    "lets a component adapt wherever it is placed"
+   ],
+   "use": "need a card to rearrange itself in a narrow sidebar and a wide main area",
+   "not": [
+    "responds only to the window width"
+   ],
+   "like": [
+    "A breakpoint"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "CSS Grid",
+   "tier": 3,
+   "says": [
+    "lays out content in rows and columns at the same time",
+    "suits whole-page and two-dimensional layouts"
+   ],
+   "use": "need to place items in both rows and columns",
+   "not": [
+    "lays out items in one dimension only"
+   ],
+   "like": [
+    "Flexbox"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "Flexbox",
+   "tier": 3,
+   "says": [
+    "lays out items along one axis at a time",
+    "distributes space and alignment among items in a row or column"
+   ],
+   "use": "need a toolbar of items that share space in a row",
+   "not": [
+    "is built for two-dimensional page grids"
+   ],
+   "like": [
+    "CSS Grid"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "A baseline grid",
+   "tier": 4,
+   "says": [
+    "aligns lines of text to a repeating vertical rhythm",
+    "keeps text across columns sitting on common lines"
+   ],
+   "use": "want text in neighbouring columns to line up",
+   "not": [
+    "divides the page into horizontal columns"
+   ],
+   "like": [
+    "A column grid",
+    "A layout grid"
+   ]
+  },
+  {
+   "group": "layout",
+   "subject": "Whitespace",
+   "tier": 1,
+   "says": [
+    "is empty space that separates and groups content",
+    "improves readability and focus",
+    "is part of the design, not wasted room"
+   ],
+   "use": "want users to find the main message on a crowded page",
+   "not": [
+    "is a defect to be filled with content"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "A type scale",
+   "tier": 1,
+   "says": [
+    "defines a limited set of font sizes for the interface",
+    "keeps text hierarchy consistent"
+   ],
+   "use": "choose the sizes for headings, body and captions",
+   "not": [
+    "lets each page pick any size"
+   ],
+   "like": [
+    "A modular scale"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "A modular scale",
+   "tier": 3,
+   "says": [
+    "grows sizes by a constant ratio such as 1.25",
+    "produces sizes that relate to one another"
+   ],
+   "use": "generate heading sizes from a body size using a ratio",
+   "not": [
+    "uses random increments"
+   ],
+   "like": [
+    "A type scale"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "Line height",
+   "tier": 2,
+   "says": [
+    "sets the vertical distance between lines of text",
+    "is commonly around 1.4 to 1.6 times the font size for body text"
+   ],
+   "use": "fix text that feels cramped in a paragraph",
+   "not": [
+    "sets the width of each line"
+   ],
+   "like": [
+    "Letter spacing",
+    "Line length"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "Line length",
+   "tier": 2,
+   "says": [
+    "is the number of characters on one line",
+    "is commonly kept near 45 to 75 characters for body text"
+   ],
+   "use": "stop long paragraphs from being tiring to read",
+   "not": [
+    "is controlled by line height"
+   ],
+   "like": [
+    "Line height"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "Letter spacing",
+   "tier": 3,
+   "says": [
+    "adjusts the space between all characters in a run of text",
+    "is often loosened for small uppercase labels"
+   ],
+   "use": "make small all-caps labels easier to read",
+   "not": [
+    "adjusts the space between lines"
+   ],
+   "like": [
+    "Line height"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "A font stack",
+   "tier": 2,
+   "says": [
+    "lists fallback fonts in order",
+    "ends with a generic family such as sans-serif"
+   ],
+   "use": "keep text readable if the brand font fails to load",
+   "not": [
+    "loads every listed font at once"
+   ],
+   "like": [
+    "A variable font",
+    "Fluid typography"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "A variable font",
+   "tier": 4,
+   "says": [
+    "holds a range of weights or widths in one file",
+    "allows smooth values along an axis such as weight"
+   ],
+   "use": "want many weights without many font files",
+   "not": [
+    "contains only one fixed weight"
+   ],
+   "like": [
+    "A font stack",
+    "Fluid typography"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "Fluid typography",
+   "tier": 4,
+   "says": [
+    "scales text smoothly between a minimum and maximum size",
+    "is often written with the CSS clamp function"
+   ],
+   "use": "avoid abrupt size jumps between breakpoints",
+   "not": [
+    "uses only fixed sizes per breakpoint"
+   ],
+   "like": [
+    "A font stack",
+    "A variable font"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "Font weight",
+   "tier": 2,
+   "says": [
+    "varies stroke thickness from light to bold",
+    "signals emphasis without changing the size"
+   ],
+   "use": "emphasise a key phrase inside body text",
+   "not": [
+    "changes the typeface family"
+   ],
+   "like": [
+    "Line height"
+   ]
+  },
+  {
+   "group": "type",
+   "subject": "font-display swap",
+   "tier": 5,
+   "says": [
+    "shows fallback text immediately while a web font loads",
+    "swaps in the web font when it arrives",
+    "can cause a visible shift when the fonts differ in size"
+   ],
+   "use": "avoid invisible text during font load",
+   "not": [
+    "hides all text until the font is ready"
+   ]
+  },
+  {
+   "group": "color",
+   "subject": "A colour palette",
+   "tier": 1,
+   "says": [
+    "is the defined set of colours a system uses",
+    "includes neutrals, brand colours and status colours"
+   ],
+   "use": "decide the colours for a product's interface",
+   "not": [
+    "is limited to one brand colour"
+   ],
+   "like": [
+    "A tonal scale"
+   ]
+  },
+  {
+   "group": "color",
+   "subject": "A tonal scale",
+   "tier": 2,
+   "says": [
+    "lists lighter to darker steps of one hue, such as 50 to 900",
+    "gives predictable options for backgrounds, borders and text"
+   ],
+   "use": "need several shades of one brand colour for different uses",
+   "not": [
+    "lists unrelated colours"
+   ],
+   "like": [
+    "A colour palette"
+   ]
+  },
+  {
+   "group": "color",
+   "subject": "Contrast ratio",
+   "tier": 1,
+   "says": [
+    "compares the luminance of two colours as a number",
+    "ranges from 1:1 for identical colours to 21:1 for black on white"
+   ],
+   "use": "measure whether text stands out from its background",
+   "not": [
+    "measures how colourful a colour is"
+   ]
+  },
+  {
+   "group": "color",
+   "subject": "A colour role",
+   "tier": 3,
+   "says": [
+    "assigns meaning such as success, warning or error to a colour",
+    "must be reinforced by text or icons"
+   ],
+   "use": "define which colour means danger across the product",
+   "not": [
+    "uses colour as the only signal"
+   ]
+  },
+  {
+   "group": "color",
+   "subject": "Dark mode",
+   "tier": 3,
+   "says": [
+    "uses a dark surface palette with adjusted token values",
+    "needs contrast re-checked rather than a simple inversion",
+    "often lowers saturation on bright colours"
+   ],
+   "use": "offer a theme for low-light use",
+   "not": [
+    "is a pure colour inversion of the light theme"
+   ],
+   "like": [
+    "A theme"
+   ]
+  },
+  {
+   "group": "color",
+   "subject": "The OKLCH colour space",
+   "tier": 5,
+   "says": [
+    "models colour with lightness, chroma and hue",
+    "gives steps that look perceptually even",
+    "makes it easier to build palettes with matching lightness"
+   ],
+   "use": "want tonal steps that look equally spaced",
+   "not": [
+    "is limited to the old sRGB gamut"
+   ]
+  },
+  {
+   "group": "color",
+   "subject": "Colour-blind safe design",
+   "tier": 3,
+   "says": [
+    "never relies on colour alone to convey meaning",
+    "adds icons, labels or patterns beside colour"
+   ],
+   "use": "make a chart readable for people who cannot tell red from green",
+   "not": [
+    "uses only red and green to differentiate states"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "WCAG",
+   "tier": 1,
+   "says": [
+    "is the Web Content Accessibility Guidelines published by the W3C",
+    "sets testable success criteria at levels A, AA and AAA"
+   ],
+   "use": "need a recognised standard for web accessibility",
+   "not": [
+    "is a design file format"
+   ],
+   "like": [
+    "POUR"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "POUR",
+   "tier": 2,
+   "says": [
+    "names the four WCAG principles: perceivable, operable, understandable and robust",
+    "gives a frame for sorting accessibility issues"
+   ],
+   "use": "remember the principles that organise the guidelines",
+   "not": [
+    "is a list of four colours"
+   ],
+   "like": [
+    "WCAG"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Normal text contrast at AA",
+   "tier": 1,
+   "says": [
+    "requires a ratio of at least 4.5:1",
+    "applies to text below the large-text size"
+   ],
+   "use": "check ordinary body text against its background",
+   "not": [
+    "requires 3:1"
+   ],
+   "like": [
+    "Large text contrast at AA",
+    "Text contrast at AAA",
+    "Non-text contrast"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Large text contrast at AA",
+   "tier": 3,
+   "says": [
+    "requires a ratio of at least 3:1",
+    "applies to text of 18 point or larger, or 14 point bold or larger"
+   ],
+   "use": "check a big heading against its background",
+   "not": [
+    "requires 7:1"
+   ],
+   "like": [
+    "Normal text contrast at AA",
+    "Text contrast at AAA",
+    "Non-text contrast"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Text contrast at AAA",
+   "tier": 4,
+   "says": [
+    "requires 7:1 for normal text",
+    "requires 4.5:1 for large text"
+   ],
+   "use": "meet the enhanced contrast level",
+   "not": [
+    "requires 4.5:1 for normal text"
+   ],
+   "like": [
+    "Normal text contrast at AA",
+    "Large text contrast at AA",
+    "Non-text contrast"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Non-text contrast",
+   "tier": 3,
+   "says": [
+    "requires at least 3:1 for interface component boundaries and meaningful graphics",
+    "covers things such as input borders and focus indicators"
+   ],
+   "use": "check that a field border is visible enough",
+   "not": [
+    "applies only to body text"
+   ],
+   "like": [
+    "Normal text contrast at AA",
+    "Large text contrast at AA",
+    "Text contrast at AAA"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Minimum target size",
+   "tier": 4,
+   "says": [
+    "is 24 by 24 CSS pixels at WCAG 2.2 level AA",
+    "helps users with limited dexterity"
+   ],
+   "use": "check that small icon buttons are easy to press",
+   "not": [
+    "is 44 by 44 pixels at level A"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Focus visible",
+   "tier": 2,
+   "says": [
+    "requires a visible indicator on the element with keyboard focus",
+    "helps keyboard users know where they are"
+   ],
+   "use": "make sure a tabbing user can see which control is active",
+   "not": [
+    "lets a design remove the outline with no replacement"
+   ],
+   "like": [
+    "A focus trap"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Semantic HTML",
+   "tier": 1,
+   "says": [
+    "uses elements for their meaning, such as button, nav and heading",
+    "gives roles and behaviour to assistive technology for free"
+   ],
+   "use": "avoid rebuilding a button from a div",
+   "not": [
+    "relies on ARIA to supply meaning where native elements exist"
+   ],
+   "like": [
+    "ARIA"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "ARIA",
+   "tier": 3,
+   "says": [
+    "adds roles and properties for assistive technology",
+    "fills gaps that native HTML cannot",
+    "changes semantics but adds no behaviour or styling"
+   ],
+   "use": "describe a custom widget to a screen reader",
+   "not": [
+    "makes a div keyboard operable by itself"
+   ],
+   "like": [
+    "Semantic HTML"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "An accessible name",
+   "tier": 3,
+   "says": [
+    "is the text a screen reader announces for a control",
+    "comes from a label, visible text or aria-label"
+   ],
+   "use": "fix an icon-only button that screen readers announce as just button",
+   "not": [
+    "is always taken from the placeholder"
+   ],
+   "like": [
+    "Alternative text"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Alternative text",
+   "tier": 1,
+   "says": [
+    "gives a text equivalent for an image",
+    "is left empty for purely decorative images"
+   ],
+   "use": "describe a chart image for people who cannot see it",
+   "not": [
+    "should always begin with image of"
+   ],
+   "like": [
+    "An accessible name"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A focus trap",
+   "tier": 5,
+   "says": [
+    "keeps keyboard focus inside a modal dialog while it is open",
+    "lets users escape with the Escape key and returns focus on close"
+   ],
+   "use": "stop tabbing from moving to the page behind a dialog",
+   "not": [
+    "is a bug that should be avoided in every dialog"
+   ],
+   "like": [
+    "Focus visible",
+    "A live region"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Reduced motion",
+   "tier": 5,
+   "says": [
+    "is a user preference that asks for less animation",
+    "is read with the prefers-reduced-motion media query"
+   ],
+   "use": "respect users who feel sick from movement",
+   "not": [
+    "is an option that only works on mobile"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "Reflow",
+   "tier": 5,
+   "says": [
+    "requires content to be usable at 320 CSS pixels wide without two-dimensional scrolling",
+    "is tested by zooming to 400 percent"
+   ],
+   "use": "check a page works for people who zoom in heavily",
+   "not": [
+    "allows horizontal scrolling for body text"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A skip link",
+   "tier": 3,
+   "says": [
+    "lets keyboard users jump past repeated navigation",
+    "is often the first focusable element on a page"
+   ],
+   "use": "avoid forcing keyboard users through twenty menu links on every page",
+   "not": [
+    "hides content from screen readers"
+   ]
+  },
+  {
+   "group": "a11y",
+   "subject": "A live region",
+   "tier": 5,
+   "says": [
+    "announces content changes to screen readers without moving focus",
+    "suits status updates such as saved or error messages"
+   ],
+   "use": "announce a form submission result without moving focus",
+   "not": [
+    "moves keyboard focus to the new content"
+   ],
+   "like": [
+    "A focus trap"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Semantic versioning",
+   "tier": 2,
+   "says": [
+    "numbers releases as major, minor and patch",
+    "raises the major number for breaking changes",
+    "raises the minor number for backward-compatible additions"
+   ],
+   "use": "communicate that a release will break existing usage",
+   "not": [
+    "raises the patch number for every new feature"
+   ],
+   "like": [
+    "A changelog",
+    "A breaking change",
+    "A deprecation policy"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A changelog",
+   "tier": 2,
+   "says": [
+    "records what changed in each release",
+    "helps consumers decide whether and how to upgrade"
+   ],
+   "use": "tell teams what is different in version 3",
+   "not": [
+    "lists future plans only"
+   ],
+   "like": [
+    "Semantic versioning"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A deprecation policy",
+   "tier": 4,
+   "says": [
+    "announces that a component will be removed, with a notice period",
+    "points consumers to the replacement",
+    "avoids surprise breaking changes"
+   ],
+   "use": "retire an old button without breaking teams",
+   "not": [
+    "removes the component the same day it is announced"
+   ],
+   "like": [
+    "A breaking change",
+    "Semantic versioning"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A breaking change",
+   "tier": 4,
+   "says": [
+    "requires consumers to change their code or designs to upgrade",
+    "belongs in a major release"
+   ],
+   "use": "decide how to ship a renamed prop",
+   "not": [
+    "can safely ship in a patch release"
+   ],
+   "like": [
+    "A deprecation policy",
+    "Semantic versioning"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A contribution model",
+   "tier": 3,
+   "says": [
+    "describes how teams propose and add to the system",
+    "comes in centralised, federated or hybrid forms"
+   ],
+   "use": "decide whether product teams can add components",
+   "not": [
+    "is the same as a licence"
+   ],
+   "like": [
+    "Design drift",
+    "An RFC process"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "An RFC process",
+   "tier": 4,
+   "says": [
+    "collects a written proposal and feedback before a change is made",
+    "creates a record of why a decision was taken"
+   ],
+   "use": "agree a major change to the component API with many teams",
+   "not": [
+    "lets one person decide privately"
+   ],
+   "like": [
+    "A changelog",
+    "A contribution model"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "Design drift",
+   "tier": 3,
+   "says": [
+    "is the gradual divergence of products from the system",
+    "grows when teams copy and tweak components"
+   ],
+   "use": "explain why screens no longer match the library",
+   "not": [
+    "is a feature of tokens"
+   ],
+   "like": [
+    "A hard-coded value"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "An adoption metric",
+   "tier": 4,
+   "says": [
+    "measures how much of a product uses system components",
+    "helps prioritise the work with most impact"
+   ],
+   "use": "show whether teams actually use the system",
+   "not": [
+    "measure how many designers work on the team"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "A release channel",
+   "tier": 5,
+   "says": [
+    "separates stable releases from beta or canary ones",
+    "lets teams test changes before they become the default"
+   ],
+   "use": "let teams try new tokens before the major release",
+   "not": [
+    "ships every change to everyone at once"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A usage guideline",
+   "tier": 2,
+   "says": [
+    "explains when and how to use a component",
+    "includes do and do-not examples"
+   ],
+   "use": "help a designer decide between a modal and an inline alert",
+   "not": [
+    "only list a component's colour values"
+   ],
+   "like": [
+    "Anatomy documentation"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "Anatomy documentation",
+   "tier": 3,
+   "says": [
+    "labels the parts of a component such as icon, label and container",
+    "gives teams a shared vocabulary for the pieces"
+   ],
+   "use": "name every part of a card so teams discuss it the same way",
+   "not": [
+    "lists the version history"
+   ],
+   "like": [
+    "A usage guideline"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A do and do-not example",
+   "tier": 2,
+   "says": [
+    "shows correct use beside a common mistake",
+    "makes a rule easier to apply than text alone"
+   ],
+   "use": "teach a rule with a good and a bad image",
+   "not": [
+    "replace the accessibility notes"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "An accessibility note",
+   "tier": 3,
+   "says": [
+    "records keyboard behaviour, roles and contrast for a component",
+    "lets consumers build on tested behaviour"
+   ],
+   "use": "tell developers how a dialog handles focus",
+   "not": [
+    "describes only the component colours"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A living style guide",
+   "tier": 3,
+   "says": [
+    "is documentation generated from or tied to real components",
+    "stays accurate because it updates with the code"
+   ],
+   "use": "avoid docs that go stale after a release",
+   "not": [
+    "is a static PDF that is updated yearly"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A content style guide",
+   "tier": 4,
+   "says": [
+    "sets voice, tone and writing rules for interface text",
+    "keeps button labels and messages consistent"
+   ],
+   "use": "decide whether to say Sign in or Log in everywhere",
+   "not": [
+    "covers only colour choices"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "A single source of truth",
+   "tier": 3,
+   "says": [
+    "keeps one authoritative place for design decisions",
+    "prevents conflicting copies in different tools"
+   ],
+   "use": "stop two files showing different button colours",
+   "not": [
+    "spreads decisions across many documents"
+   ]
+  },
+  {
+   "group": "doc",
+   "subject": "An iconography guideline",
+   "tier": 4,
+   "says": [
+    "sets the grid, stroke and style of icons",
+    "keeps icon meaning consistent"
+   ],
+   "use": "make new icons match the existing set",
+   "not": [
+    "lets each designer pick any style"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "A design handoff",
+   "tier": 1,
+   "says": [
+    "passes a finished design to developers with the detail needed to build it",
+    "includes specs, assets and behaviour notes"
+   ],
+   "use": "make sure engineers can build a screen without guessing",
+   "not": [
+    "ends the designer's involvement"
+   ],
+   "like": [
+    "A design spec",
+    "An interaction spec"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "A design spec",
+   "tier": 2,
+   "says": [
+    "states sizes, spacing, colours and typography for a design",
+    "references tokens instead of raw values where possible"
+   ],
+   "use": "tell a developer the exact padding of a card",
+   "not": [
+    "describes only the final colours of the logo"
+   ],
+   "like": [
+    "A redline",
+    "A design handoff",
+    "An interaction spec"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "A redline",
+   "tier": 3,
+   "says": [
+    "marks measurements and spacing directly on a design",
+    "is partly replaced by inspect tools in design software"
+   ],
+   "use": "annotate gaps between elements on a mockup",
+   "not": [
+    "is a user research method"
+   ],
+   "like": [
+    "A design spec"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "Auto layout",
+   "tier": 3,
+   "says": [
+    "makes a frame resize and reflow its contents",
+    "mirrors how flexbox arranges items in code"
+   ],
+   "use": "build a design that behaves like the coded layout",
+   "not": [
+    "fixes every item at an absolute position"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "Design and code parity",
+   "tier": 4,
+   "says": [
+    "means the design library and the code library use the same names and structure",
+    "reduces translation errors"
+   ],
+   "use": "keep Button in the design file the same as Button in code",
+   "not": [
+    "means designers must write production code"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "Storybook",
+   "tier": 4,
+   "says": [
+    "lets developers build and view components in isolation",
+    "documents each state of a component"
+   ],
+   "use": "review all states of a button without running the app",
+   "not": [
+    "is a design tool for drawing mock-ups"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "Visual regression testing",
+   "tier": 5,
+   "says": [
+    "compares screenshots before and after a change",
+    "flags unintended visual differences"
+   ],
+   "use": "catch a style change that moved a button",
+   "not": [
+    "checks that code compiles"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "An interaction spec",
+   "tier": 3,
+   "says": [
+    "describes behaviour such as transitions, timing and what happens on error",
+    "covers what static mockups cannot show"
+   ],
+   "use": "explain how a menu opens and closes",
+   "not": [
+    "lists static colours only"
+   ],
+   "like": [
+    "A design handoff",
+    "A design spec"
+   ]
+  },
+  {
+   "group": "hand",
+   "subject": "Definition of done for design",
+   "tier": 5,
+   "says": [
+    "states what must be true before a design is considered shippable",
+    "includes accessibility and all states"
+   ],
+   "use": "agree when a component is ready for release",
+   "not": [
+    "is satisfied once the mockup looks nice"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "User experience",
+   "tier": 1,
+   "says": [
+    "covers a person's whole interaction with a product",
+    "includes usability, usefulness and emotion"
+   ],
+   "use": "describe more than how a screen looks",
+   "not": [
+    "refers only to visual style"
+   ],
+   "like": [
+    "Usability"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Usability",
+   "tier": 2,
+   "says": [
+    "is how effectively and easily users reach their goals",
+    "is measured by success, speed, errors and satisfaction"
+   ],
+   "use": "judge whether people can finish a task",
+   "not": [
+    "describes only how attractive an interface is"
+   ],
+   "like": [
+    "User experience"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Visibility of system status",
+   "tier": 2,
+   "says": [
+    "keeps users informed through timely feedback about what is happening",
+    "is the Nielsen heuristic that a progress bar satisfies"
+   ],
+   "use": "show progress while an upload runs",
+   "not": [
+    "tells users to read the manual"
+   ],
+   "like": [
+    "Error prevention",
+    "Feedback",
+    "User control and freedom"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Match between system and the real world",
+   "tier": 3,
+   "says": [
+    "uses words and concepts familiar to the user rather than system terms",
+    "is the Nielsen heuristic violated by internal jargon"
+   ],
+   "use": "replace internal jargon with the user's own words",
+   "not": [
+    "encourages use of technical terms"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "User control and freedom",
+   "tier": 3,
+   "says": [
+    "gives users a clearly marked way out, such as undo and cancel",
+    "is the Nielsen heuristic violated by a flow with no exit"
+   ],
+   "use": "let a user back out of an action by mistake",
+   "not": [
+    "locks users into each step"
+   ],
+   "like": [
+    "Error prevention",
+    "Visibility of system status"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Error prevention",
+   "tier": 3,
+   "says": [
+    "stops problems before they occur, for example with constraints and confirmation",
+    "is the Nielsen heuristic that disabling an impossible option satisfies"
+   ],
+   "use": "stop users from entering an invalid date",
+   "not": [
+    "shows a helpful message after the error occurs"
+   ],
+   "like": [
+    "Visibility of system status",
+    "User control and freedom"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Recognition rather than recall",
+   "tier": 3,
+   "says": [
+    "keeps options visible so users need not remember them",
+    "is the Nielsen heuristic that suggests recent items satisfy"
+   ],
+   "use": "show recent searches rather than expecting users to remember",
+   "not": [
+    "rewards users who memorise commands"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Visual hierarchy",
+   "tier": 1,
+   "says": [
+    "guides attention using size, contrast, colour and position",
+    "shows what is most important first"
+   ],
+   "use": "make the main action stand out on a page",
+   "not": [
+    "gives every element equal weight"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "An affordance",
+   "tier": 2,
+   "says": [
+    "is a property that suggests how something can be used",
+    "helps a control look interactive"
+   ],
+   "use": "make a button look pressable",
+   "not": [
+    "is a hidden feature unrelated to the visual design"
+   ],
+   "like": [
+    "A signifier"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "A signifier",
+   "tier": 4,
+   "says": [
+    "is a perceivable cue that shows where an action is possible",
+    "was named by Don Norman to clarify affordances"
+   ],
+   "use": "add a visible cue showing a card can be dragged",
+   "not": [
+    "is a hidden capability of an object"
+   ],
+   "like": [
+    "An affordance"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Feedback",
+   "tier": 2,
+   "says": [
+    "tells the user that the system received an action and what happened",
+    "can be visual, textual or haptic"
+   ],
+   "use": "confirm a button press registered",
+   "not": [
+    "hides the result until the next page"
+   ],
+   "like": [
+    "Visibility of system status"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Fitts's law",
+   "tier": 4,
+   "says": [
+    "predicts that time to reach a target depends on its distance and size",
+    "favours large targets placed near the pointer"
+   ],
+   "use": "decide how big a frequent button should be",
+   "not": [
+    "says users scan pages in an F pattern"
+   ],
+   "like": [
+    "Hick's law",
+    "Jakob's law"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Hick's law",
+   "tier": 4,
+   "says": [
+    "says decision time grows with the number and complexity of choices",
+    "supports reducing and grouping options"
+   ],
+   "use": "simplify a menu with thirty choices",
+   "not": [
+    "predicts the time to reach a target"
+   ],
+   "like": [
+    "Fitts's law",
+    "Jakob's law"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Jakob's law",
+   "tier": 4,
+   "says": [
+    "says users spend most of their time on other sites, so they prefer familiar patterns",
+    "supports using conventions"
+   ],
+   "use": "decide whether to move the cart icon to an unusual place",
+   "not": [
+    "says to reinvent navigation to stand out"
+   ],
+   "like": [
+    "Hick's law",
+    "Fitts's law"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "Progressive disclosure",
+   "tier": 3,
+   "says": [
+    "shows only the most needed options first",
+    "reveals advanced options on request"
+   ],
+   "use": "hide advanced settings until a user asks",
+   "not": [
+    "shows every option on the first screen"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "The Gestalt law of proximity",
+   "tier": 3,
+   "says": [
+    "says elements placed close together are seen as related",
+    "helps group a label with its field"
+   ],
+   "use": "group related form fields without drawing boxes",
+   "not": [
+    "says similar colours always mean the same group"
+   ]
+  },
+  {
+   "group": "ux",
+   "subject": "A mental model",
+   "tier": 4,
+   "says": [
+    "is a person's belief about how a system works",
+    "causes confusion when an interface contradicts it"
+   ],
+   "use": "explain why a user expected a trash icon to delete",
+   "not": [
+    "is the design team's internal model of the code"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A usability test",
+   "tier": 1,
+   "says": [
+    "watches real users attempt tasks with a product",
+    "uncovers problems that opinions miss"
+   ],
+   "use": "find out why users abandon the checkout",
+   "not": [
+    "asks users what they prefer without any tasks"
+   ],
+   "like": [
+    "A survey",
+    "Think-aloud",
+    "A heuristic evaluation"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Think-aloud",
+   "tier": 3,
+   "says": [
+    "asks participants to say their thoughts as they work",
+    "reveals confusion and expectations in the moment"
+   ],
+   "use": "understand what a user expects while using a prototype",
+   "not": [
+    "interrupts users with questions after each click"
+   ],
+   "like": [
+    "A usability test",
+    "A heuristic evaluation"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Card sorting",
+   "tier": 3,
+   "says": [
+    "asks participants to group topics into categories",
+    "informs navigation and information architecture"
+   ],
+   "use": "design menu labels and groups",
+   "not": [
+    "tests whether people can find items in an existing menu"
+   ],
+   "like": [
+    "Tree testing"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Tree testing",
+   "tier": 5,
+   "says": [
+    "checks whether users can find items in a text-only hierarchy",
+    "evaluates the structure without visual design"
+   ],
+   "use": "validate a new navigation structure before design",
+   "not": [
+    "asks users to create new categories"
+   ],
+   "like": [
+    "Card sorting"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A heuristic evaluation",
+   "tier": 3,
+   "says": [
+    "has experts review an interface against usability principles",
+    "finds issues without recruiting users"
+   ],
+   "use": "get quick expert feedback before testing",
+   "not": [
+    "relies on random users clicking"
+   ],
+   "like": [
+    "A usability test",
+    "Think-aloud"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "A survey",
+   "tier": 2,
+   "says": [
+    "collects answers from many people at low cost",
+    "tells you what people say, not what they do"
+   ],
+   "use": "gather opinions from a large audience",
+   "not": [
+    "watches users complete tasks"
+   ],
+   "like": [
+    "A usability test"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "The System Usability Scale",
+   "tier": 4,
+   "says": [
+    "is a ten-item questionnaire",
+    "produces a single score from 0 to 100"
+   ],
+   "use": "compare perceived usability across releases",
+   "not": [
+    "is a measure of page load speed"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "An A/B test",
+   "tier": 4,
+   "says": [
+    "compares two versions with different users at the same time",
+    "needs enough traffic to reach a reliable conclusion"
+   ],
+   "use": "decide which of two button labels gets more clicks",
+   "not": [
+    "shows the same version to everyone"
+   ],
+   "like": [
+    "A usability test"
+   ]
+  },
+  {
+   "group": "res",
+   "subject": "Contextual inquiry",
+   "tier": 5,
+   "says": [
+    "observes people in their real environment while they work",
+    "uncovers workarounds and constraints that interviews miss"
+   ],
+   "use": "learn how nurses use a system during a shift",
+   "not": [
+    "uses a lab with scripted tasks only"
+   ]
+  },
+  {
+   "group": "studio",
+   "subject": "The Brand System guideline document",
+   "tier": 3,
+   "says": [
+    "runs to 30 to 60 pages in the Guru Graphics Brand System engagement",
+    "gathers the logo, colour, typography and voice rules in one document"
+   ],
+   "use": "explain what the largest Guru Graphics engagement hands over",
+   "not": [
+    "is a website build"
+   ],
+   "like": [
+    "The Brand System accessibility standard",
+    "The Brand System colour and typography rule",
+    "The Brand System voice rule",
+    "The Brand System campaign style rule",
+    "The Guru Graphics design scope"
+   ]
+  },
+  {
+   "group": "studio",
+   "subject": "The Brand System accessibility standard",
+   "tier": 3,
+   "says": [
+    "is included in the Guru Graphics Brand System",
+    "sets the contrast and accessibility rules the brand must follow"
+   ],
+   "use": "explain how Guru Graphics covers accessible brand design",
+   "not": [
+    "is offered only as a separate add-on"
+   ],
+   "like": [
+    "The Brand System colour and typography rule",
+    "The Brand System guideline document",
+    "The Brand System voice rule",
+    "The Brand System campaign style rule",
+    "The Guru Graphics design scope"
+   ]
+  },
+  {
+   "group": "studio",
+   "subject": "The Brand System colour and typography rule",
+   "tier": 2,
+   "says": [
+    "belongs to the Guru Graphics Brand System guidelines",
+    "says which colours and typefaces the brand uses and how"
+   ],
+   "use": "explain where a client finds approved fonts and colours",
+   "not": [
+    "is limited to website code"
+   ],
+   "like": [
+    "The Brand System accessibility standard",
+    "The Brand System guideline document",
+    "The Brand System voice rule",
+    "The Brand System campaign style rule",
+    "The Guru Graphics design scope"
+   ]
+  },
+  {
+   "group": "studio",
+   "subject": "The Brand System voice rule",
+   "tier": 3,
+   "says": [
+    "covers brand voice and writing tone in the Guru Graphics Brand System",
+    "guides how words sound across channels"
+   ],
+   "use": "explain where tone of writing is defined for a client brand",
+   "not": [
+    "is covered by logo rules"
+   ],
+   "like": [
+    "The Brand System colour and typography rule",
+    "The Brand System guideline document",
+    "The Brand System accessibility standard",
+    "The Brand System campaign style rule",
+    "The Guru Graphics design scope"
+   ]
+  },
+  {
+   "group": "studio",
+   "subject": "The Brand System campaign style rule",
+   "tier": 4,
+   "says": [
+    "defines campaign and advertising style in the Guru Graphics Brand System",
+    "extends the identity into promotion"
+   ],
+   "use": "explain how a brand should look in adverts",
+   "not": [
+    "is covered by accessibility standards"
+   ],
+   "like": [
+    "The Brand System voice rule",
+    "The Brand System guideline document",
+    "The Brand System accessibility standard",
+    "The Brand System colour and typography rule",
+    "The Guru Graphics design scope"
+   ]
+  },
+  {
+   "group": "studio",
+   "subject": "The Guru Graphics design scope",
+   "tier": 2,
+   "says": [
+    "covers design and branding only",
+    "does not include building websites or software"
+   ],
+   "use": "answer a client who asks Guru Graphics to build a web app",
+   "not": [
+    "includes software development"
+   ],
+   "like": [
+    "The Brand System guideline document",
+    "The Brand System accessibility standard",
+    "The Brand System colour and typography rule",
+    "The Brand System voice rule",
+    "The Brand System campaign style rule"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What is the main purpose of a design system?",
+   "right": "To give teams a shared, reusable set of components and guidelines for consistent interfaces",
+   "wrong": [
+    "To replace the need for user research",
+    "To store the final copy of every project file",
+    "To limit a product to one screen size"
+   ],
+   "tier": 1,
+   "why": "A design system gives design and engineering a common library and rules."
+  },
+  {
+   "q": "What is a design token?",
+   "right": "A named value for a design decision such as a colour or spacing step",
+   "wrong": [
+    "A single-use password for a design tool",
+    "A screenshot of a finished page",
+    "A licence for a typeface"
+   ],
+   "tier": 1,
+   "why": "Tokens replace raw values with names shared by design and code."
+  },
+  {
+   "q": "Which text contrast ratio does WCAG AA require for normal body text?",
+   "right": "At least 4.5:1",
+   "wrong": [
+    "At least 2:1",
+    "At least 3:1",
+    "At least 7:1"
+   ],
+   "tier": 1,
+   "why": "AA is 4.5:1 for normal text and 3:1 for large text."
+  },
+  {
+   "q": "Which is the best element for a control that triggers an action?",
+   "right": "A native button element",
+   "wrong": [
+    "A div with a click handler",
+    "A span styled to look like a button",
+    "An image with a title"
+   ],
+   "tier": 1,
+   "why": "A native button brings keyboard support and semantics for free."
+  },
+  {
+   "q": "What does a primary button signal?",
+   "right": "The most important action in the view",
+   "wrong": [
+    "That the action cannot be undone",
+    "That the control is disabled",
+    "That the page is loading"
+   ],
+   "tier": 1,
+   "why": "Only one primary action per view keeps emphasis meaningful."
+  },
+  {
+   "q": "What is alt text for a meaningful image?",
+   "right": "A text equivalent for people who cannot see the image",
+   "wrong": [
+    "A caption shown under every image",
+    "A title that appears in the page tab",
+    "A way to make the file smaller"
+   ],
+   "tier": 1,
+   "why": "Alt text is the accessible text alternative."
+  },
+  {
+   "q": "What does a layout grid help with?",
+   "right": "Aligning elements and keeping consistent spacing across pages",
+   "wrong": [
+    "Compressing images",
+    "Choosing brand names",
+    "Running automated tests"
+   ],
+   "tier": 1,
+   "why": "Grids create consistent columns, gutters and margins."
+  },
+  {
+   "q": "A team hard-codes #1A73E8 in forty components. The brand colour changes. What is the best long-term fix?",
+   "right": "Replace the literals with a semantic colour token that aliases a primitive",
+   "wrong": [
+    "Search and replace the hex value each time it changes",
+    "Ask designers to avoid changing the brand colour",
+    "Keep both colours and let each team choose"
+   ],
+   "tier": 2,
+   "why": "A token layer lets one change flow everywhere."
+  },
+  {
+   "q": "Which naming is more useful for a semantic token?",
+   "right": "color-text-primary",
+   "wrong": [
+    "blue-500-text",
+    "the-blue-we-like",
+    "text1"
+   ],
+   "tier": 2,
+   "why": "Semantic names state purpose so the value can change without renaming."
+  },
+  {
+   "q": "A form shows a field with only a placeholder as its label. What is the main problem?",
+   "right": "The label disappears when typing and is unreliable as an accessible name",
+   "wrong": [
+    "Placeholders cannot contain text",
+    "Placeholders make the field read-only",
+    "Screen readers always announce placeholders twice"
+   ],
+   "tier": 2,
+   "why": "Use a visible label linked to the input."
+  },
+  {
+   "q": "A user sees a green tick next to a saved file and a red cross next to an error, with no text. Who is most likely to miss the meaning?",
+   "right": "A person who cannot distinguish red from green",
+   "wrong": [
+    "A person who prefers dark mode",
+    "A person using a wide monitor",
+    "A person on a fast connection"
+   ],
+   "tier": 2,
+   "why": "Colour must be backed by shape or text."
+  },
+  {
+   "q": "What do tabs do compared with an accordion?",
+   "right": "Show one panel at a time among peers in the same space",
+   "wrong": [
+    "Hide all panels permanently",
+    "Always open every section at once",
+    "Load a new page for each panel"
+   ],
+   "tier": 2,
+   "why": "Tabs swap content in place; accordions expand sections under headings."
+  },
+  {
+   "q": "A designer wants a card layout that rearranges at wider widths. Which unit of change is this?",
+   "right": "A breakpoint",
+   "wrong": [
+    "A token alias",
+    "A semantic version",
+    "A deprecation"
+   ],
+   "tier": 2,
+   "why": "A breakpoint is where the layout changes."
+  },
+  {
+   "q": "Why is body text commonly kept to roughly 45 to 75 characters per line?",
+   "right": "Lines that are too long or too short tire the reader",
+   "wrong": [
+    "Browsers cannot render longer lines",
+    "It makes images load faster",
+    "It satisfies a WCAG level A rule"
+   ],
+   "tier": 2,
+   "why": "Line length affects readability."
+  },
+  {
+   "q": "A pointer user cannot tell which button is hovered or pressed. What is missing?",
+   "right": "Designed interactive states",
+   "wrong": [
+    "A higher semantic version",
+    "A skip link",
+    "A tonal scale"
+   ],
+   "tier": 2,
+   "why": "Components need hover, pressed, focus and disabled states."
+  },
+  {
+   "q": "Which is the best way to give a screen reader a name for an icon-only button?",
+   "right": "Add an accessible name such as aria-label",
+   "wrong": [
+    "Add a tooltip that only shows on hover",
+    "Change the icon colour",
+    "Add a placeholder attribute"
+   ],
+   "tier": 2,
+   "why": "The accessible name comes from a label or aria-label.",
+   "code": "<button aria-label=\"Close dialog\">\n  <svg aria-hidden=\"true\">...</svg>\n</button>"
+  },
+  {
+   "q": "A design file labels a button Primary but the code calls it Main. What is the likely consequence?",
+   "right": "Translation errors and drift between design and code",
+   "wrong": [
+    "Faster builds",
+    "Better contrast",
+    "Fewer breaking changes"
+   ],
+   "tier": 3,
+   "why": "Parity of names reduces confusion."
+  },
+  {
+   "q": "A team renames a component prop from size to scale. Which release should this ship in?",
+   "right": "A major release with a migration note",
+   "wrong": [
+    "A patch release",
+    "A minor release without notes",
+    "A nightly build only"
+   ],
+   "tier": 3,
+   "why": "Renaming a prop breaks consumers, so semantic versioning requires a major release."
+  },
+  {
+   "q": "A design system team wants to remove an old component. What should they do first?",
+   "right": "Announce deprecation with a timeline and a replacement",
+   "wrong": [
+    "Delete it today",
+    "Hide it from the docs only",
+    "Rename it to something else"
+   ],
+   "tier": 3,
+   "why": "A deprecation policy avoids surprise breakage."
+  },
+  {
+   "q": "A product team needs a button variant that the system does not have. What process fits a federated model?",
+   "right": "Propose it through the contribution process and review it",
+   "wrong": [
+    "Copy the button into the product and change it",
+    "Wait indefinitely for the core team",
+    "Use an inline style on every instance"
+   ],
+   "tier": 3,
+   "why": "Contribution models keep additions consistent."
+  },
+  {
+   "q": "A modal dialog opens, but a keyboard user can tab to links behind it. What is the fix?",
+   "right": "Trap focus inside the dialog and return it on close",
+   "wrong": [
+    "Increase the dialog's z-index",
+    "Add a larger close button",
+    "Remove the focus outline"
+   ],
+   "tier": 3,
+   "why": "Focus must stay in the dialog while it is open."
+  },
+  {
+   "q": "A user presses Tab and cannot see where focus is. Which WCAG idea is broken?",
+   "right": "Focus visible",
+   "wrong": [
+    "Reflow",
+    "Language of page",
+    "Info and relationships"
+   ],
+   "tier": 3,
+   "why": "Keyboard users need a visible focus indicator."
+  },
+  {
+   "q": "Which statement about the toast pattern is correct?",
+   "right": "It suits low-importance confirmations because it can be missed",
+   "wrong": [
+    "It is the best way to show critical errors",
+    "It blocks the page until dismissed",
+    "It cannot appear on mobile"
+   ],
+   "tier": 3,
+   "why": "Critical information should persist in context, not fade away."
+  },
+  {
+   "q": "A product page loads data slowly and the layout jumps when it arrives. What helps?",
+   "right": "A skeleton screen that reserves the layout",
+   "wrong": [
+    "A longer page title",
+    "A tooltip on every element",
+    "A modal dialog"
+   ],
+   "tier": 3,
+   "why": "Placeholders keep layout stable."
+  },
+  {
+   "q": "A list page has no items for a new user. What should the empty state include?",
+   "right": "An explanation and a clear next step",
+   "wrong": [
+    "A blank area",
+    "Only a spinner",
+    "A random illustration with no text"
+   ],
+   "tier": 3,
+   "why": "Empty states should guide the user."
+  },
+  {
+   "q": "Which is the better CSS for a token that a dark theme can override?",
+   "right": "Declare a custom property and read it with var()",
+   "wrong": [
+    "Write the hex value in every rule",
+    "Use an image for the colour",
+    "Inline the colour in HTML attributes"
+   ],
+   "tier": 3,
+   "why": "Custom properties cascade and can be overridden per theme.",
+   "code": ":root { --color-surface: #ffffff; }\n[data-theme=\"dark\"] { --color-surface: #121212; }\n.card { background: var(--color-surface); }"
+  },
+  {
+   "q": "What does this CSS do?",
+   "right": "Applies a style only when the user asks for reduced motion",
+   "wrong": [
+    "Plays the animation twice",
+    "Disables all colour",
+    "Loads a mobile stylesheet"
+   ],
+   "tier": 3,
+   "why": "The media query reads the user's operating system preference.",
+   "code": "@media (prefers-reduced-motion: reduce) {\n  .banner { animation: none; }\n}"
+  },
+  {
+   "q": "Which tells a mobile browser to match layout width to the device?",
+   "right": "The viewport meta tag with width=device-width",
+   "wrong": [
+    "A meta tag that disables zoom",
+    "A link to a mobile stylesheet",
+    "A heading with a data-mobile attribute"
+   ],
+   "tier": 3,
+   "why": "The viewport tag controls the layout viewport.",
+   "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+  },
+  {
+   "q": "A checkout form shows a red border only when a field is invalid. What is missing?",
+   "right": "A text message tied to the field that says what is wrong",
+   "wrong": [
+    "A darker red",
+    "A longer field",
+    "A smaller font size"
+   ],
+   "tier": 3,
+   "why": "Errors must not rely on colour alone and need text."
+  },
+  {
+   "q": "A product designer asks if a setting should be a toggle or a checkbox plus Save button. The setting changes immediately. Which fits?",
+   "right": "A toggle switch",
+   "wrong": [
+    "A radio button group",
+    "A select menu with save",
+    "A modal dialog"
+   ],
+   "tier": 3,
+   "why": "Toggles apply immediately."
+  },
+  {
+   "q": "A team asks for a Card component with 18 boolean props. What is the best response?",
+   "right": "Introduce variants and composition to avoid combinations that cannot be tested",
+   "wrong": [
+    "Add the props, the API will be fine",
+    "Ship two Card components with no documentation",
+    "Hide the props from the docs"
+   ],
+   "tier": 4,
+   "why": "Boolean prop explosion is solved with variants and slots."
+  },
+  {
+   "q": "Which pair of colours meets AA for normal text?",
+   "right": "Colours measured at 4.6:1",
+   "wrong": [
+    "Colours measured at 3.2:1",
+    "Colours measured at 2.8:1",
+    "Colours measured at 1.9:1"
+   ],
+   "tier": 4,
+   "why": "4.5:1 is the AA minimum."
+  },
+  {
+   "q": "Large text of 24 px regular needs which minimum ratio at AA?",
+   "right": "3:1",
+   "wrong": [
+    "4.5:1",
+    "7:1",
+    "1.5:1"
+   ],
+   "tier": 4,
+   "why": "Large text, 18 pt or 24 px, needs 3:1 at AA."
+  },
+  {
+   "q": "An input border measures 2:1 against its background. What does WCAG non-text contrast say?",
+   "right": "It fails because component boundaries need at least 3:1",
+   "wrong": [
+    "It passes because 2:1 is enough",
+    "It passes because borders are decorative",
+    "It cannot be tested"
+   ],
+   "tier": 4,
+   "why": "Interface components need 3:1."
+  },
+  {
+   "q": "Small icon buttons are 16 by 16 CSS pixels with no spacing. Which WCAG 2.2 AA criterion is at risk?",
+   "right": "Target size minimum",
+   "wrong": [
+    "Reflow",
+    "Page titled",
+    "Language of page"
+   ],
+   "tier": 4,
+   "why": "The 2.2 minimum is 24 by 24 CSS pixels (with spacing exceptions)."
+  },
+  {
+   "q": "A design token JSON file has this structure. What is $type?",
+   "right": "The kind of value, such as colour or dimension",
+   "wrong": [
+    "The author of the file",
+    "The version of the app",
+    "The CSS selector for the token"
+   ],
+   "tier": 4,
+   "why": "The DTCG format stores a value and a type for each token.",
+   "code": "{\n  \"color\": {\n    \"brand\": { \"$value\": \"#0a5cff\", \"$type\": \"color\" }\n  }\n}"
+  },
+  {
+   "q": "A team wants web and native apps to share colours from one file. What tool category fits?",
+   "right": "A token transformer such as Style Dictionary",
+   "wrong": [
+    "A raster image editor",
+    "A load balancer",
+    "A spell checker"
+   ],
+   "tier": 4,
+   "why": "Token tools output many platform formats from one source."
+  },
+  {
+   "q": "A team ships a new component with a bug. A visual regression suite catches it. How?",
+   "right": "By comparing screenshots before and after the change",
+   "wrong": [
+    "By measuring server memory",
+    "By reading the changelog",
+    "By counting lines of code"
+   ],
+   "tier": 4,
+   "why": "Visual regression compares rendered output."
+  },
+  {
+   "q": "A test with five users found a navigation problem. What is the best next step?",
+   "right": "Fix it and test again with new participants",
+   "wrong": [
+    "Ignore it because five is too few",
+    "Wait for A/B test results",
+    "Add more colour"
+   ],
+   "tier": 4,
+   "why": "Small rounds of testing are cheap and iterative."
+  },
+  {
+   "q": "You want to know if people can find a page in a proposed menu with no visual design. Which method?",
+   "right": "Tree testing",
+   "wrong": [
+    "Card sorting",
+    "A/B testing the colour",
+    "Heuristic evaluation of the logo"
+   ],
+   "tier": 4,
+   "why": "Tree testing checks findability in a text hierarchy."
+  },
+  {
+   "q": "You need to discover how people group topics before building navigation. Which method?",
+   "right": "Card sorting",
+   "wrong": [
+    "Tree testing",
+    "Visual regression testing",
+    "A contrast checker"
+   ],
+   "tier": 4,
+   "why": "Card sorting reveals mental groupings."
+  },
+  {
+   "q": "Which Nielsen heuristic does a progress bar during upload support?",
+   "right": "Visibility of system status",
+   "wrong": [
+    "Error prevention",
+    "Flexibility and efficiency of use",
+    "Help and documentation"
+   ],
+   "tier": 4,
+   "why": "Progress feedback keeps users informed."
+  },
+  {
+   "q": "A form disables the Submit button until required fields are valid. Which heuristic does this mainly serve?",
+   "right": "Error prevention",
+   "wrong": [
+    "Aesthetic and minimalist design",
+    "Recognition rather than recall",
+    "Consistency and standards"
+   ],
+   "tier": 4,
+   "why": "It prevents invalid submission."
+  },
+  {
+   "q": "A settings page lists 40 options at once and users freeze. Which law explains this?",
+   "right": "Hick's law",
+   "wrong": [
+    "Fitts's law",
+    "Jakob's law",
+    "The law of proximity"
+   ],
+   "tier": 4,
+   "why": "Decision time grows with the number of choices."
+  },
+  {
+   "q": "A frequently used button is tiny and in a corner. Which law suggests a problem?",
+   "right": "Fitts's law",
+   "wrong": [
+    "Hick's law",
+    "Jakob's law",
+    "Gestalt similarity"
+   ],
+   "tier": 4,
+   "why": "Targets should be large and close."
+  },
+  {
+   "q": "A team uses an as prop to render the same button style as an anchor. What risk must they manage?",
+   "right": "Keeping the correct semantics for the rendered element",
+   "wrong": [
+    "Losing all CSS",
+    "Breaking semantic versioning automatically",
+    "Exposing tokens to users"
+   ],
+   "tier": 5,
+   "why": "A polymorphic component must preserve correct roles and behaviour."
+  },
+  {
+   "q": "A dark theme was made by inverting every light colour. What is the likely issue?",
+   "right": "Contrast and saturation can fail, so values need re-checking",
+   "wrong": [
+    "Tokens stop working",
+    "Fonts become illegible by default",
+    "The grid collapses"
+   ],
+   "tier": 5,
+   "why": "Dark themes need their own token values."
+  },
+  {
+   "q": "Many teams use an escape hatch to override a component. What does that signal?",
+   "right": "A missing variant or API gap worth addressing",
+   "wrong": [
+    "That the component is perfect",
+    "That tokens are unnecessary",
+    "That the grid is wrong"
+   ],
+   "tier": 5,
+   "why": "Frequent overrides indicate the system lacks something."
+  },
+  {
+   "q": "A page works at 1280 px but needs horizontal scrolling at 320 px for text. Which criterion fails?",
+   "right": "Reflow",
+   "wrong": [
+    "Non-text contrast",
+    "Target size",
+    "Page titled"
+   ],
+   "tier": 5,
+   "why": "Content must reflow at 320 CSS px without two-dimensional scrolling."
+  },
+  {
+   "q": "A status message must be announced to screen readers without moving focus. Which technique?",
+   "right": "A live region such as role=status",
+   "wrong": [
+    "A longer alt text",
+    "A tooltip",
+    "A higher tabindex"
+   ],
+   "tier": 5,
+   "why": "Live regions announce changes.",
+   "code": "<div role=\"status\">Draft saved</div>"
+  },
+  {
+   "q": "A design system has strong docs but low adoption. What should the team check first?",
+   "right": "Whether the components solve the product teams' real needs and are easy to adopt",
+   "wrong": [
+    "Whether the font is trendy",
+    "Whether to rename the system",
+    "Whether to hide the docs"
+   ],
+   "tier": 5,
+   "why": "Adoption depends on fit and ease of use, not documentation alone."
+  },
+  {
+   "q": "A product team shows a modal for every confirmation, and users dismiss without reading. What is a better approach?",
+   "right": "Use the lightest pattern that fits, such as inline confirmation or undo",
+   "wrong": [
+    "Add more modals",
+    "Make the modal bigger",
+    "Remove all feedback"
+   ],
+   "tier": 5,
+   "why": "Overusing modals trains users to ignore them."
+  },
+  {
+   "q": "A researcher interviews users in a meeting room about their workflow. Why might contextual inquiry add value?",
+   "right": "It shows workarounds and constraints visible only in the real environment",
+   "wrong": [
+    "It is always faster",
+    "It removes the need for analysis",
+    "It gives exact statistics"
+   ],
+   "tier": 5,
+   "why": "Observation in context reveals what interviews miss."
+  },
+  {
+   "q": "Guru Graphics describes its Brand System guidelines. Which content is stated for them?",
+   "right": "30 to 60 pages with logo, colour and typography rules and accessibility and contrast standards",
+   "wrong": [
+    "A website build and hosting",
+    "A single-page logo sheet only",
+    "A software licence"
+   ],
+   "tier": 5,
+   "why": "The sources list these deliverables in the Brand System engagement."
+  },
+  {
+   "q": "A client asks Guru Graphics to build their website and mobile app. What does the source say about the studio's scope?",
+   "right": "The studio does design and branding only, not websites or software",
+   "wrong": [
+    "It builds websites for all clients",
+    "It builds only mobile apps",
+    "It resells hosting"
+   ],
+   "tier": 3,
+   "why": "The sources state design and branding only."
+  },
+  {
+   "q": "Which is typical for a Guru Graphics Brand System engagement?",
+   "right": "About 8 to 12 weeks",
+   "wrong": [
+    "One day",
+    "About 6 months",
+    "No fixed duration"
+   ],
+   "tier": 2,
+   "why": "The sources give a typical 8-12 weeks."
+  }
+ ]
+}

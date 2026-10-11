@@ -1,0 +1,2761 @@
+{
+ "slug": "sdlc-devops",
+ "name": "9. CI/CD and DevOps",
+ "description": "Pipelines, environments, containers, monitoring, alerting.",
+ "roles": "developer",
+ "kind": "process",
+ "brand": "software-lifecycle",
+ "audience": "staff",
+ "tier": "role",
+ "groups": {
+  "pipe": "CI/CD concept",
+  "test": "kind of automated test",
+  "env": "environment concept",
+  "branch": "branching or release concept",
+  "deploy": "deployment or release technique",
+  "run": "runtime or process concept",
+  "iac": "infrastructure-as-code concept",
+  "obs": "observability or monitoring concept",
+  "rel": "reliability concept",
+  "sec": "secrets or pipeline security practice",
+  "dora": "delivery metric or principle",
+  "ops": "on-call or incident practice",
+  "gg": "GGLearn deploy fact",
+  "ggo": "ggsocial or ggmoney operations fact"
+ },
+ "cards": [
+  {
+   "group": "pipe",
+   "subject": "Continuous integration",
+   "tier": 1,
+   "says": [
+    "merges every developer's changes into a shared branch frequently",
+    "builds and tests each change automatically as it lands"
+   ],
+   "use": "want integration problems found within minutes of a commit",
+   "not": [
+    "ships each change to customers without running any tests"
+   ],
+   "like": [
+    "Continuous delivery",
+    "Continuous deployment"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "Continuous delivery",
+   "tier": 2,
+   "says": [
+    "keeps every passing change in a releasable state",
+    "leaves the decision to release to production to a person"
+   ],
+   "use": "want to be able to ship any green build on demand but choose when",
+   "not": [
+    "pushes every commit to production with no human decision"
+   ],
+   "like": [
+    "Continuous deployment",
+    "Continuous integration"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "Continuous deployment",
+   "tier": 2,
+   "says": [
+    "releases every change that passes the pipeline to production automatically",
+    "has no manual approval step before production"
+   ],
+   "use": "trust your automated checks enough to ship each green commit without a gate",
+   "not": [
+    "requires a person to click release for every change"
+   ],
+   "like": [
+    "Continuous delivery",
+    "Continuous integration"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A build artifact",
+   "tier": 2,
+   "says": [
+    "is the single versioned output of a build that later stages deploy",
+    "can be stored and identified by a version number or hash"
+   ],
+   "use": "need a stored, versioned build output that any stage can fetch",
+   "not": [
+    "is rebuilt from source from scratch in every environment"
+   ],
+   "like": [
+    "A dependency lockfile",
+    "Promotion between environments"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A dependency lockfile",
+   "tier": 2,
+   "says": [
+    "records the exact resolved version of every dependency",
+    "makes an install on another machine reproduce the same dependency tree"
+   ],
+   "use": "need a repeatable install on a clean server",
+   "not": [
+    "lets each machine pick the newest version on every install"
+   ],
+   "like": [
+    "A build artifact"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A quality gate",
+   "tier": 2,
+   "says": [
+    "blocks promotion to the next stage when a defined check fails",
+    "turns a policy such as test results or scan findings into a pass or fail decision"
+   ],
+   "use": "need a release stopped automatically when a required check fails",
+   "not": [
+    "only logs a warning and always lets the release continue"
+   ],
+   "like": [
+    "Fail fast"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "Fail fast",
+   "tier": 1,
+   "says": [
+    "stops the pipeline at the first failing step",
+    "puts the cheapest and quickest checks first"
+   ],
+   "use": "want developers to learn about a broken build in seconds rather than after the full run",
+   "not": [
+    "runs every remaining step after a failure to collect all results"
+   ],
+   "like": [
+    "A quality gate"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "Pipeline as code",
+   "tier": 1,
+   "says": [
+    "defines the pipeline in a versioned file next to the source",
+    "makes pipeline changes reviewable like any other change"
+   ],
+   "use": "want pipeline changes to go through code review and be revertable",
+   "not": [
+    "is configured only in a web console that keeps no history"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "A build cache",
+   "tier": 3,
+   "says": [
+    "reuses unchanged work from earlier runs to shorten builds",
+    "can serve stale output when its key leaves out an input"
+   ],
+   "use": "want faster builds when most inputs have not changed",
+   "not": [
+    "guarantees a correct build even when an input is missing from its key"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "Job parallelism",
+   "tier": 3,
+   "says": [
+    "runs independent jobs at the same time to shorten total pipeline time",
+    "is limited by jobs that depend on each other's output"
+   ],
+   "use": "want a long test suite split across several runners",
+   "not": [
+    "lets a deploy job start before the build it needs has finished"
+   ]
+  },
+  {
+   "group": "pipe",
+   "subject": "Promotion between environments",
+   "tier": 3,
+   "says": [
+    "moves the same tested artifact from one environment to the next",
+    "happens only after the checks of the earlier environment pass"
+   ],
+   "use": "need staging and production to run exactly the same bits",
+   "not": [
+    "rebuilds the code for each environment so each gets a fresh build"
+   ],
+   "like": [
+    "A build artifact"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A unit test",
+   "tier": 1,
+   "says": [
+    "checks one small piece of code in isolation",
+    "runs in milliseconds with collaborators replaced by fakes"
+   ],
+   "use": "want instant feedback on one function's logic",
+   "not": [
+    "needs a full deployed environment and a real database"
+   ],
+   "like": [
+    "An integration test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "An integration test",
+   "tier": 2,
+   "says": [
+    "checks that several components work together, such as code and a real database",
+    "fails when two parts disagree about an interface"
+   ],
+   "use": "need to verify the app's code against a real database or service",
+   "not": [
+    "isolates each function from every collaborator using fakes"
+   ],
+   "like": [
+    "A unit test",
+    "An end-to-end test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "An end-to-end test",
+   "tier": 2,
+   "says": [
+    "drives the whole application through its user interface like a user",
+    "covers a full journey across every layer"
+   ],
+   "use": "need to prove a complete journey such as log in and check out still works",
+   "not": [
+    "is the fastest and most stable kind of automated test"
+   ],
+   "like": [
+    "An integration test",
+    "A smoke test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A smoke test",
+   "tier": 1,
+   "says": [
+    "runs a few fast checks that a fresh deploy is basically alive",
+    "verifies the app responds rather than that every feature is correct"
+   ],
+   "use": "want a quick check right after a deploy",
+   "not": [
+    "replaces the full regression suite"
+   ],
+   "like": [
+    "An end-to-end test",
+    "A regression test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A regression test",
+   "tier": 2,
+   "says": [
+    "guards against a previously fixed bug returning",
+    "is usually added at the moment a bug is fixed"
+   ],
+   "use": "just fixed a bug and want to be sure it never comes back",
+   "not": [
+    "is written only before any code exists"
+   ],
+   "like": [
+    "A smoke test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A contract test",
+   "tier": 4,
+   "says": [
+    "checks that a service and its consumer agree on the shape of requests and responses",
+    "lets two teams change independently while catching breaking API changes"
+   ],
+   "use": "need to catch an API change that would break a consumer without running both systems together",
+   "not": [
+    "measures how the service behaves under heavy traffic"
+   ],
+   "like": [
+    "An integration test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A load test",
+   "tier": 3,
+   "says": [
+    "measures behavior under expected or peak traffic",
+    "reveals throughput limits and latency growth under concurrency"
+   ],
+   "use": "need to know how much traffic the service handles before it slows down",
+   "not": [
+    "checks that a single function returns the right value"
+   ],
+   "like": [
+    "A soak test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "A soak test",
+   "tier": 5,
+   "says": [
+    "runs sustained load for hours to expose slow leaks",
+    "finds memory growth that short tests miss"
+   ],
+   "use": "suspect a memory leak that only shows after hours of running",
+   "not": [
+    "finds the maximum throughput in a one-minute burst"
+   ],
+   "like": [
+    "A load test"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "The development environment",
+   "tier": 1,
+   "says": [
+    "is where a developer runs and changes the app locally",
+    "uses local configuration and throwaway data"
+   ],
+   "use": "are writing and trying code on your own machine",
+   "not": [
+    "serves real customers and holds their data"
+   ],
+   "like": [
+    "The production environment"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "The staging environment",
+   "tier": 2,
+   "says": [
+    "mirrors production closely to rehearse a release",
+    "is where a release candidate gets its final checks"
+   ],
+   "use": "want to rehearse a release on production-like infrastructure before real users see it",
+   "not": [
+    "holds the live customer data"
+   ],
+   "like": [
+    "The production environment",
+    "A preview environment",
+    "A sandbox environment"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "The production environment",
+   "tier": 1,
+   "says": [
+    "serves real users and holds real data",
+    "must never share secrets or databases with other environments"
+   ],
+   "use": "need the live service that customers depend on",
+   "not": [
+    "is the right place to try out risky experiments first"
+   ],
+   "like": [
+    "The staging environment",
+    "The development environment"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A sandbox environment",
+   "tier": 2,
+   "says": [
+    "is a safe place to experiment where actions have no real-world effect",
+    "stubs or blocks outbound effects such as real email"
+   ],
+   "use": "want to try a risky integration without contacting real people or moving real money",
+   "not": [
+    "sends real email to real customers so tests feel realistic"
+   ],
+   "like": [
+    "The staging environment"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "A preview environment",
+   "tier": 3,
+   "says": [
+    "is a short-lived copy created for one pull request",
+    "is torn down when the pull request closes"
+   ],
+   "use": "want reviewers to click through a change before it merges",
+   "not": [
+    "is the long-lived shared copy used for final release checks"
+   ],
+   "like": [
+    "The staging environment"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "Environment parity",
+   "tier": 3,
+   "says": [
+    "keeps development, staging and production as similar as practical",
+    "makes surprises appear early instead of in production"
+   ],
+   "use": "keep finding bugs that only appear in production",
+   "not": [
+    "requires production to be a scaled-down copy of development"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "An environment variable",
+   "tier": 1,
+   "says": [
+    "supplies configuration to a process from outside the code",
+    "lets the same build behave differently in each environment"
+   ],
+   "use": "need the same code to use a different database path or API key per environment",
+   "not": [
+    "is the right place to commit a production password to the repository"
+   ]
+  },
+  {
+   "group": "env",
+   "subject": "Test data",
+   "tier": 3,
+   "says": [
+    "should be synthetic or anonymised rather than raw production records",
+    "keeps personal data out of non-production environments"
+   ],
+   "use": "need realistic records in staging without exposing customers' information",
+   "not": [
+    "is best copied unchanged from production"
+   ]
+  },
+  {
+   "group": "branch",
+   "subject": "A feature branch",
+   "tier": 1,
+   "says": [
+    "isolates one piece of work until it is ready to merge",
+    "is normally short-lived and deleted after merging"
+   ],
+   "use": "want to work on a change without disturbing the main line",
+   "not": [
+    "has to stay open until the next scheduled release"
+   ],
+   "like": [
+    "Trunk-based development",
+    "GitHub Flow"
+   ]
+  },
+  {
+   "group": "branch",
+   "subject": "Trunk-based development",
+   "tier": 2,
+   "says": [
+    "has everyone integrate small changes into one main branch at least daily",
+    "relies on feature flags to hide unfinished work"
+   ],
+   "use": "want to avoid long-lived branches and painful merges",
+   "not": [
+    "requires a long-lived develop branch alongside main"
+   ],
+   "like": [
+    "GitFlow",
+    "GitHub Flow",
+    "A feature branch"
+   ]
+  },
+  {
+   "group": "branch",
+   "subject": "GitFlow",
+   "tier": 3,
+   "says": [
+    "uses long-lived main and develop branches plus release and hotfix branches",
+    "suits software shipped in scheduled, versioned releases"
+   ],
+   "use": "ship versioned releases on a schedule and must maintain more than one version",
+   "not": [
+    "merges straight to main many times a day with no other long-lived branches"
+   ],
+   "like": [
+    "Trunk-based development",
+    "GitHub Flow"
+   ]
+  },
+  {
+   "group": "branch",
+   "subject": "GitHub Flow",
+   "tier": 2,
+   "says": [
+    "branches from main, opens a pull request and merges back to main",
+    "treats main as always deployable"
+   ],
+   "use": "deploy continuously from main with review through pull requests",
+   "not": [
+    "keeps a permanent develop branch that collects work before release"
+   ],
+   "like": [
+    "Trunk-based development",
+    "GitFlow",
+    "A feature branch"
+   ]
+  },
+  {
+   "group": "branch",
+   "subject": "A release branch",
+   "tier": 3,
+   "says": [
+    "is cut from main to stabilise one particular version",
+    "receives only fixes while main moves on"
+   ],
+   "use": "need to harden version 2.4 while new work continues on main",
+   "not": [
+    "is where every new feature is developed first"
+   ],
+   "like": [
+    "A hotfix"
+   ]
+  },
+  {
+   "group": "branch",
+   "subject": "A hotfix",
+   "tier": 2,
+   "says": [
+    "ships an urgent fix to production outside the normal release cycle",
+    "must be merged back so later releases keep the fix"
+   ],
+   "use": "find production broken and cannot wait for the next scheduled release",
+   "not": [
+    "waits in the queue for the next planned release like any other change"
+   ],
+   "like": [
+    "A release branch"
+   ]
+  },
+  {
+   "group": "branch",
+   "subject": "Semantic versioning",
+   "tier": 2,
+   "says": [
+    "numbers releases as major.minor.patch",
+    "bumps the major number for backwards-incompatible changes"
+   ],
+   "use": "need version numbers that tell consumers whether an upgrade can break them",
+   "not": [
+    "bumps the patch number whenever a new feature is added"
+   ],
+   "like": [
+    "A release tag"
+   ]
+  },
+  {
+   "group": "branch",
+   "subject": "A release tag",
+   "tier": 2,
+   "says": [
+    "marks the exact commit a release was built from",
+    "lets you rebuild or inspect a past release"
+   ],
+   "use": "need to find exactly what code is running as version 1.8.2",
+   "not": [
+    "moves automatically to the newest commit on main"
+   ],
+   "like": [
+    "Semantic versioning"
+   ]
+  },
+  {
+   "group": "branch",
+   "subject": "A merge queue",
+   "tier": 5,
+   "says": [
+    "tests each pull request against the latest main plus the changes queued ahead of it",
+    "stops two individually green changes from breaking main together"
+   ],
+   "use": "want main to stay green when many pull requests merge at once",
+   "not": [
+    "merges pull requests in random order without re-testing them"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A rolling deployment",
+   "tier": 2,
+   "says": [
+    "replaces instances a few at a time with the new version",
+    "keeps some capacity serving throughout without a second full environment"
+   ],
+   "use": "want zero downtime without paying for a duplicate environment",
+   "not": [
+    "switches all traffic at once to a second identical environment"
+   ],
+   "like": [
+    "A blue/green deployment",
+    "A canary release",
+    "A recreate deployment"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A blue/green deployment",
+   "tier": 3,
+   "says": [
+    "runs two identical environments and switches traffic from the old to the new",
+    "makes rollback a switch back to the previous environment"
+   ],
+   "use": "need an instant cutover and an instant way back",
+   "not": [
+    "updates instances one by one in place"
+   ],
+   "like": [
+    "A rolling deployment",
+    "A canary release"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A canary release",
+   "tier": 4,
+   "says": [
+    "sends a small share of real traffic to the new version first",
+    "expands only if the metrics for that small share stay healthy"
+   ],
+   "use": "want to limit the damage of a bad release to a few users",
+   "not": [
+    "switches every user to the new version at the same moment"
+   ],
+   "like": [
+    "A rolling deployment",
+    "A blue/green deployment",
+    "Progressive delivery"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A recreate deployment",
+   "tier": 2,
+   "says": [
+    "stops the old version completely before starting the new one",
+    "causes a short downtime window"
+   ],
+   "use": "can accept a brief outage and want the simplest possible deploy",
+   "not": [
+    "keeps old and new versions serving side by side during the change"
+   ],
+   "like": [
+    "A rolling deployment"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A feature flag",
+   "tier": 3,
+   "says": [
+    "turns a code path on or off at runtime without a deploy",
+    "separates deploying code from releasing a feature"
+   ],
+   "use": "want to ship unfinished code safely and switch it on later or for a few users",
+   "not": [
+    "requires a new build to change its value"
+   ],
+   "like": [
+    "Progressive delivery"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "Shadow traffic",
+   "tier": 5,
+   "says": [
+    "copies live requests to the new version and discards its responses",
+    "tests a new version against real traffic with no user impact"
+   ],
+   "use": "want to compare a rewrite against real traffic before any user depends on it",
+   "not": [
+    "returns the new version's responses to a small share of users"
+   ],
+   "like": [
+    "A canary release"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A rollback",
+   "tier": 1,
+   "says": [
+    "returns production to the previous known-good version",
+    "is fastest when the previous artifact is still available"
+   ],
+   "use": "see a release failing and need service restored within minutes",
+   "not": [
+    "requires building the previous version from source again"
+   ],
+   "like": [
+    "A roll forward"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "A roll forward",
+   "tier": 4,
+   "says": [
+    "fixes a bad release by shipping a new corrected version",
+    "is often the safer choice after an irreversible data migration"
+   ],
+   "use": "face a bad release that already changed data in a way the old version cannot read",
+   "not": [
+    "restores the previous version by redeploying it unchanged"
+   ],
+   "like": [
+    "A rollback"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "An expand and contract migration",
+   "tier": 5,
+   "says": [
+    "adds the new schema first, moves the code over, then removes the old schema",
+    "lets old and new versions of the app run against the same database"
+   ],
+   "use": "need a schema change with zero downtime during a rolling deploy",
+   "not": [
+    "drops the old column in the same release that stops using it"
+   ]
+  },
+  {
+   "group": "deploy",
+   "subject": "Progressive delivery",
+   "tier": 4,
+   "says": [
+    "widens exposure in stages guided by live metrics",
+    "combines canaries and flags with automated promotion or abort"
+   ],
+   "use": "want a rollout that advances or aborts by itself based on the error rate",
+   "not": [
+    "releases to everyone first and measures afterwards"
+   ],
+   "like": [
+    "A canary release",
+    "A feature flag"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "A container",
+   "tier": 1,
+   "says": [
+    "packages an app with its dependencies so it runs the same anywhere",
+    "shares the host's kernel rather than booting a full operating system"
+   ],
+   "use": "need an app to run identically on a laptop and a server",
+   "not": [
+    "boots its own complete kernel like a virtual machine"
+   ],
+   "like": [
+    "A container image"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "A container image",
+   "tier": 2,
+   "says": [
+    "is the read-only template a container is started from",
+    "is built in layers from instructions such as a Dockerfile"
+   ],
+   "use": "need a versioned, shareable package to start many identical containers",
+   "not": [
+    "holds the changing state of a running container"
+   ],
+   "like": [
+    "A container",
+    "A volume"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "A volume",
+   "tier": 2,
+   "says": [
+    "keeps data outside the container's disposable filesystem",
+    "survives the container being deleted and recreated"
+   ],
+   "use": "run a database in a container and must not lose its data on redeploy",
+   "not": [
+    "is wiped each time the container restarts"
+   ],
+   "like": [
+    "A container image"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "A process manager",
+   "tier": 1,
+   "says": [
+    "starts an app, restarts it after a crash and brings it back after a reboot",
+    "keeps an app alive without someone watching it"
+   ],
+   "use": "need a Node server to come back by itself after it dies",
+   "not": [
+    "builds the app from source before every start"
+   ],
+   "like": [
+    "A container orchestrator"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "A reverse proxy",
+   "tier": 2,
+   "says": [
+    "accepts client requests and forwards them to an app behind it",
+    "can terminate TLS and hide the app's real port"
+   ],
+   "use": "want one public front door such as Apache or Nginx in front of an app on a private port",
+   "not": [
+    "is the origin application that generates the pages"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "Binding to localhost",
+   "tier": 2,
+   "says": [
+    "makes a service listen only on 127.0.0.1",
+    "keeps a port unreachable from other machines"
+   ],
+   "use": "want an internal service reachable only by a reverse proxy on the same machine",
+   "not": [
+    "makes the service reachable from the whole internet"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "A resource limit",
+   "tier": 3,
+   "says": [
+    "caps the memory or CPU a process or container may use",
+    "stops one runaway process starving its neighbours"
+   ],
+   "use": "want a memory leak to hurt one process rather than the whole host",
+   "not": [
+    "lets a process use unlimited memory when it needs it"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "Graceful shutdown",
+   "tier": 5,
+   "says": [
+    "lets a process finish in-flight requests before it exits on a termination signal",
+    "prevents dropped requests during a restart"
+   ],
+   "use": "restart a server during a deploy without cutting users off mid-request",
+   "not": [
+    "kills the process instantly so no work is left half done"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "A liveness check",
+   "tier": 5,
+   "says": [
+    "tells the platform whether a process is stuck and needs restarting",
+    "should not fail merely because a downstream dependency is down"
+   ],
+   "use": "need a hung process to be killed and restarted automatically",
+   "not": [
+    "keeps an instance out of rotation while it starts up"
+   ],
+   "like": [
+    "A readiness check"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "A readiness check",
+   "tier": 4,
+   "says": [
+    "tells the load balancer whether an instance can accept traffic yet",
+    "keeps an instance out of rotation while it starts up or warms its caches"
+   ],
+   "use": "want traffic held back until the app has finished starting",
+   "not": [
+    "restarts the process whenever it fails"
+   ],
+   "like": [
+    "A liveness check"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "A container orchestrator",
+   "tier": 4,
+   "says": [
+    "schedules containers across several machines and restarts failed ones",
+    "reconciles the running state to a declared desired state"
+   ],
+   "use": "run many containers across several hosts and want failures healed automatically",
+   "not": [
+    "is a library for writing unit tests"
+   ],
+   "like": [
+    "A process manager"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "Infrastructure as code",
+   "tier": 2,
+   "says": [
+    "describes servers, networks and services in versioned files",
+    "lets infrastructure changes be reviewed and repeated"
+   ],
+   "use": "want to rebuild an environment from a repository instead of from memory",
+   "not": [
+    "means clicking through a console and writing down what you did"
+   ],
+   "like": [
+    "Declarative configuration"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "Declarative configuration",
+   "tier": 2,
+   "says": [
+    "states the desired end result and lets the tool work out the steps",
+    "can be applied repeatedly to converge on the same state"
+   ],
+   "use": "want to say three servers with this setup and have a tool make it so",
+   "not": [
+    "lists every command to run in order"
+   ],
+   "like": [
+    "An imperative script"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "An imperative script",
+   "tier": 3,
+   "says": [
+    "lists the exact steps to run in order",
+    "can fail halfway and leave a partly changed system"
+   ],
+   "use": "need a quick one-off sequence of commands",
+   "not": [
+    "describes only the desired end state"
+   ],
+   "like": [
+    "Declarative configuration"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "Idempotence",
+   "tier": 3,
+   "says": [
+    "means applying the same operation twice gives the same result as once",
+    "makes it safe to rerun a failed provisioning step"
+   ],
+   "use": "need a setup step that is safe to retry after a failure",
+   "not": [
+    "means an operation can be run only one time"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "A state file",
+   "tier": 5,
+   "says": [
+    "records what the infrastructure tool believes it has created",
+    "is compared with the code and reality to compute a plan"
+   ],
+   "use": "share infrastructure code across a team and need one source of truth about what exists",
+   "not": [
+    "should be edited by hand to speed up changes"
+   ],
+   "like": [
+    "Drift detection"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "A dry-run plan",
+   "tier": 2,
+   "says": [
+    "shows the changes a tool would make without making them",
+    "lets a reviewer catch an unintended destroy before it happens"
+   ],
+   "use": "want to see what a change will delete before approving it",
+   "not": [
+    "applies the changes first and reports afterwards"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "Immutable infrastructure",
+   "tier": 4,
+   "says": [
+    "replaces servers with new ones from a fresh image instead of patching them in place",
+    "avoids servers that differ through accumulated manual changes"
+   ],
+   "use": "want every server to be a known image so rollback means swapping back",
+   "not": [
+    "patches each live server by hand over time"
+   ],
+   "like": [
+    "A snowflake server"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "A snowflake server",
+   "tier": 3,
+   "says": [
+    "is a machine whose setup cannot be reproduced because it grew through manual changes",
+    "is hard to rebuild after a failure"
+   ],
+   "use": "inherit a server nobody dares to touch or rebuild",
+   "not": [
+    "is built from a version-controlled definition"
+   ],
+   "like": [
+    "Immutable infrastructure"
+   ]
+  },
+  {
+   "group": "iac",
+   "subject": "Drift detection",
+   "tier": 4,
+   "says": [
+    "compares live infrastructure with its code definition to find manual changes",
+    "flags resources changed outside the pipeline"
+   ],
+   "use": "suspect someone edited a production setting by hand in a console",
+   "not": [
+    "rebuilds every server on a schedule"
+   ],
+   "like": [
+    "A state file"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Logging",
+   "tier": 1,
+   "says": [
+    "records timestamped events as the app runs",
+    "gives the detail needed to reconstruct what happened around a failure"
+   ],
+   "use": "need to see what the app did just before it failed",
+   "not": [
+    "gives a single number sampled over time for dashboards"
+   ],
+   "like": [
+    "A metric",
+    "A trace"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A metric",
+   "tier": 1,
+   "says": [
+    "is a numeric measurement sampled over time",
+    "is cheap to store and suits dashboards and alert thresholds"
+   ],
+   "use": "want a graph of requests per second over the last week",
+   "not": [
+    "records the full text of each individual request"
+   ],
+   "like": [
+    "Logging",
+    "A trace"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A trace",
+   "tier": 3,
+   "says": [
+    "follows one request across every service it touches",
+    "shows which hop in a chain added the latency"
+   ],
+   "use": "need to find which of five services made one request slow",
+   "not": [
+    "counts total errors per minute for the whole system"
+   ],
+   "like": [
+    "Logging",
+    "A metric"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Structured logging",
+   "tier": 2,
+   "says": [
+    "writes log entries as key-value fields such as JSON",
+    "lets tools filter on fields instead of searching free text"
+   ],
+   "use": "need to find every event with a given request id",
+   "not": [
+    "prints only unformatted free text for humans to read"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Observability",
+   "tier": 3,
+   "says": [
+    "is how well you can explain internal behavior from the outputs a system emits",
+    "lets you ask new questions without shipping new code"
+   ],
+   "use": "need to debug an unexpected failure that nobody wrote an alert for",
+   "not": [
+    "is just another word for owning a dashboard"
+   ],
+   "like": [
+    "Monitoring"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Monitoring",
+   "tier": 2,
+   "says": [
+    "watches known indicators and tells you when they cross a threshold",
+    "answers questions you thought to ask in advance"
+   ],
+   "use": "want to know when a known indicator such as error rate goes past a limit",
+   "not": [
+    "lets you explore failures nobody anticipated without new instrumentation"
+   ],
+   "like": [
+    "Observability"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "A health endpoint",
+   "tier": 1,
+   "says": [
+    "exposes a URL that reports whether the app is up",
+    "is what a deploy script or load balancer polls"
+   ],
+   "use": "want a deploy script to confirm the app came back",
+   "not": [
+    "proves every feature works for every user"
+   ],
+   "like": [
+    "Synthetic monitoring"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Synthetic monitoring",
+   "tier": 4,
+   "says": [
+    "sends scripted requests to the live service on a schedule",
+    "can detect an outage when no real user is online"
+   ],
+   "use": "want to know the login page is down at 3 a.m. before a customer tells you",
+   "not": [
+    "waits for real users to report problems"
+   ],
+   "like": [
+    "A health endpoint"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "An alert",
+   "tier": 1,
+   "says": [
+    "notifies a person when a condition needs action",
+    "should be actionable and point to a next step"
+   ],
+   "use": "need a person woken only when something needs doing",
+   "not": [
+    "should fire on every metric that moves"
+   ],
+   "like": [
+    "Alert fatigue"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Alert fatigue",
+   "tier": 4,
+   "says": [
+    "happens when frequent low-value alerts train people to ignore them",
+    "is reduced by alerting on symptoms users feel and removing noisy rules"
+   ],
+   "use": "notice the team muting the pager channel because it fires constantly",
+   "not": [
+    "is cured by adding more alerts for every metric"
+   ],
+   "like": [
+    "An alert"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "The golden-signals method",
+   "tier": 4,
+   "says": [
+    "covers latency, traffic, errors and saturation",
+    "gives a short starting list of what to watch for any service"
+   ],
+   "use": "are asked what to monitor first on a service you have never seen",
+   "not": [
+    "covers only CPU, memory, disk and network"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "Metric cardinality",
+   "tier": 5,
+   "says": [
+    "grows with the number of distinct label combinations on a metric",
+    "explodes when labels hold unbounded values such as user ids"
+   ],
+   "use": "see a metrics bill or database balloon after adding a user id label",
+   "not": [
+    "is the number of dashboards a team may create"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A service level indicator",
+   "tier": 3,
+   "says": [
+    "is a measured quantity describing service behavior, such as the share of successful requests",
+    "is the raw measurement an SLO sets a target on"
+   ],
+   "use": "need a precise number for how well the service is doing",
+   "not": [
+    "is the contract that refunds customers when missed"
+   ],
+   "like": [
+    "A service level objective",
+    "A service level agreement"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A service level objective",
+   "tier": 3,
+   "says": [
+    "is an internal target for an indicator over a period, such as 99.9 percent of requests succeeding in 30 days",
+    "guides how much reliability work is worth doing"
+   ],
+   "use": "need an agreed target to decide when reliability is good enough",
+   "not": [
+    "is a legal promise that refunds customers when missed"
+   ],
+   "like": [
+    "A service level indicator",
+    "A service level agreement"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A service level agreement",
+   "tier": 3,
+   "says": [
+    "is a contractual promise to customers with consequences if missed",
+    "is usually looser than the internal objective behind it"
+   ],
+   "use": "need to know what the customer contract guarantees and what happens on a breach",
+   "not": [
+    "is a purely internal target with no contractual weight"
+   ],
+   "like": [
+    "A service level objective",
+    "A service level indicator"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "An error budget",
+   "tier": 4,
+   "says": [
+    "is the amount of unreliability an SLO allows over its period",
+    "shifts effort from new features to reliability when it is spent"
+   ],
+   "use": "need an objective way to decide whether to ship risky changes or stabilise",
+   "not": [
+    "is money set aside to compensate customers after an outage"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "Availability",
+   "tier": 1,
+   "says": [
+    "is the share of time or requests in which a service works",
+    "is often quoted as a number of nines"
+   ],
+   "use": "are asked what percentage of the time users could use the service",
+   "not": [
+    "measures how fast the service responds"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "Tail latency",
+   "tier": 4,
+   "says": [
+    "is the response time that, for p99, 99 percent of requests beat",
+    "exposes slow outliers that an average hides"
+   ],
+   "use": "see a healthy average response time yet users still complain of slowness",
+   "not": [
+    "is identical to the mean response time"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A single point of failure",
+   "tier": 2,
+   "says": [
+    "is a component whose failure takes the whole service down",
+    "is removed by adding redundancy"
+   ],
+   "use": "ask what happens if this one server dies",
+   "not": [
+    "is any component that has more than one copy"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "Graceful degradation",
+   "tier": 4,
+   "says": [
+    "keeps core functions working while optional features switch off under failure",
+    "serves a reduced experience instead of an error page"
+   ],
+   "use": "must keep checkout working while a recommendations service is down",
+   "not": [
+    "fails the whole page whenever any dependency fails"
+   ],
+   "like": [
+    "A circuit breaker"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "Retry with backoff",
+   "tier": 4,
+   "says": [
+    "retries a failed call after growing, jittered delays",
+    "prevents a recovering service being flattened by synchronised retries"
+   ],
+   "use": "see a briefly failing dependency hammered by callers that all retry at once",
+   "not": [
+    "retries instantly and forever to guarantee success"
+   ],
+   "like": [
+    "A circuit breaker"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "A circuit breaker",
+   "tier": 5,
+   "says": [
+    "stops calling a failing dependency for a while after repeated errors",
+    "fails fast so a slow dependency does not exhaust the caller's threads"
+   ],
+   "use": "see calls piling up behind a downstream service that is timing out",
+   "not": [
+    "retries every failed call until it succeeds"
+   ],
+   "like": [
+    "Retry with backoff",
+    "Graceful degradation"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A secrets manager",
+   "tier": 3,
+   "says": [
+    "stores secrets encrypted and hands them to authorised workloads at runtime",
+    "keeps an audit trail of who read each secret"
+   ],
+   "use": "want credentials out of code and out of config files on disk",
+   "not": [
+    "is a file committed to the repository for convenience"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Secret rotation",
+   "tier": 3,
+   "says": [
+    "replaces a credential with a new one on a schedule or after exposure",
+    "limits how long a stolen credential stays useful"
+   ],
+   "use": "want a stolen key to stop working without anyone noticing the theft",
+   "not": [
+    "keeps the same credential forever so nothing breaks"
+   ],
+   "like": [
+    "A leaked secret"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Least privilege",
+   "tier": 1,
+   "says": [
+    "gives an identity only the permissions its job needs",
+    "limits the damage a compromised account can do"
+   ],
+   "use": "set up a deploy account that only needs to restart one app",
+   "not": [
+    "gives every engineer admin rights to avoid blocking them"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Secret scanning",
+   "tier": 4,
+   "says": [
+    "searches commits and repositories for accidentally committed credentials",
+    "can block a push that contains a key"
+   ],
+   "use": "worry that someone pasted an API key into code",
+   "not": [
+    "checks third-party packages for known vulnerabilities"
+   ],
+   "like": [
+    "Dependency scanning"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Dependency scanning",
+   "tier": 4,
+   "says": [
+    "checks third-party packages against databases of known vulnerabilities",
+    "flags a vulnerable package even when your own code is unchanged"
+   ],
+   "use": "want warning when a library you use gets a security advisory",
+   "not": [
+    "searches your commits for pasted passwords"
+   ],
+   "like": [
+    "Secret scanning",
+    "Static application security testing"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Static application security testing",
+   "tier": 3,
+   "says": [
+    "inspects your own source for insecure patterns without running it",
+    "finds issues such as injection-prone code before deployment"
+   ],
+   "use": "want insecure coding patterns caught during code review",
+   "not": [
+    "lists known-vulnerable versions of libraries you installed"
+   ],
+   "like": [
+    "Dependency scanning"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A software bill of materials",
+   "tier": 5,
+   "says": [
+    "lists every component and version inside a software build",
+    "lets you find which products contain a newly disclosed vulnerable library"
+   ],
+   "use": "must find where a newly announced vulnerable library ships",
+   "not": [
+    "encrypts the artifact so it cannot be altered"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "Short-lived credentials",
+   "tier": 4,
+   "says": [
+    "expire automatically after minutes or hours",
+    "reduce the value of a token leaked from a pipeline"
+   ],
+   "use": "want a pipeline token that is useless soon after it leaks",
+   "not": [
+    "are issued once and stay valid for years"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "A leaked secret",
+   "tier": 4,
+   "says": [
+    "must be revoked and rotated even after it is deleted from git history",
+    "should be assumed copied by anyone who could read the repository"
+   ],
+   "use": "find an API key in a public commit",
+   "not": [
+    "is fixed by deleting the commit and carrying on"
+   ],
+   "like": [
+    "Secret rotation"
+   ]
+  },
+  {
+   "group": "dora",
+   "subject": "Deployment frequency",
+   "tier": 2,
+   "says": [
+    "counts how often a team releases to production",
+    "rises when changes are small and releases are routine"
+   ],
+   "use": "want to know how often we ship",
+   "not": [
+    "measures how long a change takes from commit to production"
+   ],
+   "like": [
+    "Lead time for changes"
+   ]
+  },
+  {
+   "group": "dora",
+   "subject": "Lead time for changes",
+   "tier": 2,
+   "says": [
+    "measures the time from a commit to running in production",
+    "is shortened by small batches and automated pipelines"
+   ],
+   "use": "want to know how long an idea takes to reach users once coded",
+   "not": [
+    "counts how many releases happen in a week"
+   ],
+   "like": [
+    "Deployment frequency"
+   ]
+  },
+  {
+   "group": "dora",
+   "subject": "Change failure rate",
+   "tier": 3,
+   "says": [
+    "is the share of deployments that cause a failure needing a fix or rollback",
+    "tracks the quality side of delivery speed"
+   ],
+   "use": "want to know whether shipping faster is breaking things",
+   "not": [
+    "is the number of bugs found in code review"
+   ],
+   "like": [
+    "Time to restore service"
+   ]
+  },
+  {
+   "group": "dora",
+   "subject": "Time to restore service",
+   "tier": 3,
+   "says": [
+    "measures how long it takes to recover after a production failure",
+    "is improved by fast rollback and good alerting"
+   ],
+   "use": "want to know how quickly the team recovers when a release goes wrong",
+   "not": [
+    "counts how many incidents happen per month"
+   ],
+   "like": [
+    "Change failure rate",
+    "Mean time to detect"
+   ]
+  },
+  {
+   "group": "dora",
+   "subject": "Mean time to detect",
+   "tier": 3,
+   "says": [
+    "is the time from a failure starting to someone knowing about it",
+    "is shortened by symptom-based alerting and synthetic checks"
+   ],
+   "use": "find out about outages from customers rather than from your own alerts",
+   "not": [
+    "is the time it takes to finish writing the postmortem"
+   ],
+   "like": [
+    "Time to restore service"
+   ]
+  },
+  {
+   "group": "dora",
+   "subject": "Batch size",
+   "tier": 4,
+   "says": [
+    "is the amount of change released together",
+    "shrinks risk and speeds feedback when it is reduced"
+   ],
+   "use": "releases keep breaking and each one contains weeks of changes",
+   "not": [
+    "is safest when many weeks of changes ship together"
+   ]
+  },
+  {
+   "group": "dora",
+   "subject": "Goodhart's law",
+   "tier": 5,
+   "says": [
+    "says a measure stops being a good measure once it becomes a target",
+    "warns that rewarding deploy counts can encourage splitting changes pointlessly"
+   ],
+   "use": "managers want to rank teams by deployment frequency",
+   "not": [
+    "says a metric becomes more accurate once teams are rewarded for it"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "An on-call rotation",
+   "tier": 1,
+   "says": [
+    "shares responsibility for responding to alerts among a team in turns",
+    "gives one named person ownership at any moment"
+   ],
+   "use": "need someone accountable to answer alerts out of hours",
+   "not": [
+    "makes every engineer respond to every alert at once"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A runbook",
+   "tier": 1,
+   "says": [
+    "documents the steps to diagnose and fix a known problem",
+    "lets a tired responder act without recalling details"
+   ],
+   "use": "get paged for a known failure at night and want the fix steps written down",
+   "not": [
+    "records why the team chose an architecture"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "An escalation policy",
+   "tier": 3,
+   "says": [
+    "defines who is paged next if the first responder does not acknowledge",
+    "prevents an alert dying because one person missed it"
+   ],
+   "use": "want an unacknowledged page to reach someone else automatically",
+   "not": [
+    "lists the steps for fixing a particular fault"
+   ],
+   "like": [
+    "A runbook"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A severity level",
+   "tier": 3,
+   "says": [
+    "classifies an incident by its user impact",
+    "decides how fast and how widely people are mobilised"
+   ],
+   "use": "need to decide whether an issue wakes the whole team or can wait until morning",
+   "not": [
+    "names the engineer responsible for the outage"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "An incident commander",
+   "tier": 4,
+   "says": [
+    "coordinates the response and decisions during an incident",
+    "does not usually do the hands-on fixing themselves"
+   ],
+   "use": "run an incident with many people where nobody knows who decides",
+   "not": [
+    "writes the postmortem alone after the incident"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A blameless postmortem",
+   "tier": 3,
+   "says": [
+    "reviews an incident to find causes and improvements rather than someone to blame",
+    "ends with tracked follow-up actions"
+   ],
+   "use": "want to learn from an outage that is now over",
+   "not": [
+    "names the engineer at fault so they can be disciplined"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A status page",
+   "tier": 3,
+   "says": [
+    "tells users what is broken and when to expect an update",
+    "reduces support load during an outage"
+   ],
+   "use": "want customers to see an outage acknowledged without emailing support",
+   "not": [
+    "is where engineers keep their internal runbooks"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "Toil",
+   "tier": 4,
+   "says": [
+    "is repetitive manual operational work that grows with the service and could be automated",
+    "signals a task worth automating"
+   ],
+   "use": "keep manually restarting the same service every week",
+   "not": [
+    "is the creative design work done during incidents"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "A game day",
+   "tier": 5,
+   "says": [
+    "rehearses a failure on purpose to test systems and responders",
+    "finds gaps in runbooks before a real incident"
+   ],
+   "use": "want to learn whether the team and tooling cope with a database failure before it happens for real",
+   "not": [
+    "is the scheduled day for deploying the quarterly release"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLearn deploy script",
+   "tier": 1,
+   "says": [
+    "rsyncs the code to the server and then runs the remote steps",
+    "sets -euo pipefail so any failing step stops it"
+   ],
+   "use": "need to ship GGLearn to the server",
+   "not": [
+    "relies on a hosted CI service to run each deploy"
+   ],
+   "like": [
+    "The post-deploy health check"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLearn rsync exclude list",
+   "tier": 2,
+   "says": [
+    "leaves node_modules, .next, .git, the SQLite database files and every .env file off the sync",
+    "stops a deploy overwriting production secrets or data"
+   ],
+   "use": "worry that a deploy might overwrite production secrets or the database",
+   "not": [
+    "includes the .env files so production gets the right secrets"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Streaming the remote steps into bash",
+   "tier": 3,
+   "says": [
+    "feeds the remote steps to bash instead of the server's login shell",
+    "exists because the server's login shell is fish, which cannot parse bash syntax"
+   ],
+   "use": "ask why the remote steps are not simply run in the server's default shell",
+   "not": [
+    "is needed because the server has no shell at all"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The flock lock",
+   "tier": 2,
+   "says": [
+    "stops two deploys running on the server at the same time",
+    "is taken at the start of the remote steps"
+   ],
+   "use": "worry that two people might deploy at the same moment",
+   "not": [
+    "encrypts the deploy so nobody else can read it"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The npm ci step",
+   "tier": 2,
+   "says": [
+    "installs exact dependency versions from the lockfile on the server",
+    "is the dependency step of the remote deploy"
+   ],
+   "use": "ask how GGLearn gets repeatable dependencies on the server",
+   "not": [
+    "upgrades every package to its latest version"
+   ],
+   "like": [
+    "The drizzle-kit push step"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The drizzle-kit push step",
+   "tier": 3,
+   "says": [
+    "applies the schema defined in code to the database during deploy",
+    "brings the database structure in line with the new release"
+   ],
+   "use": "need the database tables to match the new release",
+   "not": [
+    "builds the Next.js production bundle"
+   ],
+   "like": [
+    "The npm ci step"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The pm2 startOrRestart step",
+   "tier": 3,
+   "says": [
+    "starts the app if it is not running and restarts it if it is",
+    "comes after the build and before the final health check"
+   ],
+   "use": "ask how a deploy works for both a first start and a later release",
+   "not": [
+    "only ever starts the app and fails if it is already running"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The post-deploy health check",
+   "tier": 3,
+   "says": [
+    "polls the app on 127.0.0.1 port 3400 up to ten times",
+    "fails the deploy unless it receives HTTP 200",
+    "prints recent PM2 error logs when it fails"
+   ],
+   "use": "ask how GGLearn knows the app really came back after a deploy",
+   "not": [
+    "only checks that the rsync step exited with status zero"
+   ],
+   "like": [
+    "The GGLearn deploy script"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLearn ecosystem.config.cjs",
+   "tier": 2,
+   "says": [
+    "defines one app, gglearn-web, running next start on port 3400",
+    "sets NODE_ENV to production"
+   ],
+   "use": "ask where GGLearn's PM2 process is defined",
+   "not": [
+    "defines separate web and scheduler processes"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The max_memory_restart setting",
+   "tier": 4,
+   "says": [
+    "is set to 400M for gglearn-web",
+    "restarts the process when memory grows past the limit, as a safety net against leaks"
+   ],
+   "use": "ask what protects GGLearn's server from a slow memory leak",
+   "not": [
+    "caps the size of the SQLite database at 400 MB"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "Apache in front of GGLearn",
+   "tier": 2,
+   "says": [
+    "is the only thing that reaches the app, which listens on 127.0.0.1 port 3400",
+    "is why the Next.js server is started bound to localhost"
+   ],
+   "use": "ask why GGLearn is not directly exposed on its port",
+   "not": [
+    "connects to the app over the public internet address"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLearn in-memory rate limiter",
+   "tier": 5,
+   "says": [
+    "assumes a single process",
+    "would break with several PM2 instances unless its state moved to the database"
+   ],
+   "use": "are asked to run three PM2 instances of GGLearn for more capacity",
+   "not": [
+    "is stored in the database and works across any number of instances"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The DATABASE_FILE variable",
+   "tier": 1,
+   "says": [
+    "sets the path of GGLearn's SQLite database",
+    "has a default under data/ for local use"
+   ],
+   "use": "need to point GGLearn at a different database file",
+   "not": [
+    "selects between Postgres and MySQL"
+   ]
+  },
+  {
+   "group": "gg",
+   "subject": "The GGLearn README's database advice",
+   "tier": 4,
+   "says": [
+    "says SQLite suits local development",
+    "suggests Postgres before heavier multi-user production use"
+   ],
+   "use": "ask whether SQLite is the long-term plan for heavy production use",
+   "not": [
+    "recommends SQLite for any amount of production traffic"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggsocial pre-flight checks",
+   "tier": 2,
+   "says": [
+    "run type-check, lint and tests before shipping",
+    "stop a broken change reaching the server"
+   ],
+   "use": "ask what ggsocial verifies before it deploys",
+   "not": [
+    "run only after the new build is already live"
+   ],
+   "like": [
+    "The ggsocial database backup"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggsocial database backup",
+   "tier": 2,
+   "says": [
+    "is taken before changes are applied",
+    "gives a way back if a change damages data"
+   ],
+   "use": "ask what ggsocial does to protect data before a deploy",
+   "not": [
+    "is taken only after the deploy succeeded"
+   ],
+   "like": [
+    "The ggsocial pre-flight checks"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggsocial build swap",
+   "tier": 3,
+   "says": [
+    "builds into a fresh directory and then swaps it in",
+    "lets the old build keep serving until the new one is ready"
+   ],
+   "use": "ask how ggsocial avoids downtime while building",
+   "not": [
+    "builds in place over the files that are serving traffic"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggsocial .env guard",
+   "tier": 3,
+   "says": [
+    "stops the deploy if .env is missing",
+    "exists because rsync --delete without an exclude could delete the production secrets"
+   ],
+   "use": "ask why ggsocial's deploy script refuses to continue without a .env file",
+   "not": [
+    "creates a new random .env file when none exists"
+   ],
+   "like": [
+    "The ggsocial APP_SECRET"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggsocial APP_SECRET",
+   "tier": 5,
+   "says": [
+    "logs every user out when it is lost",
+    "makes stored platform tokens unreadable when it is lost"
+   ],
+   "use": "ask why losing one value in ggsocial's production config is serious",
+   "not": [
+    "can be regenerated at any time with no effect on users"
+   ],
+   "like": [
+    "The ggsocial .env guard"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggsocial database container",
+   "tier": 3,
+   "says": [
+    "runs the database in a container on 127.0.0.1",
+    "keeps its data in a named volume"
+   ],
+   "use": "ask which part of ggsocial runs in a container",
+   "not": [
+    "also containerises the ggsocial web app"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggsocial scheduler",
+   "tier": 3,
+   "says": [
+    "runs as its own PM2 process",
+    "follows the one-concern-per-process rule"
+   ],
+   "use": "ask why ggsocial's scheduled jobs are not inside the web process",
+   "not": [
+    "runs inside the web process to share its memory"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The tick failed message",
+   "tier": 4,
+   "says": [
+    "is logged once by the ggsocial scheduler during every restart",
+    "is expected once but not when it keeps repeating"
+   ],
+   "use": "see 'tick failed: fetch failed' once in the logs right after a restart",
+   "not": [
+    "proves the deploy failed and must be rolled back"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggmoney APP_ENV",
+   "tier": 3,
+   "says": [
+    "is either sandbox or production",
+    "makes a sandbox install refuse to email real employees"
+   ],
+   "use": "ask how ggmoney avoids emailing real employees from a test install",
+   "not": [
+    "makes a sandbox install email employees twice to test delivery"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggmoney config.local.php",
+   "tier": 2,
+   "says": [
+    "is kept out of the upload so a deploy never overwrites it",
+    "holds environment-specific settings outside the shipped code"
+   ],
+   "use": "ask how ggmoney keeps environment settings out of its deploys",
+   "not": [
+    "is committed to the repository with the production values"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggmoney bin/alerts.php",
+   "tier": 3,
+   "says": [
+    "runs from cron on weekday mornings",
+    "emails owners what needs attention, such as deadlines",
+    "sends nothing when there is nothing to report"
+   ],
+   "use": "ask how ggmoney reminds owners of deadlines without nagging",
+   "not": [
+    "emails every owner a daily digest even when empty"
+   ]
+  },
+  {
+   "group": "ggo",
+   "subject": "The ggmoney deploy-check.php",
+   "tier": 4,
+   "says": [
+    "reports whether the rules are really in force",
+    "is a separate script from the cron alerts job"
+   ],
+   "use": "ask how ggmoney confirms its rules are actually enforced",
+   "not": [
+    "emails owners about upcoming deadlines"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Why is .env listed in .gitignore?",
+   "right": "So local secrets are not committed to the repository",
+   "wrong": [
+    "So Git can compress the file better",
+    "So the file is deployed twice",
+    "So the app ignores the file at runtime"
+   ],
+   "tier": 1,
+   "why": "A gitignored file is never staged by default, which keeps credentials out of version control.",
+   "code": ".env\nnode_modules/\n.next/"
+  },
+  {
+   "q": "What happens when npm ci fails on the server in this script?",
+   "right": "The script exits with an error and never prints deployed",
+   "wrong": [
+    "The script prints deployed anyway because ssh succeeded",
+    "Only a warning is shown and the rsync is reversed",
+    "The script retries npm ci forever"
+   ],
+   "tier": 2,
+   "why": "set -e (with -u and pipefail) stops the script on the first failing command, and ssh returns the remote command's exit status.",
+   "code": "#!/usr/bin/env bash\nset -euo pipefail\nrsync -az ./ server:/app/\nssh server \"cd /app && npm ci && npm run build\"\necho \"deployed\""
+  },
+  {
+   "q": "With pipefail set, what does this print?",
+   "right": "1",
+   "wrong": [
+    "0",
+    "127",
+    "true"
+   ],
+   "tier": 3,
+   "why": "pipefail makes a pipeline return the status of the last command that failed, here false.",
+   "code": "set -o pipefail\nfalse | true\necho $?"
+  },
+  {
+   "q": "What does the -n option do in this command?",
+   "right": "Fails immediately with busy if another process holds the lock, instead of waiting",
+   "wrong": [
+    "Encrypts the lock file",
+    "Runs the script in the background",
+    "Deletes the lock file after use"
+   ],
+   "tier": 3,
+   "why": "flock -n is non-blocking: it gives up at once when the lock is taken.",
+   "code": "flock -n /tmp/deploy.lock ./deploy-steps.sh || echo \"busy\""
+  },
+  {
+   "q": "What does this loop accomplish?",
+   "right": "It retries up to ten times and fails the deploy if the app never returns 200",
+   "wrong": [
+    "It restarts the app ten times in a row",
+    "It sends ten emails to the team",
+    "It deletes old builds until one returns 200"
+   ],
+   "tier": 3,
+   "why": "A post-deploy check should verify the app really came back and fail the deploy if it did not.",
+   "code": "for i in $(seq 1 10); do\n  code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3400/)\n  [ \"$code\" = \"200\" ] && exit 0\n  sleep 2\ndone\nexit 1"
+  },
+  {
+   "q": "What happens when this process passes 400 MB of memory?",
+   "right": "The process manager restarts it",
+   "wrong": [
+    "The process is paused until memory frees up",
+    "The database is truncated",
+    "The deploy is rolled back"
+   ],
+   "tier": 3,
+   "why": "max_memory_restart tells PM2 to restart a process that exceeds the limit, a safety net against leaks.",
+   "code": "module.exports = {\n  apps: [{\n    name: \"web\",\n    script: \"server.js\",\n    max_memory_restart: \"400M\",\n    env: { NODE_ENV: \"production\" }\n  }]\n};"
+  },
+  {
+   "q": "What does this command do when the app is not yet running?",
+   "right": "It starts the app from the ecosystem file",
+   "wrong": [
+    "It fails because nothing is running",
+    "It only restarts apps that are already running",
+    "It deletes the ecosystem file"
+   ],
+   "tier": 2,
+   "why": "startOrRestart works for both a first start and a later restart.",
+   "code": "pm2 startOrRestart ecosystem.config.cjs"
+  },
+  {
+   "q": "Which command lists the processes PM2 is managing?",
+   "right": "pm2 list",
+   "wrong": [
+    "pm2 show-all",
+    "pm2 processes",
+    "pm2 inspect --all"
+   ],
+   "tier": 2,
+   "why": "pm2 list (alias ls) prints the managed processes and their status.",
+   "code": "pm2 list"
+  },
+  {
+   "q": "Why does this Dockerfile copy package*.json and run npm ci before COPY . .?",
+   "right": "So the dependency layer is cached and reused when only source files change",
+   "wrong": [
+    "So npm ci can see the source files",
+    "Because Docker forbids copying the source first",
+    "To make the final image smaller than any other order"
+   ],
+   "tier": 3,
+   "why": "Docker caches layers in order; an unchanged package file keeps the expensive install layer cached.",
+   "code": "FROM node:lts-slim\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nCMD [\"npm\", \"start\"]"
+  },
+  {
+   "q": "What does the -p 127.0.0.1:5432:5432 part do?",
+   "right": "Publishes the container port only on the host's loopback address",
+   "wrong": [
+    "Opens the database to the whole internet",
+    "Maps host port 127 to container port 5432",
+    "Blocks all connections to the container"
+   ],
+   "tier": 3,
+   "why": "Prefixing the host IP limits the published port to that interface; 127.0.0.1 is local only.",
+   "code": "docker run -d -p 127.0.0.1:5432:5432 -v pgdata:/var/lib/postgresql/data --env-file db.env postgres"
+  },
+  {
+   "q": "After docker rm of that container, what happens to the data in the pgdata volume?",
+   "right": "It remains in the volume and can be mounted by a new container",
+   "wrong": [
+    "It is deleted with the container",
+    "It is moved into the image",
+    "It is uploaded to the registry"
+   ],
+   "tier": 3,
+   "why": "Named volumes outlive containers; only removing the volume deletes the data.",
+   "code": "docker rm -f db\ndocker volume ls"
+  },
+  {
+   "q": "What does this command do?",
+   "right": "Creates an annotated tag marking the current commit as the release",
+   "wrong": [
+    "Deletes the v1.4.0 branch",
+    "Pushes the release to production",
+    "Renames the latest commit"
+   ],
+   "tier": 2,
+   "why": "A tag records the exact commit a release was built from.",
+   "code": "git tag -a v1.4.0 -m \"Release 1.4.0\""
+  },
+  {
+   "q": "A fix is on main as commit abc123 and only the release/2.1 branch needs it. Which commands apply it?",
+   "right": "git switch release/2.1 then git cherry-pick abc123",
+   "wrong": [
+    "git switch release/2.1 then git merge main",
+    "git rebase release/2.1 on main",
+    "git reset --hard abc123 on release/2.1"
+   ],
+   "tier": 3,
+   "why": "Cherry-pick applies one commit without bringing along the rest of main's work.",
+   "code": "git switch release/2.1\ngit cherry-pick abc123"
+  },
+  {
+   "q": "The current version is 2.3.1 and a release removes a parameter from a public API. What should the next version be?",
+   "right": "3.0.0",
+   "wrong": [
+    "2.3.2",
+    "2.4.0",
+    "2.3.1-fix"
+   ],
+   "tier": 3,
+   "why": "Backwards-incompatible changes bump the major version."
+  },
+  {
+   "q": "The current version is 2.3.1 and a release adds a backwards-compatible feature. What should the next version be?",
+   "right": "2.4.0",
+   "wrong": [
+    "3.0.0",
+    "2.3.2",
+    "2.3.1.1"
+   ],
+   "tier": 3,
+   "why": "New compatible functionality bumps the minor version and resets the patch."
+  },
+  {
+   "q": "What does needs: test do in this pipeline?",
+   "right": "The deploy job waits for the test job and runs only if it succeeds",
+   "wrong": [
+    "The deploy job runs first and test follows",
+    "Both jobs run in parallel with no order",
+    "The test job is skipped when deploy is present"
+   ],
+   "tier": 3,
+   "why": "A needs relationship expresses job dependency, forming a gate.",
+   "code": "jobs:\n  test:\n    steps:\n      - run: npm ci\n      - run: npm test\n  deploy:\n    needs: test\n    steps:\n      - run: ./deploy.sh"
+  },
+  {
+   "q": "Roughly what share of requests reaches the second server here?",
+   "right": "About 10 percent",
+   "wrong": [
+    "About 50 percent",
+    "About 1 percent",
+    "All requests until the first fails"
+   ],
+   "tier": 3,
+   "why": "Weights 9 and 1 split traffic roughly 90/10, a simple canary.",
+   "code": "upstream app {\n  server 10.0.0.1:3000 weight=9;\n  server 10.0.0.2:3000 weight=1;\n}"
+  },
+  {
+   "q": "What does this Apache configuration do?",
+   "right": "Forwards public requests to an app listening on the local machine",
+   "wrong": [
+    "Redirects visitors to a different domain",
+    "Serves static files from port 3400",
+    "Blocks requests to port 3400"
+   ],
+   "tier": 2,
+   "why": "ProxyPass makes Apache act as a reverse proxy to the backend; ProxyPassReverse rewrites response headers.",
+   "code": "ProxyPass / http://127.0.0.1:3400/\nProxyPassReverse / http://127.0.0.1:3400/"
+  },
+  {
+   "q": "How much downtime does a 99.9 percent availability SLO allow in a 30-day month?",
+   "right": "About 43 minutes",
+   "wrong": [
+    "About 4 minutes",
+    "About 7 hours",
+    "About 43 seconds"
+   ],
+   "tier": 3,
+   "why": "30 days is 43,200 minutes and 0.1 percent of that is about 43."
+  },
+  {
+   "q": "How much downtime does 99.99 percent availability allow in a 30-day month?",
+   "right": "About 4.3 minutes",
+   "wrong": [
+    "About 43 minutes",
+    "About 26 seconds",
+    "About 4 hours"
+   ],
+   "tier": 3,
+   "why": "0.01 percent of 43,200 minutes is about 4.3 minutes."
+  },
+  {
+   "q": "A 99.9 percent monthly SLO has used 40 of its 43 error-budget minutes by day 12, and a risky migration is planned. What should the team do?",
+   "right": "Slow down risky changes and prioritise reliability work until the budget recovers",
+   "wrong": [
+    "Ship the migration because the SLA is not yet breached",
+    "Raise the SLO target so the budget is larger",
+    "Delete the alert that reported the downtime"
+   ],
+   "tier": 4,
+   "why": "A nearly spent error budget is the signal to trade feature risk for stability."
+  },
+  {
+   "q": "An alert fires nightly when CPU passes 80 percent for one minute and nobody ever acts on it. What is the best fix?",
+   "right": "Remove or retune it and alert on a user-visible symptom instead",
+   "wrong": [
+    "Page more people so it gets noticed",
+    "Lower the threshold to 60 percent",
+    "Mute the pager channel permanently"
+   ],
+   "tier": 3,
+   "why": "Alerts nobody acts on cause fatigue; alert on symptoms that need action."
+  },
+  {
+   "q": "Average latency is 120 ms but p99 is 4 s. What does this suggest?",
+   "right": "A small share of requests is very slow, so the tail needs investigating",
+   "wrong": [
+    "The service is healthy because the average is low",
+    "The p99 figure must be a measurement error",
+    "Every request takes about 4 seconds"
+   ],
+   "tier": 4,
+   "why": "Averages hide outliers; percentiles reveal them."
+  },
+  {
+   "q": "Why is the second form of this log line more useful than a free-text message?",
+   "right": "Tools can filter and aggregate on its fields such as order_id",
+   "wrong": [
+    "It uses fewer characters than free text",
+    "It cannot contain errors",
+    "It is never written to disk"
+   ],
+   "tier": 2,
+   "why": "Key-value fields make logs searchable and countable.",
+   "code": "{\"level\":\"error\",\"msg\":\"payment failed\",\"order_id\":\"o-18\",\"duration_ms\":812}"
+  },
+  {
+   "q": "What is the problem with this metric?",
+   "right": "The user_id label has unbounded values and creates a huge number of time series",
+   "wrong": [
+    "Counters cannot have labels",
+    "The name must end in _seconds",
+    "Status codes must not be labels"
+   ],
+   "tier": 5,
+   "why": "Each distinct label combination is its own series; unbounded labels cause a cardinality explosion.",
+   "code": "http_requests_total{user_id=\"u-48213\",status=\"200\"}"
+  },
+  {
+   "q": "What is the random term for in this retry delay?",
+   "right": "It adds jitter so many clients do not retry at the same moment",
+   "wrong": [
+    "It makes the delay shorter on every attempt",
+    "It ensures the request succeeds",
+    "It chooses which server to call"
+   ],
+   "tier": 4,
+   "why": "Jitter spreads retries out and avoids a synchronised wave.",
+   "code": "delay = base * 2 ** attempt + random(0, base)"
+  },
+  {
+   "q": "A developer committed an API key to a public repository and deleted it in the next commit. What should happen first?",
+   "right": "Revoke and rotate the key, because it must be assumed copied",
+   "wrong": [
+    "Nothing, since the new commit removed it",
+    "Wait for the next release to remove the history",
+    "Rename the repository"
+   ],
+   "tier": 3,
+   "why": "A secret in public history is compromised the moment it is pushed."
+  },
+  {
+   "q": "What does --exclude .env achieve in this command?",
+   "right": "It stops the server's .env from being overwritten or deleted by --delete",
+   "wrong": [
+    "It deletes .env on the server",
+    "It encrypts .env during transfer",
+    "It copies .env twice for safety"
+   ],
+   "tier": 3,
+   "why": "Excluded paths are neither transferred nor removed unless --delete-excluded is used.",
+   "code": "rsync -az --delete --exclude .env ./ server:/app/"
+  },
+  {
+   "q": "The server has a .env that is not in the local project. What does this command do to it?",
+   "right": "It deletes it because --delete removes files missing from the source",
+   "wrong": [
+    "It keeps it because dotfiles are always protected",
+    "It overwrites it with an empty file",
+    "It moves it to a backup folder"
+   ],
+   "tier": 3,
+   "why": "Without an exclude rule, --delete removes extra files at the destination.",
+   "code": "rsync -az --delete ./ server:/app/"
+  },
+  {
+   "q": "You must rename the column email to contact_email during a rolling deploy with no downtime. What is the safe approach?",
+   "right": "Add the new column, write both, backfill, switch reads, and drop the old column in a later release",
+   "wrong": [
+    "Rename the column in the same release as the code change",
+    "Stop all traffic, rename, then restart",
+    "Drop email first and recreate it as contact_email"
+   ],
+   "tier": 4,
+   "why": "Expand and contract keeps old and new app versions working against the same schema."
+  },
+  {
+   "q": "A release changed data in a way the old version cannot read, and users report errors. What is usually safest?",
+   "right": "Roll forward with a corrected release",
+   "wrong": [
+    "Roll back to the previous version immediately",
+    "Restore last week's backup over production",
+    "Switch off monitoring until it settles"
+   ],
+   "tier": 4,
+   "why": "Rolling back to code that cannot read the new data can make things worse."
+  },
+  {
+   "q": "A deploy script exited 0, yet the site returns 502. What was missing from the pipeline?",
+   "right": "A post-deploy health check that fails the deploy when the app does not respond",
+   "wrong": [
+    "A longer rsync timeout",
+    "A second copy of the lockfile",
+    "More verbose build logs"
+   ],
+   "tier": 3,
+   "why": "Steps can succeed while the app still fails to start; verify the result."
+  },
+  {
+   "q": "Two teammates ran the deploy at the same moment and the build was corrupted. What prevents this?",
+   "right": "A lock such as flock around the remote steps",
+   "wrong": [
+    "A faster network connection",
+    "Running npm install instead of npm ci",
+    "Disabling the health check"
+   ],
+   "tier": 3,
+   "why": "A lock serialises deploys so one finishes before the next starts."
+  },
+  {
+   "q": "Staging passes but production fails; staging uses a different database engine. What principle was violated?",
+   "right": "Environment parity",
+   "wrong": [
+    "Least privilege",
+    "Semantic versioning",
+    "Error budgeting"
+   ],
+   "tier": 3,
+   "why": "Differences between environments hide bugs until production."
+  },
+  {
+   "q": "A test fails one run in ten and the team re-runs until green. What is the best response?",
+   "right": "Quarantine it, find the root cause and fix or delete it",
+   "wrong": [
+    "Keep re-running until it passes",
+    "Raise the pass threshold to 90 percent",
+    "Disable all tests in that suite"
+   ],
+   "tier": 3,
+   "why": "Flaky tests erode trust in the pipeline and should be fixed or removed."
+  },
+  {
+   "q": "A team doubled deployment frequency and change failure rate rose from 5 to 25 percent. What does this suggest?",
+   "right": "Speed has been gained at the cost of quality, so look at test coverage and validation",
+   "wrong": [
+    "The DORA metrics are unrelated to each other",
+    "The team should deploy even more often",
+    "Failures are caused only by monitoring"
+   ],
+   "tier": 4,
+   "why": "Throughput and stability should improve together; diverging figures signal a problem."
+  },
+  {
+   "q": "A server restarts every six hours because of max_memory_restart, and users see occasional errors. What should you do first?",
+   "right": "Investigate the leak and restart gracefully, keeping the limit as a safety net",
+   "wrong": [
+    "Raise the limit to a very large value",
+    "Remove the limit so the process is never killed",
+    "Add more servers and ignore the leak"
+   ],
+   "tier": 4,
+   "why": "The limit hides a symptom; find the leak and avoid dropping in-flight requests."
+  },
+  {
+   "q": "Two instances sit behind a proxy and users are logged out at random because sessions live in each process's memory. What is the fix?",
+   "right": "Move session state to a shared store",
+   "wrong": [
+    "Turn off the proxy",
+    "Run the instances on different ports only",
+    "Shorten the session cookie"
+   ],
+   "tier": 4,
+   "why": "In-memory state is per process; shared state must live somewhere common."
+  },
+  {
+   "q": "A Postgres container was recreated from a new image and all data vanished. What was probably missing?",
+   "right": "A volume mounted at the data directory",
+   "wrong": [
+    "A larger memory limit",
+    "A reverse proxy",
+    "A health endpoint"
+   ],
+   "tier": 3,
+   "why": "Container filesystems are disposable; data needs a volume."
+  },
+  {
+   "q": "Which strategy needs capacity for two full environments at once?",
+   "right": "Blue/green deployment",
+   "wrong": [
+    "Rolling deployment",
+    "Recreate deployment",
+    "Canary at one percent"
+   ],
+   "tier": 3,
+   "why": "Blue/green runs old and new fully in parallel."
+  },
+  {
+   "q": "A canary at 5 percent shows an error rate equal to baseline but p99 latency up 30 percent. What should you do?",
+   "right": "Hold or abort promotion and investigate the latency",
+   "wrong": [
+    "Promote to 100 percent because errors are unchanged",
+    "Ignore latency because users rarely notice it",
+    "Restart the canary until latency drops"
+   ],
+   "tier": 4,
+   "why": "Error rate alone is not enough; slowdowns are also failures."
+  },
+  {
+   "q": "A liveness probe queries the database; the database blips for a minute and every instance restarts at once. What is the lesson?",
+   "right": "Liveness should check only the process itself, not its dependencies",
+   "wrong": [
+    "Probes should never be used",
+    "The restart interval was too long",
+    "Use a bigger database"
+   ],
+   "tier": 5,
+   "why": "Dependency failures should affect readiness at most, not trigger mass restarts."
+  },
+  {
+   "q": "An infrastructure plan shows destroy then create for a database after you renamed its resource in code. What should you do?",
+   "right": "Stop and move or rename the resource in state instead of applying",
+   "wrong": [
+    "Apply it because the plan is automatic",
+    "Approve it and restore from backup afterwards",
+    "Delete the state file and run again"
+   ],
+   "tier": 4,
+   "why": "A rename in code can look like destroy and create; review the plan before applying."
+  },
+  {
+   "q": "Which command previews infrastructure changes in Terraform without applying them?",
+   "right": "terraform plan",
+   "wrong": [
+    "terraform preview",
+    "terraform apply -dry",
+    "terraform check"
+   ],
+   "tier": 2,
+   "why": "plan computes and shows the changes without making them.",
+   "code": "terraform plan"
+  },
+  {
+   "q": "Why tag container images with versions rather than only latest?",
+   "right": "So you can reproduce a release and roll back to a known image",
+   "wrong": [
+    "Because latest is not allowed",
+    "To make images smaller",
+    "To skip pushing to the registry"
+   ],
+   "tier": 3,
+   "why": "A moving tag cannot tell you what is running or what to return to.",
+   "code": "docker build -t app:1.4.2 .\ndocker push app:1.4.2"
+  },
+  {
+   "q": "Why should an internal SLO be tighter than the customer SLA?",
+   "right": "So the team reacts before the contractual promise is breached",
+   "wrong": [
+    "So customers receive larger refunds",
+    "Because SLOs are legally binding",
+    "To remove the need for monitoring"
+   ],
+   "tier": 3,
+   "why": "The gap gives time to act before a contractual breach."
+  },
+  {
+   "q": "Management sets a target of 20 deploys per team per week and teams start splitting changes into trivial pieces. Which idea explains this?",
+   "right": "Goodhart's law",
+   "wrong": [
+    "Amdahl's law",
+    "The CAP theorem",
+    "Conway's law"
+   ],
+   "tier": 5,
+   "why": "When a measure becomes a target, people optimise the number rather than the outcome."
+  },
+  {
+   "q": "A draft postmortem says the outage was caused by Sam running the wrong command. What is the better framing?",
+   "right": "Ask why the system allowed the command and add a guardrail",
+   "wrong": [
+    "Keep the blame to deter repeats",
+    "Remove the section on causes",
+    "Restrict Sam's access without investigation"
+   ],
+   "tier": 3,
+   "why": "Blameless reviews fix conditions, not individuals."
+  },
+  {
+   "q": "A feature flag for a launched feature has been on for everyone for a year. What should you do?",
+   "right": "Remove the flag and dead code path",
+   "wrong": [
+    "Keep it forever as insurance",
+    "Rename the flag",
+    "Turn it off to test it"
+   ],
+   "tier": 4,
+   "why": "Stale flags add branches and risk and should be cleaned up."
+  },
+  {
+   "q": "A CI log shows a pasted API key from echo $API_KEY. What is the right response?",
+   "right": "Rotate the key and mask secrets in pipeline output",
+   "wrong": [
+    "Delete the log line and continue",
+    "Shorten the log retention",
+    "Rename the variable"
+   ],
+   "tier": 3,
+   "why": "Anything printed to logs must be treated as exposed.",
+   "code": "echo $API_KEY"
+  },
+  {
+   "q": "npm ci fails with a message that package.json and package-lock.json are not in sync. What is the usual fix?",
+   "right": "Run npm install locally and commit the updated lockfile",
+   "wrong": [
+    "Delete package.json",
+    "Run npm ci with --force on the server",
+    "Skip the install step"
+   ],
+   "tier": 3,
+   "why": "npm ci refuses to modify the lockfile, so it must be corrected and committed.",
+   "code": "npm ci"
+  },
+  {
+   "q": "Unfinished work must merge to main daily without reaching users. What is the usual technique?",
+   "right": "Hide it behind a feature flag that is off by default",
+   "wrong": [
+    "Keep it on a branch for a month",
+    "Commit it to a release branch only",
+    "Skip code review"
+   ],
+   "tier": 3,
+   "why": "Flags separate merging from releasing."
+  },
+  {
+   "q": "What time does this crontab entry run?",
+   "right": "08:00 from Monday to Friday",
+   "wrong": [
+    "08:00 every day",
+    "00:08 every weekday",
+    "Eight times a day on weekdays"
+   ],
+   "tier": 2,
+   "why": "Fields are minute, hour, day-of-month, month, day-of-week; 1-5 means Monday to Friday.",
+   "code": "0 8 * * 1-5 php bin/alerts.php"
+  },
+  {
+   "q": "What does this command print?",
+   "right": "The HTTP status code of the response",
+   "wrong": [
+    "The page body",
+    "The response time in seconds",
+    "The server's IP address"
+   ],
+   "tier": 2,
+   "why": "-w with %{http_code} prints the status code and -o /dev/null discards the body.",
+   "code": "curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3400/"
+  },
+  {
+   "q": "An ops team restarts the same service by hand every week. Which concept describes this and what should it do?",
+   "right": "Toil, so automate it or fix the cause",
+   "wrong": [
+    "A game day, so repeat it monthly",
+    "A runbook, so leave it manual",
+    "An error budget, so stop it"
+   ],
+   "tier": 4,
+   "why": "Repetitive manual work that scales with the service should be automated away."
+  }
+ ]
+}

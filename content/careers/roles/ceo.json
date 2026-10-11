@@ -1,0 +1,114 @@
+{
+  "role": "ceo",
+  "name": "CEO",
+  "bridges": [
+    {
+      "from": "cto",
+      "fromLevel": 3,
+      "toLevel": 2
+    },
+    {
+      "from": "sales",
+      "fromLevel": 4,
+      "toLevel": 1
+    },
+    {
+      "from": "manager",
+      "fromLevel": 3,
+      "toLevel": 1
+    },
+    {
+      "from": "marketing",
+      "fromLevel": 5,
+      "toLevel": 1
+    },
+    {
+      "from": "accounting",
+      "fromLevel": 5,
+      "toLevel": 1
+    },
+    {
+      "from": "delivery manager",
+      "fromLevel": 4,
+      "toLevel": 1
+    },
+    {
+      "from": "hr manager",
+      "fromLevel": 4,
+      "toLevel": 1
+    },
+    {
+      "from": "admin",
+      "fromLevel": 5,
+      "toLevel": 1
+    },
+    {
+      "from": "account manager",
+      "fromLevel": 4,
+      "toLevel": 1
+    }
+  ],
+  "rungs": [
+    {
+      "title": "Head of Department",
+      "summary": "Runs a whole function and sits on the leadership team.",
+      "knowledge": "Expert in their function and literate in the others.",
+      "delivery": "Owns a function's results and budget.",
+      "leadership": "Leads managers and works as one team with the other heads.",
+      "steps": []
+    },
+    {
+      "title": "General Manager",
+      "summary": "Runs a business unit end to end.",
+      "knowledge": "Reads the unit's finance, customers, people and risk together.",
+      "delivery": "Owns a business unit's profit, growth and customer outcomes.",
+      "leadership": "Leads several heads of department and answers to the CEO.",
+      "steps": [
+        ["payments-billing", 10],
+        ["people-operations", 10],
+        ["delivery-management", 12],
+        ["data-analytics", 5],
+        ["lead-generation-titan", 8],
+        ["product-management-core", 8],
+        ["service-design-pricing", 8],
+        ["brand-positioning-voice", 5]
+      ]
+    },
+    {
+      "title": "Chief Operating Officer",
+      "summary": "Runs the day-to-day of the whole company.",
+      "knowledge": "Sees every function, its costs and where the company will break under growth.",
+      "delivery": "Owns operations, planning and the company's performance against its plan.",
+      "leadership": "Leads the executive team's operating rhythm and is the CEO's deputy.",
+      "steps": [
+        ["delivery-management", 14],
+        ["people-operations", 16],
+        ["payments-billing", 14],
+        ["product-management-core", 12],
+        ["brand-positioning-voice", 10]
+      ]
+    },
+    {
+      "title": "CEO",
+      "summary": "Sets the direction of the company and answers for it.",
+      "knowledge": "Understands the market, the money, the technology and the people, and how AI is changing all four.",
+      "delivery": "Sets strategy, allocates capital and is accountable for the company's results.",
+      "leadership": "Leads the leadership team, the culture and the company's relationship with investors, customers and regulators.",
+      "steps": [
+        ["governance-compliance", 12],
+        ["payments-billing", 16],
+        ["people-operations", 18],
+        ["delivery-management", 18],
+        ["data-analytics", 16],
+        ["ai-llm-practice", 5],
+        ["llm-prompting-titan", 5],
+        ["product-management-core", 16],
+        ["service-design-pricing", 12],
+        ["brand-positioning-voice", 12],
+        ["executive-communication", 8],
+        ["finance-for-leaders", 8],
+        ["risk-resilience-leadership", 8]
+      ]
+    }
+  ]
+}

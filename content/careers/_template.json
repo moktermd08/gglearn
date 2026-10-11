@@ -1,0 +1,33 @@
+{
+  "_howTo": [
+    "Copy this file to content/careers/roles/<role>.json (or, for one company only, to content/careers/overlays/<company>.json, see below) and fill it in. Then run: npm run seed:careers",
+    "role is the job role exactly as it appears on people, lower case ('graphics designer'). It is what a person's job role must match for their ladder to show.",
+    "rungs run from the entry level up. Rung 1 is where people start, so it never has steps. Rung N is level N (IC N on individual-contributor ladders, see content/careers/framework.json). Use 4 to 6 rungs.",
+    "Every rung says what that level looks like in the framework's three measures: knowledge, delivery, leadership. Write what you would see someone do, not adjectives.",
+    "steps are [track slug, level to pass]. Typical levels: IC2 5, IC3 8, IC4 10 to 12, IC5 12 to 16. A step on a track whose questions do not reach that level yet shows as 'coming soon' and never blocks.",
+    "bridges say where people on other ladders can cross into this one: someone who has reached fromLevel on fromRole can step into this ladder at toLevel. This is how 'junior developer to CTO' becomes a route.",
+    "Nothing here overwrites a ladder an admin has already edited in the app: seed:careers only creates ladders that do not exist, fills in blank wording, and with --add-steps adds steps that are missing."
+  ],
+  "role": "example role",
+  "name": "Example Role",
+  "bridges": [{ "from": "another role", "fromLevel": 4, "toLevel": 1 }],
+  "rungs": [
+    {
+      "title": "Junior Example",
+      "summary": "One line: what this level is for.",
+      "knowledge": "What they know and how deeply.",
+      "delivery": "What they are trusted to deliver and with how much help.",
+      "leadership": "How they communicate and who they lead or influence.",
+      "steps": []
+    },
+    {
+      "title": "Example",
+      "summary": "One line.",
+      "knowledge": "",
+      "delivery": "",
+      "leadership": "",
+      "steps": [["governance-compliance", 5], ["your-company-track-slug", 5]]
+    }
+  ],
+  "_overlayFormat": "A company that wants its own tracks on a shared ladder adds content/careers/overlays/<company>.json: { \"company\": \"Moksy AI\", \"steps\": [{ \"role\": \"social media manager\", \"rung\": 2, \"slug\": \"moksy-brand-voice\", \"level\": 5 }] }. These are added to the ladder, never replace it."
+}
