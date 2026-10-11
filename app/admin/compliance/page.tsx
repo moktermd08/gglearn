@@ -3,6 +3,7 @@ import { requireManager } from "@/lib/auth";
 import { pendingCounts } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath } from "@/lib/roles";
 import { catalog, complianceReport, requirementsFor, scopeLabels, scopeOptions } from "@/lib/paths";
+import { Donut, EmptyState, PageHero, PALETTE } from "@/components/charts";
 import { AlertTriangle, CheckCircle2, Clock, FileQuestion, ShieldCheck, UserX } from "lucide-react";
 
 export const metadata = { title: "Who is up to date — gglearn" };
@@ -34,11 +35,19 @@ export default async function Compliance() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="flex items-center gap-2 text-2xl font-bold"><ShieldCheck className="text-emerald-300" />Who is up to date</h1>
+      <PageHero Icon={ShieldCheck} tone="emerald" title="Who is up to date" sub="Required learning for every person, against its deadline.">
         {me.role === "admin" && <Link href="/admin/paths" className="btn btn-ghost !py-1 text-sm">Set what is required</Link>}
         {me.role === "admin" && <Link href="/admin/matrix" className="btn btn-ghost !py-1 text-sm">Role and pillar matrix</Link>}
-      </div>
+      </PageHero>
+      <section className="card p-5">
+        <Donut size={150} sub="people" center={rows.length} parts={[
+          { label: "Up to date", value: count("ok"), color: PALETTE.emerald },
+          { label: "In progress", value: count("due"), color: PALETTE.sky },
+          { label: "Overdue", value: count("overdue"), color: PALETTE.rose },
+          { label: "Not assigned", value: count("no-scope"), color: PALETTE.amber },
+          { label: "Nothing required", value: count("none"), color: PALETTE.slate },
+        ]} />
+      </section>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map(({ Icon, label, value, cls }, i) => (
           <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>

@@ -24,6 +24,7 @@
 :root { --background: #f7f5ef; --foreground: #14161f; --line: rgba(20,22,31,.1); }
 @theme inline { --color-background: var(--background); --color-foreground: var(--foreground); }
 body {
+  overflow-x: clip;
   background: var(--background); color: var(--foreground);
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -75,4 +76,4 @@ input, textarea, select { color: #14161f; }
 .ring-draw { animation: draw 1.2s ease-out; }
 .slide-in { animation: slide .3s ease-out both; }
 @media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation: none !important; transition: none !important; } }
-@media print { header { display: none; } body { background: #fff !important; color: #000; } .card { box-shadow: none !important; } }
+@media print { header { display: none; } * { -webkit-print-color-adjust: exact; print-color-adjust: exact; } body { background: #fff !important; color: #000; } .card { box-shadow: none !important; } }

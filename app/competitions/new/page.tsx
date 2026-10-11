@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { openTo } from "@/lib/paths";
 import { KIND_LABEL } from "@/lib/levels";
 import { Trophy } from "lucide-react";
+import { PageHero } from "@/components/charts";
 import NewCompetitionForm from "./form";
 
 export const metadata = { title: "Start a contest — gglearn" };
@@ -20,7 +21,7 @@ export default async function NewCompetition() {
   const groups = [...byKind];
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="flex items-center gap-2 text-2xl font-extrabold"><Trophy className="pulse-glow text-yellow-300" />Start a contest</h1>
+      <PageHero Icon={Trophy} tone="amber" title="Start a contest" sub="Pick a topic, set a goal and a deadline, then race people, bots, or both." />
       <NewCompetitionForm groups={groups} />
     </div>
   );

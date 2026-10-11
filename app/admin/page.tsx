@@ -2,6 +2,7 @@ import { desc, eq, sql } from "drizzle-orm";
 import { answers, db, questions, topicRequests, tracks } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { retireQuestion } from "@/app/actions";
+import { Donut, PageHero, PALETTE } from "@/components/charts";
 import { AlertTriangle, BarChart3, Lightbulb, Database, MessageSquareText, PenLine, Archive, TrendingDown, TrendingUp, CheckCircle2, Clock } from "lucide-react";
 
 const MIN_ATTEMPTS = 5;
@@ -50,7 +51,7 @@ export default async function Admin() {
 
   return (
     <div className="space-y-8">
-      <h1 className="flex items-center gap-2 text-2xl font-bold"><Database className="text-indigo-300" />Question bank</h1>
+      <PageHero Icon={Database} title="Question bank" sub="What learners are asked, how much of it is hand-written, and which questions need a second look." />
       {wanted.length > 0 && (
         <section className="card p-4">
           <h2 className="mb-2 flex items-center gap-2 font-semibold"><Lightbulb size={18} className="text-amber-300" />Topics people asked for</h2>
@@ -69,6 +70,17 @@ export default async function Admin() {
           </div>
         ))}
       </div>
+      <section className="card grid items-center gap-6 p-5 md:grid-cols-[auto_1fr]">
+        <Donut size={150} sub="active" center={bank.active.toLocaleString("en-GB")} parts={[
+          { label: "Authored", value: bank.authoredQ, color: PALETTE.violet },
+          { label: "Generated or imported", value: Math.max(0, bank.active - bank.authoredQ), color: PALETTE.sky },
+          { label: "Held for review", value: bank.review, color: PALETTE.amber },
+        ]} />
+        <div className="text-sm text-slate-400">
+          <h2 className="mb-1 flex items-center gap-2 font-semibold text-slate-200"><BarChart3 size={18} className="text-violet-300" />Shape of the bank</h2>
+          Hand-written questions are the gold standard; generated and imported ones fill the long tail. Held questions wait for a person to approve them before learners see them.
+        </div>
+      </section>
       <section>
         <h2 className="mb-2 flex items-center gap-2 font-semibold"><AlertTriangle size={18} className="text-amber-300" />Needs review ({flagged.length})</h2>
         <p className="mb-3 text-sm text-slate-400">Questions with {MIN_ATTEMPTS}+ attempts that are almost always failed (possibly unclear or wrong) or never failed (too easy).</p>

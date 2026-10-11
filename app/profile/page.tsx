@@ -3,7 +3,8 @@ import { db, enrollments, tracks, userAvatars } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { Competitor } from "@/components/Competitor";
 import { Flame, Mail, Mountain, Shield, Sparkles, Trash2, UserRound, Swords } from "lucide-react";
-import { trackStats } from "@/lib/stats";
+import { activityFor, trackStats } from "@/lib/stats";
+import { AreaChart, Heatmap, PageHero, PALETTE, StatTile } from "@/components/charts";
 import { removePhoto } from "./actions";
 import PhotoForm from "./photo-form";
 
@@ -20,9 +21,10 @@ export default async function Profile() {
     { Icon: Mountain, label: "Levels passed", value: mine.reduce((a, m) => a + m.s.passed, 0), cls: "text-violet-300" },
     { Icon: Swords, label: "Topics", value: mine.length, cls: "text-pink-300" },
   ];
+  const activity = activityFor(me.id, 24);
   return (
-    <div className="mx-auto max-w-xl space-y-6">
-      <h1 className="flex items-center gap-2 text-2xl font-extrabold"><UserRound className="text-indigo-300" />Your profile</h1>
+    <div className="mx-auto max-w-2xl space-y-6">
+      <PageHero Icon={UserRound} title="Your profile" sub="Your photo, your numbers, and how steadily you have been learning." />
       <section className="card pop flex flex-wrap items-center gap-6 p-6">
         <Competitor isBot={false} seed={`u${me.id}`} name={me.name} size={112} photoUrl={photo ? `/api/avatar/${me.id}?v=${photo.v}` : null} />
         <div className="min-w-0 flex-1 space-y-3">
@@ -37,14 +39,14 @@ export default async function Profile() {
       </section>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {stats.map(({ Icon, label, value, cls }, i) => (
-          <div key={label} className="card rise p-3 text-center" style={{ "--i": i } as React.CSSProperties}>
-            <Icon size={20} className={`mx-auto ${cls}`} />
-            <div className="text-2xl font-extrabold">{value}</div>
-            <div className="text-[11px] uppercase tracking-wider text-slate-400">{label}</div>
-          </div>
-        ))}
+        {stats.map(({ Icon, label, value }, i) => <StatTile key={label} i={i} Icon={Icon} label={label} value={value} color={[PALETTE.sky, "#ea580c", PALETTE.violet, PALETTE.pink][i]} />)}
       </div>
+
+      <section className="card space-y-3 p-5">
+        <h2 className="font-bold">Learning rhythm</h2>
+        <AreaChart data={activity.slice(-30).map((d) => ({ label: d.day.slice(5), value: d.value }))} color={PALETTE.emerald} />
+        <Heatmap days={activity} />
+      </section>
     </div>
   );
 }

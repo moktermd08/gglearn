@@ -1,3 +1,4 @@
+import { PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
 import { checklistItems, db, enrollments, handovers, tracks, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
@@ -33,18 +34,11 @@ export default async function People() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="flex items-center gap-2 text-2xl font-bold"><Users className="text-indigo-300" />People</h1>
+      <PageHero Icon={Users} title="People" sub="Invite, assign and offboard. Each person's company, brands and projects decide what they must learn.">
         <Link href="/admin/compliance" className="btn btn-ghost !py-1 text-sm"><ShieldCheck size={15} />Who is up to date</Link>
-      </div>
+      </PageHero>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {tiles.map(({ Icon, label, value, cls }, i) => (
-          <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
-            <Icon size={22} className={`mx-auto ${cls}`} />
-            <div className="mt-1 text-2xl font-extrabold">{value}</div>
-            <div className="text-[11px] uppercase tracking-wider text-slate-400">{label}</div>
-          </div>
-        ))}
+        {tiles.map(({ Icon, label, value }, i) => <StatTile key={label} i={i} Icon={Icon} label={label} value={value} color={[PALETTE.emerald, PALETTE.rose, PALETTE.amber, PALETTE.sky][i]} />)}
       </div>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2 font-semibold"><Mail size={18} className="text-sky-300" />Invite someone</h2>

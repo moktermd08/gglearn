@@ -52,3 +52,23 @@ export function badgesFor(s: ReturnType<typeof trackStats>): Badge[] {
     { key: "titan", name: "Titan", desc: "Reach level 20", icon: "👑", earned: s.passed >= 20 },
   ];
 }
+
+/** XP earned per UTC day over the last `weeks` weeks (quests + finished exams), oldest first, ending today. */
+export function activityFor(userId: number, weeks = 12) {
+  const n = weeks * 7;
+  const iso = (d: Date) => d.toISOString().slice(0, 10);
+  const start = new Date(); start.setUTCDate(start.getUTCDate() - (n - 1));
+  const from = iso(start);
+  const xp = new Map<string, number>();
+  for (const q of db.select({ day: dailyQuests.day, xp: dailyQuests.xp }).from(dailyQuests)
+    .where(and(eq(dailyQuests.userId, userId), sql`${dailyQuests.day} >= ${from}`)).all()) xp.set(q.day, (xp.get(q.day) ?? 0) + q.xp);
+  for (const r of db.select({ at: runs.finishedAt, score: runs.score, passed: runs.passed }).from(runs)
+    .where(and(eq(runs.userId, userId), sql`${runs.finishedAt} is not null`, sql`${runs.finishedAt} >= ${Math.floor(start.getTime() / 1000) - 86400}`)).all()) {
+    const day = iso(new Date((r.at ?? 0) * 1000));
+    xp.set(day, (xp.get(day) ?? 0) + Math.round((r.score ?? 0) * 100) + (r.passed ? 50 : 0));
+  }
+  return Array.from({ length: n }, (_, i) => {
+    const d = new Date(start); d.setUTCDate(start.getUTCDate() + i);
+    return { day: iso(d), value: xp.get(iso(d)) ?? 0 };
+  });
+}

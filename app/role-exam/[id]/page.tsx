@@ -10,6 +10,7 @@ import { roleLabel } from "@/lib/journey";
 import { submitRoleExam } from "@/app/actions";
 import { Quiz } from "@/components/Quiz";
 import { Ring } from "@/components/Ring";
+import { PageHero, PALETTE, Radar } from "@/components/charts";
 import { ArrowLeft, Target, Trophy } from "lucide-react";
 
 export const metadata = { title: "Role check — gglearn" };
@@ -54,6 +55,7 @@ export default async function RoleExamPage({ params }: { params: Promise<{ id: s
 
       <section className="card space-y-3 p-5">
         <h2 className="font-bold">Score by area</h2>
+        {byDomain.length >= 3 && <div className="flex justify-center"><Radar size={260} color={passed ? PALETTE.emerald : PALETTE.amber} axes={DOMAIN_KEYS.flatMap((d) => byDomain.filter((r) => r.domain === d)).map((r) => ({ label: domainLabel(r.domain), value: r.score }))} /></div>}
         <ul className="space-y-2.5">
           {DOMAIN_KEYS.flatMap((d) => byDomain.filter((r) => r.domain === d)).map((r) => (
             <li key={r.domain}>

@@ -94,8 +94,26 @@ function subjectKey(slug: string, name: string) {
   return SUBJECTS[s] ? s : SUBJECTS[n] ? n : s.split("-")[0];
 }
 
+// Specific title words first, so "Database design" is a database rather than a palette.
+const TRACK_ICONS: [RegExp, Icon][] = [
+  [/database|data stores|analytics/i, Database], [/architecture|system design|patterns/i, Boxes], [/front-?end|ui\/ux|design systems/i, Layout],
+  [/back-?end|server|infrastructure|hosting/i, Server], [/security|authentication|governance|compliance|risk/i, ShieldCheck], [/testing|qa\b/i, Bug],
+  [/ci\/cd|devops|deploy|launch/i, Rocket], [/discover|planning|roadmap|strategy/i, Route], [/requirement/i, ClipboardCheck],
+  [/payment|subscription|finance|pricing/i, Briefcase], [/sales|support|people|leadership|communication/i, Users], [/\bai\b|llm|automation/i, Brain],
+  [/content|seo|brand|voice|marketing|social/i, Megaphone],
+];
+
+const FALLBACK_COLORS = ["#6366F1", "#EC4899", "#14B8A6", "#F59E0B", "#0EA5E9", "#8B5CF6", "#10B981", "#EF4444", "#06B6D4", "#D946EF"];
+
+/** Tracks with no brand mark get a keyword icon for their title and a stable colour, so a long list of them stays tell-apart-able. */
 export function artFor(slug: string, name: string, kind: string): Art {
-  return SUBJECTS[subjectKey(slug, name)] ?? BY_KIND[kind] ?? BY_KIND.subject;
+  const known = SUBJECTS[subjectKey(slug, name)];
+  if (known) return known;
+  const base = BY_KIND[kind] ?? BY_KIND.subject;
+  const clean = name.replace(/^\d+\.\s*/, "");
+  const Icon = TRACK_ICONS.find(([re]) => re.test(clean))?.[1] ?? TOPIC_ICONS.find(([re]) => re.test(clean))?.[1];
+  const hash = [...slug].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
+  return { glyph: Icon ? line(Icon) : base.glyph, color: FALLBACK_COLORS[hash % FALLBACK_COLORS.length] };
 }
 
 function shade(hex: string, f: number) {

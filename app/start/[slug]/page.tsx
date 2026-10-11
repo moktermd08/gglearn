@@ -7,6 +7,8 @@ import { PLACEMENT_BATCH, PLACEMENT_PASS } from "@/lib/placement";
 import { ArrowRight, Check, Gauge, Lightbulb, Sprout } from "lucide-react";
 import { JourneySteps } from "@/components/JourneySteps";
 import { RankEmblem } from "@/components/RankEmblem";
+import { LevelScale } from "@/components/charts";
+import { SubjectArt, artFor } from "@/components/SubjectArt";
 import { answerPlacement, skipPlacement, startPlacement } from "../actions";
 import Setup from "./setup";
 
@@ -26,7 +28,7 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
     return (
       <div className="mx-auto max-w-3xl space-y-6">
         <JourneySteps at={4} />
-        <div className="card pop flex items-center gap-5 p-5">
+        <div className="card pop flex flex-wrap items-center gap-5 p-5" style={{ background: `linear-gradient(120deg, hsl(${hue} 80% 55% / .14), #ffffff 60%)` }}>
           {placed > 0 ? <RankEmblem level={placed} size={72} /> : <Sprout size={56} className="bob text-emerald-400" aria-hidden />}
           <div>
             <div className="text-xs uppercase tracking-widest text-slate-400">Your starting point in {track.name}</div>
@@ -47,8 +49,9 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
     return (
       <div className="mx-auto max-w-3xl space-y-6">
         <JourneySteps at={3} />
-        <div className="card space-y-4 p-6">
-          <h1 className="flex items-center gap-2 text-2xl font-extrabold"><Gauge className="text-sky-300" />Let us find your level in {track.name}</h1>
+        <div className="card pop space-y-4 overflow-hidden p-6" style={{ background: `linear-gradient(120deg, ${artFor(track.slug, track.name, track.kind).color}1f, #ffffff 60%)` }}>
+          <div className="flex items-center gap-4"><SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={64} className="shadow-lg" /><h1 className="text-2xl font-extrabold">Let us find your level in {track.name}</h1></div>
+          <LevelScale lo={j.lo} hi={MAX_LEVEL} />
           <p className="text-slate-300">
             A short adaptive check: we ask {PLACEMENT_BATCH} multiple-choice questions at a time, starting mid-way, and jump up or down depending on how you do.
             It usually takes 3 to 5 rounds. {j.lo > 0 && <>You have already passed level {j.lo} by exam, so we start from there.</>}
@@ -80,10 +83,7 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
           <span className="text-sm text-slate-400">Narrowing from level {j.lo} to {j.hi}. Need {PLACEMENT_PASS} of {PLACEMENT_BATCH} to move up.</span>
         </div>
         <div role="img" aria-label={`Your level is between ${j.lo} and ${j.hi}`}>
-          <div className="relative h-3 overflow-hidden rounded-full bg-white/10">
-            <div className="absolute inset-y-0 rounded-full bg-gradient-to-r from-sky-400 to-violet-400 transition-all duration-1000" style={{ left: `${(j.lo / MAX_LEVEL) * 100}%`, width: `${Math.max(2, ((j.hi - j.lo) / MAX_LEVEL) * 100)}%` }} />
-          </div>
-          <div className="mt-1 flex justify-between text-[10px] text-slate-500"><span>0</span><span>5</span><span>10</span><span>15</span><span>{MAX_LEVEL}</span></div>
+          <LevelScale lo={j.lo} hi={j.hi} />
         </div>
       </div>
       <form action={answerPlacement.bind(null, slug)} className="space-y-4">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Bot, Clock, Flag, Globe, Lock, Mail, Target, Users } from "lucide-react";
+import { SubjectArt } from "@/components/SubjectArt";
 import { modeLabel, span, now, type Card } from "@/lib/competitions";
 
 const CHIP = {
@@ -10,7 +11,7 @@ const CHIP = {
 } as const;
 
 export function CompetitionCard({ card }: { card: Card }) {
-  const { c, trackName, humans, bots, state, invited } = card;
+  const { c, trackName, track, humans, bots, state, invited } = card;
   const t = now();
   const [label, cls] = CHIP[state];
   const elapsed = state === "finished" ? 1 : state === "live" ? Math.min(1, Math.max(0, (t - c.startsAt) / Math.max(1, c.endsAt - c.startsAt))) : 0;
@@ -25,8 +26,11 @@ export function CompetitionCard({ card }: { card: Card }) {
         <span className="inline-flex items-center gap-1 text-slate-400">{c.visibility === "public" ? <><Globe size={12} />Public</> : <><Lock size={12} />Private</>}</span>
         <span className="ml-auto text-slate-400">{modeLabel(humans, bots)}</span>
       </div>
-      <div className="mt-2 font-semibold">{c.title}</div>
-      <div className="flex items-center gap-1.5 text-sm text-slate-300"><Target size={14} className="shrink-0 text-pink-300" />{trackName} · gain {c.goalLevels} level{c.goalLevels === 1 ? "" : "s"}</div>
+      <div className="mt-3 flex items-center gap-3">
+        <SubjectArt slug={track.slug} name={trackName} kind={track.kind} size={44} />
+        <div className="min-w-0"><div className="truncate font-semibold">{c.title}</div>
+        <div className="flex items-center gap-1.5 text-sm text-slate-300"><Target size={14} className="shrink-0 text-pink-300" /><span className="truncate">{trackName} · gain {c.goalLevels} level{c.goalLevels === 1 ? "" : "s"}</span></div></div>
+      </div>
       {(state === "live" || state === "finished") && (
         <div className="bar mt-2 !h-1.5" title="Time elapsed"><i style={{ width: `${elapsed * 100}%`, background: state === "live" ? undefined : "#64748b" }} /></div>
       )}

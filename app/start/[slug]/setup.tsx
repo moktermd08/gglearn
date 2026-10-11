@@ -5,6 +5,7 @@ import { launchJourney, type StartState } from "../actions";
 import { BOT_TIERS } from "@/lib/bots";
 import { CURRENCIES, PRIZE_SPLIT_LABEL } from "@/lib/competitions-shared";
 import { LEVELS, MAX_LEVEL } from "@/lib/levels";
+import { LevelScale } from "@/components/charts";
 
 export default function Setup({ slug, mode, placed, trackName }: { slug: string; mode: "solo" | "group"; placed: number; trackName: string }) {
   const [state, run, pending] = useActionState<StartState, FormData>(launchJourney.bind(null, slug), null);
@@ -22,11 +23,7 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
     <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="space-y-6">
       <section className="card space-y-3 p-5">
         <h2 className="flex items-center gap-2 font-bold"><Flag size={18} className="text-emerald-300" />Your finish line</h2>
-        <div className="relative" aria-hidden>
-          <div className="bar"><i style={{ width: `${(placed / MAX_LEVEL) * 100}%`, background: "#64748b" }} /></div>
-          <div className="bar absolute inset-0 !bg-transparent"><i className="!transition-all" style={{ width: `${(finish / MAX_LEVEL) * 100}%`, opacity: 0.55 }} /></div>
-          <div className="mt-1 flex justify-between text-[10px] text-slate-500"><span>0</span><span>start L{placed}</span><span>finish L{finish}</span><span>{MAX_LEVEL}</span></div>
-        </div>
+        <LevelScale lo={placed} hi={finish} />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={label} htmlFor="goalLevels">Levels to climb: <b>{goal}</b></label>
@@ -49,7 +46,7 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
         <p className="text-sm text-slate-300">Bots are <b>simulated</b>: they follow a published daily schedule and never really study, so you can see exactly what pace beats them.</p>
         <div className="grid gap-3 sm:grid-cols-3">
           {(Object.keys(BOT_TIERS) as (keyof typeof BOT_TIERS)[]).map((k) => (
-            <div key={k}><label className={label} htmlFor={k}>{BOT_TIERS[k].label} bots</label>
+            <div key={k} className="rounded-xl border border-black/10 p-3"><label className={`${label} mb-1 flex items-center gap-1.5`} htmlFor={k}><Bot size={15} className="text-violet-300" />{BOT_TIERS[k].label} bots</label>
               <input id={k} name={k} type="number" min={0} max={2} defaultValue={k === "steady" ? 1 : 0} className={input} />
               <span className="text-xs text-slate-400">{BOT_TIERS[k].blurb}</span></div>
           ))}
@@ -58,10 +55,14 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
 
       <section className="card space-y-3 p-5">
         <h2 className="flex items-center gap-2 font-bold"><Trophy size={18} className="text-amber-300" />What is the reward?</h2>
-        <label className="flex items-start gap-2"><input type="radio" name="incentive" value="cert" checked={incentive === "cert"} onChange={() => setIncentive("cert")} className="mt-1" />
-          <span><b className="inline-flex items-center gap-1"><GraduationCap size={15} className="text-sky-300" />Certificate and glory</b> · everyone who reaches the finish line can claim a verifiable certificate; the first to get there is named Champion.</span></label>
-        <label className="flex items-start gap-2"><input type="radio" name="incentive" value="cash" checked={incentive === "cash"} onChange={() => setIncentive("cash")} className="mt-1" />
-          <span><b className="inline-flex items-center gap-1"><Coins size={15} className="text-amber-300" />Add a cash prize</b> · certificates too, plus money for the first to finish{group ? "" : " (a reward you set yourself)"}.</span></label>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {([["cert", GraduationCap, "Certificate and glory", "Everyone who reaches the finish line can claim a verifiable certificate; the first to get there is named Champion.", "bg-sky-500/15 text-sky-300"], ["cash", Coins, "Add a cash prize", `Certificates too, plus money for the first to finish${group ? "" : " (a reward you set yourself)"}.`, "bg-amber-500/15 text-amber-300"]] as const).map(([v, Icon, name, text, tone]) => (
+            <label key={v} className={`cursor-pointer rounded-xl border p-4 transition ${incentive === v ? "border-indigo-400 bg-indigo-500/10" : "border-black/10 hover:border-black/25"}`}>
+              <input type="radio" name="incentive" value={v} checked={incentive === v} onChange={() => setIncentive(v)} className="sr-only" />
+              <span className={`mb-2 grid h-10 w-10 place-items-center rounded-xl ${tone}`}><Icon size={20} /></span><b className="block">{name}</b><span className="text-sm text-slate-400">{text}</span>
+            </label>
+          ))}
+        </div>
         {incentive === "cash" && (
           <div className="ml-6 space-y-3">
             <div className="grid gap-3 sm:grid-cols-3">
@@ -82,10 +83,14 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
       {group && (
         <section className="card space-y-2 p-5">
           <h2 className="flex items-center gap-2 font-bold"><Eye size={18} className="text-sky-300" />Who can watch?</h2>
-          <label className="flex items-start gap-2"><input type="radio" name="visibility" value="private" checked={visibility === "private"} onChange={() => setVisibility("private")} className="mt-1" />
-            <span><b className="inline-flex items-center gap-1"><Lock size={14} />Private</b> · only your group.</span></label>
-          <label className="flex items-start gap-2"><input type="radio" name="visibility" value="public" checked={visibility === "public"} onChange={() => setVisibility("public")} className="mt-1" />
-            <span><b className="inline-flex items-center gap-1"><Globe size={14} />Public</b> · anyone with the link can watch the live leaderboard.</span></label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {([["private", Lock, "Private", "Only your group.", "bg-emerald-500/15 text-emerald-300"], ["public", Globe, "Public", "Anyone with the link can watch the live leaderboard.", "bg-sky-500/15 text-sky-300"]] as const).map(([v, Icon, name, text, tone]) => (
+              <label key={v} className={`cursor-pointer rounded-xl border p-4 transition ${visibility === v ? "border-indigo-400 bg-indigo-500/10" : "border-black/10 hover:border-black/25"}`}>
+                <input type="radio" name="visibility" value={v} checked={visibility === v} onChange={() => setVisibility(v)} className="sr-only" />
+                <span className={`mb-2 grid h-10 w-10 place-items-center rounded-xl ${tone}`}><Icon size={20} /></span><b className="block">{name}</b><span className="text-sm text-slate-400">{text}</span>
+              </label>
+            ))}
+          </div>
           {visibility === "public" && (
             <label className="ml-6 flex items-start gap-2 text-sm"><input type="checkbox" name="consent" required className="mt-1" />
               <span>I understand names, photos and progress of everyone in this race are visible to anyone. It can be made private later, but not the other way round.</span></label>
@@ -94,7 +99,7 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
       )}
 
       {state?.error && <p role="alert" className="text-sm text-rose-400">{state.error}</p>}
-      <button disabled={pending} className="btn disabled:opacity-50">{pending ? "Opening the race…" : <>Start the race<Swords size={16} /></>}</button>
+      <button disabled={pending} className="btn !px-6 !py-3 text-base disabled:opacity-50">{pending ? "Opening the race…" : <>Start the race<Swords size={16} /></>}</button>
     </form>
   );
 }
