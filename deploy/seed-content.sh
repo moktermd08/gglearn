@@ -8,10 +8,14 @@
 #
 # Locally: DIR=$PWD DRY=1 bash deploy/seed-content.sh
 #
-# Order: curriculum (brands, tracks) -> AI tracks -> knowledge items and questions -> structure -> career ladders ->
-# customer content. Customer questions are imported as "review"; nothing customer-facing goes live until an admin
-# approves it at /admin/review/<track>. The legacy TrialTest and questions-repo imports are NOT part of this: they
-# need folders that only exist on the author's machine.
+# Order: curriculum (brands, tracks) -> AI tracks -> knowledge items and questions -> structure -> career ladders
+# (plus any steps added to existing ladders) -> customer content -> company content (brand, gglink, guru).
+# Customer and company questions are imported as "review"; nothing goes live until an admin approves it at
+# /admin/review/<track>. Approving a role track enrols everyone it applies to, so check the facts first.
+# Note that "seed:ai" publishes the AI technology tracks (including facebook-marketing-titan, lead-generation-titan and
+# claude-chatgpt-everyday-titan) immediately: those questions are generated, not held for review.
+# The legacy TrialTest and questions-repo imports are NOT part of this: they need folders that only exist on the
+# author's machine.
 set -euo pipefail
 DIR="${DIR:-/var/www/gglearn.gglink.co.uk}"
 cd "$DIR"
@@ -63,7 +67,14 @@ run import:knowledge -- content/products/*.json
 run import:knowledge -- content/tools/*.json
 run seed:structure
 run seed:careers
+# adds only steps that are missing from ladders that already exist (never changes or removes one)
+run seed:careers -- --add-steps
 run import:knowledge -- content/customer/*.json
+# company content: skipped quietly if a folder has no files
+for d in content/brand content/gglink content/guru; do
+  files=("$d"/*.json)
+  if [ ${#files[@]} -gt 0 ]; then run import:knowledge -- "${files[@]}"; else echo "(nothing in $d)"; fi
+done
 
 echo
 echo "after:  $(counts "$TARGET")"
