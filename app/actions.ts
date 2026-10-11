@@ -15,6 +15,7 @@ import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/leve
 import { completeQuest } from "@/lib/stats";
 import { hiddenTrackIds } from "@/lib/tracks";
 import { drillCompleted, drillQuestion, noteDrillAnswer } from "@/lib/drill";
+import { DYNAMIC_PER_RUN, drawDynamic } from "@/lib/dynamic/store";
 import { claimPendingInvites } from "@/lib/contests";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 
@@ -140,17 +141,22 @@ export async function startRun(fd: FormData) {
     .where(and(eq(runs.userId, u.id), eq(runs.trackId, trackId), eq(runs.level, level), sql`${runs.finishedAt} is null`)).get();
   if (open) redirect(`/run/${open.id}`);
 
-  // a fresh random draw each run, favouring questions this person has not answered correctly before
-  const picked = db.select({ id: questions.id }).from(questions)
+  const track = db.select().from(tracks).where(eq(tracks.id, trackId)).get();
+  if (!track) return;
+  // stored questions: a fresh random draw each run, favouring ones this person has not answered correctly before
+  const pool = db.select({ id: questions.id }).from(questions)
     .where(and(eq(questions.trackId, trackId), eq(questions.level, level), eq(questions.status, "active")))
     .orderBy(sql`
       (select count(*) from ${answers} a join ${runs} r on r.id = a.run_id
         where a.question_id = ${questions.id} and r.user_id = ${u.id} and a.score >= 0.8) asc, random()`)
-    .limit(QUESTIONS_PER_RUN).all();
+    .limit(QUESTIONS_PER_RUN).all().map((q) => q.id);
+  // generated questions: new values every time and never repeated for this person, so there is nothing to memorise
+  const fresh = drawDynamic(u.id, track, level, Math.min(QUESTIONS_PER_RUN, Math.max(DYNAMIC_PER_RUN, QUESTIONS_PER_RUN - pool.length)));
+  const picked = [...fresh, ...pool.slice(0, QUESTIONS_PER_RUN - fresh.length)].sort(() => Math.random() - 0.5);
   if (!picked.length) return;
 
   const run = db.insert(runs).values({ userId: u.id, trackId, level }).returning().get();
-  db.insert(answers).values(picked.map((q) => ({ runId: run.id, questionId: q.id }))).run();
+  db.insert(answers).values(picked.map((questionId) => ({ runId: run.id, questionId }))).run();
   redirect(`/run/${run.id}`);
 }
 

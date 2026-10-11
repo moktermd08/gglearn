@@ -13,6 +13,9 @@
     "seed:curriculum": "tsx --env-file=.env.local scripts/seed-curriculum.ts",
     "merge:legacy": "tsx --env-file=.env.local scripts/merge-legacy.ts",
     "import:questions": "tsx --env-file=.env.local scripts/import-questions.ts",
+    "check:dynamic": "tsx scripts/dynamic-check.ts",
+    "coverage": "tsx scripts/coverage.ts",
+    "generate:bank": "tsx --env-file=.env.local scripts/generate-bank.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

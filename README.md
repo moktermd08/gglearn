@@ -34,6 +34,14 @@ npm run dev
 - **Legacy bank**: `npm run seed` imports `../trialtest.ai/database/data` (override with `LEGACY_DIR`) as the
   "Tech Foundations" brand, mapping each file's level band across the 20 levels.
 
+## Dynamic questions (never the same exam twice)
+- `lib/dynamic/` holds ~70 question *families*: seeded generators that build a fresh multiple-choice question every time (new numbers, code, names, tables, snippets) and work out the right answer in code. Each level exam draws 7 of its 10 questions from them (`DYNAMIC_PER_RUN` in `lib/dynamic/store.ts`; the rest come from the stored bank), and a learner is never shown the same generated prompt twice on a track.
+- `lib/dynamic/tags.ts` maps each track to families (the first tag is the track's own subject and is drawn about twice as often). A track with no tags uses stored questions only.
+- A generated question is saved as a one-off snapshot row (`source = dynamic`, `status = generated`), so grading, the review page and certificates work unchanged. These rows never enter the stored pools, drills or placement.
+- `npm run check:dynamic [familyPrefix] [samples]` re-derives answers by really running node, python, php, sqlite, git, npm semver and the TypeScript compiler, and fails on any mismatch. Families without an executable oracle (CSS maths, REST, cloud/marketing maths, framework rules) are checked for structure only; review them by hand when you change them.
+- `npm run coverage [-- --min 100 --fail]` counts, for every track and level, stored questions plus distinct generatable prompts, and lists the levels still under 100.
+- Subjects that are company knowledge rather than computable (the `sdlc-*`, `gglink-*`, `moksy-*`... curriculum tracks) cannot be generated. `npm run generate:bank -- --track <slug>` authors them with Claude from the track's knowledge items, has a second blind pass audit every answer key, and saves them as `review` (add `--activate` to publish). It needs `ANTHROPIC_API_KEY`.
+
 ## Known gaps
 - Legacy bank is thin at levels 16–20 and has no brand-specific content. Real brand knowledge must be authored.
 - `git-extreme.json`, `google-cloud-expert.json`, `google-cloud-intermediate.json` are invalid JSON and were skipped.

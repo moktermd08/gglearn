@@ -66,8 +66,9 @@ export const questions = sqliteTable(
     weight: integer("weight").notNull().default(10),
     timeSec: integer("time_sec").notNull().default(60),
     knowledgeItemId: integer("knowledge_item_id").references(() => knowledgeItems.id),
-    source: text("source", { enum: ["legacy-trialtest", "authored", "ai", "questions-repo"] }).notNull().default("authored"),
-    status: text("status", { enum: ["active", "review", "retired"] }).notNull().default("active"),
+    source: text("source", { enum: ["legacy-trialtest", "authored", "ai", "questions-repo", "dynamic"] }).notNull().default("authored"),
+    // "generated" = a one-off snapshot of a dynamic question (lib/dynamic); never part of the stored pools
+    status: text("status", { enum: ["active", "review", "retired", "generated"] }).notNull().default("active"),
     version: integer("version").notNull().default(1),
     createdAt: integer("created_at").notNull().default(now),
   },
