@@ -1,4 +1,4 @@
-import { PageHero, PALETTE, StatTile } from "@/components/charts";
+import { Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
 import { checklistItems, db, enrollments, handovers, tracks, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
@@ -6,7 +6,7 @@ import { addHandover, offboard, toggleChecklist, updateScopes } from "@/app/acti
 import { catalog, scopeLabels, scopeOptions, scopesOf } from "@/lib/paths";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { ScopePicker } from "@/components/ScopePicker";
-import { CheckSquare, ClipboardList, NotebookPen, Plus, Save, Shield, ShieldCheck, Square, UserCheck, UserMinus, UserPlus, Users, UserCog, Mail } from "lucide-react";
+import { Building2, CheckSquare, ClipboardList, NotebookPen, Plus, Save, Shield, ShieldCheck, Square, UserCheck, UserMinus, UserPlus, Users, UserCog, Mail } from "lucide-react";
 import NewPerson from "./new-person";
 import InvitePerson from "./invite-person";
 import RoleForm from "./role-form";
@@ -41,13 +41,14 @@ export default async function People() {
         {tiles.map(({ Icon, label, value }, i) => <StatTile key={label} i={i} Icon={Icon} label={label} value={value} color={[PALETTE.emerald, PALETTE.rose, PALETTE.amber, PALETTE.sky][i]} />)}
       </div>
       <section className="space-y-2">
-        <h2 className="flex items-center gap-2 font-semibold"><Mail size={18} className="text-sky-300" />Invite someone</h2>
+        <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-sky-500/15 text-sky-300"><Mail size={17} /></span>Invite someone</h2>
         <InvitePerson options={options} roles={roles} />
       </section>
       <section className="space-y-2">
-        <h2 className="flex items-center gap-2 font-semibold"><UserPlus size={18} className="text-emerald-300" />Or create their account yourself</h2>
+        <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-emerald-500/15 text-emerald-300"><UserPlus size={17} /></span>Or create their account yourself</h2>
         <NewPerson options={options} roles={roles} />
       </section>
+      <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-500/15 text-indigo-300"><Users size={17} /></span>Everyone <span className="text-sm font-normal text-slate-400">{all.length}</span></h2>
       <ul className="space-y-4">
         {all.map((u, ui) => {
           const mine = items.filter((i) => i.userId === u.id);
@@ -59,7 +60,7 @@ export default async function People() {
           return (
             <li key={u.id} className={`card rise p-4 ${off ? "opacity-70" : ""}`} style={{ "--i": Math.min(ui, 10) } as React.CSSProperties}>
               <div className="flex items-center gap-3">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-lg font-extrabold text-[#fff]" style={{ background: `hsl(${(u.id * 47) % 360} 55% 40%)` }} aria-hidden>{u.name.trim().charAt(0).toUpperCase()}</div>
+                <Initials name={u.name} size={44} />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2 font-medium">{u.name}
                     {u.audience === "customer" && <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">customer</span>}
@@ -67,12 +68,12 @@ export default async function People() {
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${off ? "bg-rose-500/20 text-rose-300" : "bg-emerald-500/20 text-emerald-300"}`}>{off ? <UserMinus size={10} /> : <UserCheck size={10} />}{u.status}</span>
                   </div>
                   <div className="truncate text-sm text-slate-400">{u.email} · {u.jobRole}{u.audience === "staff" && u.status === "active" && hasNoRolePath(coverageFor(u.jobRole, cat)) && <span title={`Nothing is set up for the role "${u.jobRole}", so they only get company-wide learning. Change their role, or add learning for it.`} className="ml-2 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">no role learning</span>}</div>
-                  <div className="truncate text-xs text-slate-500">{labels.length ? labels.join(" · ") : "Not assigned to any company, brand or project yet"}</div>
+                  <div className="mt-1 flex flex-wrap gap-1.5 text-[11px]">{labels.length ? labels.map((l) => <span key={l} className="inline-flex items-center gap-1 rounded-full bg-black/5 px-2 py-0.5 text-slate-300"><Building2 size={10} />{l}</span>) : <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-amber-300">Not assigned to any company, brand or project yet</span>}</div>
                 </div>
                 {u.status === "active" && u.id !== me.id && (me.role === "admin" || u.role === "learner") && (
                   <form action={offboard}>
                     <input type="hidden" name="userId" value={u.id} />
-                    <button className="inline-flex items-center gap-1 rounded-lg bg-rose-500/15 px-3 py-1 text-sm font-semibold text-rose-300 transition hover:bg-rose-500/25"><UserMinus size={14} />Offboard (ends access now)</button>
+                    <button className="inline-flex items-center gap-1 rounded-lg bg-rose-500/15 px-3 py-1 text-sm font-semibold text-rose-300 transition hover:bg-rose-500/25"><UserMinus size={14} />Offboard</button>
                   </form>
                 )}
               </div>

@@ -2,7 +2,8 @@ import { desc, eq, sql } from "drizzle-orm";
 import { answers, db, questions, topicRequests, tracks } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { retireQuestion } from "@/app/actions";
-import { Donut, PageHero, PALETTE } from "@/components/charts";
+import { Donut, PageHero, PALETTE, StatTile } from "@/components/charts";
+import { SubjectArt } from "@/components/SubjectArt";
 import { AlertTriangle, BarChart3, Lightbulb, Database, MessageSquareText, PenLine, Archive, TrendingDown, TrendingUp, CheckCircle2, Clock } from "lucide-react";
 
 const MIN_ATTEMPTS = 5;
@@ -16,7 +17,7 @@ export default async function Admin() {
   const SHOWN = 60;
   const activeIds = sql`count(distinct case when ${questions.status} = 'active' then ${questions.id} end)`;
   const perTrack = db.select({
-    track: tracks.name,
+    track: tracks.name, slug: tracks.slug, kind: tracks.kind,
     total: sql<number>`${activeIds}`,
     authored: sql<number>`count(distinct case when ${questions.status} = 'active' and ${questions.source} = 'authored' then ${questions.id} end)`,
     attempts,
@@ -61,14 +62,8 @@ export default async function Admin() {
           </ul>
         </section>
       )}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {tiles.map(({ Icon, label, value, cls }, i) => (
-          <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
-            <Icon size={22} className={`mx-auto ${cls}`} />
-            <div className="mt-1 text-2xl font-extrabold">{value}</div>
-            <div className="text-[11px] uppercase tracking-wider text-slate-400">{label}</div>
-          </div>
-        ))}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-5 max-lg:[&>*:last-child:nth-child(odd)]:col-span-2">
+        {tiles.map(({ Icon, label, value }, i) => <StatTile key={label} i={i} Icon={Icon} label={label} value={value} color={[PALETTE.sky, PALETTE.amber, PALETTE.violet, PALETTE.emerald, flagged.length ? PALETTE.amber : PALETTE.slate][i]} />)}
       </div>
       <section className="card grid items-center gap-6 p-5 md:grid-cols-[auto_1fr]">
         <Donut size={150} sub="active" center={bank.active.toLocaleString("en-GB")} parts={[
@@ -121,7 +116,7 @@ export default async function Admin() {
             const auth = r.authored ?? 0;
             return (
               <li key={r.track} className="rise grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 px-4 py-2 sm:grid-cols-[14rem_minmax(0,1fr)_auto]" style={{ "--i": Math.min(i, 12) } as React.CSSProperties}>
-                <span className="truncate font-medium">{r.track}</span>
+                <span className="flex min-w-0 items-center gap-2.5"><SubjectArt slug={r.slug} name={r.track} kind={r.kind} size={28} /><span className="truncate font-medium">{r.track}</span></span>
                 <span className="order-3 col-span-2 flex h-2.5 overflow-hidden rounded-full bg-white/10 sm:order-none sm:col-span-1" title={`${auth} authored of ${r.total}`}>
                   <i className="grow block h-full bg-violet-400" style={{ width: `${(auth / maxTotal) * 100}%` }} />
                   <i className="grow block h-full bg-sky-400/60" style={{ width: `${((r.total - auth) / maxTotal) * 100}%` }} />
