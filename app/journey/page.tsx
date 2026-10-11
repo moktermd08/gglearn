@@ -1,4 +1,5 @@
-import { EmptyState, PageHero } from "@/components/charts";
+import { EmptyState, PageHero, PALETTE, Radar } from "@/components/charts";
+import { Ring } from "@/components/Ring";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { db, enrollments } from "@/lib/db";
@@ -24,6 +25,7 @@ function QuestionMix({ leg }: { leg: Leg }) {
     <section className="card p-5">
       <h2 className="mb-1 font-semibold">What you will be asked</h2>
       <p className="mb-3 text-xs text-slate-400">For {leg.title}, out of every 100 exam questions. A different role, or a higher level, shifts the mix.</p>
+      <div className="grid items-center gap-4 sm:grid-cols-[1fr_auto]">
       <ul className="space-y-1.5">
         {DOMAIN_KEYS.filter((d) => mix[d] > 0).sort((a, b) => mix[b] - mix[a]).map((d) => (
           <li key={d} className="flex items-center gap-2 text-sm">
@@ -33,6 +35,8 @@ function QuestionMix({ leg }: { leg: Leg }) {
           </li>
         ))}
       </ul>
+      <div className="mx-auto"><Radar size={230} color={PALETTE.violet} axes={DOMAIN_KEYS.filter((d) => mix[d] > 0).map((d) => ({ label: domainLabel(d), value: mix[d] / Math.max(1, ...DOMAIN_KEYS.map((k) => mix[k])) }))} /></div>
+      </div>
     </section>
   );
 }
@@ -111,13 +115,12 @@ export default async function Journey({ searchParams }: { searchParams: Promise<
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <div>
-        <h1 className="flex items-center gap-2 text-3xl font-extrabold"><Mountain className="shrink-0 text-violet-300" />My career <span className="gradient-text">journey</span></h1>
-        <p className="mt-1 text-slate-300">Say where you want to get to and by when. We map the route from your current role, set the challenges in order and tell you honestly whether the date is realistic.</p>
-      </div>
+      <PageHero Icon={Mountain} tone="violet" title="My career journey" sub="Say where you want to get to and by when. We map the route from your current role, set the challenges in order and tell you honestly whether the date is realistic.">
+        {goal && !reached && pace && <Ring pct={j.counted ? j.met / j.counted : 0} label={`${j.met}/${j.counted}`} sub="steps" size={92} color={pace.status === "behind" || pace.status === "past-date" ? "#f59e0b" : "#10b981"} />}
+      </PageHero>
 
-      <section className="card flex flex-wrap items-center gap-3 p-4">
-        <MapPin size={20} className="shrink-0 text-sky-300" />
+      <section className="card flex flex-wrap items-center gap-3 border-l-4 !border-l-sky-400 p-4">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-sky-500/15"><MapPin size={20} className="text-sky-300" /></span>
         <div className="flex-1">
           <div className="text-xs text-slate-400">You are here</div>
           <div className="font-semibold">{here.title} <span className="text-xs font-normal text-slate-400">{roleLabel(here.role)} · {here.code}</span></div>
@@ -179,9 +182,10 @@ export default async function Journey({ searchParams }: { searchParams: Promise<
       {legs.length > 0 && (
         <section className="space-y-3">
           <h2 className="font-semibold">The route <span className="text-xs font-normal text-slate-500">{legs.length} step{legs.length === 1 ? "" : "s"} from {here.title}</span></h2>
-          <ol className="space-y-3">
+          <ol className="relative space-y-3 pl-10 before:absolute before:bottom-4 before:left-[15px] before:top-4 before:w-0.5 before:bg-gradient-to-b before:from-violet-300 before:to-pink-300">
             {legs.map((l, i) => (
-              <li key={`${l.role}|${l.level}`} className={`card p-4 ${l.done && l.counted > 0 ? "border-emerald-400/40" : ""}`}>
+              <li key={`${l.role}|${l.level}`} className={`card relative p-4 ${l.done && l.counted > 0 ? "border-emerald-400/40" : ""}`}>
+                <span className={`absolute -left-10 top-4 grid h-8 w-8 place-items-center rounded-full border-2 text-xs font-extrabold ${l.done && l.counted > 0 ? "border-emerald-400 bg-emerald-500 text-[#fff]" : "border-violet-300 bg-[#fff] text-violet-300"}`}>{l.done && l.counted > 0 ? <CheckCircle2 size={16} /> : i + 1}</span>
                 {l.crossing && (
                   <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-pink-300"><Repeat size={13} />A new path begins: you move from {roleLabel(legs[i - 1]?.role ?? here.role)} to {roleLabel(l.role)}. This is a change of role, agreed with your manager.</p>
                 )}
@@ -217,6 +221,7 @@ function StepRow({ s, leg, enrolled }: { s: Leg["steps"][number]; leg: Leg; enro
     <li className="flex flex-wrap items-center gap-2 text-sm">
       {s.met ? <CheckCircle2 size={16} className="text-emerald-400" /> : s.countable ? <Square size={16} className="text-slate-500" /> : <CircleDashed size={16} className="text-slate-600" />}
       <span className={s.met ? "text-slate-500" : s.countable ? "text-slate-200" : "text-slate-500"}>{s.track.name}</span>
+      {s.countable && <span className="h-1.5 w-16 overflow-hidden rounded-full bg-black/10" aria-hidden><i className="block h-full rounded-full bg-violet-400" style={{ width: `${(Math.min(s.passed, s.need) / s.need) * 100}%` }} /></span>}
       <span className="text-xs text-slate-500">{s.countable ? `level ${Math.min(s.passed, s.need)}/${s.need}` : "coming soon"}</span>
       {s.open && (enrolled
         ? <Link href={`/tracks/${s.track.slug}`} className="text-xs text-sky-300 underline">Continue</Link>

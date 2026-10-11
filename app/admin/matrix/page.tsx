@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/charts";
+import { Initials, PageHero } from "@/components/charts";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { requireManager } from "@/lib/auth";
@@ -9,10 +9,10 @@ import { Grid3x3 } from "lucide-react";
 
 export const metadata = { title: "Role and pillar matrix — gglearn" };
 
-const CELL: Record<Stance, { mark: string; cls: string }> = {
-  required: { mark: "●", cls: "text-emerald-300" },
-  recommended: { mark: "○", cls: "text-sky-300" },
-  optional: { mark: "·", cls: "text-slate-600" },
+const DOT: Record<Stance, string> = {
+  required: "bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,.18)]",
+  recommended: "border-2 border-sky-500 bg-sky-500/10",
+  optional: "bg-black/10 !h-1.5 !w-1.5",
 };
 
 /** Which pillars each role must pass, is advised to learn, or may skip. Read-only: the data is content/blueprints/pillars.json. */
@@ -26,11 +26,13 @@ export default async function Matrix() {
 
   return (
     <div className="space-y-4">
-      <PageHero Icon={Grid3x3} title="Role and pillar matrix" sub={<>
-          <span className={CELL.required.cls}>● required</span> becomes mandatory learning for that role (only for tracks with enough questions; a track you set by hand on{" "}
-          <Link href="/admin/paths" className="underline">What is required</Link> is left alone). <span className={CELL.recommended.cls}>○ recommended</span> shapes a new joiner&apos;s starter plan.
-          The number under each pillar is how many of its tracks can be examined today. Edit <code>content/blueprints/pillars.json</code>.
-        </>} />
+      <PageHero Icon={Grid3x3} title="Role and pillar matrix" sub={<>Which pillars each role must pass, is advised to learn, or may skip. The number under each pillar is how many of its tracks can be examined today. A track you set by hand on{" "}
+          <Link href="/admin/paths" className="underline">What is required</Link> is left alone. Edit <code>content/blueprints/pillars.json</code>.</>} />
+      <ul className="flex flex-wrap gap-4 text-sm text-slate-300" aria-label="Legend">
+        <li className="flex items-center gap-2"><i className={`inline-block h-3 w-3 rounded-full ${DOT.required}`} /><b>Required</b> becomes mandatory learning for the role</li>
+        <li className="flex items-center gap-2"><i className={`inline-block h-3 w-3 rounded-full ${DOT.recommended}`} /><b>Recommended</b> shapes a new joiner&apos;s starter plan</li>
+        <li className="flex items-center gap-2"><i className={`inline-block h-1.5 w-1.5 rounded-full ${DOT.optional.split(" ")[0]}`} />Optional</li>
+      </ul>
       <div className="card overflow-x-auto p-3">
         <table className="w-full text-sm">
           <thead>
@@ -43,11 +45,11 @@ export default async function Matrix() {
           </thead>
           <tbody>
             {roles.map((r) => (
-              <tr key={r} className="border-t border-white/5">
-                <td className="sticky left-0 whitespace-nowrap bg-[#fff] py-1 pr-3">{roleLabel(r)}</td>
+              <tr key={r} className="border-t border-black/5 transition hover:bg-indigo-500/5">
+                <td className="sticky left-0 whitespace-nowrap bg-[#fff] py-1 pr-3 font-medium"><span className="inline-flex items-center gap-2"><Initials name={roleLabel(r)} size={22} />{roleLabel(r)}</span></td>
                 {pillars.map((p) => {
                   const s = pillarStance(r, p);
-                  return <td key={p} className={`px-1 text-center ${CELL[s].cls}`} title={`${roleLabel(r)} · ${p}: ${s}`}>{CELL[s].mark}</td>;
+                  return <td key={p} className="px-1 py-1.5 text-center" title={`${roleLabel(r)} · ${p}: ${s}`}><i className={`inline-block h-3 w-3 rounded-full align-middle ${DOT[s]}`}><span className="sr-only">{s}</span></i></td>;
                 })}
               </tr>
             ))}

@@ -177,3 +177,42 @@ export function StackBar({ parts }: { parts: { label: string; value: number; col
     </div>
   );
 }
+
+/** Round monogram for a person, with a stable colour per name. */
+export function Initials({ name, size = 36 }: { name: string; size?: number }) {
+  const hue = [...name].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) % 360, 7);
+  const letters = name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("");
+  return <span className="grid shrink-0 place-items-center rounded-full font-extrabold text-[#fff]" style={{ width: size, height: size, fontSize: size * 0.38, background: `linear-gradient(135deg, hsl(${hue} 70% 52%), hsl(${(hue + 40) % 360} 70% 42%))` }} aria-hidden>{letters}</span>;
+}
+
+/** A row of numbered steps joined by arrows, e.g. a career ladder. `at` highlights the current step. */
+export function Chain({ steps, at, color = PALETTE.violet }: { steps: string[]; at?: number; color?: string }) {
+  return (
+    <ol className="flex flex-wrap items-center gap-1.5 text-xs">
+      {steps.map((s, i) => (
+        <li key={i} className="flex items-center gap-1.5">
+          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-semibold ${i === at ? "text-[#fff]" : "text-slate-300"}`} style={i === at ? { background: color, borderColor: color } : { borderColor: "rgba(20,22,31,.12)", background: "#fff" }}>
+            <span className="grid h-4 w-4 place-items-center rounded-full text-[9px] font-extrabold" style={i === at ? { background: "rgba(255,255,255,.3)" } : { background: `${color}22`, color }}>{i + 1}</span>{s}
+          </span>
+          {i < steps.length - 1 && <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden className="text-slate-500"><path d="M2 6h8M7 3l3 3-3 3" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+/** The 20-level scale as five tier-coloured blocks; levels in [lo, hi] are lit, the rest dimmed. */
+export function LevelScale({ lo, hi, you }: { lo: number; hi: number; you?: number }) {
+  return (
+    <div role="img" aria-label={`Levels ${lo} to ${hi} of 20`}>
+      <div className="flex gap-0.5">
+        {Array.from({ length: 20 }, (_, n) => {
+          const lvl = n + 1, hue = [200, 150, 45, 280, 350][Math.min(4, Math.floor(n / 4))];
+          const lit = lvl > lo && lvl <= hi, passed = lvl <= lo;
+          return <i key={n} className="block h-5 flex-1 rounded-sm transition-all" style={{ background: `hsl(${hue} 75% 55%)`, opacity: lit ? 1 : passed ? 0.45 : 0.14, transform: lit ? "scaleY(1.25)" : undefined, outline: you === lvl ? "2px solid #14161f" : undefined }} />;
+        })}
+      </div>
+      <div className="mt-1.5 flex justify-between text-[10px] text-slate-500"><span>Novice</span><span>Adept</span><span>Expert</span><span>Master</span><span>Titan</span></div>
+    </div>
+  );
+}

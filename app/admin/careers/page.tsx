@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/charts";
+import { Chain, Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import { eq } from "drizzle-orm";
 import { db, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
@@ -6,7 +6,7 @@ import { addCareerLevel, addCareerStep, promote, removeCareerStep, saveCareerLev
 import { careerFor, ladderFor, rolesWithLadders } from "@/lib/careers";
 import { catalog } from "@/lib/paths";
 import { MAX_LEVEL } from "@/lib/levels";
-import { ArrowUpRight, CircleDashed, Plus, Save, Trash2, TrendingUp } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, CircleDashed, Plus, Save, Trash2, TrendingUp } from "lucide-react";
 
 export const metadata = { title: "Careers — gglearn" };
 
@@ -28,12 +28,19 @@ export default async function Careers() {
     <div className="space-y-8">
       <PageHero Icon={TrendingUp} tone="violet" title="Careers" sub="Promotion ladders for every role, and who is ready to move up." />
 
+      <div className="grid grid-cols-3 gap-3">
+        <StatTile i={0} Icon={TrendingUp} label="Ladders" value={roles.length} color={PALETTE.violet} />
+        <StatTile i={1} Icon={CheckCircle2} label="Ready for review" value={ready.length} color={PALETTE.emerald} />
+        <StatTile i={2} Icon={CircleDashed} label="Staff tracked" value={rows.length} color={PALETTE.sky} />
+      </div>
+
       <section className="space-y-3">
         <h2 className="font-semibold">People <span className="text-xs font-normal text-slate-500">{ready.length} ready for promotion review</span></h2>
         <ul className="space-y-3">
           {rows.map(({ p, c }) => (
             <li key={p.id} className={`card p-4 ${c.ready ? "border-emerald-400/40" : ""}`}>
               <div className="flex flex-wrap items-center gap-3">
+                <Initials name={p.name} size={40} />
                 <div className="min-w-0 flex-1">
                   <div className="font-medium">{p.name} <span className="text-xs text-slate-500">{c.role}</span></div>
                   <div className="text-sm text-slate-400">{c.current.title}{c.next && <> <ArrowUpRight size={12} className="inline" /> {c.next.title}</>}</div>
@@ -68,7 +75,7 @@ export default async function Careers() {
           const ladder = ladderFor(role, cat);
           return (
             <details key={role} className="card p-4">
-              <summary className="cursor-pointer font-semibold capitalize">{role} <span className="text-xs font-normal normal-case text-slate-500">{ladder.map((r) => r.title).join(" → ")}</span></summary>
+              <summary className="cursor-pointer space-y-2 font-semibold capitalize"><span className="text-lg">{role}</span><div className="font-normal normal-case"><Chain steps={ladder.map((r) => r.title)} /></div></summary>
               <ol className="mt-3 space-y-4">
                 {ladder.map((r) => (
                   <li key={r.id} className="space-y-2">

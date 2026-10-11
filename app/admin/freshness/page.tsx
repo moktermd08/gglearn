@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/charts";
+import { EmptyState, PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { brands, db, knowledgeItems, tracks } from "@/lib/db";
@@ -21,6 +21,8 @@ export default async function Freshness({ searchParams }: { searchParams: Promis
     ? db.select({ t: tracks, b: brands }).from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).all().filter((r) => r.t.slug === sp.track)[0]
     : undefined;
   const items = picker ? db.select().from(knowledgeItems).where(eq(knowledgeItems.trackId, picker.t.id)).all() : [];
+  const overdueN = report.filter((r) => r.change.material && r.overdue && r.affected.some((a) => !a.read)).length;
+  const currentN = report.filter((r) => r.change.material && r.affected.every((a) => a.read)).length;
   const input = "rounded border border-white/20 bg-[#fff] px-2 py-1 text-slate-900";
 
   return (
@@ -29,6 +31,12 @@ export default async function Freshness({ searchParams }: { searchParams: Promis
           When company knowledge changes (a brand moto, tone, policy), people enrolled in that track are asked to read it within {REVIEW_DAYS} days.
           People who joined after the change are not asked.
         </>} />
+
+      <div className="grid grid-cols-3 gap-3">
+        <StatTile i={0} Icon={Newspaper} label="Changes recorded" value={report.length} color={PALETTE.amber} />
+        <StatTile i={1} Icon={CheckCircle2} label="Everyone current" value={currentN} color={PALETTE.emerald} />
+        <StatTile i={2} Icon={AlertTriangle} label="Overdue" value={overdueN} color={PALETTE.rose} />
+      </div>
 
       {me.role === "admin" && (
         <section className="card space-y-3 p-4">
@@ -55,12 +63,12 @@ export default async function Freshness({ searchParams }: { searchParams: Promis
         </section>
       )}
 
-      {report.length === 0 && <p className="text-sm text-slate-400">No changes recorded yet.</p>}
+      {report.length === 0 && <EmptyState Icon={Newspaper} tone="amber" title="No changes recorded yet">When company knowledge changes, record it here and everyone enrolled is asked to read it.</EmptyState>}
       <ul className="space-y-3">
         {report.map((r) => {
           const read = r.affected.filter((a) => a.read).length, waiting = r.affected.filter((a) => !a.read);
           return (
-            <li key={r.change.id} className="card space-y-2 p-4">
+            <li key={r.change.id} className={`card space-y-2 border-l-4 p-4 ${!r.change.material ? "!border-l-slate-300" : r.affected.every((a) => a.read) ? "!border-l-emerald-400" : r.overdue ? "!border-l-rose-400" : "!border-l-sky-400"}`}>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-medium">{r.change.title}</span>
                 <span className="text-xs text-slate-500">{r.brand} · {r.track.name} · v{r.change.version} · {date(r.change.createdAt)}{r.by && ` · by ${r.by}`}</span>

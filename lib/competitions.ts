@@ -165,7 +165,7 @@ export function modeLabel(humans: number, bots: number): string {
   return "Group race with bots";
 }
 
-export type Card = { c: Competition; trackName: string; humans: number; bots: number; state: State; invited: boolean };
+export type Card = { c: Competition; trackName: string; track: { slug: string; kind: string }; humans: number; bots: number; state: State; invited: boolean };
 
 /** Contests the viewer may see in a list: public ones plus anything they created, joined or were invited to. */
 export function listFor(viewer: Viewer, opts: { mineOnly?: boolean } = {}): Card[] {
@@ -173,16 +173,16 @@ export function listFor(viewer: Viewer, opts: { mineOnly?: boolean } = {}): Card
     ? new Set(db.select({ id: competitionMembers.competitionId }).from(competitionMembers)
         .where(and(eq(competitionMembers.userId, viewer.id), inArray(competitionMembers.status, ["invited", "joined"]))).all().map((r) => r.id))
     : new Set<number>();
-  const rows = db.select({ c: competitions, trackName: tracks.name }).from(competitions)
+  const rows = db.select({ c: competitions, trackName: tracks.name, tSlug: tracks.slug, tKind: tracks.kind }).from(competitions)
     .innerJoin(tracks, eq(tracks.id, competitions.trackId)).orderBy(desc(competitions.createdAt)).limit(300).all()
     .filter(({ c }) => (viewer && (c.createdBy === viewer.id || mineIds.has(c.id))) || (!opts.mineOnly && c.visibility === "public"));
   if (!rows.length) return [];
   const members = db.select().from(competitionMembers).where(inArray(competitionMembers.competitionId, rows.map((r) => r.c.id))).all();
   const t = now();
-  return rows.map(({ c, trackName }) => {
+  return rows.map(({ c, trackName, tSlug, tKind }) => {
     const ms = members.filter((m) => m.competitionId === c.id);
     return {
-      c, trackName, state: stateOf(c, t),
+      c, trackName, track: { slug: tSlug, kind: tKind }, state: stateOf(c, t),
       humans: ms.filter((m) => m.kind === "human" && m.status === "joined").length,
       bots: ms.filter((m) => m.kind === "bot").length,
       invited: !!viewer && ms.some((m) => m.userId === viewer.id && m.status === "invited"),

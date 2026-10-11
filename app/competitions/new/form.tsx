@@ -17,9 +17,9 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
   const perDay = (goal / days).toFixed(2);
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="card space-y-6 p-6">
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 font-bold"><Target size={18} className="text-pink-300" />1. Topic and goal</h2>
+    <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="space-y-5">
+      <section className="card space-y-3 p-5">
+        <h2 className="flex items-center gap-3 text-lg font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-pink-500/15"><Target size={18} className="text-pink-300" /></span><span><span className="mr-1 text-slate-400">1.</span>Topic and goal</span></h2>
         <div><label className={label} htmlFor="title">Name your contest</label>
           <input id="title" name="title" required minLength={3} maxLength={80} placeholder="e.g. Python sprint: team vs the bots" className={input} /></div>
         <div><label className={label} htmlFor="trackId">Topic (hard skill or soft skill)</label>
@@ -39,7 +39,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
               {[3, 7, 14, 30, 60, 90].map((d) => <option key={d} value={d}>{d} days</option>)}
             </select></div>
         </div>
-        <div className="flex items-center gap-3 text-xs text-slate-400" aria-hidden>
+        <div className="flex items-center gap-3 rounded-xl bg-amber-500/10 p-3 text-xs text-slate-300" aria-hidden>
           <Timer size={16} className="shrink-0 text-amber-300" />
           <div className="bar flex-1"><i style={{ width: `${Math.min(100, (Number(perDay) / 1) * 100)}%` }} /></div>
           <span>{perDay} levels / day</span>
@@ -52,12 +52,12 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
           <textarea id="description" name="description" maxLength={500} rows={2} className={input} /></div>
       </section>
 
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 font-bold"><Bot size={18} className="text-violet-300" />2. Opponents</h2>
+      <section className="card space-y-3 p-5">
+        <h2 className="flex items-center gap-3 text-lg font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-violet-500/15"><Bot size={18} className="text-violet-300" /></span><span><span className="mr-1 text-slate-400">2.</span>Opponents</span></h2>
         <p className="text-sm text-slate-300">Race people, bots, or both. Bots are <b>simulated</b>: they follow a published daily schedule and do not really study. Each gets its own look and style.</p>
         <div className="grid gap-3 sm:grid-cols-3">
           {(Object.keys(BOT_TIERS) as (keyof typeof BOT_TIERS)[]).map((k) => (
-            <div key={k}><label className={label} htmlFor={k}>{BOT_TIERS[k].label} bots</label>
+            <div key={k} className="rounded-xl border border-black/10 p-3"><label className={`${label} mb-1 flex items-center gap-1.5`} htmlFor={k}><Bot size={15} className="text-violet-300" />{BOT_TIERS[k].label} bots</label>
               <input id={k} name={k} type="number" min={0} max={3} defaultValue={k === "steady" ? 1 : 0} className={input} />
               <span className="text-xs text-slate-400">{BOT_TIERS[k].pace} XP/day · {BOT_TIERS[k].blurb}</span></div>
           ))}
@@ -68,12 +68,17 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
           <input id="maxHumans" name="maxHumans" type="number" min={2} max={50} defaultValue={20} className={`${input} max-w-32`} /></div>
       </section>
 
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 font-bold"><Eye size={18} className="text-sky-300" />3. Who can watch</h2>
-        <label className="flex items-start gap-2"><input type="radio" name="visibility" value="private" checked={visibility === "private"} onChange={() => setVisibility("private")} className="mt-1" />
-          <span><b className="inline-flex items-center gap-1"><Lock size={14} />Private</b> · only people you invite can see or join it.</span></label>
-        <label className="flex items-start gap-2"><input type="radio" name="visibility" value="public" checked={visibility === "public"} onChange={() => setVisibility("public")} className="mt-1" />
-          <span><b className="inline-flex items-center gap-1"><Globe size={14} />Public</b> · anyone with the link can watch the live leaderboard, without signing in.</span></label>
+      <section className="card space-y-3 p-5">
+        <h2 className="flex items-center gap-3 text-lg font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-sky-500/15"><Eye size={18} className="text-sky-300" /></span><span><span className="mr-1 text-slate-400">3.</span>Who can watch</span></h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {([["private", Lock, "Private", "Only people you invite can see or join it.", "bg-emerald-500/15 text-emerald-300"], ["public", Globe, "Public", "Anyone with the link can watch the live leaderboard, without signing in.", "bg-sky-500/15 text-sky-300"]] as const).map(([v, Icon, name, text, col]) => (
+            <label key={v} className={`cursor-pointer rounded-xl border p-4 transition ${visibility === v ? "border-indigo-400 bg-indigo-500/10 shadow-sm" : "border-black/10 hover:border-black/25"}`}>
+              <input type="radio" name="visibility" value={v} checked={visibility === v} onChange={() => setVisibility(v)} className="sr-only" />
+              <span className={`mb-2 grid h-10 w-10 place-items-center rounded-xl ${col}`}><Icon size={20} /></span>
+              <b className="block">{name}</b><span className="text-sm text-slate-400">{text}</span>
+            </label>
+          ))}
+        </div>
         {visibility === "public" && (
           <div className="ml-6 space-y-2 text-sm">
             <label className="flex items-center gap-2"><input type="checkbox" name="openJoin" /> Let any signed-in learner join (otherwise invited people only)</label>
@@ -83,8 +88,8 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
         )}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 font-bold"><Coins size={18} className="text-amber-300" />4. Reward</h2>
+      <section className="card space-y-3 p-5">
+        <h2 className="flex items-center gap-3 text-lg font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-amber-500/15"><Coins size={18} className="text-amber-300" /></span><span><span className="mr-1 text-slate-400">4.</span>Reward</span></h2>
         <p className="text-sm text-slate-300">Everyone who reaches the goal can claim a certificate. Optionally add a cash prize for the first to get there. gglearn does not hold or send money: you pay winners yourself and record it. Only people, not bots, can win.</p>
         <div className="grid gap-3 sm:grid-cols-4">
           <div><label className={label} htmlFor="prizeAmount">Prize pool (optional)</label><input id="prizeAmount" name="prizeAmount" inputMode="decimal" placeholder="0" className={input} /></div>
@@ -97,7 +102,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
       </section>
 
       {state?.error && <p role="alert" className="slide-in flex items-center gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} />{state.error}</p>}
-      <button disabled={pending} className="btn disabled:opacity-50">{pending ? "Creating…" : <>Create contest<Swords size={16} /></>}</button>
+      <button disabled={pending} className="btn !px-6 !py-3 text-base disabled:opacity-50">{pending ? "Creating…" : <>Create contest<Swords size={16} /></>}</button>
     </form>
   );
 }
