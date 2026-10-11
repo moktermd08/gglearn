@@ -1,21 +1,18 @@
 import { and, between, eq, sql } from "drizzle-orm";
 import { answers, db, questions, roleExamAnswers, roleExams, runs, users } from "@/lib/db";
-import { DOMAIN_KEYS, apportion, domainOf, examPlan, type Domain, type Mix } from "@/lib/blueprint";
+import { DOMAIN_KEYS, apportion, domainOf, type Domain, type Mix } from "@/lib/blueprint";
 import { careerFor } from "@/lib/careers";
 import { catalog, inScope, scopesOf } from "@/lib/paths";
 import { drawDynamic } from "@/lib/dynamic/store";
 import { grade } from "@/lib/grading";
 import { PASS_MARK } from "@/lib/levels";
-import { ROLE_EXAM_MIN } from "@/lib/roleCheck";
+import { LEVEL_SPREAD, ROLE_EXAM_MIN, ROLE_EXAM_SIZE, planDomains } from "@/lib/roleCheck";
 
-export { ROLE_EXAM_MIN };
+export { ROLE_EXAM_MIN, ROLE_EXAM_SIZE };
 
 type Person = typeof users.$inferSelect;
 type CatalogTrack = ReturnType<typeof catalog>[number];
 
-export const ROLE_EXAM_SIZE = 20;
-/** How far below a step's level a question may come from, so the check is not only the hardest material. */
-const LEVEL_SPREAD = 2;
 const FRESH_SHARE = 0.7;
 
 export type Source = { track: CatalogTrack; level: number; domain: Domain };
@@ -54,12 +51,7 @@ export function roleExamPlan(person: Person, cat = catalog()): RoleExamPlan | nu
   const sources = [...need.values()];
   if (!sources.length) return null;
 
-  const wanted = examPlan(c.role, rung, c.ladder.length, ROLE_EXAM_SIZE);
-  const have = DOMAIN_KEYS.filter((d) => sources.some((s) => s.domain === d));
-  // domains with nothing to draw from hand their share to the rest, in proportion to what those were asked for
-  const lost = DOMAIN_KEYS.filter((d) => !have.includes(d)).reduce((a, d) => a + wanted[d], 0);
-  const extra = apportion(lost, have.map((d) => wanted[d] || 1));
-  const planned = Object.fromEntries(DOMAIN_KEYS.map((d) => [d, have.includes(d) ? wanted[d] + extra[have.indexOf(d)] : 0])) as Mix;
+  const { wanted, planned } = planDomains(c.role, rung, c.ladder.length, sources.map((s) => ({ trackId: s.track.id, slug: s.track.slug, domain: s.domain, level: s.level })));
   return { role: c.role, rung, rungs: c.ladder.length, title: target.title, wanted, planned, sources };
 }
 
@@ -91,6 +83,12 @@ export function drawRoleExam(userId: number, plan: RoleExamPlan): { id: number; 
       short = share[i] + short - ids.length; // what this track could not give, the next one tries to
       for (const id of ids) { taken.add(id); out.push({ id, domain: d }); }
     });
+    // a shortfall only carries forward, so a short last track leaves a gap: let every track in the domain try again for what is missing
+    let missing = plan.planned[d] - out.filter((x) => x.domain === d).length;
+    for (const s of src) {
+      if (missing <= 0) break;
+      for (const id of drawFrom(userId, s, missing, taken)) { taken.add(id); out.push({ id, domain: d }); missing--; }
+    }
   }
   return out;
 }

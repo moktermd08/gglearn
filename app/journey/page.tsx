@@ -7,7 +7,7 @@ import { ladderFor } from "@/lib/careers";
 import { dateBounds, journeyFor, levelCode, roleLabel, targetsFor, type Leg } from "@/lib/journey";
 import { clearCareerGoal, enroll, setCareerGoal, startRoleExam } from "@/app/actions";
 import { ROLE_EXAM_MIN, ROLE_EXAM_SIZE, latestRoleExam, roleExamPlan } from "@/lib/roleExam";
-import { ROLE_CHECK_VALID_DAYS } from "@/lib/roleCheck";
+import { ROLE_CHECK_VALID_DAYS, roleExamsAvailable } from "@/lib/roleCheck";
 import { careerFor } from "@/lib/careers";
 import { AlertTriangle, ArrowRight, CalendarClock, CheckCircle2, CircleDashed, Flag, MapPin, Mountain, Repeat, Square, Target } from "lucide-react";
 
@@ -41,6 +41,7 @@ function QuestionMix({ leg }: { leg: Leg }) {
 
 /** The role check: one exam across the tracks of the person's ladder in the proportions of their role's question mix. */
 function RoleCheck({ user, unavailable }: { user: Awaited<ReturnType<typeof requireUser>>; unavailable: boolean }) {
+  if (!roleExamsAvailable()) return null; // the role check tables are not in this database yet (npm run db:push)
   const plan = roleExamPlan(user);
   if (!plan) return null;
   const last = latestRoleExam(user.id);

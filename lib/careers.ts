@@ -2,7 +2,8 @@ import { and, desc, eq, inArray } from "drizzle-orm";
 import { careerLevels, careerRequirements, db, promotions, users } from "@/lib/db";
 import { levelsEarned } from "@/lib/progress";
 import { catalog, inScope, requirementsFor, scopesOf } from "@/lib/paths";
-import { roleCheckDrawable, roleCheckValidUntil } from "@/lib/roleCheck";
+import { domainOf } from "@/lib/blueprint";
+import { roleCheckDrawable, roleCheckValidUntil, roleExamsAvailable, type CheckSource } from "@/lib/roleCheck";
 
 type Person = typeof users.$inferSelect;
 type CatalogTrack = ReturnType<typeof catalog>[number];
@@ -64,17 +65,18 @@ export function ladderFor(role: string, catalogRows = catalog()): Rung[] {
 
 /** Promotion needs a recent passing role check aimed at the next level, unless no fair check can be drawn from the path (then it cannot block). */
 function roleCheckFor(person: Person, role: string, ladder: Rung[], nextLevel: number, scopes: ReturnType<typeof scopesOf>): NonNullable<Career["check"]> {
-  const tracks = new Map<number, { slug: string; questions: number; level: number }>();
+  if (!roleExamsAvailable()) return { needed: false, validUntil: null }; // tables not pushed yet: nobody can take a check, so none is asked for
+  const tracks = new Map<number, CheckSource>();
   for (const r of ladder) {
     if (r.level > nextLevel) break;
     for (const s of r.steps) {
       if (!s.countable || !inScope(s.track, person.audience, scopes)) continue;
       const t = tracks.get(s.track.id);
-      if (!t || s.need > t.level) tracks.set(s.track.id, { slug: s.track.slug, questions: s.track.questions, level: s.need });
+      if (!t || s.need > t.level) tracks.set(s.track.id, { trackId: s.track.id, slug: s.track.slug, domain: domainOf(s.track.slug, s.track.kind), level: s.need });
     }
   }
   const rungNo = ladder.findIndex((r) => r.level === nextLevel) + 1;
-  return { needed: roleCheckDrawable([...tracks.values()]), validUntil: roleCheckValidUntil(person.id, role, rungNo, now()) };
+  return { needed: roleCheckDrawable(role, rungNo, ladder.length, [...tracks.values()]), validUntil: roleCheckValidUntil(person.id, role, rungNo, now()) };
 }
 
 /** Where this person stands on their role's ladder. Null when their role has no ladder or they are not staff. */
