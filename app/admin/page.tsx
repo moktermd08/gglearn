@@ -2,7 +2,7 @@ import { desc, eq, sql } from "drizzle-orm";
 import { answers, db, questions, topicRequests, tracks } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { retireQuestion } from "@/app/actions";
-import { AlertTriangle, BarChart3, Lightbulb, Database, MessageSquareText, PenLine, Archive, TrendingDown, TrendingUp, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, BarChart3, Lightbulb, Database, MessageSquareText, PenLine, Archive, TrendingDown, TrendingUp, CheckCircle2, Clock } from "lucide-react";
 
 const MIN_ATTEMPTS = 5;
 
@@ -11,13 +11,23 @@ export default async function Admin() {
   const attempts = sql<number>`count(${answers.id})`;
   const accuracy = sql<number>`avg(${answers.score})`;
 
+  // The list shows the 60 largest tracks; the tiles count the whole bank (the list used to be summed, which left every smaller track out).
+  const SHOWN = 60;
+  const activeIds = sql`count(distinct case when ${questions.status} = 'active' then ${questions.id} end)`;
   const perTrack = db.select({
     track: tracks.name,
-    total: sql<number>`count(distinct ${questions.id})`,
-    authored: sql<number>`sum(${questions.source} != 'legacy-trialtest')`,
+    total: sql<number>`${activeIds}`,
+    authored: sql<number>`count(distinct case when ${questions.status} = 'active' and ${questions.source} = 'authored' then ${questions.id} end)`,
     attempts,
   }).from(tracks).leftJoin(questions, eq(questions.trackId, tracks.id)).leftJoin(answers, eq(answers.questionId, questions.id))
-    .groupBy(tracks.id).orderBy(desc(sql`count(distinct ${questions.id})`)).limit(60).all();
+    .groupBy(tracks.id).orderBy(desc(activeIds)).limit(SHOWN).all();
+  const bank = db.select({
+    active: sql<number>`coalesce(sum(${questions.status} = 'active'), 0)`,
+    review: sql<number>`coalesce(sum(${questions.status} = 'review'), 0)`,
+    authoredQ: sql<number>`coalesce(sum(${questions.status} = 'active' and ${questions.source} = 'authored'), 0)`,
+  }).from(questions).get()!;
+  const totalAnswers = db.select({ n: sql<number>`count(*)` }).from(answers).get()!.n;
+  const trackCount = db.select({ n: sql<number>`count(*)` }).from(tracks).get()!.n;
 
   // The improvement loop: questions that people almost always fail (unclear or wrong?) or never fail (too easy).
   const flagged = db.select({ q: questions, track: tracks.name, attempts, accuracy })
@@ -26,14 +36,12 @@ export default async function Admin() {
     .having(sql`count(${answers.id}) >= ${MIN_ATTEMPTS} and (avg(${answers.score}) < 0.25 or avg(${answers.score}) > 0.98)`)
     .limit(50).all();
 
-  const totalQ = perTrack.reduce((a, r) => a + r.total, 0);
-  const totalAuthored = perTrack.reduce((a, r) => a + (r.authored ?? 0), 0);
-  const totalAttempts = perTrack.reduce((a, r) => a + r.attempts, 0);
   const maxTotal = Math.max(1, ...perTrack.map((r) => r.total));
   const tiles = [
-    { Icon: Database, label: "Questions", value: totalQ, cls: "text-sky-300" },
-    { Icon: PenLine, label: "Brand-authored", value: totalQ ? `${Math.round((totalAuthored / totalQ) * 100)}%` : "0%", cls: "text-violet-300" },
-    { Icon: MessageSquareText, label: "Answers given", value: totalAttempts, cls: "text-emerald-300" },
+    { Icon: Database, label: "Active questions", value: bank.active.toLocaleString("en-GB"), cls: "text-sky-300" },
+    { Icon: Clock, label: "Held for review", value: bank.review.toLocaleString("en-GB"), cls: bank.review ? "text-amber-300" : "text-slate-400" },
+    { Icon: PenLine, label: "Authored", value: bank.active ? `${Math.round((bank.authoredQ / bank.active) * 1000) / 10}%` : "0%", cls: "text-violet-300" },
+    { Icon: MessageSquareText, label: "Answers given", value: totalAnswers.toLocaleString("en-GB"), cls: "text-emerald-300" },
     { Icon: AlertTriangle, label: "Need review", value: flagged.length, cls: flagged.length ? "text-amber-300" : "text-slate-400" },
   ];
 
@@ -52,7 +60,7 @@ export default async function Admin() {
           </ul>
         </section>
       )}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {tiles.map(({ Icon, label, value, cls }, i) => (
           <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
             <Icon size={22} className={`mx-auto ${cls}`} />
@@ -91,9 +99,10 @@ export default async function Admin() {
       </section>
       <section>
         <h2 className="mb-2 flex items-center gap-2 font-semibold"><BarChart3 size={18} className="text-violet-300" />Coverage by track</h2>
+        <p className="mb-2 text-xs text-slate-400">Active questions in the {Math.min(SHOWN, trackCount)} largest of {trackCount} tracks. Authored means written as knowledge items and imported from the content files; the rest are generated (concept cards, the question generators) or come from the legacy and questions-repo imports.</p>
         <div className="mb-3 flex flex-wrap gap-4 text-xs text-slate-400">
-          <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-violet-400" />Brand-authored</span>
-          <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-sky-400/60" />Other</span>
+          <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-violet-400" />Authored</span>
+          <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-sky-400/60" />Generated or imported</span>
         </div>
         <ul className="card divide-y divide-white/10 text-sm">
           {perTrack.map((r, i) => {
