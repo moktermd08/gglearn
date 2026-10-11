@@ -28,6 +28,19 @@ const cap = (s: string) => (/^[a-z]+[._(\d]|^[a-z]+[A-Z]|^[a-z]+_/.test(s) ? s :
 const clean = (s: string) => s.trim().replace(/[.\s]+$/, "");
 const sentence = (subject: string, pred: string) => `${cap(subject)} ${clean(pred)}.`;
 
+/** grammatical number of a predicate from its first verb: "returns" is singular, "return" plural, "can" fits both */
+const MODAL = new Set(["can", "must", "may", "will", "should", "would", "might", "could", "cannot"]);
+const SING = new Set(["is", "has", "does", "was"]);
+const PLURAL = new Set(["are", "have", "do", "were"]);
+const numberOf = (pred: string): "s" | "p" | "any" => {
+  const w = (pred.trim().split(/\s+/)[0] ?? "").toLowerCase().replace(/[^a-z]/g, "");
+  if (MODAL.has(w)) return "any";
+  if (SING.has(w)) return "s";
+  if (PLURAL.has(w)) return "p";
+  return w.endsWith("s") && !w.endsWith("ss") ? "s" : "p";
+};
+const fits = (a: "s" | "p" | "any", b: "s" | "p" | "any") => a === "any" || b === "any" || a === b;
+
 type Prep = Card & { id: number; says: string[]; tk: Set<string>[]; label: string; subjectStems: Set<string>; useStems: Set<string> };
 
 export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings: string[] } {
@@ -65,12 +78,12 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
   };
 
   /** n predicates from other cards that are false of c, mutually distinct */
-  function falsePreds(c: Prep, n: number, avoid: string[] = []): { pred: string; from: Prep }[] | null {
+  function falsePreds(c: Prep, n: number, avoid: string[] = [], num: "s" | "p" | "any" = "any"): { pred: string; from: Prep }[] | null {
     const out: { pred: string; from: Prep }[] = [];
     // wrong statements come from other groups first: siblings in the same group are the ones that turn out to be true too
     const donors = [...r.shuffle(cards.filter((x) => x.group !== c.group && !related(c, x))), ...pool(c).filter((x) => x.group === c.group)];
     for (const d of donors) {
-      const cands = r.shuffle(d.says).filter((p) => !clash(c, p) && !avoid.includes(p) && out.every((o) => jac(toks(o.pred), toks(p)) < 0.5));
+      const cands = r.shuffle(d.says).filter((p) => fits(numberOf(p), num) && !clash(c, p) && !avoid.includes(p) && out.every((o) => jac(toks(o.pred), toks(p)) < 0.5));
       if (cands.length) out.push({ pred: cands[0], from: d });
       if (out.length === n) return out;
     }
@@ -110,12 +123,12 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
       // true / false (true statement)
       add({ prompt: `True or false: ${sentence(S, p)}`, options: TF, correct: 0, topic, hint: why, form: "tf", score: base(c) + j(), timeSec: 20, fixedOrder: true });
       // true / false (false statement: a misconception, or another card's predicate)
-      const wrongs = [...(i === 0 ? c.not ?? [] : []).map(clean), ...(falsePreds(c, 1)?.map((x) => x.pred) ?? [])];
+      const wrongs = [...(i === 0 ? c.not ?? [] : []).map(clean), ...(falsePreds(c, 1, [], numberOf(p))?.map((x) => x.pred) ?? [])];
       for (const w of wrongs.slice(0, i === 0 ? Math.max(1, (c.not ?? []).length) : 1)) {
         add({ prompt: `True or false: ${sentence(S, w)}`, options: TF, correct: 1, topic, hint: `Actually, ${S} ${p}.`, form: "tf", score: base(c) + 0.5 + j(), timeSec: 20, fixedOrder: true });
       }
       // complete the statement / which description (two stems)
-      const d1 = falsePreds(c, 3, (c.not ?? []).map(clean).slice(0, 0));
+      const d1 = falsePreds(c, 3, [], numberOf(p));
       if (d1) {
         const nots = (c.not ?? []).map(clean);
         const dd = i === 0 && nots.length ? [nots[0], ...d1.slice(0, 2).map((x) => x.pred)] : d1.map((x) => x.pred);
@@ -123,19 +136,19 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
         const k = i % 5;
         add({ prompt: [`Complete the statement: “${cap(S)} …”`, `Finish this sentence: “${cap(S)} …”`, `Which ending is correct? “${cap(S)} …”`, `Pick the right continuation: “${cap(S)} …”`, `Fill in the rest: “${cap(S)} …”`][k],
           options: [p, ...dd], correct: 0, topic, hint: why, form: "defn", score: base(c) + 1 + j(), timeSec: 40 });
-        const d2 = falsePreds(c, 3, dd);
+        const d2 = falsePreds(c, 3, dd, numberOf(p));
         if (d2) add({ prompt: [`Which description of ${S} is accurate?`, `Which statement about ${S} is correct?`, `Which of these is true of ${S}?`, `What best describes ${S}?`, `Which option correctly characterises ${S}?`][k],
           options: [p, ...d2.map((x) => x.pred)], correct: 0, topic, hint: why, form: "defn", score: base(c) + 1.4 + j(), timeSec: 40 });
       }
       // which <group> ...? (two stems)
-      const subs = otherSubjects(c, p, 3);
+      const subs = numberOf(p) === "p" ? null : otherSubjects(c, p, 3);
       if (subs) {
         add({ prompt: `Which ${c.label} ${p}?`, options: [S, ...subs.map((d) => d.subject)], correct: 0, topic, hint: why, form: "term", score: base(c) + 2 + j(), timeSec: 45 });
         const subs2 = otherSubjects(c, p, 6)?.slice(3);
         if (subs2 && subs2.length === 3) add({ prompt: `Name the ${c.label} that ${p}.`, options: [S, ...subs2.map((d) => d.subject)], correct: 0, topic, hint: why, form: "term", score: base(c) + 2.3 + j(), timeSec: 45 });
       }
       // two-way contrast
-      const partner = pool(c).find((d) => d.group === c.group && !clash(d, p));
+      const partner = numberOf(p) === "p" ? undefined : pool(c).find((d) => d.group === c.group && !clash(d, p));
       if (partner) {
         const pair = r.shuffle([S, partner.subject]);
         add({ prompt: `Between ${S} and ${partner.subject}, which ${p}?`, options: [...pair, "Both", "Neither"], correct: pair.indexOf(S), topic, hint: why, form: "contrast", score: base(c) + 3.5 + j(), timeSec: 50, fixedOrder: true });
@@ -144,7 +157,7 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
 
     // which is NOT true of S
     const own = r.shuffle(c.says);
-    const outsider = falsePreds(c, 1);
+    const outsider = falsePreds(c, 1, [], numberOf(own[0] ?? ""));
     if (own.length >= 3 && outsider) {
       add({ prompt: `Which of these is NOT true of ${S}?`, options: [outsider[0].pred, ...own.slice(0, 3)], correct: 0, topic,
         hint: `${S} does not do that; ${outsider[0].from.subject} ${outsider[0].pred}.`, form: "except", score: base(c) + 3 + j(), timeSec: 50 });
