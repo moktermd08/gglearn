@@ -15,6 +15,8 @@ export const MIN_PER_LEVEL = 100;
 
 const STOP = new Set("the a an and or of to in is are for on with that this it as be by at from its into than can not you your they their which when what used use using also each per via more most only any all one has have will".split(" "));
 const toks = (s: string) => new Set((s.toLowerCase().match(/[a-z0-9]+/g) ?? []).filter((w) => w.length > 3 && !STOP.has(w)));
+/** like toks, but folds plurals and common endings so "retrieves" and "retrieval" count as the same idea */
+const stems = (s: string) => new Set([...toks(s)].map((w) => w.replace(/(ations?|ation|ings?|ing|ies|ied|ed|es|s|al|ly)$/, "")).filter((w) => w.length > 2));
 const jac = (a: Set<string>, b: Set<string>) => {
   if (!a.size || !b.size) return 0;
   let i = 0;
@@ -26,13 +28,14 @@ const cap = (s: string) => (/^[a-z]+[._(\d]|^[a-z]+[A-Z]|^[a-z]+_/.test(s) ? s :
 const clean = (s: string) => s.trim().replace(/[.\s]+$/, "");
 const sentence = (subject: string, pred: string) => `${cap(subject)} ${clean(pred)}.`;
 
-type Prep = Card & { id: number; says: string[]; tk: Set<string>[]; label: string };
+type Prep = Card & { id: number; says: string[]; tk: Set<string>[]; label: string; subjectStems: Set<string>; useStems: Set<string> };
 
 export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings: string[] } {
   const r = makeRng(spec.slug);
   const warnings: string[] = [];
   const cards: Prep[] = spec.cards.map((c, id) => ({
-    ...c, id, says: c.says.map(clean), tk: c.says.map((s) => toks(s)), label: spec.groups[c.group] ?? "",
+    ...c, id, says: c.says.map(clean), tk: c.says.map((s) => stems(s)), label: spec.groups[c.group] ?? "",
+    subjectStems: stems(c.subject), useStems: stems(c.use ?? ""),
   }));
   for (const c of cards) if (!c.label) warnings.push(`card "${c.subject}": unknown group "${c.group}"`);
   const byGroup = new Map<string, Prep[]>();
@@ -47,8 +50,11 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
     (b.like ?? []).some((x) => x.toLowerCase() === a.subject.toLowerCase());
   /** a predicate that is (nearly) already true of `c` cannot be used as a wrong answer for it */
   const clash = (c: Prep, pred: string) => {
-    const t = toks(pred);
-    return c.says.some((s, i) => s === pred || jac(c.tk[i], t) >= 0.3);
+    const t = stems(pred);
+    if (c.says.some((s, i) => s === pred || jac(c.tk[i], t) >= 0.2)) return true;
+    // a wrong answer that mentions the subject itself, or its use case, is probably about the same thing
+    for (const w of c.subjectStems) if (t.has(w)) return true;
+    return c.useStems.size > 0 && jac(c.useStems, t) >= 0.15;
   };
   /** nearest-first pool: same group, then the rest */
   const pool = (c: Prep) => {
@@ -61,7 +67,9 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
   /** n predicates from other cards that are false of c, mutually distinct */
   function falsePreds(c: Prep, n: number, avoid: string[] = []): { pred: string; from: Prep }[] | null {
     const out: { pred: string; from: Prep }[] = [];
-    for (const d of pool(c)) {
+    // wrong statements come from other groups first: siblings in the same group are the ones that turn out to be true too
+    const donors = [...r.shuffle(cards.filter((x) => x.group !== c.group && !related(c, x))), ...pool(c).filter((x) => x.group === c.group)];
+    for (const d of donors) {
       const cands = r.shuffle(d.says).filter((p) => !clash(c, p) && !avoid.includes(p) && out.every((o) => jac(toks(o.pred), toks(p)) < 0.5));
       if (cands.length) out.push({ pred: cands[0], from: d });
       if (out.length === n) return out;
@@ -111,9 +119,13 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
       if (d1) {
         const nots = (c.not ?? []).map(clean);
         const dd = i === 0 && nots.length ? [nots[0], ...d1.slice(0, 2).map((x) => x.pred)] : d1.map((x) => x.pred);
-        add({ prompt: `Complete the statement: “${cap(S)} …”`, options: [p, ...dd], correct: 0, topic, hint: why, form: "defn", score: base(c) + 1 + j(), timeSec: 40 });
+        // a different wording per predicate keeps every prompt unique without a visible counter
+        const k = i % 5;
+        add({ prompt: [`Complete the statement: “${cap(S)} …”`, `Finish this sentence: “${cap(S)} …”`, `Which ending is correct? “${cap(S)} …”`, `Pick the right continuation: “${cap(S)} …”`, `Fill in the rest: “${cap(S)} …”`][k],
+          options: [p, ...dd], correct: 0, topic, hint: why, form: "defn", score: base(c) + 1 + j(), timeSec: 40 });
         const d2 = falsePreds(c, 3, dd);
-        if (d2) add({ prompt: `Which description of ${S} is accurate (${i + 1} of ${c.says.length})?`, options: [p, ...d2.map((x) => x.pred)], correct: 0, topic, hint: why, form: "defn", score: base(c) + 1.4 + j(), timeSec: 40 });
+        if (d2) add({ prompt: [`Which description of ${S} is accurate?`, `Which statement about ${S} is correct?`, `Which of these is true of ${S}?`, `What best describes ${S}?`, `Which option correctly characterises ${S}?`][k],
+          options: [p, ...d2.map((x) => x.pred)], correct: 0, topic, hint: why, form: "defn", score: base(c) + 1.4 + j(), timeSec: 40 });
       }
       // which <group> ...? (two stems)
       const subs = otherSubjects(c, p, 3);
