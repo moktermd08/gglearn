@@ -1,5 +1,6 @@
 import { asc } from "drizzle-orm";
 import { db, tracks } from "@/lib/db";
+import { hiddenTrackIds } from "@/lib/tracks";
 import { requireUser } from "@/lib/auth";
 import { KIND_LABEL } from "@/lib/levels";
 import { JourneySteps } from "@/components/JourneySteps";
@@ -10,7 +11,9 @@ export const metadata = { title: "Start your journey — gglearn" };
 
 export default async function Start() {
   await requireUser();
+  const hidden = hiddenTrackIds();
   const all = db.select({ id: tracks.id, name: tracks.name, kind: tracks.kind, description: tracks.description }).from(tracks).orderBy(asc(tracks.name)).all()
+    .filter((t) => !hidden.has(t.id))
     .map((t) => ({ ...t, kindLabel: KIND_LABEL[t.kind] ?? t.kind }));
   return (
     <div className="mx-auto max-w-3xl space-y-6">
