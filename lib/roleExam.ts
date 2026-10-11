@@ -6,13 +6,14 @@ import { catalog, inScope, scopesOf } from "@/lib/paths";
 import { drawDynamic } from "@/lib/dynamic/store";
 import { grade } from "@/lib/grading";
 import { PASS_MARK } from "@/lib/levels";
+import { ROLE_EXAM_MIN } from "@/lib/roleCheck";
+
+export { ROLE_EXAM_MIN };
 
 type Person = typeof users.$inferSelect;
 type CatalogTrack = ReturnType<typeof catalog>[number];
 
 export const ROLE_EXAM_SIZE = 20;
-/** A role check below this many drawable questions is not offered: it would not be a fair sample of the mix. */
-export const ROLE_EXAM_MIN = 10;
 /** How far below a step's level a question may come from, so the check is not only the hardest material. */
 const LEVEL_SPREAD = 2;
 const FRESH_SHARE = 0.7;
