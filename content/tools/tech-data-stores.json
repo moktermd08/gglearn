@@ -1,0 +1,343 @@
+{
+ "trackSlug": "tech-data-stores",
+ "items": [
+  {
+   "title": "PostgreSQL with Drizzle in ggsocial",
+   "source": "ggsocial/drizzle.config.ts, ggsocial/package.json, ggsocial/src/lib/db/schema.ts, ggsocial/DEPLOY.md",
+   "body": "ggsocial stores its data in PostgreSQL and talks to it through Drizzle, a TypeScript layer where the tables are described in code. The schema file uses pgTable and Postgres column types: text ids made with nanoid, timestamps with time zone that default to now, jsonb for flexible structured fields such as brand colours or links, booleans, and unique indexes such as one on the user's email. Drizzle's types then flow into queries, so a wrong column name fails at build time, not in production. The drizzle.config.ts file sets dialect postgresql, points at the schema, and reads DATABASE_URL from the environment (it loads .env.local itself because drizzle-kit runs outside Next). The package scripts offer db:push to sync the schema straight to a database, db:generate to write migration files, and db:studio to browse data. In production, DEPLOY.md runs Postgres in a Docker container bound to 127.0.0.1 only, with a named volume so data survives container replacement. The deploy script backs up first, and a manual backup is pg_dump piped through gzip. Use push for quick local work; use generated migrations when other environments must follow the same steps. Never commit DATABASE_URL, and never expose the database port to the internet.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In ggsocial, where do the table definitions live?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In a hand-written SQL dump"
+      },
+      {
+       "key": "b",
+       "text": "In the Docker image only"
+      },
+      {
+       "key": "c",
+       "text": "In a Drizzle schema file written in TypeScript"
+      },
+      {
+       "key": "d",
+       "text": "In Cloudflare"
+      }
+     ],
+     "answer": "c",
+     "topic": "schema"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does the ggsocial database config read from the environment?",
+     "options": [
+      {
+       "key": "a",
+       "text": "DATABASE_FILE"
+      },
+      {
+       "key": "b",
+       "text": "MONGODB_URI"
+      },
+      {
+       "key": "c",
+       "text": "REDIS_URL"
+      },
+      {
+       "key": "d",
+       "text": "DATABASE_URL"
+      }
+     ],
+     "answer": "d",
+     "topic": "config"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does ggsocial use jsonb for fields like brand colours and links?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It stores flexible structured data without a separate table for each shape"
+      },
+      {
+       "key": "b",
+       "text": "It makes passwords stronger"
+      },
+      {
+       "key": "c",
+       "text": "It replaces indexes"
+      },
+      {
+       "key": "d",
+       "text": "It is the only type Postgres has"
+      }
+     ],
+     "answer": "a",
+     "topic": "jsonb"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Explain the difference between db:push and db:generate, and when you would prefer each.",
+     "answer": "db:push applies the current schema straight to a database with no migration history, which is quick for local development. db:generate writes migration files that can be reviewed, committed and applied in order, which is safer for shared or production databases where every environment must follow the same steps.",
+     "rubric": "Distinguishes direct sync from versioned migration files; gives local versus shared/production preference."
+    }
+   ]
+  },
+  {
+   "title": "SQLite with Drizzle in gglearn",
+   "source": "gglearn/lib/db/index.ts, gglearn/drizzle.config.ts, gglearn/package.json, gglearn/lib/rate-limit.ts, gglearn/README.md, gglearn/ecosystem.config.cjs",
+   "body": "gglearn keeps everything in one SQLite file and uses Drizzle on top of the better-sqlite3 driver. The setup in lib/db/index.ts opens the file named by DATABASE_FILE (default data/gglearn.db), then runs two pragmas. journal_mode WAL (write-ahead log) lets readers continue while one writer writes, which suits a web app with many reads. foreign_keys ON turns on foreign-key enforcement, which SQLite leaves off unless you ask. The Drizzle config sets dialect sqlite and the same db:push script syncs the schema. SQLite needs no separate server: backup is copying or vacuuming the file, and there is nothing to log into. The trade-off is that there is one writer at a time and the file lives on one machine. That is why the app runs as a single PM2 process, and why lib/rate-limit.ts can keep its attempt counters in process memory: it says this is fine while the app is one process, and that counters reset on restart. The README advises moving to Postgres before multi-user production use, while the same README describes a live production deployment, so treat that line as a caution about scale rather than a ban. Never commit the .db file, and back it up before changing the schema.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which driver does gglearn use with Drizzle?",
+     "options": [
+      {
+       "key": "a",
+       "text": "pg"
+      },
+      {
+       "key": "b",
+       "text": "better-sqlite3"
+      },
+      {
+       "key": "c",
+       "text": "mysql2"
+      },
+      {
+       "key": "d",
+       "text": "mongodb"
+      }
+     ],
+     "answer": "b",
+     "topic": "driver"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does the WAL journal mode help with?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Encrypting the file"
+      },
+      {
+       "key": "b",
+       "text": "Replacing foreign keys"
+      },
+      {
+       "key": "c",
+       "text": "Running multiple writers at once"
+      },
+      {
+       "key": "d",
+       "text": "Readers can continue while one writer writes"
+      }
+     ],
+     "answer": "d",
+     "topic": "WAL"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why is gglearn's in-memory rate limiter acceptable today?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Counters are shared by many servers"
+      },
+      {
+       "key": "b",
+       "text": "SQLite stores them"
+      },
+      {
+       "key": "c",
+       "text": "The app runs as one PM2 process, though counters reset on restart"
+      },
+      {
+       "key": "d",
+       "text": "Cloudflare keeps them"
+      }
+     ],
+     "answer": "c",
+     "topic": "rate limiter"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "gglearn is moving to two app servers behind a load balancer. List what breaks or must change in the data layer and the rate limiter, and what you would move to.",
+     "answer": "A SQLite file on one machine cannot be shared safely by two servers, and in-memory rate counters would be per-process so each server would allow its own limit and lose counts on restart. Move the database to a network database such as Postgres (as ggsocial does) with migrations, and move rate-limit counters to the database or a shared store such as Redis. Back up before migrating and test the data copy.",
+     "rubric": "Identifies SQLite single-machine limit and per-process counters; proposes Postgres or shared store; mentions backup/migration care."
+    }
+   ]
+  },
+  {
+   "title": "One app, two databases: ggmoney SQLite and MySQL",
+   "source": "ggmoney/README.md (Two databases, one behaviour), ggmoney/config.php, ggmoney/db/migrations/{sqlite,mysql}",
+   "body": "ggmoney is a plain PHP app that runs on either SQLite or MySQL, chosen by the DB_DRIVER setting. SQLite is the default and is used for local development and tests. MySQL is what the shared live server runs, because that box already had it. The repository keeps two migration folders, db/migrations/sqlite and db/migrations/mysql, with matching numbered files such as core, VAT, payroll and bank feeds, applied in order and recorded in a schema_migrations table. The README lists each difference as a deliberate choice. Money is stored as whole pence in integers; SQLite integers are 64-bit, but in MySQL a plain INT would overflow at about 21.5 million pounds, so BIGINT is used. SQLite is forgiving about types, so MySQL runs in strict mode to make a truncated money value raise an error instead of being stored wrongly. Every MySQL table must be InnoDB, since otherwise transactions would silently fail to roll back. A deploy-check script asserts strict mode, InnoDB and that all migrations are applied. Backups differ too: VACUUM INTO for SQLite, and mysqldump with single-transaction for MySQL. The lesson is that supporting two engines costs real effort, so do it only with a clear reason.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which database does the ggmoney live server use?",
+     "options": [
+      {
+       "key": "a",
+       "text": "MySQL"
+      },
+      {
+       "key": "b",
+       "text": "SQLite"
+      },
+      {
+       "key": "c",
+       "text": "PostgreSQL"
+      },
+      {
+       "key": "d",
+       "text": "MongoDB"
+      }
+     ],
+     "answer": "a",
+     "topic": "live db"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why are money columns BIGINT in MySQL?",
+     "options": [
+      {
+       "key": "a",
+       "text": "BIGINT is faster for text"
+      },
+      {
+       "key": "b",
+       "text": "INT would overflow at about 21.5 million pounds in pence"
+      },
+      {
+       "key": "c",
+       "text": "SQLite requires it"
+      },
+      {
+       "key": "d",
+       "text": "It stores decimals"
+      }
+     ],
+     "answer": "b",
+     "topic": "money"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What does strict SQL mode protect against here?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Slow queries"
+      },
+      {
+       "key": "b",
+       "text": "Missing indexes"
+      },
+      {
+       "key": "c",
+       "text": "A truncated money value being stored silently"
+      },
+      {
+       "key": "d",
+       "text": "Cloudflare outages"
+      }
+     ],
+     "answer": "c",
+     "topic": "strict mode"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why does deploy-check assert that every MySQL table is InnoDB?",
+     "answer": "Because only InnoDB supports transactions properly; with another engine a failed multi-step change would not roll back, leaving partial financial data. The check catches that before it matters.",
+     "rubric": "Mentions transactions/rollback; ties to partial or inconsistent financial data."
+    }
+   ]
+  },
+  {
+   "title": "Moksy data services: MongoDB, Redis and Qdrant",
+   "source": "moksy.ai/wt-earning-gaps/docker-compose.yml (mongo, redis, ai-memory-db services and volumes)",
+   "body": "The Moksy platform runs many small services, and its docker-compose file shows three stores beside them. MongoDB holds the document data. One mongo container serves many services, but each service connects to its own named database through MONGODB_URI, for example auth-service, users-service, permissions-service and projects-service, so one service does not read another's data directly. Data lives in a named volume, with a backups folder mounted in. A comment in the file records that Mongo ran out of file handles on production twice, because every service holds a connection pool, so the compose file raises the open-files limit and uses restart unless-stopped; the lesson is to size connections and limits, not just start the container. Redis runs from a small image with a health check, and the stack passes REDIS_URL to services so they can use a fast in-memory store for short-lived data. Qdrant is a vector database, running as ai-memory-db only in the ai and full profiles, with its own volume. A vector database stores embeddings, lists of numbers that represent meaning, and finds the nearest ones, which is how an AI assistant can recall related past content. Choose the store by the job: documents, fast temporary data, or similarity search.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is a vector database such as Qdrant used for in Moksy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Hosting web pages"
+      },
+      {
+       "key": "b",
+       "text": "Sending email"
+      },
+      {
+       "key": "c",
+       "text": "Running Git"
+      },
+      {
+       "key": "d",
+       "text": "Storing similarity-searchable embeddings for AI memory"
+      }
+     ],
+     "answer": "d",
+     "topic": "vector"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How does each Moksy service isolate its data in the shared Mongo container?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They share one collection"
+      },
+      {
+       "key": "b",
+       "text": "Each connects to its own named database"
+      },
+      {
+       "key": "c",
+       "text": "They use SQLite"
+      },
+      {
+       "key": "d",
+       "text": "They use separate Cloudflare zones"
+      }
+     ],
+     "answer": "b",
+     "topic": "isolation"
+    },
+    {
+     "level": 6,
+     "type": "open",
+     "prompt": "Match each job to a store and say why: user documents with changing shape, a short-lived counter, and 'find past notes similar in meaning to this question'.",
+     "answer": "User documents with changing shape suit MongoDB (flexible documents). A short-lived counter suits Redis (fast in-memory store for temporary data). Finding notes similar in meaning suits Qdrant (embeddings and nearest-neighbour search).",
+     "rubric": "Maps document to Mongo, temporary to Redis, similarity to vector database, each with a reason."
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "Mongo on production stopped twice with file-handle errors during a backup and after a batched restart. Explain the cause, and what you would configure and monitor to prevent it.",
+     "answer": "Every service keeps a connection pool and each connection uses a file handle; a restart storm or a parallel dump pushes the total past the container's default limit. Raise the open-files limit (the compose file sets 64000), use a restart policy that survives clean exits such as unless-stopped, stagger restarts, run dumps carefully, and monitor open files, connection counts and container restarts with health checks and alerts.",
+     "rubric": "Explains pooled connections and file handles; names raised ulimit and restart policy; adds staggering or monitoring."
+    }
+   ]
+  }
+ ]
+}

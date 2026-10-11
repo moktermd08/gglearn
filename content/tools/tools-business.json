@@ -1,0 +1,361 @@
+{
+ "trackSlug": "tools-business",
+ "items": [
+  {
+   "title": "Business tool categories and what each one owns",
+   "source": "moksy.ai/wt-earning-gaps/docs/MOKSY_1000_INTEGRATIONS.md (family table; catalogued, not used by us); general practice",
+   "body": "Business tools fall into families, and each family is the system of record for one kind of thing. A CRM owns people, companies and deals. A helpdesk owns tickets and the conversation on each. Billing and payments own invoices, subscriptions and payment events. Marketing automation owns contacts, campaigns and consent to be emailed. Scheduling owns bookings and availability. Team chat owns the live conversation, and an automation hub owns no data at all: it only moves events between the others. The Moksy integration catalogue groups roughly 1,165 apps into 41 families this way, for example CRM and sales (39 apps), customer support and helpdesk (31), marketing automation (32), scheduling (22), team chat (28), payments and billing (22) and automation hubs (42). These apps are catalogued, meaning Moksy has a page and recipes for them; that is not the same as GGLink using each one. For an agency like GGLink, the sales side lives in the CRM and scheduling, and the support side in the helpdesk and chat. When choosing, ask first what the one source of truth for each object will be. Two tools both believing they own the customer record is the most common cause of duplicate contacts and wrong reports. Buy a new category only when a real, repeated job has no owner yet.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In the family model, which kind of tool is the system of record for tickets?",
+     "options": [
+      {
+       "key": "a",
+       "text": "CRM"
+      },
+      {
+       "key": "b",
+       "text": "Scheduling tool"
+      },
+      {
+       "key": "c",
+       "text": "Helpdesk"
+      },
+      {
+       "key": "d",
+       "text": "Automation hub"
+      }
+     ],
+     "answer": "c",
+     "topic": "categories"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does an automation hub own, according to this lesson?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Contacts and deals"
+      },
+      {
+       "key": "b",
+       "text": "Invoices"
+      },
+      {
+       "key": "c",
+       "text": "Bookings and availability"
+      },
+      {
+       "key": "d",
+       "text": "No data of its own; it moves events between other tools"
+      }
+     ],
+     "answer": "d",
+     "topic": "hubs"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "The Moksy catalogue lists an app in the CRM family. What does that tell you about GGLink?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The app is catalogued, with a page and recipes, which does not mean GGLink uses it"
+      },
+      {
+       "key": "b",
+       "text": "GGLink uses that CRM in production"
+      },
+      {
+       "key": "c",
+       "text": "GGLink has a paid contract with it"
+      },
+      {
+       "key": "d",
+       "text": "It is certified by Moksy"
+      }
+     ],
+     "answer": "a",
+     "topic": "catalogued vs used"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Why should you decide the 'source of truth' for each object before adding a new business tool?",
+     "answer": "Because if two tools both believe they own the customer (or ticket, invoice) record you get duplicates, conflicting edits and wrong reports. Naming one owner per object, and letting the others read or sync from it, keeps data consistent.",
+     "rubric": "Must say one owner per object; mentions duplicates or conflicting data as the risk; mentions other tools sync from the owner."
+    }
+   ]
+  },
+  {
+   "title": "Integration patterns: webhooks, polling and hubs",
+   "source": "moksy.ai/wt-earning-gaps/docs/MOKSY_INTEGRATIONS_MASTER_PLAN.md (section 1 Stripe inbound webhook precedent, section 3 events primitive); general practice",
+   "body": "There are three common ways to connect two business tools. Polling means one side asks 'anything new?' on a timer: simple, but slow and wasteful, and it can hit rate limits. A webhook means the source calls your URL when something happens: fast, but you must be able to receive it and handle failure. A hub such as Zapier, n8n or Make sits in the middle and offers ready-made triggers and actions, so little code is written. Safe webhook receiving has a few fixed habits. Read the raw body and verify the signature (a keyed hash, often HMAC, over the timestamp and body) before trusting anything. Reject old timestamps to stop replays. Store the event id and skip ones you have seen, because senders retry and the same event can arrive twice. Return a success status quickly and do the heavy work afterwards. Moksy's inbound Stripe webhook follows this: raw-body capture, signature check against configured secrets, a dedupe record per event, then typed dispatch. The same plan describes Moksy's own outbound webhooks as planned work: when it was read, subscriptions were held in memory and unsigned, so treat them as a design target, not a feature. Choose a hub for quick wins and low volume; choose direct webhooks when you need reliability, speed or control.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which approach has one tool ask another 'anything new?' on a timer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Webhook"
+      },
+      {
+       "key": "b",
+       "text": "Polling"
+      },
+      {
+       "key": "c",
+       "text": "OAuth"
+      },
+      {
+       "key": "d",
+       "text": "Signature"
+      }
+     ],
+     "answer": "b",
+     "topic": "polling"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why must a webhook receiver skip events whose id it has already stored?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes the signature valid"
+      },
+      {
+       "key": "b",
+       "text": "It lowers the HTTP status code"
+      },
+      {
+       "key": "c",
+       "text": "Hubs require it"
+      },
+      {
+       "key": "d",
+       "text": "Senders may retry, so the same event can arrive more than once"
+      }
+     ],
+     "answer": "d",
+     "topic": "dedupe"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What should a receiver do first with an incoming webhook?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Run the long job, then reply"
+      },
+      {
+       "key": "b",
+       "text": "Delete the event id"
+      },
+      {
+       "key": "c",
+       "text": "Verify the signature on the raw body"
+      },
+      {
+       "key": "d",
+       "text": "Ask the user to log in"
+      }
+     ],
+     "answer": "c",
+     "topic": "signature"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A new-lead form must create a CRM contact and post to team chat. Volume is about ten a day, and nobody on the team writes code. A colleague proposes custom webhook code with signature checks and a dedupe table. Which would you pick, and what would make you change your mind?",
+     "answer": "Use a hub: low volume and no coding skill make ready-made triggers and actions cheaper and faster to maintain. Change to direct webhooks if volume grows, if the hub's delay or limits hurt, if reliability and retry control matter, or if the data is sensitive enough that you want it not to pass through a third party. If you do build, verify signatures, check timestamps, dedupe by event id and reply fast.",
+     "rubric": "Chooses hub for low volume/no code with reasons; names at least two triggers to switch (volume, reliability, control, sensitivity); mentions signature/dedupe if built."
+    }
+   ]
+  },
+  {
+   "title": "OAuth, scopes and storing tokens",
+   "source": "moksy.ai/wt-earning-gaps/docker-compose.yml (auth service env: PKCE enforced, state TTL, providers off by default); MOKSY_INTEGRATIONS_MASTER_PLAN.md section 1; general practice",
+   "body": "Most business tools let you connect them with OAuth rather than sharing a password. In the authorization-code flow the user is sent to the provider, approves a list of scopes, and the provider returns a short code to your callback URL. Your server swaps that code for an access token (short-lived) and often a refresh token (long-lived). Three protections matter. First, a random state value, saved before the redirect and checked on return, defeats forged callbacks. Second, PKCE adds a one-time secret so a stolen code is useless. Third, ask for the fewest scopes that do the job: a tool that only reads contacts should not request permission to delete them. Moksy's auth service is an OAuth client for sign-in providers; its compose file enforces PKCE by default, keeps the state for ten minutes, and has each provider switched off until configured. The integrations plan also notes that provider secrets are stored sealed, not in plain text. Tokens are credentials: keep them server-side, encrypted at rest, never in logs or URLs, and revoke them when the person leaves or the connection is removed. Expect a refresh token to stop working if the user changes their password or removes the app, and design the connection to show a clear 'reconnect' state rather than failing silently.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is the purpose of the OAuth state value?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It lets your server check that the callback matches a request it started"
+      },
+      {
+       "key": "b",
+       "text": "It encrypts the token"
+      },
+      {
+       "key": "c",
+       "text": "It lists the scopes"
+      },
+      {
+       "key": "d",
+       "text": "It refreshes the access token"
+      }
+     ],
+     "answer": "a",
+     "topic": "state"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A tool only needs to read a CRM's contacts. Which scope choice is best?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The broadest scope, to avoid later changes"
+      },
+      {
+       "key": "b",
+       "text": "Read-only access to contacts"
+      },
+      {
+       "key": "c",
+       "text": "Full admin access"
+      },
+      {
+       "key": "d",
+       "text": "No scope at all"
+      }
+     ],
+     "answer": "b",
+     "topic": "least privilege"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Which statement about tokens is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Put them in the callback URL so they are easy to debug"
+      },
+      {
+       "key": "b",
+       "text": "Share one token between all clients"
+      },
+      {
+       "key": "c",
+       "text": "Store them server-side, encrypted, and keep them out of logs"
+      },
+      {
+       "key": "d",
+       "text": "They never expire"
+      }
+     ],
+     "answer": "c",
+     "topic": "token storage"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "A connected helpdesk integration suddenly returns 'unauthorised' for one customer. Give likely causes and how the product should behave.",
+     "answer": "Likely causes: the refresh token was revoked, the user removed the app or changed their password, scopes were reduced, or the token expired and refresh failed. The product should detect the failure, mark the connection as needing reconnect, tell the owner clearly, stop retrying endlessly, and avoid leaking token details in logs.",
+     "rubric": "Names at least two causes; says to show a reconnect state; avoids silent failure or infinite retries."
+    }
+   ]
+  },
+  {
+   "title": "Data ownership, lock-in and hub tiers",
+   "source": "moksy.ai/wt-earning-gaps/docs/MOKSY_1000_INTEGRATIONS.md (sections 1-2 definitions); MOKSY_INTEGRATIONS_MASTER_PLAN.md (status: at founder review gate); general practice",
+   "body": "Before you adopt a business tool, ask who owns the data and how it leaves. Check: can you export everything (contacts, history, attachments) in an open format such as CSV or JSON? Is there an API, and what are its rate limits? What happens to the data if you cancel? Lock-in is the cost of moving later, and it grows with every custom field and automation you build inside the tool. Reduce it by keeping a copy of key records in a system you control, using standard fields, and documenting your automations. Also keep customer personal data to the tools that need it, because each extra tool is another place data can leak and another party to list in your privacy documentation. The Moksy catalogue sorts each app by how it reaches Moksy: live (a URL, file or link is enough), through a hub (works with the hub's generic webhook and HTTP steps), with a script (only via the public API), adapter planned, or not yet. Read those labels with care. The catalogue reports hundreds of apps as working today, but the integrations master plan, read earlier, says its webhooks, public keys and exports were mostly absent or partial, and the plan was at a review gate. Two documents disagree, so check the current build before promising a customer an integration.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which question best tests lock-in risk before buying a tool?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Does it have a dark mode?"
+      },
+      {
+       "key": "b",
+       "text": "How many users are on the vendor's homepage?"
+      },
+      {
+       "key": "c",
+       "text": "Is its logo available?"
+      },
+      {
+       "key": "d",
+       "text": "Can we export all our data in an open format?"
+      }
+     ],
+     "answer": "d",
+     "topic": "export"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "In the catalogue, what does 'through a hub' mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It needs a native adapter that is still planned"
+      },
+      {
+       "key": "b",
+       "text": "It works now using the hub's generic webhook and HTTP steps with a Moksy API key"
+      },
+      {
+       "key": "c",
+       "text": "It only works with a script"
+      },
+      {
+       "key": "d",
+       "text": "Moksy does not support it"
+      }
+     ],
+     "answer": "b",
+     "topic": "tiers"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why limit personal customer data to the tools that need it?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes tools run faster"
+      },
+      {
+       "key": "b",
+       "text": "It is required by every CRM"
+      },
+      {
+       "key": "c",
+       "text": "Each extra tool is another place data can leak and another party to document"
+      },
+      {
+       "key": "d",
+       "text": "Hubs refuse extra fields"
+      }
+     ],
+     "answer": "c",
+     "topic": "minimisation"
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "A prospect asks whether GGLink can push Moksy plans into their CRM today. The catalogue marks the CRM family as 'through a hub', but the master plan says Moksy's webhooks and public API keys are not yet built. What do you tell the prospect, and what do you do before replying?",
+     "answer": "Do not promise it. First check the current build (are API keys verified, do webhooks fire and sign, is the hub app published?) and read the latest status of both documents. Then reply honestly: describe it as planned or possible via a hub with manual steps if that is what is true, give a date only if engineering confirms, and offer an interim path such as a file export.",
+     "rubric": "Refuses to over-promise; verifies the real current state; notes the two sources conflict; offers honest wording or interim path."
+    }
+   ]
+  }
+ ]
+}

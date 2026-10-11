@@ -1,0 +1,325 @@
+{
+ "trackSlug": "tech-testing",
+ "items": [
+  {
+   "title": "ggsocial's Vitest suite and in-memory Postgres",
+   "body": "ggsocial is the one Next.js app of ours with a proper automated test suite. `npm test` runs `vitest run`. The config includes files matching tests/**/*.test.ts, uses the node environment (these are server-side tests, not browser tests), sets a 30 second timeout, and aliases the `server-only` package to a stub, because that package deliberately throws outside a real Next.js server build. Current test files cover publishing, registration, Bluesky and Mastodon handling, research, writing-style checks (writing-tells) and alerts. Rather than needing a live Postgres, tests call makeTestDb in tests/stubs/test-db.ts. It creates an in-memory Postgres using PGlite, then uses drizzle-kit's pushSchema to build the real app schema inside it. A test then replaces the app's database module with vi.mock(\"@/lib/db\"), seeds its own brands, users and memberships, and mocks fetch for outside services. This keeps tests fast, isolated and close to production because the same schema and SQL dialect are used. The deploy script scripts/deploy.sh runs the type check, lint and tests on the developer machine, and a failed test means nothing is deployed; only SKIP_TESTS=1 bypasses it, intended for emergencies. Jest is not used here, and no Playwright config exists in ggsocial.",
+   "source": "ggsocial/package.json, ggsocial/vitest.config.mts, ggsocial/tests/*, ggsocial/scripts/deploy.sh",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What command runs ggsocial's automated tests?",
+     "options": [
+      {
+       "key": "a",
+       "text": "npm run jest"
+      },
+      {
+       "key": "b",
+       "text": "npm test, which runs vitest run"
+      },
+      {
+       "key": "c",
+       "text": "npm run e2e"
+      },
+      {
+       "key": "d",
+       "text": "npm run check:ai"
+      }
+     ],
+     "answer": "b",
+     "topic": "running tests"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does ggsocial's Vitest config alias server-only to a stub?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To speed up the browser tests"
+      },
+      {
+       "key": "b",
+       "text": "The real package throws outside a Next.js server build, and the tests are server code"
+      },
+      {
+       "key": "c",
+       "text": "To connect to the production database"
+      },
+      {
+       "key": "d",
+       "text": "To disable TypeScript checking"
+      }
+     ],
+     "answer": "b",
+     "topic": "test config"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does makeTestDb provide?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A connection to the production Postgres container"
+      },
+      {
+       "key": "b",
+       "text": "An in-memory PGlite Postgres with the real app schema pushed into it"
+      },
+      {
+       "key": "c",
+       "text": "A SQLite file copied from gglearn"
+      },
+      {
+       "key": "d",
+       "text": "A mock that returns empty arrays"
+      }
+     ],
+     "answer": "b",
+     "topic": "test database"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Why use an in-memory PGlite database for ggsocial's tests instead of a mocked database object or the real Docker Postgres? Give two benefits and one limitation you should keep in mind.",
+     "answer": "Benefits: the real schema and Postgres SQL dialect run, so query mistakes are caught that a hand-written mock would hide; it is fast, isolated per test run and needs no network or running container. Limitation: it is not the real server, so version-specific or extension behaviour, connection pooling and production data volume are not exercised; the deploy-time and live system still need checking.",
+     "rubric": "Gives two benefits (realism of SQL/schema, speed/isolation); states a real limitation of an embedded stand-in."
+    }
+   ]
+  },
+  {
+   "title": "ggmoney's PHP tests: plain scripts, two databases",
+   "body": "ggmoney is plain PHP, and its tests are plain PHP scripts in the tests folder with names such as vat_test.php, payroll_test.php, itsa_test.php, csrf_test.php, tenant_test.php, banking_test.php and compliance_test.php. We found no PHPUnit or other framework config. Each script starts with declare(strict_types=1), defines the constants the app needs, builds a throwaway database, posts documents through the real code, and checks the results; the VAT test, for example, checks all nine VAT boxes under each of three schemes. By default the suite runs against SQLite. Setting GGMONEY_TEST_DRIVER=mysql, plus the DB_* variables, runs the same assertions against MySQL, which proves the two schemas behave identically. That matters because MySQL runs in STRICT mode, which errors on a truncated money value, while SQLite is looser. A tests/stress folder holds heavier suites grouped by area: banking, compliance, itsa, ledger, payroll, security and vat. The tests define TAX_YEARS_VERIFIED, so figures for a tax year not yet marked verified are not presented as checked, and payroll warns until it is verified. Tests in a finance app guard money rules (rounding, thresholds, tenant separation), so a failing assertion should be treated as a possible incorrect-calculation bug, not noise. Tax rules themselves must come from HMRC sources, not from the tests.",
+   "source": "ggmoney/tests/*_test.php, ggmoney/tests/stress/, ggmoney/README.md",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How are ggmoney's tests written?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As plain PHP scripts in tests/ that build a throwaway database and check results"
+      },
+      {
+       "key": "b",
+       "text": "As Jest tests run by npm"
+      },
+      {
+       "key": "c",
+       "text": "As Playwright browser flows"
+      },
+      {
+       "key": "d",
+       "text": "As PHPUnit classes configured in phpunit.xml"
+      }
+     ],
+     "answer": "a",
+     "topic": "test style"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does setting GGMONEY_TEST_DRIVER=mysql do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Skips all database tests"
+      },
+      {
+       "key": "b",
+       "text": "Enables live HMRC calls"
+      },
+      {
+       "key": "c",
+       "text": "Seeds production data"
+      },
+      {
+       "key": "d",
+       "text": "Runs the same assertions against MySQL instead of the default SQLite"
+      }
+     ],
+     "answer": "d",
+     "topic": "driver switch"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why is it valuable to run the suite on both SQLite and MySQL?",
+     "options": [
+      {
+       "key": "a",
+       "text": "MySQL is always faster"
+      },
+      {
+       "key": "b",
+       "text": "SQLite cannot store numbers"
+      },
+      {
+       "key": "c",
+       "text": "It proves the two schemas behave identically, including MySQL's strict handling of truncated money values"
+      },
+      {
+       "key": "d",
+       "text": "It removes the need for a staging site"
+      }
+     ],
+     "answer": "c",
+     "topic": "cross-database"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "You change the student-loan deduction rounding in payroll code. The SQLite test run passes but you have not run MySQL. Explain what you would do before merging, and why a finance app justifies this.",
+     "answer": "Run the same suite with GGMONEY_TEST_DRIVER=mysql and the DB_* variables, plus the payroll stress tests, because MySQL STRICT mode and rounding or truncation can differ from SQLite and money errors are costly. Check the expected figures against an official HMRC source rather than editing the assertion to match the code, and add a test case for the changed rounding.",
+     "rubric": "Runs MySQL driver; mentions differing strictness; verifies expected values from authoritative source; adds a test."
+    }
+   ]
+  },
+  {
+   "title": "gglearn: no test script, but check and coverage scripts",
+   "body": "gglearn has no `test` script in package.json and no vitest, Jest or Playwright config. Its scripts include lint, typecheck (tsc --noEmit), check:ai, check:dynamic and coverage. The last two are quality gates for question content, not unit tests of application code. `check:dynamic` (scripts/dynamic-check.ts) self-tests the dynamic question families: for each family and a spread of levels it checks that a draft becomes four distinct options with the answer among them, that the stated answer matches what real execution produces (using node, python, php, sqlite3, git, semver and tsc), and that each family has enough distinct prompts per level. The sampler records how often generators reject a draw, because too many rejections point to a weak generator. `coverage` (scripts/coverage.ts) counts, for every track and level, stored active questions plus the distinct prompts the dynamic families can produce, and compares that with a minimum (default 100, adjustable with --min), failing the run when asked with --fail. Together they answer \"is every answer actually correct\" and \"will a learner run out of questions\". They do not cover login, scoring, page rendering or database logic, and the deploy workflow runs none of them, so a broken change can ship if nobody runs them. Sensible next steps would be a small Vitest suite for scoring and levels logic and a CI step running typecheck, lint and check:dynamic.",
+   "source": "gglearn/package.json, gglearn/scripts/dynamic-check.ts, gglearn/scripts/coverage.ts, gglearn/.github/workflows/deploy.yml",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Does gglearn's package.json have a test script?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No; it has typecheck, check:dynamic and coverage scripts instead"
+      },
+      {
+       "key": "b",
+       "text": "Yes, it runs vitest run"
+      },
+      {
+       "key": "c",
+       "text": "Yes, it runs Playwright"
+      },
+      {
+       "key": "d",
+       "text": "Yes, it runs phpunit"
+      }
+     ],
+     "answer": "a",
+     "topic": "gglearn scripts"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does check:dynamic verify for a generated question?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That the question text is under 100 words"
+      },
+      {
+       "key": "b",
+       "text": "That the learner has a profile picture"
+      },
+      {
+       "key": "c",
+       "text": "That the page loads in under a second"
+      },
+      {
+       "key": "d",
+       "text": "The stated answer matches what real execution of the code or tool produces"
+      }
+     ],
+     "answer": "d",
+     "topic": "dynamic check"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Name two risks that remain in gglearn because there is no automated test script, and say what you would add first.",
+     "answer": "Risks: logic such as scoring, level progression or auth could break without anyone noticing; the deploy workflow runs no checks, so a bad push to main deploys. check:dynamic and coverage only protect question content. Add first: a small Vitest suite for scoring and level logic, and a CI step before deploy running typecheck, lint and check:dynamic.",
+     "rubric": "Names risks not covered by the content checks; notes deploy runs no checks; proposes a concrete first test or CI step."
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "coverage reports that a new tools track has only 30 distinct questions at level 6 while the minimum is 100. A teammate says to ship anyway because check:dynamic passed. Respond.",
+     "answer": "check:dynamic proves the dynamic families produce correct answers and enough variety per family; it does not prove the track as a whole has enough questions. The coverage report shows a shortfall at level 6, so a learner would repeat questions. Either add stored or generated questions for that level, or knowingly lower the minimum for this track. Run coverage with --fail in the release process so the gap blocks shipping rather than depending on someone reading the output.",
+     "rubric": "Separates correctness check from quantity check; recommends adding questions or an explicit decision; suggests --fail gate."
+    }
+   ]
+  },
+  {
+   "title": "Moksy test setups, Playwright and test strategy",
+   "body": "Moksy has the broadest testing, spread across a monorepo. Many foundation services and packages carry a vitest.config.js, some packages use Node's built-in test runner (`node --test`), and the root package.json has scripts for unit, integration, contract, performance and smoke runs. Hundreds of test and spec files exist. Integration suites named *.itest.mjs persist through real Mongoose models against a real Mongo, and the CI workflow starts a Mongo service container for them, because unique indexes and guarded updates cannot be proven with a mock. The dashboard has unit, integration and e2e scripts, but its e2e script runs a Vitest file (requirements-to-document.flow.test.jsx), a flow test rather than a real browser. CI (ci.yml) runs lint, unit, integration, a Compose config check, a Trivy image scan and gateway smoke tests on pushes and pull requests. On tool names: Jest has no config in any of our repos. Playwright appears only as a declared dependency in foundation/requirements/package.json, and we found no playwright.config anywhere, so treat browser end-to-end testing as not established. Strategy in short: many fast unit tests, fewer integration tests against real dependencies where behaviour depends on the database, and a few smoke or flow tests of whole journeys. Pick the cheapest test that would actually catch the failure.",
+   "source": "moksy.ai/wt-earning-gaps/{package.json,.github/workflows/ci.yml,foundation/*/vitest.config.js,apps/dashboard/package.json}, repo-wide config search",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why do Moksy's *.itest.mjs suites run against a real Mongo in CI?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Unique indexes and guarded updates cannot be proven with a mock"
+      },
+      {
+       "key": "b",
+       "text": "Because Mongo is faster than mocks"
+      },
+      {
+       "key": "c",
+       "text": "Because Jest requires it"
+      },
+      {
+       "key": "d",
+       "text": "Because Playwright needs a database"
+      }
+     ],
+     "answer": "a",
+     "topic": "integration tests"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which of these is true about Jest in our repos?",
+     "options": [
+      {
+       "key": "a",
+       "text": "gglearn's test script uses Jest"
+      },
+      {
+       "key": "b",
+       "text": "ggsocial uses Jest with PGlite"
+      },
+      {
+       "key": "c",
+       "text": "Moksy CI runs Jest e2e tests"
+      },
+      {
+       "key": "d",
+       "text": "No repo we checked has a Jest config"
+      }
+     ],
+     "answer": "d",
+     "topic": "jest status"
+    },
+    {
+     "level": 9,
+     "type": "open",
+     "prompt": "Explain the testing pyramid as Moksy applies it, and when you would choose an integration test over a unit test.",
+     "answer": "Many fast unit tests at the base, fewer integration tests against real dependencies in the middle, and a small number of smoke or whole-flow tests at the top. Choose an integration test when the behaviour depends on the real dependency, such as database constraints, unique indexes or guarded updates, which a mock would simply assume away.",
+     "rubric": "Describes layers and relative counts; gives a concrete criterion for integration tests tied to Moksy's Mongo example."
+    },
+    {
+     "level": 12,
+     "type": "scenario",
+     "prompt": "You must add automated checks for a new gglearn feature that changes how scores update. gglearn has no test script. Plan the minimum viable testing and CI changes, and state which tools our repos already show you can reuse.",
+     "answer": "Add a test script using Vitest, which ggsocial and many Moksy packages already use, with a node environment config like ggsocial's. Write unit tests for the pure scoring and level logic first, and a database-backed test using a temporary SQLite database or in-memory setup. Add a workflow step before deploy running typecheck, lint, the new tests and check:dynamic, as Moksy's ci.yml does for its checks. Defer browser end-to-end work, since Playwright is not configured in any repo.",
+     "rubric": "Chooses Vitest citing existing use; targets pure logic first; adds CI gating before deploy; avoids claiming Playwright is in place."
+    }
+   ]
+  }
+ ]
+}

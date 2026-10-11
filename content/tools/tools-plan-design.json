@@ -1,0 +1,361 @@
+{
+ "trackSlug": "tools-plan-design",
+ "items": [
+  {
+   "title": "Planning tools as families, and how Moksy reaches them",
+   "source": "moksy.ai/wt-earning-gaps/docs/MOKSY_1000_INTEGRATIONS.md (catalogue; the tools are catalogued, not used by us)",
+   "body": "Planning and design tools come in families, and the Moksy integration catalogue is organised that way. The catalogue document lists 41 families covering 1,165 apps. The planning-and-design ones are: product management and roadmaps, user research and feedback, documents and wikis, diagrams and whiteboards, design and prototyping, and presentations and publishing. Each family has a 'what moves' unit: a roadmap item, a piece of feedback, a page, a board, a design file, a slide deck. That unit is what an integration carries between the tool and Moksy.\n\nThe catalogue gives every app a status. 'Works today' means a path Moksy already ships carries it with nothing needed on the app side except a URL, a file, a link or an MCP entry. 'Through a hub' means it works now using an automation hub's generic webhook and HTTP steps plus a Moksy API key. 'With a script' means only Moksy's public API from the app's own scripting. 'Adapter planned' means only a first-class connector would carry it, and that connector is not built. 'Not yet' means the app offers nothing Moksy can use. Effort is graded E0 (nothing to do), E1 (a hub template or worked example) or E2 (a native adapter). The catalogue file is generated from source files and must not be edited by hand.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "In the Moksy catalogue, what does the status 'through a hub' mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The app needs a native connector that has not been built yet"
+      },
+      {
+       "key": "b",
+       "text": "The app is retired and kept only for completeness"
+      },
+      {
+       "key": "c",
+       "text": "The app can only be reached by emailing the Moksy team"
+      },
+      {
+       "key": "d",
+       "text": "The app works now using an automation hub's generic webhook and HTTP steps plus a Moksy API key"
+      }
+     ],
+     "answer": "d",
+     "topic": "catalogue status"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is the 'what moves' unit for the Design and prototyping family?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A design file"
+      },
+      {
+       "key": "b",
+       "text": "A calendar event"
+      },
+      {
+       "key": "c",
+       "text": "A payment"
+      },
+      {
+       "key": "d",
+       "text": "A support ticket"
+      }
+     ],
+     "answer": "a",
+     "topic": "families"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why must the catalogue markdown file not be edited by hand?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is encrypted"
+      },
+      {
+       "key": "b",
+       "text": "It is generated from the source catalogue files, so manual edits would be overwritten and drift from the truth"
+      },
+      {
+       "key": "c",
+       "text": "Editing it deletes the apps"
+      },
+      {
+       "key": "d",
+       "text": "Only the hub vendors may change it"
+      }
+     ],
+     "answer": "b",
+     "topic": "generated docs"
+    },
+    {
+     "level": 7,
+     "type": "open",
+     "prompt": "Explain why a catalogue of over a thousand apps is not a thousand separate integration builds.",
+     "answer": "Moksy has a small set of primitives, and an outside app reaches them through a handful of shared paths (webhook, public API, file, MCP, URL source, email, calendar feed, automation hubs). Apps in the same family share recipes, so one path covers many apps. Only apps needing consent screens and mapping need a native adapter.",
+     "rubric": "Must mention shared paths/primitives, family-level recipes reused across apps, and that native adapters are the exception."
+    }
+   ]
+  },
+  {
+   "title": "Choosing a roadmap and user-research tool",
+   "source": "general practice; family purposes from MOKSY_1000_INTEGRATIONS.md",
+   "body": "A roadmap tool answers 'what are we building next, and why?'. A user-research tool answers 'what do people actually need?'. They belong together: the roadmap should point back to evidence, and research should end in decisions rather than a folder of notes. In the Moksy catalogue the reasoning is explicit: roadmap items can start a Briefing, and interview notes and feedback are the Sources a problem statement is built from.\n\nWhen choosing either kind of tool, do not start with a feature list. Ask who writes and who only reads, since most stakeholders only read. Ask whether data can be exported in a plain format, because lock-in is the biggest long-term risk. Ask whether there is an API or webhook so items can flow into your issue tracker and docs without retyping. Ask what permissions exist, since research notes often contain names and opinions about real people. Ask how evidence links to decisions, so a roadmap item can show which interviews justify it.\n\nFor research data, store raw material separately from conclusions, anonymise participants where you can, and agree who may see recordings. Treat any third-party tool as a place where you must be able to delete data on request. For small teams, a simple shared document and a spreadsheet often beat a heavy platform until the volume of feedback justifies one.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which question matters most for avoiding long-term lock-in when choosing a roadmap tool?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Does it have a dark mode?"
+      },
+      {
+       "key": "b",
+       "text": "How many colours do the cards support?"
+      },
+      {
+       "key": "c",
+       "text": "Does it have a mobile app?"
+      },
+      {
+       "key": "d",
+       "text": "Can the data be exported in a plain, portable format?"
+      }
+     ],
+     "answer": "d",
+     "topic": "lock-in"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "According to the Moksy catalogue's reasoning, what do interview notes and feedback become?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Invoices"
+      },
+      {
+       "key": "b",
+       "text": "Sources that a problem statement is built from"
+      },
+      {
+       "key": "c",
+       "text": "Deployment logs"
+      },
+      {
+       "key": "d",
+       "text": "Calendar milestones"
+      }
+     ],
+     "answer": "c",
+     "topic": "research evidence"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why should raw research material be kept separate from conclusions?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So that decisions can be checked against the original evidence and re-interpreted later"
+      },
+      {
+       "key": "b",
+       "text": "Because conclusions cannot be stored in the same tool"
+      },
+      {
+       "key": "c",
+       "text": "To make the research folder larger"
+      },
+      {
+       "key": "d",
+       "text": "Because law forbids writing conclusions"
+      }
+     ],
+     "answer": "a",
+     "topic": "evidence"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "A five-person team wants to adopt a heavyweight research platform after two interviews. Another colleague says a shared doc is enough. Argue a recommendation and say what would change your mind.",
+     "answer": "Recommend starting with a shared doc plus a simple tracking sheet because volume is low, cost and lock-in are lower and the habit of linking evidence to decisions matters more than tooling. Revisit when feedback volume, number of researchers or need for search/tagging/permissions outgrow it. Check export, API, permissions and deletion before any adoption.",
+     "rubric": "Good answer weighs volume against tool overhead, names selection criteria (export, API, permissions, deletion), states a concrete trigger for moving to a platform, and avoids product claims."
+    }
+   ]
+  },
+  {
+   "title": "Docs, wikis and diagrams: what lives where",
+   "source": "gglearn/deploy/*, ggsocial/DEPLOY.md, gglearn/docs, MOKSY_1000_INTEGRATIONS.md (documents/diagrams families catalogued)",
+   "body": "Documentation lives in two places for different reasons. Anything that must stay true alongside code lives in the repository and is reviewed with the code. Our projects do this: gglearn keeps a docs folder and a README, and ggsocial and ggmoney each have a DEPLOY.md. The ggsocial DEPLOY.md is a good model because it records 'traps learned the hard way', for example that a deploy sync with delete can wipe the production secrets file, and that the server's login shell cannot parse some commands. That is knowledge a wiki page tends to lose.\n\nA wiki or document tool suits material that changes often and is written by non-developers: meeting notes, onboarding, plans, decision logs. Keep one owner per page and say when it was last checked. Stale docs are worse than none, because people trust them. Dates written into a doc, such as when a setting was added, help a reader judge freshness.\n\nDiagrams are for showing structure that prose hides: how requests flow, what talks to what. Draw only what the reader needs, name every box, and keep the source file editable. In the Moksy catalogue, whiteboards and diagrams are catalogued as inputs to a Briefing and as attachments to a Blueprint. We have not standardised on a diagramming product; the choice should follow whether the team can export and version the file.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Where should documentation that must stay true alongside the code live?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the repository, reviewed with the code"
+      },
+      {
+       "key": "b",
+       "text": "Only in a chat channel"
+      },
+      {
+       "key": "c",
+       "text": "Only in a personal notebook"
+      },
+      {
+       "key": "d",
+       "text": "On the production server's home directory"
+      }
+     ],
+     "answer": "a",
+     "topic": "docs location"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why is a 'traps learned the hard way' section useful in a DEPLOY.md?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes the file longer"
+      },
+      {
+       "key": "b",
+       "text": "It records operational knowledge that is easily lost, such as how a sync can delete production secrets"
+      },
+      {
+       "key": "c",
+       "text": "It replaces the need for tests"
+      },
+      {
+       "key": "d",
+       "text": "It is required by Apache"
+      }
+     ],
+     "answer": "b",
+     "topic": "operational docs"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What is the main risk of a stale wiki page?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It uses disk space"
+      },
+      {
+       "key": "b",
+       "text": "It looks untidy"
+      },
+      {
+       "key": "c",
+       "text": "It cannot be searched"
+      },
+      {
+       "key": "d",
+       "text": "People trust it and act on out-of-date information"
+      }
+     ],
+     "answer": "d",
+     "topic": "staleness"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Your team keeps deployment instructions in a wiki, but the deploy script in the repo has changed twice since the page was last edited. Explain what you would do and why.",
+     "answer": "Move the authoritative steps into the repo (DEPLOY.md next to the script, reviewed in the same pull request as script changes) and leave the wiki with a short pointer. Add a last-checked date and an owner. Make updating the doc part of changing the script.",
+     "rubric": "Must propose docs-in-repo for code-coupled content, tie doc updates to code changes, mention ownership/dates, and the wiki as a pointer."
+    }
+   ]
+  },
+  {
+   "title": "Prototyping and presentation tools",
+   "source": "general practice; MOKSY_1000_INTEGRATIONS.md families (design/prototyping and presentations catalogued, not used by us)",
+   "body": "A prototype exists to test an idea cheaply before engineers build it. Choose its fidelity by the question you are asking. A rough sketch is enough to test whether a flow makes sense. A clickable mock is needed to see whether people can finish a task. Code is only worth writing when you must test behaviour a mock cannot show, such as speed or real data. Do not let a polished prototype be mistaken for a finished product: label it, and state what is not real.\n\nIn the Moksy catalogue the design family is described like this: designs are cited in the Blueprint, and requirements sit next to the mockups. That is a good habit in general. Link the design file from the requirement, and write down the decision the prototype supported, because a design file alone does not record why.\n\nPresentation tools turn a plan into something others can follow. Keep a deck to one message per slide, put the decision you need on the first slide, and prefer sharing a link over attaching a file so the audience sees the latest version. Check link permissions before sending, since a link anyone can open may expose unreleased work. Make sure you can export to a portable format in case the tool is no longer available. The catalogue lists the Blueprint being presented as a deck or published as a page as the intended pattern.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What should decide how detailed a prototype is?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The question you are trying to answer"
+      },
+      {
+       "key": "b",
+       "text": "The designer's mood"
+      },
+      {
+       "key": "c",
+       "text": "The size of the file"
+      },
+      {
+       "key": "d",
+       "text": "Whatever the tool defaults to"
+      }
+     ],
+     "answer": "a",
+     "topic": "fidelity"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why link the design file from the requirement and write down the decision it supported?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Design files cannot be opened otherwise"
+      },
+      {
+       "key": "b",
+       "text": "Because links make files smaller"
+      },
+      {
+       "key": "c",
+       "text": "Because it is mandatory in every tool"
+      },
+      {
+       "key": "d",
+       "text": "A design file shows what but not why, so the reason would be lost"
+      }
+     ],
+     "answer": "d",
+     "topic": "traceability"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "What is a sensible check before sharing a presentation link with a client?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Rename the file"
+      },
+      {
+       "key": "b",
+       "text": "Check who can open the link, since open links can expose unreleased work"
+      },
+      {
+       "key": "c",
+       "text": "Delete the speaker notes"
+      },
+      {
+       "key": "d",
+       "text": "Convert it to an image"
+      }
+     ],
+     "answer": "c",
+     "topic": "sharing"
+    },
+    {
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A stakeholder sees a polished clickable prototype and asks why the feature is not live yet. How would you prevent and handle this?",
+     "answer": "Prevent by labelling prototypes as prototypes, listing what is not real (no backend, fake data), and choosing lower fidelity when the question allows. Handle by explaining what was tested and learned, what remains to build (data, security, error cases, performance), and giving an honest estimate.",
+     "rubric": "Should cover labelling, scoping fidelity to the question, explaining the gap between mock and product, and setting expectations."
+    }
+   ]
+  }
+ ]
+}

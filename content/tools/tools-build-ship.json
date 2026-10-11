@@ -1,0 +1,361 @@
+{
+ "trackSlug": "tools-build-ship",
+ "items": [
+  {
+   "title": "How gglearn ships: deploy.sh and the GitHub Actions workflow",
+   "source": "gglearn/deploy/deploy.sh, gglearn/.github/workflows/deploy.yml, gglearn/ecosystem.config.cjs, gglearn/drizzle.config.ts",
+   "body": "gglearn is deployed by one script, deploy/deploy.sh, and the same script is run by a GitHub Actions workflow on every push to main (or by hand through workflow_dispatch). The workflow checks that four repository secrets exist (an SSH key, host, user and known-hosts), writes an SSH config with the alias gglink-live, then runs the script. Its concurrency setting queues deploys rather than cancelling one that is half-way.\n\nThe script first rsyncs the code to /var/www/gglearn.gglink.co.uk with --delete, excluding node_modules, .next, .git, the SQLite database files and any .env files. Those exclusions matter: with --delete, anything not excluded and not in the source would be removed from the server. Then it pipes steps into bash on the server: take a flock so two deploys cannot overlap, npm ci, drizzle-kit push for the schema, next build, then pm2 startOrRestart of the ecosystem file and pm2 save. It deliberately does not pass --force to drizzle-kit, so a schema change that would delete rows stops the deploy instead of running a delete.\n\nLast, it polls http://127.0.0.1:3400/ up to ten times and fails the deploy unless it gets HTTP 200, printing recent pm2 error logs. A deploy therefore only succeeds if the app actually came back. Note that this repository has no test or lint step in its workflow; the checks are the build and the health probe.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What triggers the gglearn GitHub Actions deploy workflow?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A push to main, or a manual workflow_dispatch run"
+      },
+      {
+       "key": "b",
+       "text": "Every pull request"
+      },
+      {
+       "key": "c",
+       "text": "A nightly schedule only"
+      },
+      {
+       "key": "d",
+       "text": "A comment on an issue"
+      }
+     ],
+     "answer": "a",
+     "topic": "triggers"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does gglearn's deploy run drizzle-kit push without --force?",
+     "options": [
+      {
+       "key": "a",
+       "text": "--force is not supported by SQLite"
+      },
+      {
+       "key": "b",
+       "text": "To make it faster"
+      },
+      {
+       "key": "c",
+       "text": "Because pm2 requires it"
+      },
+      {
+       "key": "d",
+       "text": "So a schema change that would delete rows stops and fails the deploy instead of silently deleting data"
+      }
+     ],
+     "answer": "d",
+     "topic": "safe migrations"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What is the flock in the remote deploy steps for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To encrypt the database"
+      },
+      {
+       "key": "b",
+       "text": "To lock the .env file against reading"
+      },
+      {
+       "key": "c",
+       "text": "To stop two deploys running on the server at the same time"
+      },
+      {
+       "key": "d",
+       "text": "To speed up npm ci"
+      }
+     ],
+     "answer": "c",
+     "topic": "locking"
+    },
+    {
+     "level": 10,
+     "type": "scenario",
+     "prompt": "A deploy finishes the build but the final step reports the app did not return HTTP 200. Describe what the script has already done, what you would check first, and what you would not do.",
+     "answer": "The code was synced, the schema pushed, the app built and pm2 restarted, so the site may be down or running a broken build. Read the pm2 error logs the script printed (and pm2 logs gglearn-web), check the build and runtime errors, check the port 3400 listener and database file permissions, fix forward or redeploy the last good commit. Do not force a schema push or delete the database or .env files to make the error go away.",
+     "rubric": "Should note the health check is the gate, check logs first, consider rollback by redeploying a previous commit, and avoid destructive shortcuts (--force, deleting data/.env)."
+    }
+   ]
+  },
+  {
+   "title": "Cloudflare in front, Apache behind: locking the origin",
+   "source": "gglearn/deploy/apache-cloudflare-only.conf, update-cloudflare-ips.sh, gglearn.gglink.co.uk.conf, ggmoney/DEPLOY.md",
+   "body": "Our sites sit behind Cloudflare, with Apache on the origin server proxying to a local Node process. The app reads the visitor's address from X-Forwarded-For. That is only trustworthy if every request really came through Cloudflare. If people can hit the origin server directly, they can send a forged header and spoof their address, which defeats rate limiting and logging.\n\ngglearn solves this in Apache. deploy/apache-cloudflare-only.conf is a Location block that allows only localhost and Cloudflare's published address ranges. The vhost pulls it in with a plain Include rather than IncludeOptional, so if the file is missing Apache refuses to start instead of quietly serving everyone. A note in the vhost warns that certbot copies the port 80 vhost into the port 443 one, and that copy must carry the same Include line.\n\ndeploy/update-cloudflare-ips.sh regenerates that file from Cloudflare's published lists. It refuses to write if the fetched lists look wrong, so a bad fetch cannot produce an empty allow-list that locks everyone out. Review the diff, commit, deploy, and reload Apache.\n\nTLS has two hops. ggmoney's DEPLOY.md records that Cloudflare's SSL mode must be Full (strict), because with Flexible mode the traffic from Cloudflare to the origin, including OAuth tokens, would travel unencrypted. Certificates on the origin are Let's Encrypt, issued and renewed by certbot's timer.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why must the origin only accept connections from Cloudflare?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cloudflare charges for direct traffic"
+      },
+      {
+       "key": "b",
+       "text": "Apache cannot run otherwise"
+      },
+      {
+       "key": "c",
+       "text": "To make certificates last longer"
+      },
+      {
+       "key": "d",
+       "text": "So forged X-Forwarded-For headers from direct requests cannot spoof client addresses"
+      }
+     ],
+     "answer": "d",
+     "topic": "origin lock"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does the gglearn vhost use Include instead of IncludeOptional for the allow-list file?",
+     "options": [
+      {
+       "key": "a",
+       "text": "IncludeOptional is deprecated"
+      },
+      {
+       "key": "b",
+       "text": "Include is faster"
+      },
+      {
+       "key": "c",
+       "text": "A missing file should stop Apache loading rather than silently expose the site to everyone"
+      },
+      {
+       "key": "d",
+       "text": "IncludeOptional only works over HTTP"
+      }
+     ],
+     "answer": "c",
+     "topic": "fail closed"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does update-cloudflare-ips.sh do if the fetched lists look wrong?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Writes an empty file"
+      },
+      {
+       "key": "b",
+       "text": "Refuses to write the file and exits with an error"
+      },
+      {
+       "key": "c",
+       "text": "Opens the site to all addresses"
+      },
+      {
+       "key": "d",
+       "text": "Deletes the vhost"
+      }
+     ],
+     "answer": "b",
+     "topic": "safe automation"
+    },
+    {
+     "level": 9,
+     "type": "open",
+     "prompt": "ggmoney sends HMRC OAuth tokens between Cloudflare and the origin. Explain which Cloudflare SSL mode to use and what could go wrong with the wrong one.",
+     "answer": "Use Full (strict): Cloudflare connects to the origin over HTTPS and validates its certificate, which the origin has through Let's Encrypt. Flexible mode would send the Cloudflare-to-origin hop in plain HTTP, exposing tokens in transit between those two points even though the visitor sees HTTPS. Also keep the cert renewing and the origin restricted.",
+     "rubric": "Must name Full (strict), explain the Flexible risk to the second hop, and ideally mention origin cert validity and renewal."
+    }
+   ]
+  },
+  {
+   "title": "ggsocial deploy: pm2, rsync and the traps",
+   "source": "ggsocial/DEPLOY.md, ggsocial/ecosystem.config.cjs, ggsocial/package.json",
+   "body": "ggsocial runs two pm2 processes: ggsocial-web (the Next server on a local port behind Apache) and ggsocial-scheduler, which calls cron endpoints so scheduled posts go out. Its database is Postgres in a Docker container, according to its DEPLOY.md. Secrets live in a .env file on the server only.\n\nRun npm run deploy from a laptop. The local script warns about uncommitted changes, runs tsc, lint and the vitest tests (a failure in any stops the deploy), then rsyncs and runs the server half over ssh. The server half checks .env exists, backs up the database, installs dependencies, pushes the schema before restarting, builds into a fresh directory and swaps it in so the old build keeps serving, then restarts both processes and polls /login until it returns 200.\n\nThe document lists traps worth learning from. rsync with --delete will remove .env unless it is excluded, and losing the app secret logs everyone out and makes stored tokens unreadable. The server's login shell is fish, which cannot parse some bash syntax, so the script streams commands into 'bash -s'. A login shell can pick the wrong Node version, so the script puts the system Node first. The live HTTPS vhost is a copy, not a symlink, so edits to sites-available can pass configtest and change nothing. Backups are not scheduled automatically.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does the ggsocial-scheduler pm2 process do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Serves the website"
+      },
+      {
+       "key": "b",
+       "text": "Backs up the database"
+      },
+      {
+       "key": "c",
+       "text": "Renews TLS certificates"
+      },
+      {
+       "key": "d",
+       "text": "Calls cron endpoints so scheduled posts and other timed jobs run"
+      }
+     ],
+     "answer": "d",
+     "topic": "processes"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What happens if rsync --delete runs without excluding the server's .env file?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing, .env is copied back"
+      },
+      {
+       "key": "b",
+       "text": "The file is removed because it is not in the source, breaking secrets and logging everyone out"
+      },
+      {
+       "key": "c",
+       "text": "The build is faster"
+      },
+      {
+       "key": "d",
+       "text": "Apache reloads"
+      }
+     ],
+     "answer": "c",
+     "topic": "rsync delete"
+    },
+    {
+     "level": 6,
+     "type": "mcq",
+     "prompt": "Why does the deploy script stream commands into 'bash -s' over ssh?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The server login shell is fish, which cannot parse some bash syntax"
+      },
+      {
+       "key": "b",
+       "text": "bash is faster than ssh"
+      },
+      {
+       "key": "c",
+       "text": "Because pm2 needs it"
+      },
+      {
+       "key": "d",
+       "text": "To avoid using a password"
+      }
+     ],
+     "answer": "a",
+     "topic": "shell quirks"
+    },
+    {
+     "level": 11,
+     "type": "scenario",
+     "prompt": "You edit /etc/apache2/sites-available/ggsocial...-le-ssl.conf, apachectl configtest passes, you reload, and nothing changes. Explain the likely cause and the correct procedure.",
+     "answer": "The live HTTPS vhost in sites-enabled is a regular file copy, not a symlink, and Apache serves that one, so the edit in sites-available has no effect. Check with apachectl -S which file each vhost comes from, back up the file, edit the sites-enabled copy (and keep the port 80 one consistent), then run apachectl configtest and reload Apache.",
+     "rubric": "Must identify copy vs symlink, mention apachectl -S, backup before editing, configtest then reload."
+    }
+   ]
+  },
+  {
+   "title": "CI, issue trackers and monitoring: what we use and what is catalogued",
+   "source": "moksy.ai/wt-earning-gaps/.github/workflows/ci.yml, observability/, MOKSY_1000_INTEGRATIONS.md; ggsocial/DEPLOY.md",
+   "body": "Continuous integration runs checks automatically on every change. Moksy's CI workflow runs on pushes and pull requests with jobs for lint, unit and integration tests (against a real MongoDB service container), a container image scan, and smoke tests of the gateway. It declares secrets shared by all services once at the top, because a past copy-per-job drifted and one job failed with a too-short secret. These are CI-only dummy values, which is the right habit: never reuse real secrets in CI.\n\nGitHub Actions is also how gglearn deploys. ggsocial instead runs its tsc, lint and tests on the developer's machine before deploying. Each approach has a trade-off: remote CI is shared and visible, local scripts are simple but depend on discipline.\n\nIssue trackers turn work into trackable items with owners and states. Pick one place for work, and link code changes to items. Monitoring answers 'is it up, and is it healthy?'. Moksy's repo has observability folders for Loki, Promtail and an alert dispatcher. Our small Next apps rely on pm2 logs, Apache logs and a health curl after deploys, and ggsocial's notes say database backups are not scheduled, which is a gap. Hosted trackers, cloud providers, monitors and identity providers (SSO) appear in the Moksy catalogue as families; they are catalogued, not claimed as used here. Choose them by export, API access, permissions and alert noise.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why does Moksy's CI declare shared secret values once at the top of the workflow?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is required by GitHub"
+      },
+      {
+       "key": "b",
+       "text": "To make the workflow shorter"
+      },
+      {
+       "key": "c",
+       "text": "So real secrets can be reused"
+      },
+      {
+       "key": "d",
+       "text": "To avoid drift between jobs, where one job had a too-short secret and failed"
+      }
+     ],
+     "answer": "d",
+     "topic": "CI config"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What kind of values should CI environments use for secrets?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Real production secrets"
+      },
+      {
+       "key": "b",
+       "text": "Personal passwords"
+      },
+      {
+       "key": "c",
+       "text": "Dummy values created only for CI"
+      },
+      {
+       "key": "d",
+       "text": "No secrets, ever, even for tests that need them"
+      }
+     ],
+     "answer": "c",
+     "topic": "CI secrets"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which gap does ggsocial's DEPLOY.md state about its operations?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Database backups are not scheduled automatically"
+      },
+      {
+       "key": "b",
+       "text": "There is no health check"
+      },
+      {
+       "key": "c",
+       "text": "pm2 does not restart after reboot"
+      },
+      {
+       "key": "d",
+       "text": "The app has no tests"
+      }
+     ],
+     "answer": "a",
+     "topic": "backups"
+    },
+    {
+     "level": 8,
+     "type": "open",
+     "prompt": "Choose one hosted issue tracker or monitoring tool for a small team and list the checks you would make before committing. Do not rely on product-specific claims.",
+     "answer": "Criteria: export of data in portable form, API/webhooks to connect with code hosting and chat, permission model and SSO, rate limits and alert noise controls, cost behaviour as team grows, data location and deletion. Trial with a real week of work, define who owns it, and record how to leave.",
+     "rubric": "Looks for generic selection criteria (export, API, permissions, noise, cost, exit plan), a trial, and ownership; no invented product facts."
+    }
+   ]
+  }
+ ]
+}
