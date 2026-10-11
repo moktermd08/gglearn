@@ -1,0 +1,2484 @@
+{
+ "trackSlug": "gglink-hosting-maintenance",
+ "status": "review",
+ "lessons": [
+  {
+   "level": 1,
+   "title": "Meet the GGLink site",
+   "syllabus": [
+    "A PHP site, deployed by copying files, with its data in storage/gglink.sqlite",
+    "Run php deploy-check.php before and after every upload",
+    "Secrets live in config.local.php, never in git",
+    "Enquiries appear under Enquiries in the admin"
+   ]
+  },
+  {
+   "level": 2,
+   "title": "Deploy and first run",
+   "syllabus": [
+    "Upload vendor/ (there is no Composer on the server)",
+    "Never overwrite storage/gglink.sqlite",
+    "First run: create the first admin account",
+    "Pricing, Credentials and Results stay hidden until real"
+   ]
+  },
+  {
+   "level": 3,
+   "title": "Checks and safety nets",
+   "syllabus": [
+    "Back up the database before every release",
+    "/storage/gglink.sqlite must return 403 or 404",
+    "Rollback: restore the previous files, leave storage/ alone",
+    "Mail: verify the whole domain in SendGrid for SPF and DKIM"
+   ]
+  },
+  {
+   "level": 4,
+   "title": "Security and access",
+   "syllabus": [
+    "Everything in .htaccess depends on AllowOverride; nginx needs the rules copied by hand",
+    "Admin: 8 attempts per IP then a 15-minute lockout; owner and editor roles",
+    "Behind Cloudflare, redirects key off X-Forwarded-Proto",
+    "Consent decides who may be bulk emailed"
+   ]
+  },
+  {
+   "level": 5,
+   "title": "Running it with confidence",
+   "syllabus": [
+    "PHP 7.4 minimum and already end-of-life: plan the upgrade",
+    "CRM built for about 100,000 contacts: indexed and paginated",
+    "Prices, results and service levels are claims: publish only what is real",
+    "Treat a downloadable database as a possible data breach"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "title": "Deploying the GGLink site safely",
+   "body": "The GGLink website (www.gglink.co.uk) is a PHP site deployed by copying files. Run `php deploy-check.php` before and after uploading: it only reports, changes nothing, exits non-zero if anything would break the site, and refuses to run over HTTP so it is safe to leave on the server. Secrets live in config.local.php, which is gitignored and must never be committed; create it from config.local.php.example. Its settings are SENDGRID_API_KEY (a restricted key with Mail Send permission only), SENDGRID_FROM (must be a verified sender or mail is rejected), ENQUIRY_TO (where enquiries land) and RECAPTCHA_SECRET (without it spam filtering is off). Upload everything except .git/, node_modules/ and storage/gglink.sqlite*. vendor/ must be uploaded because there is no Composer on the server. Never overwrite storage/gglink.sqlite on a re-deploy: it holds the CMS content, blog posts, enquiries and contacts. Back it up before every release, for example cp storage/gglink.sqlite storage/backup-$(date +%F).sqlite. Permissions: chmod 755 storage assets/images/uploads and chmod 644 config.local.php. Only storage/ and assets/images/uploads/ should be writable by the web server. Source: gglink/DEPLOY.md and deploy-check.php.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What should you run before and after uploading a new version of the GGLink site?",
+     "options": [
+      {
+       "key": "a",
+       "text": "php deploy-check.php"
+      },
+      {
+       "key": "b",
+       "text": "composer install"
+      },
+      {
+       "key": "c",
+       "text": "npm run build"
+      },
+      {
+       "key": "d",
+       "text": "php artisan migrate"
+      }
+     ],
+     "answer": "a",
+     "hint": "A pre-flight check that only reports.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does deploy-check.php do to the site?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Restores the latest backup"
+      },
+      {
+       "key": "b",
+       "text": "Uploads the vendor folder"
+      },
+      {
+       "key": "c",
+       "text": "Only reports; it changes nothing"
+      },
+      {
+       "key": "d",
+       "text": "Fixes permissions automatically"
+      }
+     ],
+     "answer": "c",
+     "hint": "Report-only.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which file holds the GGLink site's secrets such as the SendGrid key?",
+     "options": [
+      {
+       "key": "a",
+       "text": "DEPLOY.md"
+      },
+      {
+       "key": "b",
+       "text": "config.local.php"
+      },
+      {
+       "key": "c",
+       "text": ".htaccess"
+      },
+      {
+       "key": "d",
+       "text": "config.php"
+      }
+     ],
+     "answer": "b",
+     "hint": "Gitignored, created from the example file.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "How is the GGLink site deployed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "By a Docker image"
+      },
+      {
+       "key": "b",
+       "text": "By copying files to the server"
+      },
+      {
+       "key": "c",
+       "text": "By a Composer install on the server"
+      },
+      {
+       "key": "d",
+       "text": "By pushing to a managed platform"
+      }
+     ],
+     "answer": "b",
+     "hint": "There is no Composer on the server.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why can deploy-check.php be left on the server safely?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It deletes itself after one run"
+      },
+      {
+       "key": "b",
+       "text": "It only reads public files"
+      },
+      {
+       "key": "c",
+       "text": "It refuses to run over HTTP, so visitors cannot trigger it"
+      },
+      {
+       "key": "d",
+       "text": "It is password protected by Apache"
+      }
+     ],
+     "answer": "c",
+     "hint": "It is command-line only.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Is config.local.php committed to the repository?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only on the main branch"
+      },
+      {
+       "key": "b",
+       "text": "Yes, so everyone has the same keys"
+      },
+      {
+       "key": "c",
+       "text": "No: it is gitignored and must never be committed"
+      },
+      {
+       "key": "d",
+       "text": "Yes, but encrypted"
+      }
+     ],
+     "answer": "c",
+     "hint": "It holds secrets.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What happens if RECAPTCHA_SECRET is not set?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Enquiries are rejected"
+      },
+      {
+       "key": "b",
+       "text": "Emails are sent twice"
+      },
+      {
+       "key": "c",
+       "text": "Spam filtering is off"
+      },
+      {
+       "key": "d",
+       "text": "The site returns a 500 error"
+      }
+     ],
+     "answer": "c",
+     "hint": "deploy-check warns that spam protection is not enforced.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which setting decides where enquiry emails land?",
+     "options": [
+      {
+       "key": "a",
+       "text": "ENQUIRY_TO"
+      },
+      {
+       "key": "b",
+       "text": "RECAPTCHA_SECRET"
+      },
+      {
+       "key": "c",
+       "text": "BASE_URL"
+      },
+      {
+       "key": "d",
+       "text": "SENDGRID_FROM"
+      }
+     ],
+     "answer": "a",
+     "hint": "SENDGRID_FROM is the sender.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which folder must be uploaded because there is no Composer on the server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "storage/"
+      },
+      {
+       "key": "b",
+       "text": ".git/"
+      },
+      {
+       "key": "c",
+       "text": "vendor/"
+      },
+      {
+       "key": "d",
+       "text": "node_modules/"
+      }
+     ],
+     "answer": "c",
+     "hint": "The dependency tree ships with the site.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which paths are left out when uploading?",
+     "options": [
+      {
+       "key": "a",
+       "text": ".git/, node_modules/ and storage/gglink.sqlite*"
+      },
+      {
+       "key": "b",
+       "text": "vendor/, assets/ and snippets/"
+      },
+      {
+       "key": "c",
+       "text": "admin/, storage/ and vendor/"
+      },
+      {
+       "key": "d",
+       "text": "config.php and header.php"
+      }
+     ],
+     "answer": "a",
+     "hint": "The database file must never be overwritten.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What should you do before every release?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Change the admin password"
+      },
+      {
+       "key": "b",
+       "text": "Back up storage/gglink.sqlite, for example with cp to storage/backup-$(date +%F).sqlite"
+      },
+      {
+       "key": "c",
+       "text": "Delete storage/ so it is recreated"
+      },
+      {
+       "key": "d",
+       "text": "Run composer update"
+      }
+     ],
+     "answer": "b",
+     "hint": "The file is your CMS data.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What kind of key should the SendGrid API key be?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A key shared with the whole team"
+      },
+      {
+       "key": "b",
+       "text": "A restricted key with Mail Send permission only"
+      },
+      {
+       "key": "c",
+       "text": "A read-only key"
+      },
+      {
+       "key": "d",
+       "text": "A full access key"
+      }
+     ],
+     "answer": "b",
+     "hint": "Least privilege.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A re-deploy overwrote storage/gglink.sqlite with an old copy. What was lost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only the vendor folder"
+      },
+      {
+       "key": "b",
+       "text": "Nothing: the data lives in the PHP files"
+      },
+      {
+       "key": "c",
+       "text": "Only the logo"
+      },
+      {
+       "key": "d",
+       "text": "CMS content, blog posts, enquiries and contacts"
+      }
+     ],
+     "answer": "d",
+     "hint": "That file is the CMS data.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What happens if SENDGRID_FROM is not a verified sender?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Mail is sent from a default address"
+      },
+      {
+       "key": "b",
+       "text": "Mail goes to spam but is delivered"
+      },
+      {
+       "key": "c",
+       "text": "The site falls back to PHP mail()"
+      },
+      {
+       "key": "d",
+       "text": "Mail is rejected"
+      }
+     ],
+     "answer": "d",
+     "hint": "The sender must be verified in SendGrid.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which permissions does the guide set on config.local.php?",
+     "options": [
+      {
+       "key": "a",
+       "text": "400 owned by root only"
+      },
+      {
+       "key": "b",
+       "text": "755"
+      },
+      {
+       "key": "c",
+       "text": "777"
+      },
+      {
+       "key": "d",
+       "text": "644"
+      }
+     ],
+     "answer": "d",
+     "hint": "chmod 644 config.local.php.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which folders should be writable by the web server?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Every folder"
+      },
+      {
+       "key": "b",
+       "text": "Only vendor/"
+      },
+      {
+       "key": "c",
+       "text": "storage/ and assets/images/uploads/, and nothing else"
+      },
+      {
+       "key": "d",
+       "text": "admin/ and storage/"
+      }
+     ],
+     "answer": "c",
+     "hint": "Everything else should not be writable.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which missing setting would stop enquiry emails from sending at all?",
+     "options": [
+      {
+       "key": "a",
+       "text": "RECAPTCHA_SECRET"
+      },
+      {
+       "key": "b",
+       "text": "APP_NAME"
+      },
+      {
+       "key": "c",
+       "text": "SENDGRID_API_KEY"
+      },
+      {
+       "key": "d",
+       "text": "BASE_URL"
+      }
+     ],
+     "answer": "c",
+     "hint": "deploy-check marks it FAIL: enquiry emails will not send.",
+     "topic": "Deploy"
+    },
+    {
+     "level": 6,
+     "type": "scenario",
+     "prompt": "You must release a code change to the GGLink site. Describe the steps from preparation to confirming it worked.",
+     "answer": "Run php deploy-check.php before; back up storage/gglink.sqlite (cp to storage/backup-DATE.sqlite); upload everything except .git, node_modules and storage/gglink.sqlite*, including vendor/; never overwrite the database; check permissions (storage and uploads writable only); run deploy-check.php again for zero failures; then verify: the home page loads, the contact form reaches the thank-you page, the enquiry appears under Enquiries, the notification email arrives, and /storage/gglink.sqlite returns 403 or 404.",
+     "rubric": "A good answer includes: deploy-check.php before and after; a database backup before release; the exclusion list (.git, node_modules, storage/gglink.sqlite*); uploading vendor/ because there is no Composer on the server; not overwriting the database; permissions; and the post-deploy checks (home page, contact form to thank-you page, enquiry in admin, notification email, database URL returns 403 or 404). Give credit for each correct step with its reason; mark down any step that overwrites the database or skips the backup.",
+     "topic": "Release procedure"
+    }
+   ]
+  },
+  {
+   "title": "First run and checking a deploy",
+   "body": "On first run, visit https://www.gglink.co.uk/admin/: it asks you to create the first account, and that page disappears once an account exists. Fill in Credentials (certificate numbers), Pricing (care plans and day rates) and Results; each section stays hidden on the public site until it has real values, so nothing ships half-finished. Branding (logo, favicon, social share image, brand colour) is optional: a blank field falls back to the shipped asset. One brand colour drives the whole site; darker, softer and wash shades are worked out from it. site-manifest.php serves the web app manifest so the installed-app name, icon and colour follow these settings. After a deploy, check: the home page loads and the logo appears; submitting the contact form lands on the thank-you page; the enquiry appears under Enquiries in the admin; the notification email arrives; and https://www.gglink.co.uk/storage/gglink.sqlite returns 403 or 404 (if it downloads, .htaccess is not being honoured and must be fixed before going live). Run deploy-check.php again and confirm zero failures. Source: gglink/DEPLOY.md.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What does /admin/ ask you to do the first time it is opened?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Enter the SendGrid key"
+      },
+      {
+       "key": "b",
+       "text": "Create the first account"
+      },
+      {
+       "key": "c",
+       "text": "Choose a theme"
+      },
+      {
+       "key": "d",
+       "text": "Upload the database"
+      }
+     ],
+     "answer": "b",
+     "hint": "It drives first-run setup.",
+     "topic": "First run"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is the public address of the GGLink site?",
+     "options": [
+      {
+       "key": "a",
+       "text": "https://www.gurugraphics.co.uk"
+      },
+      {
+       "key": "b",
+       "text": "https://www.gglink.co.uk"
+      },
+      {
+       "key": "c",
+       "text": "https://app.gglink.uk"
+      },
+      {
+       "key": "d",
+       "text": "https://gglink.com"
+      }
+     ],
+     "answer": "b",
+     "hint": "www is the canonical host.",
+     "topic": "First run"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Where do contact-form enquiries appear for the team?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Under Enquiries in the admin"
+      },
+      {
+       "key": "b",
+       "text": "In the browser console"
+      },
+      {
+       "key": "c",
+       "text": "On the thank-you page"
+      },
+      {
+       "key": "d",
+       "text": "In storage/backup files only"
+      }
+     ],
+     "answer": "a",
+     "hint": "They are stored in the CMS.",
+     "topic": "First run"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What happens to the first-run setup page once an account exists?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is emailed to the owner"
+      },
+      {
+       "key": "b",
+       "text": "It becomes the login page"
+      },
+      {
+       "key": "c",
+       "text": "It disappears"
+      },
+      {
+       "key": "d",
+       "text": "It stays visible for 24 hours"
+      }
+     ],
+     "answer": "c",
+     "hint": "Setup is one-time.",
+     "topic": "First run"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which sections stay hidden on the public site until they have real values?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Credentials, Pricing and Results"
+      },
+      {
+       "key": "b",
+       "text": "Home, About and Contact"
+      },
+      {
+       "key": "c",
+       "text": "Blog, Media and Users"
+      },
+      {
+       "key": "d",
+       "text": "Branding, Account and Setup"
+      }
+     ],
+     "answer": "a",
+     "hint": "Nothing ships half-finished.",
+     "topic": "First run"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which file serves the web app manifest so the installed-app name, icon and colour follow the settings?",
+     "options": [
+      {
+       "key": "a",
+       "text": "manifest.json"
+      },
+      {
+       "key": "b",
+       "text": "robots.txt"
+      },
+      {
+       "key": "c",
+       "text": "site-manifest.php"
+      },
+      {
+       "key": "d",
+       "text": "serviceWorker.js"
+      }
+     ],
+     "answer": "c",
+     "hint": "It replaced two static manifest files.",
+     "topic": "First run"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How many colours drive the whole GGLink site's palette?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Two colours chosen by the browser"
+      },
+      {
+       "key": "b",
+       "text": "Five fixed colours"
+      },
+      {
+       "key": "c",
+       "text": "One brand colour, with the shades worked out from it"
+      },
+      {
+       "key": "d",
+       "text": "A colour per page"
+      }
+     ],
+     "answer": "c",
+     "hint": "Darker, softer and wash shades are derived.",
+     "topic": "First run"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "https://www.gglink.co.uk/storage/gglink.sqlite should return what?",
+     "options": [
+      {
+       "key": "a",
+       "text": "200 with the file"
+      },
+      {
+       "key": "b",
+       "text": "A blank page with 200"
+      },
+      {
+       "key": "c",
+       "text": "403 or 404"
+      },
+      {
+       "key": "d",
+       "text": "A redirect to the admin"
+      }
+     ],
+     "answer": "c",
+     "hint": "The database must not be downloadable.",
+     "topic": "First run"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "That URL downloads the database file. What does it tell you?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The backup ran successfully"
+      },
+      {
+       "key": "b",
+       "text": "The CMS is up to date"
+      },
+      {
+       "key": "c",
+       "text": "Cloudflare is caching it, which is harmless"
+      },
+      {
+       "key": "d",
+       "text": ".htaccess is not being honoured, so fix it before going live"
+      }
+     ],
+     "answer": "d",
+     "hint": "The protections depend on Apache honouring .htaccess.",
+     "topic": "First run"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "After submitting the contact form on a fresh deploy, what should you see?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No visible change until the next day"
+      },
+      {
+       "key": "b",
+       "text": "The admin dashboard immediately"
+      },
+      {
+       "key": "c",
+       "text": "A download of the enquiry"
+      },
+      {
+       "key": "d",
+       "text": "The thank-you page, then the enquiry under Enquiries and a notification email"
+      }
+     ],
+     "answer": "d",
+     "hint": "These are steps on the post-deploy checklist.",
+     "topic": "First run"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A brand field left blank in the Branding screen does what?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Hides the whole site"
+      },
+      {
+       "key": "b",
+       "text": "Uses the Guru Graphics logo"
+      },
+      {
+       "key": "c",
+       "text": "Shows a broken image"
+      },
+      {
+       "key": "d",
+       "text": "Falls back to the shipped asset, so the site never breaks because a slot is empty"
+      }
+     ],
+     "answer": "d",
+     "hint": "Everything in Branding is optional.",
+     "topic": "First run"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why do Pricing and Results stay hidden until they have real values?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because they need a licence key"
+      },
+      {
+       "key": "b",
+       "text": "Because Apache blocks them"
+      },
+      {
+       "key": "c",
+       "text": "So nothing ships half-finished or with invented figures"
+      },
+      {
+       "key": "d",
+       "text": "Because they are slow to load"
+      }
+     ],
+     "answer": "c",
+     "hint": "They are claims you can be held to.",
+     "topic": "First run"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What is the final step after the deploy checklist passes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Restore the backup"
+      },
+      {
+       "key": "b",
+       "text": "Change config.php"
+      },
+      {
+       "key": "c",
+       "text": "Run deploy-check.php again and confirm zero failures"
+      },
+      {
+       "key": "d",
+       "text": "Delete deploy-check.php"
+      }
+     ],
+     "answer": "c",
+     "hint": "Check before and after.",
+     "topic": "First run"
+    },
+    {
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A client says the GGLink contact form \"does nothing\" since yesterday's release. List the checks you would make, in order, and what each one tells you.",
+     "answer": "Run deploy-check.php for FAILs. Check config.local.php still has SENDGRID_API_KEY, SENDGRID_FROM (a verified sender) and ENQUIRY_TO. Submit the form yourself: does it reach the thank-you page? Does the enquiry appear under Enquiries in the admin (data saved) and does the notification email arrive (mail)? If saved but no email, suspect SendGrid key or sender; if not saved, suspect permissions on storage/ or an error in the form handler (check logs, not displayed errors). If the release caused it and the cause is not quickly fixed, roll back the code files and leave storage/ alone.",
+     "rubric": "A good answer: starts with deploy-check.php; checks the three mail settings; reproduces the problem by submitting the form; distinguishes saved-but-not-emailed from not-saved; mentions storage/ writable permissions and checking logs (display_errors is off); and, if needed, rolls back code only while leaving storage/ untouched. Credit logical order and the reasoning for each check.",
+     "topic": "Troubleshooting"
+    }
+   ]
+  },
+  {
+   "title": "Security and hosting configuration",
+   "body": "The site's .htaccess forces HTTPS, canonicalises non-www to www, collapses /index.php to /, sets security headers (HSTS, Referrer-Policy, X-Content-Type-Options, X-Frame-Options SAMEORIGIN, Permissions-Policy) and removes the PHP version banner. It denies source and secret file types (scss, map, lock, json, md, sh, bak, sql, sqlite, db, ini, log and others, plus config.local.php, composer files and dotfiles) and returns 404 for /vendor/, /storage/ and /admin/inc and /admin/views. manifest.json is the one JSON file allowed. All of this depends on AllowOverride being enabled; on nginx the rules must be reproduced manually or the database is downloadable. The site sits behind Cloudflare: with Flexible SSL the origin is reached over plain HTTP, so the HTTPS redirect keys off X-Forwarded-Proto and only falls back to %{HTTPS} for direct hits, to avoid a redirect loop. HSTS starts with a short max-age (86400) and should be raised to 31536000 once nothing is served over plain HTTP. Admin sessions are host-scoped; serving the admin from crm.gglink.co.uk isolates its cookie from the public site, so a cross-site scripting bug on the marketing pages cannot reach the CRM. display_errors is off in the admin and the form handler and should be off site-wide; errors are logged instead. Source: gglink/.htaccess and DEPLOY.md.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does the GGLink .htaccess force for visitors?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A login page for every visitor"
+      },
+      {
+       "key": "b",
+       "text": "The non-www host"
+      },
+      {
+       "key": "c",
+       "text": "HTTP only"
+      },
+      {
+       "key": "d",
+       "text": "HTTPS, and the www host as the canonical address"
+      }
+     ],
+     "answer": "d",
+     "hint": "Plain HTTP and non-www are redirected.",
+     "topic": "Security"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which paths does the site refuse to serve?",
+     "options": [
+      {
+       "key": "a",
+       "text": "/storage/, /admin/inc/, /admin/views/ and vendor/"
+      },
+      {
+       "key": "b",
+       "text": "/assets/ and /snippets/"
+      },
+      {
+       "key": "c",
+       "text": "/admin/ and /blog/"
+      },
+      {
+       "key": "d",
+       "text": "/index.php and /thank-you.php"
+      }
+     ],
+     "answer": "a",
+     "hint": "The database and engine are never served directly.",
+     "topic": "Security"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Should PHP show errors to visitors?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No: display_errors is off and errors are logged instead"
+      },
+      {
+       "key": "b",
+       "text": "Yes, to help reporting"
+      },
+      {
+       "key": "c",
+       "text": "Only on the home page"
+      },
+      {
+       "key": "d",
+       "text": "Only for admin users"
+      }
+     ],
+     "answer": "a",
+     "hint": "Showing errors leaks details.",
+     "topic": "Security"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What do the .htaccess protections depend on in Apache?",
+     "options": [
+      {
+       "key": "a",
+       "text": "AllowOverride being enabled"
+      },
+      {
+       "key": "b",
+       "text": "A paid licence"
+      },
+      {
+       "key": "c",
+       "text": "mod_php being disabled"
+      },
+      {
+       "key": "d",
+       "text": "Cloudflare being switched off"
+      }
+     ],
+     "answer": "a",
+     "hint": "Without it the rules are ignored.",
+     "topic": "Security"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "The site moves to nginx. What must you do about the .htaccess rules?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Reproduce them manually, or the database is downloadable"
+      },
+      {
+       "key": "b",
+       "text": "Delete them"
+      },
+      {
+       "key": "c",
+       "text": "Nothing: nginx reads .htaccess"
+      },
+      {
+       "key": "d",
+       "text": "Move them into config.php"
+      }
+     ],
+     "answer": "a",
+     "hint": "nginx ignores .htaccess.",
+     "topic": "Security"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which kinds of files are denied by the .htaccess file-type rules?",
+     "options": [
+      {
+       "key": "a",
+       "text": "HTML pages"
+      },
+      {
+       "key": "b",
+       "text": "CSS stylesheets"
+      },
+      {
+       "key": "c",
+       "text": "Source, config and data files such as sqlite, sql, ini, log and md"
+      },
+      {
+       "key": "d",
+       "text": "Images and fonts"
+      }
+     ],
+     "answer": "c",
+     "hint": "They could expose secrets or data.",
+     "topic": "Security"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does the HTTPS redirect check X-Forwarded-Proto?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The site sits behind Cloudflare, and a plain %{HTTPS} check would loop under Flexible SSL"
+      },
+      {
+       "key": "b",
+       "text": "Because Apache cannot read HTTPS"
+      },
+      {
+       "key": "c",
+       "text": "Because PHP sets that header"
+      },
+      {
+       "key": "d",
+       "text": "Because browsers send it"
+      }
+     ],
+     "answer": "a",
+     "hint": "Cloudflare may talk to the origin over HTTP.",
+     "topic": "Security"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which Cloudflare SSL mode makes it reach the origin over plain HTTP?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Off, with no proxy"
+      },
+      {
+       "key": "b",
+       "text": "Full (strict)"
+      },
+      {
+       "key": "c",
+       "text": "Full"
+      },
+      {
+       "key": "d",
+       "text": "Flexible"
+      }
+     ],
+     "answer": "d",
+     "hint": "Flexible encrypts only to the visitor.",
+     "topic": "Security"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What HSTS max-age does the file start with, and why?",
+     "options": [
+      {
+       "key": "a",
+       "text": "86400 seconds, kept short until you are sure nothing is served over plain HTTP"
+      },
+      {
+       "key": "b",
+       "text": "10 seconds for testing"
+      },
+      {
+       "key": "c",
+       "text": "31536000 seconds, to be safe"
+      },
+      {
+       "key": "d",
+       "text": "Zero, because HSTS is risky"
+      }
+     ],
+     "answer": "a",
+     "hint": "Raise to 31536000 later.",
+     "topic": "Security"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does serving the admin from crm.gglink.co.uk achieve?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It hides the admin from search engines only"
+      },
+      {
+       "key": "b",
+       "text": "Its session cookie is isolated, so XSS on the marketing pages cannot reach the CRM"
+      },
+      {
+       "key": "c",
+       "text": "It makes the admin faster"
+      },
+      {
+       "key": "d",
+       "text": "It removes the need for a password"
+      }
+     ],
+     "answer": "b",
+     "hint": "Admin sessions are host-scoped.",
+     "topic": "Security"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which JSON file must stay reachable despite the JSON deny rule?",
+     "options": [
+      {
+       "key": "a",
+       "text": "manifest.json"
+      },
+      {
+       "key": "b",
+       "text": "composer.json"
+      },
+      {
+       "key": "c",
+       "text": "initialData.json"
+      },
+      {
+       "key": "d",
+       "text": "package.json"
+      }
+     ],
+     "answer": "a",
+     "hint": "The web app manifest needs to be public.",
+     "topic": "Security"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does the .htaccess unset the PHP version banner and turn expose_php off?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To avoid telling attackers which PHP version runs"
+      },
+      {
+       "key": "b",
+       "text": "To satisfy Cloudflare"
+      },
+      {
+       "key": "c",
+       "text": "To speed up responses"
+      },
+      {
+       "key": "d",
+       "text": "To enable HTTPS"
+      }
+     ],
+     "answer": "a",
+     "hint": "Less information, less targeting.",
+     "topic": "Security"
+    },
+    {
+     "level": 7,
+     "type": "scenario",
+     "prompt": "While checking a deploy you find that https://www.gglink.co.uk/storage/gglink.sqlite downloads. Explain what it means, what you do immediately, and how you prevent it from recurring.",
+     "answer": "It means .htaccess is not being honoured (AllowOverride disabled, or the server is nginx without the rules), so the CMS database is publicly downloadable. It contains customer enquiries, contacts and admin password hashes, so treat it as a potential personal data breach. Immediately block access (restore the rules or deny /storage/ at the server level), check access logs for downloads of the file, tell the owner, change the admin passwords and rotate keys if needed, and assess whether the breach must be reported (in the UK a personal data breach likely to risk people's rights must be reported to the ICO within 72 hours). Prevent it by enabling AllowOverride or reproducing the rules in the server config, adding the 403/404 check to every deploy, and running deploy-check.php before and after.",
+     "rubric": "A good answer: identifies .htaccess not honoured / AllowOverride or missing nginx rules; recognises the file contains enquiries, contacts and password hashes; takes immediate containment steps (block the path, check logs, inform the owner, change passwords); mentions assessing breach reporting duties (UK GDPR, 72 hours to the ICO where required); and gives preventive steps (server config, the post-deploy check). Partial credit for fix without breach thinking.",
+     "topic": "Incident response"
+    }
+   ]
+  },
+  {
+   "title": "Rolling back a bad release",
+   "body": "Content and data live in the database, not in files, so a bad code deploy is recovered by restoring the previous files and leaving storage/ alone. The database is never restored over live data just to undo a code change, because enquiries and contacts keep arriving between the release and the rollback. Back up storage/gglink.sqlite before every release so there is always a copy to compare against or recover from if the data itself is damaged. Source: gglink/DEPLOY.md.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Where do the GGLink site's content and data live?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the vendor folder"
+      },
+      {
+       "key": "b",
+       "text": "In the database, not in files"
+      },
+      {
+       "key": "c",
+       "text": "In the PHP files"
+      },
+      {
+       "key": "d",
+       "text": "In Cloudflare"
+      }
+     ],
+     "answer": "b",
+     "hint": "storage/gglink.sqlite.",
+     "topic": "Rollback"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "A release broke a page. How do you roll back the code?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Restore the old database"
+      },
+      {
+       "key": "b",
+       "text": "Re-run composer update"
+      },
+      {
+       "key": "c",
+       "text": "Delete storage/ and reinstall"
+      },
+      {
+       "key": "d",
+       "text": "Restore the previous files and leave storage/ alone"
+      }
+     ],
+     "answer": "d",
+     "hint": "Data and code are separate.",
+     "topic": "Rollback"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which rollback step is wrong?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Leaving storage/ untouched"
+      },
+      {
+       "key": "b",
+       "text": "Re-running deploy-check.php afterwards"
+      },
+      {
+       "key": "c",
+       "text": "Restoring the previous PHP files"
+      },
+      {
+       "key": "d",
+       "text": "Restoring an old storage/gglink.sqlite over the live one"
+      }
+     ],
+     "answer": "d",
+     "hint": "Enquiries that arrived since would be lost.",
+     "topic": "Rollback"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why take a database backup before every release?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because deploy-check.php needs it"
+      },
+      {
+       "key": "b",
+       "text": "To speed up the upload"
+      },
+      {
+       "key": "c",
+       "text": "Because PHP requires it"
+      },
+      {
+       "key": "d",
+       "text": "So there is a copy to recover from if the data itself is damaged"
+      }
+     ],
+     "answer": "d",
+     "hint": "It is insurance, not part of a code rollback.",
+     "topic": "Rollback"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Two hours after a release, enquiries have arrived and the contact form is broken. What is the right recovery?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Switch the site off until Monday"
+      },
+      {
+       "key": "b",
+       "text": "Restore the previous code files, keep storage/ as it is, then re-run deploy-check.php and the contact-form check"
+      },
+      {
+       "key": "c",
+       "text": "Delete the new enquiries and redeploy"
+      },
+      {
+       "key": "d",
+       "text": "Restore last night's database backup"
+      }
+     ],
+     "answer": "b",
+     "hint": "The live data is newer than any backup.",
+     "topic": "Rollback"
+    },
+    {
+     "level": 7,
+     "type": "scenario",
+     "prompt": "Your team wants to move the GGLink site from Apache to nginx. What could go wrong and how do you move it safely?",
+     "answer": "nginx ignores .htaccess, so the HTTPS and www redirects, the security headers, the blocked paths (/storage/, /admin/inc/, /admin/views/, vendor/) and the denied file types would all stop working and the database could become downloadable. Reproduce every rule in the nginx config first, handle X-Forwarded-Proto behind Cloudflare to avoid a redirect loop, keep display_errors off, copy files without overwriting the database, back up storage/gglink.sqlite, run deploy-check.php, and verify the checklist including that /storage/gglink.sqlite returns 403 or 404, with the ability to roll back to Apache.",
+     "rubric": "A good answer: states that .htaccess rules do not apply on nginx; lists the rules to recreate (HTTPS and www redirects, headers, blocked paths and file types); notes the Cloudflare X-Forwarded-Proto redirect issue; keeps display_errors off; backs up and does not overwrite storage/gglink.sqlite; verifies that /storage/gglink.sqlite is 403 or 404; and has a rollback plan. Credit each correct point.",
+     "topic": "Hosting changes"
+    }
+   ]
+  },
+  {
+   "title": "Admin access and sign-in rules",
+   "body": "The admin deliberately uses plain, well-understood tools: password_hash and password_verify for passwords, a session id regenerated at login, a host-scoped session named gglink_cms with an httponly cookie and SameSite=Lax, and a per-session CSRF token checked with hash_equals on forms. Login attempts are limited to 8 per IP with a 15-minute lockout. When an email is unknown the code still verifies against a dummy hash so timing does not reveal which emails exist. There are two roles, owner and editor; the role column was added after launch, and the last owner cannot be removed or demoted. The first account is created on first run. Source: gglink/admin/inc/auth.php, config constants and views/users.php.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which PHP functions does the admin use for passwords?",
+     "options": [
+      {
+       "key": "a",
+       "text": "crypt with a fixed salt"
+      },
+      {
+       "key": "b",
+       "text": "base64_encode"
+      },
+      {
+       "key": "c",
+       "text": "md5 and sha1"
+      },
+      {
+       "key": "d",
+       "text": "password_hash and password_verify"
+      }
+     ],
+     "answer": "d",
+     "hint": "Deliberately boring and safe.",
+     "topic": "Admin"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How many failed sign-ins per IP before a lockout, and for how long?",
+     "options": [
+      {
+       "key": "a",
+       "text": "20 attempts, locked out for a minute"
+      },
+      {
+       "key": "b",
+       "text": "No limit"
+      },
+      {
+       "key": "c",
+       "text": "8 attempts, locked out for 15 minutes"
+      },
+      {
+       "key": "d",
+       "text": "3 attempts, locked out for a day"
+      }
+     ],
+     "answer": "c",
+     "hint": "CMS_MAX_ATTEMPTS and CMS_LOCKOUT_MINUTES.",
+     "topic": "Admin"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which roles exist in the CMS?",
+     "options": [
+      {
+       "key": "a",
+       "text": "root and user"
+      },
+      {
+       "key": "b",
+       "text": "admin and guest"
+      },
+      {
+       "key": "c",
+       "text": "owner, manager and viewer"
+      },
+      {
+       "key": "d",
+       "text": "owner and editor"
+      }
+     ],
+     "answer": "d",
+     "hint": "Two roles.",
+     "topic": "Admin"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What protects admin forms against cross-site request forgery?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A hidden honeypot field"
+      },
+      {
+       "key": "b",
+       "text": "A per-session CSRF token compared with hash_equals"
+      },
+      {
+       "key": "c",
+       "text": "Nothing; the cookie is enough"
+      },
+      {
+       "key": "d",
+       "text": "Checking the referrer only"
+      }
+     ],
+     "answer": "b",
+     "hint": "Forms carry a token.",
+     "topic": "Admin"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What happens to the session id when someone signs in?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is regenerated"
+      },
+      {
+       "key": "b",
+       "text": "It stays the same"
+      },
+      {
+       "key": "c",
+       "text": "It is copied into the URL"
+      },
+      {
+       "key": "d",
+       "text": "It is stored in localStorage"
+      }
+     ],
+     "answer": "a",
+     "hint": "session_regenerate_id(true).",
+     "topic": "Admin"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which flags does the admin session cookie use?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only secure"
+      },
+      {
+       "key": "b",
+       "text": "Not httponly and SameSite=None"
+      },
+      {
+       "key": "c",
+       "text": "No flags"
+      },
+      {
+       "key": "d",
+       "text": "httponly and SameSite=Lax"
+      }
+     ],
+     "answer": "d",
+     "hint": "Standard hardening.",
+     "topic": "Admin"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does login verify against a dummy hash when the email is unknown?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To count failed attempts"
+      },
+      {
+       "key": "b",
+       "text": "So timing does not reveal which emails exist"
+      },
+      {
+       "key": "c",
+       "text": "To save database queries"
+      },
+      {
+       "key": "d",
+       "text": "To create a new account"
+      }
+     ],
+     "answer": "b",
+     "hint": "Timing side-channel defence.",
+     "topic": "Admin"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Can the last owner account be removed or demoted?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, any owner can do it"
+      },
+      {
+       "key": "b",
+       "text": "Only on Mondays"
+      },
+      {
+       "key": "c",
+       "text": "Only from the command line"
+      },
+      {
+       "key": "d",
+       "text": "No: the code refuses it"
+      }
+     ],
+     "answer": "d",
+     "hint": "At least one owner must remain.",
+     "topic": "Admin"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "The role column was added after launch. How were existing installs handled?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The column was added only for new installs"
+      },
+      {
+       "key": "b",
+       "text": "The database was recreated"
+      },
+      {
+       "key": "c",
+       "text": "A patch checks the columns and runs ALTER TABLE, so existing data is kept"
+      },
+      {
+       "key": "d",
+       "text": "Users were asked to export and import"
+      }
+     ],
+     "answer": "c",
+     "hint": "Applied as a patch rather than part of CREATE TABLE.",
+     "topic": "Admin"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A support developer needs to give a colleague edit access to blog posts only. Which role fits?",
+     "options": [
+      {
+       "key": "a",
+       "text": "root"
+      },
+      {
+       "key": "b",
+       "text": "visitor"
+      },
+      {
+       "key": "c",
+       "text": "editor"
+      },
+      {
+       "key": "d",
+       "text": "owner"
+      }
+     ],
+     "answer": "c",
+     "hint": "Owners can manage users; editors cannot.",
+     "topic": "Admin"
+    }
+   ]
+  },
+  {
+   "title": "The CMS database and PHP requirements",
+   "body": "The CMS keeps everything in storage/gglink.sqlite (the code can also use MySQL). Tables include cms_users, cms_content, cms_posts, cms_enquiries, cms_settings, the CRM tables cms_contacts, cms_deals, cms_activities and cms_campaigns, and a login-attempts table. The SQLite file contains customer enquiries and password hashes, so storage/*.sqlite and its -wal and -shm files are gitignored and must never be committed; it is recreated automatically on first run. Schema changes made after launch are applied as patches that inspect the existing columns first, so existing installs keep their data. The CRM was built for about 100,000 contacts, so every filtered or sorted column is indexed and all lists are paginated server-side. deploy-check.php requires PHP 7.4 or newer, warns that PHP 7.4 is end-of-life (unsupported since November 2022) and should be planned for upgrade, and needs the extensions pdo_sqlite, curl, mbstring, fileinfo, openssl and json. shell_exec is optional: without it the content editor falls back to parsing and image constants may not be editable. Source: gglink/admin/inc/db.php, .gitignore and deploy-check.php.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which file holds the GGLink CMS content, blog posts, enquiries and contacts?",
+     "options": [
+      {
+       "key": "a",
+       "text": "assets/images/uploads"
+      },
+      {
+       "key": "b",
+       "text": "vendor/autoload.php"
+      },
+      {
+       "key": "c",
+       "text": "storage/gglink.sqlite"
+      },
+      {
+       "key": "d",
+       "text": "config.php"
+      }
+     ],
+     "answer": "c",
+     "hint": "The SQLite database.",
+     "topic": "Data"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which table stores contact-form enquiries?",
+     "options": [
+      {
+       "key": "a",
+       "text": "cms_posts"
+      },
+      {
+       "key": "b",
+       "text": "cms_settings"
+      },
+      {
+       "key": "c",
+       "text": "cms_contacts"
+      },
+      {
+       "key": "d",
+       "text": "cms_enquiries"
+      }
+     ],
+     "answer": "d",
+     "hint": "Enquiries and contacts are separate tables.",
+     "topic": "Data"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which tables make up the CRM?",
+     "options": [
+      {
+       "key": "a",
+       "text": "cms_enquiries and cms_settings only"
+      },
+      {
+       "key": "b",
+       "text": "cms_contacts, cms_deals, cms_activities and cms_campaigns"
+      },
+      {
+       "key": "c",
+       "text": "cms_users, cms_posts and cms_content"
+      },
+      {
+       "key": "d",
+       "text": "cms_login_attempts only"
+      }
+     ],
+     "answer": "b",
+     "hint": "Contacts, deals, activities and nurture campaigns.",
+     "topic": "Data"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why is the SQLite file never committed to git?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It contains customer enquiries and password hashes"
+      },
+      {
+       "key": "b",
+       "text": "It changes every minute"
+      },
+      {
+       "key": "c",
+       "text": "git cannot store binary files"
+      },
+      {
+       "key": "d",
+       "text": "It is too large for git"
+      }
+     ],
+     "answer": "a",
+     "hint": "Sensitive data.",
+     "topic": "Data"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the minimum PHP version deploy-check.php accepts?",
+     "options": [
+      {
+       "key": "a",
+       "text": "8.3"
+      },
+      {
+       "key": "b",
+       "text": "9.0"
+      },
+      {
+       "key": "c",
+       "text": "7.4"
+      },
+      {
+       "key": "d",
+       "text": "5.6"
+      }
+     ],
+     "answer": "c",
+     "hint": "Below it fails.",
+     "topic": "Data"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does deploy-check.php say about PHP 7.4?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is blocked"
+      },
+      {
+       "key": "b",
+       "text": "It is end-of-life, so plan the upgrade"
+      },
+      {
+       "key": "c",
+       "text": "It is the recommended version"
+      },
+      {
+       "key": "d",
+       "text": "It is only for Windows"
+      }
+     ],
+     "answer": "b",
+     "hint": "Unsupported since November 2022.",
+     "topic": "Data"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which PHP extensions does the pre-flight check require?",
+     "options": [
+      {
+       "key": "a",
+       "text": "gd, intl and redis"
+      },
+      {
+       "key": "b",
+       "text": "mysqli and pgsql only"
+      },
+      {
+       "key": "c",
+       "text": "zip, soap and imap"
+      },
+      {
+       "key": "d",
+       "text": "pdo_sqlite, curl, mbstring, fileinfo, openssl and json"
+      }
+     ],
+     "answer": "d",
+     "hint": "Missing ones are FAIL.",
+     "topic": "Data"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What happens if shell_exec is not available?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The whole site stops"
+      },
+      {
+       "key": "b",
+       "text": "The content editor falls back to parsing and image constants may not be editable"
+      },
+      {
+       "key": "c",
+       "text": "Emails are not sent"
+      },
+      {
+       "key": "d",
+       "text": "Enquiries are not saved"
+      }
+     ],
+     "answer": "b",
+     "hint": "It is a WARN, not a FAIL.",
+     "topic": "Data"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "The CRM was built for about 100,000 contacts. What does that imply for the code?",
+     "options": [
+      {
+       "key": "a",
+       "text": "All contacts are loaded into the page"
+      },
+      {
+       "key": "b",
+       "text": "Contacts are stored in files"
+      },
+      {
+       "key": "c",
+       "text": "Filtered columns are indexed and lists are paginated on the server"
+      },
+      {
+       "key": "d",
+       "text": "Contacts are limited to 200 per list"
+      }
+     ],
+     "answer": "c",
+     "hint": "A LIMIT-200 list is useless at that scale.",
+     "topic": "Data"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What happens to the database file if it is deleted?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cloudflare restores it"
+      },
+      {
+       "key": "b",
+       "text": "The site keeps working with the old data"
+      },
+      {
+       "key": "c",
+       "text": "It is restored from git"
+      },
+      {
+       "key": "d",
+       "text": "It is recreated automatically on first run, but the data in it is gone"
+      }
+     ],
+     "answer": "d",
+     "hint": "The file is never committed, so there is no copy in git.",
+     "topic": "Data"
+    }
+   ]
+  },
+  {
+   "title": "CRM, consent and the pipeline",
+   "body": "Consent is a first-class field on every contact (consent, consent_date, consent_source). The contacts we may bulk email are those whose consent is consented, soft or legitimate, whose status is not unsubscribed or bounced, and whose email is not empty; a contact with unknown or withdrawn/opted-out consent is not mailable. Deals move through stages with default probabilities: Qualified 25%, Proposal sent 50%, Negotiation 75%, Won 100% and Lost 0%. The weighted pipeline is the sum of value times probability divided by 100. Product interest tags are stored as a comma-wrapped string such as \",crm,ecommerce,\" so LIKE matching is exact and cannot half-match another tag. Nurture sequences keep a send log so nobody is emailed twice. Source: gglink/admin/inc/crm.php and db.php.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which deal stage has a default probability of 50%?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Negotiation"
+      },
+      {
+       "key": "b",
+       "text": "Qualified"
+      },
+      {
+       "key": "c",
+       "text": "Proposal sent"
+      },
+      {
+       "key": "d",
+       "text": "Won"
+      }
+     ],
+     "answer": "c",
+     "hint": "Qualified 25, Proposal 50, Negotiation 75.",
+     "topic": "CRM"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What is the default probability of a Qualified deal?",
+     "options": [
+      {
+       "key": "a",
+       "text": "50%"
+      },
+      {
+       "key": "b",
+       "text": "90%"
+      },
+      {
+       "key": "c",
+       "text": "10%"
+      },
+      {
+       "key": "d",
+       "text": "25%"
+      }
+     ],
+     "answer": "d",
+     "hint": "The first stage.",
+     "topic": "CRM"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What are the default probabilities of Won and Lost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "100% and 0%"
+      },
+      {
+       "key": "b",
+       "text": "75% and 25%"
+      },
+      {
+       "key": "c",
+       "text": "50% and 0%"
+      },
+      {
+       "key": "d",
+       "text": "100% and 50%"
+      }
+     ],
+     "answer": "a",
+     "hint": "Closed outcomes.",
+     "topic": "CRM"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which contacts may be bulk emailed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Anyone who has ever enquired"
+      },
+      {
+       "key": "b",
+       "text": "Everyone with an email address"
+      },
+      {
+       "key": "c",
+       "text": "Consent consented, soft or legitimate; status not unsubscribed or bounced; email not empty"
+      },
+      {
+       "key": "d",
+       "text": "Only contacts with consent consented"
+      }
+     ],
+     "answer": "c",
+     "hint": "The mailable clause.",
+     "topic": "CRM"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How is the weighted pipeline value worked out?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The number of deals times 25"
+      },
+      {
+       "key": "b",
+       "text": "The Won deals only"
+      },
+      {
+       "key": "c",
+       "text": "The sum of each deal's value multiplied by its probability divided by 100"
+      },
+      {
+       "key": "d",
+       "text": "The sum of deal values"
+      }
+     ],
+     "answer": "c",
+     "hint": "SUM(value * probability / 100).",
+     "topic": "CRM"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Where is consent recorded for a contact?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the server log"
+      },
+      {
+       "key": "b",
+       "text": "In the browser"
+      },
+      {
+       "key": "c",
+       "text": "On the contact itself, with the date and source"
+      },
+      {
+       "key": "d",
+       "text": "Only in an email footer"
+      }
+     ],
+     "answer": "c",
+     "hint": "Consent is a first-class field.",
+     "topic": "CRM"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A contact's consent is unknown. May they be included in a bulk email?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, if the email is valid"
+      },
+      {
+       "key": "b",
+       "text": "No: unknown is not in the mailable list"
+      },
+      {
+       "key": "c",
+       "text": "Yes, on weekdays"
+      },
+      {
+       "key": "d",
+       "text": "Yes, until they object"
+      }
+     ],
+     "answer": "b",
+     "hint": "Only consented, soft and legitimate qualify.",
+     "topic": "CRM"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A contact has consent withdrawn or opted out. May they be bulk emailed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, once"
+      },
+      {
+       "key": "b",
+       "text": "Yes, if they bought before"
+      },
+      {
+       "key": "c",
+       "text": "Yes, if their status is new"
+      },
+      {
+       "key": "d",
+       "text": "No"
+      }
+     ],
+     "answer": "d",
+     "hint": "They have opted out.",
+     "topic": "CRM"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why are product tags stored like \",crm,ecommerce,\"?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To save space"
+      },
+      {
+       "key": "b",
+       "text": "Because SQLite requires it"
+      },
+      {
+       "key": "c",
+       "text": "So LIKE matching is exact and cannot half-match another tag"
+      },
+      {
+       "key": "d",
+       "text": "To sort them alphabetically"
+      }
+     ],
+     "answer": "c",
+     "hint": "Each tag is wrapped in commas.",
+     "topic": "CRM"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does the send log on nurture sequences prevent?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Emailing the same person twice"
+      },
+      {
+       "key": "b",
+       "text": "Failed deploys"
+      },
+      {
+       "key": "c",
+       "text": "Duplicate contacts"
+      },
+      {
+       "key": "d",
+       "text": "Emails going to spam"
+      }
+     ],
+     "answer": "a",
+     "hint": "It records who has already received each step.",
+     "topic": "CRM"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A contact is bounced and has consent consented. May they be bulk emailed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, because consent is consented"
+      },
+      {
+       "key": "b",
+       "text": "No: bounced status excludes them"
+      },
+      {
+       "key": "c",
+       "text": "Yes, if the email is long"
+      },
+      {
+       "key": "d",
+       "text": "Yes, if the tag matches"
+      }
+     ],
+     "answer": "b",
+     "hint": "Both conditions must hold.",
+     "topic": "CRM"
+    }
+   ]
+  },
+  {
+   "title": "Email, spam protection and the blog feed",
+   "body": "Enquiry notifications are sent with SendGrid. Verify the whole gglink.co.uk domain in SendGrid rather than a single sender: it sets up SPF and DKIM, which keeps notifications out of spam. SENDGRID_FROM must be a verified sender or mail is rejected. Google reCAPTCHA protects the form; without RECAPTCHA_SECRET spam filtering is not enforced. The site also reads the GGLink blog from the WordPress REST API (BLOG_API_URL) with a 3-second timeout and a 900-second cache of the last good response, so a slow or failing blog never blocks a page render. Source: DEPLOY.md and config.php.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which service sends the enquiry notification emails?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Gmail SMTP"
+      },
+      {
+       "key": "b",
+       "text": "SendGrid"
+      },
+      {
+       "key": "c",
+       "text": "Amazon SES"
+      },
+      {
+       "key": "d",
+       "text": "Mailchimp"
+      }
+     ],
+     "answer": "b",
+     "hint": "Configured in config.local.php.",
+     "topic": "Mail"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What should you verify in SendGrid so notifications stay out of spam?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing: SendGrid does it automatically"
+      },
+      {
+       "key": "b",
+       "text": "A single email address only"
+      },
+      {
+       "key": "c",
+       "text": "The whole domain, which sets up SPF and DKIM"
+      },
+      {
+       "key": "d",
+       "text": "The reCAPTCHA key"
+      }
+     ],
+     "answer": "c",
+     "hint": "Domain authentication.",
+     "topic": "Mail"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which service protects the contact form from spam?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Google reCAPTCHA"
+      },
+      {
+       "key": "b",
+       "text": "Cloudflare Workers"
+      },
+      {
+       "key": "c",
+       "text": "SQLite"
+      },
+      {
+       "key": "d",
+       "text": "SendGrid"
+      }
+     ],
+     "answer": "a",
+     "hint": "Needs RECAPTCHA_SECRET.",
+     "topic": "Mail"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Enquiries are saved but nobody gets the notification email. Which settings do you check first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "SENDGRID_API_KEY, SENDGRID_FROM being a verified sender, and ENQUIRY_TO"
+      },
+      {
+       "key": "b",
+       "text": "The blog API URL"
+      },
+      {
+       "key": "c",
+       "text": "RECAPTCHA_SECRET only"
+      },
+      {
+       "key": "d",
+       "text": "BASE_URL and APP_NAME"
+      }
+     ],
+     "answer": "a",
+     "hint": "Mail depends on those three.",
+     "topic": "Mail"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Why does the blog feed use a 3-second timeout?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To limit API costs"
+      },
+      {
+       "key": "b",
+       "text": "Because SendGrid requires it"
+      },
+      {
+       "key": "c",
+       "text": "A slow blog must never block a page render for long"
+      },
+      {
+       "key": "d",
+       "text": "Because WordPress needs three seconds to start"
+      }
+     ],
+     "answer": "c",
+     "hint": "BLOG_API_TIMEOUT.",
+     "topic": "Mail"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "How long is the last good blog response reused?",
+     "options": [
+      {
+       "key": "a",
+       "text": "3 seconds"
+      },
+      {
+       "key": "b",
+       "text": "It is never cached"
+      },
+      {
+       "key": "c",
+       "text": "24 hours"
+      },
+      {
+       "key": "d",
+       "text": "900 seconds (15 minutes)"
+      }
+     ],
+     "answer": "d",
+     "hint": "BLOG_CACHE_TTL.",
+     "topic": "Mail"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "The blog is down. What should visitors see on the GGLink site?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A fatal error"
+      },
+      {
+       "key": "b",
+       "text": "A blank site"
+      },
+      {
+       "key": "c",
+       "text": "A redirect to the admin"
+      },
+      {
+       "key": "d",
+       "text": "The site still renders; the feed falls back to the last good cached response"
+      }
+     ],
+     "answer": "d",
+     "hint": "Resilience by design.",
+     "topic": "Mail"
+    }
+   ]
+  },
+  {
+   "title": "Published prices and results are claims",
+   "body": "Two master switches, GG_PRICING_LIVE and GG_RESULTS_LIVE in gg-sales-config.php, keep pricing and client results hidden until they are real. They are gated because published prices and published outcomes are claims you can be held to (the CAP Code for advertising and the DMCC Act 2024 for testimonials and anything presented as a customer result), and shipping invented figures would be worse than shipping nothing. Results must be real numbers, anonymised, and something you could evidence if a customer or the ASA asked; delete any you cannot back up. Service-level figures such as response times, uptime and backup retention are only to be published if they can be evidenced and met. In the repository copy of gg-sales-config.php the prices and service levels are TODO placeholders; whether real values have been entered in the live admin was not checked. Either way, this track does not state any price, response time or support commitment, and none should be quoted to a client from it. Source: gglink/gg-sales-config.php.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which two switches keep pricing and results hidden on the GGLink site until they are real?",
+     "options": [
+      {
+       "key": "a",
+       "text": "SENDGRID_LIVE and RECAPTCHA_LIVE"
+      },
+      {
+       "key": "b",
+       "text": "APP_DEBUG and APP_LIVE"
+      },
+      {
+       "key": "c",
+       "text": "BASE_URL and BASE_URL_ADMIN"
+      },
+      {
+       "key": "d",
+       "text": "GG_PRICING_LIVE and GG_RESULTS_LIVE"
+      }
+     ],
+     "answer": "d",
+     "hint": "Both default to false.",
+     "topic": "Claims"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why must placeholder or invented prices never go live?",
+     "options": [
+      {
+       "key": "a",
+       "text": "SendGrid rejects them"
+      },
+      {
+       "key": "b",
+       "text": "Search engines ban them"
+      },
+      {
+       "key": "c",
+       "text": "They slow the site down"
+      },
+      {
+       "key": "d",
+       "text": "Published prices and outcomes are claims you can be held to"
+      }
+     ],
+     "answer": "d",
+     "hint": "CAP Code and DMCC Act 2024.",
+     "topic": "Claims"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What must a published client result be?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A target for next year"
+      },
+      {
+       "key": "b",
+       "text": "A rounded-up estimate"
+      },
+      {
+       "key": "c",
+       "text": "A competitor's figure"
+      },
+      {
+       "key": "d",
+       "text": "A real, anonymised number you could evidence if asked"
+      }
+     ],
+     "answer": "d",
+     "hint": "Delete any you cannot back up.",
+     "topic": "Claims"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A colleague wants to quote a 4-hour response time to a client from the config file. What is the right response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Quote a 1-hour time to be safe"
+      },
+      {
+       "key": "b",
+       "text": "Quote it; it is in the file"
+      },
+      {
+       "key": "c",
+       "text": "Quote it but say approximately"
+      },
+      {
+       "key": "d",
+       "text": "Do not: in the config file they are TODO placeholders, not confirmed commitments, and only figures that can be evidenced and met may be quoted"
+      }
+     ],
+     "answer": "d",
+     "hint": "Only publish what can be evidenced and met.",
+     "topic": "Claims"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which statement about service-level figures such as uptime and backup retention is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Publish whatever competitors publish"
+      },
+      {
+       "key": "b",
+       "text": "Only publish figures you can evidence and meet"
+      },
+      {
+       "key": "c",
+       "text": "Publish ambitious figures to win work"
+      },
+      {
+       "key": "d",
+       "text": "Publish industry averages"
+      }
+     ],
+     "answer": "b",
+     "hint": "Claims must be substantiated.",
+     "topic": "Claims"
+    }
+   ]
+  }
+ ]
+}
