@@ -76,4 +76,4 @@ input, textarea, select { color: #14161f; }
 .ring-draw { animation: draw 1.2s ease-out; }
 .slide-in { animation: slide .3s ease-out both; }
 @media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation: none !important; transition: none !important; } }
-@media print { header { display: none; } body { background: #fff !important; color: #000; } .card { box-shadow: none !important; } }
+@media print { header { display: none; } * { -webkit-print-color-adjust: exact; print-color-adjust: exact; } body { background: #fff !important; color: #000; } .card { box-shadow: none !important; } }

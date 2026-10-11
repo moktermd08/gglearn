@@ -49,7 +49,7 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
         {[{ Icon: BookOpen, t: "Read the guide" }, { Icon: Layers, t: "Flip the cards" }, { Icon: GraduationCap, t: `Pass level ${level}` }].map(({ Icon, t }, i) => (
           <li key={t} className="rise relative flex flex-col items-center gap-1.5" style={{ "--i": i } as React.CSSProperties}>
             {i < 2 && <span className="absolute left-[calc(50%+22px)] right-[calc(-50%+22px)] top-5 border-t-2 border-dashed border-black/15" aria-hidden />}
-            <span className="relative grid h-10 w-10 place-items-center rounded-full text-white shadow" style={{ background: accent }}><Icon size={18} /></span>
+            <span className="relative grid h-10 w-10 place-items-center rounded-full text-[#fff] shadow" style={{ background: accent }}><Icon size={18} /></span>
             <span className="text-slate-300">{i + 1}. {t}</span>
           </li>
         ))}

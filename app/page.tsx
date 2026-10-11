@@ -3,7 +3,7 @@ import { asc, eq, sql } from "drizzle-orm";
 import { brands, db, questions, tracks } from "@/lib/db";
 import { KIND_LABEL, LEVELS, TIERS } from "@/lib/levels";
 import { Avatar } from "@/components/Avatar";
-import { SubjectArt } from "@/components/SubjectArt";
+import { SubjectArt, artFor } from "@/components/SubjectArt";
 import { rivalFor } from "@/lib/rivals";
 import { hiddenTrackIds } from "@/lib/tracks";
 import { currentUser } from "@/lib/auth";
@@ -37,7 +37,9 @@ export default async function Home() {
 
   return (
     <div className="space-y-16">
-      <section className="grid items-center gap-8 pt-4 lg:grid-cols-[1.15fr_1fr]">
+      <section className="relative grid items-center gap-8 pt-4 lg:grid-cols-[1.15fr_1fr]">
+        <div className="pointer-events-none absolute -left-24 -top-16 -z-10 h-80 w-80 rounded-full bg-indigo-500/15 blur-3xl" aria-hidden />
+        <div className="pointer-events-none absolute -right-16 top-10 -z-10 h-72 w-72 rounded-full bg-pink-500/15 blur-3xl" aria-hidden />
         <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-[#fff] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-indigo-300"><GraduationCap size={14} />Training academy</p>
           <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl">Learn what your role needs. <span className="gradient-text">Prove it. Move up.</span></h1>
@@ -75,6 +77,13 @@ export default async function Home() {
         <StatTile i={3} Icon={Trophy} label="Levels to Titan" value={LEVELS.length} color={PALETTE.amber} />
       </section>
 
+      <section aria-label="Subjects you can learn" className="space-y-3">
+        <p className="text-center text-xs font-semibold uppercase tracking-[.3em] text-slate-400">Learn anything your work needs</p>
+        <div className="flex flex-wrap justify-center gap-3">
+          {rows.filter((r) => artFor(r.track.slug, r.track.name, r.track.kind).glyph.kind === "brand").slice(0, 16).map(({ track }) => <Link key={track.id} href={`/tracks/${track.slug}`} title={track.name} className="transition hover:-translate-y-1"><SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={52} className="shadow-md" /></Link>)}
+        </div>
+      </section>
+
       <section>
         <h2 className="mb-1 text-2xl font-bold">How it works</h2>
         <p className="mb-4 text-slate-400">Four steps, repeated until you reach Titan.</p>
@@ -107,6 +116,11 @@ export default async function Home() {
             <p className="mt-2 text-slate-300">Every subject has a rival who trains every day. Do your daily quest, pass your exam, and stay ahead. It is a motivator on top of the learning, not a replacement for it.</p>
             <Link href="/competitions" className="mt-4 inline-flex items-center gap-1 font-semibold text-indigo-300 hover:underline">Or run a contest against friends or a group<ArrowRight size={15} /></Link>
           </div>
+          <div>
+            <svg viewBox="0 0 400 130" className="mb-3 w-full" role="img" aria-label="Twenty levels grouped into five ranks">
+              {Array.from({ length: 20 }, (_, n) => { const tier = TIERS[Math.min(4, Math.floor(n / 4))]; const h = 14 + n * 5.4; return <rect key={n} x={n * 20 + 1} y={120 - h} width="18" height={h} rx="4" fill={`hsl(${tier.hue} 75% 55%)`} className="grow" style={{ "--i": n, transformOrigin: "bottom" } as React.CSSProperties} />; })}
+              <text x="296" y="14" textAnchor="end" fontSize="11" fontWeight="800" fill="#6f7788">Titan 👑</text>
+            </svg>
           <div className="grid grid-cols-5 gap-2">
             {TIERS.map((t, i) => (
               <div key={t.name} className="rounded-xl border border-black/10 bg-[#fff] p-2 text-center">
@@ -115,6 +129,7 @@ export default async function Home() {
                 <div className="text-[10px] text-slate-400">L{t.from}–{i === 4 ? 20 : t.from + 3}</div>
               </div>
             ))}
+          </div>
           </div>
         </div>
       </section>
@@ -143,6 +158,12 @@ export default async function Home() {
         </section>
       ))}
       </div>
+      <section className="relative overflow-hidden rounded-2xl p-8 text-center text-[#fff] sm:p-12" style={{ background: "linear-gradient(120deg,#4f46e5,#9333ea 70%,#db2777)" }}>
+        <svg className="pointer-events-none absolute -right-10 -top-16 h-72 w-72 opacity-25" viewBox="0 0 200 200" aria-hidden><circle cx="100" cy="100" r="90" fill="none" stroke="#fff" /><circle cx="100" cy="100" r="60" fill="none" stroke="#fff" strokeDasharray="4 6" className="march" /></svg>
+        <h2 className="relative text-3xl font-extrabold">Ready to start your climb?</h2>
+        <p className="relative mx-auto mt-2 max-w-lg text-[#fff]/80">Your path is waiting, and so is your rival.</p>
+        <Link href={viewer ? "/dashboard" : "/login"} className="btn relative mt-5 !bg-[#fff] !text-indigo-700">{viewer ? "Go to my path" : "Sign in"}<ArrowRight size={16} /></Link>
+      </section>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
-import { startTransition, useActionState, useMemo, useState } from "react";
-import { ArrowRight, BookOpen, Check, Mail, Mountain, Search, Swords, Users } from "lucide-react";
+import { startTransition, useActionState, useMemo, useState, type ReactNode } from "react";
+import { ArrowRight, Check, Mail, Mountain, Search, Swords, Users } from "lucide-react";
 import { beginJourney, requestTopic, type StartState } from "./actions";
 
-type Topic = { id: number; name: string; kindLabel: string; description: string; suggested: boolean };
+type Topic = { icon: ReactNode; id: number; name: string; kindLabel: string; description: string; suggested: boolean };
 
 export default function Begin({ topics }: { topics: Topic[] }) {
   const [state, run, pending] = useActionState<StartState, FormData>(beginJourney, null);
@@ -27,8 +27,8 @@ export default function Begin({ topics }: { topics: Topic[] }) {
         <div role="radiogroup" aria-label="Topics" className="grid max-h-72 gap-2 overflow-y-auto sm:grid-cols-2">
           {shown.map((t, i) => (
             <button type="button" key={t.id} role="radio" aria-checked={t.id === trackId} onClick={() => setTrackId(t.id)}
-              style={{ "--i": Math.min(i, 8) } as React.CSSProperties} className={`rise flex items-start gap-2 rounded-lg border p-3 text-left transition ${t.id === trackId ? "border-indigo-400 bg-indigo-500/20" : "border-white/10 hover:border-white/30"}`}>
-              <BookOpen size={16} className={`mt-1 shrink-0 ${t.id === trackId ? "text-indigo-300" : "text-slate-500"}`} />
+              style={{ "--i": Math.min(i, 8) } as React.CSSProperties} className={`rise flex items-center gap-3 rounded-xl border p-3 text-left transition ${t.id === trackId ? "border-indigo-400 bg-indigo-500/20" : "border-white/10 hover:border-white/30"}`}>
+              <span className="shrink-0">{t.icon}</span>
               <span className="min-w-0 flex-1"><span className="block font-semibold">{t.name}</span><span className="block text-xs text-slate-400">{t.kindLabel}{t.suggested && <span className="ml-2 rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold uppercase text-emerald-300">for you</span>}</span></span>
               {t.id === trackId && <Check size={18} className="spin-in mt-0.5 shrink-0 text-indigo-300" />}
             </button>
@@ -51,12 +51,12 @@ export default function Begin({ topics }: { topics: Topic[] }) {
         <div className="grid gap-3 sm:grid-cols-2">
           <label className={`cursor-pointer rounded-xl border p-4 ${mode === "solo" ? "border-indigo-400 bg-indigo-500/20" : "border-white/10"}`}>
             <input type="radio" name="mode" value="solo" checked={mode === "solo"} onChange={() => setMode("solo")} className="sr-only" />
-            <div className="flex items-center gap-2 text-lg font-bold"><Mountain size={20} className="text-emerald-300" />Just me</div>
+            <div className="mb-2 grid h-11 w-11 place-items-center rounded-xl bg-emerald-500/15"><Mountain size={22} className="text-emerald-300" /></div><div className="flex items-center gap-2 text-lg font-bold">Just me{mode === "solo" && <Check size={18} className="spin-in text-indigo-300" />}</div>
             <div className="text-sm text-slate-300">Race the clock, your own goal and, if you like, simulated rivals.</div>
           </label>
           <label className={`cursor-pointer rounded-xl border p-4 ${mode === "group" ? "border-indigo-400 bg-indigo-500/20" : "border-white/10"}`}>
             <input type="radio" name="mode" value="group" checked={mode === "group"} onChange={() => setMode("group")} className="sr-only" />
-            <div className="flex items-center gap-2 text-lg font-bold"><Swords size={20} className="text-pink-300" />I have a group</div>
+            <div className="mb-2 grid h-11 w-11 place-items-center rounded-xl bg-pink-500/15"><Swords size={22} className="text-pink-300" /></div><div className="flex items-center gap-2 text-lg font-bold">I have a group{mode === "group" && <Check size={18} className="spin-in text-indigo-300" />}</div>
             <div className="text-sm text-slate-300">Friends or teammates race you on a live leaderboard. Prizes are possible.</div>
           </label>
         </div>

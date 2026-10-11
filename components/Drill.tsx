@@ -53,7 +53,7 @@ export function Drill({ trackId, back, questions }: { trackId: number; back: str
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <div className="card flex items-center justify-between p-4 text-sm text-slate-400" style={{ background: "linear-gradient(120deg,#f59e0b26,#ffffff 60%)" }}>
-        <span className="flex items-center gap-2 text-base font-extrabold text-amber-300"><span className="grid h-9 w-9 place-items-center rounded-xl bg-amber-500 text-white"><Zap size={18} /></span>Quick drill</span>
+        <span className="flex items-center gap-2 text-base font-extrabold text-amber-300"><span className="grid h-9 w-9 place-items-center rounded-xl bg-amber-500 text-[#fff]"><Zap size={18} /></span>Quick drill</span>
         <span className="flex items-center gap-3">
           {streak >= 2 && <span className="pop flex items-center gap-1 font-bold text-orange-400"><Flame size={15} />{streak} streak</span>}
           <span>{i + 1}/{questions.length} · {score} correct</span>
