@@ -1,6 +1,6 @@
 import type { ComponentType, SVGProps } from "react";
 import * as si from "simple-icons";
-import { BarChart3, Bot, Boxes, Braces, Briefcase, Brain, BookOpen, Bug, Cloud, Code, Cpu, Database, FileCode, FormInput, Gauge, Globe, GitBranch, Key, Layout, LayoutDashboard, Megaphone, MessageSquare, Network, Package, Palette, Plug, Repeat, Rocket, Route, Scale, Search, Server, Settings, Shield, Smartphone, Sparkles, Table, Terminal, TrendingUp, Users, Variable, Webhook, Workflow, Wrench, Zap } from "lucide-react";
+import { BarChart3, Bot, Boxes, Braces, Briefcase, Brain, BookOpen, Bug, Cloud, Code, Cpu, Database, FileCode, FormInput, Gauge, Globe, GitBranch, Key, Layout, LayoutDashboard, Megaphone, MessageSquare, Network, Package, Palette, Plug, Repeat, Rocket, Route, Scale, Search, Server, Settings, Shield, Smartphone, Sparkles, Table, Terminal, TrendingUp, Users, Variable, Webhook, Workflow, Wrench, Zap, Aperture, ClipboardCheck, FileSearch, Image as ImageIcon, Library, ShieldCheck, SlidersHorizontal, WandSparkles, Waypoints } from "lucide-react";
 
 type Icon = ComponentType<SVGProps<SVGSVGElement> & { size?: number | string }>;
 type Art = { glyph: { kind: "brand"; path: string; title: string } | { kind: "line"; Icon: Icon }; color: string };
@@ -50,6 +50,34 @@ const SUBJECTS: Record<string, Art> = {
   oop: { glyph: line(Boxes), color: "#8B5CF6" },
   dynamics: { glyph: line(LayoutDashboard), color: "#0078D4" },
   sample: { glyph: line(Briefcase), color: "#6366F1" },
+
+  // AI technologies (scripts/ai): brand marks where Simple Icons has one, otherwise a line icon in a distinct colour
+  "api-openai-platform": { glyph: line(Sparkles), color: "#10A37F" },
+  "api-claude": { glyph: brand(si.siClaude), color: "#D97757" },
+  "api-gemini": { glyph: brand(si.siGooglegemini), color: "#8E75B2" },
+  "api-copilot": { glyph: brand(si.siGithubcopilot), color: "#6E40C9" },
+  "llm-aisearch": { glyph: brand(si.siPerplexity), color: "#1FB8CD" },
+  "llm-prompting": { glyph: line(WandSparkles), color: "#D946EF" },
+  "llm-fundamentals": { glyph: line(Brain), color: "#A855F7" },
+  "llm-local": { glyph: brand(si.siOllama), color: "#64748B" },
+  "rag-pipelines": { glyph: line(Library), color: "#0D9488" },
+  "rag-llamaindex": { glyph: line(FileSearch), color: "#DB2777" },
+  "vec-databases": { glyph: line(Waypoints), color: "#2563EB" },
+  "agent-design": { glyph: line(Bot), color: "#F59E0B" },
+  "agent-mcp": { glyph: brand(si.siModelcontextprotocol), color: "#0F766E" },
+  "agent-langchain": { glyph: brand(si.siLangchain), color: "#2E8B6E" },
+  "agent-cursor": { glyph: brand(si.siCursor), color: "#475569" },
+  "agent-claudecode": { glyph: brand(si.siClaudecode), color: "#C2410C" },
+  "agent-automation": { glyph: brand(si.siN8n), color: "#EA4B71" },
+  "ml-huggingface": { glyph: brand(si.siHuggingface), color: "#FFD21E" },
+  "ml-pytorch": { glyph: brand(si.siPytorch), color: "#EE4C2C" },
+  "ml-tensorflow": { glyph: brand(si.siTensorflow), color: "#FF6F00" },
+  "ml-sklearn": { glyph: brand(si.siScikitlearn), color: "#F7931E" },
+  "tune-finetuning": { glyph: line(SlidersHorizontal), color: "#E11D48" },
+  "eval-llm": { glyph: line(ClipboardCheck), color: "#06B6D4" },
+  "eval-safety": { glyph: line(ShieldCheck), color: "#DC2626" },
+  "image-midjourney": { glyph: line(ImageIcon), color: "#EC4899" },
+  "image-diffusion": { glyph: line(Aperture), color: "#7C3AED" },
 };
 
 const BY_KIND: Record<string, Art> = {
@@ -83,7 +111,8 @@ function shade(hex: string, f: number) {
 export function SubjectArt({ slug, name, kind, size = 48, className = "" }: { slug: string; name: string; kind: string; size?: number; className?: string }) {
   const { glyph, color } = artFor(slug, name, kind);
   const id = `sa-${slug.replace(/[^a-z0-9]/gi, "")}-${size}`;
-  const dark = color.toLowerCase() === "#f7df1e"; // yellow needs a dark mark
+  const lum = (0.299 * parseInt(color.slice(1, 3), 16) + 0.587 * parseInt(color.slice(3, 5), 16) + 0.114 * parseInt(color.slice(5, 7), 16)) / 255;
+  const dark = lum > 0.72; // yellow needs a dark mark
   const ink = dark ? "#1f2937" : "#ffffff";
   return (
     <svg viewBox="0 0 96 96" width={size} height={size} className={`shrink-0 rounded-[22%] ${className}`} role="img" aria-label={`${name} logo`}>
