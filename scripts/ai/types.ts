@@ -47,6 +47,16 @@ export type TrackSpec = {
   qa?: QA[];
   /** ids of parametric generators from calc.ts that fit this subject (unlimited fresh numbers each) */
   calc?: string[];
+  /** Company/role tracks only (content/cards): what the track is. Defaults to "technology". */
+  kind?: "subject" | "product" | "service" | "tool" | "technology" | "process";
+  /** brand slug the track hangs off when it has to be created. Defaults to "titan-academy". An existing track keeps its own brand and metadata. */
+  brand?: string;
+  audience?: "staff" | "customer" | "both";
+  tier?: "mandatory" | "role" | "growth";
+  /** who the knowledge applies to when the track is created. Card tracks default to "company" (shared by every brand). */
+  scope?: "company" | "brand" | "project";
+  /** the thinnest level must reach this many questions. Card tracks default to 50 (1000 in all), Titan tracks to 100. */
+  minPerLevel?: number;
 };
 
 /** Engine output. */
@@ -63,6 +73,8 @@ export type GenQ = {
   timeSec: number;
   /** study-guide bullet: the card this question came from */
   subject?: string;
+  /** subject + predicate index: two questions about the same fact are kept on different levels */
+  fact?: string;
   blurb?: string;
   /** keep option order as authored (True/False, Both/Neither) */
   fixedOrder?: boolean;

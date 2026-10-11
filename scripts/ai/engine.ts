@@ -62,12 +62,12 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
     (a.like ?? []).some((x) => x.toLowerCase() === b.subject.toLowerCase()) ||
     (b.like ?? []).some((x) => x.toLowerCase() === a.subject.toLowerCase());
   /** a predicate that is (nearly) already true of `c` cannot be used as a wrong answer for it */
-  const clash = (c: Prep, pred: string) => {
+  const clash = (c: Prep, pred: string, strict = false) => {
     const t = stems(pred);
-    if (c.says.some((s, i) => s === pred || jac(c.tk[i], t) >= 0.2)) return true;
+    if (c.says.some((s, i) => s === pred || jac(c.tk[i], t) >= (strict ? 0.1 : 0.2))) return true;
     // a wrong answer that mentions the subject itself, or its use case, is probably about the same thing
     for (const w of c.subjectStems) if (t.has(w)) return true;
-    return c.useStems.size > 0 && jac(c.useStems, t) >= 0.15;
+    return c.useStems.size > 0 && jac(c.useStems, t) >= (strict ? 0.08 : 0.15);
   };
   /** nearest-first pool: same group, then the rest */
   const pool = (c: Prep) => {
@@ -78,16 +78,24 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
   };
 
   /** n predicates from other cards that are false of c, mutually distinct */
-  function falsePreds(c: Prep, n: number, avoid: string[] = [], num: "s" | "p" | "any" = "any"): { pred: string; from: Prep }[] | null {
+  /** `near` of the n wrong statements come from sibling cards (plausible, so harder) under a strict overlap filter; the rest from other groups */
+  function falsePreds(c: Prep, n: number, avoid: string[] = [], num: "s" | "p" | "any" = "any", near = 0): { pred: string; from: Prep }[] | null {
     const out: { pred: string; from: Prep }[] = [];
-    // wrong statements come from other groups first: siblings in the same group are the ones that turn out to be true too
+    const ok = (p: string, strict: boolean) => fits(numberOf(p), num) && !clash(c, p, strict) && !avoid.includes(p) && out.every((o) => jac(toks(o.pred), toks(p)) < 0.5);
+    for (const d of pool(c).filter((x) => x.group === c.group)) {
+      if (out.length >= Math.min(near, n)) break;
+      const cand = r.shuffle(d.says).find((p) => ok(p, true));
+      if (cand) out.push({ pred: cand, from: d });
+    }
+    // wrong statements otherwise come from other groups first: siblings are the ones that turn out to be true too
     const donors = [...r.shuffle(cards.filter((x) => x.group !== c.group && !related(c, x))), ...pool(c).filter((x) => x.group === c.group)];
     for (const d of donors) {
-      const cands = r.shuffle(d.says).filter((p) => fits(numberOf(p), num) && !clash(c, p) && !avoid.includes(p) && out.every((o) => jac(toks(o.pred), toks(p)) < 0.5));
-      if (cands.length) out.push({ pred: cands[0], from: d });
       if (out.length === n) return out;
+      if (out.some((o) => o.from.id === d.id)) continue;
+      const cand = r.shuffle(d.says).find((p) => ok(p, false));
+      if (cand) out.push({ pred: cand, from: d });
     }
-    return null;
+    return out.length === n ? out : null;
   }
   /** n subjects (other than c) of which the predicate is not true */
   function otherSubjects(c: Prep, pred: string, n: number): Prep[] | null {
@@ -103,9 +111,10 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
   const qs: GenQ[] = [];
   const seen = new Set<string>();
   let cur: Prep | null = null;
+  let curFact = "";
   const add = (q: GenQ) => {
     if (seen.has(q.prompt)) return;
-    if (cur) { q.subject = cur.subject; q.blurb = sentence(cur.subject, cur.says[0]); }
+    if (cur) { q.subject = cur.subject; q.blurb = sentence(cur.subject, cur.says[0]); q.fact = curFact; }
     if (new Set(q.options.map((o) => o.toLowerCase())).size !== q.options.length) return;
     seen.add(q.prompt);
     qs.push(q);
@@ -119,6 +128,7 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
     const topic = cap(c.label);
     const S = c.subject;
     c.says.forEach((p, i) => {
+      curFact = `${c.subject}#${i}`;
       const why = sentence(S, p);
       // true / false (true statement)
       add({ prompt: `True or false: ${sentence(S, p)}`, options: TF, correct: 0, topic, hint: why, form: "tf", score: base(c) + j(), timeSec: 20, fixedOrder: true });
@@ -128,7 +138,9 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
         add({ prompt: `True or false: ${sentence(S, w)}`, options: TF, correct: 1, topic, hint: `Actually, ${S} ${p}.`, form: "tf", score: base(c) + 0.5 + j(), timeSec: 20, fixedOrder: true });
       }
       // complete the statement / which description (two stems)
-      const d1 = falsePreds(c, 3, [], numberOf(p));
+      // a wrong option that is secretly true is worse than an easy question, so only the hardest tier gets one near-miss
+      const near = c.tier >= 5 ? 1 : 0;
+      const d1 = falsePreds(c, 3, [], numberOf(p), near);
       if (d1) {
         const nots = (c.not ?? []).map(clean);
         const dd = i === 0 && nots.length ? [nots[0], ...d1.slice(0, 2).map((x) => x.pred)] : d1.map((x) => x.pred);
@@ -136,7 +148,7 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
         const k = i % 5;
         add({ prompt: [`Complete the statement: “${cap(S)} …”`, `Finish this sentence: “${cap(S)} …”`, `Which ending is correct? “${cap(S)} …”`, `Pick the right continuation: “${cap(S)} …”`, `Fill in the rest: “${cap(S)} …”`][k],
           options: [p, ...dd], correct: 0, topic, hint: why, form: "defn", score: base(c) + 1 + j(), timeSec: 40 });
-        const d2 = falsePreds(c, 3, dd, numberOf(p));
+        const d2 = falsePreds(c, 3, dd, numberOf(p), near);
         if (d2) add({ prompt: [`Which description of ${S} is accurate?`, `Which statement about ${S} is correct?`, `Which of these is true of ${S}?`, `What best describes ${S}?`, `Which option correctly characterises ${S}?`][k],
           options: [p, ...d2.map((x) => x.pred)], correct: 0, topic, hint: why, form: "defn", score: base(c) + 1.4 + j(), timeSec: 40 });
       }
@@ -155,6 +167,7 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
       }
     });
 
+    curFact = `${c.subject}#card`;
     // which is NOT true of S
     const own = r.shuffle(c.says);
     const outsider = falsePreds(c, 1, [], numberOf(own[0] ?? ""));
@@ -220,6 +233,7 @@ export function generate(spec: TrackSpec): { qs: GenQ[]; pool: number; warnings:
     kept = [...keep, ...r.shuffle(qs.filter((q) => q.form !== "qa")).slice(0, cap_ - keep.length)];
   }
   kept.sort((a, b) => a.score - b.score);
+  separateRepeats(kept);
   return { qs: kept, pool: qs.length, warnings };
 }
 
@@ -231,4 +245,42 @@ export function shuffled(q: GenQ, r: Rng): { options: { key: string; text: strin
   const order = q.fixedOrder ? idx : r.shuffle(idx);
   const keys = "abcd";
   return { options: order.map((o, k) => ({ key: keys[k], text: q.options[o] })), answer: keys[order.indexOf(q.correct)] };
+}
+
+/**
+ * Two questions about the same fact (a true/false and a "complete the statement" of one predicate) should not meet in one
+ * exam. Swap the later one with a question in a nearby level that creates no new repeat; level sizes stay the same.
+ */
+function separateRepeats(qs: GenQ[]) {
+  const n = qs.length;
+  const bounds = (l: number) => [Math.ceil(((l - 1) * n) / LEVEL_COUNT), Math.ceil((l * n) / LEVEL_COUNT)] as const;
+  const factsIn = (l: number, skip = -1) => {
+    const [a, b] = bounds(l);
+    const out = new Set<string>();
+    for (let i = a; i < b; i++) if (i !== skip && qs[i].fact) out.add(qs[i].fact!);
+    return out;
+  };
+  for (let pass = 0; pass < 6; pass++) {
+    for (let l = 1; l <= LEVEL_COUNT; l++) {
+      const [a, b] = bounds(l);
+      const seen = new Set<string>();
+      for (let i = a; i < b; i++) {
+        const f = qs[i].fact;
+        if (!f) continue;
+        if (!seen.has(f)) { seen.add(f); continue; }
+        const here = factsIn(l, i);
+        search: for (const nl of [l + 1, l - 1, l + 2, l - 2, l + 3, l - 3, l + 4, l - 4]) {
+          if (nl < 1 || nl > LEVEL_COUNT) continue;
+          if (factsIn(nl).has(f)) continue;
+          const [c, d] = bounds(nl);
+          for (let j = c; j < d; j++) {
+            const g = qs[j].fact;
+            if (g && here.has(g)) continue;
+            [qs[i], qs[j]] = [qs[j], qs[i]];
+            break search;
+          }
+        }
+      }
+    }
+  }
 }
