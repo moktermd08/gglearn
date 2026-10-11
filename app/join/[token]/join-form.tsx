@@ -5,7 +5,7 @@ import { joinWithInvite } from "@/app/actions";
 
 export default function JoinForm({ token, email }: { token: string; email: string }) {
   const [error, run, pending] = useActionState(joinWithInvite.bind(null, token), null);
-  const input = "w-full rounded-lg border border-white/15 bg-black/30 px-3 py-2";
+  const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
   return (
     <form action={run} className="card pop mx-auto max-w-sm space-y-3 p-6">
       <div className="flex items-center gap-2"><PartyPopper className="bob text-amber-300" /><h2 className="text-lg font-semibold">Create your account</h2></div>

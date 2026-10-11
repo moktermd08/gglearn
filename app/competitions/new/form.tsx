@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { Bot, Coins, Eye, Globe, Lock, Swords, Target, Timer, TriangleAlert } from "lucide-react";
 import { createCompetition, type CreateState } from "../actions";
 import { BOT_TIERS } from "@/lib/bots";
@@ -12,12 +12,12 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
   const [visibility, setVisibility] = useState("private");
   const [goal, setGoal] = useState(3);
   const [days, setDays] = useState(14);
-  const input = "w-full rounded-lg border border-white/15 bg-black/30 px-3 py-2";
+  const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
   const label = "block text-sm font-semibold";
   const perDay = (goal / days).toFixed(2);
 
   return (
-    <form action={run} className="card space-y-6 p-6">
+    <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="card space-y-6 p-6">
       <section className="space-y-3">
         <h2 className="flex items-center gap-2 font-bold"><Target size={18} className="text-pink-300" />1. Topic and goal</h2>
         <div><label className={label} htmlFor="title">Name your contest</label>

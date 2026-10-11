@@ -5,7 +5,7 @@ import { login } from "../actions";
 
 export default function LoginPage() {
   const [error, run, pending] = useActionState(login, null);
-  const input = "w-full rounded-lg border border-white/15 bg-black/30 px-3 py-2";
+  const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
   return (
     <div className="mx-auto max-w-sm space-y-4">
       <form action={run} className="card pop space-y-3 p-6">

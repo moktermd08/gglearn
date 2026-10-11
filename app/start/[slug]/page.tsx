@@ -91,7 +91,7 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
           <fieldset key={q.id} className="card rise space-y-3 p-4" style={{ "--i": i } as React.CSSProperties}>
             <legend className="sr-only">Question {i + 1}</legend>
             <div className="font-medium">{i + 1}. {q.prompt}</div>
-            {q.code && <pre className="overflow-x-auto rounded bg-black/50 p-2 text-sm">{q.code}</pre>}
+            {q.code && <pre className="overflow-x-auto rounded bg-black/5 p-2 text-sm">{q.code}</pre>}
             <div className="grid gap-2">
               {q.options?.map((o) => (
                 <label key={o.key} className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 p-2 transition hover:border-white/30 hover:bg-white/5 has-[:checked]:border-indigo-400 has-[:checked]:bg-indigo-500/20">

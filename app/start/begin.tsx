@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useMemo, useState } from "react";
+import { startTransition, useActionState, useMemo, useState } from "react";
 import { ArrowRight, BookOpen, Check, Mail, Mountain, Search, Swords, Users } from "lucide-react";
 import { beginJourney, type StartState } from "./actions";
 
@@ -15,10 +15,10 @@ export default function Begin({ topics }: { topics: Topic[] }) {
     return (n ? topics.filter((t) => `${t.name} ${t.kindLabel} ${t.description}`.toLowerCase().includes(n)) : topics).slice(0, 24);
   }, [q, topics]);
   const picked = topics.find((t) => t.id === trackId);
-  const input = "w-full rounded-lg border border-white/15 bg-black/30 px-3 py-2";
+  const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
 
   return (
-    <form action={run} className="space-y-8">
+    <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="space-y-8">
       <input type="hidden" name="trackId" value={trackId ?? ""} />
       <section className="card space-y-3 p-5">
         <label htmlFor="q" className="flex items-center gap-2 font-bold"><Search size={18} className="text-sky-300" />1. Your learning goal</label>

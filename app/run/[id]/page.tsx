@@ -133,7 +133,7 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
                     <span className={`ml-auto font-bold ${TEXT[t]}`}>{Math.round(a.score * 100)}%</span>
                   </div>
                   <div className="font-medium">{q.prompt}</div>
-                  {q.code && <pre className="overflow-x-auto rounded bg-black/50 p-2 text-sm">{q.code}</pre>}
+                  {q.code && <pre className="overflow-x-auto rounded bg-black/5 p-2 text-sm">{q.code}</pre>}
                   <div className="h-1.5 overflow-hidden rounded-full bg-white/10"><div className={`grow h-full rounded-full ${BAR[t]}`} style={{ width: `${a.score * 100}%`, "--i": i } as React.CSSProperties} /></div>
                   <div className={`rounded-lg p-2.5 text-sm ${t === "emerald" ? "bg-emerald-500/10" : "bg-rose-500/10"}`}>
                     <span className="text-xs uppercase tracking-wider text-slate-400">Your answer</span>

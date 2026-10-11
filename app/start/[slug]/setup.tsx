@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { Bot, Coins, Eye, Flag, GraduationCap, Globe, Lock, Swords, Timer, Trophy } from "lucide-react";
 import { launchJourney, type StartState } from "../actions";
 import { BOT_TIERS } from "@/lib/bots";
@@ -14,12 +14,12 @@ export default function Setup({ slug, mode, placed, trackName }: { slug: string;
   const [incentive, setIncentive] = useState<"cert" | "cash">("cert");
   const [visibility, setVisibility] = useState("private");
   const group = mode === "group";
-  const input = "w-full rounded-lg border border-white/15 bg-black/30 px-3 py-2";
+  const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
   const label = "block text-sm font-semibold";
   const finish = Math.min(MAX_LEVEL, placed + goal);
 
   return (
-    <form action={run} className="space-y-6">
+    <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="space-y-6">
       <section className="card space-y-3 p-5">
         <h2 className="flex items-center gap-2 font-bold"><Flag size={18} className="text-emerald-300" />Your finish line</h2>
         <div className="relative" aria-hidden>

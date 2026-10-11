@@ -18,7 +18,7 @@ export function Drill({ trackId, back, questions }: { trackId: number; back: str
       {questions.map((_, n) => {
         const r = results[n];
         return (
-          <span key={n} className={`grid h-7 w-7 place-items-center rounded-full text-xs font-bold transition ${r === undefined ? (n === i ? "bg-indigo-500/30 ring-2 ring-indigo-400" : "bg-white/10 text-slate-500") : r ? "pop bg-emerald-500 text-white" : "pop bg-rose-500 text-white"}`}>
+          <span key={n} className={`grid h-7 w-7 place-items-center rounded-full text-xs font-bold transition ${r === undefined ? (n === i ? "bg-indigo-500/30 ring-2 ring-indigo-400" : "bg-white/10 text-slate-500") : r ? "pop bg-emerald-500 text-[#fff]" : "pop bg-rose-500 text-[#fff]"}`}>
             {r === undefined ? n + 1 : r ? <Check size={14} /> : <X size={14} />}
           </span>
         );
@@ -58,14 +58,14 @@ export function Drill({ trackId, back, questions }: { trackId: number; back: str
       <div key={q.id} className={`card slide-in space-y-4 p-6 ${res && !res.correct ? "shake" : ""}`}>
         {q.topic && <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold text-slate-300"><Tag size={12} />{q.topic}</span>}
         <div className="text-lg font-semibold">{q.prompt}</div>
-        {q.code && <pre className="overflow-x-auto rounded-lg bg-black/50 p-3 text-sm text-emerald-200">{q.code}</pre>}
+        {q.code && <pre className="overflow-x-auto rounded-lg bg-black/5 p-3 text-sm text-emerald-200">{q.code}</pre>}
         <div className="grid gap-2">
           {q.options?.map((o) => {
             const chosen = res?.key === o.key, right = res && o.key === res.answer;
             return (
               <button key={o.key} onClick={() => pick(o.key)} disabled={!!res}
                 className={`flex items-center gap-3 rounded-xl border p-3 text-left transition ${right ? "ping-once border-emerald-400 bg-emerald-500/20" : chosen ? "border-rose-400 bg-rose-500/20" : res ? "border-white/5 opacity-50" : "border-white/10 hover:bg-white/5"}`}>
-                <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg font-mono text-sm font-bold ${right ? "bg-emerald-500 text-white" : chosen ? "bg-rose-500 text-white" : "bg-white/10"}`}>{o.key.toUpperCase()}</span>
+                <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg font-mono text-sm font-bold ${right ? "bg-emerald-500 text-[#fff]" : chosen ? "bg-rose-500 text-[#fff]" : "bg-white/10"}`}>{o.key.toUpperCase()}</span>
                 <span className="flex-1">{o.text}</span>
                 {right && <Check size={20} className="spin-in text-emerald-300" />}
                 {chosen && !right && <X size={20} className="spin-in text-rose-300" />}

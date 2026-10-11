@@ -36,7 +36,7 @@ export function Quiz({ questions, action, level, rivalHue, rivalName }: {
       <nav aria-label="Question navigator" className="flex flex-wrap justify-center gap-1.5">
         {questions.map((x, n) => (
           <button type="button" key={x.id} onClick={() => setI(n)} aria-label={`Go to question ${n + 1}`} aria-current={n === i}
-            className={`grid h-8 w-8 place-items-center rounded-lg text-xs font-bold transition ${n === i ? "scale-110 bg-indigo-500 text-white ring-2 ring-indigo-300/60" : done(x.id) ? "bg-emerald-500/25 text-emerald-200 hover:bg-emerald-500/40" : "bg-white/10 text-slate-400 hover:bg-white/20"}`}>
+            className={`grid h-8 w-8 place-items-center rounded-lg text-xs font-bold transition ${n === i ? "scale-110 bg-indigo-500 text-[#fff] ring-2 ring-indigo-300/60" : done(x.id) ? "bg-emerald-500/25 text-emerald-200 hover:bg-emerald-500/40" : "bg-white/10 text-slate-400 hover:bg-white/20"}`}>
             {done(x.id) && n !== i ? <Check size={14} /> : n + 1}
           </button>
         ))}
@@ -49,7 +49,7 @@ export function Quiz({ questions, action, level, rivalHue, rivalName }: {
           {q.topic && <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-slate-300"><Tag size={12} />{q.topic}</span>}
         </div>
         <div className="text-lg font-semibold">{q.prompt}</div>
-        {q.code && <pre className="overflow-x-auto rounded-lg bg-black/50 p-3 text-sm text-emerald-200">{q.code}</pre>}
+        {q.code && <pre className="overflow-x-auto rounded-lg bg-black/5 p-3 text-sm text-emerald-200">{q.code}</pre>}
         {q.type === "mcq" ? (
           <div className="grid gap-2">
             {q.options?.map((o, n) => {
@@ -57,7 +57,7 @@ export function Quiz({ questions, action, level, rivalHue, rivalName }: {
               return (
                 <button type="button" key={o.key} onClick={() => setAns({ ...ans, [q.id]: o.key })} style={{ "--i": n } as React.CSSProperties}
                   className={`rise flex items-start gap-3 rounded-xl border p-3 text-left transition ${on ? "border-indigo-400 bg-indigo-500/20" : "border-white/10 hover:border-white/30 hover:bg-white/5"}`}>
-                  <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg font-mono text-sm font-bold transition ${on ? "bg-indigo-500 text-white" : "bg-white/10"}`}>{o.key.toUpperCase()}</span>
+                  <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg font-mono text-sm font-bold transition ${on ? "bg-indigo-500 text-[#fff]" : "bg-white/10"}`}>{o.key.toUpperCase()}</span>
                   <span className="flex-1">{o.text}</span>
                   {on && <Check size={18} className="spin-in mt-0.5 shrink-0 text-indigo-300" />}
                 </button>
@@ -67,7 +67,7 @@ export function Quiz({ questions, action, level, rivalHue, rivalName }: {
         ) : (
           <div>
             <textarea rows={5} maxLength={4000} value={ans[q.id] ?? ""} onChange={(e) => setAns({ ...ans, [q.id]: e.target.value })}
-              placeholder="Write your answer" className="w-full rounded-xl border border-white/15 bg-black/30 p-3 focus:border-indigo-400 focus:outline-none" />
+              placeholder="Write your answer" className="w-full rounded-xl border border-white/15 bg-[#fff] p-3 focus:border-indigo-400 focus:outline-none" />
             <div className="mt-1 flex justify-between text-xs text-slate-500">
               <span>Graded against the reference answer.</span>
               <span>{(ans[q.id] ?? "").length} / 4000</span>
