@@ -375,9 +375,37 @@ export const careerLevels = sqliteTable(
     level: integer("level").notNull(),
     title: text("title").notNull(),
     summary: text("summary").notNull().default(""),
+    // what this level looks like in the three measures of the career framework (content/careers/framework.json)
+    knowledge: text("knowledge").notNull().default(""),
+    delivery: text("delivery").notNull().default(""),
+    leadership: text("leadership").notNull().default(""), // "Communication & leadership"
   },
   (t) => [uniqueIndex("career_level_unique").on(t.jobRole, t.level)],
 );
+
+// A way across from one role's ladder to another's ("a Lead Developer can step into Engineering Manager, cto level 1").
+// It lets a person aim at a role outside their own ladder: the route is the rest of their ladder, the bridge, then the target ladder.
+export const careerBridges = sqliteTable(
+  "career_bridges",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    fromRole: text("from_role").notNull(),
+    fromLevel: integer("from_level").notNull(), // the level to have reached on the old ladder
+    toRole: text("to_role").notNull(),
+    toLevel: integer("to_level").notNull().default(1), // the level you arrive at on the new ladder
+  },
+  (t) => [uniqueIndex("career_bridge_unique").on(t.fromRole, t.toRole)],
+);
+
+// "I want to be a CTO by March 2028": one goal per person.
+export const careerGoals = sqliteTable("career_goals", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().unique().references(() => users.id),
+  targetRole: text("target_role").notNull(),
+  targetLevel: integer("target_level").notNull(),
+  targetDate: integer("target_date").notNull(), // unix seconds
+  createdAt: integer("created_at").notNull().default(now),
+});
 
 export const careerRequirements = sqliteTable(
   "career_requirements",

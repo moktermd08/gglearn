@@ -1,0 +1,83 @@
+{
+  "role": "accounting",
+  "name": "Accounting",
+  "bridges": [
+    {
+      "from": "admin",
+      "fromLevel": 2,
+      "toLevel": 1
+    }
+  ],
+  "rungs": [
+    {
+      "title": "Accounts Assistant",
+      "summary": "Learning bookkeeping, the ledgers and the month-end routine.",
+      "knowledge": "Knows the chart of accounts, invoicing and expense rules.",
+      "delivery": "Processes invoices, payments and reconciliations accurately, with checks.",
+      "leadership": "Meets deadlines, asks when unsure and keeps clean records.",
+      "steps": []
+    },
+    {
+      "title": "Accountant",
+      "summary": "Owns a set of ledgers and the month-end for them.",
+      "knowledge": "Fluent in double entry, VAT, payments, billing systems and reconciliation.",
+      "delivery": "Closes the month for their ledgers on time and explains the variances.",
+      "leadership": "Works with budget holders and sales on billing questions without friction.",
+      "steps": [
+        ["governance-compliance", 5],
+        ["payments-billing", 8],
+        ["tools-business", 5],
+        ["data-analytics", 5],
+        ["delivery-management", 5],
+        ["communications-email", 5],
+        ["product-management-core", 5],
+        ["service-design-pricing", 5]
+      ]
+    },
+    {
+      "title": "Senior Accountant",
+      "summary": "Owns reporting, controls and the accuracy of the books.",
+      "knowledge": "Deep in tax, controls and management reporting; spots what looks wrong.",
+      "delivery": "Owns the monthly and annual reporting and the controls behind it.",
+      "leadership": "Reviews and mentors; presents numbers to non-finance managers.",
+      "steps": [
+        ["payments-billing", 12],
+        ["data-analytics", 8],
+        ["governance-compliance", 10],
+        ["tools-business", 8],
+        ["people-operations", 5],
+        ["chatgpt-titan", 5],
+        ["sdlc-discovery", 5],
+        ["service-design-pricing", 8],
+        ["brand-positioning-voice", 5]
+      ]
+    },
+    {
+      "title": "Finance Manager",
+      "summary": "Runs the finance function: budgets, forecasts and cash.",
+      "knowledge": "Connects the numbers to the business model, cash and risk.",
+      "delivery": "Owns budgets, forecasts, cash and the audit.",
+      "leadership": "Manages the finance team and is a trusted advisor to department heads.",
+      "steps": [
+        ["payments-billing", 14],
+        ["people-operations", 8],
+        ["security-operations", 5],
+        ["product-management-core", 8],
+        ["finance-for-leaders", 5]
+      ]
+    },
+    {
+      "title": "Head of Finance",
+      "summary": "Owns finance strategy, compliance and investor trust.",
+      "knowledge": "Sees financial, regulatory and operational risk together.",
+      "delivery": "Owns financial strategy, funding, tax and audit outcomes.",
+      "leadership": "Leads leaders and advises the CEO and the board.",
+      "steps": [
+        ["payments-billing", 16],
+        ["service-design-pricing", 10],
+        ["risk-resilience-leadership", 5],
+        ["executive-communication", 5]
+      ]
+    }
+  ]
+}

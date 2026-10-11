@@ -1,0 +1,22 @@
+{
+  "_about": "The career framework every company follows. Source: the Career Progression guidelines (IC1 to IC6). Level N of a ladder here is ICN on an individual-contributor ladder; management and executive ladders use the same numbering and show it as LN. Each rung in content/careers/roles/*.json describes its level in the three measures below. Copy content/careers/_template.json to add a role.",
+  "measures": [
+    { "key": "knowledge", "name": "Knowledge", "means": "Breadth and depth of knowledge; how their area(s) of expertise develop over time." },
+    { "key": "delivery", "name": "Delivery", "means": "What they are expected to deliver and how they go about doing that." },
+    { "key": "leadership", "name": "Communication & leadership", "means": "How they communicate and lead people and/or projects across the business." }
+  ],
+  "levels": [
+    { "level": 1, "code": "IC1", "band": "Entry", "theme": "A supporting-level player who is honing their craft and working to understand organizational context." },
+    { "level": 2, "code": "IC2", "band": "Developing", "theme": "An established performer with strong communication skills who proactively builds relationships." },
+    { "level": 3, "code": "IC3", "band": "Career", "theme": "A high-level performer with strong relationships and the ability to lead projects." },
+    { "level": 4, "code": "IC4", "band": "Advanced", "theme": "A leading performer who prefers to manage projects over managing people." },
+    { "level": 5, "code": "IC5", "band": "Expert", "theme": "A recognised expert whose judgement the whole company relies on." },
+    { "level": 6, "code": "IC6", "band": "Principal", "theme": "An indispensable individual contributor." }
+  ],
+  "sublevels": [
+    { "suffix": ".0", "name": "New", "means": "New to that level." },
+    { "suffix": ".1", "name": "Established", "means": "Strong experience at that level. Standing to take on half the competencies in the level above." },
+    { "suffix": ".2", "name": "Pushing for the next level", "means": "Nailing their level. Comfortable with most of the competencies in the level above." }
+  ],
+  "sublevelRule": "Computed, never stored: of the next level's passable steps, fewer than half met = .0, half or more = .1, three quarters or more = .2."
+}

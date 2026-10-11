@@ -37,6 +37,7 @@ export default async function Compliance() {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="flex items-center gap-2 text-2xl font-bold"><ShieldCheck className="text-emerald-300" />Who is up to date</h1>
         {me.role === "admin" && <Link href="/admin/paths" className="btn btn-ghost !py-1 text-sm">Set what is required</Link>}
+        {me.role === "admin" && <Link href="/admin/matrix" className="btn btn-ghost !py-1 text-sm">Role and pillar matrix</Link>}
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map(({ Icon, label, value, cls }, i) => (

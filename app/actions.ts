@@ -5,10 +5,11 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
-import { answers, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, runs, tracks, users } from "@/lib/db";
+import { answers, careerGoals, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, runs, tracks, users } from "@/lib/db";
 import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
+import { canReach } from "@/lib/journey";
 import { endSession, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
 import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@/lib/password";
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
@@ -21,7 +22,8 @@ import { drillCompleted, drillQuestion, noteDrillAnswer } from "@/lib/drill";
 import { DYNAMIC_PER_RUN, drawDynamic } from "@/lib/dynamic/store";
 import { claimPendingInvites } from "@/lib/contests";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
-import { type Audience, formatScopes, openTo, parseScopes, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
+import { STARTER_SIZE, starterPlan } from "@/lib/starter";
+import { type Audience, formatScopes, openTo, parseScopes, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
   "Read the brand story and values",
@@ -59,10 +61,15 @@ function provision(tx: Tx, userId: number, email: string, jobRole: string, audie
   const steps = audience === "customer" ? CUSTOMER_ONBOARDING : ONBOARDING;
   tx.insert(checklistItems).values(steps.map((label) => ({ userId, kind: "onboarding" as const, label }))).run();
   const required = syncRequired({ id: userId, jobRole, audience }, tx);
-  if (!required && audience === "staff") {
-    const hidden = hiddenTrackIds();
-    const rec = tx.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${jobRole}%`))).all()
-      .filter((t) => !hidden.has(t.id) && openTo(audience, t.audience)).slice(0, 6);
+  if (audience === "staff") {
+    // a role-shaped starter plan (question mix + role pillars) on top of what is required; the old open pick only if it finds nothing
+    const have = new Set(tx.select({ id: enrollments.trackId }).from(enrollments).where(eq(enrollments.userId, userId)).all().map((e) => e.id));
+    let rec: { id: number }[] = starterPlan({ jobRole, audience }, scopesOf(userId, tx), have, STARTER_SIZE - have.size);
+    if (!rec.length && !required && !have.size) {
+      const hidden = hiddenTrackIds();
+      rec = tx.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${jobRole}%`))).all()
+        .filter((t) => !hidden.has(t.id) && openTo(audience, t.audience)).slice(0, 6);
+    }
     if (rec.length) {
       tx.insert(enrollments).values(rec.map((t) => ({ userId, trackId: t.id, goal: `Onboarding path for ${jobRole}` }))).onConflictDoNothing().run();
     }
@@ -415,6 +422,31 @@ export async function removeCareerStep(id: number) {
   if (!(await adminOnly())) return;
   db.delete(careerRequirements).where(eq(careerRequirements.id, id)).run();
   revalidatePath("/admin/careers");
+}
+
+/**
+ * Sets (or replaces) the person's career goal: a role and level they can actually reach from where they are, and a date.
+ * The target arrives as "role|level" from a list that only offers reachable places, and is checked again here.
+ */
+export async function setCareerGoal(fd: FormData) {
+  const me = await requireUser();
+  const p = z.object({ role: z.string().trim().min(1).max(40), level: z.coerce.number().int().min(1).max(10), date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/) })
+    .safeParse({ role: String(fd.get("target") ?? "").split("|")[0], level: String(fd.get("target") ?? "").split("|")[1], date: fd.get("date") });
+  if (!p.success) return;
+  const at = Math.floor(Date.parse(`${p.data.date}T12:00:00Z`) / 1000), nowSec = Math.floor(Date.now() / 1000);
+  if (!Number.isFinite(at) || at <= nowSec || at > nowSec + 20 * 365 * 86400) return;
+  if (!canReach(me, p.data.role, p.data.level)) return;
+  db.insert(careerGoals).values({ userId: me.id, targetRole: p.data.role, targetLevel: p.data.level, targetDate: at })
+    .onConflictDoUpdate({ target: careerGoals.userId, set: { targetRole: p.data.role, targetLevel: p.data.level, targetDate: at, createdAt: nowSec } }).run();
+  revalidatePath("/journey");
+  revalidatePath("/dashboard");
+}
+
+export async function clearCareerGoal() {
+  const me = await requireUser();
+  db.delete(careerGoals).where(eq(careerGoals.userId, me.id)).run();
+  revalidatePath("/journey");
+  revalidatePath("/dashboard");
 }
 
 /** A person ticks their own onboarding items; managers can tick anyone's (including offboarding items). */

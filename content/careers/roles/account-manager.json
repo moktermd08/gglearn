@@ -1,0 +1,67 @@
+{
+  "role": "account manager",
+  "name": "Account Manager",
+  "bridges": [
+    {
+      "from": "sales",
+      "fromLevel": 2,
+      "toLevel": 2
+    }
+  ],
+  "rungs": [
+    {
+      "title": "Account Coordinator",
+      "summary": "Learning the customers, the products and the support routes.",
+      "knowledge": "Knows the products, plans and how to find answers fast.",
+      "delivery": "Handles routine customer requests and keeps account records current.",
+      "leadership": "Is responsive and honest, and learns from account managers' calls.",
+      "steps": []
+    },
+    {
+      "title": "Account Manager",
+      "summary": "Owns the relationship with a set of customers.",
+      "knowledge": "Fluent in the products, billing and what each customer is trying to achieve.",
+      "delivery": "Keeps customers healthy and renews or grows their accounts.",
+      "leadership": "Builds trust with customers and brings the delivery team in early.",
+      "steps": [
+        ["governance-compliance", 5],
+        ["gglink-sales-support", 5],
+        ["moksy-product", 5],
+        ["ggsocial-product", 5],
+        ["payments-billing", 8],
+        ["communications-email", 5],
+        ["tools-business", 5],
+        ["service-design-pricing", 8],
+        ["brand-positioning-voice", 5]
+      ]
+    },
+    {
+      "title": "Senior Account Manager",
+      "summary": "Owns the larger accounts and their growth.",
+      "knowledge": "Deep in the customer's business, pricing and what AI can change for them.",
+      "delivery": "Owns larger accounts, forecasts renewals and expansion accurately.",
+      "leadership": "Handles escalations and mentors account managers.",
+      "steps": [
+        ["gglink-sales-support", 8],
+        ["payments-billing", 10],
+        ["data-analytics", 5],
+        ["lead-generation-titan", 5],
+        ["product-management-core", 5],
+        ["service-design-pricing", 10],
+        ["executive-communication", 5]
+      ]
+    },
+    {
+      "title": "Head of Accounts",
+      "summary": "Owns customer retention and account strategy.",
+      "knowledge": "Reads the numbers behind retention, churn and expansion.",
+      "delivery": "Owns retention, expansion and the account team's targets.",
+      "leadership": "Leads account managers and carries the customer's voice to the executive team.",
+      "steps": [
+        ["people-operations", 8],
+        ["service-design-pricing", 12],
+        ["brand-positioning-voice", 8]
+      ]
+    }
+  ]
+}

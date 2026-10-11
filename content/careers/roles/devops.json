@@ -1,0 +1,96 @@
+{
+  "role": "devops",
+  "name": "DevOps",
+  "bridges": [
+    {
+      "from": "developer",
+      "fromLevel": 2,
+      "toLevel": 2
+    },
+    {
+      "from": "tester",
+      "fromLevel": 3,
+      "toLevel": 2
+    }
+  ],
+  "rungs": [
+    {
+      "title": "Junior DevOps Engineer",
+      "summary": "Learning pipelines, servers and how releases reach production.",
+      "knowledge": "Knows Linux, Git, containers and the basics of the company's pipeline.",
+      "delivery": "Handles routine pipeline and server tasks from runbooks, with review.",
+      "leadership": "Documents what they do and flags risk early.",
+      "steps": []
+    },
+    {
+      "title": "DevOps Engineer",
+      "summary": "Builds and runs pipelines and environments reliably.",
+      "knowledge": "Fluent in CI/CD, containers, cloud basics and monitoring.",
+      "delivery": "Builds and maintains pipelines and environments; responds to incidents.",
+      "leadership": "Works with developers to make releases boring; writes clear runbooks.",
+      "steps": [
+        ["governance-compliance", 8],
+        ["sdlc-devops", 8],
+        ["foundations-docker", 5],
+        ["foundations-aws", 5],
+        ["tech-cloud-devops", 5],
+        ["git-titan", 8],
+        ["tools-build-ship", 5],
+        ["tools-plan-design", 5],
+        ["product-management-core", 5]
+      ]
+    },
+    {
+      "title": "Senior DevOps Engineer",
+      "summary": "Owns the platform, its security and its reliability.",
+      "knowledge": "Deep in infrastructure as code, observability and security operations.",
+      "delivery": "Owns the platform: availability, cost, security and recovery.",
+      "leadership": "Leads incident response and mentors; builds relationships with every team that ships.",
+      "steps": [
+        ["sdlc-devops", 12],
+        ["servers-infrastructure", 10],
+        ["security-operations", 8],
+        ["tech-cloud-devops", 10],
+        ["lambda-titan", 5],
+        ["foundations-linux", 5],
+        ["foundations-apache", 5],
+        ["tools-build-ship", 8],
+        ["tools-plan-design", 8],
+        ["service-design-pricing", 5],
+        ["brand-positioning-voice", 5],
+        ["engineering-leadership", 5]
+      ]
+    },
+    {
+      "title": "Platform Lead",
+      "summary": "Leads the platform team and its roadmap.",
+      "knowledge": "Balances reliability, cost, security and developer speed across the company.",
+      "delivery": "Plans and delivers platform work; owns uptime targets and recovery tests.",
+      "leadership": "Leads a team; speaks for infrastructure in architecture and budget decisions.",
+      "steps": [
+        ["servers-infrastructure", 12],
+        ["delivery-management", 5],
+        ["people-operations", 5],
+        ["payments-billing", 5],
+        ["nodejs-titan", 5],
+        ["tools-build-ship", 10]
+      ]
+    },
+    {
+      "title": "Head of Infrastructure",
+      "summary": "Owns infrastructure strategy and vendors.",
+      "knowledge": "Sees infrastructure as risk, cost and capability for the whole company.",
+      "delivery": "Owns infrastructure strategy, budget and resilience.",
+      "leadership": "Leads leaders and advises executives on risk and spend.",
+      "steps": [
+        ["servers-infrastructure", 16],
+        ["security-operations", 10],
+        ["delivery-management", 10],
+        ["people-operations", 8],
+        ["python-titan", 5],
+        ["tools-build-ship", 14],
+        ["product-management-core", 8]
+      ]
+    }
+  ]
+}

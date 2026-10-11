@@ -1,0 +1,88 @@
+{
+  "role": "tester",
+  "name": "Tester",
+  "bridges": [
+    {
+      "from": "developer",
+      "fromLevel": 1,
+      "toLevel": 1
+    }
+  ],
+  "rungs": [
+    {
+      "title": "Junior Tester",
+      "summary": "Learning to find, reproduce and report defects.",
+      "knowledge": "Knows test case design basics, the product and the bug tracker.",
+      "delivery": "Runs written test cases and reports defects others can reproduce.",
+      "leadership": "Communicates clearly with developers and keeps reports factual.",
+      "steps": []
+    },
+    {
+      "title": "Tester",
+      "summary": "Plans and runs testing for a feature, including automation.",
+      "knowledge": "Fluent in test design, exploratory testing, API testing and automation basics.",
+      "delivery": "Owns the test plan for a feature and signs it off with evidence.",
+      "leadership": "Works with developers early rather than at the end; explains risk plainly.",
+      "steps": [
+        ["governance-compliance", 5],
+        ["sdlc-testing", 8],
+        ["tech-testing", 8],
+        ["sdlc-requirements", 5],
+        ["git-titan", 5],
+        ["javascript-titan", 5],
+        ["tools-build-ship", 5],
+        ["tools-plan-design", 5],
+        ["product-management-core", 5],
+        ["engineering-leadership", 5]
+      ]
+    },
+    {
+      "title": "Senior Tester",
+      "summary": "Owns quality for a product and builds its automation.",
+      "knowledge": "Deep in automation, performance, security testing and what the product must never do.",
+      "delivery": "Owns quality for a product; builds and maintains its automated suite.",
+      "leadership": "Mentors testers and influences the definition of done across teams.",
+      "steps": [
+        ["sdlc-testing", 10],
+        ["tech-testing", 10],
+        ["sdlc-security", 8],
+        ["eval-llm-titan", 5],
+        ["tools-build-ship", 8],
+        ["product-management-core", 8],
+        ["service-design-pricing", 5]
+      ]
+    },
+    {
+      "title": "QA Lead",
+      "summary": "Leads the test strategy and the team.",
+      "knowledge": "Sets the test strategy, tooling and metrics for the company.",
+      "delivery": "Owns release quality across products and the test environments.",
+      "leadership": "Leads testers and is trusted to say a release is not ready.",
+      "steps": [
+        ["sdlc-testing", 16],
+        ["sdlc-launch", 8],
+        ["delivery-management", 8],
+        ["people-operations", 5],
+        ["foundations-restapi", 5],
+        ["python-titan", 5],
+        ["product-management-core", 10],
+        ["brand-positioning-voice", 5],
+        ["executive-communication", 5]
+      ]
+    },
+    {
+      "title": "Head of Quality",
+      "summary": "Owns quality strategy and risk.",
+      "knowledge": "Connects quality to customer trust, compliance and AI risk.",
+      "delivery": "Owns the quality strategy, tooling budget and release standards.",
+      "leadership": "Leads leaders and reports quality and risk to executives.",
+      "steps": [
+        ["delivery-management", 10],
+        ["people-operations", 8],
+        ["data-analytics", 8],
+        ["product-management-core", 14],
+        ["tech-strategy-roadmap", 5]
+      ]
+    }
+  ]
+}
