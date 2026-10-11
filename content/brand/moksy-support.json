@@ -1,0 +1,2920 @@
+{
+ "trackSlug": "moksy-support",
+ "status": "review",
+ "lessons": [
+  {
+   "level": 1,
+   "title": "Where customers go",
+   "syllabus": [
+    "Support is support@moksy.ai; privacy is privacy@moksy.ai; legal is legal@moksy.ai",
+    "Free £0, Pro £19, Max £79 a month",
+    "Include the account email and a link to the plan or review",
+    "MOX is Moksy credit and is not needed to produce a plan"
+   ]
+  },
+  {
+   "level": 2,
+   "title": "Plans and MOX",
+   "syllabus": [
+    "Free: 3 projects, 5 of 22 areas, no Expert Reviews",
+    "Pro: 25 projects, 12 of 22 areas, unlimited Expert Reviews, 5 seats",
+    "Max: unlimited projects, all 22 areas, unlimited seats",
+    "MOX is bought once, does not renew, is dollar-pegged and itemised in the wallet"
+   ]
+  },
+  {
+   "level": 3,
+   "title": "Reading the messages",
+   "syllabus": [
+    "Feature not included means a plan limit; role denied means a permission",
+    "Locked after too many attempts: write from the address on the account",
+    "A plan is a draft; AI output is informational and must be validated",
+    "Refund of unused MOX: contact support and we will look at it"
+   ]
+  },
+  {
+   "level": 4,
+   "title": "Trust and terms",
+   "syllabus": [
+    "UK data, TLS 1.2+, AES-256 at rest, mandatory 2FA for administrators",
+    "Not ISO 27001 certified and not yet Cyber Essentials certified: say so plainly",
+    "Terms: bill in advance in GBP excluding VAT, cancel any time, liability capped at 12 months' payments",
+    "Disputed reviews are arbitrated by a senior reviewer"
+   ]
+  },
+  {
+   "level": 5,
+   "title": "Quote only what is settled",
+   "syllabus": [
+    "Published pages disagree on data deletion (30 versus 90 days): confirm and route to privacy@moksy.ai",
+    "Confirm the route for security questionnaires before promising one",
+    "Do not quote review prices in MOX: they are unsettled",
+    "Report discrepancies so the pages can be corrected"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "title": "How customers reach Moksy support",
+   "body": "Moksy's contact-support page says most answers are in the help centre, and when they are not, this is how you reach a person. Support is support@moksy.ai. The page says to include the account email and, if it is about a specific plan or review, the link to it, which roughly halves the number of messages it takes to fix something. The fastest route by problem: account or sign-in goes to support (if the customer cannot sign in at all, they say so from the address on the account); a plan that looks wrong goes to support, saying which section and mentioning if a reviewer has been involved; billing or credit goes to support with the date and amount of the charge; a review or a dispute goes to support, and disputed reviews are arbitrated by a senior reviewer; privacy or data requests go to privacy@moksy.ai, which reaches the people who handle them directly; something broken goes to support with what the customer did and what happened (a screenshot is worth several paragraphs). Someone buying rather than fixing is sent to Sales, which handles pricing, procurement and security questionnaires. Legal questions about the terms go to legal@moksy.ai. Source: contact-support.json, legal-terms.json.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which email address reaches Moksy support?",
+     "options": [
+      {
+       "key": "a",
+       "text": "help@moksy.com"
+      },
+      {
+       "key": "b",
+       "text": "hello@moksy.ai"
+      },
+      {
+       "key": "c",
+       "text": "contact@gglink.co.uk"
+      },
+      {
+       "key": "d",
+       "text": "support@moksy.ai"
+      }
+     ],
+     "answer": "d",
+     "hint": "Published on the contact-support page.",
+     "topic": "Routes"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which address handles privacy and data requests?",
+     "options": [
+      {
+       "key": "a",
+       "text": "privacy@moksy.ai"
+      },
+      {
+       "key": "b",
+       "text": "sales@moksy.ai"
+      },
+      {
+       "key": "c",
+       "text": "support@moksy.ai"
+      },
+      {
+       "key": "d",
+       "text": "legal@moksy.ai"
+      }
+     ],
+     "answer": "a",
+     "hint": "It reaches the people who handle data requests directly.",
+     "topic": "Routes"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which address is given for questions about the Terms of Service?",
+     "options": [
+      {
+       "key": "a",
+       "text": "support@moksy.ai"
+      },
+      {
+       "key": "b",
+       "text": "terms@moksy.ai"
+      },
+      {
+       "key": "c",
+       "text": "legal@moksy.ai"
+      },
+      {
+       "key": "d",
+       "text": "privacy@moksy.ai"
+      }
+     ],
+     "answer": "c",
+     "hint": "At the end of the terms.",
+     "topic": "Routes"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does the contact-support page say halves the number of messages needed to fix something?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Writing in capital letters"
+      },
+      {
+       "key": "b",
+       "text": "Calling instead of writing"
+      },
+      {
+       "key": "c",
+       "text": "Sending three messages at once"
+      },
+      {
+       "key": "d",
+       "text": "Including the account email and a link to the plan or review in question"
+      }
+     ],
+     "answer": "d",
+     "hint": "Context up front.",
+     "topic": "Routes"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Where does the contact page send someone who is buying rather than fixing?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Support"
+      },
+      {
+       "key": "b",
+       "text": "Sales, which handles pricing, procurement and security questionnaires"
+      },
+      {
+       "key": "c",
+       "text": "Privacy"
+      },
+      {
+       "key": "d",
+       "text": "The reviewer directory"
+      }
+     ],
+     "answer": "b",
+     "hint": "/contact/sales.",
+     "topic": "Routes"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Where does the page say most answers are?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the terms"
+      },
+      {
+       "key": "b",
+       "text": "In the Wallet"
+      },
+      {
+       "key": "c",
+       "text": "In the pricing table"
+      },
+      {
+       "key": "d",
+       "text": "In the help centre"
+      }
+     ],
+     "answer": "d",
+     "hint": "Contact a person when they are not.",
+     "topic": "Routes"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "A customer cannot sign in at all. How does the page say they should report it?",
+     "options": [
+      {
+       "key": "a",
+       "text": "By phone only"
+      },
+      {
+       "key": "b",
+       "text": "Say so from the address on the account"
+      },
+      {
+       "key": "c",
+       "text": "From any address"
+      },
+      {
+       "key": "d",
+       "text": "By posting on social media"
+      }
+     ],
+     "answer": "b",
+     "hint": "Support route for account or sign-in.",
+     "topic": "Routes"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "A customer says their plan looks wrong. What should they tell support?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing: support can see everything"
+      },
+      {
+       "key": "b",
+       "text": "Only the date they joined"
+      },
+      {
+       "key": "c",
+       "text": "Which section looks wrong, and whether a reviewer has been involved"
+      },
+      {
+       "key": "d",
+       "text": "Only their name"
+      }
+     ],
+     "answer": "c",
+     "hint": "Context for the fix.",
+     "topic": "Routes"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "A customer raises a billing or credit question. What should they include?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Their password"
+      },
+      {
+       "key": "b",
+       "text": "Their card number"
+      },
+      {
+       "key": "c",
+       "text": "A screenshot of their bank balance"
+      },
+      {
+       "key": "d",
+       "text": "The date and amount of the charge"
+      }
+     ],
+     "answer": "d",
+     "hint": "Never ask for card numbers.",
+     "topic": "Routes"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Something is broken for a customer. What does the page say is worth several paragraphs?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The browser's name only"
+      },
+      {
+       "key": "b",
+       "text": "A longer apology"
+      },
+      {
+       "key": "c",
+       "text": "A screenshot"
+      },
+      {
+       "key": "d",
+       "text": "A voicemail"
+      }
+     ],
+     "answer": "c",
+     "hint": "Plus what they did and what happened.",
+     "topic": "Routes"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Who arbitrates a disputed review, according to the contact page?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A senior reviewer"
+      },
+      {
+       "key": "b",
+       "text": "Sales"
+      },
+      {
+       "key": "c",
+       "text": "The customer's team"
+      },
+      {
+       "key": "d",
+       "text": "A random member"
+      }
+     ],
+     "answer": "a",
+     "hint": "Support is the route in.",
+     "topic": "Routes"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A customer asks support to delete their data. Where does the page say data requests go?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The status page"
+      },
+      {
+       "key": "b",
+       "text": "A reviewer"
+      },
+      {
+       "key": "c",
+       "text": "privacy@moksy.ai, which reaches the people who handle them directly"
+      },
+      {
+       "key": "d",
+       "text": "Sales"
+      }
+     ],
+     "answer": "c",
+     "hint": "Route it, do not improvise.",
+     "topic": "Routes"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer who wants a quote for 40 seats and a signed DPA writes to support. Where should you point them?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Sales, which handles pricing, procurement and security questionnaires"
+      },
+      {
+       "key": "b",
+       "text": "The help centre FAQ"
+      },
+      {
+       "key": "c",
+       "text": "Reviewer accreditation"
+      },
+      {
+       "key": "d",
+       "text": "The Wallet page"
+      }
+     ],
+     "answer": "a",
+     "hint": "Enterprise is priced separately.",
+     "topic": "Routes"
+    }
+   ]
+  },
+  {
+   "title": "Plans, limits and what each includes",
+   "body": "Moksy's published plans (GBP per month): Free £0 gives 3 projects, a Starter Blueprint of 5 of 22 areas, standard Moksy models, reading published reviewer work and 1 seat, with 5 exports a month, no Expert Reviews and no API access. Pro £19 gives 25 projects, a Fuller Blueprint of 12 of 22 areas, advanced models, unlimited Expert Reviews, 5 seats, 100 exports a month and API access. Max £79 gives unlimited projects, a Complete Blueprint of all 22 areas, the most capable models, unlimited Expert Reviews, unlimited seats and unlimited exports, with API access, and Max is the plan that makes someone eligible to become a paid reviewer. The pricing page says the Free plan is a real plan, the same engine reporting on fewer areas (five of the twenty-two, chosen for what you are building), deliberately enough to judge whether the thinking is any good. Pro is the first tier an accredited reviewer can read your plan on. Enterprise and public sector are priced separately and include SSO and SCIM, role-based access, a signed DPA, invoicing against a PO, UK data residency and a private reviewer pool; public bodies get procurement paperwork and discounted credit. Moksy claims no rights over a customer's plan or the idea behind it, on any tier. Source: pricing.json, pages/pricing-mox.json.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "How much does Moksy's Free plan cost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£0"
+      },
+      {
+       "key": "b",
+       "text": "£79 a month"
+      },
+      {
+       "key": "c",
+       "text": "£5 a month"
+      },
+      {
+       "key": "d",
+       "text": "£19 a month"
+      }
+     ],
+     "answer": "a",
+     "hint": "A real plan.",
+     "topic": "Plans"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "How much does Pro cost a month?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£79"
+      },
+      {
+       "key": "b",
+       "text": "£49"
+      },
+      {
+       "key": "c",
+       "text": "£19"
+      },
+      {
+       "key": "d",
+       "text": "£9"
+      }
+     ],
+     "answer": "c",
+     "hint": "The middle tier.",
+     "topic": "Plans"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "How much does Max cost a month?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£99"
+      },
+      {
+       "key": "b",
+       "text": "£79"
+      },
+      {
+       "key": "c",
+       "text": "£19"
+      },
+      {
+       "key": "d",
+       "text": "£149"
+      }
+     ],
+     "answer": "b",
+     "hint": "The top published tier.",
+     "topic": "Plans"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "How many of the 22 areas does a Free Blueprint cover?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5"
+      },
+      {
+       "key": "b",
+       "text": "3"
+      },
+      {
+       "key": "c",
+       "text": "12"
+      },
+      {
+       "key": "d",
+       "text": "22"
+      }
+     ],
+     "answer": "a",
+     "hint": "A Starter Blueprint.",
+     "topic": "Plans"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How many areas does a Pro Blueprint cover?",
+     "options": [
+      {
+       "key": "a",
+       "text": "12"
+      },
+      {
+       "key": "b",
+       "text": "8"
+      },
+      {
+       "key": "c",
+       "text": "5"
+      },
+      {
+       "key": "d",
+       "text": "22"
+      }
+     ],
+     "answer": "a",
+     "hint": "A Fuller Blueprint.",
+     "topic": "Plans"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How many projects are included on Free, Pro and Max?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Unlimited on every plan"
+      },
+      {
+       "key": "b",
+       "text": "1, 5 and 10"
+      },
+      {
+       "key": "c",
+       "text": "3, 25 and unlimited"
+      },
+      {
+       "key": "d",
+       "text": "5, 50 and unlimited"
+      }
+     ],
+     "answer": "c",
+     "hint": "Published limits.",
+     "topic": "Plans"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How many seats are included on Free, Pro and Max?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5, 25 and unlimited"
+      },
+      {
+       "key": "b",
+       "text": "Unlimited on every plan"
+      },
+      {
+       "key": "c",
+       "text": "1, 5 and unlimited"
+      },
+      {
+       "key": "d",
+       "text": "1, 3 and 10"
+      }
+     ],
+     "answer": "c",
+     "hint": "Published limits.",
+     "topic": "Plans"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Which plans include Expert Reviews?",
+     "options": [
+      {
+       "key": "a",
+       "text": "All three plans"
+      },
+      {
+       "key": "b",
+       "text": "Pro and Max"
+      },
+      {
+       "key": "c",
+       "text": "Max only"
+      },
+      {
+       "key": "d",
+       "text": "Free and Pro"
+      }
+     ],
+     "answer": "b",
+     "hint": "Free shows a dash.",
+     "topic": "Plans"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How many exports a month are included on Free, Pro and Max?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5, 100 and unlimited"
+      },
+      {
+       "key": "b",
+       "text": "Unlimited on every plan"
+      },
+      {
+       "key": "c",
+       "text": "10, 100 and 1,000"
+      },
+      {
+       "key": "d",
+       "text": "1, 10 and 100"
+      }
+     ],
+     "answer": "a",
+     "hint": "Published limits.",
+     "topic": "Plans"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which plans include API access?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Free only"
+      },
+      {
+       "key": "b",
+       "text": "Max only"
+      },
+      {
+       "key": "c",
+       "text": "All three plans"
+      },
+      {
+       "key": "d",
+       "text": "Pro and Max"
+      }
+     ],
+     "answer": "d",
+     "hint": "Free shows a dash.",
+     "topic": "Plans"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which plan makes a customer eligible to become a paid reviewer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Pro"
+      },
+      {
+       "key": "b",
+       "text": "Free"
+      },
+      {
+       "key": "c",
+       "text": "Max"
+      },
+      {
+       "key": "d",
+       "text": "Any plan"
+      }
+     ],
+     "answer": "c",
+     "hint": "Shown as Eligible on the comparison table.",
+     "topic": "Plans"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Does the pricing page call the Free plan a real plan or a teaser?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A plan for staff only"
+      },
+      {
+       "key": "b",
+       "text": "A teaser with a different engine"
+      },
+      {
+       "key": "c",
+       "text": "A real plan: the same engine on fewer areas, enough to judge whether the thinking is any good"
+      },
+      {
+       "key": "d",
+       "text": "A trial that expires after 14 days"
+      }
+     ],
+     "answer": "c",
+     "hint": "Five of twenty-two areas.",
+     "topic": "Plans"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A Free customer asks for an Expert Review of their plan. What is the accurate answer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are free for the first month"
+      },
+      {
+       "key": "b",
+       "text": "Only staff can request one"
+      },
+      {
+       "key": "c",
+       "text": "They are included on every plan"
+      },
+      {
+       "key": "d",
+       "text": "Expert Reviews are not included on Free; Pro and Max include them"
+      }
+     ],
+     "answer": "d",
+     "hint": "Free shows a dash for Expert Reviews.",
+     "topic": "Plans"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A Pro customer needs 8 people on one workspace. Which plan includes enough seats?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No plan"
+      },
+      {
+       "key": "b",
+       "text": "Max, which has unlimited seats"
+      },
+      {
+       "key": "c",
+       "text": "Pro, which has 8 seats"
+      },
+      {
+       "key": "d",
+       "text": "Free, which has 10 seats"
+      }
+     ],
+     "answer": "b",
+     "hint": "Pro has 5 seats.",
+     "topic": "Plans"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A customer asks whether Moksy owns what the plan produces. What does the pricing page say?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Moksy owns it until paid for"
+      },
+      {
+       "key": "b",
+       "text": "Moksy owns it on Free"
+      },
+      {
+       "key": "c",
+       "text": "No: Moksy claims no rights over the plan or the idea behind it, on any tier"
+      },
+      {
+       "key": "d",
+       "text": "Moksy shares it with reviewers"
+      }
+     ],
+     "answer": "c",
+     "hint": "The customer owns it.",
+     "topic": "Plans"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A university asks for SSO, SCIM, a signed DPA, invoicing against a PO and UK data residency. What does the pricing page say?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Enterprise and public sector are priced separately and include those features, so route them to Sales"
+      },
+      {
+       "key": "b",
+       "text": "They are free add-ons to Pro"
+      },
+      {
+       "key": "c",
+       "text": "They are all included in Max"
+      },
+      {
+       "key": "d",
+       "text": "They are not offered"
+      }
+     ],
+     "answer": "a",
+     "hint": "Priced separately.",
+     "topic": "Plans"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer asks if the plan Moksy writes can be wrong. What does the pricing page say?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only Free plans can be wrong"
+      },
+      {
+       "key": "b",
+       "text": "Only reviewers make mistakes"
+      },
+      {
+       "key": "c",
+       "text": "No: it is always accurate"
+      },
+      {
+       "key": "d",
+       "text": "Some of it will be: it is a draft, every recommendation shows its reasoning, and an accredited reviewer can correct it"
+      }
+     ],
+     "answer": "d",
+     "hint": "A draft written from what the customer said.",
+     "topic": "Plans"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer says Pro only gives 10 exports a month because they hit a limit. What should you check against the published limits?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That exports only exist on Free"
+      },
+      {
+       "key": "b",
+       "text": "That Pro includes 100 exports a month, so look at their usage and account"
+      },
+      {
+       "key": "c",
+       "text": "Nothing: 10 is correct"
+      },
+      {
+       "key": "d",
+       "text": "That Pro includes unlimited exports"
+      }
+     ],
+     "answer": "b",
+     "hint": "Verify against the published limits.",
+     "topic": "Plans"
+    },
+    {
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A customer on the Free plan writes: \"Your plan covers only a few areas and I want an accredited reviewer to check it before I show it to an agency. What do I need?\" Write your reply in two or three short paragraphs.",
+     "answer": "Thanks for getting in touch. On Free, your Blueprint covers 5 of the 22 areas, and Expert Reviews are not included. Pro (£19 a month) covers 12 of the 22 areas and includes unlimited Expert Reviews, and Max (£79 a month) covers all 22 areas, also with unlimited Expert Reviews. You do not need to buy MOX to produce a plan; MOX pays for work outside a membership's benefits. Because you want an accredited reviewer to check the plan before showing it to an agency, Pro is the first tier that includes that. If it helps, tell me what you are building and I can explain which areas each plan covers.",
+     "rubric": "A good answer: explains Free covers 5 of 22 areas and has no Expert Reviews; names Pro (12 areas, unlimited Expert Reviews, £19) and Max (22 areas, £79) accurately; says MOX is not needed to produce a plan; recommends Pro as the first tier with review without pressuring; does not invent discounts, trial periods or promises; asks a useful follow-up; uses a warm, plain, British-English tone. Penalise wrong limits or prices, invented offers, or promising outcomes.",
+     "topic": "Applying the facts"
+    }
+   ]
+  },
+  {
+   "title": "MOX credit, refunds and the wallet",
+   "body": "MOX is Moksy credit; per the lexicon 1 MOX equals $0.01. The pricing pages say a membership is a monthly plan that carries what is included in it and renews on its own, while MOX is credit bought once and spent when the customer chooses, for work outside those benefits: expert reviews, additional plans and priority turnaround. Nobody needs to buy MOX to produce a plan. MOX does not renew on its own, is dollar-pegged so the price of a review does not move with the customer's currency, and every debit is itemised in the wallet ledger so a customer can see what a piece of work cost after it happened. On team tiers MOX is pooled: one balance for the workspace rather than a card per person. There are no expiry surprises: balance and history stay visible in the wallet. On refunds, the page says only: can I get a refund on unused credit? Contact support and we will look at it. That is a discretionary review, not a promise of an automatic refund. Source: pages/pricing-mox.json, pricing.json, Moksy Lexicon.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "What is MOX?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Moksy Experience Points"
+      },
+      {
+       "key": "b",
+       "text": "A reviewer rung"
+      },
+      {
+       "key": "c",
+       "text": "A kind of Review"
+      },
+      {
+       "key": "d",
+       "text": "Moksy credit"
+      }
+     ],
+     "answer": "d",
+     "hint": "MXP is the experience points.",
+     "topic": "MOX"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Do customers need MOX to produce a plan?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only for the first plan"
+      },
+      {
+       "key": "b",
+       "text": "Yes, every plan costs MOX"
+      },
+      {
+       "key": "c",
+       "text": "No: they can produce a plan without spending any"
+      },
+      {
+       "key": "d",
+       "text": "Only on Free"
+      }
+     ],
+     "answer": "c",
+     "hint": "MOX pays for optional extras.",
+     "topic": "MOX"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does MOX pay for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The monthly membership itself"
+      },
+      {
+       "key": "b",
+       "text": "VAT on invoices"
+      },
+      {
+       "key": "c",
+       "text": "Work outside a membership's benefits, such as expert reviews, additional plans and priority turnaround"
+      },
+      {
+       "key": "d",
+       "text": "Cookies and analytics"
+      }
+     ],
+     "answer": "c",
+     "hint": "Chiefly extra expert review.",
+     "topic": "MOX"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Does MOX renew on its own?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, monthly"
+      },
+      {
+       "key": "b",
+       "text": "Yes, annually"
+      },
+      {
+       "key": "c",
+       "text": "No: it is bought once and spent when the customer chooses"
+      },
+      {
+       "key": "d",
+       "text": "Only on team tiers"
+      }
+     ],
+     "answer": "c",
+     "hint": "Credit, not a subscription.",
+     "topic": "MOX"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How much is 1 MOX worth?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£1"
+      },
+      {
+       "key": "b",
+       "text": "$0.10"
+      },
+      {
+       "key": "c",
+       "text": "$1"
+      },
+      {
+       "key": "d",
+       "text": "$0.01"
+      }
+     ],
+     "answer": "d",
+     "hint": "The documented peg.",
+     "topic": "MOX"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does the price of a review not move with a customer's currency?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Reviewers are paid in the customer's currency"
+      },
+      {
+       "key": "b",
+       "text": "Currency does not matter to Stripe"
+      },
+      {
+       "key": "c",
+       "text": "MOX is dollar-pegged: one balance, one unit"
+      },
+      {
+       "key": "d",
+       "text": "Prices change daily"
+      }
+     ],
+     "answer": "c",
+     "hint": "Published on the MOX page.",
+     "topic": "MOX"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Where can a customer see what a piece of work cost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In an email only"
+      },
+      {
+       "key": "b",
+       "text": "Nowhere"
+      },
+      {
+       "key": "c",
+       "text": "On a printed invoice only"
+      },
+      {
+       "key": "d",
+       "text": "In the wallet ledger, where every debit is itemised"
+      }
+     ],
+     "answer": "d",
+     "hint": "After it happened.",
+     "topic": "MOX"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "On team tiers, how is MOX held?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Not available on teams"
+      },
+      {
+       "key": "b",
+       "text": "Per project only"
+      },
+      {
+       "key": "c",
+       "text": "Pooled: one balance for the workspace"
+      },
+      {
+       "key": "d",
+       "text": "A balance per person only"
+      }
+     ],
+     "answer": "c",
+     "hint": "Rather than a card per person.",
+     "topic": "MOX"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the difference between a plan and MOX, according to the FAQ?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A plan is a monthly membership with benefits included; MOX is credit for work outside those benefits"
+      },
+      {
+       "key": "b",
+       "text": "They are the same thing"
+      },
+      {
+       "key": "c",
+       "text": "A plan is credit; MOX is a membership"
+      },
+      {
+       "key": "d",
+       "text": "MOX is only for reviewers"
+      }
+     ],
+     "answer": "a",
+     "hint": "Most people need one and occasionally the other.",
+     "topic": "MOX"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A customer asks for a refund of unused MOX credit. What does the published page say?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Credit is always refunded in full"
+      },
+      {
+       "key": "b",
+       "text": "Contact support and we will look at it"
+      },
+      {
+       "key": "c",
+       "text": "Refunds are automatic after 30 days"
+      },
+      {
+       "key": "d",
+       "text": "Credit is never refundable"
+      }
+     ],
+     "answer": "b",
+     "hint": "A discretionary review.",
+     "topic": "MOX"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How should you answer a customer who asks for a refund of unused credit?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Tell them to dispute the charge with their bank"
+      },
+      {
+       "key": "b",
+       "text": "Say you will look at it, without promising an automatic refund"
+      },
+      {
+       "key": "c",
+       "text": "Promise a full refund immediately"
+      },
+      {
+       "key": "d",
+       "text": "Refuse and close the case"
+      }
+     ],
+     "answer": "b",
+     "hint": "Match the published wording.",
+     "topic": "MOX"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A customer worries their MOX will expire. What does the MOX page say?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It expires when the plan renews"
+      },
+      {
+       "key": "b",
+       "text": "It expires on cancellation"
+      },
+      {
+       "key": "c",
+       "text": "There are no expiry surprises: balance and history stay visible in the wallet"
+      },
+      {
+       "key": "d",
+       "text": "It expires after 12 months"
+      }
+     ],
+     "answer": "c",
+     "hint": "Visible in the wallet.",
+     "topic": "MOX"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer asks why a review debited their wallet when they thought it was included. What should you check first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Their plan (Pro and Max include Expert Reviews) and the itemised debit in the wallet ledger"
+      },
+      {
+       "key": "b",
+       "text": "Their password"
+      },
+      {
+       "key": "c",
+       "text": "Nothing: debits are final"
+      },
+      {
+       "key": "d",
+       "text": "Whether they like the reviewer"
+      }
+     ],
+     "answer": "a",
+     "hint": "The ledger shows what the debit was for.",
+     "topic": "MOX"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer asks if buying MOX improves their Blueprint's depth. What is accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, MOX upgrades the plan"
+      },
+      {
+       "key": "b",
+       "text": "Yes, MOX unlocks all 22 areas"
+      },
+      {
+       "key": "c",
+       "text": "MOX only affects colours"
+      },
+      {
+       "key": "d",
+       "text": "Depth (areas covered) comes with the plan tier; MOX pays for work outside a membership's benefits"
+      }
+     ],
+     "answer": "d",
+     "hint": "Free 5, Pro 12, Max 22 areas.",
+     "topic": "MOX"
+    },
+    {
+     "level": 7,
+     "type": "scenario",
+     "prompt": "A customer writes: \"The cost figures in my Moksy plan were wrong. I used them to book a supplier and it cost me. I want a refund.\" Write the reply you would send and say what you would do internally, using only what Moksy has published.",
+     "answer": "I'm sorry this has caused you a problem, and thank you for telling us. I want to be clear about how Moksy describes its plans: a plan is an AI-drafted draft, every recommendation shows its reasoning, and the Terms say AI output is for information only and must be reviewed and validated before relying on it; an accredited reviewer can correct a plan, and Expert Reviews are included from Pro upward. I cannot promise a refund in this message. I am passing your case to the right people with your account email and the link to the plan, and we will come back to you. If any MOX credit is unused you can also ask us to look at that. Internally I would record the plan link, the section with the wrong figures and what was booked, escalate rather than decide a refund or liability myself (the Terms cap liability at what the customer paid in the previous 12 months, which is for the right people to apply), and flag if the figure should have been caught by review.",
+     "rubric": "A good answer: is empathetic; accurately restates that a plan is a draft, AI output is informational and must be validated, reviews exist and are included from Pro up; does not promise a refund or accept liability; does not invent a refund policy for subscription charges; mentions unused MOX credit can be looked at only if relevant; takes the details (account email, plan link, section, what was booked) and escalates; may mention the liability cap as something others apply. Penalise promising refunds or compensation, blaming the customer, or inventing policies.",
+     "topic": "Difficult cases"
+    }
+   ]
+  },
+  {
+   "title": "Reviews, drafts and what the plan is",
+   "body": "Moksy uses large language models to draft plans from the answers a customer gives. The trust page says two things plainly: an AI-drafted plan is a draft, and it is fluent, which is exactly what makes an unchecked one risky, which is why expert review exists. The pricing page says some of a plan will be wrong; every recommendation shows its reasoning instead of asserting an answer; and an accredited reviewer can correct it. Review requests are included from Pro upward. The Terms of Service say AI outputs are provided for informational purposes only, that Moksy does not guarantee their accuracy, completeness or fitness for purpose, and that the customer is solely responsible for reviewing and validating any AI-generated output before relying on it. Disputed reviews are arbitrated by a senior reviewer, and support is the route in. The help page's advice after a plan is generated: review the recommendations internally, refine the output if needed, then use the package to brief a supplier, compare options, or align your own delivery team, and use it as a working brief before committing budget. Source: pages/trust.json, pricing.json, legal-terms.json, help.json, contact-support.json.",
+   "questions": [
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Is an AI-drafted Moksy plan a final answer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, it is verified"
+      },
+      {
+       "key": "b",
+       "text": "Yes, on Max only"
+      },
+      {
+       "key": "c",
+       "text": "No: it is a draft"
+      },
+      {
+       "key": "d",
+       "text": "Yes, once exported"
+      }
+     ],
+     "answer": "c",
+     "hint": "Fluent, which makes an unchecked one risky.",
+     "topic": "Reviews"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Why does the trust page say a fluent draft is risky if unchecked?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Fluency can make a wrong recommendation look right"
+      },
+      {
+       "key": "b",
+       "text": "Because drafts are encrypted"
+      },
+      {
+       "key": "c",
+       "text": "Because drafts are short"
+      },
+      {
+       "key": "d",
+       "text": "Because drafts are free"
+      }
+     ],
+     "answer": "a",
+     "hint": "That is why expert review exists.",
+     "topic": "Reviews"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "From which plan are review requests included?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Pro upward"
+      },
+      {
+       "key": "b",
+       "text": "Only enterprise"
+      },
+      {
+       "key": "c",
+       "text": "Max only"
+      },
+      {
+       "key": "d",
+       "text": "Free"
+      }
+     ],
+     "answer": "a",
+     "hint": "Free has none.",
+     "topic": "Reviews"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does every Moksy recommendation show?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Its reasoning, instead of just asserting an answer"
+      },
+      {
+       "key": "b",
+       "text": "Only a colour"
+      },
+      {
+       "key": "c",
+       "text": "Only a risk score"
+      },
+      {
+       "key": "d",
+       "text": "Only a price"
+      }
+     ],
+     "answer": "a",
+     "hint": "So the customer can judge it.",
+     "topic": "Reviews"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Who can correct a plan according to the pricing page?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The payment processor"
+      },
+      {
+       "key": "b",
+       "text": "The customer's bank"
+      },
+      {
+       "key": "c",
+       "text": "An accredited reviewer"
+      },
+      {
+       "key": "d",
+       "text": "Any visitor"
+      }
+     ],
+     "answer": "c",
+     "hint": "Expert review.",
+     "topic": "Reviews"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What do the Terms say about the accuracy of AI-generated output?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is guaranteed accurate"
+      },
+      {
+       "key": "b",
+       "text": "It is for information only and not guaranteed; the customer must review and validate it before relying on it"
+      },
+      {
+       "key": "c",
+       "text": "Moksy validates it for the customer"
+      },
+      {
+       "key": "d",
+       "text": "It is guaranteed for 12 months"
+      }
+     ],
+     "answer": "b",
+     "hint": "Section 7 of the Terms.",
+     "topic": "Reviews"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A customer disputes a review verdict. What is the published route?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Post publicly"
+      },
+      {
+       "key": "b",
+       "text": "Reply to the reviewer directly"
+      },
+      {
+       "key": "c",
+       "text": "Contact support; disputed reviews are arbitrated by a senior reviewer"
+      },
+      {
+       "key": "d",
+       "text": "Open a chargeback"
+      }
+     ],
+     "answer": "c",
+     "hint": "Support is the route in.",
+     "topic": "Reviews"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What does the help page advise after a solution package is generated?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Delete it"
+      },
+      {
+       "key": "b",
+       "text": "Wait for Moksy to implement it"
+      },
+      {
+       "key": "c",
+       "text": "Publish it immediately"
+      },
+      {
+       "key": "d",
+       "text": "Review the recommendations internally, refine, then use it to brief a supplier or align the team"
+      }
+     ],
+     "answer": "d",
+     "hint": "Use it as a working brief before committing budget.",
+     "topic": "Reviews"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer says Moksy's cost figure was wrong and asks if Moksy guaranteed it. What is the accurate position?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Figures are never shown"
+      },
+      {
+       "key": "b",
+       "text": "Moksy guarantees every figure for a year"
+      },
+      {
+       "key": "c",
+       "text": "Moksy refunds any wrong figure"
+      },
+      {
+       "key": "d",
+       "text": "The plan is a draft and AI output is informational only; the customer must validate it, and Expert Review from Pro upward is how a person checks it"
+      }
+     ],
+     "answer": "d",
+     "hint": "Terms section 7 and the pricing FAQ.",
+     "topic": "Reviews"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which statement fits the help page's advice about using a plan?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Sign a contract on it straight away"
+      },
+      {
+       "key": "b",
+       "text": "Treat the output as a working brief and refine it before committing budget"
+      },
+      {
+       "key": "c",
+       "text": "Skip internal review"
+      },
+      {
+       "key": "d",
+       "text": "Treat it as legal advice"
+      }
+     ],
+     "answer": "b",
+     "hint": "A draft to refine.",
+     "topic": "Reviews"
+    }
+   ]
+  },
+  {
+   "title": "Sign-in, sessions and what the messages mean",
+   "body": "Moksy's error dictionary holds the messages customers actually see, and support should be able to say what each means. Examples: \"Identity Verification Failed: Invalid email or password.\" (wrong sign-in details); \"Your secure session has expired. Re-authentication is required.\" (sign in again); \"Identity Suspended: Too many failed attempts. Contact administration.\" (the account is locked; the contact page's route is support, from the address on the account); \"Multi-Factor Authentication required to proceed.\" (an extra verification step is needed); \"That email already has a Moksy account. Try logging in instead.\" (the email is already registered); \"Access Restricted: This feature is not included in your current subscription.\" (a plan limit, not a fault); \"Authority Denied: You do not have the required role for this module.\" (a role or permission, not a plan); \"Restricted Access: You have read-only permissions for this resource.\" (a read-only role); \"The request exceeded the 10,000ms safety threshold\" (a timeout); \"The platform is currently undergoing scheduled governance. Check back shortly.\" (maintenance mode); \"A critical system update is available. Please refresh your interface.\" (refresh the page); and \"An unexpected orchestration error occurred. Our engineers have been alerted.\" (an internal error: ask what the customer did and what happened). Administrators must use two-factor authentication. Source: errors.json, contact-support.json, trust.json.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "A customer sees \"Your secure session has expired. Re-authentication is required.\" What does it mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Moksy is down"
+      },
+      {
+       "key": "b",
+       "text": "Their plan was cancelled"
+      },
+      {
+       "key": "c",
+       "text": "They need to sign in again"
+      },
+      {
+       "key": "d",
+       "text": "Their account was deleted"
+      }
+     ],
+     "answer": "c",
+     "hint": "Session expired.",
+     "topic": "Errors"
+    },
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "A customer sees \"Identity Verification Failed: Invalid email or password.\" What does it mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The account is locked for a year"
+      },
+      {
+       "key": "b",
+       "text": "Their plan has expired"
+      },
+      {
+       "key": "c",
+       "text": "The review failed"
+      },
+      {
+       "key": "d",
+       "text": "The sign-in details were wrong"
+      }
+     ],
+     "answer": "d",
+     "hint": "Wrong email or password.",
+     "topic": "Errors"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "A customer sees \"Identity Suspended: Too many failed attempts. Contact administration.\" What has happened?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The account is locked after too many failed sign-in attempts"
+      },
+      {
+       "key": "b",
+       "text": "The browser is out of date"
+      },
+      {
+       "key": "c",
+       "text": "Moksy deleted the account"
+      },
+      {
+       "key": "d",
+       "text": "The plan has been cancelled"
+      }
+     ],
+     "answer": "a",
+     "hint": "Route: support, from the address on the account.",
+     "topic": "Errors"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "A customer sees \"That email already has a Moksy account. Try logging in instead.\" What does it mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The email is invalid"
+      },
+      {
+       "key": "b",
+       "text": "The password is wrong"
+      },
+      {
+       "key": "c",
+       "text": "The email is already registered"
+      },
+      {
+       "key": "d",
+       "text": "The email is banned"
+      }
+     ],
+     "answer": "c",
+     "hint": "They should sign in.",
+     "topic": "Errors"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "What does \"Multi-Factor Authentication required to proceed\" mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The plan is free"
+      },
+      {
+       "key": "b",
+       "text": "An extra verification step is needed before continuing"
+      },
+      {
+       "key": "c",
+       "text": "The account is deleted"
+      },
+      {
+       "key": "d",
+       "text": "The browser is blocked"
+      }
+     ],
+     "answer": "b",
+     "hint": "MFA.",
+     "topic": "Errors"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does \"Access Restricted: This feature is not included in your current subscription\" mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The account is locked"
+      },
+      {
+       "key": "b",
+       "text": "Moksy is down"
+      },
+      {
+       "key": "c",
+       "text": "The feature is not part of the customer's plan"
+      },
+      {
+       "key": "d",
+       "text": "The password is wrong"
+      }
+     ],
+     "answer": "c",
+     "hint": "A plan limit, not a fault.",
+     "topic": "Errors"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does \"Authority Denied: You do not have the required role for this module\" mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Their plan has expired"
+      },
+      {
+       "key": "b",
+       "text": "The customer's role lacks permission for that area, which is not the same as a plan limit"
+      },
+      {
+       "key": "c",
+       "text": "They need a faster browser"
+      },
+      {
+       "key": "d",
+       "text": "Moksy is in maintenance"
+      }
+     ],
+     "answer": "b",
+     "hint": "A role, not a subscription.",
+     "topic": "Errors"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What does \"Restricted Access: You have read-only permissions for this resource\" mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They need to upgrade"
+      },
+      {
+       "key": "b",
+       "text": "The resource is deleted"
+      },
+      {
+       "key": "c",
+       "text": "The person can view but not change it"
+      },
+      {
+       "key": "d",
+       "text": "The page is slow"
+      }
+     ],
+     "answer": "c",
+     "hint": "A read-only role.",
+     "topic": "Errors"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A customer sees \"The request exceeded the 10,000ms safety threshold\". What does it mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Their plan is full"
+      },
+      {
+       "key": "b",
+       "text": "Their wallet is empty"
+      },
+      {
+       "key": "c",
+       "text": "A timeout: the request took longer than the safety limit"
+      },
+      {
+       "key": "d",
+       "text": "The review was rejected"
+      }
+     ],
+     "answer": "c",
+     "hint": "Try again and report if it repeats.",
+     "topic": "Errors"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A customer sees \"The platform is currently undergoing scheduled governance. Check back shortly.\" What is it?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A plan upgrade"
+      },
+      {
+       "key": "b",
+       "text": "A refund notice"
+      },
+      {
+       "key": "c",
+       "text": "Maintenance mode"
+      },
+      {
+       "key": "d",
+       "text": "A lock on their account"
+      }
+     ],
+     "answer": "c",
+     "hint": "Not specific to their account.",
+     "topic": "Errors"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A customer sees \"A critical system update is available. Please refresh your interface.\" What should they do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Reinstall the browser"
+      },
+      {
+       "key": "b",
+       "text": "Contact their bank"
+      },
+      {
+       "key": "c",
+       "text": "Refresh the page"
+      },
+      {
+       "key": "d",
+       "text": "Delete their account"
+      }
+     ],
+     "answer": "c",
+     "hint": "Upgrade required.",
+     "topic": "Errors"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How should a locked-out customer contact support, according to the contact page?",
+     "options": [
+      {
+       "key": "a",
+       "text": "By asking a reviewer"
+      },
+      {
+       "key": "b",
+       "text": "Write from the address on the account and say they cannot sign in"
+      },
+      {
+       "key": "c",
+       "text": "From any email address"
+      },
+      {
+       "key": "d",
+       "text": "By posting on social media"
+      }
+     ],
+     "answer": "b",
+     "hint": "Account or sign-in route.",
+     "topic": "Errors"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer sees \"An unexpected orchestration error occurred. Our engineers have been alerted.\" What do you ask them for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "What they did, what happened, and a screenshot"
+      },
+      {
+       "key": "b",
+       "text": "Nothing"
+      },
+      {
+       "key": "c",
+       "text": "Their password"
+      },
+      {
+       "key": "d",
+       "text": "Their card number"
+      }
+     ],
+     "answer": "a",
+     "hint": "Something-is-broken route.",
+     "topic": "Errors"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why does \"the address on the account\" matter when a locked-out customer writes in?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is a spam filter"
+      },
+      {
+       "key": "b",
+       "text": "It speeds up the broadband"
+      },
+      {
+       "key": "c",
+       "text": "It is the contact page's way of tying the request to the account holder"
+      },
+      {
+       "key": "d",
+       "text": "It makes the email shorter"
+      }
+     ],
+     "answer": "c",
+     "hint": "The documented sign-in route.",
+     "topic": "Errors"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "What does the trust page say about two-factor authentication?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is optional for everyone"
+      },
+      {
+       "key": "b",
+       "text": "It is mandatory for administrators"
+      },
+      {
+       "key": "c",
+       "text": "It is banned"
+      },
+      {
+       "key": "d",
+       "text": "It is mandatory only for reviewers"
+      }
+     ],
+     "answer": "b",
+     "hint": "Role-based access and an audit log too.",
+     "topic": "Errors"
+    },
+    {
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A customer writes from a personal address: \"I keep getting 'Identity Suspended: Too many failed attempts. Contact administration.' Please unlock my account.\" The account was registered under a different email address. Write your reply.",
+     "answer": "Thanks for getting in touch, and sorry for the trouble. That message means the account has been locked after too many failed sign-in attempts. To help with account and sign-in problems we ask customers to write to us from the address on the account, so please send your message to support@moksy.ai from the email address you registered with and tell us you cannot sign in. If you are not sure which address you used, tell us what you remember about when you created it and we will take it from there. Please do not send us your password.",
+     "rubric": "A good answer: explains the message means a lock after too many failed attempts; asks them to write to support from the address on the account (the published route); does not unlock or confirm account details for an unverified address; offers a helpful next step if they are unsure which email they used; asks them never to send a password; is polite and plain. Penalise unlocking the account on request, promising outcomes, or asking for sensitive data such as passwords or card numbers.",
+     "topic": "Applying the facts"
+    }
+   ]
+  },
+  {
+   "title": "Data, privacy and trust: what you may and may not say",
+   "body": "Moksy's trust page states the answers to security questionnaires in writing. Primary data is held in the UK, and sub-processors are pinned to UK or EEA regions wherever the service supports it. Data is protected with TLS 1.2 or better in transit and AES-256 at rest for the primary database and its backups. Access is role-based with a per-endpoint audit log, quarterly access reviews and mandatory two-factor authentication for administrators. Moksy does not sell personal data and does not enrich it with third-party demographic feeds. Controllers are notified within 72 hours of Moksy becoming aware of a personal-data breach, as UK GDPR Article 33 requires. Audit and ledger rows are anonymised rather than deleted, for fraud detection and financial record-keeping. Moksy uses large language models to draft plans, covered by the Data Processing Agreement; adding a sub-processor takes 30 days' notice. The page says plainly what Moksy does not claim: it is not ISO 27001 certified, and it is not Cyber Essentials certified yet; when that changes the page will say so. The privacy policy says the data controller is Moksy AI Ltd (privacy@moksy.ai); it lists sub-processors OpenAI, Stripe, MongoDB Atlas and Redis; payment data is processed by Stripe (card numbers are not stored by Moksy); legal bases are contract, legitimate interests, consent for marketing and legal obligation; customers can ask for access, correction, deletion, to object or restrict, portability, and can complain to the ICO; only strictly necessary cookies are used without consent, and optional analytics cookies need explicit consent. Source: pages/trust.json, legal-privacy.json.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Where is Moksy's primary data held?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In Australia"
+      },
+      {
+       "key": "b",
+       "text": "In the UK"
+      },
+      {
+       "key": "c",
+       "text": "In the United States"
+      },
+      {
+       "key": "d",
+       "text": "On customers' devices"
+      }
+     ],
+     "answer": "b",
+     "hint": "Sub-processors are UK or EEA where possible.",
+     "topic": "Trust"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Does Moksy sell personal data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, to partners"
+      },
+      {
+       "key": "b",
+       "text": "No"
+      },
+      {
+       "key": "c",
+       "text": "Only on Free"
+      },
+      {
+       "key": "d",
+       "text": "Yes, anonymised"
+      }
+     ],
+     "answer": "b",
+     "hint": "It also does not enrich with third-party demographic feeds.",
+     "topic": "Trust"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Is Moksy ISO 27001 certified, according to its trust page?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, since launch"
+      },
+      {
+       "key": "b",
+       "text": "No: the page says so plainly, and will carry the certificate if that changes"
+      },
+      {
+       "key": "c",
+       "text": "Yes, for the UK only"
+      },
+      {
+       "key": "d",
+       "text": "It is pending approval and can be claimed"
+      }
+     ],
+     "answer": "b",
+     "hint": "What we do not claim.",
+     "topic": "Trust"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Is Moksy Cyber Essentials certified, according to its trust page?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, Plus"
+      },
+      {
+       "key": "b",
+       "text": "Not yet"
+      },
+      {
+       "key": "c",
+       "text": "The page does not say"
+      },
+      {
+       "key": "d",
+       "text": "Yes, basic"
+      }
+     ],
+     "answer": "b",
+     "hint": "Stated plainly.",
+     "topic": "Trust"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What encryption does the trust page state?",
+     "options": [
+      {
+       "key": "a",
+       "text": "AES-256 in transit only"
+      },
+      {
+       "key": "b",
+       "text": "TLS 1.0 only"
+      },
+      {
+       "key": "c",
+       "text": "No encryption at rest"
+      },
+      {
+       "key": "d",
+       "text": "TLS 1.2 or better in transit and AES-256 at rest for the primary database and backups"
+      }
+     ],
+     "answer": "d",
+     "hint": "Published figures.",
+     "topic": "Trust"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Which access controls does the trust page list?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No audit log"
+      },
+      {
+       "key": "b",
+       "text": "Role-based access, a per-endpoint audit log, quarterly access reviews and mandatory two-factor authentication for administrators"
+      },
+      {
+       "key": "c",
+       "text": "Annual access reviews only"
+      },
+      {
+       "key": "d",
+       "text": "Shared passwords"
+      }
+     ],
+     "answer": "b",
+     "hint": "Published.",
+     "topic": "Trust"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How quickly are controllers notified of a personal-data breach?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Never"
+      },
+      {
+       "key": "b",
+       "text": "Within 72 hours of Moksy becoming aware"
+      },
+      {
+       "key": "c",
+       "text": "Within 30 days"
+      },
+      {
+       "key": "d",
+       "text": "Within one year"
+      }
+     ],
+     "answer": "b",
+     "hint": "UK GDPR Article 33.",
+     "topic": "Trust"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "How much notice does the trust page say adding a sub-processor takes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "One year"
+      },
+      {
+       "key": "b",
+       "text": "24 hours"
+      },
+      {
+       "key": "c",
+       "text": "30 days"
+      },
+      {
+       "key": "d",
+       "text": "No notice"
+      }
+     ],
+     "answer": "c",
+     "hint": "Listed in the DPA.",
+     "topic": "Trust"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which sub-processors does the privacy policy list?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Mailchimp and HubSpot"
+      },
+      {
+       "key": "b",
+       "text": "Google Analytics only"
+      },
+      {
+       "key": "c",
+       "text": "OpenAI, Stripe, MongoDB Atlas and Redis"
+      },
+      {
+       "key": "d",
+       "text": "AWS and Azure only"
+      }
+     ],
+     "answer": "c",
+     "hint": "Each bound to protect data.",
+     "topic": "Trust"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Does Moksy store customers' card numbers?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, for 7 years"
+      },
+      {
+       "key": "b",
+       "text": "Yes, encrypted"
+      },
+      {
+       "key": "c",
+       "text": "Only for Max"
+      },
+      {
+       "key": "d",
+       "text": "No: payments are processed by Stripe"
+      }
+     ],
+     "answer": "d",
+     "hint": "The privacy policy says so.",
+     "topic": "Trust"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which UK GDPR rights does the privacy policy list?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only deletion"
+      },
+      {
+       "key": "b",
+       "text": "Access, correction, deletion, objection or restriction, portability and complaint to the ICO"
+      },
+      {
+       "key": "c",
+       "text": "Only access"
+      },
+      {
+       "key": "d",
+       "text": "None"
+      }
+     ],
+     "answer": "b",
+     "hint": "Via privacy@moksy.ai.",
+     "topic": "Trust"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "What happens to audit and ledger rows when customer data is deleted, according to the trust page?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are anonymised rather than deleted, for fraud detection and financial record-keeping"
+      },
+      {
+       "key": "b",
+       "text": "They are published"
+      },
+      {
+       "key": "c",
+       "text": "They are sold"
+      },
+      {
+       "key": "d",
+       "text": "They are deleted at once"
+      }
+     ],
+     "answer": "a",
+     "hint": "Records have a purpose.",
+     "topic": "Trust"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Who is the data controller named in the privacy policy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "OpenAI"
+      },
+      {
+       "key": "b",
+       "text": "MongoDB Atlas"
+      },
+      {
+       "key": "c",
+       "text": "Stripe"
+      },
+      {
+       "key": "d",
+       "text": "Moksy AI Ltd, contactable at privacy@moksy.ai"
+      }
+     ],
+     "answer": "d",
+     "hint": "A UK company.",
+     "topic": "Trust"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Which cookies need no consent according to the privacy policy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Analytics cookies"
+      },
+      {
+       "key": "b",
+       "text": "Strictly necessary ones for session management and authentication"
+      },
+      {
+       "key": "c",
+       "text": "All cookies"
+      },
+      {
+       "key": "d",
+       "text": "Advertising cookies"
+      }
+     ],
+     "answer": "b",
+     "hint": "Optional analytics need explicit consent.",
+     "topic": "Trust"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A buyer asks, \"Are you ISO 27001 certified? We need that to sign.\" What is the honest answer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, it is in progress so say yes"
+      },
+      {
+       "key": "b",
+       "text": "No: say so plainly, point to the trust page and DPA, and route the questionnaire; never claim a certification Moksy does not hold"
+      },
+      {
+       "key": "c",
+       "text": "Avoid the question"
+      },
+      {
+       "key": "d",
+       "text": "Say it is certified for UK data"
+      }
+     ],
+     "answer": "b",
+     "hint": "What we do not claim.",
+     "topic": "Trust"
+    },
+    {
+     "level": 7,
+     "type": "scenario",
+     "prompt": "A public-sector procurement officer emails support: \"Are you ISO 27001 certified? Where is our data held? How long do you keep it after we leave? Who are your sub-processors?\" Answer honestly using only what Moksy has published, including anything you cannot answer yet.",
+     "answer": "Thank you for the questions. ISO 27001: no, Moksy is not ISO 27001 certified, and it is not Cyber Essentials certified yet; the trust page says so plainly and will carry the certificate if that changes. Data location: primary data is held in the UK, and sub-processors are pinned to UK or EEA regions wherever the service supports it. Retention after you leave: I want to give you an accurate figure, so I am confirming it with our privacy team rather than quoting one, as our published pages need to be checked against each other; they will reply from privacy@moksy.ai. Sub-processors: our privacy policy lists OpenAI, Stripe, MongoDB Atlas and Redis, and the Data Processing Agreement and the sub-processor list on our trust page carry the full detail. For a formal security questionnaire I will confirm the right route and come back to you.",
+     "rubric": "A good answer: says plainly that Moksy is not ISO 27001 certified and not yet Cyber Essentials certified; states UK primary data location and UK/EEA sub-processors where supported; does not quote a single deletion figure as settled (published pages say 30 and 90 days) and routes to privacy@moksy.ai; lists the sub-processors from the privacy policy and points to the DPA and trust page; confirms the questionnaire route rather than guessing; is courteous and plain. Penalise claiming a certification, quoting a deletion window as fact, or inventing details.",
+     "topic": "Trust questions"
+    }
+   ]
+  },
+  {
+   "title": "The Terms of Service in brief",
+   "body": "Moksy's Terms of Service are an agreement with Moksy AI Ltd, a company registered in England and Wales. Accepting means agreeing to the terms and the privacy policy. Customers must create an account, are responsible for keeping their login credentials confidential and for all activity under the account, and must be at least 18; someone creating an account for an organisation represents that they have authority to bind it. Acceptable use forbids unlawful use, unauthorised access, reverse engineering, harmful or defamatory content and reselling or sublicensing access without written permission. Premium features need a paid subscription, billed in advance monthly or annually; prices are in GBP and exclude VAT unless stated; payments are processed by Stripe and authorise recurring charges until the customer cancels; a subscription can be cancelled any time in account settings. The customer keeps ownership of the data and content they submit, and gives Moksy a non-exclusive, royalty-free licence to process it solely to provide the services. AI output is informational only and not guaranteed. Moksy's total liability for a claim is capped at the amount the customer paid in the 12 months before it, and it is not liable for indirect or consequential loss. English law and courts apply. Material changes are notified by email or a prominent notice, and continued use means acceptance. Questions go to legal@moksy.ai. Source: legal-terms.json.",
+   "questions": [
+    {
+     "level": 1,
+     "type": "mcq",
+     "prompt": "Which law governs Moksy's Terms of Service?",
+     "options": [
+      {
+       "key": "a",
+       "text": "French law"
+      },
+      {
+       "key": "b",
+       "text": "Delaware law"
+      },
+      {
+       "key": "c",
+       "text": "The laws of England and Wales"
+      },
+      {
+       "key": "d",
+       "text": "No particular law"
+      }
+     ],
+     "answer": "c",
+     "hint": "Courts of England and Wales.",
+     "topic": "Terms"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How are subscriptions billed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only annually in euros"
+      },
+      {
+       "key": "b",
+       "text": "In advance, monthly or annually, in GBP excluding VAT unless stated"
+      },
+      {
+       "key": "c",
+       "text": "Per project in cash"
+      },
+      {
+       "key": "d",
+       "text": "In arrears, in USD"
+      }
+     ],
+     "answer": "b",
+     "hint": "Section 5.",
+     "topic": "Terms"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "Who processes subscription payments?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Moksy's own card reader"
+      },
+      {
+       "key": "b",
+       "text": "PayPal"
+      },
+      {
+       "key": "c",
+       "text": "A bank transfer only"
+      },
+      {
+       "key": "d",
+       "text": "Stripe"
+      }
+     ],
+     "answer": "d",
+     "hint": "Authorising recurring charges.",
+     "topic": "Terms"
+    },
+    {
+     "level": 2,
+     "type": "mcq",
+     "prompt": "How can a customer cancel a subscription?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only after 12 months"
+      },
+      {
+       "key": "b",
+       "text": "Only by post"
+      },
+      {
+       "key": "c",
+       "text": "At any time through account settings"
+      },
+      {
+       "key": "d",
+       "text": "Only through a reviewer"
+      }
+     ],
+     "answer": "c",
+     "hint": "Cancel any time.",
+     "topic": "Terms"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What is the minimum age to create an account?",
+     "options": [
+      {
+       "key": "a",
+       "text": "18"
+      },
+      {
+       "key": "b",
+       "text": "16"
+      },
+      {
+       "key": "c",
+       "text": "21"
+      },
+      {
+       "key": "d",
+       "text": "13"
+      }
+     ],
+     "answer": "a",
+     "hint": "Section 3.",
+     "topic": "Terms"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Who owns the data and content a customer submits?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The customer keeps ownership; Moksy gets a non-exclusive licence to process it to provide the services"
+      },
+      {
+       "key": "b",
+       "text": "Moksy owns it"
+      },
+      {
+       "key": "c",
+       "text": "It is public"
+      },
+      {
+       "key": "d",
+       "text": "Reviewers own it"
+      }
+     ],
+     "answer": "a",
+     "hint": "Section 6.",
+     "topic": "Terms"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "What caps Moksy's total liability for a claim?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£100"
+      },
+      {
+       "key": "b",
+       "text": "The customer's turnover"
+      },
+      {
+       "key": "c",
+       "text": "Unlimited"
+      },
+      {
+       "key": "d",
+       "text": "The amount the customer paid in the 12 months before the claim"
+      }
+     ],
+     "answer": "d",
+     "hint": "Section 8.",
+     "topic": "Terms"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Who is responsible for activity under an account?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Moksy"
+      },
+      {
+       "key": "b",
+       "text": "The account holder, who must keep login credentials confidential"
+      },
+      {
+       "key": "c",
+       "text": "Stripe"
+      },
+      {
+       "key": "d",
+       "text": "The reviewer"
+      }
+     ],
+     "answer": "b",
+     "hint": "Section 3.",
+     "topic": "Terms"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How are customers told of material changes to the Terms?",
+     "options": [
+      {
+       "key": "a",
+       "text": "By email or a prominent notice on the platform"
+      },
+      {
+       "key": "b",
+       "text": "They are not told"
+      },
+      {
+       "key": "c",
+       "text": "By phone only"
+      },
+      {
+       "key": "d",
+       "text": "By post only"
+      }
+     ],
+     "answer": "a",
+     "hint": "Continued use means acceptance.",
+     "topic": "Terms"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "May a customer resell access to Moksy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "No, not without written permission"
+      },
+      {
+       "key": "b",
+       "text": "Yes, on Max"
+      },
+      {
+       "key": "c",
+       "text": "Yes, on Free"
+      },
+      {
+       "key": "d",
+       "text": "Yes, freely"
+      }
+     ],
+     "answer": "a",
+     "hint": "Acceptable use.",
+     "topic": "Terms"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "Which entity do the Terms name as the contracting company?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Moksy AI Ltd, registered in England and Wales"
+      },
+      {
+       "key": "b",
+       "text": "Moksy Limited, registered in Scotland"
+      },
+      {
+       "key": "c",
+       "text": "Moksy Inc"
+      },
+      {
+       "key": "d",
+       "text": "GGLink Ltd"
+      }
+     ],
+     "answer": "a",
+     "hint": "Section 1.",
+     "topic": "Terms"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Is AI-generated output guaranteed accurate or fit for purpose under the Terms?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, for 12 months"
+      },
+      {
+       "key": "b",
+       "text": "Yes, once reviewed by Moksy"
+      },
+      {
+       "key": "c",
+       "text": "Yes, on paid plans"
+      },
+      {
+       "key": "d",
+       "text": "No: it is informational only, and the customer must review and validate it"
+      }
+     ],
+     "answer": "d",
+     "hint": "Section 7.",
+     "topic": "Terms"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Someone creates an account for their employer. What do they represent under the Terms?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That they are a reviewer"
+      },
+      {
+       "key": "b",
+       "text": "That they own the company"
+      },
+      {
+       "key": "c",
+       "text": "Nothing"
+      },
+      {
+       "key": "d",
+       "text": "That they have authority to bind the organisation to the Terms"
+      }
+     ],
+     "answer": "d",
+     "hint": "Section 3.",
+     "topic": "Terms"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer wants to talk to someone about the legal wording of the Terms. Where do you send them?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A reviewer"
+      },
+      {
+       "key": "b",
+       "text": "legal@moksy.ai"
+      },
+      {
+       "key": "c",
+       "text": "privacy@moksy.ai"
+      },
+      {
+       "key": "d",
+       "text": "support@moksy.ai only"
+      }
+     ],
+     "answer": "b",
+     "hint": "Listed at the end of the Terms.",
+     "topic": "Terms"
+    }
+   ]
+  },
+  {
+   "title": "Where the published pages disagree: confirm before quoting",
+   "body": "Support should quote published pages, and the pages are the company's statements. As read on 11 October 2026, a few of them disagree or look out of date, and a support person should know where, so that they do not repeat a figure as settled. (1) Data deletion: the trust page says customer data is hard-deleted within 30 days of termination, while the privacy policy says personal data is deleted or anonymised within 90 days of account closure, except where retention is required by law (financial records: 7 years). Do not quote either as definitive; say you will confirm and route to privacy@moksy.ai. (2) Security questionnaires: the contact-support page says Sales handles them, while the trust page says to send the questionnaire to privacy@moksy.ai. Confirm the current route before promising one, and never answer security claims you cannot evidence. (3) Sector wording: the Terms and privacy policy describe Moksy as for the education sector, while the help, pricing and trust pages describe founders, teams, agencies, enterprises and the public sector; do not tell a founder Moksy is only for schools, and flag the outdated legal wording. (4) Review arbitration: the contact page says disputed reviews are arbitrated by a senior reviewer; the internal lexicon names a rung for it, so say \"a senior reviewer\" as published without naming a rung. Prices of reviews in MOX are also unsettled in the repository, so avoid quoting a review price. This item is dated; re-check the pages. Source: trust.json, legal-privacy.json, contact-support.json, legal-terms.json, help.json.",
+   "questions": [
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "The trust page says customer data is hard-deleted within 30 days of termination; the privacy policy says 90 days. What should you do when a customer asks how long Moksy keeps their data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Quote 30 days, since it is shorter"
+      },
+      {
+       "key": "b",
+       "text": "Tell them it is deleted immediately"
+      },
+      {
+       "key": "c",
+       "text": "Quote 90 days, since it is longer"
+      },
+      {
+       "key": "d",
+       "text": "Do not quote either as settled: say you will confirm, and route the question to privacy@moksy.ai"
+      }
+     ],
+     "answer": "d",
+     "hint": "The published pages disagree.",
+     "topic": "Conflicts"
+    },
+    {
+     "level": 3,
+     "type": "mcq",
+     "prompt": "Why does the retention conflict matter for support?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A figure quoted to a customer is a statement by the company, so a wrong or inconsistent one can mislead"
+      },
+      {
+       "key": "b",
+       "text": "It makes the website slower"
+      },
+      {
+       "key": "c",
+       "text": "It affects Stripe"
+      },
+      {
+       "key": "d",
+       "text": "It changes the plan price"
+      }
+     ],
+     "answer": "a",
+     "hint": "Quote only what is settled.",
+     "topic": "Conflicts"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "The contact page says Sales handles security questionnaires; the trust page says to send them to privacy@moksy.ai. What do you do when a buyer sends one to support?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Confirm the current route before promising one, and do not answer security claims you cannot evidence"
+      },
+      {
+       "key": "b",
+       "text": "Ignore it"
+      },
+      {
+       "key": "c",
+       "text": "Tell them to try both addresses at random"
+      },
+      {
+       "key": "d",
+       "text": "Answer it yourself from memory"
+      }
+     ],
+     "answer": "a",
+     "hint": "The pages disagree.",
+     "topic": "Conflicts"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "A founder asks whether Moksy is only for schools because the Terms mention the education sector. What is accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Yes, only for schools"
+      },
+      {
+       "key": "b",
+       "text": "Only for universities"
+      },
+      {
+       "key": "c",
+       "text": "Only for charities"
+      },
+      {
+       "key": "d",
+       "text": "No: the help, pricing and trust pages describe founders, teams, agencies, enterprises and the public sector, and the legal wording looks out of date, so flag it"
+      }
+     ],
+     "answer": "d",
+     "hint": "Published audiences are broader.",
+     "topic": "Conflicts"
+    },
+    {
+     "level": 4,
+     "type": "mcq",
+     "prompt": "How should you name who arbitrates a disputed review when speaking to a customer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A random reviewer"
+      },
+      {
+       "key": "b",
+       "text": "\"A senior reviewer\", as the contact page publishes it, without naming a rung"
+      },
+      {
+       "key": "c",
+       "text": "The customer's reviewer of choice"
+      },
+      {
+       "key": "d",
+       "text": "The CEO"
+      }
+     ],
+     "answer": "b",
+     "hint": "Do not add detail the page does not state.",
+     "topic": "Conflicts"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "A customer asks what Moksy will refund a failed review for in MOX. What is the sound response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Promise a refund of 100%"
+      },
+      {
+       "key": "b",
+       "text": "Quote an average"
+      },
+      {
+       "key": "c",
+       "text": "Quote the lowest price you have seen"
+      },
+      {
+       "key": "d",
+       "text": "Avoid quoting a price or refund amount, since review prices in MOX are unsettled; take the details and escalate"
+      }
+     ],
+     "answer": "d",
+     "hint": "The repository's price tables disagree.",
+     "topic": "Conflicts"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "Why quote published pages rather than your own understanding?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because pages never change"
+      },
+      {
+       "key": "b",
+       "text": "Because customers never read them"
+      },
+      {
+       "key": "c",
+       "text": "Because it is faster"
+      },
+      {
+       "key": "d",
+       "text": "They are the company's statements, and improvising can create promises Moksy has not made"
+      }
+     ],
+     "answer": "d",
+     "hint": "A support habit grounded in the sources.",
+     "topic": "Conflicts"
+    },
+    {
+     "level": 5,
+     "type": "mcq",
+     "prompt": "You notice two published pages disagree. What is the most useful thing to do after helping the customer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ignore it"
+      },
+      {
+       "key": "b",
+       "text": "Report the discrepancy so the pages can be corrected"
+      },
+      {
+       "key": "c",
+       "text": "Pick the one you prefer and tell customers"
+      },
+      {
+       "key": "d",
+       "text": "Edit the pages yourself without telling anyone"
+      }
+     ],
+     "answer": "b",
+     "hint": "Closing the loop.",
+     "topic": "Conflicts"
+    }
+   ]
+  }
+ ]
+}
