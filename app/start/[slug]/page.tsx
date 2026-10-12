@@ -4,7 +4,7 @@ import { db, journeys, questions, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { LEVELS, MAX_LEVEL, TIERS, tierOf } from "@/lib/levels";
 import { PLACEMENT_BATCH, PLACEMENT_PASS } from "@/lib/placement";
-import { ArrowRight, Check, Gauge, Lightbulb, Sprout } from "lucide-react";
+import { ArrowRight, Check, Gauge, Lightbulb, ListChecks, Sprout, Target, TrendingUp } from "lucide-react";
 import { JourneySteps } from "@/components/JourneySteps";
 import { RankEmblem } from "@/components/RankEmblem";
 import { LevelScale } from "@/components/charts";
@@ -56,6 +56,14 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
             A short adaptive check: we ask {PLACEMENT_BATCH} multiple-choice questions at a time, starting mid-way, and jump up or down depending on how you do.
             It usually takes 3 to 5 rounds. {j.lo > 0 && <>You have already passed level {j.lo} by exam, so we start from there.</>}
           </p>
+          <ol className="grid grid-cols-3 gap-2 text-center text-xs font-semibold" aria-label="How the check works">
+            {[{ Icon: ListChecks, t: `${PLACEMENT_BATCH} questions a round`, c: "bg-sky-500/15 text-sky-300" }, { Icon: TrendingUp, t: "Jump up or down", c: "bg-violet-500/15 text-violet-300" }, { Icon: Target, t: "Settle on your level", c: "bg-emerald-500/15 text-emerald-300" }].map(({ Icon, t, c }, i) => (
+              <li key={t} className="rise relative flex flex-col items-center gap-1.5 rounded-2xl border border-black/10 bg-[#fff] p-3" style={{ "--i": i } as React.CSSProperties}>
+                {i < 2 && <span className="pointer-events-none absolute -right-2.5 top-1/2 z-10 hidden h-5 w-5 -translate-y-1/2 place-items-center rounded-full border border-black/10 bg-[#fff] text-slate-400 sm:grid" aria-hidden><ArrowRight size={11} /></span>}
+                <span className={`grid h-10 w-10 place-items-center rounded-xl ${c}`}><Icon size={20} /></span>{t}
+              </li>
+            ))}
+          </ol>
           <ul className="space-y-2 text-sm text-slate-400">
             {["Skip a question you do not know rather than guessing. A blank counts as wrong, but guessing can place you too high.",
               "The check only ever raises your starting point. It never removes a level you earned. Required courses, promotions and certificates still need real exams."].map((t, i) => (
@@ -79,7 +87,7 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
       <JourneySteps at={3} />
       <div className="card space-y-3 p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h1 className="flex items-center gap-2 text-xl font-extrabold"><Gauge size={20} className="text-sky-300" />Level check · round {j.round}</h1>
+          <h1 className="flex items-center gap-2 text-xl font-extrabold"><Gauge size={20} className="text-sky-300" />Level check <span className="flex items-center gap-1" aria-label={`Round ${j.round}`}>{[1, 2, 3, 4, 5].map((n) => <i key={n} className={`h-2.5 rounded-full transition-all ${n === j.round ? "w-6 bg-sky-500" : n < j.round ? "w-2.5 bg-emerald-500" : "w-2.5 bg-black/15"}`} />)}</span><span className="text-sm font-semibold text-slate-400">round {j.round}</span></h1>
           <span className="text-sm text-slate-400">Narrowing from level {j.lo} to {j.hi}. Need {PLACEMENT_PASS} of {PLACEMENT_BATCH} to move up.</span>
         </div>
         <div role="img" aria-label={`Your level is between ${j.lo} and ${j.hi}`}>
@@ -94,9 +102,10 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
             {q.code && <pre className="overflow-x-auto rounded bg-black/5 p-2 text-sm">{q.code}</pre>}
             <div className="grid gap-2">
               {q.options?.map((o) => (
-                <label key={o.key} className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 p-2 transition hover:border-white/30 hover:bg-white/5 has-[:checked]:border-indigo-400 has-[:checked]:bg-indigo-500/20">
-                  <input type="radio" name={`q${q.id}`} value={o.key} className="mt-1" />
-                  <span><b className="font-mono">{o.key}</b> {o.text}</span>
+                <label key={o.key} className="group flex cursor-pointer items-start gap-3 rounded-xl border-2 border-black/10 p-3 transition hover:border-black/30 has-[:checked]:border-indigo-400 has-[:checked]:bg-indigo-500/10 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-indigo-300">
+                  <input type="radio" name={`q${q.id}`} value={o.key} className="sr-only" />
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-black/[.06] font-mono text-sm font-bold transition group-has-[:checked]:bg-indigo-500 group-has-[:checked]:text-[#fff]">{o.key.toUpperCase()}</span>
+                  <span className="pt-0.5">{o.text}</span>
                 </label>
               ))}
             </div>
