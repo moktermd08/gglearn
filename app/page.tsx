@@ -11,7 +11,8 @@ import { openTo } from "@/lib/paths";
 import { avatarLooks } from "@/lib/avatars";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { StatTile, PALETTE } from "@/components/charts";
-import { ArrowRight, BadgeCheck, BookOpen, Building2, Flame, GraduationCap, Layers, ShieldCheck, Sparkles, Swords, Target, Trophy, Users } from "lucide-react";
+import { ArrowRight, BadgeCheck, BookOpen, Briefcase, Building2, Compass, Flame, Gift, GraduationCap, Medal, Radio, RotateCcw, ShieldCheck, Sparkles, Swords, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
+import { SETS, campaignViews, type SetKey } from "@/lib/campaigns";
 import { listFor } from "@/lib/competitions";
 import { CompetitionCard } from "@/components/CompetitionCard";
 import { CertFrame } from "@/components/CertFrame";
@@ -42,6 +43,16 @@ export default async function Home() {
   const byBrand = new Map<string, typeof rows>();
   for (const r of rows) byBrand.set(r.brand.name, [...(byBrand.get(r.brand.name) ?? []), r]);
   const brandSlug = (name: string) => `brand-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  const camps = campaignViews();
+  const prized = camps.filter((v) => v.rewardKind !== "certificate").sort((a, b) => b.reward.cash - a.reward.cash);
+  const flagships = prized.slice(0, 3);
+  const topPool = flagships[0]?.reward.cash ?? 0;
+  const prizeCount = camps.filter((v) => v.rewardKind !== "certificate").length;
+  const SET_META: Record<SetKey, { Icon: typeof Briefcase; tone: string; hue: string; blurb: string }> = {
+    career: { Icon: Briefcase, tone: "bg-violet-500/15 text-violet-300", hue: "#8b5cf6", blurb: "A race for every role: from first job to CTO." },
+    general: { Icon: Compass, tone: "bg-sky-500/15 text-sky-300", hue: "#0ea5e9", blurb: "Leagues and sprints on the skills everyone uses." },
+    ai: { Icon: Sparkles, tone: "bg-pink-500/15 text-pink-300", hue: "#ec4899", blurb: "Races on prompting, agents, RAG and the AI toolchain." },
+  };
   const contests = listFor(viewer).filter((x) => x.c.visibility === "public" && (x.state === "live" || x.state === "upcoming")).slice(0, 3);
   const logos = rows.filter((r) => artFor(r.track.slug, r.track.name, r.track.kind).glyph.kind === "brand").slice(0, 18);
 
@@ -70,10 +81,11 @@ export default async function Home() {
           <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl">Learn what your role needs. <span className="gradient-text">Prove it. Move up.</span></h1>
           <p className="mt-4 max-w-xl text-lg text-slate-300">
             gglearn gives every person on your team, and every customer, a clear learning path. Pass level exams, earn certificates,
-            and climb {LEVELS.length} levels from Novice to Titan, with a daily rival to keep you showing up.
+            and climb {LEVELS.length} levels from Novice to Titan, with a daily rival to keep you showing up. Want a race? Join one of {camps.length} public campaigns.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href={viewer ? "/dashboard" : "/login"} className="btn">{viewer ? "Go to my path" : "Sign in to see your path"}<ArrowRight size={16} /></Link>
+            <Link href="/campaigns" className="btn btn-ghost"><Flame size={16} className="text-pink-300" />Browse {camps.length} campaigns</Link>
             <a href="#subjects" className="btn btn-ghost">Browse subjects</a>
           </div>
           <p className="mt-3 text-sm text-slate-400">{rows.length} subjects · {totalQ.toLocaleString("en-GB")} questions · accounts are created by your admin</p>
@@ -102,7 +114,7 @@ export default async function Home() {
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4" aria-label="The academy in numbers">
         <StatTile i={0} Icon={BookOpen} label="Subjects" value={rows.length} color={PALETTE.indigo} />
         <StatTile i={1} Icon={Target} label="Questions" value={totalQ.toLocaleString("en-GB")} color={PALETTE.sky} />
-        <StatTile i={2} Icon={Layers} label="Brands" value={byBrand.size} color={PALETTE.violet} />
+        <StatTile i={2} Icon={Flame} label="Public campaigns" value={camps.length} color={PALETTE.pink} />
         <StatTile i={3} Icon={Trophy} label="Levels to Titan" value={LEVELS.length} color={PALETTE.amber} />
       </section>
 
@@ -133,6 +145,40 @@ export default async function Home() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section aria-label="Campaigns" className="space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h2 className="flex items-center gap-2.5 text-2xl font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-pink-500/15 text-pink-300"><Flame size={19} /></span>{camps.length} public campaigns, one for every career</h2>
+            <p className="text-slate-400">Pick one, climb the leaderboard and earn a certificate. {prizeCount} of them add prizes for the best.</p>
+          </div>
+          <Link href="/campaigns" className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-300 hover:underline">All campaigns<ArrowRight size={14} /></Link>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-[1.15fr_1fr]">
+          <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-1">
+            {(Object.keys(SETS) as SetKey[]).map((k, i) => { const { Icon, tone, hue, blurb } = SET_META[k]; const n = camps.filter((v) => v.kind === k).length; return (
+              <Link key={k} href={`/campaigns?set=${k}#browse`} className="card card-hover rise group relative flex items-center gap-3 overflow-hidden p-4" style={{ "--i": i } as React.CSSProperties}>
+                <span className="absolute inset-y-0 left-0 w-1" style={{ background: hue }} aria-hidden />
+                <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${tone}`}><Icon size={21} /></span>
+                <span className="min-w-0 flex-1"><span className="block font-bold">{SETS[k]} <span className="text-sm font-normal text-slate-400">· {n} campaigns</span></span><span className="block text-xs text-slate-400">{blurb}</span></span>
+                <ArrowRight size={16} className="hidden shrink-0 text-slate-400 transition group-hover:translate-x-0.5 lg:block" />
+              </Link>); })}
+          </div>
+          <div className="card relative overflow-hidden p-4" style={{ background: "linear-gradient(140deg, rgba(251,191,36,.18), #fff 65%)" }}>
+            <div className="mb-3 flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-amber-300"><Trophy size={14} />{topPool >= 10000 ? "Flagship races · $100 prize pools" : "Races with prizes"}</div>
+            <ul className="space-y-2">
+              {flagships.map((v) => (
+                <li key={v.id}><Link href={`/competitions/${v.slug}`} className="group flex items-center gap-3 rounded-xl bg-[#fff]/80 p-2.5 transition hover:bg-[#fff] hover:shadow-md">
+                  <SubjectArt slug={v.track} name={v.trackName} kind={v.trackKind as never} size={40} />
+                  <span className="min-w-0 flex-1"><span className="block truncate text-sm font-bold">{v.title}</span><span className="block truncate text-xs text-slate-400">{v.hook}</span></span>
+                  <span className="shrink-0 rounded-full bg-amber-400/25 px-2 py-0.5 text-xs font-extrabold text-amber-300">{v.reward.cash > 0 ? `$${v.reward.cash / 100}` : "Prize"}</span>
+                </Link></li>
+              ))}
+            </ul>
+            <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-400"><Gift size={13} className="text-emerald-400" />Plus Amazon vouchers and certificates, paid by the organiser. gglearn never holds the money.</p>
+          </div>
+        </div>
       </section>
 
       <section className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]" aria-label="Certificates">
@@ -191,6 +237,23 @@ export default async function Home() {
         </div>
       </section>
 
+      <section aria-label="Contest features" className="space-y-4">
+        <div><h2 className="flex items-center gap-2.5 text-2xl font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-sky-500/15 text-sky-300"><Timer size={19} /></span>Race the clock, and the record</h2><p className="text-slate-400">Contests are not just a leaderboard. Every finish is timed, ranked and kept.</p></div>
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[{ Icon: Radio, t: "Live leaderboard", d: "Ranked by who reaches the goal first, then levels gained, then XP. Bots are always labelled as simulated.", tone: "bg-emerald-500/15 text-emerald-300" },
+            { Icon: Timer, t: "Exam clock", d: "Exams show a live clock and, in a contest you race in, the level record to beat.", tone: "bg-sky-500/15 text-sky-300" },
+            { Icon: Trophy, t: "Time records and Hall of Fame", d: "Finish times, ranks, splits and how many people you beat, all read from real exams.", tone: "bg-amber-500/15 text-amber-300" },
+            { Icon: RotateCcw, t: "Come back and beat it", d: "When a contest ends, anyone who can see it can start a record attempt and chase the fastest time.", tone: "bg-violet-500/15 text-violet-300" },
+            { Icon: Medal, t: "Badges, never handed out", d: "Record holder, Podium, Flawless, Speed demon and more, earned from what you actually did.", tone: "bg-pink-500/15 text-pink-300" },
+            { Icon: Wand2, t: "An optional twist", d: "Organisers can switch on the Architect: one racer per level may rewrite a question, checked by an AI referee, with the organiser able to veto it.", tone: "bg-indigo-500/15 text-indigo-300" }].map(({ Icon, t, d, tone }, i) => (
+            <li key={t} className="card rise flex items-start gap-3 p-4" style={{ "--i": i } as React.CSSProperties}>
+              <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${tone}`}><Icon size={20} /></span>
+              <div><div className="text-sm font-bold">{t}</div><p className="mt-0.5 text-xs text-slate-400">{d}</p></div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {contests.length > 0 && (
         <section aria-label="Contests">
           <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
@@ -223,7 +286,7 @@ export default async function Home() {
         <svg className="pointer-events-none absolute -right-10 -top-16 h-72 w-72 opacity-25" viewBox="0 0 200 200" aria-hidden><circle cx="100" cy="100" r="90" fill="none" stroke="#fff" /><circle cx="100" cy="100" r="60" fill="none" stroke="#fff" strokeDasharray="4 6" className="march" /></svg>
         <h2 className="relative text-3xl font-extrabold">Ready to start your climb?</h2>
         <p className="relative mx-auto mt-2 max-w-lg text-[#fff]/80">Your path is waiting, and so is your rival.</p>
-        <Link href={viewer ? "/dashboard" : "/login"} className="btn relative mt-5 !bg-[#fff] !text-indigo-700">{viewer ? "Go to my path" : "Sign in"}<ArrowRight size={16} /></Link>
+        <div className="relative mt-5 flex flex-wrap justify-center gap-3"><Link href={viewer ? "/dashboard" : "/login"} className="btn !bg-[#fff] !text-indigo-700">{viewer ? "Go to my path" : "Sign in"}<ArrowRight size={16} /></Link><Link href="/campaigns" className="btn !bg-transparent !text-[#fff] ring-2 ring-[#fff]/60 hover:!bg-[#fff]/15"><Flame size={16} />See the campaigns</Link></div>
       </section>
     </div>
   );
