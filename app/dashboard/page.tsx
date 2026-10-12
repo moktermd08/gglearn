@@ -6,6 +6,7 @@ import { requireUser } from "@/lib/auth";
 import { LEVELS, MAX_LEVEL, TIERS, tierOf } from "@/lib/levels";
 import { QUEST_XP, activityFor, trackStats } from "@/lib/stats";
 import { progressionFor } from "@/lib/progression";
+import { periodAt, standings as seasonStandings, timeLeft } from "@/lib/seasons";
 import { BadgeWall, PlayerLevelCard } from "@/components/Achievements";
 import { RankEmblem } from "@/components/RankEmblem";
 import { AreaChart, EmptyState, Heatmap, PALETTE, Radar, StatTile } from "@/components/charts";
@@ -34,6 +35,7 @@ export default async function Dashboard() {
   const todo = db.select().from(checklistItems).where(eq(checklistItems.userId, user.id)).all();
   const stats = mine.map((m) => ({ ...m, s: trackStats(user.id, m.t, m.e.startedAt) }));
   const prog = progressionFor(user.id);
+  const week = periodAt("week"), weekRows = seasonStandings(week, user.audience), weekMe = weekRows.find((r) => r.userId === user.id);
   const totalXp = prog.facts.xp;
   const bestStreak = prog.streak.current;
   const contests = listFor(user, { mineOnly: true }).filter((x) => x.state === "live" || x.state === "upcoming" || x.invited).slice(0, 6);
@@ -319,6 +321,11 @@ export default async function Dashboard() {
               <div className="space-y-3">{contests.slice(0, 3).map((x) => <CompetitionCard key={x.c.id} card={x} />)}</div>
             )}
           </section>
+
+          <Link href="/seasons" className="card card-hover block p-5" aria-label="This week's season">
+            {heading(Trophy, "bg-violet-500/15 text-violet-300", "This week", <span className="text-xs text-slate-400">ends in {timeLeft(week.end - now())}</span>)}
+            {weekMe ? <div className="flex items-baseline gap-3"><span className="text-3xl font-extrabold">#{weekMe.rank}</span><span className="text-sm text-slate-400">of {weekRows.length} · {weekMe.points} pts</span></div> : <p className="text-sm text-slate-400">No points yet this week. Pass a level or finish a quest to get on the board.</p>}
+          </Link>
 
           <section className="card p-5">
             {heading(Medal, "bg-yellow-500/15 text-yellow-500", "Level and badges", <span className="text-xs text-slate-400">{prog.earned}/{prog.badges.length} earned</span>)}

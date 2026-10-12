@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import Link from "next/link";
-import { certificates, db, enrollments, tracks, userAvatars } from "@/lib/db";
+import { certificates, db, enrollments, tracks, userAvatars, users } from "@/lib/db";
+import { setSeasonBoard } from "./actions";
 import { requireUser } from "@/lib/auth";
 import { Competitor } from "@/components/Competitor";
 import { AvatarPicker } from "@/components/AvatarPicker";
@@ -32,6 +33,7 @@ export default async function Profile() {
   const certs = db.select({ c: certificates, t: tracks }).from(certificates).innerJoin(tracks, eq(tracks.id, certificates.trackId)).where(eq(certificates.userId, me.id)).all()
     .sort((a, b) => b.c.issuedAt - a.c.issuedAt);
   const prog = progressionFor(me.id);
+  const boardShown = db.select({ s: users.seasonBoard }).from(users).where(eq(users.id, me.id)).get()?.s !== "hide";
   const totalXp = prog.facts.xp, levels = mine.reduce((a, m) => a + m.s.passed, 0), streak = prog.streak.current;
   const bestLevel = Math.max(0, ...mine.map((m) => m.s.passed)), tier = TIERS[tierOf(bestLevel)];
   const activity = activityFor(me.id, 24);
@@ -151,6 +153,12 @@ export default async function Profile() {
         <p className="mb-3 flex gap-2 text-sm text-slate-300"><Shield size={16} className="mt-0.5 shrink-0 text-emerald-300" /><span>A photo is optional. Without one you get a generated face. In contests, colleagues see your photo; strangers see it only if you play in a <b>public</b> contest.</span></p>
         <PhotoForm />
         {photo && <form action={removePhoto} className="mt-2"><button className="inline-flex items-center gap-1 text-sm text-slate-400 underline"><Trash2 size={13} />Remove my photo</button></form>}
+      </section>
+
+      <section id="season-board" className="card scroll-mt-24 p-5">
+        <h2 className="mb-1 text-lg font-bold">Season leaderboards</h2>
+        <p className="mb-3 text-sm text-slate-400">{boardShown ? "Colleagues in your group can see your first name, an initial and your points on the weekly and monthly boards." : "You are hidden from every weekly and monthly board, including past ones, and will not earn new season results."}</p>
+        <form action={setSeasonBoard}><input type="hidden" name="show" value={boardShown ? "0" : "1"} /><button className="btn btn-ghost" type="submit">{boardShown ? "Hide me from the boards" : "Show me on the boards"}</button></form>
       </section>
     </div>
   );
