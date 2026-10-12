@@ -21,7 +21,7 @@ export function PageHero({ Icon, title, sub, tone = "indigo", children }: { Icon
       </svg>
       <div className="relative flex flex-wrap items-center gap-4">
         <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl text-[#fff] shadow-lg" style={{ background: `linear-gradient(135deg, ${c}, ${c}aa)`, boxShadow: `0 10px 24px -10px ${c}` }}><Icon size={28} /></div>
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-[1_1_14rem]">
           <h1 className="text-2xl font-extrabold">{title}</h1>
           {sub && <p className="mt-0.5 max-w-2xl text-sm text-slate-400">{sub}</p>}
         </div>
