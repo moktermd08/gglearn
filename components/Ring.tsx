@@ -8,7 +8,7 @@ export function Ring({ pct, size = 120, label, sub, color = "#38bdf8", className
         <circle cx="60" cy="60" r={r} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
           strokeDasharray={c} strokeDashoffset={c * (1 - p)} className="ring-draw" style={{ ["--c" as string]: c }} />
       </svg>
-      <div className="text-center leading-tight"><div className="text-2xl font-extrabold">{label}</div>{sub && <div className="text-[11px] text-slate-400">{sub}</div>}</div>
+      <div className="text-center leading-tight"><div className="font-extrabold" style={{ fontSize: Math.min(24, Math.round(size * 0.24)) }}>{label}</div>{sub && size >= 80 && <div className="text-[11px] text-slate-400">{sub}</div>}</div>
     </div>
   );
 }

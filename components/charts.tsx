@@ -134,11 +134,11 @@ export function Donut({ parts, size = 132, center, sub }: { parts: { label: stri
             off += len; return el;
           })}
         </svg>
-        <div className="absolute inset-0 grid place-items-center text-center leading-tight"><div><div className="text-2xl font-extrabold">{center ?? total.toLocaleString("en-GB")}</div>{sub && <div className="text-[10px] uppercase tracking-wider text-slate-400">{sub}</div>}</div></div>
+        <div className="absolute inset-0 grid place-items-center text-center leading-tight"><div><div className={`font-extrabold ${String(center ?? total.toLocaleString("en-GB")).length > 6 ? "text-base" : "text-2xl"}`}>{center ?? total.toLocaleString("en-GB")}</div>{sub && <div className="text-[10px] uppercase tracking-wider text-slate-400">{sub}</div>}</div></div>
       </div>
       <ul className="space-y-1.5 text-sm">
         {parts.map((p) => (
-          <li key={p.label} className="flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-sm" style={{ background: p.color }} /><span className="text-slate-300">{p.label}</span><b className="ml-1">{p.value.toLocaleString("en-GB")}</b>{total > 0 && <span className="text-xs text-slate-500">{Math.round((p.value / total) * 100)}%</span>}</li>
+          <li key={p.label} className="flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-sm" style={{ background: p.color }} /><span className="text-slate-300">{p.label}</span><b className="ml-1">{p.value.toLocaleString("en-GB")}</b>{total > 0 && <span className="text-xs text-slate-500">{p.value > 0 && (p.value / total) * 100 < 1 ? "<1%" : `${Math.round((p.value / total) * 100)}%`}</span>}</li>
         ))}
       </ul>
     </div>

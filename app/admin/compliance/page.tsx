@@ -3,7 +3,8 @@ import { requireManager } from "@/lib/auth";
 import { pendingCounts } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath } from "@/lib/roles";
 import { catalog, complianceReport, requirementsFor, scopeLabels, scopeOptions } from "@/lib/paths";
-import { Donut, EmptyState, PageHero, PALETTE } from "@/components/charts";
+import { Donut, EmptyState, Initials, PageHero, PALETTE } from "@/components/charts";
+import { Ring } from "@/components/Ring";
 import { AlertTriangle, CheckCircle2, Clock, FileQuestion, ShieldCheck, UserX } from "lucide-react";
 
 export const metadata = { title: "Who is up to date — gglearn" };
@@ -26,12 +27,6 @@ export default async function Compliance() {
   const count = (s: keyof typeof STATE) => rows.filter((r) => r.state === s).length;
   // required by policy but with no questions yet: nobody can be held to it
   const empty = cat.filter((t) => (t.tier === "mandatory" || t.tier === "role") && t.reach < t.requiredLevel);
-  const tiles = [
-    { Icon: CheckCircle2, label: "Up to date", value: count("ok"), cls: "text-emerald-300" },
-    { Icon: Clock, label: "In progress", value: count("due"), cls: "text-sky-300" },
-    { Icon: AlertTriangle, label: "Overdue", value: count("overdue"), cls: "text-rose-300" },
-    { Icon: UserX, label: "Not assigned", value: count("no-scope"), cls: "text-amber-300" },
-  ];
 
   return (
     <div className="space-y-8">
@@ -39,7 +34,7 @@ export default async function Compliance() {
         {me.role === "admin" && <Link href="/admin/paths" className="btn btn-ghost !py-1 text-sm">Set what is required</Link>}
         {me.role === "admin" && <Link href="/admin/matrix" className="btn btn-ghost !py-1 text-sm">Role and pillar matrix</Link>}
       </PageHero>
-      <section className="card p-5">
+      <section className="card grid items-center gap-6 p-5 md:grid-cols-[auto_1fr]">
         <Donut size={150} sub="people" center={rows.length} parts={[
           { label: "Up to date", value: count("ok"), color: PALETTE.emerald },
           { label: "In progress", value: count("due"), color: PALETTE.sky },
@@ -47,16 +42,19 @@ export default async function Compliance() {
           { label: "Not assigned", value: count("no-scope"), color: PALETTE.amber },
           { label: "Nothing required", value: count("none"), color: PALETTE.slate },
         ]} />
+        <div className="space-y-2" aria-label="Needs attention">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400">Needs attention</h2>
+          {count("overdue") + count("no-scope") + empty.length === 0 ? (
+            <p className="flex items-center gap-2 rounded-xl bg-emerald-500/10 p-3 text-sm text-emerald-300"><CheckCircle2 size={16} />Nobody is overdue and everyone has a path.</p>
+          ) : (
+            <ul className="space-y-2 text-sm">
+              {count("overdue") > 0 && <li className="flex items-center gap-2.5 rounded-xl bg-rose-500/10 p-2.5 text-rose-300"><AlertTriangle size={16} className="shrink-0" /><span><b>{count("overdue")}</b> {count("overdue") === 1 ? "person is" : "people are"} overdue</span></li>}
+              {count("no-scope") > 0 && <li className="flex items-center gap-2.5 rounded-xl bg-amber-500/10 p-2.5 text-amber-300"><UserX size={16} className="shrink-0" /><span><b>{count("no-scope")}</b> not assigned to a company, brand or project. <Link href="/admin/people" className="underline">Assign them</Link></span></li>}
+              {empty.length > 0 && <li className="flex items-center gap-2.5 rounded-xl bg-sky-500/10 p-2.5 text-sky-300"><FileQuestion size={16} className="shrink-0" /><span><b>{empty.length}</b> required {empty.length === 1 ? "subject has" : "subjects have"} too few questions to examine yet</span></li>}
+            </ul>
+          )}
+        </div>
       </section>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {tiles.map(({ Icon, label, value, cls }, i) => (
-          <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
-            <Icon size={22} className={`mx-auto ${cls}`} />
-            <div className="mt-1 text-2xl font-extrabold">{value}</div>
-            <div className="text-[11px] uppercase tracking-wider text-slate-400">{label}</div>
-          </div>
-        ))}
-      </div>
 
       <ul className="space-y-3">
         {rows.map((r, i) => {
@@ -64,8 +62,9 @@ export default async function Compliance() {
           const open = r.state === "overdue" || r.state === "due" ? requirementsFor(r.person, r.scopes, cat).filter((q) => !q.done) : [];
           const labels = scopeLabels(r.scopes, options);
           return (
-            <li key={r.person.id} className="card rise p-4" style={{ "--i": Math.min(i, 10) } as React.CSSProperties}>
+            <li key={r.person.id} className={`card rise border-l-4 p-4 ${r.state === "overdue" ? "!border-l-rose-400" : r.state === "ok" ? "!border-l-emerald-400" : r.state === "due" ? "!border-l-sky-400" : r.state === "no-scope" ? "!border-l-amber-400" : "!border-l-slate-300"}`} style={{ "--i": Math.min(i, 10) } as React.CSSProperties}>
               <div className="flex flex-wrap items-center gap-3">
+                <Initials name={r.person.name} size={42} />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2 font-medium">{r.person.name}
                     {r.person.audience === "customer" && <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">customer</span>}
@@ -76,9 +75,9 @@ export default async function Compliance() {
                   <div className="truncate text-xs text-slate-500">{r.person.jobRole} · {labels.length ? labels.join(" · ") : "no company, brand or project"}</div>
                 </div>
                 {r.required > 0 && (
-                  <div className="w-40 text-right text-xs text-slate-400">
-                    {r.done}/{r.required} required passed
-                    <div className="bar !h-1.5 mt-1"><i style={{ width: `${(r.done / r.required) * 100}%`, background: r.done === r.required ? "#34d399" : r.overdue ? "#fb7185" : undefined }} /></div>
+                  <div className="flex items-center gap-2.5 text-right text-xs text-slate-400">
+                    <span>{r.done}/{r.required}<br />required passed</span>
+                    <Ring pct={r.done / r.required} label={`${Math.round((r.done / r.required) * 100)}%`} size={56} color={r.done === r.required ? "#34d399" : r.overdue ? "#fb7185" : "#6366f1"} />
                   </div>
                 )}
               </div>
