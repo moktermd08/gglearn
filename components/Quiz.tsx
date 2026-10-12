@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Flag, Lightbulb, ListChecks, PenLine, Tag } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Flag, Lightbulb, ListChecks, PenLine, Tag, Timer } from "lucide-react";
+import { LiveClock } from "@/components/LiveClock";
+import { exact } from "@/lib/competitions-shared";
 import { Avatar } from "@/components/Avatar";
 
 export type QuizQ = { id: number; prompt: string; code?: string | null; type: "mcq" | "open" | "scenario"; options?: { key: string; text: string }[] | null; topic?: string | null };
@@ -12,8 +14,10 @@ const KIND = {
 } as const;
 
 /** One question at a time with a progress bar. Answers are posted together; grading stays on the server. */
-export function Quiz({ questions, action, level, rivalHue, rivalName, meLook, rivalLook, photoUrl }: {
+export function Quiz({ questions, action, level, rivalHue, rivalName, meLook, rivalLook, photoUrl, elapsed, record }: {
   questions: QuizQ[]; action: (fd: FormData) => void | Promise<void>; level: number; rivalHue: number; rivalName: string; meLook?: string; rivalLook?: string; photoUrl?: string | null;
+  elapsed?: number; // seconds since the exam was started, measured by the server
+  record?: { seconds: number; holder: string; mine: boolean; title: string } | null; // fastest pass of this level in a live contest the person is racing in
 }) {
   const [i, setI] = useState(0);
   const [ans, setAns] = useState<Record<number, string>>({});
@@ -32,6 +36,13 @@ export function Quiz({ questions, action, level, rivalHue, rivalName, meLook, ri
         </div>
         <Avatar kind="rival" level={level} hue={rivalHue} size={44} className="opacity-70" look={rivalLook} />
       </div>
+
+      {elapsed !== undefined && (
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm" aria-label="Exam clock">
+          <span className="inline-flex items-center gap-1.5 font-bold"><Timer size={16} className="text-sky-300" /><LiveClock elapsed={elapsed} className="text-lg" /></span>
+          {record && <span className="text-xs text-slate-400">{record.mine ? "Your record" : `${record.holder}’s record`} in {record.title}: <b className="text-slate-200">{exact(record.seconds)}</b></span>}
+        </div>
+      )}
 
       <nav aria-label="Question navigator" className="flex flex-wrap justify-center gap-1.5">
         {questions.map((x, n) => (

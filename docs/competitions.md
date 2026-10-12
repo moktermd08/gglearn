@@ -14,6 +14,23 @@ Learn any track head-to-head: against simulated bots, against people, or both. P
   on the member row, not re-derived.
 - Practice XP (study guide, drill) is counted by UTC day, so it can include same-day activity from before the start time.
 
+## Time records, rankings and coming back to beat them
+Every live or finished contest page has a **Time to beat** section (`lib/records.ts`, `app/competitions/[slug]/time-board.tsx`). Nothing is stored
+for it except record attempts: times, ranks, percentiles, splits and badges are read from real exams (`runs`) on every view.
+- **Finish time**: from when you started racing (contest start, or when you joined if later) to the exam pass that reached the goal.
+- **Hall of Fame**: fastest first, best time per person. "Beats X%" is the share of the *other* people on the board who were slower.
+  The header shows the record, how many raced, how many finished (completion rate) and the median time. A histogram shows where you sit in the pool.
+- **Splits**: your time for each level gained next to the record holder’s.
+- **Pace projection** (live, still racing): a straight-line estimate of your finish time and how it would rank. Shown as an estimate.
+- **Fastest single exam per level**: start-to-finish time of one passing exam (needs two or more people at that level). Question draws differ between people, so close times are ties.
+- **Exam clock**: the exam page ticks up from when the exam started and, in a live contest you race in, shows the level record to beat. The result page shows time taken, rank and % beaten, and celebrates a new level record.
+- **Come back and beat it** (after the contest ends): anyone who can see the contest starts a record attempt (table `contest_attempts`): the same goal, from wherever they stand now
+  (levels already passed do not count again), with their own clock and as long as the contest lasted. A ghost bar shows the record holder’s pace. A finished attempt goes on the same board;
+  retrying is allowed, the best time counts. Public contests ask a non-member to consent to appearing on the board.
+- **Badges** (derived, never awarded by hand): Record holder, Podium, Top 10% / Top 25% (five or more finishers), Finisher, Record breaker (beat the contest’s time after it ended),
+  Beat their own time, Speed demon (fastest exam on a level), Flawless (a 100% pass), Steady (five or more practice days).
+- Limits: the exam clock includes grading time and any idle time with the tab open; a different question draw can make one exam easier than another. Times compare people who race the *growth* of N levels, not identical levels.
+
 ## Bots are simulated, and say so
 A bot does not study or answer questions. It follows a fixed daily XP schedule (`lib/bots.ts`) on the same scale as people
 (150 XP = 1 level). Tiers set the pace (casual 45, steady 75, fierce 120 XP/day); five styles shape the schedule (steady,
