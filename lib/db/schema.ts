@@ -562,3 +562,16 @@ export const roleExamAnswers = sqliteTable(
   },
   (t) => [index("role_exam_answers_exam").on(t.examId)],
 );
+
+// Badges a person has earned. The catalogue lives in code (lib/progression.ts); a row is written the first time the rule is met,
+// so "earned on" and "just earned" survive later changes to the underlying data.
+export const userBadges = sqliteTable(
+  "user_badges",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    key: text("key").notNull(),
+    earnedAt: integer("earned_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("user_badge_unique").on(t.userId, t.key)],
+);
