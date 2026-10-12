@@ -3,7 +3,8 @@ import { ArrowRight, Award, Briefcase, CalendarDays, Clock, Coins, Compass, Flam
 import { now, span } from "@/lib/competitions";
 import { PageHero, PALETTE, StatTile } from "@/components/charts";
 import { SubjectArt } from "@/components/SubjectArt";
-import { SETS, campaignViews, type CampaignView, type RewardKind, type SetKey } from "@/lib/campaigns";
+import { currentUser } from "@/lib/auth";
+import { SETS, campaignStatus, campaignViews, type CampaignView, type RewardKind, type SetKey } from "@/lib/campaigns";
 
 export const metadata = { title: "Campaigns — gglearn", description: "300 public campaigns: careers, general leagues and AI races. Everyone can join. Certificates by default, prizes for the best." };
 export const dynamic = "force-dynamic";
@@ -105,7 +106,7 @@ function Flagship({ v, i }: { v: CampaignView; i: number }) {
 
 export default async function Campaigns({ searchParams }: { searchParams: Promise<Q> }) {
   const q = await searchParams;
-  const all = campaignViews();
+  const all = campaignViews(), status = campaignStatus(), me = await currentUser(), admin = me?.role === "admin";
   const needle = (q.q ?? "").trim().toLowerCase().slice(0, 60);
   const len = LENGTHS.find((l) => l.key === q.len);
   const set = q.set && q.set in SETS ? (q.set as SetKey) : undefined;
@@ -122,9 +123,17 @@ export default async function Campaigns({ searchParams }: { searchParams: Promis
 
   return (
     <div className="space-y-8">
-      <PageHero Icon={Flame} tone="pink" title="Campaigns" sub="300 public campaigns for every career and every curiosity. Pick one, climb the leaderboard and earn a certificate. The best of each campaign also win prizes.">
+      <PageHero Icon={Flame} tone="pink" title="Campaigns" sub={`${all.length} public campaigns for every career and every curiosity. Pick one, climb the leaderboard and earn a certificate. The best of each campaign also win prizes.`}>
         <Link href="#browse" className="btn"><Swords size={16} />Find my campaign</Link>
       </PageHero>
+
+      {admin && (status.noOrganiser || status.waiting.length > 0) && (
+        <div role="note" className="card border border-amber-400/50 p-4 text-sm">
+          {status.noOrganiser
+            ? <><b>No contests can be created here yet.</b> This database has no active admin user to own them. Create an admin and reload.</>
+            : <><b>{status.waiting.length} campaigns are hidden</b> because their subjects are not in this database yet. Run <code>deploy/seed-content.sh</code> on the server to load them.</>}
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatTile i={0} Icon={Flame} label="Campaigns" value={all.length} color={PALETTE.pink} />

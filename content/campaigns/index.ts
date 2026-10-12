@@ -6,8 +6,8 @@ import type { Row } from "./types";
 export type Reward = { cash: number; split: "winner" | "top3"; note: string };
 export type Campaign = { id: string; kind: "career" | "general" | "ai"; title: string; track: string; goal: number; days: number; hook: string; reward: Reward };
 
-const XP = "Every level you pass earns XP (150 XP per level).";
-const CERT = "Certificate for everyone who reaches the goal; Champion certificate for 1st.";
+export const XP = "Every level you pass earns XP (150 XP per level).";
+export const CERT = "Certificate for everyone who reaches the goal; Champion certificate for 1st.";
 
 /**
  * Reward ladder, by position in each list. Certificates are the default for every contest; money is rare and capped at $100.
