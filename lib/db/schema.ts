@@ -350,6 +350,29 @@ export const competitionMembers = sqliteTable(
   ],
 );
 
+// A record attempt: after a contest ends, anyone who can see it may start their own clock on the same goal ("gain N levels")
+// and try to beat the fastest finish. Progress is read from real exams; the result is written once, when the goal is reached.
+export const contestAttempts = sqliteTable(
+  "contest_attempts",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    competitionId: integer("competition_id").notNull().references(() => competitions.id),
+    userId: integer("user_id").notNull().references(() => users.id),
+    startedAt: integer("started_at").notNull().default(now),
+    startLevel: integer("start_level").notNull(), // level held when the clock started; only levels passed after count
+    target: integer("target").notNull(), // levels to gain (the contest goal, capped at Titan)
+    // active: clock running. finished: goal reached, durationSec is final. abandoned: the person stopped. expired: ran out of time.
+    status: text("status", { enum: ["active", "finished", "abandoned", "expired"] }).notNull().default("active"),
+    finishedAt: integer("finished_at"),
+    durationSec: integer("duration_sec"),
+  },
+  (t) => [
+    index("ca_competition").on(t.competitionId),
+    index("ca_user").on(t.userId, t.competitionId),
+    uniqueIndex("ca_one_active").on(t.competitionId, t.userId).where(sql`status = 'active'`),
+  ],
+);
+
 // Emails invited to a contest before they have an account. Turned into real invitations when the account is created.
 export const competitionEmailInvites = sqliteTable(
   "competition_email_invites",

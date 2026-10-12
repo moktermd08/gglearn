@@ -15,6 +15,9 @@ import { Competitor } from "@/components/Competitor";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import InviteForm from "./invite-form";
 import TwistForm from "./twist-form";
+import { TimeBoard } from "./time-board";
+import { attemptStart, attemptView, attemptsOf, hallOfFame, settleAttempts } from "@/lib/records";
+import { openTo } from "@/lib/paths";
 import { PALETTE, StatTile } from "@/components/charts";
 import { Podium } from "@/components/Podium";
 import { Ring } from "@/components/Ring";
@@ -66,13 +69,19 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
   const pay = payouts(c, rows), finishers = finishersOf(rows);
   const myCert = user ? db.select().from(competitionCerts).where(and(eq(competitionCerts.competitionId, c.id), eq(competitionCerts.userId, user.id))).get() : undefined;
   const canClaim = !!user && state === "finished" && !myCert && finishers.some((r) => r.userId === user.id);
+  if (state === "finished") settleAttempts(c, t); // close attempts that reached the goal or ran out of time, so the board only shows final times
+  const board = hallOfFame(c, rows, members, !!user);
+  const myAttempts = user ? attemptsOf(c, user.id) : [];
+  const running = myAttempts.find((a) => a.status === "active");
+  const activeAttempt = running ? attemptView(c, running, t) : null;
+  const canChallengeNow = !!user && state === "finished" && openTo(user.audience, track.audience) && attemptStart(user.id, c, t).target > 0;
   const accent = artFor(track.slug, track.name, track.kind).color;
   const elapsed = state === "finished" ? 1 : Math.min(1, Math.max(0, (t - c.startsAt) / Math.max(1, c.endsAt - c.startsAt)));
   const leader = finishers[0] ?? rows.find((r) => !r.isBot && r.gained > 0);
 
   return (
     <div className="space-y-6">
-      {state === "live" && <AutoRefresh />}
+      {(state === "live" || activeAttempt) && <AutoRefresh seconds={activeAttempt ? 20 : 30} />}
 
       <header className="card pop relative space-y-2 overflow-hidden p-6" style={{ background: `linear-gradient(120deg, ${accent}26, #ffffff 60%)` }}>
         <div className="absolute right-4 top-4 flex items-center gap-4 sm:right-5 sm:top-5"><SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={56} className="shadow-lg" />{state !== "canceled" && <Ring pct={elapsed} label={`${Math.round(elapsed * 100)}%`} sub="of time" size={84} color={state === "finished" ? "#94a3b8" : "#10b981"} className="hidden sm:inline-grid" />}</div>
@@ -250,6 +259,11 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
           Bots: a fixed simulated schedule. Practice XP counts by UTC day.
         </p>
       </section>
+
+      {(state === "live" || state === "finished") && (
+        <TimeBoard c={c} state={state} board={board} rows={rows} t={t} userId={user?.id ?? null} isMember={mine?.status === "joined"} canChallengeNow={canChallengeNow}
+          trackSlug={track.slug} active={activeAttempt} myAttempts={myAttempts} />
+      )}
 
       <section className="flex flex-wrap items-start gap-4">
         {!user && c.visibility === "public" && !over && <p className="card p-4 text-sm"><Link href="/login" className="underline">Sign in</Link> to join this contest.</p>}
