@@ -4,6 +4,7 @@ import { CalendarDays, Clock, Crown, Flame, Info, Medal, Target, Trophy } from "
 import { PageHero, PALETTE, StatTile } from "@/components/charts";
 import { Competitor } from "@/components/Competitor";
 import { requireUser } from "@/lib/auth";
+import { ShareButton } from "@/components/ShareButton";
 import { db, enrollments, seasonResults, tracks, users } from "@/lib/db";
 import { POINTS_PER_DAY, POINTS_PER_LEVEL, type Kind, type Period, type Row, closedPeriods, medalOf, periodAt, periodByKey, resultsFor, settleRecent, shortName, standings, timeLeft, winnersOf } from "@/lib/seasons";
 
@@ -143,7 +144,7 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
           <h2 className="mb-2 flex items-center gap-2 text-lg font-bold"><Medal size={18} className="text-amber-300" />Your results</h2>
           {history.length === 0 ? <p className="text-sm text-slate-400">Finish a season with points to see your results here.</p> : (
             <ul className="space-y-1.5 text-sm">{history.map((h) => (
-              <li key={`${h.kind}${h.key}`} className="flex items-center gap-2"><span className="w-7 text-center" aria-hidden>{medalOf(h.rank) ?? "·"}</span><span className="min-w-0 flex-1 truncate">{h.kind === "week" ? `Week ${h.key.slice(5)} ${h.key.slice(0, 4)}` : h.key}</span><span className="text-slate-400">#{h.rank} of {h.players}</span><span className="w-14 text-right font-bold">{h.points}</span></li>
+              <li key={`${h.kind}${h.key}`} className="flex items-center gap-2"><span className="w-7 text-center" aria-hidden>{medalOf(h.rank) ?? "·"}</span><span className="min-w-0 flex-1 truncate">{h.kind === "week" ? `Week ${h.key.slice(5)} ${h.key.slice(0, 4)}` : h.key}</span><span className="text-slate-400">#{h.rank} of {h.players}</span><span className="w-14 text-right font-bold">{h.points}</span><ShareButton kind="season" refKey={`${h.kind}:${h.key}`} label="Share" /></li>
             ))}</ul>
           )}
           {past[0] && (() => { const w = winnersOf(kind, past[0].key, me.audience); return w.length > 0 ? <p className="mt-3 border-t border-black/5 pt-3 text-xs text-slate-400">Last {kind}&apos;s champion: <b>{shortName(w[0].name)}</b> with {w[0].points} points.</p> : null; })()}

@@ -3,6 +3,10 @@ import { Flame, Medal, Sparkles, Trophy } from "lucide-react";
 import { PageHero, PALETTE, StatTile } from "@/components/charts";
 import { BadgeTile, PlayerLevelCard, StreakCard, TIER, badgeDate } from "@/components/Achievements";
 import { requireUser } from "@/lib/auth";
+import { ShareButton } from "@/components/ShareButton";
+import { db, shareCards } from "@/lib/db";
+import { and, eq, isNull } from "drizzle-orm";
+import { revokeShare } from "@/app/share/actions";
 import { BADGE_GROUPS, PLAYER_TITLES, progressionFor, xpToReach } from "@/lib/progression";
 
 export const metadata = { title: "Achievements — gglearn" };
@@ -11,6 +15,7 @@ export const dynamic = "force-dynamic";
 export default async function Achievements() {
   const me = await requireUser();
   const p = progressionFor(me.id);
+  const shared = db.select().from(shareCards).where(and(eq(shareCards.userId, me.id), isNull(shareCards.revokedAt))).all();
   const next = p.badges.filter((b) => !b.earned).sort((a, b) => b.pct - a.pct).slice(0, 3);
 
   return (
@@ -20,8 +25,8 @@ export default async function Achievements() {
       </PageHero>
 
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
-        <section className="card p-5" aria-label="Player level"><PlayerLevelCard p={p.player} /></section>
-        <section className="card p-5" aria-label="Streak"><StreakCard s={p.streak} /></section>
+        <section className="card p-5" aria-label="Player level"><PlayerLevelCard p={p.player} /><ShareButton kind="level" refKey="level" label="Share my level" className="mt-3" /></section>
+        <section className="card p-5" aria-label="Streak"><StreakCard s={p.streak} />{p.streak.longest >= 3 && <ShareButton kind="streak" refKey="streak" label="Share my streak" className="mt-3" />}</section>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -54,12 +59,22 @@ export default async function Achievements() {
                 <div className="flex flex-wrap items-center gap-2"><span className="text-sm font-bold">{b.name}</span><span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">{TIER[b.tier].label}</span></div>
                 <div className="text-xs text-slate-400">{b.desc}</div>
                 {b.earned
-                  ? <div className="mt-1 text-[11px] font-semibold text-emerald-300">Earned{b.earnedAt ? ` ${badgeDate(b.earnedAt)}` : ""}</div>
+                  ? <div className="mt-1 flex items-center gap-3"><span className="text-[11px] font-semibold text-emerald-300">Earned{b.earnedAt ? ` ${badgeDate(b.earnedAt)}` : ""}</span><ShareButton kind="badge" refKey={b.key} /></div>
                   : <><div className="bar mt-2 !h-1.5"><i style={{ width: `${b.pct * 100}%` }} /></div><div className="mt-1 text-[11px] text-slate-400">{Math.min(b.value, b.target).toLocaleString("en-GB")} / {b.target.toLocaleString("en-GB")}</div></>}
               </div>
             </li>))}</ul>
         </section>
       ))}
+
+      {shared.length > 0 && (
+        <section className="card p-5" aria-label="Your shared cards">
+          <h2 className="mb-2 text-lg font-bold">Your shared cards</h2>
+          <p className="mb-3 text-xs text-slate-400">These are public to anyone with the link, showing your first name and initial. Stop sharing to take one down.</p>
+          <ul className="divide-y divide-black/5">{shared.map((s) => (
+            <li key={s.id} className="flex items-center gap-3 py-2 text-sm"><Link href={`/s/${s.code}`} className="min-w-0 flex-1 truncate font-semibold hover:underline">{s.title}: {s.headline}</Link><form action={revokeShare.bind(null, s.id)}><button className="text-xs text-slate-400 underline" type="submit">Stop sharing</button></form></li>
+          ))}</ul>
+        </section>
+      )}
 
       <section className="card p-5" aria-label="How levels work">
         <h2 className="mb-2 text-lg font-bold">How player levels work</h2>
