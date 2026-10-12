@@ -3,7 +3,7 @@ import { randomInt } from "node:crypto";
 import { and, asc, eq, gte, inArray, sql } from "drizzle-orm";
 import { answers, competitionMembers, competitions, contestTwists, db, questions, runs } from "@/lib/db";
 import { baselineLevel, now, stateOf } from "@/lib/competitions";
-import { MAX_LEVEL } from "@/lib/levels";
+import { MAX_LEVEL, QUESTIONS_PER_RUN } from "@/lib/levels";
 
 /**
  * The Architect twist. In a contest that turned it on, each level draws one racer at random. That racer is shown one pool
@@ -41,12 +41,20 @@ function racers(c: Competition) {
   });
 }
 
+/** Which racers have begun which levels since the contest opened: one query, so a sync does not re-ask per level. */
+function startedLevels(c: Competition, racerIds: number[]) {
+  const seen = new Map<number, Set<number>>(); // level -> racers who started it
+  if (!racerIds.length) return seen;
+  const rows = db.selectDistinct({ level: runs.level, userId: runs.userId }).from(runs)
+    .where(and(inArray(runs.userId, racerIds), eq(runs.trackId, c.trackId), gte(runs.startedAt, c.startsAt))).all();
+  for (const r of rows) seen.set(r.level, (seen.get(r.level) ?? new Set()).add(r.userId));
+  return seen;
+}
 /** True when someone other than the Architect has already begun this level since the contest opened. */
+const startedBy = (seen: Map<number, Set<number>>, level: number, architectId: number) =>
+  [...(seen.get(level) ?? [])].some((id) => id !== architectId);
 function started(c: Competition, level: number, architectId: number) {
-  const ids = racers(c).map((r) => r.userId).filter((id) => id !== architectId);
-  if (!ids.length) return false;
-  return !!db.select({ id: runs.id }).from(runs)
-    .where(and(inArray(runs.userId, ids), eq(runs.trackId, c.trackId), eq(runs.level, level), gte(runs.startedAt, c.startsAt))).get();
+  return startedBy(startedLevels(c, racers(c).map((r) => r.userId)), level, architectId);
 }
 
 /**
@@ -56,16 +64,17 @@ function started(c: Competition, level: number, architectId: number) {
 export function syncTwists(c: Competition) {
   if (!twistOn(c) || c.canceledAt) return;
   const live = stateOf(c) === "live";
-  const joined = new Set(racers(c).map((r) => r.userId));
+  const people = racers(c);
+  const joined = new Set(people.map((r) => r.userId));
+  const seen = startedLevels(c, people.map((r) => r.userId));
 
   for (const t of db.select().from(contestTwists).where(and(eq(contestTwists.competitionId, c.id), inArray(contestTwists.status, ["offered", "pending"]))).all()) {
-    if (!live || !joined.has(t.architectId) || started(c, t.level, t.architectId)) {
+    if (!live || !joined.has(t.architectId) || startedBy(seen, t.level, t.architectId)) {
       db.update(contestTwists).set({ status: "expired", decidedAt: now() }).where(and(eq(contestTwists.id, t.id), inArray(contestTwists.status, ["offered", "pending"]))).run();
     }
   }
   if (!live) return;
 
-  const people = racers(c);
   const have = db.select().from(contestTwists).where(eq(contestTwists.competitionId, c.id)).all();
   const done = new Set(have.map((t) => t.level));
   const load = new Map<number, number>();
@@ -75,9 +84,12 @@ export function syncTwists(c: Competition) {
     if (done.has(level)) continue;
     const ahead = people.filter((r) => level >= r.from && level <= r.to);
     if (ahead.length < 2) continue; // a twist needs an Architect and at least one rival to face it
-    if (started(c, level, -1)) continue; // someone is already on this level: too late to change it fairly
-    const pool = db.select({ id: questions.id }).from(questions)
-      .where(and(eq(questions.trackId, c.trackId), eq(questions.level, level), eq(questions.status, "active"), eq(questions.type, "mcq"), sql`${questions.options} is not null`)).all();
+    if (startedBy(seen, level, -1)) continue; // someone is already on this level: too late to change it fairly
+    const active = db.select({ id: questions.id, type: questions.type, options: questions.options }).from(questions)
+      .where(and(eq(questions.trackId, c.trackId), eq(questions.level, level), eq(questions.status, "active"))).all();
+    // a twist replaces one question, so the level must be able to fill a whole exam without it; otherwise it could become the exam
+    if (active.length < QUESTIONS_PER_RUN) continue;
+    const pool = active.filter((q) => q.type === "mcq" && q.options);
     if (!pool.length) continue;
     // fewest turns so far goes first, so a small contest rotates; ties are broken by the server's random draw
     const least = Math.min(...ahead.map((r) => load.get(r.userId) ?? 0));
@@ -242,11 +254,14 @@ export function reviewTwist(twistId: number, organiserId: number, action: "appro
 export function twistResults(competitionId: number) {
   const rows = db.select().from(contestTwists).where(and(eq(contestTwists.competitionId, competitionId), eq(contestTwists.status, "approved"))).orderBy(asc(contestTwists.level)).all();
   return rows.map((t) => {
-    const got = t.twistQuestionId
-      ? db.select({ score: answers.score }).from(answers).innerJoin(runs, eq(runs.id, answers.runId))
-          .where(and(eq(answers.questionId, t.twistQuestionId), sql`${runs.finishedAt} is not null`)).all()
+    const all = t.twistQuestionId
+      ? db.select({ userId: runs.userId, score: answers.score }).from(answers).innerJoin(runs, eq(runs.id, answers.runId))
+          .where(and(eq(answers.questionId, t.twistQuestionId), sql`${runs.finishedAt} is not null`)).orderBy(answers.id).all()
       : [];
-    return { twist: t, tried: got.length, right: got.filter((g) => g.score >= OK_SCORE).length };
+    // people, not attempts: each person counts once, by their first try, so a retake cannot inflate "missed it"
+    const first = new Map<number, number>();
+    for (const g of all) if (!first.has(g.userId)) first.set(g.userId, g.score);
+    return { twist: t, tried: first.size, right: [...first.values()].filter((s) => s >= OK_SCORE).length };
   });
 }
 

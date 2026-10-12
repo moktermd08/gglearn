@@ -1,6 +1,6 @@
 "use client";
 import { startTransition, useActionState, useMemo, useState, type ReactNode } from "react";
-import { Award, Bot, CalendarClock, Check, Coins, Eye, Flag, Globe, Lock, Minus, Plus, Swords, Target, Timer, Trophy, TriangleAlert, Users } from "lucide-react";
+import { Award, Bot, CalendarClock, Check, Coins, Eye, Flag, Globe, Lock, Minus, Plus, Shuffle, Swords, Target, Timer, Trophy, TriangleAlert, Users } from "lucide-react";
 import { createCompetition, type CreateState } from "../actions";
 import { BOT_TIERS } from "@/lib/bots";
 import { CURRENCIES, PRIZE_SPLIT_LABEL } from "@/lib/competitions-shared";
@@ -129,6 +129,18 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
               <div><label className={label} htmlFor="prizeNote">Who pays, and when? (required with a prize)</label><input id="prizeNote" name="prizeNote" maxLength={200} className={`${input} mt-1`} /></div>
             </div>
           )}
+        </section>
+
+        <section className={section}>
+          {head(Shuffle, "bg-fuchsia-500/15 text-fuchsia-300", 5, "Architect twist (optional)")}
+          <label className="flex items-start gap-2 text-sm"><input type="checkbox" name="twist" className="mt-1" />
+            <span><b>Let a random racer rewrite one question for the others.</b> For each level, one person in the race is drawn by the server and shown one multiple-choice question,
+              which they may reword for their rivals. They can also just pass, and then nothing changes.</span></label>
+          <ul className="list-disc space-y-1 pl-9 text-xs text-slate-400">
+            <li>It can never decide the race: at most 1 question in 10 per level, never counted in the ranking, and the Architect does not face their own twist.</li>
+            <li>Same format and number of options, no links, and an AI referee checks that exactly one answer is right before it goes live. If the referee is down, you approve it, and you can veto any twist.</li>
+            <li>It locks the moment a rival starts that level, so everyone faces it or nobody does. Racers only see who the Architect was after the contest ends.</li>
+          </ul>
         </section>
       </div>
 
