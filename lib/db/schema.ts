@@ -146,7 +146,7 @@ export const questions = sqliteTable(
     weight: integer("weight").notNull().default(10),
     timeSec: integer("time_sec").notNull().default(60),
     knowledgeItemId: integer("knowledge_item_id").references(() => knowledgeItems.id),
-    source: text("source", { enum: ["legacy-trialtest", "authored", "ai", "questions-repo", "dynamic"] }).notNull().default("authored"),
+    source: text("source", { enum: ["legacy-trialtest", "authored", "ai", "questions-repo", "dynamic", "twist"] }).notNull().default("authored"),
     // "generated" = a one-off snapshot of a dynamic question (lib/dynamic); never part of the stored pools
     status: text("status", { enum: ["active", "review", "retired", "generated"] }).notNull().default("active"),
     version: integer("version").notNull().default(1),
@@ -295,9 +295,36 @@ export const competitions = sqliteTable("competitions", {
   prizeSplit: text("prize_split", { enum: ["winner", "top3"] }).notNull().default("winner"),
   prizeNote: text("prize_note").notNull().default(""),
   prizePaidAt: integer("prize_paid_at"),
+  // "on": one randomly chosen racer per level may amend one question for the others (see lib/twists.ts). Text, not a boolean:
+  // drizzle-kit drops falsy defaults, which breaks adding a NOT NULL column to a table that already has rows.
+  twist: text("twist", { enum: ["off", "on"] }).notNull().default("off"),
   canceledAt: integer("canceled_at"),
   createdAt: integer("created_at").notNull().default(now),
 });
+
+// The Architect twist: for each level of a contest, one racer is drawn at random and may rewrite ONE question for everyone else.
+// The twist is a separate question row (status "generated"), so the stored pool is never edited. Rows are created server-side only.
+export const contestTwists = sqliteTable(
+  "contest_twists",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    competitionId: integer("competition_id").notNull().references(() => competitions.id),
+    level: integer("level").notNull(),
+    architectId: integer("architect_id").notNull().references(() => users.id),
+    // the pool question the Architect was shown and may rewrite; it is withheld from the Architect's own exam
+    baseQuestionId: integer("base_question_id").notNull().references(() => questions.id),
+    // offered: waiting for the Architect. pending: written, waiting for the organiser (AI check unavailable).
+    // approved: live for racers who start the level from now on. declined: the Architect passed. rejected: failed the check.
+    // vetoed: organiser pulled it. expired: someone started the level first, or the Architect left.
+    status: text("status", { enum: ["offered", "pending", "approved", "declined", "rejected", "vetoed", "expired"] }).notNull().default("offered"),
+    twistQuestionId: integer("twist_question_id").references(() => questions.id),
+    attempts: integer("attempts").notNull().default(0),
+    note: text("note").notNull().default(""),
+    createdAt: integer("created_at").notNull().default(now),
+    decidedAt: integer("decided_at"),
+  },
+  (t) => [uniqueIndex("twist_level").on(t.competitionId, t.level), index("twist_architect").on(t.architectId)],
+);
 
 export const competitionMembers = sqliteTable(
   "competition_members",

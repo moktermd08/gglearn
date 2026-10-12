@@ -67,6 +67,7 @@ export type NewContest = {
   title: string; description: string; trackId: number; goalLevels: number; startInDays: number; days: number; maxHumans: number;
   visibility: "public" | "private"; openJoin: boolean; consent: boolean; bots: BotTier[]; emails: string;
   prizeAmount: number; prizeCurrency: string; prizeSplit: "winner" | "top3"; prizeNote: string;
+  twist?: boolean; // Architect twist, see lib/twists.ts
 };
 
 export const newContestSchema = z.object({
@@ -109,6 +110,7 @@ export function createContest(me: { id: number }, v: NewContest): { slug: string
       joinPolicy: isPublic && v.openJoin ? "open" : "invite",
       goalLevels: v.goalLevels, startsAt, endsAt: startsAt + v.days * 86400, maxHumans: v.maxHumans,
       prizeAmount: v.prizeAmount, prizeCurrency: v.prizeCurrency, prizeSplit: v.prizeSplit, prizeNote: v.prizeNote.trim(),
+      twist: v.twist ? "on" : "off",
     }).returning().get();
     tx.insert(competitionMembers).values({ competitionId: c.id, kind: "human", userId: me.id, status: "joined", joinedAt: now() }).run();
     if (bots.length) {
