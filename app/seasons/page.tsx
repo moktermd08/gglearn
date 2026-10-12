@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { and, asc, eq } from "drizzle-orm";
-import { CalendarDays, Clock, Crown, Flame, Info, Medal, Target, Trophy } from "lucide-react";
+import { Building2, CalendarDays, Clock, Crown, Flame, Info, Medal, Target, Trophy, UserRound, Users } from "lucide-react";
 import { PageHero, PALETTE, StatTile } from "@/components/charts";
 import { Competitor } from "@/components/Competitor";
 import { requireUser } from "@/lib/auth";
+import { MIN_MEMBERS, groupsOf, rankGroups, type GroupKind } from "@/lib/groups";
 import { ShareButton } from "@/components/ShareButton";
 import { db, enrollments, seasonResults, tracks, users } from "@/lib/db";
 import { POINTS_PER_DAY, POINTS_PER_LEVEL, type Kind, type Period, type Row, closedPeriods, medalOf, periodAt, periodByKey, resultsFor, settleRecent, shortName, standings, timeLeft, winnersOf } from "@/lib/seasons";
@@ -11,7 +12,7 @@ import { POINTS_PER_DAY, POINTS_PER_LEVEL, type Kind, type Period, type Row, clo
 export const metadata = { title: "Seasons — gglearn" };
 export const dynamic = "force-dynamic";
 
-type Q = { kind?: string; p?: string; track?: string };
+type Q = { kind?: string; p?: string; track?: string; view?: string; g?: string };
 const TOP = 25;
 const now = () => Math.floor(Date.now() / 1000);
 
@@ -51,7 +52,15 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
   const top = rows.slice(0, TOP), podium = rows.slice(0, 3);
   const history = resultsFor(me.id, 8);
   const left = period.end - now();
-  const base = { kind: kind === "week" ? undefined : kind, track: track?.slug } as Q;
+  const VIEWS = { teams: ["team", "Teams", Users], companies: ["company", "Companies", Building2], roles: ["role", "Roles", UserRound] } as const;
+  const view = me.audience === "staff" && q.view && q.view in VIEWS ? (q.view as keyof typeof VIEWS) : undefined;
+  const groupKind: GroupKind | null = view ? VIEWS[view][0] : null;
+  const groups = groupKind ? groupsOf(groupKind) : [];
+  const ranked = groupKind ? rankGroups(groups, rows, me.id) : [];
+  const selected = groups.find((g) => g.key === q.g);
+  const members = selected ? rows.filter((r) => selected.memberIds.includes(r.userId)).map((r, i) => ({ ...r, rank: i + 1 })) : [];
+  const myGroups = ranked.filter((g) => g.mine);
+  const base = { kind: kind === "week" ? undefined : kind, track: track?.slug, view } as Q;
 
   return (
     <div className="space-y-8">
@@ -60,16 +69,22 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
       </PageHero>
 
       <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Season length">
-        <Chip to={href({ track: q.track }, {})} on={kind === "week"}>Weekly</Chip>
-        <Chip to={href({ track: q.track }, { kind: "month" })} on={kind === "month"}>Monthly</Chip>
+        <Chip to={href({ track: q.track, view }, {})} on={kind === "week"}>Weekly</Chip>
+        <Chip to={href({ track: q.track, view }, { kind: "month" })} on={kind === "month"}>Monthly</Chip>
         <span className="mx-1 hidden h-5 w-px bg-slate-600/50 sm:block" />
         <Chip to={href({ ...base }, { p: undefined })} on={period.key === current.key}>This {kind}</Chip>
         {past.map((p) => <Chip key={p.key} to={href({ ...base }, { p: p.key })} on={period.key === p.key}>{kind === "week" ? p.key.slice(5) : p.label.split(" ")[0].slice(0, 3)}</Chip>)}
       </div>
+      {me.audience === "staff" && (
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Who to rank">
+          <Chip to={href({ ...base }, { view: undefined, g: undefined })} on={!view}><UserRound size={13} />People</Chip>
+          {(Object.keys(VIEWS) as (keyof typeof VIEWS)[]).map((k) => { const Icon = VIEWS[k][2]; return <Chip key={k} to={href({ ...base }, { view: k, g: undefined })} on={view === k}><Icon size={13} />{VIEWS[k][1]}</Chip>; })}
+        </div>
+      )}
       {mine.length > 0 && (
         <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Subject">
-          <Chip to={href({ kind: q.kind, p: q.p }, { track: undefined })} on={!track}>All subjects</Chip>
-          {mine.slice(0, 8).map((t) => <Chip key={t.id} to={href({ kind: q.kind, p: q.p }, { track: t.slug })} on={track?.id === t.id}>{t.name.replace(/:.*$/, "")}</Chip>)}
+          <Chip to={href({ kind: q.kind, p: q.p, view }, { track: undefined })} on={!track}>All subjects</Chip>
+          {mine.slice(0, 8).map((t) => <Chip key={t.id} to={href({ kind: q.kind, p: q.p, view }, { track: t.slug })} on={track?.id === t.id}>{t.name.replace(/:.*$/, "")}</Chip>)}
         </div>
       )}
 
@@ -99,6 +114,51 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
         {!final && !hidden && meRow?.rank === 1 && <p className="mt-3 text-sm font-bold text-amber-300">You are first. Keep going.</p>}
       </section>
 
+      {groupKind && (
+        <section aria-label={`${VIEWS[view!][1]} leaderboard`} className="space-y-4">
+          {myGroups.length > 0 && !selected && (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-label="Yours">
+              {myGroups.slice(0, 3).map((g) => (
+                <Link key={g.key} href={href({ ...base }, { g: g.key })} className="card card-hover p-4">
+                  <div className="text-xs font-bold uppercase tracking-wider text-pink-300">Yours</div>
+                  <div className="truncate font-bold">{g.name}</div>
+                  <div className="text-sm text-slate-400">{g.rank ? `#${g.rank} of ${ranked.filter((x) => x.rank).length}` : `Not ranked (needs ${MIN_MEMBERS}+ members and some points)`} · {g.avg} avg</div>
+                </Link>))}
+            </div>
+          )}
+          {selected ? (
+            <div className="space-y-3">
+              <Link href={href({ ...base }, { g: undefined })} className="text-sm font-bold text-sky-300">All {VIEWS[view!][1].toLowerCase()}</Link>
+              <div className="card p-5"><h2 className="text-lg font-extrabold">{selected.name}</h2><p className="text-sm text-slate-400">{selected.sub} · {selected.memberIds.length} members · {members.length} scored this {kind}</p></div>
+              {members.length === 0 ? <div className="card p-6 text-center text-slate-300">Nobody in this group has scored yet.</div> : (
+                <ol className="card divide-y divide-black/5 overflow-hidden">{members.slice(0, TOP).map((r) => (
+                  <li key={r.userId} className={`flex items-center gap-3 px-4 py-2.5 ${r.userId === me.id ? "bg-pink-500/10" : ""}`}>
+                    <span className="w-8 shrink-0 text-center text-sm font-extrabold text-slate-400">{medalOf(r.rank) ?? r.rank}</span>
+                    <Competitor isBot={false} seed={`u${r.userId}`} name={shortName(r.name)} size={32} />
+                    <span className="min-w-0 flex-1 truncate text-sm font-semibold">{shortName(r.name)}{r.userId === me.id && <span className="ml-1.5 text-xs font-bold text-pink-300">you</span>}</span>
+                    <span className="hidden shrink-0 text-xs text-slate-400 sm:block">{r.levels} lvl · {r.days} day{r.days === 1 ? "" : "s"}</span>
+                    <span className="w-16 shrink-0 text-right text-sm font-extrabold">{r.points}</span>
+                  </li>))}</ol>
+              )}
+            </div>
+          ) : ranked.length === 0 ? (
+            <div className="card p-8 text-center text-slate-300">{view === "roles" ? "No job roles are set yet." : `No ${VIEWS[view!][1].toLowerCase()} are set up yet. An admin assigns people to ${view === "companies" ? "a company" : "a brand or project"} on the People page.`}</div>
+          ) : (
+            <ol className="card divide-y divide-black/5 overflow-hidden">
+              {ranked.map((g) => (
+                <li key={g.key}><Link href={href({ ...base }, { g: g.key })} className={`flex items-center gap-3 px-4 py-3 transition hover:bg-black/[.03] ${g.mine ? "bg-pink-500/10" : ""} ${g.rank ? "" : "opacity-60"}`}>
+                  <span className="w-8 shrink-0 text-center text-sm font-extrabold text-slate-400">{g.rank ? medalOf(g.rank) ?? g.rank : "·"}</span>
+                  <span className="min-w-0 flex-1"><span className="block truncate text-sm font-bold">{g.name}{g.mine && <span className="ml-1.5 text-xs font-bold text-pink-300">your group</span>}</span><span className="block truncate text-xs text-slate-400">{g.sub} · {g.members} member{g.members === 1 ? "" : "s"} · {g.active} scored · {g.total} pts total</span></span>
+                  <span className="shrink-0 text-right"><span className="block text-sm font-extrabold">{g.avg}</span><span className="block text-[10px] uppercase tracking-wider text-slate-400">avg / member</span></span>
+                </Link></li>))}
+            </ol>
+          )}
+          <p className="text-xs text-slate-400">Groups are ranked by average points per member, so size does not decide it; members with no points count as zero. A group needs {MIN_MEMBERS}+ members to be ranked.{final && " Past seasons use today's group membership."}</p>
+        </section>
+      )}
+
+      {!groupKind && (
+        <>
       {podium.length > 0 && (
         <section aria-label="Top three" className="grid gap-3 sm:grid-cols-3">
           {podium.map((r, i) => (
@@ -129,6 +189,9 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
           </ol>
         )}
       </section>
+
+        </>
+      )}
 
       <div className="grid gap-3 lg:grid-cols-2">
         <section className="card p-5" aria-label="How points work">
