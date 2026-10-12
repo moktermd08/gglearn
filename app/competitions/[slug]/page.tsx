@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { competitionCerts, competitionEmailInvites, competitionMembers, competitions, contestTwists, db, questions, tracks, users } from "@/lib/db";
 import { LIMITS, MAX_ATTEMPTS, syncTwists, twistOn, twistResults } from "@/lib/twists";
 import { currentUser } from "@/lib/auth";
+import { levelsPassed } from "@/lib/progress";
 import { canView, finishersOf, modeLabel, now, payouts, span, standings, stateOf, type Standing } from "@/lib/competitions";
 import { PRIZE_SPLIT_LABEL, money } from "@/lib/competitions-shared";
 import { BOT_STYLES } from "@/lib/bots";
@@ -44,11 +45,15 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
   const { rows, events } = standings(c, members, t);
 
   // Architect twist: draw Architects, close stale offers, then collect what this viewer may see
-  if (twistOn(c)) syncTwists(c);
+  // only people in the contest trigger the draw, so an anonymous page view never writes
+  const racing = !!user && members.some((m) => m.userId === user.id && m.status === "joined");
+  if (twistOn(c) && racing) syncTwists(c);
   const twists = twistOn(c) ? db.select().from(contestTwists).where(eq(contestTwists.competitionId, c.id)).orderBy(contestTwists.level).all() : [];
   const myTwist = user ? twists.find((x) => x.architectId === user.id && x.status === "offered") : undefined;
   const myBase = myTwist ? db.select().from(questions).where(eq(questions.id, myTwist.baseQuestionId)).get() : undefined;
   const waiting = user && user.id === c.createdBy ? twists.filter((x) => x.status === "pending" || x.status === "approved") : [];
+  // an organiser who is racing must not read a twist before facing that level: its text stays hidden until they have passed it
+  const organiserPassed = racing && user && waiting.length ? levelsPassed(user.id, c.trackId) : 0;
   const reveal = state === "finished" && twistOn(c) ? twistResults(c.id) : [];
   const names = new Map((twists.length ? db.select({ id: users.id, name: users.name }).from(users).where(inArray(users.id, twists.map((x) => x.architectId))).all() : []).map((u) => [u.id, u.name]));
 
@@ -159,23 +164,28 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
             <div className="space-y-2 text-sm">
               <h3 className="font-semibold">Organiser: twists that need you</h3>
               {waiting.map((x) => {
-                const q = x.twistQuestionId ? db.select().from(questions).where(eq(questions.id, x.twistQuestionId)).get() : undefined;
-                if (!q) return null;
+                const hidden = racing && organiserPassed < x.level;
+                const q = !hidden && x.twistQuestionId ? db.select().from(questions).where(eq(questions.id, x.twistQuestionId)).get() : undefined;
+                if (!hidden && !q) return null;
                 return (
                   <div key={x.id} className="space-y-1 rounded-lg border border-black/10 p-3">
                     <div className="text-xs text-slate-400">Level {x.level} · {x.status === "pending" ? "waiting for you (the AI referee was unavailable)" : "live"}</div>
-                    <div className="font-medium">{q.prompt}</div>
-                    {q.code && <pre className="overflow-x-auto rounded bg-black/5 p-2 text-xs">{q.code}</pre>}
-                    <ul className="text-slate-300">{q.options?.map((o) => <li key={o.key}><span className="font-mono font-bold">{o.key.toUpperCase()}</span> {o.text}{o.key === q.answer && <span className="ml-1 text-emerald-300">(correct)</span>}</li>)}</ul>
+                    {q ? (
+                      <>
+                        <div className="font-medium">{q.prompt}</div>
+                        {q.code && <pre className="overflow-x-auto rounded bg-black/5 p-2 text-xs">{q.code}</pre>}
+                        <ul className="text-slate-300">{q.options?.map((o) => <li key={o.key}><span className="font-mono font-bold">{o.key.toUpperCase()}</span> {o.text}{o.key === q.answer && <span className="ml-1 text-emerald-300">(correct)</span>}</li>)}</ul>
+                      </>
+                    ) : <p className="text-slate-400">Hidden while you are racing: you can read it once you have passed level {x.level}, so you cannot see it before you face it.</p>}
                     <div className="flex gap-4 pt-1">
-                      {x.status === "pending" && <form action={reviewTwistAction.bind(null, x.id, "approve")}><button className="btn !py-1">Approve</button></form>}
-                      {x.status === "pending" && <form action={reviewTwistAction.bind(null, x.id, "reject")}><button className="text-slate-400 underline">Reject</button></form>}
+                      {x.status === "pending" && q && <form action={reviewTwistAction.bind(null, x.id, "approve")}><button className="btn !py-1">Approve</button></form>}
+                      {x.status === "pending" && q && <form action={reviewTwistAction.bind(null, x.id, "reject")}><button className="text-slate-400 underline">Reject</button></form>}
                       {x.status === "approved" && <form action={reviewTwistAction.bind(null, x.id, "veto")}><button className="text-rose-400 underline">Veto (new exams go back to normal)</button></form>}
                     </div>
                   </div>
                 );
               })}
-              <p className="text-xs text-slate-500">If you are racing, you are seeing these questions in advance. Consider handing the review to a co-organiser or leaving them unreviewed.</p>
+              <p className="text-xs text-slate-500">While you are racing, a twist stays hidden from you until you have passed its level. A twist waiting for review stays off until you can read it.</p>
             </div>
           )}
           {reveal.length > 0 && (
