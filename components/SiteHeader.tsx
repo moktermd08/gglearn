@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookMarked, Database, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound } from "lucide-react";
+import { BookMarked, Database, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound } from "lucide-react";
 import { logout, logoutEverywhere } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
@@ -31,6 +31,7 @@ export function SiteHeader({ user }: { user: User }) {
           {user && <NavLink href="/dashboard"><LayoutDashboard size={15} />My quest</NavLink>}
           {user && <NavLink href="/journey"><Mountain size={15} />My career</NavLink>}
           {user && <NavLink href="/start"><Rocket size={15} />Start a journey</NavLink>}
+          <NavLink href="/campaigns"><Flame size={15} />Campaigns</NavLink>
           <NavLink href="/competitions"><Trophy size={15} />Compete</NavLink>
           {staff && (
             <Dropdown prefix="/admin" label={<><ShieldCheck size={15} />Admin</>}>
@@ -60,6 +61,7 @@ export function SiteHeader({ user }: { user: User }) {
             {user && <Link href="/dashboard" className={mobile}><LayoutDashboard size={18} />My quest</Link>}
             {user && <Link href="/journey" className={mobile}><Mountain size={18} />My career</Link>}
             {user && <Link href="/start" className={mobile}><Rocket size={18} />Start a journey</Link>}
+            <Link href="/campaigns" className={mobile}><Flame size={18} />Campaigns</Link>
             <Link href="/competitions" className={mobile}><Trophy size={18} />Compete</Link>
             {staff && <div className="px-3 pb-1 pt-3 text-[11px] font-extrabold uppercase tracking-widest text-indigo-300">Admin</div>}
             {staff && ADMIN_LINKS.map(({ href, label, Icon }) => <Link key={href} href={href} className={mobile}><Icon size={18} />{label}</Link>)}
