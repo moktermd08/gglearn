@@ -1,6 +1,7 @@
 import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
+import { notify } from "@/lib/notifications";
 import { competitionEmailInvites, competitionMembers, competitions, db, enrollments, tracks, users } from "@/lib/db";
 import { openTo } from "@/lib/paths";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
@@ -31,7 +32,9 @@ export function inviteEmails(tx: Tx, competitionId: number, inviterId: number, r
   const emails = parseEmails(raw);
   if (!emails.length) return 0;
   const found = tx.select({ id: users.id, email: users.email }).from(users).where(and(inArray(users.email, emails), eq(users.status, "active"))).all();
+  const contest = tx.select({ slug: competitions.slug, title: competitions.title }).from(competitions).where(eq(competitions.id, competitionId)).get();
   for (const u of found) {
+    if (contest) notify(u.id, { key: `invite-${competitionId}`, kind: "contest", title: "You are invited to a contest", body: contest.title, href: `/competitions/${contest.slug}` }, { tx });
     tx.insert(competitionMembers).values({ competitionId, kind: "human", userId: u.id, status: "invited", invitedBy: inviterId })
       .onConflictDoUpdate({
         target: [competitionMembers.competitionId, competitionMembers.userId],

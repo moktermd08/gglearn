@@ -3,6 +3,7 @@ import "./globals.css";
 import { currentUser } from "@/lib/auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { unreadCount } from "@/lib/notifications";
 
 export const metadata: Metadata = {
   title: "gglearn — Training academy",
@@ -14,7 +15,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col antialiased">
-        <SiteHeader user={user} />
+        <SiteHeader user={user} unread={user ? unreadCount(user.id) : 0} />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
         <SiteFooter user={user} />
       </body>

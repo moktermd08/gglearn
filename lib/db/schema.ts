@@ -20,6 +20,8 @@ export const users = sqliteTable("users", {
   // the look this person picked for themselves and for their rival (see lib/avatars.ts); null = the default fighter / robot
   avatarMe: text("avatar_me"),
   avatarRival: text("avatar_rival"),
+  // "hide": left out of the weekly and monthly season boards (see lib/seasons.ts). Text, not a boolean, so it can be added to a table with rows.
+  seasonBoard: text("season_board", { enum: ["show", "hide"] }).notNull().default("show"),
   createdAt: integer("created_at").notNull().default(now),
 });
 
@@ -574,4 +576,71 @@ export const userBadges = sqliteTable(
     earnedAt: integer("earned_at").notNull().default(now),
   },
   (t) => [uniqueIndex("user_badge_unique").on(t.userId, t.key)],
+);
+
+// Weekly and monthly seasons. Standings are computed from exams and quests on read; once a season has ended its final standings
+// are written here once (season_closed marks it settled), so a finished season never changes. Ranks are within the person's audience.
+export const seasonClosed = sqliteTable(
+  "season_closed",
+  {
+    kind: text("kind", { enum: ["week", "month"] }).notNull(),
+    key: text("key").notNull(), // 2026-W41 or 2026-10
+    settledAt: integer("settled_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("season_closed_pk").on(t.kind, t.key)],
+);
+
+export const seasonResults = sqliteTable(
+  "season_results",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    kind: text("kind", { enum: ["week", "month"] }).notNull(),
+    key: text("key").notNull(),
+    userId: integer("user_id").notNull().references(() => users.id),
+    rank: integer("rank").notNull(),
+    points: integer("points").notNull(),
+    levels: integer("levels").notNull(),
+    days: integer("days").notNull(),
+    players: integer("players").notNull(), // how many people were ranked in that audience
+  },
+  (t) => [uniqueIndex("season_result_unique").on(t.kind, t.key, t.userId), index("season_result_user").on(t.userId)],
+);
+
+// In-app notifications. `key` makes each event idempotent per person (one badge, one season result, one level), so the code that
+// notices an event may run any number of times. Rows created when someone first opens a feature are born read (no backfill spam).
+export const notifications = sqliteTable(
+  "notifications",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    key: text("key").notNull(),
+    kind: text("kind", { enum: ["badge", "level", "season", "contest", "system"] }).notNull(),
+    title: text("title").notNull(),
+    body: text("body").notNull().default(""),
+    href: text("href").notNull().default(""),
+    createdAt: integer("created_at").notNull().default(now),
+    readAt: integer("read_at"),
+  },
+  (t) => [uniqueIndex("notification_unique").on(t.userId, t.key), index("notification_user").on(t.userId, t.readAt)],
+);
+
+// A public, opt-in share card. It is a frozen snapshot made server-side from real data when the person presses Share, shows only
+// a first name and initial, and can be revoked. Anyone with the code can see it; nothing else about the person is exposed.
+export const shareCards = sqliteTable(
+  "share_cards",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    code: text("code").notNull().unique(),
+    userId: integer("user_id").notNull().references(() => users.id),
+    kind: text("kind", { enum: ["badge", "season", "level", "streak"] }).notNull(),
+    ref: text("ref").notNull(), // what it is about: a badge key, "week:2026-W41", "level", "streak"
+    headline: text("headline").notNull(), // the big text on the card: "#2", "Level 12", "30 days"
+    title: text("title").notNull(),
+    subtitle: text("subtitle").notNull().default(""),
+    tone: text("tone").notNull().default("indigo"), // bronze | silver | gold | legend | indigo | orange
+    name: text("name").notNull(), // first name and initial, as shown on boards
+    createdAt: integer("created_at").notNull().default(now),
+    revokedAt: integer("revoked_at"),
+  },
+  (t) => [index("share_user").on(t.userId), uniqueIndex("share_active").on(t.userId, t.kind, t.ref).where(sql`revoked_at is null`)],
 );

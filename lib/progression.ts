@@ -4,7 +4,9 @@
  * Only the moment a badge was first earned is stored (`user_badges`).
  */
 import { and, eq, sql } from "drizzle-orm";
-import { certificates, competitionCerts, contestAttempts, dailyQuests, db, enrollments, runs, userBadges } from "@/lib/db";
+import { certificates, competitionCerts, contestAttempts, dailyQuests, db, enrollments, runs, seasonResults, userBadges } from "@/lib/db";
+import { settleRecent } from "@/lib/seasons";
+import { lastLevelNoted, notify } from "@/lib/notifications";
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 const day = (sec: number) => iso(new Date(sec * 1000));
@@ -48,7 +50,7 @@ export function streakOf(days: Set<string>, today = iso(new Date())): Streak {
 
 export type Facts = {
   xp: number; levelsPassed: number; perfect: number; tracksStarted: number; tracksProgressed: number; titan: number;
-  certs: number; contestsFinished: number; champion: number; records: number; longestStreak: number; playerLevel: number;
+  certs: number; seasonsPlayed: number; podiums: number; seasonWins: number; contestsFinished: number; champion: number; records: number; longestStreak: number; playerLevel: number;
   days: Set<string>;
 };
 
@@ -63,7 +65,9 @@ export function factsOf(userId: number): Facts {
   const levelsPassed = Number(db.select({ n: sql<number>`count(*)` }).from(db.select({ t: runs.trackId, l: runs.level }).from(runs).where(passed).groupBy(runs.trackId, runs.level).as("p")).get()?.n ?? 0);
   const xp = runXp + quests.reduce((s, q) => s + q.xp, 0);
   const streak = streakOf(days);
+  const seasons = db.select({ rank: seasonResults.rank }).from(seasonResults).where(eq(seasonResults.userId, userId)).all();
   return {
+    seasonsPlayed: seasons.length, podiums: seasons.filter((r) => r.rank <= 3).length, seasonWins: seasons.filter((r) => r.rank === 1).length,
     xp, levelsPassed, days,
     perfect: Number(one(db.select({ n: sql<number>`count(*)` }).from(runs).where(and(passed, sql`${runs.score} >= 0.999`)).get())),
     tracksStarted: Number(one(db.select({ n: sql<number>`count(*)` }).from(enrollments).where(eq(enrollments.userId, userId)).get())),
@@ -82,7 +86,7 @@ export function factsOf(userId: number): Facts {
 export type BadgeTier = "bronze" | "silver" | "gold" | "legend";
 export type BadgeDef = { key: string; group: string; name: string; desc: string; icon: string; tier: BadgeTier; target: number; value: (f: Facts) => number };
 
-export const BADGE_GROUPS = ["Streaks", "XP", "Levels", "Mastery", "Contests"] as const;
+export const BADGE_GROUPS = ["Streaks", "XP", "Levels", "Mastery", "Contests", "Seasons"] as const;
 const b = (group: string, key: string, name: string, desc: string, icon: string, tier: BadgeTier, target: number, value: (f: Facts) => number): BadgeDef => ({ key, group, name, desc, icon, tier, target, value });
 
 export const BADGES: BadgeDef[] = [
@@ -114,6 +118,11 @@ export const BADGES: BadgeDef[] = [
   b("Contests", "contest-5", "Regular", "Reach the goal in 5 contests", "🎯", "silver", 5, (f) => f.contestsFinished),
   b("Contests", "champion", "Champion", "Finish first in a contest", "🥇", "gold", 1, (f) => f.champion),
   b("Contests", "record", "Record Chaser", "Finish a record attempt", "⏱️", "silver", 1, (f) => f.records),
+  b("Seasons", "season-1", "Season Starter", "Score points in a weekly or monthly season", "🗓️", "bronze", 1, (f) => f.seasonsPlayed),
+  b("Seasons", "season-5", "Season Regular", "Score points in 5 seasons", "📅", "silver", 5, (f) => f.seasonsPlayed),
+  b("Seasons", "podium", "On the Podium", "Finish in the top 3 of a season", "🥉", "silver", 1, (f) => f.podiums),
+  b("Seasons", "podium-5", "Podium Habit", "Finish in the top 3 of 5 seasons", "🥈", "gold", 5, (f) => f.podiums),
+  b("Seasons", "season-win", "Season Champion", "Finish first in a season", "🥇", "legend", 1, (f) => f.seasonWins),
 ];
 
 export type BadgeView = Omit<BadgeDef, "value"> & { value: number; earned: boolean; earnedAt: number | null; pct: number };
@@ -125,16 +134,20 @@ export type Progression = { facts: Facts; player: ReturnType<typeof playerLevel>
  * call on any page load and after any exam. `fresh` are the badges earned in the last `freshSec` seconds.
  */
 export function progressionFor(userId: number, freshSec = 30): Progression {
+  settleRecent(); // writes the final standings of any season that has just ended (a cheap lookup once settled)
   const facts = factsOf(userId);
   const have = new Map(db.select().from(userBadges).where(eq(userBadges.userId, userId)).all().map((r) => [r.key, r.earnedAt]));
   const t = now();
+  const firstSync = have.size === 0; // someone opening this for the first time is not told about everything they already had
   const badges = BADGES.map((d): BadgeView => {
     const { value: rule, ...def } = d, value = rule(facts), met = value >= d.target;
     if (met && !have.has(d.key)) {
       const r = db.insert(userBadges).values({ userId, key: d.key, earnedAt: t }).onConflictDoNothing().run();
-      if (r.changes) have.set(d.key, t);
+      if (r.changes) { have.set(d.key, t); notify(userId, { key: `badge-${d.key}`, kind: "badge", title: `Badge earned: ${d.name}`, body: d.desc, href: "/achievements" }, { read: firstSync }); }
     }
     return { ...def, value, earned: met, earnedAt: have.get(d.key) ?? null, pct: Math.min(1, value / d.target) };
   });
-  return { facts, player: playerLevel(facts.xp), streak: streakOf(facts.days), badges, earned: badges.filter((x) => x.earned).length, fresh: badges.filter((x) => x.earnedAt !== null && t - x.earnedAt <= freshSec && x.earned) };
+  const player = playerLevel(facts.xp), noted = lastLevelNoted(userId);
+  if (player.level >= 2 && player.level > noted) notify(userId, { key: `level-${player.level}`, kind: "level", title: `Level up! You are player level ${player.level}`, body: `${player.title}. ${player.xp.toLocaleString("en-GB")} XP so far.`, href: "/achievements" }, { read: firstSync });
+  return { facts, player, streak: streakOf(facts.days), badges, earned: badges.filter((x) => x.earned).length, fresh: badges.filter((x) => x.earnedAt !== null && t - x.earnedAt <= freshSec && x.earned) };
 }
