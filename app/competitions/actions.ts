@@ -4,7 +4,8 @@ import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { randomBytes } from "node:crypto";
-import { competitionCerts, competitionMembers, competitions, db } from "@/lib/db";
+import { competitionCerts, competitionMembers, competitions, contestTwists, db, tracks } from "@/lib/db";
+import { declineTwist, reviewTwist, submitTwist } from "@/lib/twists";
 import { requireUser } from "@/lib/auth";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import type { BotTier } from "@/lib/bots";
@@ -29,7 +30,7 @@ export async function createCompetition(_: CreateState, fd: FormData): Promise<C
   const bots: BotTier[] = [...Array(num("casual") || 0).fill("casual"), ...Array(num("steady") || 0).fill("steady"), ...Array(num("fierce") || 0).fill("fierce")];
   const r = createContest(me, {
     ...p.data, visibility: p.data.visibility, bots, emails: str(fd.get("emails")),
-    openJoin: str(fd.get("openJoin")) === "on", consent: str(fd.get("consent")) === "on",
+    openJoin: str(fd.get("openJoin")) === "on", consent: str(fd.get("consent")) === "on", twist: str(fd.get("twist")) === "on",
   });
   if ("error" in r) return { error: r.error };
   revalidatePath("/competitions");
@@ -133,4 +134,44 @@ export async function claimCertificate(competitionId: number) {
     code: randomBytes(5).toString("hex").toUpperCase(),
   }).onConflictDoNothing().run();
   revalidatePath(`/competitions/${c.slug}`);
+}
+
+// ---- Architect twist (see lib/twists.ts) ----
+
+export type TwistState = { error?: string; message?: string } | null;
+
+/** The drawn racer hands in a rewrite of their question. */
+export async function submitTwistAction(twistId: number, _: TwistState, fd: FormData): Promise<TwistState> {
+  const me = await requireUser();
+  if (!allowed(`twist:${me.id}`, 12)) return { error: "Too many tries. Wait a few minutes." };
+  hit(`twist:${me.id}`, 10 * MINUTE);
+  const row = db.select({ t: contestTwists, c: competitions, track: tracks.name }).from(contestTwists)
+    .innerJoin(competitions, eq(competitions.id, contestTwists.competitionId)).innerJoin(tracks, eq(tracks.id, competitions.trackId))
+    .where(eq(contestTwists.id, twistId)).get();
+  if (!row) return { error: "This twist was not found." };
+  const options = fd.getAll("option").map((o) => (typeof o === "string" ? o : ""));
+  const r = await submitTwist(twistId, me.id, { prompt: str(fd.get("prompt")), code: str(fd.get("code")), options, answer: str(fd.get("answer")) }, row.track);
+  revalidatePath(`/competitions/${row.c.slug}`);
+  return r;
+}
+
+async function twistContest(twistId: number) {
+  const row = db.select({ slug: competitions.slug }).from(contestTwists)
+    .innerJoin(competitions, eq(competitions.id, contestTwists.competitionId)).where(eq(contestTwists.id, twistId)).get();
+  return row?.slug;
+}
+
+/** The drawn racer passes: the level keeps its normal questions. */
+export async function declineTwistAction(twistId: number) {
+  const me = await requireUser();
+  declineTwist(twistId, me.id);
+  const slug = await twistContest(twistId);
+  if (slug) revalidatePath(`/competitions/${slug}`);
+}
+
+export async function reviewTwistAction(twistId: number, action: "approve" | "reject" | "veto") {
+  const me = await requireUser();
+  reviewTwist(twistId, me.id, action);
+  const slug = await twistContest(twistId);
+  if (slug) revalidatePath(`/competitions/${slug}`);
 }

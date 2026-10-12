@@ -1,18 +1,20 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Bot, CalendarClock, Check, Clock, Coins, Crown, Flag, Globe, GraduationCap, Lock, Radio, Swords, Target, Trophy, Users } from "lucide-react";
+import { Bot, CalendarClock, Check, Clock, Coins, Crown, Flag, Globe, GraduationCap, Lock, Radio, Shuffle, Swords, Target, Trophy, Users } from "lucide-react";
 import type { Metadata } from "next";
-import { competitionCerts, competitionEmailInvites, competitionMembers, competitions, db, tracks, users } from "@/lib/db";
+import { competitionCerts, competitionEmailInvites, competitionMembers, competitions, contestTwists, db, questions, tracks, users } from "@/lib/db";
+import { LIMITS, MAX_ATTEMPTS, syncTwists, twistOn, twistResults } from "@/lib/twists";
 import { currentUser } from "@/lib/auth";
 import { canView, finishersOf, modeLabel, now, payouts, span, standings, stateOf, type Standing } from "@/lib/competitions";
 import { PRIZE_SPLIT_LABEL, money } from "@/lib/competitions-shared";
 import { BOT_STYLES } from "@/lib/bots";
 import { XP_PER_LEVEL } from "@/lib/levels";
-import { cancelCompetition, claimCertificate, declineInvite, joinCompetition, leaveCompetition, makePrivate, markPrizePaid } from "../actions";
+import { cancelCompetition, claimCertificate, declineInvite, joinCompetition, leaveCompetition, makePrivate, markPrizePaid, reviewTwistAction } from "../actions";
 import { Competitor } from "@/components/Competitor";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import InviteForm from "./invite-form";
+import TwistForm from "./twist-form";
 import { PALETTE, StatTile } from "@/components/charts";
 import { Podium } from "@/components/Podium";
 import { Ring } from "@/components/Ring";
@@ -37,6 +39,15 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
   const creator = db.select({ name: users.name }).from(users).where(eq(users.id, c.createdBy)).get();
   const t = now(), state = stateOf(c, t);
   const { rows, events } = standings(c, members, t);
+
+  // Architect twist: draw Architects, close stale offers, then collect what this viewer may see
+  if (twistOn(c)) syncTwists(c);
+  const twists = twistOn(c) ? db.select().from(contestTwists).where(eq(contestTwists.competitionId, c.id)).orderBy(contestTwists.level).all() : [];
+  const myTwist = user ? twists.find((x) => x.architectId === user.id && x.status === "offered") : undefined;
+  const myBase = myTwist ? db.select().from(questions).where(eq(questions.id, myTwist.baseQuestionId)).get() : undefined;
+  const waiting = user && user.id === c.createdBy ? twists.filter((x) => x.status === "pending" || x.status === "approved") : [];
+  const reveal = state === "finished" && twistOn(c) ? twistResults(c.id) : [];
+  const names = new Map((twists.length ? db.select({ id: users.id, name: users.name }).from(users).where(inArray(users.id, twists.map((x) => x.architectId))).all() : []).map((u) => [u.id, u.name]));
 
   const mine = user ? members.find((m) => m.userId === user.id) : undefined;
   const isOrganiser = !!user && user.id === c.createdBy;
@@ -113,6 +124,66 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
           : state === "upcoming" ? <StatTile i={3} Icon={CalendarClock} label="Starts in" value={span(c.startsAt - t)} color={PALETTE.sky} />
           : <StatTile i={3} Icon={Flag} label="Reached goal" value={reached.length} color={PALETTE.amber} />}
       </div>
+
+      {twistOn(c) && (
+        <section aria-label="Architect twist" className="card space-y-3 border-fuchsia-400/30 p-5">
+          <h2 className="flex items-center gap-2 text-lg font-bold"><Shuffle size={20} className="text-fuchsia-300" />Architect twist</h2>
+          <p className="text-sm text-slate-300">
+            For each level, the server draws one racer who may rewrite <b>one</b> question for their rivals, or pass. It is capped at 1 question in 10, checked by a referee,
+            locked as soon as a rival starts the level, and it never counts toward the ranking. Racers learn who the Architects were when the contest ends.
+          </p>
+          {myTwist && myBase?.options && state === "live" && (
+            <div className="space-y-2 rounded-xl border border-fuchsia-400/40 bg-fuchsia-500/10 p-4">
+              <div className="font-bold text-fuchsia-200">You were drawn as the Architect for level {myTwist.level}</div>
+              <p className="text-sm text-slate-300">Rewrite this question for your rivals, or pass. You will not see your twist or the original in your own level {myTwist.level} exam. Do it before a rival starts the level, or it stays as it was.</p>
+              <TwistForm twistId={myTwist.id} level={myTwist.level} attemptsLeft={MAX_ATTEMPTS - myTwist.attempts} note={myTwist.note} limits={LIMITS}
+                base={{ prompt: myBase.prompt, code: myBase.code, options: myBase.options, answer: myBase.answer ?? "" }} />
+            </div>
+          )}
+          {user && twists.some((x) => x.architectId === user.id && x.status === "pending") && (
+            <p className="text-sm text-amber-200">Your twist is saved and waiting for the organiser to approve it.</p>
+          )}
+          {user && twists.some((x) => x.architectId === user.id && x.status === "approved") && state === "live" && (
+            <p className="text-sm text-emerald-300">Your twist is live for rivals who start that level from now on.</p>
+          )}
+          {waiting.length > 0 && state === "live" && (
+            <div className="space-y-2 text-sm">
+              <h3 className="font-semibold">Organiser: twists that need you</h3>
+              {waiting.map((x) => {
+                const q = x.twistQuestionId ? db.select().from(questions).where(eq(questions.id, x.twistQuestionId)).get() : undefined;
+                if (!q) return null;
+                return (
+                  <div key={x.id} className="space-y-1 rounded-lg border border-black/10 p-3">
+                    <div className="text-xs text-slate-400">Level {x.level} · {x.status === "pending" ? "waiting for you (the AI referee was unavailable)" : "live"}</div>
+                    <div className="font-medium">{q.prompt}</div>
+                    {q.code && <pre className="overflow-x-auto rounded bg-black/5 p-2 text-xs">{q.code}</pre>}
+                    <ul className="text-slate-300">{q.options?.map((o) => <li key={o.key}><span className="font-mono font-bold">{o.key.toUpperCase()}</span> {o.text}{o.key === q.answer && <span className="ml-1 text-emerald-300">(correct)</span>}</li>)}</ul>
+                    <div className="flex gap-4 pt-1">
+                      {x.status === "pending" && <form action={reviewTwistAction.bind(null, x.id, "approve")}><button className="btn !py-1">Approve</button></form>}
+                      {x.status === "pending" && <form action={reviewTwistAction.bind(null, x.id, "reject")}><button className="text-slate-400 underline">Reject</button></form>}
+                      {x.status === "approved" && <form action={reviewTwistAction.bind(null, x.id, "veto")}><button className="text-rose-400 underline">Veto (new exams go back to normal)</button></form>}
+                    </div>
+                  </div>
+                );
+              })}
+              <p className="text-xs text-slate-500">If you are racing, you are seeing these questions in advance. Consider handing the review to a co-organiser or leaving them unreviewed.</p>
+            </div>
+          )}
+          {reveal.length > 0 && (
+            <div className="space-y-1 text-sm">
+              <h3 className="font-semibold">The twists, revealed</h3>
+              <ul className="divide-y divide-white/10">
+                {reveal.map(({ twist: x, tried, right }) => (
+                  <li key={x.id} className="flex flex-wrap justify-between gap-2 py-1.5">
+                    <span>Level {x.level}: rewritten by <b>{names.get(x.architectId) ?? "a racer"}</b></span>
+                    <span className="text-slate-400">{tried ? `${tried - right} of ${tried} missed it` : "nobody answered it"}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
 
       {winners.length > 0 && (
         <div className="card pop border-amber-400/50 p-4 text-center">
