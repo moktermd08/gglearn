@@ -18,6 +18,7 @@ import { grade } from "@/lib/grading";
 import { levelsPassed } from "@/lib/progress";
 import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import { completeQuest } from "@/lib/stats";
+import { progressionFor } from "@/lib/progression";
 import { hiddenTrackIds } from "@/lib/tracks";
 import { drillCompleted, drillQuestion, noteDrillAnswer } from "@/lib/drill";
 import { DYNAMIC_PER_RUN, drawDynamic } from "@/lib/dynamic/store";
@@ -269,6 +270,7 @@ async function gradeRun(userId: number, run: typeof runs.$inferSelect, runId: nu
     db.insert(certificates).values({ userId: u.id, trackId: run.trackId, level: run.level, score, code: randomBytes(5).toString("hex").toUpperCase() })
       .onConflictDoNothing().run();
   }
+  progressionFor(u.id); // records any badge this exam earned
 }
 
 // ---- daily quests ----

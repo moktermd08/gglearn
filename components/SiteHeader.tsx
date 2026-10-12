@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookMarked, Database, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound } from "lucide-react";
+import { BookMarked, Database, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal } from "lucide-react";
 import { logout, logoutEverywhere } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
@@ -46,6 +46,7 @@ export function SiteHeader({ user }: { user: User }) {
             <Dropdown align="right" label={<><Initials name={user.name} size={26} /><span className="max-w-32 truncate">{user.name}</span></>}>
               <div className="border-b border-black/5 px-3 pb-2 pt-1.5"><div className="font-semibold">{user.name}</div><div className="truncate text-xs text-slate-400">{user.email}</div></div>
               <Link href="/profile" className="mt-1 items-center gap-2 hover:bg-black/5"><UserRound size={15} />Your profile</Link>
+              <Link href="/achievements" className="items-center gap-2 hover:bg-black/5"><Medal size={15} />Achievements</Link>
               <form action={logout}>
                 <button><LogOut size={15} />Sign out</button>
                 <button formAction={logoutEverywhere} title="Ends your session on every device" className="!text-slate-400"><BookMarked size={15} />Sign out everywhere</button>
@@ -69,6 +70,7 @@ export function SiteHeader({ user }: { user: User }) {
             {user ? (
               <>
                 <Link href="/profile" className={mobile}><UserRound size={18} />{user.name}</Link>
+                <Link href="/achievements" className={mobile}><Medal size={18} />Achievements</Link>
                 <form action={logout}>
                   <button className={mobile}><LogOut size={18} />Sign out</button>
                   <button formAction={logoutEverywhere} className={`${mobile} !text-slate-400`}><BookMarked size={18} />Sign out everywhere</button>

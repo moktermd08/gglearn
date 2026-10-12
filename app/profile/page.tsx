@@ -6,9 +6,11 @@ import { Competitor } from "@/components/Competitor";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { RankEmblem } from "@/components/RankEmblem";
 import { SubjectArt } from "@/components/SubjectArt";
-import { Calendar, Flame, GraduationCap, Lock, Mail, Medal, Mountain, Shield, ShieldCheck, Sparkles, Swords, Trash2, TrendingUp, UserRound, Activity, Briefcase } from "lucide-react";
+import { Calendar, Flame, GraduationCap, Mail, Medal, Mountain, Shield, ShieldCheck, Sparkles, Swords, Trash2, TrendingUp, UserRound, Activity, Briefcase } from "lucide-react";
 import { LEVELS, MAX_LEVEL, TIERS, certTitle, tierOf } from "@/lib/levels";
-import { activityFor, badgesFor, trackStats } from "@/lib/stats";
+import { activityFor, trackStats } from "@/lib/stats";
+import { progressionFor } from "@/lib/progression";
+import { BadgeWall, PlayerLevelCard, StreakCard } from "@/components/Achievements";
 import { avatarLooks } from "@/lib/avatars";
 import { roleLabel } from "@/lib/journey";
 import { AreaChart, EmptyState, Heatmap, PALETTE, StatTile } from "@/components/charts";
@@ -29,9 +31,9 @@ export default async function Profile() {
     .sort((a, b) => b.s.passed - a.s.passed || b.s.xp - a.s.xp);
   const certs = db.select({ c: certificates, t: tracks }).from(certificates).innerJoin(tracks, eq(tracks.id, certificates.trackId)).where(eq(certificates.userId, me.id)).all()
     .sort((a, b) => b.c.issuedAt - a.c.issuedAt);
-  const totalXp = mine.reduce((a, m) => a + m.s.xp, 0), levels = mine.reduce((a, m) => a + m.s.passed, 0), streak = Math.max(0, ...mine.map((m) => m.s.streak));
+  const prog = progressionFor(me.id);
+  const totalXp = prog.facts.xp, levels = mine.reduce((a, m) => a + m.s.passed, 0), streak = prog.streak.current;
   const bestLevel = Math.max(0, ...mine.map((m) => m.s.passed)), tier = TIERS[tierOf(bestLevel)];
-  const badges = mine.length ? badgesFor([...mine].sort((a, b) => b.s.xp - a.s.xp)[0].s) : [];
   const activity = activityFor(me.id, 24);
   const weekXp = activity.slice(-7).reduce((a, d) => a + d.value, 0), activeDays = activity.filter((d) => d.value > 0).length;
   const photoUrl = photo ? `/api/avatar/${me.id}?v=${photo.v}` : null;
@@ -64,9 +66,14 @@ export default async function Profile() {
         </div>
       </section>
 
+      <div className="grid gap-3 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
+        <section className="card p-5" aria-label="Player level"><PlayerLevelCard p={prog.player} /></section>
+        <section className="card p-5" aria-label="Streak"><StreakCard s={prog.streak} /></section>
+      </div>
+
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile i={0} Icon={Sparkles} label="Total XP" value={totalXp.toLocaleString("en-GB")} color={PALETTE.sky} spark={activity.slice(-14).map((d) => d.value)} />
-        <StatTile i={1} Icon={Flame} label="Best streak" value={streak} color="#ea580c" />
+        <StatTile i={1} Icon={Flame} label="Day streak" value={streak} color="#ea580c" />
         <StatTile i={2} Icon={Mountain} label="Levels passed" value={levels} color={PALETTE.violet} />
         <StatTile i={3} Icon={GraduationCap} label="Certificates" value={certs.length} color={PALETTE.amber} />
       </div>
@@ -132,19 +139,10 @@ export default async function Profile() {
             <div className="mt-3"><div className="mb-1 text-[11px] uppercase tracking-wider text-slate-400">Last 24 weeks</div><Heatmap days={activity} /></div>
           </section>
 
-          {badges.length > 0 && (
-            <section className="card p-5">
-              <h2 className="mb-3 flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-yellow-500/15 text-yellow-500"><TrendingUp size={17} /></span>Badges <span className="text-xs font-normal text-slate-400">{badges.filter((x) => x.earned).length}/{badges.length}</span></h2>
-              <div className="grid grid-cols-4 gap-2">
-                {badges.map((x) => (
-                  <div key={x.key} title={`${x.name}: ${x.desc}`} className={`relative flex aspect-square flex-col items-center justify-center rounded-2xl text-center ${x.earned ? "bg-yellow-400/15 ring-1 ring-yellow-400/50" : "bg-black/[.04] opacity-50 grayscale"}`}>
-                    {!x.earned && <Lock size={10} className="absolute right-1.5 top-1.5 text-slate-400" />}
-                    <div className="text-2xl">{x.icon}</div><div className="mt-0.5 px-1 text-[9px] font-bold leading-tight">{x.name}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+          <section className="card p-5">
+            <h2 className="mb-3 flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-yellow-500/15 text-yellow-500"><TrendingUp size={17} /></span>Badges <span className="text-xs font-normal text-slate-400">{prog.earned}/{prog.badges.length} earned</span></h2>
+            <BadgeWall p={prog} />
+          </section>
         </aside>
       </div>
 
