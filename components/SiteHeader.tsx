@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookMarked, Database, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays } from "lucide-react";
+import { BookMarked, Database, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
 import { logout, logoutEverywhere } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
@@ -16,7 +16,7 @@ export const ADMIN_LINKS = [
   { href: "/admin/careers", label: "Careers", Icon: TrendingUp },
 ];
 
-export function SiteHeader({ user }: { user: User }) {
+export function SiteHeader({ user, unread = 0 }: { user: User; unread?: number }) {
   const staff = !!user && user.role !== "learner";
   const mobile = "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-base";
   return (
@@ -44,6 +44,8 @@ export function SiteHeader({ user }: { user: User }) {
         <span className="ml-auto" />
         <div className="hidden items-center gap-2 md:flex">
           {user ? (
+            <>
+            <Link href="/notifications" className="relative grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}><Bell size={18} />{unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-full bg-pink-600 px-1 text-[10px] font-bold leading-4 text-[#fff]">{unread > 9 ? "9+" : unread}</span>}</Link>
             <Dropdown align="right" label={<><Initials name={user.name} size={26} /><span className="max-w-32 truncate">{user.name}</span></>}>
               <div className="border-b border-black/5 px-3 pb-2 pt-1.5"><div className="font-semibold">{user.name}</div><div className="truncate text-xs text-slate-400">{user.email}</div></div>
               <Link href="/profile" className="mt-1 items-center gap-2 hover:bg-black/5"><UserRound size={15} />Your profile</Link>
@@ -53,6 +55,7 @@ export function SiteHeader({ user }: { user: User }) {
                 <button formAction={logoutEverywhere} title="Ends your session on every device" className="!text-slate-400"><BookMarked size={15} />Sign out everywhere</button>
               </form>
             </Dropdown>
+            </>
           ) : (
             <Link href="/login" className="btn !py-1.5"><LogIn size={15} />Sign in</Link>
           )}
@@ -72,6 +75,7 @@ export function SiteHeader({ user }: { user: User }) {
             {user ? (
               <>
                 <Link href="/profile" className={mobile}><UserRound size={18} />{user.name}</Link>
+                <Link href="/notifications" className={mobile}><Bell size={18} />Notifications{unread > 0 && <span className="ml-auto rounded-full bg-pink-600 px-2 text-xs font-bold text-[#fff]">{unread}</span>}</Link>
                 <Link href="/achievements" className={mobile}><Medal size={18} />Achievements</Link>
                 <form action={logout}>
                   <button className={mobile}><LogOut size={18} />Sign out</button>

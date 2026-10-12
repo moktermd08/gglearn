@@ -6,6 +6,7 @@
 import { and, eq, sql } from "drizzle-orm";
 import { certificates, competitionCerts, contestAttempts, dailyQuests, db, enrollments, runs, seasonResults, userBadges } from "@/lib/db";
 import { settleRecent } from "@/lib/seasons";
+import { lastLevelNoted, notify } from "@/lib/notifications";
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 const day = (sec: number) => iso(new Date(sec * 1000));
@@ -137,13 +138,16 @@ export function progressionFor(userId: number, freshSec = 30): Progression {
   const facts = factsOf(userId);
   const have = new Map(db.select().from(userBadges).where(eq(userBadges.userId, userId)).all().map((r) => [r.key, r.earnedAt]));
   const t = now();
+  const firstSync = have.size === 0; // someone opening this for the first time is not told about everything they already had
   const badges = BADGES.map((d): BadgeView => {
     const { value: rule, ...def } = d, value = rule(facts), met = value >= d.target;
     if (met && !have.has(d.key)) {
       const r = db.insert(userBadges).values({ userId, key: d.key, earnedAt: t }).onConflictDoNothing().run();
-      if (r.changes) have.set(d.key, t);
+      if (r.changes) { have.set(d.key, t); notify(userId, { key: `badge-${d.key}`, kind: "badge", title: `Badge earned: ${d.name}`, body: d.desc, href: "/achievements" }, { read: firstSync }); }
     }
     return { ...def, value, earned: met, earnedAt: have.get(d.key) ?? null, pct: Math.min(1, value / d.target) };
   });
-  return { facts, player: playerLevel(facts.xp), streak: streakOf(facts.days), badges, earned: badges.filter((x) => x.earned).length, fresh: badges.filter((x) => x.earnedAt !== null && t - x.earnedAt <= freshSec && x.earned) };
+  const player = playerLevel(facts.xp), noted = lastLevelNoted(userId);
+  if (player.level >= 2 && player.level > noted) notify(userId, { key: `level-${player.level}`, kind: "level", title: `Level up! You are player level ${player.level}`, body: `${player.title}. ${player.xp.toLocaleString("en-GB")} XP so far.`, href: "/achievements" }, { read: firstSync });
+  return { facts, player, streak: streakOf(facts.days), badges, earned: badges.filter((x) => x.earned).length, fresh: badges.filter((x) => x.earnedAt !== null && t - x.earnedAt <= freshSec && x.earned) };
 }

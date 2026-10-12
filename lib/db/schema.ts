@@ -605,3 +605,42 @@ export const seasonResults = sqliteTable(
   },
   (t) => [uniqueIndex("season_result_unique").on(t.kind, t.key, t.userId), index("season_result_user").on(t.userId)],
 );
+
+// In-app notifications. `key` makes each event idempotent per person (one badge, one season result, one level), so the code that
+// notices an event may run any number of times. Rows created when someone first opens a feature are born read (no backfill spam).
+export const notifications = sqliteTable(
+  "notifications",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    key: text("key").notNull(),
+    kind: text("kind", { enum: ["badge", "level", "season", "contest", "system"] }).notNull(),
+    title: text("title").notNull(),
+    body: text("body").notNull().default(""),
+    href: text("href").notNull().default(""),
+    createdAt: integer("created_at").notNull().default(now),
+    readAt: integer("read_at"),
+  },
+  (t) => [uniqueIndex("notification_unique").on(t.userId, t.key), index("notification_user").on(t.userId, t.readAt)],
+);
+
+// A public, opt-in share card. It is a frozen snapshot made server-side from real data when the person presses Share, shows only
+// a first name and initial, and can be revoked. Anyone with the code can see it; nothing else about the person is exposed.
+export const shareCards = sqliteTable(
+  "share_cards",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    code: text("code").notNull().unique(),
+    userId: integer("user_id").notNull().references(() => users.id),
+    kind: text("kind", { enum: ["badge", "season", "level", "streak"] }).notNull(),
+    ref: text("ref").notNull(), // what it is about: a badge key, "week:2026-W41", "level", "streak"
+    headline: text("headline").notNull(), // the big text on the card: "#2", "Level 12", "30 days"
+    title: text("title").notNull(),
+    subtitle: text("subtitle").notNull().default(""),
+    tone: text("tone").notNull().default("indigo"), // bronze | silver | gold | legend | indigo | orange
+    name: text("name").notNull(), // first name and initial, as shown on boards
+    createdAt: integer("created_at").notNull().default(now),
+    revokedAt: integer("revoked_at"),
+  },
+  (t) => [index("share_user").on(t.userId), uniqueIndex("share_active").on(t.userId, t.kind, t.ref).where(sql`revoked_at is null`)],
+);

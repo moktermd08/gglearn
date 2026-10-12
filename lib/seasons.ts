@@ -10,6 +10,7 @@
  */
 import { and, eq, gte, inArray, lt, sql } from "drizzle-orm";
 import { dailyQuests, db, enrollments, runs, seasonClosed, seasonResults, users } from "@/lib/db";
+import { notify } from "@/lib/notifications";
 
 export const POINTS_PER_LEVEL = 100, POINTS_PER_DAY = 10;
 export type Kind = "week" | "month";
@@ -95,7 +96,11 @@ export function settle(p: Period) {
   db.transaction((tx) => {
     for (const audience of ["staff", "customer"] as const) {
       const rows = standings(p, audience);
-      for (const r of rows) tx.insert(seasonResults).values({ kind: p.kind, key: p.key, userId: r.userId, rank: r.rank, points: r.points, levels: r.levels, days: r.days, players: rows.length }).onConflictDoNothing().run();
+      for (const r of rows) {
+        tx.insert(seasonResults).values({ kind: p.kind, key: p.key, userId: r.userId, rank: r.rank, points: r.points, levels: r.levels, days: r.days, players: rows.length }).onConflictDoNothing().run();
+        // only tell people about a season that has just ended, not about old ones settled for the first time
+        if (now() - p.end < 3 * DAY) notify(r.userId, { key: `season-${p.kind}-${p.key}`, kind: "season", title: `Season results: ${p.label}`, body: `You finished #${r.rank} of ${rows.length} with ${r.points} points.`, href: `/seasons?${p.kind === "month" ? "kind=month&" : ""}p=${p.key}` }, { tx });
+      }
     }
     tx.insert(seasonClosed).values({ kind: p.kind, key: p.key }).onConflictDoNothing().run();
   });
