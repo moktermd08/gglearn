@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq, inArray, like, or, sql } from "drizzle-orm";
+import { and, eq, inArray, like, notInArray, or, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -22,6 +22,7 @@ import { hiddenTrackIds } from "@/lib/tracks";
 import { drillCompleted, drillQuestion, noteDrillAnswer } from "@/lib/drill";
 import { DYNAMIC_PER_RUN, drawDynamic } from "@/lib/dynamic/store";
 import { claimPendingInvites } from "@/lib/contests";
+import { twistFor } from "@/lib/twists";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
 import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
@@ -176,15 +177,19 @@ export async function startRun(fd: FormData) {
   const track = db.select().from(tracks).where(eq(tracks.id, trackId)).get();
   if (!track) return;
   // stored questions: a fresh random draw each run, favouring ones this person has not answered correctly before
+  // a contest "Architect twist" may swap one question for a rival's rewrite, and keeps the original away from the Architect
+  const twist = twistFor(u.id, trackId, level);
+  const slots = QUESTIONS_PER_RUN - (twist.inject ? 1 : 0);
   const pool = db.select({ id: questions.id }).from(questions)
-    .where(and(eq(questions.trackId, trackId), eq(questions.level, level), eq(questions.status, "active")))
+    .where(and(eq(questions.trackId, trackId), eq(questions.level, level), eq(questions.status, "active"),
+      twist.exclude.length ? notInArray(questions.id, twist.exclude) : undefined))
     .orderBy(sql`
       (select count(*) from ${answers} a join ${runs} r on r.id = a.run_id
         where a.question_id = ${questions.id} and r.user_id = ${u.id} and a.score >= 0.8) asc, random()`)
     .limit(QUESTIONS_PER_RUN).all().map((q) => q.id);
   // generated questions: new values every time and never repeated for this person, so there is nothing to memorise
-  const fresh = drawDynamic(u.id, track, level, Math.min(QUESTIONS_PER_RUN, Math.max(DYNAMIC_PER_RUN, QUESTIONS_PER_RUN - pool.length)));
-  const picked = [...fresh, ...pool.slice(0, QUESTIONS_PER_RUN - fresh.length)].sort(() => Math.random() - 0.5);
+  const fresh = drawDynamic(u.id, track, level, Math.min(slots, Math.max(DYNAMIC_PER_RUN, slots - pool.length)));
+  const picked = [...fresh, ...pool.slice(0, slots - fresh.length), ...(twist.inject ? [twist.inject] : [])].sort(() => Math.random() - 0.5);
   if (!picked.length) return;
 
   const run = db.insert(runs).values({ userId: u.id, trackId, level }).returning().get();
