@@ -22,5 +22,12 @@ Round 1 starts when it is first created and runs its full length, so it never ov
 
 The sync runs at most once a minute per server process, from the site layout and `/campaigns`, so rounds roll over on whichever page someone opens first. There is no scheduler: if nobody opens the site during a week, that week has no contest. The page always shows what the current round really offers (a renewal shows "Certificate", never the catalogue prize).
 
+## Scheduled run (pm2)
+`ecosystem.config.cjs` has a second pm2 app, `gglearn-campaigns`, that runs `scripts/seed-campaigns.ts` at **01:05 every day** (server time) and once on every deploy (`pm2 startOrRestart`). It exits after each run and pm2 starts it again at the next cron time, so `pm2 list` shows it as **stopped** between runs, which is normal. This is what creates the weekly round on Monday and the monthly round on the 1st when nobody has opened the site.
+- Daily rather than weekly, so monthly and rolling rounds are covered too. 01:05 rather than 00:05 so it is past midnight UTC whether the server clock is on GMT or BST.
+- Check it on the server with `pm2 list` and `pm2 logs gglearn-campaigns --lines 20 --nostream`. A normal run prints "create N and renew N of 300 campaigns".
+- It needs `.env.local`, an active admin and the tracks, like the page sync. With no admin it logs a message and does nothing.
+- Tested in an isolated pm2 instance: it ran at start, exited, and pm2 started it again on the next cron tick.
+
 ## If production says "Coming soon"
 That is a database with no contest rows behind the catalogue (the page links only to contests that exist). After deploying this change, open `/campaigns` once, or run `npm run seed:campaigns` on the server. If a notice says campaigns are hidden, load the missing content with `deploy/seed-content.sh`.
