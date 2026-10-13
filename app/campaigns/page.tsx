@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Award, Briefcase, CalendarDays, Clock, Coins, Compass, Flame, Gift, Mountain, Search, Sparkles, Swords, Target, Trophy, Users, X, Zap } from "lucide-react";
+import { ArrowRight, Award, Briefcase, CalendarDays, Clock, Coins, Compass, Flame, Gift, Mountain, Search, Sparkles, Swords, Target, Trophy, Users, X, Zap, RefreshCw } from "lucide-react";
 import { now, span } from "@/lib/competitions";
 import { PageHero, PALETTE, StatTile } from "@/components/charts";
 import { SubjectArt } from "@/components/SubjectArt";
@@ -19,7 +19,8 @@ const REWARD_ICON = { cash: Coins, voucher: Gift, certificate: Award } as const;
 const SET_TONE: Record<SetKey, string> = { career: "bg-violet-500/15 text-violet-300", general: "bg-sky-500/15 text-sky-300", ai: "bg-pink-500/15 text-pink-300" };
 const REWARD_TONE: Record<RewardKind, string> = { cash: "bg-amber-400/20 text-amber-300", voucher: "bg-emerald-500/20 text-emerald-300", certificate: "bg-slate-500/20 text-slate-300" };
 
-type Q = { set?: string; reward?: string; len?: string; q?: string; limit?: string };
+type Q = { set?: string; reward?: string; len?: string; rep?: string; q?: string; limit?: string };
+const REPEATS = [{ key: "weekly", label: "Every week" }, { key: "monthly", label: "Every month" }] as const;
 
 function href(q: Q, patch: Partial<Q>) {
   const m = { ...q, ...patch, limit: undefined, ...("limit" in patch ? { limit: patch.limit } : {}) };
@@ -44,6 +45,8 @@ function Card({ v, i }: { v: CampaignView; i: number }) {
       <span className="absolute inset-x-0 top-0 h-1" style={{ background: `linear-gradient(90deg, ${hue}, ${hue}66)` }} aria-hidden />
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-bold ${SET_TONE[set]}`}><SetIcon size={11} />{SETS[set]}</span>
+        {v.cadence !== "rolling" && <span className="inline-flex items-center gap-1 rounded-full bg-black/5 px-2 py-0.5 font-bold text-slate-300"><RefreshCw size={11} />{v.cadence === "weekly" ? "Weekly" : "Monthly"}</span>}
+        {v.round && <span className="rounded-full bg-black/5 px-2 py-0.5 font-bold text-slate-400">{v.round}</span>}
         {live && <span className="ml-auto inline-flex items-center gap-1 font-bold text-emerald-300"><i className="h-1.5 w-1.5 animate-ping rounded-full bg-emerald-400" />Live</span>}
         {v.state === "upcoming" && <span className="ml-auto font-bold text-sky-300">Starting soon</span>}
         {v.state === "finished" && <span className="ml-auto font-bold text-slate-400">Finished</span>}
@@ -111,12 +114,13 @@ export default async function Campaigns({ searchParams }: { searchParams: Promis
   const len = LENGTHS.find((l) => l.key === q.len);
   const set = q.set && q.set in SETS ? (q.set as SetKey) : undefined;
   const reward = REWARDS.find((r) => r.key === q.reward)?.key;
+  const rep = REPEATS.find((r) => r.key === q.rep)?.key;
   const shown = all.filter((v) =>
-    (!set || v.kind === set) && (!reward || v.rewardKind === reward) && (!len || len.ok(v.days)) &&
+    (!set || v.kind === set) && (!reward || v.rewardKind === reward) && (!len || len.ok(v.days)) && (!rep || v.cadence === rep) &&
     (!needle || `${v.title} ${v.hook} ${v.trackName}`.toLowerCase().includes(needle)));
   const limit = Math.min(Math.max(Number(q.limit) || PAGE, PAGE), all.length);
   const flagships = all.filter((v) => v.reward.cash >= 10000);
-  const filtered = !!(set || reward || len || needle);
+  const filtered = !!(set || reward || len || rep || needle);
   const byTrack = new Map<string, { track: string; trackName: string; trackKind: string; n: number }>();
   for (const v of all) { const e = byTrack.get(v.track); if (e) e.n++; else byTrack.set(v.track, { track: v.track, trackName: v.trackName, trackKind: v.trackKind, n: 1 }); }
   const popular = [...byTrack.values()].sort((a, b) => b.n - a.n).slice(0, 12);
@@ -173,9 +177,11 @@ export default async function Campaigns({ searchParams }: { searchParams: Promis
           {REWARDS.map((r) => { const I = REWARD_ICON[r.key]; return <Chip key={r.key} to={href(q, { reward: reward === r.key ? undefined : r.key })} on={reward === r.key}><I size={13} />{r.label}</Chip>; })}
           <span className="mx-1 hidden h-5 w-px bg-slate-600/50 sm:block" />
           {LENGTHS.map((l) => { const I = LENGTH_ICON[l.key as keyof typeof LENGTH_ICON]; return <Chip key={l.key} to={href(q, { len: len?.key === l.key ? undefined : l.key })} on={len?.key === l.key}><I size={13} />{l.label}</Chip>; })}
+          <span className="mx-1 hidden h-5 w-px bg-slate-600/50 sm:block" />
+          {REPEATS.map((r) => <Chip key={r.key} to={href(q, { rep: rep === r.key ? undefined : r.key })} on={rep === r.key}><RefreshCw size={13} />{r.label}</Chip>)}
         </div>
         <form action="/campaigns" className="flex gap-2" role="search">
-          {set && <input type="hidden" name="set" value={set} />}{reward && <input type="hidden" name="reward" value={reward} />}{len && <input type="hidden" name="len" value={len.key} />}
+          {set && <input type="hidden" name="set" value={set} />}{reward && <input type="hidden" name="reward" value={reward} />}{len && <input type="hidden" name="len" value={len.key} />}{rep && <input type="hidden" name="rep" value={rep} />}
           <label className="relative min-w-0 flex-1"><span className="sr-only">Search campaigns</span><Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input name="q" defaultValue={needle} maxLength={60} placeholder="Search by role, skill or tool, e.g. CTO, Python, Claude" className="w-full rounded-lg border border-white/15 bg-[#fff] py-2 pl-9 pr-3" /></label>
           <button className="btn" type="submit">Search</button>
