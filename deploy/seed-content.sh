@@ -9,7 +9,7 @@
 # Locally: DIR=$PWD DRY=1 bash deploy/seed-content.sh
 #
 # Order: curriculum (brands, tracks) -> AI tracks -> card tracks (company, product, service, process, tool, leadership)
-# -> knowledge items and questions -> structure -> career ladders
+# -> knowledge items and questions -> structure -> career ladders -> public campaign contests
 # (plus any steps added to existing ladders) -> customer content -> company content (brand, gglink, guru).
 # Customer and company questions are imported as "review"; nothing goes live until an admin approves it at
 # /admin/review/<track>. Approving a role track enrols everyone it applies to, so check the facts first.
@@ -81,6 +81,8 @@ for d in content/brand content/gglink content/guru; do
   files=("$d"/*.json)
   if [ ${#files[@]} -gt 0 ]; then run import:knowledge -- "${files[@]}"; else echo "(nothing in $d)"; fi
 done
+# the 300 public campaigns (and their renewals) need the tracks above to exist; the /campaigns page also does this on demand
+run seed:campaigns
 
 echo
 echo "after:  $(counts "$TARGET")"

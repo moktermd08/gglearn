@@ -3,6 +3,8 @@ import "./globals.css";
 import { currentUser } from "@/lib/auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { unreadCount } from "@/lib/notifications";
+import { keepCampaignsFresh } from "@/lib/campaigns";
 
 export const metadata: Metadata = {
   title: "gglearn — Training academy",
@@ -11,10 +13,11 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser();
+  keepCampaignsFresh(); // weekly and monthly contests roll over by themselves, on whichever page someone opens first
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col antialiased">
-        <SiteHeader user={user} />
+        <SiteHeader user={user} unread={user ? unreadCount(user.id) : 0} />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
         <SiteFooter user={user} />
       </body>

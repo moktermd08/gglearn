@@ -1,120 +1,174 @@
 "use client";
-import { startTransition, useActionState, useState } from "react";
-import { Bot, Coins, Eye, Globe, Lock, Shuffle, Swords, Target, Timer, TriangleAlert } from "lucide-react";
+import { startTransition, useActionState, useMemo, useState, type ReactNode } from "react";
+import { Award, Bot, CalendarClock, Check, Coins, Eye, Flag, Globe, Lock, Minus, Plus, Shuffle, Swords, Target, Timer, Trophy, TriangleAlert, Users } from "lucide-react";
 import { createCompetition, type CreateState } from "../actions";
 import { BOT_TIERS } from "@/lib/bots";
 import { CURRENCIES, PRIZE_SPLIT_LABEL } from "@/lib/competitions-shared";
 
-type Group = [string, { id: number; name: string }[]];
+type Topic = { id: number; name: string; kind: string; art: ReactNode };
+type Group = [string, Topic[]];
+
+const DAYS = [3, 7, 14, 30, 60, 90];
+const STARTS = [[0, "Right now"], [1, "In 1 day"], [3, "In 3 days"], [7, "In 1 week"]] as const;
+const BOT_LOOK = { casual: "bg-sky-500/15 text-sky-300", steady: "bg-violet-500/15 text-violet-300", fierce: "bg-rose-500/15 text-rose-300" } as const;
 
 export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
   const [state, run, pending] = useActionState<CreateState, FormData>(createCompetition, null);
-  const [visibility, setVisibility] = useState("private");
-  const [goal, setGoal] = useState(3);
-  const [days, setDays] = useState(14);
-  const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
+  const [title, setTitle] = useState(""), [trackId, setTrackId] = useState("");
+  const [goal, setGoal] = useState(3), [days, setDays] = useState(14), [start, setStart] = useState(0);
+  const [bots, setBots] = useState<Record<string, number>>({ casual: 0, steady: 1, fierce: 0 });
+  const [visibility, setVisibility] = useState("private"), [prize, setPrize] = useState(false), [amount, setAmount] = useState("");
+  const topic = useMemo(() => groups.flatMap(([, items]) => items).find((t) => String(t.id) === trackId), [groups, trackId]);
+  const botTotal = Object.values(bots).reduce((a, b) => a + b, 0);
+  const perDay = goal / days, intensity = perDay < 0.15 ? { l: "Gentle", c: "#10b981" } : perDay < 0.4 ? { l: "Steady", c: "#f59e0b" } : { l: "Intense", c: "#f43f5e" };
+  const input = "w-full rounded-xl border border-black/15 bg-[#fff] px-3 py-2.5 focus:border-indigo-400 focus:outline-none";
   const label = "block text-sm font-semibold";
-  const perDay = (goal / days).toFixed(2);
+  const section = "card space-y-4 p-5";
+  const head = (Icon: typeof Target, tone: string, n: number, text: string) => (
+    <h2 className="flex items-center gap-3 text-lg font-bold"><span className={`grid h-9 w-9 place-items-center rounded-xl ${tone}`}><Icon size={18} /></span><span><span className="mr-1 text-slate-400">{n}.</span>{text}</span></h2>
+  );
+  const chip = (on: boolean) => `cursor-pointer rounded-full border-2 px-3.5 py-1.5 text-sm font-semibold transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-indigo-300 ${on ? "border-indigo-400 bg-indigo-500 text-[#fff]" : "border-black/10 bg-[#fff] text-slate-300 hover:border-indigo-300"}`;
+  const ready = !!trackId && title.trim().length >= 3;
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="space-y-5">
-      <section className="card space-y-3 p-5">
-        <h2 className="flex items-center gap-3 text-lg font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-pink-500/15"><Target size={18} className="text-pink-300" /></span><span><span className="mr-1 text-slate-400">1.</span>Topic and goal</span></h2>
-        <div><label className={label} htmlFor="title">Name your contest</label>
-          <input id="title" name="title" required minLength={3} maxLength={80} placeholder="e.g. Python sprint: team vs the bots" className={input} /></div>
-        <div><label className={label} htmlFor="trackId">Topic (hard skill or soft skill)</label>
-          <select id="trackId" name="trackId" required defaultValue="" className={input}>
-            <option value="" disabled>Choose a topic…</option>
-            {groups.map(([g, items]) => <optgroup key={g} label={g}>{items.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}</optgroup>)}
-          </select></div>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <div><label className={label} htmlFor="goalLevels">Goal: levels to gain</label>
-            <input id="goalLevels" name="goalLevels" type="number" min={1} max={20} value={goal} onChange={(e) => setGoal(Math.max(1, Number(e.target.value) || 1))} className={input} /></div>
-          <div><label className={label} htmlFor="startInDays">Starts</label>
-            <select id="startInDays" name="startInDays" defaultValue="0" className={input}>
-              <option value="0">Right now</option><option value="1">In 1 day</option><option value="3">In 3 days</option><option value="7">In 1 week</option>
+    <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
+      <div className="min-w-0 space-y-5">
+        <section className={section}>
+          {head(Target, "bg-pink-500/15 text-pink-300", 1, "Topic and goal")}
+          <div><label className={label} htmlFor="title">Name your contest</label>
+            <input id="title" name="title" required minLength={3} maxLength={80} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Python sprint: team vs the bots" className={`${input} mt-1`} /></div>
+          <div><label className={label} htmlFor="trackId">Topic (hard skill or soft skill)</label>
+            <select id="trackId" name="trackId" required value={trackId} onChange={(e) => setTrackId(e.target.value)} className={`${input} mt-1`}>
+              <option value="" disabled>Choose a topic…</option>
+              {groups.map(([g, items]) => <optgroup key={g} label={g}>{items.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}</optgroup>)}
             </select></div>
-          <div><label className={label} htmlFor="days">Length (days)</label>
-            <select id="days" name="days" value={days} onChange={(e) => setDays(Number(e.target.value))} className={input}>
-              {[3, 7, 14, 30, 60, 90].map((d) => <option key={d} value={d}>{d} days</option>)}
-            </select></div>
-        </div>
-        <div className="flex items-center gap-3 rounded-xl bg-amber-500/10 p-3 text-xs text-slate-300" aria-hidden>
-          <Timer size={16} className="shrink-0 text-amber-300" />
-          <div className="bar flex-1"><i style={{ width: `${Math.min(100, (Number(perDay) / 1) * 100)}%` }} /></div>
-          <span>{perDay} levels / day</span>
-        </div>
-        <p className="text-xs text-slate-400">
-          Progress is measured as levels <i>newly passed</i> after you start, so beginners and experts can race fairly. Your goal works out to {perDay} levels a day.
-          Spreading practice over several days beats cramming, so a longer contest usually teaches more.
-        </p>
-        <div><label className={label} htmlFor="description">Description (optional)</label>
-          <textarea id="description" name="description" maxLength={500} rows={2} className={input} /></div>
-      </section>
 
-      <section className="card space-y-3 p-5">
-        <h2 className="flex items-center gap-3 text-lg font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-violet-500/15"><Bot size={18} className="text-violet-300" /></span><span><span className="mr-1 text-slate-400">2.</span>Opponents</span></h2>
-        <p className="text-sm text-slate-300">Race people, bots, or both. Bots are <b>simulated</b>: they follow a published daily schedule and do not really study. Each gets its own look and style.</p>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {(Object.keys(BOT_TIERS) as (keyof typeof BOT_TIERS)[]).map((k) => (
-            <div key={k} className="rounded-xl border border-black/10 p-3"><label className={`${label} mb-1 flex items-center gap-1.5`} htmlFor={k}><Bot size={15} className="text-violet-300" />{BOT_TIERS[k].label} bots</label>
-              <input id={k} name={k} type="number" min={0} max={3} defaultValue={k === "steady" ? 1 : 0} className={input} />
-              <span className="text-xs text-slate-400">{BOT_TIERS[k].pace} XP/day · {BOT_TIERS[k].blurb}</span></div>
-          ))}
-        </div>
-        <div><label className={label} htmlFor="emails">Invite people by email (they need an account)</label>
-          <textarea id="emails" name="emails" rows={2} placeholder="ana@example.com, ben@example.com" className={input} /></div>
-        <div><label className={label} htmlFor="maxHumans">Max people</label>
-          <input id="maxHumans" name="maxHumans" type="number" min={2} max={50} defaultValue={20} className={`${input} max-w-32`} /></div>
-      </section>
-
-      <section className="card space-y-3 p-5">
-        <h2 className="flex items-center gap-3 text-lg font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-sky-500/15"><Eye size={18} className="text-sky-300" /></span><span><span className="mr-1 text-slate-400">3.</span>Who can watch</span></h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {([["private", Lock, "Private", "Only people you invite can see or join it.", "bg-emerald-500/15 text-emerald-300"], ["public", Globe, "Public", "Anyone with the link can watch the live leaderboard, without signing in.", "bg-sky-500/15 text-sky-300"]] as const).map(([v, Icon, name, text, col]) => (
-            <label key={v} className={`cursor-pointer rounded-xl border p-4 transition ${visibility === v ? "border-indigo-400 bg-indigo-500/10 shadow-sm" : "border-black/10 hover:border-black/25"}`}>
-              <input type="radio" name="visibility" value={v} checked={visibility === v} onChange={() => setVisibility(v)} className="sr-only" />
-              <span className={`mb-2 grid h-10 w-10 place-items-center rounded-xl ${col}`}><Icon size={20} /></span>
-              <b className="block">{name}</b><span className="text-sm text-slate-400">{text}</span>
-            </label>
-          ))}
-        </div>
-        {visibility === "public" && (
-          <div className="ml-6 space-y-2 text-sm">
-            <label className="flex items-center gap-2"><input type="checkbox" name="openJoin" /> Let any signed-in learner join (otherwise invited people only)</label>
-            <label className="flex items-start gap-2"><input type="checkbox" name="consent" required className="mt-1" />
-              <span>I understand that names, photos and progress of everyone in this contest are visible to anyone. You can make it private later, but not the other way round.</span></label>
+          <div>
+            <label className={label} htmlFor="goalLevels">Goal: levels to gain <b className="ml-1 rounded-full bg-indigo-500/12 px-2 py-0.5 text-indigo-300">{goal}</b></label>
+            <input id="goalLevels" name="goalLevels" type="range" min={1} max={20} value={goal} onChange={(e) => setGoal(Number(e.target.value))} className="mt-2 w-full" />
+            <div className="flex justify-between text-[10px] text-slate-400"><span>1</span><span>5</span><span>10</span><span>15</span><span>20</span></div>
           </div>
-        )}
-      </section>
+          <fieldset><legend className={label}>Length</legend>
+            <div className="mt-1.5 flex flex-wrap gap-2">{DAYS.map((d) => <label key={d} className={chip(days === d)}><input type="radio" name="days" value={d} checked={days === d} onChange={() => setDays(d)} className="sr-only" />{d} days</label>)}</div></fieldset>
+          <fieldset><legend className={label}>Starts</legend>
+            <div className="mt-1.5 flex flex-wrap gap-2">{STARTS.map(([v, t]) => <label key={v} className={chip(start === v)}><input type="radio" name="startInDays" value={v} checked={start === v} onChange={() => setStart(v)} className="sr-only" />{t}</label>)}</div></fieldset>
 
-      <section className="card space-y-3 p-5">
-        <h2 className="flex items-center gap-3 text-lg font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-amber-500/15"><Coins size={18} className="text-amber-300" /></span><span><span className="mr-1 text-slate-400">4.</span>Reward</span></h2>
-        <p className="text-sm text-slate-300">Everyone who reaches the goal can claim a certificate. Optionally add a cash prize for the first to get there. gglearn does not hold or send money: you pay winners yourself and record it. Only people, not bots, can win.</p>
-        <div className="grid gap-3 sm:grid-cols-4">
-          <div><label className={label} htmlFor="prizeAmount">Prize pool (optional)</label><input id="prizeAmount" name="prizeAmount" inputMode="decimal" placeholder="0" className={input} /></div>
-          <div><label className={label} htmlFor="prizeCurrency">Currency</label>
-            <select id="prizeCurrency" name="prizeCurrency" className={input}>{Object.entries(CURRENCIES).map(([k, sym]) => <option key={k} value={k}>{k} {sym}</option>)}</select></div>
-          <div className="sm:col-span-2"><label className={label} htmlFor="prizeSplit">Split</label>
-            <select id="prizeSplit" name="prizeSplit" className={input}>{Object.entries(PRIZE_SPLIT_LABEL).map(([k, t]) => <option key={k} value={k}>{t}</option>)}</select></div>
+          <div className="rounded-2xl p-3.5" style={{ background: `${intensity.c}14` }} aria-hidden>
+            <div className="mb-1.5 flex items-center justify-between text-xs font-semibold"><span className="flex items-center gap-1.5"><Timer size={15} style={{ color: intensity.c }} />{perDay.toFixed(2)} levels a day</span><span className="rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase text-[#fff]" style={{ background: intensity.c }}>{intensity.l} pace</span></div>
+            <div className="h-2 overflow-hidden rounded-full bg-black/10"><i className="block h-full rounded-full transition-all" style={{ width: `${Math.min(100, perDay * 100)}%`, background: intensity.c }} /></div>
+          </div>
+          <p className="text-xs text-slate-400">Progress is measured as levels <i>newly passed</i> after you start, so beginners and experts can race fairly. Spreading practice over several days beats cramming, so a longer contest usually teaches more.</p>
+          <div><label className={label} htmlFor="description">Description (optional)</label>
+            <textarea id="description" name="description" maxLength={500} rows={2} className={`${input} mt-1`} /></div>
+        </section>
+
+        <section className={section}>
+          {head(Bot, "bg-violet-500/15 text-violet-300", 2, "Opponents")}
+          <p className="text-sm text-slate-300">Race people, bots, or both. Bots are <b>simulated</b>: they follow a published daily schedule and do not really study. Each gets its own look and style.</p>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            {(Object.keys(BOT_TIERS) as (keyof typeof BOT_TIERS)[]).map((k) => (
+              <div key={k} className={`rounded-2xl border-2 p-2 text-center transition sm:p-3 ${bots[k] > 0 ? "border-indigo-400 bg-indigo-500/5" : "border-black/10"}`}>
+                <input type="hidden" name={k} value={bots[k]} />
+                <span className={`mx-auto grid h-11 w-11 place-items-center rounded-xl ${BOT_LOOK[k]}`}><Bot size={22} /></span>
+                <div className="mt-1.5 font-bold">{BOT_TIERS[k].label}</div>
+                <div className="text-[11px] leading-tight text-slate-400">{BOT_TIERS[k].pace} XP/day<span className="hidden sm:inline"> · {BOT_TIERS[k].blurb}</span></div>
+                <div className="mt-2.5 flex items-center justify-center gap-2">
+                  <button type="button" onClick={() => setBots({ ...bots, [k]: Math.max(0, bots[k] - 1) })} disabled={bots[k] === 0} aria-label={`Fewer ${BOT_TIERS[k].label} bots`} className="grid h-8 w-8 place-items-center rounded-lg border border-black/10 disabled:opacity-30"><Minus size={14} /></button>
+                  <span className="w-6 text-lg font-extrabold tabular-nums" aria-live="polite">{bots[k]}</span>
+                  <button type="button" onClick={() => setBots({ ...bots, [k]: Math.min(3, bots[k] + 1) })} disabled={bots[k] === 3} aria-label={`More ${BOT_TIERS[k].label} bots`} className="grid h-8 w-8 place-items-center rounded-lg border border-black/10 disabled:opacity-30"><Plus size={14} /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div><label className={label} htmlFor="emails">Invite people by email (they need an account)</label>
+            <textarea id="emails" name="emails" rows={2} placeholder="ana@example.com, ben@example.com" className={`${input} mt-1`} /></div>
+          <div><label className={label} htmlFor="maxHumans">Max people</label>
+            <input id="maxHumans" name="maxHumans" type="number" min={2} max={50} defaultValue={20} className={`${input} mt-1 max-w-32`} /></div>
+        </section>
+
+        <section className={section}>
+          {head(Eye, "bg-sky-500/15 text-sky-300", 3, "Who can watch")}
+          <div className="grid gap-3 sm:grid-cols-2">
+            {([["private", Lock, "Private", "Only people you invite can see or join it.", "bg-emerald-500/15 text-emerald-300"], ["public", Globe, "Public", "Anyone with the link can watch the live leaderboard, without signing in.", "bg-sky-500/15 text-sky-300"]] as const).map(([v, Icon, name, text, tone]) => (
+              <label key={v} className={`relative cursor-pointer rounded-2xl border-2 p-4 transition hover:-translate-y-0.5 hover:shadow-md ${visibility === v ? "border-indigo-400 bg-indigo-500/10" : "border-black/10"}`}>
+                <input type="radio" name="visibility" value={v} checked={visibility === v} onChange={() => setVisibility(v)} className="sr-only" />
+                <span className={`mb-2 grid h-10 w-10 place-items-center rounded-xl ${tone}`}><Icon size={20} /></span>
+                <b className="flex items-center gap-1.5">{name}{visibility === v && <Check size={16} className="spin-in text-indigo-300" />}</b><span className="text-sm text-slate-400">{text}</span>
+              </label>
+            ))}
+          </div>
+          {visibility === "public" && (
+            <div className="space-y-2 rounded-2xl bg-black/[.03] p-3 text-sm">
+              <label className="flex items-center gap-2"><input type="checkbox" name="openJoin" /> Let any signed-in learner join (otherwise invited people only)</label>
+              <label className="flex items-start gap-2"><input type="checkbox" name="consent" required className="mt-1" />
+                <span>I understand that names, photos and progress of everyone in this contest are visible to anyone. You can make it private later, but not the other way round.</span></label>
+            </div>
+          )}
+        </section>
+
+        <section className={section}>
+          {head(Coins, "bg-amber-500/15 text-amber-300", 4, "Reward")}
+          <div className="grid gap-3 sm:grid-cols-2">
+            {([[false, Award, "Certificates", "Everyone who reaches the goal can claim one. First place is Champion.", "bg-sky-500/15 text-sky-300"], [true, Coins, "Add a cash prize", "Paid by you, outside gglearn, to the first to reach the goal.", "bg-amber-500/15 text-amber-300"]] as const).map(([v, Icon, name, text, tone]) => (
+              <button type="button" key={name} onClick={() => setPrize(v)} aria-pressed={prize === v} className={`rounded-2xl border-2 p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${prize === v ? "border-indigo-400 bg-indigo-500/10" : "border-black/10"}`}>
+                <span className={`mb-2 grid h-10 w-10 place-items-center rounded-xl ${tone}`}><Icon size={20} /></span>
+                <b className="flex items-center gap-1.5">{name}{prize === v && <Check size={16} className="text-indigo-300" />}</b><span className="text-sm text-slate-400">{text}</span>
+              </button>
+            ))}
+          </div>
+          {prize && (
+            <div className="space-y-3">
+              <p className="text-sm text-slate-300">gglearn does not hold or send money: you pay winners yourself and record it. Only people, not bots, can win.</p>
+              <div className="grid gap-3 sm:grid-cols-4">
+                <div><label className={label} htmlFor="prizeAmount">Prize pool</label><input id="prizeAmount" name="prizeAmount" inputMode="decimal" placeholder="100" value={amount} onChange={(e) => setAmount(e.target.value)} className={`${input} mt-1`} /></div>
+                <div><label className={label} htmlFor="prizeCurrency">Currency</label>
+                  <select id="prizeCurrency" name="prizeCurrency" className={`${input} mt-1`}>{Object.entries(CURRENCIES).map(([k, sym]) => <option key={k} value={k}>{k} {sym}</option>)}</select></div>
+                <div className="sm:col-span-2"><label className={label} htmlFor="prizeSplit">Split</label>
+                  <select id="prizeSplit" name="prizeSplit" className={`${input} mt-1`}>{Object.entries(PRIZE_SPLIT_LABEL).map(([k, t]) => <option key={k} value={k}>{t}</option>)}</select></div>
+              </div>
+              <div><label className={label} htmlFor="prizeNote">Who pays, and when? (required with a prize)</label><input id="prizeNote" name="prizeNote" maxLength={200} className={`${input} mt-1`} /></div>
+            </div>
+          )}
+        </section>
+
+        <section className={section}>
+          {head(Shuffle, "bg-fuchsia-500/15 text-fuchsia-300", 5, "Architect twist (optional)")}
+          <label className="flex items-start gap-2 text-sm"><input type="checkbox" name="twist" className="mt-1" />
+            <span><b>Let a random racer rewrite one question for the others.</b> For each level, one person in the race is drawn by the server and shown one multiple-choice question,
+              which they may reword for their rivals. They can also just pass, and then nothing changes.</span></label>
+          <ul className="list-disc space-y-1 pl-9 text-xs text-slate-400">
+            <li>It can never decide the race: at most 1 question in 10 per level, never counted in the ranking, and the Architect does not face their own twist.</li>
+            <li>Same format and number of options, no links, and an AI referee checks that exactly one answer is right before it goes live. If the referee is down, you approve it, and you can veto any twist.</li>
+            <li>It locks the moment a rival starts that level, so everyone faces it or nobody does. Racers only see who the Architect was after the contest ends.</li>
+          </ul>
+        </section>
+      </div>
+
+      {/* the contest as the people in it will see it */}
+      <aside className="lg:sticky lg:top-20" aria-label="Your contest">
+        <div className="card overflow-hidden">
+          <div className="px-5 pb-4 pt-5" style={{ background: "linear-gradient(135deg, rgba(245,158,11,.2), #fff 70%)" }}>
+            <div className="mb-3 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-slate-400"><Trophy size={13} />Your contest</div>
+            <div className="flex items-center gap-3">
+              {topic ? <div className="pop shrink-0" key={topic.id}>{topic.art}</div> : <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl border-2 border-dashed border-black/15 text-slate-300"><Target size={26} /></span>}
+              <div className="min-w-0"><div className="truncate text-lg font-extrabold leading-tight">{title.trim() || "Name your contest"}</div><div className="truncate text-xs text-slate-400">{topic ? topic.name : "Choose a topic"}</div></div>
+            </div>
+          </div>
+          <ul className="space-y-2.5 border-t border-black/5 px-5 py-4 text-sm">
+            <li className="flex items-center gap-2.5"><Flag size={16} className="shrink-0 text-pink-300" /><span>Gain <b>{goal}</b> level{goal === 1 ? "" : "s"} in <b>{days}</b> days</span></li>
+            <li className="flex items-center gap-2.5"><CalendarClock size={16} className="shrink-0 text-sky-300" /><span>Starts <b>{start === 0 ? "right now" : `in ${start} day${start === 1 ? "" : "s"}`}</b></span></li>
+            <li className="flex items-center gap-2.5"><Timer size={16} className="shrink-0" style={{ color: intensity.c }} /><span><b>{intensity.l}</b> pace, {perDay.toFixed(2)} levels a day</span></li>
+            <li className="flex items-center gap-2.5"><Users size={16} className="shrink-0 text-violet-300" /><span>You{botTotal > 0 ? <> and <b>{botTotal}</b> bot{botTotal === 1 ? "" : "s"}</> : " and anyone you invite"}</span></li>
+            <li className="flex items-center gap-2.5">{visibility === "private" ? <Lock size={16} className="shrink-0 text-emerald-300" /> : <Globe size={16} className="shrink-0 text-sky-300" />}<span><b>{visibility === "private" ? "Private" : "Public"}</b>: {visibility === "private" ? "invited people only" : "anyone can watch"}</span></li>
+            <li className="flex items-center gap-2.5">{prize ? <Coins size={16} className="shrink-0 text-amber-300" /> : <Award size={16} className="shrink-0 text-sky-300" />}<span>{prize ? <>Cash prize{amount.trim() ? <>: <b>{amount.trim()}</b></> : ""} and certificates</> : "Certificates for everyone who finishes"}</span></li>
+          </ul>
+          <div className="space-y-2 border-t border-black/5 p-4">
+            {state?.error && <p role="alert" className="slide-in flex items-start gap-1.5 rounded-xl bg-rose-500/10 p-2.5 text-sm text-rose-400"><TriangleAlert size={14} className="mt-0.5 shrink-0" />{state.error}</p>}
+            <button disabled={pending} className="btn w-full !justify-center !py-3 text-base disabled:opacity-50">{pending ? "Creating…" : <>Create contest<Swords size={16} /></>}</button>
+            {!ready && <p className="text-center text-xs text-slate-400">Add a name and a topic to create it.</p>}
+          </div>
         </div>
-        <div><label className={label} htmlFor="prizeNote">Who pays, and when? (required with a prize)</label><input id="prizeNote" name="prizeNote" maxLength={200} className={input} /></div>
-      </section>
-
-      <section className="card space-y-3 p-5">
-        <h2 className="flex items-center gap-3 text-lg font-bold"><span className="grid h-9 w-9 place-items-center rounded-xl bg-fuchsia-500/15"><Shuffle size={18} className="text-fuchsia-300" /></span><span><span className="mr-1 text-slate-400">5.</span>Architect twist (optional)</span></h2>
-        <label className="flex items-start gap-2 text-sm"><input type="checkbox" name="twist" className="mt-1" />
-          <span><b>Let a random racer rewrite one question for the others.</b> For each level, one person in the race is drawn by the server and shown one multiple-choice question,
-            which they may reword for their rivals. They can also just pass, and then nothing changes.</span></label>
-        <ul className="list-disc space-y-1 pl-9 text-xs text-slate-400">
-          <li>It can never decide the race: at most 1 question in 10 per level, never counted in the ranking, and the Architect does not face their own twist.</li>
-          <li>Same format and number of options, no links, and an AI referee checks that exactly one answer is right before it goes live. If the referee is down, you approve it, and you can veto any twist.</li>
-          <li>It locks the moment a rival starts that level, so everyone faces it or nobody does. Racers only see who the Architect was after the contest ends.</li>
-        </ul>
-      </section>
-
-      {state?.error && <p role="alert" className="slide-in flex items-center gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} />{state.error}</p>}
-      <button disabled={pending} className="btn !px-6 !py-3 text-base disabled:opacity-50">{pending ? "Creating…" : <>Create contest<Swords size={16} /></>}</button>
+      </aside>
     </form>
   );
 }

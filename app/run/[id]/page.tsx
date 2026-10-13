@@ -5,13 +5,18 @@ import { answers, certificates, db, enrollments, questions, runs, tracks } from 
 import { requireUser } from "@/lib/auth";
 import { LEVELS, MAX_LEVEL, PASS_MARK, TIERS, certTitle, tierOf } from "@/lib/levels";
 import { rivalFor, rivalProgress } from "@/lib/rivals";
+import { examStanding, levelRecordToBeat } from "@/lib/records";
+import { now } from "@/lib/competitions";
+import { progressionFor } from "@/lib/progression";
+import { BadgeTile } from "@/components/Achievements";
+import { exact } from "@/lib/competitions-shared";
 import { submitRun } from "@/app/actions";
 import { Quiz } from "@/components/Quiz";
 import { Ring } from "@/components/Ring";
 import { Confetti } from "@/components/Confetti";
 import { Avatar } from "@/components/Avatar";
 import { avatarLooks } from "@/lib/avatars";
-import { ArrowLeft, BarChart3, Check, CircleCheck, CircleMinus, CircleX, GraduationCap, Lightbulb, Medal, MessageSquareText, Sparkles, Tag, Target, Trophy } from "lucide-react";
+import { ArrowLeft, BarChart3, Timer, Check, CircleCheck, CircleMinus, CircleX, GraduationCap, Lightbulb, Medal, MessageSquareText, Sparkles, Tag, Target, Trophy } from "lucide-react";
 
 const OK = 0.8; // same bar the review has always used for a correct answer
 const tone = (sc: number) => (sc >= OK ? "emerald" : sc > 0 ? "amber" : "rose") as "emerald" | "amber" | "rose";
@@ -46,7 +51,7 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
     return (
       <div className="space-y-4">
         <h1 className="text-center text-xl font-extrabold">{title}</h1>
-        <Quiz action={submitRun.bind(null, runId)} level={run.level} rivalHue={rival.hue} rivalName={rival.name} meLook={looks.me} rivalLook={looks.rival} photoUrl={looks.photoUrl}
+        <Quiz action={submitRun.bind(null, runId)} level={run.level} elapsed={Math.max(0, now() - run.startedAt)} record={levelRecordToBeat(user.id, run.trackId, run.level)} rivalHue={rival.hue} rivalName={rival.name} meLook={looks.me} rivalLook={looks.rival} photoUrl={looks.photoUrl}
           questions={rows.map(({ q }) => ({ id: q.id, prompt: q.prompt, code: q.code, type: q.type, options: q.options, topic: q.topic }))} />
       </div>
     );
@@ -54,6 +59,9 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
 
   const score = run.score ?? 0, pct = Math.round(score * 100), passed = !!run.passed;
   const xp = pct + (passed ? 50 : 0);
+  // badges first earned by finishing this exam (written by submitRun; progressionFor also catches any the action missed)
+  const prog = progressionFor(user.id), finished = run.finishedAt ?? 0;
+  const newBadges = prog.badges.filter((x) => x.earnedAt !== null && x.earnedAt >= finished && x.earnedAt - finished < 120);
   const enrolment = db.select().from(enrollments).where(and(eq(enrollments.userId, user.id), eq(enrollments.trackId, track.id))).get();
   const rv = rivalProgress(rival, track.slug, enrolment?.startedAt ?? run.startedAt);
   const cert = db.select().from(certificates).where(and(eq(certificates.userId, user.id), eq(certificates.trackId, track.id), eq(certificates.level, run.level))).get();
@@ -61,11 +69,12 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
   const byTopic = new Map<string, number[]>();
   for (const { a, q } of rows) if (q.topic) byTopic.set(q.topic, [...(byTopic.get(q.topic) ?? []), a.score]);
   const topics = [...byTopic].map(([name, sc]) => ({ name, avg: sc.reduce((x, y) => x + y, 0) / sc.length })).sort((x, y) => x.avg - y.avg);
+  const took = Math.max(1, run.finishedAt - run.startedAt), speed = examStanding(user.id, run);
   const tierUp = passed && run.level > 1 && tierOf(run.level) > tierOf(run.level - 1);
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      {passed && <Confetti count={run.level === MAX_LEVEL || cert ? 120 : 60} />}
+      {passed && <Confetti count={run.level === MAX_LEVEL || cert || speed.some((x) => x.isRecord) ? 120 : 60} />}
       <div className="card pop space-y-4 p-6 text-center">
         <h1 className="text-xl font-extrabold">{title}</h1>
         <div className="flex items-center justify-center gap-6">
@@ -78,6 +87,10 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
         </p>
         <p className="text-slate-300">+{xp} XP · {passed ? `${rival.name} is on level ${rv.level}${run.level > rv.level ? ", and you are ahead!" : run.level === rv.level ? ", and you are level." : ", so keep pushing."}` : `You need ${PASS_MARK * 100}% to pass. ${rival.name} is on level ${rv.level}.`}</p>
         {tierUp && <p className="pop flex items-center justify-center gap-2 font-bold" style={{ color: `hsl(${TIERS[tierOf(run.level)].hue} 70% 35%)` }}><Medal size={20} />Rank up: {TIERS[tierOf(run.level)].name}!</p>}
+        <p className="text-sm text-slate-400">Player level {prog.player.level} · {prog.player.title}{prog.streak.current > 0 && ` · ${prog.streak.current}-day streak`}</p>
+        {newBadges.length > 0 && (
+          <div className="pop mx-auto max-w-md rounded-2xl bg-yellow-400/10 p-3 ring-1 ring-yellow-400/40"><div className="mb-2 text-sm font-bold text-yellow-600">New badge{newBadges.length === 1 ? "" : "s"} earned!</div><div className="flex flex-wrap justify-center gap-2">{newBadges.map((x) => <div key={x.key} className="w-20"><BadgeTile b={x} fresh /></div>)}</div></div>
+        )}
         {cert && <Link href={`/cert/${cert.code}`} className="btn"><GraduationCap size={18} />Get your {certTitle(run.level)} certificate</Link>}
         <div><Link href={`/tracks/${track.slug}`} className="btn btn-ghost"><ArrowLeft size={16} />Back to the climb</Link></div>
       </div>
@@ -88,6 +101,20 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
         <Stat Icon={CircleX} label="Missed" value={missed} cls="text-rose-400" i={2} />
         <Stat Icon={Sparkles} label="XP earned" value={`+${xp}`} cls="text-sky-300" i={3} />
       </div>
+
+      <section className="card rise flex flex-wrap items-center gap-x-6 gap-y-2 p-4" aria-label="Exam time">
+        <div className="flex items-center gap-3"><Timer size={22} className="text-sky-300" /><div><div className="text-2xl font-extrabold tabular-nums">{exact(took)}</div><div className="text-[11px] uppercase tracking-wider text-slate-400">Time taken</div></div></div>
+        <div className="min-w-0 flex-1 space-y-1 text-sm">
+          {speed.length === 0 && <p className="text-slate-400">{passed ? "Race in a contest on this topic to see how your time ranks against others." : "Pass the level to put a time on the board."}</p>}
+          {speed.map((s) => (
+            <p key={s.slug} className={s.isRecord ? "font-bold text-amber-300" : "text-slate-300"}>
+              {s.isRecord ? "New level record in " : "In "}<Link href={`/competitions/${s.slug}`} className="underline">{s.title}</Link>
+              {s.isRecord ? `: ${exact(s.seconds)}.` : s.record ? `: the fastest pass of this level is ${exact(s.record.seconds)}${s.record.mine ? " (yours)" : ` by ${s.record.holder}`}.` : "."}
+              {s.beaten !== null && ` Faster than ${s.beaten}% of the other ${s.people - 1}.`}
+            </p>
+          ))}
+        </div>
+      </section>
 
       <section className="card space-y-3 p-5">
         <h2 className="flex items-center gap-2 font-bold"><BarChart3 size={18} className="text-indigo-300" />Score by question</h2>

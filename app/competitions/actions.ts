@@ -4,12 +4,14 @@ import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { randomBytes } from "node:crypto";
-import { competitionCerts, competitionMembers, competitions, contestTwists, db, tracks } from "@/lib/db";
+import { competitionCerts, competitionMembers, competitions, contestAttempts, contestTwists, db, tracks, users } from "@/lib/db";
+import { openTo } from "@/lib/paths";
+import { attemptStart, canChallenge, MAX_RUNNING_ATTEMPTS, runningAttempts, settleAttempts } from "@/lib/records";
 import { declineTwist, reviewTwist, submitTwist } from "@/lib/twists";
 import { requireUser } from "@/lib/auth";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import type { BotTier } from "@/lib/bots";
-import { baselineLevel, finishersOf, now, standings, stateOf } from "@/lib/competitions";
+import { baselineLevel, canView, finishersOf, now, standings, stateOf } from "@/lib/competitions";
 import { enrol, createContest, inviteEmails, newContestSchema, toMinor } from "@/lib/contests";
 import { MAX_LEVEL } from "@/lib/levels";
 
@@ -174,4 +176,38 @@ export async function reviewTwistAction(twistId: number, action: "approve" | "re
   reviewTwist(twistId, me.id, action);
   const slug = await twistContest(twistId);
   if (slug) revalidatePath(`/competitions/${slug}`);
+}
+
+/** After a contest ends: start your own clock on the same goal and try to beat the fastest time. */
+export async function startChallenge(competitionId: number, fd: FormData) {
+  const me = await requireUser();
+  const c = db.select().from(competitions).where(eq(competitions.id, competitionId)).get();
+  if (!c || !canView(c, me) || !canChallenge(c)) return;
+  // a public board shows names, so a person who never joined the contest has to agree to appear on it
+  if (c.visibility === "public" && str(fd.get("consent")) !== "on") return;
+  if (!allowed(`challenge:${me.id}`, 10)) return;
+  hit(`challenge:${me.id}`, 60 * MINUTE);
+
+  db.transaction((tx) => {
+    const who = tx.select({ a: users.audience }).from(users).where(eq(users.id, me.id)).get();
+    const track = tx.select({ a: tracks.audience }).from(tracks).where(eq(tracks.id, c.trackId)).get();
+    if (!who || !track || !openTo(who.a, track.a)) return;
+    if (runningAttempts(me.id) >= MAX_RUNNING_ATTEMPTS) return;
+    const { startLevel, target } = attemptStart(me.id, c);
+    if (target < 1) return; // already a Titan here: nothing left to gain
+    tx.insert(contestAttempts).values({ competitionId: c.id, userId: me.id, startLevel, target }).onConflictDoNothing().run();
+    enrol(tx, me.id, c.trackId, c.title);
+  });
+  revalidatePath(`/competitions/${c.slug}`);
+}
+
+/** Stop the running attempt; the person can start another. */
+export async function abandonChallenge(competitionId: number) {
+  const me = await requireUser();
+  const c = db.select().from(competitions).where(eq(competitions.id, competitionId)).get();
+  if (!c) return;
+  settleAttempts(c); // a goal reached a moment ago is a finish, not an abandon
+  db.update(contestAttempts).set({ status: "abandoned", finishedAt: now() })
+    .where(and(eq(contestAttempts.competitionId, c.id), eq(contestAttempts.userId, me.id), eq(contestAttempts.status, "active"))).run();
+  revalidatePath(`/competitions/${c.slug}`);
 }

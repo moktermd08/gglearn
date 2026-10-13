@@ -1,0 +1,2828 @@
+{
+  "slug": "moksy-support",
+  "name": "Moksy support",
+  "description": "Answering Moksy customers from its own published pages: contact routes, plans and limits, MOX and refunds, reviews, error messages, trust and the terms.",
+  "roles": "support,customer success",
+  "kind": "process",
+  "audience": "staff",
+  "groups": {
+    "contact": "Moksy contact route or report detail",
+    "plan": "Moksy plan or plan feature",
+    "mox": "MOX or wallet concept",
+    "error": "Moksy error message",
+    "trust": "Moksy trust or privacy fact",
+    "terms": "Moksy Terms of Service clause",
+    "conflict": "point where published pages disagree",
+    "review": "Moksy review concept",
+    "triage": "triage practice",
+    "tone": "tone or de-escalation technique",
+    "escalation": "escalation practice",
+    "knowledge": "knowledge-base habit",
+    "privacy": "support privacy practice",
+    "complaints": "refund or complaint handling concept",
+    "service": "service-level concept"
+  },
+  "cards": [
+    {
+      "group": "contact",
+      "subject": "The support address",
+      "tier": 1,
+      "says": [
+        "is support@moksy.ai",
+        "is the route for account, sign-in, plan, billing, review and breakage problems"
+      ],
+      "use": "need to report a broken feature or a sign-in problem to a person",
+      "not": [
+        "handles privacy and data requests"
+      ],
+      "like": [
+        "The privacy address",
+        "The legal address"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "The privacy address",
+      "tier": 1,
+      "says": [
+        "is privacy@moksy.ai",
+        "reaches the people who handle privacy and data requests directly"
+      ],
+      "use": "hear a customer ask for access to or deletion of their data",
+      "not": [
+        "handles billing questions about a charge"
+      ],
+      "like": [
+        "The support address",
+        "The legal address"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "The legal address",
+      "tier": 2,
+      "says": [
+        "is legal@moksy.ai",
+        "takes questions about the wording of the terms"
+      ],
+      "use": "are asked about what a clause in the Terms of Service means",
+      "not": [
+        "takes sign-in problems from locked-out customers"
+      ],
+      "like": [
+        "The support address",
+        "The privacy address"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "Sales",
+      "tier": 2,
+      "says": [
+        "handles pricing and procurement enquiries for someone buying rather than fixing",
+        "is where the contact page sends quotes for large teams"
+      ],
+      "use": "meet a customer who wants a quote rather than a fix",
+      "not": [
+        "arbitrates disputed reviews"
+      ],
+      "like": [
+        "The support address"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "The help centre",
+      "tier": 1,
+      "says": [
+        "is where the contact page says most answers already are",
+        "comes before writing to a person"
+      ],
+      "use": "want to check whether a question is already answered before writing in",
+      "not": [
+        "replaces the privacy address for data requests"
+      ],
+      "like": [
+        "The support address"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "Account email and plan or review link",
+      "tier": 2,
+      "says": [
+        "are the two things the contact page asks every message to include",
+        "roughly halve the number of messages it takes to fix something"
+      ],
+      "use": "want to cut the back-and-forth on a customer's problem",
+      "not": [
+        "are replaced by the customer's card number"
+      ],
+      "like": [
+        "Billing details to include"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "Billing details to include",
+      "tier": 3,
+      "says": [
+        "are the date and amount of the charge",
+        "let support find the transaction without asking again"
+      ],
+      "use": "hear a customer say a charge looks wrong",
+      "not": [
+        "are the customer's full card number"
+      ],
+      "like": [
+        "Account email and plan or review link"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "Locked-out report",
+      "tier": 3,
+      "says": [
+        "is made by saying so from the address on the account",
+        "tells support the customer cannot sign in at all"
+      ],
+      "use": "are writing to a customer who cannot sign in at all",
+      "not": [
+        "can be sent from any address the customer likes"
+      ],
+      "like": [
+        "The support address"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "Plan-looks-wrong report",
+      "tier": 3,
+      "says": [
+        "names the section that looks wrong",
+        "says whether a reviewer has been involved"
+      ],
+      "use": "hear a customer say their plan has an error in it",
+      "not": [
+        "needs only the customer's name"
+      ],
+      "like": [
+        "Account email and plan or review link"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "Broken-feature report",
+      "tier": 3,
+      "says": [
+        "says what the customer did and what happened",
+        "is helped by a screenshot, worth several paragraphs"
+      ],
+      "use": "are asked how a customer should describe something that is broken",
+      "not": [
+        "needs only the name of the browser"
+      ],
+      "like": [
+        "Plan-looks-wrong report"
+      ]
+    },
+    {
+      "group": "contact",
+      "subject": "Review dispute route",
+      "tier": 4,
+      "says": [
+        "goes in through support",
+        "ends with arbitration by a senior reviewer"
+      ],
+      "use": "hear a customer disagree with the verdict of a review",
+      "not": [
+        "goes to Sales, which handles pricing"
+      ],
+      "like": [
+        "The support address"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "The Free plan",
+      "tier": 1,
+      "says": [
+        "costs £0 a month",
+        "gives 3 projects, 5 exports a month and 1 seat",
+        "has no Expert Reviews and no API access"
+      ],
+      "use": "are asked what a customer gets before paying anything",
+      "not": [
+        "includes unlimited Expert Reviews"
+      ],
+      "like": [
+        "The Pro plan",
+        "The Max plan"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "The Pro plan",
+      "tier": 1,
+      "says": [
+        "costs £19 a month",
+        "gives 25 projects, 5 seats and 100 exports a month",
+        "is the first tier an accredited reviewer can read a plan on"
+      ],
+      "use": "meet a customer who needs Expert Reviews and a small team",
+      "not": [
+        "gives unlimited seats"
+      ],
+      "like": [
+        "The Free plan",
+        "The Max plan"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "The Max plan",
+      "tier": 1,
+      "says": [
+        "costs £79 a month",
+        "gives unlimited projects, seats and exports",
+        "is the plan that makes someone eligible to become a paid reviewer"
+      ],
+      "use": "are asked which plan allows a person to become a paid reviewer",
+      "not": [
+        "gives only 25 projects"
+      ],
+      "like": [
+        "The Free plan",
+        "The Pro plan"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "The Starter Blueprint",
+      "tier": 2,
+      "says": [
+        "covers 5 of the 22 areas",
+        "is the Blueprint depth that comes with the Free plan"
+      ],
+      "use": "are asked how many areas a Free customer's Blueprint covers",
+      "not": [
+        "covers all 22 areas"
+      ],
+      "like": [
+        "The Fuller Blueprint",
+        "The Complete Blueprint"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "The Fuller Blueprint",
+      "tier": 2,
+      "says": [
+        "covers 12 of the 22 areas",
+        "is the Blueprint depth that comes with the Pro plan"
+      ],
+      "use": "are asked how many areas a Pro customer's Blueprint covers",
+      "not": [
+        "covers only 5 areas"
+      ],
+      "like": [
+        "The Starter Blueprint",
+        "The Complete Blueprint"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "The Complete Blueprint",
+      "tier": 2,
+      "says": [
+        "covers all 22 areas",
+        "is the Blueprint depth that comes with the Max plan"
+      ],
+      "use": "are asked what a Max customer's Blueprint covers",
+      "not": [
+        "covers 12 of the 22 areas"
+      ],
+      "like": [
+        "The Starter Blueprint",
+        "The Fuller Blueprint"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "Enterprise and public sector pricing",
+      "tier": 3,
+      "says": [
+        "is priced separately from the published plans",
+        "includes SSO and SCIM, role-based access and a signed DPA",
+        "includes invoicing against a PO, UK data residency and a private reviewer pool"
+      ],
+      "use": "meet a university asking for SSO, SCIM and invoicing against a PO",
+      "not": [
+        "is listed as a monthly price on the pricing page"
+      ],
+      "like": [
+        "The Max plan"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "Public body procurement support",
+      "tier": 4,
+      "says": [
+        "gives public bodies procurement paperwork and discounted credit",
+        "sits within the separately priced Enterprise and public sector offer"
+      ],
+      "use": "hear a public body ask what procurement help is available",
+      "not": [
+        "is included in the Free plan"
+      ],
+      "like": [
+        "Enterprise and public sector pricing"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "The Free plan's status",
+      "tier": 3,
+      "says": [
+        "is described by the pricing page as a real plan, not a teaser",
+        "is the same engine reporting on fewer areas",
+        "is deliberately enough to judge whether the thinking is any good"
+      ],
+      "use": "are asked whether the Free plan is a trial or a real plan",
+      "not": [
+        "is described as a short trial that expires"
+      ],
+      "like": [
+        "The Free plan",
+        "The Pro plan",
+        "The Max plan"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "API access",
+      "tier": 3,
+      "says": [
+        "is included on Pro and Max",
+        "is not included on Free"
+      ],
+      "use": "are asked which published plans include API access",
+      "not": [
+        "is included on Free"
+      ],
+      "like": [
+        "The Free plan"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "Access to published reviewer work",
+      "tier": 4,
+      "says": [
+        "is included on the Free plan for reading",
+        "is different from a reviewer reading and correcting the customer's own plan"
+      ],
+      "use": "hear a Free customer think they can have a reviewer correct their own plan",
+      "not": [
+        "lets a Free customer commission unlimited reviews"
+      ],
+      "like": [
+        "The Pro plan"
+      ]
+    },
+    {
+      "group": "plan",
+      "subject": "Moksy's claim over customer ideas",
+      "tier": 3,
+      "says": [
+        "is none: Moksy claims no rights over a customer's plan or the idea behind it",
+        "applies on every tier"
+      ],
+      "use": "hear a founder worry that Moksy owns their idea",
+      "not": [
+        "is a licence over the idea on Free only"
+      ],
+      "like": [
+        "Data ownership clause"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "MOX",
+      "tier": 1,
+      "says": [
+        "is Moksy credit",
+        "is worth $0.01 per MOX in the lexicon"
+      ],
+      "use": "are asked what MOX is",
+      "not": [
+        "is a monthly membership that renews on its own"
+      ],
+      "like": [
+        "Membership"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "Membership",
+      "tier": 2,
+      "says": [
+        "is a monthly plan that carries what is included in it",
+        "renews on its own"
+      ],
+      "use": "need to explain how a plan differs from credit",
+      "not": [
+        "is credit bought once and spent when chosen"
+      ],
+      "like": [
+        "MOX"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "What MOX pays for",
+      "tier": 2,
+      "says": [
+        "covers work outside plan benefits such as expert reviews, additional plans and priority turnaround",
+        "is spent when the customer chooses"
+      ],
+      "use": "are asked what a customer can spend MOX on",
+      "not": [
+        "is needed before any plan can be produced"
+      ],
+      "like": [
+        "MOX"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "Producing a plan without MOX",
+      "tier": 2,
+      "says": [
+        "needs no MOX purchase at all",
+        "is possible on any tier"
+      ],
+      "use": "hear a customer say they must buy MOX before they can produce a plan",
+      "not": [
+        "requires a minimum MOX balance of one review"
+      ],
+      "like": [
+        "MOX"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "MOX renewal",
+      "tier": 3,
+      "says": [
+        "does not happen on its own",
+        "means credit is bought once"
+      ],
+      "use": "are asked whether MOX renews each month like a plan",
+      "not": [
+        "is automatic each month"
+      ],
+      "like": [
+        "Membership"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "Dollar peg",
+      "tier": 3,
+      "says": [
+        "keeps MOX tied to dollars",
+        "stops the price of a review moving with the customer's currency"
+      ],
+      "use": "are asked why a review costs the same MOX in any currency",
+      "not": [
+        "makes MOX fall in value each month"
+      ],
+      "like": [
+        "MOX"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "Wallet ledger",
+      "tier": 3,
+      "says": [
+        "itemises every debit",
+        "lets a customer see what a piece of work cost after it happened"
+      ],
+      "use": "are asked to explain why a customer's balance dropped",
+      "not": [
+        "shows only the current balance with no history"
+      ],
+      "like": [
+        "Pooled MOX balance"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "Pooled MOX balance",
+      "tier": 3,
+      "says": [
+        "is one balance for the whole workspace on team tiers",
+        "replaces a card per person"
+      ],
+      "use": "hear a team ask how credit is shared between members",
+      "not": [
+        "gives each member a separate balance"
+      ],
+      "like": [
+        "Wallet ledger"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "MOX expiry",
+      "tier": 4,
+      "says": [
+        "has no expiry surprises as balance and history stay visible in the wallet",
+        "is something the customer can check themselves"
+      ],
+      "use": "hear a customer worry their credit will vanish",
+      "not": [
+        "is stated as a fixed number of days"
+      ],
+      "like": [
+        "Wallet ledger"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "Unused credit refund request",
+      "tier": 4,
+      "says": [
+        "is answered by the page with contact support and we will look at it",
+        "is a discretionary review, not a promise of an automatic refund"
+      ],
+      "use": "hear a customer ask for a refund of unused credit",
+      "not": [
+        "is promised as an automatic full refund"
+      ],
+      "like": [
+        "Review refund rule"
+      ]
+    },
+    {
+      "group": "mox",
+      "subject": "Review refund rule",
+      "tier": 5,
+      "says": [
+        "is not published anywhere in the sources",
+        "means support must never quote a refund amount for a review"
+      ],
+      "use": "are asked what Moksy will refund for a review that disappointed",
+      "not": [
+        "is a full refund within 14 days"
+      ],
+      "like": [
+        "Unused credit refund request"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The Identity Verification Failed message",
+      "tier": 1,
+      "says": [
+        "says the email or password entered was invalid",
+        "means the sign-in details were wrong"
+      ],
+      "use": "hear a customer quote 'Invalid email or password'",
+      "not": [
+        "means the account is locked"
+      ],
+      "like": [
+        "The Identity Suspended message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The secure session expired message",
+      "tier": 1,
+      "says": [
+        "says re-authentication is required",
+        "means the customer should sign in again"
+      ],
+      "use": "hear a customer say their secure session has expired",
+      "not": [
+        "means the account has been closed"
+      ],
+      "like": [
+        "The Identity Verification Failed message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The Identity Suspended message",
+      "tier": 2,
+      "says": [
+        "says there were too many failed attempts",
+        "means the account is locked",
+        "is reported to support from the address on the account"
+      ],
+      "use": "hear a customer quote 'Too many failed attempts. Contact administration'",
+      "not": [
+        "means a wrong password was typed once"
+      ],
+      "like": [
+        "The Identity Verification Failed message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The Multi-Factor Authentication message",
+      "tier": 2,
+      "says": [
+        "says the process needs an extra verification step to proceed",
+        "relates to the two-factor requirement for administrators"
+      ],
+      "use": "hear a customer say they are asked for extra verification",
+      "not": [
+        "says the account is locked"
+      ],
+      "like": [
+        "The Identity Suspended message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The email already registered message",
+      "tier": 2,
+      "says": [
+        "says that email already has a Moksy account",
+        "suggests logging in instead"
+      ],
+      "use": "hear a customer say sign-up refuses their email address",
+      "not": [
+        "says the password was wrong"
+      ],
+      "like": [
+        "The Identity Verification Failed message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The Access Restricted message",
+      "tier": 3,
+      "says": [
+        "says the feature is not included in the current subscription",
+        "is a plan limit, not a fault"
+      ],
+      "use": "hear a customer quote 'not included in your current subscription'",
+      "not": [
+        "means the customer's role lacks permission"
+      ],
+      "like": [
+        "The Authority Denied message",
+        "The read-only message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The Authority Denied message",
+      "tier": 3,
+      "says": [
+        "says the customer lacks the required role for the module",
+        "is a role or permission issue, not a plan issue"
+      ],
+      "use": "hear a customer quote 'do not have the required role for this module'",
+      "not": [
+        "means the plan does not include the feature"
+      ],
+      "like": [
+        "The Access Restricted message",
+        "The read-only message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The read-only message",
+      "tier": 3,
+      "says": [
+        "says the customer has read-only permissions for the resource",
+        "comes from a read-only role"
+      ],
+      "use": "hear a customer quote 'read-only permissions for this resource'",
+      "not": [
+        "means the subscription lacks the feature"
+      ],
+      "like": [
+        "The Access Restricted message",
+        "The Authority Denied message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The timeout message",
+      "tier": 4,
+      "says": [
+        "says the request exceeded the 10,000ms safety threshold",
+        "reports a timeout"
+      ],
+      "use": "hear a customer quote the 10,000ms safety threshold",
+      "not": [
+        "says engineers have been alerted"
+      ],
+      "like": [
+        "The orchestration error message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The scheduled governance message",
+      "tier": 4,
+      "says": [
+        "says the platform is undergoing scheduled governance",
+        "tells the customer to check back shortly"
+      ],
+      "use": "hear a customer say the platform says to check back shortly",
+      "not": [
+        "tells the customer to refresh the interface"
+      ],
+      "like": [
+        "The system update message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The system update message",
+      "tier": 4,
+      "says": [
+        "says a critical system update is available",
+        "tells the customer to refresh the interface"
+      ],
+      "use": "hear a customer quote 'Please refresh your interface'",
+      "not": [
+        "says the platform is in maintenance mode"
+      ],
+      "like": [
+        "The scheduled governance message"
+      ]
+    },
+    {
+      "group": "error",
+      "subject": "The orchestration error message",
+      "tier": 4,
+      "says": [
+        "says an unexpected orchestration error occurred and engineers have been alerted",
+        "is an internal error, so the useful question is what the customer did and what happened"
+      ],
+      "use": "hear a customer quote an unexpected orchestration error",
+      "not": [
+        "is a plan limit"
+      ],
+      "like": [
+        "The timeout message"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "UK data residency",
+      "tier": 2,
+      "says": [
+        "holds primary data in the UK",
+        "pins sub-processors to UK or EEA regions wherever the service supports it"
+      ],
+      "use": "are asked where customer data is held",
+      "not": [
+        "holds primary data in the US"
+      ],
+      "like": [
+        "Encryption"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Encryption",
+      "tier": 2,
+      "says": [
+        "uses TLS 1.2 or better in transit",
+        "uses AES-256 at rest for the primary database and its backups"
+      ],
+      "use": "are asked how data is protected in transit and at rest",
+      "not": [
+        "is stated as end-to-end with keys held by the customer"
+      ],
+      "like": [
+        "Access controls"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Access controls",
+      "tier": 3,
+      "says": [
+        "are role-based with a per-endpoint audit log",
+        "include quarterly access reviews"
+      ],
+      "use": "are asked how access to customer data is controlled",
+      "not": [
+        "are a single shared login for all staff"
+      ],
+      "like": [
+        "Encryption"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Administrator two-factor authentication",
+      "tier": 2,
+      "says": [
+        "is mandatory for administrators",
+        "is listed among the access controls"
+      ],
+      "use": "hear a customer ask whether admins must use two-factor",
+      "not": [
+        "is optional for all users"
+      ],
+      "like": [
+        "Access controls"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Personal data sale",
+      "tier": 1,
+      "says": [
+        "never happens: Moksy does not sell personal data",
+        "includes no enrichment with third-party demographic feeds"
+      ],
+      "use": "hear a customer ask whether their data is sold",
+      "not": [
+        "is allowed with consent"
+      ],
+      "like": [
+        "UK data residency"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Breach notification",
+      "tier": 3,
+      "says": [
+        "tells controllers within 72 hours of Moksy becoming aware of a personal-data breach",
+        "follows UK GDPR Article 33"
+      ],
+      "use": "are asked how quickly controllers hear about a breach",
+      "not": [
+        "promises notice within 24 hours"
+      ],
+      "like": [
+        "The DPA"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Anonymised audit and ledger rows",
+      "tier": 4,
+      "says": [
+        "are anonymised rather than deleted",
+        "exist for fraud detection and financial record-keeping"
+      ],
+      "use": "hear a customer ask why some records survive a deletion request",
+      "not": [
+        "are deleted the same day as the account"
+      ],
+      "like": [
+        "Breach notification"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "ISO 27001 status",
+      "tier": 3,
+      "says": [
+        "is not held: Moksy is not ISO 27001 certified",
+        "is stated plainly on the trust page"
+      ],
+      "use": "hear a buyer ask 'Are you ISO 27001 certified?'",
+      "not": [
+        "is held and in date"
+      ],
+      "like": [
+        "Cyber Essentials status"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Cyber Essentials status",
+      "tier": 3,
+      "says": [
+        "is not yet held, and the page says it will change if that changes",
+        "is stated plainly on the trust page"
+      ],
+      "use": "hear a buyer ask about Cyber Essentials",
+      "not": [
+        "is held with a published certificate number"
+      ],
+      "like": [
+        "ISO 27001 status"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "The DPA",
+      "tier": 4,
+      "says": [
+        "covers Moksy's use of large language models to draft plans",
+        "is the signed agreement offered on Enterprise and public sector tiers"
+      ],
+      "use": "hear a buyer ask which agreement covers the use of AI models",
+      "not": [
+        "is replaced by the Free plan terms"
+      ],
+      "like": [
+        "Sub-processor notice"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Sub-processor notice",
+      "tier": 4,
+      "says": [
+        "takes 30 days' notice when a sub-processor is added",
+        "is covered by the DPA"
+      ],
+      "use": "are asked how much warning customers get before a new sub-processor",
+      "not": [
+        "takes 24 hours' notice"
+      ],
+      "like": [
+        "The DPA"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Listed sub-processors",
+      "tier": 4,
+      "says": [
+        "are OpenAI, Stripe, MongoDB Atlas and Redis",
+        "are named in the privacy policy"
+      ],
+      "use": "are asked which sub-processors the privacy policy lists",
+      "not": [
+        "include only Stripe"
+      ],
+      "like": [
+        "Sub-processor notice"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Card payment handling",
+      "tier": 3,
+      "says": [
+        "is done by Stripe",
+        "means Moksy does not store card numbers"
+      ],
+      "use": "hear a customer ask whether Moksy stores their card number",
+      "not": [
+        "keeps card numbers in the main database"
+      ],
+      "like": [
+        "Listed sub-processors"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "The data controller",
+      "tier": 3,
+      "says": [
+        "is Moksy AI Ltd, reached at privacy@moksy.ai",
+        "is named in the privacy policy"
+      ],
+      "use": "are asked who the data controller is",
+      "not": [
+        "is Stripe"
+      ],
+      "like": [
+        "The privacy address"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Data subject rights",
+      "tier": 4,
+      "says": [
+        "include access, correction, deletion, objection or restriction, and portability",
+        "include a right to complain to the ICO"
+      ],
+      "use": "hear a customer ask what rights they have over their data",
+      "not": [
+        "are limited to a right to cancel"
+      ],
+      "like": [
+        "The data controller"
+      ]
+    },
+    {
+      "group": "trust",
+      "subject": "Cookie consent",
+      "tier": 4,
+      "says": [
+        "lets strictly necessary cookies run without consent",
+        "needs explicit consent for optional analytics cookies"
+      ],
+      "use": "are asked which cookies need consent",
+      "not": [
+        "is needed for strictly necessary cookies"
+      ],
+      "like": [
+        "Data subject rights"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "The contracting company",
+      "tier": 2,
+      "says": [
+        "is Moksy AI Ltd, registered in England and Wales",
+        "is the party the customer agrees with"
+      ],
+      "use": "are asked who the Terms are an agreement with",
+      "not": [
+        "is Stripe"
+      ],
+      "like": [
+        "Governing law"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Governing law",
+      "tier": 3,
+      "says": [
+        "is English law, with English courts",
+        "applies to the Terms"
+      ],
+      "use": "are asked which law governs the Terms",
+      "not": [
+        "is the law of the customer's country"
+      ],
+      "like": [
+        "The contracting company"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Minimum age",
+      "tier": 2,
+      "says": [
+        "is at least 18 to create an account",
+        "applies to everyone who accepts the Terms"
+      ],
+      "use": "hear a 16-year-old ask to open an account",
+      "not": [
+        "is 13"
+      ],
+      "like": [
+        "Authority to bind"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Authority to bind",
+      "tier": 4,
+      "says": [
+        "is represented by someone creating an account for an organisation",
+        "means they say they can bind it"
+      ],
+      "use": "hear an employee set up an account on behalf of their employer",
+      "not": [
+        "is not needed for organisations"
+      ],
+      "like": [
+        "Minimum age"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Credential responsibility",
+      "tier": 2,
+      "says": [
+        "makes the customer responsible for keeping login credentials confidential",
+        "makes the customer responsible for all activity under the account"
+      ],
+      "use": "hear a customer blame Moksy for activity done with their shared login",
+      "not": [
+        "makes Moksy responsible for all activity under the account"
+      ],
+      "like": [
+        "Acceptable use"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Acceptable use",
+      "tier": 3,
+      "says": [
+        "forbids unlawful use, unauthorised access and reverse engineering",
+        "forbids reselling or sublicensing access without written permission"
+      ],
+      "use": "hear a customer ask whether they may resell their Moksy access",
+      "not": [
+        "allows resale of access freely"
+      ],
+      "like": [
+        "Credential responsibility"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Billing terms",
+      "tier": 3,
+      "says": [
+        "bill in advance, monthly or annually",
+        "are in GBP and exclude VAT unless stated",
+        "authorise recurring charges through Stripe until the customer cancels"
+      ],
+      "use": "are asked how paid plans are billed",
+      "not": [
+        "bill in arrears in US dollars"
+      ],
+      "like": [
+        "Cancellation"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Cancellation",
+      "tier": 2,
+      "says": [
+        "can be done any time in account settings",
+        "stops the recurring charges"
+      ],
+      "use": "hear a customer ask how to cancel",
+      "not": [
+        "needs a letter to legal"
+      ],
+      "like": [
+        "Billing terms"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Data ownership clause",
+      "tier": 3,
+      "says": [
+        "leaves ownership of submitted data and content with the customer",
+        "gives Moksy a non-exclusive, royalty-free licence solely to provide the services"
+      ],
+      "use": "hear a customer ask who owns what they submit",
+      "not": [
+        "transfers ownership to Moksy"
+      ],
+      "like": [
+        "Moksy's claim over customer ideas"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "AI output clause",
+      "tier": 3,
+      "says": [
+        "says AI output is for information only and is not guaranteed accurate, complete or fit for purpose",
+        "makes the customer solely responsible for validating it before relying on it"
+      ],
+      "use": "hear a customer say they relied on a figure without checking it",
+      "not": [
+        "guarantees every figure for a year"
+      ],
+      "like": [
+        "Liability cap"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Liability cap",
+      "tier": 4,
+      "says": [
+        "limits Moksy's total liability for a claim to the amount paid in the 12 months before it",
+        "excludes liability for indirect or consequential loss"
+      ],
+      "use": "hear a customer claim losses far beyond what they paid",
+      "not": [
+        "is unlimited"
+      ],
+      "like": [
+        "AI output clause"
+      ]
+    },
+    {
+      "group": "terms",
+      "subject": "Change notification",
+      "tier": 3,
+      "says": [
+        "tells customers of material changes by email or a prominent notice",
+        "treats continued use as acceptance"
+      ],
+      "use": "are asked how customers learn about changes to the Terms",
+      "not": [
+        "needs the customer to sign again"
+      ],
+      "like": [
+        "Governing law"
+      ]
+    },
+    {
+      "group": "conflict",
+      "subject": "Data deletion timeline conflict",
+      "tier": 4,
+      "says": [
+        "is that the trust page says hard-deletion within 30 days while the privacy policy says 90 days",
+        "is routed to privacy@moksy.ai instead of quoting either figure"
+      ],
+      "use": "hear a customer ask exactly how many days data is kept after closing",
+      "not": [
+        "is settled at 30 days"
+      ],
+      "like": [
+        "Security questionnaire route conflict"
+      ]
+    },
+    {
+      "group": "conflict",
+      "subject": "Security questionnaire route conflict",
+      "tier": 4,
+      "says": [
+        "is that the contact page says Sales while the trust page says privacy@moksy.ai",
+        "means confirming the current route before promising one"
+      ],
+      "use": "hear a buyer send a security questionnaire to support",
+      "not": [
+        "is settled as Sales only"
+      ],
+      "like": [
+        "Data deletion timeline conflict"
+      ]
+    },
+    {
+      "group": "conflict",
+      "subject": "Sector wording conflict",
+      "tier": 4,
+      "says": [
+        "is that the Terms and privacy policy call Moksy an education-sector service while other pages name founders, teams and the public sector",
+        "means telling a founder it is not only for schools and flagging the outdated wording"
+      ],
+      "use": "hear a founder ask whether Moksy is only for schools",
+      "not": [
+        "is settled as education only"
+      ],
+      "like": [
+        "Review arbitration wording"
+      ]
+    },
+    {
+      "group": "conflict",
+      "subject": "Review arbitration wording",
+      "tier": 5,
+      "says": [
+        "is saying a senior reviewer as published",
+        "avoids naming a rung from the internal lexicon"
+      ],
+      "use": "are tempted to name the internal rung that arbitrates a dispute",
+      "not": [
+        "is naming the exact internal rung"
+      ],
+      "like": [
+        "Sector wording conflict"
+      ]
+    },
+    {
+      "group": "conflict",
+      "subject": "Review values in MOX",
+      "tier": 5,
+      "says": [
+        "are quoted only as published and dated, never as a promise",
+        "are not to be confused with what a membership includes"
+      ],
+      "use": "are asked what a review is worth in MOX",
+      "not": [
+        "are promised never to change"
+      ],
+      "like": [
+        "Review refund rule"
+      ]
+    },
+    {
+      "group": "conflict",
+      "subject": "Quoting published pages",
+      "tier": 4,
+      "says": [
+        "means quoting the pages as the company's statements",
+        "includes saying you will confirm when pages disagree"
+      ],
+      "use": "are tempted to answer from your own memory of how Moksy works",
+      "not": [
+        "means quoting your own understanding"
+      ],
+      "like": [
+        "Review values in MOX"
+      ]
+    },
+    {
+      "group": "conflict",
+      "subject": "Reporting a discrepancy",
+      "tier": 5,
+      "says": [
+        "is passing on the disagreeing pages after helping the customer",
+        "lets the pages be corrected"
+      ],
+      "use": "notice two published pages disagree",
+      "not": [
+        "is leaving it for the customer to notice"
+      ],
+      "like": [
+        "Quoting published pages"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "An AI-drafted plan",
+      "tier": 1,
+      "says": [
+        "is a draft written by large language models from the customer's answers",
+        "is fluent, which makes an unchecked one risky"
+      ],
+      "use": "hear a customer treat a generated plan as final",
+      "not": [
+        "is a guaranteed final answer"
+      ],
+      "like": [
+        "Expert Review"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Expert Review",
+      "tier": 2,
+      "says": [
+        "lets an accredited reviewer correct a plan",
+        "is included from Pro upward"
+      ],
+      "use": "hear a customer ask how a person can check their plan",
+      "not": [
+        "is included on the Free plan"
+      ],
+      "like": [
+        "An AI-drafted plan"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Shown reasoning",
+      "tier": 3,
+      "says": [
+        "appears with every recommendation instead of a bare answer",
+        "lets a customer judge a claim before relying on it"
+      ],
+      "use": "are asked what makes a recommendation checkable",
+      "not": [
+        "is hidden behind the Expert Review"
+      ],
+      "like": [
+        "Expert Review"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Plan accuracy",
+      "tier": 3,
+      "says": [
+        "is acknowledged on the pricing page: a drafted plan can contain errors",
+        "is the reason an accredited reviewer can correct it"
+      ],
+      "use": "hear a customer ask whether a plan can be wrong",
+      "not": [
+        "is denied on the pricing page"
+      ],
+      "like": [
+        "An AI-drafted plan"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Using the package after generation",
+      "tier": 3,
+      "says": [
+        "means reviewing the recommendations internally and refining the output",
+        "includes briefing a supplier, comparing options or aligning a delivery team"
+      ],
+      "use": "are asked what the help page says to do with a generated package",
+      "not": [
+        "means committing budget immediately"
+      ],
+      "like": [
+        "A working brief"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "A working brief",
+      "tier": 4,
+      "says": [
+        "is how the help page says to use a plan before committing budget",
+        "treats the plan as a starting point"
+      ],
+      "use": "hear a customer plan to commit budget on a plan alone",
+      "not": [
+        "is a fixed quote"
+      ],
+      "like": [
+        "Using the package after generation"
+      ]
+    },
+    {
+      "group": "review",
+      "subject": "Review debit check",
+      "tier": 4,
+      "says": [
+        "starts with the wallet ledger",
+        "tells whether MOX was spent on something outside the customer's plan benefits"
+      ],
+      "use": "hear a customer ask why a review debited their wallet",
+      "not": [
+        "starts with refunding the customer"
+      ],
+      "like": [
+        "Wallet ledger"
+      ]
+    },
+    {
+      "group": "triage",
+      "subject": "Severity",
+      "tier": 1,
+      "says": [
+        "rates how badly a problem damages the customer's work",
+        "stays the same however loudly the customer writes"
+      ],
+      "use": "need to rate how serious a problem is",
+      "not": [
+        "is the order in which the queue is worked"
+      ],
+      "like": [
+        "Priority"
+      ]
+    },
+    {
+      "group": "triage",
+      "subject": "Priority",
+      "tier": 2,
+      "says": [
+        "decides the order in which tickets are worked",
+        "weighs severity against urgency and commitments"
+      ],
+      "use": "need to decide which ticket to handle first",
+      "not": [
+        "rates the damage to the customer alone"
+      ],
+      "like": [
+        "Severity"
+      ]
+    },
+    {
+      "group": "triage",
+      "subject": "Intake questions",
+      "tier": 1,
+      "says": [
+        "gather the facts needed before any diagnosis",
+        "are the same few questions asked each time for a category"
+      ],
+      "use": "receive a vague message that says only 'it does not work'",
+      "not": [
+        "are the final reply"
+      ],
+      "like": [
+        "Reproduction steps"
+      ]
+    },
+    {
+      "group": "triage",
+      "subject": "Reproduction steps",
+      "tier": 2,
+      "says": [
+        "list the exact actions that cause the problem",
+        "let a second person see the same failure"
+      ],
+      "use": "need an engineer to see the same fault the customer saw",
+      "not": [
+        "are the customer's feelings about the fault"
+      ],
+      "like": [
+        "Intake questions"
+      ]
+    },
+    {
+      "group": "triage",
+      "subject": "Duplicate detection",
+      "tier": 3,
+      "says": [
+        "links tickets describing the same issue",
+        "shows when one fault is affecting many customers"
+      ],
+      "use": "notice the third ticket this hour describing the same fault",
+      "not": [
+        "merges two unrelated customers into one account"
+      ],
+      "like": [
+        "Categorisation tags"
+      ]
+    },
+    {
+      "group": "triage",
+      "subject": "Categorisation tags",
+      "tier": 2,
+      "says": [
+        "label a ticket by type of problem",
+        "make later reporting on common issues possible"
+      ],
+      "use": "want to report which issues come up most often",
+      "not": [
+        "decide how quickly a ticket must be answered"
+      ],
+      "like": [
+        "Duplicate detection"
+      ]
+    },
+    {
+      "group": "triage",
+      "subject": "Workaround",
+      "tier": 3,
+      "says": [
+        "gives the customer a way to carry on while the fix is pending",
+        "does not remove the underlying fault"
+      ],
+      "use": "know a fix will take time but the customer has a deadline",
+      "not": [
+        "is the permanent fix"
+      ],
+      "like": [
+        "Root cause"
+      ]
+    },
+    {
+      "group": "triage",
+      "subject": "Root cause",
+      "tier": 4,
+      "says": [
+        "is the underlying reason a problem happens",
+        "is found by asking why until the explanation stops changing"
+      ],
+      "use": "see the same symptom return after each ticket is closed",
+      "not": [
+        "is the first symptom the customer mentioned"
+      ],
+      "like": [
+        "Workaround"
+      ]
+    },
+    {
+      "group": "triage",
+      "subject": "First-contact resolution",
+      "tier": 3,
+      "says": [
+        "solves the problem in the first reply",
+        "depends on gathering the details before answering"
+      ],
+      "use": "want the customer to need only one message",
+      "not": [
+        "is closing the ticket without a reply"
+      ],
+      "like": [
+        "Intake questions"
+      ]
+    },
+    {
+      "group": "tone",
+      "subject": "Active listening",
+      "tier": 1,
+      "says": [
+        "means reading the whole message before replying",
+        "picks out the customer's actual question beneath the frustration"
+      ],
+      "use": "receive a long angry message",
+      "not": [
+        "means replying to the first sentence only"
+      ],
+      "like": [
+        "Empathy statement"
+      ]
+    },
+    {
+      "group": "tone",
+      "subject": "Empathy statement",
+      "tier": 1,
+      "says": [
+        "names the customer's feeling and the impact on them",
+        "comes before the solution"
+      ],
+      "use": "meet a customer who is upset about lost time",
+      "not": [
+        "admits legal fault"
+      ],
+      "like": [
+        "Apology that names the problem"
+      ]
+    },
+    {
+      "group": "tone",
+      "subject": "Apology that names the problem",
+      "tier": 2,
+      "says": [
+        "says sorry for the specific thing that went wrong",
+        "avoids vague regret"
+      ],
+      "use": "need to apologise for a real failure",
+      "not": [
+        "says sorry you feel that way"
+      ],
+      "like": [
+        "Empathy statement"
+      ]
+    },
+    {
+      "group": "tone",
+      "subject": "Plain language",
+      "tier": 2,
+      "says": [
+        "uses short words the customer already uses",
+        "explains any unavoidable term"
+      ],
+      "use": "are about to reply with internal jargon",
+      "not": [
+        "uses internal codenames for speed"
+      ],
+      "like": [
+        "Positive framing"
+      ]
+    },
+    {
+      "group": "tone",
+      "subject": "Positive framing",
+      "tier": 3,
+      "says": [
+        "says what can be done rather than what cannot",
+        "keeps a refusal constructive"
+      ],
+      "use": "must refuse a request but offer something else",
+      "not": [
+        "hides the refusal altogether"
+      ],
+      "like": [
+        "Plain language"
+      ]
+    },
+    {
+      "group": "tone",
+      "subject": "Setting expectations",
+      "tier": 3,
+      "says": [
+        "states what happens next and roughly when",
+        "avoids promising what you cannot control"
+      ],
+      "use": "cannot fix a problem right now",
+      "not": [
+        "promises a fix by tomorrow regardless"
+      ],
+      "like": [
+        "Closing the loop"
+      ]
+    },
+    {
+      "group": "tone",
+      "subject": "Closing the loop",
+      "tier": 3,
+      "says": [
+        "tells the customer the outcome after they reported a problem",
+        "shows their report was acted on"
+      ],
+      "use": "learn that a bug a customer reported has been fixed",
+      "not": [
+        "waits until the customer asks"
+      ],
+      "like": [
+        "Setting expectations"
+      ]
+    },
+    {
+      "group": "tone",
+      "subject": "The pause before replying",
+      "tier": 4,
+      "says": [
+        "is a short delay used to avoid answering anger with anger",
+        "helps a reply focus on the problem"
+      ],
+      "use": "feel stung by a rude message",
+      "not": [
+        "means replying immediately to match the customer's tone"
+      ],
+      "like": [
+        "De-escalation"
+      ]
+    },
+    {
+      "group": "tone",
+      "subject": "De-escalation",
+      "tier": 4,
+      "says": [
+        "lowers the temperature before solving the problem",
+        "includes acknowledging, slowing the pace and focusing on facts"
+      ],
+      "use": "face a customer who is shouting in capitals",
+      "not": [
+        "matches the customer's volume"
+      ],
+      "like": [
+        "The pause before replying"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "Escalation trigger",
+      "tier": 2,
+      "says": [
+        "is a pre-agreed condition that moves a ticket to someone else",
+        "includes limits on authority and time"
+      ],
+      "use": "are unsure when a ticket must go up",
+      "not": [
+        "is the customer using the word urgent"
+      ],
+      "like": [
+        "Warm handoff"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "Warm handoff",
+      "tier": 3,
+      "says": [
+        "introduces the customer and context to the next person",
+        "spares the customer from repeating the story"
+      ],
+      "use": "pass a ticket to a specialist",
+      "not": [
+        "forwards the ticket with no note"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "Escalation note",
+      "tier": 3,
+      "says": [
+        "summarises the facts, steps taken and what is needed",
+        "lets the receiver act without re-reading the thread"
+      ],
+      "use": "write the hand-over for a specialist",
+      "not": [
+        "is a copy of the whole thread"
+      ],
+      "like": [
+        "Warm handoff"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "Ownership during escalation",
+      "tier": 4,
+      "says": [
+        "stays with the original agent until a named person accepts",
+        "keeps the customer informed"
+      ],
+      "use": "have escalated and the customer asks for an update",
+      "not": [
+        "transfers the moment you click escalate"
+      ],
+      "like": [
+        "Escalation note"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "Bug report to engineering",
+      "tier": 4,
+      "says": [
+        "gives steps, expected result, actual result and impact",
+        "is written so an engineer can act without a call"
+      ],
+      "use": "have found a fault that needs engineering",
+      "not": [
+        "says it is broken, please fix"
+      ],
+      "like": [
+        "Escalation note"
+      ]
+    },
+    {
+      "group": "escalation",
+      "subject": "Incident communication",
+      "tier": 4,
+      "says": [
+        "gives customers regular, honest updates during an outage",
+        "includes what is known, what is not and when the next update comes"
+      ],
+      "use": "are told several customers are affected by an outage",
+      "not": [
+        "stays silent until it is resolved"
+      ],
+      "like": [
+        "Setting expectations"
+      ]
+    },
+    {
+      "group": "knowledge",
+      "subject": "Single source of truth",
+      "tier": 2,
+      "says": [
+        "keeps one authoritative version of each answer",
+        "stops agents giving different answers"
+      ],
+      "use": "find that two agents gave a customer different answers",
+      "not": [
+        "copies the answer into every ticket"
+      ],
+      "like": [
+        "Review date"
+      ]
+    },
+    {
+      "group": "knowledge",
+      "subject": "Article titled in customer words",
+      "tier": 2,
+      "says": [
+        "names an article with the phrase customers search for",
+        "makes it findable"
+      ],
+      "use": "are writing an article for a common question",
+      "not": [
+        "uses internal project names"
+      ],
+      "like": [
+        "Single source of truth"
+      ]
+    },
+    {
+      "group": "knowledge",
+      "subject": "Canned reply",
+      "tier": 2,
+      "says": [
+        "is a saved response that saves typing",
+        "needs personalising before it is sent"
+      ],
+      "use": "answer the same question many times a day",
+      "not": [
+        "is sent unchanged to everyone"
+      ],
+      "like": [
+        "Article titled in customer words"
+      ]
+    },
+    {
+      "group": "knowledge",
+      "subject": "Review date",
+      "tier": 3,
+      "says": [
+        "marks when an article must be checked again",
+        "catches stale answers before customers see them"
+      ],
+      "use": "worry an article has gone out of date",
+      "not": [
+        "is the date the article was first written"
+      ],
+      "like": [
+        "Single source of truth"
+      ]
+    },
+    {
+      "group": "knowledge",
+      "subject": "Known-issue article",
+      "tier": 3,
+      "says": [
+        "describes a current fault and its workaround",
+        "is removed or updated once the fix ships"
+      ],
+      "use": "learn of a fault that many customers hit",
+      "not": [
+        "lasts for ever once published"
+      ],
+      "like": [
+        "Review date"
+      ]
+    },
+    {
+      "group": "knowledge",
+      "subject": "Ticket-driven gap analysis",
+      "tier": 4,
+      "says": [
+        "looks at recurring tickets to find missing articles",
+        "feeds new articles from real questions"
+      ],
+      "use": "see the same question arriving repeatedly",
+      "not": [
+        "is based on what staff think customers need"
+      ],
+      "like": [
+        "Single source of truth"
+      ]
+    },
+    {
+      "group": "privacy",
+      "subject": "Identity verification",
+      "tier": 2,
+      "says": [
+        "confirms the requester controls the account before changes",
+        "is done through details already on file"
+      ],
+      "use": "get a request to change an email address",
+      "not": [
+        "is accepting a name given in the message"
+      ],
+      "like": [
+        "Social engineering"
+      ]
+    },
+    {
+      "group": "privacy",
+      "subject": "Data minimisation",
+      "tier": 3,
+      "says": [
+        "asks only for the information needed to solve the problem",
+        "keeps unnecessary personal data out of tickets"
+      ],
+      "use": "are tempted to ask for more details just in case",
+      "not": [
+        "collects everything possible up front"
+      ],
+      "like": [
+        "Redaction"
+      ]
+    },
+    {
+      "group": "privacy",
+      "subject": "Never ask for passwords",
+      "tier": 1,
+      "says": [
+        "is a rule that support never requests a password",
+        "keeps secrets out of tickets"
+      ],
+      "use": "are about to ask a customer to send their password to diagnose a login",
+      "not": [
+        "is relaxed for urgent cases"
+      ],
+      "like": [
+        "Identity verification"
+      ]
+    },
+    {
+      "group": "privacy",
+      "subject": "Redaction",
+      "tier": 3,
+      "says": [
+        "hides sensitive details in screenshots and logs before sharing",
+        "protects data when a ticket goes to others"
+      ],
+      "use": "receive a screenshot that shows a card number",
+      "not": [
+        "is leaving details visible for speed"
+      ],
+      "like": [
+        "Data minimisation"
+      ]
+    },
+    {
+      "group": "privacy",
+      "subject": "Least-privilege access",
+      "tier": 4,
+      "says": [
+        "gives each agent only the access the job needs",
+        "limits harm from a mistake or misuse"
+      ],
+      "use": "are asked who should see full customer records",
+      "not": [
+        "gives all agents full access"
+      ],
+      "like": [
+        "Identity verification"
+      ]
+    },
+    {
+      "group": "privacy",
+      "subject": "Data subject request",
+      "tier": 3,
+      "says": [
+        "is a customer's request about their own personal data",
+        "should be recognised even if not labelled as one"
+      ],
+      "use": "get a message asking what data is held about the customer",
+      "not": [
+        "is handled like a normal query"
+      ],
+      "like": [
+        "Breach recognition"
+      ]
+    },
+    {
+      "group": "privacy",
+      "subject": "Breach recognition",
+      "tier": 4,
+      "says": [
+        "spots that data may have gone to the wrong person",
+        "is reported internally at once"
+      ],
+      "use": "realise you sent a reply to the wrong customer",
+      "not": [
+        "waits until the end of the week"
+      ],
+      "like": [
+        "Data subject request"
+      ]
+    },
+    {
+      "group": "privacy",
+      "subject": "Social engineering",
+      "tier": 4,
+      "says": [
+        "is manipulating an agent into giving access or data",
+        "often uses urgency or authority"
+      ],
+      "use": "receive an urgent request from someone claiming to be a director",
+      "not": [
+        "is a technical attack on a server"
+      ],
+      "like": [
+        "Identity verification"
+      ]
+    },
+    {
+      "group": "complaints",
+      "subject": "Entitlement",
+      "tier": 2,
+      "says": [
+        "is something the customer is owed under stated terms",
+        "is applied the same way for everyone"
+      ],
+      "use": "check what the written policy gives the customer",
+      "not": [
+        "is a favour at the agent's discretion"
+      ],
+      "like": [
+        "Discretionary decision"
+      ]
+    },
+    {
+      "group": "complaints",
+      "subject": "Discretionary decision",
+      "tier": 3,
+      "says": [
+        "is a case-by-case judgement not promised in advance",
+        "needs a consistent basis"
+      ],
+      "use": "are asked for something the policy does not promise",
+      "not": [
+        "is automatic for any request"
+      ],
+      "like": [
+        "Entitlement"
+      ]
+    },
+    {
+      "group": "complaints",
+      "subject": "Goodwill gesture",
+      "tier": 3,
+      "says": [
+        "is a voluntary act to repair trust",
+        "does not admit that a policy was broken"
+      ],
+      "use": "want to repair a bad experience beyond the policy",
+      "not": [
+        "is a legal obligation"
+      ],
+      "like": [
+        "Discretionary decision"
+      ]
+    },
+    {
+      "group": "complaints",
+      "subject": "Consistency of treatment",
+      "tier": 4,
+      "says": [
+        "gives similar cases similar outcomes",
+        "protects against accusations of unfairness"
+      ],
+      "use": "notice two similar complaints got different outcomes",
+      "not": [
+        "means always granting the biggest remedy"
+      ],
+      "like": [
+        "Goodwill gesture"
+      ]
+    },
+    {
+      "group": "complaints",
+      "subject": "Complaint",
+      "tier": 2,
+      "says": [
+        "is an expression of dissatisfaction that needs a response",
+        "is recorded and followed through"
+      ],
+      "use": "hear a customer say they are dissatisfied and want it recorded",
+      "not": [
+        "is the same as general feedback"
+      ]
+    },
+    {
+      "group": "complaints",
+      "subject": "Written record of a decision",
+      "tier": 3,
+      "says": [
+        "notes what was decided and why",
+        "lets any colleague follow up consistently"
+      ],
+      "use": "finish a difficult refund conversation",
+      "not": [
+        "lives only in your memory"
+      ],
+      "like": [
+        "Consistency of treatment"
+      ]
+    },
+    {
+      "group": "complaints",
+      "subject": "Saying no well",
+      "tier": 4,
+      "says": [
+        "explains the reason, offers an alternative and stays courteous",
+        "avoids reading out policy as a wall"
+      ],
+      "use": "must decline a request that is outside policy",
+      "not": [
+        "blames the customer"
+      ],
+      "like": [
+        "Positive framing"
+      ]
+    },
+    {
+      "group": "complaints",
+      "subject": "Not promising an unconfirmed outcome",
+      "tier": 4,
+      "says": [
+        "refuses to promise what you cannot confirm",
+        "says you will check and come back"
+      ],
+      "use": "are asked for a refund amount you cannot verify",
+      "not": [
+        "guesses a reasonable sum"
+      ],
+      "like": [
+        "Saying no well"
+      ]
+    },
+    {
+      "group": "service",
+      "subject": "First response time",
+      "tier": 1,
+      "says": [
+        "measures how long a customer waits for a first human reply",
+        "is not the same as the time to resolution"
+      ],
+      "use": "are asked how quickly customers hear back",
+      "not": [
+        "measures the time until the ticket is closed"
+      ],
+      "like": [
+        "Resolution time"
+      ]
+    },
+    {
+      "group": "service",
+      "subject": "Resolution time",
+      "tier": 2,
+      "says": [
+        "measures from the report to the problem being solved",
+        "depends on the complexity of the issue"
+      ],
+      "use": "are asked how long a problem takes to fix",
+      "not": [
+        "measures only the wait for a first reply"
+      ],
+      "like": [
+        "First response time"
+      ]
+    },
+    {
+      "group": "service",
+      "subject": "Service level agreement",
+      "tier": 3,
+      "says": [
+        "is a written commitment on service standards",
+        "carries agreed consequences if missed"
+      ],
+      "use": "hear a customer ask what is formally promised",
+      "not": [
+        "is an internal hope with no obligation"
+      ]
+    },
+    {
+      "group": "service",
+      "subject": "Clock pause",
+      "tier": 4,
+      "says": [
+        "stops the timer while waiting on the customer",
+        "restarts when the customer replies"
+      ],
+      "use": "are waiting for the customer to send information",
+      "not": [
+        "stops the clock for ever"
+      ],
+      "like": [
+        "Backlog ageing"
+      ]
+    },
+    {
+      "group": "service",
+      "subject": "Backlog ageing",
+      "tier": 4,
+      "says": [
+        "tracks how long open tickets have waited",
+        "shows tickets about to be forgotten"
+      ],
+      "use": "worry old tickets are being neglected",
+      "not": [
+        "counts only new tickets"
+      ],
+      "like": [
+        "Clock pause"
+      ]
+    },
+    {
+      "group": "service",
+      "subject": "Customer satisfaction score",
+      "tier": 2,
+      "says": [
+        "asks the customer to rate an interaction",
+        "is read alongside the comments left"
+      ],
+      "use": "want the customer's own view of a conversation",
+      "not": [
+        "measures resolution speed"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "A customer cannot sign in at all and wants to report it. What does the contact page say?",
+      "right": "Say so from the address on the account",
+      "wrong": [
+        "Write from any address and attach a photo of their ID",
+        "Use the Sales route",
+        "Write to legal@moksy.ai"
+      ],
+      "tier": 1,
+      "why": "Account and sign-in problems go to support, from the address on the account."
+    },
+    {
+      "q": "Which address do you give a customer who wants their data deleted?",
+      "right": "privacy@moksy.ai",
+      "wrong": [
+        "support@moksy.ai",
+        "legal@moksy.ai",
+        "sales@moksy.ai"
+      ],
+      "tier": 1,
+      "why": "Privacy and data requests go to privacy@moksy.ai."
+    },
+    {
+      "q": "A customer asks what MOX is. What is the accurate short answer?",
+      "right": "Moksy credit, bought once and spent when the customer chooses",
+      "wrong": [
+        "A monthly membership that renews on its own",
+        "A required deposit before a first plan",
+        "A discount code for Pro"
+      ],
+      "tier": 1,
+      "why": "MOX is credit; a membership is the monthly plan."
+    },
+    {
+      "q": "A new customer asks if Free is a trial that will expire. What do you say?",
+      "right": "The pricing page calls it a real plan, the same engine on fewer areas",
+      "wrong": [
+        "Yes, it expires after a month",
+        "It is a demo with no Blueprint",
+        "It is only for reviewers"
+      ],
+      "tier": 1,
+      "why": "Free is described as a real plan."
+    },
+    {
+      "q": "A customer says they are not sure whether their question is covered already. Where does the contact page say most answers are?",
+      "right": "In the help centre",
+      "wrong": [
+        "In the wallet",
+        "In the terms only",
+        "On social media"
+      ],
+      "tier": 1,
+      "why": "Contact a person when the help centre does not answer."
+    },
+    {
+      "q": "A customer's first message just says 'it does not work'. What is the best first reply?",
+      "right": "Ask what they did, what happened and which plan or section, and for the account email",
+      "wrong": [
+        "Close the ticket as unclear",
+        "Apologise and say a fix is coming",
+        "Ask for their password"
+      ],
+      "tier": 1,
+      "why": "Intake questions gather the facts before diagnosis."
+    },
+    {
+      "q": "Which statement about an AI-drafted plan fits the trust page?",
+      "right": "It is a draft, and its fluency makes an unchecked one risky",
+      "wrong": [
+        "It is a verified final answer",
+        "It is correct if it reads well",
+        "It cannot contain errors on Max"
+      ],
+      "tier": 1,
+      "why": "The trust page says a draft is fluent, which is the risk."
+    },
+    {
+      "q": "A Free customer says 'Your plan covers only a few areas.' How many areas does the Free Blueprint cover?",
+      "right": "5 of the 22",
+      "wrong": [
+        "12 of the 22",
+        "All 22",
+        "3 of the 22"
+      ],
+      "tier": 2,
+      "why": "Free is a Starter Blueprint of 5 of 22 areas."
+    },
+    {
+      "q": "A customer on Pro asks how many people can share the workspace seats. What is the published figure?",
+      "right": "5 seats",
+      "wrong": [
+        "1 seat",
+        "Unlimited seats",
+        "25 seats"
+      ],
+      "tier": 2,
+      "why": "Pro gives 5 seats; 25 is its project count."
+    },
+    {
+      "q": "A customer sees 'Access Restricted: This feature is not included in your current subscription.' What do you tell them?",
+      "right": "It is a plan limit, not a fault; the feature is not on their plan",
+      "wrong": [
+        "Their account is locked",
+        "Their role lacks permission",
+        "The platform is down"
+      ],
+      "tier": 2,
+      "why": "Plan limit versus role versus lock are different messages."
+    },
+    {
+      "q": "A customer sees 'Authority Denied: You do not have the required role for this module.' What is it?",
+      "right": "A role or permission issue, not a plan issue",
+      "wrong": [
+        "A plan limit",
+        "A timeout",
+        "A lock after failed attempts"
+      ],
+      "tier": 2,
+      "why": "The workspace administrator controls roles."
+    },
+    {
+      "q": "A customer quotes 'Multi-Factor Authentication required to proceed.' What does it mean?",
+      "right": "An extra verification step is needed before they can continue",
+      "wrong": [
+        "The account is closed",
+        "The password was wrong",
+        "A payment failed"
+      ],
+      "tier": 2,
+      "why": "It is an extra verification step."
+    },
+    {
+      "q": "Which statement about the Terms is accurate?",
+      "right": "A subscription can be cancelled any time in account settings",
+      "wrong": [
+        "Cancelling needs a written letter",
+        "Subscriptions cannot be cancelled mid-year",
+        "Only legal can cancel"
+      ],
+      "tier": 2,
+      "why": "Cancellation is in account settings."
+    },
+    {
+      "q": "A customer asks if buying MOX is needed to produce a plan. What is accurate?",
+      "right": "No, nobody needs to buy MOX to produce a plan",
+      "wrong": [
+        "Yes, at least one review is needed",
+        "Yes, on Free only",
+        "Only on Max"
+      ],
+      "tier": 2,
+      "why": "MOX is for work outside plan benefits."
+    },
+    {
+      "q": "A customer sends a vague bug report. Which two details most speed a fix?",
+      "right": "What they did and what happened, plus a screenshot",
+      "wrong": [
+        "Their feelings and a deadline",
+        "Their job title and company size",
+        "Only the browser name"
+      ],
+      "tier": 2,
+      "why": "The contact page asks for what they did and what happened."
+    },
+    {
+      "q": "A customer is angry and writes in capitals. What is the best first move?",
+      "right": "Acknowledge the frustration, then move to the facts",
+      "wrong": [
+        "Reply in capitals to match",
+        "Quote the policy at once",
+        "Wait several days"
+      ],
+      "tier": 2,
+      "why": "De-escalate before solving."
+    },
+    {
+      "q": "A Pro customer says they only get 10 exports a month. What should you check?",
+      "right": "The published figure of 100 exports a month on Pro, then their usage",
+      "wrong": [
+        "Nothing, agree it is 10",
+        "Whether they are on Free, which has 100",
+        "Tell them exports are unlimited on Pro"
+      ],
+      "tier": 3,
+      "why": "Free has 5 exports, Pro 100, Max unlimited; always check the plan."
+    },
+    {
+      "q": "A customer asks you to confirm Moksy is ISO 27001 certified so they can sign. What is the honest answer?",
+      "right": "No, the trust page says it is not ISO 27001 certified, and you say so plainly",
+      "wrong": [
+        "Yes, it is in progress and will be done soon",
+        "Yes, it is certified",
+        "Say you do not know and avoid the question"
+      ],
+      "tier": 3,
+      "why": "Never answer security claims you cannot evidence."
+    },
+    {
+      "q": "A buyer asks where their data is held. What do you say?",
+      "right": "Primary data is held in the UK, with sub-processors pinned to UK or EEA regions where the service supports it",
+      "wrong": [
+        "Anywhere, depending on load",
+        "In the US for speed",
+        "In the EEA only"
+      ],
+      "tier": 3,
+      "why": "The trust page states UK primary data."
+    },
+    {
+      "q": "A customer asks if Moksy sells personal data. What do you say?",
+      "right": "No, Moksy does not sell personal data or enrich it with third-party demographic feeds",
+      "wrong": [
+        "Yes, with consent",
+        "Only anonymised data",
+        "It is covered by legitimate interests"
+      ],
+      "tier": 3,
+      "why": "Stated plainly on the trust page."
+    },
+    {
+      "q": "A customer on Free asks for an Expert Review of their plan. What is accurate?",
+      "right": "Free has no Expert Reviews; they are included from Pro upward, or can be bought with MOX",
+      "wrong": [
+        "Free includes one a month",
+        "Only Max can buy them",
+        "Reviews are not available to customers"
+      ],
+      "tier": 3,
+      "why": "Expert Review is part of Pro and Max benefits and also MOX work."
+    },
+    {
+      "q": "A customer wants to know whether Moksy owns the plan it produced. What is the answer?",
+      "right": "Moksy claims no rights over the plan or the idea behind it, and the customer owns the data they submit",
+      "wrong": [
+        "Moksy owns the plan on Free",
+        "Moksy owns it for 12 months",
+        "Moksy keeps joint ownership"
+      ],
+      "tier": 3,
+      "why": "Pricing page and Terms both say so."
+    },
+    {
+      "q": "A customer disputes a review verdict. What is the published route?",
+      "right": "Write to support; a senior reviewer arbitrates",
+      "wrong": [
+        "Write to Sales",
+        "Edit the plan themselves",
+        "Post on a public forum"
+      ],
+      "tier": 3,
+      "why": "Support is the route in."
+    },
+    {
+      "q": "Which of these is the best escalation note?",
+      "right": "A summary of the problem, steps already tried, the customer's impact and what you need from the next person",
+      "wrong": [
+        "The whole thread forwarded without comment",
+        "'Please look at this'",
+        "A note saying the customer is angry"
+      ],
+      "tier": 3,
+      "why": "A good note lets the receiver act without re-reading."
+    },
+    {
+      "q": "A customer has been passed to a second agent and asks again for the same details. What went wrong?",
+      "right": "The handoff was cold and context was not passed on",
+      "wrong": [
+        "The customer was impatient",
+        "The second agent was too senior",
+        "The ticket was escalated too soon"
+      ],
+      "tier": 3,
+      "why": "Warm handoffs carry context."
+    },
+    {
+      "q": "A customer asks you to look at their account after sending only a name. What should you do before changing anything?",
+      "right": "Confirm they control the account using details already on file",
+      "wrong": [
+        "Make the change; the name is enough",
+        "Ask for their password",
+        "Ask them to send their card number"
+      ],
+      "tier": 3,
+      "why": "Identity verification before account changes."
+    },
+    {
+      "q": "A customer pastes a screenshot showing a full card number into a ticket. What should you do?",
+      "right": "Redact it, remind them not to share card details, and carry on with what you need",
+      "wrong": [
+        "Leave it so the team can see everything",
+        "Forward it to engineering",
+        "Save it in the knowledge base"
+      ],
+      "tier": 3,
+      "why": "Minimise sensitive data in tickets."
+    },
+    {
+      "q": "What is the difference between severity and priority?",
+      "right": "Severity rates the damage to the customer; priority decides the order of work",
+      "wrong": [
+        "They are the same measure",
+        "Priority rates the damage; severity the order",
+        "Severity is set by the customer's tone"
+      ],
+      "tier": 3,
+      "why": "Both are needed in triage."
+    },
+    {
+      "q": "A customer asks how to see what a review cost. Where do they look?",
+      "right": "The wallet ledger, which itemises every debit",
+      "wrong": [
+        "The pricing table",
+        "The terms",
+        "A monthly statement from Stripe only"
+      ],
+      "tier": 3,
+      "why": "Every debit is itemised."
+    },
+    {
+      "q": "A customer asks exactly how long Moksy keeps their data after they close their account. What is the best answer?",
+      "right": "Say the published pages differ, you will confirm, and route to privacy@moksy.ai",
+      "wrong": [
+        "30 days, as the trust page says",
+        "90 days, as the privacy policy says",
+        "Immediately"
+      ],
+      "tier": 4,
+      "why": "The sources disagree, so neither is definitive."
+    },
+    {
+      "q": "A buyer sends you a security questionnaire and asks if support will answer it. What do you do?",
+      "right": "Confirm the current route before promising anything; the pages name different routes",
+      "wrong": [
+        "Answer it yourself from memory",
+        "Refuse to respond",
+        "Send it to legal@moksy.ai"
+      ],
+      "tier": 4,
+      "why": "Contact page says Sales, trust page says privacy@moksy.ai."
+    },
+    {
+      "q": "A founder asks whether Moksy is only for schools because the Terms mention education. What is accurate?",
+      "right": "No; other pages describe founders, teams, agencies, enterprises and the public sector, and the legal wording is outdated and should be flagged",
+      "wrong": [
+        "Yes, it is education only",
+        "Only on Free",
+        "The Terms are accurate"
+      ],
+      "tier": 4,
+      "why": "Do not repeat outdated sector wording as settled."
+    },
+    {
+      "q": "A customer asks what Moksy will refund them for a review that disappointed. What is the sound response?",
+      "right": "No refund rule for reviews is published, so you will not quote an amount; ask support to look into it",
+      "wrong": [
+        "A full refund within 30 days",
+        "Half the MOX spent",
+        "Whatever the customer suggests"
+      ],
+      "tier": 4,
+      "why": "Never invent a refund rule."
+    },
+    {
+      "q": "A customer asks for a refund of unused MOX credit. What does the page say?",
+      "right": "Contact support and we will look at it, a discretionary review",
+      "wrong": [
+        "An automatic refund within 14 days",
+        "Credit is never refundable",
+        "Refunds only through Stripe"
+      ],
+      "tier": 4,
+      "why": "A discretionary review is not a promise."
+    },
+    {
+      "q": "A customer says the cost figure in a plan was wrong and they paid more to a supplier. What is the accurate position?",
+      "right": "The plan is a draft, AI output is informational only and the customer must validate it; Expert Review is how a person checks",
+      "wrong": [
+        "Moksy guarantees the figures",
+        "Moksy pays the difference",
+        "Figures are always accurate on Max"
+      ],
+      "tier": 4,
+      "why": "Terms and pricing page say so."
+    },
+    {
+      "q": "A customer asks what an Expert Review is worth in MOX. What is the sound response?",
+      "right": "Quote any figure only as published and dated, say the rate can change, and remind them Pro and Max include Expert Reviews",
+      "wrong": [
+        "Promise the figure will never change",
+        "Quote the lowest you have seen",
+        "Say you cannot discuss pricing"
+      ],
+      "tier": 4,
+      "why": "Review values are quoted as published and dated."
+    },
+    {
+      "q": "A customer says 'The request exceeded the 10,000ms safety threshold'. What is it?",
+      "right": "A timeout",
+      "wrong": [
+        "A plan limit",
+        "A locked account",
+        "A role problem"
+      ],
+      "tier": 4,
+      "why": "It reports a timeout."
+    },
+    {
+      "q": "A customer reports 'An unexpected orchestration error occurred. Our engineers have been alerted.' What do you ask?",
+      "right": "What they did and what happened, with a screenshot if possible",
+      "wrong": [
+        "Whether they are on Free",
+        "Their password",
+        "Nothing; the engineers will fix it"
+      ],
+      "tier": 4,
+      "why": "Internal error; gather steps for reproduction."
+    },
+    {
+      "q": "A university asks for SSO, SCIM, a signed DPA, invoicing against a PO and UK data residency. What does the pricing page say?",
+      "right": "Enterprise and public sector are priced separately and include those; Sales handles the enquiry",
+      "wrong": [
+        "They are included on Max",
+        "They are add-ons costing MOX",
+        "They are not offered"
+      ],
+      "tier": 4,
+      "why": "Enterprise includes those and is priced separately."
+    },
+    {
+      "q": "A ticket reaches you after two escalations, and the customer is waiting. Who owns it?",
+      "right": "Whoever has accepted it by name, and they update the customer",
+      "wrong": [
+        "Nobody until it is resolved",
+        "The customer",
+        "The original agent without telling anyone"
+      ],
+      "tier": 4,
+      "why": "One named owner at each step."
+    },
+    {
+      "q": "A customer asks you for a discount outside any published policy. What is the best reply?",
+      "right": "Explain what you can offer within policy and offer to pass the request to someone who can decide, without promising an outcome",
+      "wrong": [
+        "Promise the discount",
+        "Refuse and end the conversation",
+        "Make up a coupon"
+      ],
+      "tier": 4,
+      "why": "Do not promise what you cannot confirm."
+    },
+    {
+      "q": "You realise a reply with another customer's details went to the wrong person. What first?",
+      "right": "Report it internally at once so it can be handled as a possible data breach",
+      "wrong": [
+        "Wait to see if anyone notices",
+        "Ask the recipient to ignore it and say nothing",
+        "Delete the sent mail"
+      ],
+      "tier": 4,
+      "why": "Prompt reporting matters."
+    },
+    {
+      "q": "A public-sector officer emails support: 'Are you ISO 27001 certified? Where is our data held? How long until we are told of a breach?' What is the best answer?",
+      "right": "Answer from the trust page: not ISO 27001 certified, primary data in the UK, controllers told within 72 hours, and offer the Sales route for the questionnaire after confirming it",
+      "wrong": [
+        "Say yes to ISO 27001 to avoid losing the deal",
+        "Promise notification within 24 hours",
+        "Refuse to answer security questions"
+      ],
+      "tier": 5,
+      "why": "State what is published and what is not."
+    },
+    {
+      "q": "You find the help page and the pricing page disagree on a figure customers keep quoting. What is best after helping the customer?",
+      "right": "Tell the customer you will confirm, then report the discrepancy so the pages can be corrected",
+      "wrong": [
+        "Quote the one you prefer",
+        "Ignore it",
+        "Edit the page yourself"
+      ],
+      "tier": 5,
+      "why": "Report discrepancies."
+    },
+    {
+      "q": "A customer insists you name the internal rung that arbitrates review disputes. What do you say?",
+      "right": "A senior reviewer, as published, without naming a rung",
+      "wrong": [
+        "The top rung of the lexicon",
+        "Nobody; disputes are not arbitrated",
+        "The Sales team"
+      ],
+      "tier": 5,
+      "why": "Say it as published."
+    },
+    {
+      "q": "A team keeps getting the same question across fifty tickets this month. What is the best response?",
+      "right": "Write or fix a knowledge-base article in the customers' words and use it in canned replies, with a review date",
+      "wrong": [
+        "Reply faster to each ticket",
+        "Tell customers to read the terms",
+        "Ask the team to remember the answer"
+      ],
+      "tier": 5,
+      "why": "Ticket-driven gap analysis."
+    },
+    {
+      "q": "Two customers with the same complaint got different remedies. What does this threaten?",
+      "right": "Consistency and fairness, which a written basis for discretionary decisions protects",
+      "wrong": [
+        "Nothing; each case is unique",
+        "The Free plan",
+        "The service level agreement only"
+      ],
+      "tier": 5,
+      "why": "Consistency of treatment."
+    },
+    {
+      "q": "You expect to miss a promised update time on a serious incident. What do you do?",
+      "right": "Tell the customer before the time passes, give a new time and record why",
+      "wrong": [
+        "Say nothing",
+        "Blame engineering",
+        "Close the ticket and reopen it later"
+      ],
+      "tier": 5,
+      "why": "Missed commitments are handled by early honest notice."
+    },
+    {
+      "q": "A caller claiming to be a director demands a customer's account details urgently. What do you do?",
+      "right": "Follow identity verification and access rules regardless of urgency or seniority",
+      "wrong": [
+        "Share the details to be helpful",
+        "Share half now",
+        "Ask for their password"
+      ],
+      "tier": 5,
+      "why": "Social engineering often uses authority and urgency."
+    },
+    {
+      "q": "A customer says Pro was supposed to include API access, but they cannot see it. What do you check first?",
+      "right": "The customer's actual plan, because API access is published on Pro and Max, then whether it is a role issue",
+      "wrong": [
+        "Whether they have bought MOX",
+        "Whether they are on Free, which includes API access",
+        "Nothing; escalate straight to engineering"
+      ],
+      "tier": 5,
+      "why": "Plan then role then fault."
+    }
+  ]
+}

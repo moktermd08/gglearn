@@ -4,7 +4,10 @@ import Link from "next/link";
 import { brands, checklistItems, db, enrollments, tracks } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { LEVELS, MAX_LEVEL, TIERS, tierOf } from "@/lib/levels";
-import { QUEST_XP, activityFor, badgesFor, trackStats } from "@/lib/stats";
+import { QUEST_XP, activityFor, trackStats } from "@/lib/stats";
+import { progressionFor } from "@/lib/progression";
+import { periodAt, standings as seasonStandings, timeLeft } from "@/lib/seasons";
+import { BadgeWall, PlayerLevelCard } from "@/components/Achievements";
 import { RankEmblem } from "@/components/RankEmblem";
 import { AreaChart, EmptyState, Heatmap, PALETTE, Radar, StatTile } from "@/components/charts";
 import { rivalFor } from "@/lib/rivals";
@@ -21,7 +24,7 @@ import { goalOf, roleLabel } from "@/lib/journey";
 import { pendingFor } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath } from "@/lib/roles";
 import { enroll, toggleChecklist } from "@/app/actions";
-import { BookOpen, CircleCheck, Zap, AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, Lock, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain, Activity, Radar as RadarIcon, Rocket } from "lucide-react";
+import { BookOpen, CircleCheck, Zap, AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain, Activity, Radar as RadarIcon, Rocket } from "lucide-react";
 
 export default async function Dashboard() {
   const user = await requireUser();
@@ -31,8 +34,10 @@ export default async function Dashboard() {
     .where(eq(enrollments.userId, user.id)).all();
   const todo = db.select().from(checklistItems).where(eq(checklistItems.userId, user.id)).all();
   const stats = mine.map((m) => ({ ...m, s: trackStats(user.id, m.t, m.e.startedAt) }));
-  const totalXp = stats.reduce((a, m) => a + m.s.xp, 0);
-  const bestStreak = Math.max(0, ...stats.map((m) => m.s.streak));
+  const prog = progressionFor(user.id);
+  const week = periodAt("week"), weekRows = seasonStandings(week, user.audience), weekMe = weekRows.find((r) => r.userId === user.id);
+  const totalXp = prog.facts.xp;
+  const bestStreak = prog.streak.current;
   const contests = listFor(user, { mineOnly: true }).filter((x) => x.state === "live" || x.state === "upcoming" || x.invited).slice(0, 6);
   const questsDone = stats.reduce((a, m) => a + m.s.doneToday.size, 0), questsTotal = stats.length ? 3 : 0; // the daily goal is three quests, on any subjects
   const levelsPassed = stats.reduce((a, m) => a + m.s.passed, 0);
@@ -49,7 +54,6 @@ export default async function Dashboard() {
   const weekXp = activity.slice(-7).reduce((a, d) => a + d.value, 0);
   const activeDays = activity.filter((d) => d.value > 0).length;
   const radarAxes = [...stats].sort((a, b) => b.s.passed - a.s.passed).slice(0, 6).map((m) => ({ label: m.t.name.replace(/^\d+\.\s*/, "").replace(/:.*$/, ""), value: m.s.passed / MAX_LEVEL }));
-  const badges = stats.length ? badgesFor(stats.sort((a, b) => b.s.xp - a.s.xp)[0].s) : [];
 
   const daysLeft = (sec: number) => Math.ceil((sec - now()) / 86400);
   const statByTrack = new Map(stats.map((m) => [m.t.id, m]));
@@ -318,20 +322,16 @@ export default async function Dashboard() {
             )}
           </section>
 
-          {badges.length > 0 && (
-            <section className="card p-5">
-              {heading(Medal, "bg-yellow-500/15 text-yellow-500", "Badges", <span className="text-xs text-slate-400">{badges.filter((x) => x.earned).length}/{badges.length} earned</span>)}
-              <div className="grid grid-cols-4 gap-2">
-                {badges.map((x, i) => (
-                  <div key={x.key} title={`${x.name}: ${x.desc}`} style={{ "--i": i } as React.CSSProperties} className={`rise relative flex aspect-square flex-col items-center justify-center rounded-2xl text-center ${x.earned ? "pop bg-yellow-400/15 ring-1 ring-yellow-400/50" : "bg-black/[.04] opacity-50 grayscale"}`}>
-                    {!x.earned && <Lock size={10} className="absolute right-1.5 top-1.5 text-slate-400" />}
-                    <div className="text-2xl">{x.icon}</div><div className="mt-0.5 px-1 text-[9px] font-bold leading-tight">{x.name}</div>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-3 text-[11px] text-slate-400">Next: {badges.find((x) => !x.earned)?.desc ?? "you have them all"}</p>
-            </section>
-          )}
+          <Link href="/seasons" className="card card-hover block p-5" aria-label="This week's season">
+            {heading(Trophy, "bg-violet-500/15 text-violet-300", "This week", <span className="text-xs text-slate-400">ends in {timeLeft(week.end - now())}</span>)}
+            {weekMe ? <div className="flex items-baseline gap-3"><span className="text-3xl font-extrabold">#{weekMe.rank}</span><span className="text-sm text-slate-400">of {weekRows.length} · {weekMe.points} pts</span></div> : <p className="text-sm text-slate-400">No points yet this week. Pass a level or finish a quest to get on the board.</p>}
+          </Link>
+
+          <section className="card p-5">
+            {heading(Medal, "bg-yellow-500/15 text-yellow-500", "Level and badges", <span className="text-xs text-slate-400">{prog.earned}/{prog.badges.length} earned</span>)}
+            <div className="mb-4"><PlayerLevelCard p={prog.player} compact /></div>
+            <BadgeWall p={prog} max={8} />
+          </section>
         </aside>
       </div>
     </div>

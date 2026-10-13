@@ -18,6 +18,7 @@ import { grade } from "@/lib/grading";
 import { levelsPassed } from "@/lib/progress";
 import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import { completeQuest } from "@/lib/stats";
+import { progressionFor } from "@/lib/progression";
 import { hiddenTrackIds } from "@/lib/tracks";
 import { drillCompleted, drillQuestion, noteDrillAnswer } from "@/lib/drill";
 import { DYNAMIC_PER_RUN, drawDynamic } from "@/lib/dynamic/store";
@@ -189,7 +190,10 @@ export async function startRun(fd: FormData) {
     .limit(QUESTIONS_PER_RUN).all().map((q) => q.id);
   // generated questions: new values every time and never repeated for this person, so there is nothing to memorise
   const fresh = drawDynamic(u.id, track, level, Math.min(slots, Math.max(DYNAMIC_PER_RUN, slots - pool.length)));
-  const picked = [...fresh, ...pool.slice(0, slots - fresh.length), ...(twist.inject ? [twist.inject] : [])].sort(() => Math.random() - 0.5);
+  const rest = [...fresh, ...pool.slice(0, slots - fresh.length)];
+  // never let a twist stand in for a thin exam: it only goes in when it is one question among a full set
+  const inject = twist.inject && rest.length >= QUESTIONS_PER_RUN - 1 ? twist.inject : null;
+  const picked = [...rest, ...(inject ? [inject] : [])].sort(() => Math.random() - 0.5);
   if (!picked.length) return;
 
   const run = db.insert(runs).values({ userId: u.id, trackId, level }).returning().get();
@@ -269,6 +273,7 @@ async function gradeRun(userId: number, run: typeof runs.$inferSelect, runId: nu
     db.insert(certificates).values({ userId: u.id, trackId: run.trackId, level: run.level, score, code: randomBytes(5).toString("hex").toUpperCase() })
       .onConflictDoNothing().run();
   }
+  progressionFor(u.id); // records any badge this exam earned
 }
 
 // ---- daily quests ----

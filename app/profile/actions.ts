@@ -2,7 +2,7 @@
 
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { db, userAvatars } from "@/lib/db";
+import { db, userAvatars, users } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import { sniffImage } from "@/lib/image";
@@ -31,4 +31,13 @@ export async function removePhoto() {
   const me = await requireUser();
   db.delete(userAvatars).where(eq(userAvatars.userId, me.id)).run();
   revalidatePath("/", "layout");
+}
+
+/** Opt in or out of the weekly and monthly season boards. Hiding removes the person from live standings and from future results. */
+export async function setSeasonBoard(formData: FormData) {
+  const me = await requireUser();
+  const show = formData.get("show") === "1";
+  db.update(users).set({ seasonBoard: show ? "show" : "hide" }).where(eq(users.id, me.id)).run();
+  revalidatePath("/seasons");
+  revalidatePath("/profile");
 }
