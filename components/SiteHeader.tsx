@@ -45,7 +45,7 @@ export function SiteHeader({ user, unread = 0 }: { user: User; unread?: number }
         <div className="hidden items-center gap-2 md:flex">
           {user ? (
             <>
-            <Link href="/notifications" className="relative grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}><Bell size={18} />{unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-full bg-pink-600 px-1 text-[10px] font-bold leading-4 text-[#fff]">{unread > 9 ? "9+" : unread}</span>}</Link>
+            <Link href="/notifications" className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}><Bell size={18} />{unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-full bg-pink-600 px-1 text-[10px] font-bold leading-4 text-[#fff]">{unread > 9 ? "9+" : unread}</span>}</Link>
             <Dropdown align="right" label={<><Initials name={user.name} size={26} /><span className="max-w-32 truncate">{user.name}</span></>}>
               <div className="border-b border-black/5 px-3 pb-2 pt-1.5"><div className="font-semibold">{user.name}</div><div className="truncate text-xs text-slate-400">{user.email}</div></div>
               <Link href="/profile" className="mt-1 items-center gap-2 hover:bg-black/5"><UserRound size={15} />Your profile</Link>
