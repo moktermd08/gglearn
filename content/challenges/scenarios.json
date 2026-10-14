@@ -1,0 +1,779 @@
+{
+ "_about": "Scenario questions derived from docs/learning-challenges.md. 'challenge' is the number of the challenge in that file. Same question shape as content/lifecycle/*.json. Not yet seeded.",
+ "roles": [
+  {
+   "role": "cto",
+   "name": "CTO",
+   "scenarios": [
+    {
+     "challenge": 2,
+     "level": 9,
+     "type": "scenario",
+     "prompt": "Your board asks why engineering needs a quarter to pay down technical debt while a competitor ships AI features. How do you make the case?",
+     "answer": "Frame debt as business risk: show incident cost, slowed lead time and customer churn tied to it, propose a time-boxed plan with measurable outcomes (deploy frequency, incident count), and pair it with a thin AI slice so the roadmap does not stall.",
+     "rubric": "Translates debt into revenue/risk terms, proposes measurable, time-boxed plan, acknowledges competitive pressure."
+    },
+    {
+     "challenge": 4,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A vendor demo for a $400k platform looks impressive. How do you decide build vs buy?",
+     "answer": "Define the requirement and total cost of ownership over three years, check integration and exit costs, run a time-boxed proof of concept on your own data, ask reference customers about problems, and decide on differentiation: buy commodity, build what is your edge.",
+     "rubric": "Uses TCO, PoC, references, lock-in and differentiation; does not rely on the demo."
+    },
+    {
+     "challenge": 16,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A 12-person team wants microservices because 'Netflix does it'. What do you ask and recommend?",
+     "answer": "Ask what problem it solves: scaling, team autonomy, deploy independence. At 12 people a modular monolith usually gives clear boundaries without operational overhead; revisit when a boundary shows distinct scaling or release needs.",
+     "rubric": "Challenges the motive, weighs operational cost, proposes modular monolith with revisit criteria."
+    },
+    {
+     "challenge": 31,
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A critical npm package your product depends on is reported compromised. What do you do in the first 24 hours?",
+     "answer": "Open an incident, identify affected builds via SBOM/lockfiles, pin or remove the version, rotate secrets that could have been exposed, redeploy from clean builds, check logs for abuse, communicate to customers if data was affected, then add dependency pinning and scanning.",
+     "rubric": "Containment, scope via SBOM, secret rotation, communication, preventive follow-up."
+    },
+    {
+     "challenge": 39,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "You discover staff pasting customer data into public AI chat tools. Respond.",
+     "answer": "Do not just ban it: publish a clear policy, provide an approved tool with data controls, add DLP and training, explain the risk, and monitor for shadow use. Treat it as a systems gap, not only misconduct.",
+     "rubric": "Policy plus approved alternative plus controls; avoids blanket ban alone."
+    },
+    {
+     "challenge": 50,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "Your best senior engineer has a competing offer with 30% more pay and equity. How do you respond?",
+     "answer": "Have an honest conversation about what they want: growth, scope, pay. Check market data and fairness for the level, offer what is feasible, and address non-pay drivers. Do not make one-off exceptions that break pay equity; plan for knowledge transfer either way.",
+     "rubric": "Listens first, considers equity and internal fairness, plans for continuity."
+    },
+    {
+     "challenge": 61,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "Cloud spend rose 40% in a quarter with flat traffic. How do you investigate?",
+     "answer": "Break spend down by service, team and environment using tags; look for idle resources, oversized instances, data transfer, logging volume and unbounded AI calls; set budgets and alerts; assign cost ownership; track cost per customer or feature.",
+     "rubric": "Uses tagging/attribution, finds specific causes, creates ownership and alerts."
+    },
+    {
+     "challenge": 74,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "After a three-hour outage, the CEO wants to know who is to blame. What do you do?",
+     "answer": "Run a blameless post-mortem: timeline, contributing factors, detection and response gaps, and concrete actions with owners and dates. Explain to the CEO that fixing the system prevents recurrence, while individual performance issues are handled separately and privately.",
+     "rubric": "Blameless process, systemic fixes, owners/dates, handles CEO expectation."
+    },
+    {
+     "challenge": 96,
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A team proposes an AI agent that can issue customer refunds automatically. What guardrails do you require?",
+     "answer": "Start with low-risk limits and human approval above a threshold, restrict tools to least privilege, log every action with reasoning, add evals and adversarial tests, include a kill switch and rollback, and review outcomes regularly before widening autonomy.",
+     "rubric": "Least privilege, thresholds, auditability, evals, kill switch, staged autonomy."
+    },
+    {
+     "challenge": 115,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "You have 2 hours a week for your own learning as CTO. How do you spend it?",
+     "answer": "Split between a thin radar scan of trends, one deep topic tied to a live decision, and conversations with engineers and peers. Review learning against upcoming decisions rather than reading everything.",
+     "rubric": "Prioritizes decision-linked learning and peer input over broad consumption."
+    }
+   ]
+  },
+  {
+   "role": "support-developer",
+   "name": "Support Developer",
+   "scenarios": [
+    {
+     "challenge": 116,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "A customer reports a bug you cannot reproduce. What are your next steps?",
+     "answer": "Gather exact steps, version, environment, account, logs and screenshots; check feature flags and data specific to the account; try a matching environment; add temporary logging if needed; keep the customer updated and document findings.",
+     "rubric": "Collects environment details, checks account-specific data/flags, communicates."
+    },
+    {
+     "challenge": 119,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Ticket: 'The export is empty.' How do you tell user error from a defect?",
+     "answer": "Check filters, date range and permissions in the customer's view, then run the same export with the same inputs. If data exists and the export is empty, it is a defect; otherwise guide the user and update docs if the UI misled them.",
+     "rubric": "Verifies inputs and permissions first, reproduces with same inputs, improves docs."
+    },
+    {
+     "challenge": 121,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "Errors occur once every few hundred requests and vanish when you attach a debugger. How do you proceed?",
+     "answer": "Suspect timing or concurrency. Add structured logging with correlation IDs, capture state at failure, look for shared mutable state or race conditions, stress with load, and avoid debugger-only approaches that change timing.",
+     "rubric": "Suspects race conditions, uses logging/correlation instead of debugger."
+    },
+    {
+     "challenge": 130,
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A production-only bug needs a fix; staging cannot reproduce it. How do you debug safely?",
+     "answer": "Use read-only access, logs and traces first. Redact customer data, use feature flags or canary instances for extra logging, never modify data directly without approval, and apply the fix through the normal pipeline with a rollback ready.",
+     "rubric": "Read-only first, privacy, canary, normal pipeline, rollback."
+    },
+    {
+     "challenge": 134,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "Users report being logged out randomly after an SSO change. What do you check?",
+     "answer": "Token and session lifetimes, clock skew, cookie domain/SameSite settings, refresh-token handling, load-balancer stickiness and identity-provider configuration changes; compare affected versus unaffected users.",
+     "rubric": "Checks session/token lifetimes, cookies, clock skew, IdP changes."
+    },
+    {
+     "challenge": 153,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Write what a good bug report to engineering contains.",
+     "answer": "Clear title, steps to reproduce, expected vs actual result, environment/version, logs or screenshots, customer impact and urgency, workarounds tried, and links to related tickets.",
+     "rubric": "Includes reproduction, impact, environment, evidence."
+    },
+    {
+     "challenge": 166,
+     "level": 4,
+     "type": "scenario",
+     "prompt": "An angry customer says your product 'wasted their whole day'. How do you reply?",
+     "answer": "Acknowledge the impact sincerely, state what you understand, give the next step and a realistic time, avoid blame and jargon, and follow up when you said you would.",
+     "rubric": "Empathy, clear next step, honest timing."
+    },
+    {
+     "challenge": 184,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "You must patch a vulnerability reported by a customer. What do you consider besides the code fix?",
+     "answer": "Confirm and scope the issue, check for similar patterns elsewhere, fix through code review with a test, coordinate disclosure with the reporter, check logs for exploitation, notify affected customers if needed, and document it.",
+     "rubric": "Scope, tests, disclosure, exploit check, notification."
+    },
+    {
+     "challenge": 211,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A customer sends logs containing tokens and personal data. What do you do?",
+     "answer": "Treat as sensitive: remove or redact before sharing internally, tell the customer to rotate exposed tokens, store only where policy allows, and delete when done.",
+     "rubric": "Redaction, rotation advice, minimal storage."
+    },
+    {
+     "challenge": 229,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "You see the same issue weekly from different customers. What do you do?",
+     "answer": "Quantify tickets and impact, find the root cause, raise it to product/engineering with the data, propose a fix or doc/UI change, and track whether tickets drop afterwards.",
+     "rubric": "Aggregates data, root cause, escalation, measurement."
+    }
+   ]
+  },
+  {
+   "role": "nodejs-developer",
+   "name": "Node.js Developer",
+   "scenarios": [
+    {
+     "challenge": 232,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "An endpoint that hashes large files freezes all other requests. Why and how do you fix it?",
+     "answer": "Synchronous CPU work blocks the single event loop thread. Move it to a worker thread or separate process/queue, use streaming and async crypto APIs where available, and monitor event-loop lag.",
+     "rubric": "Identifies event-loop blocking, offers worker/queue and monitoring."
+    },
+    {
+     "challenge": 234,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A function uses `array.forEach(async ...)` and the response returns before work finishes. What is wrong?",
+     "answer": "forEach ignores returned promises, so nothing awaits them. Use `for...of` with await for sequence, or `Promise.all(array.map(...))` for parallel work, and handle rejections.",
+     "rubric": "Explains forEach ignores promises; gives for..of / Promise.all."
+    },
+    {
+     "challenge": 235,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "Streaming a 5 GB file to clients exhausts memory. What is the likely cause and fix?",
+     "answer": "The file is read fully into memory or the writer is slower than the reader without backpressure. Use pipeline() with streams so backpressure is respected, and handle errors and client aborts.",
+     "rubric": "Backpressure, pipeline, error/abort handling."
+    },
+    {
+     "challenge": 243,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "Deploys drop in-flight requests. How do you add graceful shutdown?",
+     "answer": "Handle SIGTERM: stop accepting new connections, finish in-flight requests with a timeout, close DB/queue connections, then exit; coordinate with the orchestrator's readiness checks and termination grace period.",
+     "rubric": "SIGTERM handling, draining, closing resources, orchestrator."
+    },
+    {
+     "challenge": 266,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "Your public API is hammered by one client. What protections do you add?",
+     "answer": "Rate limits per key/IP with a shared store (Redis), return 429 with Retry-After, add request size limits and timeouts, cache where possible, and monitor and alert on abuse.",
+     "rubric": "Shared-store rate limit, 429/Retry-After, limits, monitoring."
+    },
+    {
+     "challenge": 268,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A payment provider webhook is delivered twice and you create two orders. Fix it.",
+     "answer": "Verify the signature, make handlers idempotent using the event ID stored with a unique constraint, process asynchronously, return 2xx quickly, and handle out-of-order events.",
+     "rubric": "Signature, idempotency key, unique constraint, fast ack."
+    },
+    {
+     "challenge": 275,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "Under load the app errors with 'too many connections'. Why?",
+     "answer": "Each instance or request opens too many database connections beyond the server limit. Use a bounded pool, release connections reliably, size pools by instance count, and consider a pooler such as PgBouncer.",
+     "rubric": "Bounded pool, release, sizing across instances, pooler."
+    },
+    {
+     "challenge": 287,
+     "level": 9,
+     "type": "scenario",
+     "prompt": "A search endpoint builds SQL by string concatenation. What are the risks and the fix?",
+     "answer": "SQL injection can leak or alter data. Use parameterized queries or a query builder, validate input, apply least-privilege DB credentials, and add tests with malicious input.",
+     "rubric": "Names injection, parameterization, least privilege, tests."
+    },
+    {
+     "challenge": 291,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A dependency you use gets a malicious release. How do you reduce exposure in future?",
+     "answer": "Commit lockfiles, pin versions, use `npm ci`, delay adopting new releases, run audits and provenance checks, minimise dependencies, disable unneeded install scripts and scope CI tokens.",
+     "rubric": "Lockfiles, pinning, audit, minimising scripts and tokens."
+    },
+    {
+     "challenge": 300,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "A test fails one time in ten in CI only. How do you approach it?",
+     "answer": "Look for timing assumptions, shared state, test order dependence, unmocked network or clock, resource limits in CI. Reproduce by repeating, isolate and fix the cause rather than adding retries.",
+     "rubric": "Finds root cause categories, reproduces, avoids blind retries."
+    }
+   ]
+  },
+  {
+   "role": "website-developer",
+   "name": "Website Developer",
+   "scenarios": [
+    {
+     "challenge": 346,
+     "level": 4,
+     "type": "scenario",
+     "prompt": "A designer gives you a button built from a clickable `div`. What do you change and why?",
+     "answer": "Use a `button` element: it provides keyboard focus, Enter/Space activation and correct role for assistive tech for free; style it to match.",
+     "rubric": "Native element, keyboard/role benefits."
+    },
+    {
+     "challenge": 347,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "A card grid breaks at awkward widths. How do you make it robust?",
+     "answer": "Use CSS Grid with `repeat(auto-fit, minmax(...))` or container queries instead of fixed breakpoints, test at many widths, and avoid fixed heights.",
+     "rubric": "Intrinsic layout, auto-fit/minmax or container queries."
+    },
+    {
+     "challenge": 365,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "Explain when to choose SSR, SSG or client rendering for a product page.",
+     "answer": "Product pages benefit from SSG/ISR or SSR for SEO and speed; rendering on the client suits private, interactive dashboards. Choose by freshness, personalization and SEO needs.",
+     "rubric": "Maps rendering mode to freshness/SEO/personalization."
+    },
+    {
+     "challenge": 376,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "LCP is 4.5 s on mobile. How do you improve it?",
+     "answer": "Identify the LCP element, optimise and properly size the image (modern format, priority loading), reduce render-blocking CSS/JS, use a CDN and caching, preconnect to required origins, and verify with field data.",
+     "rubric": "Identifies LCP element, image priority, blocking resources, field data."
+    },
+    {
+     "challenge": 382,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "Marketing wants five new tracking scripts. How do you respond?",
+     "answer": "Quantify performance and privacy cost, load via a tag manager asynchronously after consent, remove unused ones, and test before and after impact on Core Web Vitals.",
+     "rubric": "Cost measurement, consent, async loading."
+    },
+    {
+     "challenge": 388,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "After a route change in your SPA, screen reader users hear nothing. Fix?",
+     "answer": "Manage focus: move it to the page heading or main region, update the document title, and announce route changes through a live region.",
+     "rubric": "Focus management, title, live region."
+    },
+    {
+     "challenge": 411,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A comment feature renders user input with innerHTML. What is the risk and fix?",
+     "answer": "Cross-site scripting. Render as text, or sanitize with a vetted library, apply a Content Security Policy, and encode output on the server.",
+     "rubric": "XSS, text rendering/sanitizer, CSP."
+    },
+    {
+     "challenge": 414,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A European visitor sees analytics firing before consent. What is wrong and what do you do?",
+     "answer": "Non-essential tracking must wait for opt-in under GDPR/ePrivacy. Gate scripts behind the consent manager, record consent, and verify no cookies set beforehand.",
+     "rubric": "Consent gating, verification."
+    },
+    {
+     "challenge": 421,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "A client-rendered site is not indexed well. What do you check?",
+     "answer": "Whether content is in the initial HTML, crawlability of links, rendering via SSR/prerender, metadata, canonicals and sitemap, and Search Console's rendered view.",
+     "rubric": "Initial HTML, links, SSR, tools."
+    },
+    {
+     "challenge": 432,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "A client keeps changing requirements after sign-off. How do you handle it?",
+     "answer": "Refer to the signed scope, log each change as a change request with estimated time and cost, discuss trade-offs and agree before work begins, and keep a written record.",
+     "rubric": "Scope reference, change requests, agreement."
+    }
+   ]
+  },
+  {
+   "role": "website-support",
+   "name": "Website Support",
+   "scenarios": [
+    {
+     "challenge": 461,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "A client says 'my site is down'. What is your first diagnostic sequence?",
+     "answer": "Confirm from outside, check DNS resolution, SSL validity, hosting status, server and error logs, recent changes or updates, then application and database health. Narrow the layer before changing anything.",
+     "rubric": "Layered checks, no changes before diagnosis."
+    },
+    {
+     "challenge": 466,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "After a plugin update the site shows a white screen. What do you do?",
+     "answer": "Enable debug logging, check the error log, disable the plugin via file system or CLI, restore from backup if needed, then test updates on staging before retrying.",
+     "rubric": "Debug log, disable via FS, backup, staging."
+    },
+    {
+     "challenge": 471,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "A site redirects visitors to a spam site. What is your response?",
+     "answer": "Assume compromise: take a backup of the evidence, put the site in maintenance mode, scan and remove malicious code, update everything, change all credentials and keys, check for backdoors and rogue admin users, harden, and report to the client.",
+     "rubric": "Containment, cleanup, credentials, backdoors, report."
+    },
+    {
+     "challenge": 479,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "Contact-form emails land in spam. What do you check?",
+     "answer": "SPF, DKIM and DMARC records, sending via authenticated SMTP rather than PHP mail, the From domain match and the blacklist status.",
+     "rubric": "SPF/DKIM/DMARC, SMTP."
+    },
+    {
+     "challenge": 470,
+     "level": 4,
+     "type": "scenario",
+     "prompt": "The client edits a page but still sees the old one. Why?",
+     "answer": "Layers of caching: browser, CDN, server and plugin. Purge in order and test in a private window.",
+     "rubric": "Names cache layers."
+    },
+    {
+     "challenge": 496,
+     "level": 3,
+     "type": "scenario",
+     "prompt": "Explain to a non-technical owner why the SSL warning appears.",
+     "answer": "The certificate has expired or does not match the domain, so browsers warn visitors; we renew or reissue it and set up auto-renewal.",
+     "rubric": "Plain language, cause and fix."
+    },
+    {
+     "challenge": 502,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "A client edited theme files themselves and the site broke. How do you react?",
+     "answer": "Restore from a backup, explain without blame, recommend a staging copy or child theme for edits, and note any out-of-scope time.",
+     "rubric": "Restore, no blame, preventive advice."
+    },
+    {
+     "challenge": 504,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "A backup restore fails and recent orders are missing. How do you communicate?",
+     "answer": "Tell the client promptly and factually what is known, the potential impact, recovery options (host backups, payment-provider records), a timeline, and the prevention plan.",
+     "rubric": "Honest, early, options."
+    },
+    {
+     "challenge": 527,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A client emails their admin password. What do you do?",
+     "answer": "Do not reuse it; ask them to change it, use a password manager or temporary scoped account, and delete the email where policy allows.",
+     "rubric": "Secure handling."
+    },
+    {
+     "challenge": 544,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "An AI assistant suggests editing wp-config.php live. How do you proceed?",
+     "answer": "Verify against official docs, test on staging, take a backup, and apply with a rollback plan. Never paste unvetted code into production.",
+     "rubric": "Verifies AI advice, staging."
+    }
+   ]
+  },
+  {
+   "role": "it-support",
+   "name": "IT Support",
+   "scenarios": [
+    {
+     "challenge": 583,
+     "level": 4,
+     "type": "scenario",
+     "prompt": "A laptop is 'slow' every morning. How do you diagnose?",
+     "answer": "Ask when it started, check startup items, disk space/health, memory, updates running, security scans and network. Use task manager or logs to find the cause.",
+     "rubric": "Structured diagnosis."
+    },
+    {
+     "challenge": 591,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Wi-Fi drops in one meeting room only. Steps?",
+     "answer": "Check access-point coverage and channel interference, signal strength with a survey tool, firmware, client roaming settings and physical obstacles.",
+     "rubric": "Survey, interference."
+    },
+    {
+     "challenge": 603,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "Someone calls claiming to be the CEO and demands an urgent password reset. What do you do?",
+     "answer": "Do not reset: verify identity through a trusted second channel and follow the documented process; report the attempt as social engineering.",
+     "rubric": "Verification, process."
+    },
+    {
+     "challenge": 606,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "An employee loses their phone containing the MFA app. Response?",
+     "answer": "Verify identity, revoke sessions and tokens, remotely lock or wipe the device, issue new MFA enrollment through a secure process, and review account activity.",
+     "rubric": "Revoke, wipe, re-enroll."
+    },
+    {
+     "challenge": 621,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "Five staff clicked a phishing link. Immediate actions?",
+     "answer": "Isolate affected devices, reset passwords and revoke sessions, check mailbox rules and sign-in logs, remove the email tenant-wide, inform users and run a lessons-learned review.",
+     "rubric": "Contain, reset, hunt, communicate."
+    },
+    {
+     "challenge": 625,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A critical patch must go out but could break a finance app. Approach?",
+     "answer": "Test in a pilot group, schedule a window, prepare rollback, communicate, and deploy in rings while monitoring.",
+     "rubric": "Rings, rollback."
+    },
+    {
+     "challenge": 633,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "Ransomware encrypts a file server. What matters most for recovery?",
+     "answer": "Isolate the network, preserve evidence, identify scope, restore from offline or immutable backups, rebuild clean, reset credentials and report as required.",
+     "rubric": "Isolate, backup, credentials."
+    },
+    {
+     "challenge": 641,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "Email is down company-wide. How do you run the incident?",
+     "answer": "Assign an incident lead, check provider status and recent changes, communicate through an alternate channel at set intervals, restore, then write up root cause.",
+     "rubric": "Roles, comms, post-incident."
+    },
+    {
+     "challenge": 654,
+     "level": 4,
+     "type": "scenario",
+     "prompt": "An executive demands you skip the queue. What do you do?",
+     "answer": "Be polite and responsive, assess real urgency against the severity policy, and escalate to your manager where policy conflicts rather than silently reordering.",
+     "rubric": "Policy-based."
+    },
+    {
+     "challenge": 667,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Can you paste an error log with customer names into an AI tool?",
+     "answer": "No, not without approval: redact sensitive data, use approved tools only, and verify any suggestion before use.",
+     "rubric": "Privacy."
+    }
+   ]
+  },
+  {
+   "role": "sales-assistant",
+   "name": "Sales Assistant",
+   "scenarios": [
+    {
+     "challenge": 691,
+     "level": 3,
+     "type": "scenario",
+     "prompt": "A prospect asks if the product 'integrates with everything'. What do you say?",
+     "answer": "Don't promise: ask which systems matter, check the integration list and confirm with a solutions engineer before answering.",
+     "rubric": "Avoids overpromising."
+    },
+    {
+     "challenge": 706,
+     "level": 3,
+     "type": "scenario",
+     "prompt": "Why does CRM hygiene matter for the team?",
+     "answer": "Accurate records drive forecasting, follow-up, handoffs and reporting. Bad data wastes time and misleads decisions.",
+     "rubric": "Links hygiene to outcomes."
+    },
+    {
+     "challenge": 721,
+     "level": 4,
+     "type": "scenario",
+     "prompt": "Your cold email gets no replies. How do you improve it?",
+     "answer": "Research the recipient, make it short and relevant to their problem, one clear ask, a specific subject line, test variants and track results.",
+     "rubric": "Relevance, brevity, testing."
+    },
+    {
+     "challenge": 726,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "You scraped a list of EU contacts. What compliance questions apply?",
+     "answer": "Legal basis for contact, opt-out and consent rules, data source legitimacy, and recording suppression requests.",
+     "rubric": "GDPR awareness."
+    },
+    {
+     "challenge": 736,
+     "level": 4,
+     "type": "scenario",
+     "prompt": "What are good discovery questions for a first call?",
+     "answer": "Ask about goals, current process, pain, impact, who decides, budget and timeline, and listen rather than pitch.",
+     "rubric": "Open questions, listening."
+    },
+    {
+     "challenge": 738,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "A prospect says 'your price is too high'. Reply?",
+     "answer": "Ask what they compare against and the value gap, restate outcomes, explore scope options, and don't discount without approval or a trade.",
+     "rubric": "Explore, no reflex discount."
+    },
+    {
+     "challenge": 748,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A seller wants a stalled deal marked 80% likely. What do you do?",
+     "answer": "Check evidence of next steps, buyer engagement and decision date, and record the stage honestly per the criteria.",
+     "rubric": "Honest pipeline."
+    },
+    {
+     "challenge": 776,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Your manager asks you to say a feature exists that is only planned. Response?",
+     "answer": "Don't misrepresent; describe it as roadmap with no commitment, and raise the concern if pressed.",
+     "rubric": "Honesty."
+    },
+    {
+     "challenge": 799,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A security questionnaire arrives with 200 questions. How do you handle it?",
+     "answer": "Triage, reuse approved answers from a library, route technical items to the owners, track deadlines, and never guess.",
+     "rubric": "Reuse, route, no guessing."
+    },
+    {
+     "challenge": 787,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Using an AI tool to write outreach at volume: what are the risks?",
+     "answer": "Generic or inaccurate messages, brand harm, privacy and consent issues. Personalize, fact-check and follow policy.",
+     "rubric": "Risks and controls."
+    }
+   ]
+  },
+  {
+   "role": "product-manager",
+   "name": "Product Manager",
+   "scenarios": [
+    {
+     "challenge": 806,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A key customer demands a feature immediately. What do you do?",
+     "answer": "Dig into the underlying problem and its frequency, check fit with strategy and other customers' needs, consider alternatives or workarounds, and decide transparently with a clear explanation.",
+     "rubric": "Problem behind request."
+    },
+    {
+     "challenge": 807,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Critique this interview question: 'Wouldn't you love a dashboard?'",
+     "answer": "It leads and invites polite agreement. Ask about past behaviour: how they currently track this and what happened last time.",
+     "rubric": "Past behaviour."
+    },
+    {
+     "challenge": 816,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "The roadmap has 40 requests. How do you decide what not to build?",
+     "answer": "Link to goals, estimate impact and effort, check evidence, say no with reasons and keep a visible parking lot.",
+     "rubric": "Prioritization."
+    },
+    {
+     "challenge": 822,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "An A/B test shows +3% conversion after two days. Ship?",
+     "answer": "Not yet: confirm sample size and duration for power, check novelty effects, segment sanity, guardrail metrics and pre-registered hypotheses.",
+     "rubric": "Statistical rigor."
+    },
+    {
+     "challenge": 830,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Page views doubled but revenue is flat. What now?",
+     "answer": "Page views are a vanity metric; examine conversion, activation and retention, and investigate traffic quality.",
+     "rubric": "Vanity vs outcome."
+    },
+    {
+     "challenge": 836,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "Engineers say a feature is 'three months' and you think it is simple. React?",
+     "answer": "Ask what drives the complexity, explore scope slices, and learn from their reasoning rather than push.",
+     "rubric": "Curiosity."
+    },
+    {
+     "challenge": 856,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "The CEO adds an unplanned feature mid-quarter. Response?",
+     "answer": "Show trade-offs: what moves or drops, impact on goals, and ask for a decision with full visibility.",
+     "rubric": "Trade-offs."
+    },
+    {
+     "challenge": 888,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Growth proposes a hidden-cancel flow to improve retention. Your view?",
+     "answer": "It's a dark pattern: harms trust and may breach consumer law. Improve value or offer pause/discount transparently.",
+     "rubric": "Ethics."
+    },
+    {
+     "challenge": 902,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "An AI summary feature sometimes invents facts. What do you do before launch?",
+     "answer": "Define quality metrics and evaluations, add source citations and confidence cues, human review for high-risk cases, user feedback and monitoring, and a fallback.",
+     "rubric": "AI quality controls."
+    },
+    {
+     "challenge": 904,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "Your AI feature's costs vary per use. How do you price it?",
+     "answer": "Model cost per use, find the value metric, use tiers or credits with fair-use limits, and monitor margins.",
+     "rubric": "Unit economics."
+    }
+   ]
+  },
+  {
+   "role": "delivery-manager",
+   "name": "Delivery Manager",
+   "scenarios": [
+    {
+     "challenge": 921,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A client wants a fixed date and price for vague requirements. What do you do?",
+     "answer": "Propose discovery first, give ranges with assumptions, use phased delivery and change control, and explain the risk of fixing everything upfront.",
+     "rubric": "Ranges, phases."
+    },
+    {
+     "challenge": 926,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "Two engineers go on leave in the final sprint. How do you re-plan?",
+     "answer": "Recalculate capacity, cut or defer scope with the stakeholders, cross-train quickly, and update the risk log and forecast.",
+     "rubric": "Capacity."
+    },
+    {
+     "challenge": 936,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "A client's contract is waterfall but your team is agile. What do you do?",
+     "answer": "Map contractual milestones to iterative delivery, deliver demos and incremental acceptance within the framework, and agree change handling.",
+     "rubric": "Hybrid."
+    },
+    {
+     "challenge": 939,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "Velocity is up but customers see no value. What do you look at?",
+     "answer": "Flow and outcome metrics such as cycle time, escaped defects and delivered outcomes rather than output points.",
+     "rubric": "Outcome focus."
+    },
+    {
+     "challenge": 951,
+     "level": 5,
+     "type": "scenario",
+     "prompt": "Your risk register hasn't been updated in six weeks. Fix?",
+     "answer": "Make it a standing agenda item, assign owners and review dates, drop stale items and add new ones, tying it to decisions.",
+     "rubric": "Living register."
+    },
+    {
+     "challenge": 960,
+     "level": 8,
+     "type": "scenario",
+     "prompt": "Go-live is tomorrow with two open high-severity bugs. Recommend?",
+     "answer": "Assess impact and workarounds, bring evidence to a go/no-go with the sponsor, consider a phased or feature-flagged release, and have a rollback plan.",
+     "rubric": "Evidence-based go/no-go."
+    },
+    {
+     "challenge": 966,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "The project is two weeks late and you haven't told the client. What now?",
+     "answer": "Tell them now with cause, impact, recovery options and a revised plan; early honesty preserves trust.",
+     "rubric": "Early honesty."
+    },
+    {
+     "challenge": 981,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "A team lead ignores your requests and you have no authority. Approach?",
+     "answer": "Understand their constraints, align on shared goals, use data, agree commitments, and escalate transparently if needed.",
+     "rubric": "Influence."
+    },
+    {
+     "challenge": 987,
+     "level": 6,
+     "type": "scenario",
+     "prompt": "The team works weekends to hit a deadline for the third time. Act?",
+     "answer": "Treat as a planning failure: renegotiate scope or date, protect sustainable pace, and fix the estimation causes.",
+     "rubric": "Sustainable pace."
+    },
+    {
+     "challenge": 1030,
+     "level": 7,
+     "type": "scenario",
+     "prompt": "AI coding tools speed up development. How does that change your plans?",
+     "answer": "Re-baseline estimates with observed data, watch review and testing bottlenecks and quality, and don't just shorten timelines.",
+     "rubric": "Data-driven re-baseline."
+    }
+   ]
+  }
+ ]
+}
