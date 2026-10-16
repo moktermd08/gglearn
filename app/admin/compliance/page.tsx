@@ -33,6 +33,7 @@ export default async function Compliance() {
   return (
     <div className="space-y-8">
       <PageHero Icon={ShieldCheck} tone="emerald" title="Who is up to date" sub="Required learning for every person, against its deadline.">
+        {me.role === "admin" && <Link href="/admin/setup" className="btn btn-ghost !py-1 text-sm">Set up companies and tracks</Link>}
         {me.role === "admin" && <Link href="/admin/paths" className="btn btn-ghost !py-1 text-sm">Set what is required</Link>}
         {me.role === "admin" && <Link href="/admin/matrix" className="btn btn-ghost !py-1 text-sm">Role and pillar matrix</Link>}
       </PageHero>
