@@ -5,7 +5,9 @@ import { brands, db, enrollments, lessons, questions, tracks } from "@/lib/db";
 import { LevelDetail, type LevelDetailData } from "@/components/LevelDetail";
 import { LEVEL_INFO } from "@/lib/levelInfo";
 import { currentUser } from "@/lib/auth";
-import { openTo } from "@/lib/paths";
+import { openTo, requirementsFor, scopesOf } from "@/lib/paths";
+import { gateFor } from "@/lib/onboarding";
+import { now } from "@/lib/competitions";
 import { CERT_LEVELS, KIND_LABEL, LEVELS, PASS_MARK, QUESTIONS_PER_RUN, TIERS, certTitle, tierOf } from "@/lib/levels";
 import { QUEST_LABEL, QUEST_XP, badgesFor, trackStats } from "@/lib/stats";
 import { rivalFor } from "@/lib/rivals";
@@ -17,7 +19,7 @@ import { AvatarPicker } from "@/components/AvatarPicker";
 import { avatarLooks } from "@/lib/avatars";
 import { RankEmblem } from "@/components/RankEmblem";
 import { Ring } from "@/components/Ring";
-import { ArrowRight, Info, BookOpen, Check, CheckCircle2, Crown, Flame, GraduationCap, ListChecks, Lock, LogIn, Medal, Mountain, Sparkles, Swords, Target, Trophy, Zap } from "lucide-react";
+import { AlertTriangle, ArrowRight, Hourglass, Info, ShieldCheck, BookOpen, Check, CheckCircle2, Crown, Flame, GraduationCap, ListChecks, Lock, LogIn, Medal, Mountain, Sparkles, Swords, Target, Trophy, Zap } from "lucide-react";
 
 const QUEST_ICON = { study: BookOpen, drill: Zap, exam: Trophy } as const;
 
@@ -67,6 +69,10 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
   const looks = await avatarLooks();
   const accent = artFor(track.slug, track.name, track.kind).color;
   const totalQs = [...counts.values()].reduce((a, b) => a + b, 0);
+  // is this subject required of the person looking at it? then say what, and by when, right where they will act on it
+  const req = user && enrolment ? requirementsFor(user, scopesOf(user.id)).find((r) => r.track.id === track.id) : undefined;
+  const gate = user && enrolment ? gateFor(user.id, track.id) : null;
+  const reqDays = req ? Math.ceil((req.dueAt - now()) / 86400) : 0;
 
   return (
     <div className="space-y-8">
@@ -105,8 +111,20 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
         </div>
       )}
 
+      {req && (
+        <section role="status" aria-label="Required learning" className={`card flex flex-wrap items-center gap-3 p-4 text-sm ${req.done ? "border-emerald-400/40" : req.overdue ? "border-rose-400/50" : "border-indigo-300/40"}`}>
+          <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${req.done ? "bg-emerald-500/15 text-emerald-400" : req.overdue ? "bg-rose-500/15 text-rose-400" : "bg-indigo-500/15 text-indigo-400"}`}>{req.done ? <ShieldCheck size={18} /> : req.overdue ? <AlertTriangle size={18} /> : <Hourglass size={18} />}</span>
+          <span className="min-w-0 flex-1">
+            <b>{req.done ? "Required learning: passed." : `${req.why === "mandatory" ? "Mandatory for everyone" : "Required for your role"}: pass level ${track.requiredLevel}.`}</b>{" "}
+            {!req.done && (req.overdue ? `It was due ${Math.abs(reqDays)} day${Math.abs(reqDays) === 1 ? "" : "s"} ago. Finish it as soon as you can.` : `${reqDays} day${reqDays === 1 ? "" : "s"} left (due ${new Date(req.dueAt * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "long" })}). You are on level ${Math.min(req.passed, track.requiredLevel)} of ${track.requiredLevel}.`)}
+          </span>
+        </section>
+      )}
+
       {!user ? (
         <p className="card flex items-center gap-2 p-4"><LogIn size={18} className="text-indigo-300" /><span><Link href="/login" className="underline">Sign in</Link> to take on {rival.name}.</span></p>
+      ) : totalQs === 0 ? (
+        <p role="status" className="card flex items-center gap-2 p-4 text-sm"><Hourglass size={18} className="text-amber-400" /><span><b>Coming soon.</b> The questions for this subject are still being written and checked, so there is nothing to take yet.</span></p>
       ) : !enrolment ? (
         <form action={enroll} className="card flex max-w-xl flex-col gap-2 p-5">
           <input type="hidden" name="trackId" value={track.id} />
@@ -117,6 +135,24 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
         </form>
       ) : (
         <>
+          {gate && (
+            <section aria-label="Locked until sign-off" className="card flex items-start gap-3 border-violet-300/40 p-4 text-sm">
+              <Lock size={18} className="mt-0.5 shrink-0 text-violet-400" />
+              <p><b>Exams are locked for now.</b> This is part of {gate.phase}, which opens once your manager signs off {gate.waitingOn}. You can still read the study guides.</p>
+            </section>
+          )}
+          {passed < 20 && (
+            <section aria-label="Next up" className="card flex flex-wrap items-center gap-3 border-indigo-300/40 p-4">
+              <RankEmblem level={next} state="current" size={48} />
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-extrabold uppercase tracking-widest text-indigo-300">Next up</div>
+                <div className="font-extrabold">Level {next} · {LEVELS[next - 1]}</div>
+                <div className="text-xs text-slate-400">{passed === 0 ? "Read the guide first if the subject is new to you, then take the exam." : "Keep going: pass this level to unlock the next."}</div>
+              </div>
+              <Link href={`/tracks/${track.slug}/learn/${next}`} className="btn btn-ghost"><BookOpen size={16} />Study guide</Link>
+              {gate ? <span className="inline-flex items-center gap-1 text-xs text-slate-400"><Lock size={13} />Locked</span> : <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={next} /><button className="btn">Take the exam<ArrowRight size={16} /></button></form>}
+            </section>
+          )}
           <RaceTrack you={user.name.split(" ")[0]} rival={rival} youLevel={passed} rivalLevel={s!.rival.level} meLook={looks.me} rivalLook={looks.rival} photoUrl={looks.photoUrl} />
 
           <section>
@@ -171,7 +207,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
                       className={`card card-hover rise relative flex flex-col items-center gap-2 p-4 text-center [&>*]:pointer-events-none [&>button]:pointer-events-auto [&_a]:pointer-events-auto [&_a]:relative [&_a]:z-10 [&_form]:pointer-events-auto [&_form]:relative [&_form]:z-10 ${enrolment && !done && !open ? "bg-[#fbfaf6]" : ""}`}>
                       <LevelDetail d={detailFor(level, done ? "done" : open ? "current" : enrolment ? "locked" : "preview")} actions={open && n > 0 ? (<>
                         <Link href={`/tracks/${track.slug}/learn/${level}`} className="btn btn-ghost !px-3 !py-1 text-sm"><BookOpen size={14} />Study</Link>
-                        <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} /><button className="btn !px-3 !py-1 text-sm">Take the exam<ArrowRight size={14} /></button></form>
+                        {gate ? <span className="inline-flex items-center gap-1 text-xs text-slate-400"><Lock size={13} />Locked</span> : <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} /><button className="btn !px-3 !py-1 text-sm">Take the exam<ArrowRight size={14} /></button></form>}
                       </>) : undefined} />
                       <span className="absolute right-2 top-2 text-slate-500" aria-hidden><Info size={14} /></span>
                       {j < 3 && <span className="pointer-events-none absolute -right-3 top-12 hidden w-3 border-t-2 border-dashed border-black/15 lg:block" aria-hidden />}
@@ -187,10 +223,10 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
                       {open && n > 0 && (
                         <div className="flex flex-wrap justify-center gap-2">
                           <Link href={`/tracks/${track.slug}/learn/${level}`} className="btn btn-ghost !px-3 !py-1 text-sm"><BookOpen size={14} />Study</Link>
-                          <form action={startRun}>
+                          {gate ? <span className="inline-flex items-center gap-1 text-xs text-slate-400"><Lock size={13} />Locked</span> : <form action={startRun}>
                             <input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} />
                             <button className="btn !px-3 !py-1 text-sm">Exam<ArrowRight size={14} /></button>
-                          </form>
+                          </form>}
                         </div>
                       )}
                       {open && n === 0 && <span className="text-xs text-amber-400">No questions yet</span>}

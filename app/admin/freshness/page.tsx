@@ -109,7 +109,7 @@ export default async function Freshness({ searchParams }: { searchParams: Promis
       )}
 
       <section aria-label="Changes">
-        {report.length === 0 && <EmptyState Icon={Newspaper} tone="amber" title="No changes recorded yet">When company knowledge changes, record it here and everyone enrolled is asked to read it.</EmptyState>}
+        {report.length === 0 && <EmptyState Icon={Newspaper} tone="amber" title="No changes recorded yet">{me.role === "admin" ? "When company knowledge changes, record it above and everyone enrolled is asked to read it." : "When company knowledge changes, an admin records it and everyone enrolled is asked to read it. You will see who has read it here."}</EmptyState>}
         {report.length > 0 && (
           <ul className="relative space-y-4 pl-9 before:absolute before:bottom-3 before:left-[11px] before:top-3 before:w-0.5 before:bg-gradient-to-b before:from-amber-300 before:to-black/10">
             {report.map((r) => {

@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { randomBytes } from "node:crypto";
-import { userAvatars, answers, careerGoals, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
+import { phaseSignoffs, projects, userAvatars, answers, careerGoals, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
 import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
@@ -28,7 +28,8 @@ import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invit
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
 import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
 import { isLook } from "@/lib/avatars";
-import { type Audience, formatScopes, openTo, parseScopes, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
+import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
+import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
   "Read the brand story and values",
@@ -143,6 +144,41 @@ export async function logout() {
   redirect("/");
 }
 
+/**
+ * Changing your own password needs the current one, then signs out every other device and keeps this one signed in.
+ * People whose manager set a temporary password use this to replace it.
+ */
+export async function changePassword(_: string | null, fd: FormData): Promise<string | null> {
+  const me = await requireUser();
+  const key = `pw-change:${me.id}`;
+  if (!allowed(key, 5)) return TOO_MANY;
+  const current = str(fd.get("current")).slice(0, 200), next = str(fd.get("next")).slice(0, 200), again = str(fd.get("again")).slice(0, 200);
+  if (next.length < 8) return "Choose a new password of at least 8 characters.";
+  if (next !== again) return "The two new passwords do not match.";
+  if (next === current) return "Choose a password you have not used here before.";
+  if (!(await verifyPassword(current, me.passwordHash))) { hit(key, 15 * MINUTE); return "Your current password is wrong."; }
+  clear(key);
+  db.update(users).set({ passwordHash: await hashPassword(next) }).where(eq(users.id, me.id)).run();
+  revokeSessions(me.id);
+  await startSession(me.id);
+  return "ok";
+}
+
+/** A manager sets a temporary password for someone who is locked out; every session they had ends. Managers can only do this for learners. */
+export async function resetPassword(_: string | null, fd: FormData): Promise<string | null> {
+  const me = await requireManager();
+  const userId = Number(fd.get("userId")), temp = str(fd.get("password")).slice(0, 200);
+  if (!Number.isInteger(userId) || userId <= 0) return "Choose a person.";
+  if (temp.length < 8) return "A temporary password needs at least 8 characters.";
+  const u = db.select().from(users).where(eq(users.id, userId)).get();
+  if (!u || u.status !== "active") return "That person is not active.";
+  if (u.id === me.id) return "Use Your profile to change your own password.";
+  if (me.role !== "admin" && u.role !== "learner") return "Only an admin can reset a manager's password.";
+  db.update(users).set({ passwordHash: await hashPassword(temp) }).where(eq(users.id, u.id)).run();
+  revokeSessions(u.id);
+  return "ok";
+}
+
 /** Signs this person out on every device, including this one. */
 export async function logoutEverywhere() {
   const u = await requireUser();
@@ -169,6 +205,7 @@ export async function startRun(fd: FormData) {
   if (!Number.isInteger(level) || level < 1 || level > MAX_LEVEL) return;
   if (!db.select().from(enrollments).where(and(eq(enrollments.userId, u.id), eq(enrollments.trackId, trackId))).get()) return;
   if (level > levelsPassed(u.id, trackId) + 1) return; // levels unlock in order
+  if (gateFor(u.id, trackId)) return; // an earlier onboarding phase is not signed off yet
 
   // reuse an unfinished run for this level instead of piling up abandoned ones
   const open = db.select().from(runs)
@@ -363,9 +400,16 @@ export async function createInvite(_: InviteState, fd: FormData): Promise<Invite
     return { email, path: `/join/${token}` };
   });
   const cov = p.data.audience === "staff" ? coverageFor(p.data.jobRole) : null;
-  const notice = cov && hasNoRolePath(cov)
+  let notice = cov && hasNoRolePath(cov)
     ? `Nothing is set up for the role "${p.data.jobRole}" yet, so they will only get company-wide learning. Roles with learning: ${knownRoles().join(", ") || "none"}. You can change their role later on People.`
     : undefined;
+  // a customer's getting-started subject usually belongs to a product (project), which ticking only its brand does not cover
+  if (p.data.audience === "customer" && !requirementsFor({ id: 0, jobRole: p.data.jobRole, audience: "customer" }, scopes).length) {
+    const brandIds = scopes.filter((x) => x.kind === "brand").map((x) => x.id);
+    const hint = brandIds.length ? db.select({ n: projects.name }).from(tracks).innerJoin(projects, eq(projects.id, tracks.projectId))
+      .where(and(eq(tracks.audience, "customer"), inArray(tracks.brandId, brandIds))).all().map((r) => r.n) : [];
+    notice = `Nothing is assigned to customers with this scope yet, so they would start with an empty path.${hint.length ? ` Also tick the product: ${[...new Set(hint)].join(", ")}.` : " Tick the product (project) or brand they bought."}`;
+  }
   return { invites: invites_, skipped: taken.size ? [...taken] : undefined, notice };
 }
 
@@ -500,6 +544,31 @@ export async function toggleChecklist(id: number) {
   const own = item.userId === me.id && item.kind === "onboarding";
   if (!own && me.role === "learner") return;
   db.update(checklistItems).set({ done: !item.done }).where(eq(checklistItems.id, id)).run();
+  revalidatePath("/admin/people");
+  revalidatePath("/dashboard");
+}
+
+/** A manager confirms a person has finished an onboarding phase. Only once all its required learning is passed, and only for people they cover. */
+export async function signOffPhase(fd: FormData) {
+  const me = await requireManager();
+  const userId = Number(fd.get("userId")), phase = str(fd.get("phase"));
+  if (!Number.isInteger(userId) || !isPhase(phase) || !canSignOff(me, userId)) return;
+  const person = db.select().from(users).where(eq(users.id, userId)).get();
+  if (!person || person.status !== "active") return;
+  const status = onboardingFor(person).phases.find((p) => p.key === phase);
+  if (!status || status.state !== "ready") return; // nothing to sign, already signed, held behind an earlier phase, or work left
+  db.insert(phaseSignoffs).values({ userId, phase, signedBy: me.id, note: str(fd.get("note")).slice(0, 300) }).run();
+  revalidatePath("/admin/people");
+  revalidatePath("/dashboard");
+}
+
+/** Undoes a sign-off (signed by mistake, or the person's role changed). Kept in the history as revoked. */
+export async function revokeSignOff(fd: FormData) {
+  const me = await requireManager();
+  const id = Number(fd.get("id"));
+  const row = db.select().from(phaseSignoffs).where(and(eq(phaseSignoffs.id, id), sql`${phaseSignoffs.revokedAt} is null`)).get();
+  if (!row || !canSignOff(me, row.userId)) return;
+  db.update(phaseSignoffs).set({ revokedBy: me.id, revokedAt: Math.floor(Date.now() / 1000) }).where(eq(phaseSignoffs.id, id)).run();
   revalidatePath("/admin/people");
   revalidatePath("/dashboard");
 }

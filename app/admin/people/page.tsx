@@ -10,6 +10,9 @@ import { Building2, CheckSquare, ClipboardList, NotebookPen, Plus, Save, Shield,
 import NewPerson from "./new-person";
 import InvitePerson from "./invite-person";
 import RoleForm from "./role-form";
+import ResetPassword from "./reset-password";
+import { OnboardingPhases } from "@/components/OnboardingPhases";
+import { canSignOff, onboardingFor } from "@/lib/onboarding";
 
 export default async function People() {
   const me = await requireManager();
@@ -57,6 +60,8 @@ export default async function People() {
           const off = u.status === "offboarded";
           const myScopes = scopesOf(u.id);
           const labels = scopeLabels(myScopes, options);
+          const phases = off ? null : onboardingFor(u, myScopes);
+          const mayJudge = canSignOff(me, u.id);
           return (
             <li key={u.id} className={`card rise p-4 ${off ? "opacity-70" : ""}`} style={{ "--i": Math.min(ui, 10) } as React.CSSProperties}>
               <div className="flex items-center gap-3">
@@ -79,13 +84,20 @@ export default async function People() {
               </div>
               {!off && (
                 <details className="mt-3 text-sm">
-                  <summary className="cursor-pointer text-slate-400 hover:text-white">Change role or where {u.name.split(" ")[0]} belongs</summary>
+                  <summary className="cursor-pointer text-slate-400 hover:text-white">Change role, where {u.name.split(" ")[0]} belongs, or reset their password</summary>
                   <RoleForm userId={u.id} jobRole={u.jobRole} roles={roles} />
+                  {u.id !== me.id && (me.role === "admin" || u.role === "learner") && <ResetPassword userId={u.id} name={u.name} />}
                   <form action={updateScopes} className="mt-2 space-y-2">
                     <input type="hidden" name="userId" value={u.id} />
                     <ScopePicker options={options} selected={myScopes} />
                     <button className="btn btn-ghost !px-3 !py-1"><Save size={14} />Save and enrol in what is required</button>
                   </form>
+                </details>
+              )}
+              {phases && phases.gated && phases.phases.length > 0 && (
+                <details className="mt-3 text-sm" open={phases.phases.some((p) => p.state === "ready")}>
+                  <summary className="cursor-pointer text-slate-400 hover:text-white">Onboarding phases{phases.phases.some((p) => p.state === "ready") && <span className="ml-2 rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-violet-400">waiting for sign-off</span>}</summary>
+                  <div className="mt-2"><OnboardingPhases o={phases} sign={mayJudge ? { userId: u.id } : undefined} /></div>
                 </details>
               )}
               {mine.length > 0 && (

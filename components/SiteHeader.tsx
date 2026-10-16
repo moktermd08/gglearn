@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookMarked, Database, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
+import { BookMarked, Database, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, Route, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
 import { logout, logoutEverywhere } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
@@ -14,7 +14,10 @@ export const ADMIN_LINKS = [
   { href: "/admin/compliance", label: "Compliance", Icon: ShieldCheck },
   { href: "/admin/freshness", label: "Freshness", Icon: Newspaper },
   { href: "/admin/careers", label: "Careers", Icon: TrendingUp },
+  { href: "/admin/paths", label: "What is required", Icon: Route, adminOnly: true },
 ];
+/** Managers see everything except the policy pages only an admin may change. */
+export const adminLinksFor = (role: string) => ADMIN_LINKS.filter((l) => !("adminOnly" in l && l.adminOnly) || role === "admin");
 
 export function SiteHeader({ user, unread = 0 }: { user: User; unread?: number }) {
   const staff = !!user && user.role !== "learner";
@@ -36,7 +39,7 @@ export function SiteHeader({ user, unread = 0 }: { user: User; unread?: number }
           <NavLink href="/competitions"><Trophy size={15} />Compete</NavLink>
           {staff && (
             <Dropdown prefix="/admin" label={<><ShieldCheck size={15} />Admin</>}>
-              {ADMIN_LINKS.map(({ href, label, Icon }) => <NavLink key={href} href={href} exact={href === "/admin"}><Icon size={15} />{label}</NavLink>)}
+              {adminLinksFor(user!.role).map(({ href, label, Icon }) => <NavLink key={href} href={href} exact={href === "/admin"}><Icon size={15} />{label}</NavLink>)}
             </Dropdown>
           )}
         </div>
@@ -70,7 +73,7 @@ export function SiteHeader({ user, unread = 0 }: { user: User; unread?: number }
             <Link href="/seasons" className={mobile}><CalendarDays size={18} />Seasons</Link>
             <Link href="/competitions" className={mobile}><Trophy size={18} />Compete</Link>
             {staff && <div className="px-3 pb-1 pt-3 text-[11px] font-extrabold uppercase tracking-widest text-indigo-300">Admin</div>}
-            {staff && ADMIN_LINKS.map(({ href, label, Icon }) => <Link key={href} href={href} className={mobile}><Icon size={18} />{label}</Link>)}
+            {staff && adminLinksFor(user!.role).map(({ href, label, Icon }) => <Link key={href} href={href} className={mobile}><Icon size={18} />{label}</Link>)}
             <div className="my-2 border-t border-black/10" />
             {user ? (
               <>

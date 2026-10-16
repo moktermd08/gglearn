@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Swords } from "lucide-react";
-import { ADMIN_LINKS } from "@/components/SiteHeader";
+import { adminLinksFor } from "@/components/SiteHeader";
 
 type User = { role: string } | null;
 
@@ -34,7 +34,7 @@ export function SiteFooter({ user }: { user: User }) {
           </ul></nav>
         <nav aria-label={staff ? "Admin" : "Account"}><h2 className={head}>{staff ? "Admin" : "Account"}</h2>
           <ul className={col}>
-            {staff && ADMIN_LINKS.map(({ href, label }) => <li key={href}><Link href={href} className={link}>{label}</Link></li>)}
+            {staff && adminLinksFor(user!.role).map(({ href, label }) => <li key={href}><Link href={href} className={link}>{label}</Link></li>)}
             {user ? <li><Link href="/profile" className={link}>Your profile</Link></li> : <li><Link href="/login" className={link}>Sign in</Link></li>}
           </ul></nav>
       </div>

@@ -10,13 +10,13 @@ import { now } from "@/lib/competitions";
 import { progressionFor } from "@/lib/progression";
 import { BadgeTile } from "@/components/Achievements";
 import { exact } from "@/lib/competitions-shared";
-import { submitRun } from "@/app/actions";
+import { startRun, submitRun } from "@/app/actions";
 import { Quiz } from "@/components/Quiz";
 import { Ring } from "@/components/Ring";
 import { Confetti } from "@/components/Confetti";
 import { Avatar } from "@/components/Avatar";
 import { avatarLooks } from "@/lib/avatars";
-import { ArrowLeft, BarChart3, Timer, Check, CircleCheck, CircleMinus, CircleX, GraduationCap, Lightbulb, Medal, MessageSquareText, Sparkles, Tag, Target, Trophy } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, RotateCcw, BarChart3, Timer, Check, CircleCheck, CircleMinus, CircleX, GraduationCap, Lightbulb, Medal, MessageSquareText, Sparkles, Tag, Target, Trophy } from "lucide-react";
 
 const OK = 0.8; // same bar the review has always used for a correct answer
 const tone = (sc: number) => (sc >= OK ? "emerald" : sc > 0 ? "amber" : "rose") as "emerald" | "amber" | "rose";
@@ -83,7 +83,7 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
           <Avatar kind="rival" level={rv.level} hue={rival.hue} size={96} className="bob [animation-delay:.5s]" look={looks.rival} />
         </div>
         <p className={`text-2xl font-extrabold ${passed ? "text-emerald-300" : "text-amber-300"}`}>
-          <span className="inline-flex items-center justify-center gap-2">{passed ? <Trophy className="pulse-glow text-yellow-300" /> : <Target />}{passed ? (run.level === MAX_LEVEL ? "You are a Titan." : `Level ${run.level} conquered!`) : "So close. Review and go again."}</span>
+          <span className="inline-flex items-center justify-center gap-2">{passed ? <Trophy className="pulse-glow text-yellow-300" /> : <Target />}{passed ? (run.level === MAX_LEVEL ? "You are a Titan." : `Level ${run.level} conquered!`) : (pct >= 60 ? "So close. Review and go again." : "Not yet. Review and go again.")}</span>
         </p>
         <p className="text-slate-300">+{xp} XP · {passed ? `${rival.name} is on level ${rv.level}${run.level > rv.level ? ", and you are ahead!" : run.level === rv.level ? ", and you are level." : ", so keep pushing."}` : `You need ${PASS_MARK * 100}% to pass. ${rival.name} is on level ${rv.level}.`}</p>
         {tierUp && <p className="pop flex items-center justify-center gap-2 font-bold" style={{ color: `hsl(${TIERS[tierOf(run.level)].hue} 70% 35%)` }}><Medal size={20} />Rank up: {TIERS[tierOf(run.level)].name}!</p>}
@@ -92,7 +92,12 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
           <div className="pop mx-auto max-w-md rounded-2xl bg-yellow-400/10 p-3 ring-1 ring-yellow-400/40"><div className="mb-2 text-sm font-bold text-yellow-600">New badge{newBadges.length === 1 ? "" : "s"} earned!</div><div className="flex flex-wrap justify-center gap-2">{newBadges.map((x) => <div key={x.key} className="w-20"><BadgeTile b={x} fresh /></div>)}</div></div>
         )}
         {cert && <Link href={`/cert/${cert.code}`} className="btn"><GraduationCap size={18} />Get your {certTitle(run.level)} certificate</Link>}
-        <div><Link href={`/tracks/${track.slug}`} className="btn btn-ghost"><ArrowLeft size={16} />Back to the climb</Link></div>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {!passed && <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={run.level} /><button className="btn"><RotateCcw size={16} />Try level {run.level} again</button></form>}
+          {!passed && <Link href={`/tracks/${track.slug}/learn/${run.level}`} className="btn btn-ghost"><BookOpen size={16} />Study the guide first</Link>}
+          {passed && run.level < MAX_LEVEL && <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={run.level + 1} /><button className="btn">Take level {run.level + 1}<ArrowRight size={16} /></button></form>}
+          <Link href={`/tracks/${track.slug}`} className="btn btn-ghost"><ArrowLeft size={16} />Back to the climb</Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -166,7 +171,7 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
                   <div className="h-1.5 overflow-hidden rounded-full bg-white/10"><div className={`grow h-full rounded-full ${BAR[t]}`} style={{ width: `${a.score * 100}%`, "--i": i } as React.CSSProperties} /></div>
                   <div className={`rounded-lg p-2.5 text-sm ${t === "emerald" ? "bg-emerald-500/10" : "bg-rose-500/10"}`}>
                     <span className="text-xs uppercase tracking-wider text-slate-400">Your answer</span>
-                    <div className="mt-0.5 whitespace-pre-wrap font-mono">{a.response || "—"}</div>
+                    <div className="mt-0.5 whitespace-pre-wrap font-mono">{!a.response ? "—" : q.type === "mcq" ? <><b>{a.response.toUpperCase()}</b> — {q.options?.find((o) => o.key === a.response)?.text ?? ""}</> : a.response}</div>
                   </div>
                   {q.type === "mcq" && a.score < 1 && (
                     <div className="rounded-lg bg-emerald-500/10 p-2.5 text-sm">

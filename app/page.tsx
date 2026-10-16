@@ -38,7 +38,7 @@ export default async function Home() {
     .select({ track: tracks, brand: brands, n: sql<number>`(select count(*) from ${questions} q where q.track_id = ${tracks.id} and q.status = 'active')` })
     .from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).orderBy(asc(brands.name), asc(tracks.name)).all();
   const hidden = hiddenTrackIds();
-  const rows = all.filter((r) => !hidden.has(r.track.id) && (!viewer || openTo(viewer.audience, r.track.audience)));
+  const rows = all.filter((r) => !hidden.has(r.track.id) && r.n > 0 && (!viewer || openTo(viewer.audience, r.track.audience)));
     const totalQ = rows.reduce((a, r) => a + r.n, 0), maxN = Math.max(1, ...rows.map((r) => r.n));
   const byBrand = new Map<string, typeof rows>();
   for (const r of rows) byBrand.set(r.brand.name, [...(byBrand.get(r.brand.name) ?? []), r]);

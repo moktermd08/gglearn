@@ -1,10 +1,22 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Check, Copy, Info, Link2, TriangleAlert } from "lucide-react";
 import { createInvite, type InviteState } from "@/app/actions";
 import { RoleInput } from "@/components/RoleInput";
 import { ScopePicker } from "@/components/ScopePicker";
 import type { ScopeOptions } from "@/lib/paths";
+
+const origin = () => (typeof window === "undefined" ? "" : window.location.origin);
+
+/** Copies text and says so for two seconds; falls back to selecting the field when the clipboard is blocked. */
+function CopyButton({ text, label, className = "" }: { text: string; label: string; className?: string }) {
+  const [ok, setOk] = useState(false);
+  return (
+    <button type="button" className={`btn btn-ghost !px-2.5 !py-1 text-xs ${className}`} onClick={async () => {
+      try { await navigator.clipboard.writeText(text); setOk(true); setTimeout(() => setOk(false), 2000); } catch { /* the field next to it can still be selected by hand */ }
+    }}>{ok ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}{ok ? "Copied" : label}</button>
+  );
+}
 
 export default function InvitePerson({ options, roles }: { options: ScopeOptions; roles: string[] }) {
   const [state, run, pending] = useActionState<InviteState, FormData>(createInvite, null);
@@ -25,12 +37,16 @@ export default function InvitePerson({ options, roles }: { options: ScopeOptions
       {!pending && state?.invites && (
         <div className="pop w-full space-y-2 text-slate-300">
           <span className="flex items-center gap-1.5 text-emerald-300"><Check size={14} />{state.invites.length === 1 ? "Invite ready." : `${state.invites.length} invites ready.`}</span>
-          <span className="flex items-center gap-1.5"><Copy size={13} className="text-slate-400" />Send each person their own link (single use, valid 7 days, shown once):</span>
+          <span className="flex flex-wrap items-center gap-2"><span className="flex items-center gap-1.5"><Copy size={13} className="text-slate-400" />Send each person their own link (single use, valid 7 days, shown once). No email is sent for you.</span>
+            {state.invites.length > 1 && <CopyButton label="Copy all links" text={state.invites.map((i) => `${i.email}: ${origin()}${i.path}`).join("\n")} />}</span>
           <ul className="space-y-2">
             {state.invites.map((i) => (
               <li key={i.email}>
                 <label className="block text-xs text-slate-400">For <b className="text-slate-200">{i.email}</b></label>
-                <input readOnly aria-label={`Invite link for ${i.email}`} value={`${typeof window === "undefined" ? "" : window.location.origin}${i.path}`} onFocus={(e) => e.currentTarget.select()} className={`${input} block w-full`} />
+                <div className="flex gap-2">
+                  <input readOnly aria-label={`Invite link for ${i.email}`} value={`${origin()}${i.path}`} onFocus={(e) => e.currentTarget.select()} className={`${input} block min-w-0 flex-1`} />
+                  <CopyButton label="Copy link" text={`${origin()}${i.path}`} />
+                </div>
               </li>
             ))}
           </ul>

@@ -17,6 +17,7 @@ import { roleLabel } from "@/lib/journey";
 import { AreaChart, EmptyState, Heatmap, PALETTE, StatTile } from "@/components/charts";
 import { removePhoto } from "./actions";
 import PhotoForm from "./photo-form";
+import PasswordForm from "./password-form";
 
 export const metadata = { title: "Your profile — gglearn" };
 
@@ -96,7 +97,7 @@ export default async function Profile() {
                         <div className="truncate text-sm font-semibold">{t.name}</div>
                         <div className="mt-1 flex items-center gap-2">
                           <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-black/10"><i className="block h-full rounded-full" style={{ width: `${(s.passed / MAX_LEVEL) * 100}%`, background: `hsl(${TIERS[tierOf(s.passed)].hue} 75% 52%)` }} /></span>
-                          <span className="shrink-0 text-[11px] text-slate-400">{s.passed === 0 ? "Not started" : `L${s.passed} ${LEVELS[s.passed - 1]}`}</span>
+                          <span className="shrink-0 text-[11px] text-slate-400">{s.passed === 0 ? (s.xp > 0 ? "Level 1 in progress" : "Not started") : `L${s.passed} ${LEVELS[s.passed - 1]}`}</span>
                         </div>
                       </div>
                       <span className="flex shrink-0 items-center gap-0.5 text-xs text-sky-300"><Sparkles size={11} />{s.xp}</span>
@@ -153,6 +154,12 @@ export default async function Profile() {
         <p className="mb-3 flex gap-2 text-sm text-slate-300"><Shield size={16} className="mt-0.5 shrink-0 text-emerald-300" /><span>A photo is optional. Without one you get a generated face. In contests, colleagues see your photo; strangers see it only if you play in a <b>public</b> contest.</span></p>
         <PhotoForm />
         {photo && <form action={removePhoto} className="mt-2"><button className="inline-flex items-center gap-1 text-sm text-slate-400 underline"><Trash2 size={13} />Remove my photo</button></form>}
+      </section>
+
+      <section id="password" className="card scroll-mt-24 p-5">
+        <h2 className="mb-1 text-lg font-bold">Password</h2>
+        <p className="mb-3 text-sm text-slate-400">Changing it signs you out on your other devices. If you forget it, ask your manager to set a temporary one.</p>
+        <PasswordForm />
       </section>
 
       <section id="season-board" className="card scroll-mt-24 p-5">
