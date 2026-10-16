@@ -1,6 +1,7 @@
-import { and, desc, eq, inArray, isNull, or } from "drizzle-orm";
-import { brands, db, phaseSignoffs, projects, users } from "@/lib/db";
+import { and, desc, eq, isNull } from "drizzle-orm";
+import { db, phaseSignoffs, users } from "@/lib/db";
 import { type Requirement, type Scope, requirementsFor, scopesOf } from "@/lib/paths";
+import { reachOf, userInReach } from "@/lib/tenancy";
 
 /**
  * Onboarding phases, and the gate between them. A required track belongs to the phase its deadline (`dueDays`) falls in. A manager
@@ -72,31 +73,14 @@ export function gateFor(userId: number, trackId: number): { phase: string; waiti
   return onboardingFor(u).locked.get(trackId) ?? null;
 }
 
-/** Companies, brands and projects a manager covers: their own scopes, and everything under a company or brand they have. */
-function coverage(scopes: Scope[]): Set<string> {
-  const keys = new Set(scopes.map((s) => `${s.kind}:${s.id}`));
-  const companyIds = scopes.filter((s) => s.kind === "company").map((s) => s.id);
-  const brandIds = scopes.filter((s) => s.kind === "brand").map((s) => s.id);
-  if (companyIds.length) {
-    for (const b of db.select({ id: brands.id }).from(brands).where(inArray(brands.companyId, companyIds)).all()) { keys.add(`brand:${b.id}`); brandIds.push(b.id); }
-  }
-  const under = [companyIds.length && inArray(projects.companyId, companyIds), brandIds.length && inArray(projects.brandId, brandIds)].filter(Boolean) as ReturnType<typeof inArray>[];
-  if (under.length) for (const p of db.select({ id: projects.id }).from(projects).where(or(...under)).all()) keys.add(`project:${p.id}`);
-  return keys;
-}
-
 /**
- * May this manager sign off this person? Admins can sign anyone. A manager can sign people who share a company, brand or project with
- * them, so one company's manager cannot sign another's staff. A manager with no scope at all keeps the global reach older accounts had.
+ * May this manager sign off this person? Only managers and admins, never for themselves, and only for people inside their reach
+ * (lib/tenancy.ts): a company's manager or admin cannot sign another company's staff, and only the platform owner (no scopes) reaches everyone.
  */
 export function canSignOff(manager: { id: number; role: string }, learnerId: number): boolean {
   if (manager.id === learnerId) return false; // nobody signs off their own onboarding, admins included
-  if (manager.role === "admin") return true;
-  if (manager.role !== "manager") return false;
-  const mine = scopesOf(manager.id);
-  if (!mine.length) return true;
-  const cover = coverage(mine);
-  return scopesOf(learnerId).some((s) => cover.has(`${s.kind}:${s.id}`));
+  if (manager.role !== "admin" && manager.role !== "manager") return false;
+  return userInReach(reachOf(manager.id), learnerId);
 }
 
 /** Phases waiting for a manager, across everyone this manager may sign. */

@@ -10,6 +10,9 @@ import { Building2, CheckSquare, ClipboardList, NotebookPen, Plus, Save, Shield,
 import NewPerson from "./new-person";
 import InvitePerson from "./invite-person";
 import RoleForm from "./role-form";
+import ResetPassword from "./reset-password";
+import { OnboardingPhases } from "@/components/OnboardingPhases";
+import { canSignOff, onboardingFor } from "@/lib/onboarding";
 import { limitOptions, reachOf, usersInReach } from "@/lib/tenancy";
 
 export default async function People() {

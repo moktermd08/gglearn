@@ -9,6 +9,7 @@ import { listFor, listedFor } from "../lib/competitions";
 import { groupsOf } from "../lib/groups";
 import { periodAt, settle, standings } from "../lib/seasons";
 import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/brand";
+import { canSignOff } from "../lib/onboarding";
 import { isGlobal, personInReach, reachOf, scopeInReach, trackInReach, usersInReach } from "../lib/tenancy";
 
 let fails = 0;
@@ -37,6 +38,13 @@ try {
   check("does not see another company's learner", !ids.has(gLearner.id));
   check("does not see a person with no scopes", !ids.has(loose.id));
   check("platform owner sees everyone (null = all)", usersInReach(reachOf(owner.id)) === null);
+
+  check("onboarding sign-off: manager signs their own company's learner", canSignOff(mMgr, mLearner.id));
+  check("onboarding sign-off: not another company's learner", !canSignOff(mMgr, gLearner.id));
+  check("onboarding sign-off: not someone with no scopes", !canSignOff(mMgr, loose.id));
+  check("onboarding sign-off: nobody signs themselves, even the platform owner", !canSignOff(mMgr, mMgr.id) && !canSignOff(owner, owner.id));
+  check("onboarding sign-off: the platform owner signs anyone else", canSignOff(owner, gLearner.id));
+  check("onboarding sign-off: a learner cannot sign", !canSignOff(mLearner, gLearner.id));
 
   const r = reachOf(mMgr.id);
   check("may grant their own company", scopeInReach(r, { kind: "company", id: moksy.id }));

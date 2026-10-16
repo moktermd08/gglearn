@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
+import { phaseSignoffs, projects, userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
 import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
@@ -29,7 +29,8 @@ import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib
 import { isLook } from "@/lib/avatars";
 import { awardForPass } from "@/lib/rewards";
 import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/lib/tenancy";
-import { type Audience, formatScopes, openTo, parseScopes, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
+import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
+import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
   "Read the brand story and values",

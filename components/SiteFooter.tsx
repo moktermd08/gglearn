@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Swords } from "lucide-react";
-import { ADMIN_LINKS } from "@/components/SiteHeader";
+import { adminLinksFor } from "@/components/SiteHeader";
 import { DEFAULT_LOOK, type Look } from "@/lib/brand";
 
 type User = { role: string } | null;
