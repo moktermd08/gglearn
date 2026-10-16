@@ -3,7 +3,7 @@ import { competitionMembers, competitions, dailyQuests, db, enrollments, runs, t
 import { MAX_LEVEL, XP_PER_LEVEL } from "@/lib/levels";
 import { PRIZE_SPLITS } from "@/lib/competitions-shared";
 import { botReachedAt, botXpAt, type BotSpec, type BotStyle } from "@/lib/bots";
-import { OPEN, arenaMap, arenaOf, isPlatformOwner } from "@/lib/arena";
+import { OPEN, arenaMap, arenaOf, arenaOfUser, isPlatformOwner } from "@/lib/arena";
 
 export type Competition = typeof competitions.$inferSelect;
 export type Member = typeof competitionMembers.$inferSelect;
@@ -28,9 +28,9 @@ export function canView(c: Competition, viewer: Viewer): boolean {
     .where(and(eq(competitionMembers.competitionId, c.id), eq(competitionMembers.userId, viewer.id), inArray(competitionMembers.status, ["invited", "joined"]))).get();
 }
 
-/** Everyone may see a stranger's photo only if that person plays in a public contest; signed-in colleagues always can. */
+/** A photo is seen by its owner, by people in the same company arena, and by the platform owner; anyone else only if that person plays in a public contest. */
 export function canSeeAvatar(ownerId: number, viewer: Viewer): boolean {
-  if (viewer) return true;
+  if (viewer && (viewer.id === ownerId || arenaOfUser(viewer.id) === arenaOfUser(ownerId) || isPlatformOwner(viewer.id))) return true;
   return !!db.select({ id: competitionMembers.id }).from(competitionMembers)
     .innerJoin(competitions, eq(competitions.id, competitionMembers.competitionId))
     .where(and(eq(competitionMembers.userId, ownerId), eq(competitionMembers.status, "joined"), eq(competitions.visibility, "public"))).get();
