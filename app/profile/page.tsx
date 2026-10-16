@@ -79,7 +79,7 @@ export default async function Profile() {
         <StatTile i={0} Icon={Sparkles} label="Total XP" value={totalXp.toLocaleString("en-GB")} color={PALETTE.sky} spark={activity.slice(-14).map((d) => d.value)} />
         <StatTile i={1} Icon={Flame} label="Day streak" value={streak} color="#ea580c" />
         <StatTile i={2} Icon={Mountain} label="Levels passed" value={levels} color={PALETTE.violet} />
-        <StatTile i={3} Icon={GraduationCap} label="Certificates" value={certs.length} color={PALETTE.amber} />
+        <StatTile i={3} Icon={GraduationCap} label="Certificates" value={certs.filter(({ c }) => !c.revokedAt).length} color={PALETTE.amber} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
@@ -124,7 +124,7 @@ export default async function Profile() {
                 <li key={c.id}>
                   <Link href={`/cert/${c.code}`} className="card-hover relative flex items-center gap-3 overflow-hidden rounded-2xl border border-amber-400/40 p-3" style={{ background: `linear-gradient(135deg, hsl(${TIERS[tierOf(c.level)].hue} 85% 55% / .14), #fff 70%)` }}>
                     <RankEmblem level={c.level} size={44} />
-                    <div className="min-w-0"><div className="truncate text-sm font-bold">{certTitle(c.level)} · {t.name}</div><div className="text-[11px] text-slate-400">Level {c.level} · {Math.round(c.score * 100)}% · {date(c.issuedAt, { day: "numeric", month: "short", year: "numeric" })}{(() => { const l = certState(c); return l.state === "expired" ? <b className="text-rose-500"> · Expired — pass level {c.level} again to renew</b> : l.state === "expiring" ? <b className="text-amber-500"> · Expires in {l.daysLeft} day{l.daysLeft === 1 ? "" : "s"}; pass again to renew</b> : null; })()}</div></div>
+                    <div className="min-w-0"><div className="truncate text-sm font-bold">{certTitle(c.level)} · {t.name}</div><div className="text-[11px] text-slate-400">Level {c.level} · {Math.round(c.score * 100)}% · {date(c.issuedAt, { day: "numeric", month: "short", year: "numeric" })}{(() => { const l = certState(c); return c.revokedAt ? <b className="text-rose-500"> · Revoked</b> : l.state === "expired" ? <b className="text-rose-500"> · Expired — pass level {c.level} again to renew</b> : l.state === "expiring" ? <b className="text-amber-500"> · Expires in {l.daysLeft} day{l.daysLeft === 1 ? "" : "s"}; pass again to renew</b> : null; })()}</div></div>
                   </Link>
                 </li>
               ))}</ul>

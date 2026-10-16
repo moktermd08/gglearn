@@ -3,7 +3,7 @@
  * Everything is derived from exams (`runs`), daily quests and contests, so it can never drift from real activity.
  * Only the moment a badge was first earned is stored (`user_badges`).
  */
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { certificates, competitionCerts, contestAttempts, dailyQuests, db, runs, seasonResults, userBadges } from "@/lib/db";
 import { settleRecent } from "@/lib/seasons";
 import { bonusXp } from "@/lib/rewards";
@@ -75,7 +75,7 @@ export function factsOf(userId: number): Facts {
     tracksStarted: Number(one(db.select({ n: sql<number>`count(distinct ${runs.trackId})` }).from(runs).where(done).get())),
     tracksProgressed: Number(one(db.select({ n: sql<number>`count(distinct ${runs.trackId})` }).from(runs).where(passed).get())),
     titan: Number(one(db.select({ n: sql<number>`count(*)` }).from(runs).where(and(passed, eq(runs.level, 20))).get())),
-    certs: Number(one(db.select({ n: sql<number>`count(*)` }).from(certificates).where(eq(certificates.userId, userId)).get())),
+    certs: Number(one(db.select({ n: sql<number>`count(*)` }).from(certificates).where(and(eq(certificates.userId, userId), isNull(certificates.revokedAt))).get())),
     contestsFinished: Number(one(db.select({ n: sql<number>`count(*)` }).from(competitionCerts).where(eq(competitionCerts.userId, userId)).get())),
     champion: Number(one(db.select({ n: sql<number>`count(*)` }).from(competitionCerts).where(and(eq(competitionCerts.userId, userId), eq(competitionCerts.kind, "champion"))).get())),
     records: Number(one(db.select({ n: sql<number>`count(*)` }).from(contestAttempts).where(and(eq(contestAttempts.userId, userId), eq(contestAttempts.status, "finished"))).get())),

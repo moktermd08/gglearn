@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookMarked, Database, Gift, Settings2, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
+import { Award, BookMarked, Database, Gift, Settings2, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
 import { logout, logoutEverywhere } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
@@ -16,6 +16,7 @@ export const ADMIN_LINKS = [
   { href: "/admin/freshness", label: "Freshness", Icon: Newspaper },
   { href: "/admin/careers", label: "Careers", Icon: TrendingUp },
   { href: "/admin/rewards", label: "Rewards", Icon: Gift },
+  { href: "/admin/certificates", label: "Certificates", Icon: Award, adminOnly: true },
   { href: "/admin/setup", label: "Set up", Icon: Settings2 },
 ];
 /** Managers see everything except the policy pages only an admin may change. */

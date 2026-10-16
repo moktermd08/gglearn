@@ -49,10 +49,11 @@ const secret = () => {
   if (!s || s.length < 16) throw new Error("SESSION_SECRET must be set (16+ chars)");
   return s;
 };
-type Signed = Pick<Cert, "code" | "userId" | "trackId" | "level" | "score" | "issuedAt" | "expiresAt" | "renewedAt" | "signer" | "signerTitle">;
+type Signed = Pick<Cert, "code" | "userId" | "trackId" | "level" | "score" | "issuedAt" | "expiresAt" | "renewedAt" | "signer" | "signerTitle"> & Partial<Pick<Cert, "revokedAt" | "revokedReason">>;
 /** 20 hex characters (80 bits) of an HMAC over the certificate's fields, with its own prefix so it can never double as a session token. */
 export function signatureOf(c: Signed): string {
-  const body = ["cert1", c.code, c.userId, c.trackId, c.level, Math.round(c.score * 100), c.issuedAt, c.expiresAt ?? 0, c.renewedAt ?? 0, c.signer, c.signerTitle].join("|");
+  // a certificate that was never revoked signs exactly as before, so signatures made before revocation existed still verify
+  const body = ["cert1", c.code, c.userId, c.trackId, c.level, Math.round(c.score * 100), c.issuedAt, c.expiresAt ?? 0, c.renewedAt ?? 0, c.signer, c.signerTitle, ...(c.revokedAt ? ["revoked", c.revokedAt, c.revokedReason ?? ""] : [])].join("|");
   return createHmac("sha256", secret()).update(body).digest("hex").slice(0, 20).toUpperCase();
 }
 
@@ -75,6 +76,7 @@ export function issueCertificate(tx: Pick<typeof db, "insert" | "select" | "upda
     tx.insert(certificates).values({ ...row, signature: signatureOf(row) }).onConflictDoNothing().run();
     return;
   }
+  if (have.revokedAt) return; // a revoked certificate stays revoked until an admin reinstates it, whatever the person passes
   if (have.expiresAt == null || pol.validMonths <= 0 || have.expiresAt - at > RENEW_WINDOW_DAYS * DAY) return;
   const next = { ...have, expiresAt: addMonths(at, pol.validMonths), renewedAt: at, signer: pol.signer || have.signer, signerTitle: pol.signer ? pol.signerTitle : have.signerTitle };
   tx.update(certificates).set({ expiresAt: next.expiresAt, renewedAt: next.renewedAt, signer: next.signer, signerTitle: next.signerTitle, signature: signatureOf(next) }).where(eq(certificates.id, have.id)).run();

@@ -1,6 +1,6 @@
 /** Checks company-scoped admin reach against the real structure: npm run check:tenancy (uses DATABASE_FILE or data/gglearn.db; adds and removes its own test users). */
 import { eq, like } from "drizzle-orm";
-import { brands, certificates, companies, competitions, db, notifications, rewardAwards, rewardRules, runs, seasonClosed, seasonResults, tracks, userScopes, users } from "../lib/db";
+import { brands, certificateEvents, certificates, companies, competitions, db, notifications, rewardAwards, rewardRules, runs, seasonClosed, seasonResults, tracks, userBadges, userScopes, users } from "../lib/db";
 import { addBrand, addCompany, addTrack, saveBranding, uniqueSlug } from "../lib/setup";
 import { awardForPass, bonusXp, rulesFor } from "../lib/rewards";
 import { removeRule, saveRule, settleAward } from "../lib/rewardsAdmin";
@@ -9,6 +9,8 @@ import { listFor, listedFor } from "../lib/competitions";
 import { groupsOf } from "../lib/groups";
 import { periodAt, settle, standings } from "../lib/seasons";
 import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/brand";
+import { reinstateCertificate, revokeCertificate } from "../lib/certsAdmin";
+import { progressionFor } from "../lib/progression";
 import { RENEW_WINDOW_DAYS, certState, signatureOf, signatureStatus } from "../lib/certs";
 import { canSeeAvatar } from "../lib/competitions";
 import { canSignOff } from "../lib/onboarding";
@@ -243,13 +245,56 @@ try {
   check("a title with no signatory is rejected", !!(await saveBranding(mAdmin, form({ companyId: String(moksy.id), academyName: "", certIssuer: "", accent: "", certSigner: "", certSignerTitle: "CEO", certValidMonths: "12" })))?.error);
   check("another company's admin cannot set this company's policy", await (async () => { const g = mk("t-guru-admin2@check.local", "admin", [{ kind: "company", refId: guru.id }]); return !!(await saveBranding(g, form({ companyId: String(moksy.id), academyName: "", certIssuer: "", accent: "", certSigner: "X", certSignerTitle: "", certValidMonths: "12" })))?.error; })());
 
+  // ---- certificate revocation ----
+  db.update(companies).set({ certValidMonths: 12 }).where(eq(companies.id, moksy.id)).run();
+  const rc = certAt(mLearner.id, 10), gc = certAt(gLearner.id, 10);
+  const gAdm = mk("t-guru-admin3@check.local", "admin", [{ kind: "company", refId: guru.id }]);
+  awardForPass(mAdmin.id, zt.id, 10, 0.9);
+  const ownCert = certAt(mAdmin.id, 10);
+  const rv = (id: number, reason = "Issued in error") => form({ id: String(id), reason });
+  check("a manager cannot revoke a certificate", !!revokeCertificate(mMgr, rv(rc.id))?.error);
+  check("another company's admin cannot revoke it", !!revokeCertificate(gAdm, rv(rc.id))?.error && !certAt(mLearner.id, 10).revokedAt);
+  check("an admin cannot revoke their own", !!revokeCertificate(mAdmin, rv(ownCert.id))?.error);
+  check("a reason is required", !!revokeCertificate(mAdmin, rv(rc.id, ""))?.error && !!revokeCertificate(mAdmin, rv(rc.id, "ab"))?.error && !certAt(mLearner.id, 10).revokedAt);
+  check("a certificate that does not exist is refused", !!revokeCertificate(mAdmin, rv(999999))?.error);
+  check("the company's admin revokes it", !!revokeCertificate(mAdmin, rv(rc.id, "Passed by mistake"))?.done);
+  const rcv = certAt(mLearner.id, 10);
+  check("it is marked revoked, with who, when and why", rcv.revokedAt !== null && rcv.revokedBy === mAdmin.id && rcv.revokedReason === "Passed by mistake");
+  check("it still verifies as an authentic record", signatureStatus(rcv) === "valid");
+  check("the holder was told, with the reason", db.select().from(notifications).where(eq(notifications.userId, mLearner.id)).all().some((n) => n.key.startsWith(`cert-revoked-${rc.id}`) && n.body.includes("Passed by mistake")));
+  check("revoking twice is refused", !!revokeCertificate(mAdmin, rv(rc.id))?.error);
+  db.update(certificates).set({ revokedAt: null, revokedReason: "" }).where(eq(certificates.id, rc.id)).run();
+  check("clearing the revocation directly in the database is caught", signatureStatus(certAt(mLearner.id, 10)) === "altered");
+  db.update(certificates).set({ revokedAt: rcv.revokedAt, revokedReason: "Something else" }).where(eq(certificates.id, rc.id)).run();
+  check("so is changing the reason", signatureStatus(certAt(mLearner.id, 10)) === "altered");
+  db.update(certificates).set({ revokedReason: rcv.revokedReason, expiresAt: nowS + 5 * DAYS, signature: signatureOf({ ...rcv, expiresAt: nowS + 5 * DAYS }) }).where(eq(certificates.id, rc.id)).run();
+  awardForPass(mLearner.id, zt.id, 10, 0.99);
+  const kept = certAt(mLearner.id, 10);
+  check("passing the level again does not renew a revoked certificate", kept.revokedAt === rcv.revokedAt && kept.renewedAt === rcv.renewedAt && kept.expiresAt === nowS + 5 * DAYS);
+  check("a revoked certificate no longer counts toward the Collector badge total", progressionFor(mLearner.id).facts.certs === db.select().from(certificates).where(eq(certificates.userId, mLearner.id)).all().filter((c) => !c.revokedAt).length);
+  check("another company's admin cannot reinstate it", !!reinstateCertificate(gAdm, rv(rc.id))?.error && !!certAt(mLearner.id, 10).revokedAt);
+  check("a manager cannot reinstate it", !!reinstateCertificate(mMgr, rv(rc.id))?.error);
+  check("the company's admin reinstates it", !!reinstateCertificate(mAdmin, rv(rc.id, "Checked: it was correct"))?.done);
+  const back = certAt(mLearner.id, 10);
+  check("it is valid again and its signature matches", back.revokedAt === null && back.revokedReason === "" && signatureStatus(back) === "valid");
+  check("reinstating one that is not revoked is refused", !!reinstateCertificate(mAdmin, rv(rc.id))?.error);
+  const evs = db.select().from(certificateEvents).where(eq(certificateEvents.certificateId, rc.id)).all();
+  check("both changes stay in the history", evs.length === 2 && evs.some((e) => e.kind === "revoked" && e.byUser === mAdmin.id) && evs.some((e) => e.kind === "reinstated" && e.reason === "Checked: it was correct"));
+  check("the platform owner can revoke anyone's", !!revokeCertificate(owner, rv(gc.id, "Policy breach"))?.done && !!certAt(gLearner.id, 10).revokedAt);
+  check("a legacy unsigned certificate is signed when revoked", (() => { const l = certAt(loose.id, 10); db.update(certificates).set({ signature: "" }).where(eq(certificates.id, l.id)).run(); return !!revokeCertificate(owner, rv(l.id, "Test"))?.done && signatureStatus(certAt(loose.id, 10)) === "valid"; })());
+
   db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo, certValidMonths: before.certValidMonths, certSigner: before.certSigner, certSignerTitle: before.certSignerTitle }).where(eq(companies.id, moksy.id)).run();
 } finally {
   const t = db.select().from(users).where(like(users.email, "t-%@check.local")).all();
+  for (const u of t) { // history rows point at certificates and at the admin who acted, so they go before either
+    db.delete(certificateEvents).where(eq(certificateEvents.byUser, u.id)).run();
+    for (const c of db.select().from(certificates).where(eq(certificates.userId, u.id)).all()) db.delete(certificateEvents).where(eq(certificateEvents.certificateId, c.id)).run();
+  }
   for (const u of db.select().from(users).where(like(users.email, "t-%@check.local")).all()) {
     db.delete(rewardAwards).where(eq(rewardAwards.userId, u.id)).run();
     db.delete(certificates).where(eq(certificates.userId, u.id)).run();
     db.delete(notifications).where(eq(notifications.userId, u.id)).run();
+    db.delete(userBadges).where(eq(userBadges.userId, u.id)).run(); // progressionFor records the badges a person has earned
     db.delete(rewardRules).where(eq(rewardRules.createdBy, u.id)).run();
   }
   for (const c of db.select().from(competitions).where(like(competitions.slug, "zz-%")).all()) db.delete(competitions).where(eq(competitions.id, c.id)).run();
