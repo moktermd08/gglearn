@@ -1,7 +1,8 @@
 /** Checks company-scoped admin reach against the real structure: npm run check:tenancy (uses DATABASE_FILE or data/gglearn.db; adds and removes its own test users). */
 import { eq, like } from "drizzle-orm";
 import { brands, companies, db, tracks, userScopes, users } from "../lib/db";
-import { addBrand, addCompany, addTrack, uniqueSlug } from "../lib/setup";
+import { addBrand, addCompany, addTrack, saveBranding, uniqueSlug } from "../lib/setup";
+import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/brand";
 import { isGlobal, personInReach, reachOf, scopeInReach, trackInReach, usersInReach } from "../lib/tenancy";
 
 let fails = 0;
@@ -15,6 +16,7 @@ const mk = (email: string, role: "admin" | "manager" | "learner", scopes: { kind
   for (const s of scopes) db.insert(userScopes).values({ userId: u.id, ...s }).run();
   return u;
 };
+(async () => {
 try {
   const owner = mk("t-owner@check.local", "admin", []);
   const mMgr = mk("t-moksy-mgr@check.local", "manager", [{ kind: "company", refId: moksy.id }]);
@@ -71,6 +73,32 @@ try {
   check("a second track with the same name gets a new slug", !!addTrack(owner, trackForm(zb.id, "Zz Track"))?.done && uniqueSlug("tracks", "Zz Track") === "zz-track-3");
   check("a shared academy brand takes no tracks", !!addTrack(owner, trackForm(shared0(), "Zz Shared"))?.error);
   check("bad numbers are refused", !!addTrack(owner, form({ brandId: String(zb.id), name: "Zz Bad", kind: "process", scope: "brand", tier: "growth", audience: "staff", requiredLevel: "99", dueDays: "30" }))?.error);
+
+  // ---- branding ----
+  const png = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0, 0, 0, 0, 0]);
+  const brandForm = (o: Record<string, string>, file?: File) => { const fd = form({ companyId: String(moksy.id), academyName: "", certIssuer: "", accent: "", ...o }); if (file) fd.set("logo", file); return fd; };
+  check("white text is readable on indigo but not on yellow", readableWithWhite("#4f46e5") && !readableWithWhite("#ffe066"));
+  check("a manager cannot change branding", !!(await saveBranding(mMgr, brandForm({ academyName: "X" })))?.error);
+  check("a company admin cannot brand another company", !!(await saveBranding(mAdmin, brandForm({ companyId: String(guru.id), academyName: "X" })))?.error);
+  check("a too-light colour is refused", !!(await saveBranding(mAdmin, brandForm({ accent: "#ffe066" })))?.error);
+  check("a malformed colour is refused", !!(await saveBranding(mAdmin, brandForm({ accent: "blue" })))?.error);
+  check("a non-image logo is refused", !!(await saveBranding(mAdmin, brandForm({}, new File([new Uint8Array(64)], "a.png", { type: "image/png" }))))?.error);
+  check("an oversized logo is refused", !!(await saveBranding(mAdmin, brandForm({}, new File([new Uint8Array(200 * 1024)], "a.png"))))?.error);
+  const before = db.select().from(companies).where(eq(companies.id, moksy.id)).get()!;
+  const ok = await saveBranding(mAdmin, brandForm({ academyName: "Moksy Academy", certIssuer: "Moksy Limited", accent: "#0f766e" }, new File([png], "logo.png", { type: "image/png" })));
+  check("a company admin brands their own company", !!ok?.done);
+  const look = lookFor(mLearner.id);
+  check("their people see the company look", look.name === "Moksy Academy" && look.accent === "#0f766e" && !!look.logo && look.issuer === "Moksy Limited" && look.company === moksy.name);
+  check("another company's people still see the default", lookFor(gLearner.id).name === DEFAULT_LOOK.name && lookFor(gLearner.id).logo === null);
+  check("a person with no company sees the default", lookFor(loose.id) === DEFAULT_LOOK || lookFor(loose.id).company === null);
+  const twoCo = mk("t-two@check.local", "learner", [{ kind: "company", refId: moksy.id }, { kind: "company", refId: guru.id }]);
+  check("a person in two companies sees the default", lookFor(twoCo.id).company === null);
+  const viaBrand = mk("t-brand@check.local", "learner", [{ kind: "brand", refId: moksyBrand.id }]);
+  check("a brand-only person gets their brand's company look", lookFor(viaBrand.id).name === "Moksy Academy");
+  await saveBranding(mAdmin, brandForm({ accent: "#4f46e5", removeLogo: "on" }));
+  const cleared = lookOfCompany(moksy.id);
+  check("the standard shade clears the colour, an empty name resets to the default, and the logo can be removed", cleared.accent === null && cleared.logo === null && cleared.name === DEFAULT_LOOK.name);
+  db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo }).where(eq(companies.id, moksy.id)).run();
 } finally {
   const t = db.select().from(users).where(like(users.email, "t-%@check.local")).all();
   for (const tr of db.select().from(tracks).where(like(tracks.slug, "zz-%")).all()) db.delete(tracks).where(eq(tracks.id, tr.id)).run();
@@ -80,3 +108,4 @@ try {
 }
 console.log(fails ? `${fails} FAILED` : "all passed");
 process.exit(fails ? 1 : 0);
+})();

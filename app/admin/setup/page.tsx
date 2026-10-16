@@ -6,7 +6,8 @@ import { brands, companies, db, questions, tracks } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { isGlobal, reachOf, scopeInReach, trackInReach } from "@/lib/tenancy";
-import { BrandForm, CompanyForm, TrackForm } from "./forms";
+import { BrandForm, BrandingForm, CompanyForm, TrackForm } from "./forms";
+import { lookOfCompany } from "@/lib/brand";
 
 export const metadata = { title: "Set up — gglearn" };
 
@@ -45,6 +46,17 @@ export default async function Setup() {
         <h2 className={h2}>Add a track</h2>
         <p className="mb-2 text-sm text-slate-400">A new track is empty. Nobody is required to take it until it has enough questions to reach its pass level; add them with <code>npm run import:knowledge</code> and approve them at /admin/review.</p>
         <TrackForm brands={myBrands.map((b) => ({ id: b.id, name: b.name, company: companyName.get(b.companyId!) ?? "" }))} />
+      </section>
+
+      <section>
+        <h2 className={h2}>Branding</h2>
+        <p className="mb-2 text-sm text-slate-400">What the academy looks like for people who belong to one company: its name, colour, logo and the issuer on certificates. People in several companies see the standard look.</p>
+        <div className="space-y-3">
+          {myCompanies.length === 0 && <p className="text-sm text-slate-400">Add a company first.</p>}
+          {myCompanies.map((c) => (
+            <BrandingForm key={c.id} company={{ id: c.id, name: c.name, academyName: c.academyName, accent: c.accent, certIssuer: c.certIssuer, logoUrl: lookOfCompany(c.id).logo }} />
+          ))}
+        </div>
       </section>
 
       <section>

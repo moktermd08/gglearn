@@ -3,6 +3,7 @@ import { z } from "zod";
 import { brands, companies, db, tracks } from "@/lib/db";
 import { MAX_LEVEL } from "@/lib/levels";
 import { isGlobal, reachOf, scopeInReach, trackInReach } from "@/lib/tenancy";
+import { isHex, readableWithWhite } from "@/lib/brand";
 
 export type SetupState = { error?: string; done?: string } | null;
 type Me = { id: number; role: "admin" | "manager" | "learner" };
@@ -82,4 +83,39 @@ export function addTrack(me: Me, fd: FormData): SetupState {
   if (roles.length > 200) return { error: "Too many roles: keep the list under 200 characters." };
   db.insert(tracks).values({ ...p.data, slug, roles, policySource: "admin" }).run();
   return { done: `Added track ${p.data.name}. It has no questions yet, so nobody is required to take it until some are added.` };
+}
+
+export const MAX_LOGO_BYTES = 150 * 1024;
+/** png, jpeg or webp by their first bytes, not by the name or type the browser claims. */
+function imageType(b: Uint8Array): "image/png" | "image/jpeg" | "image/webp" | null {
+  if (b.length > 12 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return "image/png";
+  if (b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return "image/jpeg";
+  if (b.length > 12 && String.fromCharCode(...b.slice(0, 4)) === "RIFF" && String.fromCharCode(...b.slice(8, 12)) === "WEBP") return "image/webp";
+  return null;
+}
+
+/** Saves how the academy looks for one company: its name, accent colour, logo and the issuer printed on certificates. Empty fields go back to the default. */
+export async function saveBranding(me: Me, fd: FormData): Promise<SetupState> {
+  if (me.role !== "admin") return { error: "Only an admin can change branding." };
+  const id = Number(fd.get("companyId"));
+  const company = Number.isInteger(id) ? db.select().from(companies).where(eq(companies.id, id)).get() : undefined;
+  if (!company || !scopeInReach(reachOf(me.id), { kind: "company", id: company.id })) return { error: "You can only change the branding of a company you run." };
+  const p = z.object({ academyName: z.string().max(40), certIssuer: z.string().max(80), accent: z.string() })
+    .safeParse({ academyName: str(fd.get("academyName")), certIssuer: str(fd.get("certIssuer")), accent: str(fd.get("accent")).toLowerCase() });
+  if (!p.success) return { error: "Keep the academy name under 40 characters and the issuer under 80." };
+  if (p.data.accent === "#4f46e5") p.data.accent = ""; // the standard shade means "no custom colour"
+  if (p.data.accent && !isHex(p.data.accent)) return { error: "The colour must look like #1a73e8." };
+  if (p.data.accent && !readableWithWhite(p.data.accent)) return { error: "That colour is too light for white button text. Pick a darker one." };
+
+  let logo = company.logo;
+  const file = fd.get("logo");
+  if (fd.get("removeLogo") === "on") logo = "";
+  else if (file instanceof File && file.size > 0) {
+    if (file.size > MAX_LOGO_BYTES) return { error: `The logo is over ${MAX_LOGO_BYTES / 1024} KB. Use a smaller image.` };
+    const bytes = new Uint8Array(await file.arrayBuffer()), type = imageType(bytes);
+    if (!type) return { error: "The logo must be a PNG, JPEG or WebP image." };
+    logo = `data:${type};base64,${Buffer.from(bytes).toString("base64")}`;
+  }
+  db.update(companies).set({ academyName: p.data.academyName, certIssuer: p.data.certIssuer, accent: p.data.accent, logo }).where(eq(companies.id, company.id)).run();
+  return { done: `Saved branding for ${company.name}. People in this company see it on their next page load.` };
 }

@@ -5,6 +5,7 @@ import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
 import { MobileMenu } from "@/components/MobileMenu";
 import { Initials } from "@/components/charts";
+import { DEFAULT_LOOK, type Look } from "@/lib/brand";
 
 type User = { name: string; email: string; role: string } | null;
 
@@ -16,15 +17,18 @@ export const ADMIN_LINKS = [
   { href: "/admin/careers", label: "Careers", Icon: TrendingUp },
 ];
 
-export function SiteHeader({ user, unread = 0 }: { user: User; unread?: number }) {
+export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: User; unread?: number; look?: Look }) {
   const staff = !!user && user.role !== "learner";
   const mobile = "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-base";
   return (
     <header className="sticky top-0 z-40 border-b border-black/10 bg-[#f7f5ef]/90 backdrop-blur print:hidden">
       <nav aria-label="Main" className="relative mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5 text-sm [&_a]:whitespace-nowrap [&_button]:whitespace-nowrap">
         <Link href="/" className="flex items-center gap-2 text-lg font-extrabold">
-          <span className="grid h-8 w-8 place-items-center rounded-lg text-[#fff] shadow" style={{ background: "linear-gradient(135deg,#4f46e5,#9333ea 70%,#db2777)" }}><Swords size={17} aria-hidden /></span>
-          <span className="gradient-text">gglearn</span>
+          {look.logo
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img src={look.logo} alt="" className="h-8 w-8 rounded-lg object-contain" />
+            : <span className="grid h-8 w-8 place-items-center rounded-lg text-[#fff] shadow" style={{ background: look.accent ? "var(--brand)" : "linear-gradient(135deg,#4f46e5,#9333ea 70%,#db2777)" }}><Swords size={17} aria-hidden /></span>}
+          <span className="gradient-text">{look.name}</span>
         </Link>
 
         <div className="ml-2 hidden items-center gap-1 md:flex">
