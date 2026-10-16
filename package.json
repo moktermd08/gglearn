@@ -23,6 +23,7 @@
     "generate:bank": "tsx --env-file=.env.local scripts/generate-bank.ts",
     "typecheck": "tsc --noEmit",
     "check:tenancy": "tsx scripts/check-tenancy.ts",
+    "sign:certs": "tsx --env-file=.env.local scripts/sign-certificates.ts",
     "check:blueprint": "tsx --env-file=.env.local scripts/check-blueprint.ts",
     "seed:cards": "tsx --env-file=.env.local scripts/seed-ai.ts --cards",
     "check:cards": "tsx scripts/ai/check.ts --cards",

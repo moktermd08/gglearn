@@ -9,10 +9,12 @@ import { listFor, listedFor } from "../lib/competitions";
 import { groupsOf } from "../lib/groups";
 import { periodAt, settle, standings } from "../lib/seasons";
 import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/brand";
+import { RENEW_WINDOW_DAYS, certState, signatureOf, signatureStatus } from "../lib/certs";
 import { canSeeAvatar } from "../lib/competitions";
 import { canSignOff } from "../lib/onboarding";
 import { isGlobal, personInReach, reachOf, scopeInReach, trackInReach, usersInReach } from "../lib/tenancy";
 
+process.env.SESSION_SECRET ??= "check-tenancy-only-secret-0123456789"; // the certificate signature is keyed with it
 let fails = 0;
 const shared0 = () => db.select().from(brands).where(eq(brands.kind, "shared")).get()!.id;
 const check = (name: string, ok: boolean) => { if (!ok) fails++; console.log(`${ok ? "ok  " : "FAIL"} ${name}`); };
@@ -201,7 +203,47 @@ try {
   check("removing a rule keeps the awards already given", !!removeRule(mAdmin, ruleToRemove.id)?.done && db.select().from(rewardAwards).where(eq(rewardAwards.ruleId, ruleToRemove.id)).all().length === 2);
   check("a manager cannot remove rules", !!removeRule(mMgr, ruleToRemove.id)?.error);
 
-  db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo }).where(eq(companies.id, moksy.id)).run();
+  // ---- certificates: expiry, signatory and signature ----
+  const certAt = (u: number, lvl: number) => db.select().from(certificates).where(eq(certificates.userId, u)).all().find((c) => c.trackId === zt.id && c.level === lvl)!;
+  const DAYS = 86400, nowS = Math.floor(Date.now() / 1000);
+  awardForPass(loose.id, zt.id, 10, 0.9);
+  check("a person in no company gets a certificate that never expires, with no signatory", certAt(loose.id, 10).expiresAt === null && certAt(loose.id, 10).signer === "" && certState(certAt(loose.id, 10)).state === "permanent");
+  db.update(companies).set({ certValidMonths: 12, certSigner: "Test Signer", certSignerTitle: "Head of Learning" }).where(eq(companies.id, moksy.id)).run();
+  awardForPass(mLearner.id, zt.id, 10, 0.9);
+  const mc = certAt(mLearner.id, 10);
+  check("a company's validity sets the expiry on a new certificate", mc.expiresAt !== null && Math.abs(mc.expiresAt - (nowS + 365 * DAYS)) < 3 * DAYS && certState(mc).state === "valid");
+  check("the signatory is copied onto it", mc.signer === "Test Signer" && mc.signerTitle === "Head of Learning");
+  check("it carries a signature that verifies", mc.signature.length === 20 && signatureStatus(mc) === "valid");
+  check("another company's setting does not apply", (awardForPass(gLearner.id, zt.id, 10, 0.9), certAt(gLearner.id, 10).expiresAt === null));
+  db.update(companies).set({ certValidMonths: 24, certSigner: "Someone Else" }).where(eq(companies.id, moksy.id)).run();
+  check("changing the company's policy does not rewrite a certificate already given", certAt(mLearner.id, 10).expiresAt === mc.expiresAt && certAt(mLearner.id, 10).signer === "Test Signer" && signatureStatus(certAt(mLearner.id, 10)) === "valid");
+  awardForPass(mLearner.id, zt.id, 10, 0.95);
+  check("passing again while the certificate is current leaves it alone", certAt(mLearner.id, 10).expiresAt === mc.expiresAt && certAt(mLearner.id, 10).renewedAt === null);
+  const tamper = (patch: Partial<typeof mc>) => { db.update(certificates).set(patch).where(eq(certificates.id, mc.id)).run(); return signatureStatus(certAt(mLearner.id, 10)); };
+  check("a changed expiry no longer matches the signature", tamper({ expiresAt: mc.expiresAt! + 400 * DAYS }) === "altered");
+  check("nor does a changed score", tamper({ expiresAt: mc.expiresAt, score: 0.5 }) === "altered");
+  check("restoring the record makes it verify again", tamper({ score: mc.score }) === "valid");
+  check("an unsigned legacy certificate is reported as unsigned, not altered", tamper({ signature: "" }) === "unsigned" && (tamper({ signature: signatureOf(mc) }) === "valid"));
+  db.update(certificates).set({ expiresAt: nowS + 10 * DAYS, signature: signatureOf({ ...mc, expiresAt: nowS + 10 * DAYS }) }).where(eq(certificates.id, mc.id)).run();
+  check("a certificate inside the renewal window reads as expiring", certState(certAt(mLearner.id, 10)).state === "expiring" && RENEW_WINDOW_DAYS >= 10);
+  awardForPass(mLearner.id, zt.id, 10, 0.9);
+  const renewed = certAt(mLearner.id, 10);
+  check("passing again inside the window renews it from now, with the company's current policy", renewed.renewedAt !== null && Math.abs(renewed.expiresAt! - (nowS + 730 * DAYS)) < 3 * DAYS && renewed.signer === "Someone Else" && signatureStatus(renewed) === "valid");
+  check("a renewal keeps the original code and issue date", renewed.code === mc.code && renewed.issuedAt === mc.issuedAt);
+  db.update(certificates).set({ expiresAt: nowS - 5 * DAYS, signature: signatureOf({ ...renewed, expiresAt: nowS - 5 * DAYS }) }).where(eq(certificates.id, mc.id)).run();
+  check("a certificate past its date reads as expired", certState(certAt(mLearner.id, 10)).state === "expired");
+  awardForPass(mLearner.id, zt.id, 10, 0.9);
+  check("passing again after expiry renews it", certState(certAt(mLearner.id, 10)).state === "valid" && signatureStatus(certAt(mLearner.id, 10)) === "valid");
+  db.update(companies).set({ certValidMonths: 0 }).where(eq(companies.id, moksy.id)).run();
+  db.update(certificates).set({ expiresAt: nowS - 5 * DAYS }).where(eq(certificates.id, mc.id)).run();
+  awardForPass(mLearner.id, zt.id, 10, 0.9);
+  check("a company that no longer expires certificates does not renew an old one", certAt(mLearner.id, 10).expiresAt === nowS - 5 * DAYS);
+  db.update(companies).set({ certValidMonths: 12 }).where(eq(companies.id, moksy.id)).run();
+  check("the setup form rejects a negative or absurd validity", await (async () => { const bad = async (v: string) => (await saveBranding(mAdmin, form({ companyId: String(moksy.id), academyName: "", certIssuer: "", accent: "", certSigner: "", certSignerTitle: "", certValidMonths: v }))); return !!(await bad("-1"))?.error && !!(await bad("121"))?.error && !!(await bad("ab"))?.error; })());
+  check("a title with no signatory is rejected", !!(await saveBranding(mAdmin, form({ companyId: String(moksy.id), academyName: "", certIssuer: "", accent: "", certSigner: "", certSignerTitle: "CEO", certValidMonths: "12" })))?.error);
+  check("another company's admin cannot set this company's policy", await (async () => { const g = mk("t-guru-admin2@check.local", "admin", [{ kind: "company", refId: guru.id }]); return !!(await saveBranding(g, form({ companyId: String(moksy.id), academyName: "", certIssuer: "", accent: "", certSigner: "X", certSignerTitle: "", certValidMonths: "12" })))?.error; })());
+
+  db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo, certValidMonths: before.certValidMonths, certSigner: before.certSigner, certSignerTitle: before.certSignerTitle }).where(eq(companies.id, moksy.id)).run();
 } finally {
   const t = db.select().from(users).where(like(users.email, "t-%@check.local")).all();
   for (const u of db.select().from(users).where(like(users.email, "t-%@check.local")).all()) {

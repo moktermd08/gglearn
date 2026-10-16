@@ -36,6 +36,11 @@ export const companies = sqliteTable("companies", {
   accent: text("accent").notNull().default(""), // #rrggbb, dark enough for white text
   logo: text("logo").notNull().default(""), // a data: URL (png, jpeg or webp, 150 KB at most)
   certIssuer: text("cert_issuer").notNull().default(""), // printed under "Issued by" on certificates
+  // Certificate policy (see lib/certs.ts): how long a new certificate stays valid, and who signs it. 0 months = never expires.
+  // default(sql`0`), not default(0): drizzle-kit drops a falsy default, then "adds a NOT NULL column with no default" by emptying the table
+  certValidMonths: integer("cert_valid_months").notNull().default(sql`0`),
+  certSigner: text("cert_signer").notNull().default(""),
+  certSignerTitle: text("cert_signer_title").notNull().default(""),
 });
 
 export const brands = sqliteTable("brands", {
@@ -271,6 +276,14 @@ export const certificates = sqliteTable(
     code: text("code").notNull().unique(),
     score: real("score").notNull(),
     issuedAt: integer("issued_at").notNull().default(now),
+    // null = never expires (every certificate issued before expiry existed, and any company with no validity set)
+    expiresAt: integer("expires_at"),
+    renewedAt: integer("renewed_at"), // set when a pass near or after expiry extended it
+    // who signed it, copied from the company at issue so a later change never rewrites an old certificate
+    signer: text("signer").notNull().default(""),
+    signerTitle: text("signer_title").notNull().default(""),
+    // keyed fingerprint of the fields above (lib/certs.ts): a record edited in the database no longer matches it. "" = issued before signatures.
+    signature: text("signature").notNull().default(""),
   },
   (t) => [uniqueIndex("cert_unique").on(t.userId, t.trackId, t.level)],
 );

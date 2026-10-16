@@ -3,7 +3,7 @@ import { BadgeCheck, Swords } from "lucide-react";
 import { DEFAULT_LOOK, type Look } from "@/lib/brand";
 
 /** Ornamental certificate sheet shared by both public certificate pages. `hue` tints the border, seal and corners. */
-export function CertFrame({ hue, seal, children, code, look = DEFAULT_LOOK }: { hue: number; seal: ReactNode; children: ReactNode; code: string; look?: Look }) {
+export function CertFrame({ hue, seal, children, code, look = DEFAULT_LOOK, signer }: { hue: number; seal: ReactNode; children: ReactNode; code: string; look?: Look; signer?: { name: string; title: string } }) {
   const c = `hsl(${hue} 70% 48%)`, soft = `hsl(${hue} 80% 60%)`;
   const corner = (cls: string) => (
     <svg viewBox="0 0 60 60" className={`pointer-events-none absolute h-14 w-14 ${cls}`} aria-hidden>
@@ -30,7 +30,7 @@ export function CertFrame({ hue, seal, children, code, look = DEFAULT_LOOK }: { 
         </div>
         {children}
         <div className="mt-8 grid grid-cols-[1fr_auto_1fr] items-end gap-4 px-4 text-xs text-slate-400 sm:px-8">
-          <div><div className="border-b border-slate-300 pb-1 font-serif text-lg italic text-slate-300">{look.company ? look.issuer : "gglearn"}</div>{look.company ? "Issued by" : "Issued by the academy"}</div>
+          <div><div className="border-b border-slate-300 pb-1 font-serif text-lg italic text-slate-300">{signer?.name || (look.company ? look.issuer : "gglearn")}</div>{signer?.name ? `${signer.title ? `${signer.title}, ` : ""}${look.company ? look.issuer : "gglearn"}` : look.company ? "Issued by" : "Issued by the academy"}</div>
           <BadgeCheck size={34} style={{ color: c }} aria-label="Verified" />
           <div><div className="break-all border-b border-slate-300 pb-1 font-mono text-sm text-slate-300">{code}</div>Verification code</div>
         </div>

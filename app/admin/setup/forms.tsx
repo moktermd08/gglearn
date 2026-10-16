@@ -110,7 +110,7 @@ export function TrackForm({ brands }: { brands: { id: number; name: string; comp
   );
 }
 
-export function BrandingForm({ company }: { company: { id: number; name: string; academyName: string; accent: string; certIssuer: string; logoUrl: string | null } }) {
+export function BrandingForm({ company }: { company: { id: number; name: string; academyName: string; accent: string; certIssuer: string; certValidMonths: number; certSigner: string; certSignerTitle: string; logoUrl: string | null } }) {
   const { ref, state, run, pending } = useSetup(saveCompanyBranding, true);
   return (
     <form ref={ref} action={run} className="card grid gap-3 p-4 text-sm md:grid-cols-3">
@@ -128,7 +128,17 @@ export function BrandingForm({ company }: { company: { id: number; name: string;
       <label className="grid gap-1">Certificate issuer
         <input name="certIssuer" defaultValue={company.certIssuer} placeholder={company.name} maxLength={80} className={input} />
       </label>
-      <div className="flex items-center gap-3 md:col-span-2">
+      <label className="grid gap-1">Certificates stay valid for (months)
+        <input name="certValidMonths" type="number" min={0} max={120} defaultValue={company.certValidMonths} className={input} />
+        <span className="text-xs text-slate-400">0 means never. Applies to certificates issued from now on; passing the level again within 60 days of expiry renews it.</span>
+      </label>
+      <label className="grid gap-1">Signed by
+        <input name="certSigner" defaultValue={company.certSigner} placeholder="A name, printed on every new certificate" maxLength={60} className={input} />
+      </label>
+      <label className="grid gap-1">Signatory&apos;s title
+        <input name="certSignerTitle" defaultValue={company.certSignerTitle} placeholder="Head of Learning" maxLength={60} className={input} />
+      </label>
+      <div className="flex items-center gap-3 md:col-span-3">
         {company.logoUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={company.logoUrl} alt={`${company.name} logo`} className="h-10 w-10 rounded-lg border border-black/10 object-contain" />

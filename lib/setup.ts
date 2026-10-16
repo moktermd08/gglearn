@@ -4,6 +4,7 @@ import { brands, companies, db, tracks } from "@/lib/db";
 import { MAX_LEVEL } from "@/lib/levels";
 import { isGlobal, reachOf, scopeInReach, trackInReach } from "@/lib/tenancy";
 import { isHex, readableWithWhite } from "@/lib/brand";
+import { MAX_VALID_MONTHS } from "@/lib/certs";
 
 export type SetupState = { error?: string; done?: string } | null;
 type Me = { id: number; role: "admin" | "manager" | "learner" };
@@ -94,15 +95,18 @@ function imageType(b: Uint8Array): "image/png" | "image/jpeg" | "image/webp" | n
   return null;
 }
 
-/** Saves how the academy looks for one company: its name, accent colour, logo and the issuer printed on certificates. Empty fields go back to the default. */
+/** Saves how the academy looks for one company: its name, accent colour, logo, the issuer printed on certificates, and the certificate policy (validity and signatory). Empty fields go back to the default. */
 export async function saveBranding(me: Me, fd: FormData): Promise<SetupState> {
   if (me.role !== "admin") return { error: "Only an admin can change branding." };
   const id = Number(fd.get("companyId"));
   const company = Number.isInteger(id) ? db.select().from(companies).where(eq(companies.id, id)).get() : undefined;
   if (!company || !scopeInReach(reachOf(me.id), { kind: "company", id: company.id })) return { error: "You can only change the branding of a company you run." };
-  const p = z.object({ academyName: z.string().max(40), certIssuer: z.string().max(80), accent: z.string() })
-    .safeParse({ academyName: str(fd.get("academyName")), certIssuer: str(fd.get("certIssuer")), accent: str(fd.get("accent")).toLowerCase() });
-  if (!p.success) return { error: "Keep the academy name under 40 characters and the issuer under 80." };
+  const p = z.object({ academyName: z.string().max(40), certIssuer: z.string().max(80), accent: z.string(), certSigner: z.string().max(60), certSignerTitle: z.string().max(60), months: z.string().regex(/^\d{0,3}$/) })
+    .safeParse({ academyName: str(fd.get("academyName")), certIssuer: str(fd.get("certIssuer")), accent: str(fd.get("accent")).toLowerCase(), certSigner: str(fd.get("certSigner")), certSignerTitle: str(fd.get("certSignerTitle")), months: str(fd.get("certValidMonths")) });
+  if (!p.success) return { error: "Keep the academy name under 40 characters, the issuer under 80, the signatory name and title under 60, and the validity a whole number of months." };
+  const validMonths = Number(p.data.months || 0);
+  if (validMonths > MAX_VALID_MONTHS) return { error: `Certificates can stay valid for at most ${MAX_VALID_MONTHS} months. Use 0 for never.` };
+  if (p.data.certSignerTitle && !p.data.certSigner) return { error: "Add the signatory's name, or clear their title." };
   if (p.data.accent === "#4f46e5") p.data.accent = ""; // the standard shade means "no custom colour"
   if (p.data.accent && !isHex(p.data.accent)) return { error: "The colour must look like #1a73e8." };
   if (p.data.accent && !readableWithWhite(p.data.accent)) return { error: "That colour is too light for white button text. Pick a darker one." };
@@ -116,6 +120,6 @@ export async function saveBranding(me: Me, fd: FormData): Promise<SetupState> {
     if (!type) return { error: "The logo must be a PNG, JPEG or WebP image." };
     logo = `data:${type};base64,${Buffer.from(bytes).toString("base64")}`;
   }
-  db.update(companies).set({ academyName: p.data.academyName, certIssuer: p.data.certIssuer, accent: p.data.accent, logo }).where(eq(companies.id, company.id)).run();
-  return { done: `Saved branding for ${company.name}. People in this company see it on their next page load.` };
+  db.update(companies).set({ academyName: p.data.academyName, certIssuer: p.data.certIssuer, accent: p.data.accent, logo, certValidMonths: validMonths, certSigner: p.data.certSigner, certSignerTitle: p.data.certSignerTitle }).where(eq(companies.id, company.id)).run();
+  return { done: `Saved branding for ${company.name}. People in this company see it on their next page load. New certificates ${validMonths ? `stay valid for ${validMonths} month${validMonths === 1 ? "" : "s"}` : "never expire"}; ones already issued keep their dates.` };
 }

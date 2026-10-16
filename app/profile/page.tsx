@@ -8,6 +8,7 @@ import { AvatarPicker } from "@/components/AvatarPicker";
 import { RankEmblem } from "@/components/RankEmblem";
 import { SubjectArt } from "@/components/SubjectArt";
 import { Calendar, Flame, GraduationCap, Mail, Medal, Mountain, Shield, ShieldCheck, Sparkles, Swords, Trash2, TrendingUp, UserRound, Activity, Briefcase } from "lucide-react";
+import { certState } from "@/lib/certs";
 import { LEVELS, MAX_LEVEL, TIERS, certTitle, tierOf } from "@/lib/levels";
 import { activityFor, trackStats } from "@/lib/stats";
 import { progressionFor } from "@/lib/progression";
@@ -123,7 +124,7 @@ export default async function Profile() {
                 <li key={c.id}>
                   <Link href={`/cert/${c.code}`} className="card-hover relative flex items-center gap-3 overflow-hidden rounded-2xl border border-amber-400/40 p-3" style={{ background: `linear-gradient(135deg, hsl(${TIERS[tierOf(c.level)].hue} 85% 55% / .14), #fff 70%)` }}>
                     <RankEmblem level={c.level} size={44} />
-                    <div className="min-w-0"><div className="truncate text-sm font-bold">{certTitle(c.level)} · {t.name}</div><div className="text-[11px] text-slate-400">Level {c.level} · {Math.round(c.score * 100)}% · {date(c.issuedAt, { day: "numeric", month: "short", year: "numeric" })}</div></div>
+                    <div className="min-w-0"><div className="truncate text-sm font-bold">{certTitle(c.level)} · {t.name}</div><div className="text-[11px] text-slate-400">Level {c.level} · {Math.round(c.score * 100)}% · {date(c.issuedAt, { day: "numeric", month: "short", year: "numeric" })}{(() => { const l = certState(c); return l.state === "expired" ? <b className="text-rose-500"> · Expired — pass level {c.level} again to renew</b> : l.state === "expiring" ? <b className="text-amber-500"> · Expires in {l.daysLeft} day{l.daysLeft === 1 ? "" : "s"}; pass again to renew</b> : null; })()}</div></div>
                   </Link>
                 </li>
               ))}</ul>
