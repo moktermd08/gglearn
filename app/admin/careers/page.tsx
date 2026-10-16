@@ -18,6 +18,7 @@ export const metadata = { title: "Careers — gglearn" };
 const date = (sec: number) => new Date(sec * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
 export default async function Careers({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
+  const openRole = ((await searchParams).role ?? "").toLowerCase(); // only the ladder being looked at is drawn in full: all 28 at once was a 7 MB page
   const me = await requireManager();
   const reach = reachOf(me.id), mine = usersInReach(reach);
   const isAdmin = me.role === "admin" && isGlobal(reach); // ladders are shared by every company
