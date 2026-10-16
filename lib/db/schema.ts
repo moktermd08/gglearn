@@ -31,6 +31,11 @@ export const companies = sqliteTable("companies", {
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
   tagline: text("tagline").notNull().default(""),
+  // How the academy looks for this company's people (see lib/brand.ts). Empty = the gglearn default.
+  academyName: text("academy_name").notNull().default(""),
+  accent: text("accent").notNull().default(""), // #rrggbb, dark enough for white text
+  logo: text("logo").notNull().default(""), // a data: URL (png, jpeg or webp, 150 KB at most)
+  certIssuer: text("cert_issuer").notNull().default(""), // printed under "Issued by" on certificates
 });
 
 export const brands = sqliteTable("brands", {
@@ -661,4 +666,48 @@ export const shareCards = sqliteTable(
     revokedAt: integer("revoked_at"),
   },
   (t) => [index("share_user").on(t.userId), uniqueIndex("share_active").on(t.userId, t.kind, t.ref).where(sql`revoked_at is null`)],
+);
+
+// What passing a level earns, set by whoever owns the content. One rule per (scope, level, kind); the most specific wins
+// (track, then brand, then company). An "off" rule switches that reward off at its scope and below. See lib/rewards.ts.
+export const rewardRules = sqliteTable(
+  "reward_rules",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    scope: text("scope", { enum: ["company", "brand", "track"] }).notNull(),
+    refId: integer("ref_id").notNull(), // companies.id, brands.id or tracks.id, checked in code
+    level: integer("level").notNull(), // the track level whose first pass earns it
+    kind: text("kind", { enum: ["certificate", "xp", "voucher", "money"] }).notNull(),
+    enabled: text("enabled", { enum: ["on", "off"] }).notNull().default("on"),
+    amount: integer("amount").notNull().default(0), // xp points, or money in minor units
+    currency: text("currency").notNull().default(""),
+    label: text("label").notNull().default(""), // what a voucher is for
+    maxAwards: integer("max_awards").notNull().default(0), // budget cap; required for voucher and money, 0 = no cap otherwise
+    createdBy: integer("created_by").references(() => users.id),
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("reward_rule_slot").on(t.scope, t.refId, t.level, t.kind)],
+);
+
+// The ledger: one row per reward given. Unique per person, rule, track and level, so a retake never pays twice.
+// gglearn never holds or moves money: a voucher or money award starts "pending" and the company marks it fulfilled once it has paid.
+export const rewardAwards = sqliteTable(
+  "reward_awards",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    ruleId: integer("rule_id").notNull(),
+    trackId: integer("track_id").notNull().references(() => tracks.id),
+    level: integer("level").notNull(),
+    kind: text("kind", { enum: ["certificate", "xp", "voucher", "money"] }).notNull(),
+    amount: integer("amount").notNull().default(0),
+    currency: text("currency").notNull().default(""),
+    label: text("label").notNull().default(""),
+    status: text("status", { enum: ["granted", "pending", "fulfilled", "void"] }).notNull(),
+    reference: text("reference").notNull().default(""), // how it was paid: a voucher code, a payment reference
+    settledBy: integer("settled_by").references(() => users.id),
+    settledAt: integer("settled_at"),
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("reward_award_once").on(t.userId, t.ruleId, t.trackId, t.level), index("reward_award_user").on(t.userId), index("reward_award_status").on(t.status)],
 );

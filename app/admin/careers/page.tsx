@@ -11,6 +11,7 @@ import { careerFor, ladderFor, rolesWithLadders } from "@/lib/careers";
 import { catalog } from "@/lib/paths";
 import { MAX_LEVEL } from "@/lib/levels";
 import { AlertTriangle, ArrowUpRight, CheckCircle2, ChevronDown, CircleDashed, Medal, Plus, Save, Trash2, TrendingUp } from "lucide-react";
+import { isGlobal, reachOf, usersInReach } from "@/lib/tenancy";
 
 export const metadata = { title: "Careers — gglearn" };
 
@@ -18,10 +19,10 @@ const date = (sec: number) => new Date(sec * 1000).toLocaleDateString("en-GB", {
 
 export default async function Careers({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
   const me = await requireManager();
-  const openRole = ((await searchParams).role ?? "").toLowerCase(); // only the ladder being looked at is drawn in full: all 28 at once was a 7 MB page
-  const isAdmin = me.role === "admin";
+  const reach = reachOf(me.id), mine = usersInReach(reach);
+  const isAdmin = me.role === "admin" && isGlobal(reach); // ladders are shared by every company
   const cat = catalog();
-  const people = db.select().from(users).where(eq(users.status, "active")).orderBy(users.name).all();
+  const people = db.select().from(users).where(eq(users.status, "active")).orderBy(users.name).all().filter((u) => !mine || mine.has(u.id));
   const rows = people.map((p) => ({ p, c: careerFor(p, cat) })).filter((r): r is { p: typeof r.p; c: NonNullable<typeof r.c> } => !!r.c);
   const noLadder = people.filter((p) => p.audience === "staff" && !rows.some((r) => r.p.id === p.id));
   const ready = rows.filter((r) => r.c.ready);

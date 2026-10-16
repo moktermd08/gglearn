@@ -11,6 +11,7 @@
 import { and, eq, gte, inArray, lt, sql } from "drizzle-orm";
 import { dailyQuests, db, enrollments, runs, seasonClosed, seasonResults, users } from "@/lib/db";
 import { notify } from "@/lib/notifications";
+import { arenaMap, arenaOf, type Arena } from "@/lib/arena";
 
 export const POINTS_PER_LEVEL = 100, POINTS_PER_DAY = 10;
 export type Kind = "week" | "month";
@@ -55,10 +56,13 @@ export const shortName = (name: string) => {
   return rest.length ? `${first} ${rest[rest.length - 1][0].toUpperCase()}.` : first || "Player";
 };
 
-export function standings(p: Period, audience: "staff" | "customer", trackId?: number): Row[] {
+/** `arena`: only people who compete in it (see lib/arena.ts). Left out, everyone is ranked together. */
+export function standings(p: Period, audience: "staff" | "customer", trackId?: number, arena?: Arena): Row[] {
   const end = Math.min(p.end, now() + 1);
+  const arenas = arena ? arenaMap() : null;
   const people = new Map(db.select({ id: users.id, name: users.name }).from(users)
-    .where(and(eq(users.status, "active"), eq(users.audience, audience), eq(users.seasonBoard, "show"))).all().map((u) => [u.id, u.name]));
+    .where(and(eq(users.status, "active"), eq(users.audience, audience), eq(users.seasonBoard, "show"))).all()
+    .filter((u) => !arenas || arenaOf(u.id, arenas) === arena).map((u) => [u.id, u.name]));
   if (!people.size) return [];
   const inWindow = and(gte(runs.finishedAt, p.start), lt(runs.finishedAt, end), trackId ? eq(runs.trackId, trackId) : undefined);
   const rs = db.select({ u: runs.userId, t: runs.trackId, l: runs.level, at: runs.finishedAt, ok: runs.passed }).from(runs).where(inWindow).all().filter((r) => people.has(r.u));
@@ -94,8 +98,10 @@ export function standings(p: Period, audience: "staff" | "customer", trackId?: n
 export function settle(p: Period) {
   if (p.end > now() || db.select().from(seasonClosed).where(and(eq(seasonClosed.kind, p.kind), eq(seasonClosed.key, p.key))).get()) return;
   db.transaction((tx) => {
-    for (const audience of ["staff", "customer"] as const) {
-      const rows = standings(p, audience);
+    // each arena is ranked on its own, so a company's people are never placed against another company's
+    const arenas = [...new Set(arenaMap().values())];
+    for (const [audience, arena] of (["staff", "customer"] as const).flatMap((a) => arenas.map((x) => [a, x] as const))) {
+      const rows = standings(p, audience, undefined, arena);
       for (const r of rows) {
         tx.insert(seasonResults).values({ kind: p.kind, key: p.key, userId: r.userId, rank: r.rank, points: r.points, levels: r.levels, days: r.days, players: rows.length }).onConflictDoNothing().run();
         // only tell people about a season that has just ended, not about old ones settled for the first time
@@ -118,9 +124,11 @@ export function resultsFor(userId: number, limit = 12) {
     .sort((a, b) => b.key.localeCompare(a.key)).slice(0, limit);
 }
 
-export function winnersOf(kind: Kind, key: string, audience: "staff" | "customer") {
+export function winnersOf(kind: Kind, key: string, audience: "staff" | "customer", arena?: Arena) {
+  const arenas = arena ? arenaMap() : null;
   return db.select({ userId: seasonResults.userId, name: users.name, points: seasonResults.points }).from(seasonResults).innerJoin(users, eq(users.id, seasonResults.userId))
-    .where(and(eq(seasonResults.kind, kind), eq(seasonResults.key, key), eq(seasonResults.rank, 1), eq(users.audience, audience), eq(users.seasonBoard, "show"))).all();
+    .where(and(eq(seasonResults.kind, kind), eq(seasonResults.key, key), eq(seasonResults.rank, 1), eq(users.audience, audience), eq(users.seasonBoard, "show"))).all()
+    .filter((w) => !arenas || arenaOf(w.userId, arenas) === arena);
 }
 
 export function timeLeft(sec: number) {

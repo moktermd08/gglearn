@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { Swords } from "lucide-react";
-import { adminLinksFor } from "@/components/SiteHeader";
+import { ADMIN_LINKS } from "@/components/SiteHeader";
+import { DEFAULT_LOOK, type Look } from "@/lib/brand";
 
 type User = { role: string } | null;
 
-export function SiteFooter({ user }: { user: User }) {
+export function SiteFooter({ user, look = DEFAULT_LOOK }: { user: User; look?: Look }) {
   const staff = !!user && user.role !== "learner";
   const col = "space-y-2 text-sm";
   const head = "mb-3 text-[11px] font-extrabold uppercase tracking-widest text-slate-400";
@@ -14,8 +15,11 @@ export function SiteFooter({ user }: { user: User }) {
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div className="max-w-xs">
           <Link href="/" className="flex items-center gap-2 text-lg font-extrabold">
-            <span className="grid h-8 w-8 place-items-center rounded-lg text-[#fff]" style={{ background: "linear-gradient(135deg,#4f46e5,#9333ea 70%,#db2777)" }}><Swords size={17} aria-hidden /></span>
-            <span className="gradient-text">gglearn</span>
+            {look.logo
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={look.logo} alt="" className="h-8 w-8 rounded-lg object-contain" />
+              : <span className="grid h-8 w-8 place-items-center rounded-lg text-[#fff]" style={{ background: look.accent ? "var(--brand)" : "linear-gradient(135deg,#4f46e5,#9333ea 70%,#db2777)" }}><Swords size={17} aria-hidden /></span>}
+            <span className="gradient-text">{look.name}</span>
           </Link>
           <p className="mt-3 text-sm text-slate-400">Role-based training for your team and customers: a learning path for every role, level exams, certificates and career progression.</p>
         </div>
@@ -40,7 +44,7 @@ export function SiteFooter({ user }: { user: User }) {
       </div>
       <div className="border-t border-black/5">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-slate-400">
-          <span>© {new Date().getFullYear()} gglearn. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} {look.company ?? "gglearn"}. All rights reserved.</span>
           <span>Accounts are created by your admin.</span>
         </div>
       </div>

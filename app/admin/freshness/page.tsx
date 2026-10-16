@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { EmptyState, Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import { Ring } from "@/components/Ring";
 import { SubjectArt } from "@/components/SubjectArt";
@@ -8,6 +9,7 @@ import { requireManager } from "@/lib/auth";
 import { REVIEW_DAYS, changeReport } from "@/lib/freshness";
 import { ChangeForm } from "./form";
 import { AlertTriangle, ArrowLeft, ArrowRight, CheckCircle2, FileText, HelpCircle, Newspaper, PenLine, Quote, Search } from "lucide-react";
+import { reachOf, trackInReach } from "@/lib/tenancy";
 
 export const metadata = { title: "Is everyone current — gglearn" };
 
@@ -16,17 +18,20 @@ const date = (sec: number) => new Date(sec * 1000).toLocaleDateString("en-GB", {
 export default async function Freshness({ searchParams }: { searchParams: Promise<{ item?: string; track?: string }> }) {
   const me = await requireManager();
   const sp = await searchParams;
-  const report = changeReport();
+  const reach = reachOf(me.id);
+  const report = changeReport().filter((r) => trackInReach(reach, r.track));
   const item = me.role === "admin" && /^\d+$/.test(sp.item ?? "") ? db.select().from(knowledgeItems).where(eq(knowledgeItems.id, Number(sp.item))).get() : undefined;
   const itemTrack = item && db.select().from(tracks).where(eq(tracks.id, item.trackId)).get();
+  if (item && !(itemTrack && trackInReach(reach, itemTrack))) redirect("/admin/freshness");
   const picker = me.role === "admin" && !item
-    ? db.select({ t: tracks, b: brands }).from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).all().filter((r) => r.t.slug === sp.track)[0]
+    ? db.select({ t: tracks, b: brands }).from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).all().filter((r) => r.t.slug === sp.track && trackInReach(reach, r.t))[0]
     : undefined;
   const items = picker ? db.select().from(knowledgeItems).where(eq(knowledgeItems.trackId, picker.t.id)).all() : [];
   // the tracks that have company knowledge to change, so nobody has to remember a slug
   const withItems = me.role === "admin" && !item && !picker
     ? db.select({ slug: tracks.slug, name: tracks.name, kind: tracks.kind, brand: brands.name, n: sql<number>`count(${knowledgeItems.id})` }).from(knowledgeItems)
       .innerJoin(tracks, eq(tracks.id, knowledgeItems.trackId)).innerJoin(brands, eq(brands.id, tracks.brandId)).groupBy(tracks.id).orderBy(brands.name, tracks.name).all()
+      .filter((r) => { const t = db.select().from(tracks).where(eq(tracks.slug, r.slug)).get(); return !!t && trackInReach(reach, t); })
     : [];
   const overdueN = report.filter((r) => r.change.material && r.overdue && r.affected.some((a) => !a.read)).length;
   const currentN = report.filter((r) => r.change.material && r.affected.every((a) => a.read)).length;

@@ -6,6 +6,7 @@
 import { and, eq, sql } from "drizzle-orm";
 import { certificates, competitionCerts, contestAttempts, dailyQuests, db, runs, seasonResults, userBadges } from "@/lib/db";
 import { settleRecent } from "@/lib/seasons";
+import { bonusXp } from "@/lib/rewards";
 import { lastLevelNoted, notify } from "@/lib/notifications";
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
@@ -63,7 +64,7 @@ export function factsOf(userId: number): Facts {
   const passed = and(done, eq(runs.passed, true));
   const one = <T,>(q: { n: T } | undefined) => q?.n ?? (0 as T);
   const levelsPassed = Number(db.select({ n: sql<number>`count(*)` }).from(db.select({ t: runs.trackId, l: runs.level }).from(runs).where(passed).groupBy(runs.trackId, runs.level).as("p")).get()?.n ?? 0);
-  const xp = runXp + quests.reduce((s, q) => s + q.xp, 0);
+  const xp = runXp + quests.reduce((s, q) => s + q.xp, 0) + bonusXp(userId); // plus any bonus a company's reward policy gave
   const streak = streakOf(days);
   const seasons = db.select({ rank: seasonResults.rank }).from(seasonResults).where(eq(seasonResults.userId, userId)).all();
   return {

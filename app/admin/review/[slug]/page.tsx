@@ -7,6 +7,7 @@ import { activateTrackQuestions, retireQuestion } from "@/app/actions";
 import { Check, CheckCheck, ClipboardCheck, Trash2 } from "lucide-react";
 import { EmptyState, PageHero } from "@/components/charts";
 import { SubjectArt } from "@/components/SubjectArt";
+import { reachOf, trackInReach } from "@/lib/tenancy";
 
 export const metadata = { title: "Review questions — gglearn" };
 
@@ -14,7 +15,7 @@ export default async function ReviewQuestions({ params }: { params: Promise<{ sl
   const me = await requireManager();
   const { slug } = await params;
   const track = db.select().from(tracks).where(eq(tracks.slug, slug)).get();
-  if (!track) notFound();
+  if (!track || !trackInReach(reachOf(me.id), track)) notFound();
   const waiting = db.select().from(questions).where(and(eq(questions.trackId, track.id), eq(questions.status, "review"))).orderBy(asc(questions.level), asc(questions.id)).all();
   const levels = [...new Set(waiting.map((q) => q.level))];
 

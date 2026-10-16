@@ -10,19 +10,18 @@ import { Building2, CheckSquare, ClipboardList, NotebookPen, Plus, Save, Shield,
 import NewPerson from "./new-person";
 import InvitePerson from "./invite-person";
 import RoleForm from "./role-form";
-import ResetPassword from "./reset-password";
-import { OnboardingPhases } from "@/components/OnboardingPhases";
-import { canSignOff, onboardingFor } from "@/lib/onboarding";
+import { limitOptions, reachOf, usersInReach } from "@/lib/tenancy";
 
 export default async function People() {
   const me = await requireManager();
-  const all = db.select().from(users).orderBy(users.name).all();
-  const items = db.select().from(checklistItems).all();
-  const notes = db.select().from(handovers).all();
+  const reach = reachOf(me.id), mine = usersInReach(reach);
+  const all = db.select().from(users).orderBy(users.name).all().filter((u) => !mine || mine.has(u.id));
+  const items = db.select().from(checklistItems).all().filter((i) => !mine || mine.has(i.userId));
+  const notes = db.select().from(handovers).all().filter((n) => !mine || mine.has(n.userId));
   const trackName = new Map(db.select({ id: tracks.id, name: tracks.name }).from(tracks).all().map((t) => [t.id, t.name]));
   const enrolledIn = new Map<number, number[]>();
   for (const e of db.select({ u: enrollments.userId, t: enrollments.trackId }).from(enrollments).all()) enrolledIn.set(e.u, [...(enrolledIn.get(e.u) ?? []), e.t]);
-  const options = scopeOptions();
+  const options = limitOptions(scopeOptions(), reach);
   const cat = catalog();
   const roles = knownRoles(cat);
   const active = all.filter((u) => u.status === "active").length;
