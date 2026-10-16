@@ -31,6 +31,11 @@ export const companies = sqliteTable("companies", {
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
   tagline: text("tagline").notNull().default(""),
+  // How the academy looks for this company's people (see lib/brand.ts). Empty = the gglearn default.
+  academyName: text("academy_name").notNull().default(""),
+  accent: text("accent").notNull().default(""), // #rrggbb, dark enough for white text
+  logo: text("logo").notNull().default(""), // a data: URL (png, jpeg or webp, 150 KB at most)
+  certIssuer: text("cert_issuer").notNull().default(""), // printed under "Issued by" on certificates
 });
 
 export const brands = sqliteTable("brands", {
