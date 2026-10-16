@@ -23,7 +23,7 @@ export default async function Start() {
   const role = me.jobRole.trim().toLowerCase();
   const counts = new Map(db.select({ id: questions.trackId, n: sql<number>`count(*)` }).from(questions).where(and(sql`${questions.status} = 'active'`)).groupBy(questions.trackId).all().map((r) => [r.id, r.n]));
   const all = db.select({ id: tracks.id, slug: tracks.slug, name: tracks.name, kind: tracks.kind, description: tracks.description, audience: tracks.audience, roles: tracks.roles }).from(tracks).orderBy(asc(tracks.name)).all()
-    .filter((t) => !hidden.has(t.id) && openTo(me.audience, t.audience))
+    .filter((t) => !hidden.has(t.id) && (counts.get(t.id) ?? 0) > 0 && openTo(me.audience, t.audience)) // a subject with no live questions cannot be started: it would be a dead end
     .map(({ audience: _a, roles, slug, ...t }) => ({ ...t, n: counts.get(t.id) ?? 0, rival: (({ name, tagline, hue }) => ({ name, tagline, hue }))(rivalFor(slug)), icon: <SubjectArt slug={slug} name={t.name} kind={t.kind} size={40} />, bigIcon: <SubjectArt slug={slug} name={t.name} kind={t.kind} size={72} className="shadow-lg" />, kindLabel: KIND_LABEL[t.kind] ?? t.kind, suggested: required.has(t.id) || roles.split(",").some((r) => r.trim().toLowerCase() === role) }))
     .sort((a, b) => Number(b.suggested) - Number(a.suggested));
   return (

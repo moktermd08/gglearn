@@ -215,6 +215,24 @@ export const handovers = sqliteTable("handovers", {
   createdAt: integer("created_at").notNull().default(now),
 });
 
+// A manager confirming that someone has finished an onboarding phase (see lib/onboarding.ts). The gate: required learning
+// in a later phase stays locked until every earlier phase that has any is signed. Kept as a record of who signed and when;
+// undoing one marks it revoked instead of deleting it, so the history stays.
+export const phaseSignoffs = sqliteTable(
+  "phase_signoffs",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    phase: text("phase").notNull(), // a key from PHASES in lib/onboarding.ts
+    signedBy: integer("signed_by").notNull().references(() => users.id),
+    note: text("note").notNull().default(""),
+    signedAt: integer("signed_at").notNull().default(now),
+    revokedBy: integer("revoked_by").references(() => users.id),
+    revokedAt: integer("revoked_at"),
+  },
+  (t) => [index("ps_user").on(t.userId)],
+);
+
 // Study guide for one level of a track: the syllabus bullets shown before the exam.
 export const lessons = sqliteTable(
   "lessons",

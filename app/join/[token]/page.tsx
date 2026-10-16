@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, LinkIcon } from "lucide-react";
 import { EmptyState } from "@/components/charts";
 import { findOpenInvite } from "@/lib/invites";
+import { currentUser } from "@/lib/auth";
 import JoinForm from "./join-form";
 
 export default async function JoinPage({ params }: { params: Promise<{ token: string }> }) {
@@ -15,5 +16,6 @@ export default async function JoinPage({ params }: { params: Promise<{ token: st
       </div>
     );
   }
-  return <JoinForm token={token} email={inv.email} />;
+  const me = await currentUser();
+  return <JoinForm token={token} email={inv.email} signedInAs={me && me.email.toLowerCase() !== inv.email.toLowerCase() ? me.name : null} />;
 }

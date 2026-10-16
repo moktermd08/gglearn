@@ -4,7 +4,7 @@
  * Only the moment a badge was first earned is stored (`user_badges`).
  */
 import { and, eq, sql } from "drizzle-orm";
-import { certificates, competitionCerts, contestAttempts, dailyQuests, db, enrollments, runs, seasonResults, userBadges } from "@/lib/db";
+import { certificates, competitionCerts, contestAttempts, dailyQuests, db, runs, seasonResults, userBadges } from "@/lib/db";
 import { settleRecent } from "@/lib/seasons";
 import { bonusXp } from "@/lib/rewards";
 import { lastLevelNoted, notify } from "@/lib/notifications";
@@ -71,7 +71,8 @@ export function factsOf(userId: number): Facts {
     seasonsPlayed: seasons.length, podiums: seasons.filter((r) => r.rank <= 3).length, seasonWins: seasons.filter((r) => r.rank === 1).length,
     xp, levelsPassed, days,
     perfect: Number(one(db.select({ n: sql<number>`count(*)` }).from(runs).where(and(passed, sql`${runs.score} >= 0.999`)).get())),
-    tracksStarted: Number(one(db.select({ n: sql<number>`count(*)` }).from(enrollments).where(eq(enrollments.userId, userId)).get())),
+    // a subject counts as started once an exam is finished in it; being auto-enrolled into required subjects is not exploring
+    tracksStarted: Number(one(db.select({ n: sql<number>`count(distinct ${runs.trackId})` }).from(runs).where(done).get())),
     tracksProgressed: Number(one(db.select({ n: sql<number>`count(distinct ${runs.trackId})` }).from(runs).where(passed).get())),
     titan: Number(one(db.select({ n: sql<number>`count(*)` }).from(runs).where(and(passed, eq(runs.level, 20))).get())),
     certs: Number(one(db.select({ n: sql<number>`count(*)` }).from(certificates).where(eq(certificates.userId, userId)).get())),

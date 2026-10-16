@@ -24,6 +24,9 @@ import { goalOf, roleLabel } from "@/lib/journey";
 import { pendingFor } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath } from "@/lib/roles";
 import { enroll, toggleChecklist } from "@/app/actions";
+import { ManagerGlance } from "@/components/ManagerGlance";
+import { OnboardingPhases } from "@/components/OnboardingPhases";
+import { onboardingFor } from "@/lib/onboarding";
 import { BookOpen, CircleCheck, Zap, AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain, Activity, Radar as RadarIcon, Rocket } from "lucide-react";
 
 export default async function Dashboard() {
@@ -44,16 +47,20 @@ export default async function Dashboard() {
   const checkDone = todo.filter((c) => c.done).length;
   const required = requirementsFor(user, scopesOf(user.id));
   const requiredOpen = required.filter((r) => !r.done), overdue = requiredOpen.filter((r) => r.overdue);
+  const onboarding = onboardingFor(user);
   const career = careerFor(user);
   const goal = goalOf(user.id);
   const unread = pendingFor(user.id);
-  const noRolePath = user.audience === "staff" && hasNoRolePath(coverageFor(user.jobRole));
+  const noRolePath = user.audience === "staff" && !(user.role !== "learner" && user.jobRole === "general") && hasNoRolePath(coverageFor(user.jobRole)); // an admin account with no job role is not missing a learning path
   const enrolledIds = new Set(mine.map((m) => m.t.id));
   const activity = activityFor(user.id, 24);
   const last30 = activity.slice(-30).map((d) => ({ label: d.day.slice(5), value: d.value }));
   const weekXp = activity.slice(-7).reduce((a, d) => a + d.value, 0);
   const activeDays = activity.filter((d) => d.value > 0).length;
-  const radarAxes = [...stats].sort((a, b) => b.s.passed - a.s.passed).slice(0, 6).map((m) => ({ label: m.t.name.replace(/^\d+\.\s*/, "").replace(/:.*$/, ""), value: m.s.passed / MAX_LEVEL }));
+  const radarPick = [...stats].sort((a, b) => b.s.passed - a.s.passed).slice(0, 6);
+  const shortName = (n: string) => n.replace(/^\d+\.\s*/, "").replace(/:.*$/, "");
+  const radarAxes = radarPick.map((m) => ({ // the short form can collide ("Tools: plan" / "Tools: build"): fall back to the full name so labels stay unique
+    label: radarPick.filter((o) => shortName(o.t.name) === shortName(m.t.name)).length > 1 ? m.t.name.replace(/^\d+\.\s*/, "") : shortName(m.t.name), value: m.s.passed / MAX_LEVEL }));
 
   const daysLeft = (sec: number) => Math.ceil((sec - now()) / 86400);
   const statByTrack = new Map(stats.map((m) => [m.t.id, m]));
@@ -113,7 +120,7 @@ export default async function Dashboard() {
           <span className="absolute -top-1 h-3.5 w-1 rounded bg-rose-400" title={`${rv.name} · L${s.rival.level}`} style={{ left: `${(s.rival.level / MAX_LEVEL) * 100}%` }} />
         </div>
         <div className="mt-1 flex justify-between text-xs text-slate-400">
-          <span>{s.passed === 0 ? "Not started" : `Level ${s.passed} · ${LEVELS[s.passed - 1]} · ${tier.name}`}</span>
+          <span>{s.passed === 0 ? (s.xp > 0 ? "Level 1 in progress" : "Not started") : `Level ${s.passed} · ${LEVELS[s.passed - 1]} · ${tier.name}`}</span>
           <span className="flex items-center gap-2">
             <span className="flex items-center gap-0.5 text-orange-300"><Flame size={12} />{s.streak}</span>
             <span className="flex items-center gap-0.5"><Sparkles size={12} className="text-sky-300" />{s.xp}</span>
@@ -132,6 +139,7 @@ export default async function Dashboard() {
     </div>
   );
   const goalDone = Math.min(3, questsDone);
+  const firstVisit = totalXp === 0 && levelsPassed === 0;
 
   return (
     <div className="space-y-6">
@@ -144,8 +152,8 @@ export default async function Dashboard() {
             <span>{bestTier.name} rank</span>
             {bestStreak > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 px-2 py-0.5 text-[11px] normal-case tracking-normal text-orange-500"><Flame size={12} fill="#f97316" />{bestStreak}-day streak</span>}
           </div>
-          <h1 className="text-2xl font-extrabold sm:text-3xl">Welcome back, {user.name}</h1>
-          <p className="text-sm text-slate-400">{goalDone >= questsTotal && questsTotal > 0 ? "Today's goal is done. Anything more is a bonus." : "Finish today's quests to keep the streak and stay ahead of your rivals."}</p>
+          <h1 className="text-2xl font-extrabold sm:text-3xl">{firstVisit ? "Welcome" : "Welcome back"}, {user.name}</h1>
+          <p className="text-sm text-slate-400">{firstVisit ? (focusTrack ? "Your first step is below: it takes about five minutes." : "Pick a subject below to start your first level.") : goalDone >= questsTotal && questsTotal > 0 ? "Today's goal is done. Anything more is a bonus." : "Finish today's quests to keep the streak and stay ahead of your rivals."}</p>
           <AvatarPicker me={looks.me} rival={looks.rival} photoUrl={looks.photoUrl} signedIn level={bestLevel} className="mt-2" />
         </div>
         {questsTotal > 0 && <div className="relative text-center"><Ring pct={goalDone / questsTotal} label={`${goalDone}/${questsTotal}`} sub="daily goal" size={104} color={goalDone === questsTotal ? "#34d399" : "#38bdf8"} /></div>}
@@ -161,6 +169,7 @@ export default async function Dashboard() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
         {/* main column: what to do next */}
         <div className="min-w-0 space-y-6">
+          {user.role !== "learner" && <ManagerGlance admin={user.role === "admin"} viewer={user} />}
           {focusTrack && (
             <section aria-label="Continue" className="card relative overflow-hidden p-5" style={{ background: `linear-gradient(125deg, hsl(${TIERS[tierOf(focusNext)].hue} 85% 55% / .16), #fff 60%)` }}>
               <div className="flex flex-wrap items-center gap-4">
@@ -186,7 +195,7 @@ export default async function Dashboard() {
                     return (
                       <Link key={k} href={href} className={`flex items-center gap-2.5 rounded-xl border p-3 text-sm font-semibold transition hover:-translate-y-0.5 hover:shadow-md ${done ? "border-emerald-400/50 bg-emerald-500/10" : "border-black/10 bg-[#fff]"}`}>
                         <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${done ? "bg-emerald-500/20 text-emerald-300" : "bg-indigo-500/12 text-indigo-300"}`}>{done ? <CircleCheck size={17} /> : <Icon size={17} />}</span>
-                        <span className="min-w-0 flex-1 truncate">{label}</span>
+                        <span className="min-w-0 flex-1 leading-tight">{label}</span>
                         <span className="flex items-center gap-0.5 text-xs text-sky-300"><Sparkles size={11} />+{QUEST_XP[k]}</span>
                       </Link>
                     );
@@ -195,6 +204,20 @@ export default async function Dashboard() {
               ) : (
                 <div className="mt-4"><Link href={`/tracks/${focusTrack.slug}`} className="btn">Start this subject<ArrowUpRight size={16} /></Link></div>
               )}
+            </section>
+          )}
+
+          {!focusTrack && (
+            <section aria-label="Start here" className="card relative overflow-hidden border-indigo-300/40 p-5" style={{ background: "linear-gradient(125deg, rgba(99,102,241,.14), #fff 60%)" }}>
+              <div className="flex flex-wrap items-center gap-4">
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-indigo-500/15 text-indigo-400"><Rocket size={26} /></span>
+                <div className="min-w-0 flex-1">
+                  <div className="text-xs font-extrabold uppercase tracking-widest text-indigo-300">Start here</div>
+                  <h2 className="text-xl font-extrabold">{user.audience === "customer" ? "Pick the product you want to learn" : "Choose your first subject"}</h2>
+                  <p className="text-sm text-slate-400">{user.audience === "customer" ? "Nothing has been assigned to you yet, so choose a getting-started subject. It takes a minute to find your level." : "Nothing is required of you yet. Pick any subject: we find your level, then you climb."}</p>
+                </div>
+                <Link href="/start" className="btn">Choose a subject<ArrowUpRight size={16} /></Link>
+              </div>
             </section>
           )}
 
@@ -260,6 +283,13 @@ export default async function Dashboard() {
                   </ul>
                 </>
               )}
+            </section>
+          )}
+
+          {onboarding.gated && onboarding.phases.length > 0 && (
+            <section className="card p-5">
+              {heading(Rocket, "bg-violet-500/15 text-violet-300", "Onboarding phases", <span className="text-xs text-slate-400">a manager signs each one off</span>)}
+              <OnboardingPhases o={onboarding} />
             </section>
           )}
 

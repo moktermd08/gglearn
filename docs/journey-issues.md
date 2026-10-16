@@ -35,3 +35,35 @@ Invite and join; single-use links; login and sign-out; compliance and careers pa
 - #7 content authoring and #15 comparison view (above).
 - A race can still be created on a track with only a few questions per level (finishing "3 levels" takes four answers). A guard that requires enough questions for the goal would stop it.
 - The "Pass level 3 in your first recommended track" checklist text is still generic.
+
+---
+
+# Second walk-through (2026-10-13): every role, in a browser
+
+Walked on a copy of the dev database as each role: a visitor, an admin, a manager, a new staff hire (Sam, social media manager) and a customer (Cara),
+plus every route swept with each role's session for crashes and wrong redirects. Fixed items are in the same change; "Open" items need a decision or content.
+
+| # | Role | Sev | Issue | Status |
+|---|---|---|---|---|
+| 16 | learner | B | **Failing an exam left one button, "Back to the climb".** No retry, no study link; "So close" was shown at 40%. | **Fixed.** Results offer "Try level N again", "Study the guide first" (or "Take level N+1" after a pass); the headline depends on the score. |
+| 17 | learner | B | **Exam answers lived only in the page.** A refresh or a dropped connection lost every answer while the clock kept running; submitting with blanks gave no warning. | **Fixed.** Answers are kept as a draft for the tab; submit warns about blanks ("Go to question 3" or "Submit anyway"); 1-4 / A-D and the arrow keys work; options are announced as radios. |
+| 18 | learner | C | **Results showed your own answer as a bare lowercase key ("a")** next to "B — False" for the right one. | **Fixed.** Both read "A — True". |
+| 19 | learner | B | **Subjects with no live questions were offered everywhere** (landing page, "Start a journey" picked-for-you list) and the track page said "Accept the challenge". | **Fixed.** Hidden from those lists; a direct link says "Coming soon". |
+| 20 | learner | C | **A required subject did not say it was required, or by when**, on its own page. | **Fixed.** A banner: "Required for your role: pass level 5. 30 days left (due 12 November)". The page also opens with a "Next up" card (study guide, take the exam). |
+| 21 | learner | C | **"Explorer: start 3 subjects" was awarded for being auto-enrolled**, before any exam. A new hire got a badge notification for doing nothing. | **Fixed.** A subject counts once an exam is finished in it. |
+| 22 | learner | C | **Profile and dashboard said "Not started" after a failed first exam.** | **Fixed.** "Level 1 in progress". |
+| 23 | learner | C | First visit said "Welcome back"; quest buttons were clipped ("Study g…"); a duplicate React key in the skill map ("Tools" twice). | **Fixed.** |
+| 24 | customer | A | **A customer invited with only a brand got an empty path and no warning**: getting-started subjects belong to a product (project), which ticking its brand does not cover. The dashboard then showed a checklist item ("Complete your getting-started path") that could never be done. | **Fixed.** The invite says "Nothing is assigned to customers with this scope yet. Also tick the product: moksy.ai"; the dashboard shows a "Start here" card when there is nothing to continue. |
+| 25 | all | A | **Nobody could change a password, and a manager could not reset one.** People created with a temporary password were stuck with it; someone who forgot theirs was locked out for good. | **Fixed.** Profile → Password (current password required, other devices signed out). People → "reset their password" (a generated temporary password, copy button, the person is signed out everywhere). Managers reset learners only. |
+| 26 | admin | B | **Invite links had to be selected by hand**; no "copy all" for a team. | **Fixed.** Copy link / Copy all links, and the note that no email is sent. |
+| 27 | admin | B | **A manager or admin landed on a learner dashboard with nothing about their job.** | **Fixed.** "Needs your attention" at the top: overdue people, people with no path, invites not accepted, unread company updates, questions held for approval, each linking to where it is fixed. The "nothing is set up for your role" notice no longer shows for an admin with no job role. |
+| 28 | admin | C | **"What is required" (`/admin/paths`) was reachable only from a button on Compliance.** | **Fixed.** In the Admin menu and footer for admins. |
+| 29 | admin | B | **`/admin/careers` was a 7.4 MB page (18 s)**: all 28 ladders with their editors drawn at once. | **Fixed.** Ladders are summary rows; the one you open (`?role=developer`) is drawn in full (about 340 KB). |
+| 30 | manager | C | **Freshness told managers to "record it here" but only admins can.** | **Fixed.** The empty state says an admin records it. |
+| 31 | invitee | C | Opening an invite while signed in as someone else showed the other person's menu and, on Join, silently swapped the account. The login page was shown to people who were already signed in. | **Fixed.** A warning on the invite; `/login` sends signed-in people to their quest. Show/hide password on both forms. |
+
+## Still open
+- A manager cannot tell a customer apart from staff on `/admin/careers` and Compliance without reading the small chip. Not changed.
+- Content: **Moksy brand & voice** and **Moksy reviewer onboarding** have questions in "review" only (0 live), so they are hidden from learners until an admin approves them at `/admin/review/<slug>`; people required to take them are not yet counted.
+- Question wording from the generated bank is sometimes odd (for example a data-protection item that mentions Moksy's scrub rules). Needs a content review pass; not a code fix.
+- `/start`, `/campaigns` and `/admin/paths` are 0.5 to 1.1 MB pages. Usable, but worth paginating.
