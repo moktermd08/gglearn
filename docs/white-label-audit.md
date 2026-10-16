@@ -49,6 +49,21 @@ Not yet configurable: level names (Novice to Titan, `lib/levels.ts`), the rest o
 
 The most specific rule wins (track, then brand, then company). Every award is a ledger row, unique per person, rule, track and level, so a retake never pays twice. The reward follows whoever owns the content, not the learner's own company.
 
+## Browser check (2026-10-16)
+Run against a scratch copy of the database with a Moksy manager and learner, a Guru manager, learner and admin (company-scoped), signed in through the real login form.
+
+| Check | Result |
+|---|---|
+| Moksy manager: `/admin/people` | Lists only Moksy people; scope pickers offer only Moksy. |
+| Moksy manager: compliance, careers, freshness, updates, seasons, competitions, achievements | No Guru people or company data in any page. |
+| Moksy manager: matrix, paths, setup, rewards | Redirect to compliance (platform-owner or admin only). |
+| Moksy manager: forged password reset for a Guru learner (hidden user id changed in the form) | Refused with "outside the companies you run"; the Guru learner's password and sessions unchanged. |
+| Control: same form for a Moksy learner | Succeeds; their sessions are ended. |
+| Guru admin: people, setup, rewards, paths, compliance, careers | Only Guru data; no Moksy people or entities. |
+| Guru admin: forged "add brand" under Moksy's company id | Refused ("You can only add brands to a company you run"); nothing created. |
+
+Not covered: certificate and share-card pages, the avatar route through the UI (covered by `check:tenancy`), other write actions (checklist ticks, sign-off), and any role outside the five test accounts.
+
 ## Still open
 | Area | Finding | Ease |
 |---|---|---|
@@ -57,5 +72,5 @@ The most specific rule wins (track, then brand, then company). Every award is a 
 | Domains | No per-company domain or host-based lookup. | Medium |
 | Level names and XP rules | Fixed for everyone. | Medium |
 | Certificate expiry and signature | None. | Small |
-| Browser-level check of admin pages as a scoped manager | Code and rule checks only; not exercised end to end. | Small |
+| Wider browser coverage | A scoped manager and a scoped admin were exercised in a browser on 2026-10-16 (see below); other roles, mobile layouts and write actions beyond those listed were not. | Small |
 | Performance with many companies in one database | Not measured. `arenaMap()` and `usersInReach()` load whole tables. | Medium |
