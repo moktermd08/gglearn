@@ -1,7 +1,9 @@
 /** Checks company-scoped admin reach against the real structure: npm run check:tenancy (uses DATABASE_FILE or data/gglearn.db; adds and removes its own test users). */
 import { eq, like } from "drizzle-orm";
-import { brands, companies, competitions, db, runs, seasonClosed, seasonResults, tracks, userScopes, users } from "../lib/db";
+import { brands, certificates, companies, competitions, db, notifications, rewardAwards, rewardRules, runs, seasonClosed, seasonResults, tracks, userScopes, users } from "../lib/db";
 import { addBrand, addCompany, addTrack, saveBranding, uniqueSlug } from "../lib/setup";
+import { awardForPass, bonusXp, rulesFor } from "../lib/rewards";
+import { removeRule, saveRule, settleAward } from "../lib/rewardsAdmin";
 import { arenaOf, isPlatformOwner } from "../lib/arena";
 import { listFor, listedFor } from "../lib/competitions";
 import { groupsOf } from "../lib/groups";
@@ -141,9 +143,57 @@ try {
   check("the contest list follows the same rule", seen(mLearner2.id).has(cM.id) && !seen(gLearner.id).has(cM.id) && seen(gLearner.id).has(cO.id));
   check("an organiser always sees their own contest", seen(mLearner.id).has(cM.id));
 
+  // ---- rewards: who gives what for passing a level ----
+  const rf = (o: Record<string, string>) => form({ enabled: "on", amount: "", currency: "", label: "", maxAwards: "", ...o });
+  const slot = (scope: string, refId: number, level: number, kind: string, o: Record<string, string> = {}) => rf({ scope, refId: String(refId), level: String(level), kind, ...o });
+  const certsOf = (u: number, lvl: number) => db.select().from(certificates).where(eq(certificates.userId, u)).all().filter((c) => c.trackId === zt.id && c.level === lvl).length;
+  check("a manager cannot set rewards", !!saveRule(mMgr, slot("track", zt.id, 3, "xp", { amount: "50" }))?.error);
+  check("a company admin cannot set rewards on another company's track", !!saveRule(mAdmin, slot("company", guru.id, 3, "xp", { amount: "50" }))?.error);
+  check("bonus XP must be a sensible whole number", !!saveRule(mAdmin, slot("track", zt.id, 3, "xp", { amount: "0" }))?.error && !!saveRule(mAdmin, slot("track", zt.id, 3, "xp", { amount: "999999" }))?.error);
+  check("money needs a currency, an amount and a cap", !!saveRule(mAdmin, slot("track", zt.id, 3, "money", { amount: "20", currency: "GBP" }))?.error && !!saveRule(mAdmin, slot("track", zt.id, 3, "money", { amount: "20", currency: "XXX", maxAwards: "5" }))?.error && !!saveRule(mAdmin, slot("track", zt.id, 3, "money", { amount: "0", currency: "GBP", maxAwards: "5" }))?.error);
+  check("a voucher needs a label and a cap", !!saveRule(mAdmin, slot("track", zt.id, 3, "voucher", { maxAwards: "5" }))?.error && !!saveRule(mAdmin, slot("track", zt.id, 3, "voucher", { label: "Coffee" }))?.error);
+
+  check("with no rules a pass at level 3 earns nothing", rulesFor(zt.id, 3).length === 0 && awardForPass(mLearner.id, zt.id, 3, 0.9).length === 0);
+  awardForPass(mLearner.id, zt.id, 5, 0.9);
+  check("the academy default still gives a certificate at level 5", certsOf(mLearner.id, 5) === 1);
+  check("and not at level 3", certsOf(mLearner.id, 3) === 0);
+
+  check("a company admin sets a company-wide bonus XP rule", !!saveRule(mAdmin, slot("company", moksy.id, 3, "xp", { amount: "100" }))?.done);
+  check("a track rule overrides the company's", !!saveRule(mAdmin, slot("track", zt.id, 3, "xp", { amount: "40" }))?.done && rulesFor(zt.id, 3).find((r) => r.kind === "xp")?.amount === 40);
+  const first = awardForPass(mLearner.id, zt.id, 3, 0.9);
+  check("passing gives the bonus XP once", first.length === 1 && first[0].status === "granted" && bonusXp(mLearner.id) === 40);
+  check("passing again does not pay twice", awardForPass(mLearner.id, zt.id, 3, 0.95).length === 0 && bonusXp(mLearner.id) === 40);
+  check("another person earns their own", awardForPass(mLearner2.id, zt.id, 3, 0.8).length === 1 && bonusXp(mLearner2.id) === 40);
+  check("a track switched off ends the search", (saveRule(mAdmin, slot("track", zt.id, 3, "xp", { enabled: "off" })), rulesFor(zt.id, 3).length === 0));
+
+  check("a certificate rule at another level issues one", !!saveRule(mAdmin, slot("brand", zb.id, 3, "certificate"))?.done && (awardForPass(mLearner2.id, zt.id, 3, 0.9), certsOf(mLearner2.id, 3) === 1));
+  check("switching the certificate off removes the default", !!saveRule(mAdmin, slot("brand", zb.id, 5, "certificate", { enabled: "off" }))?.done && (awardForPass(mLearner2.id, zt.id, 5, 0.9), certsOf(mLearner2.id, 5) === 0));
+
+  check("a money rule is capped at its limit", !!saveRule(mAdmin, slot("track", zt.id, 4, "money", { amount: "25.50", currency: "GBP", maxAwards: "1" }))?.done);
+  const pay1 = awardForPass(mLearner.id, zt.id, 4, 0.9), pay2 = awardForPass(mLearner2.id, zt.id, 4, 0.9);
+  check("the first winner gets a pending award in minor units", pay1.length === 1 && pay1[0].status === "pending" && pay1[0].amount === 2550 && pay1[0].currency === "GBP");
+  check("the second gets nothing once the cap is reached", pay2.length === 0);
+  check("a manager cannot settle it", !!settleAward(mMgr, form({ awardId: String(pay1[0].id), to: "fulfilled", reference: "x" }))?.error);
+  check("another company's admin cannot settle it", (() => { const g = mk("t-guru-admin@check.local", "admin", [{ kind: "company", refId: guru.id }]); return !!settleAward(g, form({ awardId: String(pay1[0].id), to: "fulfilled", reference: "x" }))?.error; })());
+  check("fulfilling needs a reference", !!settleAward(mAdmin, form({ awardId: String(pay1[0].id), to: "fulfilled", reference: "" }))?.error);
+  check("the company admin marks it sent", !!settleAward(mAdmin, form({ awardId: String(pay1[0].id), to: "fulfilled", reference: "BACS-1" }))?.done);
+  check("it cannot be settled twice", !!settleAward(mAdmin, form({ awardId: String(pay1[0].id), to: "void", reference: "" }))?.error);
+  check("the learner was told", db.select().from(notifications).where(eq(notifications.userId, mLearner.id)).all().some((n) => n.key === `reward-paid-${pay1[0].id}`));
+  const voided = (saveRule(mAdmin, slot("track", zt.id, 6, "voucher", { label: "Team lunch", maxAwards: "1" })), awardForPass(mLearner.id, zt.id, 6, 0.9)[0]);
+  check("a voided award frees its place under the cap", settleAward(mAdmin, form({ awardId: String(voided.id), to: "void", reference: "" }))?.done !== undefined && awardForPass(mLearner2.id, zt.id, 6, 0.9).length === 1);
+  const ruleToRemove = db.select().from(rewardRules).where(eq(rewardRules.kind, "voucher")).get()!;
+  check("removing a rule keeps the awards already given", !!removeRule(mAdmin, ruleToRemove.id)?.done && db.select().from(rewardAwards).where(eq(rewardAwards.ruleId, ruleToRemove.id)).all().length === 2);
+  check("a manager cannot remove rules", !!removeRule(mMgr, ruleToRemove.id)?.error);
+
   db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo }).where(eq(companies.id, moksy.id)).run();
 } finally {
   const t = db.select().from(users).where(like(users.email, "t-%@check.local")).all();
+  for (const u of db.select().from(users).where(like(users.email, "t-%@check.local")).all()) {
+    db.delete(rewardAwards).where(eq(rewardAwards.userId, u.id)).run();
+    db.delete(certificates).where(eq(certificates.userId, u.id)).run();
+    db.delete(notifications).where(eq(notifications.userId, u.id)).run();
+    db.delete(rewardRules).where(eq(rewardRules.createdBy, u.id)).run();
+  }
   for (const c of db.select().from(competitions).where(like(competitions.slug, "zz-%")).all()) db.delete(competitions).where(eq(competitions.id, c.id)).run();
   for (const u of db.select().from(users).where(like(users.email, "t-%@check.local")).all()) db.delete(runs).where(eq(runs.userId, u.id)).run();
   { const o = periodAt("week", Math.floor(Date.now() / 1000) - 140 * 86400); db.delete(seasonResults).where(eq(seasonResults.key, o.key)).run(); db.delete(seasonClosed).where(eq(seasonClosed.key, o.key)).run(); }

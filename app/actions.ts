@@ -5,8 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { randomBytes } from "node:crypto";
-import { userAvatars, answers, careerGoals, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
+import { userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
 import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
@@ -16,7 +15,7 @@ import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
 import { grade } from "@/lib/grading";
 import { levelsPassed } from "@/lib/progress";
-import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
+import { MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import { completeQuest } from "@/lib/stats";
 import { progressionFor } from "@/lib/progression";
 import { hiddenTrackIds } from "@/lib/tracks";
@@ -28,6 +27,7 @@ import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invit
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
 import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
 import { isLook } from "@/lib/avatars";
+import { awardForPass } from "@/lib/rewards";
 import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/lib/tenancy";
 import { type Audience, formatScopes, openTo, parseScopes, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
@@ -270,10 +270,8 @@ async function gradeRun(userId: number, run: typeof runs.$inferSelect, runId: nu
   if (!done.changes) return; // finished by someone else in the meantime
   const passed = score >= PASS_MARK;
   completeQuest(u.id, run.trackId, "exam");
-  if (passed && (CERT_LEVELS as readonly number[]).includes(run.level)) {
-    db.insert(certificates).values({ userId: u.id, trackId: run.trackId, level: run.level, score, code: randomBytes(5).toString("hex").toUpperCase() })
-      .onConflictDoNothing().run();
-  }
+  if (passed) awardForPass(u.id, run.trackId, run.level, score); // certificate, XP, voucher or money, as the content's owner has set
+
   progressionFor(u.id); // records any badge this exam earned
 }
 
