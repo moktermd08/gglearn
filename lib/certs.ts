@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { and, eq } from "drizzle-orm";
-import { companies, db, certificates } from "@/lib/db";
+import { and, eq, gt, isNull, lt } from "drizzle-orm";
+import { companies, db, certificates, tracks } from "@/lib/db";
+import { notify } from "@/lib/notifications";
 import { singleCompany } from "@/lib/brand";
 import { scopesOf } from "@/lib/paths";
 
@@ -17,6 +18,10 @@ import { scopesOf } from "@/lib/paths";
  */
 export const RENEW_WINDOW_DAYS = 60;
 export const MAX_VALID_MONTHS = 120;
+/** The reminder that follows the first heads-up (sent when the certificate enters the renewal window). */
+export const REMINDER_DAYS = 14;
+/** A certificate that expired longer ago than this is not announced: it is old news, and the profile already marks it. */
+export const EXPIRED_NOTICE_DAYS = 30;
 const DAY = 86400;
 export const nowSec = () => Math.floor(Date.now() / 1000);
 
@@ -80,4 +85,27 @@ export function issueCertificate(tx: Pick<typeof db, "insert" | "select" | "upda
   if (have.expiresAt == null || pol.validMonths <= 0 || have.expiresAt - at > RENEW_WINDOW_DAYS * DAY) return;
   const next = { ...have, expiresAt: addMonths(at, pol.validMonths), renewedAt: at, signer: pol.signer || have.signer, signerTitle: pol.signer ? pol.signerTitle : have.signerTitle };
   tx.update(certificates).set({ expiresAt: next.expiresAt, renewedAt: next.renewedAt, signer: next.signer, signerTitle: next.signerTitle, signature: signatureOf(next) }).where(eq(certificates.id, have.id)).run();
+}
+
+const day = (t: number) => new Date(t * 1000).toISOString().slice(0, 10);
+
+/**
+ * Tells a person about their certificates that are expiring or have just expired, once per stage: a heads-up when one enters the
+ * renewal window (RENEW_WINDOW_DAYS out), a reminder at REMINDER_DAYS, and a notice when it expires (up to EXPIRED_NOTICE_DAYS after).
+ * Only the most urgent stage is sent, so someone who comes back late gets one notice, not three. The key includes the expiry date, so
+ * a renewed certificate starts again. Revoked certificates and ones that never expire are never mentioned. Safe to call on every page.
+ */
+export function noteExpiringCertificates(userId: number, at = nowSec()): void {
+  const rows = db.select({ c: certificates, name: tracks.name }).from(certificates).innerJoin(tracks, eq(tracks.id, certificates.trackId))
+    .where(and(eq(certificates.userId, userId), isNull(certificates.revokedAt), lt(certificates.expiresAt, at + RENEW_WINDOW_DAYS * DAY), gt(certificates.expiresAt, at - EXPIRED_NOTICE_DAYS * DAY))).all();
+  if (!rows.length) return;
+  const renew = policyFor(userId).validMonths > 0 ? " Pass the level again to renew it." : "";
+  for (const { c, name } of rows) {
+    const s = certState(c, at);
+    if (s.expiresAt == null) continue;
+    const what = `${name}, level ${c.level}`, key = (stage: string) => `cert-expiry-${stage}-${c.id}-${c.expiresAt}`;
+    if (s.state === "expired") notify(userId, { key: key("expired"), kind: "system", title: "A certificate has expired", body: `${what} expired on ${day(s.expiresAt)}.${renew}`, href: "/profile" });
+    else if (s.daysLeft! <= REMINDER_DAYS) notify(userId, { key: key("soon"), kind: "system", title: `A certificate expires in ${s.daysLeft} day${s.daysLeft === 1 ? "" : "s"}`, body: `${what} expires on ${day(s.expiresAt)}.${renew}`, href: "/profile" });
+    else notify(userId, { key: key("window"), kind: "system", title: "A certificate expires soon", body: `${what} expires on ${day(s.expiresAt)}, in ${s.daysLeft} days.${renew}`, href: "/profile" });
+  }
 }

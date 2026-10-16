@@ -4,6 +4,7 @@ import { currentUser } from "@/lib/auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { unreadCount } from "@/lib/notifications";
+import { noteExpiringCertificates } from "@/lib/certs";
 import { keepCampaignsFresh } from "@/lib/campaigns";
 import { lookFor, themeStyle } from "@/lib/brand";
 
@@ -17,6 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser();
+  if (user) noteExpiringCertificates(user.id); // before the unread count, so a new notice shows on this page load
   const look = lookFor(user?.id);
   keepCampaignsFresh(); // weekly and monthly contests roll over by themselves, on whichever page someone opens first
   return (
