@@ -1,8 +1,9 @@
 import { and, eq, sql } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
-import { brands, certificates, db, rewardAwards, rewardRules, tracks } from "@/lib/db";
+import { brands, db, rewardAwards, rewardRules, tracks } from "@/lib/db";
 import { CERT_LEVELS, MAX_LEVEL } from "@/lib/levels";
 import { notify } from "@/lib/notifications";
+import { issueCertificate } from "@/lib/certs";
 
 export type Kind = "certificate" | "xp" | "voucher" | "money";
 export const KINDS: Kind[] = ["certificate", "xp", "voucher", "money"];
@@ -53,9 +54,9 @@ export function awardForPass(userId: number, trackId: number, level: number, sco
   const rules = rulesFor(trackId, level);
   const given: Award[] = [];
   db.transaction((tx) => {
-    if (defaultCertificate(trackId, level)) tx.insert(certificates).values({ userId, trackId, level, score, code: code() }).onConflictDoNothing().run();
+    if (defaultCertificate(trackId, level)) issueCertificate(tx, userId, trackId, level, score, code());
     for (const r of rules) {
-      if (r.kind === "certificate") tx.insert(certificates).values({ userId, trackId, level, score, code: code() }).onConflictDoNothing().run();
+      if (r.kind === "certificate") issueCertificate(tx, userId, trackId, level, score, code());
       if (r.maxAwards > 0) {
         const used = tx.select({ n: sql<number>`count(*)` }).from(rewardAwards).where(and(eq(rewardAwards.ruleId, r.id), sql`${rewardAwards.status} != 'void'`)).get()?.n ?? 0;
         if (used >= r.maxAwards) continue; // the budget for this rule is spent

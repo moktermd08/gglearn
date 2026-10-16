@@ -37,12 +37,14 @@ gglearn separates **what people learn**, **who can see and run it**, **how it lo
 ## Branding
 Per company: academy name (header, footer, page title), logo, accent colour (checked for readable white text) and the issuer printed on certificates. A person sees the look of their company when they belong to exactly one.
 
+Certificate policy (validity months, signatory name and title) is set in the same place, per company, and copied onto each certificate when it is issued, so changing it later never rewrites one already given. Both come from the holder's company, like the issuer line; people in no company or in several get no expiry and no signatory.
+
 Not yet configurable: level names (Novice to Titan, `lib/levels.ts`), the rest of the colour scheme, custom domains or host-based lookup.
 
 ## Rewards
 | Reward | Today |
 |---|---|
-| Certificate | Academy default at levels 5, 10, 15 and 20, or per-rule at any level. Verifiable at `/cert/<code>`. No expiry or signature. |
+| Certificate | Academy default at levels 5, 10, 15 and 20, or per-rule at any level. Verifiable at `/cert/<code>`. A company can set how many months new certificates stay valid (0 = never) and name a signatory (name and title) printed on them. Passing the level again within 60 days of expiry, or after it, renews the certificate. Each one carries a keyed signature over its fields; the public page shows altered, expired, expiring and pre-signature certificates differently. |
 | XP | Fixed base formula in `lib/progression.ts`; a reward rule can add bonus XP at a level. The base formula cannot be changed or switched off per company. |
 | Voucher | Per-rule, with a label and a required budget cap. Starts "pending"; the company marks it fulfilled. |
 | Money | Per-rule, in minor units with a required cap. gglearn never holds or moves money: an award starts "pending" and the company records how it paid. |
@@ -71,6 +73,5 @@ Not covered: certificate and share-card pages, the avatar route through the UI (
 | Database | A single SQLite file with isolation by code convention only. The README already says to move to Postgres before real multi-user production. | Hard |
 | Domains | No per-company domain or host-based lookup. | Medium |
 | Level names and XP rules | Fixed for everyone. | Medium |
-| Certificate expiry and signature | None. | Small |
 | Wider browser coverage | A scoped manager and a scoped admin were exercised in a browser on 2026-10-16 (see below); other roles, mobile layouts and write actions beyond those listed were not. | Small |
 | Performance with many companies in one database | Not measured. `arenaMap()` and `usersInReach()` load whole tables. | Medium |
