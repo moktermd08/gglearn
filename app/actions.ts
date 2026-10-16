@@ -5,8 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { randomBytes } from "node:crypto";
-import { userAvatars, answers, careerGoals, careerLevels, careerRequirements, certificates, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
+import { userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
 import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
@@ -16,7 +15,7 @@ import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
 import { grade } from "@/lib/grading";
 import { levelsPassed } from "@/lib/progress";
-import { CERT_LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
+import { MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import { completeQuest } from "@/lib/stats";
 import { progressionFor } from "@/lib/progression";
 import { hiddenTrackIds } from "@/lib/tracks";
@@ -28,6 +27,8 @@ import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invit
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
 import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
 import { isLook } from "@/lib/avatars";
+import { awardForPass } from "@/lib/rewards";
+import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/lib/tenancy";
 import { type Audience, formatScopes, openTo, parseScopes, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
@@ -269,10 +270,8 @@ async function gradeRun(userId: number, run: typeof runs.$inferSelect, runId: nu
   if (!done.changes) return; // finished by someone else in the meantime
   const passed = score >= PASS_MARK;
   completeQuest(u.id, run.trackId, "exam");
-  if (passed && (CERT_LEVELS as readonly number[]).includes(run.level)) {
-    db.insert(certificates).values({ userId: u.id, trackId: run.trackId, level: run.level, score, code: randomBytes(5).toString("hex").toUpperCase() })
-      .onConflictDoNothing().run();
-  }
+  if (passed) awardForPass(u.id, run.trackId, run.level, score); // certificate, XP, voucher or money, as the content's owner has set
+
   progressionFor(u.id); // records any badge this exam earned
 }
 
@@ -309,7 +308,7 @@ export async function finishDrill(trackId: number) {
 // ---- people: onboarding & offboarding (managers/admins) ----
 
 export async function createPerson(_: string | null, fd: FormData): Promise<string | null> {
-  await requireManager();
+  const me = await requireManager();
   const p = z.object({
     name: z.string().min(1).max(80),
     email: z.string().email().transform((s) => s.toLowerCase()),
@@ -320,6 +319,8 @@ export async function createPerson(_: string | null, fd: FormData): Promise<stri
   if (!p.success) return "Name, valid email, role and a temporary password (8+ chars) are required.";
   const scopes = validScopes(db, formScopes(fd));
   if (!scopes.length) return "Pick at least one company, brand or project they belong to.";
+  const reach = reachOf(me.id);
+  if (scopes.some((s) => !scopeInReach(reach, s))) return "You can only add people to the companies, brands and projects you run.";
   if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return "That email already exists.";
 
   const u = db.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: p.data.jobRole, audience: p.data.audience, passwordHash: await hashPassword(p.data.password) }).returning().get();
@@ -351,6 +352,8 @@ export async function createInvite(_: InviteState, fd: FormData): Promise<Invite
   if (!p.success) return { error: `Enter one to ${MAX_INVITES_AT_ONCE} valid email addresses and a role.` };
   const scopes = validScopes(db, formScopes(fd));
   if (!scopes.length) return { error: "Pick at least one company, brand or project they belong to." };
+  const reach = reachOf(me.id);
+  if (scopes.some((s) => !scopeInReach(reach, s))) return { error: "You can only invite people to the companies, brands and projects you run." };
 
   const taken = new Set(db.select({ e: users.email }).from(users).where(inArray(users.email, p.data.emails)).all().map((r) => r.e));
   const fresh = p.data.emails.filter((e) => !taken.has(e));
@@ -371,11 +374,16 @@ export async function createInvite(_: InviteState, fd: FormData): Promise<Invite
 
 /** Moves someone to a different set of companies, brands and projects, then enrols them in whatever that now requires. */
 export async function updateScopes(fd: FormData) {
-  await requireManager();
+  const me = await requireManager();
   const u = db.select().from(users).where(eq(users.id, Number(fd.get("userId")))).get();
   if (!u || u.status !== "active") return;
+  const reach = reachOf(me.id);
+  if (!userInReach(reach, u.id)) return;
+  const next = validScopes(db, formScopes(fd));
+  // someone with no scopes runs everything, so only the platform owner may leave a manager without any
+  if (!isGlobal(reach) && (next.some((s) => !scopeInReach(reach, s)) || (!next.length && u.role !== "learner"))) return;
   db.transaction((tx) => {
-    setScopes(tx, u.id, validScopes(tx, formScopes(fd)));
+    setScopes(tx, u.id, next);
     syncRequired(u, tx);
   });
   revalidatePath("/admin/people");
@@ -395,6 +403,8 @@ export async function updateTrackPolicy(fd: FormData) {
   }).safeParse(Object.fromEntries(fd));
   if (!p.success) return;
   const { trackId, ...policy } = p.data;
+  const track = db.select().from(tracks).where(eq(tracks.id, trackId)).get();
+  if (!track || !trackInReach(reachOf(me.id), track)) return;
   db.update(tracks).set({ ...policy, policySource: "admin" }).where(eq(tracks.id, trackId)).run();
   syncEveryone();
   revalidatePath("/admin/paths");
@@ -412,7 +422,7 @@ export async function promote(fd: FormData) {
   const userId = Number(fd.get("userId")), note = str(fd.get("note")).slice(0, 1000);
   if (userId === me.id) return;
   const person = db.select().from(users).where(eq(users.id, userId)).get();
-  if (!person || person.status !== "active") return;
+  if (!person || person.status !== "active" || !userInReach(reachOf(me.id), person.id)) return;
   const career = careerFor(person);
   if (!career?.next) return;
   const overridden = !career.ready;
@@ -422,9 +432,10 @@ export async function promote(fd: FormData) {
   revalidatePath("/dashboard");
 }
 
+/** Career ladders are shared by every company, so only an admin who runs the whole academy may edit them. */
 const adminOnly = async () => {
   const me = await requireManager();
-  return me.role === "admin";
+  return me.role === "admin" && isGlobal(reachOf(me.id));
 };
 
 export async function saveCareerLevel(fd: FormData) {
@@ -505,10 +516,10 @@ export async function toggleChecklist(id: number) {
 }
 
 export async function addHandover(fd: FormData) {
-  await requireManager();
+  const me = await requireManager();
   const userId = Number(fd.get("userId")), notes = str(fd.get("notes")).slice(0, 8000);
   const trackId = Number(fd.get("trackId")) || null;
-  if (!notes || !db.select().from(users).where(eq(users.id, userId)).get()) return;
+  if (!notes || !db.select().from(users).where(eq(users.id, userId)).get() || !userInReach(reachOf(me.id), userId)) return;
   db.insert(handovers).values({ userId, trackId, notes }).run();
   revalidatePath("/admin/people");
 }
@@ -518,7 +529,7 @@ export async function offboard(fd: FormData) {
   const userId = Number(fd.get("userId"));
   if (userId === me.id) return; // cannot lock yourself out
   const u = db.select().from(users).where(eq(users.id, userId)).get();
-  if (!u || u.status === "offboarded") return;
+  if (!u || u.status === "offboarded" || !userInReach(reachOf(me.id), u.id)) return;
   if (me.role !== "admin" && u.role !== "learner") return; // managers can only offboard learners
   db.update(users).set({ status: "offboarded", sessionVersion: sql`${users.sessionVersion} + 1` }).where(eq(users.id, userId)).run(); // access ends now
   db.insert(checklistItems).values(OFFBOARDING.map((label) => ({ userId, kind: "offboarding" as const, label }))).run();
@@ -526,9 +537,11 @@ export async function offboard(fd: FormData) {
 }
 
 export async function retireQuestion(fd: FormData) {
-  await requireManager();
+  const me = await requireManager();
   const id = Number(fd.get("id")), status = str(fd.get("status"));
   if (status !== "retired" && status !== "active" && status !== "review") return;
+  const owner = db.select({ t: tracks }).from(questions).innerJoin(tracks, eq(tracks.id, questions.trackId)).where(eq(questions.id, id)).get();
+  if (!owner || !trackInReach(reachOf(me.id), owner.t)) return;
   const q = db.update(questions).set({ status }).where(eq(questions.id, id)).returning().get();
   revalidatePath("/admin");
   if (q) {
@@ -543,7 +556,7 @@ export async function activateTrackQuestions(trackId: number) {
   const me = await requireManager();
   if (me.role !== "admin") return;
   const t = db.select().from(tracks).where(eq(tracks.id, trackId)).get();
-  if (!t) return;
+  if (!t || !trackInReach(reachOf(me.id), t)) return;
   db.update(questions).set({ status: "active" }).where(and(eq(questions.trackId, trackId), eq(questions.status, "review"))).run();
   syncEveryone();
   revalidatePath(`/admin/review/${t.slug}`);
@@ -569,6 +582,8 @@ export async function recordKnowledgeChange(_: string | null, fd: FormData): Pro
   const done = db.transaction((tx) => {
     const item = tx.select().from(knowledgeItems).where(eq(knowledgeItems.id, p.data.itemId)).get();
     if (!item) return "That item no longer exists.";
+    const owner = tx.select().from(tracks).where(eq(tracks.id, item.trackId)).get();
+    if (!owner || !trackInReach(reachOf(me.id), owner)) return "That knowledge belongs to a company you do not run.";
     return recordChange(tx, item, p.data.body, { note: p.data.note, material, by: me.id }) ? null : "That is the same text as before.";
   });
   if (done) return done;
@@ -593,7 +608,7 @@ export async function updateRole(_: string | null, fd: FormData): Promise<string
     .safeParse({ userId: fd.get("userId"), jobRole: str(fd.get("jobRole")) });
   if (!p.success) return "Enter a role of up to 40 characters.";
   const u = db.select().from(users).where(eq(users.id, p.data.userId)).get();
-  if (!u || u.status !== "active") return "That person is not active.";
+  if (!u || u.status !== "active" || !userInReach(reachOf(me.id), u.id)) return "That person is not active.";
   if (me.role !== "admin" && u.role !== "learner") return "Only an admin can change a manager's role.";
   db.transaction((tx) => {
     tx.update(users).set({ jobRole: p.data.jobRole }).where(eq(users.id, u.id)).run();

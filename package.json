@@ -22,6 +22,7 @@
     "coverage": "tsx scripts/coverage.ts",
     "generate:bank": "tsx --env-file=.env.local scripts/generate-bank.ts",
     "typecheck": "tsc --noEmit",
+    "check:tenancy": "tsx scripts/check-tenancy.ts",
     "check:blueprint": "tsx --env-file=.env.local scripts/check-blueprint.ts",
     "seed:cards": "tsx --env-file=.env.local scripts/seed-ai.ts --cards",
     "check:cards": "tsx scripts/ai/check.ts --cards",

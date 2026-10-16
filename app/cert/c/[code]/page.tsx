@@ -5,6 +5,7 @@ import Link from "next/link";
 import { competitionCerts, competitions, db, tracks, users } from "@/lib/db";
 import { BadgeCheck, CalendarDays, Flag, Printer, Target, Trophy } from "lucide-react";
 import { MAX_LEVEL } from "@/lib/levels";
+import { lookFor, themeStyle } from "@/lib/brand";
 
 export const metadata = { title: "Contest certificate — gglearn" };
 
@@ -18,9 +19,10 @@ export default async function ContestCert({ params }: { params: Promise<{ code: 
   if (!row) notFound();
   const { k, c, t, u } = row, champion = k.kind === "champion";
   const hue = champion ? 45 : 200;
+  const look = lookFor(u.id);
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
-      <CertFrame hue={hue} code={k.code} seal={champion ? <Trophy size={52} className="pulse-glow text-yellow-500" /> : <Flag size={52} className="text-sky-500" />}>
+    <div className="mx-auto max-w-3xl space-y-4" style={themeStyle(look) as React.CSSProperties | undefined}>
+      <CertFrame look={look} hue={hue} code={k.code} seal={champion ? <Trophy size={52} className="pulse-glow text-yellow-500" /> : <Flag size={52} className="text-sky-500" />}>
         <p className="mt-5 text-xs uppercase tracking-[.4em] text-slate-400">{champion ? "Champion" : "Certificate of completion"}</p>
         <h1 className="mt-2 text-3xl font-extrabold gradient-text sm:text-4xl">{t.name}</h1>
         <p className="mt-6 text-slate-400">This certifies that</p>
@@ -35,7 +37,7 @@ export default async function ContestCert({ params }: { params: Promise<{ code: 
           <span className="inline-flex items-center gap-1.5 rounded-full bg-black/5 px-3 py-1"><CalendarDays size={14} style={{ color: `hsl(${hue} 70% 40%)` }} />Issued {new Date(k.issuedAt * 1000).toISOString().slice(0, 10)}</span>
         </div>
       </CertFrame>
-      <p className="flex flex-wrap items-center justify-center gap-x-1.5 text-center text-sm text-slate-400"><BadgeCheck size={16} className="text-emerald-400" />Verified by gglearn. Progress comes from real level exams. <Printer size={14} />Print this page to save it as a PDF. <Link href="/" className="underline">gglearn</Link></p>
+      <p className="flex flex-wrap items-center justify-center gap-x-1.5 text-center text-sm text-slate-400"><BadgeCheck size={16} className="text-emerald-400" />Verified by {look.name}. Progress comes from real level exams. <Printer size={14} />Print this page to save it as a PDF. <Link href="/" className="underline">{look.name}</Link></p>
     </div>
   );
 }

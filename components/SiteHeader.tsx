@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { BookMarked, Database, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
+import { BookMarked, Database, Gift, Settings2, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
 import { logout, logoutEverywhere } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
 import { MobileMenu } from "@/components/MobileMenu";
 import { Initials } from "@/components/charts";
+import { DEFAULT_LOOK, type Look } from "@/lib/brand";
 
 type User = { name: string; email: string; role: string } | null;
 
@@ -14,17 +15,22 @@ export const ADMIN_LINKS = [
   { href: "/admin/compliance", label: "Compliance", Icon: ShieldCheck },
   { href: "/admin/freshness", label: "Freshness", Icon: Newspaper },
   { href: "/admin/careers", label: "Careers", Icon: TrendingUp },
+  { href: "/admin/rewards", label: "Rewards", Icon: Gift },
+  { href: "/admin/setup", label: "Set up", Icon: Settings2 },
 ];
 
-export function SiteHeader({ user, unread = 0 }: { user: User; unread?: number }) {
+export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: User; unread?: number; look?: Look }) {
   const staff = !!user && user.role !== "learner";
   const mobile = "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-base";
   return (
     <header className="sticky top-0 z-40 border-b border-black/10 bg-[#f7f5ef]/90 backdrop-blur print:hidden">
       <nav aria-label="Main" className="relative mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5 text-sm [&_a]:whitespace-nowrap [&_button]:whitespace-nowrap">
         <Link href="/" className="flex items-center gap-2 text-lg font-extrabold">
-          <span className="grid h-8 w-8 place-items-center rounded-lg text-[#fff] shadow" style={{ background: "linear-gradient(135deg,#4f46e5,#9333ea 70%,#db2777)" }}><Swords size={17} aria-hidden /></span>
-          <span className="gradient-text">gglearn</span>
+          {look.logo
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img src={look.logo} alt="" className="h-8 w-8 rounded-lg object-contain" />
+            : <span className="grid h-8 w-8 place-items-center rounded-lg text-[#fff] shadow" style={{ background: look.accent ? "var(--brand)" : "linear-gradient(135deg,#4f46e5,#9333ea 70%,#db2777)" }}><Swords size={17} aria-hidden /></span>}
+          <span className="gradient-text">{look.name}</span>
         </Link>
 
         <div className="ml-2 hidden items-center gap-1 md:flex">
@@ -50,6 +56,7 @@ export function SiteHeader({ user, unread = 0 }: { user: User; unread?: number }
               <div className="border-b border-black/5 px-3 pb-2 pt-1.5"><div className="font-semibold">{user.name}</div><div className="truncate text-xs text-slate-400">{user.email}</div></div>
               <Link href="/profile" className="mt-1 items-center gap-2 hover:bg-black/5"><UserRound size={15} />Your profile</Link>
               <Link href="/achievements" className="items-center gap-2 hover:bg-black/5"><Medal size={15} />Achievements</Link>
+              <Link href="/rewards" className="items-center gap-2 hover:bg-black/5"><Gift size={15} />My rewards</Link>
               <form action={logout}>
                 <button><LogOut size={15} />Sign out</button>
                 <button formAction={logoutEverywhere} title="Ends your session on every device" className="!text-slate-400"><BookMarked size={15} />Sign out everywhere</button>
@@ -77,6 +84,7 @@ export function SiteHeader({ user, unread = 0 }: { user: User; unread?: number }
                 <Link href="/profile" className={mobile}><UserRound size={18} />{user.name}</Link>
                 <Link href="/notifications" className={mobile}><Bell size={18} />Notifications{unread > 0 && <span className="ml-auto rounded-full bg-pink-600 px-2 text-xs font-bold text-[#fff]">{unread}</span>}</Link>
                 <Link href="/achievements" className={mobile}><Medal size={18} />Achievements</Link>
+                <Link href="/rewards" className={mobile}><Gift size={18} />My rewards</Link>
                 <form action={logout}>
                   <button className={mobile}><LogOut size={18} />Sign out</button>
                   <button formAction={logoutEverywhere} className={`${mobile} !text-slate-400`}><BookMarked size={18} />Sign out everywhere</button>

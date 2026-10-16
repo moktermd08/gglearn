@@ -10,6 +10,7 @@ import { and, eq } from "drizzle-orm";
 import { brands, companies, db, projects, userScopes, users } from "@/lib/db";
 import { roleLabel } from "@/lib/journey";
 import type { Row } from "@/lib/seasons";
+import { arenaMap, arenaOf, type Arena } from "@/lib/arena";
 
 export type GroupKind = "team" | "company" | "role";
 export type Group = { key: string; name: string; sub: string; memberIds: number[] };
@@ -17,9 +18,12 @@ export type GroupRow = { key: string; name: string; sub: string; members: number
 
 export const MIN_MEMBERS = 2;
 
-export function groupsOf(kind: GroupKind): Group[] {
+/** Groups are made only of people in `arena`, so a company never sees another company's teams or counts them as members. */
+export function groupsOf(kind: GroupKind, arena: Arena): Group[] {
+  const arenas = arenaMap();
   const people = db.select({ id: users.id, jobRole: users.jobRole }).from(users)
-    .where(and(eq(users.audience, "staff"), eq(users.status, "active"), eq(users.seasonBoard, "show"))).all();
+    .where(and(eq(users.audience, "staff"), eq(users.status, "active"), eq(users.seasonBoard, "show"))).all()
+    .filter((u) => arenaOf(u.id, arenas) === arena);
   const ids = new Set(people.map((p) => p.id));
   const out = new Map<string, Group>();
   const add = (key: string, name: string, sub: string, userId: number) => {

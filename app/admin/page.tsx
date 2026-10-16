@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { isGlobal, reachOf } from "@/lib/tenancy";
 import { desc, eq, sql } from "drizzle-orm";
 import { answers, db, questions, topicRequests, tracks } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
@@ -9,7 +11,9 @@ import { AlertTriangle, BarChart3, Lightbulb, Database, MessageSquareText, PenLi
 const MIN_ATTEMPTS = 5;
 
 export default async function Admin() {
-  await requireManager();
+  const me = await requireManager();
+  // whole-academy statistics and the search log are for the platform owner; a company manager reviews its own tracks at /admin/review/<track>
+  if (!isGlobal(reachOf(me.id))) redirect("/admin/compliance");
   const attempts = sql<number>`count(${answers.id})`;
   const accuracy = sql<number>`avg(${answers.score})`;
 

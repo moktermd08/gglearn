@@ -6,6 +6,7 @@ import { blueprintRoles, pillarStance, type Stance } from "@/lib/blueprint";
 import { catalog } from "@/lib/paths";
 import { roleLabel } from "@/lib/journey";
 import { Grid3x3 } from "lucide-react";
+import { isGlobal, reachOf } from "@/lib/tenancy";
 
 export const metadata = { title: "Role and pillar matrix — gglearn" };
 
@@ -18,7 +19,7 @@ const DOT: Record<Stance, string> = {
 /** Which pillars each role must pass, is advised to learn, or may skip. Read-only: the data is content/blueprints/pillars.json. */
 export default async function Matrix() {
   const me = await requireManager();
-  if (me.role !== "admin") redirect("/admin/compliance");
+  if (me.role !== "admin" || !isGlobal(reachOf(me.id))) redirect("/admin/compliance"); // the role-by-pillar policy is shared by every company
   const cat = catalog();
   const pillars = [...new Set(cat.map((t) => t.pillar).filter((p): p is string => !!p))].sort();
   const ready = (p: string) => cat.filter((t) => t.pillar === p && t.reach >= t.requiredLevel).length;

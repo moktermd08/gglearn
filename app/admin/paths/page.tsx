@@ -9,13 +9,15 @@ import { updateTrackPolicy } from "@/app/actions";
 import { catalog } from "@/lib/paths";
 import { MAX_LEVEL } from "@/lib/levels";
 import { Save, Route } from "lucide-react";
+import { reachOf, trackInReach } from "@/lib/tenancy";
 
 export const metadata = { title: "What is required — gglearn" };
 
 export default async function Paths() {
   const me = await requireManager();
   if (me.role !== "admin") redirect("/admin/compliance");
-  const cat = catalog();
+  const reach = reachOf(me.id);
+  const cat = catalog().filter((t) => trackInReach(reach, t));
   const waiting = new Map(db.select({ id: questions.trackId, n: sql<number>`count(*)` }).from(questions).where(eq(questions.status, "review")).groupBy(questions.trackId).all().map((r) => [r.id, r.n]));
   const byBrand = new Map<string, typeof cat>();
   for (const t of cat) byBrand.set(t.brand.name, [...(byBrand.get(t.brand.name) ?? []), t]);

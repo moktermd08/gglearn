@@ -11,7 +11,7 @@ import { declineTwist, reviewTwist, submitTwist } from "@/lib/twists";
 import { requireUser } from "@/lib/auth";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import type { BotTier } from "@/lib/bots";
-import { baselineLevel, canView, finishersOf, now, standings, stateOf } from "@/lib/competitions";
+import { baselineLevel, canView, finishersOf, listedFor, now, standings, stateOf } from "@/lib/competitions";
 import { enrol, createContest, inviteEmails, newContestSchema, toMinor } from "@/lib/contests";
 import { MAX_LEVEL } from "@/lib/levels";
 
@@ -68,7 +68,7 @@ export async function joinCompetition(competitionId: number, fd: FormData) {
     const mine = tx.select().from(competitionMembers)
       .where(and(eq(competitionMembers.competitionId, c.id), eq(competitionMembers.userId, me.id))).get();
     if (mine?.status === "joined") return;
-    const open = c.visibility === "public" && c.joinPolicy === "open";
+    const open = c.visibility === "public" && c.joinPolicy === "open" && listedFor(me.id, c.createdBy); // an open race is open to the organiser's arena only
     if (!open && mine?.status !== "invited") return;
     const humans = tx.select({ n: sql<number>`count(*)` }).from(competitionMembers)
       .where(and(eq(competitionMembers.competitionId, c.id), eq(competitionMembers.kind, "human"), eq(competitionMembers.status, "joined"))).get()?.n ?? 0;
