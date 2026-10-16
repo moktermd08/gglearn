@@ -284,8 +284,26 @@ export const certificates = sqliteTable(
     signerTitle: text("signer_title").notNull().default(""),
     // keyed fingerprint of the fields above (lib/certs.ts): a record edited in the database no longer matches it. "" = issued before signatures.
     signature: text("signature").notNull().default(""),
+    // Revoked by an admin (see lib/certsAdmin.ts). Still shown at /cert/<code>, marked revoked; never renewed. The reason is for admins only.
+    revokedAt: integer("revoked_at"),
+    revokedBy: integer("revoked_by"), // -> users.id; no inline FK, see the note above `tracks.scope`
+    revokedReason: text("revoked_reason").notNull().default(""),
   },
   (t) => [uniqueIndex("cert_unique").on(t.userId, t.trackId, t.level)],
+);
+
+// Every revocation and reinstatement of a certificate, kept even after the certificate is reinstated.
+export const certificateEvents = sqliteTable(
+  "certificate_events",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    certificateId: integer("certificate_id").notNull().references(() => certificates.id),
+    kind: text("kind", { enum: ["revoked", "reinstated"] }).notNull(),
+    byUser: integer("by_user").notNull().references(() => users.id),
+    reason: text("reason").notNull().default(""),
+    at: integer("at").notNull().default(now),
+  },
+  (t) => [index("cert_event_cert").on(t.certificateId)],
 );
 
 // Signup is invite-only. A manager issues one; the token itself is shown once and only its hash is stored.
