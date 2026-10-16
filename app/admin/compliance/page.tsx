@@ -6,6 +6,7 @@ import { catalog, complianceReport, requirementsFor, scopeLabels, scopeOptions }
 import { Donut, EmptyState, Initials, PageHero, PALETTE } from "@/components/charts";
 import { Ring } from "@/components/Ring";
 import { AlertTriangle, CheckCircle2, Clock, FileQuestion, ShieldCheck, UserX } from "lucide-react";
+import { limitOptions, reachOf, trackInReach, usersInReach } from "@/lib/tenancy";
 
 export const metadata = { title: "Who is up to date — gglearn" };
 
@@ -20,9 +21,10 @@ const STATE = {
 
 export default async function Compliance() {
   const me = await requireManager();
-  const rows = complianceReport();
-  const options = scopeOptions();
-  const cat = catalog();
+  const reach = reachOf(me.id), mine = usersInReach(reach);
+  const rows = complianceReport().filter((r) => !mine || mine.has(r.person.id));
+  const options = limitOptions(scopeOptions(), reach);
+  const cat = catalog().filter((t) => trackInReach(reach, t));
   const behind = pendingCounts();
   const count = (s: keyof typeof STATE) => rows.filter((r) => r.state === s).length;
   // required by policy but with no questions yet: nobody can be held to it
