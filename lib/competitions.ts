@@ -3,6 +3,7 @@ import { competitionMembers, competitions, dailyQuests, db, enrollments, runs, t
 import { MAX_LEVEL, XP_PER_LEVEL } from "@/lib/levels";
 import { PRIZE_SPLITS } from "@/lib/competitions-shared";
 import { botReachedAt, botXpAt, type BotSpec, type BotStyle } from "@/lib/bots";
+import { OPEN, arenaMap, arenaOf, isPlatformOwner } from "@/lib/arena";
 
 export type Competition = typeof competitions.$inferSelect;
 export type Member = typeof competitionMembers.$inferSelect;
@@ -168,6 +169,16 @@ export function modeLabel(humans: number, bots: number): string {
 export type Card = { c: Competition; trackName: string; track: { slug: string; kind: string }; humans: number; bots: number; state: State; invited: boolean };
 
 /** Contests the viewer may see in a list: public ones plus anything they created, joined or were invited to. */
+/**
+ * Public contests are listed only to people in the organiser's arena, so a company's open races stay inside the company. Contests run
+ * by the platform owner (weekly and monthly campaigns, academy events) are for everyone. Contests you were invited to or created always show.
+ */
+export function listedFor(viewerId: number | null, organiserId: number): boolean {
+  if (isPlatformOwner(organiserId)) return true;
+  const arenas = arenaMap();
+  return arenaOf(organiserId, arenas) === (viewerId == null ? OPEN : arenaOf(viewerId, arenas));
+}
+
 export function listFor(viewer: Viewer, opts: { mineOnly?: boolean } = {}): Card[] {
   const mineIds = viewer
     ? new Set(db.select({ id: competitionMembers.competitionId }).from(competitionMembers)
@@ -175,7 +186,7 @@ export function listFor(viewer: Viewer, opts: { mineOnly?: boolean } = {}): Card
     : new Set<number>();
   const rows = db.select({ c: competitions, trackName: tracks.name, tSlug: tracks.slug, tKind: tracks.kind }).from(competitions)
     .innerJoin(tracks, eq(tracks.id, competitions.trackId)).orderBy(desc(competitions.createdAt)).limit(300).all()
-    .filter(({ c }) => (viewer && (c.createdBy === viewer.id || mineIds.has(c.id))) || (!opts.mineOnly && c.visibility === "public"));
+    .filter(({ c }) => (viewer && (c.createdBy === viewer.id || mineIds.has(c.id))) || (!opts.mineOnly && c.visibility === "public" && listedFor(viewer?.id ?? null, c.createdBy)));
   if (!rows.length) return [];
   const members = db.select().from(competitionMembers).where(inArray(competitionMembers.competitionId, rows.map((r) => r.c.id))).all();
   const t = now();

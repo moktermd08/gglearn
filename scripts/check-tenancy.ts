@@ -1,7 +1,11 @@
 /** Checks company-scoped admin reach against the real structure: npm run check:tenancy (uses DATABASE_FILE or data/gglearn.db; adds and removes its own test users). */
 import { eq, like } from "drizzle-orm";
-import { brands, companies, db, tracks, userScopes, users } from "../lib/db";
+import { brands, companies, competitions, db, runs, seasonClosed, seasonResults, tracks, userScopes, users } from "../lib/db";
 import { addBrand, addCompany, addTrack, saveBranding, uniqueSlug } from "../lib/setup";
+import { arenaOf, isPlatformOwner } from "../lib/arena";
+import { listFor, listedFor } from "../lib/competitions";
+import { groupsOf } from "../lib/groups";
+import { periodAt, settle, standings } from "../lib/seasons";
 import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/brand";
 import { isGlobal, personInReach, reachOf, scopeInReach, trackInReach, usersInReach } from "../lib/tenancy";
 
@@ -98,9 +102,51 @@ try {
   await saveBranding(mAdmin, brandForm({ accent: "#4f46e5", removeLogo: "on" }));
   const cleared = lookOfCompany(moksy.id);
   check("the standard shade clears the colour, an empty name resets to the default, and the logo can be removed", cleared.accent === null && cleared.logo === null && cleared.name === DEFAULT_LOOK.name);
+  // ---- boards: who competes with whom ----
+  const now = Math.floor(Date.now() / 1000), anyTrack = db.select().from(tracks).get()!;
+  const mLearner2 = mk("t-moksy-l2@check.local", "learner", [{ kind: "company", refId: moksy.id }]);
+  const arenaM = `c${moksy.id}`, arenaG = `c${guru.id}`;
+  check("a one-company person's arena is that company", arenaOf(mLearner.id) === arenaM && arenaOf(gLearner.id) === arenaG);
+  check("people in several companies, or none, share the open arena", arenaOf(twoCo.id) === "open" && arenaOf(loose.id) === "open");
+  check("only an admin with no scopes is a platform owner", isPlatformOwner(owner.id) && !isPlatformOwner(mAdmin.id) && !isPlatformOwner(mMgr.id));
+  const finished = (userId: number, level: number, at: number) => db.insert(runs).values({ userId, trackId: anyTrack.id, level, score: 1, passed: true, startedAt: at, finishedAt: at }).run();
+  for (const u of [mLearner, mLearner2, gLearner, loose]) finished(u.id, 1, now);
+  finished(mLearner.id, 2, now);
+  const week = periodAt("week");
+  const idsIn = (arena?: string) => new Set(standings(week, "staff", undefined, arena).map((r) => r.userId));
+  const [im, ig, io, ia] = [idsIn(arenaM), idsIn(arenaG), idsIn("open"), idsIn()];
+  check("a company's board holds only its own people", im.has(mLearner.id) && im.has(mLearner2.id) && !im.has(gLearner.id) && !im.has(loose.id));
+  check("another company's board does not hold them", ig.has(gLearner.id) && !ig.has(mLearner.id));
+  check("the open board holds no company people", io.has(loose.id) && !io.has(mLearner.id) && !io.has(gLearner.id));
+  check("with no arena everyone is still ranked together", [mLearner, mLearner2, gLearner, loose].every((u) => ia.has(u.id)));
+  check("the leader of a company board is ranked first", standings(week, "staff", undefined, arenaM)[0].userId === mLearner.id);
+  const roleGroups = groupsOf("role", arenaM);
+  const arenaMembers = new Set([mLearner.id, mLearner2.id]);
+  check("group boards list only the viewer's arena", roleGroups.every((g) => g.memberIds.every((id) => arenaMembers.has(id) || arenaOf(id) === arenaM)) && groupsOf("company", arenaG).every((g) => !g.memberIds.includes(mLearner.id)));
+  // a settled season ranks each arena on its own
+  const old = periodAt("week", now - 140 * 86400);
+  for (const u of [mLearner, mLearner2, gLearner, loose]) finished(u.id, 1, old.start + 3600);
+  finished(mLearner.id, 2, old.start + 7200);
+  settle(old);
+  const res = (id: number) => db.select().from(seasonResults).where(eq(seasonResults.userId, id)).all().find((r) => r.key === old.key)!;
+  check("settled seasons rank each arena separately", res(mLearner.id).rank === 1 && res(mLearner.id).players === 2 && res(mLearner2.id).rank === 2 && res(gLearner.id).rank === 1 && res(gLearner.id).players === 1);
+
+  // contests: open races stay inside the organiser's arena; the platform owner's are for everyone
+  const contest = (slug: string, by: number) => db.insert(competitions).values({ slug, title: slug, trackId: anyTrack.id, createdBy: by, visibility: "public", joinPolicy: "open", goalLevels: 1, startsAt: now - 60, endsAt: now + 86400 }).returning().get();
+  const cM = contest("zz-c-moksy", mLearner.id), cO = contest("zz-c-owner", owner.id);
+  check("a company's open contest is listed to its own people", listedFor(mLearner2.id, mLearner.id));
+  check("but not to another company or the open arena", !listedFor(gLearner.id, mLearner.id) && !listedFor(loose.id, mLearner.id) && !listedFor(null, mLearner.id));
+  check("the platform owner's contest is listed to everyone", [mLearner2, gLearner, loose].every((u) => listedFor(u.id, owner.id)) && listedFor(null, owner.id));
+  const seen = (id: number) => new Set(listFor({ id } as never).map((x) => x.c.id));
+  check("the contest list follows the same rule", seen(mLearner2.id).has(cM.id) && !seen(gLearner.id).has(cM.id) && seen(gLearner.id).has(cO.id));
+  check("an organiser always sees their own contest", seen(mLearner.id).has(cM.id));
+
   db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo }).where(eq(companies.id, moksy.id)).run();
 } finally {
   const t = db.select().from(users).where(like(users.email, "t-%@check.local")).all();
+  for (const c of db.select().from(competitions).where(like(competitions.slug, "zz-%")).all()) db.delete(competitions).where(eq(competitions.id, c.id)).run();
+  for (const u of db.select().from(users).where(like(users.email, "t-%@check.local")).all()) db.delete(runs).where(eq(runs.userId, u.id)).run();
+  { const o = periodAt("week", Math.floor(Date.now() / 1000) - 140 * 86400); db.delete(seasonResults).where(eq(seasonResults.key, o.key)).run(); db.delete(seasonClosed).where(eq(seasonClosed.key, o.key)).run(); }
   for (const tr of db.select().from(tracks).where(like(tracks.slug, "zz-%")).all()) db.delete(tracks).where(eq(tracks.id, tr.id)).run();
   for (const b of db.select().from(brands).where(like(brands.slug, "zz-%")).all()) db.delete(brands).where(eq(brands.id, b.id)).run();
   for (const c of db.select().from(companies).where(like(companies.slug, "zz-%")).all()) db.delete(companies).where(eq(companies.id, c.id)).run();

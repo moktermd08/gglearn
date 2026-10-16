@@ -8,6 +8,7 @@ import { MIN_MEMBERS, groupsOf, rankGroups, type GroupKind } from "@/lib/groups"
 import { ShareButton } from "@/components/ShareButton";
 import { db, enrollments, seasonResults, tracks, users } from "@/lib/db";
 import { POINTS_PER_DAY, POINTS_PER_LEVEL, type Kind, type Period, type Row, closedPeriods, medalOf, periodAt, periodByKey, resultsFor, settleRecent, shortName, standings, timeLeft, winnersOf } from "@/lib/seasons";
+import { arenaMap, arenaOf, type Arena } from "@/lib/arena";
 
 export const metadata = { title: "Seasons — gglearn" };
 export const dynamic = "force-dynamic";
@@ -59,13 +60,15 @@ const Meter = ({ v, max, you }: { v: number; max: number; you?: boolean }) => (
 );
 
 /** A finished season reads the stored final standings; a live one (or a subject-filtered one) is computed on read. */
-function boardFor(p: Period, audience: "staff" | "customer", trackId?: number): { rows: Row[]; final: boolean } {
+function boardFor(p: Period, audience: "staff" | "customer", arena: Arena, trackId?: number): { rows: Row[]; final: boolean } {
   if (p.end <= now() && !trackId) {
+    const arenas = arenaMap();
     const stored = db.select({ r: seasonResults, name: users.name }).from(seasonResults).innerJoin(users, eq(users.id, seasonResults.userId))
-      .where(and(eq(seasonResults.kind, p.kind), eq(seasonResults.key, p.key), eq(users.audience, audience), eq(users.seasonBoard, "show"))).orderBy(asc(seasonResults.rank)).all();
+      .where(and(eq(seasonResults.kind, p.kind), eq(seasonResults.key, p.key), eq(users.audience, audience), eq(users.seasonBoard, "show"))).orderBy(asc(seasonResults.rank)).all()
+      .filter(({ r }) => arenaOf(r.userId, arenas) === arena);
     if (stored.length) return { final: true, rows: stored.map(({ r, name }) => ({ userId: r.userId, name, points: r.points, levels: r.levels, days: r.days, lastAt: 0, rank: r.rank })) };
   }
-  return { final: p.end <= now(), rows: standings(p, audience, trackId) };
+  return { final: p.end <= now(), rows: standings(p, audience, trackId, arena) };
 }
 
 export default async function Seasons({ searchParams }: { searchParams: Promise<Q> }) {
@@ -76,7 +79,8 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
   const current = periodAt(kind), period = (q.p && periodByKey(kind, q.p)) || current;
   const mine = db.select({ t: tracks }).from(enrollments).innerJoin(tracks, eq(tracks.id, enrollments.trackId)).where(eq(enrollments.userId, me.id)).all().map((x) => x.t);
   const track = mine.find((t) => t.slug === q.track);
-  const { rows, final } = boardFor(period, me.audience, track?.id);
+  const arena = arenaOf(me.id);
+  const { rows, final } = boardFor(period, me.audience, arena, track?.id);
   const hidden = db.select({ s: users.seasonBoard }).from(users).where(eq(users.id, me.id)).get()?.s === "hide";
   const meRow = rows.find((r) => r.userId === me.id);
   const ahead = meRow ? rows[meRow.rank - 2] : rows[rows.length - 1];
@@ -89,7 +93,7 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
   const VIEWS = { teams: ["team", "Teams", Users], companies: ["company", "Companies", Building2], roles: ["role", "Roles", UserRound] } as const;
   const view = me.audience === "staff" && q.view && q.view in VIEWS ? (q.view as keyof typeof VIEWS) : undefined;
   const groupKind: GroupKind | null = view ? VIEWS[view][0] : null;
-  const groups = groupKind ? groupsOf(groupKind) : [];
+  const groups = groupKind ? groupsOf(groupKind, arena) : [];
   const ranked = groupKind ? rankGroups(groups, rows, me.id) : [];
   const topAvg = Math.max(0, ...ranked.map((g) => g.avg));
   const selected = groups.find((g) => g.key === q.g);
@@ -253,7 +257,7 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
               <li key={`${h.kind}${h.key}`} className="flex items-center gap-2"><span className="w-7 text-center" aria-hidden>{medalOf(h.rank) ?? "·"}</span><span className="min-w-0 flex-1 truncate">{h.kind === "week" ? `Week ${h.key.slice(5)} ${h.key.slice(0, 4)}` : h.key}</span><span className="text-slate-400">#{h.rank} of {h.players}</span><span className="w-14 text-right font-bold">{h.points}</span><ShareButton kind="season" refKey={`${h.kind}:${h.key}`} label="Share" /></li>
             ))}</ul>
           )}
-          {past[0] && (() => { const w = winnersOf(kind, past[0].key, me.audience); return w.length > 0 ? <p className="mt-3 border-t border-black/5 pt-3 text-xs text-slate-400">Last {kind}&apos;s champion: <b>{shortName(w[0].name)}</b> with {w[0].points} points.</p> : null; })()}
+          {past[0] && (() => { const w = winnersOf(kind, past[0].key, me.audience, arena); return w.length > 0 ? <p className="mt-3 border-t border-black/5 pt-3 text-xs text-slate-400">Last {kind}&apos;s champion: <b>{shortName(w[0].name)}</b> with {w[0].points} points.</p> : null; })()}
         </section>
       </div>
     </div>

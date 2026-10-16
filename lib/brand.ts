@@ -39,20 +39,30 @@ export function lookOfCompany(companyId: number): Look {
   return { name, logo: c.logo ? `/brand/${c.id}/logo?v=${version(c.logo)}` : null, accent: isHex(c.accent) ? c.accent : null, issuer: c.certIssuer || c.academyName || c.name, company: c.name };
 }
 
+type ScopeRef = { kind: "company" | "brand" | "project"; id: number };
+export type CompanyMaps = { brands: Map<number, { companyId: number | null }>; projects: Map<number, { companyId: number | null; brandId: number | null }> };
+
+/** Brands and projects loaded once, so many people can be placed without a query each. */
+export function companyMaps(): CompanyMaps {
+  return { brands: new Map(db.select().from(brands).all().map((b) => [b.id, b])), projects: new Map(db.select().from(projects).all().map((p) => [p.id, p])) };
+}
+
 /** The company a set of scopes belongs to, when it is exactly one: through a company scope, a brand's company or a project's. */
-export function singleCompany(scopes: { kind: "company" | "brand" | "project"; id: number }[]): number | null {
+export function singleCompanyIn(scopes: ScopeRef[], m: CompanyMaps): number | null {
   const ids = new Set<number>();
   for (const s of scopes) {
     if (s.kind === "company") ids.add(s.id);
-    else if (s.kind === "brand") { const b = db.select().from(brands).where(eq(brands.id, s.id)).get(); if (b?.companyId != null) ids.add(b.companyId); }
+    else if (s.kind === "brand") { const c = m.brands.get(s.id)?.companyId; if (c != null) ids.add(c); }
     else {
-      const p = db.select().from(projects).where(eq(projects.id, s.id)).get();
-      if (p?.companyId != null) ids.add(p.companyId);
-      else if (p?.brandId != null) { const b = db.select().from(brands).where(eq(brands.id, p.brandId)).get(); if (b?.companyId != null) ids.add(b.companyId); }
+      const p = m.projects.get(s.id);
+      const c = p?.companyId ?? (p?.brandId != null ? m.brands.get(p.brandId)?.companyId : null);
+      if (c != null) ids.add(c);
     }
   }
   return ids.size === 1 ? [...ids][0] : null;
 }
+
+export const singleCompany = (scopes: ScopeRef[]): number | null => singleCompanyIn(scopes, companyMaps());
 
 /** A person sees their company's look when they belong to exactly one company; otherwise (several companies, or none) the default. */
 export function lookFor(userId: number | null | undefined): Look {
