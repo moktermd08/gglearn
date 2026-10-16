@@ -16,7 +16,7 @@ export const ADMIN_LINKS = [
   { href: "/admin/freshness", label: "Freshness", Icon: Newspaper },
   { href: "/admin/careers", label: "Careers", Icon: TrendingUp },
   { href: "/admin/rewards", label: "Rewards", Icon: Gift },
-  { href: "/admin/certificates", label: "Certificates", Icon: Award, adminOnly: true },
+  { href: "/admin/certificates", label: "Certificates", Icon: Award },
   { href: "/admin/setup", label: "Set up", Icon: Settings2 },
 ];
 /** Managers see everything except the policy pages only an admin may change. */

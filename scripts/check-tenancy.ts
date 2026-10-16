@@ -1,6 +1,6 @@
 /** Checks company-scoped admin reach against the real structure: npm run check:tenancy (uses DATABASE_FILE or data/gglearn.db; adds and removes its own test users). */
 import { eq, like } from "drizzle-orm";
-import { brands, certificateEvents, certificates, companies, competitions, db, notifications, rewardAwards, rewardRules, runs, seasonClosed, seasonResults, tracks, userBadges, userScopes, users } from "../lib/db";
+import { brands, certificateEvents, invites, certificates, companies, competitions, db, notifications, rewardAwards, rewardRules, runs, seasonClosed, seasonResults, tracks, userBadges, userScopes, users } from "../lib/db";
 import { addBrand, addCompany, addTrack, saveBranding, uniqueSlug } from "../lib/setup";
 import { awardForPass, bonusXp, rulesFor } from "../lib/rewards";
 import { removeRule, saveRule, settleAward } from "../lib/rewardsAdmin";
@@ -11,6 +11,7 @@ import { periodAt, settle, standings } from "../lib/seasons";
 import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/brand";
 import { reinstateCertificate, revokeCertificate } from "../lib/certsAdmin";
 import { progressionFor } from "../lib/progression";
+import { glanceCounts } from "../lib/glance";
 import { EXPIRED_NOTICE_DAYS, REMINDER_DAYS, noteExpiringCertificates, RENEW_WINDOW_DAYS, certState, signatureOf, signatureStatus } from "../lib/certs";
 import { canSeeAvatar } from "../lib/competitions";
 import { canSignOff } from "../lib/onboarding";
@@ -320,6 +321,32 @@ try {
   check("nothing is sent to someone else", sweep(mLearner.id).every((n) => !n.key.includes(`-${en.id}-`) && !n.key.includes(`-${en2.id}-`)));
   db.update(companies).set({ certValidMonths: 12 }).where(eq(companies.id, moksy.id)).run();
 
+  // ---- the manager panel counts only what the viewer runs ----
+  setExp(en.id, null); setExp(en2.id, null);
+  awardForPass(gLearner.id, zt.id, 15, 0.9);
+  const gen = certAt(gLearner.id, 15), gch = certAt(gLearner.id, 10);
+  setExp(gen.id, null);
+  const mc0 = glanceCounts(mMgr), gc0 = glanceCounts(gAdm), oc0 = glanceCounts(owner);
+  setExp(en.id, nowS + 20 * DAYS); setExp(gen.id, nowS + 20 * DAYS);
+  const mc1 = glanceCounts(mMgr), gc1 = glanceCounts(gAdm), oc1 = glanceCounts(owner);
+  check("an expiring certificate is counted for the manager of its company", mc1.certs.expiring === mc0.certs.expiring + 1);
+  check("another company's expiring certificate is not", gc1.certs.expiring === gc0.certs.expiring + 1 && oc1.certs.expiring === oc0.certs.expiring + 2);
+  setExp(en2.id, nowS - 3 * DAYS);
+  check("a recently expired one is counted separately", glanceCounts(mMgr).certs.expired === mc0.certs.expired + 1 && glanceCounts(mMgr).certs.expiring === mc1.certs.expiring);
+  setExp(en2.id, nowS - (EXPIRED_NOTICE_DAYS + 20) * DAYS);
+  check("one that expired long ago is not", glanceCounts(mMgr).certs.expired === mc0.certs.expired);
+  db.update(certificates).set({ revokedAt: nowS }).where(eq(certificates.id, en.id)).run();
+  check("a revoked one is not", glanceCounts(mMgr).certs.expiring === mc0.certs.expiring);
+  setExp(en.id, null); setExp(en2.id, null); setExp(gen.id, null);
+  const inv = (email: string, scopes: string) => db.insert(invites).values({ tokenHash: `t-${email}-${Math.random()}`, email, jobRole: "developer", scopes, createdBy: mMgr.id, expiresAt: nowS + DAYS }).run();
+  const iv0 = glanceCounts(mMgr).invitesWaiting, io0 = glanceCounts(owner).invitesWaiting;
+  inv("t-i1@check.local", `company:${moksy.id}`); inv("t-i2@check.local", `company:${guru.id}`); inv("t-i3@check.local", "");
+  check("only an open invite into the manager's own company is counted for them", glanceCounts(mMgr).invitesWaiting === iv0 + 1);
+  check("the platform owner counts all of them", glanceCounts(owner).invitesWaiting === io0 + 3);
+  check("a company manager is not shown people who belong to no company", glanceCounts(mMgr).unassigned === 0 && glanceCounts(owner).unassigned >= 1);
+  check("overdue people and unread updates come from their own company only", glanceCounts(mMgr).overdue <= glanceCounts(owner).overdue && glanceCounts(mMgr).unread <= glanceCounts(owner).unread);
+  check("held questions are shown to admins only", glanceCounts(mMgr).held === 0 && glanceCounts(gAdm).held <= glanceCounts(owner).held);
+
   db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo, certValidMonths: before.certValidMonths, certSigner: before.certSigner, certSignerTitle: before.certSignerTitle }).where(eq(companies.id, moksy.id)).run();
 } finally {
   const t = db.select().from(users).where(like(users.email, "t-%@check.local")).all();
@@ -331,6 +358,7 @@ try {
     db.delete(rewardAwards).where(eq(rewardAwards.userId, u.id)).run();
     db.delete(certificates).where(eq(certificates.userId, u.id)).run();
     db.delete(notifications).where(eq(notifications.userId, u.id)).run();
+    db.delete(invites).where(eq(invites.createdBy, u.id)).run();
     db.delete(userBadges).where(eq(userBadges.userId, u.id)).run(); // progressionFor records the badges a person has earned
     db.delete(rewardRules).where(eq(rewardRules.createdBy, u.id)).run();
   }
