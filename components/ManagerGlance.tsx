@@ -1,27 +1,23 @@
 import Link from "next/link";
-import { and, eq, gt, isNull, sql } from "drizzle-orm";
-import { AlertTriangle, ArrowUpRight, FileQuestion, MailPlus, ShieldCheck, Stamp, UserX } from "lucide-react";
-import { db, invites, questions } from "@/lib/db";
-import { complianceReport } from "@/lib/paths";
-import { pendingCounts } from "@/lib/freshness";
-import { now } from "@/lib/competitions";
+import { AlertTriangle, ArrowUpRight, FileQuestion, Hourglass, MailPlus, ShieldCheck, Stamp, UserX } from "lucide-react";
+import { glanceCounts } from "@/lib/glance";
+import { EXPIRED_NOTICE_DAYS, RENEW_WINDOW_DAYS } from "@/lib/certs";
 import { awaitingSignoff } from "@/lib/onboarding";
 
 /**
  * What a manager or admin has to act on, on the page they land on after signing in. Each tile goes straight to
- * the screen where the thing is fixed, and a tile with nothing to do stays quiet instead of showing a zero.
+ * the screen where the thing is fixed, and a tile with nothing to do stays quiet instead of showing a zero. Every number is
+ * counted over the companies this person runs only (lib/glance.ts).
  */
 export function ManagerGlance({ admin, viewer }: { admin: boolean; viewer: { id: number; role: string } }) {
-  const rows = complianceReport();
-  const overdue = rows.filter((r) => r.state === "overdue").length;
-  const unassigned = rows.filter((r) => r.state === "no-scope").length;
-  const waiting = db.select({ n: sql<number>`count(*)` }).from(invites).where(and(isNull(invites.usedAt), gt(invites.expiresAt, now()))).get()?.n ?? 0;
-  const held = db.select({ n: sql<number>`count(*)` }).from(questions).where(eq(questions.status, "review")).get()?.n ?? 0;
+  const g = glanceCounts(viewer);
   const signoffs = awaitingSignoff(viewer).length;
-  const unread = [...pendingCounts().values()].reduce((a, b) => a + b, 0);
+  const { overdue, unassigned, invitesWaiting: waiting, held, unread } = g;
+  const certLine = [g.certs.expiring && `${g.certs.expiring} certificate${g.certs.expiring === 1 ? "" : "s"} expire${g.certs.expiring === 1 ? "s" : ""} within ${RENEW_WINDOW_DAYS} days`, g.certs.expired && `${g.certs.expired} expired in the last ${EXPIRED_NOTICE_DAYS} days`].filter(Boolean).join(", ");
 
   const items = [
     signoffs > 0 && { Icon: Stamp, tone: "bg-violet-500/12 text-violet-500", href: "/admin/people", text: `${signoffs} onboarding phase${signoffs === 1 ? " is" : "s are"} finished and waiting for your sign-off` },
+    certLine && { Icon: Hourglass, tone: "bg-amber-500/12 text-amber-500", href: "/admin/certificates?show=expiring", text: certLine },
     overdue > 0 && { Icon: AlertTriangle, tone: "bg-rose-500/12 text-rose-500", href: "/admin/compliance", text: `${overdue} ${overdue === 1 ? "person is" : "people are"} overdue on required learning` },
     unassigned > 0 && { Icon: UserX, tone: "bg-amber-500/12 text-amber-500", href: "/admin/people", text: `${unassigned} ${unassigned === 1 ? "person has" : "people have"} no company, brand or project, so no path` },
     waiting > 0 && { Icon: MailPlus, tone: "bg-sky-500/12 text-sky-500", href: "/admin/people", text: `${waiting} invite${waiting === 1 ? "" : "s"} not accepted yet` },

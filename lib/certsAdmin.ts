@@ -1,7 +1,7 @@
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNotNull, isNull } from "drizzle-orm";
 import { certificateEvents, certificates, db, tracks, users } from "@/lib/db";
 import { notify } from "@/lib/notifications";
-import { nowSec, signatureOf } from "@/lib/certs";
+import { EXPIRED_NOTICE_DAYS, RENEW_WINDOW_DAYS, nowSec, signatureOf } from "@/lib/certs";
 import { reachOf, userInReach } from "@/lib/tenancy";
 import type { SetupState } from "@/lib/setup";
 
@@ -63,4 +63,16 @@ export function reinstateCertificate(me: Me, fd: FormData): SetupState {
 export function revocationLog(limit = 30) {
   return db.select({ e: certificateEvents, by: users.name }).from(certificateEvents).innerJoin(users, eq(users.id, certificateEvents.byUser))
     .orderBy(desc(certificateEvents.at), desc(certificateEvents.id)).limit(limit).all();
+}
+
+/** Certificates worth a manager's attention: expiring within the renewal window, or expired in the last EXPIRED_NOTICE_DAYS. Never revoked ones. */
+export function isWatched(c: Pick<typeof certificates.$inferSelect, "expiresAt" | "revokedAt">, at = nowSec()): boolean {
+  return !c.revokedAt && c.expiresAt != null && c.expiresAt < at + RENEW_WINDOW_DAYS * 86400 && c.expiresAt > at - EXPIRED_NOTICE_DAYS * 86400;
+}
+
+/** How many certificates among these people are expiring soon, and how many expired recently (mine = null means everyone). */
+export function expiryWatch(mine: Set<number> | null, at = nowSec()): { expiring: number; expired: number } {
+  const rows = db.select().from(certificates).where(isNotNull(certificates.expiresAt)).all().filter((c) => (!mine || mine.has(c.userId)) && isWatched(c, at));
+  const expired = rows.filter((c) => c.expiresAt! <= at).length;
+  return { expiring: rows.length - expired, expired };
 }

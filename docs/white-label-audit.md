@@ -31,6 +31,7 @@ gglearn separates **what people learn**, **who can see and run it**, **how it lo
 ## Admin isolation
 - A manager or admin with scopes reaches only people and tracks inside their companies, brands and projects. One with no scopes is the platform owner and reaches everything. Rules live in `lib/tenancy.ts`.
 - Manager server actions were reviewed for scope checks (invites, create person, role and scope changes, offboarding, track policy, sign-off, setup, branding, rewards, knowledge changes). The gaps found were closed: password reset, onboarding checklist ticks and avatar photos were not scoped, and now are.
+- The "Needs your attention" panel on the dashboard counts overdue people, open invites, unread updates, held questions and expiring certificates over the viewer's reach only (`lib/glance.ts`); it used to count the whole academy. Managers can open `/admin/certificates` read-only to see who is expiring; only admins can revoke or reinstate.
 - Career ladders are shared by every company, so only the platform-owner admin edits them.
 - Route handlers: `/api/avatar/[id]` is scoped (owner, same company arena, platform owner, or a public contest). `/brand/[id]/logo` is public on purpose. `/cert/*` and `/s/*` are reachable only with an unguessable code (40 and 56 bits) and show a name and the certificate or card, not email or other company data.
 
