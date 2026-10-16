@@ -174,6 +174,7 @@ export async function resetPassword(_: string | null, fd: FormData): Promise<str
   const u = db.select().from(users).where(eq(users.id, userId)).get();
   if (!u || u.status !== "active") return "That person is not active.";
   if (u.id === me.id) return "Use Your profile to change your own password.";
+  if (!userInReach(reachOf(me.id), u.id)) return "That person is outside the companies you run."; // or one manager could sign in as anyone
   if (me.role !== "admin" && u.role !== "learner") return "Only an admin can reset a manager's password.";
   db.update(users).set({ passwordHash: await hashPassword(temp) }).where(eq(users.id, u.id)).run();
   revokeSessions(u.id);
@@ -553,7 +554,7 @@ export async function toggleChecklist(id: number) {
   const item = db.select().from(checklistItems).where(eq(checklistItems.id, id)).get();
   if (!item) return;
   const own = item.userId === me.id && item.kind === "onboarding";
-  if (!own && me.role === "learner") return;
+  if (!own && (me.role === "learner" || !userInReach(reachOf(me.id), item.userId))) return;
   db.update(checklistItems).set({ done: !item.done }).where(eq(checklistItems.id, id)).run();
   revalidatePath("/admin/people");
   revalidatePath("/dashboard");
