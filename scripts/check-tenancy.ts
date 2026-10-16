@@ -11,7 +11,7 @@ import { periodAt, settle, standings } from "../lib/seasons";
 import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/brand";
 import { reinstateCertificate, revokeCertificate } from "../lib/certsAdmin";
 import { progressionFor } from "../lib/progression";
-import { RENEW_WINDOW_DAYS, certState, signatureOf, signatureStatus } from "../lib/certs";
+import { EXPIRED_NOTICE_DAYS, REMINDER_DAYS, noteExpiringCertificates, RENEW_WINDOW_DAYS, certState, signatureOf, signatureStatus } from "../lib/certs";
 import { canSeeAvatar } from "../lib/competitions";
 import { canSignOff } from "../lib/onboarding";
 import { isGlobal, personInReach, reachOf, scopeInReach, trackInReach, usersInReach } from "../lib/tenancy";
@@ -282,6 +282,43 @@ try {
   check("both changes stay in the history", evs.length === 2 && evs.some((e) => e.kind === "revoked" && e.byUser === mAdmin.id) && evs.some((e) => e.kind === "reinstated" && e.reason === "Checked: it was correct"));
   check("the platform owner can revoke anyone's", !!revokeCertificate(owner, rv(gc.id, "Policy breach"))?.done && !!certAt(gLearner.id, 10).revokedAt);
   check("a legacy unsigned certificate is signed when revoked", (() => { const l = certAt(loose.id, 10); db.update(certificates).set({ signature: "" }).where(eq(certificates.id, l.id)).run(); return !!revokeCertificate(owner, rv(l.id, "Test"))?.done && signatureStatus(certAt(loose.id, 10)) === "valid"; })());
+
+  // ---- certificate expiry notifications ----
+  db.update(companies).set({ certValidMonths: 12 }).where(eq(companies.id, moksy.id)).run();
+  awardForPass(mLearner2.id, zt.id, 15, 0.9); awardForPass(mLearner2.id, zt.id, 20, 0.9);
+  const en = certAt(mLearner2.id, 15), en2 = certAt(mLearner2.id, 20);
+  const setExp = (id: number, secs: number | null) => db.update(certificates).set({ expiresAt: secs, revokedAt: null }).where(eq(certificates.id, id)).run();
+  const notes = (u: number) => db.select().from(notifications).where(eq(notifications.userId, u)).all().filter((n) => n.key.startsWith("cert-expiry-"));
+  const sweep = (u: number, at = Math.floor(Date.now() / 1000)) => { noteExpiringCertificates(u, at); return notes(u); };
+  check("a certificate far from expiring is not mentioned", (setExp(en.id, nowS + 200 * DAYS), setExp(en2.id, null), sweep(mLearner2.id).length === 0));
+  check("one that never expires is never mentioned", sweep(mLearner2.id, nowS + 5000 * DAYS).length === 0);
+  setExp(en.id, nowS + 45 * DAYS);
+  const w = sweep(mLearner2.id);
+  check("entering the renewal window sends one heads-up", w.length === 1 && w[0].title === "A certificate expires soon" && w[0].body.includes("45 days") && w[0].body.includes("Pass the level again to renew"));
+  check("it points at the profile", w[0].href === "/profile" && w[0].kind === "system" && w[0].readAt === null);
+  check("sweeping again sends nothing more", sweep(mLearner2.id).length === 1 && sweep(mLearner2.id).length === 1);
+  setExp(en.id, nowS + (REMINDER_DAYS - 4) * DAYS);
+  const rem = sweep(mLearner2.id);
+  check("closer to the date, a reminder follows", rem.length === 2 && rem.some((n) => /expires in \d+ days?/.test(n.title)));
+  check("and only once", sweep(mLearner2.id).length === 2);
+  setExp(en.id, nowS - 5 * DAYS);
+  const x = sweep(mLearner2.id);
+  check("when it expires, the person is told", x.length === 3 && x.some((n) => n.title === "A certificate has expired" && n.body.includes("expired on")));
+  setExp(en.id, nowS - (EXPIRED_NOTICE_DAYS + 60) * DAYS);
+  check("a certificate long expired is not announced", (db.delete(notifications).where(eq(notifications.userId, mLearner2.id)).run(), sweep(mLearner2.id).length === 0));
+  setExp(en.id, nowS + 10 * DAYS);
+  db.update(certificates).set({ revokedAt: nowS }).where(eq(certificates.id, en.id)).run();
+  check("a revoked certificate is not mentioned", sweep(mLearner2.id).length === 0);
+  setExp(en.id, nowS + 10 * DAYS);
+  const before1 = sweep(mLearner2.id).length;
+  setExp(en.id, nowS + 400 * DAYS);
+  setExp(en.id, nowS + 20 * DAYS);
+  check("a renewed certificate starts again with its new date", sweep(mLearner2.id).length === before1 + 1);
+  db.update(companies).set({ certValidMonths: 0 }).where(eq(companies.id, moksy.id)).run();
+  setExp(en2.id, nowS + 30 * DAYS);
+  check("a company that no longer expires certificates gets no renew instruction", sweep(mLearner2.id).some((n) => n.key.includes(String(en2.id)) && !n.body.includes("renew")));
+  check("nothing is sent to someone else", sweep(mLearner.id).every((n) => !n.key.includes(`-${en.id}-`) && !n.key.includes(`-${en2.id}-`)));
+  db.update(companies).set({ certValidMonths: 12 }).where(eq(companies.id, moksy.id)).run();
 
   db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo, certValidMonths: before.certValidMonths, certSigner: before.certSigner, certSignerTitle: before.certSignerTitle }).where(eq(companies.id, moksy.id)).run();
 } finally {
