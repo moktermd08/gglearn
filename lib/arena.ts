@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { db, userScopes, users } from "@/lib/db";
 import { companyMaps, singleCompanyIn } from "@/lib/brand";
 
@@ -21,6 +22,13 @@ export function arenaMap(): Map<number, Arena> {
     out.set(u.id, c == null ? OPEN : `c${c}`);
   }
   return out;
+}
+
+/** One person's arena, without loading everyone's. */
+export function arenaOfUser(userId: number): Arena {
+  const scopes = db.select().from(userScopes).where(eq(userScopes.userId, userId)).all().map((s) => ({ kind: s.kind, id: s.refId }));
+  const c = singleCompanyIn(scopes, companyMaps());
+  return c == null ? OPEN : `c${c}`;
 }
 
 export const arenaOf = (userId: number, m: Map<number, Arena> = arenaMap()): Arena => m.get(userId) ?? OPEN;

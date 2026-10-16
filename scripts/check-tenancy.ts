@@ -9,6 +9,7 @@ import { listFor, listedFor } from "../lib/competitions";
 import { groupsOf } from "../lib/groups";
 import { periodAt, settle, standings } from "../lib/seasons";
 import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/brand";
+import { canSeeAvatar } from "../lib/competitions";
 import { canSignOff } from "../lib/onboarding";
 import { isGlobal, personInReach, reachOf, scopeInReach, trackInReach, usersInReach } from "../lib/tenancy";
 
@@ -45,6 +46,13 @@ try {
   check("onboarding sign-off: nobody signs themselves, even the platform owner", !canSignOff(mMgr, mMgr.id) && !canSignOff(owner, owner.id));
   check("onboarding sign-off: the platform owner signs anyone else", canSignOff(owner, gLearner.id));
   check("onboarding sign-off: a learner cannot sign", !canSignOff(mLearner, gLearner.id));
+
+  const mColleague = mk("t-moksy-col@check.local", "learner", [{ kind: "company", refId: moksy.id }]);
+  check("avatar: a colleague in the same company sees a photo", canSeeAvatar(mLearner.id, { id: mColleague.id }));
+  check("avatar: a person sees their own", canSeeAvatar(mLearner.id, { id: mLearner.id }));
+  check("avatar: another company's person does not", !canSeeAvatar(mLearner.id, { id: gLearner.id }));
+  check("avatar: a signed-out stranger does not", !canSeeAvatar(mLearner.id, null));
+  check("avatar: the platform owner sees it", canSeeAvatar(mLearner.id, { id: owner.id }));
 
   const r = reachOf(mMgr.id);
   check("may grant their own company", scopeInReach(r, { kind: "company", id: moksy.id }));
