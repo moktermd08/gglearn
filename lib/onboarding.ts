@@ -1,7 +1,7 @@
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { db, phaseSignoffs, users } from "@/lib/db";
 import { type Requirement, type Scope, requirementsFor, scopesOf } from "@/lib/paths";
-import { reachOf, userInReach } from "@/lib/tenancy";
+import { type Reach, reachOf, userInReach } from "@/lib/tenancy";
 
 /**
  * Onboarding phases, and the gate between them. A required track belongs to the phase its deadline (`dueDays`) falls in. A manager
@@ -84,10 +84,10 @@ export function canSignOff(manager: { id: number; role: string }, learnerId: num
 }
 
 /** Phases waiting for a manager, across everyone this manager may sign. */
-export function awaitingSignoff(manager: { id: number; role: string }): { person: typeof users.$inferSelect; phase: PhaseStatus }[] {
+export function awaitingSignoff(manager: { id: number; role: string }, within?: Reach): { person: typeof users.$inferSelect; phase: PhaseStatus }[] {
   const out: { person: typeof users.$inferSelect; phase: PhaseStatus }[] = [];
   for (const person of db.select().from(users).where(eq(users.status, "active")).orderBy(users.name).all()) {
-    if (!canSignOff(manager, person.id)) continue;
+    if (!canSignOff(manager, person.id) || (within && !userInReach(within, person.id))) continue; // `within`: only the company or brand they have switched to
     const o = onboardingFor(person);
     if (!o.gated) continue;
     const ready = o.phases.find((p) => p.state === "ready");

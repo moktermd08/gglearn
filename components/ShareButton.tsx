@@ -1,5 +1,5 @@
 import { Share2 } from "lucide-react";
-import { createShare } from "@/app/share/actions";
+import { createShare } from "@/app/(site)/share/actions";
 import type { ShareKind } from "@/lib/share";
 
 /** Makes a public card for something you earned and opens it. Server-checked: nothing unearned can be shared. */
