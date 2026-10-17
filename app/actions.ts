@@ -682,25 +682,6 @@ export async function acknowledgeChange(changeId: number) {
   revalidatePath("/admin/freshness");
 }
 
-/** Changes what someone does at the company, then enrols them in what that role requires. Managers can only change learners. */
-export async function updateRole(_: string | null, fd: FormData): Promise<string | null> {
-  const me = await requireManager();
-  const p = z.object({ userId: z.coerce.number().int().positive(), jobRole: z.string().trim().toLowerCase().min(1).max(40) })
-    .safeParse({ userId: fd.get("userId"), jobRole: str(fd.get("jobRole")) });
-  if (!p.success) return "Enter a role of up to 40 characters.";
-  const u = db.select().from(users).where(eq(users.id, p.data.userId)).get();
-  if (!u || u.status !== "active" || !userInReach(reachOf(me.id), u.id)) return "That person is not active.";
-  if (me.role !== "admin" && u.role !== "learner") return "Only an admin can change a manager's role.";
-  db.transaction((tx) => {
-    tx.update(users).set({ jobRole: p.data.jobRole }).where(eq(users.id, u.id)).run();
-    syncRequired({ id: u.id, jobRole: p.data.jobRole, audience: u.audience }, tx);
-  });
-  revalidatePath("/admin/people");
-  revalidatePath("/admin/compliance");
-  revalidatePath("/admin/careers");
-  return null;
-}
-
 /**
  * Pick the look for yourself ("me") or for your rival ("rival"). Signed-in people keep it on their account, and may use their
  * uploaded photo for themselves; guests keep it in a cookie on this device.

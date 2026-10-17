@@ -10,7 +10,6 @@ import { ScopePicker } from "@/components/ScopePicker";
 import { Building2, CheckSquare, ClipboardList, NotebookPen, Plus, Save, Shield, ShieldCheck, Square, UserCheck, UserMinus, UserPlus, Users, UserCog, Mail } from "lucide-react";
 import NewPerson from "./new-person";
 import InvitePerson from "./invite-person";
-import RoleForm from "./role-form";
 import ResetPassword from "./reset-password";
 import { OnboardingPhases } from "@/components/OnboardingPhases";
 import { canSignOff, onboardingFor } from "@/lib/onboarding";
@@ -75,7 +74,6 @@ export default async function People({ searchParams }: { searchParams: Promise<{
         {needle && <Link href="/admin/people" className="text-xs text-sky-300 underline">Clear</Link>}
       </form>
       {all.length === 0 && <p className="card p-4 text-sm text-slate-400">Nobody matches.</p>}
-      <datalist id="people-roles">{roles.map((r) => <option key={r} value={r} />)}</datalist>
       <ul className="space-y-4">
         {all.map((u, ui) => {
           const mine = items.filter((i) => i.userId === u.id);
@@ -108,9 +106,8 @@ export default async function People({ searchParams }: { searchParams: Promise<{
               </div>
               {!off && (
                 <details className="mt-3 text-sm">
-                  <summary className="cursor-pointer text-slate-400 hover:text-white">Change role, where {u.name.split(" ")[0]} belongs, or reset their password</summary>
-                  {u.id !== me.id && u.status === "active" && <Link href={`/admin/role-change?user=${u.id}`} className="mt-2 inline-block text-sm text-sky-300 underline">Promote, demote or move to a new role, with the tool access it changes</Link>}
-                  <RoleForm userId={u.id} jobRole={u.jobRole} sharedList="people-roles" />
+                  <summary className="cursor-pointer text-slate-400 hover:text-white">Role, where {u.name.split(" ")[0]} belongs, or reset their password</summary>
+                  {u.id !== me.id && u.status === "active" && <Link href={`/admin/role-change?user=${u.id}`} className="mt-2 inline-block text-sm text-sky-300 underline">Change role: promote, demote or move, with the learning and tool access it changes</Link>}
                   {u.id !== me.id && (me.role === "admin" || u.role === "learner") && <ResetPassword userId={u.id} name={u.name} />}
                   <form action={updateScopes} className="mt-2 space-y-2">
                     <input type="hidden" name="userId" value={u.id} />
