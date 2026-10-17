@@ -747,3 +747,107 @@ export const rewardAwards = sqliteTable(
   },
   (t) => [uniqueIndex("reward_award_once").on(t.userId, t.ruleId, t.trackId, t.level), index("reward_award_user").on(t.userId), index("reward_award_status").on(t.status)],
 );
+
+// ---- Company and brand profile -------------------------------------------------------------------------------------------------
+// What the company or brand knows about itself, so a new person can operate and contribute. The sections and their fields are defined
+// in code (lib/profile.ts), so adding a question never needs a migration: one row here is one answered field. An empty value is a
+// cleared answer. Not a boolean anywhere: drizzle-kit drops falsy defaults (see `companies`).
+export const profileEntries = sqliteTable(
+  "profile_entries",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    scope: text("scope", { enum: ["company", "brand"] }).notNull(),
+    refId: integer("ref_id").notNull(), // companies.id or brands.id, checked in code
+    section: text("section").notNull(), // key of a section in lib/profile.ts
+    field: text("field").notNull(), // key of a field in that section
+    value: text("value").notNull().default(""),
+    updatedBy: integer("updated_by").references(() => users.id),
+    updatedAt: integer("updated_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("profile_entry_slot").on(t.scope, t.refId, t.section, t.field)],
+);
+
+// Per section: who owns it, and whether it applies. "na" = reviewed and does not apply (a brand with no investors), so it stops counting
+// against completeness. reviewedAt feeds the staleness check.
+export const profileSections = sqliteTable(
+  "profile_sections",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    scope: text("scope", { enum: ["company", "brand"] }).notNull(),
+    refId: integer("ref_id").notNull(),
+    section: text("section").notNull(),
+    status: text("status", { enum: ["open", "na"] }).notNull().default("open"),
+    ownerId: integer("owner_id").references(() => users.id),
+    reviewedAt: integer("reviewed_at"),
+    reviewedBy: integer("reviewed_by").references(() => users.id),
+  },
+  (t) => [uniqueIndex("profile_section_slot").on(t.scope, t.refId, t.section)],
+);
+
+// ---- Tool access register ------------------------------------------------------------------------------------------------------
+// Every system people use (GitHub, Slack, the bank portal...), who owns it, and how to take access away.
+export const tools = sqliteTable(
+  "tools",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    slug: text("slug").notNull().unique(),
+    name: text("name").notNull(),
+    category: text("category").notNull().default("other"), // see TOOL_CATEGORIES in lib/access.ts
+    scope: text("scope", { enum: ["global", "company", "brand"] }).notNull().default("company"), // global: every company
+    refId: integer("ref_id").notNull().default(0), // companies.id or brands.id; 0 when global
+    ownerId: integer("owner_id").references(() => users.id), // who grants and revokes
+    // sensitive: money, production, customer data. Revoked first, and offboarding is not complete until it is.
+    sensitivity: text("sensitivity", { enum: ["standard", "sensitive"] }).notNull().default("standard"),
+    revokeSteps: text("revoke_steps").notNull().default(""), // how to take access away, in plain words
+    retired: text("retired", { enum: ["no", "yes"] }).notNull().default("no"),
+  },
+  (t) => [index("tools_scope").on(t.scope, t.refId)],
+);
+
+// Which access a job role gets by default. Drives the onboarding checklist, and what changes on a role change.
+export const toolRoleAccess = sqliteTable(
+  "tool_role_access",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    toolId: integer("tool_id").notNull().references(() => tools.id),
+    jobRole: text("job_role").notNull(), // users.jobRole, or "*" for everyone in the tool's scope
+    level: text("level", { enum: ["user", "admin", "owner"] }).notNull().default("user"),
+  },
+  (t) => [uniqueIndex("tool_role_slot").on(t.toolId, t.jobRole)],
+);
+
+// One row per grant, kept after it ends: revokedAt set = no longer has it. The history answers "who had what, when".
+export const toolAccess = sqliteTable(
+  "tool_access",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    toolId: integer("tool_id").notNull().references(() => tools.id),
+    level: text("level", { enum: ["user", "admin", "owner"] }).notNull().default("user"),
+    reason: text("reason", { enum: ["onboarding", "role_change", "promotion", "request", "other"] }).notNull().default("onboarding"),
+    grantedBy: integer("granted_by").references(() => users.id),
+    grantedAt: integer("granted_at").notNull().default(now),
+    revokedAt: integer("revoked_at"),
+    revokedBy: integer("revoked_by").references(() => users.id),
+    revokeReason: text("revoke_reason", { enum: ["offboarding", "role_change", "demotion", "no_longer_needed", "security", "other"] }),
+  },
+  (t) => [index("tool_access_user").on(t.userId), index("tool_access_tool").on(t.toolId)],
+);
+
+// A change of job role, and why. Promotion and demotion are different decisions from a sideways move, so the kind is kept.
+// `actions` is the list of things to do in the tools (add, raise, lower, remove access), kept as text so the history reads as it was.
+export const roleChanges = sqliteTable(
+  "role_changes",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    fromRole: text("from_role").notNull(),
+    toRole: text("to_role").notNull(),
+    kind: text("kind", { enum: ["promotion", "demotion", "role_change"] }).notNull(),
+    note: text("note").notNull().default(""),
+    actions: text("actions").notNull().default(""),
+    decidedBy: integer("decided_by").notNull().references(() => users.id),
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [index("role_changes_user").on(t.userId)],
+);

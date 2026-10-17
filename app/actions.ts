@@ -29,6 +29,7 @@ import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib
 import { isLook } from "@/lib/avatars";
 import { awardForPass } from "@/lib/rewards";
 import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/lib/tenancy";
+import { offboardingLines, onboardingLines } from "@/lib/access";
 import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
 import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
@@ -66,7 +67,8 @@ function provision(tx: Tx, userId: number, email: string, jobRole: string, audie
   claimPendingInvites(tx, userId, email); // contests this address was invited to before it had an account
   setScopes(tx, userId, validScopes(tx, scopes));
   const steps = audience === "customer" ? CUSTOMER_ONBOARDING : ONBOARDING;
-  tx.insert(checklistItems).values(steps.map((label) => ({ userId, kind: "onboarding" as const, label }))).run();
+  const access = audience === "staff" ? onboardingLines(userId, jobRole) : []; // the tools this role starts with (lib/access.ts)
+  tx.insert(checklistItems).values([...steps, ...access].map((label) => ({ userId, kind: "onboarding" as const, label }))).run();
   const required = syncRequired({ id: userId, jobRole, audience }, tx);
   if (audience === "staff") {
     // a role-shaped starter plan (question mix + role pillars) on top of what is required; the old open pick only if it finds nothing
@@ -609,7 +611,7 @@ export async function offboard(fd: FormData) {
   if (!u || u.status === "offboarded" || !userInReach(reachOf(me.id), u.id)) return;
   if (me.role !== "admin" && u.role !== "learner") return; // managers can only offboard learners
   db.update(users).set({ status: "offboarded", sessionVersion: sql`${users.sessionVersion} + 1` }).where(eq(users.id, userId)).run(); // access ends now
-  db.insert(checklistItems).values(OFFBOARDING.map((label) => ({ userId, kind: "offboarding" as const, label }))).run();
+  db.insert(checklistItems).values([...offboardingLines(userId), ...OFFBOARDING].map((label) => ({ userId, kind: "offboarding" as const, label }))).run(); // one line per tool they still hold (lib/access.ts), then the general ones
   revalidatePath("/admin/people");
 }
 

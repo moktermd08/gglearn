@@ -109,6 +109,7 @@ export default async function People({ searchParams }: { searchParams: Promise<{
               {!off && (
                 <details className="mt-3 text-sm">
                   <summary className="cursor-pointer text-slate-400 hover:text-white">Change role, where {u.name.split(" ")[0]} belongs, or reset their password</summary>
+                  {u.id !== me.id && u.status === "active" && <Link href={`/admin/role-change?user=${u.id}`} className="mt-2 inline-block text-sm text-sky-300 underline">Promote, demote or move to a new role, with the tool access it changes</Link>}
                   <RoleForm userId={u.id} jobRole={u.jobRole} sharedList="people-roles" />
                   {u.id !== me.id && (me.role === "admin" || u.role === "learner") && <ResetPassword userId={u.id} name={u.name} />}
                   <form action={updateScopes} className="mt-2 space-y-2">
