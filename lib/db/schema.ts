@@ -37,8 +37,9 @@ export const companies = sqliteTable("companies", {
   logo: text("logo").notNull().default(""), // a data: URL (png, jpeg or webp, 150 KB at most)
   certIssuer: text("cert_issuer").notNull().default(""), // printed under "Issued by" on certificates
   // Certificate policy (see lib/certs.ts): how long a new certificate stays valid, and who signs it. 0 months = never expires.
-  // default(sql`0`), not default(0): drizzle-kit drops a falsy default, then "adds a NOT NULL column with no default" by emptying the table
-  certValidMonths: integer("cert_valid_months").notNull().default(sql`0`),
+  // null (or 0) = never expires. Nullable on purpose: drizzle-kit cannot round-trip a NOT NULL integer DEFAULT 0 added to an existing table. As NOT NULL
+  // DEFAULT 0 it tries to empty `companies` on the first push ("delete from companies"); as a SQL default it rebuilds `companies` on every later push.
+  certValidMonths: integer("cert_valid_months"),
   certSigner: text("cert_signer").notNull().default(""),
   certSignerTitle: text("cert_signer_title").notNull().default(""),
 });

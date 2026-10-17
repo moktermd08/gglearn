@@ -129,7 +129,7 @@ export function BrandingForm({ company }: { company: { id: number; name: string;
         <input name="certIssuer" defaultValue={company.certIssuer} placeholder={company.name} maxLength={80} className={input} />
       </label>
       <label className="grid gap-1">Certificates stay valid for (months)
-        <input name="certValidMonths" type="number" min={0} max={120} defaultValue={company.certValidMonths} className={input} />
+        <input name="certValidMonths" type="number" min={0} max={120} defaultValue={company.certValidMonths ?? 0} className={input} />
         <span className="text-xs text-slate-400">0 means never. Applies to certificates issued from now on; passing the level again within 60 days of expiry renews it.</span>
       </label>
       <label className="grid gap-1">Signed by
