@@ -55,7 +55,7 @@ export default async function Setup() {
         <div className="space-y-3">
           {myCompanies.length === 0 && <p className="text-sm text-slate-400">Add a company first.</p>}
           {myCompanies.map((c) => (
-            <BrandingForm key={c.id} company={{ id: c.id, name: c.name, academyName: c.academyName, accent: c.accent, certIssuer: c.certIssuer, certValidMonths: c.certValidMonths, certSigner: c.certSigner, certSignerTitle: c.certSignerTitle, logoUrl: lookOfCompany(c.id).logo }} />
+            <BrandingForm key={c.id} company={{ id: c.id, name: c.name, academyName: c.academyName, accent: c.accent, certIssuer: c.certIssuer, certValidMonths: c.certValidMonths ?? 0, certSigner: c.certSigner, certSignerTitle: c.certSignerTitle, logoUrl: lookOfCompany(c.id).logo }} />
           ))}
         </div>
       </section>

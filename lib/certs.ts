@@ -32,7 +32,7 @@ export const NO_POLICY: CertPolicy = { validMonths: 0, signer: "", signerTitle: 
 export function policyFor(userId: number): CertPolicy {
   const id = singleCompany(scopesOf(userId));
   const c = id == null ? undefined : db.select().from(companies).where(eq(companies.id, id)).get();
-  return c ? { validMonths: c.certValidMonths, signer: c.certSigner, signerTitle: c.certSignerTitle } : NO_POLICY;
+  return c ? { validMonths: c.certValidMonths ?? 0, signer: c.certSigner, signerTitle: c.certSignerTitle } : NO_POLICY;
 }
 
 export function addMonths(at: number, months: number): number {
