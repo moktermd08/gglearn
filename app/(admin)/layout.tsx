@@ -4,8 +4,8 @@ import "../../src/gg-ui/styles.css"; // the shared GG kit; only this document lo
 import { Badge, Shell, type NavGroup } from "@gg/ui";
 import { requireManager } from "@/lib/auth";
 import { adminScopeOf, scopeChoices } from "@/lib/adminScope";
-import { expiryWatch } from "@/lib/certsAdmin";
-import { isGlobal, reachOf, usersInReach } from "@/lib/tenancy";
+import { expiryWatchFor } from "@/lib/certsAdmin";
+import { isGlobal, reachOf } from "@/lib/tenancy";
 import { AdminNav } from "@/components/admin/AdminNav";
 
 export const metadata: Metadata = { title: "Admin — gglearn" };
@@ -16,7 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const scope = await adminScopeOf(me);
   const choices = scopeChoices(me);
   const admin = me.role === "admin", global = isGlobal(reachOf(me.id));
-  const watch = expiryWatch(usersInReach(scope.reach));
+  const watch = expiryWatchFor(scope.reach); // only the holders of the few certificates in the window are looked up, so this costs next to nothing on every admin page
 
   // Pages only an admin, or only the platform owner, may open are left out of the nav for everyone else, as the pages themselves refuse them.
   const groups: NavGroup[] = [

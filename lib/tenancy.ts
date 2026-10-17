@@ -13,10 +13,14 @@ export type Reach = { all: true } | { all: false; keys: Set<string> };
 
 const key = (kind: Scope["kind"], id: number) => `${kind}:${id}`;
 
+type Structure = { brands: { id: number; companyId: number | null }[]; projects: { id: number; companyId: number | null; brandId: number | null }[] };
+/** The brands and projects, read once so a list of many people does not read them again for each person. */
+const structure = (): Structure => ({ brands: db.select({ id: brands.id, companyId: brands.companyId }).from(brands).all(), projects: db.select({ id: projects.id, companyId: projects.companyId, brandId: projects.brandId }).from(projects).all() });
+
 /** Scopes plus everything beneath them, as "kind:id" keys. */
-function expand(scopes: Scope[]): Set<string> {
+function expand(scopes: Scope[], st: Structure = structure()): Set<string> {
   const keys = new Set(scopes.map((s) => key(s.kind, s.id)));
-  const allBrands = db.select().from(brands).all(), allProjects = db.select().from(projects).all();
+  const allBrands = st.brands, allProjects = st.projects;
   for (const b of allBrands) if (b.companyId != null && keys.has(key("company", b.companyId))) keys.add(key("brand", b.id));
   for (const p of allProjects) {
     if ((p.companyId != null && keys.has(key("company", p.companyId))) || (p.brandId != null && keys.has(key("brand", p.brandId)))) keys.add(key("project", p.id));
@@ -42,10 +46,10 @@ export function scopeInReach(r: Reach, s: Scope): boolean {
 }
 
 /** Is a person (identified by their scopes) someone this manager runs? People with no scopes are only reachable by the platform owner. */
-export function personInReach(r: Reach, personScopes: Scope[]): boolean {
+export function personInReach(r: Reach, personScopes: Scope[], st?: Structure): boolean {
   if (r.all) return true;
   if (!personScopes.length) return false;
-  const theirs = expand(personScopes);
+  const theirs = expand(personScopes, st);
   for (const k of theirs) if (r.keys.has(k)) return true;
   return false;
 }
@@ -59,7 +63,8 @@ export function usersInReach(r: Reach): Set<number> | null {
   if (r.all) return null;
   const by = new Map<number, Scope[]>();
   for (const s of db.select().from(userScopes).all()) by.set(s.userId, [...(by.get(s.userId) ?? []), { kind: s.kind, id: s.refId }]);
-  return new Set([...by].filter(([, sc]) => personInReach(r, sc)).map(([id]) => id));
+  const st = structure();
+  return new Set([...by].filter(([, sc]) => personInReach(r, sc, st)).map(([id]) => id));
 }
 
 /** Does a track belong to something this manager runs? Shared academy tracks (no company) belong to the platform owner only. */

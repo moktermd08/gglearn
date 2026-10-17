@@ -68,7 +68,7 @@ export type ChangeReport = {
 };
 
 /** Recent changes with who has and has not read each. A reader of a newer change to the same item counts as having read this one. */
-export function changeReport(limit = 30, at = now()): ChangeReport[] {
+export function changeReport(limit = 30, at = now(), only?: Set<number> | null): ChangeReport[] {
   const changes = db.select({ c: knowledgeChanges, t: tracks, b: brands }).from(knowledgeChanges)
     .innerJoin(tracks, eq(tracks.id, knowledgeChanges.trackId)).innerJoin(brands, eq(brands.id, tracks.brandId))
     .orderBy(desc(knowledgeChanges.createdAt), desc(knowledgeChanges.id)).limit(limit).all();
@@ -77,11 +77,12 @@ export function changeReport(limit = 30, at = now()): ChangeReport[] {
   const acks = new Set(db.select().from(knowledgeAcks).where(inArray(knowledgeAcks.changeId, ids)).all().map((a) => `${a.userId}:${a.changeId}`));
   const linked = new Map(db.select({ id: questions.knowledgeItemId, n: sql<number>`count(*)` }).from(questions)
     .where(and(inArray(questions.knowledgeItemId, changes.map((x) => x.c.itemId)), eq(questions.status, "active"))).groupBy(questions.knowledgeItemId).all().map((r) => [r.id, r.n]));
-  const names = new Map(db.select({ id: users.id, n: users.name }).from(users).all().map((u) => [u.id, u.n]));
+  const authors = [...new Set(changes.map((x) => x.c.createdBy).filter((id): id is number => id != null))];
+  const names = new Map((authors.length ? db.select({ id: users.id, n: users.name }).from(users).where(inArray(users.id, authors)).all() : []).map((u) => [u.id, u.n]));
   return changes.map(({ c, t, b }) => {
-    const enrolled = db.select({ u: users, e: enrollments }).from(enrollments).innerJoin(users, eq(users.id, enrollments.userId))
+    const enrolled = db.select({ u: { id: users.id, name: users.name, jobRole: users.jobRole, audience: users.audience } }).from(enrollments).innerJoin(users, eq(users.id, enrollments.userId))
       .where(and(eq(enrollments.trackId, c.trackId), eq(users.status, "active"), sql`${enrollments.startedAt} < ${c.createdAt}`)).all()
-      .filter((r) => openTo(r.u.audience, t.audience));
+      .filter((r) => openTo(r.u.audience, t.audience) && (!only || only.has(r.u.id)));
     const newer = db.select({ id: knowledgeChanges.id }).from(knowledgeChanges)
       .where(and(eq(knowledgeChanges.itemId, c.itemId), sql`${knowledgeChanges.version} > ${c.version}`)).all().map((r) => r.id);
     const newerAcks = newer.length ? new Set(db.select().from(knowledgeAcks).where(inArray(knowledgeAcks.changeId, newer)).all().map((a) => a.userId)) : new Set<number>();
@@ -95,9 +96,9 @@ export function changeReport(limit = 30, at = now()): ChangeReport[] {
 }
 
 /** How many material changes each person still has to read, for the compliance list. */
-export function pendingCounts(): Map<number, number> {
+export function pendingCounts(only?: Set<number> | null): Map<number, number> {
   const out = new Map<number, number>(), seen = new Set<string>();
-  for (const r of changeReport(100)) {
+  for (const r of changeReport(100, now(), only)) {
     if (!r.change.material) continue;
     for (const a of r.affected) {
       const key = `${a.id}:${r.change.itemId}`; // one count per item, however many edits it had

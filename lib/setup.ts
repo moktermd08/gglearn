@@ -4,6 +4,7 @@ import { brands, companies, db, tracks } from "@/lib/db";
 import { MAX_LEVEL } from "@/lib/levels";
 import { isGlobal, reachOf, scopeInReach, trackInReach } from "@/lib/tenancy";
 import { isHex, readableWithWhite } from "@/lib/brand";
+import { resetCatalogCache } from "@/lib/paths";
 import { MAX_VALID_MONTHS } from "@/lib/certs";
 
 export type SetupState = { error?: string; done?: string } | null;
@@ -83,6 +84,7 @@ export function addTrack(me: Me, fd: FormData): SetupState {
   const roles = [...new Set(str(fd.get("roles")).toLowerCase().split(",").map((r) => r.trim()).filter(Boolean))].join(",");
   if (roles.length > 200) return { error: "Too many roles: keep the list under 200 characters." };
   db.insert(tracks).values({ ...p.data, slug, roles, policySource: "admin" }).run();
+  resetCatalogCache();
   return { done: `Added track ${p.data.name}. It has no questions yet, so nobody is required to take it until some are added.` };
 }
 

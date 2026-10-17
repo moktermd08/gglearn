@@ -1,8 +1,9 @@
-import { and, desc, eq, isNotNull, isNull } from "drizzle-orm";
+import { and, desc, eq, gt, isNull, lt } from "drizzle-orm";
 import { certificateEvents, certificates, db, tracks, users } from "@/lib/db";
 import { notify } from "@/lib/notifications";
 import { EXPIRED_NOTICE_DAYS, RENEW_WINDOW_DAYS, nowSec, signatureOf } from "@/lib/certs";
-import { reachOf, userInReach } from "@/lib/tenancy";
+import { scopesOf } from "@/lib/paths";
+import { type Reach, personInReach, reachOf, userInReach, usersInReach } from "@/lib/tenancy";
 import type { SetupState } from "@/lib/setup";
 
 type Me = { id: number; role: string };
@@ -70,9 +71,31 @@ export function isWatched(c: Pick<typeof certificates.$inferSelect, "expiresAt" 
   return !c.revokedAt && c.expiresAt != null && c.expiresAt < at + RENEW_WINDOW_DAYS * 86400 && c.expiresAt > at - EXPIRED_NOTICE_DAYS * 86400;
 }
 
-/** How many certificates among these people are expiring soon, and how many expired recently (mine = null means everyone). */
-export function expiryWatch(mine: Set<number> | null, at = nowSec()): { expiring: number; expired: number } {
-  const rows = db.select().from(certificates).where(isNotNull(certificates.expiresAt)).all().filter((c) => (!mine || mine.has(c.userId)) && isWatched(c, at));
+/** The certificates inside the watch window (see isWatched), read through the expiry-date index: a handful of rows, not every certificate. */
+function watchedRows(at: number) {
+  return db.select({ userId: certificates.userId, expiresAt: certificates.expiresAt }).from(certificates)
+    .where(and(isNull(certificates.revokedAt), gt(certificates.expiresAt, at - EXPIRED_NOTICE_DAYS * 86400), lt(certificates.expiresAt, at + RENEW_WINDOW_DAYS * 86400))).all();
+}
+const tally = (rows: { expiresAt: number | null }[], at: number) => {
   const expired = rows.filter((c) => c.expiresAt! <= at).length;
   return { expiring: rows.length - expired, expired };
+};
+
+/** How many certificates among these people are expiring soon, and how many expired recently (mine = null means everyone). */
+export function expiryWatch(mine: Set<number> | null, at = nowSec()): { expiring: number; expired: number } {
+  return tally(watchedRows(at).filter((c) => !mine || mine.has(c.userId)), at);
+}
+
+/**
+ * The same for everyone inside a reach. With a few watched certificates only their holders are looked up, which costs next to nothing on every
+ * admin page; with many (a big academy in a busy month) it is cheaper to build the set of everyone in reach once and test against it.
+ */
+const HOLDER_LOOKUP_LIMIT = 150;
+export function expiryWatchFor(reach: Reach, at = nowSec()): { expiring: number; expired: number } {
+  const rows = watchedRows(at);
+  if (reach.all) return tally(rows, at);
+  if (rows.length > HOLDER_LOOKUP_LIMIT) { const mine = usersInReach(reach); return tally(rows.filter((c) => !mine || mine.has(c.userId)), at); }
+  const inReach = new Map<number, boolean>();
+  const ok = (id: number) => inReach.get(id) ?? inReach.set(id, personInReach(reach, scopesOf(id))).get(id)!;
+  return tally(rows.filter((c) => ok(c.userId)), at);
 }

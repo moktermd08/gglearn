@@ -1,7 +1,7 @@
-import { and, desc, eq, isNull } from "drizzle-orm";
-import { db, phaseSignoffs, users } from "@/lib/db";
-import { type Requirement, type Scope, requirementsFor, scopesOf } from "@/lib/paths";
-import { type Reach, reachOf, userInReach } from "@/lib/tenancy";
+import { and, desc, eq, gt, isNull } from "drizzle-orm";
+import { db, phaseSignoffs, userScopes, users } from "@/lib/db";
+import { type CatalogTrack, type Progress, type Requirement, type Scope, catalog, loadProgress, requirementsFor, scopesOf } from "@/lib/paths";
+import { type Reach, reachOf, userInReach, usersInReach } from "@/lib/tenancy";
 
 /**
  * Onboarding phases, and the gate between them. A required track belongs to the phase its deadline (`dueDays`) falls in. A manager
@@ -42,14 +42,24 @@ export type Onboarding = {
 
 type Person = { id: number; jobRole: string; audience: "staff" | "customer"; createdAt: number };
 
-/** Where a person stands in onboarding: each phase with required learning, whether it is signed, and which tracks the gate holds back. */
-export function onboardingFor(person: Person, scopes: Scope[] = scopesOf(person.id)): Onboarding {
-  const reqs = requirementsFor(person, scopes);
-  const signed = new Map(
+type Signed = Map<string, { id: number; by: string; at: number; note: string }>;
+/** For a list of people: what each call would otherwise look up for itself (the catalogue, everyone's progress, who has signed what). */
+export type OnboardingContext = { cat?: CatalogTrack[]; prog?: Progress; signed?: Map<number, Signed> };
+
+const NOT_GATED: Onboarding = { phases: [], gated: false, locked: new Map() };
+
+/**
+ * Where a person stands in onboarding: each phase with required learning, whether it is signed, and which tracks the gate holds back.
+ * Someone past GATE_DAYS is not being gated, so nothing is worked out for them at all.
+ */
+export function onboardingFor(person: Person, scopes: Scope[] = scopesOf(person.id), ctx: OnboardingContext = {}): Onboarding {
+  const gated = now() - person.createdAt < GATE_DAYS * DAY;
+  if (!gated) return NOT_GATED;
+  const reqs = requirementsFor(person, scopes, ctx.cat ?? catalog(), undefined, ctx.prog);
+  const signed: Signed = ctx.signed ? ctx.signed.get(person.id) ?? new Map() : new Map(
     db.select({ s: phaseSignoffs, by: users.name }).from(phaseSignoffs).innerJoin(users, eq(users.id, phaseSignoffs.signedBy))
       .where(and(eq(phaseSignoffs.userId, person.id), isNull(phaseSignoffs.revokedAt))).all().map((r) => [r.s.phase, { id: r.s.id, by: r.by, at: r.s.signedAt, note: r.s.note }]),
   );
-  const gated = now() - person.createdAt < GATE_DAYS * DAY;
   const locked: Onboarding["locked"] = new Map();
   let blocker: string | null = null; // label of the first phase that is not signed
   const phases: PhaseStatus[] = [];
@@ -83,14 +93,29 @@ export function canSignOff(manager: { id: number; role: string }, learnerId: num
   return userInReach(reachOf(manager.id), learnerId);
 }
 
-/** Phases waiting for a manager, across everyone this manager may sign. */
+/**
+ * Phases waiting for a manager, across everyone this manager may sign. Only people still inside the gate window are looked at, and they are looked at together.
+ * `within`: only the company or brand they have switched to in the admin.
+ */
 export function awaitingSignoff(manager: { id: number; role: string }, within?: Reach): { person: typeof users.$inferSelect; phase: PhaseStatus }[] {
+  if (manager.role !== "admin" && manager.role !== "manager") return [];
+  const mine = usersInReach(reachOf(manager.id)), scoped = within ? usersInReach(within) : null;
+  const cutoff = now() - GATE_DAYS * DAY;
+  const people = db.select().from(users).where(and(eq(users.status, "active"), gt(users.createdAt, cutoff))).orderBy(users.name).all()
+    .filter((u) => u.id !== manager.id && (!mine || mine.has(u.id)) && (!scoped || scoped.has(u.id)));
+  if (!people.length) return [];
+  const ids = new Set(people.map((u) => u.id));
+  const scopesBy = new Map<number, Scope[]>();
+  for (const sc of db.select().from(userScopes).all()) if (ids.has(sc.userId)) scopesBy.set(sc.userId, [...(scopesBy.get(sc.userId) ?? []), { kind: sc.kind, id: sc.refId }]);
+  const signed = new Map<number, Signed>();
+  for (const r of db.select({ s: phaseSignoffs, by: users.name }).from(phaseSignoffs).innerJoin(users, eq(users.id, phaseSignoffs.signedBy)).where(isNull(phaseSignoffs.revokedAt)).all()) {
+    if (!ids.has(r.s.userId)) continue;
+    signed.set(r.s.userId, (signed.get(r.s.userId) ?? new Map()).set(r.s.phase, { id: r.s.id, by: r.by, at: r.s.signedAt, note: r.s.note }));
+  }
+  const ctx: OnboardingContext = { cat: catalog(), prog: loadProgress(ids), signed };
   const out: { person: typeof users.$inferSelect; phase: PhaseStatus }[] = [];
-  for (const person of db.select().from(users).where(eq(users.status, "active")).orderBy(users.name).all()) {
-    if (!canSignOff(manager, person.id) || (within && !userInReach(within, person.id))) continue; // `within`: only the company or brand they have switched to
-    const o = onboardingFor(person);
-    if (!o.gated) continue;
-    const ready = o.phases.find((p) => p.state === "ready");
+  for (const person of people) {
+    const ready = onboardingFor(person, scopesBy.get(person.id) ?? [], ctx).phases.find((p) => p.state === "ready");
     if (ready) out.push({ person, phase: ready });
   }
   return out;

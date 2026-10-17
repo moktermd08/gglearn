@@ -20,14 +20,23 @@ const STATE = {
   "no-scope": { label: "Not assigned", cls: "bg-amber-500/20 text-amber-300" },
 } as const;
 
-export default async function Compliance() {
+const PAGE = 50;
+
+export default async function Compliance({ searchParams }: { searchParams: Promise<{ page?: string; state?: string }> }) {
   const me = await requireManager();
+  const { page: pageParam = "1", state: stateParam = "" } = await searchParams;
   const reach = (await adminScopeOf(me)).reach, mine = usersInReach(reach);
-  const rows = complianceReport().filter((r) => !mine || mine.has(r.person.id));
+  const every = complianceReport(mine); // only the people this manager runs
   const options = limitOptions(scopeOptions(), reach);
   const cat = catalog().filter((t) => trackInReach(reach, t));
-  const behind = pendingCounts();
-  const count = (s: keyof typeof STATE) => rows.filter((r) => r.state === s).length;
+  const behind = pendingCounts(mine);
+  const count = (s: keyof typeof STATE) => every.filter((r) => r.state === s).length;
+  // the totals above cover everyone; the list below is read a page at a time, optionally narrowed to one state
+  const state = stateParam in STATE ? (stateParam as keyof typeof STATE) : null;
+  const matching = state ? every.filter((r) => r.state === state) : every;
+  const pages = Math.max(1, Math.ceil(matching.length / PAGE)), page = Math.min(pages, Math.max(1, Number.parseInt(pageParam, 10) || 1));
+  const rows = matching.slice((page - 1) * PAGE, page * PAGE);
+  const pageHref = (n: number) => `/admin/compliance?${new URLSearchParams({ ...(state ? { state } : {}), page: String(n) })}`;
   // required by policy but with no questions yet: nobody can be held to it
   const empty = cat.filter((t) => (t.tier === "mandatory" || t.tier === "role") && t.reach < t.requiredLevel);
 
@@ -39,7 +48,7 @@ export default async function Compliance() {
         {me.role === "admin" && <Link href="/admin/matrix" className="btn btn-ghost !py-1 text-sm">Role and pillar matrix</Link>}
       </PageHero>
       <section className="card grid items-center gap-6 p-5 md:grid-cols-[auto_1fr]">
-        <Donut size={150} sub="people" center={rows.length} parts={[
+        <Donut size={150} sub="people" center={every.length} parts={[
           { label: "Up to date", value: count("ok"), color: PALETTE.emerald },
           { label: "In progress", value: count("due"), color: PALETTE.sky },
           { label: "Overdue", value: count("overdue"), color: PALETTE.rose },
@@ -60,6 +69,12 @@ export default async function Compliance() {
         </div>
       </section>
 
+      <nav aria-label="Filter by state" className="flex flex-wrap items-center gap-2 text-xs">
+        <Link href="/admin/compliance" className={`rounded-full px-3 py-1 ${!state ? "bg-indigo-500/20 font-bold text-indigo-400" : "bg-black/5 text-slate-400"}`}>Everyone ({every.length.toLocaleString("en-GB")})</Link>
+        {(Object.keys(STATE) as (keyof typeof STATE)[]).filter((k) => count(k) > 0).map((k) => (
+          <Link key={k} href={`/admin/compliance?state=${k}`} className={`rounded-full px-3 py-1 ${state === k ? "bg-indigo-500/20 font-bold text-indigo-400" : "bg-black/5 text-slate-400"}`}>{STATE[k].label} ({count(k).toLocaleString("en-GB")})</Link>
+        ))}
+      </nav>
       <ul className="space-y-3">
         {rows.map((r, i) => {
           const st = STATE[r.state];
@@ -100,6 +115,13 @@ export default async function Compliance() {
           );
         })}
       </ul>
+      {pages > 1 && (
+        <nav aria-label="Pages" className="flex items-center justify-between text-sm">
+          {page > 1 ? <Link href={pageHref(page - 1)} className="btn btn-ghost !px-3 !py-1">Previous</Link> : <span />}
+          <span className="text-slate-400">Page {page} of {pages} · {(page - 1) * PAGE + 1}–{Math.min(page * PAGE, matching.length)} of {matching.length.toLocaleString("en-GB")}</span>
+          {page < pages ? <Link href={pageHref(page + 1)} className="btn btn-ghost !px-3 !py-1">Next</Link> : <span />}
+        </nav>
+      )}
 
       {empty.length > 0 && (
         <section className="card space-y-2 p-4">

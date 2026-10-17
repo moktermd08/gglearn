@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { brands, companies, db, projects } from "@/lib/db";
 import { scopesOf } from "@/lib/paths";
 
@@ -62,7 +62,17 @@ export function singleCompanyIn(scopes: ScopeRef[], m: CompanyMaps): number | nu
   return ids.size === 1 ? [...ids][0] : null;
 }
 
-export const singleCompany = (scopes: ScopeRef[]): number | null => singleCompanyIn(scopes, companyMaps());
+/** Only the brands and projects these scopes mention (and the brands those projects sit under), for placing one person without reading the whole table. */
+function companyMapsFor(scopes: ScopeRef[]): CompanyMaps {
+  const projectIds = scopes.filter((s) => s.kind === "project").map((s) => s.id);
+  const projs = projectIds.length ? db.select().from(projects).where(inArray(projects.id, projectIds)).all() : [];
+  const brandIds = [...new Set([...scopes.filter((s) => s.kind === "brand").map((s) => s.id), ...projs.map((p) => p.brandId).filter((b): b is number => b != null)])];
+  const brs = brandIds.length ? db.select().from(brands).where(inArray(brands.id, brandIds)).all() : [];
+  return { brands: new Map(brs.map((b) => [b.id, b])), projects: new Map(projs.map((p) => [p.id, p])) };
+}
+
+export const singleCompany = (scopes: ScopeRef[]): number | null => (scopes.some((s) => s.kind !== "company") ? singleCompanyIn(scopes, companyMapsFor(scopes)) : singleCompanyIn(scopes, EMPTY_MAPS));
+const EMPTY_MAPS: CompanyMaps = { brands: new Map(), projects: new Map() };
 
 /** A person sees their company's look when they belong to exactly one company; otherwise (several companies, or none) the default. */
 export function lookFor(userId: number | null | undefined): Look {

@@ -8,7 +8,7 @@ import { MIN_MEMBERS, groupsOf, rankGroups, type GroupKind } from "@/lib/groups"
 import { ShareButton } from "@/components/ShareButton";
 import { db, enrollments, seasonResults, tracks, users } from "@/lib/db";
 import { POINTS_PER_DAY, POINTS_PER_LEVEL, type Kind, type Period, type Row, closedPeriods, medalOf, periodAt, periodByKey, resultsFor, settleRecent, shortName, standings, timeLeft, winnersOf } from "@/lib/seasons";
-import { arenaMap, arenaOf, type Arena } from "@/lib/arena";
+import { arenaMap, arenaOf, arenaOfUser, type Arena } from "@/lib/arena";
 
 export const metadata = { title: "Seasons — gglearn" };
 export const dynamic = "force-dynamic";
@@ -79,7 +79,7 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
   const current = periodAt(kind), period = (q.p && periodByKey(kind, q.p)) || current;
   const mine = db.select({ t: tracks }).from(enrollments).innerJoin(tracks, eq(tracks.id, enrollments.trackId)).where(eq(enrollments.userId, me.id)).all().map((x) => x.t);
   const track = mine.find((t) => t.slug === q.track);
-  const arena = arenaOf(me.id);
+  const arena = arenaOfUser(me.id);
   const { rows, final } = boardFor(period, me.audience, arena, track?.id);
   const hidden = db.select({ s: users.seasonBoard }).from(users).where(eq(users.id, me.id)).get()?.s === "hide";
   const meRow = rows.find((r) => r.userId === me.id);

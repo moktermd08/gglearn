@@ -165,7 +165,7 @@ export const questions = sqliteTable(
     version: integer("version").notNull().default(1),
     createdAt: integer("created_at").notNull().default(now),
   },
-  (t) => [uniqueIndex("questions_dedupe").on(t.trackId, t.level, t.prompt)],
+  (t) => [uniqueIndex("questions_dedupe").on(t.trackId, t.level, t.prompt), index("q_status_track_level").on(t.status, t.trackId, t.level)],
 );
 
 export const enrollments = sqliteTable(
@@ -193,7 +193,11 @@ export const runs = sqliteTable("runs", {
   passed: integer("passed", { mode: "boolean" }),
   startedAt: integer("started_at").notNull().default(now),
   finishedAt: integer("finished_at"),
-});
+}, (t) => [
+  // progress, requirements, seasons and the dashboard all ask "this person's passes in this subject" or "runs finished in this window"; neither had an index
+  index("runs_user_track").on(t.userId, t.trackId),
+  index("runs_finished").on(t.finishedAt),
+]);
 
 export const answers = sqliteTable("answers", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -202,7 +206,7 @@ export const answers = sqliteTable("answers", {
   response: text("response").notNull().default(""),
   score: real("score").notNull().default(0), // 0..1
   feedback: text("feedback"),
-});
+}, (t) => [index("answers_run").on(t.runId)]);
 
 // Onboarding / offboarding checklists and knowledge handover.
 export const checklistItems = sqliteTable("checklist_items", {
@@ -211,7 +215,7 @@ export const checklistItems = sqliteTable("checklist_items", {
   kind: text("kind", { enum: ["onboarding", "offboarding"] }).notNull(),
   label: text("label").notNull(),
   done: integer("done", { mode: "boolean" }).notNull().default(false),
-});
+}, (t) => [index("checklist_user").on(t.userId)]);
 
 export const handovers = sqliteTable("handovers", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -290,7 +294,7 @@ export const certificates = sqliteTable(
     revokedBy: integer("revoked_by"), // -> users.id; no inline FK, see the note above `tracks.scope`
     revokedReason: text("revoked_reason").notNull().default(""),
   },
-  (t) => [uniqueIndex("cert_unique").on(t.userId, t.trackId, t.level)],
+  (t) => [uniqueIndex("cert_unique").on(t.userId, t.trackId, t.level), index("cert_expires").on(t.expiresAt)],
 );
 
 // Every revocation and reinstatement of a certificate, kept even after the certificate is reinstated.
