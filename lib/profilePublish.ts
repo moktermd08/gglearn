@@ -1,7 +1,7 @@
 import { and, asc, eq } from "drizzle-orm";
 import { brands, companies, db, knowledgeItems, questions, tracks } from "@/lib/db";
 import { recordChange } from "@/lib/freshness";
-import { type ProfileScope, type SectionState, profileOf } from "@/lib/profile";
+import { type ProfileScope, type SectionState, isAnswered, profileOf, showValue } from "@/lib/profile";
 import { canEditProfile } from "@/lib/profileAdmin";
 import { resetCatalogCache } from "@/lib/paths";
 import type { SetupState } from "@/lib/setup";
@@ -18,7 +18,7 @@ export const profileSlug = (scope: ProfileScope, refId: number) => `profile-${sc
 
 /** The text taught for one section: only what was answered, under the question it answers. */
 export function sectionBody(s: SectionState): string {
-  const parts = s.section.fields.filter((f) => s.answers[f.key]).map((f) => `${f.label}\n${s.answers[f.key]}`);
+  const parts = s.fields.filter((f) => isAnswered(f, s.answers[f.key])).map((f) => `${f.label}\n${showValue(f, s.answers[f.key])}`);
   return parts.length ? `${s.section.label}: ${s.section.why}\n\n${parts.join("\n\n")}` : "";
 }
 
