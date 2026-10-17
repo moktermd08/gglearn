@@ -1,8 +1,11 @@
 /** Checks the company/brand profile and the tool access register: npm run check:access (uses DATABASE_FILE or data/gglearn.db; adds and removes its own rows). Run db:push first. */
 import { eq, like } from "drizzle-orm";
-import { companies, db, enrollments, knowledgeChanges, knowledgeItems, profileEntries, profileFields, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, tools, userScopes, users } from "../lib/db";
+import { and } from "drizzle-orm";
+import { brands, companies, db, enrollments, knowledgeChanges, knowledgeItems, profileEntries, profileFields, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, tools, userScopes, users } from "../lib/db";
 import { SECTIONS, completenessOf, fieldsFor, profileOf, rowsOf, saveAnswer, saveSectionMeta } from "../lib/profile";
 import { addCustomField, retireCustomField } from "../lib/profileAdmin";
+import { TEMPLATES, applyTemplate, previewTemplate } from "../lib/profileTemplates";
+import { MAX_CUSTOM } from "../lib/profileAdmin";
 import { profileSlug, publishProfile, publishStates } from "../lib/profilePublish";
 import { activeAccess, applyPlan, grantAccess, holdersOf, leaversWithAccess, offboardingLines, planFor, revokeAccess } from "../lib/access";
 import { canManageTool, grantForm, revokeForm, setRoleAccess } from "../lib/accessAdmin";
@@ -85,6 +88,33 @@ try {
   check("remove an own question", !!retireCustomField(mgr0, sup!.id!)?.done && !fieldsFor("company", REF, "offerings")!.some((x) => x.key === "approved_suppliers"));
   check("a removed question keeps its answers", db.select().from(profileEntries).all().some((e) => e.field === "approved_suppliers"));
 
+  // templates
+  check("template keys unique", new Set(TEMPLATES.map((t) => t.key)).size === TEMPLATES.length);
+  check("every template question is valid and fits the limit", TEMPLATES.every((t) => t.questions.length <= MAX_CUSTOM && t.questions.every((x) => SECTIONS.some((sc) => sc.key === x.section) && x.label.length >= 2 && (x.kind !== "table" || ((x.columns?.length ?? 0) >= 2 && (x.columns?.length ?? 0) <= 6 && new Set(x.columns!.map((c) => c.trim().toLowerCase())).size === x.columns!.length))) && new Set(t.questions.map((x) => x.section + "|" + x.label)).size === t.questions.length));
+  check("template n/a sections exist", TEMPLATES.every((t) => t.notApplicable.every((k) => SECTIONS.some((sc) => sc.key === k))));
+  const mgr1 = { id: u.id, role: "manager" as const };
+  const agencyN = TEMPLATES.find((t) => t.key === "agency")!.questions.length;
+  const pvA = previewTemplate("company", REF, "agency")!;
+  const activeOwn = () => db.select().from(profileFields).all().filter((r) => r.scope === "company" && r.refId === REF && r.retired === "no").length;
+  const ownBefore = activeOwn();
+  check("preview lists the template's questions and changes nothing", pvA.add.length > 0 && pvA.add.length <= agencyN && pvA.have === 0 && activeOwn() === ownBefore);
+  check("unknown template is refused", !!applyTemplate(mgr1, "company", REF, "nope")?.error);
+  check("apply adds every question", !!applyTemplate(mgr1, "company", REF, "agency")?.done && activeOwn() === ownBefore + agencyN);
+  check("applying again adds nothing", previewTemplate("company", REF, "agency")!.add.length === 0 && !!applyTemplate(mgr1, "company", REF, "agency")?.done);
+  const rate = fieldsFor("company", REF, "finance")!.find((x) => x.label === "Rate card")!;
+  retireCustomField(mgr1, rate.id!);
+  check("a removed template question is offered again", previewTemplate("company", REF, "agency")!.add.length === 1);
+  applyTemplate(mgr1, "company", REF, "agency");
+  check("re-adding a removed question revives it rather than duplicating", fieldsFor("company", REF, "finance")!.filter((x) => x.label === "Rate card").length === 1 && fieldsFor("company", REF, "finance")!.find((x) => x.label === "Rate card")!.key === rate.key);
+  saveSectionMeta("company", REF, "investors", u.id, { status: "open" });
+  saveAnswer("company", REF, "investors", "funding", "Seed round", u.id);
+  applyTemplate(mgr1, "company", REF, "solo");
+  const st = new Map(profileOf("company", REF).map((x) => [x.section.key, x.status]));
+  check("solo template marks an empty section n/a but not one with answers", st.get("expansion") === "na" && st.get("investors") === "open");
+  const bId = db.select().from(brands).where(eq(brands.kind, "company")).get()!.id;
+  const pvB = previewTemplate("brand", bId, "agency")!;
+  check("for a brand, company-only sections are left out", pvB.skipped > 0 && pvB.add.every((x) => x.section !== "legal" && x.section !== "finance"));
+
   // access register
   db.insert(userScopes).values({ userId: u.id, kind: "company", refId: REF }).run();
   const mk = (slug: string, sensitivity: "standard" | "sensitive" = "standard") => db.insert(tools).values({ slug: `t-${slug}`, name: `T ${slug}`, scope: "company", refId: REF, sensitivity, revokeSteps: "remove user" }).returning().get();
@@ -163,7 +193,9 @@ try {
   for (const id of ids) db.delete(enrollments).where(eq(enrollments.userId, id)).run(); // a role change enrols the person in what the new role requires
   for (const id of ids) { db.delete(toolAccess).where(eq(toolAccess.userId, id)).run(); db.delete(userScopes).where(eq(userScopes.userId, id)).run(); }
   for (const t of db.select().from(tools).where(like(tools.slug, "t-%")).all()) { db.delete(toolRoleAccess).where(eq(toolRoleAccess.toolId, t.id)).run(); db.delete(tools).where(eq(tools.id, t.id)).run(); }
-  db.delete(profileEntries).where(eq(profileEntries.refId, REF)).run(); db.delete(profileFields).where(eq(profileFields.refId, REF)).run(); db.delete(profileSections).where(eq(profileSections.refId, REF)).run();
+  for (const [sc, id] of [["company", REF], ["brand", db.select().from(brands).where(eq(brands.kind, "company")).get()?.id ?? -1]] as const) {
+    db.delete(profileEntries).where(and(eq(profileEntries.scope, sc), eq(profileEntries.refId, id))).run(); db.delete(profileFields).where(and(eq(profileFields.scope, sc), eq(profileFields.refId, id))).run(); db.delete(profileSections).where(and(eq(profileSections.scope, sc), eq(profileSections.refId, id))).run();
+  }
   for (const id of ids) db.delete(users).where(eq(users.id, id)).run();
 }
 console.log(fails ? `\n${fails} check(s) FAILED` : "\nall passed");

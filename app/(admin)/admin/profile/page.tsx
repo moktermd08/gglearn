@@ -10,15 +10,16 @@ import { type PublishState, profileSlug, publishStates } from "@/lib/profilePubl
 import { scopeInReach, usersInReach } from "@/lib/tenancy";
 import { ActionForm } from "@/components/admin/ActionForm";
 import { TableInput } from "@/components/admin/TableInput";
-import { addFieldAction, retireFieldAction, saveSection } from "./actions";
+import { addFieldAction, applyTemplateAction, retireFieldAction, saveSection } from "./actions";
 import { publishAction } from "./publish-action";
+import { TEMPLATES, previewTemplate, templateOf } from "@/lib/profileTemplates";
 
 export const metadata = { title: "Company and brand profile — gglearn" };
 const when = (t: number | null) => (t ? new Date(t * 1000).toISOString().slice(0, 10) : "never");
 
-export default async function Profile({ searchParams }: { searchParams: Promise<{ for?: string }> }) {
+export default async function Profile({ searchParams }: { searchParams: Promise<{ for?: string; tpl?: string }> }) {
   const me = await requireManager();
-  const { for: pick } = await searchParams;
+  const { for: pick, tpl } = await searchParams;
   const scope = (pick ? resolveScope(me, pick) : null) ?? (await adminScopeOf(me));
   const subject: { kind: ProfileScope; id: number; name: string } | null =
     scope.kind === "company" && scope.id != null ? { kind: "company", id: scope.id, name: scope.name } : scope.kind === "brand" && scope.id != null ? { kind: "brand", id: scope.id, name: scope.name } : null;
@@ -30,6 +31,8 @@ export default async function Profile({ searchParams }: { searchParams: Promise<
   const owners = db.select({ id: users.id, name: users.name }).from(users).where(and(eq(users.status, "active"), inArray(users.role, ["admin", "manager"]))).orderBy(users.name).all().filter((u) => !mine || mine.has(u.id));
   const ownerName = new Map(owners.map((o) => [o.id, o.name]));
   const pub = publishStates(subject.kind, subject.id);
+  const chosen = tpl ? templateOf(tpl) : null, plan = chosen ? previewTemplate(subject.kind, subject.id, chosen.key) : null;
+  const here = `/admin/profile?for=${subject.kind}:${subject.id}`;
   const pending = [...pub.states.values()].filter((v) => v === "unpublished" || v === "changed").length;
 
   return (
@@ -42,6 +45,39 @@ export default async function Profile({ searchParams }: { searchParams: Promise<
         <StatTile label="Due for review" value={c.stale.length} tone={c.stale.length ? "warn" : undefined} hint="Complete but not confirmed lately" icon="clock" />
       </Stats>
       {!editable && <Badge tone="muted">Read only: you do not run this {subject.kind}</Badge>}
+      {editable && (
+        <Section title="Start from a template" subtitle="Adds the questions this kind of organisation usually has to answer, as your own questions you can change or remove. It never fills in an answer and never touches a section that already has answers.">
+          <details open={!!chosen}>
+            <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>{chosen ? chosen.label : "Choose a type"}</summary>
+            <div style={{ display: "grid", gap: 8, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+              {TEMPLATES.map((t) => (
+                <Link key={t.key} href={`${here}&tpl=${t.key}`} className="card" style={{ padding: 12, textDecoration: "none", outline: chosen?.key === t.key ? "2px solid var(--accent, #4f46e5)" : "none" }}>
+                  <b style={{ fontSize: 14 }}>{t.label}</b>
+                  <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>{t.blurb}</div>
+                </Link>
+              ))}
+            </div>
+            {chosen && plan && (
+              <div style={{ display: "grid", gap: 10, marginTop: 14, fontSize: 13 }}>
+                {plan.add.length === 0 ? <Badge tone="ok">Everything in this template is already in your profile</Badge> : (
+                  <>
+                    <div><b>{plan.add.length} question{plan.add.length === 1 ? "" : "s"} will be added</b>{plan.have ? ` · ${plan.have} already there` : ""}{plan.skipped ? ` · ${plan.skipped} left out because they are for a company, not a brand` : ""}</div>
+                    <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 2 }}>
+                      {plan.add.map((x) => <li key={x.section + x.label}><span style={{ color: "var(--muted)" }}>{states.find((st) => st.section.key === x.section)?.section.label}:</span> {x.label}{x.required && <span style={{ color: "var(--bad, #c0392b)" }}> *</span>} <Badge tone="muted">{x.kind === "table" ? `table: ${x.columns?.join(", ")}` : x.kind}</Badge></li>)}
+                    </ul>
+                    {plan.markNa.length > 0 && <div>Will mark as not applying (nothing answered there): <b>{plan.markNa.join(", ")}</b></div>}
+                    {plan.add.length > plan.room && <Badge tone="bad">Only room for {plan.room} more own questions: remove some first</Badge>}
+                    <ActionForm action={applyTemplateAction} style={{ display: "flex", gap: 8 }}>
+                      <input type="hidden" name="scope" value={subject.kind} /><input type="hidden" name="refId" value={subject.id} /><input type="hidden" name="template" value={chosen.key} />
+                      <Button variant="primary" disabled={plan.add.length > plan.room}>Add these questions</Button>
+                    </ActionForm>
+                  </>
+                )}
+              </div>
+            )}
+          </details>
+        </Section>
+      )}
       {editable && me.role === "admin" && (
         <Section title="Publish to learning" subtitle="Turns the answered sections into study material, so what this profile says is what people are taught and asked. Re-publish after you change it.">
           <ActionForm action={publishAction} style={{ display: "grid", gap: 12, maxWidth: 560 }}>
