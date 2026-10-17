@@ -4,12 +4,13 @@ import { Badge, Button, EmptyState, Field, PageHeader, Section, StatTile, Stats 
 import { brands, companies, db, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { adminScopeOf, resolveScope } from "@/lib/adminScope";
-import { type ProfileScope, type SectionState, completenessOf, profileOf } from "@/lib/profile";
+import { type ProfileScope, type SectionState, completenessOf, profileOf, rowsOf, typeOf } from "@/lib/profile";
 import { canEditProfile } from "@/lib/profileAdmin";
 import { type PublishState, profileSlug, publishStates } from "@/lib/profilePublish";
 import { scopeInReach, usersInReach } from "@/lib/tenancy";
 import { ActionForm } from "@/components/admin/ActionForm";
-import { saveSection } from "./actions";
+import { TableInput } from "@/components/admin/TableInput";
+import { addFieldAction, retireFieldAction, saveSection } from "./actions";
 import { publishAction } from "./publish-action";
 
 export const metadata = { title: "Company and brand profile — gglearn" };
@@ -79,11 +80,13 @@ function SectionCard({ s, published, scope, refId, owners, ownerName, editable }
         </summary>
         <ActionForm action={saveSection} style={{ display: "grid", gap: 14 }}>
           <input type="hidden" name="scope" value={scope} /><input type="hidden" name="refId" value={refId} /><input type="hidden" name="section" value={section.key} />
-          {!na && section.fields.map((fl) => (
-            <Field key={fl.key} label={<>{fl.label}{fl.required && <span style={{ color: "var(--bad, #c0392b)" }}> *</span>}</>} hint={fl.hint}>
-              {fl.long
-                ? <textarea name={`f_${fl.key}`} defaultValue={s.answers[fl.key] ?? ""} rows={3} maxLength={8000} disabled={!editable} />
-                : <input name={`f_${fl.key}`} defaultValue={s.answers[fl.key] ?? ""} maxLength={8000} disabled={!editable} />}
+          {!na && s.fields.map((fl) => (
+            <Field key={fl.key} label={<>{fl.label}{fl.required && <span style={{ color: "var(--bad, #c0392b)" }}> *</span>}{fl.custom && <> <Badge tone="muted">Our own</Badge></>}</>} hint={fl.hint}>
+              {typeOf(fl) === "table"
+                ? <TableInput name={`f_${fl.key}`} columns={fl.columns ?? []} initial={rowsOf(fl, s.answers[fl.key] ?? "")} disabled={!editable} />
+                : typeOf(fl) === "long"
+                  ? <textarea name={`f_${fl.key}`} defaultValue={s.answers[fl.key] ?? ""} rows={3} maxLength={8000} disabled={!editable} />
+                  : <input name={`f_${fl.key}`} defaultValue={s.answers[fl.key] ?? ""} maxLength={8000} disabled={!editable} />}
             </Field>
           ))}
           {editable && (
@@ -103,6 +106,28 @@ function SectionCard({ s, published, scope, refId, owners, ownerName, editable }
             </div>
           )}
         </ActionForm>
+        {editable && !na && (
+          <details style={{ marginTop: 14, fontSize: 13 }}>
+            <summary style={{ cursor: "pointer", color: "var(--muted)" }}>Our own questions: add one{s.fields.some((f) => f.custom) ? " or remove one" : ""}</summary>
+            <div style={{ display: "grid", gap: 12, marginTop: 10 }}>
+              {s.fields.filter((f) => f.custom).map((f) => (
+                <form key={f.key} action={retireFieldAction} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <input type="hidden" name="fieldId" value={f.id} /><span>{f.label}</span><Badge tone="muted">{typeOf(f) === "table" ? `table: ${(f.columns ?? []).map((c) => c.label).join(", ")}` : typeOf(f)}</Badge>
+                  <Button size="sm" variant="ghost" style={{ marginLeft: "auto" }}>Remove</Button>
+                </form>
+              ))}
+              <ActionForm action={addFieldAction} style={{ display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))" }}>
+                <input type="hidden" name="scope" value={scope} /><input type="hidden" name="refId" value={refId} /><input type="hidden" name="section" value={section.key} />
+                <Field label="Question"><input name="label" required maxLength={80} placeholder="e.g. Approved suppliers" /></Field>
+                <Field label="Answer is"><select name="kind" defaultValue="long"><option value="long">A paragraph</option><option value="text">One line</option><option value="table">A table</option></select></Field>
+                <Field label="Table columns" hint="Only for a table: 2 to 6, separated by commas."><input name="columns" maxLength={200} placeholder="Supplier, Contact, Renewal date" /></Field>
+                <Field label="Hint (optional)"><input name="hint" maxLength={200} /></Field>
+                <label style={{ display: "flex", gap: 8, alignItems: "end" }}><input type="checkbox" name="required" /> Required</label>
+                <div style={{ alignSelf: "end" }}><Button variant="primary">Add question</Button></div>
+              </ActionForm>
+            </div>
+          </details>
+        )}
       </details>
     </Section>
   );

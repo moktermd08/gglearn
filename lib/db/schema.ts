@@ -851,3 +851,25 @@ export const roleChanges = sqliteTable(
   },
   (t) => [index("role_changes_user").on(t.userId)],
 );
+
+// A question a company or brand adds to its own profile, on top of the built-in ones (lib/profile.ts). Retired, never deleted, so
+// answers already given are kept. `columns` is a JSON list of {key, label} for kind "table" (a list of rows, e.g. KPIs), else empty.
+export const profileFields = sqliteTable(
+  "profile_fields",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    scope: text("scope", { enum: ["company", "brand"] }).notNull(),
+    refId: integer("ref_id").notNull(),
+    section: text("section").notNull(),
+    key: text("key").notNull(),
+    label: text("label").notNull(),
+    hint: text("hint").notNull().default(""),
+    kind: text("kind", { enum: ["text", "long", "table"] }).notNull().default("long"),
+    columns: text("columns").notNull().default(""),
+    required: text("required", { enum: ["no", "yes"] }).notNull().default("no"),
+    retired: text("retired", { enum: ["no", "yes"] }).notNull().default("no"),
+    createdBy: integer("created_by").references(() => users.id),
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("profile_field_slot").on(t.scope, t.refId, t.section, t.key)],
+);

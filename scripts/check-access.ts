@@ -1,7 +1,8 @@
 /** Checks the company/brand profile and the tool access register: npm run check:access (uses DATABASE_FILE or data/gglearn.db; adds and removes its own rows). Run db:push first. */
 import { eq, like } from "drizzle-orm";
-import { companies, db, enrollments, knowledgeChanges, knowledgeItems, profileEntries, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, tools, userScopes, users } from "../lib/db";
-import { SECTIONS, completenessOf, profileOf, saveAnswer, saveSectionMeta } from "../lib/profile";
+import { companies, db, enrollments, knowledgeChanges, knowledgeItems, profileEntries, profileFields, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, tools, userScopes, users } from "../lib/db";
+import { SECTIONS, completenessOf, fieldsFor, profileOf, rowsOf, saveAnswer, saveSectionMeta } from "../lib/profile";
+import { addCustomField, retireCustomField } from "../lib/profileAdmin";
 import { profileSlug, publishProfile, publishStates } from "../lib/profilePublish";
 import { activeAccess, applyPlan, grantAccess, holdersOf, leaversWithAccess, offboardingLines, planFor, revokeAccess } from "../lib/access";
 import { canManageTool, grantForm, revokeForm, setRoleAccess } from "../lib/accessAdmin";
@@ -54,6 +55,36 @@ try {
   check("a changed section is recorded as a material change with the note", ch.length === 1 && ch[0].material === 1 && ch[0].note === "new mission" && ch[0].after.includes("A new mission"));
   check("a section marked not applicable is not published", publishStates("company", REF).states.get("finance") === "empty");
 
+  // structured fields and own questions
+  const kpis = fieldsFor("company", REF, "goals")!.find((x) => x.key === "kpis")!;
+  check("built-in KPIs are a table", kpis.type === "table" && (kpis.columns?.length ?? 0) >= 3);
+  saveAnswer("company", REF, "goals", "kpis", JSON.stringify([{ kpi: " Churn ", target: "< 2%", bogus: "x" }, { kpi: "", target: "" }]), u.id);
+  const kr = rowsOf(kpis, profileOf("company", REF).find((x) => x.section.key === "goals")!.answers.kpis);
+  check("a table keeps its own columns, trims, and drops empty rows", kr.length === 1 && kr[0].kpi === "Churn" && kr[0].target === "< 2%" && !("bogus" in kr[0]));
+  check("legacy plain text shows as one row", rowsOf(kpis, "Weekly signups")[0].kpi === "Weekly signups");
+  saveAnswer("company", REF, "goals", "kpis", "not json at all", u.id);
+  check("text saved to a table field becomes a row, not an error", rowsOf(kpis, profileOf("company", REF).find((x) => x.section.key === "goals")!.answers.kpis)[0].kpi === "not json at all");
+  saveAnswer("company", REF, "goals", "kpis", JSON.stringify([{ kpi: "", target: "" }]), u.id);
+  check("a table of empty rows counts as unanswered", profileOf("company", REF).find((x) => x.section.key === "goals")!.missing.some((m) => m.key === "kpis"));
+  saveAnswer("company", REF, "goals", "kpis", JSON.stringify([{ kpi: "Churn", target: "2%" }]), u.id);
+
+  const mgr0 = { id: u.id, role: "manager" as const };
+  const f1 = (o: Record<string, string>) => { const f = new FormData(); for (const [k, v] of Object.entries({ scope: "company", refId: String(REF), section: "offerings", ...o })) f.set(k, v); return f; };
+  check("own question needs a real label", !!addCustomField(mgr0, f1({ label: "x" }))?.error);
+  check("own table needs 2 to 6 distinct columns", !!addCustomField(mgr0, f1({ label: "Suppliers", kind: "table", columns: "Only" }))?.error && !!addCustomField(mgr0, f1({ label: "Suppliers", kind: "table", columns: "A, a" }))?.error);
+  check("own question refused for a section that does not exist", !!addCustomField(mgr0, f1({ label: "Whatever", section: "nope" }))?.error);
+  check("add an own table question", !!addCustomField(mgr0, f1({ label: "Approved suppliers", kind: "table", columns: "Supplier, Contact, Renewal date", required: "on" }))?.done);
+  const sup = fieldsFor("company", REF, "offerings")!.find((x) => x.custom);
+  check("it appears after the built-in ones, as a required table", !!sup && sup.key === "approved_suppliers" && sup.required === true && sup.columns!.length === 3 && fieldsFor("company", REF, "offerings")!.findIndex((x) => x.key === sup.key) === SECTIONS.find((x) => x.key === "offerings")!.fields.length);
+  check("a required own question makes the section incomplete until answered", profileOf("company", REF).find((x) => x.section.key === "offerings")!.missing.some((m) => m.key === "approved_suppliers"));
+  check("own questions are per company: the other company does not get it", !fieldsFor("company", REF + 1000, "offerings")!.some((x) => x.custom));
+  saveAnswer("company", REF, "offerings", "approved_suppliers", JSON.stringify([{ supplier: "Acme", contact: "a@acme.test", renewal_date: "2027-01-01" }]), u.id);
+  check("own question answered", !profileOf("company", REF).find((x) => x.section.key === "offerings")!.missing.some((m) => m.key === "approved_suppliers"));
+  check("same label again gets its own key", !!addCustomField(mgr0, f1({ label: "Approved suppliers", kind: "text" }))?.done && fieldsFor("company", REF, "offerings")!.some((x) => x.key === "approved_suppliers_2"));
+  check("a table answer is taught as one line per row", publishProfile(adminMe, "company", REF, { material: false, note: "" })?.done !== undefined && db.select().from(knowledgeItems).all().some((i) => i.body.includes("Supplier: Acme; Contact: a@acme.test; Renewal date: 2027-01-01")));
+  check("remove an own question", !!retireCustomField(mgr0, sup!.id!)?.done && !fieldsFor("company", REF, "offerings")!.some((x) => x.key === "approved_suppliers"));
+  check("a removed question keeps its answers", db.select().from(profileEntries).all().some((e) => e.field === "approved_suppliers"));
+
   // access register
   db.insert(userScopes).values({ userId: u.id, kind: "company", refId: REF }).run();
   const mk = (slug: string, sensitivity: "standard" | "sensitive" = "standard") => db.insert(tools).values({ slug: `t-${slug}`, name: `T ${slug}`, scope: "company", refId: REF, sensitivity, revokeSteps: "remove user" }).returning().get();
@@ -85,6 +116,7 @@ try {
   const adm = { id: u.id, role: "admin" as const }, mgr = { id: u.id, role: "manager" as const };
   const other = db.insert(users).values({ email: "t-other@check.local", name: "t-other", role: "admin" }).returning().get();
   db.insert(userScopes).values({ userId: other.id, kind: "company", refId: db.select().from(companies).all().find((c) => c.id !== REF)!.id }).run();
+  check("nobody removes a question of a company they do not run", !!retireCustomField({ id: other.id, role: "admin" as const }, db.select().from(profileFields).all().find((r) => r.scope === "company" && r.refId === REF)!.id)?.error);
   check("a manager cannot manage tools", !canManageTool(mgr, bank));
   check("an admin of another company cannot manage this company's tool", !canManageTool({ id: other.id, role: "admin" }, bank));
   check("only the platform owner manages a global tool", !canManageTool({ id: other.id, role: "admin" }, { scope: "global", refId: 0 }));
@@ -131,7 +163,7 @@ try {
   for (const id of ids) db.delete(enrollments).where(eq(enrollments.userId, id)).run(); // a role change enrols the person in what the new role requires
   for (const id of ids) { db.delete(toolAccess).where(eq(toolAccess.userId, id)).run(); db.delete(userScopes).where(eq(userScopes.userId, id)).run(); }
   for (const t of db.select().from(tools).where(like(tools.slug, "t-%")).all()) { db.delete(toolRoleAccess).where(eq(toolRoleAccess.toolId, t.id)).run(); db.delete(tools).where(eq(tools.id, t.id)).run(); }
-  db.delete(profileEntries).where(eq(profileEntries.refId, REF)).run(); db.delete(profileSections).where(eq(profileSections.refId, REF)).run();
+  db.delete(profileEntries).where(eq(profileEntries.refId, REF)).run(); db.delete(profileFields).where(eq(profileFields.refId, REF)).run(); db.delete(profileSections).where(eq(profileSections.refId, REF)).run();
   for (const id of ids) db.delete(users).where(eq(users.id, id)).run();
 }
 console.log(fails ? `\n${fails} check(s) FAILED` : "\nall passed");
