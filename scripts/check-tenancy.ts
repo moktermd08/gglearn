@@ -12,6 +12,7 @@ import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/
 import { reinstateCertificate, revokeCertificate } from "../lib/certsAdmin";
 import { progressionFor } from "../lib/progression";
 import { glanceCounts } from "../lib/glance";
+import { resolveScope, scopeChoices } from "../lib/adminScope";
 import { EXPIRED_NOTICE_DAYS, REMINDER_DAYS, noteExpiringCertificates, RENEW_WINDOW_DAYS, certState, signatureOf, signatureStatus } from "../lib/certs";
 import { canSeeAvatar } from "../lib/competitions";
 import { canSignOff } from "../lib/onboarding";
@@ -346,6 +347,25 @@ try {
   check("a company manager is not shown people who belong to no company", glanceCounts(mMgr).unassigned === 0 && glanceCounts(owner).unassigned >= 1);
   check("overdue people and unread updates come from their own company only", glanceCounts(mMgr).overdue <= glanceCounts(owner).overdue && glanceCounts(mMgr).unread <= glanceCounts(owner).unread);
   check("held questions are shown to admins only", glanceCounts(mMgr).held === 0 && glanceCounts(gAdm).held <= glanceCounts(owner).held);
+
+  // ---- the admin's scope switcher: what a person may look at ----
+  const mBrand = db.select().from(brands).where(eq(brands.companyId, moksy.id)).get()!;
+  const asOwner = (raw?: string | null) => resolveScope(owner, raw), asMgr = (raw?: string | null) => resolveScope(mMgr, raw);
+  check("the platform owner can enter master", asOwner("master")?.isMaster === true && isGlobal(asOwner("master")!.reach));
+  check("a company manager and a company admin cannot", asMgr("master") === null && resolveScope(mAdmin, "master") === null);
+  check("no cookie or 'all' means everything they run", asMgr("all")?.kind === "all" && asMgr(undefined)?.kind === "all" && asMgr(null)?.kind === "all" && isGlobal(asOwner("all")!.reach));
+  const oCo = asOwner(`company:${moksy.id}`)!;
+  check("the owner can look at one company, which narrows what pages read", oCo.kind === "company" && !isGlobal(oCo.reach) && personInReach(oCo.reach, [{ kind: "company", id: moksy.id }]) && !personInReach(oCo.reach, [{ kind: "company", id: guru.id }]));
+  check("a manager can look at their own company", asMgr(`company:${moksy.id}`)?.kind === "company");
+  check("but not at another company, even with the right number in the cookie", asMgr(`company:${guru.id}`) === null && resolveScope(mAdmin, `company:${guru.id}`) === null);
+  const oBr = asOwner(`brand:${mBrand.id}`)!;
+  check("a brand narrows to that brand's people", oBr.kind === "brand" && personInReach(oBr.reach, [{ kind: "brand", id: mBrand.id }]) && !personInReach(oBr.reach, [{ kind: "company", id: guru.id }]));
+  check("a manager can look at a brand of their company", asMgr(`brand:${mBrand.id}`)?.kind === "brand");
+  check("values that are not scopes are refused", ["company:abc", "brand:-1", "evil", "company:", ":1", "master:1", "company:1.5"].every((v) => asOwner(v) === null && asMgr(v) === null));
+  check("narrowing never reaches wider than the person's own reach", usersInReach(asMgr(`company:${moksy.id}`)!.reach)!.has(mLearner.id) && !usersInReach(asMgr(`company:${moksy.id}`)!.reach)!.has(gLearner.id));
+  check("the switcher offers a manager only their own companies, and no master", (() => { const c = scopeChoices(mMgr); return !c.owner && c.companies.length === 1 && c.companies[0].id === moksy.id && c.shared.length === 0; })());
+  check("and the owner every company, with the shared academy brands", (() => { const c = scopeChoices(owner); return c.owner && c.companies.length >= 2 && c.shared.length >= 1; })());
+  check("the panel counts follow the chosen company", glanceCounts(owner, oCo.reach).unassigned === 0 && glanceCounts(owner, oCo.reach).certs.expiring <= glanceCounts(owner).certs.expiring);
 
   db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo, certValidMonths: before.certValidMonths, certSigner: before.certSigner, certSignerTitle: before.certSignerTitle }).where(eq(companies.id, moksy.id)).run();
 } finally {

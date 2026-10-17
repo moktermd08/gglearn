@@ -29,6 +29,11 @@ export function reachOf(userId: number): Reach {
   return scopes.length ? { all: false, keys: expand(scopes) } : { all: true };
 }
 
+/** The reach of just these scopes and what is beneath them: a manager who runs several companies, looking at one. Never wider than what they run: check scopeInReach first. */
+export function reachFor(scopes: Scope[]): Reach {
+  return { all: false, keys: expand(scopes) };
+}
+
 export const isGlobal = (r: Reach): r is { all: true } => r.all;
 
 /** May this manager grant or touch this scope? */

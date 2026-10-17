@@ -613,7 +613,7 @@ export async function retireQuestion(fd: FormData) {
   const owner = db.select({ t: tracks }).from(questions).innerJoin(tracks, eq(tracks.id, questions.trackId)).where(eq(questions.id, id)).get();
   if (!owner || !trackInReach(reachOf(me.id), owner.t)) return;
   const q = db.update(questions).set({ status }).where(eq(questions.id, id)).returning().get();
-  revalidatePath("/admin");
+  revalidatePath("/admin/bank");
   if (q) {
     const t = db.select({ slug: tracks.slug }).from(tracks).where(eq(tracks.id, q.trackId)).get();
     if (t) revalidatePath(`/admin/review/${t.slug}`);

@@ -10,7 +10,8 @@ import { DEFAULT_LOOK, type Look } from "@/lib/brand";
 type User = { name: string; email: string; role: string } | null;
 
 export const ADMIN_LINKS = [
-  { href: "/admin", label: "Question bank", Icon: Database, exact: true },
+  { href: "/admin", label: "Overview", Icon: LayoutDashboard, exact: true },
+  { href: "/admin/bank", label: "Question bank", Icon: Database },
   { href: "/admin/people", label: "People", Icon: Users },
   { href: "/admin/compliance", label: "Compliance", Icon: ShieldCheck },
   { href: "/admin/freshness", label: "Freshness", Icon: Newspaper },

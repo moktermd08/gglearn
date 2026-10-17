@@ -3,14 +3,14 @@ import { db, invites, questions, tracks } from "@/lib/db";
 import { complianceReport, parseScopes } from "@/lib/paths";
 import { pendingCounts } from "@/lib/freshness";
 import { expiryWatch } from "@/lib/certsAdmin";
-import { personInReach, reachOf, trackInReach, usersInReach } from "@/lib/tenancy";
+import { type Reach, personInReach, reachOf, trackInReach, usersInReach } from "@/lib/tenancy";
 
 /**
  * The numbers behind "Needs your attention", counted only over what this manager or admin runs. A company's manager never sees
  * another company's overdue people, open invites, unread updates or expiring certificates; the platform owner (no scopes) sees all.
  */
-export function glanceCounts(viewer: { id: number; role: string }) {
-  const reach = reachOf(viewer.id), mine = usersInReach(reach);
+export function glanceCounts(viewer: { id: number; role: string }, reach: Reach = reachOf(viewer.id)) {
+  const mine = usersInReach(reach); // `reach`: the whole of what they run, or the company or brand they have switched to
   const inMine = (id: number) => !mine || mine.has(id);
   const rows = complianceReport().filter((r) => inMine(r.person.id));
   const now = Math.floor(Date.now() / 1000);
