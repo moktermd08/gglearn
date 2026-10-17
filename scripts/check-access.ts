@@ -1,7 +1,8 @@
 /** Checks the company/brand profile and the tool access register: npm run check:access (uses DATABASE_FILE or data/gglearn.db; adds and removes its own rows). Run db:push first. */
 import { eq, like } from "drizzle-orm";
-import { companies, db, enrollments, profileEntries, roleChanges, profileSections, toolAccess, toolRoleAccess, tools, userScopes, users } from "../lib/db";
+import { companies, db, enrollments, knowledgeChanges, knowledgeItems, profileEntries, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, tools, userScopes, users } from "../lib/db";
 import { SECTIONS, completenessOf, profileOf, saveAnswer, saveSectionMeta } from "../lib/profile";
+import { profileSlug, publishProfile, publishStates } from "../lib/profilePublish";
 import { activeAccess, applyPlan, grantAccess, holdersOf, leaversWithAccess, offboardingLines, planFor, revokeAccess } from "../lib/access";
 import { canManageTool, grantForm, revokeForm, setRoleAccess } from "../lib/accessAdmin";
 import { applyRoleChange, mayChangeRole, previewRoleChange, roleHistory } from "../lib/roleChange";
@@ -36,6 +37,22 @@ try {
   saveSectionMeta("company", REF, "identity", u.id, { reviewed: true });
   check("reviewing clears staleness", !completenessOf(profileOf("company", REF)).stale.some((s) => s.section.key === "identity"));
   check("empty meta update is harmless", saveSectionMeta("company", REF, "identity", u.id, {}));
+
+  // publish to learning
+  const adminMe = { id: u.id, role: "admin" as const };
+  check("only an admin publishes", !!publishProfile({ id: u.id, role: "manager" }, "company", REF, { material: false, note: "" })?.error);
+  const pub1 = publishProfile(adminMe, "company", REF, { material: false, note: "" });
+  const trk = db.select().from(tracks).where(eq(tracks.slug, profileSlug("company", REF))).get();
+  check("publish creates a growth track with one item per answered section", !!pub1?.done && trk?.tier === "growth" && db.select().from(knowledgeItems).where(eq(knowledgeItems.trackId, trk!.id)).all().length > 5);
+  check("everything published is current", [...publishStates("company", REF).states.values()].every((v) => v === "current" || v === "empty"));
+  publishProfile(adminMe, "company", REF, { material: false, note: "" });
+  check("publishing twice makes no second track", db.select().from(tracks).where(eq(tracks.slug, profileSlug("company", REF))).all().length === 1);
+  saveAnswer("company", REF, "identity", "mission", "A new mission", u.id);
+  check("an edit shows as changed", publishStates("company", REF).states.get("identity") === "changed");
+  publishProfile(adminMe, "company", REF, { material: true, note: "new mission" });
+  const ch = db.select().from(knowledgeChanges).where(eq(knowledgeChanges.trackId, trk!.id)).all();
+  check("a changed section is recorded as a material change with the note", ch.length === 1 && ch[0].material === 1 && ch[0].note === "new mission" && ch[0].after.includes("A new mission"));
+  check("a section marked not applicable is not published", publishStates("company", REF).states.get("finance") === "empty");
 
   // access register
   db.insert(userScopes).values({ userId: u.id, kind: "company", refId: REF }).run();
@@ -109,6 +126,7 @@ try {
   check("all revoked = audit clean", leaversWithAccess().filter((l) => l.grant.userId === u.id).length === 0 && !revokeAccess(1e9, "other", null));
 } finally {
   const ids = db.select({ id: users.id }).from(users).where(like(users.email, "%@check.local")).all().map((r) => r.id);
+  for (const t of db.select().from(tracks).where(like(tracks.slug, "profile-%")).all()) { db.delete(knowledgeChanges).where(eq(knowledgeChanges.trackId, t.id)).run(); db.delete(knowledgeItems).where(eq(knowledgeItems.trackId, t.id)).run(); db.delete(tracks).where(eq(tracks.id, t.id)).run(); }
   for (const id of ids) db.delete(roleChanges).where(eq(roleChanges.userId, id)).run();
   for (const id of ids) db.delete(enrollments).where(eq(enrollments.userId, id)).run(); // a role change enrols the person in what the new role requires
   for (const id of ids) { db.delete(toolAccess).where(eq(toolAccess.userId, id)).run(); db.delete(userScopes).where(eq(userScopes.userId, id)).run(); }

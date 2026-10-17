@@ -6,9 +6,11 @@ import { requireManager } from "@/lib/auth";
 import { adminScopeOf, resolveScope } from "@/lib/adminScope";
 import { type ProfileScope, type SectionState, completenessOf, profileOf } from "@/lib/profile";
 import { canEditProfile } from "@/lib/profileAdmin";
+import { type PublishState, profileSlug, publishStates } from "@/lib/profilePublish";
 import { scopeInReach, usersInReach } from "@/lib/tenancy";
 import { ActionForm } from "@/components/admin/ActionForm";
 import { saveSection } from "./actions";
+import { publishAction } from "./publish-action";
 
 export const metadata = { title: "Company and brand profile — gglearn" };
 const when = (t: number | null) => (t ? new Date(t * 1000).toISOString().slice(0, 10) : "never");
@@ -26,6 +28,8 @@ export default async function Profile({ searchParams }: { searchParams: Promise<
   const mine = usersInReach(scope.reach);
   const owners = db.select({ id: users.id, name: users.name }).from(users).where(and(eq(users.status, "active"), inArray(users.role, ["admin", "manager"]))).orderBy(users.name).all().filter((u) => !mine || mine.has(u.id));
   const ownerName = new Map(owners.map((o) => [o.id, o.name]));
+  const pub = publishStates(subject.kind, subject.id);
+  const pending = [...pub.states.values()].filter((v) => v === "unpublished" || v === "changed").length;
 
   return (
     <div style={{ display: "grid", gap: 20 }}>
@@ -37,18 +41,38 @@ export default async function Profile({ searchParams }: { searchParams: Promise<
         <StatTile label="Due for review" value={c.stale.length} tone={c.stale.length ? "warn" : undefined} hint="Complete but not confirmed lately" icon="clock" />
       </Stats>
       {!editable && <Badge tone="muted">Read only: you do not run this {subject.kind}</Badge>}
-      {states.map((s) => <SectionCard key={s.section.key} s={s} scope={subject.kind} refId={subject.id} owners={owners} ownerName={ownerName} editable={editable} />)}
+      {editable && me.role === "admin" && (
+        <Section title="Publish to learning" subtitle="Turns the answered sections into study material, so what this profile says is what people are taught and asked. Re-publish after you change it.">
+          <ActionForm action={publishAction} style={{ display: "grid", gap: 12, maxWidth: 560 }}>
+            <input type="hidden" name="scope" value={subject.kind} /><input type="hidden" name="refId" value={subject.id} />
+            <div style={{ fontSize: 13 }}>
+              {pub.track ? <>Track <b>{pub.track.name}</b> · {pub.questions} live question{pub.questions === 1 ? "" : "s"}</> : "No track yet: publishing creates one."}
+              {" · "}{pending ? <Badge tone="warn">{pending} section{pending === 1 ? "" : "s"} to publish</Badge> : <Badge tone="ok">Up to date</Badge>}
+            </div>
+            <Field label="What changed" hint="Shown to people who are asked to read it again."><input name="note" maxLength={500} placeholder="e.g. New pricing rules" /></Field>
+            <label style={{ display: "flex", gap: 8, fontSize: 13 }}><input type="checkbox" name="material" /> Ask people already enrolled to read the changes again</label>
+            <div><Button variant="primary">Publish {pending ? pending : ""} to learning</Button></div>
+          </ActionForm>
+          {pub.track && pub.questions < 50 && (
+            <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 10 }}>
+              Nobody is required to take it until it has questions. Generate them from the published text (they arrive as "review" for you to approve):
+              {" "}<code>npm run generate:bank -- --track {profileSlug(subject.kind, subject.id)}</code>
+            </p>
+          )}
+        </Section>
+      )}
+      {states.map((s) => <SectionCard key={s.section.key} s={s} published={pub.states.get(s.section.key) ?? "empty"} scope={subject.kind} refId={subject.id} owners={owners} ownerName={ownerName} editable={editable} />)}
     </div>
   );
 }
 
-function SectionCard({ s, scope, refId, owners, ownerName, editable }: {
-  s: SectionState; scope: ProfileScope; refId: number; owners: { id: number; name: string }[]; ownerName: Map<number, string>; editable: boolean;
+function SectionCard({ s, published, scope, refId, owners, ownerName, editable }: {
+  s: SectionState; published: PublishState; scope: ProfileScope; refId: number; owners: { id: number; name: string }[]; ownerName: Map<number, string>; editable: boolean;
 }) {
   const { section } = s, na = s.status === "na";
   const badge = na ? <Badge tone="muted">Does not apply</Badge> : s.complete ? (s.stale ? <Badge tone="warn">Confirm still current</Badge> : <Badge tone="ok">Complete</Badge>) : <Badge tone="warn">{s.missing.length} required missing</Badge>;
   return (
-    <Section title={<>{section.label} {section.tier === "extra" && <Badge tone="muted">Extra</Badge>}</>} subtitle={section.why} action={badge}>
+    <Section title={<>{section.label} {section.tier === "extra" && <Badge tone="muted">Extra</Badge>}</>} subtitle={section.why} action={<span style={{ display: "flex", gap: 6 }}>{published === "unpublished" && <Badge tone="muted">Not published</Badge>}{published === "changed" && <Badge tone="warn">Changed since published</Badge>}{published === "current" && <Badge tone="ok">Published</Badge>}{badge}</span>}>
       <details open={!na && !s.complete}>
         <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>
           {s.filled} of {s.total} answered · reviewed {when(s.reviewedAt)}{s.ownerId ? ` · owner ${ownerName.get(s.ownerId) ?? "someone outside your view"}` : " · no owner"}
