@@ -23,6 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { label: "Work", items: [
       { href: "/admin", label: "Overview", icon: "home" },
       { href: "/admin/people", label: "People", icon: "users" },
+      { href: "/admin/role-change", label: "Change a role", icon: "arrow" },
       { href: "/admin/compliance", label: "Compliance", icon: "shield" },
       { href: "/admin/certificates", label: "Certificates", icon: "trophy", count: watch.expiring + watch.expired },
     ] },
@@ -35,6 +36,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       { href: "/admin/careers", label: "Careers", icon: "arrow" },
       ...(admin ? [{ href: "/admin/rewards", label: "Rewards", icon: "coin" }] : []),
       ...(admin && global ? [{ href: "/admin/matrix", label: "Role matrix", icon: "table" }] : []),
+    ] },
+    { label: "Organisation", items: [
+      { href: "/admin/profile", label: "Profile", icon: "briefcase" },
+      ...(admin ? [{ href: "/admin/access", label: "Tool access", icon: "shield" }] : []),
     ] },
     ...(admin ? [{ label: "Setup", items: [{ href: "/admin/setup", label: "Companies and brands", icon: "briefcase" }] }] : []),
   ];
