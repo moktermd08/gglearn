@@ -57,18 +57,31 @@ export const shortName = (name: string) => {
 };
 
 /** `arena`: only people who compete in it (see lib/arena.ts). Left out, everyone is ranked together. */
-export function standings(p: Period, audience: "staff" | "customer", trackId?: number, arena?: Arena): Row[] {
+export function standings(p: Period, audience: "staff" | "customer", trackId?: number, arena?: Arena, arenas: Map<number, Arena> | null = arena ? arenaMap() : null): Row[] {
   const end = Math.min(p.end, now() + 1);
-  const arenas = arena ? arenaMap() : null;
-  const people = new Map(db.select({ id: users.id, name: users.name }).from(users)
-    .where(and(eq(users.status, "active"), eq(users.audience, audience), eq(users.seasonBoard, "show"))).all()
-    .filter((u) => !arenas || arenaOf(u.id, arenas) === arena).map((u) => [u.id, u.name]));
-  if (!people.size) return [];
-  const inWindow = and(gte(runs.finishedAt, p.start), lt(runs.finishedAt, end), trackId ? eq(runs.trackId, trackId) : undefined);
-  const rs = db.select({ u: runs.userId, t: runs.trackId, l: runs.level, at: runs.finishedAt, ok: runs.passed }).from(runs).where(inWindow).all().filter((r) => people.has(r.u));
+  // For one arena, read only its people's runs and quests (a company's few hundred people, by index), not everyone's. With no arena, everyone is ranked
+  // together and the window itself is the filter. Either way the cost follows the activity, not the size of the academy.
+  const members = arena && arenas ? [...arenas].filter(([, a]) => a === arena).map(([id]) => id) : null;
+  if (members && !members.length) return [];
+  const slices = members ? Array.from({ length: Math.ceil(members.length / 5000) }, (_, i) => members.slice(i * 5000, (i + 1) * 5000)) : [null];
   const from = iso(p.start), to = iso(end - 1);
-  const qs = db.select({ u: dailyQuests.userId, day: dailyQuests.day }).from(dailyQuests)
-    .where(and(gte(dailyQuests.day, from), sql`${dailyQuests.day} <= ${to}`, trackId ? eq(dailyQuests.trackId, trackId) : undefined)).all().filter((q) => people.has(q.u));
+  const allRuns: { u: number; t: number; l: number; at: number | null; ok: boolean | null }[] = [], allQuests: { u: number; day: string }[] = [];
+  for (const ids of slices) {
+    for (const row of db.select({ u: runs.userId, t: runs.trackId, l: runs.level, at: runs.finishedAt, ok: runs.passed }).from(runs)
+      .where(and(gte(runs.finishedAt, p.start), lt(runs.finishedAt, end), trackId ? eq(runs.trackId, trackId) : undefined, ids ? inArray(runs.userId, ids) : undefined)).all()) allRuns.push(row); // a loop, not push(...rows): a busy week is far more rows than a call can take as arguments
+    for (const row of db.select({ u: dailyQuests.userId, day: dailyQuests.day }).from(dailyQuests)
+      .where(and(gte(dailyQuests.day, from), sql`${dailyQuests.day} <= ${to}`, trackId ? eq(dailyQuests.trackId, trackId) : undefined, ids ? inArray(dailyQuests.userId, ids) : undefined)).all()) allQuests.push(row);
+  }
+  const candidates = [...new Set([...allRuns.map((r) => r.u), ...allQuests.map((q) => q.u)])];
+  const found: { id: number; name: string }[] = [];
+  for (let i = 0; i < candidates.length; i += 5000) {
+    found.push(...db.select({ id: users.id, name: users.name }).from(users)
+      .where(and(inArray(users.id, candidates.slice(i, i + 5000)), eq(users.status, "active"), eq(users.audience, audience), eq(users.seasonBoard, "show"))).all());
+  }
+  const people = new Map(found.map((u) => [u.id, u.name]));
+  if (!people.size) return [];
+  const rs = allRuns.filter((r) => people.has(r.u));
+  const qs = allQuests.filter((q) => people.has(q.u));
 
   const passedPairs = new Set(rs.filter((r) => r.ok).map((r) => `${r.u}:${r.t}`));
   const base = new Map<string, number>(); // level held in each subject when the season began
@@ -99,9 +112,9 @@ export function settle(p: Period) {
   if (p.end > now() || db.select().from(seasonClosed).where(and(eq(seasonClosed.kind, p.kind), eq(seasonClosed.key, p.key))).get()) return;
   db.transaction((tx) => {
     // each arena is ranked on its own, so a company's people are never placed against another company's
-    const arenas = [...new Set(arenaMap().values())];
+    const map = arenaMap(), arenas = [...new Set(map.values())]; // the map is read once for all of them
     for (const [audience, arena] of (["staff", "customer"] as const).flatMap((a) => arenas.map((x) => [a, x] as const))) {
-      const rows = standings(p, audience, undefined, arena);
+      const rows = standings(p, audience, undefined, arena, map);
       for (const r of rows) {
         tx.insert(seasonResults).values({ kind: p.kind, key: p.key, userId: r.userId, rank: r.rank, points: r.points, levels: r.levels, days: r.days, players: rows.length }).onConflictDoNothing().run();
         // only tell people about a season that has just ended, not about old ones settled for the first time

@@ -9,15 +9,17 @@ import { listFor, listedFor } from "../lib/competitions";
 import { groupsOf } from "../lib/groups";
 import { periodAt, settle, standings } from "../lib/seasons";
 import { DEFAULT_LOOK, lookFor, lookOfCompany, readableWithWhite } from "../lib/brand";
-import { reinstateCertificate, revokeCertificate } from "../lib/certsAdmin";
+import { expiryWatch, expiryWatchFor, reinstateCertificate, revokeCertificate } from "../lib/certsAdmin";
 import { progressionFor } from "../lib/progression";
 import { glanceCounts } from "../lib/glance";
 import { resolveScope, scopeChoices } from "../lib/adminScope";
+import { catalog, complianceReport, loadProgress, requirementsFor, resetCatalogCache, scopesOf } from "../lib/paths";
 import { EXPIRED_NOTICE_DAYS, REMINDER_DAYS, noteExpiringCertificates, RENEW_WINDOW_DAYS, certState, signatureOf, signatureStatus } from "../lib/certs";
 import { canSeeAvatar } from "../lib/competitions";
-import { canSignOff } from "../lib/onboarding";
+import { awaitingSignoff, canSignOff, onboardingFor } from "../lib/onboarding";
 import { isGlobal, personInReach, reachOf, scopeInReach, trackInReach, usersInReach } from "../lib/tenancy";
 
+process.env.CATALOG_TTL_MS = "0"; process.env.GLANCE_TTL_MS = "0"; // the script changes tracks and questions directly, so it must never read a cached catalogue
 process.env.SESSION_SECRET ??= "check-tenancy-only-secret-0123456789"; // the certificate signature is keyed with it
 let fails = 0;
 const shared0 = () => db.select().from(brands).where(eq(brands.kind, "shared")).get()!.id;
@@ -365,7 +367,26 @@ try {
   check("narrowing never reaches wider than the person's own reach", usersInReach(asMgr(`company:${moksy.id}`)!.reach)!.has(mLearner.id) && !usersInReach(asMgr(`company:${moksy.id}`)!.reach)!.has(gLearner.id));
   check("the switcher offers a manager only their own companies, and no master", (() => { const c = scopeChoices(mMgr); return !c.owner && c.companies.length === 1 && c.companies[0].id === moksy.id && c.shared.length === 0; })());
   check("and the owner every company, with the shared academy brands", (() => { const c = scopeChoices(owner); return c.owner && c.companies.length >= 2 && c.shared.length >= 1; })());
+  check("the nav's expiring-certificates badge agrees with counting over the whole reach", [mMgr, gAdm, owner].every((u) => { const a = expiryWatch(usersInReach(reachOf(u.id))), b = expiryWatchFor(reachOf(u.id)); return a.expiring === b.expiring && a.expired === b.expired; }) && (() => { const a = expiryWatch(usersInReach(oCo.reach)), b = expiryWatchFor(oCo.reach); return a.expiring === b.expiring && a.expired === b.expired; })());
   check("the panel counts follow the chosen company", glanceCounts(owner, oCo.reach).unassigned === 0 && glanceCounts(owner, oCo.reach).certs.expiring <= glanceCounts(owner).certs.expiring);
+  // ---- the scale work must not change any answer ----
+  const sameReqs = [mLearner, mLearner2, gLearner, loose].every((u) => {
+    const at = Math.floor(Date.now() / 1000); // one fixed time for both: a due date for a track the person is not enrolled in counts from now, so two calls a second apart would differ
+    const a = requirementsFor(u, scopesOf(u.id), catalog(), at), b = requirementsFor(u, scopesOf(u.id), catalog(), at, loadProgress(new Set([u.id])));
+    return a.length === b.length && a.every((x, i) => x.track.id === b[i].track.id && x.passed === b[i].passed && x.assignedAt === b[i].assignedAt && x.dueAt === b[i].dueAt && x.done === b[i].done);
+  });
+  check("required learning is the same whether worked out for one person or for a batch", sameReqs);
+  const batch = new Set([mLearner.id, mLearner2.id, gLearner.id]);
+  const full = complianceReport(), part = complianceReport(batch);
+  check("a compliance report for some people equals the full report narrowed to them", part.length === full.filter((r) => batch.has(r.person.id)).length && part.every((r) => { const o = full.find((x) => x.person.id === r.person.id)!; return o.state === r.state && o.required === r.required && o.done === r.done && o.overdue === r.overdue; }));
+  check("people past the onboarding window are not gated and nothing is worked out for them", (() => { const old = { ...mLearner, createdAt: nowS - 200 * DAYS }; const o = onboardingFor(old, scopesOf(mLearner.id)); return !o.gated && o.phases.length === 0 && o.locked.size === 0; })());
+  check("the batched sign-off list agrees with one-by-one", awaitingSignoff(mMgr).every((a) => onboardingFor(a.person, scopesOf(a.person.id)).phases.find((p) => p.state === "ready")?.key === a.phase.key));
+  process.env.CATALOG_TTL_MS = "600000";
+  resetCatalogCache();
+  const c1 = catalog(), c2 = catalog();
+  check("the catalogue is kept between calls", c1 === c2);
+  check("and dropped when a track is added, so the change shows at once", !!addTrack(mAdmin, trackForm(zb.id, "Zz Cache Track"))?.done && catalog() !== c1 && catalog().some((t) => t.name === "Zz Cache Track"));
+  process.env.CATALOG_TTL_MS = "0";
 
   db.update(companies).set({ academyName: before.academyName, certIssuer: before.certIssuer, accent: before.accent, logo: before.logo, certValidMonths: before.certValidMonths, certSigner: before.certSigner, certSignerTitle: before.certSignerTitle }).where(eq(companies.id, moksy.id)).run();
 } finally {

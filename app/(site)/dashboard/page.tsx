@@ -7,6 +7,7 @@ import { LEVELS, MAX_LEVEL, TIERS, tierOf } from "@/lib/levels";
 import { QUEST_XP, activityFor, trackStats } from "@/lib/stats";
 import { progressionFor } from "@/lib/progression";
 import { periodAt, standings as seasonStandings, timeLeft } from "@/lib/seasons";
+import { arenaOfUser } from "@/lib/arena";
 import { BadgeWall, PlayerLevelCard } from "@/components/Achievements";
 import { RankEmblem } from "@/components/RankEmblem";
 import { AreaChart, EmptyState, Heatmap, PALETTE, Radar, StatTile } from "@/components/charts";
@@ -38,7 +39,7 @@ export default async function Dashboard() {
   const todo = db.select().from(checklistItems).where(eq(checklistItems.userId, user.id)).all();
   const stats = mine.map((m) => ({ ...m, s: trackStats(user.id, m.t, m.e.startedAt) }));
   const prog = progressionFor(user.id);
-  const week = periodAt("week"), weekRows = seasonStandings(week, user.audience), weekMe = weekRows.find((r) => r.userId === user.id);
+  const week = periodAt("week"), weekRows = seasonStandings(week, user.audience, undefined, arenaOfUser(user.id)), weekMe = weekRows.find((r) => r.userId === user.id);
   const totalXp = prog.facts.xp;
   const bestStreak = prog.streak.current;
   const contests = listFor(user, { mineOnly: true }).filter((x) => x.state === "live" || x.state === "upcoming" || x.invited).slice(0, 6);

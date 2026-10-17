@@ -1,5 +1,5 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
-import { brands, companies, db, enrollments, pillars, projects, questions, tracks, userScopes, users } from "@/lib/db";
+import { brands, companies, db, enrollments, pillars, projects, questions, runs, tracks, userScopes, users } from "@/lib/db";
 import { levelsEarned } from "@/lib/progress";
 import { MAX_LEVEL } from "@/lib/levels";
 import { tagsFor } from "@/lib/dynamic/tags";
@@ -51,16 +51,23 @@ export function setScopes(tx: Tx, userId: number, scopes: Scope[]) {
 export const openTo = (audience: Audience, trackAudience: "staff" | "customer" | "both") => trackAudience === "both" || trackAudience === audience;
 
 /** `reach` = the highest level a person can actually pass: levels unlock in order, so it stops at the first level with no questions. */
-type CatalogTrack = typeof tracks.$inferSelect & { brand: typeof brands.$inferSelect; questions: number; reach: number; pillar: string | null };
+export type CatalogTrack = typeof tracks.$inferSelect & { brand: typeof brands.$inferSelect; questions: number; reach: number; pillar: string | null };
 
-/** Every visible track with its brand and how many active questions it has. Load once, reuse for many people. */
+let cached: { at: number; rows: CatalogTrack[] } | null = null;
+// Counting the active questions is the one expensive part (hundreds of thousands of rows) and nearly every page asks for the catalogue, some several times.
+// So it is kept for a short while, and dropped at once by anything in this process that changes tracks or questions (resetCatalogCache).
+const catalogTtlMs = () => Number(process.env.CATALOG_TTL_MS ?? 30_000); // read each time so a script can switch the cache off
+export function resetCatalogCache() { cached = null; }
+
+/** Every visible track with its brand and how many active questions it has. Load once, reuse for many people. Shared and cached: do not modify the rows. */
 export function catalog(): CatalogTrack[] {
+  if (cached && Date.now() - cached.at < catalogTtlMs()) return cached.rows;
   const hidden = hiddenTrackIds();
-  const counts = new Map(
-    db.select({ id: questions.trackId, n: sql<number>`count(*)` }).from(questions).where(eq(questions.status, "active")).groupBy(questions.trackId).all().map((r) => [r.id, r.n]),
-  );
+  const counts = new Map<number, number>();
   const levels = new Map<number, Set<number>>();
-  for (const r of db.select({ id: questions.trackId, l: questions.level }).from(questions).where(eq(questions.status, "active")).groupBy(questions.trackId, questions.level).all()) {
+  // one pass over the questions, answered from the (track, status, level) index
+  for (const r of db.select({ id: questions.trackId, l: questions.level, n: sql<number>`count(*)` }).from(questions).where(eq(questions.status, "active")).groupBy(questions.trackId, questions.level).all()) {
+    counts.set(r.id, (counts.get(r.id) ?? 0) + r.n);
     levels.set(r.id, (levels.get(r.id) ?? new Set()).add(r.l));
   }
   const reachOf = (id: number, slug: string) => {
@@ -71,11 +78,13 @@ export function catalog(): CatalogTrack[] {
     return l;
   };
   const pillarSlug = new Map(db.select({ id: pillars.id, slug: pillars.slug }).from(pillars).all().map((p) => [p.id, p.slug]));
-  return db.select({ t: tracks, b: brands }).from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).all()
+  const rows = db.select({ t: tracks, b: brands }).from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).all()
     .filter((r) => !hidden.has(r.t.id)).map((r) => ({
       ...r.t, brand: r.b, questions: counts.get(r.t.id) ?? 0, reach: reachOf(r.t.id, r.t.slug),
       pillar: r.t.pillarId == null ? null : pillarSlug.get(r.t.pillarId) ?? null,
     }));
+  cached = { at: Date.now(), rows };
+  return rows;
 }
 
 /** Is this track part of the knowledge this person's companies, brands and projects share? */
@@ -111,27 +120,54 @@ export function worksForCompany(scopes: Scope[]): boolean {
   return projectIds.length > 0 && !!db.select({ id: projects.id }).from(projects).where(and(inArray(projects.id, projectIds), sql`(${projects.companyId} is not null or ${projects.brandId} is not null)`)).get();
 }
 
-/** Tracks this person must pass. Tracks without enough questions to reach the required level are left out: nobody can be required to pass what cannot be taken. */
-export function requirementsFor(person: Person, scopes: Scope[], cat = catalog(), at = now()): Requirement[] {
+/** When each person was enrolled and the highest level each has passed, for many people at once ("userId:trackId" keys). Two queries however many people. */
+export type Progress = {
+  started: Map<string, number>;
+  passed: Map<string, number>;
+  /** The required tracks worked out for each distinct (audience, role, scopes), since many people share one. Belongs to one catalogue: make a new Progress per report. */
+  tracks: Map<string, CatalogTrack[]>;
+};
+export function loadProgress(userIds?: Set<number> | null): Progress {
+  const started = new Map<string, number>(), passed = new Map<string, number>();
+  // a few thousand ids at a time (SQLite caps the number of parameters); no filter reads everyone in one go
+  const groups = userIds ? Array.from({ length: Math.ceil(userIds.size / 5000) }, (_, i) => [...userIds].slice(i * 5000, (i + 1) * 5000)) : [null];
+  for (const ids of groups) {
+    for (const e of db.select({ u: enrollments.userId, t: enrollments.trackId, at: enrollments.startedAt }).from(enrollments).where(ids ? inArray(enrollments.userId, ids) : undefined).all()) started.set(`${e.u}:${e.t}`, e.at);
+    for (const p of db.select({ u: runs.userId, t: runs.trackId, m: sql<number>`max(${runs.level})` }).from(runs).where(and(eq(runs.passed, true), ids ? inArray(runs.userId, ids) : undefined)).groupBy(runs.userId, runs.trackId).all()) passed.set(`${p.u}:${p.t}`, Math.min(p.m, MAX_LEVEL));
+  }
+  return { started, passed, tracks: new Map() };
+}
+
+/**
+ * Tracks this person must pass. Tracks without enough questions to reach the required level are left out: nobody can be required to pass what cannot be taken.
+ * For a list of people pass `prog` (loadProgress) so each person costs no queries of their own.
+ */
+export function requirementsFor(person: Person, scopes: Scope[], cat = catalog(), at = now(), prog?: Progress): Requirement[] {
   // accounts with no scope at all predate scoping; they keep the company-wide courses they always had
-  const company = person.audience === "customer" || scopes.length === 0 || worksForCompany(scopes);
-  const mine = cat.filter((t) => t.reach >= t.requiredLevel && inScope(t, person.audience, scopes))
-    .filter((t) => company || t.brand.kind !== "shared").filter((t) => {
-    if (t.tier === "mandatory") return true;
-    if (person.audience !== "staff") return false;
-    const roles = rolesOf(t);
-    if (t.tier === "role" && (!roles.length || roles.includes(person.jobRole.toLowerCase()))) return true;
-    // the role x pillar matrix (content/blueprints/pillars.json) adds requirements, unless an admin has set this track's policy by hand
-    return t.policySource !== "admin" && !isLibraryBrand(t.brand.slug) && pillarStance(person.jobRole, t.pillar) === "required";
-  });
+  const shareKey = prog ? `${person.audience}|${person.jobRole}|${scopes.map((s) => `${s.kind}:${s.id}`).sort().join(",")}` : "";
+  let mine = prog?.tracks.get(shareKey);
+  if (!mine) {
+    const company = person.audience === "customer" || scopes.length === 0 || worksForCompany(scopes);
+    mine = cat.filter((t) => t.reach >= t.requiredLevel && inScope(t, person.audience, scopes))
+      .filter((t) => company || t.brand.kind !== "shared").filter((t) => {
+      if (t.tier === "mandatory") return true;
+      if (person.audience !== "staff") return false;
+      const roles = rolesOf(t);
+      if (t.tier === "role" && (!roles.length || roles.includes(person.jobRole.toLowerCase()))) return true;
+      // the role x pillar matrix (content/blueprints/pillars.json) adds requirements, unless an admin has set this track's policy by hand
+      return t.policySource !== "admin" && !isLibraryBrand(t.brand.slug) && pillarStance(person.jobRole, t.pillar) === "required";
+    });
+    prog?.tracks.set(shareKey, mine);
+  }
   if (!mine.length) return [];
-  const started = new Map(
+  const picked = mine;
+  const started = prog ? null : new Map(
     db.select({ t: enrollments.trackId, at: enrollments.startedAt }).from(enrollments)
-      .where(and(eq(enrollments.userId, person.id), inArray(enrollments.trackId, mine.map((t) => t.id)))).all().map((r) => [r.t, r.at]),
+      .where(and(eq(enrollments.userId, person.id), inArray(enrollments.trackId, picked.map((t) => t.id)))).all().map((r) => [r.t, r.at]),
   );
-  return mine.map((t) => {
-    const passed = levelsEarned(person.id, t.id); // real exams only: a placement guess never counts as compliance
-    const assignedAt = started.get(t.id) ?? null;
+  return picked.map((t) => {
+    const passed = prog ? prog.passed.get(`${person.id}:${t.id}`) ?? 0 : levelsEarned(person.id, t.id); // real exams only: a placement guess never counts as compliance
+    const assignedAt = (prog ? prog.started.get(`${person.id}:${t.id}`) : started!.get(t.id)) ?? null;
     const dueAt = (assignedAt ?? at) + t.dueDays * DAY;
     const done = passed >= t.requiredLevel;
     return { track: t, why: t.tier === "mandatory" ? "mandatory" : "role", passed, done, assignedAt, dueAt, overdue: !done && at > dueAt } as Requirement;
@@ -163,13 +199,15 @@ export type Compliance = {
 };
 
 /** One row per active person: how far through their required path they are. */
-export function complianceReport(): Compliance[] {
+export function complianceReport(only?: Set<number> | null): Compliance[] {
   const cat = catalog();
-  const people = db.select().from(users).where(eq(users.status, "active")).orderBy(users.name).all();
-  const allScopes = db.select().from(userScopes).all();
+  const people = db.select().from(users).where(eq(users.status, "active")).orderBy(users.name).all().filter((u) => !only || only.has(u.id));
+  const scopesBy = new Map<number, Scope[]>();
+  for (const s of db.select().from(userScopes).all()) if (!only || only.has(s.userId)) scopesBy.set(s.userId, [...(scopesBy.get(s.userId) ?? []), { kind: s.kind, id: s.refId }]);
+  const prog = loadProgress(only);
   return people.map((person) => {
-    const scopes = allScopes.filter((s) => s.userId === person.id).map((s) => ({ kind: s.kind, id: s.refId }));
-    const reqs = requirementsFor(person, scopes, cat);
+    const scopes = scopesBy.get(person.id) ?? [];
+    const reqs = requirementsFor(person, scopes, cat, now(), prog);
     const open = reqs.filter((r) => !r.done);
     const overdue = open.filter((r) => r.overdue).length;
     const state = !scopes.length ? "no-scope" : !reqs.length ? "none" : overdue ? "overdue" : open.length ? "due" : "ok";

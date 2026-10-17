@@ -30,7 +30,7 @@ import { isLook } from "@/lib/avatars";
 import { awardForPass } from "@/lib/rewards";
 import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/lib/tenancy";
 import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
-import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
+import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
   "Read the brand story and values",
@@ -451,6 +451,7 @@ export async function updateTrackPolicy(fd: FormData) {
   const track = db.select().from(tracks).where(eq(tracks.id, trackId)).get();
   if (!track || !trackInReach(reachOf(me.id), track)) return;
   db.update(tracks).set({ ...policy, policySource: "admin" }).where(eq(tracks.id, trackId)).run();
+  resetCatalogCache(); // the catalogue is kept for a while; this change must show at once
   syncEveryone();
   revalidatePath("/admin/paths");
   revalidatePath("/admin/compliance");
@@ -585,6 +586,12 @@ export async function revokeSignOff(fd: FormData) {
   revalidatePath("/dashboard");
 }
 
+/** The same, for a form where each item is a button named "id" (one form per person instead of one per item). */
+export async function toggleChecklistItem(fd: FormData) {
+  const id = Number(fd.get("id"));
+  if (Number.isInteger(id)) await toggleChecklist(id);
+}
+
 export async function addHandover(fd: FormData) {
   const me = await requireManager();
   const userId = Number(fd.get("userId")), notes = str(fd.get("notes")).slice(0, 8000);
@@ -613,6 +620,7 @@ export async function retireQuestion(fd: FormData) {
   const owner = db.select({ t: tracks }).from(questions).innerJoin(tracks, eq(tracks.id, questions.trackId)).where(eq(questions.id, id)).get();
   if (!owner || !trackInReach(reachOf(me.id), owner.t)) return;
   const q = db.update(questions).set({ status }).where(eq(questions.id, id)).returning().get();
+  resetCatalogCache();
   revalidatePath("/admin/bank");
   if (q) {
     const t = db.select({ slug: tracks.slug }).from(tracks).where(eq(tracks.id, q.trackId)).get();
@@ -628,6 +636,7 @@ export async function activateTrackQuestions(trackId: number) {
   const t = db.select().from(tracks).where(eq(tracks.id, trackId)).get();
   if (!t || !trackInReach(reachOf(me.id), t)) return;
   db.update(questions).set({ status: "active" }).where(and(eq(questions.trackId, trackId), eq(questions.status, "review"))).run();
+  resetCatalogCache();
   syncEveryone();
   revalidatePath(`/admin/review/${t.slug}`);
   revalidatePath("/admin/paths");

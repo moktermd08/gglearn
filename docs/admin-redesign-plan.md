@@ -123,4 +123,4 @@ Cross-cutting checks in every phase: scoped pages read a page at a time (see `do
 - **Every page shows its scope** in a strip at the top: the kind, the name and one line on what is shown. In Master, pages with no master layer yet say they show the whole academy.
 - **Checks.** 13 new cases in `npm run check:tenancy`: who can enter master, in-reach and out-of-reach companies and brands, forged and malformed values, and what the switcher offers.
 
-Known limits: the existing pages keep gglearn's look inside the new frame until they are rebuilt with kit components; the nav counts other than Certificates arrive once the list pages are cheap enough to count on every page (see `docs/performance.md`); the admin is light only.
+Known limits: the existing pages keep gglearn's look inside the new frame until they are rebuilt with kit components; the nav shows a count only on Certificates; counts on People and Compliance can follow now that the underlying queries are cheap (see `docs/performance.md`), but they were left out so they do not add a cost to every page; the admin is light only.

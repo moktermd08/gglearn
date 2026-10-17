@@ -75,4 +75,4 @@ Not covered: certificate and share-card pages, the avatar route through the UI (
 | Domains | No per-company domain or host-based lookup. | Medium |
 | Level names and XP rules | Fixed for everyone. | Medium |
 | Wider browser coverage | A scoped manager and a scoped admin were exercised in a browser on 2026-10-16 (see below); other roles, mobile layouts and write actions beyond those listed were not. | Small |
-| Performance with many companies in one database | Not measured. `arenaMap()` and `usersInReach()` load whole tables. | Medium |
+| Performance with many companies in one database | Measured at 20 companies and 10,003 people and fixed where it hurt (see `docs/performance.md`): pages now load in 0.14 to 0.33 s for a company manager. Still one SQLite file in one process, and the reach and arena maps are read whole. | Medium |
