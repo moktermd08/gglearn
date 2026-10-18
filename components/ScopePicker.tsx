@@ -20,6 +20,7 @@ export function ScopePicker({ options, selected = [] }: { options: ScopeOptions;
   );
   return (
     <div className="w-full space-y-2">
+      <p className="text-xs text-slate-400">Where they belong. A company covers all its brands; projects are separate, so tick the ones they work on.</p>
       {group("Companies", Building2, "company", options.companies)}
       {group("Brands", Tag, "brand", options.brands.map((b) => ({ ...b, hint: b.company })))}
       {group("Projects", FolderKanban, "project", options.projects.map((p) => ({ ...p, hint: p.brand })))}

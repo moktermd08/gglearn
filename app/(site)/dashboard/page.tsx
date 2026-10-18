@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { ROLE_CHECK_VALID_DAYS } from "@/lib/roleCheck";
 import Link from "next/link";
-import { brands, checklistItems, db, enrollments, tracks } from "@/lib/db";
+import { brands, checklistItems, db, enrollments, tracks, users } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { LEVELS, MAX_LEVEL, TIERS, tierOf } from "@/lib/levels";
 import { QUEST_XP, activityFor, trackStats } from "@/lib/stats";
@@ -42,7 +42,11 @@ export default async function Dashboard() {
   const week = periodAt("week"), weekRows = seasonStandings(week, user.audience, undefined, arenaOfUser(user.id)), weekMe = weekRows.find((r) => r.userId === user.id);
   const totalXp = prog.facts.xp;
   const bestStreak = prog.streak.current;
-  const contests = listFor(user, { mineOnly: true }).filter((x) => x.state === "live" || x.state === "upcoming" || x.invited).slice(0, 6);
+  const mineAll = listFor(user, { mineOnly: true });
+  const contests = mineAll.filter((x) => x.state === "live" || x.state === "upcoming" || x.invited).slice(0, 6);
+  // races someone asked this person to join, and who asked: the first thing the page says, because nothing else on it can be answered by someone else
+  const invites = mineAll.filter((x) => x.invited && (x.state === "live" || x.state === "upcoming"));
+  const askedBy = new Map(invites.length ? db.select({ id: users.id, name: users.name }).from(users).where(inArray(users.id, invites.map((x) => x.c.createdBy))).all().map((u) => [u.id, u.name.split(" ")[0]]) : []);
   const questsDone = stats.reduce((a, m) => a + m.s.doneToday.size, 0), questsTotal = stats.length ? 3 : 0; // the daily goal is three quests, on any subjects
   const levelsPassed = stats.reduce((a, m) => a + m.s.passed, 0);
   const checkDone = todo.filter((c) => c.done).length;
@@ -52,7 +56,7 @@ export default async function Dashboard() {
   const career = careerFor(user);
   const goal = goalOf(user.id);
   const unread = pendingFor(user.id);
-  const noRolePath = user.audience === "staff" && !(user.role !== "learner" && user.jobRole === "general") && hasNoRolePath(coverageFor(user.jobRole)); // an admin account with no job role is not missing a learning path
+  const noRolePath = user.audience === "staff" && user.guest !== "yes" && !(user.role !== "learner" && user.jobRole === "general") && hasNoRolePath(coverageFor(user.jobRole)); // an admin account with no job role is not missing a learning path
   const enrolledIds = new Set(mine.map((m) => m.t.id));
   const activity = activityFor(user.id, 24);
   const last30 = activity.slice(-30).map((d) => ({ label: d.day.slice(5), value: d.value }));
@@ -141,6 +145,8 @@ export default async function Dashboard() {
   );
   const goalDone = Math.min(3, questsDone);
   const firstVisit = totalXp === 0 && levelsPassed === 0;
+  // a first day should show a handful of things, not all twenty: the rest is one click away
+  const reqCap = firstVisit ? 3 : 6, raceCap = firstVisit ? 2 : 6;
 
   return (
     <div className="space-y-6">
@@ -150,7 +156,7 @@ export default async function Dashboard() {
         <Avatar kind="human" level={bestLevel} size={92} className="bob" look={looks.me} photoUrl={looks.photoUrl} />
         <div className="relative order-last min-w-0 basis-full sm:order-none sm:flex-1 sm:basis-0">
           <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold uppercase tracking-widest" style={{ color: `hsl(${bestTier.hue} 70% 42%)` }}>
-            <span>{bestTier.name} rank</span>
+            <span title="Your rank comes from your best subject: the highest level you have passed in it.">{bestTier.name} rank</span>
             {bestStreak > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 px-2 py-0.5 text-[11px] normal-case tracking-normal text-orange-500"><Flame size={12} fill="#f97316" />{bestStreak}-day streak</span>}
           </div>
           <h1 className="text-2xl font-extrabold sm:text-3xl">{firstVisit ? "Welcome" : "Welcome back"}, {user.name}</h1>
@@ -160,11 +166,24 @@ export default async function Dashboard() {
         {questsTotal > 0 && <div className="relative text-center"><Ring pct={goalDone / questsTotal} label={`${goalDone}/${questsTotal}`} sub="daily goal" size={104} color={goalDone === questsTotal ? "#34d399" : "#38bdf8"} /></div>}
       </header>
 
+      {invites.length > 0 && (
+        <section role="status" aria-label="Invitations" className="card space-y-2 border-2 border-indigo-300/70 p-4">
+          <h2 className="flex items-center gap-2 font-bold"><Swords size={18} className="text-indigo-400" />{invites.length === 1 ? "You are invited to a race" : `You are invited to ${invites.length} races`}</h2>
+          {invites.map((x) => (
+            <Link key={x.c.id} href={`/competitions/${x.c.slug}`} className="flex flex-wrap items-center gap-3 rounded-xl bg-[#fff]/70 p-3 transition hover:shadow-md">
+              <span className="min-w-0 flex-1"><b className="block truncate">{x.c.title}</b>
+                <span className="text-xs text-slate-500">{askedBy.get(x.c.createdBy) ?? "Someone"} invited you · {x.trackName} · gain {x.c.goalLevels} level{x.c.goalLevels === 1 ? "" : "s"}</span></span>
+              <span className="btn !py-1 text-sm">See invitation<ArrowUpRight size={15} /></span>
+            </Link>
+          ))}
+        </section>
+      )}
+
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile i={0} Icon={Sparkles} label="Total XP" value={totalXp.toLocaleString("en-GB")} color={PALETTE.sky} spark={activity.slice(-14).map((d) => d.value)} />
         <StatTile i={1} Icon={Flame} label="Day streak" value={bestStreak} color="#ea580c" spark={activity.slice(-14).map((d) => (d.value ? 1 : 0))} />
         <StatTile i={2} Icon={Mountain} label="Levels passed" value={levelsPassed} color={PALETTE.violet} />
-        <StatTile i={3} Icon={Swords} label="Live contests" value={contests.filter((x) => x.state === "live").length} color={PALETTE.pink} />
+        <StatTile i={3} Icon={Swords} label="Live contests" value={contests.filter((x) => x.state === "live" && !x.invited).length} color={PALETTE.pink} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
@@ -234,7 +253,7 @@ export default async function Dashboard() {
             <section role="status" className="card flex items-start gap-3 border-amber-300/40 p-4 text-sm">
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-amber-500/15"><Compass size={18} className="text-amber-300" /></span>
               <div>
-                <b>Nothing is set up for your role yet.</b> Your role is “{user.jobRole}”, and the academy has no learning or promotion path for it, so you only see company-wide courses. Ask your manager to check your role, or pick something to learn from <Link href="/start" className="underline">Start a journey</Link>.
+                <b>Nothing is set up for your role yet.</b> Your role is “{user.jobRole}”, and the academy has no learning or promotion path for it, so you only see company-wide courses. Ask your manager to check your role, or pick something to learn from <Link href="/start" className="underline">Start a race</Link>.
               </div>
             </section>
           )}
@@ -244,10 +263,10 @@ export default async function Dashboard() {
               {heading(ShieldCheck, overdue.length ? "bg-rose-500/15 text-rose-300" : "bg-emerald-500/15 text-emerald-300", "Required for you", <span className="text-xs text-slate-400">{required.length - requiredOpen.length}/{required.length} passed</span>)}
               <div className="bar mb-3"><i style={{ width: `${((required.length - requiredOpen.length) / required.length) * 100}%`, background: overdue.length ? "#fb7185" : undefined }} /></div>
               {overdue.length > 0 && <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-rose-300"><AlertTriangle size={15} />{overdue.length} overdue. Please finish {overdue.length === 1 ? "it" : "these"} first.</p>}
-              <ul className="space-y-0.5">{required.slice(0, 6).map(reqRow)}</ul>
+              <ul className="space-y-0.5">{required.slice(0, reqCap).map(reqRow)}</ul>
               {required.length > 6 && (
-                <details className="mt-2 text-sm"><summary className="cursor-pointer text-xs font-semibold text-sky-300">Show the other {required.length - 6}</summary>
-                  <ul className="mt-2 space-y-0.5">{required.slice(6).map(reqRow)}</ul></details>
+                <details className="mt-2 text-sm"><summary className="cursor-pointer text-xs font-semibold text-sky-300">Show the other {required.length - reqCap}</summary>
+                  <ul className="mt-2 space-y-0.5">{required.slice(reqCap).map(reqRow)}</ul></details>
               )}
             </section>
           )}
@@ -290,7 +309,7 @@ export default async function Dashboard() {
           {onboarding.gated && onboarding.phases.length > 0 && (
             <section className="card p-5">
               {heading(Rocket, "bg-violet-500/15 text-violet-300", "Onboarding phases", <span className="text-xs text-slate-400">a manager signs each one off</span>)}
-              <OnboardingPhases o={onboarding} />
+              <OnboardingPhases o={onboarding} compact />
             </section>
           )}
 
@@ -314,11 +333,11 @@ export default async function Dashboard() {
             {heading(Swords, "bg-pink-500/15 text-pink-300", "My races")}
             {mine.length === 0 && <EmptyState Icon={Swords} title="No rival yet" tone="pink">Pick a subject and meet the rival who trains it every day. <Link href="/" className="underline">Browse subjects</Link>.</EmptyState>}
             <div className="grid gap-4 sm:grid-cols-2">
-              {stats.slice(0, 6).map(raceCard)}
+              {stats.slice(0, raceCap).map(raceCard)}
             </div>
-            {stats.length > 6 && (
-              <details className="mt-4"><summary className="cursor-pointer text-sm font-semibold text-sky-300">Show the other {stats.length - 6} races</summary>
-                <div className="mt-3 grid gap-4 sm:grid-cols-2">{stats.slice(6).map((x, i) => raceCard(x, i + 6))}</div></details>
+            {stats.length > raceCap && (
+              <details className="mt-4"><summary className="cursor-pointer text-sm font-semibold text-sky-300">Show the other {stats.length - raceCap} races</summary>
+                <div className="mt-3 grid gap-4 sm:grid-cols-2">{stats.slice(raceCap).map((x, i) => raceCard(x, i + raceCap))}</div></details>
             )}
           </section>
         </div>
@@ -360,6 +379,7 @@ export default async function Dashboard() {
 
           <section className="card p-5">
             {heading(Medal, "bg-yellow-500/15 text-yellow-500", "Level and badges", <span className="text-xs text-slate-400">{prog.earned}/{prog.badges.length} earned</span>)}
+            <p className="mb-3 text-xs text-slate-400">Your level grows with all the XP you earn. Your rank, at the top of the page, comes from your best subject.</p>
             <div className="mb-4"><PlayerLevelCard p={prog.player} compact /></div>
             <BadgeWall p={prog} max={8} />
           </section>

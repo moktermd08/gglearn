@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db, userScopes, users } from "@/lib/db";
+import { companies, db, userScopes, users } from "@/lib/db";
 import { companyMaps, singleCompanyIn } from "@/lib/brand";
 
 /**
@@ -29,6 +29,12 @@ export function arenaOfUser(userId: number): Arena {
   const scopes = db.select().from(userScopes).where(eq(userScopes.userId, userId)).all().map((s) => ({ kind: s.kind, id: s.refId }));
   const c = singleCompanyIn(scopes, companyMaps());
   return c == null ? OPEN : `c${c}`;
+}
+
+/** The company this person belongs to, by name, when they belong to exactly one (their arena); null for everyone else. For telling people whose race they are joining. */
+export function arenaLabel(userId: number): string | null {
+  const a = arenaOfUser(userId);
+  return a === OPEN ? null : db.select({ n: companies.name }).from(companies).where(eq(companies.id, Number(a.slice(1)))).get()?.n ?? null;
 }
 
 export const arenaOf = (userId: number, m: Map<number, Arena> = arenaMap()): Arena => m.get(userId) ?? OPEN;

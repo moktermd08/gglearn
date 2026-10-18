@@ -103,7 +103,7 @@ export default function Begin({ topics }: { topics: Topic[] }) {
             <div>
               <label htmlFor="emails" className="flex items-center gap-1.5 text-sm font-semibold"><Mail size={15} className="text-sky-300" />Their email addresses</label>
               <textarea id="emails" name="emails" rows={3} placeholder="ana@example.com, ben@example.com" className={`${input} mt-1`} />
-              <p className="mt-1 text-xs text-slate-400">People who already have an account are invited right away. Anyone else is invited automatically the moment a manager creates their account with that email. gglearn does not send email, so tell them to look for the invitation on their dashboard.</p>
+              <p className="mt-1 text-xs text-slate-400">People who already have an account are invited right away and find the invitation on their dashboard. For anyone else, you get a link to share as soon as the race is created.</p>
             </div>
           )}
         </section>

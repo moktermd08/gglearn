@@ -22,6 +22,11 @@ export function markAllRead(userId: number) {
   db.update(notifications).set({ readAt: Math.floor(Date.now() / 1000) }).where(and(eq(notifications.userId, userId), isNull(notifications.readAt))).run();
 }
 
+/** Marks one event read by its key, e.g. an invitation once it has been answered, so the bell does not keep counting it. */
+export function markKeyRead(userId: number, key: string) {
+  db.update(notifications).set({ readAt: Math.floor(Date.now() / 1000) }).where(and(eq(notifications.userId, userId), eq(notifications.key, key), isNull(notifications.readAt))).run();
+}
+
 export function markRead(userId: number, id: number) {
   db.update(notifications).set({ readAt: Math.floor(Date.now() / 1000) }).where(and(eq(notifications.userId, userId), eq(notifications.id, id), isNull(notifications.readAt))).run();
 }

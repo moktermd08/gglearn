@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { Award, BookMarked, Database, Gift, Settings2, Flame, LayoutDashboard, LogIn, LogOut, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
-import { logout, logoutEverywhere } from "@/app/actions";
+import { Award, Database, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
+import { logout } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
 import { MobileMenu } from "@/components/MobileMenu";
+import { SignOutButtons } from "@/components/SignOutButtons";
 import { Initials } from "@/components/charts";
 import { DEFAULT_LOOK, type Look } from "@/lib/brand";
 
@@ -37,10 +38,10 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
           <span className="gradient-text">{look.name}</span>
         </Link>
 
-        <div className="ml-2 hidden items-center gap-1 md:flex">
+        <div className={`ml-2 hidden items-center gap-1 ${staff ? "min-[1200px]:flex" : "min-[1090px]:flex"}`}>
           {user && <NavLink href="/dashboard"><LayoutDashboard size={15} />My quest</NavLink>}
           {user && <NavLink href="/journey"><Mountain size={15} />My career</NavLink>}
-          {user && <NavLink href="/start"><Rocket size={15} />Start a journey</NavLink>}
+          {user && <NavLink href="/start"><Rocket size={15} />Start a race</NavLink>}
           <NavLink href="/campaigns"><Flame size={15} />Campaigns</NavLink>
           <NavLink href="/seasons"><CalendarDays size={15} />Seasons</NavLink>
           <NavLink href="/competitions"><Trophy size={15} />Compete</NavLink>
@@ -52,7 +53,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
         </div>
 
         <span className="ml-auto" />
-        <div className="hidden items-center gap-2 md:flex">
+        <div className={`hidden items-center gap-2 ${staff ? "min-[1200px]:flex" : "min-[1090px]:flex"}`}>
           {user ? (
             <>
             <Link href="/notifications" className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}><Bell size={18} />{unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-full bg-pink-600 px-1 text-[10px] font-bold leading-4 text-[#fff]">{unread > 9 ? "9+" : unread}</span>}</Link>
@@ -62,8 +63,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
               <Link href="/achievements" className="items-center gap-2 hover:bg-black/5"><Medal size={15} />Achievements</Link>
               <Link href="/rewards" className="items-center gap-2 hover:bg-black/5"><Gift size={15} />My rewards</Link>
               <form action={logout}>
-                <button><LogOut size={15} />Sign out</button>
-                <button formAction={logoutEverywhere} title="Ends your session on every device" className="!text-slate-400"><BookMarked size={15} />Sign out everywhere</button>
+                <SignOutButtons everywhereClass="!text-slate-400" />
               </form>
             </Dropdown>
             </>
@@ -72,11 +72,11 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
           )}
         </div>
 
-        <MobileMenu>
+        <MobileMenu hideClass={staff ? "min-[1200px]:hidden" : "min-[1090px]:hidden"}>
           <div className="space-y-0.5 text-slate-300">
             {user && <Link href="/dashboard" className={mobile}><LayoutDashboard size={18} />My quest</Link>}
             {user && <Link href="/journey" className={mobile}><Mountain size={18} />My career</Link>}
-            {user && <Link href="/start" className={mobile}><Rocket size={18} />Start a journey</Link>}
+            {user && <Link href="/start" className={mobile}><Rocket size={18} />Start a race</Link>}
             <Link href="/campaigns" className={mobile}><Flame size={18} />Campaigns</Link>
             <Link href="/seasons" className={mobile}><CalendarDays size={18} />Seasons</Link>
             <Link href="/competitions" className={mobile}><Trophy size={18} />Compete</Link>
@@ -90,8 +90,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
                 <Link href="/achievements" className={mobile}><Medal size={18} />Achievements</Link>
                 <Link href="/rewards" className={mobile}><Gift size={18} />My rewards</Link>
                 <form action={logout}>
-                  <button className={mobile}><LogOut size={18} />Sign out</button>
-                  <button formAction={logoutEverywhere} className={`${mobile} !text-slate-400`}><BookMarked size={18} />Sign out everywhere</button>
+                  <SignOutButtons size={18} className={mobile} everywhereClass={`${mobile} !text-slate-400`} />
                 </form>
               </>
             ) : <Link href="/login" className={`${mobile} font-semibold text-indigo-300`}><LogIn size={18} />Sign in</Link>}

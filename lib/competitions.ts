@@ -159,6 +159,7 @@ export function span(sec: number): string {
 }
 
 export function modeLabel(humans: number, bots: number): string {
+  if (humans === 0 && bots === 0) return "Open: be the first";
   if (humans <= 1 && bots === 0) return "Solo";
   if (humans === 1 && bots === 1) return "Human vs Bot";
   if (humans === 1) return `Human vs ${bots} bots`;

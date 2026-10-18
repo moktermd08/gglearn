@@ -1,7 +1,7 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Bot, CalendarClock, Check, Clock, Coins, Crown, Flag, Globe, GraduationCap, Lock, Radio, Shuffle, Swords, Target, Trophy, Users } from "lucide-react";
+import { Bot, CalendarClock, Check, Clock, Coins, Crown, Flag, Globe, GraduationCap, Link2, Lock, Radio, Shuffle, Swords, Target, Trophy, Users } from "lucide-react";
 import type { Metadata } from "next";
 import { competitionCerts, competitionEmailInvites, competitionMembers, competitions, contestTwists, db, questions, tracks, users } from "@/lib/db";
 import { LIMITS, MAX_ATTEMPTS, syncTwists, twistOn, twistResults } from "@/lib/twists";
@@ -11,7 +11,11 @@ import { canView, finishersOf, modeLabel, now, payouts, span, standings, stateOf
 import { PRIZE_SPLIT_LABEL, money } from "@/lib/competitions-shared";
 import { BOT_STYLES } from "@/lib/bots";
 import { XP_PER_LEVEL } from "@/lib/levels";
-import { cancelCompetition, claimCertificate, declineInvite, joinCompetition, leaveCompetition, makePrivate, markPrizePaid, reviewTwistAction } from "../actions";
+import { cancelCompetition, claimCertificate, declineInvite, joinCompetition, leaveCompetition, makePrivate, markPrizePaid, reviewTwistAction, setGuestLink } from "../actions";
+import { CopyButton } from "@/components/CopyButton";
+import { guestAudience, guestPath, placesLeft } from "@/lib/guestLink";
+import { siteUrl } from "@/lib/share";
+import { arenaLabel } from "@/lib/arena";
 import { Competitor } from "@/components/Competitor";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import InviteForm from "./invite-form";
@@ -60,9 +64,17 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
   const mine = user ? members.find((m) => m.userId === user.id) : undefined;
   const isOrganiser = !!user && user.id === c.createdBy;
   // the organiser asked these people, so they may see who has not answered yet (everyone else only sees who joined)
-  const invitedUsers = isOrganiser ? new Map(db.select({ id: users.id, name: users.name }).from(users).all().map((u) => [u.id, u.name])) : new Map<number, string>();
+  // the invite link: offered only for topics safe to show someone with no account (lib/guestLink.ts)
+  const guestOk = isOrganiser && guestAudience(c.trackId) !== null;
+  const guestLink = guestOk && c.guestLinkVersion != null ? `${await siteUrl()}${guestPath(c)}` : null;
   const asked = isOrganiser ? members.filter((m) => m.kind === "human" && m.userId && m.userId !== c.createdBy && m.status !== "joined") : [];
-  const waitingEmails = isOrganiser ? db.select({ e: competitionEmailInvites.email }).from(competitionEmailInvites).where(eq(competitionEmailInvites.competitionId, c.id)).all().map((r) => r.e) : [];
+  // Names appear only once someone has answered. Until then the list is a count, the same whether an address has an account or not, so it cannot be used to find out who is registered.
+  const answered = asked.filter((m) => m.status !== "invited");
+  const answeredNames = new Map(answered.length ? db.select({ id: users.id, name: users.name }).from(users).where(inArray(users.id, answered.map((m) => m.userId!))).all().map((u) => [u.id, u.name]) : []);
+  const waitingCount = isOrganiser ? asked.filter((m) => m.status === "invited").length + (db.select({ n: sql<number>`count(*)` }).from(competitionEmailInvites).where(eq(competitionEmailInvites.competitionId, c.id)).get()?.n ?? 0) : 0;
+  // whose race this is: the organiser's company, when they have one, so someone invited from outside knows what they are joining
+  const organiserCompany = arenaLabel(c.createdBy), viewerCompany = user ? arenaLabel(user.id) : null;
+  const fromOutside = !!organiserCompany && organiserCompany !== viewerCompany;
   const humans = rows.filter((r) => !r.isBot).length, bots = rows.filter((r) => r.isBot);
   const over = state === "finished" || state === "canceled";
   const full = humans >= c.maxHumans;
@@ -100,7 +112,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
         <h1 className="pr-20 text-3xl font-extrabold sm:pr-48">{c.title}</h1>
         {c.description && <p className="text-slate-300">{c.description}</p>}
         <p className="text-sm text-slate-300">
-          Topic <Link href={`/tracks/${track.slug}`} className="underline">{track.name}</Link> · goal: gain <b>{c.goalLevels}</b> level{c.goalLevels === 1 ? "" : "s"} · organised by {creator?.name ?? "someone"}
+          Topic <Link href={`/tracks/${track.slug}`} className="underline">{track.name}</Link> · goal: gain <b>{c.goalLevels}</b> level{c.goalLevels === 1 ? "" : "s"} · organised by {creator?.name ?? "someone"}{organiserCompany ? ` (${organiserCompany})` : ""}
         </p>
         {c.prizeAmount > 0 && (
           <div className="flex items-center gap-3 rounded-2xl border border-amber-400/40 px-3 py-2.5 text-sm" style={{ background: "linear-gradient(120deg, rgba(251,191,36,.22), rgba(251,191,36,.06))" }}>
@@ -129,6 +141,21 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
           {state === "canceled" && "The organiser canceled this contest."}
         </p>
       </header>
+
+      {canJoin && (
+        <form action={joinCompetition.bind(null, c.id)} className="card space-y-3 border-2 border-indigo-300/70 p-5 text-sm">
+          <div className="text-lg font-extrabold">{mine?.status === "invited" ? `${creator?.name.split(" ")[0] ?? "Someone"} invited you to this race` : "Join this race"}</div>
+          {mine?.status === "invited" && fromOutside && <p className="text-slate-300">It is organised at {organiserCompany}. Everyone in the race will see your name and your progress.</p>}
+          {consent && (
+            <label className="flex max-w-md items-start gap-2"><input type="checkbox" name="consent" required className="mt-1" />
+              <span>I understand my name, photo (if I add one) and progress will be visible to anyone.</span></label>
+          )}
+          <div className="flex flex-wrap items-center gap-4">
+            <button className="btn">{mine?.status === "invited" ? "Accept and join" : "Join"}<Swords size={16} /></button>
+            {mine?.status === "invited" && <button formAction={declineInvite.bind(null, c.id)} formNoValidate className="text-sm text-slate-400 underline">No thanks</button>}
+          </div>
+        </form>
+      )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile i={0} Icon={Users} label="People" value={humans} color={PALETTE.sky} />
@@ -285,19 +312,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
           </div>
         )}
 
-        {canJoin && (
-          <form action={joinCompetition.bind(null, c.id)} className="card space-y-2 p-4 text-sm">
-            <div className="font-semibold">{mine?.status === "invited" ? "You were invited to this contest" : "Join this contest"}</div>
-            {consent && (
-              <label className="flex max-w-md items-start gap-2"><input type="checkbox" name="consent" required className="mt-1" />
-                <span>I understand my name, photo (if I add one) and progress will be visible to anyone.</span></label>
-            )}
-            <div className="flex items-center gap-3">
-              <button className="btn">{mine?.status === "invited" ? "Accept" : "Join"}<Swords size={16} /></button>
-            </div>
-          </form>
-        )}
-        {mine?.status === "invited" && !over && (
+        {mine?.status === "invited" && !over && !canJoin && (
           <form action={declineInvite.bind(null, c.id)} className="self-center"><button className="text-sm text-slate-400 underline">Decline</button></form>
         )}
         {user && !over && full && mine?.status !== "joined" && <p className="card p-4 text-sm text-slate-300">This contest is full.</p>}
@@ -329,15 +344,41 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
       {isOrganiser && !over && (
         <section className="card space-y-4 p-4">
           <h2 className="font-bold">Organiser tools</h2>
-          {(asked.length > 0 || waitingEmails.length > 0) && (
-            <div className="text-sm">
-              <h3 className="mb-1 font-semibold">Invited, not in the race yet</h3>
-              <ul className="space-y-0.5 text-slate-300">
-                {asked.map((m) => <li key={m.id}>{invitedUsers.get(m.userId!) ?? "Someone"} <span className="text-xs text-slate-500">{m.status === "invited" ? "has not answered" : m.status}</span></li>)}
-                {waitingEmails.map((e) => <li key={e}>{e} <span className="text-xs text-slate-500">no account yet; invited when one is created</span></li>)}
-              </ul>
+          {(waitingCount > 0 || answered.length > 0) && (
+            <div className="space-y-1 text-sm">
+              <h3 className="font-semibold">Invited, not in the race yet</h3>
+              {waitingCount > 0 && <p className="text-slate-300">{waitingCount} invited and not answered yet. Names show here once someone answers.</p>}
+              {answered.length > 0 && (
+                <ul className="space-y-0.5 text-slate-300">
+                  {answered.map((m) => <li key={m.id}>{answeredNames.get(m.userId!) ?? "Someone"} <span className="text-xs text-slate-500">{m.status === "declined" ? "said no" : "left"}</span></li>)}
+                </ul>
+              )}
             </div>
           )}
+          <div className="space-y-2 text-sm">
+            <h3 className="flex items-center gap-1.5 font-semibold"><Link2 size={15} className="text-indigo-300" />Invite link</h3>
+            {!guestOk ? (
+              <p className="text-slate-400">This topic belongs to a company, so a link cannot bring in people who have no account. Invite colleagues by email below, or ask a manager to add people.</p>
+            ) : guestLink ? (
+              <>
+                <p className="text-slate-300">Send this to friends. They join with one click, and if they have no account they make one in a few seconds. {placesLeft(c)} place{placesLeft(c) === 1 ? "" : "s"} left.</p>
+                <div className="flex flex-wrap gap-2">
+                  <input readOnly aria-label="Invite link" value={guestLink} className="block min-w-0 flex-1 rounded border border-white/20 bg-[#fff] px-2 py-1" />
+                  <CopyButton label="Copy link" text={guestLink} />
+                  <CopyButton label="Copy message" text={`Join my gglearn race "${c.title}": gain ${c.goalLevels} level${c.goalLevels === 1 ? "" : "s"} in ${track.name}. Open this link to join: ${guestLink}`} />
+                </div>
+                <div className="flex flex-wrap gap-4 text-xs text-slate-400">
+                  <form action={setGuestLink.bind(null, c.id, "new")}><button className="underline">Make a new link</button> <span>(the old one stops working)</span></form>
+                  <form action={setGuestLink.bind(null, c.id, "off")}><button className="underline">Stop sharing</button></form>
+                </div>
+              </>
+            ) : (
+              <form action={setGuestLink.bind(null, c.id, "on")} className="space-y-1.5">
+                <p className="text-slate-300">Friends with no account cannot be invited by email. Make a link instead: anyone who opens it can join, up to {c.maxHumans} people, until the race ends. You can switch it off any time.</p>
+                <button className="btn !py-1.5"><Link2 size={14} />Create invite link</button>
+              </form>
+            )}
+          </div>
           <InviteForm competitionId={c.id} />
           <div className="flex flex-wrap gap-4 text-sm">
             {c.visibility === "public" && <form action={makePrivate.bind(null, c.id)}><button className="underline">Make private</button></form>}
@@ -360,7 +401,7 @@ function Lane({ r, goal, i }: { r: Standing; goal: number; i: number }) {
   const hue = (r.userId ?? 0) * 47 % 360;
   return (
     <div className={`card rise flex items-center gap-4 p-3 ${r.rank === 1 && r.gained > 0 ? "border-amber-400/40" : ""}`} style={{ "--i": i } as React.CSSProperties}>
-      <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-black" style={r.rank <= 3 && r.gained > 0 ? { background: ["#fde68a", "#e2e8f0", "#fdba74"][r.rank - 1], color: ["#92400e", "#475569", "#9a3412"][r.rank - 1] } : { color: "#6f7788" }}>{r.rank === 1 && r.gained > 0 ? <Crown size={18} /> : r.rank}</div>
+      <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-black" style={r.rank <= 3 && r.gained > 0 ? { background: ["#fde68a", "#e2e8f0", "#fdba74"][r.rank - 1], color: ["#92400e", "#475569", "#9a3412"][r.rank - 1] } : { color: "#6f7788" }}>{r.rank === 1 && r.gained > 0 ? <Crown size={18} /> : (r.gained === 0 && r.xp === 0 && r.reachedAt === null ? "–" : r.rank)}</div>
       <Competitor isBot={r.isBot} seed={r.isBot ? (r.member.botSeed ?? r.name) : `u${r.userId}`} name={r.name} size={52}
         photoUrl={r.hasPhoto ? `/api/avatar/${r.userId}?v=${r.photoVersion}` : null} />
       <div className="min-w-0 flex-1">

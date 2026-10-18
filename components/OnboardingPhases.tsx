@@ -14,7 +14,7 @@ const date = (t: number) => new Date(t * 1000).toLocaleDateString("en-GB", { day
  * The onboarding phases and the gate between them. A learner sees where they are and what is holding them back; a manager
  * (`sign` set) also gets the button that signs a finished phase, and can undo one.
  */
-export function OnboardingPhases({ o, sign }: { o: Onboarding; sign?: { userId: number } }) {
+export function OnboardingPhases({ o, sign, compact = false }: { o: Onboarding; sign?: { userId: number }; compact?: boolean }) {
   if (!o.phases.length) return null;
   return (
     <ol className="space-y-2.5">
@@ -29,13 +29,22 @@ export function OnboardingPhases({ o, sign }: { o: Onboarding; sign?: { userId: 
               <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${badge.cls}`}>{badge.text}</span>
               <span className="ml-auto text-xs text-slate-400">{done}/{p.reqs.length} passed</span>
             </div>
-            {p.state !== "signed" && p.state !== "locked" && (
+            {p.state !== "signed" && p.state !== "locked" && (compact && p.reqs.length > 3 ? (
+              <details className="mt-1.5 text-xs text-slate-400">
+                <summary className="cursor-pointer font-semibold text-sky-300">Show the {p.reqs.length} tracks in this phase</summary>
+                <ul className="mt-1.5 space-y-0.5">
+                  {p.reqs.map((r) => (
+                    <li key={r.track.id} className="flex items-center gap-1.5">{r.done ? <CheckCircle2 size={12} className="text-emerald-400" /> : <Square size={12} />}<span className={r.done ? "line-through" : ""}>{r.track.name}</span></li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
               <ul className="mt-1.5 space-y-0.5 text-xs text-slate-400">
                 {p.reqs.map((r) => (
                   <li key={r.track.id} className="flex items-center gap-1.5">{r.done ? <CheckCircle2 size={12} className="text-emerald-400" /> : <Square size={12} />}<span className={r.done ? "line-through" : ""}>{r.track.name}</span></li>
                 ))}
               </ul>
-            )}
+            ))}
             {p.state === "locked" && <p className="mt-1.5 text-xs text-slate-400">{p.reqs.length} required {p.reqs.length === 1 ? "track opens" : "tracks open"} once your manager signs off the earlier phase.</p>}
             {p.state === "ready" && !sign && <p className="mt-1.5 text-xs text-slate-400">All passed. Your manager signs this off to open the next phase.</p>}
             {p.signed && <p className="mt-1.5 text-xs text-slate-400">Signed by {p.signed.by} on {date(p.signed.at)}{p.signed.note && <> · “{p.signed.note}”</>}</p>}
