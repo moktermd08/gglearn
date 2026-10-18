@@ -26,6 +26,7 @@ import { twistFor } from "@/lib/twists";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
 import { siteUrl } from "@/lib/share";
+import { mailConfigured, sendInvites } from "@/lib/mail";
 import { safeNext } from "@/lib/nextPath";
 import { type Level, isLevel, levelForInvite, refuseAccess, setAccessLevel } from "@/lib/accessLevel";
 import type { SetupState } from "@/lib/setup";
@@ -416,8 +417,10 @@ export type InviteState = {
   notice?: string;
   /** who is inviting, where to and as what: the form turns these into a ready-to-send message */
   message?: { from: string; where: string; role: string; access: Level };
+  /** the result of emailing the invitations, when that was asked for and email is set up */
+  mail?: { sent: string[]; failed: { email: string; error: string }[] };
   /** what was typed, returned on an error so the form is not emptied (a form action resets its fields) */
-  values?: { emails: string; jobRole: string; audience: "staff" | "customer"; scopes: string; access: Level };
+  values?: { emails: string; jobRole: string; audience: "staff" | "customer"; scopes: string; access: Level; sendEmail: boolean };
 } | null;
 
 const MAX_INVITES_AT_ONCE = 25;
@@ -428,7 +431,7 @@ export async function createInvite(_: InviteState, fd: FormData): Promise<Invite
   const emails = [...new Set(str(fd.get("emails")).toLowerCase().split(/[\s,;]+/).filter(Boolean))];
   const keep: NonNullable<InviteState>["values"] = {
     emails: str(fd.get("emails")), jobRole: str(fd.get("jobRole")),
-    audience: str(fd.get("audience")) === "customer" ? "customer" : "staff", access: accessFrom(fd), scopes: fd.getAll("scope").filter((v): v is string => typeof v === "string").join(","),
+    audience: str(fd.get("audience")) === "customer" ? "customer" : "staff", access: accessFrom(fd), sendEmail: str(fd.get("sendEmail")) === "on", scopes: fd.getAll("scope").filter((v): v is string => typeof v === "string").join(","),
   };
   const p = z.object({
     emails: z.array(z.string().email().max(120)).min(1).max(MAX_INVITES_AT_ONCE),
@@ -467,7 +470,11 @@ export async function createInvite(_: InviteState, fd: FormData): Promise<Invite
     notice = `Nothing is assigned to customers with this scope yet, so they would start with an empty path.${hint.length ? ` Also tick the product: ${[...new Set(hint)].join(", ")}.` : " Tick the product (project) or brand they bought."}`;
   }
   const where = scopeLabels(scopes, scopeOptions()).join(", ");
-  return { invites: invites_, skipped: taken.size ? [...taken] : undefined, notice, message: { from: me.name, where, role: p.data.jobRole, access } };
+  // email them too, when the manager asked and the server is set up for it; the links stay on screen either way
+  const mail = keep.sendEmail && mailConfigured()
+    ? await sendInvites(me.id, invites_.map((i) => ({ to: i.email, link: i.url, from: me.name, where, role: p.data.jobRole, access, replyTo: me.email, key: `invite-${hashToken(i.path.split("/").pop()!).slice(0, 32)}` })))
+    : undefined;
+  return { invites: invites_, skipped: taken.size ? [...taken] : undefined, notice, mail, message: { from: me.name, where, role: p.data.jobRole, access } };
 }
 
 /** Moves someone to a different set of companies, brands and projects, then enrols them in whatever that now requires. */

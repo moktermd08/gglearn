@@ -29,7 +29,7 @@ export function AdminNav({ groups, scope, choices, signedInAs }: {
           <div className="scope-list">
             <form action={setAdminScope}>
               <input type="hidden" name="next" value={path} />
-              {choices.owner && <ScopeItem field="scope" on={scope === "master"} value="master" label="Master" title="The academy's general layer: what every company starts from" mark={mark("layers")} />}
+              {choices.owner && <ScopeItem field="scope" on={scope === "master"} value="master" label="Academy defaults" title="The academy's general layer: what every company starts from" mark={mark("layers")} />}
               <ScopeItem field="scope" on={scope === "all"} value="all" label={choices.owner ? "Whole academy" : "Everything I run"} mark={mark("grid")} count={choices.companies.length} />
               {choices.companies.map((c) => (
                 <div key={c.id}>

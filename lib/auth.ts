@@ -1,8 +1,9 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { eq, sql } from "drizzle-orm";
 import { db, users } from "@/lib/db";
+import { safeNext } from "@/lib/nextPath";
 
 const COOKIE = "gglearn_session";
 const SESSION_TTL_SEC = 60 * 60 * 24 * 30;
@@ -52,7 +53,11 @@ export async function currentUser() {
 
 export async function requireUser() {
   const u = await currentUser();
-  if (!u) redirect("/login");
+  if (!u) {
+    // send them back to the page they asked for once they have signed in (set by proxy.ts, and only ever a path inside this site)
+    const back = safeNext((await headers()).get("x-return-to"));
+    redirect(back && !back.startsWith("/login") ? `/login?next=${encodeURIComponent(back)}` : "/login");
+  }
   return u;
 }
 

@@ -22,7 +22,7 @@ function inviteMessage(m: { from: string; where: string; role: string; access: s
   };
 }
 
-export default function InvitePerson({ options, roles, access = [] }: { options: ScopeOptions; roles: string[]; access?: AccessChoice[] }) {
+export default function InvitePerson({ options, roles, access = [], mailReady = false }: { options: ScopeOptions; roles: string[]; access?: AccessChoice[]; mailReady?: boolean }) {
   const [state, run, pending] = useActionState<InviteState, FormData>(createInvite, null);
   const input = "rounded border border-white/20 bg-[#fff] px-2 py-1";
   const kept = state?.values; // after an error the form shows what was typed instead of emptying
@@ -36,14 +36,17 @@ export default function InvitePerson({ options, roles, access = [] }: { options:
       </select>
       <AccessSelect choices={access} defaultValue={kept?.access} className={input} />
       <ScopePicker options={options} selected={kept ? scopesFrom(kept.scopes) : []} />
-      <button disabled={pending} className="btn !py-1.5 py-1.5 disabled:opacity-50"><Link2 size={14} />{pending ? "Creating…" : "Create invites"}</button>
+      {mailReady && <label className="flex items-center gap-2"><input type="checkbox" name="sendEmail" defaultChecked={kept?.sendEmail ?? true} />Email the invitation now</label>}
+      <button disabled={pending} className="btn !py-1.5 py-1.5 disabled:opacity-50"><Link2 size={14} />{pending ? "Creating…" : mailReady ? "Create and send invites" : "Create invites"}</button>
       {state?.error && <p role="alert" className="slide-in flex w-full items-center gap-1.5 text-rose-400"><TriangleAlert size={14} />{state.error}</p>}
       {!pending && state?.notice && <p role="status" className="slide-in flex w-full items-start gap-1.5 text-amber-300"><Info size={14} className="mt-0.5 shrink-0" />{state.notice}</p>}
       {!pending && state?.skipped && <p className="w-full text-slate-400">No link for {state.skipped.join(", ")}: already has an account.</p>}
       {!pending && state?.invites && (
         <div className="pop w-full space-y-2 text-slate-300">
           <span className="flex items-center gap-1.5 text-emerald-300"><Check size={14} />{state.invites.length === 1 ? "Invite ready." : `${state.invites.length} invites ready.`}</span>
-          <span className="flex flex-wrap items-center gap-2"><span className="flex items-center gap-1.5"><Mail size={13} className="shrink-0 text-slate-400" /><span>Next: send each person their invite. gglearn does not send email itself, so use <b className="text-slate-200">Open in email</b> (your mail app opens with the message written) or copy it. Each link works once, for 7 days, and is shown only now.</span></span>
+          <span className="flex flex-wrap items-center gap-2"><span className="flex items-center gap-1.5"><Mail size={13} className="shrink-0 text-slate-400" />{state.mail
+              ? <span>{state.mail.sent.length > 0 && <>Emailed to <b className="text-slate-200">{state.mail.sent.join(", ")}</b>. </>}{state.mail.failed.length > 0 && <span className="text-amber-300">Could not email {state.mail.failed.map((f) => `${f.email} (${f.error})`).join("; ")}: send those yourself with <b>Open in email</b> or copy the link. </span>}The links are below too. Each works once, for 7 days, and is shown only now.</span>
+              : <span>Next: send each person their invite. {mailReady ? "You chose not to email them from here, so use" : "gglearn is not set up to send email, so use"} <b className="text-slate-200">Open in email</b> (your mail app opens with the message written) or copy it. Each link works once, for 7 days, and is shown only now.</span>}</span>
             {state.invites.length > 1 && <CopyButton label="Copy all links" text={state.invites.map((i) => `${i.email}: ${i.url}`).join("\n")} />}</span>
           <ul className="space-y-2">
             {state.invites.map((i) => (

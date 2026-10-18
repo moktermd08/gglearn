@@ -6,6 +6,7 @@ import { requireManager } from "@/lib/auth";
 import { addHandover, offboard, setAccess, toggleChecklistItem, updateScopes } from "@/app/actions";
 import { ActionForm } from "@/components/admin/ActionForm";
 import { LEVELS, grantableLevels } from "@/lib/accessLevel";
+import { mailConfigured } from "@/lib/mail";
 import { catalog, loadProgress, scopeLabels, scopeOptions, scopesOf } from "@/lib/paths";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { ScopePicker } from "@/components/ScopePicker";
@@ -65,7 +66,7 @@ export default async function People({ searchParams }: { searchParams: Promise<{
       </div>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-sky-500/15 text-sky-300"><Mail size={17} /></span>Invite someone</h2>
-        <InvitePerson options={options} roles={roles} access={grantable} />
+        <InvitePerson options={options} roles={roles} access={grantable} mailReady={mailConfigured()} />
       </section>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-emerald-500/15 text-emerald-300"><UserPlus size={17} /></span>Or create their account yourself</h2>

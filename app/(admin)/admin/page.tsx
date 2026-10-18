@@ -63,7 +63,7 @@ export default async function Overview() {
 
       <Section icon="layers" title="How the scopes work" subtitle="Switch scope at the top of the side nav.">
         <div style={{ display: "grid", gap: 6, fontSize: 13 }}>
-          <div><b>Master</b> is the academy&apos;s general layer: the content and defaults every company starts from. Only the platform owner can open it.</div>
+          <div><b>Academy defaults</b> is the academy&apos;s general layer: the content and defaults every company starts from. Only the platform owner can open it.</div>
           <div><b>A company</b> shows that company&apos;s people, brands and content, and (as they arrive) its own settings on top of the master.</div>
           <div><b>A brand</b> narrows to one brand inside a company.</div>
           <div><b>Whole academy</b> or <b>Everything I run</b> shows all of it at once.</div>

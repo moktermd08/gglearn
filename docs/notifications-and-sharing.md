@@ -1,7 +1,7 @@
 # Notifications and share cards
 
 ## Notifications (`/notifications`, the bell in the header)
-In-app only: no email or push. Logic: `lib/notifications.ts`.
+In-app, no push. The one email gglearn can send is a manager's invitation to a new person (`lib/mail.ts`, through Resend, only when `RESEND_API_KEY` and `MAIL_FROM` are set; otherwise managers copy the link or use "Open in email"). Logic: `lib/notifications.ts`.
 - **Events**: a badge earned, a player level up, a season result (only for a season that ended in the last 3 days), and a contest invitation to an existing account.
 - **Stored once per event**: each row has a `key` (`badge-streak-3`, `level-12`, `season-week-2026-W41`, `invite-<id>`), unique per person, so the code that notices an event can run any number of times.
 - **No backfill spam**: the first time someone opens progression, what they already had is filed as read.

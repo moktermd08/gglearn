@@ -38,13 +38,15 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
           <span className="gradient-text">{look.name}</span>
         </Link>
 
-        <div className={`ml-2 hidden items-center gap-1 ${staff ? "min-[1200px]:flex" : "min-[1090px]:flex"}`}>
+        <div className={`ml-2 hidden items-center gap-1 ${staff ? "min-[1040px]:flex" : "min-[940px]:flex"}`}>
           {user && <NavLink href="/dashboard"><LayoutDashboard size={15} />My quest</NavLink>}
           {user && <NavLink href="/journey"><Mountain size={15} />My career</NavLink>}
           {user && <NavLink href="/start"><Rocket size={15} />Start a race</NavLink>}
-          <NavLink href="/campaigns"><Flame size={15} />Campaigns</NavLink>
-          <NavLink href="/seasons"><CalendarDays size={15} />Seasons</NavLink>
-          <NavLink href="/competitions"><Trophy size={15} />Compete</NavLink>
+          <Dropdown prefix={["/competitions", "/campaigns", "/seasons"]} label={<><Trophy size={15} />Compete</>}>
+            <NavLink href="/competitions"><Trophy size={15} />Contests</NavLink>
+            <NavLink href="/campaigns"><Flame size={15} />Campaigns</NavLink>
+            <NavLink href="/seasons"><CalendarDays size={15} />Seasons</NavLink>
+          </Dropdown>
           {staff && (
             <Dropdown prefix="/admin" label={<><ShieldCheck size={15} />Admin</>}>
               {adminLinksFor(user!.role).map(({ href, label, Icon }) => <NavLink key={href} href={href} exact={href === "/admin"}><Icon size={15} />{label}</NavLink>)}
@@ -53,7 +55,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
         </div>
 
         <span className="ml-auto" />
-        <div className={`hidden items-center gap-2 ${staff ? "min-[1200px]:flex" : "min-[1090px]:flex"}`}>
+        <div className={`hidden items-center gap-2 ${staff ? "min-[1040px]:flex" : "min-[940px]:flex"}`}>
           {user ? (
             <>
             <Link href="/notifications" className="grid h-9 w-9 place-items-center rounded-full hover:bg-black/5" aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}><Bell size={18} />{unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid min-w-4 place-items-center rounded-full bg-pink-600 px-1 text-[10px] font-bold leading-4 text-[#fff]">{unread > 9 ? "9+" : unread}</span>}</Link>
@@ -72,7 +74,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
           )}
         </div>
 
-        <MobileMenu hideClass={staff ? "min-[1200px]:hidden" : "min-[1090px]:hidden"}>
+        <MobileMenu hideClass={staff ? "min-[1040px]:hidden" : "min-[940px]:hidden"}>
           <div className="space-y-0.5 text-slate-300">
             {user && <Link href="/dashboard" className={mobile}><LayoutDashboard size={18} />My quest</Link>}
             {user && <Link href="/journey" className={mobile}><Mountain size={18} />My career</Link>}
