@@ -4,7 +4,7 @@ export { GATES, LINES };
 export type { LineId, Gate };
 
 /* Layout of the map, in SVG units. */
-export const U = 78, LEFT = 230, TOP = 150, ROW = 84;
+export const U = 96, LEFT = 230, TOP = 170, ROW = 98;
 export const W = LEFT + 40 * U + 70, H = TOP + 9 * ROW + 72;
 export const px = (x: number) => LEFT + x * U;
 export const py = (row: number) => TOP + row * ROW;
@@ -104,7 +104,7 @@ for (const l of LINES) {
   const last = { a: -1e9, b: -1e9 };
   let prev: "a" | "b" = "b";
   for (const st of stationsOn(l.id)) {
-    const X = px(st.x), w = st.name.length * 7.6;
+    const X = px(st.x), w = st.name.length * 9.1;
     const span = (anchor: Station["anchor"]) => anchor === "middle" ? [X - w / 2, X + w / 2] : anchor === "start" ? [X - 6, X - 6 + w] : [X + 6 - w, X + 6];
     const clearOfGates = (L: number, R: number) => !gx.some((g) => g > L - 10 && g < R + 10);
     const alt: "a" | "b" = prev === "a" ? "b" : "a", other: "a" | "b" = alt === "a" ? "b" : "a";
