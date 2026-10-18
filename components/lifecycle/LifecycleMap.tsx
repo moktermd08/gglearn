@@ -44,7 +44,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const focusLines = useMemo(() => new Set<LineId>(FOCUS.find((f) => f.id === focus)!.lines), [focus]);
   /* The route: the stops a role's career ladder asks for, or every stop on the lines of the chosen area. */
   const routeIds = useMemo(() => {
-    if (role) { const t = new Set(role.tracks); const ids = STATIONS.filter((s) => t.has(s.track)).map((s) => s.id); if (ids.length) return new Set(ids); }
+    if (role) { const t = new Set(role.core); const ids = STATIONS.filter((s) => t.has(s.track)).map((s) => s.id); if (ids.length) return new Set(ids); }
     return new Set(STATIONS.filter((s) => focusLines.has(s.line)).map((s) => s.id));
   }, [role, focusLines]);
   const litLines = useMemo(() => new Set<LineId>(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.line)), [routeIds]);
@@ -162,7 +162,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
     setRoleKey(key); setPicker(false); setPq(""); setSel(null); setHint(false);
     const r = data.roles.find((x) => x.key === key);
     if (!r) { setFocus("all"); frameLines(new Set<LineId>(LINES.map((l) => l.id))); return; }
-    const t = new Set(r.tracks), ls = new Set<LineId>(STATIONS.filter((st) => t.has(st.track)).map((st) => st.line));
+    const t = new Set(r.core), ls = new Set<LineId>(STATIONS.filter((st) => t.has(st.track)).map((st) => st.line));
     frameLines(ls.size ? ls : new Set<LineId>(LINES.map((l) => l.id)));
   };
   const goNext = () => { if (next) pick({ kind: "st", id: next.id }); };

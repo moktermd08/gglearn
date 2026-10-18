@@ -23,12 +23,19 @@ export function loadRoles(): RoleInfo[] {
   if (cache) return cache;
   const dir = path.join(process.cwd(), "content", "careers", "roles");
   const roles: RoleInfo[] = [];
+  const levels = new Map<string, Map<string, number>>();
   for (const f of fs.readdirSync(dir).filter((n) => n.endsWith(".json")).sort()) {
     try {
       const j = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as { role: string; name: string; rungs?: { steps?: [string, number][] }[] };
-      const tracks = [...new Set((j.rungs ?? []).flatMap((r) => (r.steps ?? []).map((s) => s[0])))];
-      roles.push({ key: j.role, name: j.name, aliases: ALIASES[j.role] ?? [], tracks });
+      const top = new Map<string, number>();
+      for (const r of j.rungs ?? []) for (const [t, l] of r.steps ?? []) top.set(t, Math.max(top.get(t) ?? 0, l));
+      levels.set(j.role, top);
+      roles.push({ key: j.role, name: j.name, aliases: ALIASES[j.role] ?? [], tracks: [...top.keys()], core: [] });
     } catch { /* a ladder file that does not parse is simply not offered */ }
   }
+  // A track most ladders ask for (such as governance and compliance) is a basic, not what sets a role apart, so it only counts as core when this ladder wants it at level 8 or more.
+  const shared = new Map<string, number>();
+  for (const r of roles) for (const t of r.tracks) shared.set(t, (shared.get(t) ?? 0) + 1);
+  for (const r of roles) r.core = r.tracks.filter((t) => (shared.get(t) ?? 0) <= roles.length * 0.7 || (levels.get(r.key)?.get(t) ?? 0) >= 8);
   return (cache = roles.sort((a, b) => a.name.localeCompare(b.name)));
 }

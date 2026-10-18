@@ -145,7 +145,13 @@ export function focusForRole(role: string | null | undefined): FocusId {
 }
 
 /** A job role from the career ladders, with every track its ladder asks for. */
-export type RoleInfo = { key: string; name: string; aliases: string[]; tracks: string[] };
+export type RoleInfo = {
+  key: string; name: string; aliases: string[];
+  /** every track the ladder asks for (used to find races) */
+  tracks: string[];
+  /** the tracks that set this role apart: asked for at level 8 or more, or not a basic that nearly every role shares (used for the route) */
+  core: string[];
+};
 /** A live or upcoming public race (campaign) on one track. */
 export type RaceInfo = {
   id: string; title: string; track: string; trackName: string; state: "live" | "upcoming"; humans: number; slug: string; hook: string; headline: string; goal: number; days: number;
