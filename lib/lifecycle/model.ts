@@ -141,10 +141,11 @@ export type FocusId = (typeof FOCUS)[number]["id"];
 
 /** Areas that follow a hand-picked set of stops instead of whole lines (a whole line would pull in stops the area never touches). */
 export const FOCUS_STOPS: Partial<Record<FocusId, readonly string[]>> = {
+  sell: ["market", "icp", "position", "compwatch", "brandvoice", "valueprop", "funnel", "pricing", "content", "contentplan", "gtm", "landing", "leadcapture", "crm", "playbook", "paidsocial", "launch", "emailseq", "salesen", "calls", "pipeline"],
   customers: ["emailseq", "onboard", "feedback", "health", "renewal", "custnotice", "hypercare", "servicedesk", "incident", "userguide", "runbooks"],
 };
 /** Where "Take me to my next stop" begins for an area, when nothing is required or in progress. */
-export const FOCUS_START: Partial<Record<FocusId, string>> = { customers: "onboard" };
+export const FOCUS_START: Partial<Record<FocusId, string>> = { sell: "icp", customers: "onboard" };
 /** The lines an area touches. */
 export const focusLinesOf = (id: FocusId): Set<LineId> => {
   const stops = FOCUS_STOPS[id];
