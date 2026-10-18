@@ -74,15 +74,15 @@ export type Station = {
   id: string; line: LineId; x: number; row: number; name: string; scale: Scale; ai: boolean; owner: string; ins: string[]; outs: string[];
   /** slug of the Software Lifecycle track this stop belongs to */
   track: string;
-  /** label placement: above (a) or below (b) the line, and how it is anchored */
-  side: "a" | "b"; anchor: "start" | "middle" | "end"; L: number; R: number;
+  /** label placement: always above the line, on the near (0) or far (1) tier, and how it is anchored */
+  tier: 0 | 1; anchor: "start" | "middle" | "end"; L: number; R: number;
 };
 
 export const STATIONS: Station[] = [];
 for (const line of LINES) for (const a of RAW[line.id]) {
   STATIONS.push({
     id: a[0], line: line.id, x: a[1], row: line.row, name: a[2], scale: a[3], ai: !!a[4], owner: a[6], ins: a[7].split("|"), outs: a[8].split("|"),
-    track: TRACK_OVERRIDE.get(a[0]) ?? LINE_DEFAULT[line.id], side: "a", anchor: "middle", L: 0, R: 0,
+    track: TRACK_OVERRIDE.get(a[0]) ?? LINE_DEFAULT[line.id], tier: 0, anchor: "middle", L: 0, R: 0,
   });
 }
 export const STATION_BY_ID = new Map(STATIONS.map((s) => [s.id, s]));
@@ -98,24 +98,24 @@ export const SEQ = Object.fromEntries(LINES.map((l) => {
 })) as Record<LineId, Stop[]>;
 export const stationsOn = (line: LineId) => STATIONS.filter((s) => s.line === line).sort((a, b) => a.x - b.x);
 
-// Label layout: each label goes above or below its line, centred or shifted to one side, whichever clears its neighbours and the gate connectors.
+// Label layout: every label sits above its line, on the near tier or (when that is taken) a second tier higher up, centred or shifted to one side, whichever clears its neighbours and the gate connectors.
 for (const l of LINES) {
   const gx = GATES.filter((g) => gateRow(g) <= l.row && l.row <= gateBottom(g)).map((g) => px(g.x));
-  const last = { a: -1e9, b: -1e9 };
-  let prev: "a" | "b" = "b";
+  const last: [number, number] = [-1e9, -1e9];
+  let prev: 0 | 1 = 1;
   for (const st of stationsOn(l.id)) {
     const X = px(st.x), w = st.name.length * 7.6;
     const span = (anchor: Station["anchor"]) => anchor === "middle" ? [X - w / 2, X + w / 2] : anchor === "start" ? [X - 6, X - 6 + w] : [X + 6 - w, X + 6];
     const clearOfGates = (L: number, R: number) => !gx.some((g) => g > L - 10 && g < R + 10);
-    const alt: "a" | "b" = prev === "a" ? "b" : "a", other: "a" | "b" = alt === "a" ? "b" : "a";
-    const tries: [Station["side"], Station["anchor"]][] = [[alt, "middle"], [other, "middle"], [alt, "start"], [other, "start"], [alt, "end"], [other, "end"]];
-    // first choice: no overlap and no gate line through the text; then allow the text to cross a gate line (it has a halo); last resort: least crowded lane
-    const fits = ([side, anchor]: (typeof tries)[number]) => span(anchor)[0] > last[side] + 8;
+    const alt: 0 | 1 = prev === 0 ? 1 : 0, other: 0 | 1 = alt === 0 ? 1 : 0;
+    const tries: [0 | 1, Station["anchor"]][] = [[alt, "middle"], [other, "middle"], [alt, "start"], [other, "start"], [alt, "end"], [other, "end"]];
+    // first choice: no overlap and no gate line through the text; then allow the text to cross a gate line (it has a halo); last resort: least crowded tier
+    const fits = ([tier, anchor]: (typeof tries)[number]) => span(anchor)[0] > last[tier] + 8;
     let pick = tries.find((t) => fits(t) && clearOfGates(...(span(t[1]) as [number, number]))) ?? tries.find(fits);
     if (!pick) pick = [...tries].sort((p, q) => last[p[0]] - last[q[0]])[0];
-    const [side, anchor] = pick, [L, R] = span(anchor);
-    last[side] = R; prev = side;
-    Object.assign(st, { side, anchor, L, R });
+    const [tier, anchor] = pick, [L, R] = span(anchor);
+    last[tier] = R; prev = tier;
+    Object.assign(st, { tier, anchor, L, R });
   }
 }
 

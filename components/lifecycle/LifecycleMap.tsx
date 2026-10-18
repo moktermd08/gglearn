@@ -207,7 +207,7 @@ export function LifecycleMap({ data, signage }: { data: MapData; signage: string
             {/* stations */}
             {STATIONS.map((st) => {
               const X = px(st.x), Y = py(st.row), c = LINE_COLOUR[st.line], t = data.tracks[st.track], mk = markOf(t);
-              const on = !dimming || focusLines.has(st.line), isNext = next?.id === st.id, isSel = sel?.kind === "st" && sel.id === st.id, above = st.side === "a";
+              const on = !dimming || focusLines.has(st.line), isNext = next?.id === st.id, isSel = sel?.kind === "st" && sel.id === st.id, lift = st.tier * 22;
               const tx = st.anchor === "start" ? st.L : st.anchor === "end" ? st.R : X, frac = Math.min(1, (t?.passed ?? 0) / 20), C = 2 * Math.PI * 14.5;
               const label = showLabels && (on || isSel) || isNext || isSel;
               return (
@@ -219,16 +219,16 @@ export function LifecycleMap({ data, signage }: { data: MapData; signage: string
                   <circle cx={X} cy={Y} r={mk === "titan" ? 10 : 8} fill={mk === "titan" ? "#f5b800" : mk === "solid" ? c : "#fbfaf6"} stroke={mk === "titan" ? "#14161f" : c} strokeWidth={4} />
                   {t?.required && t.overdue && <circle cx={X + 11} cy={Y - 11} r={5.5} fill="#e11d48" stroke="#fbfaf6" strokeWidth={1.5} />}
                   {label && (
-                    <text className="nm" x={tx} y={above ? Y - 22 : Y + 32} textAnchor={st.anchor} fontSize={17} fontWeight={isNext || isSel ? 700 : 500} fill={isSel ? "#4f46e5" : "#14161f"} stroke="#fbfaf6" strokeWidth={4.5} paintOrder="stroke" strokeLinejoin="round">{st.name}</text>
+                    <text className="nm" x={tx} y={Y - 22 - lift} textAnchor={st.anchor} fontSize={17} fontWeight={isNext || isSel ? 700 : 500} fill={isSel ? "#4f46e5" : "#14161f"} stroke="#fbfaf6" strokeWidth={4.5} paintOrder="stroke" strokeLinejoin="round">{st.name}</text>
                   )}
                   {isNext && !isSel && (
-                    <g transform={`translate(${X},${above ? Y - 54 : Y + 62})`}>
+                    <g transform={`translate(${X},${Y + 34})`}>
                       <rect x={-42} y={-13} width={84} height={24} rx={12} fill="#14161f" />
                       <text y={4} textAnchor="middle" fontSize={13} fontWeight={700} letterSpacing=".06em" fill="#fff">{data.signedIn ? "NEXT STOP" : "START HERE"}</text>
                     </g>
                   )}
                   <circle cx={X} cy={Y} r={20} fill="transparent" />
-                  {label && <rect x={st.L - 4} y={above ? Y - 40 : Y - 8} width={st.R - st.L + 8} height={46} fill="transparent" />}
+                  {label && <rect x={st.L - 4} y={Y - 40 - lift} width={st.R - st.L + 8} height={40 + lift} fill="transparent" />}
                 </g>
               );
             })}
