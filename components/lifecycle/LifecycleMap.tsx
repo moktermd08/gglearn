@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Minus, Plus, Search, Trophy, X } from "lucide-react";
 import {
-  FOCUS, FOCUS_START, FOCUS_STOPS, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
-  focusLinesOf, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
+  AI_MODES, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
+  aiRoleName, buildRoute, type AiMode, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
 } from "@/lib/lifecycle/model";
 
 type View = { k: number; x: number; y: number };
@@ -37,18 +37,14 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const [sel, setSel] = useState<Sel>(null);
   const [hint, setHint] = useState(true);
   const [legend, setLegend] = useState(false);
+  const [mode, setMode] = useState<AiMode>("human");
   const narrow = size.w > 0 && size.w < 900;
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
 
   const role = useMemo<RoleInfo | null>(() => data.roles.find((r) => r.key === roleKey) ?? null, [roleKey, data.roles]);
-  const focusLines = useMemo(() => focusLinesOf(focus), [focus]);
-  /* The route: the stops a role's career ladder asks for, or every stop on the lines of the chosen area. */
-  const routeIds = useMemo(() => {
-    if (role) { const t = new Set(role.core); const ids = STATIONS.filter((s) => t.has(s.track)).map((s) => s.id); if (ids.length) return new Set(ids); }
-    const stops = FOCUS_STOPS[focus];
-    if (stops) return new Set<string>(stops);
-    return new Set(STATIONS.filter((s) => focusLines.has(s.line)).map((s) => s.id));
-  }, [role, focus, focusLines]);
+  /* The route: the stops a role's career ladder asks for (or an area's hand-picked stops), seen through the chosen AI lens. */
+  const route = useMemo(() => buildRoute(role, focus, mode), [role, focus, mode]);
+  const routeIds = route.ids;
   const litLines = useMemo(() => new Set<LineId>(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.line)), [routeIds]);
   const dimming = routeIds.size < STATIONS.length;
 
@@ -56,14 +52,14 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const next = useMemo<Station | null>(() => {
     const mine = STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
     const t = (s: Station) => data.tracks[s.track];
-    const start = !role ? STATION_BY_ID.get(FOCUS_START[focus] ?? "") : undefined;
+    const start = mode !== "human" ? STATION_BY_ID.get("aiuse") : !role ? STATION_BY_ID.get(FOCUS_START[focus] ?? "") : undefined;
     return mine.find((s) => t(s)?.open && t(s)?.required && t(s)!.passed < t(s)!.requiredLevel)
       ?? (start && routeIds.has(start.id) && (t(start)?.passed ?? 0) < 5 ? start : undefined)
       ?? mine.find((s) => t(s)?.open && (t(s)?.passed ?? 0) < 5) ?? mine[0] ?? null;
-  }, [routeIds, role, focus, data.tracks]);
+  }, [routeIds, role, focus, mode, data.tracks]);
 
   /* Races: live or upcoming campaigns on the tracks of this route. One flag per track, on the first stop of that track on the route. */
-  const routeTracks = useMemo(() => role ? new Set(role.tracks) : new Set(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.track)), [role, routeIds]);
+  const routeTracks = useMemo(() => role ? new Set([...role.tracks, ...(mode !== "human" ? ["ai-llm-practice"] : [])]) : new Set(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.track)), [role, mode, routeIds]);
   const raceList = useMemo(() => data.races.filter((r) => routeTracks.has(r.track)).sort((a, b) => Number(b.state === "live") - Number(a.state === "live") || b.humans - a.humans), [data.races, routeTracks]);
   const racesByTrack = useMemo(() => { const m = new Map<string, RaceInfo[]>(); for (const r of data.races) m.set(r.track, [...(m.get(r.track) ?? []), r]); return m; }, [data.races]);
   const raceAnchor = useMemo(() => {
@@ -162,13 +158,18 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
     const cx = n ? px(n.x) : px(g!.x), cy = n ? py(n.row) : (py(gateRow(g!)) + py(gateBottom(g!))) / 2;
     centreOn(cx, cy, Math.max(viewRef.current.k, narrow ? 0.8 : 1.05), true, narrow ? 0 : 380, narrow);
   };
-  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); frameLines(focusLinesOf(id), true, FOCUS_STOPS[id] ? new Set(FOCUS_STOPS[id]) : undefined); };
+  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); const r = buildRoute(null, id, mode); frameLines(new Set<LineId>(STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids); };
   const chooseRole = (key: string | null) => {
     setRoleKey(key); setPicker(false); setPq(""); setSel(null); setHint(false);
     const r = data.roles.find((x) => x.key === key);
     if (!r) { setFocus("all"); frameLines(new Set<LineId>(LINES.map((l) => l.id))); return; }
-    const t = new Set(r.core), ls = new Set<LineId>(STATIONS.filter((st) => t.has(st.track)).map((st) => st.line));
-    frameLines(ls.size ? ls : new Set<LineId>(LINES.map((l) => l.id)), true, ls.size ? new Set(STATIONS.filter((st) => t.has(st.track)).map((st) => st.id)) : undefined);
+    const rt = buildRoute(r, "all", mode);
+    frameLines(new Set<LineId>(STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
+  };
+  const chooseMode = (m: AiMode) => {
+    setMode(m); setSel(null); setHint(false);
+    const rt = buildRoute(role, focus, m);
+    frameLines(new Set<LineId>(STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
   };
   const goNext = () => { if (next) pick({ kind: "st", id: next.id }); };
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === "Escape") setSel(null); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
@@ -255,6 +256,13 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
                   {(isSel || mk === "learning" || mk === "solid") && <circle cx={X} cy={Y} r={16} fill="none" stroke={isSel ? "#4f46e5" : c} strokeOpacity={isSel ? 1 : 0.9} strokeWidth={isSel ? 4.5 : 4} strokeDasharray={isSel ? undefined : `${C * frac} ${C}`} transform={`rotate(-90 ${X} ${Y})`} />}
                   <circle cx={X} cy={Y} r={mk === "titan" ? 11 : 9} fill={mk === "titan" ? "#f5b800" : mk === "solid" ? c : "#fbfaf6"} stroke={mk === "titan" ? "#14161f" : c} strokeWidth={4} />
                   {t?.required && t.overdue && <circle cx={X + 11} cy={Y - 11} r={5.5} fill="#e11d48" stroke="#fbfaf6" strokeWidth={1.5} />}
+                  {route.agent.has(st.id) && <circle cx={X} cy={Y} r={17} fill="none" stroke="#6d28d9" strokeWidth={3} strokeDasharray="5 4" />}
+                  {mode === "ai" && route.ai.has(st.id) && (
+                    <g transform={`translate(${X - 19},${above ? Y + 19 : Y - 19})`}><circle r={10} fill="#6d28d9" stroke="#fbfaf6" strokeWidth={2} /><text y={3.6} textAnchor="middle" fontSize={9.5} fontWeight={800} fill="#fff">AI</text></g>
+                  )}
+                  {mode === "agent" && (route.review.has(st.id) || route.ai.has(st.id)) && (
+                    <g transform={`translate(${X - 19},${above ? Y + 19 : Y - 19})`}><circle r={10} fill="#14161f" stroke="#fbfaf6" strokeWidth={2} /><path d="M-4.5,0.5 l3,3 l6,-6.5" fill="none" stroke="#fff" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" /></g>
+                  )}
                   {raceAnchor.has(st.id) && (
                     <g transform={`translate(${X + 19},${above ? Y + 19 : Y - 19})`}>
                       <circle r={11} fill="#f5b800" stroke="#14161f" strokeWidth={2} />
@@ -301,9 +309,13 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
               <span>I am a</span>
               <button type="button" onClick={() => setPicker((v) => !v)} aria-expanded={picker} aria-haspopup="listbox"
                 className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${role ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
-                {role ? role.name : "Choose your role"}<ChevronDown size={15} />
+                {role ? aiRoleName(role.name, mode) : "Choose your role"}<ChevronDown size={15} />
               </button>
-              <span className="hidden sm:inline">or pick an area. We will light up your route.</span>
+              <span className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm" role="group" aria-label="Role as a person or with AI">
+                {AI_MODES.map((m) => <button key={m.id} type="button" aria-pressed={mode === m.id} title={m.hint} onClick={() => chooseMode(m.id)}
+                  className={`px-3 py-1 transition ${mode === m.id ? (m.id === "human" ? "bg-[#14161f] text-[#fff]" : "bg-violet-600 text-[#fff]") : "hover:bg-black/5"}`}>{m.label}</button>)}
+              </span>
+              <span className="hidden lg:inline">or pick an area. We will light up your route.</span>
               {picker && (
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                   <label className="flex items-center gap-2 rounded-xl border border-black/10 bg-[#fbfaf6] px-3 py-2"><Search size={15} className="text-slate-400" />
@@ -346,11 +358,11 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
         <div className="absolute bottom-[4.4rem] left-3 z-10 sm:bottom-[4.6rem] sm:left-5">
           <button type="button" onClick={() => setRaces((v) => !v)} aria-expanded={races}
             className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-[#fff] px-3.5 py-2 text-[14px] font-bold shadow-lg hover:shadow-xl">
-            <Trophy size={16} className="text-amber-300" />{raceList.length} race{raceList.length === 1 ? "" : "s"}{role ? ` for ${role.name}` : " on your route"}<ChevronDown size={14} className={races ? "rotate-180" : ""} />
+            <Trophy size={16} className="text-amber-300" />{raceList.length} race{raceList.length === 1 ? "" : "s"}{role ? ` for ${aiRoleName(role.name, mode)}` : " on your route"}<ChevronDown size={14} className={races ? "rotate-180" : ""} />
           </button>
           {races && (
             <div className="absolute bottom-12 left-0 w-[min(23rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-3 shadow-2xl">
-              <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Races on {role ? `the ${role.name} route` : "your route"}</p>
+              <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Races on {role ? `the ${aiRoleName(role.name, mode)} route` : "your route"}</p>
               <ul className="max-h-[22rem] space-y-1.5 overflow-auto">
                 {raceList.slice(0, 12).map((r) => {
                   const anchor = STATIONS.filter((st) => st.track === r.track && routeIds.has(st.id)).sort((a, b) => a.x - b.x)[0];
@@ -387,6 +399,9 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="11.5" fill="none" stroke="#1d5ec2" strokeWidth="3" strokeDasharray="30 73" transform="rotate(-90 17 13)" /><circle cx="17" cy="13" r="6.5" fill="#fbfaf6" stroke="#1d5ec2" strokeWidth="3" /></svg><span><b>Ring</b>: your level, out of 20</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="22"><circle cx="17" cy="11" r="6.5" fill="#1d5ec2" stroke="#1d5ec2" strokeWidth="3" /></svg><span><b>Solid</b>: passed level 5 or more</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="22"><circle cx="17" cy="11" r="8" fill="#f5b800" stroke="#14161f" strokeWidth="3" /></svg><span><b>Gold</b>: Titan, level 20</span></li>
+              <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="10" fill="#6d28d9" /></svg><span><b>AI</b>: an AI stop added when a role works with AI</span></li>
+              <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="10" fill="none" stroke="#6d28d9" strokeWidth="3" strokeDasharray="5 4" /></svg><span><b>Dashed ring</b>: an AI agent does this stop</span></li>
+              <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="10" fill="#14161f" /><path d="M12.5,13.5 l3,3 l6,-6.5" fill="none" stroke="#fff" strokeWidth="2.2" /></svg><span><b>Tick</b>: where a person checks the agent&apos;s work</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="11" fill="#f5b800" stroke="#14161f" strokeWidth="2" /></svg><span><b>Gold flag</b>: a live or upcoming race on this track</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><rect x="11" y="1" width="12" height="24" fill="#fbfaf6" stroke="#14161f" strokeWidth="2.5" /><circle cx="17" cy="6" r="6" fill="#fbfaf6" stroke="#14161f" strokeWidth="2.5" /><circle cx="17" cy="20" r="6" fill="#fbfaf6" stroke="#14161f" strokeWidth="2.5" /></svg><span><b>Gate</b>: a handoff where lines meet. Most projects fail here</span></li>
             </ul>
@@ -398,7 +413,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
       {(selStation || selGate) && (
         <aside aria-live="polite" className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-5 sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} info={data.tracks[selStation.track]} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selStation && <StationCard st={selStation} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
           {selGate && <GateCard g={selGate} tracks={data.tracks} />}
         </aside>
       )}
@@ -406,7 +421,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   );
 }
 
-function StationCard({ st, info, races, signedIn, onGo }: { st: Station; info: TrackInfo | undefined; races: RaceInfo[]; signedIn: boolean; onGo: (s: Station) => void }) {
+function StationCard({ st, info, races, lens, roleName, signedIn, onGo }: { st: Station; info: TrackInfo | undefined; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onGo: (s: Station) => void }) {
   const line = LINE_BY_ID[st.line], c = LINE_COLOUR[st.line], z = zoneOf(st.x);
   const seq = stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
   const lvl = info?.passed ?? 0;
@@ -419,6 +434,26 @@ function StationCard({ st, info, races, signedIn, onGo }: { st: Station; info: T
           <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{st.name}</h2>
           <p className="mt-1 text-sm text-slate-400">{LINE_BLURB[st.line]} Usually owned by a {st.owner.toLowerCase()}.</p>
         </div>
+
+        {lens === "agent" && (
+          <div className="rounded-2xl border-l-4 border-violet-500 bg-violet-50 p-3 text-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-violet-300">An AI agent does this stop</p>
+            <p className="mt-0.5">{roleName ? `The AI ${roleName}` : "The agent"} does the work. Before it moves on, check it leaves with:</p>
+            <ul className="mt-1 list-disc pl-5">{st.outs.map((t) => <li key={t}>{t}</li>)}</ul>
+          </div>
+        )}
+        {lens === "review" && (
+          <div className="rounded-2xl border-l-4 border-[#14161f] bg-black/5 p-3 text-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Your checkpoint</p>
+            <p className="mt-0.5">This is where a person decides: set the limits, test what the agent produced, approve it or send it back. Nothing the agent does moves on without it.</p>
+          </div>
+        )}
+        {lens === "ai" && (
+          <div className="rounded-2xl border-l-4 border-violet-500 bg-violet-50 p-3 text-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-violet-300">An AI stop</p>
+            <p className="mt-0.5">Working with AI adds this stop to the role: it is where AI work is designed, tested and kept in check.</p>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div><h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">You bring</h3><ul className="space-y-1">{st.ins.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">←</span>{t}</li>)}</ul></div>

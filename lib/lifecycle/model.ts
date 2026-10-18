@@ -206,3 +206,44 @@ export type MapData = {
   /** the visitor's own job role, when it matches one of the ladders */
   defaultRole: string | null;
 };
+
+/* ---------- the AI lens: a role as a person, a person working with AI, or an AI agent ---------- */
+export type AiMode = "human" | "ai" | "agent";
+export const AI_MODES: { id: AiMode; label: string; hint: string }[] = [
+  { id: "human", label: "Human", hint: "The role as it is today" },
+  { id: "ai", label: "Works with AI", hint: "The same role, plus the AI stops it now needs" },
+  { id: "agent", label: "AI agent", hint: "An AI agent does the role; you supervise and approve" },
+];
+/** Every stop that is about designing, building or governing AI. */
+export const AI_STOPS_FULL = STATIONS.filter((s) => s.ai).map((s) => s.id);
+/** What a non-technical role needs about AI: where to use it, how to test its output, its risks, and when it drifts. */
+export const AI_STOPS_LITE = ["aiuse", "evalset", "airisk", "drift"];
+/** Where a human checks an AI agent's work: acceptance, sign-off, risk and audit. */
+export const AI_REVIEW_STOPS = ["accept", "uat", "risk", "audit"];
+const TECH_ROLES = new Set(["developer", "backend developer", "frontend developer", "full stack developer", "engineer", "architect", "devops", "tester", "security", "data analyst", "cto"]);
+const AI_FULL_AREAS = new Set<FocusId>(["build", "secure", "run"]);
+/** "CEO" as a person, "CEO working with AI", or "AI CEO". */
+export const aiRoleName = (name: string, mode: AiMode) => (mode === "ai" ? `${name} working with AI` : mode === "agent" ? `AI ${name}` : name);
+
+export type Route = {
+  /** every lit stop */ ids: Set<string>;
+  /** the role's or area's own stops */ base: Set<string>;
+  /** AI stops added by the lens */ ai: Set<string>;
+  /** human checkpoints on an AI agent's work */ review: Set<string>;
+  /** stops an AI agent does itself (agent lens only) */ agent: Set<string>;
+};
+/** The lit stops for a role (or area) seen through an AI lens. */
+export function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode): Route {
+  let base: Set<string> | null = null;
+  if (role) { const t = new Set(role.core); const ids = STATIONS.filter((s) => t.has(s.track)).map((s) => s.id); if (ids.length) base = new Set(ids); }
+  if (!base) {
+    const stops = FOCUS_STOPS[focus];
+    const lines = focusLinesOf(focus);
+    base = stops ? new Set<string>(stops) : new Set(STATIONS.filter((s) => lines.has(s.line)).map((s) => s.id));
+  }
+  const full = role ? TECH_ROLES.has(role.key) : AI_FULL_AREAS.has(focus);
+  const ai = mode === "human" ? new Set<string>() : new Set(full ? AI_STOPS_FULL : AI_STOPS_LITE);
+  const review = mode === "agent" ? new Set(AI_REVIEW_STOPS) : new Set<string>();
+  const agent = mode === "agent" ? new Set([...base].filter((id) => !ai.has(id) && !review.has(id))) : new Set<string>();
+  return { ids: new Set([...base, ...ai, ...review]), base, ai, review, agent };
+}
