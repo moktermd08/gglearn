@@ -5,6 +5,7 @@ import { Badge, Shell, type NavGroup } from "@gg/ui";
 import { requireManager } from "@/lib/auth";
 import { adminScopeOf, scopeChoices } from "@/lib/adminScope";
 import { expiryWatchFor } from "@/lib/certsAdmin";
+import { queueCount } from "@/lib/integrityAdmin";
 import { isGlobal, reachOf } from "@/lib/tenancy";
 import { AdminNav } from "@/components/admin/AdminNav";
 
@@ -26,6 +27,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       { href: "/admin/role-change", label: "Change a role", icon: "arrow" },
       { href: "/admin/compliance", label: "Compliance", icon: "shield" },
       { href: "/admin/certificates", label: "Certificates", icon: "trophy", count: watch.expiring + watch.expired },
+      ...(admin ? [{ href: "/admin/integrity", label: "Exam integrity", icon: "shield", count: queueCount(scope.reach) }] : []),
     ] },
     { label: "Content", items: [
       ...(admin && global ? [{ href: "/admin/bank", label: "Question bank", icon: "database" }] : []),

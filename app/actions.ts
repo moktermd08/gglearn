@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { phaseSignoffs, projects, userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExams, runs, tracks, users } from "@/lib/db";
+import { phaseSignoffs, projects, userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExamAnswers, roleExams, runs, tracks, users } from "@/lib/db";
 import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
@@ -28,6 +28,7 @@ import { STARTER_SIZE, starterPlan } from "@/lib/starter";
 import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
 import { isLook } from "@/lib/avatars";
 import { awardForPass } from "@/lib/rewards";
+import { finalize as finalizeIntegrity } from "@/lib/integrity/session";
 import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/lib/tenancy";
 import { offboardingLines, onboardingLines } from "@/lib/access";
 import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
@@ -282,7 +283,11 @@ export async function submitRoleExam(examId: number, fd: FormData) {
   if (!exam || exam.finishedAt || gradingRoleExams.has(examId)) redirect(`/role-exam/${examId}`);
   gradingRoleExams.add(examId);
   try {
-    await gradeRoleExam(examId, (qid) => str(fd.get(`q${qid}`)));
+    if (await gradeRoleExam(examId, (qid) => str(fd.get(`q${qid}`)))) {
+      const done = db.select().from(roleExams).where(eq(roleExams.id, examId)).get()!;
+      const asked = db.select({ n: sql<number>`count(*)` }).from(roleExamAnswers).where(eq(roleExamAnswers.examId, examId)).get()?.n ?? 0;
+      finalizeIntegrity("role", examId, u.id, null, { questionCount: asked, startedAt: done.startedAt, finishedAt: done.finishedAt ?? done.startedAt, passed: !!done.passed, level: done.rung });
+    }
   } finally {
     gradingRoleExams.delete(examId);
   }
@@ -305,12 +310,15 @@ async function gradeRun(userId: number, run: typeof runs.$inferSelect, runId: nu
     possible += q.weight;
   }
   const score = possible ? earned / possible : 0;
-  const done = db.update(runs).set({ score, passed: score >= PASS_MARK, finishedAt: Math.floor(Date.now() / 1000) })
+  const finishedAt = Math.floor(Date.now() / 1000);
+  const done = db.update(runs).set({ score, passed: score >= PASS_MARK, finishedAt })
     .where(and(eq(runs.id, runId), sql`${runs.finishedAt} is null`)).run();
   if (!done.changes) return; // finished by someone else in the meantime
   const passed = score >= PASS_MARK;
   completeQuest(u.id, run.trackId, "exam");
-  if (passed) awardForPass(u.id, run.trackId, run.level, score); // certificate, XP, voucher or money, as the content's owner has set
+  // the evidence gathered while the exam was taken (lib/integrity): a pass it flags may wait for a person before its reward is given
+  const integrity = finalizeIntegrity("run", runId, u.id, run.trackId, { questionCount: rows.length, startedAt: run.startedAt, finishedAt, passed, level: run.level });
+  if (passed && !integrity.hold) awardForPass(u.id, run.trackId, run.level, score); // certificate, XP, voucher or money, as the content's owner has set
 
   progressionFor(u.id); // records any badge this exam earned
 }

@@ -873,3 +873,73 @@ export const profileFields = sqliteTable(
   },
   (t) => [uniqueIndex("profile_field_slot").on(t.scope, t.refId, t.section, t.key)],
 );
+
+// ---- Exam integrity ------------------------------------------------------------------------------------------------------------
+// How carefully an exam is watched, set in layers: the whole academy (scope "global", ref 0), a company, a brand, a track. A row holds only
+// what that layer sets (`settings` is JSON: { v: {key: value}, lock: [key] }); everything else is inherited, and a key a wider layer has
+// locked cannot be changed below it. See lib/integrity/policy.ts.
+export const integrityPolicies = sqliteTable(
+  "integrity_policies",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    scope: text("scope", { enum: ["global", "company", "brand", "track"] }).notNull(),
+    refId: integer("ref_id").notNull(), // 0 for global, else companies.id, brands.id or tracks.id, checked in code
+    settings: text("settings").notNull().default("{}"),
+    updatedBy: integer("updated_by").references(() => users.id),
+    updatedAt: integer("updated_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("integrity_policy_slot").on(t.scope, t.refId)],
+);
+
+// One watched exam attempt (a level run or a role check). `policy` is the resolved policy as it stood when the attempt began, so changing
+// the policy later never rewrites what an earlier attempt was held to. `award` says whether a passing result's certificate and rewards were
+// given straight away or are waiting for a person to look (status "review").
+export const integritySessions = sqliteTable(
+  "integrity_sessions",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    examKind: text("exam_kind", { enum: ["run", "role"] }).notNull(),
+    examId: integer("exam_id").notNull(), // runs.id or role_exams.id
+    userId: integer("user_id").notNull().references(() => users.id),
+    trackId: integer("track_id"), // runs only
+    level: integer("level").notNull().default(0),
+    policy: text("policy").notNull(),
+    consentAt: integer("consent_at"),
+    status: text("status", { enum: ["open", "clear", "review", "cleared", "rejected"] }).notNull().default("open"),
+    award: text("award", { enum: ["released", "held"] }).notNull().default("released"),
+    score: integer("score").notNull().default(0), // risk 0..100
+    flags: text("flags").notNull().default("[]"), // JSON: [{key, label, points, count}]
+    note: text("note").notNull().default(""),
+    reviewedBy: integer("reviewed_by").references(() => users.id),
+    reviewedAt: integer("reviewed_at"),
+    createdAt: integer("created_at").notNull().default(now),
+    finishedAt: integer("finished_at"),
+  },
+  (t) => [uniqueIndex("integrity_session_exam").on(t.examKind, t.examId), index("integrity_session_status").on(t.status), index("integrity_session_user").on(t.userId)],
+);
+
+export const integrityEvents = sqliteTable(
+  "integrity_events",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    sessionId: integer("session_id").notNull().references(() => integritySessions.id),
+    kind: text("kind").notNull(),
+    detail: text("detail").notNull().default(""),
+    at: integer("at").notNull().default(now),
+  },
+  (t) => [index("integrity_event_session").on(t.sessionId)],
+);
+
+// Small webcam stills (320px JPEG), kept only as long as the policy's retention says. Reviewed by a person; nothing here is matched by software.
+export const integritySnapshots = sqliteTable(
+  "integrity_snapshots",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    sessionId: integer("session_id").notNull().references(() => integritySessions.id),
+    tag: text("tag", { enum: ["start", "random"] }).notNull(),
+    faces: integer("faces"), // faces the browser counted, when it can; null = unknown
+    data: blob("data", { mode: "buffer" }).notNull(),
+    at: integer("at").notNull().default(now),
+  },
+  (t) => [index("integrity_snapshot_session").on(t.sessionId)],
+);
