@@ -83,6 +83,8 @@ for d in content/brand content/gglink content/guru; do
 done
 # the 300 public campaigns (and their renewals) need the tracks above to exist; the /campaigns page also does this on demand
 run seed:campaigns
+# corrects a few topic names that were imported misspelt ("AWS Lamda"); only touches a name that is still exactly the wrong one
+run fix:names
 
 echo
 echo "after:  $(counts "$TARGET")"

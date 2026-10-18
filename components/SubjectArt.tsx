@@ -86,7 +86,7 @@ const BY_KIND: Record<string, Art> = {
   technology: { glyph: line(Cpu), color: "#0EA5E9" }, process: { glyph: line(Workflow), color: "#8B5CF6" },
 };
 
-/** "foundations-nodejs" / "nodejs-titan" / "AWS Lamda: Novice to Titan" -> "nodejs" / "aws" / "lambda" */
+/** "foundations-nodejs" / "nodejs-titan" / "AWS Lambda: Novice to Titan" -> "nodejs" / "aws" / "lambda" */
 function subjectKey(slug: string, name: string) {
   const s = slug.toLowerCase().replace(/^foundations-/, "").replace(/-titan$/, "");
   if (s === "lambda" || s === "lamda") return "lambda";

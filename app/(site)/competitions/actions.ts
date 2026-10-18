@@ -14,6 +14,7 @@ import { hashPassword } from "@/lib/password";
 import { clientIp } from "@/lib/rate-limit";
 import { admitMember, admitNewGuest, entryFor, guestAudience } from "@/lib/guestLink";
 import { markKeyRead } from "@/lib/notifications";
+import { emailRaceInvites } from "@/lib/raceMail";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import type { BotTier } from "@/lib/bots";
 import { baselineLevel, canView, finishersOf, listedFor, now, standings, stateOf } from "@/lib/competitions";
@@ -40,6 +41,7 @@ export async function createCompetition(_: CreateState, fd: FormData): Promise<C
     openJoin: str(fd.get("openJoin")) === "on", consent: str(fd.get("consent")) === "on", twist: str(fd.get("twist")) === "on",
   });
   if ("error" in r) return { error: r.error };
+  await emailRaceInvites(r.slug, me, r.fresh);
   revalidatePath("/competitions");
   redirect(`/competitions/${r.slug}`);
 }
@@ -53,7 +55,8 @@ export async function inviteToCompetition(competitionId: number, _: InviteResult
   if (["finished", "canceled"].includes(stateOf(c))) return { error: "This contest is over." };
   if (!allowed(`comp-invite:${me.id}`, 20)) return { error: "Too many invitations. Try again later." };
   hit(`comp-invite:${me.id}`, 60 * MINUTE);
-  const n = db.transaction((tx) => inviteEmails(tx, c.id, me.id, str(fd.get("emails"))));
+  const { count: n, fresh } = db.transaction((tx) => inviteEmails(tx, c.id, me.id, str(fd.get("emails"))));
+  await emailRaceInvites(c.slug, me, fresh);
   if (!n) return { error: "Enter at least one valid email address." };
   revalidatePath(`/competitions/${c.slug}`);
   // identical wording whether or not an address has an account, so this form cannot be used to probe who is registered
