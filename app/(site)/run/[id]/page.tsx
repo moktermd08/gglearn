@@ -12,11 +12,14 @@ import { BadgeTile } from "@/components/Achievements";
 import { exact } from "@/lib/competitions-shared";
 import { startRun, submitRun } from "@/app/actions";
 import { Quiz } from "@/components/Quiz";
+import { ExamGuard } from "@/components/ExamGuard";
+import { clientPolicy, describePolicy, needsGuard } from "@/lib/integrity/policy";
+import { policyFor, sessionOf } from "@/lib/integrity/session";
 import { Ring } from "@/components/Ring";
 import { Confetti } from "@/components/Confetti";
 import { Avatar } from "@/components/Avatar";
 import { avatarLooks } from "@/lib/avatars";
-import { ArrowLeft, ArrowRight, BookOpen, RotateCcw, BarChart3, Timer, Check, CircleCheck, CircleMinus, CircleX, GraduationCap, Lightbulb, Medal, MessageSquareText, Sparkles, Tag, Target, Trophy } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, ShieldAlert, RotateCcw, BarChart3, Timer, Check, CircleCheck, CircleMinus, CircleX, GraduationCap, Lightbulb, Medal, MessageSquareText, Sparkles, Tag, Target, Trophy } from "lucide-react";
 
 const OK = 0.8; // same bar the review has always used for a correct answer
 const tone = (sc: number) => (sc >= OK ? "emerald" : sc > 0 ? "amber" : "rose") as "emerald" | "amber" | "rose";
@@ -48,11 +51,18 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
   const title = `${track.name} · Level ${run.level} · ${LEVELS[run.level - 1]}`;
 
   if (!run.finishedAt) {
+    const quiz = (
+      <Quiz action={submitRun.bind(null, runId)} level={run.level} elapsed={Math.max(0, now() - run.startedAt)} record={levelRecordToBeat(user.id, run.trackId, run.level)} rivalHue={rival.hue} rivalName={rival.name} meLook={looks.me} rivalLook={looks.rival} photoUrl={looks.photoUrl}
+        questions={rows.map(({ q }) => ({ id: q.id, prompt: q.prompt, code: q.code, type: q.type, options: q.options, topic: q.topic }))} />
+    );
+    // the integrity policy for this track (academy, company, brand, track), frozen on the attempt once it has begun
+    const policy = policyFor("run", runId, user.id, run.trackId).values;
     return (
       <div className="space-y-4">
         <h1 className="text-center text-xl font-extrabold">{title}</h1>
-        <Quiz action={submitRun.bind(null, runId)} level={run.level} elapsed={Math.max(0, now() - run.startedAt)} record={levelRecordToBeat(user.id, run.trackId, run.level)} rivalHue={rival.hue} rivalName={rival.name} meLook={looks.me} rivalLook={looks.rival} photoUrl={looks.photoUrl}
-          questions={rows.map(({ q }) => ({ id: q.id, prompt: q.prompt, code: q.code, type: q.type, options: q.options, topic: q.topic }))} />
+        {needsGuard(policy)
+          ? <ExamGuard kind="run" id={runId} policy={clientPolicy(policy)} notice={describePolicy(policy)} expectedSeconds={rows.length * 50}>{quiz}</ExamGuard>
+          : quiz}
       </div>
     );
   }
@@ -71,12 +81,25 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
   const topics = [...byTopic].map(([name, sc]) => ({ name, avg: sc.reduce((x, y) => x + y, 0) / sc.length })).sort((x, y) => x.avg - y.avg);
   const took = Math.max(1, run.finishedAt - run.startedAt), speed = examStanding(user.id, run);
   const tierUp = passed && run.level > 1 && tierOf(run.level) > tierOf(run.level - 1);
+  const check = sessionOf("run", runId); // set only when this exam was watched
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       {passed && <Confetti count={run.level === MAX_LEVEL || cert || speed.some((x) => x.isRecord) ? 120 : 60} />}
       <div className="card pop space-y-4 p-6 text-center">
         <h1 className="text-xl font-extrabold">{title}</h1>
+        {check?.status === "review" && (
+          <p role="status" className="mx-auto flex max-w-md items-start gap-2 rounded-xl bg-amber-500/10 p-3 text-left text-sm text-amber-700 ring-1 ring-amber-500/30">
+            <ShieldAlert size={18} className="mt-0.5 shrink-0" />
+            <span>{check.award === "held" ? "Your pass is waiting for a routine check by the people who run your academy. Your certificate and any rewards are released as soon as it is confirmed." : "Your result has been picked for a routine check by the people who run your academy."}</span>
+          </p>
+        )}
+        {check?.status === "rejected" && (
+          <p role="alert" className="mx-auto flex max-w-md items-start gap-2 rounded-xl bg-rose-500/10 p-3 text-left text-sm text-rose-700 ring-1 ring-rose-500/30">
+            <ShieldAlert size={18} className="mt-0.5 shrink-0" />
+            <span>This result was not accepted after review.{check.note ? ` ${check.note}` : ""} You can take the level again.</span>
+          </p>
+        )}
         <div className="flex items-center justify-center gap-6">
           <Avatar kind="human" level={passed ? run.level : run.level - 1} size={96} className="bob" look={looks.me} photoUrl={looks.photoUrl} />
           <Ring pct={score} label={`${pct}%`} sub={`pass ${PASS_MARK * 100}%`} size={140} color={passed ? "#34d399" : "#fbbf24"} />

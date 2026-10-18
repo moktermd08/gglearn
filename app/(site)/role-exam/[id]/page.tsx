@@ -9,6 +9,9 @@ import { domainResults, roleExamPlan } from "@/lib/roleExam";
 import { roleLabel } from "@/lib/journey";
 import { submitRoleExam } from "@/app/actions";
 import { Quiz } from "@/components/Quiz";
+import { ExamGuard } from "@/components/ExamGuard";
+import { clientPolicy, describePolicy, needsGuard } from "@/lib/integrity/policy";
+import { policyFor, sessionOf } from "@/lib/integrity/session";
 import { Ring } from "@/components/Ring";
 import { PageHero, PALETTE, Radar } from "@/components/charts";
 import { ArrowLeft, Target, Trophy } from "lucide-react";
@@ -27,18 +30,25 @@ export default async function RoleExamPage({ params }: { params: Promise<{ id: s
   if (!exam.finishedAt) {
     const now = roleExamPlan(user);
     const stale = !now || now.role !== exam.role || now.level !== exam.rung;
+    const policy = policyFor("role", examId, user.id, null).values; // the academy's, then the person's company's
+    const quiz = (
+      <Quiz action={submitRoleExam.bind(null, examId)} level={exam.rung} rivalHue={260} rivalName="The panel"
+        questions={rows.map(({ q }) => ({ id: q.id, prompt: q.prompt, code: q.code, type: q.type, options: q.options, topic: q.topic }))} />
+    );
     return (
       <div className="space-y-4">
         <h1 className="text-center text-xl font-extrabold">{title}</h1>
         {stale && <p role="alert" className="text-center text-sm text-amber-300">This check was started for an earlier level or role, so passing it will not count towards your next promotion. <Link href="/journey" className="underline">Start a current one from your journey</Link>.</p>}
         <p className="text-center text-sm text-slate-400">{rows.length} questions across the areas your role is examined on.</p>
-        <Quiz action={submitRoleExam.bind(null, examId)} level={exam.rung} rivalHue={260} rivalName="The panel"
-          questions={rows.map(({ q }) => ({ id: q.id, prompt: q.prompt, code: q.code, type: q.type, options: q.options, topic: q.topic }))} />
+        {needsGuard(policy)
+          ? <ExamGuard kind="role" id={examId} policy={clientPolicy(policy)} notice={describePolicy(policy)} expectedSeconds={rows.length * 50}>{quiz}</ExamGuard>
+          : quiz}
       </div>
     );
   }
 
   const score = exam.score ?? 0, passed = !!exam.passed;
+  const check = sessionOf("role", examId);
   const byDomain = domainResults(examId).sort((a, b) => a.score - b.score);
   const weakest = byDomain[0];
   return (
@@ -49,6 +59,8 @@ export default async function RoleExamPage({ params }: { params: Promise<{ id: s
         <p className={`flex items-center justify-center gap-2 text-2xl font-extrabold ${passed ? "text-emerald-300" : "text-amber-300"}`}>
           {passed ? <Trophy className="text-yellow-300" /> : <Target />}{passed ? "You meet the bar across your role." : "Not there yet. See where to focus."}
         </p>
+        {check?.status === "review" && <p role="status" className="text-sm text-amber-700">This result has been picked for a routine check by the people who run your academy.</p>}
+        {check?.status === "rejected" && <p role="alert" className="text-sm text-rose-700">This result was not accepted after review.{check.note ? ` ${check.note}` : ""}</p>}
         <p className="text-xs text-slate-400">A role check measures readiness. It does not replace track exams, and promotion stays a manager&apos;s decision.</p>
         <Link href="/journey" className="btn btn-ghost"><ArrowLeft size={16} />Back to my journey</Link>
       </div>

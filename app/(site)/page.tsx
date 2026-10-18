@@ -17,6 +17,9 @@ import { listFor } from "@/lib/competitions";
 import { CompetitionCard } from "@/components/CompetitionCard";
 import { CertFrame } from "@/components/CertFrame";
 import { RankEmblem } from "@/components/RankEmblem";
+import { LifecycleMap } from "@/components/lifecycle/LifecycleMap";
+import { mapDataFor } from "@/lib/lifecycle/server";
+import { signage } from "@/lib/lifecycle/font";
 
 const STEPS = [
   { Icon: Target, title: "Get your path", text: "Sign in and see the subjects your role, brand and project require, each with a deadline.", cls: "text-indigo-300 bg-indigo-500/10" },
@@ -72,7 +75,10 @@ export default async function Home() {
   };
 
   return (
-    <div className="space-y-16">
+    <>
+    {/* the map takes the whole first screen; the rest of the academy sits below it */}
+    <div className="relative left-1/2 -mt-8 w-screen -translate-x-1/2"><LifecycleMap data={mapDataFor(viewer)} signage={signage.className} /></div>
+    <div id="below" className="scroll-mt-16 space-y-16 pt-12">
       <section className="relative grid items-center gap-8 overflow-x-clip pt-4 lg:grid-cols-[1.15fr_1fr]">
         <div className="pointer-events-none absolute -left-24 -top-16 -z-10 h-80 w-80 rounded-full bg-indigo-500/15 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -right-16 top-10 -z-10 h-72 w-72 rounded-full bg-pink-500/15 blur-3xl" aria-hidden />
@@ -289,5 +295,6 @@ export default async function Home() {
         <div className="relative mt-5 flex flex-wrap justify-center gap-3"><Link href={viewer ? "/dashboard" : "/login"} className="btn !bg-[#fff] !text-indigo-700">{viewer ? "Go to my path" : "Sign in"}<ArrowRight size={16} /></Link><Link href="/campaigns" className="btn !bg-transparent !text-[#fff] ring-2 ring-[#fff]/60 hover:!bg-[#fff]/15"><Flame size={16} />See the campaigns</Link></div>
       </section>
     </div>
+    </>
   );
 }
