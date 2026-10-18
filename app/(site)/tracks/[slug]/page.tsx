@@ -1,7 +1,7 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, gt, isNull, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { brands, db, enrollments, lessons, questions, tracks } from "@/lib/db";
+import { brands, competitionMembers, competitions, db, enrollments, lessons, questions, tracks } from "@/lib/db";
 import { LevelDetail, type LevelDetailData } from "@/components/LevelDetail";
 import { LEVEL_INFO } from "@/lib/levelInfo";
 import { currentUser } from "@/lib/auth";
@@ -77,9 +77,18 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
   const orderLock = user && enrolment ? orderLockFor(user.id, track.id) : null;
   const gate = signGate ?? (orderLock ? { phase: "", waitingOn: "" } : null);
   const reqDays = req ? Math.ceil((req.dueAt - now()) / 86400) : 0;
+  // races this person is in on this topic: the way back to them, since this page is about the topic and not the race
+  const racing = user ? db.select({ slug: competitions.slug, title: competitions.title }).from(competitionMembers).innerJoin(competitions, eq(competitions.id, competitionMembers.competitionId))
+    .where(and(eq(competitionMembers.userId, user.id), eq(competitionMembers.status, "joined"), eq(competitions.trackId, track.id), isNull(competitions.canceledAt), gt(competitions.endsAt, now()))).all() : [];
 
   return (
     <div className="space-y-8">
+      {racing.map((r) => (
+        <div key={r.slug} role="status" className="card flex flex-wrap items-center gap-3 border-indigo-300/60 p-3 text-sm">
+          <span>You are racing on this topic in <b>{r.title}</b>. Levels you pass here count there.</span>
+          <Link href={`/competitions/${r.slug}`} className="btn ml-auto !py-1">Back to the race<ArrowRight size={15} /></Link>
+        </div>
+      ))}
       <div className="card pop relative flex flex-wrap items-center justify-between gap-x-6 gap-y-4 overflow-hidden p-6" style={{ background: `linear-gradient(120deg, ${accent}26, #ffffff 60%)` }}>
         <svg className="pointer-events-none absolute -right-10 -top-14 h-72 w-72" viewBox="0 0 200 200" aria-hidden><circle cx="120" cy="80" r="90" fill="none" stroke={accent} strokeOpacity=".18" /><circle cx="120" cy="80" r="58" fill="none" stroke={accent} strokeOpacity=".25" strokeDasharray="4 6" className="march" /></svg>
         <div className="flex items-end gap-1">

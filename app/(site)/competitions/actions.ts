@@ -8,7 +8,12 @@ import { competitionCerts, competitionMembers, competitions, contestAttempts, co
 import { openTo } from "@/lib/paths";
 import { attemptStart, canChallenge, MAX_RUNNING_ATTEMPTS, runningAttempts, settleAttempts } from "@/lib/records";
 import { declineTwist, reviewTwist, submitTwist } from "@/lib/twists";
-import { requireUser } from "@/lib/auth";
+import { z } from "zod";
+import { requireUser, startSession } from "@/lib/auth";
+import { hashPassword } from "@/lib/password";
+import { clientIp } from "@/lib/rate-limit";
+import { admitMember, admitNewGuest, entryFor, guestAudience } from "@/lib/guestLink";
+import { markKeyRead } from "@/lib/notifications";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import type { BotTier } from "@/lib/bots";
 import { baselineLevel, canView, finishersOf, listedFor, now, standings, stateOf } from "@/lib/competitions";
@@ -78,6 +83,7 @@ export async function joinCompetition(competitionId: number, fd: FormData) {
       .onConflictDoUpdate({ target: [competitionMembers.competitionId, competitionMembers.userId], set: { status: "joined", joinedAt: t } }).run();
     enrol(tx, me.id, c.trackId, c.title);
   });
+  markKeyRead(me.id, `invite-${c.id}`); // answered (or not possible any more): the invitation no longer needs the bell
   revalidatePath(`/competitions/${c.slug}`);
   revalidatePath("/competitions");
 }
@@ -88,6 +94,7 @@ async function setMyStatus(competitionId: number, from: ("invited" | "joined")[]
   if (!c || c.createdBy === me.id) return; // the organiser cancels instead of leaving
   db.update(competitionMembers).set({ status: to })
     .where(and(eq(competitionMembers.competitionId, c.id), eq(competitionMembers.userId, me.id), inArray(competitionMembers.status, from))).run();
+  markKeyRead(me.id, `invite-${c.id}`);
   revalidatePath(`/competitions/${c.slug}`);
   revalidatePath("/competitions");
 }
@@ -101,6 +108,45 @@ export async function cancelCompetition(competitionId: number) {
   db.update(competitions).set({ canceledAt: now() }).where(and(eq(competitions.id, c.id), isNull(competitions.canceledAt))).run();
   revalidatePath(`/competitions/${c.slug}`);
   revalidatePath("/competitions");
+}
+
+/** The organiser turns the invite link on, switches it off, or replaces it (the old link stops working). Only for topics that are safe to show an outsider. */
+export async function setGuestLink(competitionId: number, mode: "on" | "off" | "new") {
+  const me = await requireUser();
+  const c = db.select().from(competitions).where(eq(competitions.id, competitionId)).get();
+  if (!c || c.createdBy !== me.id || ["finished", "canceled"].includes(stateOf(c))) return;
+  if (mode !== "off" && !guestAudience(c.trackId)) return;
+  const version = mode === "off" ? null : mode === "on" && c.guestLinkVersion != null ? c.guestLinkVersion : Math.max(now(), (c.guestLinkVersion ?? 0) + 1);
+  db.update(competitions).set({ guestLinkVersion: version }).where(eq(competitions.id, c.id)).run();
+  revalidatePath(`/competitions/${c.slug}`);
+}
+
+/** Someone who is signed in opens the invite link and joins. Everything is re-checked here, not trusted from the page. */
+export async function joinWithLink(slug: string, key: string): Promise<string | null> {
+  const me = await requireUser();
+  const e = entryFor(slug, key);
+  if ("error" in e) return e.error === "full" ? "This race is full." : e.error === "over" ? "This race is over." : "This invite link is not valid any more. Ask for a new one.";
+  const err = db.transaction((tx) => admitMember(tx, e.c, me));
+  if (err) return err;
+  revalidatePath(`/competitions/${slug}`);
+  revalidatePath("/competitions");
+  redirect(`/competitions/${slug}`);
+}
+
+/** Someone with no account opens the invite link, makes one, and is in the race. The account has no company, manager access or onboarding. */
+export async function joinAsGuest(slug: string, key: string, _: string | null, fd: FormData): Promise<string | null> {
+  const ipKey = `guest-join:${await clientIp()}`;
+  if (!allowed(ipKey, 10)) return "Too many attempts. Please wait a few minutes and try again.";
+  hit(ipKey, 60 * MINUTE);
+  const e = entryFor(slug, key);
+  if ("error" in e) return e.error === "full" ? "This race is full." : e.error === "over" ? "This race is over." : "This invite link is not valid any more. Ask for a new one.";
+  const p = z.object({ name: z.string().min(1).max(80), email: z.string().email().max(120), password: z.string().min(8).max(200) })
+    .safeParse({ name: str(fd.get("name")), email: str(fd.get("email")).toLowerCase(), password: str(fd.get("password")) });
+  if (!p.success) return "Enter your name, a valid email and a password of 8 or more characters.";
+  const r = admitNewGuest(e, { name: p.data.name, email: p.data.email, passwordHash: await hashPassword(p.data.password) });
+  if ("error" in r) return r.error;
+  await startSession(r.userId);
+  redirect(`/competitions/${slug}`);
 }
 
 /** One-way on purpose: people joined a public contest agreeing to be seen, but nobody agreed to a private one becoming public. */

@@ -27,7 +27,7 @@ export default async function Setup() {
 
   return (
     <div className="space-y-8">
-      <PageHero Icon={Settings2} title="Set up" sub="Companies, their brands and the tracks each brand teaches. People are added on People once the company exists.">
+      <PageHero Icon={Settings2} title="Set up" sub="Companies, their brands and the tracks each brand teaches. Once a company exists, invite its first admin on People: choose Access: Admin and tick the company.">
         <Link href="/admin/paths" className="btn btn-ghost !py-1 text-sm">Set what is required</Link>
       </PageHero>
 

@@ -10,7 +10,7 @@ export type Audience = "staff" | "customer";
 export type ScopeKind = "company" | "brand" | "project";
 export type Scope = { kind: ScopeKind; id: number };
 type Tx = Pick<typeof db, "insert" | "select" | "update" | "delete">;
-type Person = { id: number; jobRole: string; audience: Audience };
+type Person = { id: number; jobRole: string; audience: Audience; guest?: "no" | "yes" };
 
 const DAY = 86400;
 const now = () => Math.floor(Date.now() / 1000);
@@ -143,6 +143,7 @@ export function loadProgress(userIds?: Set<number> | null): Progress {
  * For a list of people pass `prog` (loadProgress) so each person costs no queries of their own.
  */
 export function requirementsFor(person: Person, scopes: Scope[], cat = catalog(), at = now(), prog?: Progress): Requirement[] {
+  if (person.guest === "yes") return []; // someone who came in by a contest link is there to race, not to be put through a company's required courses
   // accounts with no scope at all predate scoping; they keep the company-wide courses they always had
   const shareKey = prog ? `${person.audience}|${person.jobRole}|${scopes.map((s) => `${s.kind}:${s.id}`).sort().join(",")}` : "";
   let mine = prog?.tracks.get(shareKey);
@@ -210,7 +211,7 @@ export function complianceReport(only?: Set<number> | null): Compliance[] {
     const reqs = requirementsFor(person, scopes, cat, now(), prog);
     const open = reqs.filter((r) => !r.done);
     const overdue = open.filter((r) => r.overdue).length;
-    const state = !scopes.length ? "no-scope" : !reqs.length ? "none" : overdue ? "overdue" : open.length ? "due" : "ok";
+    const state = person.guest === "yes" ? "none" : !scopes.length ? "no-scope" : !reqs.length ? "none" : overdue ? "overdue" : open.length ? "due" : "ok";
     return { person, scopes, required: reqs.length, done: reqs.length - open.length, overdue, nextDue: open[0]?.dueAt ?? null, state };
   });
 }

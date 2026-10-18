@@ -14,7 +14,9 @@ const BOT_LOOK = { casual: "bg-sky-500/15 text-sky-300", steady: "bg-violet-500/
 
 export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
   const [state, run, pending] = useActionState<CreateState, FormData>(createCompetition, null);
-  const [title, setTitle] = useState(""), [trackId, setTrackId] = useState("");
+  const [title, setTitle] = useState(""), [trackId, setTrackId] = useState(""), [find, setFind] = useState("");
+  // typing narrows the list; the chosen topic always stays in it
+  const shown = useMemo(() => { const q = find.trim().toLowerCase(); return q ? groups.map(([g, items]) => [g, items.filter((t) => String(t.id) === trackId || t.name.toLowerCase().includes(q))] as Group).filter(([, items]) => items.length) : groups; }, [groups, find, trackId]);
   const [goal, setGoal] = useState(3), [days, setDays] = useState(14), [start, setStart] = useState(0);
   const [bots, setBots] = useState<Record<string, number>>({ casual: 0, steady: 1, fierce: 0 });
   const [visibility, setVisibility] = useState("private"), [prize, setPrize] = useState(false), [amount, setAmount] = useState("");
@@ -38,9 +40,10 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
           <div><label className={label} htmlFor="title">Name your contest</label>
             <input id="title" name="title" required minLength={3} maxLength={80} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Python sprint: team vs the bots" className={`${input} mt-1`} /></div>
           <div><label className={label} htmlFor="trackId">Topic (hard skill or soft skill)</label>
+            <input type="search" value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search topics: git, python, sales…" aria-label="Search topics" className={`${input} mt-1`} />
             <select id="trackId" name="trackId" required value={trackId} onChange={(e) => setTrackId(e.target.value)} className={`${input} mt-1`}>
               <option value="" disabled>Choose a topic…</option>
-              {groups.map(([g, items]) => <optgroup key={g} label={g}>{items.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}</optgroup>)}
+              {shown.map(([g, items]) => <optgroup key={g} label={g}>{items.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}</optgroup>)}
             </select></div>
 
           <div>
@@ -80,8 +83,9 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
               </div>
             ))}
           </div>
-          <div><label className={label} htmlFor="emails">Invite people by email (they need an account)</label>
-            <textarea id="emails" name="emails" rows={2} placeholder="ana@example.com, ben@example.com" className={`${input} mt-1`} /></div>
+          <div><label className={label} htmlFor="emails">Invite people who already have an account, by email</label>
+            <textarea id="emails" name="emails" rows={2} placeholder="ana@example.com, ben@example.com" className={`${input} mt-1`} />
+            <p className="mt-1 text-xs text-slate-400">People in other companies can be invited too. Everyone in a race sees each other&apos;s names and progress.</p></div>
           <div><label className={label} htmlFor="maxHumans">Max people</label>
             <input id="maxHumans" name="maxHumans" type="number" min={2} max={50} defaultValue={20} className={`${input} mt-1 max-w-32`} /></div>
         </section>

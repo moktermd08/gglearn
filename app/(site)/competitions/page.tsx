@@ -35,7 +35,7 @@ export default async function Competitions() {
   return (
     <div className="space-y-8">
       <PageHero Icon={Trophy} tone="amber" title="Compete" sub="Pick any topic, set a goal and a deadline, then race a bot, a friend or a whole group. Public contests can be watched by anyone; private ones only by the people in them.">
-        {user ? <Link href="/competitions/new" className="btn"><Plus size={16} />Start a contest</Link> : <Link href="/login" className="btn"><LogIn size={16} />Sign in to compete</Link>}
+        {user ? <span className="flex flex-wrap items-center gap-3"><Link href="/start" className="btn"><Plus size={16} />Start a race</Link><Link href="/competitions/new" className="text-sm text-slate-400 underline">More options</Link></span> : <Link href="/login" className="btn"><LogIn size={16} />Sign in to compete</Link>}
       </PageHero>
 
       {spotlight && (() => {
@@ -86,6 +86,7 @@ export default async function Competitions() {
         <section key={s}>
           <h2 className="mb-3 flex items-center gap-2.5 text-lg font-bold">{(() => { const { Icon, tone } = SECTION[s]; return <span className={`grid h-8 w-8 place-items-center rounded-xl ${tone}`}><Icon size={17} /></span>; })()}{SECTION[s].title} <span className="text-sm font-normal text-slate-400">{group(s).length} · public</span></h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{group(s).slice(0, 12).map((m) => <CompetitionCard key={m.c.id} card={m} />)}</div>
+          {group(s).length > 12 && <p className="mt-2 text-xs text-slate-400">Showing the 12 most recent of {group(s).length}.</p>}
         </section>
       ))}
 

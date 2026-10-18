@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { ArrowRight, LinkIcon } from "lucide-react";
 import { EmptyState } from "@/components/charts";
+import { eq } from "drizzle-orm";
 import { findOpenInvite } from "@/lib/invites";
+import { db, users } from "@/lib/db";
+import { parseScopes, scopeLabels, scopeOptions } from "@/lib/paths";
 import { currentUser } from "@/lib/auth";
 import JoinForm from "./join-form";
 
@@ -17,5 +20,8 @@ export default async function JoinPage({ params }: { params: Promise<{ token: st
     );
   }
   const me = await currentUser();
-  return <JoinForm token={token} email={inv.email} signedInAs={me && me.email.toLowerCase() !== inv.email.toLowerCase() ? me.name : null} />;
+  // so the person knows what they are accepting before they type a password
+  const from = db.select({ n: users.name }).from(users).where(eq(users.id, inv.createdBy)).get()?.n ?? null;
+  const where = scopeLabels(parseScopes(inv.scopes), scopeOptions()).join(", ");
+  return <JoinForm token={token} email={inv.email} from={from} where={where} role={inv.jobRole} signedInAs={me && me.email.toLowerCase() !== inv.email.toLowerCase() ? me.name : null} />;
 }

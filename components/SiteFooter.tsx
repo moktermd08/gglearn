@@ -27,13 +27,13 @@ export function SiteFooter({ user, look = DEFAULT_LOOK }: { user: User; look?: L
           <ul className={col}>
             {user && <li><Link href="/dashboard" className={link}>My quest</Link></li>}
             {user && <li><Link href="/journey" className={link}>My career</Link></li>}
-            {user && <li><Link href="/start" className={link}>Start a journey</Link></li>}
+            {user && <li><Link href="/start" className={link}>Start a race</Link></li>}
             <li><Link href="/#subjects" className={link}>Browse subjects</Link></li>
           </ul></nav>
         <nav aria-label="Compete"><h2 className={head}>Compete</h2>
           <ul className={col}>
             <li><Link href="/competitions" className={link}>All contests</Link></li>
-            {user && <li><Link href="/competitions/new" className={link}>Start a contest</Link></li>}
+            {user && <li><Link href="/competitions/new" className={link}>Race options</Link></li>}
             {user && <li><Link href="/updates" className={link}>What changed</Link></li>}
           </ul></nav>
         <nav aria-label={staff ? "Admin" : "Account"}><h2 className={head}>{staff ? "Admin" : "Account"}</h2>

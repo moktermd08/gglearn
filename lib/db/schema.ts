@@ -25,6 +25,9 @@ export const users = sqliteTable("users", {
   // "soft": this person chose to take their learning journey in any order (see lib/journeyLock.ts). Only counts when their company allows the choice.
   // Text, not a boolean, so it can be added to a table with rows.
   journeyMode: text("journey_mode", { enum: ["inherit", "soft"] }).notNull().default("inherit"),
+  // "yes": a friend who joined a contest from its invite link (lib/guestLink.ts). Not part of any company: nothing is required of them and no manager is
+  // expected to set them up. Text, not a boolean, for the same reason as seasonBoard.
+  guest: text("guest", { enum: ["no", "yes"] }).notNull().default("no"),
   createdAt: integer("created_at").notNull().default(now),
 });
 
@@ -325,6 +328,8 @@ export const invites = sqliteTable("invites", {
   jobRole: text("job_role").notNull(),
   audience: text("audience", { enum: ["staff", "customer"] }).notNull().default("staff"),
   scopes: text("scopes").notNull().default(""), // "company:1,brand:2,project:3"
+  // the access level the person gets on joining (see lib/accessLevel.ts); checked again when the invite is used, since the inviter may have changed
+  role: text("role", { enum: ["admin", "manager", "learner"] }).notNull().default("learner"),
   createdBy: integer("created_by").notNull().references(() => users.id),
   createdAt: integer("created_at").notNull().default(now),
   expiresAt: integer("expires_at").notNull(),
@@ -366,6 +371,9 @@ export const competitions = sqliteTable("competitions", {
   // drizzle-kit drops falsy defaults, which breaks adding a NOT NULL column to a table that already has rows.
   twist: text("twist", { enum: ["off", "on"] }).notNull().default("off"),
   canceledAt: integer("canceled_at"),
+  // The invite link (lib/guestLink.ts): null = off, otherwise the version the link's signed key is made from. A new link is a new version,
+  // so the old one stops working. Nullable on purpose, like canceledAt: adding a NOT NULL column to a table with rows is what drizzle-kit trips on.
+  guestLinkVersion: integer("guest_link_version"),
   createdAt: integer("created_at").notNull().default(now),
 });
 

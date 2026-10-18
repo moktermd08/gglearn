@@ -4,7 +4,7 @@ import { Eye, EyeOff, KeyRound, Mail, PartyPopper, TriangleAlert, User } from "l
 import { joinWithInvite } from "@/app/actions";
 import { AuthShell } from "@/components/AuthShell";
 
-export default function JoinForm({ token, email, signedInAs = null }: { token: string; email: string; signedInAs?: string | null }) {
+export default function JoinForm({ token, email, from = null, where = "", role = "", signedInAs = null }: { token: string; email: string; from?: string | null; where?: string; role?: string; signedInAs?: string | null }) {
   const [show, setShow] = useState(false);
   const [error, run, pending] = useActionState(joinWithInvite.bind(null, token), null);
   const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
@@ -12,7 +12,7 @@ export default function JoinForm({ token, email, signedInAs = null }: { token: s
     <AuthShell title="You are invited." lead="Create your account and your first learning path is waiting.">
     <form action={run} className="space-y-3">
       <div className="flex items-center gap-2"><PartyPopper className="bob text-amber-300" /><h1 className="text-xl font-extrabold">Create your account</h1></div>
-      <p className="flex items-center gap-1.5 text-sm text-slate-300"><Mail size={14} className="shrink-0 text-sky-300" />You were invited as <b>{email}</b>.</p>
+      <p className="flex items-start gap-1.5 text-sm text-slate-300"><Mail size={14} className="mt-0.5 shrink-0 text-sky-300" /><span>{from ? <><b>{from}</b> invited you</> : "You were invited"}{where ? <> to <b>{where}</b></> : null}{role ? <> as <b>{role}</b></> : null}. Your account will use <b>{email}</b>.</span></p>
       {signedInAs && <p role="status" className="flex items-start gap-1.5 rounded-lg bg-amber-500/10 p-2.5 text-sm text-amber-300"><TriangleAlert size={14} className="mt-0.5 shrink-0" />You are signed in as {signedInAs}. Joining switches this browser to the new account, so use a private window if you are only checking the link.</p>}
       <div className="relative"><User size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
         <input name="name" placeholder="Full name" required className={`${input} !pl-9`} autoComplete="name" /></div>

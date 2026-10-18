@@ -25,6 +25,10 @@ import { claimPendingInvites } from "@/lib/contests";
 import { twistFor } from "@/lib/twists";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
+import { siteUrl } from "@/lib/share";
+import { safeNext } from "@/lib/nextPath";
+import { type Level, isLevel, levelForInvite, refuseAccess, setAccessLevel } from "@/lib/accessLevel";
+import type { SetupState } from "@/lib/setup";
 import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
 import { isLook } from "@/lib/avatars";
 import { awardForPass } from "@/lib/rewards";
@@ -33,7 +37,7 @@ import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/li
 import { offboardingLines, onboardingLines } from "@/lib/access";
 import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
 import { journeyFor, orderLockFor } from "@/lib/journeyLock";
-import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
+import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopeLabels, scopeOptions, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
   "Read the brand story and values",
@@ -109,7 +113,8 @@ export async function joinWithInvite(token: string, _: string | null, fd: FormDa
       const used = tx.update(invites).set({ usedAt: Math.floor(Date.now() / 1000) })
         .where(and(eq(invites.id, inv.id), sql`${invites.usedAt} is null`)).returning().get();
       if (!used) throw new Error("used");
-      const u = tx.insert(users).values({ name: p.data.name, email: inv.email, jobRole: inv.jobRole, audience: inv.audience, passwordHash }).returning().get();
+      const role = levelForInvite({ role: inv.role, createdBy: inv.createdBy, scopes: parseScopes(inv.scopes), audience: inv.audience });
+      const u = tx.insert(users).values({ name: p.data.name, email: inv.email, jobRole: inv.jobRole, audience: inv.audience, role, passwordHash }).returning().get();
       provision(tx, u.id, u.email, inv.jobRole, inv.audience, parseScopes(inv.scopes));
       return u.id;
     });
@@ -141,7 +146,7 @@ export async function login(_: string | null, fd: FormData): Promise<string | nu
   }
   syncRequired(u); // picks up tracks that became required since their last visit
   await startSession(u.id);
-  redirect("/dashboard");
+  redirect(safeNext(str(fd.get("next"))) ?? "/dashboard"); // an invite link sends people back to it after sign-in
 }
 
 export async function logout() {
@@ -366,6 +371,17 @@ export async function finishDrill(trackId: number) {
 
 // ---- people: onboarding & offboarding (managers/admins) ----
 
+/** The access level picked on a form; anything unrecognised is the safe one. */
+const accessFrom = (fd: FormData): Level => { const v = str(fd.get("access")); return isLevel(v) ? v : "learner"; };
+
+/** Changes one person's access level (learner, manager or admin). The rules are in lib/accessLevel.ts. */
+export async function setAccess(_: SetupState, fd: FormData): Promise<SetupState> {
+  const me = await requireManager();
+  const r = setAccessLevel(me, fd);
+  if (r?.done) revalidatePath("/admin/people");
+  return r;
+}
+
 export async function createPerson(_: string | null, fd: FormData): Promise<string | null> {
   const me = await requireManager();
   const p = z.object({
@@ -380,9 +396,12 @@ export async function createPerson(_: string | null, fd: FormData): Promise<stri
   if (!scopes.length) return "Pick at least one company, brand or project they belong to.";
   const reach = reachOf(me.id);
   if (scopes.some((s) => !scopeInReach(reach, s))) return "You can only add people to the companies, brands and projects you run.";
+  const access = accessFrom(fd);
+  const refused = refuseAccess(me, access, scopes, p.data.audience);
+  if (refused) return refused;
   if (db.select().from(users).where(eq(users.email, p.data.email)).get()) return "That email already exists.";
 
-  const u = db.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: p.data.jobRole, audience: p.data.audience, passwordHash: await hashPassword(p.data.password) }).returning().get();
+  const u = db.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: p.data.jobRole, audience: p.data.audience, role: access, passwordHash: await hashPassword(p.data.password) }).returning().get();
   provision(db, u.id, u.email, p.data.jobRole, p.data.audience, scopes);
   revalidatePath("/admin/people");
   return null;
@@ -390,11 +409,15 @@ export async function createPerson(_: string | null, fd: FormData): Promise<stri
 
 export type InviteState = {
   error?: string;
-  invites?: { email: string; path: string }[];
+  invites?: { email: string; path: string; url: string }[];
   /** addresses that already have an account, so no link was made */
   skipped?: string[];
   /** worth knowing before the link goes out, e.g. nothing is set up for this role yet */
   notice?: string;
+  /** who is inviting, where to and as what: the form turns these into a ready-to-send message */
+  message?: { from: string; where: string; role: string; access: Level };
+  /** what was typed, returned on an error so the form is not emptied (a form action resets its fields) */
+  values?: { emails: string; jobRole: string; audience: "staff" | "customer"; scopes: string; access: Level };
 } | null;
 
 const MAX_INVITES_AT_ONCE = 25;
@@ -403,26 +426,34 @@ const MAX_INVITES_AT_ONCE = 25;
 export async function createInvite(_: InviteState, fd: FormData): Promise<InviteState> {
   const me = await requireManager();
   const emails = [...new Set(str(fd.get("emails")).toLowerCase().split(/[\s,;]+/).filter(Boolean))];
+  const keep: NonNullable<InviteState>["values"] = {
+    emails: str(fd.get("emails")), jobRole: str(fd.get("jobRole")),
+    audience: str(fd.get("audience")) === "customer" ? "customer" : "staff", access: accessFrom(fd), scopes: fd.getAll("scope").filter((v): v is string => typeof v === "string").join(","),
+  };
   const p = z.object({
     emails: z.array(z.string().email().max(120)).min(1).max(MAX_INVITES_AT_ONCE),
     jobRole: z.string().min(1).max(40),
     audience: z.enum(["staff", "customer"]),
   }).safeParse({ emails, jobRole: str(fd.get("jobRole")).toLowerCase(), audience: str(fd.get("audience")) || "staff" });
-  if (!p.success) return { error: `Enter one to ${MAX_INVITES_AT_ONCE} valid email addresses and a role.` };
+  if (!p.success) return { error: `Enter one to ${MAX_INVITES_AT_ONCE} valid email addresses and a role.`, values: keep };
   const scopes = validScopes(db, formScopes(fd));
-  if (!scopes.length) return { error: "Pick at least one company, brand or project they belong to." };
+  if (!scopes.length) return { error: "Pick at least one company, brand or project they belong to.", values: keep };
   const reach = reachOf(me.id);
-  if (scopes.some((s) => !scopeInReach(reach, s))) return { error: "You can only invite people to the companies, brands and projects you run." };
+  if (scopes.some((s) => !scopeInReach(reach, s))) return { error: "You can only invite people to the companies, brands and projects you run.", values: keep };
+  const access = accessFrom(fd);
+  const refused = refuseAccess(me, access, scopes, p.data.audience);
+  if (refused) return { error: refused, values: keep };
 
   const taken = new Set(db.select({ e: users.email }).from(users).where(inArray(users.email, p.data.emails)).all().map((r) => r.e));
   const fresh = p.data.emails.filter((e) => !taken.has(e));
-  if (!fresh.length) return { error: p.data.emails.length === 1 ? "That email already has an account." : "Every one of those emails already has an account." };
+  if (!fresh.length) return { error: p.data.emails.length === 1 ? "That email already has an account." : "Every one of those emails already has an account.", values: keep };
 
   const expiresAt = Math.floor(Date.now() / 1000) + INVITE_TTL_SEC;
+  const base = await siteUrl(); // an absolute link, so a message sent from this page works wherever it is opened
   const invites_ = fresh.map((email) => {
     const token = newToken();
-    db.insert(invites).values({ tokenHash: hashToken(token), email, jobRole: p.data.jobRole, audience: p.data.audience, scopes: formatScopes(scopes), createdBy: me.id, expiresAt }).run();
-    return { email, path: `/join/${token}` };
+    db.insert(invites).values({ tokenHash: hashToken(token), email, jobRole: p.data.jobRole, audience: p.data.audience, scopes: formatScopes(scopes), role: access, createdBy: me.id, expiresAt }).run();
+    return { email, path: `/join/${token}`, url: `${base}/join/${token}` };
   });
   const cov = p.data.audience === "staff" ? coverageFor(p.data.jobRole) : null;
   let notice = cov && hasNoRolePath(cov)
@@ -435,7 +466,8 @@ export async function createInvite(_: InviteState, fd: FormData): Promise<Invite
       .where(and(eq(tracks.audience, "customer"), inArray(tracks.brandId, brandIds))).all().map((r) => r.n) : [];
     notice = `Nothing is assigned to customers with this scope yet, so they would start with an empty path.${hint.length ? ` Also tick the product: ${[...new Set(hint)].join(", ")}.` : " Tick the product (project) or brand they bought."}`;
   }
-  return { invites: invites_, skipped: taken.size ? [...taken] : undefined, notice };
+  const where = scopeLabels(scopes, scopeOptions()).join(", ");
+  return { invites: invites_, skipped: taken.size ? [...taken] : undefined, notice, message: { from: me.name, where, role: p.data.jobRole, access } };
 }
 
 /** Moves someone to a different set of companies, brands and projects, then enrols them in whatever that now requires. */

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { eq, inArray, sql } from "drizzle-orm";
 import { checklistItems, db, enrollments, handovers, tracks, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
-import { addHandover, offboard, toggleChecklistItem, updateScopes } from "@/app/actions";
+import { addHandover, offboard, setAccess, toggleChecklistItem, updateScopes } from "@/app/actions";
+import { ActionForm } from "@/components/admin/ActionForm";
+import { LEVELS, grantableLevels } from "@/lib/accessLevel";
 import { catalog, loadProgress, scopeLabels, scopeOptions, scopesOf } from "@/lib/paths";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { ScopePicker } from "@/components/ScopePicker";
@@ -13,7 +15,7 @@ import InvitePerson from "./invite-person";
 import ResetPassword from "./reset-password";
 import { OnboardingPhases } from "@/components/OnboardingPhases";
 import { canSignOff, onboardingFor } from "@/lib/onboarding";
-import { limitOptions, usersInReach } from "@/lib/tenancy";
+import { isGlobal, limitOptions, reachOf, usersInReach } from "@/lib/tenancy";
 import { adminScopeOf } from "@/lib/adminScope";
 
 const PAGE = 50;
@@ -35,6 +37,8 @@ export default async function People({ searchParams }: { searchParams: Promise<{
   const enrolledIn = new Map<number, number[]>();
   if (shownIds.length) for (const e of db.select({ u: enrollments.userId, t: enrollments.trackId }).from(enrollments).where(inArray(enrollments.userId, shownIds)).all()) enrolledIn.set(e.u, [...(enrolledIn.get(e.u) ?? []), e.t]);
   const options = limitOptions(scopeOptions(), reach);
+  const grantable = LEVELS.filter((l) => grantableLevels(me).includes(l.key as "manager" | "admin")); // what this person may hand out; empty for a manager
+  const owner = isGlobal(reachOf(me.id)); // only the platform owner changes an admin
   const cat = catalog();
   const roles = knownRoles(cat);
   const onboarding = { cat, prog: loadProgress(shown) };
@@ -61,11 +65,11 @@ export default async function People({ searchParams }: { searchParams: Promise<{
       </div>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-sky-500/15 text-sky-300"><Mail size={17} /></span>Invite someone</h2>
-        <InvitePerson options={options} roles={roles} />
+        <InvitePerson options={options} roles={roles} access={grantable} />
       </section>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-emerald-500/15 text-emerald-300"><UserPlus size={17} /></span>Or create their account yourself</h2>
-        <NewPerson options={options} roles={roles} />
+        <NewPerson options={options} roles={roles} access={grantable} />
       </section>
       <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-500/15 text-indigo-300"><Users size={17} /></span>Everyone <span className="text-sm font-normal text-slate-400">{found.length.toLocaleString("en-GB")}{needle && ` of ${everyone.length.toLocaleString("en-GB")}`}</span></h2>
       <form className="flex flex-wrap items-center gap-2 text-sm">
@@ -90,6 +94,7 @@ export default async function People({ searchParams }: { searchParams: Promise<{
                 <Initials name={u.name} size={44} />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2 font-medium">{u.name}
+                    {u.guest === "yes" && <span title="Joined a contest from its invite link" className="inline-flex items-center gap-1 rounded-full bg-sky-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-sky-300">guest</span>}
                     {u.audience === "customer" && <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">customer</span>}
                     {u.role !== "learner" && <span className="inline-flex items-center gap-1 rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-violet-300">{u.role === "admin" ? <Shield size={10} /> : <UserCog size={10} />}{u.role}</span>}
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${off ? "bg-rose-500/20 text-rose-300" : "bg-emerald-500/20 text-emerald-300"}`}>{off ? <UserMinus size={10} /> : <UserCheck size={10} />}{u.status}</span>
@@ -106,9 +111,19 @@ export default async function People({ searchParams }: { searchParams: Promise<{
               </div>
               {!off && (
                 <details className="mt-3 text-sm">
-                  <summary className="cursor-pointer text-slate-400 hover:text-white">Role, where {u.name.split(" ")[0]} belongs, or reset their password</summary>
+                  <summary className="cursor-pointer text-slate-400 hover:text-white">Role, access level, where {u.name.split(" ")[0]} belongs, or reset their password</summary>
                   {u.id !== me.id && u.status === "active" && <Link href={`/admin/role-change?user=${u.id}`} className="mt-2 inline-block text-sm text-sky-300 underline">Change role: promote, demote or move, with the learning and tool access it changes</Link>}
                   {u.id !== me.id && (me.role === "admin" || u.role === "learner") && <ResetPassword userId={u.id} name={u.name} />}
+                  {grantable.length > 0 && u.id !== me.id && u.status === "active" && u.audience === "staff" && (u.role !== "admin" || owner) && (
+                    <ActionForm action={setAccess} className="mt-2 flex flex-wrap items-center gap-2">
+                      <input type="hidden" name="userId" value={u.id} />
+                      <select key={u.role} name="access" defaultValue={u.role} aria-label={`Access level for ${u.name}`} className={input}>
+                        {[LEVELS[0], ...grantable].map((l) => <option key={l.key} value={l.key}>Access: {l.label}</option>)}
+                      </select>
+                      <button className="btn btn-ghost !px-3 !py-1"><Shield size={14} />Save access</button>
+                      <span className="text-xs text-slate-400">Manager: runs the people in their company. Admin: also tracks, rewards and tool access.</span>
+                    </ActionForm>
+                  )}
                   <form action={updateScopes} className="mt-2 space-y-2">
                     <input type="hidden" name="userId" value={u.id} />
                     <ScopePicker options={options} selected={myScopes} />

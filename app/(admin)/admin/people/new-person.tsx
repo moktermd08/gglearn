@@ -4,9 +4,10 @@ import { TriangleAlert, UserPlus } from "lucide-react";
 import { createPerson } from "@/app/actions";
 import { RoleInput } from "@/components/RoleInput";
 import { ScopePicker } from "@/components/ScopePicker";
+import { AccessSelect, type AccessChoice } from "@/components/AccessSelect";
 import type { ScopeOptions } from "@/lib/paths";
 
-export default function NewPerson({ options, roles }: { options: ScopeOptions; roles: string[] }) {
+export default function NewPerson({ options, roles, access = [] }: { options: ScopeOptions; roles: string[]; access?: AccessChoice[] }) {
   const [error, run, pending] = useActionState(createPerson, null);
   const input = "rounded border border-white/20 bg-[#fff] px-2 py-1";
   return (
@@ -18,6 +19,7 @@ export default function NewPerson({ options, roles }: { options: ScopeOptions; r
         <option value="staff">Staff</option>
         <option value="customer">Customer</option>
       </select>
+      <AccessSelect choices={access} className={input} />
       <input name="password" type="password" placeholder="Temporary password" minLength={8} required className={input} autoComplete="new-password" />
       <ScopePicker options={options} />
       <button disabled={pending} className="btn !py-1.5 py-1.5 disabled:opacity-50"><UserPlus size={14} />{pending ? "Onboarding…" : "Onboard"}</button>

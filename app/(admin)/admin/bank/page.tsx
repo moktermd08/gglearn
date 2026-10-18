@@ -60,7 +60,7 @@ export default async function Admin() {
       {wanted.length > 0 && (
         <section className="card p-4">
           <h2 className="mb-2 flex items-center gap-2 font-semibold"><Lightbulb size={18} className="text-amber-300" />Topics people asked for</h2>
-          <p className="mb-2 text-xs text-slate-400">Searches on Start a journey that found nothing. Most asked first.</p>
+          <p className="mb-2 text-xs text-slate-400">Searches on Start a race that found nothing. Most asked first.</p>
           <ul className="flex flex-wrap gap-2 text-sm">
             {wanted.map((w) => <li key={w.text} className="rounded-full bg-amber-500/15 px-3 py-1 text-amber-200">{w.text} <span className="text-xs text-amber-300/70">· {w.people}</span></li>)}
           </ul>

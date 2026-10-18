@@ -46,7 +46,7 @@ function computeGlance(viewer: { id: number; role: string }, reach: Reach) {
   const unread = [...pendingCounts(mine)].reduce((a, [, n]) => a + n, 0);
   return {
     overdue: rows.filter((r) => r.state === "overdue").length,
-    unassigned: rows.filter((r) => r.state === "no-scope").length,
+    unassigned: rows.filter((r) => r.state === "no-scope" && r.person.role === "learner").length, // a manager or admin with no scopes is the platform owner, and runs everything on purpose
     invitesWaiting, held, unread,
     certs: expiryWatch(mine),
   };
