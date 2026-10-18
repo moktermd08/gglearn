@@ -141,11 +141,24 @@ export type FocusId = (typeof FOCUS)[number]["id"];
 
 /** Areas that follow a hand-picked set of stops instead of whole lines (a whole line would pull in stops the area never touches). */
 export const FOCUS_STOPS: Partial<Record<FocusId, readonly string[]>> = {
+  build: [
+    "buildbuy", "nfr", "solarch", "apicon", "stack", "spike", "dmodel", "schema", "migplan", "devenv", "standards", "repo", "skeleton", "frontend", "backend", "codereview", "merge", "bugfix", "deps", "refactor",
+    "automation", "unit", "integ", "contract", "regression", "threat", "secrets", "sast", "envs", "ci", "cd", "flags", "adr", "apidocs", "readme",
+  ],
+  design: ["research", "personas", "journeys", "blueprint", "content", "ia", "wire", "proto", "usability", "dsys", "hifi", "a11yrev", "uxsign", "a11ystmt", "analytics", "uxiter", "gloss", "docstd", "userguide", "brandvoice", "contentplan", "landing"],
+  lead: [
+    "goals", "bizcase", "roadmap", "backlog", "kpi", "sponsor", "team", "method", "budget", "risk", "resourcing", "dplan", "board", "burn", "stagegate", "lessons", "accept", "uat", "relnotes", "relplan", "changereq", "hypercare", "incident", "slo",
+  ],
+  run: ["hosting", "iac", "envs", "obs", "proddeploy", "rollback", "hypercare", "servicedesk", "monitor", "incident", "slo", "patching", "backup", "dqmon", "runbooks", "userguide", "captest", "vulnwatch", "secinc", "hotfix", "bugfix", "opbudget", "finops", "cloudcost"],
+  secure: [
+    "regscan", "threat", "secreq", "airisk", "iam", "secdesign", "secrets", "sbom", "sast", "licence", "dast", "pentest", "evidence", "accred", "vulnwatch", "audit", "secinc", "recert", "sanitise",
+    "dclass", "dpia", "sar", "retain", "risk", "serviceassess", "archive", "deps",
+  ],
   sell: ["market", "icp", "position", "compwatch", "brandvoice", "valueprop", "funnel", "pricing", "content", "contentplan", "gtm", "landing", "leadcapture", "crm", "playbook", "paidsocial", "launch", "emailseq", "salesen", "calls", "pipeline"],
   customers: ["emailseq", "onboard", "feedback", "health", "renewal", "custnotice", "hypercare", "servicedesk", "incident", "userguide", "runbooks"],
 };
 /** Where "Take me to my next stop" begins for an area, when nothing is required or in progress. */
-export const FOCUS_START: Partial<Record<FocusId, string>> = { sell: "icp", customers: "onboard" };
+export const FOCUS_START: Partial<Record<FocusId, string>> = { build: "stack", design: "research", lead: "team", run: "obs", secure: "regscan", sell: "icp", customers: "onboard" };
 /** The lines an area touches. */
 export const focusLinesOf = (id: FocusId): Set<LineId> => {
   const stops = FOCUS_STOPS[id];
