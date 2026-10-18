@@ -139,6 +139,18 @@ export const FOCUS = [
 ] as const satisfies readonly { id: string; label: string; lines: readonly LineId[] }[];
 export type FocusId = (typeof FOCUS)[number]["id"];
 
+/** Areas that follow a hand-picked set of stops instead of whole lines (a whole line would pull in stops the area never touches). */
+export const FOCUS_STOPS: Partial<Record<FocusId, readonly string[]>> = {
+  customers: ["emailseq", "onboard", "feedback", "health", "renewal", "custnotice", "hypercare", "servicedesk", "incident", "userguide", "runbooks"],
+};
+/** Where "Take me to my next stop" begins for an area, when nothing is required or in progress. */
+export const FOCUS_START: Partial<Record<FocusId, string>> = { customers: "onboard" };
+/** The lines an area touches. */
+export const focusLinesOf = (id: FocusId): Set<LineId> => {
+  const stops = FOCUS_STOPS[id];
+  return stops ? new Set(stops.map((sid) => STATION_BY_ID.get(sid)!.line)) : new Set<LineId>(FOCUS.find((f) => f.id === id)!.lines);
+};
+
 const ROLE_WORDS: [RegExp, FocusId][] = [
   [/secur|compliance|privacy|risk|audit/, "secure"],
   [/design|ux|content|writer|brand|creative|editor/, "design"],

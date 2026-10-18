@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Minus, Plus, Search, Trophy, X } from "lucide-react";
 import {
-  FOCUS, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
-  type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
+  FOCUS, FOCUS_START, FOCUS_STOPS, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
+  focusLinesOf, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
 } from "@/lib/lifecycle/model";
 
 type View = { k: number; x: number; y: number };
@@ -41,12 +41,14 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
 
   const role = useMemo<RoleInfo | null>(() => data.roles.find((r) => r.key === roleKey) ?? null, [roleKey, data.roles]);
-  const focusLines = useMemo(() => new Set<LineId>(FOCUS.find((f) => f.id === focus)!.lines), [focus]);
+  const focusLines = useMemo(() => focusLinesOf(focus), [focus]);
   /* The route: the stops a role's career ladder asks for, or every stop on the lines of the chosen area. */
   const routeIds = useMemo(() => {
     if (role) { const t = new Set(role.core); const ids = STATIONS.filter((s) => t.has(s.track)).map((s) => s.id); if (ids.length) return new Set(ids); }
+    const stops = FOCUS_STOPS[focus];
+    if (stops) return new Set<string>(stops);
     return new Set(STATIONS.filter((s) => focusLines.has(s.line)).map((s) => s.id));
-  }, [role, focusLines]);
+  }, [role, focus, focusLines]);
   const litLines = useMemo(() => new Set<LineId>(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.line)), [routeIds]);
   const dimming = routeIds.size < STATIONS.length;
 
@@ -54,9 +56,11 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const next = useMemo<Station | null>(() => {
     const mine = STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
     const t = (s: Station) => data.tracks[s.track];
+    const start = !role ? STATION_BY_ID.get(FOCUS_START[focus] ?? "") : undefined;
     return mine.find((s) => t(s)?.open && t(s)?.required && t(s)!.passed < t(s)!.requiredLevel)
+      ?? (start && routeIds.has(start.id) && (t(start)?.passed ?? 0) < 5 ? start : undefined)
       ?? mine.find((s) => t(s)?.open && (t(s)?.passed ?? 0) < 5) ?? mine[0] ?? null;
-  }, [routeIds, data.tracks]);
+  }, [routeIds, role, focus, data.tracks]);
 
   /* Races: live or upcoming campaigns on the tracks of this route. One flag per track, on the first stop of that track on the route. */
   const routeTracks = useMemo(() => role ? new Set(role.tracks) : new Set(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.track)), [role, routeIds]);
@@ -79,13 +83,14 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
     const top = (narrow ? (size.w < 640 ? 130 : 215) : 0) + chrome, bottom = sheet ? size.h * 0.4 : size.h;
     move({ k: kk, x: (size.w - rightInset) / 2 - cx * kk, y: (top + bottom) / 2 - cy * kk }, smooth);
   }, [fitK, size, narrow, chrome, move]);
-  const frameLines = useCallback((lines: Set<LineId>, smooth = true) => {
-    if (narrow) { const s = STATIONS.filter((st) => lines.has(st.line)).sort((a, b) => a.x - b.x)[0], rs = LINES.filter((l) => lines.has(l.id)).map((l) => l.row); if (s) centreOn(px(s.x) + 120, py((Math.min(...rs) + Math.max(...rs)) / 2), 0.75, smooth); return; }
+  const frameLines = useCallback((lines: Set<LineId>, smooth = true, ids?: ReadonlySet<string>) => {
+    const on = (st: Station) => (ids ? ids.has(st.id) : lines.has(st.line));
+    if (narrow) { const s = STATIONS.filter(on).sort((a, b) => a.x - b.x)[0], rs = LINES.filter((l) => lines.has(l.id)).map((l) => l.row); if (s) centreOn(px(s.x) + 120, py((Math.min(...rs) + Math.max(...rs)) / 2), 0.75, smooth); return; }
     const rows = LINES.filter((l) => lines.has(l.id)).map((l) => l.row);
     const y0 = py(Math.min(...rows)) - 120, y1 = py(Math.max(...rows)) + 80, top = (narrow ? 100 : 136) + chrome, bottom = narrow ? 96 : 64;
     // readable first: about 0.9 unless the lit lines would not fit up and down; the fit button shows the whole map
     const kk = Math.min(1.1, Math.max(0.6, Math.min(0.95, (size.h - top - bottom) / (y1 - y0))));
-    const first = STATIONS.filter((st) => lines.has(st.line)).sort((p, q) => p.x - q.x)[0], x0 = first ? px(first.x) - 300 : 0;
+    const first = STATIONS.filter(on).sort((p, q) => p.x - q.x)[0], x0 = first ? px(first.x) - 300 : 0;
     move({ k: kk, x: 16 - Math.max(0, x0) * kk, y: top + Math.max(0, size.h - top - bottom - (y1 - y0) * kk) / 2 - y0 * kk }, smooth);
   }, [narrow, size, chrome, centreOn, move]);
 
@@ -97,7 +102,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
     return () => ro.disconnect();
   }, []);
   const first = useRef(true);
-  useLayoutEffect(() => { if (size.w && first.current) { first.current = false; frameLines(litLines, false); } }, [size.w, litLines, frameLines]);
+  useLayoutEffect(() => { if (size.w && first.current) { first.current = false; frameLines(litLines, false, routeIds); } }, [size.w, litLines, routeIds, frameLines]);
 
   /* ---------- pointer: drag to pan, two fingers or ctrl+wheel to zoom ---------- */
   const viewRef = useRef(view);
@@ -157,13 +162,13 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
     const cx = n ? px(n.x) : px(g!.x), cy = n ? py(n.row) : (py(gateRow(g!)) + py(gateBottom(g!))) / 2;
     centreOn(cx, cy, Math.max(viewRef.current.k, narrow ? 0.8 : 1.05), true, narrow ? 0 : 380, narrow);
   };
-  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); frameLines(new Set<LineId>(FOCUS.find((f) => f.id === id)!.lines)); };
+  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); frameLines(focusLinesOf(id), true, FOCUS_STOPS[id] ? new Set(FOCUS_STOPS[id]) : undefined); };
   const chooseRole = (key: string | null) => {
     setRoleKey(key); setPicker(false); setPq(""); setSel(null); setHint(false);
     const r = data.roles.find((x) => x.key === key);
     if (!r) { setFocus("all"); frameLines(new Set<LineId>(LINES.map((l) => l.id))); return; }
     const t = new Set(r.core), ls = new Set<LineId>(STATIONS.filter((st) => t.has(st.track)).map((st) => st.line));
-    frameLines(ls.size ? ls : new Set<LineId>(LINES.map((l) => l.id)));
+    frameLines(ls.size ? ls : new Set<LineId>(LINES.map((l) => l.id)), true, ls.size ? new Set(STATIONS.filter((st) => t.has(st.track)).map((st) => st.id)) : undefined);
   };
   const goNext = () => { if (next) pick({ kind: "st", id: next.id }); };
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === "Escape") setSel(null); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
