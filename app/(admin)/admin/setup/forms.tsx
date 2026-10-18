@@ -1,7 +1,7 @@
 "use client";
 import { useActionState, useRef } from "react";
 import { Building2, Check, Plus, TriangleAlert } from "lucide-react";
-import { createBrand, createCompany, createTrack, saveCompanyBranding, type SetupState } from "./actions";
+import { createBrand, createCompany, createTrack, saveCompanyBranding, saveCompanyLearningOrder, type SetupState } from "./actions";
 
 const input = "rounded border border-white/20 bg-[#fff] px-2 py-1";
 
@@ -150,6 +150,32 @@ export function BrandingForm({ company }: { company: { id: number; name: string;
       </div>
       <div className="flex flex-wrap items-center gap-3 md:col-span-3">
         <button disabled={pending} className="btn !py-1.5 disabled:opacity-50"><Check size={14} />{pending ? "Saving…" : "Save branding"}</button>
+        <Result state={state} />
+      </div>
+    </form>
+  );
+}
+
+const ORDER_CHOICES = [
+  { v: "choice", t: "Locked, learners can switch to any order", d: "The default. Later stages stay locked until earlier ones are passed, but a learner can choose to take their journey in any order." },
+  { v: "hard", t: "Locked, learners cannot change it", d: "Later stages stay locked for everyone. Learners can still test out of a stage with a placement check." },
+  { v: "soft", t: "Recommended order only", d: "Nothing is locked. The map and track pages still show the order that works best." },
+] as const;
+
+export function LearningOrderForm({ company }: { company: { id: number; name: string; journeyLock: "choice" | "hard" | "soft" } }) {
+  const { ref, state, run, pending } = useSetup(saveCompanyLearningOrder, true);
+  return (
+    <form ref={ref} action={run} className="card grid gap-2 p-4 text-sm">
+      <input type="hidden" name="companyId" value={company.id} />
+      <h3 className="font-semibold">{company.name}</h3>
+      {ORDER_CHOICES.map((c) => (
+        <label key={c.v} className="flex items-start gap-2">
+          <input type="radio" name="journeyLock" value={c.v} defaultChecked={company.journeyLock === c.v} className="mt-1" />
+          <span><b>{c.t}</b><span className="block text-xs text-slate-400">{c.d}</span></span>
+        </label>
+      ))}
+      <div className="flex flex-wrap items-center gap-3">
+        <button disabled={pending} className="btn !py-1.5 disabled:opacity-50">{pending ? "Saving…" : "Save learning order"}</button>
         <Result state={state} />
       </div>
     </form>

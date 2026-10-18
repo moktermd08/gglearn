@@ -125,3 +125,15 @@ export async function saveBranding(me: Me, fd: FormData): Promise<SetupState> {
   db.update(companies).set({ academyName: p.data.academyName, certIssuer: p.data.certIssuer, accent: p.data.accent, logo, certValidMonths: validMonths, certSigner: p.data.certSigner, certSignerTitle: p.data.certSignerTitle }).where(eq(companies.id, company.id)).run();
   return { done: `Saved branding for ${company.name}. People in this company see it on their next page load. New certificates ${validMonths ? `stay valid for ${validMonths} month${validMonths === 1 ? "" : "s"}` : "never expire"}; ones already issued keep their dates.` };
 }
+
+/** How strictly this company's people must take each role's learning journey in order: locked, locked unless a person switches, or never locked (see lib/journeyLock.ts). Only an admin, only for a company they run. */
+export function saveLearningOrder(me: Me, fd: FormData): SetupState {
+  if (me.role !== "admin") return { error: "Only an admin can change the learning order." };
+  const id = Number(fd.get("companyId"));
+  const company = Number.isInteger(id) ? db.select().from(companies).where(eq(companies.id, id)).get() : undefined;
+  if (!company || !scopeInReach(reachOf(me.id), { kind: "company", id: company.id })) return { error: "You can only change the learning order of a company you run." };
+  const mode = str(fd.get("journeyLock"));
+  if (mode !== "hard" && mode !== "choice" && mode !== "soft") return { error: "Pick locked, locked unless people switch, or recommended only." };
+  db.update(companies).set({ journeyLock: mode }).where(eq(companies.id, company.id)).run();
+  return { done: `Saved. ${company.name}'s learning journeys are now ${mode === "hard" ? "locked, and people cannot change that" : mode === "choice" ? "locked unless a person switches themselves to any order" : "recommended only, never locked"}.` };
+}

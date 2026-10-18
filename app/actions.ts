@@ -32,6 +32,7 @@ import { finalize as finalizeIntegrity } from "@/lib/integrity/session";
 import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/lib/tenancy";
 import { offboardingLines, onboardingLines } from "@/lib/access";
 import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
+import { journeyFor, orderLockFor } from "@/lib/journeyLock";
 import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const ONBOARDING = [
@@ -192,6 +193,15 @@ export async function logoutEverywhere() {
   redirect("/");
 }
 
+/** A learner switches their own learning journey between locked order ("inherit": what their company says) and any order ("soft"). Only when their company allows the choice. */
+export async function setJourneyMode(fd: FormData) {
+  const u = await requireUser();
+  const mode = str(fd.get("mode")) === "soft" ? "soft" : "inherit";
+  if (!journeyFor(u.id)?.canSwitch) return;
+  db.update(users).set({ journeyMode: mode }).where(eq(users.id, u.id)).run();
+  revalidatePath("/map"); revalidatePath("/dashboard"); revalidatePath("/tracks", "layout");
+}
+
 export async function enroll(fd: FormData) {
   const u = await requireUser();
   const trackId = Number(fd.get("trackId"));
@@ -211,6 +221,7 @@ export async function startRun(fd: FormData) {
   if (!db.select().from(enrollments).where(and(eq(enrollments.userId, u.id), eq(enrollments.trackId, trackId))).get()) return;
   if (level > levelsPassed(u.id, trackId) + 1) return; // levels unlock in order
   if (gateFor(u.id, trackId)) return; // an earlier onboarding phase is not signed off yet
+  if (orderLockFor(u.id, trackId)) return; // an earlier stage of this person's learning journey is not passed yet (lib/journeyLock.ts)
 
   // reuse an unfinished run for this level instead of piling up abandoned ones
   const open = db.select().from(runs)
