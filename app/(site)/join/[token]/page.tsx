@@ -14,7 +14,7 @@ export default async function JoinPage({ params }: { params: Promise<{ token: st
   if (!inv) {
     return (
       <div className="mx-auto max-w-md space-y-4">
-        <EmptyState Icon={LinkIcon} tone="rose" title="This invite is not valid">This link has expired or was already used. Ask your manager for a new one.</EmptyState>
+        <EmptyState Icon={LinkIcon} tone="rose" title="This invite is not valid">This link has expired or was already used. Ask the person who sent it to make you a new one.</EmptyState>
         <div className="text-center"><Link href="/login" className="btn btn-ghost">Go to sign in<ArrowRight size={16} /></Link></div>
       </div>
     );

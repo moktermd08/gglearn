@@ -160,7 +160,7 @@ export default async function Integrity({ searchParams }: { searchParams: Promis
               </select>
             </label>
             <button className="btn btn-ghost !py-1.5">Show</button>
-            <span className="text-xs text-slate-400">{owner ? "" : "The whole-academy policy is set by the platform owner, from the Master or Whole academy view; you can still see it flow into yours."}</span>
+            <span className="text-xs text-slate-400">{owner ? "" : "The whole-academy policy is set by the platform owner, from the Academy defaults or Whole academy view; you can still see it flow into yours."}</span>
           </form>
         )}
         {editor}

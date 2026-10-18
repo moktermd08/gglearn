@@ -4,13 +4,13 @@ import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
 /** Header dropdown: closes on outside click, Escape and navigation. `active` lights the trigger when a child page is open. */
-export function Dropdown({ label, children, prefix, align = "left" }: { label: ReactNode; children: ReactNode; prefix?: string; align?: "left" | "right" }) {
+export function Dropdown({ label, children, prefix, align = "left" }: { label: ReactNode; children: ReactNode; prefix?: string | string[]; align?: "left" | "right" }) {
   const path = usePathname();
   const [openAt, setOpenAt] = useState<string | null>(null); // open only for the page it was opened on, so navigating closes it
   const open = openAt === path;
   const setOpen = (v: boolean) => setOpenAt(v ? path : null);
   const box = useRef<HTMLDivElement>(null);
-  const active = !!prefix && path.startsWith(prefix);
+  const active = !!prefix && [prefix].flat().some((p) => path.startsWith(p));
   useEffect(() => {
     if (!open) return;
     const off = (e: MouseEvent) => { if (!box.current?.contains(e.target as Node)) setOpen(false); };

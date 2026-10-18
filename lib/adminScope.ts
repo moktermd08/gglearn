@@ -55,7 +55,7 @@ export function resolveScope(me: Me, raw: string | undefined | null): AdminScope
   const reach = reachOf(me.id), owner = isOwner(me);
   const all: AdminScope = { value: "all", kind: "all", id: null, name: owner ? "Whole academy" : "Everything I run", blurb: owner ? "Every company and brand." : "All the companies and brands you run.", reach, isMaster: false, owner };
   if (!raw || raw === "all") return all;
-  if (raw === "master") return owner ? { ...all, value: "master", kind: "master", name: "Master", isMaster: true, blurb: "The academy's general layer: what every company starts from." } : null;
+  if (raw === "master") return owner ? { ...all, value: "master", kind: "master", name: "Academy defaults", isMaster: true, blurb: "The academy's general layer: what every company starts from." } : null;
   const [kind, idText] = raw.split(":"), id = Number(idText);
   if (!Number.isInteger(id)) return null;
   if (kind === "company" && scopeInReach(reach, { kind: "company", id })) {

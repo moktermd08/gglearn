@@ -21,7 +21,7 @@ export default function LoginForm({ next = "" }: { next?: string }) {
         {error && <p role="alert" className="slide-in flex items-center gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} />{error}</p>}
         <button disabled={pending} className="btn disabled:opacity-50"><LogIn size={16} />{pending ? "Signing in…" : "Sign in"}</button>
       </form>
-      <p className="mt-4 text-center text-sm text-slate-400">New here? Ask your manager for an invite link. Forgot your password? Ask them to set a temporary one.</p>
+      <p className="mt-4 text-center text-sm text-slate-400">New here? Accounts start from an invitation: ask whoever runs your team, or whoever invited you to a race, to send you a link. Forgot your password? Ask them to set a temporary one.</p>
     </AuthShell>
   );
 }
