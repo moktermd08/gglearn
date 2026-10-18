@@ -1,6 +1,7 @@
 /** Checks the contest invite link: npm run check:guestlink (uses DATABASE_FILE or data/gglearn.db; adds and removes its own rows). Run db:push first. */
 import { and, eq, inArray, like } from "drizzle-orm";
-import { brands, checklistItems, competitionEmailInvites, competitionMembers, competitions, db, enrollments, tracks, userScopes, users } from "../lib/db";
+import { brands, checklistItems, competitionEmailInvites, competitionMembers, competitions, db, enrollments, notifications, tracks, userScopes, users } from "../lib/db";
+import { inviteEmails } from "../lib/contests";
 import { admitMember, admitNewGuest, entryFor, guestAudience, guestKey, guestPath, placesLeft } from "../lib/guestLink";
 import { safeNext } from "../lib/nextPath";
 import { requirementsFor } from "../lib/paths";
@@ -19,6 +20,7 @@ function sweep() {
     db.delete(competitionEmailInvites).where(inArray(competitionEmailInvites.competitionId, cs)).run();
   }
   if (us.length) {
+    db.delete(notifications).where(inArray(notifications.userId, us)).run();
     db.delete(competitionMembers).where(inArray(competitionMembers.userId, us)).run();
     db.delete(enrollments).where(inArray(enrollments.userId, us)).run();
     db.delete(checklistItems).where(inArray(checklistItems.userId, us)).run();
@@ -143,6 +145,23 @@ try {
     madeUsers.push(r4.userId);
     check("a guest also gets the contests their email was invited to", db.select().from(competitionMembers).where(and(eq(competitionMembers.competitionId, other.id), eq(competitionMembers.userId, r4.userId))).get()?.status === "invited");
   } else check("a guest also gets the contests their email was invited to", false);
+
+  // who is "newly invited" by email: the only people an email may go to
+  const raceMail = contest("racemail", shared.id, org.id);
+  const fresh1 = user("fresh1"), already = user("already"), said = user("said"), inRace = user("inrace"), gone2 = user("gone2");
+  db.update(users).set({ status: "offboarded" }).where(eq(users.id, gone2.id)).run();
+  for (const [u, status] of [[already, "invited"], [said, "declined"], [inRace, "joined"]] as const) db.insert(competitionMembers).values({ competitionId: raceMail.id, kind: "human", userId: u.id, status, joinedAt: status === "joined" ? t0 : null }).run();
+  const addrs = [fresh1, already, said, inRace, gone2].map((u) => u.email).concat("nobody-registered@guest.check");
+  const res = inviteEmails(db, raceMail.id, org.id, addrs.join(", "));
+  const freshEmails = res.fresh.map((f) => f.email).sort();
+  check("an address nobody registered is never in the people to email", !freshEmails.includes("nobody-registered@guest.check"));
+  check("someone already invited is not emailed again", !freshEmails.includes(already.email));
+  check("someone already in the race is not emailed", !freshEmails.includes(inRace.email));
+  check("an offboarded person is not emailed", !freshEmails.includes(gone2.email));
+  check("a new person is emailed, and so is someone who said no earlier and is asked again", freshEmails.join() === [fresh1.email, said.email].sort().join());
+  check("the count is the addresses given, whoever they are (the screen reads the same either way)", res.count === addrs.length);
+  const again = inviteEmails(db, raceMail.id, org.id, addrs.join(", "));
+  check("asking again emails nobody twice", again.fresh.length === 0);
 
   // where login may send someone
   check("a path inside the site is allowed", safeNext("/competitions/abc/join/key") === "/competitions/abc/join/key");

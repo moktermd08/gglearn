@@ -1,5 +1,5 @@
 /** Checks sending email, with a fake mail service so nothing is ever sent: npm run check:mail */
-import { MAX_MAILS_PER_HOUR, escapeHtml, inviteMail, mailConfigured, sendInvites, sendMail } from "../lib/mail";
+import { MAX_CONTEST_MAILS_PER_DAY, MAX_MAILS_PER_HOUR, contestInviteMail, escapeHtml, inviteMail, mailConfigured, sendContestInvites, sendInvites, sendMail } from "../lib/mail";
 import { clear } from "../lib/rate-limit";
 
 let fails = 0;
@@ -66,6 +66,20 @@ const mail = { to: "ana@example.com", subject: "Hi", text: "t", html: "<p>t</p>"
   const capped = await sendInvites(778, many, fake(200, { id: "e" }));
   check("a person cannot send more than the hourly limit", capped.sent.length === MAX_MAILS_PER_HOUR && capped.failed.length === 5 && /Too many emails/.test(capped.failed[0].error));
   clear("mail-invite:777"); clear("mail-invite:778");
+
+  // a race invitation to someone who already has an account
+  const race = contestInviteMail({ to: "ana@example.com", link: "https://g.example/competitions/abc", from: "<b>Gita</b>", title: 'Git "sprint" <script>', topic: "R&D", replyTo: "g@example.com" });
+  check("a race invitation names who, the race and the topic, and has the link", race.text.includes("https://g.example/competitions/abc") && race.text.includes("R&D") && race.subject.includes("invited you to a race"));
+  check("nothing a person typed can inject markup into a race invitation", !race.html.includes("<script>") && !race.html.includes("<b>Gita</b>") && race.html.includes("&lt;script&gt;"));
+  clear("mail-contest:900");
+  const calls4: Call[] = [];
+  const one = await sendContestInvites(900, [{ to: "ana@example.com", link: "l", from: "G", title: "T", topic: "X", key: "race-invite-1-2" }], fake(200, { id: "e" }, calls4));
+  check("a race invitation is sent to the person", one.sent.join() === "ana@example.com" && JSON.parse(String(calls4[0].init.body)).to[0] === "ana@example.com" && (calls4[0].init.headers as Record<string, string>)["Idempotency-Key"] === "race-invite-1-2");
+  clear("mail-contest:901");
+  const lots = Array.from({ length: MAX_CONTEST_MAILS_PER_DAY + 4 }, (_, n) => ({ to: `r${n}@example.com`, link: "l", from: "G", title: "T", topic: "X" }));
+  const capped2 = await sendContestInvites(901, lots, fake(200, { id: "e" }));
+  check("an organiser cannot email more race invitations than the daily limit", capped2.sent.length === MAX_CONTEST_MAILS_PER_DAY && capped2.failed.length === 4 && /today/.test(capped2.failed[0].error));
+  clear("mail-contest:900"); clear("mail-contest:901");
 
   console.log(fails ? `\n${fails} FAILED` : "\nall passed");
   process.exit(fails ? 1 : 0);

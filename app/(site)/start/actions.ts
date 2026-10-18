@@ -16,6 +16,7 @@ import { PLACEMENT_CAP, PLACEMENT_PASS, canPlace, nextProbe, scoreBatch } from "
 
 import { openTo } from "@/lib/paths";
 import { guestAudience } from "@/lib/guestLink";
+import { emailRaceInvites } from "@/lib/raceMail";
 
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
 export type StartState = { error?: string } | null;
@@ -129,6 +130,7 @@ export async function launchJourney(slug: string, _: StartState, fd: FormData): 
     ...p.data, bots, emails: group ? j.emails : "", openJoin: false, consent: str(fd.get("consent")) === "on",
   });
   if ("error" in r) return { error: r.error };
+  await emailRaceInvites(r.slug, me, r.fresh); // the people in the group who already have an account get an email as well as the in-app invitation
   // a group race starts with its invite link on, so a friend with no account can be brought in straight away (only for topics safe to show an outsider)
   if (group && guestAudience(j.trackId)) db.update(competitions).set({ guestLinkVersion: now() }).where(eq(competitions.slug, r.slug)).run();
   db.update(journeys).set({ step: "launched", competitionSlug: r.slug, emails: "" }).where(eq(journeys.id, j.id)).run();

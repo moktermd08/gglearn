@@ -26,12 +26,16 @@ export const parseEmails = (raw: string) =>
 
 /**
  * Emails -> invitations. People with an account get an "invited" row; the rest are remembered and invited the moment an
- * account with that email is created. Callers never learn which addresses matched.
+ * account with that email is created. Callers never learn which addresses matched: `count` is how many addresses were given, whoever they are.
+ * `fresh` is the people with an account who are invited NOW (not already invited or in the race), so an email goes to them once and never to anyone else.
  */
-export function inviteEmails(tx: Tx, competitionId: number, inviterId: number, raw: string) {
+export function inviteEmails(tx: Tx, competitionId: number, inviterId: number, raw: string): { count: number; fresh: { id: number; email: string }[] } {
   const emails = parseEmails(raw);
-  if (!emails.length) return 0;
+  if (!emails.length) return { count: 0, fresh: [] };
   const found = tx.select({ id: users.id, email: users.email }).from(users).where(and(inArray(users.email, emails), eq(users.status, "active"))).all();
+  const before = found.length ? new Map(tx.select({ u: competitionMembers.userId, s: competitionMembers.status }).from(competitionMembers)
+    .where(and(eq(competitionMembers.competitionId, competitionId), inArray(competitionMembers.userId, found.map((u) => u.id)))).all().map((m) => [m.u, m.s])) : new Map();
+  const fresh = found.filter((u) => !before.has(u.id) || before.get(u.id) === "declined" || before.get(u.id) === "left");
   const contest = tx.select({ slug: competitions.slug, title: competitions.title }).from(competitions).where(eq(competitions.id, competitionId)).get();
   for (const u of found) {
     if (contest) notify(u.id, { key: `invite-${competitionId}`, kind: "contest", title: "You are invited to a contest", body: contest.title, href: `/competitions/${contest.slug}` }, { tx });
@@ -47,7 +51,7 @@ export function inviteEmails(tx: Tx, competitionId: number, inviterId: number, r
   if (rest.length) {
     tx.insert(competitionEmailInvites).values(rest.map((email) => ({ competitionId, email, invitedBy: inviterId }))).onConflictDoNothing().run();
   }
-  return emails.length;
+  return { count: emails.length, fresh };
 }
 
 /** A new account picks up every contest its email was invited to while it did not exist yet. */
@@ -89,7 +93,7 @@ export const newContestSchema = z.object({
 });
 
 /** Shared by the classic form and the guided journey. Does not redirect; returns the new contest's slug or an error message. */
-export function createContest(me: { id: number }, v: NewContest): { slug: string } | { error: string } {
+export function createContest(me: { id: number }, v: NewContest): { slug: string; fresh: { id: number; email: string }[] } | { error: string } {
   if (!allowed(`comp-create:${me.id}`, 10)) return { error: "You are creating contests too quickly. Try again later." };
   if (v.bots.length > MAX_BOTS) return { error: `At most ${MAX_BOTS} bots per contest.` };
   const isPublic = v.visibility === "public";
@@ -107,6 +111,7 @@ export function createContest(me: { id: number }, v: NewContest): { slug: string
   const startsAt = now() + v.startInDays * 86400, slug = randomBytes(6).toString("base64url");
   const bots = makeBots(slug, v.bots);
 
+  let fresh: { id: number; email: string }[] = []; // people with an account who were just invited: the caller may email them
   db.transaction((tx) => {
     const c = tx.insert(competitions).values({
       slug, title: v.title, description: v.description, trackId: v.trackId, createdBy: me.id, visibility: v.visibility,
@@ -122,10 +127,10 @@ export function createContest(me: { id: number }, v: NewContest): { slug: string
         botName: b.name, botTagline: b.tagline, botStyle: b.style, botPace: b.pace, botSeed: b.seed,
       }))).run();
     }
-    if (v.emails) inviteEmails(tx, c.id, me.id, v.emails);
+    if (v.emails) fresh = inviteEmails(tx, c.id, me.id, v.emails).fresh;
     enrol(tx, me.id, v.trackId, v.title);
   });
-  return { slug };
+  return { slug, fresh };
 }
 
 /** Whole currency units typed by a person ("25" or "25.50") -> minor units. NaN when it is not a non-negative number. */

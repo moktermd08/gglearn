@@ -52,16 +52,41 @@ export function inviteMail(i: InviteMail): Mail {
 }
 
 export const MAX_MAILS_PER_HOUR = 100;
+export const MAX_CONTEST_MAILS_PER_DAY = 50;
 
-/** Emails a batch of invitations on behalf of one person, with a limit per person per hour. Returns who got one and who did not, with a reason. */
-export async function sendInvites(by: number, mails: (InviteMail & { key?: string })[], fetchImpl?: Fetch): Promise<{ sent: string[]; failed: { email: string; error: string }[] }> {
-  const sent: string[] = [], failed: { email: string; error: string }[] = [];
-  const bucket = `mail-invite:${by}`;
+type Batch = { sent: string[]; failed: { email: string; error: string }[] };
+
+/** Sends each mail in turn under one person's limit for a window. One failure never stops the rest; the result says who got one and who did not, with a reason. */
+async function sendBatch(bucket: string, limit: number, windowMs: number, tooMany: string, mails: (Mail & { key?: string })[], fetchImpl?: Fetch): Promise<Batch> {
+  const sent: string[] = [], failed: Batch["failed"] = [];
   for (const m of mails) {
-    if (!allowed(bucket, MAX_MAILS_PER_HOUR)) { failed.push({ email: m.to, error: "Too many emails this hour. Use the link instead." }); continue; }
-    hit(bucket, 60 * MINUTE);
-    const r = await sendMail(inviteMail(m), { key: m.key, fetchImpl });
+    if (!allowed(bucket, limit)) { failed.push({ email: m.to, error: tooMany }); continue; }
+    hit(bucket, windowMs);
+    const r = await sendMail(m, { key: m.key, fetchImpl });
     if (r.ok) sent.push(m.to); else failed.push({ email: m.to, error: r.error });
   }
   return { sent, failed };
 }
+
+/** Emails a batch of account invitations on behalf of one person, with a limit per person per hour. */
+export const sendInvites = (by: number, mails: (InviteMail & { key?: string })[], fetchImpl?: Fetch) =>
+  sendBatch(`mail-invite:${by}`, MAX_MAILS_PER_HOUR, 60 * MINUTE, "Too many emails this hour. Use the link instead.", mails.map((m) => ({ ...inviteMail(m), key: m.key })), fetchImpl);
+
+export type ContestMail = { to: string; link: string; from: string; title: string; topic: string; replyTo?: string };
+
+/** The note to someone who already has an account, telling them a race is waiting. Every name that came from a person is escaped. */
+export function contestInviteMail(i: ContestMail): Mail {
+  const sentence = `${i.from} invited you to the race "${i.title}" on ${i.topic}.`;
+  const text = `Hi,\n\n${sentence}\n\nOpen it to accept or say no thanks:\n${i.link}\n\nIf you were not expecting this, you can ignore it.`;
+  const link = escapeHtml(i.link);
+  const html = `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:520px;margin:0 auto;color:#1f2937;line-height:1.5">
+<p>Hi,</p><p>${escapeHtml(sentence)}</p>
+<p><a href="${link}" style="display:inline-block;background:#4f46e5;color:#ffffff;text-decoration:none;padding:10px 18px;border-radius:10px;font-weight:600">See the invitation</a></p>
+<p style="font-size:13px;color:#6b7280">If the button does not work, copy this address into your browser:<br>${link}</p>
+<p style="font-size:13px;color:#6b7280">If you were not expecting this, you can ignore it.</p></div>`;
+  return { to: i.to, subject: `${i.from} invited you to a race on gglearn`, text, html, replyTo: i.replyTo };
+}
+
+/** Emails race invitations on behalf of one organiser, with a limit per organiser per day, so nobody can use the sender address to mail at scale. */
+export const sendContestInvites = (by: number, mails: (ContestMail & { key?: string })[], fetchImpl?: Fetch) =>
+  sendBatch(`mail-contest:${by}`, MAX_CONTEST_MAILS_PER_DAY, 24 * 60 * MINUTE, "Too many race invitations emailed today.", mails.map((m) => ({ ...contestInviteMail(m), key: m.key })), fetchImpl);
