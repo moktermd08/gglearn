@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Flame, Lock, Sparkles } from "lucide-react";
+import { ArrowRight, Flame, Lock, Snowflake, Sparkles } from "lucide-react";
 import { MAX_PLAYER_LEVEL, type BadgeTier, type BadgeView, type Progression } from "@/lib/progression";
 
 const TIER: Record<BadgeTier, { ring: string; bg: string; label: string }> = {
@@ -25,7 +25,7 @@ export function PlayerLevelCard({ p, compact = false }: { p: Progression["player
   );
 }
 
-export function StreakCard({ s }: { s: Progression["streak"] }) {
+export function StreakCard({ s, freezes }: { s: Progression["streak"]; freezes?: number }) {
   return (
     <div>
       <div className="flex items-center gap-3">
@@ -33,8 +33,13 @@ export function StreakCard({ s }: { s: Progression["streak"] }) {
         <div><div className="text-2xl font-extrabold leading-none">{s.current} <span className="text-sm font-bold text-slate-400">day{s.current === 1 ? "" : "s"}</span></div><div className="mt-0.5 text-xs text-slate-400">Longest: {s.longest}</div></div>
       </div>
       <div className="mt-3 flex gap-1.5" aria-label="Last 7 days">
-        {s.week.map((d) => <span key={d.day} title={d.day} className={`grid h-7 flex-1 place-items-center rounded-lg text-[10px] font-bold ${d.active ? "bg-orange-500/20 text-orange-500" : "bg-black/[.05] text-slate-400"}`}>{new Date(`${d.day}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "narrow", timeZone: "UTC" })}</span>)}
+        {s.week.map((d) => <span key={d.day} title={d.day} className={`grid h-7 flex-1 place-items-center rounded-lg text-[10px] font-bold ${d.frozen ? "bg-sky-500/20 text-sky-500" : d.active ? "bg-orange-500/20 text-orange-500" : "bg-black/[.05] text-slate-400"}`} aria-label={d.frozen ? `${d.day}, covered by a streak freeze` : d.day}>{new Date(`${d.day}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "narrow", timeZone: "UTC" })}</span>)}
       </div>
+      {freezes !== undefined && (
+        <p className="mt-2 flex items-center gap-1.5 rounded-lg bg-sky-500/10 px-2.5 py-1.5 text-xs text-sky-600" title="A streak freeze covers a day you miss, automatically. You get one for your first activity and another for every 7 days in a row. You can hold 2.">
+          <Snowflake size={13} aria-hidden /><b>{freezes} streak freeze{freezes === 1 ? "" : "s"}</b>{freezes === 0 ? "Earn one with a 7-day streak." : "Ready to cover a missed day."}
+        </p>
+      )}
       <p className={`mt-2 text-xs ${s.atRisk ? "font-bold text-orange-500" : "text-slate-400"}`}>
         {s.atRisk ? `Do one quest or exam today to keep your ${s.current}-day streak alive.` : s.activeToday ? "Done for today. See you tomorrow." : "Do a quest or an exam today to start a streak."}
       </p>

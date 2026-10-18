@@ -34,6 +34,15 @@ export async function removePhoto() {
 }
 
 /** Opt in or out of the weekly and monthly season boards. Hiding removes the person from live standings and from future results. */
+/** Reminder and recap emails: on, off, or "declined" (said no to the dashboard question, so it is not asked again). */
+export async function setEmailNudges(formData: FormData) {
+  const me = await requireUser();
+  const v = formData.get("value");
+  db.update(users).set({ emailNudges: v === "on" ? "on" : v === "declined" ? "declined" : "off" }).where(eq(users.id, me.id)).run();
+  revalidatePath("/profile");
+  revalidatePath("/dashboard");
+}
+
 export async function setSeasonBoard(formData: FormData) {
   const me = await requireUser();
   const show = formData.get("show") === "1";

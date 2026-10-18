@@ -1,5 +1,9 @@
 import { and, eq, gt, isNull, sql } from "drizzle-orm";
-import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
+import { isPublicTrack } from "@/lib/publicCatalog";
+import { topicProof } from "@/lib/proof";
+import { topicLabel } from "@/lib/topicName";
 import Link from "next/link";
 import { brands, competitionMembers, competitions, db, enrollments, lessons, questions, tracks } from "@/lib/db";
 import { LevelDetail, type LevelDetailData } from "@/components/LevelDetail";
@@ -15,6 +19,7 @@ import { rivalFor } from "@/lib/rivals";
 import { enroll, startRun } from "@/app/actions";
 import { Avatar } from "@/components/Avatar";
 import { SubjectArt, artFor } from "@/components/SubjectArt";
+import { QuickRaceButtons } from "@/components/QuickRaceButtons";
 import { RaceTrack } from "@/components/RaceTrack";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { avatarLooks } from "@/lib/avatars";
@@ -23,6 +28,14 @@ import { Ring } from "@/components/Ring";
 import { AlertTriangle, ArrowRight, Hourglass, Info, ShieldCheck, BookOpen, Check, CheckCircle2, Crown, Flame, GraduationCap, ListChecks, Lock, LogIn, Medal, Mountain, Sparkles, Swords, Target, Trophy, Zap } from "lucide-react";
 
 const QUEST_ICON = { study: BookOpen, drill: Zap, exam: Trophy } as const;
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const t = db.select().from(tracks).where(eq(tracks.slug, (await params).slug)).get();
+  // a company's own material never names itself in a tab title or a link preview
+  if (!t || !isPublicTrack(t.id)) return { title: "Topic — gglearn", robots: { index: false, follow: false } };
+  const description = t.description || `Learn ${topicLabel(t.name)} on gglearn: find your level, pass exams, race a rival and climb 20 levels from Novice to Titan.`;
+  return { title: `${topicLabel(t.name)}: Novice to Titan — gglearn`, description, openGraph: { title: `${topicLabel(t.name)} on gglearn`, description, type: "website" }, twitter: { card: "summary_large_image", title: `${topicLabel(t.name)} on gglearn`, description } };
+}
 
 export default async function TrackPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -57,7 +70,10 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
       types: { mcq: get("mcq"), open: get("open"), scenario: get("scenario") }, nextMeaning: nxt?.meaning ?? null, nextExpect: nxt?.expect ?? null,
     };
   };
+  const proof = topicProof(track.id); // real counts, shown only when at least five people are behind them
   const user = await currentUser();
+  // a stranger only sees topics made for outsiders; anything else asks them to sign in first
+  if (!user && !isPublicTrack(track.id)) redirect(`/login?next=${encodeURIComponent(`/tracks/${slug}`)}`);
   if (user && !openTo(user.audience, track.audience)) notFound(); // customers never see staff-only tracks
   const enrolment = user
     ? db.select().from(enrollments).where(and(eq(enrollments.userId, user.id), eq(enrollments.trackId, track.id))).get()
@@ -104,6 +120,8 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           <p className="mt-1 text-slate-300">{track.description}</p>
           <p className="mt-1 flex flex-wrap items-center gap-x-3 text-xs text-slate-400"><span className="inline-flex items-center gap-1"><ListChecks size={12} />{totalQs.toLocaleString("en-GB")} questions</span><span className="inline-flex items-center gap-1"><Mountain size={12} />20 levels</span><span className="inline-flex items-center gap-1"><Target size={12} />{PASS_MARK * 100}% to pass</span></p>
           <p className="mt-1 text-sm text-slate-400">Your rival: <b className="text-white">{rival.name}</b>, {rival.tagline}.</p>
+          {(proof.learners || proof.passedThisMonth) && <p className="mt-1 flex flex-wrap items-center gap-x-3 text-xs font-semibold text-emerald-700">{proof.learners && <span>{proof.learners.toLocaleString("en-GB")} people are learning this</span>}{proof.passedThisMonth && <span>{proof.passedThisMonth.toLocaleString("en-GB")} passed a level in the last 30 days</span>}</p>}
+          {user ? <QuickRaceButtons trackId={track.id} className="mt-3" /> : <Link href={`/signup?next=${encodeURIComponent(`/tracks/${slug}`)}`} className="btn mt-3 !py-2 text-sm"><Zap size={15} />Race this topic, free</Link>}
         </div>
         {s && <Ring pct={passed / 20} label={`${passed}/20`} sub="levels" size={108} color={`hsl(${TIERS[tierOf(passed)].hue} 85% 65%)`} />}
       </div>

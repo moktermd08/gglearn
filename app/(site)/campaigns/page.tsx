@@ -4,6 +4,7 @@ import { now, span } from "@/lib/competitions";
 import { PageHero, PALETTE, StatTile } from "@/components/charts";
 import { SubjectArt } from "@/components/SubjectArt";
 import { currentUser } from "@/lib/auth";
+import { isOwner } from "@/lib/contestAdmin";
 import { SETS, campaignStatus, campaignViews, type CampaignView, type RewardKind, type SetKey } from "@/lib/campaigns";
 
 export const metadata = { title: "Campaigns — gglearn", description: "300 public campaigns: careers, general leagues and AI races. Everyone can join. Certificates by default, prizes for the best." };
@@ -109,7 +110,7 @@ function Flagship({ v, i }: { v: CampaignView; i: number }) {
 
 export default async function Campaigns({ searchParams }: { searchParams: Promise<Q> }) {
   const q = await searchParams;
-  const all = campaignViews(), status = campaignStatus(), me = await currentUser(), admin = me?.role === "admin";
+  const all = campaignViews(), status = campaignStatus(), me = await currentUser(), admin = !!me && isOwner(me); // the setup notes below concern the whole site, so only the platform owner sees them
   const needle = (q.q ?? "").trim().toLowerCase().slice(0, 60);
   const len = LENGTHS.find((l) => l.key === q.len);
   const set = q.set && q.set in SETS ? (q.set as SetKey) : undefined;

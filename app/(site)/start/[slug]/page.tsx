@@ -70,9 +70,9 @@ export default async function Journey({ params }: { params: Promise<{ slug: stri
               <li key={i} className="rise flex gap-2" style={{ "--i": i } as React.CSSProperties}><Lightbulb size={15} className="mt-0.5 shrink-0 text-amber-300" />{t}</li>
             ))}
           </ul>
-          <div className="flex flex-wrap items-center gap-4">
-            <form action={startPlacement.bind(null, slug)}><button className="btn">Start the check<ArrowRight size={16} /></button></form>
-            <form action={skipPlacement.bind(null, slug)}><button className="text-sm text-slate-400 underline">I am new to this, start from {j.lo > 0 ? `level ${j.lo}` : "zero"}</button></form>
+          <div className="flex flex-wrap items-center gap-3">
+            <form action={skipPlacement.bind(null, slug)}><button className="btn">New to this? Skip the check and start now<ArrowRight size={16} /></button></form>
+            <form action={startPlacement.bind(null, slug)}><button className="btn btn-ghost">Find my level first (about a minute)</button></form>
           </div>
         </div>
       </div>

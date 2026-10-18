@@ -7,8 +7,11 @@ import { requireManager } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { isGlobal, scopeInReach, trackInReach } from "@/lib/tenancy";
 import { adminScopeOf } from "@/lib/adminScope";
-import { BrandForm, BrandingForm, CompanyForm, LearningOrderForm, TrackForm } from "./forms";
+import { BrandForm, BrandingForm, CompanyForm, DirectoryForm, LearningOrderForm, SsoForm, TrackForm } from "./forms";
 import { lookOfCompany } from "@/lib/brand";
+import { siteUrl } from "@/lib/share";
+import { configOf, domainsOf } from "@/lib/sso";
+import { tokensOf } from "@/lib/scim";
 
 export const metadata = { title: "Set up — gglearn" };
 
@@ -23,7 +26,7 @@ export default async function Setup() {
   const counts = new Map(db.select({ id: questions.trackId, n: sql<number>`count(*)` }).from(questions).where(eq(questions.status, "active")).groupBy(questions.trackId).all().map((r) => [r.id, r.n]));
   const myTracks = db.select().from(tracks).orderBy(tracks.name).all().filter((t) => trackInReach(reach, t));
   const brandById = new Map(myBrands.map((b) => [b.id, b]));
-  const h2 = "mb-2 text-lg font-semibold";
+  const h2 = "mb-2 text-lg font-semibold", base = await siteUrl();
 
   return (
     <div className="space-y-8">
@@ -55,8 +58,26 @@ export default async function Setup() {
         <div className="space-y-3">
           {myCompanies.length === 0 && <p className="text-sm text-slate-400">Add a company first.</p>}
           {myCompanies.map((c) => (
-            <BrandingForm key={c.id} company={{ id: c.id, name: c.name, academyName: c.academyName, accent: c.accent, certIssuer: c.certIssuer, certValidMonths: c.certValidMonths ?? 0, certSigner: c.certSigner, certSignerTitle: c.certSignerTitle, logoUrl: lookOfCompany(c.id).logo }} />
+            <BrandingForm key={c.id} company={{ id: c.id, name: c.name, academyName: c.academyName, accent: c.accent, certIssuer: c.certIssuer, certValidMonths: c.certValidMonths ?? 0, certSigner: c.certSigner, certSignerTitle: c.certSignerTitle, entryMode: c.entryMode, entryText: c.entryText, leagueOpen: c.leagueOpen, slug: c.slug, logoUrl: lookOfCompany(c.id).logo }} />
           ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className={h2}>Single sign-on</h2>
+        <p className="mb-2 text-sm text-slate-400">Let your people sign in with the account your company already runs (OpenID Connect). Only email addresses on your own domains can come in, and only people who belong to your company alone: nobody else\u2019s account is ever taken over.</p>
+        <div className="space-y-3">
+          {myCompanies.length === 0 && <p className="text-sm text-slate-400">Add a company first.</p>}
+          {myCompanies.map((c) => { const s = configOf(c.id); return <SsoForm key={c.id} callback={`${base}/sso/callback`} company={{ id: c.id, name: c.name, enabled: s?.enabled === "yes", issuer: s?.issuer ?? "", clientId: s?.clientId ?? "", hasSecret: !!s?.clientSecret, domains: s ? domainsOf(s).join(", ") : "", jit: s?.jit === "yes", enforce: s?.enforce === "yes", verified: !!s?.verifiedAt }} />; })}
+        </div>
+      </section>
+
+      <section>
+        <h2 className={h2}>Directory sync</h2>
+        <p className="mb-2 text-sm text-slate-400">Connect Okta, Microsoft Entra ID, Google Workspace or any SCIM 2.0 directory. It adds people as learners in your company, keeps their names and emails current, and switches them off when they leave (their progress is kept). It can only change people it manages, never an admin, a manager or anyone in another company.</p>
+        <div className="space-y-3">
+          {myCompanies.length === 0 && <p className="text-sm text-slate-400">Add a company first.</p>}
+          {myCompanies.map((c) => <DirectoryForm key={c.id} company={{ id: c.id, name: c.name }} tokens={tokensOf(c.id)} endpoint={`${base}/api/scim/v2`} />)}
         </div>
       </section>
 

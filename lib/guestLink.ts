@@ -88,7 +88,7 @@ export function admitNewGuest(entry: Entry, who: { name: string; email: string; 
     return db.transaction((tx) => {
       const email = who.email.toLowerCase();
       if (tx.select({ id: users.id }).from(users).where(eq(users.email, email)).get()) throw new Error("taken");
-      const u = tx.insert(users).values({ name: who.name, email, jobRole: "general", audience: entry.audience, guest: "yes", passwordHash: who.passwordHash }).returning().get();
+      const u = tx.insert(users).values({ name: who.name, email, jobRole: "general", audience: entry.audience, guest: "yes", passwordHash: who.passwordHash, referredBy: entry.c.createdBy }).returning().get();
       claimPendingInvites(tx, u.id, u.email); // other contests this address was invited to
       const no = admitMember(tx, entry.c, { id: u.id, audience: entry.audience });
       if (no) throw new Error(no);

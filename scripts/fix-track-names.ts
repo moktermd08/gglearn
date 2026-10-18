@@ -10,6 +10,12 @@ const FIXES = [
   { slug: "lambda-titan", from: "AWS Lamda: Novice to Titan", to: "AWS Lambda: Novice to Titan" },
   { slug: "linkedin-titan", from: "Linkedin: Novice to Titan", to: "LinkedIn: Novice to Titan" },
   { slug: "foundations-github", from: "Github", to: "GitHub" },
+  { slug: "foundations-javascript", from: "Javascript", to: "JavaScript" },
+  { slug: "foundations-wordpress", from: "Wordpress", to: "WordPress" },
+  // the 20-level tracks imported from the question repo kept the folder's lower case
+  ...([["angular", "Angular"], ["bootstrap", "Bootstrap"], ["css", "CSS"], ["dynamics", "Dynamics"], ["html", "HTML"], ["javascript", "JavaScript"], ["laravel", "Laravel"],
+    ["mysql", "MySQL"], ["nodejs", "Node.js"], ["php", "PHP"], ["python", "Python"], ["react", "React"], ["wordpress", "WordPress"]] as const)
+    .map(([k, proper]) => ({ slug: `${k}-titan`, from: `${k}: Novice to Titan`, to: `${proper}: Novice to Titan` })),
 ];
 
 const dry = process.argv.includes("--dry");

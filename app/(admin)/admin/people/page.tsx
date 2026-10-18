@@ -1,7 +1,7 @@
 import { Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
 import { eq, inArray, sql } from "drizzle-orm";
-import { checklistItems, db, enrollments, handovers, tracks, users } from "@/lib/db";
+import { checklistItems, db, enrollments, handovers, joinLinks, tracks, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { addHandover, offboard, setAccess, toggleChecklistItem, updateScopes } from "@/app/actions";
 import { ActionForm } from "@/components/admin/ActionForm";
@@ -13,6 +13,10 @@ import { ScopePicker } from "@/components/ScopePicker";
 import { Building2, CheckSquare, ClipboardList, NotebookPen, Plus, Save, Shield, ShieldCheck, Square, UserCheck, UserMinus, UserPlus, Users, UserCog, Mail } from "lucide-react";
 import NewPerson from "./new-person";
 import InvitePerson from "./invite-person";
+import TeamLinks, { type LinkRow } from "./team-links";
+import { linkPath, stateOfLink } from "@/lib/joinLinks";
+import { siteUrl } from "@/lib/share";
+import { parseScopes } from "@/lib/paths";
 import ResetPassword from "./reset-password";
 import { OnboardingPhases } from "@/components/OnboardingPhases";
 import { canSignOff, onboardingFor } from "@/lib/onboarding";
@@ -38,6 +42,12 @@ export default async function People({ searchParams }: { searchParams: Promise<{
   const enrolledIn = new Map<number, number[]>();
   if (shownIds.length) for (const e of db.select({ u: enrollments.userId, t: enrollments.trackId }).from(enrollments).where(inArray(enrollments.userId, shownIds)).all()) enrolledIn.set(e.u, [...(enrolledIn.get(e.u) ?? []), e.t]);
   const options = limitOptions(scopeOptions(), reach);
+  // team links this person made (the platform owner sees all of them), newest first
+  const optionSet = scopeOptions();
+  const linkRows: LinkRow[] = db.select().from(joinLinks).orderBy(sql`${joinLinks.id} desc`).limit(30).all()
+    .filter((l) => l.createdBy === me.id || isGlobal(reachOf(me.id)))
+    .map((l) => ({ id: l.id, label: l.label, role: l.jobRole, where: scopeLabels(parseScopes(l.scopes), optionSet).join(", "), uses: l.uses, max: l.maxUses, state: stateOfLink(l), expires: new Date(l.expiresAt * 1000).toISOString().slice(0, 10), url: linkPath(l.id) }));
+  const origin = await siteUrl();
   const grantable = LEVELS.filter((l) => grantableLevels(me).includes(l.key as "manager" | "admin")); // what this person may hand out; empty for a manager
   const owner = isGlobal(reachOf(me.id)); // only the platform owner changes an admin
   const cat = catalog();
@@ -67,6 +77,10 @@ export default async function People({ searchParams }: { searchParams: Promise<{
       <section className="space-y-2">
         <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-sky-500/15 text-sky-300"><Mail size={17} /></span>Invite someone</h2>
         <InvitePerson options={options} roles={roles} access={grantable} mailReady={mailConfigured()} />
+      </section>
+      <section className="space-y-2">
+        <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-violet-500/15 text-violet-300"><Users size={17} /></span>Or share one link with a whole team</h2>
+        <TeamLinks options={options} roles={roles} links={linkRows} origin={origin} />
       </section>
       <section className="space-y-2">
         <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-emerald-500/15 text-emerald-300"><UserPlus size={17} /></span>Or create their account yourself</h2>

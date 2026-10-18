@@ -1,6 +1,7 @@
 "use client";
 import { useActionState, useState } from "react";
-import { Eye, EyeOff, KeyRound, LogIn, Mail, Swords, TriangleAlert } from "lucide-react";
+import Link from "next/link";
+import { Building2, Eye, EyeOff, KeyRound, LogIn, Mail, Swords, TriangleAlert } from "lucide-react";
 import { login } from "@/app/actions";
 import { AuthShell } from "@/components/AuthShell";
 
@@ -21,7 +22,10 @@ export default function LoginForm({ next = "" }: { next?: string }) {
         {error && <p role="alert" className="slide-in flex items-center gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} />{error}</p>}
         <button disabled={pending} className="btn disabled:opacity-50"><LogIn size={16} />{pending ? "Signing in…" : "Sign in"}</button>
       </form>
-      <p className="mt-4 text-center text-sm text-slate-400">New here? Accounts start from an invitation: ask whoever runs your team, or whoever invited you to a race, to send you a link. Forgot your password? Ask them to set a temporary one.</p>
+      <p className="mt-4 text-center text-sm text-slate-400">New here? <Link href={next ? `/signup?next=${encodeURIComponent(next)}` : "/signup"} className="font-semibold text-indigo-300 underline">Create a free account</Link>. Joining a company or brand? Use the invite link they sent you.</p>
+      <p className="mt-4 text-center"><Link href={next ? `/signin?next=${encodeURIComponent(next)}` : "/signin"} className="btn btn-ghost !py-1.5 text-sm"><Mail size={14} />Email me a sign-in link instead</Link></p>
+      <p className="mt-2 text-center"><Link href={next ? `/sso?next=${encodeURIComponent(next)}` : "/sso"} className="btn btn-ghost !py-1.5 text-sm"><Building2 size={14} />Sign in with your company</Link></p>
+      <p className="mt-2 text-center text-sm text-slate-400"><Link href="/forgot" className="font-semibold text-indigo-300 underline">Forgot your password?</Link> We will email you a link to choose a new one.</p>
     </AuthShell>
   );
 }

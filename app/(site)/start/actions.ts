@@ -17,6 +17,7 @@ import { PLACEMENT_CAP, PLACEMENT_PASS, canPlace, nextProbe, scoreBatch } from "
 import { openTo } from "@/lib/paths";
 import { guestAudience } from "@/lib/guestLink";
 import { emailRaceInvites } from "@/lib/raceMail";
+import { topicLabel } from "@/lib/topicName";
 
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
 export type StartState = { error?: string } | null;
@@ -54,6 +55,42 @@ export async function beginJourney(_: StartState, fd: FormData): Promise<StartSt
     step: skip ? "setup" : "level", placed: skip ? known : null,
   }).run();
   redirect(`/start/${slug}`);
+}
+
+/**
+ * One tap from a topic to a running race, for someone who does not want a form. It skips the level check (levels already earned by exam still
+ * count, and a race only counts levels passed after it starts, so nobody is disadvantaged) and uses what the form would suggest: three levels
+ * (fewer when close to Titan), about four days a level, a certificate for finishing, one simulated rival so nobody races alone, and the
+ * race private. A group race also turns the invite link on, so a friend with no account can be brought in straight away.
+ */
+export async function quickRace(trackId: number, mode: "solo" | "group" | "duel"): Promise<StartState> {
+  const me = await requireUser();
+  const p = z.object({ trackId: z.number().int().positive(), mode: z.enum(["solo", "group", "duel"]) }).safeParse({ trackId, mode });
+  if (!p.success) return { error: "Pick a topic first." };
+  const track = db.select().from(tracks).where(eq(tracks.id, p.data.trackId)).get();
+  if (!track || !openTo(me.audience, track.audience)) return { error: "Pick a topic from the list." };
+  if (!allowed(`journey:${me.id}`, 12)) return { error: "You are starting races too quickly. Try again later." };
+  const racing = db.select({ slug: competitions.slug }).from(competitionMembers)
+    .innerJoin(competitions, eq(competitions.id, competitionMembers.competitionId))
+    .where(and(eq(competitionMembers.userId, me.id), eq(competitionMembers.status, "joined"), eq(competitions.trackId, track.id),
+      isNull(competitions.canceledAt), gt(competitions.endsAt, now()))).get();
+  if (racing) redirect(`/competitions/${racing.slug}`); // already in one on this topic: take them back to it rather than start a second
+  const known = levelsPassed(me.id, track.id);
+  const room = MAX_LEVEL - known;
+  if (room < 1) return { error: `You have already reached Titan in ${topicLabel(track.name)}. Pick another topic.` };
+  hit(`journey:${me.id}`, 60 * MINUTE);
+
+  // a duel is you against one friend: two places, no simulated rival, a shorter finish line, and the link on so they can join at once
+  const duel = p.data.mode === "duel", group = p.data.mode !== "solo", goal = Math.min(duel ? 2 : 3, room);
+  const v = newContestSchema.safeParse({
+    title: duel ? `${me.name.split(" ")[0]}'s ${topicLabel(track.name)} challenge` : `${topicLabel(track.name)} ${group ? "showdown" : "sprint"}`, description: "", trackId: track.id, goalLevels: goal, startInDays: 0,
+    days: duel ? 7 : Math.max(7, Math.min(60, goal * 4)), maxHumans: duel ? 2 : group ? 20 : 2, visibility: "private", prizeAmount: 0, prizeCurrency: "USD", prizeSplit: "winner", prizeNote: "",
+  });
+  if (!v.success) return { error: "We could not set up that race. Try the full form instead." };
+  const r = createContest(me, { ...v.data, bots: duel ? [] : ["steady"], emails: "", openJoin: false, consent: false });
+  if ("error" in r) return { error: r.error };
+  if (group && guestAudience(track.id)) db.update(competitions).set({ guestLinkVersion: now() }).where(eq(competitions.slug, r.slug)).run();
+  redirect(`/competitions/${r.slug}`);
 }
 
 /** Begin the level check: draws the first batch of questions. */

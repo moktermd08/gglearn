@@ -1,7 +1,8 @@
 import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { certificates, db, enrollments, tracks, userAvatars, users } from "@/lib/db";
-import { setSeasonBoard } from "./actions";
+import { setEmailNudges, setSeasonBoard } from "./actions";
+import { WhereYouBelong } from "@/components/WhereYouBelong";
 import { requireUser } from "@/lib/auth";
 import { Competitor } from "@/components/Competitor";
 import { AvatarPicker } from "@/components/AvatarPicker";
@@ -36,6 +37,7 @@ export default async function Profile() {
     .sort((a, b) => b.c.issuedAt - a.c.issuedAt);
   const prog = progressionFor(me.id);
   const boardShown = db.select({ s: users.seasonBoard }).from(users).where(eq(users.id, me.id)).get()?.s !== "hide";
+  const emailsOn = db.select({ s: users.emailNudges }).from(users).where(eq(users.id, me.id)).get()?.s === "on";
   const totalXp = prog.facts.xp, levels = mine.reduce((a, m) => a + m.s.passed, 0), streak = prog.streak.current;
   const bestLevel = Math.max(0, ...mine.map((m) => m.s.passed)), tier = TIERS[tierOf(bestLevel)];
   const activity = activityFor(me.id, 24);
@@ -72,7 +74,7 @@ export default async function Profile() {
 
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
         <section className="card p-5" aria-label="Player level"><PlayerLevelCard p={prog.player} /></section>
-        <section className="card p-5" aria-label="Streak"><StreakCard s={prog.streak} /></section>
+        <section className="card p-5" aria-label="Streak"><StreakCard s={prog.streak} freezes={prog.freezes} /></section>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -161,6 +163,14 @@ export default async function Profile() {
         <h2 className="mb-1 text-lg font-bold">Password</h2>
         <p className="mb-3 text-sm text-slate-400">Changing it signs you out on your other devices. If you forget it, ask your manager to set a temporary one.</p>
         <PasswordForm />
+      </section>
+
+      <WhereYouBelong userId={me.id} />
+
+      <section id="emails" className="card scroll-mt-24 p-5">
+        <h2 className="mb-1 text-lg font-bold">Reminder and recap emails</h2>
+        <p className="mb-3 text-sm text-slate-400">{emailsOn ? "You get a recap on Monday mornings (UTC) and a reminder in the evening when a streak of two days or more is about to end. Every email has a one-click unsubscribe." : "Off. Turn it on for a Monday recap of your week and a reminder when a streak is about to end. You can stop any time."}</p>
+        <form action={setEmailNudges}><input type="hidden" name="value" value={emailsOn ? "off" : "on"} /><button className="btn btn-ghost" type="submit">{emailsOn ? "Stop the emails" : "Email me a recap and reminders"}</button></form>
       </section>
 
       <section id="season-board" className="card scroll-mt-24 p-5">

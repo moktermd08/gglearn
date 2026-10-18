@@ -18,6 +18,8 @@ import { emailRaceInvites } from "@/lib/raceMail";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import type { BotTier } from "@/lib/bots";
 import { baselineLevel, canView, finishersOf, listedFor, now, standings, stateOf } from "@/lib/competitions";
+import { topicLabel } from "@/lib/topicName";
+import { cancelContest, switchOffInviteLink } from "@/lib/contestAdmin";
 import { enrol, createContest, inviteEmails, newContestSchema, toMinor } from "@/lib/contests";
 import { MAX_LEVEL } from "@/lib/levels";
 
@@ -25,16 +27,19 @@ const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() 
 
 export type CreateState = { error?: string } | null;
 
+/** An unnamed race is named after its topic, so the form does not make someone invent a name first. */
+const defaultTitle = (trackId: number) => { const n = db.select({ n: tracks.name }).from(tracks).where(eq(tracks.id, trackId)).get()?.n; return n ? `${topicLabel(n)} sprint` : ""; };
+
 export async function createCompetition(_: CreateState, fd: FormData): Promise<CreateState> {
   const me = await requireUser();
   const num = (k: string) => Number(str(fd.get(k)));
   const p = newContestSchema.safeParse({
-    title: str(fd.get("title")), description: str(fd.get("description")), trackId: num("trackId"), goalLevels: num("goalLevels"),
+    title: str(fd.get("title")) || defaultTitle(num("trackId")), description: str(fd.get("description")), trackId: num("trackId"), goalLevels: num("goalLevels"),
     startInDays: num("startInDays"), days: num("days"), maxHumans: num("maxHumans") || 20, visibility: str(fd.get("visibility")),
     prizeAmount: toMinor(str(fd.get("prizeAmount")) || "0"), prizeCurrency: str(fd.get("prizeCurrency")) || "USD",
     prizeSplit: str(fd.get("prizeSplit")) || "winner", prizeNote: str(fd.get("prizeNote")),
   });
-  if (!p.success) return { error: "Check the form: a title (3+ characters), a topic, a goal of 1 to 20 levels, a length of 1 to 90 days and a valid prize are required." };
+  if (!p.success) return { error: "Check the form: a topic, a goal of 1 to 20 levels, a length of 1 to 90 days and a valid prize are required." };
   const bots: BotTier[] = [...Array(num("casual") || 0).fill("casual"), ...Array(num("steady") || 0).fill("steady"), ...Array(num("fierce") || 0).fill("fierce")];
   const r = createContest(me, {
     ...p.data, visibility: p.data.visibility, bots, emails: str(fd.get("emails")),
@@ -42,6 +47,8 @@ export async function createCompetition(_: CreateState, fd: FormData): Promise<C
   });
   if ("error" in r) return { error: r.error };
   await emailRaceInvites(r.slug, me, r.fresh);
+  // the invite link, when asked for and when the topic is safe to show someone with no account
+  if (str(fd.get("inviteLink")) === "on" && guestAudience(p.data.trackId)) db.update(competitions).set({ guestLinkVersion: now() }).where(eq(competitions.slug, r.slug)).run();
   revalidatePath("/competitions");
   redirect(`/competitions/${r.slug}`);
 }
@@ -106,11 +113,12 @@ export async function leaveCompetition(competitionId: number) { await setMyStatu
 
 export async function cancelCompetition(competitionId: number) {
   const me = await requireUser();
+  // the organiser, or an admin who runs the organiser (lib/contestAdmin.ts): an admin of one company cannot cancel another company's contest or a public campaign
+  if (!cancelContest(me, competitionId)) return;
   const c = db.select().from(competitions).where(eq(competitions.id, competitionId)).get();
-  if (!c || (c.createdBy !== me.id && me.role !== "admin")) return;
-  db.update(competitions).set({ canceledAt: now() }).where(and(eq(competitions.id, c.id), isNull(competitions.canceledAt))).run();
-  revalidatePath(`/competitions/${c.slug}`);
+  if (c) revalidatePath(`/competitions/${c.slug}`);
   revalidatePath("/competitions");
+  revalidatePath("/admin/contests");
 }
 
 /** The organiser turns the invite link on, switches it off, or replaces it (the old link stops working). Only for topics that are safe to show an outsider. */
@@ -259,4 +267,11 @@ export async function abandonChallenge(competitionId: number) {
   db.update(contestAttempts).set({ status: "abandoned", finishedAt: now() })
     .where(and(eq(contestAttempts.competitionId, c.id), eq(contestAttempts.userId, me.id), eq(contestAttempts.status, "active"))).run();
   revalidatePath(`/competitions/${c.slug}`);
+}
+
+/** An admin switches off a contest's invite link: moderation, so it works on contests the admin runs, never on others. */
+export async function switchOffLinkAsAdmin(competitionId: number) {
+  const me = await requireUser();
+  if (!switchOffInviteLink(me, competitionId)) return;
+  revalidatePath("/admin/contests");
 }

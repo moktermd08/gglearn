@@ -8,8 +8,9 @@ import { db, shareCards } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import { type ShareKind, snapshotFor } from "@/lib/share";
+import { markRead } from "@/lib/notifications";
 
-const KINDS = ["badge", "season", "level", "streak"] as const;
+const KINDS = ["badge", "season", "level", "streak", "pass", "cert", "race", "league", "duel"] as const;
 
 /** Makes (or refreshes) the public card for something the person has earned, then opens it. */
 export async function createShare(kind: ShareKind, ref: string) {
@@ -32,4 +33,17 @@ export async function revokeShare(id: number) {
   db.update(shareCards).set({ revokedAt: Math.floor(Date.now() / 1000) }).where(and(eq(shareCards.id, id), eq(shareCards.userId, me.id), isNull(shareCards.revokedAt))).run();
   revalidatePath("/achievements");
   redirect("/achievements");
+}
+
+/** Dismisses a celebration toast: the event is marked read, so it is not shown again. */
+export async function dismissCelebration(id: number) {
+  const me = await requireUser();
+  markRead(me.id, id);
+}
+
+/** Shares what a celebration toast is about: marks it read, then makes the card exactly as the Share buttons do (rebuilt from real data, nothing unearned). */
+export async function shareCelebration(id: number, kind: ShareKind, ref: string) {
+  const me = await requireUser();
+  markRead(me.id, id);
+  await createShare(kind, ref);
 }

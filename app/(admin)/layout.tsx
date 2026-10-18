@@ -28,6 +28,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       { href: "/admin/compliance", label: "Compliance", icon: "shield" },
       { href: "/admin/certificates", label: "Certificates", icon: "trophy", count: watch.expiring + watch.expired },
       ...(admin ? [{ href: "/admin/integrity", label: "Exam integrity", icon: "shield", count: queueCount(scope.reach) }] : []),
+      ...(admin ? [{ href: "/admin/contests", label: "Contests", icon: "trophy" }] : []),
     ] },
     { label: "Content", items: [
       ...(admin && global ? [{ href: "/admin/bank", label: "Question bank", icon: "database" }] : []),

@@ -8,6 +8,9 @@ import { certificates, competitionCerts, contestAttempts, dailyQuests, db, runs,
 import { settleRecent } from "@/lib/seasons";
 import { bonusXp } from "@/lib/rewards";
 import { lastLevelNoted, notify } from "@/lib/notifications";
+import { referralsOf } from "@/lib/referrals";
+import { frozenDays, freezesHeld, syncFreezes } from "@/lib/freezes";
+import { settleLeagueRecent, touchLeague } from "@/lib/league";
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 const day = (sec: number) => iso(new Date(sec * 1000));
@@ -30,10 +33,10 @@ export function playerLevel(xp: number) {
 
 // ---- streak ----
 
-export type Streak = { current: number; longest: number; activeToday: boolean; atRisk: boolean; week: { day: string; active: boolean }[] };
+export type Streak = { current: number; longest: number; activeToday: boolean; atRisk: boolean; week: { day: string; active: boolean; frozen: boolean }[] };
 
 /** A streak is consecutive UTC days with any activity (a quest or a finished exam, on any subject). It stays alive until the day ends. */
-export function streakOf(days: Set<string>, today = iso(new Date())): Streak {
+export function streakOf(days: Set<string>, today = iso(new Date()), frozen: ReadonlySet<string> = new Set()): Streak {
   const step = (d: Date, n: number) => { const x = new Date(d); x.setUTCDate(x.getUTCDate() + n); return x; };
   const t = new Date(`${today}T00:00:00Z`);
   const activeToday = days.has(today);
@@ -44,7 +47,7 @@ export function streakOf(days: Set<string>, today = iso(new Date())): Streak {
     run = prev && iso(step(new Date(`${prev}T00:00:00Z`), 1)) === d ? run + 1 : 1;
     longest = Math.max(longest, run); prev = d;
   }
-  return { current, longest: Math.max(longest, current), activeToday, atRisk: current > 0 && !activeToday, week: Array.from({ length: 7 }, (_, i) => { const d = iso(step(t, i - 6)); return { day: d, active: days.has(d) }; }) };
+  return { current, longest: Math.max(longest, current), activeToday, atRisk: current > 0 && !activeToday, week: Array.from({ length: 7 }, (_, i) => { const d = iso(step(t, i - 6)); return { day: d, active: days.has(d), frozen: frozen.has(d) }; }) };
 }
 
 // ---- facts ----
@@ -52,6 +55,8 @@ export function streakOf(days: Set<string>, today = iso(new Date())): Streak {
 export type Facts = {
   xp: number; levelsPassed: number; perfect: number; tracksStarted: number; tracksProgressed: number; titan: number;
   certs: number; seasonsPlayed: number; podiums: number; seasonWins: number; contestsFinished: number; champion: number; records: number; longestStreak: number; playerLevel: number;
+  /** friends this person brought in who have passed a level by exam */
+  referrals: number;
   days: Set<string>;
 };
 
@@ -61,6 +66,7 @@ export function factsOf(userId: number): Facts {
   const quests = db.select({ day: dailyQuests.day, xp: dailyQuests.xp }).from(dailyQuests).where(eq(dailyQuests.userId, userId)).all();
   const days = new Set(quests.map((q) => q.day));
   for (const r of db.select({ at: runs.finishedAt }).from(runs).where(done).all()) if (r.at) days.add(day(r.at));
+  for (const d of frozenDays(userId)) days.add(d); // a day a streak freeze covered counts for the streak, not as practice
   const passed = and(done, eq(runs.passed, true));
   const one = <T,>(q: { n: T } | undefined) => q?.n ?? (0 as T);
   const levelsPassed = Number(db.select({ n: sql<number>`count(*)` }).from(db.select({ t: runs.trackId, l: runs.level }).from(runs).where(passed).groupBy(runs.trackId, runs.level).as("p")).get()?.n ?? 0);
@@ -79,7 +85,7 @@ export function factsOf(userId: number): Facts {
     contestsFinished: Number(one(db.select({ n: sql<number>`count(*)` }).from(competitionCerts).where(eq(competitionCerts.userId, userId)).get())),
     champion: Number(one(db.select({ n: sql<number>`count(*)` }).from(competitionCerts).where(and(eq(competitionCerts.userId, userId), eq(competitionCerts.kind, "champion"))).get())),
     records: Number(one(db.select({ n: sql<number>`count(*)` }).from(contestAttempts).where(and(eq(contestAttempts.userId, userId), eq(contestAttempts.status, "finished"))).get())),
-    longestStreak: streak.longest, playerLevel: playerLevel(xp).level,
+    longestStreak: streak.longest, playerLevel: playerLevel(xp).level, referrals: referralsOf(userId).passed,
   };
 }
 
@@ -88,7 +94,7 @@ export function factsOf(userId: number): Facts {
 export type BadgeTier = "bronze" | "silver" | "gold" | "legend";
 export type BadgeDef = { key: string; group: string; name: string; desc: string; icon: string; tier: BadgeTier; target: number; value: (f: Facts) => number };
 
-export const BADGE_GROUPS = ["Streaks", "XP", "Levels", "Mastery", "Contests", "Seasons"] as const;
+export const BADGE_GROUPS = ["Streaks", "XP", "Levels", "Mastery", "Contests", "Seasons", "Community"] as const;
 const b = (group: string, key: string, name: string, desc: string, icon: string, tier: BadgeTier, target: number, value: (f: Facts) => number): BadgeDef => ({ key, group, name, desc, icon, tier, target, value });
 
 export const BADGES: BadgeDef[] = [
@@ -125,11 +131,14 @@ export const BADGES: BadgeDef[] = [
   b("Seasons", "podium", "On the Podium", "Finish in the top 3 of a season", "🥉", "silver", 1, (f) => f.podiums),
   b("Seasons", "podium-5", "Podium Habit", "Finish in the top 3 of 5 seasons", "🥈", "gold", 5, (f) => f.podiums),
   b("Seasons", "season-win", "Season Champion", "Finish first in a season", "🥇", "legend", 1, (f) => f.seasonWins),
+  b("Community", "recruit-1", "Recruiter", "Bring a friend who passes a level", "🤝", "bronze", 1, (f) => f.referrals),
+  b("Community", "recruit-5", "Talent Scout", "Bring 5 friends who pass a level", "🔭", "silver", 5, (f) => f.referrals),
+  b("Community", "recruit-25", "Community Builder", "Bring 25 friends who pass a level", "🏘️", "gold", 25, (f) => f.referrals),
 ];
 
 export type BadgeView = Omit<BadgeDef, "value"> & { value: number; earned: boolean; earnedAt: number | null; pct: number };
 
-export type Progression = { facts: Facts; player: ReturnType<typeof playerLevel>; streak: Streak; badges: BadgeView[]; earned: number; fresh: BadgeView[] };
+export type Progression = { facts: Facts; player: ReturnType<typeof playerLevel>; streak: Streak; freezes: number; badges: BadgeView[]; earned: number; fresh: BadgeView[] };
 
 /**
  * Everything the UI needs for one person. Writes a row for each badge whose rule is newly met (idempotent), so it is safe to
@@ -137,6 +146,9 @@ export type Progression = { facts: Facts; player: ReturnType<typeof playerLevel>
  */
 export function progressionFor(userId: number, freshSec = 30): Progression {
   settleRecent(); // writes the final standings of any season that has just ended (a cheap lookup once settled)
+  settleLeagueRecent(); // moves people up and down at the end of a week (a cheap lookup once settled)
+  touchLeague(userId); // someone who has scored this week gets their place in a league cohort
+  syncFreezes(userId); // pays any streak freezes earned and spends one if a streak would otherwise have broken, before the streak is worked out
   const facts = factsOf(userId);
   const have = new Map(db.select().from(userBadges).where(eq(userBadges.userId, userId)).all().map((r) => [r.key, r.earnedAt]));
   const t = now();
@@ -151,5 +163,5 @@ export function progressionFor(userId: number, freshSec = 30): Progression {
   });
   const player = playerLevel(facts.xp), noted = lastLevelNoted(userId);
   if (player.level >= 2 && player.level > noted) notify(userId, { key: `level-${player.level}`, kind: "level", title: `Level up! You are player level ${player.level}`, body: `${player.title}. ${player.xp.toLocaleString("en-GB")} XP so far.`, href: "/achievements" }, { read: firstSync });
-  return { facts, player, streak: streakOf(facts.days), badges, earned: badges.filter((x) => x.earned).length, fresh: badges.filter((x) => x.earnedAt !== null && t - x.earnedAt <= freshSec && x.earned) };
+  return { facts, player, streak: streakOf(facts.days, undefined, frozenDays(userId)), freezes: freezesHeld(userId), badges, earned: badges.filter((x) => x.earned).length, fresh: badges.filter((x) => x.earnedAt !== null && t - x.earnedAt <= freshSec && x.earned) };
 }

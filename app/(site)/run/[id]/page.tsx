@@ -1,4 +1,6 @@
 import { and, eq } from "drizzle-orm";
+import { ShareButton } from "@/components/ShareButton";
+import { ChallengeButton } from "@/components/ChallengeButton";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { answers, certificates, db, enrollments, questions, runs, tracks } from "@/lib/db";
@@ -116,6 +118,8 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
         )}
         {cert && <Link href={`/cert/${cert.code}`} className="btn"><GraduationCap size={18} />Get your {certTitle(run.level)} certificate</Link>}
         <div className="flex flex-wrap items-center justify-center gap-2">
+          {passed && check?.status !== "review" && check?.status !== "rejected" && run.level < MAX_LEVEL && <ChallengeButton trackId={track.id} label="Challenge a friend to beat it" />}
+          {passed && check?.status !== "review" && check?.status !== "rejected" && <ShareButton kind="pass" refKey={String(run.id)} label={`Share level ${run.level}`} prominent />}
           {!passed && <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={run.level} /><button className="btn"><RotateCcw size={16} />Try level {run.level} again</button></form>}
           {!passed && <Link href={`/tracks/${track.slug}/learn/${run.level}`} className="btn btn-ghost"><BookOpen size={16} />Study the guide first</Link>}
           {passed && run.level < MAX_LEVEL && <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={run.level + 1} /><button className="btn">Take level {run.level + 1}<ArrowRight size={16} /></button></form>}

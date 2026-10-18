@@ -7,11 +7,13 @@ import { SubjectArt, artFor } from "@/components/SubjectArt";
 import { rivalFor } from "@/lib/rivals";
 import { hiddenTrackIds } from "@/lib/tracks";
 import { currentUser } from "@/lib/auth";
+import { byTopicName, topicLabel } from "@/lib/topicName";
+import { proofLines, siteProof } from "@/lib/proof";
 import { openTo } from "@/lib/paths";
 import { avatarLooks } from "@/lib/avatars";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { StatTile, PALETTE } from "@/components/charts";
-import { ArrowRight, BadgeCheck, BookOpen, Briefcase, Building2, Compass, Flame, Gift, GraduationCap, Medal, Radio, RotateCcw, ShieldCheck, Sparkles, Swords, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
+import { Zap, ArrowRight, BadgeCheck, BookOpen, Briefcase, Building2, Compass, Flame, Gift, GraduationCap, Medal, Radio, RotateCcw, ShieldCheck, Sparkles, Swords, Target, Timer, Trophy, Users, Wand2 } from "lucide-react";
 import { SETS, campaignViews, type SetKey } from "@/lib/campaigns";
 import { listFor } from "@/lib/competitions";
 import { CompetitionCard } from "@/components/CompetitionCard";
@@ -27,8 +29,11 @@ const STEPS = [
 ] as const;
 
 const AUDIENCES = [
+  { Icon: GraduationCap, title: "You, on your own", text: "Pick any subject, find your level in a few questions, climb to Titan and earn certificates anyone can verify." },
+  { Icon: Flame, title: "Friends and groups", text: "Start a race, send one link, and everyone climbs the same live leaderboard. No account needed to be invited." },
   { Icon: Users, title: "Your team", text: "Required learning is assigned by job role and brand, tracked to a deadline, and tied to the promotion ladder for each role." },
   { Icon: Building2, title: "Your customers", text: "Customers get getting-started and product training for the brands and projects they bought, and nothing else." },
+  { Icon: Trophy, title: "Brands and companies", text: "Run an academy in your own look, with your own tracks, rewards and certificates, and race against your rivals or your own people." },
   { Icon: ShieldCheck, title: "Managers and admins", text: "See who is on track and who is overdue, manage the question bank, and approve promotions with the evidence in hand." },
 ] as const;
 
@@ -37,13 +42,15 @@ export default async function Home() {
   const looks = await avatarLooks();
   const all = db
     .select({ track: tracks, brand: brands, n: sql<number>`(select count(*) from ${questions} q where q.track_id = ${tracks.id} and q.status = 'active')` })
-    .from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).orderBy(asc(brands.name), asc(tracks.name)).all();
+    .from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).orderBy(asc(brands.name)).all().sort((a, b) => a.brand.name.localeCompare(b.brand.name) || byTopicName(a.track.name, b.track.name));
   const hidden = hiddenTrackIds();
-  const rows = all.filter((r) => !hidden.has(r.track.id) && r.n > 0 && (!viewer || openTo(viewer.audience, r.track.audience)));
+  // a stranger sees only what is made for outsiders; a company's own staff material shows once its people sign in
+  const rows = all.filter((r) => !hidden.has(r.track.id) && r.n > 0 && (viewer ? openTo(viewer.audience, r.track.audience) : r.track.audience !== "staff" || r.brand.kind === "shared"));
     const totalQ = rows.reduce((a, r) => a + r.n, 0), maxN = Math.max(1, ...rows.map((r) => r.n));
   const byBrand = new Map<string, typeof rows>();
   for (const r of rows) byBrand.set(r.brand.name, [...(byBrand.get(r.brand.name) ?? []), r]);
   const brandSlug = (name: string) => `brand-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  const proof = proofLines(siteProof()); // real numbers about what people are doing, only the ones big enough to say
   const camps = campaignViews();
   const prized = camps.filter((v) => v.rewardKind !== "certificate").sort((a, b) => b.reward.cash - a.reward.cash);
   const flagships = prized.slice(0, 3);
@@ -64,7 +71,7 @@ export default async function Home() {
         <SubjectArt slug={track.slug} name={track.name} kind={track.kind} size={56} />
         <div className="min-w-0 flex-1">
           <div className="text-xs uppercase tracking-wide text-slate-400">{KIND_LABEL[track.kind]}</div>
-          <div className="truncate font-semibold">{track.name}</div>
+          <div className="truncate font-semibold">{topicLabel(track.name)}</div>
           <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-black/10" title={`${n} questions`}><i className="grow block h-full rounded-full bg-sky-400/70" style={{ width: `${(n / maxN) * 100}%` }} /></div>
           <div className="mt-1 flex items-center gap-1 text-xs text-slate-400"><Swords size={11} className="text-pink-300" />{n} questions · vs {rv.name}</div>
         </div>
@@ -81,16 +88,19 @@ export default async function Home() {
           <p className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-[#fff] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-indigo-300"><GraduationCap size={14} />Training academy</p>
           <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl">Learn what your role needs. <span className="gradient-text">Prove it. Move up.</span></h1>
           <p className="mt-4 max-w-xl text-lg text-slate-300">
-            gglearn gives every person on your team, and every customer, a clear learning path. Pass level exams, earn certificates,
+            Learn on your own, race your friends, or train a whole team or customer base. Pass level exams, earn certificates,
             and climb {LEVELS.length} levels from Novice to Titan, with a daily rival to keep you showing up. Want a race? Join one of {camps.length} public campaigns.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href={viewer ? "/dashboard" : "/login"} className="btn">{viewer ? "Go to my path" : "Sign in to see your path"}<ArrowRight size={16} /></Link>
+            <Link href={viewer ? "/dashboard" : "/signup"} className="btn">{viewer ? "Go to my path" : "Start free"}<ArrowRight size={16} /></Link>
+            {!viewer && <Link href="/try" className="btn btn-ghost"><Zap size={16} className="text-amber-500" />Try 3 questions, no sign-up</Link>}
+            {!viewer && <Link href="/login" className="btn btn-ghost">Sign in</Link>}
             <Link href="/campaigns" className="btn btn-ghost"><Flame size={16} className="text-pink-300" />Browse {camps.length} campaigns</Link>
             <Link href="/map" className="btn btn-ghost">Explore the lifecycle map</Link>
             <a href="#subjects" className="btn btn-ghost">Browse subjects</a>
           </div>
-          <p className="mt-3 text-sm text-slate-400">{rows.length} subjects · {totalQ.toLocaleString("en-GB")} questions · accounts are created by your admin</p>
+          <p className="mt-3 text-sm text-slate-400">{rows.length} subjects · {totalQ.toLocaleString("en-GB")} questions · free to start</p>
+          {proof.length > 0 && <ul className="mt-2 flex flex-wrap gap-2" aria-label="What people are doing here">{proof.map((l) => <li key={l} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700"><i className="h-1.5 w-1.5 rounded-full bg-emerald-500" />{l}</li>)}</ul>}
         </div>
         <div className="card-soft relative p-5">
           <span className="bob pointer-events-none absolute -right-2 -top-4 z-10 hidden items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1.5 text-xs font-bold shadow-lg sm:inline-flex" aria-hidden><Flame size={14} className="text-orange-500" fill="#f97316" />5-day streak</span>
@@ -223,8 +233,8 @@ export default async function Home() {
 
       <section>
         <h2 className="mb-1 text-2xl font-bold">Who it is for</h2>
-        <p className="mb-4 text-slate-400">One platform, three kinds of people.</p>
-        <div className="grid gap-3 md:grid-cols-3">
+        <p className="mb-4 text-slate-400">One platform, whether you learn alone, in a group, in a company or for a brand.</p>
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {AUDIENCES.map(({ Icon, title, text }) => (
             <div key={title} className="card p-5"><Icon size={22} className="text-indigo-300" /><div className="mt-2 font-semibold">{title}</div><p className="mt-1 text-sm text-slate-400">{text}</p></div>
           ))}
@@ -305,7 +315,7 @@ export default async function Home() {
         <svg className="pointer-events-none absolute -right-10 -top-16 h-72 w-72 opacity-25" viewBox="0 0 200 200" aria-hidden><circle cx="100" cy="100" r="90" fill="none" stroke="#fff" /><circle cx="100" cy="100" r="60" fill="none" stroke="#fff" strokeDasharray="4 6" className="march" /></svg>
         <h2 className="relative text-3xl font-extrabold">Ready to start your climb?</h2>
         <p className="relative mx-auto mt-2 max-w-lg text-[#fff]/80">Your path is waiting, and so is your rival.</p>
-        <div className="relative mt-5 flex flex-wrap justify-center gap-3"><Link href={viewer ? "/dashboard" : "/login"} className="btn !bg-[#fff] !text-indigo-700">{viewer ? "Go to my path" : "Sign in"}<ArrowRight size={16} /></Link><Link href="/campaigns" className="btn !bg-transparent !text-[#fff] ring-2 ring-[#fff]/60 hover:!bg-[#fff]/15"><Flame size={16} />See the campaigns</Link></div>
+        <div className="relative mt-5 flex flex-wrap justify-center gap-3"><Link href={viewer ? "/dashboard" : "/signup"} className="btn !bg-[#fff] !text-indigo-700">{viewer ? "Go to my path" : "Start free"}<ArrowRight size={16} /></Link><Link href="/campaigns" className="btn !bg-transparent !text-[#fff] ring-2 ring-[#fff]/60 hover:!bg-[#fff]/15"><Flame size={16} />See the campaigns</Link></div>
       </section>
     </div>
   );

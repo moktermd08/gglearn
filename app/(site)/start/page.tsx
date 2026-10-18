@@ -13,6 +13,7 @@ import { and, sql } from "drizzle-orm";
 import { PageHero } from "@/components/charts";
 import Begin from "./begin";
 import { pickableTopics } from "@/lib/pickTopics";
+import { byTopicName, topicLabel } from "@/lib/topicName";
 
 export const metadata = { title: "Start a race — gglearn" };
 
@@ -26,8 +27,8 @@ export default async function Start() {
   const counts = new Map(db.select({ id: questions.trackId, n: sql<number>`count(*)` }).from(questions).where(and(sql`${questions.status} = 'active'`)).groupBy(questions.trackId).all().map((r) => [r.id, r.n]));
   const all = db.select({ id: tracks.id, slug: tracks.slug, name: tracks.name, kind: tracks.kind, description: tracks.description, audience: tracks.audience, roles: tracks.roles }).from(tracks).orderBy(asc(tracks.name)).all()
     .filter((t) => !hidden.has(t.id) && pickable.has(t.id)) // no live questions, a closed audience or another company's staff material: not offered
-    .map(({ audience: _a, roles, slug, ...t }) => ({ ...t, n: counts.get(t.id) ?? 0, rival: (({ name, tagline, hue }) => ({ name, tagline, hue }))(rivalFor(slug)), icon: <SubjectArt slug={slug} name={t.name} kind={t.kind} size={40} />, bigIcon: <SubjectArt slug={slug} name={t.name} kind={t.kind} size={72} className="shadow-lg" />, kindLabel: KIND_LABEL[t.kind] ?? t.kind, suggested: required.has(t.id) || roles.split(",").some((r) => r.trim().toLowerCase() === role) }))
-    .sort((a, b) => Number(b.suggested) - Number(a.suggested));
+    .map(({ audience: _a, roles, slug, ...t }) => ({ ...t, label: topicLabel(t.name), n: counts.get(t.id) ?? 0, rival: (({ name, tagline, hue }) => ({ name, tagline, hue }))(rivalFor(slug)), icon: <SubjectArt slug={slug} name={t.name} kind={t.kind} size={40} />, bigIcon: <SubjectArt slug={slug} name={t.name} kind={t.kind} size={72} className="shadow-lg" />, kindLabel: KIND_LABEL[t.kind] ?? t.kind, suggested: required.has(t.id) || roles.split(",").some((r) => r.trim().toLowerCase() === role) }))
+    .sort((a, b) => Number(b.suggested) - Number(a.suggested) || byTopicName(a.name, b.name));
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <JourneySteps at={1} />

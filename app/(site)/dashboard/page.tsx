@@ -28,7 +28,13 @@ import { enroll, toggleChecklist } from "@/app/actions";
 import { ManagerGlance } from "@/components/ManagerGlance";
 import { OnboardingPhases } from "@/components/OnboardingPhases";
 import { onboardingFor } from "@/lib/onboarding";
-import { BookOpen, CircleCheck, Zap, AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain, Activity, Radar as RadarIcon, Rocket } from "lucide-react";
+import { nextAction } from "@/lib/nextAction";
+import { leagueView } from "@/lib/league";
+import { TierGem } from "@/components/TierGem";
+import { WhereYouBelong } from "@/components/WhereYouBelong";
+import { setEmailNudges } from "@/app/(site)/profile/actions";
+import { topicLabel } from "@/lib/topicName";
+import { Snowflake, BookOpen, CircleCheck, Zap, AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain, Activity, Radar as RadarIcon, Rocket } from "lucide-react";
 
 export default async function Dashboard() {
   const user = await requireUser();
@@ -39,6 +45,7 @@ export default async function Dashboard() {
   const todo = db.select().from(checklistItems).where(eq(checklistItems.userId, user.id)).all();
   const stats = mine.map((m) => ({ ...m, s: trackStats(user.id, m.t, m.e.startedAt) }));
   const prog = progressionFor(user.id);
+  const league = leagueView(user.id);
   const week = periodAt("week"), weekRows = seasonStandings(week, user.audience, undefined, arenaOfUser(user.id)), weekMe = weekRows.find((r) => r.userId === user.id);
   const totalXp = prog.facts.xp;
   const bestStreak = prog.streak.current;
@@ -75,6 +82,18 @@ export default async function Dashboard() {
   const focusTrack = focusReq?.track ?? focusStat?.t;
   const focusPassed = focusStat?.s.passed ?? focusReq?.passed ?? 0;
   const focusNext = Math.min(MAX_LEVEL, focusPassed + 1);
+  const next = nextAction({
+    invites: invites.map((x) => ({ slug: x.c.slug, title: x.c.title, from: askedBy.get(x.c.createdBy) ?? "Someone" })),
+    updates: { count: unread.length, first: unread[0]?.change.title ?? "", overdue: unread.some((u) => u.overdue) },
+    required: [...requiredOpen].sort((x, y) => Number(y.overdue) - Number(x.overdue) || x.dueAt - y.dueAt)
+      .map((r) => ({ slug: r.track.slug, name: topicLabel(r.track.name), overdue: r.overdue, daysLeft: daysLeft(r.dueAt), enrolled: statByTrack.has(r.track.id) })),
+    races: contests.filter((x) => x.state === "live" && !x.invited).map((x) => ({ slug: x.c.slug, title: x.c.title, hoursLeft: (x.c.endsAt - now()) / 3600 })),
+    focus: focusTrack ? { slug: focusTrack.slug, name: topicLabel(focusTrack.name), enrolled: statByTrack.has(focusTrack.id) || (!focusReq && !!focusStat), passed: statByTrack.get(focusTrack.id)?.s.passed ?? focusPassed, done: statByTrack.get(focusTrack.id)?.s.doneToday ?? focusStat?.s.doneToday ?? new Set<string>() } : null,
+    streak: bestStreak, questsToday: questsDone, maxLevel: MAX_LEVEL,
+  });
+  const NEXT_ICON = { invite: Swords, update: BellRing, overdue: AlertTriangle, "race-ending": Flame, "due-soon": AlertTriangle, quest: Zap, "start-subject": Rocket, race: Swords, done: CircleCheck, start: Rocket } as const;
+  const NextIcon = NEXT_ICON[next.kind];
+  const nextUrgent = next.kind === "overdue" || next.kind === "race-ending" || next.kind === "update";
   const bestLevel = Math.max(0, ...stats.map((m) => m.s.passed));
   const bestTier = TIERS[tierOf(bestLevel)];
 
@@ -158,6 +177,7 @@ export default async function Dashboard() {
           <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold uppercase tracking-widest" style={{ color: `hsl(${bestTier.hue} 70% 42%)` }}>
             <span title="Your rank comes from your best subject: the highest level you have passed in it.">{bestTier.name} rank</span>
             {bestStreak > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 px-2 py-0.5 text-[11px] normal-case tracking-normal text-orange-500"><Flame size={12} fill="#f97316" />{bestStreak}-day streak</span>}
+            {prog.freezes > 0 && <span title="Covers a day you miss, automatically" className="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-2 py-0.5 text-[11px] normal-case tracking-normal text-sky-600"><Snowflake size={12} />{prog.freezes} freeze{prog.freezes === 1 ? "" : "s"}</span>}
           </div>
           <h1 className="text-2xl font-extrabold sm:text-3xl">{firstVisit ? "Welcome" : "Welcome back"}, {user.name}</h1>
           <p className="text-sm text-slate-400">{firstVisit ? (focusTrack ? "Your first step is below: it takes about five minutes." : "Pick a subject below to start your first level.") : goalDone >= questsTotal && questsTotal > 0 ? "Today's goal is done. Anything more is a bonus." : "Finish today's quests to keep the streak and stay ahead of your rivals."}</p>
@@ -165,6 +185,32 @@ export default async function Dashboard() {
         </div>
         {questsTotal > 0 && <div className="relative text-center"><Ring pct={goalDone / questsTotal} label={`${goalDone}/${questsTotal}`} sub="daily goal" size={104} color={goalDone === questsTotal ? "#34d399" : "#38bdf8"} /></div>}
       </header>
+
+      <section aria-label="Your next step" className={`card pop relative overflow-hidden p-5 sm:p-6 ${nextUrgent ? "border-2 border-rose-300/70" : "border-2 border-indigo-300/60"}`} style={{ background: nextUrgent ? "linear-gradient(120deg, rgba(244,63,94,.12), #fff 65%)" : "linear-gradient(120deg, rgba(99,102,241,.16), #fff 65%)" }}>
+        <div className="flex flex-wrap items-center gap-4">
+          <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl ${nextUrgent ? "bg-rose-500/15 text-rose-500" : "bg-indigo-500/15 text-indigo-500"}`}><NextIcon size={26} /></span>
+          <div className="min-w-0 flex-1 basis-60">
+            <div className="text-xs font-extrabold uppercase tracking-widest text-slate-400">Your next step</div>
+            <h2 className="text-xl font-extrabold sm:text-2xl">{next.title}</h2>
+            <p className="text-sm text-slate-300">{next.why}</p>
+          </div>
+          <Link href={next.href} className="btn !px-6 !py-3 text-base">{next.cta}<ArrowUpRight size={18} /></Link>
+        </div>
+        {next.also && next.also.length > 0 && (
+          <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-400">Or: {next.also.map((a) => <Link key={a.href} href={a.href} className="font-semibold text-indigo-400 underline">{a.label}</Link>)}</p>
+        )}
+      </section>
+
+      <WhereYouBelong userId={user.id} variant="note" />
+
+      {user.emailNudges === "off" && totalXp > 0 && (
+        <section aria-label="Email recap" className="card flex flex-wrap items-center gap-3 p-4 text-sm">
+          <BellRing size={18} className="text-indigo-400" />
+          <span className="min-w-0 flex-1 basis-56"><b>Want a weekly recap by email?</b> A Monday summary of your week and a reminder when a streak is about to end. One click to stop.</span>
+          <form action={setEmailNudges}><input type="hidden" name="value" value="on" /><button className="btn !py-1.5">Yes, email me</button></form>
+          <form action={setEmailNudges}><input type="hidden" name="value" value="declined" /><button className="text-slate-400 underline">No thanks</button></form>
+        </section>
+      )}
 
       {invites.length > 0 && (
         <section role="status" aria-label="Invitations" className="card space-y-2 border-2 border-indigo-300/70 p-4">
@@ -190,7 +236,7 @@ export default async function Dashboard() {
         {/* main column: what to do next */}
         <div className="min-w-0 space-y-6">
           {user.role !== "learner" && <ManagerGlance admin={user.role === "admin"} viewer={user} />}
-          {focusTrack && (
+          {focusTrack && next.kind !== "quest" && (
             <section aria-label="Continue" className="card relative overflow-hidden p-5" style={{ background: `linear-gradient(125deg, hsl(${TIERS[tierOf(focusNext)].hue} 85% 55% / .16), #fff 60%)` }}>
               <div className="flex flex-wrap items-center gap-4">
                 <SubjectArt slug={focusTrack.slug} name={focusTrack.name} kind={focusTrack.kind} size={64} className="shadow-lg" />
@@ -371,6 +417,18 @@ export default async function Dashboard() {
               <div className="space-y-3">{contests.slice(0, 3).map((x) => <CompetitionCard key={x.c.id} card={x} />)}</div>
             )}
           </section>
+
+          {!("notIn" in league && league.notIn === "hidden") && (
+            <Link href="/league" className="card card-hover flex items-center gap-4 p-5" aria-label="Your league" style={{ background: `linear-gradient(120deg, hsl(${league.hue} 85% 55% / .14), #fff 70%)` }}>
+              <TierGem tier={league.tier} size={52} />
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-extrabold uppercase tracking-widest text-slate-400">{league.tierName} league</div>
+                {"notIn" in league ? <p className="text-sm text-slate-300">Score a point this week to join a group of about 30 and climb.</p>
+                  : <><div className="text-xl font-extrabold">#{league.me.rank} <span className="text-sm font-bold text-slate-400">of {league.size}</span></div><p className="text-xs text-slate-400">{league.me.note}</p></>}
+              </div>
+              <ArrowUpRight size={16} className="shrink-0 text-slate-400" />
+            </Link>
+          )}
 
           <Link href="/seasons" className="card card-hover block p-5" aria-label="This week's season">
             {heading(Trophy, "bg-violet-500/15 text-violet-300", "This week", <span className="text-xs text-slate-400">ends in {timeLeft(week.end - now())}</span>)}

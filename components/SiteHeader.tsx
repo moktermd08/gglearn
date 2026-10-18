@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { Award, Database, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell } from "lucide-react";
+import { Award, Database, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell, GraduationCap, HeartHandshake } from "lucide-react";
 import { logout } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
 import { MobileMenu } from "@/components/MobileMenu";
+import { SearchPalette } from "@/components/SearchPalette";
 import { SignOutButtons } from "@/components/SignOutButtons";
 import { Initials } from "@/components/charts";
 import { DEFAULT_LOOK, type Look } from "@/lib/brand";
@@ -19,6 +20,7 @@ export const ADMIN_LINKS = [
   { href: "/admin/careers", label: "Careers", Icon: TrendingUp },
   { href: "/admin/rewards", label: "Rewards", Icon: Gift },
   { href: "/admin/certificates", label: "Certificates", Icon: Award },
+  { href: "/admin/contests", label: "Contests", Icon: Trophy, adminOnly: true },
   { href: "/admin/setup", label: "Set up", Icon: Settings2 },
 ];
 /** Managers see everything except the policy pages only an admin may change. */
@@ -42,10 +44,13 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
           {user && <NavLink href="/dashboard"><LayoutDashboard size={15} />My quest</NavLink>}
           {user && <NavLink href="/journey"><Mountain size={15} />My career</NavLink>}
           {user && <NavLink href="/start"><Rocket size={15} />Start a race</NavLink>}
-          <Dropdown prefix={["/competitions", "/campaigns", "/seasons"]} label={<><Trophy size={15} />Compete</>}>
+          <Dropdown prefix={["/competitions", "/campaigns", "/seasons", "/league", "/friends", "/teams"]} label={<><Trophy size={15} />Compete</>}>
             <NavLink href="/competitions"><Trophy size={15} />Contests</NavLink>
             <NavLink href="/campaigns"><Flame size={15} />Campaigns</NavLink>
+            <NavLink href="/league"><Medal size={15} />League</NavLink>
             <NavLink href="/seasons"><CalendarDays size={15} />Seasons</NavLink>
+            <NavLink href="/friends"><Users size={15} />Friends</NavLink>
+            <NavLink href="/teams"><Users size={15} />Teams</NavLink>
           </Dropdown>
           {staff && (
             <Dropdown prefix="/admin" label={<><ShieldCheck size={15} />Admin</>}>
@@ -55,6 +60,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
         </div>
 
         <span className="ml-auto" />
+        <SearchPalette />
         <div className={`hidden items-center gap-2 ${staff ? "min-[1040px]:flex" : "min-[940px]:flex"}`}>
           {user ? (
             <>
@@ -63,6 +69,8 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
               <div className="border-b border-black/5 px-3 pb-2 pt-1.5"><div className="font-semibold">{user.name}</div><div className="truncate text-xs text-slate-400">{user.email}</div></div>
               <Link href="/profile" className="mt-1 items-center gap-2 hover:bg-black/5"><UserRound size={15} />Your profile</Link>
               <Link href="/achievements" className="items-center gap-2 hover:bg-black/5"><Medal size={15} />Achievements</Link>
+              <Link href="/mentoring" className="items-center gap-2 hover:bg-black/5"><GraduationCap size={15} />Mentoring</Link>
+              <Link href="/sponsoring" className="items-center gap-2 hover:bg-black/5"><HeartHandshake size={15} />Sponsoring</Link>
               <Link href="/rewards" className="items-center gap-2 hover:bg-black/5"><Gift size={15} />My rewards</Link>
               <form action={logout}>
                 <SignOutButtons everywhereClass="!text-slate-400" />
@@ -70,7 +78,10 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
             </Dropdown>
             </>
           ) : (
-            <Link href="/login" className="btn !py-1.5"><LogIn size={15} />Sign in</Link>
+            <>
+              <Link href="/login" className="btn btn-ghost !py-1.5"><LogIn size={15} />Sign in</Link>
+              <Link href="/signup" className="btn !py-1.5">Start free</Link>
+            </>
           )}
         </div>
 
@@ -80,7 +91,10 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
             {user && <Link href="/journey" className={mobile}><Mountain size={18} />My career</Link>}
             {user && <Link href="/start" className={mobile}><Rocket size={18} />Start a race</Link>}
             <Link href="/campaigns" className={mobile}><Flame size={18} />Campaigns</Link>
+            <Link href="/league" className={mobile}><Medal size={18} />League</Link>
             <Link href="/seasons" className={mobile}><CalendarDays size={18} />Seasons</Link>
+            <Link href="/friends" className={mobile}><Users size={18} />Friends</Link>
+            <Link href="/teams" className={mobile}><Users size={18} />Teams</Link>
             <Link href="/competitions" className={mobile}><Trophy size={18} />Compete</Link>
             {staff && <div className="px-3 pb-1 pt-3 text-[11px] font-extrabold uppercase tracking-widest text-indigo-300">Admin</div>}
             {staff && adminLinksFor(user!.role).map(({ href, label, Icon }) => <Link key={href} href={href} className={mobile}><Icon size={18} />{label}</Link>)}
@@ -90,12 +104,14 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
                 <Link href="/profile" className={mobile}><UserRound size={18} />{user.name}</Link>
                 <Link href="/notifications" className={mobile}><Bell size={18} />Notifications{unread > 0 && <span className="ml-auto rounded-full bg-pink-600 px-2 text-xs font-bold text-[#fff]">{unread}</span>}</Link>
                 <Link href="/achievements" className={mobile}><Medal size={18} />Achievements</Link>
+                <Link href="/mentoring" className={mobile}><GraduationCap size={18} />Mentoring</Link>
+                <Link href="/sponsoring" className={mobile}><HeartHandshake size={18} />Sponsoring</Link>
                 <Link href="/rewards" className={mobile}><Gift size={18} />My rewards</Link>
                 <form action={logout}>
                   <SignOutButtons size={18} className={mobile} everywhereClass={`${mobile} !text-slate-400`} />
                 </form>
               </>
-            ) : <Link href="/login" className={`${mobile} font-semibold text-indigo-300`}><LogIn size={18} />Sign in</Link>}
+            ) : <><Link href="/signup" className={`${mobile} font-semibold text-indigo-300`}><LogIn size={18} />Start free</Link><Link href="/login" className={mobile}><LogIn size={18} />Sign in</Link></>}
           </div>
         </MobileMenu>
       </nav>

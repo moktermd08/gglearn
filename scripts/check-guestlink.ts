@@ -95,6 +95,7 @@ try {
     check("...with no company, brand or project", db.select().from(userScopes).where(eq(userScopes.userId, u.id)).all().length === 0);
     check("...a staff account for a shared topic, with the general role", u.audience === "staff" && u.jobRole === "general");
     check("...marked as a guest", u.guest === "yes");
+    check("...credited to the organiser who brought them in", u.referredBy === c.createdBy);
     const control = requirementsFor({ id: u.id, jobRole: "general", audience: "staff" }, []);
     check("...with nothing required of them", requirementsFor(u, []).length === 0);
     check("...(the same account without the mark would be required to take company-wide courses, so the mark is what exempts them)", control.length > 0);
