@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { setCompanyPolicy } from "@/lib/openLeague";
 import { z } from "zod";
 import { brands, companies, db, tracks } from "@/lib/db";
 import { MAX_LEVEL } from "@/lib/levels";
@@ -103,9 +104,9 @@ export async function saveBranding(me: Me, fd: FormData): Promise<SetupState> {
   const id = Number(fd.get("companyId"));
   const company = Number.isInteger(id) ? db.select().from(companies).where(eq(companies.id, id)).get() : undefined;
   if (!company || !scopeInReach(reachOf(me.id), { kind: "company", id: company.id })) return { error: "You can only change the branding of a company you run." };
-  const p = z.object({ academyName: z.string().max(40), certIssuer: z.string().max(80), accent: z.string(), certSigner: z.string().max(60), certSignerTitle: z.string().max(60), months: z.string().regex(/^\d{0,3}$/) })
-    .safeParse({ academyName: str(fd.get("academyName")), certIssuer: str(fd.get("certIssuer")), accent: str(fd.get("accent")).toLowerCase(), certSigner: str(fd.get("certSigner")), certSignerTitle: str(fd.get("certSignerTitle")), months: str(fd.get("certValidMonths")) });
-  if (!p.success) return { error: "Keep the academy name under 40 characters, the issuer under 80, the signatory name and title under 60, and the validity a whole number of months." };
+  const p = z.object({ academyName: z.string().max(40), certIssuer: z.string().max(80), accent: z.string(), certSigner: z.string().max(60), certSignerTitle: z.string().max(60), months: z.string().regex(/^\d{0,3}$/), entryMode: z.enum(["off", "customers"]), entryText: z.string().max(280), leagueOpen: z.boolean() })
+    .safeParse({ academyName: str(fd.get("academyName")), certIssuer: str(fd.get("certIssuer")), accent: str(fd.get("accent")).toLowerCase(), certSigner: str(fd.get("certSigner")), certSignerTitle: str(fd.get("certSignerTitle")), months: str(fd.get("certValidMonths")), entryMode: str(fd.get("entryMode")) === "customers" ? "customers" : "off", entryText: str(fd.get("entryText")), leagueOpen: fd.get("leagueOpen") === "yes" });
+  if (!p.success) return { error: "Keep the academy name under 40 characters, the issuer under 80, the signatory name and title under 60, the welcome line under 280 and the validity a whole number of months." };
   const validMonths = Number(p.data.months || 0);
   if (validMonths > MAX_VALID_MONTHS) return { error: `Certificates can stay valid for at most ${MAX_VALID_MONTHS} months. Use 0 for never.` };
   if (p.data.certSignerTitle && !p.data.certSigner) return { error: "Add the signatory's name, or clear their title." };
@@ -122,7 +123,8 @@ export async function saveBranding(me: Me, fd: FormData): Promise<SetupState> {
     if (!type) return { error: "The logo must be a PNG, JPEG or WebP image." };
     logo = `data:${type};base64,${Buffer.from(bytes).toString("base64")}`;
   }
-  db.update(companies).set({ academyName: p.data.academyName, certIssuer: p.data.certIssuer, accent: p.data.accent, logo, certValidMonths: validMonths, certSigner: p.data.certSigner, certSignerTitle: p.data.certSignerTitle }).where(eq(companies.id, company.id)).run();
+  setCompanyPolicy(company.id, p.data.leagueOpen); // moves people out at once if it was switched off
+  db.update(companies).set({ academyName: p.data.academyName, certIssuer: p.data.certIssuer, accent: p.data.accent, logo, certValidMonths: validMonths, certSigner: p.data.certSigner, certSignerTitle: p.data.certSignerTitle, entryMode: p.data.entryMode, entryText: p.data.entryText }).where(eq(companies.id, company.id)).run();
   return { done: `Saved branding for ${company.name}. People in this company see it on their next page load. New certificates ${validMonths ? `stay valid for ${validMonths} month${validMonths === 1 ? "" : "s"}` : "never expire"}; ones already issued keep their dates.` };
 }
 

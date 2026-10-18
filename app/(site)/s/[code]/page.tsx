@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { and, eq, isNull } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { ArrowRight, BadgeCheck, CalendarDays, Download, Link2, ShieldCheck, Swords, Target, Trophy } from "lucide-react";
+import { ArrowRight, BadgeCheck, CalendarDays, ShieldCheck, Swords, Target, Trophy } from "lucide-react";
 import { db, shareCards } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { TONES, siteUrl } from "@/lib/share";
+import { ShareBar } from "@/components/ShareBar";
+import { referralCode } from "@/lib/referrals";
 import { revokeShare } from "@/app/(site)/share/actions";
 
 const find = (code: string) => db.select().from(shareCards).where(and(eq(shareCards.code, code), isNull(shareCards.revokedAt))).get();
@@ -25,8 +27,7 @@ export default async function Share({ params }: { params: Promise<{ code: string
   const c = find((await params).code);
   if (!c) notFound();
   const me = await currentUser(), mine = me?.id === c.userId, url = `${await siteUrl()}/s/${c.code}`;
-  const text = encodeURIComponent(`${c.title}: ${c.headline} on gglearn`), enc = encodeURIComponent(url);
-
+  
   const tone = TONES[c.tone] ?? TONES.indigo;
   const when = new Date(c.createdAt * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
@@ -57,23 +58,19 @@ export default async function Share({ params }: { params: Promise<{ code: string
             <li key={t} className="flex items-start gap-2.5 rounded-xl bg-[#fff]/60 p-3"><span className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${tn}`}><Icon size={16} /></span><span><span className="block font-bold">{t}</span><span className="block text-xs text-slate-400">{d}</span></span></li>))}
         </ul>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
-          <Link href="/" className="btn inline-flex">Start learning on gglearn<ArrowRight size={16} /></Link>
+          <Link href={`/signup?ref=${referralCode(c.userId)}`} className="btn inline-flex">Start free on gglearn<ArrowRight size={16} /></Link>
           <Link href="/campaigns" className="btn btn-ghost inline-flex"><Trophy size={16} />Browse campaigns</Link>
         </div>
       </section>
-      {mine && (
-        <section className="card space-y-3 p-5" aria-label="Share this card">
-          <h2 className="font-bold">Share your card</h2>
+      <section className="card space-y-3 p-5" aria-label="Share this card">
+        <h2 className="font-bold">{mine ? "Share your card" : "Share this card"}</h2>
+        <ShareBar url={url} text={`${c.title}: ${c.headline}. Can you beat it on gglearn?`} imageUrl={`/s/${c.code}/image`} imageName={`gglearn-${c.kind}.png`} />
+        {mine && (<>
           <label className="block text-sm text-slate-400">Link<input readOnly value={url} className="mt-1 w-full rounded-lg border border-black/15 bg-[#fff] px-3 py-2 text-sm text-slate-800" /></label>
-          <div className="flex flex-wrap gap-2">
-            <a className="btn btn-ghost" href={`https://www.linkedin.com/sharing/share-offsite/?url=${enc}`} target="_blank" rel="noopener noreferrer"><Link2 size={15} />LinkedIn</a>
-            <a className="btn btn-ghost" href={`https://twitter.com/intent/tweet?text=${text}&url=${enc}`} target="_blank" rel="noopener noreferrer"><Link2 size={15} />X</a>
-            <a className="btn btn-ghost" href={`/s/${c.code}/image`} download={`gglearn-${c.kind}.png`}><Download size={15} />Download image</a>
-          </div>
           <p className="text-xs text-slate-400">Anyone with this link sees only your first name and initial and this achievement.</p>
           <form action={revokeShare.bind(null, c.id)}><button className="text-sm text-slate-400 underline" type="submit">Stop sharing this card</button></form>
-        </section>
-      )}
+        </>)}
+      </section>
     </div>
   );
 }

@@ -1,11 +1,13 @@
 "use server";
 
-import { and, eq, inArray, like, notInArray, or, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, like, notInArray, or, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { phaseSignoffs, projects, userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExamAnswers, roleExams, runs, tracks, users } from "@/lib/db";
+import { joinLinks, phaseSignoffs, projects, userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExamAnswers, roleExams, runs, tracks, users } from "@/lib/db";
+import { offboardUser, provision } from "@/lib/people";
+import { enforcedForDomain, ssoRequired } from "@/lib/sso";
 import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
@@ -22,12 +24,22 @@ import { hiddenTrackIds } from "@/lib/tracks";
 import { drillCompleted, drillQuestion, noteDrillAnswer } from "@/lib/drill";
 import { DYNAMIC_PER_RUN, drawDynamic } from "@/lib/dynamic/store";
 import { claimPendingInvites } from "@/lib/contests";
+import { referrerOf } from "@/lib/referrals";
+import { trialTrack } from "@/lib/trial";
+import { enrol } from "@/lib/contests";
 import { twistFor } from "@/lib/twists";
 import { INVITE_TTL_SEC, findOpenInvite, hashToken, newToken } from "@/lib/invites";
 import { STARTER_SIZE, starterPlan } from "@/lib/starter";
 import { siteUrl } from "@/lib/share";
-import { mailConfigured, sendInvites } from "@/lib/mail";
+import { mailConfigured, passwordChangedMail, resetMail, sendInvites, sendMail, signInLinkMail } from "@/lib/mail";
 import { safeNext } from "@/lib/nextPath";
+import { MAX_BULK, parseBulk } from "@/lib/bulkInvite";
+import { MIN_PASSWORD, RESET_TTL_SEC, finishReset, startReset } from "@/lib/passwordReset";
+import { LOGIN_LINK_TTL_SEC, spendLoginLink, startLoginLink } from "@/lib/loginLink";
+import { lookFor } from "@/lib/brand";
+import { noteMembershipChange } from "@/lib/membership";
+import { entryCompany, entryTopics } from "@/lib/entry";
+import { DEFAULT_LINK_DAYS, DEFAULT_LINK_USES, MAX_LINK_DAYS, MAX_LINK_USES, claimPlace, findOpenLink, linkPath } from "@/lib/joinLinks";
 import { type Level, isLevel, levelForInvite, refuseAccess, setAccessLevel } from "@/lib/accessLevel";
 import type { SetupState } from "@/lib/setup";
 import { createRoleExam, gradeRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
@@ -40,57 +52,10 @@ import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
 import { journeyFor, orderLockFor } from "@/lib/journeyLock";
 import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopeLabels, scopeOptions, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
-const ONBOARDING = [
-  "Read the brand story and values",
-  "Meet your manager and agree your 30-60-90 goals",
-  "Get access to the tools for your role",
-  "Pass level 3 in your first recommended track",
-  "Shadow a teammate on a real task",
-];
-const CUSTOMER_ONBOARDING = [
-  "Read the welcome guide for your product",
-  "Complete your getting-started path",
-  "Tell us what you want to achieve in your first 30 days",
-];
-const OFFBOARDING = [
-  "Write handover notes for each area you own",
-  "Transfer ownership of accounts, files and customers",
-  "Record answers to the 10 questions only you know",
-  "Return equipment and revoke tool access",
-];
-
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
-
-type Tx = Pick<typeof db, "insert" | "select" | "update" | "delete">;
 
 /** Scope checkboxes in a form are all named "scope" with values like "company:1". */
 const formScopes = (fd: FormData) => parseScopes(fd.getAll("scope").filter((v): v is string => typeof v === "string").join(","));
-
-/**
- * New-joiner setup: where they belong (companies, brands, projects), an onboarding checklist, and enrolment in everything
- * they are required to pass. Staff with nothing required yet fall back to the tracks recommended for their job role.
- */
-function provision(tx: Tx, userId: number, email: string, jobRole: string, audience: Audience, scopes: ReturnType<typeof parseScopes>) {
-  claimPendingInvites(tx, userId, email); // contests this address was invited to before it had an account
-  setScopes(tx, userId, validScopes(tx, scopes));
-  const steps = audience === "customer" ? CUSTOMER_ONBOARDING : ONBOARDING;
-  const access = audience === "staff" ? onboardingLines(userId, jobRole) : []; // the tools this role starts with (lib/access.ts)
-  tx.insert(checklistItems).values([...steps, ...access].map((label) => ({ userId, kind: "onboarding" as const, label }))).run();
-  const required = syncRequired({ id: userId, jobRole, audience }, tx);
-  if (audience === "staff") {
-    // a role-shaped starter plan (question mix + role pillars) on top of what is required; the old open pick only if it finds nothing
-    const have = new Set(tx.select({ id: enrollments.trackId }).from(enrollments).where(eq(enrollments.userId, userId)).all().map((e) => e.id));
-    let rec: { id: number }[] = starterPlan({ jobRole, audience }, scopesOf(userId, tx), have, STARTER_SIZE - have.size);
-    if (!rec.length && !required && !have.size) {
-      const hidden = hiddenTrackIds();
-      rec = tx.select().from(tracks).where(or(eq(tracks.roles, ""), like(tracks.roles, `%${jobRole}%`))).all()
-        .filter((t) => !hidden.has(t.id) && openTo(audience, t.audience)).slice(0, 6);
-    }
-    if (rec.length) {
-      tx.insert(enrollments).values(rec.map((t) => ({ userId, trackId: t.id, goal: `Onboarding path for ${jobRole}` }))).onConflictDoNothing().run();
-    }
-  }
-}
 
 const TOO_MANY = "Too many attempts. Please wait a few minutes and try again.";
 
@@ -126,6 +91,37 @@ export async function joinWithInvite(token: string, _: string | null, fd: FormDa
   redirect("/dashboard");
 }
 
+/**
+ * Open sign-up: anyone can make an account. It is the same kind of account a friend gets from a race link (no company, nothing required,
+ * `guest: "yes"`), so it only ever sees shared academy topics and races in the open arena. A company, brand or customer invitation still
+ * works as before and is what gives someone company material. An email that already has an account gets the same answer as any other failure.
+ */
+export async function signUp(_: string | null, fd: FormData): Promise<string | null> {
+  const ipKey = `signup:${await clientIp()}`;
+  if (!allowed(ipKey, 8)) return TOO_MANY;
+  hit(ipKey, 60 * MINUTE);
+  const p = z.object({ name: z.string().trim().min(1).max(80), email: z.string().email().max(120), password: z.string().min(8).max(200) })
+    .safeParse({ name: str(fd.get("name")), email: str(fd.get("email")).toLowerCase(), password: str(fd.get("password")) });
+  if (!p.success) return "Enter your name, a valid email and a password of 8 or more characters.";
+  const passwordHash = await hashPassword(p.data.password);
+  let userId: number;
+  try {
+    userId = db.transaction((tx) => {
+      if (tx.select({ id: users.id }).from(users).where(eq(users.email, p.data.email)).get()) throw new Error("taken");
+      const u = tx.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: "general", audience: "staff", guest: "yes", passwordHash, referredBy: referrerOf(str(fd.get("ref"))), emailNudges: fd.get("nudges") === "on" ? "on" : "off" }).returning().get();
+      claimPendingInvites(tx, u.id, u.email); // races this address was already invited to
+      // someone who came from "try it" starts on the topic they tried (only a topic a stranger may try)
+      const tried = trialTrack(str(fd.get("try")));
+      if (tried) enrol(tx, u.id, tried.id, "Tried it first");
+      return u.id;
+    });
+  } catch {
+    return "We could not create an account with those details. If you already have one, sign in instead.";
+  }
+  await startSession(userId);
+  redirect(safeNext(str(fd.get("next"))) ?? "/try?first=1"); // a first win in a minute, before any set-up
+}
+
 export async function login(_: string | null, fd: FormData): Promise<string | null> {
   const email = str(fd.get("email")).toLowerCase().slice(0, 120);
   const ip = await clientIp();
@@ -136,6 +132,11 @@ export async function login(_: string | null, fd: FormData): Promise<string | nu
   const u = db.select().from(users).where(eq(users.email, email)).get();
   // unknown or offboarded accounts still pay for a hash, so timing does not reveal which emails exist
   const ok = u && u.status === "active" ? await verifyPassword(pw, u.passwordHash) : (await verifyAgainstDummy(pw), false);
+  // A company that requires single sign-on: say so to someone who could never have used a password here (no account, or one with no password), and to anyone
+  // who got the password right. A wrong password for an account that has one stays the same plain answer, so nothing tells an outsider who has an account.
+  const viaSso = ssoRequired(email);
+  if (ok && viaSso) { clear(pairKey); return viaSso; }
+  if (!ok && (!u || !u.passwordHash) && enforcedForDomain(email)) return "Your company uses single sign-on. Choose \"Sign in with your company\" instead.";
   if (!u || !ok) {
     hit(pairKey, 15 * MINUTE);
     hit(ipKey, 15 * MINUTE);
@@ -173,6 +174,79 @@ export async function changePassword(_: string | null, fd: FormData): Promise<st
   revokeSessions(me.id);
   await startSession(me.id);
   return "ok";
+}
+
+/**
+ * "Forgot your password?": asks for a reset link. The answer is the same whether or not the address has an account (and the email is sent without
+ * waiting for it, so the time taken does not give it away either). Limited per address and per visitor, and every ask counts, real account or not.
+ */
+export async function requestPasswordReset(_: string | null, fd: FormData): Promise<string | null> {
+  const ip = await clientIp(), ipKey = `pw-reset-ip:${ip}`;
+  if (!allowed(ipKey, 10)) return TOO_MANY;
+  const email = z.string().email().max(120).safeParse(str(fd.get("email")).toLowerCase());
+  if (!email.success) return "Enter the email address you signed up with.";
+  hit(ipKey, 60 * MINUTE);
+  const addrKey = `pw-reset-addr:${email.data}`;
+  if (!allowed(addrKey, 3)) return "ok"; // too many for this address: say nothing different, send nothing more
+  hit(addrKey, 60 * MINUTE);
+  const r = ssoRequired(email.data) ? null : startReset(email.data); // single sign-on companies do not use emailed resets
+  if (r && mailConfigured()) {
+    const base = await siteUrl();
+    void sendMail(resetMail(r.email, `${base}/reset/${r.token}`, RESET_TTL_SEC / 60, lookFor(r.userId).name), { key: `reset-${hashToken(r.token).slice(0, 32)}` });
+  }
+  return "ok";
+}
+
+/** The page the emailed link opens: sets the new password, ends every other session, tells the person by email, and signs them in. */
+export async function completeReset(token: string, _: string | null, fd: FormData): Promise<string | null> {
+  const ipKey = `pw-reset-use:${await clientIp()}`;
+  if (!allowed(ipKey, 20)) return TOO_MANY;
+  hit(ipKey, 60 * MINUTE);
+  const next = str(fd.get("next")).slice(0, 200), again = str(fd.get("again")).slice(0, 200);
+  if (next.length < MIN_PASSWORD) return `Choose a new password of at least ${MIN_PASSWORD} characters.`;
+  if (next !== again) return "The two passwords do not match.";
+  const userId = finishReset(token, await hashPassword(next));
+  if (userId === null) return "This link has expired or was already used. Ask for a new one.";
+  const u = db.select({ email: users.email }).from(users).where(eq(users.id, userId)).get();
+  if (u && mailConfigured()) void sendMail(passwordChangedMail(u.email, `${await siteUrl()}/forgot`, lookFor(userId).name));
+  if (u && ssoRequired(u.email)) redirect("/sso");
+  await startSession(userId);
+  redirect("/dashboard");
+}
+
+/**
+ * "Email me a sign-in link": passwordless sign-in. Like the password reset, the reply is the same whether or not the address has an account, the
+ * email is sent without waiting for it, and every ask counts against a limit per address and per visitor.
+ */
+export async function requestSignInLink(_: string | null, fd: FormData): Promise<string | null> {
+  const ipKey = `signin-link-ip:${await clientIp()}`;
+  if (!allowed(ipKey, 10)) return TOO_MANY;
+  const email = z.string().email().max(120).safeParse(str(fd.get("email")).toLowerCase());
+  if (!email.success) return "Enter the email address you signed up with.";
+  hit(ipKey, 60 * MINUTE);
+  const addrKey = `signin-link-addr:${email.data}`;
+  if (!allowed(addrKey, 5)) return "ok";
+  hit(addrKey, 60 * MINUTE);
+  const r = ssoRequired(email.data) ? null : startLoginLink(email.data);
+  if (r && mailConfigured()) {
+    const next = safeNext(str(fd.get("next"))), q = next ? `?next=${encodeURIComponent(next)}` : "";
+    void sendMail(signInLinkMail(r.email, `${await siteUrl()}/signin/${r.token}${q}`, LOGIN_LINK_TTL_SEC / 60, lookFor(r.userId).name), { key: `signin-${hashToken(r.token).slice(0, 32)}` });
+  }
+  return "ok";
+}
+
+/** The button on the page the emailed link opens: uses the link and signs the person in. Opening the link alone never does. */
+export async function signInWithLink(token: string, next: string) {
+  const ipKey = `signin-use:${await clientIp()}`;
+  if (!allowed(ipKey, 30)) redirect(`/signin/${token}`);
+  hit(ipKey, 60 * MINUTE);
+  const userId = spendLoginLink(token);
+  if (userId === null) redirect(`/signin/${token}`); // the page explains the link no longer works
+  const u = db.select().from(users).where(eq(users.id, userId)).get();
+  if (u && ssoRequired(u.email)) redirect("/sso"); // a link issued before the company required single sign-on no longer signs anyone in
+  if (u) syncRequired(u); // picks up tracks that became required since their last visit, as a password sign-in does
+  await startSession(userId);
+  redirect(safeNext(next) ?? "/dashboard");
 }
 
 /** A manager sets a temporary password for someone who is locked out; every session they had ends. Managers can only do this for learners. */
@@ -410,7 +484,9 @@ export async function createPerson(_: string | null, fd: FormData): Promise<stri
 
 export type InviteState = {
   error?: string;
-  invites?: { email: string; path: string; url: string }[];
+  invites?: { email: string; jobRole?: string; path: string; url: string }[];
+  /** lines of a bulk import that could not be used, each with the reason */
+  rejected?: string[];
   /** addresses that already have an account, so no link was made */
   skipped?: string[];
   /** worth knowing before the link goes out, e.g. nothing is set up for this role yet */
@@ -424,6 +500,47 @@ export type InviteState = {
 } | null;
 
 const MAX_INVITES_AT_ONCE = 25;
+
+/**
+ * Makes a single-use signup link for each address, each with its own role, and emails them when asked. Shared by the one-by-one form and the
+ * bulk import. The caller has already checked the manager may invite to these scopes with this access; addresses that already have an account are skipped.
+ */
+async function issueInvites(
+  me: { id: number; name: string; email: string },
+  rows: { email: string; jobRole: string }[],
+  o: { audience: "staff" | "customer"; scopes: ReturnType<typeof validScopes>; access: Level; sendEmail: boolean },
+  keep: NonNullable<InviteState>["values"],
+): Promise<InviteState> {
+  const taken = new Set(db.select({ e: users.email }).from(users).where(inArray(users.email, rows.map((r) => r.email))).all().map((r) => r.e));
+  const fresh = rows.filter((r) => !taken.has(r.email));
+  if (!fresh.length) return { error: rows.length === 1 ? "That email already has an account." : "Every one of those emails already has an account.", values: keep };
+
+  const expiresAt = Math.floor(Date.now() / 1000) + INVITE_TTL_SEC;
+  const base = await siteUrl(); // an absolute link, so a message sent from this page works wherever it is opened
+  const invites_ = fresh.map(({ email, jobRole }) => {
+    const token = newToken();
+    db.insert(invites).values({ tokenHash: hashToken(token), email, jobRole, audience: o.audience, scopes: formatScopes(o.scopes), role: o.access, createdBy: me.id, expiresAt }).run();
+    return { email, jobRole, path: `/join/${token}`, url: `${base}/join/${token}` };
+  });
+  // roles with no learning path set up yet: worth knowing before the links go out
+  const bare = o.audience === "staff" ? [...new Set(fresh.map((r) => r.jobRole))].filter((r) => hasNoRolePath(coverageFor(r))) : [];
+  let notice = bare.length
+    ? `Nothing is set up for ${bare.length === 1 ? "the role" : "the roles"} "${bare.join('", "')}" yet, so ${bare.length === 1 ? "they" : "those people"} will only get company-wide learning. Roles with learning: ${knownRoles().join(", ") || "none"}. You can change a role later on People.`
+    : undefined;
+  // a customer's getting-started subject usually belongs to a product (project), which ticking only its brand does not cover
+  if (o.audience === "customer" && !requirementsFor({ id: 0, jobRole: fresh[0].jobRole, audience: "customer" }, o.scopes).length) {
+    const brandIds = o.scopes.filter((x) => x.kind === "brand").map((x) => x.id);
+    const hint = brandIds.length ? db.select({ n: projects.name }).from(tracks).innerJoin(projects, eq(projects.id, tracks.projectId))
+      .where(and(eq(tracks.audience, "customer"), inArray(tracks.brandId, brandIds))).all().map((r) => r.n) : [];
+    notice = `Nothing is assigned to customers with this scope yet, so they would start with an empty path.${hint.length ? ` Also tick the product: ${[...new Set(hint)].join(", ")}.` : " Tick the product (project) or brand they bought."}`;
+  }
+  const where = scopeLabels(o.scopes, scopeOptions()).join(", ");
+  // email them too, when the manager asked and the server is set up for it; the links stay on screen either way
+  const mail = o.sendEmail && mailConfigured()
+    ? await sendInvites(me.id, invites_.map((i) => ({ to: i.email, link: i.url, from: me.name, where, role: i.jobRole, access: o.access, replyTo: me.email, key: `invite-${hashToken(i.path.split("/").pop()!).slice(0, 32)}` })))
+    : undefined;
+  return { invites: invites_, skipped: taken.size ? [...taken] : undefined, notice, mail, message: { from: me.name, where, role: [...new Set(fresh.map((r) => r.jobRole))].join(", "), access: o.access } };
+}
 
 /** Issues a single-use signup link for each email, all with the same role and scope. Tokens are shown once; only hashes are stored. */
 export async function createInvite(_: InviteState, fd: FormData): Promise<InviteState> {
@@ -447,34 +564,134 @@ export async function createInvite(_: InviteState, fd: FormData): Promise<Invite
   const refused = refuseAccess(me, access, scopes, p.data.audience);
   if (refused) return { error: refused, values: keep };
 
-  const taken = new Set(db.select({ e: users.email }).from(users).where(inArray(users.email, p.data.emails)).all().map((r) => r.e));
-  const fresh = p.data.emails.filter((e) => !taken.has(e));
-  if (!fresh.length) return { error: p.data.emails.length === 1 ? "That email already has an account." : "Every one of those emails already has an account.", values: keep };
+  return issueInvites(me, p.data.emails.map((email) => ({ email, jobRole: p.data.jobRole })), { audience: p.data.audience, scopes, access, sendEmail: keep.sendEmail }, keep);
+}
 
-  const expiresAt = Math.floor(Date.now() / 1000) + INVITE_TTL_SEC;
-  const base = await siteUrl(); // an absolute link, so a message sent from this page works wherever it is opened
-  const invites_ = fresh.map((email) => {
-    const token = newToken();
-    db.insert(invites).values({ tokenHash: hashToken(token), email, jobRole: p.data.jobRole, audience: p.data.audience, scopes: formatScopes(scopes), role: access, createdBy: me.id, expiresAt }).run();
-    return { email, path: `/join/${token}`, url: `${base}/join/${token}` };
-  });
-  const cov = p.data.audience === "staff" ? coverageFor(p.data.jobRole) : null;
-  let notice = cov && hasNoRolePath(cov)
-    ? `Nothing is set up for the role "${p.data.jobRole}" yet, so they will only get company-wide learning. Roles with learning: ${knownRoles().join(", ") || "none"}. You can change their role later on People.`
-    : undefined;
-  // a customer's getting-started subject usually belongs to a product (project), which ticking only its brand does not cover
-  if (p.data.audience === "customer" && !requirementsFor({ id: 0, jobRole: p.data.jobRole, audience: "customer" }, scopes).length) {
-    const brandIds = scopes.filter((x) => x.kind === "brand").map((x) => x.id);
-    const hint = brandIds.length ? db.select({ n: projects.name }).from(tracks).innerJoin(projects, eq(projects.id, tracks.projectId))
-      .where(and(eq(tracks.audience, "customer"), inArray(tracks.brandId, brandIds))).all().map((r) => r.n) : [];
-    notice = `Nothing is assigned to customers with this scope yet, so they would start with an empty path.${hint.length ? ` Also tick the product: ${[...new Set(hint)].join(", ")}.` : " Tick the product (project) or brand they bought."}`;
+/**
+ * Invites a whole list at once, up to MAX_BULK people, each with their own role if the list gives one. The list is pasted or uploaded as a file
+ * (a spreadsheet saved as CSV works). Lines that cannot be used are reported and the rest go ahead. The same permission checks as one by one.
+ */
+export async function bulkInvite(_: InviteState, fd: FormData): Promise<InviteState> {
+  const me = await requireManager();
+  const file = fd.get("file");
+  let text = str(fd.get("csv"));
+  if (file instanceof File && file.size > 0) {
+    if (file.size > 200_000) return { error: "That file is too big. A list of up to " + MAX_BULK + " people is well under 200 KB." };
+    text = await file.text();
   }
-  const where = scopeLabels(scopes, scopeOptions()).join(", ");
-  // email them too, when the manager asked and the server is set up for it; the links stay on screen either way
-  const mail = keep.sendEmail && mailConfigured()
-    ? await sendInvites(me.id, invites_.map((i) => ({ to: i.email, link: i.url, from: me.name, where, role: p.data.jobRole, access, replyTo: me.email, key: `invite-${hashToken(i.path.split("/").pop()!).slice(0, 32)}` })))
-    : undefined;
-  return { invites: invites_, skipped: taken.size ? [...taken] : undefined, notice, mail, message: { from: me.name, where, role: p.data.jobRole, access } };
+  const jobRole = str(fd.get("jobRole")).toLowerCase();
+  const audience = str(fd.get("audience")) === "customer" ? "customer" : "staff";
+  const keep: NonNullable<InviteState>["values"] = {
+    emails: text.slice(0, 20000), jobRole, audience, access: accessFrom(fd), sendEmail: str(fd.get("sendEmail")) === "on",
+    scopes: fd.getAll("scope").filter((v): v is string => typeof v === "string").join(","),
+  };
+  if (!/^[a-z][a-z0-9 &/-]{0,39}$/.test(jobRole)) return { error: "Pick the role to use when a line does not give one.", values: keep };
+  const list = parseBulk(text, jobRole);
+  if (!list.rows.length) return { error: list.rejected.length ? "Nothing in that list could be used. " + list.rejected.slice(0, 3).join("; ") : "Paste a list or choose a file: one person per line, as email or email,role.", values: keep };
+  const scopes = validScopes(db, formScopes(fd));
+  if (!scopes.length) return { error: "Pick at least one company, brand or project they belong to.", values: keep };
+  if (scopes.some((x) => !scopeInReach(reachOf(me.id), x))) return { error: "You can only invite people to the companies, brands and projects you run.", values: keep };
+  const access = accessFrom(fd);
+  const refused = refuseAccess(me, access, scopes, audience);
+  if (refused) return { error: refused, values: keep };
+
+  const r = await issueInvites(me, list.rows, { audience, scopes, access, sendEmail: keep.sendEmail }, keep);
+  const rejected = [...list.rejected, ...(list.tooMany ? [`Only the first ${MAX_BULK} people were used; invite the rest in a second list.`] : [])];
+  return r && !r.error && rejected.length ? { ...r, rejected } : r;
+}
+
+export type LinkMade = { error?: string; path?: string } | null;
+
+/**
+ * Makes one link for a whole team. Anyone with it can create their own account in the places it names, as a learner, until it is full or
+ * expires. It can only be made for places the manager runs, and it never gives more than learner access, so it cannot be used to climb.
+ */
+export async function createJoinLink(_: LinkMade, fd: FormData): Promise<LinkMade> {
+  const me = await requireManager();
+  const p = z.object({
+    jobRole: z.string().min(1).max(40).regex(/^[a-z][a-z0-9 &/-]*$/), label: z.string().max(60),
+    audience: z.enum(["staff", "customer"]),
+    maxUses: z.coerce.number().int().min(1).max(MAX_LINK_USES), days: z.coerce.number().int().min(1).max(MAX_LINK_DAYS),
+  }).safeParse({ jobRole: str(fd.get("jobRole")).toLowerCase(), label: str(fd.get("label")), audience: str(fd.get("audience")) || "staff", maxUses: str(fd.get("maxUses")) || DEFAULT_LINK_USES, days: str(fd.get("days")) || DEFAULT_LINK_DAYS });
+  if (!p.success) return { error: `Pick a role, up to ${MAX_LINK_USES} places and up to ${MAX_LINK_DAYS} days.` };
+  const scopes = validScopes(db, formScopes(fd));
+  if (!scopes.length) return { error: "Pick the company, brand or project the link is for." };
+  if (scopes.some((x) => !scopeInReach(reachOf(me.id), x))) return { error: "You can only make a link for the companies, brands and projects you run." };
+  const refused = refuseAccess(me, "learner", scopes, p.data.audience);
+  if (refused) return { error: refused };
+  if (!allowed(`join-link:${me.id}`, 20)) return { error: TOO_MANY };
+  hit(`join-link:${me.id}`, 60 * MINUTE);
+  const row = db.insert(joinLinks).values({ label: p.data.label, jobRole: p.data.jobRole, audience: p.data.audience, scopes: formatScopes(scopes), createdBy: me.id, maxUses: p.data.maxUses, expiresAt: Math.floor(Date.now() / 1000) + p.data.days * 86400 }).returning().get();
+  revalidatePath("/admin/people");
+  return { path: linkPath(row.id) };
+}
+
+/** Switches a team link off at once. The person who made it, or the platform owner, may do it. */
+export async function revokeJoinLink(id: number) {
+  const me = await requireManager();
+  const l = db.select().from(joinLinks).where(eq(joinLinks.id, id)).get();
+  if (!l || (l.createdBy !== me.id && !(me.role === "admin" && isGlobal(reachOf(me.id))))) return;
+  db.update(joinLinks).set({ revokedAt: Math.floor(Date.now() / 1000) }).where(and(eq(joinLinks.id, id), isNull(joinLinks.revokedAt))).run();
+  revalidatePath("/admin/people");
+}
+
+/** Someone opens a team link and makes their own account. Learner access, in exactly the places the link names; an address that already has an account gets the generic answer. */
+export async function joinWithLink(token: string, _: string | null, fd: FormData): Promise<string | null> {
+  const ipKey = `join-link-use:${await clientIp()}`;
+  if (!allowed(ipKey, 10)) return TOO_MANY;
+  hit(ipKey, 60 * MINUTE);
+  const link = findOpenLink(token);
+  if (!link) return "This link is full, has expired or was switched off. Ask whoever sent it for a new one.";
+  const p = z.object({ name: z.string().trim().min(1).max(80), email: z.string().email().max(120), password: z.string().min(8).max(200) })
+    .safeParse({ name: str(fd.get("name")), email: str(fd.get("email")).toLowerCase(), password: str(fd.get("password")) });
+  if (!p.success) return "Enter your name, a valid email and a password of 8 or more characters.";
+  const passwordHash = await hashPassword(p.data.password);
+  let userId: number;
+  try {
+    userId = db.transaction((tx) => {
+      if (tx.select({ id: users.id }).from(users).where(eq(users.email, p.data.email)).get()) throw new Error("taken");
+      if (!claimPlace(tx, link.id)) throw new Error("full"); // taken last, so a failed sign-up never uses up a place
+      const u = tx.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: link.jobRole, audience: link.audience, role: "learner", passwordHash }).returning().get();
+      provision(tx, u.id, u.email, link.jobRole, link.audience, parseScopes(link.scopes));
+      return u.id;
+    });
+  } catch (e) {
+    return e instanceof Error && e.message === "full" ? "This link just filled up. Ask whoever sent it for a new one." : "We could not create an account with those details. If you already have one, sign in instead.";
+  }
+  await startSession(userId);
+  redirect("/dashboard");
+}
+
+/**
+ * Sign-up on a company's public entry page. The account is a customer of that company: audience "customer", learner access, scoped to the
+ * company, so it only ever sees the company's customer-facing topics. Works only while the company has switched its entry page on.
+ */
+export async function joinAsCustomer(companySlug: string, _: string | null, fd: FormData): Promise<string | null> {
+  const ipKey = `entry-join:${await clientIp()}`;
+  if (!allowed(ipKey, 8)) return TOO_MANY;
+  hit(ipKey, 60 * MINUTE);
+  const company = entryCompany(companySlug);
+  if (!company) return "This page is not taking sign-ups right now.";
+  const p = z.object({ name: z.string().trim().min(1).max(80), email: z.string().email().max(120), password: z.string().min(8).max(200) })
+    .safeParse({ name: str(fd.get("name")), email: str(fd.get("email")).toLowerCase(), password: str(fd.get("password")) });
+  if (!p.success) return "Enter your name, a valid email and a password of 8 or more characters.";
+  const passwordHash = await hashPassword(p.data.password);
+  let userId: number;
+  try {
+    userId = db.transaction((tx) => {
+      if (tx.select({ id: users.id }).from(users).where(eq(users.email, p.data.email)).get()) throw new Error("taken");
+      const u = tx.insert(users).values({ name: p.data.name, email: p.data.email, jobRole: "customer", audience: "customer", role: "learner", passwordHash }).returning().get();
+      provision(tx, u.id, u.email, "customer", "customer", [{ kind: "company", id: company.id }]);
+      // start them on what the page promised: up to three of the company's customer topics, so the first thing they see is a lesson to take
+      const first = entryTopics(company.id).slice(0, 3);
+      if (first.length) tx.insert(enrollments).values(first.map((t) => ({ userId: u.id, trackId: t.id, goal: `Getting started with ${company.name}` }))).onConflictDoNothing().run();
+      return u.id;
+    });
+  } catch {
+    return "We could not create an account with those details. If you already have one, sign in instead.";
+  }
+  await startSession(userId);
+  redirect("/dashboard");
 }
 
 /** Moves someone to a different set of companies, brands and projects, then enrols them in whatever that now requires. */
@@ -487,10 +704,12 @@ export async function updateScopes(fd: FormData) {
   const next = validScopes(db, formScopes(fd));
   // someone with no scopes runs everything, so only the platform owner may leave a manager without any
   if (!isGlobal(reach) && (next.some((s) => !scopeInReach(reach, s)) || (!next.length && u.role !== "learner"))) return;
+  const before = scopesOf(u.id);
   db.transaction((tx) => {
     setScopes(tx, u.id, next);
     syncRequired(u, tx);
   });
+  noteMembershipChange(u.id, before, next); // tells them if the set of companies they belong to changed, and what that means for them
   revalidatePath("/admin/people");
   revalidatePath("/admin/compliance");
 }
@@ -668,8 +887,7 @@ export async function offboard(fd: FormData) {
   const u = db.select().from(users).where(eq(users.id, userId)).get();
   if (!u || u.status === "offboarded" || !userInReach(reachOf(me.id), u.id)) return;
   if (me.role !== "admin" && u.role !== "learner") return; // managers can only offboard learners
-  db.update(users).set({ status: "offboarded", sessionVersion: sql`${users.sessionVersion} + 1` }).where(eq(users.id, userId)).run(); // access ends now
-  db.insert(checklistItems).values([...offboardingLines(userId), ...OFFBOARDING].map((label) => ({ userId, kind: "offboarding" as const, label }))).run(); // one line per tool they still hold (lib/access.ts), then the general ones
+  offboardUser(userId); // access ends now (lib/people.ts)
   revalidatePath("/admin/people");
 }
 

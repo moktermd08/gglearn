@@ -1,11 +1,11 @@
 "use client";
 import { startTransition, useActionState, useMemo, useState, type ReactNode } from "react";
-import { ArrowRight, Check, Flag, Gauge, Mail, Mountain, Rocket, Search, Sparkles, Swords, Users, X } from "lucide-react";
-import { beginJourney, requestTopic, type StartState } from "./actions";
+import { ArrowRight, Check, Flag, Gauge, Mail, Mountain, Rocket, Search, Shuffle, Sparkles, Swords, Users, X, Zap } from "lucide-react";
+import { beginJourney, quickRace, requestTopic, type StartState } from "./actions";
 import { Avatar } from "@/components/Avatar";
 
 type Topic = {
-  icon: ReactNode; bigIcon: ReactNode; id: number; name: string; kindLabel: string; description: string; suggested: boolean;
+  icon: ReactNode; bigIcon: ReactNode; id: number; name: string; label: string; kindLabel: string; description: string; suggested: boolean;
   n: number; rival: { name: string; tagline: string; hue: number };
 };
 
@@ -17,10 +17,21 @@ export default function Begin({ topics }: { topics: Topic[] }) {
   const [trackId, setTrackId] = useState<number | null>(null);
   const [mode, setMode] = useState<"solo" | "group">("solo");
   const [asked, setAsked] = useState<string | null>(null);
+  const [quickErr, setQuickErr] = useState<string | null>(null), [quickBusy, setQuickBusy] = useState(false);
+  // one tap: skip the level check and the form, and open a race on sensible defaults (see quickRace in ./actions)
+  const go = (id: number, m: "solo" | "group") => {
+    setQuickErr(null); setQuickBusy(true);
+    startTransition(async () => { const r = await quickRace(id, m); if (r?.error) { setQuickErr(r.error); setQuickBusy(false); } });
+  };
+  const surprise = () => {
+    const pool = topics.some((t) => t.suggested) ? topics.filter((t) => t.suggested) : topics.filter((t) => t.n >= 500);
+    const t = pool[Math.floor(Math.random() * pool.length)];
+    if (t) go(t.id, "solo");
+  };
   const kinds = useMemo(() => ["All", ...[...new Set(topics.map((t) => t.kindLabel))].sort()], [topics]);
   const matches = useMemo(() => {
     const n = q.trim().toLowerCase();
-    return topics.filter((t) => (kind === "All" || t.kindLabel === kind) && (!n || `${t.name} ${t.kindLabel} ${t.description}`.toLowerCase().includes(n)));
+    return topics.filter((t) => (kind === "All" || t.kindLabel === kind) && (!n || `${t.name} ${t.label} ${t.kindLabel} ${t.description}`.toLowerCase().includes(n)));
   }, [q, kind, topics]);
   const filtering = !!q.trim() || kind !== "All";
   const forYou = filtering ? [] : matches.filter((t) => t.suggested).slice(0, 4);
@@ -35,7 +46,7 @@ export default function Begin({ topics }: { topics: Topic[] }) {
       className={`rise relative flex min-w-0 items-center gap-3 rounded-2xl border-2 p-3 text-left transition hover:-translate-y-0.5 hover:shadow-md ${t.id === trackId ? "border-indigo-400 bg-indigo-500/10 shadow-md" : "border-black/10 bg-[#fff]"} ${big ? "sm:p-4" : ""}`}>
       <span className="shrink-0">{t.icon}</span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-semibold">{t.name}</span>
+        <span className="block truncate font-semibold">{t.label}</span>
         <span className="flex items-center gap-1.5 text-xs text-slate-400">{t.kindLabel}<span aria-hidden>·</span>{t.n.toLocaleString("en-GB")} questions</span>
       </span>
       {t.id === trackId && <span className="pop grid h-6 w-6 shrink-0 place-items-center rounded-full bg-indigo-500 text-[#fff]"><Check size={14} /></span>}
@@ -46,6 +57,11 @@ export default function Begin({ topics }: { topics: Topic[] }) {
     <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
       <input type="hidden" name="trackId" value={trackId ?? ""} />
       <div className="min-w-0 space-y-6">
+        <section className="card flex flex-wrap items-center gap-3 p-4" style={{ background: "linear-gradient(120deg, rgba(251,191,36,.18), #fff 70%)" }} aria-label="Quick race">
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-amber-500/20 text-amber-600"><Zap size={20} /></span>
+          <div className="min-w-0 flex-1 basis-56"><b className="block">In a hurry? Race in one tap.</b><span className="text-sm text-slate-300">No level check, no form. We pick sensible goals and you are racing a rival in seconds.</span></div>
+          <button type="button" disabled={quickBusy || pending} onClick={surprise} className="btn disabled:opacity-50"><Shuffle size={16} />{quickBusy ? "Starting…" : "Surprise me"}</button>
+        </section>
         <section className="card space-y-4 p-5">
           <label htmlFor="q" className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-sky-500/15 text-sky-300"><Search size={17} /></span><span><span className="mr-1 text-slate-400">1.</span>Your learning goal</span></label>
           <div className="relative">
@@ -118,7 +134,7 @@ export default function Begin({ topics }: { topics: Topic[] }) {
             <div className="mb-3 text-[11px] font-extrabold uppercase tracking-widest text-slate-400">Your journey</div>
             {picked ? (
               <div className="pop space-y-3" key={picked.id}>
-                <div className="flex items-center gap-3">{picked.bigIcon}<div className="min-w-0"><div className="text-lg font-extrabold leading-tight">{picked.name}</div><div className="text-xs text-slate-400">{picked.kindLabel} · {picked.n.toLocaleString("en-GB")} questions · 20 levels</div></div></div>
+                <div className="flex items-center gap-3">{picked.bigIcon}<div className="min-w-0"><div className="text-lg font-extrabold leading-tight">{picked.label}</div><div className="text-xs text-slate-400">{picked.kindLabel} · {picked.n.toLocaleString("en-GB")} questions · 20 levels</div></div></div>
                 {picked.description && <p className="line-clamp-3 text-sm text-slate-300">{picked.description}</p>}
                 <div className="flex items-center gap-3 rounded-2xl bg-black/[.04] p-3">
                   <Avatar kind="rival" level={3} hue={picked.rival.hue} size={44} />
@@ -136,7 +152,18 @@ export default function Begin({ topics }: { topics: Topic[] }) {
               <li key={t} className="flex gap-3"><span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-indigo-500/12 text-indigo-300"><Icon size={16} /></span><span><b className="block text-sm"><span className="mr-1 text-slate-400">{i + 1}.</span>{t}</b><span className="text-xs text-slate-400">{d}</span></span></li>
             ))}
           </ol>
-          <div className="border-t border-black/5 p-4">{submit}{!picked && <p className="mt-2 text-center text-xs text-slate-400">Choose a topic to continue.</p>}</div>
+          <div className="space-y-2 border-t border-black/5 p-4">
+            {submit}
+            {!picked && <p className="mt-2 text-center text-xs text-slate-400">Choose a topic to continue.</p>}
+            {picked && (
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <button type="button" disabled={quickBusy || pending} onClick={() => go(picked.id, "solo")} className="btn btn-ghost !justify-center !py-2 text-sm disabled:opacity-50"><Zap size={15} className="text-amber-500" />Race now</button>
+                <button type="button" disabled={quickBusy || pending} onClick={() => go(picked.id, "group")} className="btn btn-ghost !justify-center !py-2 text-sm disabled:opacity-50"><Users size={15} className="text-pink-400" />Race a friend</button>
+                <p className="col-span-2 text-center text-xs text-slate-400">Skips the level check and the form. &quot;Race a friend&quot; gives you a link to send.</p>
+              </div>
+            )}
+            {quickErr && <p role="alert" className="rounded-xl bg-rose-500/10 p-2.5 text-sm text-rose-400">{quickErr}</p>}
+          </div>
         </div>
       </aside>
     </form>

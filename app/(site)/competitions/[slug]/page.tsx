@@ -13,6 +13,11 @@ import { BOT_STYLES } from "@/lib/bots";
 import { XP_PER_LEVEL } from "@/lib/levels";
 import { cancelCompetition, claimCertificate, declineInvite, joinCompetition, leaveCompetition, makePrivate, markPrizePaid, reviewTwistAction, setGuestLink } from "../actions";
 import { CopyButton } from "@/components/CopyButton";
+import { ShareBar } from "@/components/ShareBar";
+import { ShareButton } from "@/components/ShareButton";
+import { referralCode } from "@/lib/referrals";
+import { topicLabel } from "@/lib/topicName";
+import { canModerate } from "@/lib/contestAdmin";
 import { guestAudience, guestPath, placesLeft } from "@/lib/guestLink";
 import { siteUrl } from "@/lib/share";
 import { arenaLabel } from "@/lib/arena";
@@ -34,7 +39,9 @@ const utc = (s: number) => `${new Date(s * 1000).toISOString().slice(0, 16).repl
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const c = find((await params).slug);
   // never put a private title in the tab or in link previews
-  return { title: c && c.visibility === "public" ? `${c.title} — gglearn` : "Contest — gglearn" };
+  if (!c || c.visibility !== "public") return { title: "Contest — gglearn", robots: { index: false, follow: false } };
+  const description = `A live race on gglearn: gain ${c.goalLevels} level${c.goalLevels === 1 ? "" : "s"} and climb the leaderboard. Open to watch and join.`;
+  return { title: `${c.title} — gglearn`, description, openGraph: { title: c.title, description, type: "website" }, twitter: { card: "summary_large_image", title: c.title, description } };
 }
 
 export default async function CompetitionPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -67,6 +74,8 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
   // the invite link: offered only for topics safe to show someone with no account (lib/guestLink.ts)
   const guestOk = isOrganiser && guestAudience(c.trackId) !== null;
   const guestLink = guestOk && c.guestLinkVersion != null ? `${await siteUrl()}${guestPath(c)}` : null;
+  // what to send a friend: the organiser's no-account link when there is one, otherwise the public page (never a private contest's address)
+  const shareUrl = guestLink ?? (c.visibility === "public" ? `${await siteUrl()}/competitions/${c.slug}` : null);
   const asked = isOrganiser ? members.filter((m) => m.kind === "human" && m.userId && m.userId !== c.createdBy && m.status !== "joined") : [];
   // Names appear only once someone has answered. Until then the list is a count, the same whether an address has an account or not, so it cannot be used to find out who is registered.
   const answered = asked.filter((m) => m.status !== "invited");
@@ -111,6 +120,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
         </div>
         <h1 className="pr-20 text-3xl font-extrabold sm:pr-48">{c.title}</h1>
         {c.description && <p className="text-slate-300">{c.description}</p>}
+        {shareUrl && !over && <div className="space-y-1.5"><p className="text-sm font-semibold">{c.maxHumans === 2 ? "Send the challenge. First to the finish line wins." : "Bring a friend. Races are better with someone to beat."}</p><ShareBar url={shareUrl} text={c.maxHumans === 2 ? `I challenge you on gglearn: first to gain ${c.goalLevels} level${c.goalLevels === 1 ? "" : "s"} in ${topicLabel(track.name)} wins. Think you can beat me?` : `Race me on gglearn: ${c.title}. Gain ${c.goalLevels} level${c.goalLevels === 1 ? "" : "s"} in ${topicLabel(track.name)}.`} /></div>}
         <p className="text-sm text-slate-300">
           Topic <Link href={`/tracks/${track.slug}`} className="underline">{track.name}</Link> · goal: gain <b>{c.goalLevels}</b> level{c.goalLevels === 1 ? "" : "s"} · organised by {creator?.name ?? "someone"}{organiserCompany ? ` (${organiserCompany})` : ""}
         </p>
@@ -303,8 +313,9 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
       )}
 
       <section className="flex flex-wrap items-start gap-4">
-        {!user && c.visibility === "public" && !over && <p className="card p-4 text-sm"><Link href="/login" className="underline">Sign in</Link> to join this contest.</p>}
+        {!user && c.visibility === "public" && !over && <p className="card p-4 text-sm"><Link href={`/signup?ref=${referralCode(c.createdBy)}&next=${encodeURIComponent(`/competitions/${c.slug}`)}`} className="btn !py-1.5">Create a free account to join</Link> <span className="ml-2">Already have one? <Link href={`/login?next=${encodeURIComponent(`/competitions/${c.slug}`)}`} className="underline">Sign in</Link></span></p>}
 
+        {mine?.status === "joined" && state !== "canceled" && <div className="card flex flex-wrap items-center gap-3 p-4"><ShareButton kind="race" refKey={c.slug} label={state === "finished" ? "Share my result" : state === "live" ? "Share my progress" : "Share that I joined"} prominent /></div>}
         {mine?.status === "joined" && !over && (
           <div className="card flex flex-wrap items-center gap-3 p-4">
             <Link href={`/tracks/${track.slug}`} className="btn">Train now<Swords size={16} /></Link>
@@ -365,7 +376,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
                 <div className="flex flex-wrap gap-2">
                   <input readOnly aria-label="Invite link" value={guestLink} className="block min-w-0 flex-1 rounded border border-white/20 bg-[#fff] px-2 py-1" />
                   <CopyButton label="Copy link" text={guestLink} />
-                  <CopyButton label="Copy message" text={`Join my gglearn race "${c.title}": gain ${c.goalLevels} level${c.goalLevels === 1 ? "" : "s"} in ${track.name}. Open this link to join: ${guestLink}`} />
+                  <CopyButton label="Copy message" text={`Join my gglearn race "${c.title}": gain ${c.goalLevels} level${c.goalLevels === 1 ? "" : "s"} in ${topicLabel(track.name)}. Open this link to join: ${guestLink}`} />
                 </div>
                 <div className="flex flex-wrap gap-4 text-xs text-slate-400">
                   <form action={setGuestLink.bind(null, c.id, "new")}><button className="underline">Make a new link</button> <span>(the old one stops working)</span></form>
@@ -386,7 +397,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
           </div>
         </section>
       )}
-      {user?.role === "admin" && !isOrganiser && !over && (
+      {user && !isOrganiser && !over && canModerate(user, c) && (
         <form action={cancelCompetition.bind(null, c.id)}><button className="text-sm text-rose-400 underline">Cancel contest (admin)</button></form>
       )}
 

@@ -1,7 +1,7 @@
 "use client";
-import { useActionState, useRef } from "react";
+import { useActionState, useRef, useState, useTransition } from "react";
 import { Building2, Check, Plus, TriangleAlert } from "lucide-react";
-import { createBrand, createCompany, createTrack, saveCompanyBranding, saveCompanyLearningOrder, type SetupState } from "./actions";
+import { createBrand, createCompany, createTrack, makeDirectoryToken, revokeDirectoryToken, saveCompanyBranding, saveCompanyLearningOrder, saveCompanySso, type SetupState } from "./actions";
 
 const input = "rounded border border-white/20 bg-[#fff] px-2 py-1";
 
@@ -110,7 +110,7 @@ export function TrackForm({ brands }: { brands: { id: number; name: string; comp
   );
 }
 
-export function BrandingForm({ company }: { company: { id: number; name: string; academyName: string; accent: string; certIssuer: string; certValidMonths: number; certSigner: string; certSignerTitle: string; logoUrl: string | null } }) {
+export function BrandingForm({ company }: { company: { id: number; name: string; academyName: string; accent: string; certIssuer: string; certValidMonths: number; certSigner: string; certSignerTitle: string; entryMode: "off" | "customers"; entryText: string; leagueOpen: "no" | "yes"; slug: string; logoUrl: string | null } }) {
   const { ref, state, run, pending } = useSetup(saveCompanyBranding, true);
   return (
     <form ref={ref} action={run} className="card grid gap-3 p-4 text-sm md:grid-cols-3">
@@ -138,6 +138,18 @@ export function BrandingForm({ company }: { company: { id: number; name: string;
       <label className="grid gap-1">Signatory&apos;s title
         <input name="certSignerTitle" defaultValue={company.certSignerTitle} placeholder="Head of Learning" maxLength={60} className={input} />
       </label>
+      <fieldset className="grid gap-2 rounded-xl border border-black/10 p-3 md:col-span-3">
+        <legend className="px-1 text-sm font-semibold">Public page for customers</legend>
+        <label className="flex items-start gap-2"><input type="checkbox" name="entryMode" value="customers" defaultChecked={company.entryMode === "customers"} className="mt-1" />
+          <span>Let anyone create a customer account on a page in this company&apos;s look. They see only the customer-facing topics, never staff material.{company.entryMode === "customers" && <> Live at <a href={`/c/${company.slug}`} className="underline" target="_blank" rel="noopener noreferrer">/c/{company.slug}</a>.</>}</span></label>
+        <label className="grid gap-1">Welcome line (optional)
+          <input name="entryText" defaultValue={company.entryText} maxLength={280} placeholder="Getting started with our products, in short lessons and quick quizzes." className={input} /></label>
+      </fieldset>
+      <fieldset className="grid gap-2 rounded-xl border border-black/10 p-3 md:col-span-3">
+        <legend className="px-1 text-sm font-semibold">Cross-company league</legend>
+        <label className="flex items-start gap-2"><input type="checkbox" name="leagueOpen" value="yes" defaultChecked={company.leagueOpen === "yes"} className="mt-1" />
+          <span>Let people here choose to play the weekly league against people from other companies. Each person decides for themselves and is off by default. Others see only their first name, an initial and points, never this company. Turning this off brings everyone back to your own league at once.</span></label>
+      </fieldset>
       <div className="flex items-center gap-3 md:col-span-3">
         {company.logoUrl && (
           // eslint-disable-next-line @next/next/no-img-element
@@ -179,5 +191,52 @@ export function LearningOrderForm({ company }: { company: { id: number; name: st
         <Result state={state} />
       </div>
     </form>
+  );
+}
+
+export function SsoForm({ company, callback }: { company: { id: number; name: string; enabled: boolean; issuer: string; clientId: string; hasSecret: boolean; domains: string; jit: boolean; enforce: boolean; verified: boolean }; callback: string }) {
+  const { ref, state, run, pending } = useSetup(saveCompanySso, true);
+  // Submitted by hand, not as a form action: React clears a form after an action runs, and a mistake in the issuer must not wipe out the secret just typed.
+  // method=post so that a submit before the page is ready can never put the secret in the address bar.
+  const [, start] = useTransition();
+  const [v, setV] = useState({ issuer: company.issuer, clientId: company.clientId, clientSecret: "", domains: company.domains, enabled: company.enabled, jit: company.jit, enforce: company.enforce });
+  const [seen, setSeen] = useState(state);
+  if (state !== seen) { setSeen(state); if (state?.done) setV((p) => ({ ...p, clientSecret: "" })); } // once saved, the secret is not left sitting in the field
+  const text = (k: "issuer" | "clientId" | "clientSecret" | "domains") => ({ name: k, value: v[k], onChange: (e: React.ChangeEvent<HTMLInputElement>) => setV((p) => ({ ...p, [k]: e.target.value })) });
+  const tick = (k: "enabled" | "jit" | "enforce") => ({ name: k, value: "yes", checked: v[k], onChange: (e: React.ChangeEvent<HTMLInputElement>) => setV((p) => ({ ...p, [k]: e.target.checked })) });
+  return (
+    <form ref={ref} method="post" onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); start(() => run(fd)); }} className="card grid gap-3 p-4 text-sm md:grid-cols-2">
+      <input type="hidden" name="companyId" value={company.id} />
+      <h3 className="font-semibold md:col-span-2">{company.name}{company.verified && <span className="ml-2 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-600">tested</span>}</h3>
+      <p className="text-xs text-slate-400 md:col-span-2">In your provider (Okta, Microsoft Entra ID, Google Workspace, Auth0, Keycloak or any OpenID Connect provider) create a web application and give it this redirect address: <code className="select-all rounded bg-black/5 px-1">{callback}</code></p>
+      <label className="grid gap-1">Issuer<input {...text("issuer")} placeholder="https://login.example.com" className={input} /></label>
+      <label className="grid gap-1">Client ID<input {...text("clientId")} autoComplete="off" className={input} /></label>
+      <label className="grid gap-1">Client secret<input {...text("clientSecret")} type="password" autoComplete="new-password" placeholder={company.hasSecret ? "Saved (leave blank to keep it)" : ""} className={input} /></label>
+      <label className="grid gap-1">Email domains of your people<input {...text("domains")} placeholder="example.com, example.co.uk" className={input} /></label>
+      <label className="flex items-start gap-2 md:col-span-2"><input type="checkbox" {...tick("enabled")} className="mt-1" /><span>Switch single sign-on on. People then see &ldquo;Sign in with your company&rdquo; and use the email address on one of the domains above.</span></label>
+      <label className="flex items-start gap-2 md:col-span-2"><input type="checkbox" {...tick("jit")} className="mt-1" /><span>Create an account the first time someone from those domains signs in (a learner in this company). Leave off if directory sync or invitations add your people.</span></label>
+      <label className="flex items-start gap-2 md:col-span-2"><input type="checkbox" {...tick("enforce")} className="mt-1" /><span>Require it: learners and managers here can no longer sign in with a password or an emailed link. Admins keep their password. {company.verified ? "" : "Available after your first successful sign-in through it."}</span></label>
+      <div className="flex flex-wrap items-center gap-3 md:col-span-2"><button disabled={pending} className="btn !py-1.5 disabled:opacity-50"><Check size={14} />{pending ? "Saving…" : "Save single sign-on"}</button><Result state={state} /></div>
+    </form>
+  );
+}
+
+export function DirectoryForm({ company, tokens, endpoint }: { company: { id: number; name: string }; tokens: { id: number; label: string; createdAt: number; lastUsedAt: number | null }[]; endpoint: string }) {
+  const { ref, state, run, pending } = useSetup(makeDirectoryToken);
+  const day = (s: number) => new Date(s * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+  return (
+    <div className="card space-y-3 p-4 text-sm">
+      <h3 className="font-semibold">{company.name}</h3>
+      <p className="text-xs text-slate-400">In your directory, add a SCIM 2.0 app with this base URL and a bearer token: <code className="select-all rounded bg-black/5 px-1">{endpoint}</code></p>
+      {tokens.length > 0 && <ul className="space-y-1">{tokens.map((t) => (
+        <li key={t.id} className="flex items-center gap-2"><span className="flex-1">{t.label || "Token"} <span className="text-xs text-slate-400">made {day(t.createdAt)}{t.lastUsedAt ? `, last used ${day(t.lastUsedAt)}` : ", never used"}</span></span>
+          <form action={revokeDirectoryToken.bind(null, company.id, t.id)}><button className="text-xs text-slate-400 underline">Revoke</button></form></li>))}</ul>}
+      <form ref={ref} action={run} className="flex flex-wrap items-end gap-2">
+        <input type="hidden" name="companyId" value={company.id} />
+        <input name="label" maxLength={60} placeholder="Label, like Okta" aria-label="Token label" className={input} />
+        <button disabled={pending} className="btn !py-1.5 disabled:opacity-50"><Plus size={14} />{pending ? "Making…" : "Make a token"}</button>
+        <Result state={state} />
+      </form>
+    </div>
   );
 }

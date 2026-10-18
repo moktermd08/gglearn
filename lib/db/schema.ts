@@ -28,6 +28,13 @@ export const users = sqliteTable("users", {
   // "yes": a friend who joined a contest from its invite link (lib/guestLink.ts). Not part of any company: nothing is required of them and no manager is
   // expected to set them up. Text, not a boolean, for the same reason as seasonBoard.
   guest: text("guest", { enum: ["no", "yes"] }).notNull().default("no"),
+  // who brought this person in: the owner of the referral link, share card or race link they came through (lib/referrals.ts). Null for everyone else.
+  referredBy: integer("referred_by"),
+  // Email reminders and the weekly recap (lib/nudges.ts). Opt-in: "off" until the person says yes at sign-up, on their profile or on the dashboard;
+  // "declined" once they have said no to the dashboard question, so it is not asked again. Every email carries a one-click unsubscribe.
+  // Whether this person chose to play the weekly league in the cross-company arena. Only counts while their company allows it.
+  openLeague: text("open_league", { enum: ["no", "yes"] }).notNull().default("no"),
+  emailNudges: text("email_nudges", { enum: ["off", "on", "declined"] }).notNull().default("off"),
   createdAt: integer("created_at").notNull().default(now),
 });
 
@@ -51,6 +58,12 @@ export const companies = sqliteTable("companies", {
   // people cannot change it; "choice" (the default) is hard unless a person switches themselves to soft; "soft" never locks, it only recommends an order.
   journeyLock: text("journey_lock", { enum: ["choice", "hard", "soft"] }).notNull().default("choice"),
   certSignerTitle: text("cert_signer_title").notNull().default(""),
+  // A public page at /c/<slug> in this company's own look (lib/entry.ts). "off" (the default) means there is no page; "customers" lets anyone
+  // create a customer account here and take the company's customer-facing topics. `entryText` is the welcome line shown on it.
+  entryMode: text("entry_mode", { enum: ["off", "customers"] }).notNull().default("off"),
+  entryText: text("entry_text").notNull().default(""),
+  // Whether this company's people may choose to play the weekly league against people from other companies (lib/openLeague.ts). "no" by default.
+  leagueOpen: text("league_open", { enum: ["no", "yes"] }).notNull().default("no"),
 });
 
 export const brands = sqliteTable("brands", {
@@ -334,6 +347,137 @@ export const invites = sqliteTable("invites", {
   createdAt: integer("created_at").notNull().default(now),
   expiresAt: integer("expires_at").notNull(),
   usedAt: integer("used_at"),
+});
+
+// A team anyone can start: friends, a class, a study group, a community. Its members see each other's names, levels and weekly XP, and the owner can
+// start a race for all of them. Not tied to a company; a person can be in a team and in a company at once. The join link is the row id plus a
+// signature (lib/teams.ts); `joinOpen` switches it on and off, and `archivedAt` closes the team.
+export const teams = sqliteTable("teams", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  ownerId: integer("owner_id").notNull().references(() => users.id),
+  joinOpen: integer("join_open", { mode: "boolean" }).notNull().default(true),
+  // "class": the owner is a teacher who sees every student's progress and sets assignments; students see only their own (lib/classes.ts). "team": everyone sees the weekly board.
+  kind: text("kind", { enum: ["team", "class"] }).notNull().default("team"),
+  createdAt: integer("created_at").notNull().default(now),
+  archivedAt: integer("archived_at"),
+});
+export const teamMembers = sqliteTable("team_members", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  teamId: integer("team_id").notNull().references(() => teams.id),
+  userId: integer("user_id").notNull().references(() => users.id),
+  joinedAt: integer("joined_at").notNull().default(now),
+}, (t) => [uniqueIndex("team_members_unique").on(t.teamId, t.userId), index("team_members_user").on(t.userId)]);
+
+// Streak freezes (lib/freezes.ts): a ledger of freezes a person was given ("grant") and spent ("used", with the missed day it covered). What they hold is
+// grants minus used. The unique key stops the same milestone being paid twice and the same day being covered twice.
+export const streakFreezes = sqliteTable("streak_freezes", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  kind: text("kind", { enum: ["grant", "used"] }).notNull(),
+  key: text("key").notNull(), // "welcome", "s7:<first day of the streak>:<7|14|...>" or "used:<day>"
+  day: text("day"), // for "used": the missed day it covered (YYYY-MM-DD, UTC)
+  createdAt: integer("created_at").notNull().default(now),
+}, (t) => [uniqueIndex("streak_freezes_unique").on(t.userId, t.key)]);
+
+// An emailed sign-in link (lib/loginLink.ts): sign in without a password. Only the token's hash is kept, it works once, and it lasts 15 minutes.
+export const loginLinks = sqliteTable("login_links", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  tokenHash: text("token_hash").notNull().unique(),
+  createdAt: integer("created_at").notNull().default(now),
+  expiresAt: integer("expires_at").notNull(),
+  usedAt: integer("used_at"),
+}, (t) => [index("login_link_user").on(t.userId)]);
+
+// A password-reset link (lib/passwordReset.ts). Only the hash of the token is kept, it works once, and it expires an hour after it is asked for.
+export const passwordResets = sqliteTable("password_resets", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  tokenHash: text("token_hash").notNull().unique(),
+  createdAt: integer("created_at").notNull().default(now),
+  expiresAt: integer("expires_at").notNull(),
+  usedAt: integer("used_at"),
+}, (t) => [index("password_reset_user").on(t.userId)]);
+
+// One row per reminder or recap sent to a person: the unique key is what stops the same email going twice, even if two runs overlap.
+export const emailLog = sqliteTable("email_log", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  kind: text("kind").notNull(), // "recap" | "streak"
+  key: text("key").notNull(), // the week (recap) or the day (streak) it was for
+  sentAt: integer("sent_at").notNull().default(now),
+}, (t) => [uniqueIndex("email_log_unique").on(t.userId, t.kind, t.key)]);
+
+// Friends (lib/friends.ts). A friendship is mutual and agreed: a request the other person accepts, or a friend link both people used. `requesterId` asked,
+// `addresseeId` was asked (for a link, the person who shared it asked and the person who opened it agreed). Friends see each other's week and real achievements.
+export const friendships = sqliteTable("friendships", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  requesterId: integer("requester_id").notNull().references(() => users.id),
+  addresseeId: integer("addressee_id").notNull().references(() => users.id),
+  status: text("status", { enum: ["pending", "accepted"] }).notNull().default("pending"),
+  createdAt: integer("created_at").notNull().default(now),
+  respondedAt: integer("responded_at"),
+}, (t) => [uniqueIndex("friendship_pair").on(t.requesterId, t.addresseeId), index("friendship_addressee").on(t.addresseeId, t.status)]);
+
+// A cheer: one friend's thumbs-up on one thing another friend did. One per person per event. `eventKey` names the event in the feed (lib/friends.ts).
+export const cheers = sqliteTable("cheers", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  fromId: integer("from_id").notNull().references(() => users.id),
+  toId: integer("to_id").notNull().references(() => users.id),
+  eventKey: text("event_key").notNull(),
+  createdAt: integer("created_at").notNull().default(now),
+}, (t) => [uniqueIndex("cheer_unique").on(t.fromId, t.eventKey), index("cheer_to").on(t.toId)]);
+
+// A teacher's assignment for a class: reach this level in this topic by this date. Whether a student has done it is worked out from their real exams, never stored.
+export const classAssignments = sqliteTable("class_assignments", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  teamId: integer("team_id").notNull().references(() => teams.id),
+  trackId: integer("track_id").notNull().references(() => tracks.id),
+  level: integer("level").notNull(), // the level to have passed
+  dueAt: integer("due_at").notNull(),
+  createdAt: integer("created_at").notNull().default(now),
+  removedAt: integer("removed_at"),
+}, (t) => [index("class_assignment_team").on(t.teamId)]);
+
+// A mentor: someone a learner chose to share their progress and goals with (lib/mentoring.ts). The learner (mentee) invites; the mentor accepts; either can end it.
+export const mentorships = sqliteTable("mentorships", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  mentorId: integer("mentor_id").notNull().references(() => users.id),
+  menteeId: integer("mentee_id").notNull().references(() => users.id),
+  // mentor: chosen by the learner to coach them. parent: a parent or guardian following a child's progress (lib/mentoring.ts). Same consent, different words and caps.
+  kind: text("kind", { enum: ["mentor", "parent"] }).notNull().default("mentor"),
+  createdAt: integer("created_at").notNull().default(now),
+}, (t) => [uniqueIndex("mentorship_pair").on(t.mentorId, t.menteeId), index("mentorship_mentee").on(t.menteeId)]);
+
+// Someone who backs a learner to reach a level in one topic (lib/sponsors.ts). The learner asks (a signed link naming the topic and level); the sponsor presses a button.
+// The sponsor sees progress on that one goal and nothing else, and is told when it is reached.
+export const sponsorships = sqliteTable("sponsorships", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  sponsorId: integer("sponsor_id").notNull().references(() => users.id),
+  learnerId: integer("learner_id").notNull().references(() => users.id),
+  trackId: integer("track_id").notNull().references(() => tracks.id),
+  level: integer("level").notNull(),
+  createdAt: integer("created_at").notNull().default(now),
+  reachedAt: integer("reached_at"),
+  endedAt: integer("ended_at"),
+}, (t) => [uniqueIndex("sponsorship_goal").on(t.sponsorId, t.learnerId, t.trackId, t.level), index("sponsorship_learner").on(t.learnerId)]);
+
+// One link for a whole team: anyone who opens it can create their own account in the company, brand or project it names, until it is full,
+// expires or is switched off. Learner access only, whoever made it. The link itself is not stored: it is the row id plus a signature
+// (lib/joinLinks.ts), so a manager can copy it again later and a revoked row stops it at once.
+export const joinLinks = sqliteTable("join_links", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  label: text("label").notNull().default(""),
+  jobRole: text("job_role").notNull(),
+  audience: text("audience", { enum: ["staff", "customer"] }).notNull().default("staff"),
+  scopes: text("scopes").notNull().default(""), // "company:1,brand:2,project:3"
+  createdBy: integer("created_by").notNull().references(() => users.id),
+  maxUses: integer("max_uses").notNull(),
+  uses: integer("uses").notNull().default(0),
+  expiresAt: integer("expires_at").notNull(),
+  revokedAt: integer("revoked_at"),
+  createdAt: integer("created_at").notNull().default(now),
 });
 
 // A profile photo is optional and opt-in; people without one get a generated face. Kept out of `users` so
@@ -663,6 +807,55 @@ export const seasonClosed = sqliteTable(
   (t) => [uniqueIndex("season_closed_pk").on(t.kind, t.key)],
 );
 
+// Live duels (lib/duel.ts, lib/duelRules.ts): a short head-to-head quiz two people play at the same moment, or one person plays against a simulated rival.
+// The schedule is never stored: it is worked out from `startedAt` (server milliseconds) and the answers' own times.
+export const duels = sqliteTable("duels", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  code: text("code").notNull().unique(), // unguessable: it is the link
+  trackId: integer("track_id").notNull().references(() => tracks.id),
+  hostId: integer("host_id").notNull().references(() => users.id),
+  guestId: integer("guest_id").references(() => users.id), // null while waiting, and when the opponent is a simulated rival
+  botSeed: text("bot_seed"), // set when the opponent is a simulated rival; it decides its whole match
+  status: text("status", { enum: ["waiting", "live", "done", "canceled"] }).notNull().default("waiting"),
+  questionIds: text("question_ids", { mode: "json" }).$type<number[]>(),
+  startedAt: integer("started_at"), // server ms: the countdown begins here
+  createdAt: integer("created_at").notNull().default(now),
+  finishedAt: integer("finished_at"),
+  hostPoints: integer("host_points"),
+  guestPoints: integer("guest_points"), // the simulated rival's too, when there is one
+});
+export const duelAnswers = sqliteTable("duel_answers", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  duelId: integer("duel_id").notNull().references(() => duels.id),
+  userId: integer("user_id").notNull().references(() => users.id),
+  qIndex: integer("q_index").notNull(),
+  choice: text("choice").notNull(),
+  correct: integer("correct", { mode: "boolean" }).notNull(),
+  afterMs: integer("after_ms").notNull(), // how long after the question opened
+  points: integer("points").notNull(),
+  answeredAt: integer("answered_at").notNull(), // server ms
+}, (t) => [uniqueIndex("duel_answer_unique").on(t.duelId, t.userId, t.qIndex)]);
+
+// The weekly league (lib/league.ts). One row per person per week they took part: the tier they played in, their cohort of up to 30, and, once the week is
+// settled, their points, rank and what happened (moved up, down or stayed). Next week's tier is worked out from the last settled row, so nothing drifts.
+export const leagueEntries = sqliteTable(
+  "league_entries",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    key: text("key").notNull(), // the week, like 2026-W41
+    audience: text("audience", { enum: ["staff", "customer"] }).notNull(),
+    arena: text("arena").notNull(), // who competes with whom (lib/arena.ts)
+    userId: integer("user_id").notNull().references(() => users.id),
+    tier: integer("tier").notNull(), // 0 = Bronze ... 7 = Diamond
+    cohort: integer("cohort").notNull(), // 1, 2, 3... within the same week, audience, arena and tier
+    points: integer("points"),
+    rank: integer("rank"),
+    outcome: text("outcome", { enum: ["up", "down", "stay"] }),
+  },
+  (t) => [uniqueIndex("league_entry_unique").on(t.key, t.userId), index("league_entry_group").on(t.key, t.audience, t.arena, t.tier, t.cohort), index("league_entry_user").on(t.userId)],
+);
+export const leagueClosed = sqliteTable("league_closed", { key: text("key").primaryKey(), settledAt: integer("settled_at").notNull().default(now) });
+
 export const seasonResults = sqliteTable(
   "season_results",
   {
@@ -705,7 +898,7 @@ export const shareCards = sqliteTable(
     id: integer("id").primaryKey({ autoIncrement: true }),
     code: text("code").notNull().unique(),
     userId: integer("user_id").notNull().references(() => users.id),
-    kind: text("kind", { enum: ["badge", "season", "level", "streak"] }).notNull(),
+    kind: text("kind", { enum: ["badge", "season", "level", "streak", "pass", "cert", "race", "league", "duel"] }).notNull(),
     ref: text("ref").notNull(), // what it is about: a badge key, "week:2026-W41", "level", "streak"
     headline: text("headline").notNull(), // the big text on the card: "#2", "Level 12", "30 days"
     title: text("title").notNull(),
@@ -957,3 +1150,39 @@ export const integritySnapshots = sqliteTable(
   },
   (t) => [index("integrity_snapshot_session").on(t.sessionId)],
 );
+
+// Directory sync (lib/scim.ts). A company's identity provider (Okta, Entra ID, Google Workspace...) calls our SCIM endpoints with one of these tokens to create,
+// update and switch off its people. Only the SHA-256 of a token is kept; the token itself is shown once, when it is made.
+export const directoryTokens = sqliteTable("directory_tokens", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  companyId: integer("company_id").notNull().references(() => companies.id),
+  label: text("label").notNull().default(""),
+  tokenHash: text("token_hash").notNull().unique(),
+  createdAt: integer("created_at").notNull().default(now),
+  lastUsedAt: integer("last_used_at"),
+  revokedAt: integer("revoked_at"),
+}, (t) => [index("directory_token_company").on(t.companyId)]);
+
+// The people a company's directory manages: only these can be changed through sync, never anyone else (an admin, someone in two companies, a stranger).
+export const directoryUsers = sqliteTable("directory_users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  companyId: integer("company_id").notNull().references(() => companies.id),
+  userId: integer("user_id").notNull().references(() => users.id),
+  externalId: text("external_id").notNull().default(""),
+  createdAt: integer("created_at").notNull().default(now),
+}, (t) => [uniqueIndex("directory_user_pair").on(t.companyId, t.userId), index("directory_user_user").on(t.userId)]);
+
+// Single sign-on for a company (lib/sso.ts): its OpenID Connect provider, the email domains that belong to it, and the rules for who may come in this way.
+// The client secret is stored encrypted (AES-GCM, key derived from SESSION_SECRET), never in clear.
+export const companySso = sqliteTable("company_sso", {
+  companyId: integer("company_id").primaryKey().references(() => companies.id),
+  enabled: text("enabled", { enum: ["no", "yes"] }).notNull().default("no"),
+  issuer: text("issuer").notNull().default(""),
+  clientId: text("client_id").notNull().default(""),
+  clientSecret: text("client_secret").notNull().default(""),
+  domains: text("domains").notNull().default(""), // comma-separated email domains
+  jit: text("jit", { enum: ["no", "yes"] }).notNull().default("no"), // create an account on first sign-in for someone in those domains
+  enforce: text("enforce", { enum: ["no", "yes"] }).notNull().default("no"), // learners and managers here must use SSO (admins can always use a password)
+  verifiedAt: integer("verified_at"), // set when someone first signs in through it; SSO can only be enforced after that, so a wrong setting cannot lock a company out
+  updatedAt: integer("updated_at").notNull().default(now),
+});

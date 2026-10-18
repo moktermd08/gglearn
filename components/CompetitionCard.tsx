@@ -36,8 +36,10 @@ export function CompetitionCard({ card }: { card: Card }) {
         <div className="bar mt-2 !h-1.5" title="Time elapsed"><i style={{ width: `${elapsed * 100}%`, background: state === "live" ? undefined : "#64748b" }} /></div>
       )}
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
-        <span className="inline-flex items-center gap-1"><Users size={12} />{humans} {humans === 1 ? "person" : "people"}</span>
-        {bots > 0 && <span className="inline-flex items-center gap-1"><Bot size={12} className="text-violet-300" />{bots} bot{bots === 1 ? "" : "s"}</span>}
+        {humans > 0 ? <span className="inline-flex items-center gap-1"><Users size={12} />{humans} {humans === 1 ? "person" : "people"}</span>
+          : state === "finished" ? <span className="inline-flex items-center gap-1"><Users size={12} />Nobody joined</span>
+          : <span className="inline-flex items-center gap-1 font-semibold text-indigo-500"><Users size={12} />Be the first to join</span>}
+        {bots > 0 && <span className="inline-flex items-center gap-1" title="Simulated: they follow a published daily schedule and do not really study"><Bot size={12} className="text-violet-300" />{bots} simulated rival{bots === 1 ? "" : "s"}</span>}
         {state === "live" && <span className="inline-flex items-center gap-1"><Clock size={12} />ends in {span(c.endsAt - t)}</span>}
         {state === "upcoming" && <span className="inline-flex items-center gap-1"><Clock size={12} />starts in {span(c.startsAt - t)}</span>}
       </div>

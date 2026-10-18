@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { CalendarDays, Flame, GraduationCap, Medal, Sparkles, Target, Trophy } from "lucide-react";
+import { CalendarDays, Flame, GraduationCap, Medal, Sparkles, Target, Trophy, Users } from "lucide-react";
+import { InviteFriendsCard } from "@/components/InviteFriendsCard";
 import { Donut, PageHero, PALETTE, StatTile } from "@/components/charts";
 import { BadgeTile, PlayerLevelCard, StreakCard, TIER, badgeDate } from "@/components/Achievements";
 import { requireUser } from "@/lib/auth";
@@ -19,6 +20,7 @@ const GROUP: Record<string, { Icon: typeof Flame; color: string; tone: string }>
   Mastery: { Icon: GraduationCap, color: PALETTE.emerald, tone: "bg-emerald-500/15 text-emerald-300" },
   Contests: { Icon: Trophy, color: PALETTE.amber, tone: "bg-amber-500/15 text-amber-300" },
   Seasons: { Icon: CalendarDays, color: PALETTE.pink, tone: "bg-pink-500/15 text-pink-300" },
+  Community: { Icon: Users, color: "#14b8a6", tone: "bg-teal-500/15 text-teal-400" },
 };
 const TIER_COLOR = { bronze: "#ea8a3c", silver: "#94a3b8", gold: "#eab308", legend: "#d946ef" } as const;
 
@@ -55,7 +57,7 @@ export default async function Achievements() {
               <span className={`mt-1 hidden truncate text-center text-[9px] font-bold uppercase tracking-wide sm:block ${i === titleAt ? "text-indigo-300" : "text-slate-500"}`}>{t}</span>
             </li>))}</ol>
           <ShareButton kind="level" refKey="level" label="Share my level" className="mt-3" /></section>
-        <section className="card p-5" aria-label="Streak"><StreakCard s={p.streak} />{p.streak.longest >= 3 && <ShareButton kind="streak" refKey="streak" label="Share my streak" className="mt-3" />}</section>
+        <section className="card p-5" aria-label="Streak"><StreakCard s={p.streak} freezes={p.freezes} />{p.streak.longest >= 3 && <ShareButton kind="streak" refKey="streak" label="Share my streak" className="mt-3" />}</section>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -90,6 +92,8 @@ export default async function Achievements() {
             </li>))}</ul>
         </section>
       )}
+
+      <InviteFriendsCard userId={me.id} />
 
       {BADGE_GROUPS.map((g) => (
         <section key={g} aria-label={`${g} badges`}>

@@ -1,7 +1,7 @@
 /** Checks the company/brand profile and the tool access register: npm run check:access (uses DATABASE_FILE or data/gglearn.db; adds and removes its own rows). Run db:push first. */
 import { eq, like } from "drizzle-orm";
 import { and } from "drizzle-orm";
-import { brands, companies, db, enrollments, knowledgeChanges, knowledgeItems, profileEntries, profileFields, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, tools, userScopes, users } from "../lib/db";
+import { brands, companies, db, enrollments, knowledgeChanges, knowledgeItems, profileEntries, profileFields, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, leagueEntries, tools, streakFreezes, userScopes, users } from "../lib/db";
 import { SECTIONS, completenessOf, fieldsFor, profileOf, rowsOf, saveAnswer, saveSectionMeta } from "../lib/profile";
 import { addCustomField, retireCustomField } from "../lib/profileAdmin";
 import { TEMPLATES, applyTemplate, previewTemplate } from "../lib/profileTemplates";
@@ -196,7 +196,7 @@ try {
   for (const [sc, id] of [["company", REF], ["brand", db.select().from(brands).where(eq(brands.kind, "company")).get()?.id ?? -1]] as const) {
     db.delete(profileEntries).where(and(eq(profileEntries.scope, sc), eq(profileEntries.refId, id))).run(); db.delete(profileFields).where(and(eq(profileFields.scope, sc), eq(profileFields.refId, id))).run(); db.delete(profileSections).where(and(eq(profileSections.scope, sc), eq(profileSections.refId, id))).run();
   }
-  for (const id of ids) db.delete(users).where(eq(users.id, id)).run();
+  for (const id of ids) { db.delete(streakFreezes).where(eq(streakFreezes.userId, id)).run(); db.delete(leagueEntries).where(eq(leagueEntries.userId, id)).run(); db.delete(users).where(eq(users.id, id)).run(); }
 }
 console.log(fails ? `\n${fails} check(s) FAILED` : "\nall passed");
 process.exit(fails ? 1 : 0);

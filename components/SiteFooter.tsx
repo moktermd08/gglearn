@@ -21,7 +21,7 @@ export function SiteFooter({ user, look = DEFAULT_LOOK }: { user: User; look?: L
               : <span className="grid h-8 w-8 place-items-center rounded-lg text-[#fff]" style={{ background: look.accent ? "var(--brand)" : "linear-gradient(135deg,#4f46e5,#9333ea 70%,#db2777)" }}><Swords size={17} aria-hidden /></span>}
             <span className="gradient-text">{look.name}</span>
           </Link>
-          <p className="mt-3 text-sm text-slate-400">Role-based training for your team and customers: a learning path for every role, level exams, certificates and career progression.</p>
+          <p className="mt-3 text-sm text-slate-400">Learn alone, race friends, or train a team: level exams, certificates anyone can verify, and 20 levels from Novice to Titan.</p>
         </div>
         <nav aria-label="Learn"><h2 className={head}>Learn</h2>
           <ul className={col}>

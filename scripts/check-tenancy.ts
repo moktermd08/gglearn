@@ -1,6 +1,6 @@
 /** Checks company-scoped admin reach against the real structure: npm run check:tenancy (uses DATABASE_FILE or data/gglearn.db; adds and removes its own test users). */
 import { eq, like } from "drizzle-orm";
-import { brands, certificateEvents, invites, certificates, companies, competitions, db, notifications, rewardAwards, rewardRules, runs, seasonClosed, seasonResults, tracks, userBadges, userScopes, users } from "../lib/db";
+import { brands, certificateEvents, invites, certificates, companies, competitions, db, notifications, rewardAwards, rewardRules, runs, seasonClosed, leagueEntries, seasonResults, streakFreezes, tracks, userBadges, userScopes, users } from "../lib/db";
 import { addBrand, addCompany, addTrack, saveBranding, uniqueSlug } from "../lib/setup";
 import { awardForPass, bonusXp, rulesFor } from "../lib/rewards";
 import { removeRule, saveRule, settleAward } from "../lib/rewardsAdmin";
@@ -409,7 +409,7 @@ try {
   for (const tr of db.select().from(tracks).where(like(tracks.slug, "zz-%")).all()) db.delete(tracks).where(eq(tracks.id, tr.id)).run();
   for (const b of db.select().from(brands).where(like(brands.slug, "zz-%")).all()) db.delete(brands).where(eq(brands.id, b.id)).run();
   for (const c of db.select().from(companies).where(like(companies.slug, "zz-%")).all()) db.delete(companies).where(eq(companies.id, c.id)).run();
-  for (const u of t) { db.delete(userScopes).where(eq(userScopes.userId, u.id)).run(); db.delete(users).where(eq(users.id, u.id)).run(); }
+  for (const u of t) { db.delete(userScopes).where(eq(userScopes.userId, u.id)).run(); db.delete(streakFreezes).where(eq(streakFreezes.userId, u.id)).run(); db.delete(leagueEntries).where(eq(leagueEntries.userId, u.id)).run(); db.delete(users).where(eq(users.id, u.id)).run(); }
 }
 console.log(fails ? `${fails} FAILED` : "all passed");
 process.exit(fails ? 1 : 0);

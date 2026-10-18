@@ -2,6 +2,7 @@ import Link from "next/link";
 import { and, asc, eq } from "drizzle-orm";
 import { ArrowUp, Building2, CalendarDays, Clock, Crown, Flame, Info, Medal, Sparkles, Target, Trophy, UserRound, Users } from "lucide-react";
 import { EmptyState, PageHero, PALETTE, StatTile } from "@/components/charts";
+import { WhereYouBelong } from "@/components/WhereYouBelong";
 import { Competitor } from "@/components/Competitor";
 import { requireUser } from "@/lib/auth";
 import { MIN_MEMBERS, groupsOf, rankGroups, type GroupKind } from "@/lib/groups";
@@ -103,6 +104,7 @@ export default async function Seasons({ searchParams }: { searchParams: Promise<
 
   return (
     <div className="space-y-8">
+      <WhereYouBelong userId={me.id} variant="note" />
       <PageHero Icon={CalendarDays} tone="violet" title="Seasons" sub="A fresh leaderboard every week and every month. Gain levels and show up on more days to climb. Finished seasons are final, and the best earn medals and badges.">
         <Link href="/campaigns" className="btn"><Trophy size={16} />Find a campaign</Link>
       </PageHero>

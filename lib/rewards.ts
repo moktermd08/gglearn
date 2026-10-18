@@ -1,4 +1,5 @@
 import { and, eq, sql } from "drizzle-orm";
+import { settleSponsorships } from "@/lib/sponsors";
 import { randomBytes } from "node:crypto";
 import { brands, db, rewardAwards, rewardRules, tracks } from "@/lib/db";
 import { CERT_LEVELS, MAX_LEVEL } from "@/lib/levels";
@@ -68,6 +69,7 @@ export function awardForPass(userId: number, trackId: number, level: number, sco
       if (row) given.push(row);
     }
   });
+  settleSponsorships(userId); // anyone who backed this learner to reach this level is told
   const name = db.select({ n: tracks.name }).from(tracks).where(eq(tracks.id, trackId)).get()?.n ?? "a track";
   for (const a of given) {
     if (a.kind === "certificate") continue; // the certificate already announces itself

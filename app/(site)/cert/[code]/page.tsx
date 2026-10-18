@@ -7,6 +7,11 @@ import { LEVELS, TIERS, certTitle, tierOf } from "@/lib/levels";
 import { AlertTriangle, Ban, BadgeCheck, CalendarDays, Hourglass, Percent, Printer, ShieldAlert } from "lucide-react";
 import { RankEmblem } from "@/components/RankEmblem";
 import { lookFor, themeStyle } from "@/lib/brand";
+import { currentUser } from "@/lib/auth";
+import { linkedInAddUrl } from "@/lib/linkedin";
+import { siteUrl } from "@/lib/share";
+import { topicLabel } from "@/lib/topicName";
+import { ShareButton } from "@/components/ShareButton";
 import { certState, signatureStatus } from "@/lib/certs";
 
 const day = (t: number) => new Date(t * 1000).toISOString().slice(0, 10);
@@ -22,6 +27,8 @@ export default async function Cert({ params }: { params: Promise<{ code: string 
   if (!row) notFound();
   const { c, t, u } = row, hue = TIERS[tierOf(c.level)].hue;
   const look = lookFor(u.id); // the certificate carries its holder's company, whoever is looking
+  const me = await currentUser(), mine = me?.id === c.userId;
+  const addToLinkedIn = mine ? linkedInAddUrl({ name: `${topicLabel(t.name)}: ${certTitle(c.level)}`, issuer: look.company ? look.issuer : look.name, issuedAt: c.renewedAt ?? c.issuedAt, expiresAt: c.expiresAt, code: c.code, url: `${await siteUrl()}/cert/${c.code}` }) : null;
   const life = certState(c), sig = signatureStatus(c), altered = sig === "altered", revoked = !!c.revokedAt, expired = life.state === "expired";
   return (
     <div className="mx-auto max-w-3xl space-y-4" style={themeStyle(look) as React.CSSProperties | undefined}>
@@ -39,6 +46,7 @@ export default async function Cert({ params }: { params: Promise<{ code: string 
           {!revoked && life.expiresAt != null && <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 ${expired ? "bg-rose-500/15 text-rose-600" : life.state === "expiring" ? "bg-amber-500/15 text-amber-600" : "bg-black/5"}`}><Hourglass size={14} />{expired ? "Expired" : "Valid until"} {day(life.expiresAt)}</span>}
         </div>
       </CertFrame>
+      {mine && !altered && !revoked && !expired && <div className="flex flex-wrap items-center justify-center gap-2"><ShareButton kind="cert" refKey={c.code} label="Share this certificate" prominent />{addToLinkedIn && <a href={addToLinkedIn} target="_blank" rel="noopener noreferrer" className="btn btn-ghost"><svg width="16" height="16" viewBox="0 0 24 24" fill="#0a66c2" aria-hidden><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>Add to LinkedIn profile</a>}</div>}
       {altered && <p role="alert" className="flex items-start justify-center gap-2 rounded-xl bg-rose-500/10 p-3 text-center text-sm font-semibold text-rose-600"><ShieldAlert size={18} className="mt-0.5 shrink-0" />This record does not match its signature. Do not rely on it; ask {look.name} to confirm.</p>}
       {!altered && revoked && <p role="status" className="flex items-start justify-center gap-2 rounded-xl bg-rose-500/10 p-3 text-center text-sm font-semibold text-rose-600"><Ban size={18} className="mt-0.5 shrink-0" />This certificate was revoked on {day(c.revokedAt!)} and is no longer valid. Ask {look.name} if you need to know more.</p>}
       {!altered && !revoked && expired && <p role="status" className="flex items-start justify-center gap-2 rounded-xl bg-rose-500/10 p-3 text-center text-sm font-semibold text-rose-600"><AlertTriangle size={18} className="mt-0.5 shrink-0" />This certificate expired on {day(life.expiresAt!)}. It was genuine, but it is no longer current.</p>}

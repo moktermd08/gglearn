@@ -1,6 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { requireManager } from "@/lib/auth";
+import { dropDirectoryToken, newDirectoryToken, saveSso } from "@/lib/ssoAdmin";
 import { addBrand, addCompany, addTrack, saveBranding, saveLearningOrder, type SetupState } from "@/lib/setup";
 
 export type { SetupState };
@@ -23,4 +24,19 @@ export async function saveCompanyLearningOrder(_: SetupState, fd: FormData): Pro
   const r = saveLearningOrder(await requireManager(), fd);
   if (r?.done) { revalidatePath("/admin/setup"); revalidatePath("/map"); revalidatePath("/tracks", "layout"); }
   return r;
+}
+
+export async function saveCompanySso(_: SetupState, fd: FormData): Promise<SetupState> {
+  const r = await saveSso(await requireManager(), fd);
+  if (r?.done) revalidatePath("/admin/setup");
+  return r;
+}
+export async function makeDirectoryToken(_: SetupState, fd: FormData): Promise<SetupState> {
+  const r = newDirectoryToken(await requireManager(), fd);
+  if (r?.done) revalidatePath("/admin/setup");
+  return r;
+}
+export async function revokeDirectoryToken(companyId: number, tokenId: number) {
+  dropDirectoryToken(await requireManager(), companyId, tokenId);
+  revalidatePath("/admin/setup");
 }

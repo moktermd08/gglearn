@@ -5,14 +5,15 @@ import { createCompetition, type CreateState } from "../actions";
 import { BOT_TIERS } from "@/lib/bots";
 import { CURRENCIES, PRIZE_SPLIT_LABEL } from "@/lib/competitions-shared";
 
-type Topic = { id: number; name: string; kind: string; art: ReactNode };
+type Topic = { id: number; name: string; guest: boolean; kind: string; art: ReactNode };
 type Group = [string, Topic[]];
 
 const DAYS = [3, 7, 14, 30, 60, 90];
+const GOALS = [1, 2, 3, 5, 10];
 const STARTS = [[0, "Right now"], [1, "In 1 day"], [3, "In 3 days"], [7, "In 1 week"]] as const;
 const BOT_LOOK = { casual: "bg-sky-500/15 text-sky-300", steady: "bg-violet-500/15 text-violet-300", fierce: "bg-rose-500/15 text-rose-300" } as const;
 
-export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
+export default function NewCompetitionForm({ groups, popular = [] }: { groups: Group[]; popular?: { id: number; name: string }[] }) {
   const [state, run, pending] = useActionState<CreateState, FormData>(createCompetition, null);
   const [title, setTitle] = useState(""), [trackId, setTrackId] = useState(""), [find, setFind] = useState("");
   // typing narrows the list; the chosen topic always stays in it
@@ -30,29 +31,46 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
     <h2 className="flex items-center gap-3 text-lg font-bold"><span className={`grid h-9 w-9 place-items-center rounded-xl ${tone}`}><Icon size={18} /></span><span><span className="mr-1 text-slate-400">{n}.</span>{text}</span></h2>
   );
   const chip = (on: boolean) => `cursor-pointer rounded-full border-2 px-3.5 py-1.5 text-sm font-semibold transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-indigo-300 ${on ? "border-indigo-400 bg-indigo-500 text-[#fff]" : "border-black/10 bg-[#fff] text-slate-300 hover:border-indigo-300"}`;
-  const ready = !!trackId && title.trim().length >= 3;
+  const ready = !!trackId;
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); startTransition(() => run(fd)); }} className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
       <div className="min-w-0 space-y-5">
         <section className={section}>
           {head(Target, "bg-pink-500/15 text-pink-300", 1, "Topic and goal")}
-          <div><label className={label} htmlFor="title">Name your contest</label>
-            <input id="title" name="title" required minLength={3} maxLength={80} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Python sprint: team vs the bots" className={`${input} mt-1`} /></div>
-          <div><label className={label} htmlFor="trackId">Topic (hard skill or soft skill)</label>
+          <div><label className={label} htmlFor="title">Name it <span className="font-normal text-slate-400">(optional)</span></label>
+            <input id="title" name="title" maxLength={80} value={title} onChange={(e) => setTitle(e.target.value)} placeholder={topic ? `${topic.name} sprint` : "We will name it after the topic"} className={`${input} mt-1`} /></div>
+          <div><label className={label} htmlFor="trackId">Topic</label>
+            {popular.length > 0 && <div className="mt-1.5 flex flex-wrap gap-1.5" role="group" aria-label="Popular topics">{popular.map((t) => <button type="button" key={t.id} aria-pressed={String(t.id) === trackId} onClick={() => { setTrackId(String(t.id)); setFind(""); }} className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${String(t.id) === trackId ? "border-indigo-400 bg-indigo-500 text-[#fff]" : "border-black/10 bg-[#fff] text-slate-300 hover:border-indigo-300"}`}>{t.name}</button>)}</div>}
             <input type="search" value={find} onChange={(e) => setFind(e.target.value)} placeholder="Search topics: git, python, sales…" aria-label="Search topics" className={`${input} mt-1`} />
             <select id="trackId" name="trackId" required value={trackId} onChange={(e) => setTrackId(e.target.value)} className={`${input} mt-1`}>
               <option value="" disabled>Choose a topic…</option>
               {shown.map(([g, items]) => <optgroup key={g} label={g}>{items.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}</optgroup>)}
             </select></div>
 
-          <div>
-            <label className={label} htmlFor="goalLevels">Goal: levels to gain <b className="ml-1 rounded-full bg-indigo-500/12 px-2 py-0.5 text-indigo-300">{goal}</b></label>
-            <input id="goalLevels" name="goalLevels" type="range" min={1} max={20} value={goal} onChange={(e) => setGoal(Number(e.target.value))} className="mt-2 w-full" />
-            <div className="flex justify-between text-[10px] text-slate-400"><span>1</span><span>5</span><span>10</span><span>15</span><span>20</span></div>
-          </div>
+          <fieldset><legend className={label}>Goal: levels to gain</legend>
+            <input type="hidden" name="goalLevels" value={goal} />
+            <div className="mt-1.5 flex flex-wrap gap-2">{GOALS.map((g) => <button type="button" key={g} aria-pressed={goal === g} onClick={() => setGoal(g)} className={chip(goal === g)}>{g} level{g === 1 ? "" : "s"}</button>)}</div>
+            {!GOALS.includes(goal) && <p className="mt-1 text-xs text-slate-400">A custom goal of {goal} levels, set under More options.</p>}
+          </fieldset>
           <fieldset><legend className={label}>Length</legend>
             <div className="mt-1.5 flex flex-wrap gap-2">{DAYS.map((d) => <label key={d} className={chip(days === d)}><input type="radio" name="days" value={d} checked={days === d} onChange={() => setDays(d)} className="sr-only" />{d} days</label>)}</div></fieldset>
+        </section>
+
+
+        <details className="card group">
+          <summary className="flex cursor-pointer list-none items-center gap-3 p-5 font-bold">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-slate-500/15 text-slate-500"><Plus size={18} className="transition group-open:rotate-45" /></span>
+            <span>More options<span className="block text-xs font-normal text-slate-400">Simulated rivals, who can watch, prizes, start time, a description, a custom goal and the Architect twist. The defaults are fine.</span></span>
+          </summary>
+          <div className="space-y-5 border-t border-black/5 p-5">
+            <section className="space-y-4">
+              <h2 className="font-bold">Timing and details</h2>
+                        <div>
+            <label className={label} htmlFor="goalLevels">Goal: levels to gain <b className="ml-1 rounded-full bg-indigo-500/12 px-2 py-0.5 text-indigo-300">{goal}</b></label>
+            <input id="goalLevels" type="range" min={1} max={20} value={goal} onChange={(e) => setGoal(Number(e.target.value))} className="mt-2 w-full" />
+            <div className="flex justify-between text-[10px] text-slate-400"><span>1</span><span>5</span><span>10</span><span>15</span><span>20</span></div>
+          </div>
           <fieldset><legend className={label}>Starts</legend>
             <div className="mt-1.5 flex flex-wrap gap-2">{STARTS.map(([v, t]) => <label key={v} className={chip(start === v)}><input type="radio" name="startInDays" value={v} checked={start === v} onChange={() => setStart(v)} className="sr-only" />{t}</label>)}</div></fieldset>
 
@@ -63,10 +81,10 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
           <p className="text-xs text-slate-400">Progress is measured as levels <i>newly passed</i> after you start, so beginners and experts can race fairly. Spreading practice over several days beats cramming, so a longer contest usually teaches more.</p>
           <div><label className={label} htmlFor="description">Description (optional)</label>
             <textarea id="description" name="description" maxLength={500} rows={2} className={`${input} mt-1`} /></div>
-        </section>
 
+            </section>
         <section className={section}>
-          {head(Bot, "bg-violet-500/15 text-violet-300", 2, "Opponents")}
+          {head(Bot, "bg-violet-500/15 text-violet-300", 1, "Opponents")}
           <p className="text-sm text-slate-300">Race people, bots, or both. Bots are <b>simulated</b>: they follow a published daily schedule and do not really study. Each gets its own look and style.</p>
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {(Object.keys(BOT_TIERS) as (keyof typeof BOT_TIERS)[]).map((k) => (
@@ -91,7 +109,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
         </section>
 
         <section className={section}>
-          {head(Eye, "bg-sky-500/15 text-sky-300", 3, "Who can watch")}
+          {head(Eye, "bg-sky-500/15 text-sky-300", 2, "Who can watch")}
           <div className="grid gap-3 sm:grid-cols-2">
             {([["private", Lock, "Private", "Only people you invite can see or join it.", "bg-emerald-500/15 text-emerald-300"], ["public", Globe, "Public", "Anyone with the link can watch the live leaderboard, without signing in.", "bg-sky-500/15 text-sky-300"]] as const).map(([v, Icon, name, text, tone]) => (
               <label key={v} className={`relative cursor-pointer rounded-2xl border-2 p-4 transition hover:-translate-y-0.5 hover:shadow-md ${visibility === v ? "border-indigo-400 bg-indigo-500/10" : "border-black/10"}`}>
@@ -101,6 +119,10 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
               </label>
             ))}
           </div>
+          {topic?.guest && (
+            <label className="flex items-start gap-2 rounded-2xl bg-black/[.03] p-3 text-sm"><input type="checkbox" name="inviteLink" defaultChecked className="mt-1" />
+              <span><b>Create an invite link.</b> A friend with no account can join from it and sign up on the spot. Anyone who has the link can join, up to your limit, so keep it to people you trust. You can switch it off on the race page.</span></label>
+          )}
           {visibility === "public" && (
             <div className="space-y-2 rounded-2xl bg-black/[.03] p-3 text-sm">
               <label className="flex items-center gap-2"><input type="checkbox" name="openJoin" /> Let any signed-in learner join (otherwise invited people only)</label>
@@ -111,7 +133,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
         </section>
 
         <section className={section}>
-          {head(Coins, "bg-amber-500/15 text-amber-300", 4, "Reward")}
+          {head(Coins, "bg-amber-500/15 text-amber-300", 3, "Reward")}
           <div className="grid gap-3 sm:grid-cols-2">
             {([[false, Award, "Certificates", "Everyone who reaches the goal can claim one. First place is Champion.", "bg-sky-500/15 text-sky-300"], [true, Coins, "Add a cash prize", "Paid by you, outside gglearn, to the first to reach the goal.", "bg-amber-500/15 text-amber-300"]] as const).map(([v, Icon, name, text, tone]) => (
               <button type="button" key={name} onClick={() => setPrize(v)} aria-pressed={prize === v} className={`rounded-2xl border-2 p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${prize === v ? "border-indigo-400 bg-indigo-500/10" : "border-black/10"}`}>
@@ -136,7 +158,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
         </section>
 
         <section className={section}>
-          {head(Shuffle, "bg-fuchsia-500/15 text-fuchsia-300", 5, "Architect twist (optional)")}
+          {head(Shuffle, "bg-fuchsia-500/15 text-fuchsia-300", 4, "Architect twist (optional)")}
           <label className="flex items-start gap-2 text-sm"><input type="checkbox" name="twist" className="mt-1" />
             <span><b>Let a random racer rewrite one question for the others.</b> For each level, one person in the race is drawn by the server and shown one multiple-choice question,
               which they may reword for their rivals. They can also just pass, and then nothing changes.</span></label>
@@ -146,6 +168,8 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
             <li>It locks the moment a rival starts that level, so everyone faces it or nobody does. Racers only see who the Architect was after the contest ends.</li>
           </ul>
         </section>
+          </div>
+        </details>
       </div>
 
       {/* the contest as the people in it will see it */}
@@ -155,7 +179,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
             <div className="mb-3 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-slate-400"><Trophy size={13} />Your contest</div>
             <div className="flex items-center gap-3">
               {topic ? <div className="pop shrink-0" key={topic.id}>{topic.art}</div> : <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl border-2 border-dashed border-black/15 text-slate-300"><Target size={26} /></span>}
-              <div className="min-w-0"><div className="truncate text-lg font-extrabold leading-tight">{title.trim() || "Name your contest"}</div><div className="truncate text-xs text-slate-400">{topic ? topic.name : "Choose a topic"}</div></div>
+              <div className="min-w-0"><div className="truncate text-lg font-extrabold leading-tight">{title.trim() || (topic ? `${topic.name} sprint` : "Your race")}</div><div className="truncate text-xs text-slate-400">{topic ? topic.name : "Choose a topic"}</div></div>
             </div>
           </div>
           <ul className="space-y-2.5 border-t border-black/5 px-5 py-4 text-sm">
@@ -169,7 +193,7 @@ export default function NewCompetitionForm({ groups }: { groups: Group[] }) {
           <div className="space-y-2 border-t border-black/5 p-4">
             {state?.error && <p role="alert" className="slide-in flex items-start gap-1.5 rounded-xl bg-rose-500/10 p-2.5 text-sm text-rose-400"><TriangleAlert size={14} className="mt-0.5 shrink-0" />{state.error}</p>}
             <button disabled={pending} className="btn w-full !justify-center !py-3 text-base disabled:opacity-50">{pending ? "Creating…" : <>Create contest<Swords size={16} /></>}</button>
-            {!ready && <p className="text-center text-xs text-slate-400">Add a name and a topic to create it.</p>}
+            {!ready && <p className="text-center text-xs text-slate-400">Choose a topic to create it.</p>}
           </div>
         </div>
       </aside>

@@ -1,5 +1,6 @@
 import { and, asc, eq, like, sql } from "drizzle-orm";
-import { competitionMembers, competitions, db, tracks, users } from "@/lib/db";
+import { competitionMembers, competitions, db, tracks, userScopes, users } from "@/lib/db";
+import { pickOwner } from "@/lib/contestAdmin";
 import { CERT, XP, campaigns, type Campaign } from "@/content/campaigns";
 import { stateOf, type State } from "@/lib/competitions";
 import { periodAt } from "@/lib/seasons";
@@ -67,13 +68,18 @@ const rounds = (): Map<string, Round[]> => {
  *    Monday's work. Other campaigns get a fresh round starting now. Renewals are certificate-only: prizes are paid by the
  *    organiser, so they are offered once per campaign rather than open-ended on every round;
  *  - a campaign whose track is not in this database is skipped (listed in `waiting`);
- *  - with no active admin there is nobody to own the contests, so nothing is created (`noOrganiser`).
+ *  - with no admin who runs the whole academy there is nobody to own the contests, so nothing is created (`noOrganiser`).
  * Slugs are unique and inserts ignore conflicts, so two requests racing cannot create a round twice.
  * `at` is the time to act as (seconds); it exists so the calendar logic can be tested.
  */
 export function syncCampaigns(opts: { dry?: boolean; at?: number } = {}): SyncResult {
   const t = opts.at ?? now();
-  const owner = db.select({ id: users.id }).from(users).where(and(eq(users.role, "admin"), eq(users.status, "active"))).orderBy(asc(users.id)).get();
+  // the public campaigns belong to the platform owner: an admin who runs the whole academy. An admin tied to one company must never own them, or the
+  // campaigns would be listed only inside that company (lib/competitions.ts listedFor)
+  const scoped = new Set(db.select({ id: userScopes.userId }).from(userScopes).all().map((r) => r.id));
+  const ownerId = pickOwner(db.select({ id: users.id }).from(users).where(and(eq(users.role, "admin"), eq(users.status, "active"))).orderBy(asc(users.id)).all().map((a) => ({ id: a.id, scoped: scoped.has(a.id) })));
+  const owner = ownerId === null ? undefined : { id: ownerId };
+  if (owner && !opts.dry) db.update(competitions).set({ createdBy: owner.id }).where(and(like(competitions.slug, "camp-%"), sql`${competitions.createdBy} != ${owner.id}`)).run(); // rounds an earlier, wrong owner started come home
   const trackIds = new Map(db.select({ slug: tracks.slug, id: tracks.id }).from(tracks).all().map((r) => [r.slug, r.id]));
   const all = rounds();
   const waiting: string[] = [], jobs: { c: Campaign; trackId: number; slug: string; title: string; startsAt: number; endsAt: number; first: boolean }[] = [];

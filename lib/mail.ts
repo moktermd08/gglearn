@@ -8,7 +8,7 @@ import { MINUTE, allowed, hit } from "@/lib/rate-limit";
  * Without them nothing is sent and every screen falls back to what it did before (copy the link, or Open in email).
  * A send never throws: the caller gets { ok: false, error } and the person is told to use the link instead.
  */
-export type Mail = { to: string; subject: string; text: string; html: string; replyTo?: string };
+export type Mail = { to: string; subject: string; text: string; html: string; replyTo?: string; headers?: Record<string, string> };
 export type SendResult = { ok: true; id: string } | { ok: false; error: string };
 type Fetch = typeof fetch;
 
@@ -24,7 +24,7 @@ export async function sendMail(m: Mail, opts: { key?: string; env?: NodeJS.Proce
     const res = await (opts.fetchImpl ?? fetch)(`${(env.RESEND_API_URL?.trim() || "https://api.resend.com").replace(/\/$/, "")}/emails`, {
       method: "POST",
       headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json", ...(opts.key ? { "Idempotency-Key": opts.key } : {}) },
-      body: JSON.stringify({ from: env.MAIL_FROM, to: [m.to], subject: m.subject, text: m.text, html: m.html, ...(m.replyTo ? { reply_to: m.replyTo } : {}) }),
+      body: JSON.stringify({ from: env.MAIL_FROM, to: [m.to], subject: m.subject, text: m.text, html: m.html, ...(m.replyTo ? { reply_to: m.replyTo } : {}), ...(m.headers ? { headers: m.headers } : {}) }),
       signal: AbortSignal.timeout(10_000),
     });
     const body = (await res.json().catch(() => ({}))) as { id?: string; message?: string };
@@ -49,6 +49,37 @@ export function inviteMail(i: InviteMail): Mail {
 <p style="font-size:13px;color:#6b7280">The link works once and expires in 7 days. If the button does not work, copy this address into your browser:<br>${link}</p>
 <p style="font-size:13px;color:#6b7280">If you were not expecting this, you can ignore it.</p></div>`;
   return { to: i.to, subject: `${i.from} invited you to gglearn`, text, html, replyTo: i.replyTo };
+}
+
+const BUTTON = "display:inline-block;background:#4f46e5;color:#ffffff;text-decoration:none;padding:10px 18px;border-radius:10px;font-weight:600";
+const wrap = (inner: string) => `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:520px;margin:0 auto;color:#1f2937;line-height:1.5">${inner}</div>`;
+
+/** The password-reset email: one button, one hour, and what to do if it was not them. */
+export function resetMail(to: string, link: string, minutes: number, academy = "gglearn"): Mail {
+  const text = `Hi,\n\nSomeone asked to reset the password for your ${academy} account. If that was you, choose a new one here (the link works once and expires in ${minutes} minutes):\n${link}\n\nIf it was not you, ignore this email: your password stays as it is.`;
+  const l = escapeHtml(link);
+  return { to, subject: `Reset your ${academy} password`, text, html: wrap(`<p>Hi,</p><p>Someone asked to reset the password for your ${escapeHtml(academy)} account. If that was you, choose a new one:</p>
+<p><a href="${l}" style="${BUTTON}">Choose a new password</a></p>
+<p style="font-size:13px;color:#6b7280">The link works once and expires in ${minutes} minutes. If the button does not work, copy this address into your browser:<br>${l}</p>
+<p style="font-size:13px;color:#6b7280">If it was not you, ignore this email: your password stays as it is.</p>`) };
+}
+
+/** The sign-in link email: one button, fifteen minutes, and what to do if it was not them. */
+export function signInLinkMail(to: string, link: string, minutes: number, academy = "gglearn"): Mail {
+  const text = `Hi,\n\nHere is your sign-in link for ${academy}. Open it and press the button to sign in (it works once and expires in ${minutes} minutes):\n${link}\n\nIf you did not ask for this, ignore this email: nobody can sign in without it.`;
+  const l = escapeHtml(link);
+  return { to, subject: `Your ${academy} sign-in link`, text, html: wrap(`<p>Hi,</p><p>Here is your sign-in link for ${escapeHtml(academy)}. Open it and press the button to sign in:</p>
+<p><a href="${l}" style="${BUTTON}">Open my sign-in page</a></p>
+<p style="font-size:13px;color:#6b7280">It works once and expires in ${minutes} minutes. If the button does not work, copy this address into your browser:<br>${l}</p>
+<p style="font-size:13px;color:#6b7280">If you did not ask for this, ignore this email: nobody can sign in without it.</p>`) };
+}
+
+/** The notice after a password has been changed by a reset, so the real owner finds out if it was not them. */
+export function passwordChangedMail(to: string, loginLink: string, academy = "gglearn"): Mail {
+  const text = `Hi,\n\nThe password for your ${academy} account was just changed, and you were signed out everywhere else.\n\nIf that was you, there is nothing to do. If it was not, reset it again straight away and tell whoever runs your team:\n${loginLink}`;
+  const l = escapeHtml(loginLink);
+  return { to, subject: `Your ${academy} password was changed`, text, html: wrap(`<p>Hi,</p><p>The password for your ${escapeHtml(academy)} account was just changed, and you were signed out everywhere else.</p>
+<p>If that was you, there is nothing to do. If it was not, reset it again straight away and tell whoever runs your team:</p><p><a href="${l}" style="${BUTTON}">Reset it again</a></p>`) };
 }
 
 export const MAX_MAILS_PER_HOUR = 100;
