@@ -4,7 +4,7 @@ export { GATES, LINES };
 export type { LineId, Gate };
 
 /* Layout of the map, in SVG units. */
-export const U = 44, LEFT = 196, TOP = 128, ROW = 60;
+export const U = 78, LEFT = 230, TOP = 150, ROW = 84;
 export const W = LEFT + 40 * U + 70, H = TOP + 9 * ROW + 72;
 export const px = (x: number) => LEFT + x * U;
 export const py = (row: number) => TOP + row * ROW;
@@ -98,19 +98,23 @@ export const SEQ = Object.fromEntries(LINES.map((l) => {
 })) as Record<LineId, Stop[]>;
 export const stationsOn = (line: LineId) => STATIONS.filter((s) => s.line === line).sort((a, b) => a.x - b.x);
 
-// Label layout: alternate above and below the line, keep clear of neighbours and of gate connectors.
+// Label layout: each label goes above or below its line, centred or shifted to one side, whichever clears its neighbours and the gate connectors.
 for (const l of LINES) {
   const gx = GATES.filter((g) => gateRow(g) <= l.row && l.row <= gateBottom(g)).map((g) => px(g.x));
-  let lastA = -1e9, lastB = -1e9, prev: "a" | "b" = "b";
+  const last = { a: -1e9, b: -1e9 };
+  let prev: "a" | "b" = "b";
   for (const st of stationsOn(l.id)) {
-    const X = px(st.x), w = st.name.length * 5.6;
-    let anchor: Station["anchor"] = "middle", L = X - w / 2, R = X + w / 2;
-    const near = gx.find((g) => Math.abs(g - X) < w / 2 + 10);
-    if (near !== undefined) { if (near < X) { anchor = "start"; L = X - 5; R = L + w; } else { anchor = "end"; R = X + 5; L = R - w; } }
-    const canA = L > lastA + 6, canB = L > lastB + 6;
-    const side: "a" | "b" = canA && canB ? (prev === "a" ? "b" : "a") : canA ? "a" : canB ? "b" : lastA < lastB ? "a" : "b";
-    if (side === "a") lastA = R; else lastB = R;
-    prev = side;
+    const X = px(st.x), w = st.name.length * 7.6;
+    const span = (anchor: Station["anchor"]) => anchor === "middle" ? [X - w / 2, X + w / 2] : anchor === "start" ? [X - 6, X - 6 + w] : [X + 6 - w, X + 6];
+    const clearOfGates = (L: number, R: number) => !gx.some((g) => g > L - 10 && g < R + 10);
+    const alt: "a" | "b" = prev === "a" ? "b" : "a", other: "a" | "b" = alt === "a" ? "b" : "a";
+    const tries: [Station["side"], Station["anchor"]][] = [[alt, "middle"], [other, "middle"], [alt, "start"], [other, "start"], [alt, "end"], [other, "end"]];
+    // first choice: no overlap and no gate line through the text; then allow the text to cross a gate line (it has a halo); last resort: least crowded lane
+    const fits = ([side, anchor]: (typeof tries)[number]) => span(anchor)[0] > last[side] + 8;
+    let pick = tries.find((t) => fits(t) && clearOfGates(...(span(t[1]) as [number, number]))) ?? tries.find(fits);
+    if (!pick) pick = [...tries].sort((p, q) => last[p[0]] - last[q[0]])[0];
+    const [side, anchor] = pick, [L, R] = span(anchor);
+    last[side] = R; prev = side;
     Object.assign(st, { side, anchor, L, R });
   }
 }
