@@ -55,15 +55,16 @@ export function LifecycleMap({ data, signage }: { data: MapData; signage: string
   }, [fitK, size, narrow, move]);
   const frameFocus = useCallback((id: FocusId, smooth = true) => {
     const lines = new Set<LineId>(FOCUS.find((f) => f.id === id)!.lines);
-    if (narrow) { const s = STATIONS.filter((st) => lines.has(st.line)).sort((a, b) => a.x - b.x)[0], rs = LINES.filter((l) => lines.has(l.id)).map((l) => l.row); if (s) centreOn(px(s.x) + 120, py((Math.min(...rs) + Math.max(...rs)) / 2), 1, smooth); return; }
+    if (narrow) { const s = STATIONS.filter((st) => lines.has(st.line)).sort((a, b) => a.x - b.x)[0], rs = LINES.filter((l) => lines.has(l.id)).map((l) => l.row); if (s) centreOn(px(s.x) + 120, py((Math.min(...rs) + Math.max(...rs)) / 2), 0.9, smooth); return; }
     const rows = LINES.filter((l) => lines.has(l.id)).map((l) => l.row);
-    const y0 = py(Math.min(...rows)) - 90, y1 = py(Math.max(...rows)) + 70, x0 = 0, x1 = W;
-    const left = 16, right = 16, top = narrow ? 24 : 108, bottom = 96;
-    const k = Math.min((size.w - left - right) / (x1 - x0), (size.h - top - bottom) / (y1 - y0), 1.15);
-    const kk = Math.max(k, 0.6);
-    move({ k: kk, x: left + Math.max(0, size.w - left - right - (x1 - x0) * kk) / 2 - x0 * kk, y: top + (size.h - top - bottom - (y1 - y0) * kk) / 2 - y0 * kk }, smooth);
+    const y0 = py(Math.min(...rows)) - 120, y1 = py(Math.max(...rows)) + 80, top = narrow ? 100 : 136, bottom = narrow ? 96 : 64;
+    // readable first: about 0.9 unless the lit lines would not fit up and down; the fit button shows the whole map
+    const kk = Math.min(1.1, Math.max(0.66, Math.min(0.95, (size.h - top - bottom) / (y1 - y0))));
+    const first = STATIONS.filter((st) => lines.has(st.line)).sort((p, q) => p.x - q.x)[0], x0 = first ? px(first.x) - 300 : 0;
+    move({ k: kk, x: 16 - Math.max(0, x0) * kk, y: top + Math.max(0, size.h - top - bottom - (y1 - y0) * kk) / 2 - y0 * kk }, smooth);
   }, [narrow, size, centreOn, move]);
 
+  const fitAll = () => { const k = Math.min((size.w - 32) / W, (size.h - 200) / H); move({ k, x: (size.w - W * k) / 2, y: 136 + (size.h - 200 - H * k) / 2 }, true); };
   useEffect(() => {
     const el = boxRef.current; if (!el) return;
     const ro = new ResizeObserver(() => setSize({ w: el.clientWidth, h: el.clientHeight }));
@@ -160,8 +161,8 @@ export function LifecycleMap({ data, signage }: { data: MapData; signage: string
                 <g key={z.name}>
                   <rect x={x0} y={0} width={x1 - x0} height={H} fill={i % 2 ? "#f4f2ea" : "#fbfaf6"} />
                   {i > 0 && <line x1={x0} x2={x0} y1={0} y2={H} stroke="#14161f" strokeOpacity={0.12} strokeDasharray="3 5" />}
-                  <text x={x0 + 14} y={30} fontSize={15} fontWeight={700} letterSpacing=".14em" fill="#14161f" fillOpacity={0.78}>{i + 1}  {z.name.toUpperCase()}</text>
-                  <text x={x0 + 14} y={47} fontSize={12} fontWeight={500} fill="#5b6375">{z.sub}</text>
+                  <text x={x0 + 14} y={34} fontSize={18} fontWeight={700} letterSpacing=".14em" fill="#14161f" fillOpacity={0.78}>{i + 1}  {z.name.toUpperCase()}</text>
+                  <text x={x0 + 14} y={55} fontSize={14} fontWeight={500} fill="#5b6375">{z.sub}</text>
                 </g>
               );
             })}
@@ -169,16 +170,16 @@ export function LifecycleMap({ data, signage }: { data: MapData; signage: string
             {/* lines */}
             {LINES.map((l) => {
               const xs = SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = px(Math.min(...xs)), b = px(Math.max(...xs)), y = py(l.row), c = LINE_COLOUR[l.id];
-              const on = !dimming || focusLines.has(l.id), pw = l.name.length * 6.6 + 22;
+              const on = !dimming || focusLines.has(l.id), pw = l.name.length * 8.2 + 30;
               return (
                 <g key={l.id} style={{ opacity: on ? 1 : 0.16, transition: "opacity .4s" }}>
-                  <line className="ln" pathLength={1} strokeDasharray={1} x1={a} x2={b} y1={y} y2={y} stroke={c} strokeWidth={l.hollow ? 9 : 7} strokeLinecap="butt" />
-                  {l.hollow && <line x1={a} x2={b} y1={y} y2={y} stroke="#fbfaf6" strokeWidth={3} />}
-                  <rect x={a - 16 - pw} y={y - 12} width={pw} height={24} rx={12} fill={c} />
-                  <text x={a - 16 - pw / 2} y={y + 4.5} textAnchor="middle" fontSize={12.5} fontWeight={600} fill={l.id === "doc" ? "#14161f" : "#fff"}>{l.name}</text>
+                  <line className="ln" pathLength={1} strokeDasharray={1} x1={a} x2={b} y1={y} y2={y} stroke={c} strokeWidth={l.hollow ? 13 : 10} strokeLinecap="butt" />
+                  {l.hollow && <line x1={a} x2={b} y1={y} y2={y} stroke="#fbfaf6" strokeWidth={4} />}
+                  <rect x={a - 18 - pw} y={y - 15} width={pw} height={30} rx={15} fill={c} />
+                  <text x={a - 18 - pw / 2} y={y + 5.5} textAnchor="middle" fontSize={16} fontWeight={600} fill={l.id === "doc" ? "#14161f" : "#fff"}>{l.name}</text>
                   {on && dimming && !l.hollow && (
                     <g className="train">
-                      <rect x={-9} y={-5} width={18} height={10} rx={3} fill="#fff" stroke={c} strokeWidth={2.5} />
+                      <rect x={-13} y={-7} width={26} height={14} rx={4} fill="#fff" stroke={c} strokeWidth={3} />
                       <animateMotion dur={`${14 + l.row}s`} repeatCount="indefinite" path={`M${a},${y} L${b},${y}`} />
                     </g>
                   )}
@@ -188,17 +189,17 @@ export function LifecycleMap({ data, signage }: { data: MapData; signage: string
 
             {/* gates */}
             {GATES.map((g) => {
-              const X = px(g.x), r0 = gateRow(g), r1 = gateBottom(g), wl = wrapWords(g.name, 12);
+              const X = px(g.x), r0 = gateRow(g), r1 = gateBottom(g), wl = wrapWords(g.name, 12), top0 = 84;
               const on = !dimming || g.lines.some((id) => focusLines.has(id)), isSel = sel?.kind === "gt" && sel.id === g.id;
               return (
                 <g key={g.id} role="button" tabIndex={0} aria-label={`Handoff gate: ${g.name}`} className="cursor-pointer outline-none" style={{ opacity: on ? 1 : 0.2, transition: "opacity .4s" }}
                   onClick={() => { if (!moved.current) pick({ kind: "gt", id: g.id }); }} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick({ kind: "gt", id: g.id }); } }}>
-                  <line x1={X} x2={X} y1={58 + wl.length * 15} y2={py(r0) - 10} stroke="#5b6375" strokeWidth={1.2} strokeDasharray="2 3" />
-                  {r1 > r0 && <rect x={X - 6} y={py(r0)} width={12} height={py(r1) - py(r0)} fill="#fbfaf6" stroke="#14161f" strokeWidth={2.5} />}
-                  {g.lines.map((id) => <circle key={id} cx={X} cy={py(LINE_BY_ID[id].row)} r={8.5} fill="#fbfaf6" stroke={isSel ? "#4f46e5" : "#14161f"} strokeWidth={isSel ? 3.5 : 2.5} />)}
-                  {wl.map((t, i) => <text key={i} x={X} y={72 + i * 15} textAnchor="middle" fontSize={13} fontWeight={700} fill={isSel ? "#4f46e5" : "#14161f"}>{t}</text>)}
-                  <rect x={X - 50} y={58} width={100} height={wl.length * 15 + 8} fill="transparent" />
-                  <rect x={X - 12} y={py(r0) - 12} width={24} height={py(r1) - py(r0) + 24} fill="transparent" />
+                  <line x1={X} x2={X} y1={top0 + wl.length * 19 - 6} y2={py(r0) - 12} stroke="#5b6375" strokeWidth={1.2} strokeDasharray="2 3" />
+                  {r1 > r0 && <rect x={X - 8} y={py(r0)} width={16} height={py(r1) - py(r0)} fill="#fbfaf6" stroke="#14161f" strokeWidth={3} />}
+                  {g.lines.map((id) => <circle key={id} cx={X} cy={py(LINE_BY_ID[id].row)} r={11} fill="#fbfaf6" stroke={isSel ? "#4f46e5" : "#14161f"} strokeWidth={isSel ? 4 : 3} />)}
+                  {wl.map((t, i) => <text key={i} x={X} y={top0 + i * 19} textAnchor="middle" fontSize={17} fontWeight={700} fill={isSel ? "#4f46e5" : "#14161f"}>{t}</text>)}
+                  <rect x={X - 60} y={top0 - 16} width={120} height={wl.length * 19 + 8} fill="transparent" />
+                  <rect x={X - 15} y={py(r0) - 15} width={30} height={py(r1) - py(r0) + 30} fill="transparent" />
                 </g>
               );
             })}
@@ -207,27 +208,27 @@ export function LifecycleMap({ data, signage }: { data: MapData; signage: string
             {STATIONS.map((st) => {
               const X = px(st.x), Y = py(st.row), c = LINE_COLOUR[st.line], t = data.tracks[st.track], mk = markOf(t);
               const on = !dimming || focusLines.has(st.line), isNext = next?.id === st.id, isSel = sel?.kind === "st" && sel.id === st.id, above = st.side === "a";
-              const tx = st.anchor === "start" ? st.L : st.anchor === "end" ? st.R : X, frac = Math.min(1, (t?.passed ?? 0) / 20), C = 2 * Math.PI * 11.5;
+              const tx = st.anchor === "start" ? st.L : st.anchor === "end" ? st.R : X, frac = Math.min(1, (t?.passed ?? 0) / 20), C = 2 * Math.PI * 14.5;
               const label = showLabels && (on || isSel) || isNext || isSel;
               return (
                 <g key={st.id} role="button" tabIndex={0} aria-label={`${st.name}${t ? `, ${t.passed > 0 ? `level ${t.passed} of 20` : "not started"}` : ""}`} className="st cursor-pointer outline-none"
                   style={{ opacity: on ? 1 : 0.14, transition: "opacity .4s" }}
                   onClick={() => { if (!moved.current) pick({ kind: "st", id: st.id }); }} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick({ kind: "st", id: st.id }); } }}>
-                  {isNext && !isSel && <circle className="pulse" cx={X} cy={Y} r={11} fill="none" stroke={c} strokeWidth={3} />}
-                  {(isSel || mk === "learning" || mk === "solid") && <circle cx={X} cy={Y} r={11.5} fill="none" stroke={isSel ? "#4f46e5" : c} strokeOpacity={isSel ? 1 : 0.9} strokeWidth={isSel ? 3.5 : 3} strokeDasharray={isSel ? undefined : `${C * frac} ${C}`} transform={`rotate(-90 ${X} ${Y})`} />}
-                  <circle cx={X} cy={Y} r={mk === "titan" ? 8 : 6.5} fill={mk === "titan" ? "#f5b800" : mk === "solid" ? c : "#fbfaf6"} stroke={mk === "titan" ? "#14161f" : c} strokeWidth={3} />
-                  {t?.required && t.overdue && <circle cx={X + 8} cy={Y - 8} r={4.5} fill="#e11d48" stroke="#fbfaf6" strokeWidth={1.5} />}
+                  {isNext && !isSel && <circle className="pulse" cx={X} cy={Y} r={14} fill="none" stroke={c} strokeWidth={4} />}
+                  {(isSel || mk === "learning" || mk === "solid") && <circle cx={X} cy={Y} r={14.5} fill="none" stroke={isSel ? "#4f46e5" : c} strokeOpacity={isSel ? 1 : 0.9} strokeWidth={isSel ? 4.5 : 4} strokeDasharray={isSel ? undefined : `${C * frac} ${C}`} transform={`rotate(-90 ${X} ${Y})`} />}
+                  <circle cx={X} cy={Y} r={mk === "titan" ? 10 : 8} fill={mk === "titan" ? "#f5b800" : mk === "solid" ? c : "#fbfaf6"} stroke={mk === "titan" ? "#14161f" : c} strokeWidth={4} />
+                  {t?.required && t.overdue && <circle cx={X + 11} cy={Y - 11} r={5.5} fill="#e11d48" stroke="#fbfaf6" strokeWidth={1.5} />}
                   {label && (
-                    <text className="nm" x={tx} y={above ? Y - 17 : Y + 26} textAnchor={st.anchor} fontSize={13} fontWeight={isNext || isSel ? 700 : 500} fill={isSel ? "#4f46e5" : "#14161f"} stroke="#fbfaf6" strokeWidth={3.5} paintOrder="stroke" strokeLinejoin="round">{st.name}</text>
+                    <text className="nm" x={tx} y={above ? Y - 22 : Y + 32} textAnchor={st.anchor} fontSize={17} fontWeight={isNext || isSel ? 700 : 500} fill={isSel ? "#4f46e5" : "#14161f"} stroke="#fbfaf6" strokeWidth={4.5} paintOrder="stroke" strokeLinejoin="round">{st.name}</text>
                   )}
                   {isNext && !isSel && (
-                    <g transform={`translate(${X},${above ? Y - 44 : Y + 50})`}>
-                      <rect x={-34} y={-11} width={68} height={20} rx={10} fill="#14161f" />
-                      <text y={3.5} textAnchor="middle" fontSize={11} fontWeight={700} letterSpacing=".06em" fill="#fff">{data.signedIn ? "NEXT STOP" : "START HERE"}</text>
+                    <g transform={`translate(${X},${above ? Y - 54 : Y + 62})`}>
+                      <rect x={-42} y={-13} width={84} height={24} rx={12} fill="#14161f" />
+                      <text y={4} textAnchor="middle" fontSize={13} fontWeight={700} letterSpacing=".06em" fill="#fff">{data.signedIn ? "NEXT STOP" : "START HERE"}</text>
                     </g>
                   )}
-                  <circle cx={X} cy={Y} r={16} fill="transparent" />
-                  {label && <rect x={st.L - 4} y={above ? Y - 32 : Y - 6} width={st.R - st.L + 8} height={38} fill="transparent" />}
+                  <circle cx={X} cy={Y} r={20} fill="transparent" />
+                  {label && <rect x={st.L - 4} y={above ? Y - 40 : Y - 8} width={st.R - st.L + 8} height={46} fill="transparent" />}
                 </g>
               );
             })}
@@ -240,7 +241,7 @@ export function LifecycleMap({ data, signage }: { data: MapData; signage: string
         <div className="flex flex-wrap items-end gap-x-8 gap-y-2" style={{ paddingRight: !narrow && sel ? "23.5rem" : undefined }}>
           <div className="pointer-events-auto">
             <p className="hidden text-[11px] font-semibold uppercase tracking-[.18em] text-slate-400 sm:block">The software lifecycle, as a map</p>
-            <h1 className="mt-0.5 text-[1.2rem] font-bold leading-[1.05] sm:text-[1.9rem]">
+            <h1 className="mt-0.5 text-[1.2rem] font-bold leading-[1.05] sm:text-[1.6rem]">
               {data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>Idea to shutdown. <span className="text-indigo-300">Learn every stop.</span></>}
             </h1>
           </div>
@@ -261,7 +262,7 @@ export function LifecycleMap({ data, signage }: { data: MapData; signage: string
       <div className="absolute bottom-3 right-3 z-10 flex flex-col gap-1.5 sm:bottom-5 sm:right-5" style={{ right: !narrow && sel ? "25rem" : undefined }}>
         <button type="button" onClick={() => zoomBy(1.3)} aria-label="Zoom in" title="Zoom in" className="hidden sm:grid h-10 w-10 place-items-center rounded-xl border border-black/10 bg-[#fff]/95 shadow-md transition hover:bg-[#fff]"><Plus size={18} /></button>
         <button type="button" onClick={() => zoomBy(1 / 1.3)} aria-label="Zoom out" title="Zoom out" className="hidden sm:grid h-10 w-10 place-items-center rounded-xl border border-black/10 bg-[#fff]/95 shadow-md transition hover:bg-[#fff]"><Minus size={18} /></button>
-        <button type="button" onClick={() => frameFocus(focus)} aria-label="Fit to screen" title="Fit to screen" className="grid h-10 w-10 place-items-center rounded-xl border border-black/10 bg-[#fff]/95 shadow-md transition hover:bg-[#fff]"><Crosshair size={18} /></button>
+        <button type="button" onClick={() => fitAll()} aria-label="See the whole map" title="See the whole map" className="grid h-10 w-10 place-items-center rounded-xl border border-black/10 bg-[#fff]/95 shadow-md transition hover:bg-[#fff]"><Crosshair size={18} /></button>
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex flex-col items-center gap-2 sm:bottom-5">
