@@ -1,5 +1,5 @@
 /* Generated from the Software Lifecycle Map artifact (Downloads/Software Lifecycle Map.html). Edit the data here, not the artifact. */
-export type LineId = "doc" | "str" | "ux" | "arc" | "dat" | "eng" | "qa" | "sec" | "ops" | "gov";
+export type LineId = "doc" | "str" | "gtm" | "ux" | "arc" | "dat" | "eng" | "qa" | "sec" | "ops" | "gov";
 export type Scale = "S" | "M" | "L" | "P";
 /** [id, x, name, scale, ai(0|1), newton pillar, owner, inputs joined by |, outputs joined by |] */
 export type RawStation = [string, number, string, Scale, 0 | 1, number, string, string, string];
@@ -8,14 +8,15 @@ export type Gate = { id: string; x: number; name: string; lines: LineId[]; ins: 
 export const LINES: { id: LineId; name: string; row: number; hollow?: boolean }[] = [
  {id:'doc',name:'Documentation',row:0,hollow:true},
  {id:'str',name:'Strategy & Product',row:1},
- {id:'ux',name:'Experience & Design',row:2},
- {id:'arc',name:'Architecture & Integration',row:3},
- {id:'dat',name:'Data & AI',row:4},
- {id:'eng',name:'Engineering',row:5},
- {id:'qa',name:'Quality',row:6},
- {id:'sec',name:'Security & Compliance',row:7},
- {id:'ops',name:'Delivery & Operations',row:8},
- {id:'gov',name:'Governance & Finance',row:9}
+ {id:'gtm',name:'Growth & Customers',row:2},
+ {id:'ux',name:'Experience & Design',row:3},
+ {id:'arc',name:'Architecture & Integration',row:4},
+ {id:'dat',name:'Data & AI',row:5},
+ {id:'eng',name:'Engineering',row:6},
+ {id:'qa',name:'Quality',row:7},
+ {id:'sec',name:'Security & Compliance',row:8},
+ {id:'ops',name:'Delivery & Operations',row:9},
+ {id:'gov',name:'Governance & Finance',row:10}
 ];
 // [id, x, name, scale, ai, pillar, owner, inputs, outputs];
 
@@ -32,6 +33,33 @@ doc:[
  ['userguide',34,'User Guides','S',0,5,'Content Designer','Live features|Support tickets','Help content|FAQs'],
  ['archive',38,'Records Archive','M',0,31,'Technical Writer','All project records|Retention schedule','Archived records|Audit trail']
 ],
+gtm:[
+ ['icp',2,'Ideal Customer','S',0,17,'Marketing Lead','Market research|Existing customers','Ideal customer profile|Target segments'],
+ ['position',5,'Positioning','S',0,17,'Marketing Lead','Market gaps|Competitor view','Positioning statement|Messaging pillars'],
+ ['compwatch',6,'Competitor Watch','S',0,17,'Marketing Analyst','Market research|Public pricing and offers','Competitor comparison|Gaps to exploit'],
+ ['brandvoice',7,'Brand Voice','S',0,17,'Content Designer','Positioning|Existing copy','Tone of voice guide|Words to use and avoid'],
+ ['valueprop',8,'Value Proposition','S',0,17,'Product Owner','Customer needs|Positioning','One-line promise|Proof points'],
+ ['funnel',11,'Funnel Model','S',0,17,'Marketing Lead','Customer journey|Pricing','Funnel stages|Conversion targets'],
+ ['pricing',13,'Pricing Model','S',0,16,'Product Owner','Market research|Cost model','Price plans|Billing rules'],
+ ['contentplan',14,'Content Plan','S',0,17,'Content Marketer','Positioning|Search terms','Content calendar|Topic clusters'],
+ ['gtm',17,'Go-to-Market Plan','S',0,17,'Marketing Lead','Pricing|Personas|Roadmap','Channels|Messaging|Launch timeline'],
+ ['landing',18,'Landing Pages','S',0,17,'Growth Marketer','Messaging|Design system','Pages that convert|Tracking in place'],
+ ['beta',20,'Beta Users','M',0,17,'Product Owner','Working build|Target segment','Early feedback|Case-study candidates'],
+ ['leadcapture',21,'Lead Capture','S',0,17,'Growth Marketer','Landing pages|Consent wording','Forms and tracking|Consent records'],
+ ['crm',22,'CRM Setup','S',0,16,'Sales Operations','Funnel stages|Data model','Pipeline stages|Fields and permissions'],
+ ['playbook',23,'Sales Playbook','S',0,16,'Sales Lead','Ideal customer|Common objections','Call scripts|Qualification rules'],
+ ['paidsocial',25,'Paid & Social','S',0,17,'Growth Marketer','Budget|Creative|Audiences','Live campaigns|Cost per lead'],
+ ['launch',26,'Launch Comms','S',0,17,'Marketing Lead','Release notes|Go-to-market plan','Announcements|Website and app store content'],
+ ['emailseq',27,'Email Sequences','S',0,17,'Marketing Lead','Segments|Templates','Nurture and onboarding emails|Deliverability checks'],
+ ['salesen',29,'Sales Enablement','M',0,16,'Sales Lead','Pricing|Demo build|Release notes','Sales deck|Demo script|Objection handling'],
+ ['onboard',30,'Customer Onboarding','S',0,27,'Customer Success Manager','Live service|User guides','Activated customers|Onboarding metrics'],
+ ['calls',31,'Discovery Calls','S',0,16,'Sales Executive','Qualified lead|Sales playbook','Needs and budget|Proposal or quote|Next step agreed'],
+ ['feedback',33,'Customer Feedback','S',0,27,'Customer Success Manager','Support tickets|Surveys|Analytics','Insight themes|New backlog items'],
+ ['pipeline',34,'Pipeline Review','S',0,16,'Sales Manager','CRM data|Forecast','Forecast|Deals to unblock'],
+ ['health',35,'Account Health','S',0,27,'Customer Success Manager','Usage data|Tickets|Surveys','Health score|At-risk accounts|Quarterly review notes'],
+ ['renewal',37,'Renewals & Upsell','S',0,27,'Account Manager','Contract dates|Account health','Renewed or expanded accounts|Churn reasons'],
+ ['custnotice',39,'Customer Notice','S',0,27,'Customer Success Manager','Sunset decision|Customer list','Notice sent|Data returned or deleted']
+],
 str:[
  ['idea',0,'Idea Intake','S',0,1,'Sponsor','Problem statement|Opportunity or mandate','Logged idea|Initial owner'],
  ['goals',1,'Business Goals','S',0,1,'Sponsor','Logged idea|Organisation strategy','Goals|KPIs and targets'],
@@ -43,13 +71,6 @@ str:[
  ['spend',8,'Spend Control','P',0,1,'Sponsor','Business case|Digital and technology spend rules','Spend approval|Conditions on delivery'],
  ['roadmap',10,'Product Roadmap','S',0,1,'Product Owner','Goals|Requirements','Now / Next / Later roadmap|Release themes'],
  ['backlog',11,'Backlog','S',0,1,'Product Owner','Roadmap|User stories','Prioritised backlog'],
- ['pricing',13,'Pricing Model','S',0,16,'Product Owner','Market research|Cost model','Price plans|Billing rules'],
- ['gtm',17,'Go-to-Market Plan','S',0,17,'Marketing Lead','Pricing|Personas|Roadmap','Channels|Messaging|Launch timeline'],
- ['beta',21,'Beta Users','M',0,17,'Product Owner','Working build|Target segment','Early feedback|Case-study candidates'],
- ['launch',26,'Launch Comms','S',0,17,'Marketing Lead','Release notes|Go-to-market plan','Announcements|Website and app store content'],
- ['salesen',29,'Sales Enablement','M',0,16,'Sales Lead','Pricing|Demo build|Release notes','Sales deck|Demo script|Objection handling'],
- ['onboard',30,'Customer Onboarding','S',0,27,'Customer Success','Live service|User guides','Activated customers|Onboarding metrics'],
- ['feedback',33,'Customer Feedback','S',0,27,'Product Owner','Support tickets|Surveys|Analytics','Insight themes|New backlog items'],
  ['kpi',34,'KPI Review','S',0,1,'Product Owner','Live metrics|Business goals','KPI scorecard|Course corrections'],
  ['benefits',37,'Benefits Realisation','M',0,1,'Sponsor','Business case|KPI scorecard','Realised versus planned benefits'],
  ['sunset',38,'Sunset Decision','S',0,1,'Sponsor','Benefits|Running cost|Replacement options','Retire, replace or keep decision']
@@ -207,13 +228,13 @@ gov:[
 ]} as unknown as Record<LineId, RawStation[]>;
 
 export const GATES: Gate[] = [
- {id:'kickoff',x:3,name:'Discovery Kick-off',lines:['doc','str','ux','gov'],ins:['Idea and business goals','Sponsor and core team','Access to real users'],outs:['Discovery scope','Research plan','Documentation standards agreed'],fail:'Delivery starts before the sponsor, the team or real users are lined up.'},
- {id:'reqbase',x:9,name:'Requirements Baseline',lines:['doc','str','ux','arc','dat','qa','sec'],ins:['User needs','Business case','NFRs','Data model','Security stories'],outs:['Signed-off requirements','Acceptance criteria','Traceability IDs'],fail:'Each discipline reads the same requirement differently, and nobody finds out until UAT.'},
+ {id:'kickoff',x:3,name:'Discovery Kick-off',lines:['doc','str','gtm','ux','gov'],ins:['Idea and business goals','Sponsor and core team','Access to real users'],outs:['Discovery scope','Research plan','Documentation standards agreed'],fail:'Delivery starts before the sponsor, the team or real users are lined up.'},
+ {id:'reqbase',x:9,name:'Requirements Baseline',lines:['doc','str','gtm','ux','arc','dat','qa','sec'],ins:['User needs','Business case','NFRs','Data model','Security stories'],outs:['Signed-off requirements','Acceptance criteria','Traceability IDs'],fail:'Each discipline reads the same requirement differently, and nobody finds out until UAT.'},
  {id:'designauth',x:15,name:'Design Authority',lines:['ux','arc','dat','eng','qa','sec'],ins:['Solution architecture','Tested prototype','Schema','Threat model','Testability review'],outs:['Approved design','Architecture decisions','Build-ready specs'],fail:'The design is approved without security, data or test sign-off.'},
  {id:'sprint',x:19,name:'Sprint Planning',lines:['str','ux','eng','qa','ops'],ins:['Prioritised backlog','Build-ready designs','Working pipelines'],outs:['Sprint goal','Committed stories'],fail:'Stories enter the sprint without acceptance criteria or finished designs.'},
  {id:'dod',x:24,name:'Definition of Done',lines:['doc','dat','eng','qa','sec'],ins:['Reviewed code','Passing tests','Clean security scans','Updated docs'],outs:['Done, releasable increment'],fail:'"Done" means coded, not tested, secured and documented.'},
- {id:'gonogo',x:28,name:'Go / No-Go',lines:['doc','str','qa','sec','ops','gov'],ins:['UAT sign-off','Security sign-off','Rollback plan','Release notes'],outs:['Release decision'],fail:'The decision is driven by the date, not by the evidence.'},
- {id:'live',x:32,name:'Live Service',lines:['str','ux','dat','ops','gov'],ins:['Production release','Runbooks','Support model','Operating budget'],outs:['Running service','Usage data','Support tickets'],fail:'The project team leaves before support is ready to take over.'},
+ {id:'gonogo',x:28,name:'Go / No-Go',lines:['doc','str','gtm','qa','sec','ops','gov'],ins:['UAT sign-off','Security sign-off','Rollback plan','Release notes'],outs:['Release decision'],fail:'The decision is driven by the date, not by the evidence.'},
+ {id:'live',x:32,name:'Live Service',lines:['str','gtm','ux','dat','ops','gov'],ins:['Production release','Runbooks','Support model','Operating budget'],outs:['Running service','Usage data','Support tickets'],fail:'The project team leaves before support is ready to take over.'},
  {id:'change',x:36,name:'Change Control',lines:['arc','eng','sec','ops','gov'],ins:['Change requests','Incidents','Tech debt'],outs:['Approved changes','Updated roadmap'],fail:'Hotfixes skip review and quietly become permanent.'},
- {id:'decom',x:40,name:'Decommission',lines:['doc','dat','sec','ops','gov'],ins:['Sunset decision','Retention rules','Contract terms'],outs:['Archived records','Deleted data','Closed contracts'],fail:'Systems are switched off while data and costs stay live.'}
+ {id:'decom',x:40,name:'Decommission',lines:['doc','gtm','dat','sec','ops','gov'],ins:['Sunset decision','Retention rules','Contract terms'],outs:['Archived records','Deleted data','Closed contracts'],fail:'Systems are switched off while data and costs stay live.'}
 ] as Gate[];

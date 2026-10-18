@@ -17,9 +17,7 @@ import { listFor } from "@/lib/competitions";
 import { CompetitionCard } from "@/components/CompetitionCard";
 import { CertFrame } from "@/components/CertFrame";
 import { RankEmblem } from "@/components/RankEmblem";
-import { LifecycleMap } from "@/components/lifecycle/LifecycleMap";
-import { mapDataFor } from "@/lib/lifecycle/server";
-import { signage } from "@/lib/lifecycle/font";
+import { GATES, LINES, LINE_COLOUR, STATIONS } from "@/lib/lifecycle/model";
 
 const STEPS = [
   { Icon: Target, title: "Get your path", text: "Sign in and see the subjects your role, brand and project require, each with a deadline.", cls: "text-indigo-300 bg-indigo-500/10" },
@@ -75,11 +73,8 @@ export default async function Home() {
   };
 
   return (
-    <>
-    {/* the map takes the whole first screen; the rest of the academy sits below it */}
-    <div className="relative left-1/2 -mt-8 w-screen -translate-x-1/2"><LifecycleMap data={mapDataFor(viewer)} signage={signage.className} /></div>
-    <div id="below" className="scroll-mt-16 space-y-16 pt-12">
-      <section className="relative grid items-center gap-8 overflow-x-clip pt-4 lg:grid-cols-[1.15fr_1fr]">
+    <div className="space-y-16">
+      <section className="grid items-center gap-8 overflow-x-clip pt-4 lg:grid-cols-[1.15fr_1fr]">
         <div className="pointer-events-none absolute -left-24 -top-16 -z-10 h-80 w-80 rounded-full bg-indigo-500/15 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -right-16 top-10 -z-10 h-72 w-72 rounded-full bg-pink-500/15 blur-3xl" aria-hidden />
         <div>
@@ -92,6 +87,7 @@ export default async function Home() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href={viewer ? "/dashboard" : "/login"} className="btn">{viewer ? "Go to my path" : "Sign in to see your path"}<ArrowRight size={16} /></Link>
             <Link href="/campaigns" className="btn btn-ghost"><Flame size={16} className="text-pink-300" />Browse {camps.length} campaigns</Link>
+            <Link href="/map" className="btn btn-ghost">Explore the lifecycle map</Link>
             <a href="#subjects" className="btn btn-ghost">Browse subjects</a>
           </div>
           <p className="mt-3 text-sm text-slate-400">{rows.length} subjects · {totalQ.toLocaleString("en-GB")} questions · accounts are created by your admin</p>
@@ -116,6 +112,23 @@ export default async function Home() {
           <div className="mt-2 text-center"><AvatarPicker me={looks.me} rival={looks.rival} photoUrl={looks.photoUrl} signedIn={looks.signedIn} level={8} rivalLevel={9} rivalHue={rivalFor("git-titan").hue} /></div>
         </div>
       </section>
+
+      <Link href="/map" className="card card-hover group block overflow-hidden" aria-label="Open the software lifecycle map">
+        <div className="grid items-center gap-5 p-5 sm:grid-cols-[1.1fr_1fr] sm:p-7">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-indigo-300">The software lifecycle, as a map</p>
+            <h2 className="mt-1.5 text-2xl font-extrabold sm:text-3xl">Every stop from idea to shutdown, drawn like a transit map</h2>
+            <p className="mt-2 text-slate-300">{LINES.length} lines, {STATIONS.length} stops and {GATES.length} handoff gates. Say what you do, see your route, and learn each stop.</p>
+            <span className="btn mt-4 inline-flex">Open the map<ArrowRight size={16} /></span>
+          </div>
+          <svg viewBox="0 0 360 150" className="w-full" aria-hidden>
+            {LINES.map((l, i) => { const y = 10 + i * (130 / LINES.length), a = 8 + (i * 17) % 60, b = 352 - (i * 23) % 70; return (
+              <g key={l.id}><line x1={a} x2={b} y1={y} y2={y} stroke={LINE_COLOUR[l.id]} strokeWidth={5} strokeLinecap="round" />
+                {[0.18, 0.4, 0.62, 0.84].map((f) => <circle key={f} cx={a + (b - a) * f} cy={y} r={4} fill="#fbfaf6" stroke={LINE_COLOUR[l.id]} strokeWidth={2.5} />)}</g>); })}
+            {[84, 176, 268].map((x) => <g key={x}><rect x={x - 4} y={10} width={8} height={130} rx={2} fill="#fbfaf6" stroke="#14161f" strokeWidth={2} /></g>)}
+          </svg>
+        </div>
+      </Link>
 
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4" aria-label="The academy in numbers">
         <StatTile i={0} Icon={BookOpen} label="Subjects" value={rows.length} color={PALETTE.indigo} />
@@ -295,6 +308,5 @@ export default async function Home() {
         <div className="relative mt-5 flex flex-wrap justify-center gap-3"><Link href={viewer ? "/dashboard" : "/login"} className="btn !bg-[#fff] !text-indigo-700">{viewer ? "Go to my path" : "Sign in"}<ArrowRight size={16} /></Link><Link href="/campaigns" className="btn !bg-transparent !text-[#fff] ring-2 ring-[#fff]/60 hover:!bg-[#fff]/15"><Flame size={16} />See the campaigns</Link></div>
       </section>
     </div>
-    </>
   );
 }
