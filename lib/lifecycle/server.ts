@@ -3,6 +3,7 @@ import { rivalFor, rivalProgress } from "@/lib/rivals";
 import { MAX_LEVEL } from "@/lib/levels";
 import { campaignViews } from "@/lib/campaigns";
 import { loadRoles } from "./roles";
+import { journeyFor } from "@/lib/journeyLock";
 import { STATIONS, focusForRole, type MapData, type RaceInfo, type TrackInfo } from "./model";
 
 type Viewer = Parameters<typeof requirementsFor>[0] & { name: string; jobRole: string };
@@ -31,8 +32,10 @@ export function mapDataFor(viewer: Viewer | null): MapData {
     id: v.id, title: v.title, track: v.track, trackName: v.trackName.replace(/^\d+\.\s*/, ""), state: v.state as "live" | "upcoming", humans: v.humans, slug: v.slug, hook: v.hook, headline: v.headline, goal: v.goal, days: v.days,
   }));
   const mine = viewer?.jobRole.toLowerCase() ?? "";
+  const j = viewer ? journeyFor(viewer.id) : null;
   return {
+    journey: j && { roleName: j.roleName, setting: j.setting, canSwitch: j.canSwitch, locked: j.locked, current: j.current, total: j.total, locks: j.locks, advice: j.advice, stages: j.stages.map((st) => ({ n: st.n, state: st.state, waitingOn: st.waitingOn, tracks: st.tracks.map(({ slug, name, passed, need }) => ({ slug, name, passed, need })) })) },
     signedIn: !!viewer, firstName: viewer ? viewer.name.split(" ")[0] : null, defaultFocus: focusForRole(viewer?.jobRole), tracks,
-    roles, races, defaultRole: roles.some((r) => r.key === mine) ? mine : null,
+    roles: roles.map((r) => ({ key: r.key, name: r.name, family: r.family, blurb: r.blurb, aliases: r.aliases, tracks: r.tracks, core: r.core })), races, defaultRole: roles.some((r) => r.key === mine) ? mine : null,
   };
 }

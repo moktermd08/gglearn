@@ -32,7 +32,8 @@
     "check:blueprint": "tsx --env-file=.env.local scripts/check-blueprint.ts",
     "seed:cards": "tsx --env-file=.env.local scripts/seed-ai.ts --cards",
     "check:cards": "tsx scripts/ai/check.ts --cards",
-    "fit:blueprint": "tsx --env-file=.env.local scripts/blueprint-fit.ts"
+    "fit:blueprint": "tsx --env-file=.env.local scripts/blueprint-fit.ts",
+    "check:journey": "tsx scripts/check-journey.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",

@@ -7,7 +7,7 @@ import { requireManager } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { isGlobal, scopeInReach, trackInReach } from "@/lib/tenancy";
 import { adminScopeOf } from "@/lib/adminScope";
-import { BrandForm, BrandingForm, CompanyForm, TrackForm } from "./forms";
+import { BrandForm, BrandingForm, CompanyForm, LearningOrderForm, TrackForm } from "./forms";
 import { lookOfCompany } from "@/lib/brand";
 
 export const metadata = { title: "Set up — gglearn" };
@@ -57,6 +57,15 @@ export default async function Setup() {
           {myCompanies.map((c) => (
             <BrandingForm key={c.id} company={{ id: c.id, name: c.name, academyName: c.academyName, accent: c.accent, certIssuer: c.certIssuer, certValidMonths: c.certValidMonths ?? 0, certSigner: c.certSigner, certSignerTitle: c.certSignerTitle, logoUrl: lookOfCompany(c.id).logo }} />
           ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className={h2}>Learning order</h2>
+        <p className="mb-2 text-sm text-slate-400">Each job role has a learning journey in a sensible order (foundations first, security later, and so on). Choose how strictly your people must follow it. A learner who already knows a stage can always test out of it with a placement check, and managers and admins are never locked.</p>
+        <div className="space-y-3">
+          {myCompanies.length === 0 && <p className="text-sm text-slate-400">Add a company first.</p>}
+          {myCompanies.map((c) => <LearningOrderForm key={c.id} company={{ id: c.id, name: c.name, journeyLock: c.journeyLock }} />)}
         </div>
       </section>
 

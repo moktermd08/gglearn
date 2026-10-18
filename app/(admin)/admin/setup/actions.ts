@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { requireManager } from "@/lib/auth";
-import { addBrand, addCompany, addTrack, saveBranding, type SetupState } from "@/lib/setup";
+import { addBrand, addCompany, addTrack, saveBranding, saveLearningOrder, type SetupState } from "@/lib/setup";
 
 export type { SetupState };
 
@@ -16,5 +16,11 @@ export async function createTrack(_: SetupState, fd: FormData): Promise<SetupSta
 export async function saveCompanyBranding(_: SetupState, fd: FormData): Promise<SetupState> {
   const r = await saveBranding(await requireManager(), fd);
   if (r?.done) revalidatePath("/", "layout");
+  return r;
+}
+
+export async function saveCompanyLearningOrder(_: SetupState, fd: FormData): Promise<SetupState> {
+  const r = saveLearningOrder(await requireManager(), fd);
+  if (r?.done) { revalidatePath("/admin/setup"); revalidatePath("/map"); revalidatePath("/tracks", "layout"); }
   return r;
 }

@@ -63,13 +63,23 @@ const OVERRIDES: Record<string, string[]> = {
   "lead-generation-titan": ["icp", "funnel", "leadcapture"],
   "brand-positioning-voice": ["position", "brandvoice", "valueprop"],
   "service-design-pricing": ["pricing"],
+  "finance-for-leaders": ["budget", "opbudget", "fund", "spend", "bizcase"],
+  "risk-resilience-leadership": ["risk"],
+  "product-management-core": ["roadmap", "backlog"],
+  "tech-strategy-roadmap": ["buildbuy", "techland", "target", "replat"],
+  "executive-communication": ["sponsor", "board"],
   "gglink-seo-content": ["contentplan", "landing"],
   "facebook-marketing-titan": ["paidsocial"],
   "communications-email": ["launch", "emailseq", "custnotice"],
   "gglink-sales-support": ["playbook", "salesen", "calls", "onboard", "feedback", "health", "renewal"],
-  "governance-compliance": ["archive", "dclass", "dpia", "sar", "retain", "regscan", "evidence", "accred", "audit", "licence", "airisk", "board", "stagegate", "serviceassess", "risk", "sustain"],
+  "governance-compliance": ["archive", "dclass", "dpia", "sar", "retain", "regscan", "evidence", "accred", "audit", "licence", "airisk", "stagegate", "serviceassess", "sustain"],
     "data-analytics": ["kpi", "benefits", "analytics", "uxiter", "pipelines", "dqmon"],
-  "ai-llm-practice": ["aiuse", "modelsel", "evalset", "training", "modelval", "drift", "aifeat"],
+  "ai-llm-practice": ["aiuse", "drift"],
+  "llm-fundamentals-titan": ["modelsel"],
+  "llm-prompting-titan": ["evalset"],
+  "ml-sklearn-titan": ["training"],
+  "eval-llm-titan": ["modelval"],
+  "rag-pipelines-titan": ["aifeat"],
   "servers-infrastructure": ["scaling", "captest", "hosting", "iac", "envs", "patching", "shutdown", "cloudcost", "finops"],
   "security-operations": ["threat", "secrets", "vulnwatch", "secinc", "recert", "sanitise", "sbom", "deps"],
   "people-operations": ["team", "resourcing"],
@@ -180,10 +190,20 @@ export function focusForRole(role: string | null | undefined): FocusId {
 }
 
 /** A job role from the career ladders, with every track its ladder asks for. */
+/** The order functions are listed in the role picker. */
+export const FAMILY_ORDER = ["Leadership", "Product & Delivery", "Engineering", "Data & AI", "IT & Infrastructure", "Design & Content", "Marketing, Sales & Customers", "Finance", "People", "Operations & Admin", "Security, Risk & Compliance", "Legal & Public Sector"];
 export type RoleInfo = {
   key: string; name: string; aliases: string[];
+  /** the function this role belongs to (Engineering, Finance, Legal & Public Sector…) */
+  family: string;
+  /** one line on what the role does */
+  blurb: string;
   /** every track the ladder asks for (used to find races) */
   tracks: string[];
+  /** the level the ladder first asks for, per track (server only: left out of what the map receives) */
+  entry?: Record<string, number>;
+  /** the first rung (1-based) of the ladder that asks for each track: a role's own craft appears at its entry rung, supporting skills later (server only) */
+  firstRung?: Record<string, number>;
   /** the tracks that set this role apart: asked for at level 8 or more, or not a basic that nearly every role shares (used for the route) */
   core: string[];
 };
@@ -200,7 +220,15 @@ export type TrackInfo = {
   open: boolean;
   rival: { name: string; level: number } | null;
 };
+/** A signed-in learner's place in their own role's journey (built by lib/journeyLock.ts). */
+export type JourneyView = {
+  roleName: string; setting: "choice" | "hard" | "soft"; canSwitch: boolean; locked: boolean; current: number; total: number;
+  stages: { n: number; state: "done" | "current" | "locked"; waitingOn: string[]; tracks: { slug: string; name: string; passed: number; need: number }[] }[];
+  locks: Record<string, { stage: number; waitingOn: { slug: string; name: string }[] }>;
+  advice: Record<string, { stage: number; waitingOn: { slug: string; name: string }[] }>;
+};
 export type MapData = {
+  journey: JourneyView | null;
   signedIn: boolean; firstName: string | null; defaultFocus: FocusId; tracks: Record<string, TrackInfo>;
   roles: RoleInfo[]; races: RaceInfo[];
   /** the visitor's own job role, when it matches one of the ladders */
@@ -220,7 +248,10 @@ export const AI_STOPS_FULL = STATIONS.filter((s) => s.ai).map((s) => s.id);
 export const AI_STOPS_LITE = ["aiuse", "evalset", "airisk", "drift"];
 /** Where a human checks an AI agent's work: acceptance, sign-off, risk and audit. */
 export const AI_REVIEW_STOPS = ["accept", "uat", "risk", "audit"];
-const TECH_ROLES = new Set(["developer", "backend developer", "frontend developer", "full stack developer", "engineer", "architect", "devops", "tester", "security", "data analyst", "cto"]);
+const TECH_FAMILIES = new Set(["Engineering", "Data & AI", "IT & Infrastructure"]);
+const TECH_ROLES = new Set(["security", "security analyst", "cto", "cio", "ciso", "chief data officer", "accessibility specialist", "data analyst"]);
+/** Engineering, data and IT roles (and security-minded leaders): the roles that build or run the technology. */
+export const isTechRole = (role: Pick<RoleInfo, "family" | "key">) => TECH_FAMILIES.has(role.family) || TECH_ROLES.has(role.key);
 const AI_FULL_AREAS = new Set<FocusId>(["build", "secure", "run"]);
 /** "CEO" as a person, "CEO working with AI", or "AI CEO". */
 export const aiRoleName = (name: string, mode: AiMode) => (mode === "ai" ? `${name} working with AI` : mode === "agent" ? `AI ${name}` : name);
@@ -241,7 +272,7 @@ export function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode):
     const lines = focusLinesOf(focus);
     base = stops ? new Set<string>(stops) : new Set(STATIONS.filter((s) => lines.has(s.line)).map((s) => s.id));
   }
-  const full = role ? TECH_ROLES.has(role.key) : AI_FULL_AREAS.has(focus);
+  const full = role ? isTechRole(role) : AI_FULL_AREAS.has(focus);
   const ai = mode === "human" ? new Set<string>() : new Set(full ? AI_STOPS_FULL : AI_STOPS_LITE);
   const review = mode === "agent" ? new Set(AI_REVIEW_STOPS) : new Set<string>();
   const agent = mode === "agent" ? new Set([...base].filter((id) => !ai.has(id) && !review.has(id))) : new Set<string>();

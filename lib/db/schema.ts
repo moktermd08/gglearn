@@ -22,6 +22,9 @@ export const users = sqliteTable("users", {
   avatarRival: text("avatar_rival"),
   // "hide": left out of the weekly and monthly season boards (see lib/seasons.ts). Text, not a boolean, so it can be added to a table with rows.
   seasonBoard: text("season_board", { enum: ["show", "hide"] }).notNull().default("show"),
+  // "soft": this person chose to take their learning journey in any order (see lib/journeyLock.ts). Only counts when their company allows the choice.
+  // Text, not a boolean, so it can be added to a table with rows.
+  journeyMode: text("journey_mode", { enum: ["inherit", "soft"] }).notNull().default("inherit"),
   createdAt: integer("created_at").notNull().default(now),
 });
 
@@ -41,6 +44,9 @@ export const companies = sqliteTable("companies", {
   // DEFAULT 0 it tries to empty `companies` on the first push ("delete from companies"); as a SQL default it rebuilds `companies` on every later push.
   certValidMonths: integer("cert_valid_months"),
   certSigner: text("cert_signer").notNull().default(""),
+  // How strictly a role's learning journey is ordered for this company's people (lib/journeyLock.ts): "hard" locks later stages until earlier ones are passed and
+  // people cannot change it; "choice" (the default) is hard unless a person switches themselves to soft; "soft" never locks, it only recommends an order.
+  journeyLock: text("journey_lock", { enum: ["choice", "hard", "soft"] }).notNull().default("choice"),
   certSignerTitle: text("cert_signer_title").notNull().default(""),
 });
 
