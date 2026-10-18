@@ -91,15 +91,15 @@ export type Station = {
   id: string; line: LineId; x: number; row: number; name: string; scale: Scale; ai: boolean; owner: string; ins: string[]; outs: string[];
   /** slug of the Software Lifecycle track this stop belongs to */
   track: string;
-  /** label placement: above (a) or below (b) the line, and how it is anchored */
-  side: "a" | "b"; anchor: "start" | "middle" | "end"; L: number; R: number;
+  /** label placement: always above the line, on the near (0) or far (1) tier, and how it is anchored */
+  tier: 0 | 1; anchor: "start" | "middle" | "end"; L: number; R: number;
 };
 
 export const STATIONS: Station[] = [];
 for (const line of LINES) for (const a of RAW[line.id]) {
   STATIONS.push({
     id: a[0], line: line.id, x: a[1], row: line.row, name: a[2], scale: a[3], ai: !!a[4], owner: a[6], ins: a[7].split("|"), outs: a[8].split("|"),
-    track: TRACK_OVERRIDE.get(a[0]) ?? LINE_DEFAULT[line.id], side: "a", anchor: "middle", L: 0, R: 0,
+    track: TRACK_OVERRIDE.get(a[0]) ?? LINE_DEFAULT[line.id], tier: 0, anchor: "middle", L: 0, R: 0,
   });
 }
 export const STATION_BY_ID = new Map(STATIONS.map((s) => [s.id, s]));
