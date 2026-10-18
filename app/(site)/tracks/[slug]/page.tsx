@@ -7,6 +7,7 @@ import { LEVEL_INFO } from "@/lib/levelInfo";
 import { currentUser } from "@/lib/auth";
 import { openTo, requirementsFor, scopesOf } from "@/lib/paths";
 import { gateFor } from "@/lib/onboarding";
+import { orderLockFor } from "@/lib/journeyLock";
 import { now } from "@/lib/competitions";
 import { CERT_LEVELS, KIND_LABEL, LEVELS, PASS_MARK, QUESTIONS_PER_RUN, TIERS, certTitle, tierOf } from "@/lib/levels";
 import { QUEST_LABEL, QUEST_XP, badgesFor, trackStats } from "@/lib/stats";
@@ -71,7 +72,10 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
   const totalQs = [...counts.values()].reduce((a, b) => a + b, 0);
   // is this subject required of the person looking at it? then say what, and by when, right where they will act on it
   const req = user && enrolment ? requirementsFor(user, scopesOf(user.id)).find((r) => r.track.id === track.id) : undefined;
-  const gate = user && enrolment ? gateFor(user.id, track.id) : null;
+  const signGate = user && enrolment ? gateFor(user.id, track.id) : null;
+  // an earlier stage of this person's learning journey is not passed yet (lib/journeyLock.ts)
+  const orderLock = user && enrolment ? orderLockFor(user.id, track.id) : null;
+  const gate = signGate ?? (orderLock ? { phase: "", waitingOn: "" } : null);
   const reqDays = req ? Math.ceil((req.dueAt - now()) / 86400) : 0;
 
   return (
@@ -135,10 +139,23 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
         </form>
       ) : (
         <>
-          {gate && (
+          {!signGate && orderLock && (
+            <section aria-label="Locked until earlier stages are passed" className="card flex items-start gap-3 border-violet-300/40 p-4 text-sm">
+              <Lock size={18} className="mt-0.5 shrink-0 text-violet-400" />
+              <div className="space-y-1.5">
+                <p><b>Exams are locked for now.</b> This is stage {orderLock.stage} of your learning journey. Pass {orderLock.waitingOn.map((w) => w.name).join(", ") || "the stage before"} first. You can still read the study guides.</p>
+                <p className="flex flex-wrap gap-3">
+                  {orderLock.waitingOn[0] && <Link href={`/tracks/${orderLock.waitingOn[0].slug}`} className="font-semibold text-indigo-300 hover:underline">Go to {orderLock.waitingOn[0].name}</Link>}
+                  <Link href={`/start/${track.slug}`} className="font-semibold text-indigo-300 hover:underline">I already know this: test out</Link>
+                  <Link href="/map" className="font-semibold text-indigo-300 hover:underline">See my journey on the map</Link>
+                </p>
+              </div>
+            </section>
+          )}
+          {signGate && (
             <section aria-label="Locked until sign-off" className="card flex items-start gap-3 border-violet-300/40 p-4 text-sm">
               <Lock size={18} className="mt-0.5 shrink-0 text-violet-400" />
-              <p><b>Exams are locked for now.</b> This is part of {gate.phase}, which opens once your manager signs off {gate.waitingOn}. You can still read the study guides.</p>
+              <p><b>Exams are locked for now.</b> This is part of {signGate.phase}, which opens once your manager signs off {signGate.waitingOn}. You can still read the study guides.</p>
             </section>
           )}
           {passed < 20 && (

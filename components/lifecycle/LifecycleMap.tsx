@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Minus, Plus, Search, Trophy, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Lock, Minus, Plus, Search, Trophy, X } from "lucide-react";
+import { setJourneyMode } from "@/app/actions";
 import {
-  AI_MODES, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
+  AI_MODES, FAMILY_ORDER, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
   aiRoleName, buildRoute, type AiMode, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
 } from "@/lib/lifecycle/model";
 
@@ -34,6 +35,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const [picker, setPicker] = useState(false);
   const [pq, setPq] = useState("");
   const [races, setRaces] = useState(false);
+  const [jpanel, setJpanel] = useState(false);
   const [sel, setSel] = useState<Sel>(null);
   const [hint, setHint] = useState(true);
   const [legend, setLegend] = useState(false);
@@ -50,13 +52,16 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
 
   /* The next stop: the first required, unfinished stop in your lines; else the first one you have not yet passed at level 5. */
   const next = useMemo<Station | null>(() => {
-    const mine = STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
+    const all = STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
+    // never send someone to a stop that is locked for them: the first stop they can open comes first
+    const free = all.filter((s) => !data.journey?.locks[s.track]);
+    const mine = free.length ? free : all;
     const t = (s: Station) => data.tracks[s.track];
     const start = mode !== "human" ? STATION_BY_ID.get("aiuse") : !role ? STATION_BY_ID.get(FOCUS_START[focus] ?? "") : undefined;
     return mine.find((s) => t(s)?.open && t(s)?.required && t(s)!.passed < t(s)!.requiredLevel)
       ?? (start && routeIds.has(start.id) && (t(start)?.passed ?? 0) < 5 ? start : undefined)
       ?? mine.find((s) => t(s)?.open && (t(s)?.passed ?? 0) < 5) ?? mine[0] ?? null;
-  }, [routeIds, role, focus, mode, data.tracks]);
+  }, [routeIds, role, focus, mode, data.tracks, data.journey]);
 
   /* Races: live or upcoming campaigns on the tracks of this route. One flag per track, on the first stop of that track on the route. */
   const routeTracks = useMemo(() => role ? new Set([...role.tracks, ...(mode !== "human" ? ["ai-llm-practice"] : [])]) : new Set(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.track)), [role, mode, routeIds]);
@@ -245,7 +250,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
             {/* stations */}
             {STATIONS.map((st) => {
               const X = px(st.x), Y = py(st.row), c = LINE_COLOUR[st.line], t = data.tracks[st.track], mk = markOf(t);
-              const on = !dimming || routeIds.has(st.id), isNext = next?.id === st.id, isSel = sel?.kind === "st" && sel.id === st.id, above = st.side === "a";
+              const on = !dimming || routeIds.has(st.id), isNext = next?.id === st.id, isSel = sel?.kind === "st" && sel.id === st.id, lift = st.tier * 22, above = true; // labels always sit above the line, on a second tier when they would collide
               const tx = st.anchor === "start" ? st.L : st.anchor === "end" ? st.R : X, frac = Math.min(1, (t?.passed ?? 0) / 20), C = 2 * Math.PI * 16;
               const label = showLabels && (on || isSel) || isNext || isSel;
               return (
@@ -270,16 +275,20 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
                     </g>
                   )}
                   {label && (
-                    <text className="nm" x={tx} y={above ? Y - 24 : Y + 36} textAnchor={st.anchor} fontSize={20} fontWeight={isNext || isSel ? 700 : 500} fill={isSel ? "#4f46e5" : "#14161f"} stroke="#fbfaf6" strokeWidth={4.5} paintOrder="stroke" strokeLinejoin="round">{st.name}</text>
+                    <text className="nm" x={tx} y={Y - 24 - lift} textAnchor={st.anchor} fontSize={20} fontWeight={isNext || isSel ? 700 : 500} fill={isSel ? "#4f46e5" : "#14161f"} stroke="#fbfaf6" strokeWidth={4.5} paintOrder="stroke" strokeLinejoin="round">{st.name}</text>
+                  )}
+                  {data.journey?.locks[st.track] && on && (
+                    <g aria-hidden pointerEvents="none"><circle cx={X} cy={Y} r={11} fill="#e9e5d9" stroke="#5b6375" strokeWidth={2} />
+                      <rect x={X - 4.5} y={Y - 1} width={9} height={7} rx={1.5} fill="#5b6375" /><path d={`M${X - 3},${Y - 1} v-2.5 a3,3 0 0 1 6,0 v2.5`} fill="none" stroke="#5b6375" strokeWidth={1.8} /></g>
                   )}
                   {isNext && !isSel && (
-                    <g transform={`translate(${X},${above ? Y - 60 : Y + 70})`}>
+                    <g transform={`translate(${X},${Y + 36})`}>
                       <rect x={-48} y={-14} width={96} height={27} rx={13} fill="#14161f" />
                       <text y={5} textAnchor="middle" fontSize={15} fontWeight={700} letterSpacing=".06em" fill="#fff">{data.signedIn ? "NEXT STOP" : "START HERE"}</text>
                     </g>
                   )}
                   <circle cx={X} cy={Y} r={20} fill="transparent" />
-                  {label && <rect x={st.L - 4} y={above ? Y - 46 : Y - 8} width={st.R - st.L + 8} height={54} fill="transparent" />}
+                  {label && <rect x={st.L - 4} y={Y - 46 - lift} width={st.R - st.L + 8} height={46 + lift} fill="transparent" />}
                 </g>
               );
             })}
@@ -319,14 +328,27 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
               {picker && (
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                   <label className="flex items-center gap-2 rounded-xl border border-black/10 bg-[#fbfaf6] px-3 py-2"><Search size={15} className="text-slate-400" />
-                    <input autoFocus value={pq} onChange={(e) => setPq(e.target.value)} placeholder="Project manager, sales manager, full stack developer…" aria-label="Find your role" className="min-w-0 flex-1 bg-transparent text-[14px] outline-none" /></label>
-                  <ul role="listbox" aria-label="Roles" className="mt-1.5 max-h-72 overflow-auto">
+                    <input autoFocus value={pq} onChange={(e) => setPq(e.target.value)} placeholder="Business analyst, CFO, policy advisor, software engineer…" aria-label="Find your role" className="min-w-0 flex-1 bg-transparent text-[14px] outline-none" /></label>
+                  <ul role="listbox" aria-label="Roles" className="mt-1.5 max-h-80 overflow-auto">
                     {role && <li><button type="button" onClick={() => chooseRole(null)} className="w-full rounded-lg px-3 py-2 text-left text-[14px] text-slate-400 hover:bg-black/5">Any role: show everything</button></li>}
-                    {data.roles.filter((r) => !pq.trim() || [r.name, ...r.aliases].some((n) => n.toLowerCase().includes(pq.trim().toLowerCase()))).map((r) => (
-                      <li key={r.key}><button type="button" role="option" aria-selected={r.key === roleKey} onClick={() => chooseRole(r.key)} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[14px] hover:bg-black/5">
-                        <span className="flex-1 font-semibold">{r.name}</span>{r.key === roleKey && <Check size={15} className="text-indigo-300" />}</button></li>
-                    ))}
-                    {pq.trim() && !data.roles.some((r) => [r.name, ...r.aliases].some((n) => n.toLowerCase().includes(pq.trim().toLowerCase()))) && <li className="px-3 py-2 text-[14px] text-slate-400">No role matches. Try an area below.</li>}
+                    {(() => {
+                      const q = pq.trim().toLowerCase();
+                      const hit = (r: RoleInfo) => !q || [r.name, r.family, r.blurb, ...r.aliases].some((n) => n.toLowerCase().includes(q));
+                      const shown = data.roles.filter(hit);
+                      if (!shown.length) return <li className="px-3 py-2 text-[14px] text-slate-400">No role matches. Try an area below.</li>;
+                      const fams = [...new Set(shown.map((r) => r.family))].sort((a, b) => (FAMILY_ORDER.indexOf(a) + 100) % 100 - (FAMILY_ORDER.indexOf(b) + 100) % 100);
+                      return fams.map((f) => (
+                        <li key={f} role="presentation">
+                          <p className="sticky top-0 bg-[#fff] px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">{f}</p>
+                          <ul role="group" aria-label={f}>
+                            {shown.filter((r) => r.family === f).map((r) => (
+                              <li key={r.key}><button type="button" role="option" aria-selected={r.key === roleKey} onClick={() => chooseRole(r.key)} className="flex w-full items-start gap-2 rounded-lg px-3 py-1.5 text-left hover:bg-black/5">
+                                <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{r.name}</span><span className="block truncate text-[12px] text-slate-400">{r.blurb}</span></span>{r.key === roleKey && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                            ))}
+                          </ul>
+                        </li>
+                      ));
+                    })()}
                   </ul>
                 </div>
               )}
@@ -353,6 +375,43 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
         {hint && <p className="pointer-events-auto rounded-full bg-[#14161f]/85 px-3.5 py-1.5 text-[13px] font-medium text-[#fff]">{narrow ? "Drag to move · pinch to zoom · tap a stop" : "Drag to move · ctrl or ⌘ + scroll to zoom · click a stop"}</p>}
         <button type="button" onClick={goNext} disabled={!next} className="btn pointer-events-auto !rounded-full !px-4 !py-3 text-[15px] shadow-xl sm:!px-5 sm:text-base">Take me to my next stop<ArrowRight size={18} /></button>
       </div>
+
+      {data.journey && (
+        <div className="absolute bottom-[7.6rem] left-3 z-10 sm:bottom-[7.8rem] sm:left-5">
+          <button type="button" onClick={() => setJpanel((v) => !v)} aria-expanded={jpanel}
+            className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-[#fff] px-3.5 py-2 text-[14px] font-bold shadow-lg hover:shadow-xl">
+            {data.journey.locked ? <Lock size={15} /> : <Check size={15} className="text-emerald-400" />}Your journey · stage {data.journey.current} of {data.journey.total}<ChevronDown size={14} className={jpanel ? "rotate-180" : ""} />
+          </button>
+          {jpanel && (
+            <div className="absolute bottom-12 left-0 w-[min(24rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-3 shadow-2xl">
+              <p className="px-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Your journey as {data.journey.roleName}</p>
+              <ol className="mt-2 max-h-[20rem] space-y-1.5 overflow-auto">
+                {data.journey.stages.map((g) => (
+                  <li key={g.n} className={`rounded-xl border p-2.5 ${g.state === "current" ? "border-indigo-400 bg-indigo-50" : "border-black/10 bg-[#fbfaf6]"}`}>
+                    <p className="flex items-center gap-2 text-[13px] font-bold">
+                      <span className={`grid h-5 w-5 place-items-center rounded-full text-[11px] text-[#fff] ${g.state === "done" ? "bg-emerald-500" : g.state === "current" ? "bg-indigo-500" : "bg-slate-400"}`}>{g.state === "done" ? <Check size={12} /> : g.state === "locked" && data.journey!.locked ? <Lock size={11} /> : g.n}</span>
+                      Stage {g.n}<span className="font-normal text-slate-400">{g.state === "done" ? " · done" : g.state === "current" ? " · you are here" : data.journey!.locked ? " · locked" : " · later"}</span>
+                    </p>
+                    <p className="mt-1 flex flex-wrap gap-1">{g.tracks.map((t) => <button key={t.slug} type="button" onClick={() => { setJpanel(false); const st = STATIONS.filter((x) => x.track === t.slug).sort((a, b) => a.x - b.x)[0]; if (st) pick({ kind: "st", id: st.id }); }}
+                      className={`rounded-full border px-2 py-0.5 text-[12px] ${t.need && t.passed >= t.need ? "border-emerald-400 text-emerald-300" : "border-black/15"}`}>{t.name}{t.need ? ` ${Math.min(t.passed, t.need)}/${t.need}` : ""}</button>)}</p>
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-2 px-1 text-[12.5px] text-slate-400">
+                {data.journey.setting === "soft" ? "Your organisation recommends this order but never locks it."
+                  : data.journey.setting === "hard" ? "Your organisation locks this order. You can test out of a stage with a placement check."
+                  : data.journey.locked ? "Later stages unlock as you pass earlier ones, and you can test out of a stage." : "You have chosen to take your journey in any order."}
+              </p>
+              {data.journey.canSwitch && (
+                <form action={setJourneyMode} className="mt-2 px-1">
+                  <input type="hidden" name="mode" value={data.journey.locked ? "soft" : "inherit"} />
+                  <button className="text-[13px] font-semibold text-indigo-300 underline">{data.journey.locked ? "Let me take it in any order" : "Lock my order again"}</button>
+                </form>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {raceList.length > 0 && (
         <div className="absolute bottom-[4.4rem] left-3 z-10 sm:bottom-[4.6rem] sm:left-5">
@@ -413,7 +472,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
       {(selStation || selGate) && (
         <aside aria-live="polite" className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-5 sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGoTrack={(slug) => { const t = STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
           {selGate && <GateCard g={selGate} tracks={data.tracks} />}
         </aside>
       )}
@@ -421,7 +480,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   );
 }
 
-function StationCard({ st, info, races, lens, roleName, signedIn, onGo }: { st: Station; info: TrackInfo | undefined; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onGo: (s: Station) => void }) {
+function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName, signedIn, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onGo: (s: Station) => void }) {
   const line = LINE_BY_ID[st.line], c = LINE_COLOUR[st.line], z = zoneOf(st.x);
   const seq = stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
   const lvl = info?.passed ?? 0;
@@ -467,8 +526,21 @@ function StationCard({ st, info, races, lens, roleName, signedIn, onGo }: { st: 
             <div className="bar mt-2" title={`Level ${lvl} of 20`}><i style={{ width: `${(lvl / 20) * 100}%` }} /></div>
             <p className="mt-1.5 text-sm text-slate-400">{lvl > 0 ? `You are on level ${lvl} of 20.` : "20 levels, from Novice to Titan."}{info.required && <> <b className={info.overdue ? "text-rose-300" : "text-amber-300"}>{lvl >= info.requiredLevel ? "Required: done." : info.overdue ? "Required: overdue." : `Required${info.dueAt ? `, due ${fmtDate(info.dueAt)}` : ""}.`}</b></>}</p>
             {info.rival && <p className="mt-1 text-sm text-slate-400">{info.rival.name} is on level {info.rival.level}{info.rival.level > lvl ? ". Catch up." : lvl > info.rival.level ? ". You are ahead." : ". Dead level."}</p>}
+            {lock && (
+              <div className="mt-3 rounded-xl border-l-4 border-slate-400 bg-black/5 p-3 text-sm">
+                <p className="flex items-center gap-1.5 font-bold"><Lock size={14} />Locked until you pass {lock.waitingOn.map((w) => w.name).join(", ") || "the stage before"}</p>
+                <p className="mt-0.5 text-slate-400">This is stage {lock.stage} of your journey. The stages before it come first, so what you learn builds up in order.</p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {lock.waitingOn[0] && <button type="button" onClick={() => onGoTrack(lock.waitingOn[0].slug)} className="rounded-full bg-[#14161f] px-3 py-1 text-[13px] font-bold text-[#fff] hover:bg-black">Take me to {lock.waitingOn[0].name}</button>}
+                  {info.open && <Link href={`/start/${info.slug}`} className="rounded-full border border-black/15 bg-[#fff] px-3 py-1 text-[13px] font-semibold hover:border-indigo-400">I already know this: test out</Link>}
+                </div>
+              </div>
+            )}
+            {!lock && advice && <p className="mt-3 rounded-xl bg-amber-500/10 p-2.5 text-[13px] text-amber-300">Recommended order: pass {advice.waitingOn.map((w) => w.name).join(", ") || "the stage before"} first. Nothing is blocked for you.</p>}
             {info.open
-              ? <Link href={`/tracks/${info.slug}`} className="btn mt-3 w-full justify-center">{lvl > 0 ? "Continue" : "Start learning"}<ArrowRight size={16} /></Link>
+              ? lock
+                ? <span className="btn mt-3 w-full cursor-not-allowed justify-center !bg-slate-400 opacity-70" aria-disabled><Lock size={15} />Locked</span>
+                : <Link href={`/tracks/${info.slug}`} className="btn mt-3 w-full justify-center">{lvl > 0 ? "Continue" : "Start learning"}<ArrowRight size={16} /></Link>
               : <p className="mt-3 text-sm text-slate-400">This track is not part of your plan.</p>}
             {!signedIn && <p className="mt-2 text-center text-xs text-slate-400"><Link href="/login" className="font-semibold text-indigo-300 hover:underline">Sign in</Link> to see your own progress here.</p>}
           </div>
