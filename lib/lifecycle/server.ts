@@ -1,7 +1,9 @@
 import { catalog, inScope, loadProgress, requirementsFor, scopesOf } from "@/lib/paths";
 import { rivalFor, rivalProgress } from "@/lib/rivals";
 import { MAX_LEVEL } from "@/lib/levels";
-import { STATIONS, focusForRole, type MapData, type TrackInfo } from "./model";
+import { campaignViews } from "@/lib/campaigns";
+import { loadRoles } from "./roles";
+import { STATIONS, focusForRole, type MapData, type RaceInfo, type TrackInfo } from "./model";
 
 type Viewer = Parameters<typeof requirementsFor>[0] & { name: string; jobRole: string };
 
@@ -24,5 +26,13 @@ export function mapDataFor(viewer: Viewer | null): MapData {
       open: !viewer || inScope(t, viewer.audience, scopes), rival,
     };
   }
-  return { signedIn: !!viewer, firstName: viewer ? viewer.name.split(" ")[0] : null, defaultFocus: focusForRole(viewer?.jobRole), tracks };
+  const roles = loadRoles();
+  const races: RaceInfo[] = campaignViews().filter((v) => v.state === "live" || v.state === "upcoming").map((v) => ({
+    id: v.id, title: v.title, track: v.track, trackName: v.trackName.replace(/^\d+\.\s*/, ""), state: v.state as "live" | "upcoming", humans: v.humans, slug: v.slug, hook: v.hook, headline: v.headline, goal: v.goal, days: v.days,
+  }));
+  const mine = viewer?.jobRole.toLowerCase() ?? "";
+  return {
+    signedIn: !!viewer, firstName: viewer ? viewer.name.split(" ")[0] : null, defaultFocus: focusForRole(viewer?.jobRole), tracks,
+    roles, races, defaultRole: roles.some((r) => r.key === mine) ? mine : null,
+  };
 }

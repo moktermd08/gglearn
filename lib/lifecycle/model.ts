@@ -144,6 +144,12 @@ export function focusForRole(role: string | null | undefined): FocusId {
   return ROLE_WORDS.find(([re]) => re.test(r))?.[1] ?? "all";
 }
 
+/** A job role from the career ladders, with every track its ladder asks for. */
+export type RoleInfo = { key: string; name: string; aliases: string[]; tracks: string[] };
+/** A live or upcoming public race (campaign) on one track. */
+export type RaceInfo = {
+  id: string; title: string; track: string; trackName: string; state: "live" | "upcoming"; humans: number; slug: string; hook: string; headline: string; goal: number; days: number;
+};
 export type TrackInfo = {
   slug: string; name: string;
   /** highest level passed, 0 to 20 */
@@ -153,4 +159,9 @@ export type TrackInfo = {
   open: boolean;
   rival: { name: string; level: number } | null;
 };
-export type MapData = { signedIn: boolean; firstName: string | null; defaultFocus: FocusId; tracks: Record<string, TrackInfo> };
+export type MapData = {
+  signedIn: boolean; firstName: string | null; defaultFocus: FocusId; tracks: Record<string, TrackInfo>;
+  roles: RoleInfo[]; races: RaceInfo[];
+  /** the visitor's own job role, when it matches one of the ladders */
+  defaultRole: string | null;
+};
