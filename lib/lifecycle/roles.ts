@@ -16,6 +16,12 @@ const ALIASES: Record<string, string[]> = {
   tester: ["qa", "qa engineer", "test engineer"],
 };
 
+type Meta = { family: string; blurb: string; aliases: string[] };
+/** Family, one-line blurb and extra search names for every role (content/careers/role-meta.json). */
+function loadMeta(): Record<string, Meta> {
+  try { return JSON.parse(fs.readFileSync(path.join(process.cwd(), "content", "careers", "role-meta.json"), "utf8")); } catch { return {}; }
+}
+
 let cache: RoleInfo[] | null = null;
 
 /** Every career ladder in content/careers/roles with the tracks it asks for (a ladder step is [trackSlug, level]). */
@@ -23,6 +29,7 @@ export function loadRoles(): RoleInfo[] {
   if (cache) return cache;
   const dir = path.join(process.cwd(), "content", "careers", "roles");
   const roles: RoleInfo[] = [];
+  const meta = loadMeta();
   const levels = new Map<string, Map<string, number>>();
   for (const f of fs.readdirSync(dir).filter((n) => n.endsWith(".json")).sort()) {
     try {
@@ -30,7 +37,8 @@ export function loadRoles(): RoleInfo[] {
       const top = new Map<string, number>();
       for (const r of j.rungs ?? []) for (const [t, l] of r.steps ?? []) top.set(t, Math.max(top.get(t) ?? 0, l));
       levels.set(j.role, top);
-      roles.push({ key: j.role, name: j.name, aliases: ALIASES[j.role] ?? [], tracks: [...top.keys()], core: [] });
+      const m = meta[j.role];
+      roles.push({ key: j.role, name: j.name, family: m?.family ?? "Other", blurb: m?.blurb ?? "", aliases: [...new Set([...(ALIASES[j.role] ?? []), ...(m?.aliases ?? [])])], tracks: [...top.keys()], core: [] });
     } catch { /* a ladder file that does not parse is simply not offered */ }
   }
   // A track most ladders ask for (such as governance and compliance) is a basic, not what sets a role apart, so it only counts as core when this ladder wants it at level 8 or more.

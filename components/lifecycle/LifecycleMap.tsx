@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Minus, Plus, Search, Trophy, X } from "lucide-react";
 import {
-  AI_MODES, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
+  AI_MODES, FAMILY_ORDER, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
   aiRoleName, buildRoute, type AiMode, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
 } from "@/lib/lifecycle/model";
 
@@ -319,14 +319,27 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
               {picker && (
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                   <label className="flex items-center gap-2 rounded-xl border border-black/10 bg-[#fbfaf6] px-3 py-2"><Search size={15} className="text-slate-400" />
-                    <input autoFocus value={pq} onChange={(e) => setPq(e.target.value)} placeholder="Project manager, sales manager, full stack developer…" aria-label="Find your role" className="min-w-0 flex-1 bg-transparent text-[14px] outline-none" /></label>
-                  <ul role="listbox" aria-label="Roles" className="mt-1.5 max-h-72 overflow-auto">
+                    <input autoFocus value={pq} onChange={(e) => setPq(e.target.value)} placeholder="Business analyst, CFO, policy advisor, software engineer…" aria-label="Find your role" className="min-w-0 flex-1 bg-transparent text-[14px] outline-none" /></label>
+                  <ul role="listbox" aria-label="Roles" className="mt-1.5 max-h-80 overflow-auto">
                     {role && <li><button type="button" onClick={() => chooseRole(null)} className="w-full rounded-lg px-3 py-2 text-left text-[14px] text-slate-400 hover:bg-black/5">Any role: show everything</button></li>}
-                    {data.roles.filter((r) => !pq.trim() || [r.name, ...r.aliases].some((n) => n.toLowerCase().includes(pq.trim().toLowerCase()))).map((r) => (
-                      <li key={r.key}><button type="button" role="option" aria-selected={r.key === roleKey} onClick={() => chooseRole(r.key)} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[14px] hover:bg-black/5">
-                        <span className="flex-1 font-semibold">{r.name}</span>{r.key === roleKey && <Check size={15} className="text-indigo-300" />}</button></li>
-                    ))}
-                    {pq.trim() && !data.roles.some((r) => [r.name, ...r.aliases].some((n) => n.toLowerCase().includes(pq.trim().toLowerCase()))) && <li className="px-3 py-2 text-[14px] text-slate-400">No role matches. Try an area below.</li>}
+                    {(() => {
+                      const q = pq.trim().toLowerCase();
+                      const hit = (r: RoleInfo) => !q || [r.name, r.family, r.blurb, ...r.aliases].some((n) => n.toLowerCase().includes(q));
+                      const shown = data.roles.filter(hit);
+                      if (!shown.length) return <li className="px-3 py-2 text-[14px] text-slate-400">No role matches. Try an area below.</li>;
+                      const fams = [...new Set(shown.map((r) => r.family))].sort((a, b) => (FAMILY_ORDER.indexOf(a) + 100) % 100 - (FAMILY_ORDER.indexOf(b) + 100) % 100);
+                      return fams.map((f) => (
+                        <li key={f} role="presentation">
+                          <p className="sticky top-0 bg-[#fff] px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">{f}</p>
+                          <ul role="group" aria-label={f}>
+                            {shown.filter((r) => r.family === f).map((r) => (
+                              <li key={r.key}><button type="button" role="option" aria-selected={r.key === roleKey} onClick={() => chooseRole(r.key)} className="flex w-full items-start gap-2 rounded-lg px-3 py-1.5 text-left hover:bg-black/5">
+                                <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{r.name}</span><span className="block truncate text-[12px] text-slate-400">{r.blurb}</span></span>{r.key === roleKey && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                            ))}
+                          </ul>
+                        </li>
+                      ));
+                    })()}
                   </ul>
                 </div>
               )}
