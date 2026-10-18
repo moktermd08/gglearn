@@ -250,7 +250,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
             {/* stations */}
             {STATIONS.map((st) => {
               const X = px(st.x), Y = py(st.row), c = LINE_COLOUR[st.line], t = data.tracks[st.track], mk = markOf(t);
-              const on = !dimming || routeIds.has(st.id), isNext = next?.id === st.id, isSel = sel?.kind === "st" && sel.id === st.id, above = st.side === "a";
+              const on = !dimming || routeIds.has(st.id), isNext = next?.id === st.id, isSel = sel?.kind === "st" && sel.id === st.id, lift = st.tier * 22, above = true; // labels always sit above the line, on a second tier when they would collide
               const tx = st.anchor === "start" ? st.L : st.anchor === "end" ? st.R : X, frac = Math.min(1, (t?.passed ?? 0) / 20), C = 2 * Math.PI * 16;
               const label = showLabels && (on || isSel) || isNext || isSel;
               return (
@@ -275,20 +275,20 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
                     </g>
                   )}
                   {label && (
-                    <text className="nm" x={tx} y={above ? Y - 24 : Y + 36} textAnchor={st.anchor} fontSize={20} fontWeight={isNext || isSel ? 700 : 500} fill={isSel ? "#4f46e5" : "#14161f"} stroke="#fbfaf6" strokeWidth={4.5} paintOrder="stroke" strokeLinejoin="round">{st.name}</text>
+                    <text className="nm" x={tx} y={Y - 24 - lift} textAnchor={st.anchor} fontSize={20} fontWeight={isNext || isSel ? 700 : 500} fill={isSel ? "#4f46e5" : "#14161f"} stroke="#fbfaf6" strokeWidth={4.5} paintOrder="stroke" strokeLinejoin="round">{st.name}</text>
                   )}
                   {data.journey?.locks[st.track] && on && (
                     <g aria-hidden pointerEvents="none"><circle cx={X} cy={Y} r={11} fill="#e9e5d9" stroke="#5b6375" strokeWidth={2} />
                       <rect x={X - 4.5} y={Y - 1} width={9} height={7} rx={1.5} fill="#5b6375" /><path d={`M${X - 3},${Y - 1} v-2.5 a3,3 0 0 1 6,0 v2.5`} fill="none" stroke="#5b6375" strokeWidth={1.8} /></g>
                   )}
                   {isNext && !isSel && (
-                    <g transform={`translate(${X},${above ? Y - 60 : Y + 70})`}>
+                    <g transform={`translate(${X},${Y + 36})`}>
                       <rect x={-48} y={-14} width={96} height={27} rx={13} fill="#14161f" />
                       <text y={5} textAnchor="middle" fontSize={15} fontWeight={700} letterSpacing=".06em" fill="#fff">{data.signedIn ? "NEXT STOP" : "START HERE"}</text>
                     </g>
                   )}
                   <circle cx={X} cy={Y} r={20} fill="transparent" />
-                  {label && <rect x={st.L - 4} y={above ? Y - 46 : Y - 8} width={st.R - st.L + 8} height={54} fill="transparent" />}
+                  {label && <rect x={st.L - 4} y={Y - 46 - lift} width={st.R - st.L + 8} height={46 + lift} fill="transparent" />}
                 </g>
               );
             })}
