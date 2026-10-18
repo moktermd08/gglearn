@@ -74,7 +74,7 @@ export default async function Home() {
 
   return (
     <div className="space-y-16">
-      <section className="relative grid items-center gap-8 overflow-x-clip pt-4 lg:grid-cols-[1.15fr_1fr]">
+      <section className="grid items-center gap-8 overflow-x-clip pt-4 lg:grid-cols-[1.15fr_1fr]">
         <div className="pointer-events-none absolute -left-24 -top-16 -z-10 h-80 w-80 rounded-full bg-indigo-500/15 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -right-16 top-10 -z-10 h-72 w-72 rounded-full bg-pink-500/15 blur-3xl" aria-hidden />
         <div>
