@@ -122,7 +122,7 @@ export default async function Home() {
             <span className="btn mt-4 inline-flex">Open the map<ArrowRight size={16} /></span>
           </div>
           <svg viewBox="0 0 360 150" className="w-full" aria-hidden>
-            {LINES.map((l, i) => { const y = 12 + i * 14.5, a = 8 + (i * 17) % 60, b = 352 - (i * 23) % 70; return (
+            {LINES.map((l, i) => { const y = 10 + i * (130 / LINES.length), a = 8 + (i * 17) % 60, b = 352 - (i * 23) % 70; return (
               <g key={l.id}><line x1={a} x2={b} y1={y} y2={y} stroke={LINE_COLOUR[l.id]} strokeWidth={5} strokeLinecap="round" />
                 {[0.18, 0.4, 0.62, 0.84].map((f) => <circle key={f} cx={a + (b - a) * f} cy={y} r={4} fill="#fbfaf6" stroke={LINE_COLOUR[l.id]} strokeWidth={2.5} />)}</g>); })}
             {[84, 176, 268].map((x) => <g key={x}><rect x={x - 4} y={10} width={8} height={130} rx={2} fill="#fbfaf6" stroke="#14161f" strokeWidth={2} /></g>)}

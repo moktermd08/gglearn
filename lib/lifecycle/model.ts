@@ -13,7 +13,7 @@ export const LINE_BY_ID = Object.fromEntries(LINES.map((l) => [l.id, l])) as Rec
 
 /** Line colours, tuned for the site's light page. */
 export const LINE_COLOUR: Record<LineId, string> = {
-  doc: "#c99700", str: "#d22b3c", ux: "#7a4cb5", arc: "#0b97a3", dat: "#8a5629",
+  doc: "#c99700", str: "#d22b3c", gtm: "#7aa300", ux: "#7a4cb5", arc: "#0b97a3", dat: "#8a5629",
   eng: "#1d5ec2", qa: "#2b9a4c", sec: "#39465a", ops: "#ec7618", gov: "#d14892",
 };
 
@@ -21,6 +21,7 @@ export const LINE_COLOUR: Record<LineId, string> = {
 export const LINE_BLURB: Record<LineId, string> = {
   doc: "Writing things down so anyone can take over.",
   str: "Why we build it, who for, and how it earns its keep.",
+  gtm: "Finding customers, winning them, and keeping them.",
   ux: "How it looks, feels and works for real people.",
   arc: "How the pieces fit together.",
   dat: "The information the product keeps, and the AI that learns from it.",
@@ -48,20 +49,26 @@ export const zoneOf = (x: number) => ZONES.findIndex((z) => x >= z.from && x < z
  * A line has a default track; stations listed under OVERRIDES belong to a better-fitting one.
  */
 const LINE_DEFAULT: Record<LineId, string> = {
-  doc: "tools-plan-design", str: "sdlc-discovery", ux: "tools-plan-design", arc: "sdlc-architecture", dat: "sdlc-database",
+  doc: "tools-plan-design", str: "sdlc-discovery", gtm: "lead-generation-titan", ux: "tools-plan-design", arc: "sdlc-architecture", dat: "sdlc-database",
   eng: "sdlc-backend", qa: "sdlc-testing", sec: "sdlc-security", ops: "sdlc-devops", gov: "delivery-management",
 };
 const OVERRIDES: Record<string, string[]> = {
   "sdlc-backend": ["apidocs", "intmap", "apicon"],
   "sdlc-devops": ["runbooks"],
-  "sdlc-launch": ["relnotes", "userguide", "launch", "onboard", "feedback", "hypercare"],
+  "sdlc-launch": ["relnotes", "userguide", "hypercare"],
   "sdlc-architecture": ["adr"],
   "sdlc-frontend": ["dsys", "hifi", "a11yrev", "uxsign", "a11ystmt", "frontend"],
   "tools-build-ship": ["readme", "devenv", "standards", "repo", "skeleton", "codereview", "merge"],
-  "tools-business": ["market", "gtm", "salesen", "beta"],
+  "tools-business": ["market", "gtm", "beta", "compwatch", "crm", "pipeline"],
+  "lead-generation-titan": ["icp", "funnel", "leadcapture"],
+  "brand-positioning-voice": ["position", "brandvoice", "valueprop"],
+  "service-design-pricing": ["pricing"],
+  "gglink-seo-content": ["contentplan", "landing"],
+  "facebook-marketing-titan": ["paidsocial"],
+  "communications-email": ["launch", "emailseq", "custnotice"],
+  "gglink-sales-support": ["playbook", "salesen", "calls", "onboard", "feedback", "health", "renewal"],
   "governance-compliance": ["archive", "dclass", "dpia", "sar", "retain", "regscan", "evidence", "accred", "audit", "licence", "airisk", "board", "stagegate", "serviceassess", "risk", "sustain"],
-  "payments-billing": ["pricing"],
-  "data-analytics": ["kpi", "benefits", "analytics", "uxiter", "pipelines", "dqmon"],
+    "data-analytics": ["kpi", "benefits", "analytics", "uxiter", "pipelines", "dqmon"],
   "ai-llm-practice": ["aiuse", "modelsel", "evalset", "training", "modelval", "drift", "aifeat"],
   "servers-infrastructure": ["scaling", "captest", "hosting", "iac", "envs", "patching", "shutdown", "cloudcost", "finops"],
   "security-operations": ["threat", "secrets", "vulnwatch", "secinc", "recert", "sanitise", "sbom", "deps"],
@@ -124,7 +131,8 @@ export const FOCUS = [
   { id: "build", label: "Build software", lines: ["arc", "dat", "eng", "qa", "sec", "ops"] },
   { id: "design", label: "Design and content", lines: ["ux", "doc", "str"] },
   { id: "lead", label: "Lead delivery", lines: ["gov", "str", "ops", "arc"] },
-  { id: "sell", label: "Sell and grow", lines: ["str", "ux"] },
+  { id: "sell", label: "Market and sell", lines: ["gtm", "str", "ux"] },
+  { id: "customers", label: "Customer success", lines: ["gtm", "ops", "doc"] },
   { id: "run", label: "Run and support", lines: ["ops", "doc", "sec"] },
   { id: "secure", label: "Secure and comply", lines: ["sec", "gov", "dat"] },
   { id: "all", label: "Show me everything", lines: LINES.map((l) => l.id) },
@@ -134,8 +142,9 @@ export type FocusId = (typeof FOCUS)[number]["id"];
 const ROLE_WORDS: [RegExp, FocusId][] = [
   [/secur|compliance|privacy|risk|audit/, "secure"],
   [/design|ux|content|writer|brand|creative|editor/, "design"],
-  [/sales|market|social|growth|business dev|account|seo/, "sell"],
-  [/support|customer|success|service|operat|devops|sre|infrastructure/, "run"],
+  [/customer|success|account|support/, "customers"],
+  [/sales|market|social|growth|business dev|seo/, "sell"],
+  [/service|operat|devops|sre|infrastructure/, "run"],
   [/manag|lead|director|cto|head|product|project|delivery|owner|executive|ceo/, "lead"],
   [/develop|engineer|programmer|architect|data|ml|qa|test/, "build"],
 ];
