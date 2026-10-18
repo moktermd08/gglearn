@@ -1,6 +1,6 @@
 import { eq, inArray } from "drizzle-orm";
 import { brands, companies, db, projects, users } from "@/lib/db";
-import { catalog, inScope, scopesOf } from "@/lib/paths";
+import { catalog, inScope, requirementsFor, scopesOf } from "@/lib/paths";
 import { levelsPassed } from "@/lib/progress";
 import { loadRoles } from "@/lib/lifecycle/roles";
 import { isTechRole } from "@/lib/lifecycle/model";
@@ -13,7 +13,7 @@ import { UNLOCK_LEVEL, journeyState, stagesOf, type Passed, type Reach } from "@
  *
  * The lock only stops someone starting a track they have no level in; anyone part-way through a track can always carry on.
  * It applies to learners with a job role that has a ladder. Managers and admins are never locked. A placement check counts as passing,
- * so a person who already knows a stage can test out of it.
+ * so a person who already knows a stage can test out of it. A required track that is overdue is never locked: a deadline must not become impossible.
  */
 export type Setting = "choice" | "hard" | "soft";
 const STRICT: Record<Setting, number> = { hard: 2, choice: 1, soft: 0 };
@@ -80,8 +80,11 @@ export function journeyFor(userId: number): Journey | null {
     tracks: s.stage.tracks.map((slug) => ({ slug, name: name(slug), passed: passed[slug] ?? 0, need: Math.min(UNLOCK_LEVEL, cap[slug] ?? UNLOCK_LEVEL, reach[slug] ?? 0), open: true })),
   }));
   for (const s of states) if (s.state === "locked") for (const slug of s.stage.tracks) if ((passed[slug] ?? 0) === 0) advice[slug] = { stage: s.stage.n, waitingOn: s.waitingOn.map((w) => ({ slug: w, name: name(w) })) };
+  // locked: the same as the recommendation, except a required track that is past its deadline, which opens whatever the order says
+  const locks: Journey["locks"] = locked ? { ...advice } : {};
+  if (locked) for (const r of requirementsFor(u, scopes, cat)) if (!r.done && r.overdue) delete locks[r.track.slug];
   const current = states.findIndex((s) => s.state !== "done");
-  return { roleKey: role.key, roleName: role.name, setting, canSwitch: setting === "choice" && !exempt, locked, stages: outStages, locks: locked ? advice : {}, advice, current: current < 0 ? stages.length : current + 1, total: stages.length };
+  return { roleKey: role.key, roleName: role.name, setting, canSwitch: setting === "choice" && !exempt, locked, stages: outStages, locks, advice, current: current < 0 ? stages.length : current + 1, total: stages.length };
 }
 
 /** Why a track cannot be started yet because of the journey order, or null. Checked before an exam starts, so the lock holds without the page that shows it. */
