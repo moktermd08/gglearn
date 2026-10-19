@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db, careerLevels } from "@/lib/db";
 import { catalog } from "@/lib/paths";
+import { isFamilyToken, matchesRoles } from "@/lib/roleFamily";
 
 type CatalogRows = ReturnType<typeof catalog>;
 export type RoleCoverage = {
@@ -17,7 +18,7 @@ const rolesOf = (t: { roles: string }) => t.roles.split(",").map(roleKey).filter
 /** What the academy has ready for one job role. Roles are matched exactly (lower case), so this is how an admin sees a mismatch. */
 export function coverageFor(jobRole: string, cat: CatalogRows = catalog()): RoleCoverage {
   const role = roleKey(jobRole);
-  const mine = cat.filter((t) => t.tier === "role" && t.audience !== "customer" && rolesOf(t).includes(role));
+  const mine = cat.filter((t) => t.tier === "role" && t.audience !== "customer" && matchesRoles(rolesOf(t), role) && rolesOf(t).length > 0);
   return {
     required: mine.filter((t) => t.reach >= t.requiredLevel).length,
     planned: mine.filter((t) => t.reach < t.requiredLevel).length,
@@ -31,7 +32,7 @@ export const hasNoRolePath = (c: RoleCoverage) => c.required === 0 && !c.ladder;
 /** Roles the academy has something for, to offer as the choices when someone is invited or changes role. */
 export function knownRoles(cat: CatalogRows = catalog()): string[] {
   const set = new Set<string>();
-  for (const t of cat) if (t.tier === "role" && t.audience !== "customer") for (const r of rolesOf(t)) set.add(r);
+  for (const t of cat) if (t.tier === "role" && t.audience !== "customer") for (const r of rolesOf(t)) if (!isFamilyToken(r)) set.add(r);
   for (const l of db.select().from(careerLevels).all()) set.add(l.jobRole);
   return [...set].sort();
 }

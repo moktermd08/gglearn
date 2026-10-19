@@ -2,10 +2,12 @@
 import { eq, like } from "drizzle-orm";
 import { and } from "drizzle-orm";
 import { brands, companies, db, enrollments, knowledgeChanges, knowledgeItems, questions, profileEntries, profileFields, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, leagueEntries, tools, streakFreezes, userScopes, users } from "../lib/db";
-import { SECTIONS, completenessOf, fieldsFor, profileOf, rowsOf, saveAnswer, saveSectionMeta, sectionsFor } from "../lib/profile";
+import { SECTIONS, completenessOf, needsOf, fieldsFor, profileOf, rowsOf, saveAnswer, saveSectionMeta, sectionsFor } from "../lib/profile";
 import { addCustomField, retireCustomField } from "../lib/profileAdmin";
 import { TEMPLATES, applyTemplate, previewTemplate } from "../lib/profileTemplates";
 import { MAX_CUSTOM } from "../lib/profileAdmin";
+import { familyOf, matchesRoles } from "../lib/roleFamily";
+import { requirementsFor, resetCatalogCache } from "../lib/paths";
 import { PER_LEVEL, writeProfileQuestions } from "../lib/profileQuestions";
 import { phaseSlug, profileSlug, publishProfile, publishStates } from "../lib/profilePublish";
 import { activeAccess, applyPlan, grantAccess, holdersOf, leaversWithAccess, offboardingLines, planFor, revokeAccess } from "../lib/access";
@@ -91,7 +93,30 @@ try {
   check("pressing again tops up levels still short of " + PER_LEVEL + " and no further", [1, 2, 3].every((l) => qOf(phaseSlug("company", REF, "d1")).filter((q) => q.level === l).length === 18));
   await writeProfileQuestions(adminMe, "company", REF, fake);
   check("a level that has enough is left alone", [1, 2, 3].every((l) => qOf(phaseSlug("company", REF, "d1")).filter((q) => q.level === l).length === 18));
-  check("publish state sees every phase track", publishStates("company", REF).tracks.length === 3 && [...publishStates("company", REF).states.values()].every((v) => v === "current" || v === "empty"));
+  // role-family tiering
+  check("roles map to the seven families", familyOf("developer") === "ENG" && familyOf("Accounting") === "CORP" && familyOf("delivery manager") === "DEL" && familyOf("ceo") === "LEAD" && familyOf("product owner") === "PDS" && familyOf("sales") === "COM" && familyOf("customer support agent") === "OPS");
+  check("a role the academy does not know has no family", familyOf("wizard") === null);
+  check("a family named in a track covers its roles, a listed role covers itself, an empty list covers everyone", matchesRoles(["family:eng"], "Developer") && !matchesRoles(["family:eng"], "accounting") && matchesRoles(["accounting"], "accounting") && matchesRoles([], "wizard") && !matchesRoles(["family:eng"], "wizard"));
+  const finKey = needsOf(SECTIONS.find((x) => x.key === "risk")!);
+  check("risk is for corporate, delivery, leadership and operations", Array.isArray(finKey) && finKey.join() === "CORP,DEL,LEAD,OPS");
+  const finTrack = db.select().from(tracks).where(eq(tracks.slug, phaseSlug("company", REF, "d30", ["CORP", "DEL", "LEAD", "OPS"]))).get();
+  check("risk is taught in a track required of those families only", finTrack?.tier === "role" && finTrack.roles === "family:corp,family:del,family:lead,family:ops" && itemsOf(finTrack.slug).titles.includes("Risk and emergencies"));
+  check("sections for everyone are not in a family track, and family sections not in the everyone track", !itemsOf(finTrack!.slug).titles.includes("Identity") && !itemsOf(profileSlug("company", REF)).titles.includes("Risk and emergencies"));
+  await writeProfileQuestions(adminMe, "company", REF, fake);
+  db.update(questions).set({ status: "active" }).where(eq(questions.trackId, finTrack!.id)).run();
+  resetCatalogCache();
+  const reqFor = (jobRole: string) => requirementsFor({ id: u.id, jobRole, audience: "staff" }, [{ kind: "company", id: REF }], undefined, undefined, undefined).filter((r) => r.track.id === finTrack!.id).length;
+  check("with approved questions, accounting, delivery, ceo and service desk must learn risk", reqFor("accounting") === 1 && reqFor("delivery manager") === 1 && reqFor("ceo") === 1 && reqFor("it support analyst") === 1);
+  check("developers, designers and unplaced roles are not held to it", reqFor("developer") === 0 && reqFor("designer") === 0 && reqFor("wizard") === 0);
+  // a section whose audience changes moves to its new track, once, with its text
+  const fin = SECTIONS.find((x) => x.key === "risk")!, was = fin.needs;
+  try {
+    fin.needs = undefined;
+    const rp = publishProfile(adminMe, "company", REF, { material: false, note: "" });
+    check("changing who must learn a section moves it, not copies it", /1 moved/.test(rp?.done ?? "") && itemsOf(profileSlug("company", REF)).titles.filter((x) => x === "Risk and emergencies").length === 1 && !itemsOf(finTrack!.slug).titles.includes("Risk and emergencies"));
+    check("the move left no stale 'changed' state", publishStates("company", REF).states.get("risk") === "current");
+  } finally { fin.needs = was; resetCatalogCache(); }
+  check("publish state sees every phase and audience track", publishStates("company", REF).tracks.length >= 4 && [...publishStates("company", REF).states.values()].every((v) => v === "current" || v === "empty"));
   saveAnswer("company", REF, "identity", "mission", "A new mission", u.id);
   check("an edit shows as changed", publishStates("company", REF).states.get("identity") === "changed");
   publishProfile(adminMe, "company", REF, { material: true, note: "new mission" });

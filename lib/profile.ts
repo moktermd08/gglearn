@@ -1,4 +1,5 @@
 import { and, eq } from "drizzle-orm";
+import type { Family } from "@/lib/roleFamily";
 import { db, profileEntries, profileFields, profileSections } from "@/lib/db";
 
 /**
@@ -18,8 +19,13 @@ export type Phase = "d1" | "w1" | "d30" | "d60" | "d90";
 export const PHASE_DAYS: Record<Phase, number> = { d1: 1, w1: 7, d30: 30, d60: 60, d90: 90 };
 export const PHASE_LABEL: Record<Phase, string> = { d1: "Day 1", w1: "Week 1", d30: "First 30 days", d60: "First 60 days", d90: "First 90 days" };
 /** `by`: the phase it is taught in. Left out, it is the first 30 days, where every section published before phases existed still lives. */
-export type Section = { key: string; label: string; why: string; tier: Tier; scopes: ProfileScope[]; fields: Field[]; staleDays: number; by?: Phase };
+/**
+ * `needs`: the role families that must learn it (the framework's M column). Left out, everyone must. Everyone else can still read it, as awareness.
+ * A role the academy cannot place in a family is held only to the sections that apply to everyone.
+ */
+export type Section = { key: string; label: string; why: string; tier: Tier; scopes: ProfileScope[]; fields: Field[]; staleDays: number; by?: Phase; needs?: Family[] };
 export const phaseOfSection = (s: Section): Phase => s.by ?? "d30";
+export const needsOf = (s: Section): Family[] | "all" => (s.needs?.length ? [...s.needs].sort() : "all");
 
 const f = (key: string, label: string, required = false, hint?: string, long = false): Field => ({ key, label, required, hint, long });
 const cols = (...labels: string[]): Column[] => labels.map((label) => ({ key: slug(label), label }));
@@ -47,7 +53,7 @@ export const SECTIONS: Section[] = [
     f("catalogue", "What we offer", true, undefined, true), f("pricing", "Pricing and discount rules", true, undefined, true),
     f("delivery", "How work is delivered", true, "Stages, handovers, definition of done.", true), f("roadmap", "Roadmap", false, undefined, true), f("platforms", "Platforms and stack", false, undefined, true),
   ] },
-  { key: "customers", label: "Customers and market", why: "Who we serve and who we compete with.", tier: "core", scopes: ["company", "brand"], staleDays: 180, fields: [
+  { key: "customers", label: "Customers and market", why: "Who we serve and who we compete with.", tier: "core", scopes: ["company", "brand"], staleDays: 180, needs: ["COM", "LEAD", "OPS", "PDS"], fields: [
     f("segments", "Customer segments", true, undefined, true), f("journey", "Customer journey", false, "From first contact to renewal.", true),
     t("competitors", "Competitors", cols("Competitor", "Website", "How we differ"), true), f("support_model", "How support works", true, "Channels, hours, response times, escalation.", true), f("feedback", "How feedback is collected and used", false, undefined, true),
   ] },
@@ -56,7 +62,7 @@ export const SECTIONS: Section[] = [
     f("data_handling", "Data handling and retention", true, undefined, true), f("contracts", "Where contracts are kept and who signs", true), f("ip_licences", "IP and licences", false, undefined, true), f("insurance", "Insurance", false),
     t("declarations", "Declarations and training", cols("Declaration or training", "When", "Renews", "Owner"), false, "Confidentiality, acceptable use, data protection, health and safety, conflicts of interest, gifts."),
   ] },
-  { key: "finance", label: "Finance", why: "How money moves and who may spend it.", tier: "core", scopes: ["company"], staleDays: 180, fields: [
+  { key: "finance", label: "Finance", why: "How money moves and who may spend it.", tier: "core", scopes: ["company"], staleDays: 180, needs: ["CORP", "DEL", "LEAD"], fields: [
     f("budget_process", "Budget process", true, undefined, true), f("spend_limits", "Spending limits and approvals", true, undefined, true),
     f("invoicing", "Invoicing and payments", true, undefined, true), f("reporting", "Financial reporting", false, undefined, true),
   ] },
@@ -68,7 +74,7 @@ export const SECTIONS: Section[] = [
     f("channels", "Which channel for what", true, undefined, true), f("meetings", "Standing meetings and their purpose", true, undefined, true),
     f("process", "Delivery process", true, "Sprints, reviews, release steps.", true), f("retros", "How we review and improve", false, undefined, true), f("documentation", "Where documentation lives and who owns it", true),
   ] },
-  { key: "risk", label: "Risk and emergencies", why: "What goes wrong, and what to do when it does.", tier: "core", scopes: ["company", "brand"], staleDays: 180, fields: [
+  { key: "risk", label: "Risk and emergencies", why: "What goes wrong, and what to do when it does.", tier: "core", scopes: ["company", "brand"], staleDays: 180, needs: ["CORP", "DEL", "LEAD", "OPS"], fields: [
     t("risk_register", "Top risks and owners", cols("Risk", "Owner", "What we do about it"), true), f("incident_response", "Incident response", true, "Who is called, in what order.", true),
     f("continuity", "Business continuity and backups", false, undefined, true), f("crisis_comms", "Crisis communication", false, undefined, true),
   ] },
@@ -113,14 +119,14 @@ export const SECTIONS: Section[] = [
     t("roles_guide", "Role guides", cols("Role", "Set-up guide", "Starter tasks", "Shadow who", "Independent by")),
     f("day_21", "What independent looks like", false, "Per role: what they can do alone by day 21 and own by day 60.", true),
   ] },
-  { key: "standards", label: "Standards, quality and change", why: "The bar work must meet, and how it reaches customers.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, fields: [
+  { key: "standards", label: "Standards, quality and change", why: "The bar work must meet, and how it reaches customers.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, needs: ["DEL", "ENG", "LEAD", "OPS", "PDS"], fields: [
     f("work_standards", "Coding, design, service and documentation standards", false, undefined, true),
     f("definition_done", "Definition of ready and done", false, undefined, true),
     f("accessibility", "Accessibility standard and how it is tested", false, "For example WCAG 2.2 AA.", true),
     f("change_release", "Change and release approval", false, "Who approves, the release calendar, how a rollback is decided.", true),
     f("reviews", "Code, design and peer reviews", false, undefined, true),
   ] },
-  { key: "engineering", label: "Engineering and operations", why: "Where the work runs: environments, repositories, deployment and monitoring.", tier: "extra", scopes: ["company", "brand"], staleDays: 90, fields: [
+  { key: "engineering", label: "Engineering and operations", why: "Where the work runs: environments, repositories, deployment and monitoring.", tier: "extra", scopes: ["company", "brand"], staleDays: 90, needs: ["ENG", "OPS"], fields: [
     t("environments", "Environments", cols("Environment", "Purpose", "Who can access", "Data allowed", "How code gets there")),
     f("repos", "Repositories and branching", false, "Where the code lives, branch and commit rules, who approves a merge.", true),
     f("architecture", "Architecture overview", false, "Components, decision records, where the diagrams are.", true),
@@ -129,12 +135,12 @@ export const SECTIONS: Section[] = [
     f("runbooks", "Runbooks and on-call", false, "Where procedures live, how the rota works, the shadow period before joining it.", true),
     f("testing", "Testing approach", false, undefined, true),
   ] },
-  { key: "ai_and_data", label: "Data and AI in use", why: "What data we hold and which AI agents, prompts and automations run, with owners and limits.", tier: "extra", scopes: ["company", "brand"], staleDays: 90, fields: [
+  { key: "ai_and_data", label: "Data and AI in use", why: "What data we hold and which AI agents, prompts and automations run, with owners and limits.", tier: "extra", scopes: ["company", "brand"], staleDays: 90, needs: ["ENG", "LEAD", "OPS"], fields: [
     t("agents", "AI agents and automations", cols("Name", "What it does", "What it may not do", "Owner")),
     f("data_map", "Where data lives and who may see it", false, undefined, true),
     f("prompt_standards", "Prompt library and standards", false, undefined, true),
   ] },
-  { key: "sales_marketing", label: "Sales and marketing", why: "How we find, win and keep customers, and what we say publicly about our work.", tier: "extra", scopes: ["company", "brand"], staleDays: 120, fields: [
+  { key: "sales_marketing", label: "Sales and marketing", why: "How we find, win and keep customers, and what we say publicly about our work.", tier: "extra", scopes: ["company", "brand"], staleDays: 120, needs: ["COM", "LEAD"], fields: [
     f("sales_process", "Sales process and pipeline", false, undefined, true),
     t("case_studies", "Case studies and past work", cols("Client or project", "What we did", "Result", "May we show it")),
     t("campaigns", "Live and planned campaigns", cols("Campaign", "Goal", "Owner", "Dates")),
@@ -145,18 +151,18 @@ export const SECTIONS: Section[] = [
     f("learning_budget", "Learning budget and how to use it", false, undefined, true),
     f("mentoring", "Mentoring and communities of practice", false, undefined, true),
   ] },
-  { key: "suppliers", label: "Suppliers and partners", why: "Who we buy from or work with, who manages each, and the contract end dates.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, by: "d60", fields: [
+  { key: "suppliers", label: "Suppliers and partners", why: "Who we buy from or work with, who manages each, and the contract end dates.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, by: "d60", needs: ["CORP", "LEAD", "OPS"], fields: [
     t("vendors", "Suppliers", cols("Supplier", "What for", "Owner", "Contract ends")),
     f("buying", "How to buy software or services", false, "Business case, budget holder, security check.", true),
   ] },
-  { key: "communications", label: "PR and communications", why: "Who speaks for us, and what we say.", tier: "extra", scopes: ["company", "brand"], staleDays: 365, fields: [
+  { key: "communications", label: "PR and communications", why: "Who speaks for us, and what we say.", tier: "extra", scopes: ["company", "brand"], staleDays: 365, needs: ["COM", "LEAD"], fields: [
     f("spokespeople", "Who may speak publicly", false), f("media", "Press and media approach", false, undefined, true), f("social", "Social accounts and approval flow", false, undefined, true),
   ] },
-  { key: "investors", label: "Investors and funding", why: "Who backs us and what we owe them.", tier: "extra", scopes: ["company"], staleDays: 180, fields: [
+  { key: "investors", label: "Investors and funding", why: "Who backs us and what we owe them.", tier: "extra", scopes: ["company"], staleDays: 180, needs: ["LEAD"], fields: [
     f("funding", "Funding stage and sources", false, undefined, true), f("reporting", "Investor reporting", false, undefined, true), f("obligations", "Obligations and consent rights", false, undefined, true),
   ] },
   { key: "custom", label: "Our own questions", why: "Anything only we need to record. Add questions to any section, or here.", tier: "extra", scopes: ["company", "brand"], staleDays: 365, fields: [] },
-  { key: "expansion", label: "Expansion", why: "Where we are heading next.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, fields: [
+  { key: "expansion", label: "Expansion", why: "Where we are heading next.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, needs: ["LEAD"], fields: [
     f("markets", "New markets or products", false, undefined, true), f("localisation", "Localisation needs", false, undefined, true), f("capacity", "What must be true before we grow", false, undefined, true),
   ] },
 ];
