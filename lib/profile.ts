@@ -13,7 +13,13 @@ export type Column = { key: string; label: string };
 /** text: one line. long: a paragraph. table: a list of rows with named columns (KPIs, competitors), stored as JSON. custom: added by this company or brand. */
 export type Field = { key: string; label: string; hint?: string; required?: boolean; long?: boolean; type?: "text" | "long" | "table"; columns?: Column[]; custom?: boolean; id?: number };
 export const typeOf = (f: Field): "text" | "long" | "table" => f.type ?? (f.long ? "long" : "text");
-export type Section = { key: string; label: string; why: string; tier: Tier; scopes: ProfileScope[]; fields: Field[]; staleDays: number };
+/** When a joiner should have learned a section: the onboarding phases of lib/onboarding.ts (day 1, week 1, first 30, 60, 90 days). */
+export type Phase = "d1" | "w1" | "d30" | "d60" | "d90";
+export const PHASE_DAYS: Record<Phase, number> = { d1: 1, w1: 7, d30: 30, d60: 60, d90: 90 };
+export const PHASE_LABEL: Record<Phase, string> = { d1: "Day 1", w1: "Week 1", d30: "First 30 days", d60: "First 60 days", d90: "First 90 days" };
+/** `by`: the phase it is taught in. Left out, it is the first 30 days, where every section published before phases existed still lives. */
+export type Section = { key: string; label: string; why: string; tier: Tier; scopes: ProfileScope[]; fields: Field[]; staleDays: number; by?: Phase };
+export const phaseOfSection = (s: Section): Phase => s.by ?? "d30";
 
 const f = (key: string, label: string, required = false, hint?: string, long = false): Field => ({ key, label, required, hint, long });
 const cols = (...labels: string[]): Column[] => labels.map((label) => ({ key: slug(label), label }));
@@ -48,6 +54,7 @@ export const SECTIONS: Section[] = [
   { key: "legal", label: "Legal and compliance", why: "What we are bound by, and what we must never do.", tier: "core", scopes: ["company"], staleDays: 365, fields: [
     f("entity", "Legal entity, registration and jurisdictions", true, undefined, true), f("regulations", "Regulations that apply", true, "GDPR, sector rules, accessibility law.", true),
     f("data_handling", "Data handling and retention", true, undefined, true), f("contracts", "Where contracts are kept and who signs", true), f("ip_licences", "IP and licences", false, undefined, true), f("insurance", "Insurance", false),
+    t("declarations", "Declarations and training", cols("Declaration or training", "When", "Renews", "Owner"), false, "Confidentiality, acceptable use, data protection, health and safety, conflicts of interest, gifts."),
   ] },
   { key: "finance", label: "Finance", why: "How money moves and who may spend it.", tier: "core", scopes: ["company"], staleDays: 180, fields: [
     f("budget_process", "Budget process", true, undefined, true), f("spend_limits", "Spending limits and approvals", true, undefined, true),
@@ -64,6 +71,83 @@ export const SECTIONS: Section[] = [
   { key: "risk", label: "Risk and emergencies", why: "What goes wrong, and what to do when it does.", tier: "core", scopes: ["company", "brand"], staleDays: 180, fields: [
     t("risk_register", "Top risks and owners", cols("Risk", "Owner", "What we do about it"), true), f("incident_response", "Incident response", true, "Who is called, in what order.", true),
     f("continuity", "Business continuity and backups", false, undefined, true), f("crisis_comms", "Crisis communication", false, undefined, true),
+  ] },
+  { key: "contacts", label: "Who to contact for what", why: "The first question every joiner asks: who do I go to, how, and how fast will they answer.", tier: "core", scopes: ["company", "brand"], staleDays: 90, by: "d1", fields: [
+    t("directory", "Contacts", cols("I need", "Contact (role)", "Name", "Channel", "Expected reply", "Backup"), true, "Laptop or login problem, access, leave, pay, HR concern, security incident, production incident, priorities, blockers, client escalation, building and travel."),
+    f("no_answer", "If nobody above answers", false, "Usually the buddy, by direct message.", true),
+  ] },
+  { key: "security", label: "Security, devices and AI use", why: "What every person must do, and never do, with systems, data, devices and AI tools.", tier: "core", scopes: ["company", "brand"], staleDays: 180, by: "d1", fields: [
+    f("acceptable_use", "Acceptable use of IT", true, "What company systems and devices may and may not be used for.", true),
+    f("mfa_devices", "Sign-in, MFA, password manager and devices", true, "Company laptop rules, authenticator app, personal devices, what to do if one is lost (and within what time).", true),
+    f("incident_reporting", "Reporting a security incident or phishing", true, "Who, how and how fast. Do not investigate it yourself.", true),
+    f("data_classification", "Data classification and what may be shared", false, undefined, true),
+    f("ai_use", "AI tools: what is approved and what data may go in", true, "Approved tools, no client or personal data unless approved, who reviews AI output.", true),
+    f("emergency", "Emergencies: fire, first aid, continuity", true, "Who to call, where to meet, what happens to the service in a major incident.", true),
+  ] },
+  { key: "joining", label: "Joining and the first 90 days", why: "What happens before day 1, in week 1 and by day 90, and who signs each step.", tier: "core", scopes: ["company", "brand"], staleDays: 180, by: "w1", fields: [
+    f("day_one", "Day 1 and week 1", true, "What a joiner receives (kit, accounts, buddy, timetable) and what they must have done by the end of week 1. A brand lists only what differs.", true),
+    f("buddy", "Buddy and manager one-to-ones", false, undefined, true),
+    f("probation", "Probation: objectives and how it is decided", true, undefined, true),
+    f("checkins", "30, 60 and 90 day check-ins", false, "Who runs them and what is recorded.", true),
+    f("declarations", "Declarations and training every joiner completes", false, "Confidentiality, acceptable use, information security, data protection, health and safety, conflicts of interest.", true),
+    f("first_task", "First real task", false, "What counts as the joiner's first delivered piece of work.", true),
+  ] },
+  { key: "benefits", label: "Pay and benefits", why: "What a joiner is entitled to and how to claim it.", tier: "core", scopes: ["company"], staleDays: 180, by: "w1", fields: [
+    t("benefits", "Benefits", cols("Benefit", "Entitlement", "How to claim", "Contact"), true, "Holiday, sick pay, pension, parental leave, health cover, wellbeing, learning budget, equipment allowance."),
+    f("pay_expenses", "Pay dates and expenses", true, "When pay is made, how to claim expenses, and the deadline.", true),
+    f("wellbeing", "Wellbeing and support", false, undefined, true),
+  ] },
+  { key: "leaving", label: "Leaving and moving on", why: "What happens when someone resigns, moves team or brand, or a project or brand closes.", tier: "core", scopes: ["company", "brand"], staleDays: 180, by: "w1", fields: [
+    f("notice_handover", "Notice and handover", true, "Notice periods, the handover note, and who takes over tickets, repos, runbooks, on-call and client contacts. A brand lists only what differs.", true),
+    f("last_day", "The last day", false, "Kit returned, accounts closed the same day, mailbox and auto-reply, shared credentials rotated.", true),
+    f("final_pay", "Final pay, holiday and benefits ending", false, undefined, true),
+    f("exit_feedback", "Exit conversation and feedback", false, undefined, true),
+    f("afterwards", "What continues after leaving", false, "Confidentiality, IP, references, data retention.", true),
+    f("urgent_leavers", "Leavers who must go at once", false, "Access is cut first; who decides and who is told.", true),
+    f("wind_down", "Winding down a project, client or brand", false, "Notice to clients, data return or deletion, domains, social accounts, contracts, archive of boards and documents.", true),
+  ] },
+  { key: "glossary", label: "Glossary", why: "The terms, product names and acronyms that cut the jargon barrier.", tier: "extra", scopes: ["company", "brand"], staleDays: 365, by: "w1", fields: [
+    t("terms", "Terms", cols("Term", "Meaning", "Where it is used")),
+  ] },
+  { key: "role_packs", label: "Role guides", why: "What each kind of role needs to get productive: set-up, first tasks, who to shadow.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, fields: [
+    t("roles_guide", "Role guides", cols("Role", "Set-up guide", "Starter tasks", "Shadow who", "Independent by")),
+    f("day_21", "What independent looks like", false, "Per role: what they can do alone by day 21 and own by day 60.", true),
+  ] },
+  { key: "standards", label: "Standards, quality and change", why: "The bar work must meet, and how it reaches customers.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, fields: [
+    f("work_standards", "Coding, design, service and documentation standards", false, undefined, true),
+    f("definition_done", "Definition of ready and done", false, undefined, true),
+    f("accessibility", "Accessibility standard and how it is tested", false, "For example WCAG 2.2 AA.", true),
+    f("change_release", "Change and release approval", false, "Who approves, the release calendar, how a rollback is decided.", true),
+    f("reviews", "Code, design and peer reviews", false, undefined, true),
+  ] },
+  { key: "engineering", label: "Engineering and operations", why: "Where the work runs: environments, repositories, deployment and monitoring.", tier: "extra", scopes: ["company", "brand"], staleDays: 90, fields: [
+    t("environments", "Environments", cols("Environment", "Purpose", "Who can access", "Data allowed", "How code gets there")),
+    f("repos", "Repositories and branching", false, "Where the code lives, branch and commit rules, who approves a merge.", true),
+    f("architecture", "Architecture overview", false, "Components, decision records, where the diagrams are.", true),
+    f("deployment", "How code reaches production", false, undefined, true),
+    f("observability", "Logs, metrics and alerts", false, undefined, true),
+    f("runbooks", "Runbooks and on-call", false, "Where procedures live, how the rota works, the shadow period before joining it.", true),
+    f("testing", "Testing approach", false, undefined, true),
+  ] },
+  { key: "ai_and_data", label: "Data and AI in use", why: "What data we hold and which AI agents, prompts and automations run, with owners and limits.", tier: "extra", scopes: ["company", "brand"], staleDays: 90, fields: [
+    t("agents", "AI agents and automations", cols("Name", "What it does", "What it may not do", "Owner")),
+    f("data_map", "Where data lives and who may see it", false, undefined, true),
+    f("prompt_standards", "Prompt library and standards", false, undefined, true),
+  ] },
+  { key: "sales_marketing", label: "Sales and marketing", why: "How we find, win and keep customers, and what we say publicly about our work.", tier: "extra", scopes: ["company", "brand"], staleDays: 120, fields: [
+    f("sales_process", "Sales process and pipeline", false, undefined, true),
+    t("case_studies", "Case studies and past work", cols("Client or project", "What we did", "Result", "May we show it")),
+    t("campaigns", "Live and planned campaigns", cols("Campaign", "Goal", "Owner", "Dates")),
+    f("brand_rules", "Claims, logos and testimonials: what may be said", false, undefined, true),
+  ] },
+  { key: "learning", label: "Learning and development", why: "How people grow here: training, budget and skills.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, fields: [
+    f("learning_plan", "Learning plan and skills matrix", false, undefined, true),
+    f("learning_budget", "Learning budget and how to use it", false, undefined, true),
+    f("mentoring", "Mentoring and communities of practice", false, undefined, true),
+  ] },
+  { key: "suppliers", label: "Suppliers and partners", why: "Who we buy from or work with, who manages each, and the contract end dates.", tier: "extra", scopes: ["company", "brand"], staleDays: 180, by: "d60", fields: [
+    t("vendors", "Suppliers", cols("Supplier", "What for", "Owner", "Contract ends")),
+    f("buying", "How to buy software or services", false, "Business case, budget holder, security check.", true),
   ] },
   { key: "communications", label: "PR and communications", why: "Who speaks for us, and what we say.", tier: "extra", scopes: ["company", "brand"], staleDays: 365, fields: [
     f("spokespeople", "Who may speak publicly", false), f("media", "Press and media approach", false, undefined, true), f("social", "Social accounts and approval flow", false, undefined, true),
