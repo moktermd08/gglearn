@@ -5,13 +5,14 @@ import { Eye, EyeOff, KeyRound, Mail, Rocket, TriangleAlert, User } from "lucide
 import { signUp } from "@/app/actions";
 import { AuthShell } from "@/components/AuthShell";
 
-export default function SignUpForm({ next = "", refCode = "", tried = "" }: { next?: string; refCode?: string; tried?: string }) {
+export default function SignUpForm({ next = "", refCode = "", tried = "", social = null }: { next?: string; refCode?: string; tried?: string; social?: React.ReactNode }) {
   const [error, run, pending] = useActionState(signUp, null);
   const [show, setShow] = useState(false);
   const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
   const signIn = next ? `/login?next=${encodeURIComponent(next)}` : "/login";
   return (
     <AuthShell title="Start your climb." lead="Free. Pick a subject, find your level and race a rival in under a minute.">
+      {social}
       <form action={run} className="space-y-3">
         <input type="hidden" name="next" value={next} />
         <input type="hidden" name="ref" value={refCode} />
