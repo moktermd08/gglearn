@@ -4,14 +4,15 @@ import { Badge, Button, EmptyState, Field, PageHeader, Section, StatTile, Stats 
 import { brands, companies, db, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { adminScopeOf, resolveScope } from "@/lib/adminScope";
-import { type ProfileScope, type SectionState, completenessOf, profileOf, rowsOf, typeOf } from "@/lib/profile";
+import { PHASE_LABEL, type ProfileScope, type SectionState, completenessOf, needsOf, phaseOfSection, profileOf, rowsOf, typeOf } from "@/lib/profile";
 import { canEditProfile } from "@/lib/profileAdmin";
-import { type PublishState, profileSlug, publishStates } from "@/lib/profilePublish";
+import { type PublishState, publishStates } from "@/lib/profilePublish";
 import { scopeInReach, usersInReach } from "@/lib/tenancy";
 import { ActionForm } from "@/components/admin/ActionForm";
 import { TableInput } from "@/components/admin/TableInput";
 import { addFieldAction, applyTemplateAction, retireFieldAction, saveSection } from "./actions";
-import { publishAction } from "./publish-action";
+import { publishAction, writeQuestionsAction } from "./publish-action";
+import { PER_LEVEL } from "@/lib/profileQuestions";
 import { TEMPLATES, previewTemplate, templateOf } from "@/lib/profileTemplates";
 
 export const metadata = { title: "Company and brand profile — gglearn" };
@@ -83,18 +84,28 @@ export default async function Profile({ searchParams }: { searchParams: Promise<
           <ActionForm action={publishAction} style={{ display: "grid", gap: 12, maxWidth: 560 }}>
             <input type="hidden" name="scope" value={subject.kind} /><input type="hidden" name="refId" value={subject.id} />
             <div style={{ fontSize: 13 }}>
-              {pub.track ? <>Track <b>{pub.track.name}</b> · {pub.questions} live question{pub.questions === 1 ? "" : "s"}</> : "No track yet: publishing creates one."}
+              {pub.tracks.length ? <>{pub.tracks.map((t, i) => <span key={t.id}>{i > 0 && ", "}<b>{t.name}</b> ({t.tier === "mandatory" ? "required of everyone" : t.tier === "role" ? `required of ${t.roles.split(",").map((r) => r.replace("family:", "").toUpperCase()).join(", ")}` : "optional"}, due day {t.dueDays})</span>)} · {pub.questions} live question{pub.questions === 1 ? "" : "s"}</> : "No track yet: publishing creates them, one for each point in a joiner's first 90 days that has something to learn."}
               {" · "}{pending ? <Badge tone="warn">{pending} section{pending === 1 ? "" : "s"} to publish</Badge> : <Badge tone="ok">Up to date</Badge>}
             </div>
             <Field label="What changed" hint="Shown to people who are asked to read it again."><input name="note" maxLength={500} placeholder="e.g. New pricing rules" /></Field>
             <label style={{ display: "flex", gap: 8, fontSize: 13 }}><input type="checkbox" name="material" /> Ask people already enrolled to read the changes again</label>
             <div><Button variant="primary">Publish {pending ? pending : ""} to learning</Button></div>
           </ActionForm>
-          {pub.track && pub.questions < 50 && (
-            <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 10 }}>
-              Nobody is required to take it until it has questions. Generate them from the published text (they arrive as "review" for you to approve):
-              {" "}<code>npm run generate:bank -- --track {profileSlug(subject.kind, subject.id)}</code>
-            </p>
+          {pub.tracks.length > 0 && (
+            <div style={{ display: "grid", gap: 10, marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--border, #e5e7eb)", maxWidth: 560 }}>
+              <div style={{ fontSize: 13 }}><b>Questions.</b> Nobody is required to take a track until it has approved questions. gglearn can write {PER_LEVEL} for each level a person must pass, from the published text. They arrive for you to review; nothing goes live until you approve it.</div>
+              <ActionForm action={writeQuestionsAction} style={{ display: "flex", gap: 8 }}>
+                <input type="hidden" name="scope" value={subject.kind} /><input type="hidden" name="refId" value={subject.id} />
+                <Button variant="primary">Write questions</Button>
+              </ActionForm>
+              <ul style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 4, fontSize: 13 }}>
+                {pub.tracks.map((t) => (
+                  <li key={t.id}>{t.name}: {pub.waiting.get(t.id) ?? 0} waiting for review
+                    {(pub.waiting.get(t.id) ?? 0) > 0 && <> · <Link href={`/admin/review/${t.slug}`}>Review and approve</Link></>}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </Section>
       )}
@@ -109,7 +120,7 @@ function SectionCard({ s, published, scope, refId, owners, ownerName, editable }
   const { section } = s, na = s.status === "na";
   const badge = na ? <Badge tone="muted">Does not apply</Badge> : s.complete ? (s.stale ? <Badge tone="warn">Confirm still current</Badge> : <Badge tone="ok">Complete</Badge>) : <Badge tone="warn">{s.missing.length} required missing</Badge>;
   return (
-    <Section title={<>{section.label} {section.tier === "extra" && <Badge tone="muted">Extra</Badge>}</>} subtitle={section.why} action={<span style={{ display: "flex", gap: 6 }}>{published === "unpublished" && <Badge tone="muted">Not published</Badge>}{published === "changed" && <Badge tone="warn">Changed since published</Badge>}{published === "current" && <Badge tone="ok">Published</Badge>}{badge}</span>}>
+    <Section title={<>{section.label} {section.tier === "extra" && <Badge tone="muted">Extra</Badge>} <Badge tone="muted">Taught by {PHASE_LABEL[phaseOfSection(section)].toLowerCase()}</Badge> {needsOf(section) !== "all" && <Badge tone="muted" title="Everyone else can read it as awareness">For {(needsOf(section) as string[]).join(", ")}</Badge>}</>} subtitle={section.why} action={<span style={{ display: "flex", gap: 6 }}>{published === "unpublished" && <Badge tone="muted">Not published</Badge>}{published === "changed" && <Badge tone="warn">Changed since published</Badge>}{published === "current" && <Badge tone="ok">Published</Badge>}{badge}</span>}>
       <details open={!na && !s.complete}>
         <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--muted)", marginBottom: 12 }}>
           {s.filled} of {s.total} answered · reviewed {when(s.reviewedAt)}{s.ownerId ? ` · owner ${ownerName.get(s.ownerId) ?? "someone outside your view"}` : " · no owner"}

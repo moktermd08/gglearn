@@ -1,12 +1,15 @@
 /** Checks the company/brand profile and the tool access register: npm run check:access (uses DATABASE_FILE or data/gglearn.db; adds and removes its own rows). Run db:push first. */
 import { eq, like } from "drizzle-orm";
 import { and } from "drizzle-orm";
-import { brands, companies, db, enrollments, knowledgeChanges, knowledgeItems, profileEntries, profileFields, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, leagueEntries, tools, streakFreezes, userScopes, users } from "../lib/db";
-import { SECTIONS, completenessOf, fieldsFor, profileOf, rowsOf, saveAnswer, saveSectionMeta } from "../lib/profile";
+import { brands, companies, db, enrollments, knowledgeChanges, knowledgeItems, questions, profileEntries, profileFields, roleChanges, profileSections, tracks, toolAccess, toolRoleAccess, leagueEntries, tools, streakFreezes, userScopes, users } from "../lib/db";
+import { SECTIONS, completenessOf, needsOf, fieldsFor, profileOf, rowsOf, saveAnswer, saveSectionMeta, sectionsFor } from "../lib/profile";
 import { addCustomField, retireCustomField } from "../lib/profileAdmin";
 import { TEMPLATES, applyTemplate, previewTemplate } from "../lib/profileTemplates";
 import { MAX_CUSTOM } from "../lib/profileAdmin";
-import { profileSlug, publishProfile, publishStates } from "../lib/profilePublish";
+import { familyOf, matchesRoles } from "../lib/roleFamily";
+import { requirementsFor, resetCatalogCache } from "../lib/paths";
+import { PER_LEVEL, writeProfileQuestions } from "../lib/profileQuestions";
+import { phaseSlug, profileSlug, publishProfile, publishStates } from "../lib/profilePublish";
 import { activeAccess, applyPlan, grantAccess, holdersOf, leaversWithAccess, offboardingLines, planFor, revokeAccess } from "../lib/access";
 import { canManageTool, grantForm, revokeForm, setRoleAccess } from "../lib/accessAdmin";
 import { applyRoleChange, mayChangeRole, previewRoleChange, roleHistory } from "../lib/roleChange";
@@ -16,6 +19,7 @@ const check = (name: string, ok: boolean) => { if (!ok) fails++; console.log(`${
 const co = db.select().from(companies).limit(1).get()!;
 const REF = co.id;
 
+(async () => {
 try {
   // sections are well formed
   check("section keys unique", new Set(SECTIONS.map((s) => s.key)).size === SECTIONS.length);
@@ -47,10 +51,72 @@ try {
   check("only an admin publishes", !!publishProfile({ id: u.id, role: "manager" }, "company", REF, { material: false, note: "" })?.error);
   const pub1 = publishProfile(adminMe, "company", REF, { material: false, note: "" });
   const trk = db.select().from(tracks).where(eq(tracks.slug, profileSlug("company", REF))).get();
-  check("publish creates a growth track with one item per answered section", !!pub1?.done && trk?.tier === "growth" && db.select().from(knowledgeItems).where(eq(knowledgeItems.trackId, trk!.id)).all().length > 5);
+  check("publish creates a mandatory track with one item per answered section", !!pub1?.done && trk?.tier === "mandatory" && db.select().from(knowledgeItems).where(eq(knowledgeItems.trackId, trk!.id)).all().length > 5);
   check("everything published is current", [...publishStates("company", REF).states.values()].every((v) => v === "current" || v === "empty"));
   publishProfile(adminMe, "company", REF, { material: false, note: "" });
   check("publishing twice makes no second track", db.select().from(tracks).where(eq(tracks.slug, profileSlug("company", REF))).all().length === 1);
+
+  // every aspect of the company is askable, and taught in the phase it belongs to
+  const keys = new Set(SECTIONS.map((s) => s.key));
+  for (const k of ["contacts", "security", "joining", "benefits", "leaving", "glossary", "standards", "engineering", "suppliers", "legal", "finance", "risk"]) check(`profile covers ${k}`, keys.has(k));
+  check("leaving covers handover, last day and winding down a brand", ["notice_handover", "last_day", "wind_down"].every((k) => SECTIONS.find((s) => s.key === "leaving")!.fields.some((x) => x.key === k)));
+  check("a brand profile has the joiner sections but not company-only ones", sectionsFor("brand").some((s) => s.key === "leaving") && !sectionsFor("brand").some((s) => s.key === "benefits"));
+  const itemsOf = (slug: string) => { const t = db.select().from(tracks).where(eq(tracks.slug, slug)).get(); return { t, titles: t ? db.select().from(knowledgeItems).where(eq(knowledgeItems.trackId, t.id)).all().map((i) => i.title) : [] }; };
+  const day1 = itemsOf(phaseSlug("company", REF, "d1")), week1 = itemsOf(phaseSlug("company", REF, "w1")), main = itemsOf(profileSlug("company", REF));
+  check("day 1 sections are taught in a mandatory track due on day 1", day1.t?.tier === "mandatory" && day1.t.dueDays === 1 && day1.titles.includes("Security, devices and AI use") && day1.titles.includes("Who to contact for what"));
+  check("week 1 sections (joining, benefits, leaving) are in a mandatory track due in 7 days", week1.t?.tier === "mandatory" && week1.t.dueDays === 7 && ["Joining and the first 90 days", "Pay and benefits", "Leaving and moving on"].every((x) => week1.titles.includes(x)));
+  check("sections for everyone without a phase stay in the original 30-day track, required of everyone", main.t?.tier === "mandatory" && main.t.dueDays === 30 && main.titles.includes("Identity") && !main.titles.includes("Leaving and moving on"));
+  check("publishing again makes no second day 1 track", (publishProfile(adminMe, "company", REF, { material: false, note: "" }), db.select().from(tracks).where(eq(tracks.slug, phaseSlug("company", REF, "d1"))).all().length === 1));
+  // in-app question writing, with a fake model so no key or network is needed
+  let seq = 0;
+  const answerOf = new Map<string, number>();
+  const fake = { messages: { async create(a: { system: string; messages: { content: string }[] }) {
+    if (a.system.startsWith("You write exam")) {
+      const drafts = Array.from({ length: 10 }, () => { const n = ++seq; const answer = n % 4; answerOf.set(`Q${n}?`, answer); return { prompt: `Q${n}?`, options: ["a", "b", "c", "d"].map((x) => `${x}${n}`), answer, hint: "because", topic: "t" }; });
+      return { content: [{ type: "text", text: JSON.stringify(drafts) }] };
+    }
+    const view = JSON.parse(a.messages[0].content) as { i: number; prompt: string }[];
+    return { content: [{ type: "text", text: JSON.stringify(view.map((v) => ({ i: v.i, answer: answerOf.get(v.prompt), ambiguous: v.i === 0 }))) }] }; // the first of each batch is called ambiguous and must be dropped
+  } } };
+  const qOf = (slug: string) => { const t = db.select().from(tracks).where(eq(tracks.slug, slug)).get()!; return db.select().from(questions).where(eq(questions.trackId, t.id)).all(); };
+  check("only an admin writes questions", !!(await writeProfileQuestions({ id: u.id, role: "manager" }, "company", REF, fake))?.error);
+  check("no key on the server: says so instead of failing", /ANTHROPIC_API_KEY/.test((await writeProfileQuestions(adminMe, "company", REF, null))?.error ?? ""));
+  const w1 = await writeProfileQuestions(adminMe, "company", REF, fake);
+  const d1Qs = qOf(phaseSlug("company", REF, "d1")), mainQs = qOf(profileSlug("company", REF));
+  check("writing questions reports what it wrote", !!w1?.done && /for review/.test(w1.done));
+  check("every question arrives for review, never live", d1Qs.length > 0 && [...d1Qs, ...mainQs].every((q) => q.status === "review" && q.source === "ai" && q.type === "mcq"));
+  check("only the levels a person must pass get questions (day 1 needs 3, the 30 day track 5)", Math.max(...d1Qs.map((q) => q.level)) === 3 && Math.max(...mainQs.map((q) => q.level)) === 5);
+  check("a question the blind pass called ambiguous is dropped (9 of 10 kept per level)", [1, 2, 3].every((l) => d1Qs.filter((q) => q.level === l).length === 9));
+  check("the saved answer key matches the option the model chose", d1Qs.every((q) => q.answer === "abcd"[answerOf.get(q.prompt)!]));
+  check("the day 1 track still has no live questions, so nobody is held to it yet", publishStates("company", REF).questions === 0 && publishStates("company", REF).waiting.get(db.select().from(tracks).where(eq(tracks.slug, phaseSlug("company", REF, "d1"))).get()!.id) === d1Qs.length);
+  await writeProfileQuestions(adminMe, "company", REF, fake);
+  check("pressing again tops up levels still short of " + PER_LEVEL + " and no further", [1, 2, 3].every((l) => qOf(phaseSlug("company", REF, "d1")).filter((q) => q.level === l).length === 18));
+  await writeProfileQuestions(adminMe, "company", REF, fake);
+  check("a level that has enough is left alone", [1, 2, 3].every((l) => qOf(phaseSlug("company", REF, "d1")).filter((q) => q.level === l).length === 18));
+  // role-family tiering
+  check("roles map to the seven families", familyOf("developer") === "ENG" && familyOf("Accounting") === "CORP" && familyOf("delivery manager") === "DEL" && familyOf("ceo") === "LEAD" && familyOf("product owner") === "PDS" && familyOf("sales") === "COM" && familyOf("customer support agent") === "OPS");
+  check("a role the academy does not know has no family", familyOf("wizard") === null);
+  check("a family named in a track covers its roles, a listed role covers itself, an empty list covers everyone", matchesRoles(["family:eng"], "Developer") && !matchesRoles(["family:eng"], "accounting") && matchesRoles(["accounting"], "accounting") && matchesRoles([], "wizard") && !matchesRoles(["family:eng"], "wizard"));
+  const finKey = needsOf(SECTIONS.find((x) => x.key === "risk")!);
+  check("risk is for corporate, delivery, leadership and operations", Array.isArray(finKey) && finKey.join() === "CORP,DEL,LEAD,OPS");
+  const finTrack = db.select().from(tracks).where(eq(tracks.slug, phaseSlug("company", REF, "d30", ["CORP", "DEL", "LEAD", "OPS"]))).get();
+  check("risk is taught in a track required of those families only", finTrack?.tier === "role" && finTrack.roles === "family:corp,family:del,family:lead,family:ops" && itemsOf(finTrack.slug).titles.includes("Risk and emergencies"));
+  check("sections for everyone are not in a family track, and family sections not in the everyone track", !itemsOf(finTrack!.slug).titles.includes("Identity") && !itemsOf(profileSlug("company", REF)).titles.includes("Risk and emergencies"));
+  await writeProfileQuestions(adminMe, "company", REF, fake);
+  db.update(questions).set({ status: "active" }).where(eq(questions.trackId, finTrack!.id)).run();
+  resetCatalogCache();
+  const reqFor = (jobRole: string) => requirementsFor({ id: u.id, jobRole, audience: "staff" }, [{ kind: "company", id: REF }], undefined, undefined, undefined).filter((r) => r.track.id === finTrack!.id).length;
+  check("with approved questions, accounting, delivery, ceo and service desk must learn risk", reqFor("accounting") === 1 && reqFor("delivery manager") === 1 && reqFor("ceo") === 1 && reqFor("it support analyst") === 1);
+  check("developers, designers and unplaced roles are not held to it", reqFor("developer") === 0 && reqFor("designer") === 0 && reqFor("wizard") === 0);
+  // a section whose audience changes moves to its new track, once, with its text
+  const fin = SECTIONS.find((x) => x.key === "risk")!, was = fin.needs;
+  try {
+    fin.needs = undefined;
+    const rp = publishProfile(adminMe, "company", REF, { material: false, note: "" });
+    check("changing who must learn a section moves it, not copies it", /1 moved/.test(rp?.done ?? "") && itemsOf(profileSlug("company", REF)).titles.filter((x) => x === "Risk and emergencies").length === 1 && !itemsOf(finTrack!.slug).titles.includes("Risk and emergencies"));
+    check("the move left no stale 'changed' state", publishStates("company", REF).states.get("risk") === "current");
+  } finally { fin.needs = was; resetCatalogCache(); }
+  check("publish state sees every phase and audience track", publishStates("company", REF).tracks.length >= 4 && [...publishStates("company", REF).states.values()].every((v) => v === "current" || v === "empty"));
   saveAnswer("company", REF, "identity", "mission", "A new mission", u.id);
   check("an edit shows as changed", publishStates("company", REF).states.get("identity") === "changed");
   publishProfile(adminMe, "company", REF, { material: true, note: "new mission" });
@@ -188,7 +254,7 @@ try {
   check("all revoked = audit clean", leaversWithAccess().filter((l) => l.grant.userId === u.id).length === 0 && !revokeAccess(1e9, "other", null));
 } finally {
   const ids = db.select({ id: users.id }).from(users).where(like(users.email, "%@check.local")).all().map((r) => r.id);
-  for (const t of db.select().from(tracks).where(like(tracks.slug, "profile-%")).all()) { db.delete(knowledgeChanges).where(eq(knowledgeChanges.trackId, t.id)).run(); db.delete(knowledgeItems).where(eq(knowledgeItems.trackId, t.id)).run(); db.delete(tracks).where(eq(tracks.id, t.id)).run(); }
+  for (const t of db.select().from(tracks).where(like(tracks.slug, "profile-%")).all()) { db.delete(knowledgeChanges).where(eq(knowledgeChanges.trackId, t.id)).run(); db.delete(questions).where(eq(questions.trackId, t.id)).run(); db.delete(knowledgeItems).where(eq(knowledgeItems.trackId, t.id)).run(); db.delete(tracks).where(eq(tracks.id, t.id)).run(); }
   for (const id of ids) db.delete(roleChanges).where(eq(roleChanges.userId, id)).run();
   for (const id of ids) db.delete(enrollments).where(eq(enrollments.userId, id)).run(); // a role change enrols the person in what the new role requires
   for (const id of ids) { db.delete(toolAccess).where(eq(toolAccess.userId, id)).run(); db.delete(userScopes).where(eq(userScopes.userId, id)).run(); }
@@ -200,3 +266,4 @@ try {
 }
 console.log(fails ? `\n${fails} check(s) FAILED` : "\nall passed");
 process.exit(fails ? 1 : 0);
+})();

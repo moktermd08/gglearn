@@ -1,4 +1,5 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
+import { matchesRoles } from "@/lib/roleFamily";
 import { brands, companies, db, enrollments, pillars, projects, questions, runs, tracks, userScopes, users } from "@/lib/db";
 import { levelsEarned } from "@/lib/progress";
 import { MAX_LEVEL } from "@/lib/levels";
@@ -154,7 +155,7 @@ export function requirementsFor(person: Person, scopes: Scope[], cat = catalog()
       if (t.tier === "mandatory") return true;
       if (person.audience !== "staff") return false;
       const roles = rolesOf(t);
-      if (t.tier === "role" && (!roles.length || roles.includes(person.jobRole.toLowerCase()))) return true;
+      if (t.tier === "role" && matchesRoles(roles, person.jobRole)) return true;
       // the role x pillar matrix (content/blueprints/pillars.json) adds requirements, unless an admin has set this track's policy by hand
       return t.policySource !== "admin" && !isLibraryBrand(t.brand.slug) && pillarStance(person.jobRole, t.pillar) === "required";
     });
