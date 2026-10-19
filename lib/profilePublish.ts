@@ -10,7 +10,8 @@ import type { SetupState } from "@/lib/setup";
 /**
  * Turns a company's or brand's profile into learning. Each answered section becomes a knowledge item on one track ("<Name>: how we work"),
  * the same items the question generator and the study pages already read. So what the profile says is what people are taught and asked.
- * The track is created once (growth tier, nobody required until an admin sets a policy and it has questions) and updated in place after that.
+ * A track is created once and updated in place after that. New tracks are required: of everyone (mandatory) or of the role families that must learn it.
+ * Nobody is held to one until it has approved questions, and an admin can loosen it at /admin/paths (publishing again never overwrites that policy).
  */
 type Me = { id: number; role: "admin" | "manager" | "learner" };
 
@@ -18,8 +19,7 @@ type Me = { id: number; role: "admin" | "manager" | "learner" };
 export const profileSlug = (scope: ProfileScope, refId: number) => `profile-${scope}-${refId}`;
 /**
  * A section is taught in the track for its phase (Section.by) and for who must learn it (Section.needs). Sections for everyone: the first
- * 30 days keep the original slug, so everything published before phases existed stays where it is; day 1 and week 1 are what every joiner
- * must have done, so those are mandatory. Sections some role families must learn get a track of their own, required of those families
+ * 30 days keep the original slug, so everything published before phases existed stays where it is. Sections some role families must learn get a track of their own, required of those families
  * ("family:eng" in the track's roles, so a role added later is covered); everyone else can still read it.
  */
 export type Audience = Family[] | "all";
@@ -90,7 +90,7 @@ export function publishProfile(me: Me, scope: ProfileScope, refId: number, o: { 
         const early = phase === "d1" || phase === "w1";
         const forFamilies = who !== "all";
         track = tx.insert(tracks).values({
-          brandId: home.id, slug, name: trackName(base, phase, who), kind: "subject", scope, tier: forFamilies ? "role" : early ? "mandatory" : "growth", audience: "staff",
+          brandId: home.id, slug, name: trackName(base, phase, who), kind: "subject", scope, tier: forFamilies ? "role" : "mandatory", audience: "staff",
           roles: forFamilies ? who.map(familyToken).join(",") : "", requiredLevel: early ? 3 : 5, dueDays: PHASE_DAYS[phase], policySource: "admin",
           description: `What ${base} says about itself, taught by ${PHASE_LABEL[phase].toLowerCase()}${forFamilies ? ` to ${who.join(", ")}` : ""}. Written from the profile, so it stays current when the profile does.`,
         }).returning().get();

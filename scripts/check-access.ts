@@ -51,7 +51,7 @@ try {
   check("only an admin publishes", !!publishProfile({ id: u.id, role: "manager" }, "company", REF, { material: false, note: "" })?.error);
   const pub1 = publishProfile(adminMe, "company", REF, { material: false, note: "" });
   const trk = db.select().from(tracks).where(eq(tracks.slug, profileSlug("company", REF))).get();
-  check("publish creates a growth track with one item per answered section", !!pub1?.done && trk?.tier === "growth" && db.select().from(knowledgeItems).where(eq(knowledgeItems.trackId, trk!.id)).all().length > 5);
+  check("publish creates a mandatory track with one item per answered section", !!pub1?.done && trk?.tier === "mandatory" && db.select().from(knowledgeItems).where(eq(knowledgeItems.trackId, trk!.id)).all().length > 5);
   check("everything published is current", [...publishStates("company", REF).states.values()].every((v) => v === "current" || v === "empty"));
   publishProfile(adminMe, "company", REF, { material: false, note: "" });
   check("publishing twice makes no second track", db.select().from(tracks).where(eq(tracks.slug, profileSlug("company", REF))).all().length === 1);
@@ -65,7 +65,7 @@ try {
   const day1 = itemsOf(phaseSlug("company", REF, "d1")), week1 = itemsOf(phaseSlug("company", REF, "w1")), main = itemsOf(profileSlug("company", REF));
   check("day 1 sections are taught in a mandatory track due on day 1", day1.t?.tier === "mandatory" && day1.t.dueDays === 1 && day1.titles.includes("Security, devices and AI use") && day1.titles.includes("Who to contact for what"));
   check("week 1 sections (joining, benefits, leaving) are in a mandatory track due in 7 days", week1.t?.tier === "mandatory" && week1.t.dueDays === 7 && ["Joining and the first 90 days", "Pay and benefits", "Leaving and moving on"].every((x) => week1.titles.includes(x)));
-  check("sections without a phase stay in the original 30-day growth track", main.t?.tier === "growth" && main.t.dueDays === 30 && main.titles.includes("Identity") && !main.titles.includes("Leaving and moving on"));
+  check("sections for everyone without a phase stay in the original 30-day track, required of everyone", main.t?.tier === "mandatory" && main.t.dueDays === 30 && main.titles.includes("Identity") && !main.titles.includes("Leaving and moving on"));
   check("publishing again makes no second day 1 track", (publishProfile(adminMe, "company", REF, { material: false, note: "" }), db.select().from(tracks).where(eq(tracks.slug, phaseSlug("company", REF, "d1"))).all().length === 1));
   // in-app question writing, with a fake model so no key or network is needed
   let seq = 0;
