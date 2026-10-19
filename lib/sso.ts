@@ -57,7 +57,7 @@ export async function safeUrl(raw: string): Promise<boolean> {
   if (host === "localhost" || host.endsWith(".local") || host.endsWith(".internal") || host.endsWith(".localhost") || !host.includes(".") && !isIP(host)) return false;
   try { const addrs = isIP(host) ? [{ address: host }] : await lookup(host, { all: true }); return addrs.length > 0 && addrs.every((a) => !privateAddress(a.address)); } catch { return false; }
 }
-async function getText(url: string, init?: RequestInit): Promise<{ status: number; text: string } | null> {
+export async function getText(url: string, init?: RequestInit): Promise<{ status: number; text: string } | null> {
   if (!(await safeUrl(url))) return null;
   try {
     const r = await fetch(url, { ...init, redirect: "error", signal: AbortSignal.timeout(FETCH_MS), cache: "no-store" });
@@ -65,19 +65,20 @@ async function getText(url: string, init?: RequestInit): Promise<{ status: numbe
     return text.length > MAX_BODY ? null : { status: r.status, text };
   } catch { return null; }
 }
-const jsonOf = (t: string | undefined): Record<string, unknown> | null => { try { const v = JSON.parse(t ?? ""); return v && typeof v === "object" ? v : null; } catch { return null; } };
+export const jsonOf = (t: string | undefined): Record<string, unknown> | null => { try { const v = JSON.parse(t ?? ""); return v && typeof v === "object" ? v : null; } catch { return null; } };
 
 // ---- discovery and keys ----
 export type Meta = { issuer: string; authorization_endpoint: string; token_endpoint: string; jwks_uri: string };
 const metaCache = new Map<string, { at: number; meta: Meta }>();
 const norm = (s: string) => s.replace(/\/+$/, "");
 
-export async function discover(issuer: string): Promise<Meta | null> {
+/** `loose`: the provider's issuer is a template that only a token can fill in (Microsoft's multi-tenant endpoint), so the document's issuer is not compared; the caller checks each token's issuer itself. */
+export async function discover(issuer: string, loose = false): Promise<Meta | null> {
   const hit = metaCache.get(issuer);
   if (hit && nowSec() - hit.at < 600) return hit.meta;
   const r = await getText(`${norm(issuer)}/.well-known/openid-configuration`);
   const j = r?.status === 200 ? jsonOf(r.text) : null;
-  if (!j || typeof j.issuer !== "string" || norm(j.issuer) !== norm(issuer)) return null;
+  if (!j || typeof j.issuer !== "string" || (!loose && norm(j.issuer) !== norm(issuer))) return null;
   const meta = { issuer: j.issuer, authorization_endpoint: String(j.authorization_endpoint ?? ""), token_endpoint: String(j.token_endpoint ?? ""), jwks_uri: String(j.jwks_uri ?? "") };
   for (const u of [meta.authorization_endpoint, meta.token_endpoint, meta.jwks_uri]) if (!(await safeUrl(u))) return null;
   metaCache.set(issuer, { at: nowSec(), meta });
@@ -97,10 +98,10 @@ async function keysFor(meta: Meta, fresh: boolean): Promise<Jwk[]> {
 }
 
 const b64 = (s: string) => Buffer.from(s, "base64url");
-export type Claims = { iss?: string; aud?: string | string[]; azp?: string; exp?: number; iat?: number; nonce?: string; sub?: string; email?: string; email_verified?: boolean | string; name?: string; given_name?: string; family_name?: string };
+export type Claims = { tid?: string; xms_edov?: boolean | string | number; preferred_username?: string; hd?: string; iss?: string; aud?: string | string[]; azp?: string; exp?: number; iat?: number; nonce?: string; sub?: string; email?: string; email_verified?: boolean | string; name?: string; given_name?: string; family_name?: string };
 
 /** Checks an ID token's signature and standard claims. Returns the claims, or why not. */
-export async function verifyIdToken(token: string, meta: Meta, clientId: string, nonce: string, at = nowSec()): Promise<Claims | { error: string }> {
+export async function verifyIdToken(token: string, meta: Meta, clientId: string, nonce: string, at = nowSec(), issuerOk?: (iss: string, c: Claims) => boolean): Promise<Claims | { error: string }> {
   const parts = token.split(".");
   if (parts.length !== 3) return { error: "token" };
   const header = jsonOf(b64(parts[0]).toString()), alg = header?.alg;
@@ -117,7 +118,7 @@ export async function verifyIdToken(token: string, meta: Meta, clientId: string,
   const c = jsonOf(b64(parts[1]).toString()) as Claims | null;
   if (!c) return { error: "token" };
   const aud = Array.isArray(c.aud) ? c.aud : typeof c.aud === "string" ? [c.aud] : [];
-  if (typeof c.iss !== "string" || norm(c.iss) !== norm(meta.issuer)) return { error: "issuer" };
+  if (typeof c.iss !== "string" || !(issuerOk ? issuerOk(c.iss, c) : norm(c.iss) === norm(meta.issuer))) return { error: "issuer" };
   if (!aud.includes(clientId) || (aud.length > 1 && c.azp !== clientId)) return { error: "audience" };
   if (typeof c.exp !== "number" || c.exp < at - 60) return { error: "expired" };
   if (typeof c.iat === "number" && c.iat > at + 300) return { error: "token" };
@@ -127,7 +128,7 @@ export async function verifyIdToken(token: string, meta: Meta, clientId: string,
 }
 
 // ---- the sign-in "box": state, nonce and PKCE verifier, kept in a short-lived signed cookie ----
-export type Box = { c: number; s: string; n: string; v: string; next: string; exp: number };
+export type Box = { c: number; s: string; n: string; v: string; next: string; exp: number; p?: string; ref?: string; try?: string; link?: number };
 const sign = (v: string) => createHmac("sha256", secret()).update(`sso-box:${v}`).digest("base64url");
 export const sealBox = (b: Box) => { const body = Buffer.from(JSON.stringify(b)).toString("base64url"); return `${body}.${sign(body)}`; };
 export function openBox(raw: string | undefined, at = nowSec()): Box | null {
@@ -178,7 +179,7 @@ export function enforcedForDomain(email: string): boolean {
 }
 
 // ---- the flow ----
-const b64url = (b: Buffer) => b.toString("base64url");
+export const b64url = (b: Buffer) => b.toString("base64url");
 export async function begin(companyId: number, redirectUri: string, next: string): Promise<{ url: string; box: string } | { error: string }> {
   const cfg = configOf(companyId);
   if (!cfg || cfg.enabled !== "yes" || !cfg.issuer || !cfg.clientId) return { error: "off" };

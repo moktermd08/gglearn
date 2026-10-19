@@ -6,6 +6,8 @@ import { db, userAvatars, users } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import { sniffImage } from "@/lib/image";
+import { disconnect, isProvider } from "@/lib/social";
+import { redirect } from "next/navigation";
 
 const MAX_BYTES = 300 * 1024;
 
@@ -49,4 +51,13 @@ export async function setSeasonBoard(formData: FormData) {
   db.update(users).set({ seasonBoard: show ? "show" : "hide" }).where(eq(users.id, me.id)).run();
   revalidatePath("/seasons");
   revalidatePath("/profile");
+}
+
+/** Removes a connected Google or Microsoft account, but never the last way in. */
+export async function disconnectSocial(provider: string) {
+  const me = await requireUser();
+  if (!isProvider(provider)) return;
+  const r = disconnect(me.id, provider);
+  revalidatePath("/profile");
+  redirect(`/profile?social=${"error" in r ? "last" : "removed"}#connected`);
 }

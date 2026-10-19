@@ -17,7 +17,8 @@ import { BadgeWall, PlayerLevelCard, StreakCard } from "@/components/Achievement
 import { avatarLooks } from "@/lib/avatars";
 import { roleLabel } from "@/lib/journey";
 import { AreaChart, EmptyState, Heatmap, PALETTE, StatTile } from "@/components/charts";
-import { removePhoto } from "./actions";
+import { disconnectSocial, removePhoto } from "./actions";
+import { LABEL, available, identitiesOf } from "@/lib/social";
 import PhotoForm from "./photo-form";
 import PasswordForm from "./password-form";
 
@@ -26,7 +27,8 @@ export const metadata = { title: "Your profile — gglearn" };
 const date = (sec: number, opts: Intl.DateTimeFormatOptions) => new Date(sec * 1000).toLocaleDateString("en-GB", opts);
 const ROLE: Record<string, string> = { admin: "Admin", manager: "Manager", learner: "Learner" };
 
-export default async function Profile() {
+export default async function Profile({ searchParams }: { searchParams: Promise<{ social?: string }> }) {
+  const social = (await searchParams).social;
   const me = await requireUser();
   const looks = await avatarLooks();
   const photo = db.select({ v: userAvatars.updatedAt }).from(userAvatars).where(eq(userAvatars.userId, me.id)).get();
@@ -166,6 +168,21 @@ export default async function Profile() {
       </section>
 
       <WhereYouBelong userId={me.id} />
+
+      {available().length > 0 && (
+        <section id="connected" className="card scroll-mt-24 p-5">
+          <h2 className="mb-1 text-lg font-bold">Connected accounts</h2>
+          <p className="mb-3 text-sm text-slate-400">Sign in with Google or Microsoft instead of a password. Nothing is shared with them beyond the sign-in.</p>
+          {social && <p role="status" className="mb-3 text-sm text-emerald-600">{({ connected: "Connected.", removed: "Removed." } as Record<string, string>)[social] ?? ""}</p>}
+          {social === "last" && <p role="alert" className="mb-3 text-sm text-rose-500">That is your only way to sign in without a password. Set a password first (use &ldquo;Forgot your password?&rdquo; on the sign-in page), then you can remove it.</p>}
+          {social === "taken" && <p role="alert" className="mb-3 text-sm text-rose-500">That account is already connected to a different account here.</p>}
+          <ul className="space-y-2 text-sm">
+            {available().map((p) => { const have = identitiesOf(me.id).find((i) => i.provider === p); return (
+              <li key={p} className="flex items-center gap-3"><b className="w-24">{LABEL[p]}</b><span className="flex-1 text-slate-400">{have ? (have.email || "Connected") : "Not connected"}</span>
+                {have ? <form action={disconnectSocial.bind(null, p)}><button className="text-slate-400 underline">Remove</button></form> : <a href={`/auth/${p}?connect=1`} className="btn btn-ghost !py-1 text-sm">Connect</a>}</li>); })}
+          </ul>
+        </section>
+      )}
 
       <section id="emails" className="card scroll-mt-24 p-5">
         <h2 className="mb-1 text-lg font-bold">Reminder and recap emails</h2>

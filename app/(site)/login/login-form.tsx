@@ -5,12 +5,14 @@ import { Building2, Eye, EyeOff, KeyRound, LogIn, Mail, Swords, TriangleAlert } 
 import { login } from "@/app/actions";
 import { AuthShell } from "@/components/AuthShell";
 
-export default function LoginForm({ next = "" }: { next?: string }) {
+export default function LoginForm({ next = "", problem = "", social = null }: { next?: string; problem?: string; social?: React.ReactNode }) {
   const [error, run, pending] = useActionState(login, null);
   const [show, setShow] = useState(false);
   const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
   return (
     <AuthShell title="Welcome back." lead="Pick up your climb where you left it. Your rival has been training.">
+      {problem && <p role="alert" className="slide-in mb-3 flex items-start gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} className="mt-0.5 shrink-0" />{problem}</p>}
+      {social}
       <form action={run} className="space-y-3">
         <input type="hidden" name="next" value={next} />
         <div className="flex items-center gap-2"><Swords className="bob text-pink-300" /><h1 className="text-xl font-extrabold">Sign in</h1></div>

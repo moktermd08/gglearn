@@ -1186,3 +1186,14 @@ export const companySso = sqliteTable("company_sso", {
   verifiedAt: integer("verified_at"), // set when someone first signs in through it; SSO can only be enforced after that, so a wrong setting cannot lock a company out
   updatedAt: integer("updated_at").notNull().default(now),
 });
+
+// A sign-in with a personal Google or Microsoft account that belongs to one gglearn account (lib/social.ts). The provider's own stable id (`sub`) is what counts, not the
+// email, so a changed email at the provider never moves an identity to someone else.
+export const oauthIdentities = sqliteTable("oauth_identities", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  provider: text("provider", { enum: ["google", "microsoft"] }).notNull(),
+  subject: text("subject").notNull(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  email: text("email").notNull().default(""), // as the provider reported it when linked; for display only
+  createdAt: integer("created_at").notNull().default(now),
+}, (t) => [uniqueIndex("oauth_identity_unique").on(t.provider, t.subject), index("oauth_identity_user").on(t.userId)]);
