@@ -7,5 +7,5 @@ import { acceptRoleStart } from "@/lib/credits";
 export async function acceptRoleStartAction(slug: string) {
   const me = await requireUser();
   acceptRoleStart(me.id, slug);
-  for (const p of ["/map", "/map/software", "/dashboard"]) revalidatePath(p);
+  for (const p of ["/map", "/map/public", "/map/software", "/dashboard"]) revalidatePath(p);
 }
