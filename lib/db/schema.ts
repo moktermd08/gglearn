@@ -1059,6 +1059,28 @@ export const roleChanges = sqliteTable(
   (t) => [index("role_changes_user").on(t.userId)],
 );
 
+// A starting level given to a person in a track, outside the exams: by a manager or admin, or from what their role normally holds.
+// It lifts where they start and unlocks what comes next, and it never becomes an exam pass: certificates still need the exam. Only an
+// admin may mark one "counts as complete", which lets it satisfy required training. Rows are never deleted: a revoked one stays as the record.
+export const levelCredits = sqliteTable(
+  "level_credits",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    trackId: integer("track_id").notNull().references(() => tracks.id),
+    level: integer("level").notNull(),
+    source: text("source", { enum: ["manager", "admin", "role"] }).notNull(),
+    grantedBy: integer("granted_by").notNull().references(() => users.id), // the person themselves for a role start they accepted
+    reason: text("reason").notNull().default(""),
+    countsAsComplete: integer("counts_as_complete", { mode: "boolean" }).notNull().default(false),
+    expiresAt: integer("expires_at"),
+    revokedAt: integer("revoked_at"),
+    revokedBy: integer("revoked_by").references(() => users.id),
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [index("level_credits_user").on(t.userId, t.trackId)],
+);
+
 // A question a company or brand adds to its own profile, on top of the built-in ones (lib/profile.ts). Retired, never deleted, so
 // answers already given are kept. `columns` is a JSON list of {key, label} for kind "table" (a list of rows, e.g. KPIs), else empty.
 export const profileFields = sqliteTable(

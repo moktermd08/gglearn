@@ -1,7 +1,7 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { matchesRoles } from "@/lib/roleFamily";
-import { brands, companies, db, enrollments, pillars, projects, questions, runs, tracks, userScopes, users } from "@/lib/db";
-import { levelsEarned } from "@/lib/progress";
+import { brands, companies, db, enrollments, levelCredits, pillars, projects, questions, runs, tracks, userScopes, users } from "@/lib/db";
+import { creditInForce, levelsEarned } from "@/lib/progress";
 import { MAX_LEVEL } from "@/lib/levels";
 import { tagsFor } from "@/lib/dynamic/tags";
 import { hiddenTrackIds } from "@/lib/tracks";
@@ -135,6 +135,11 @@ export function loadProgress(userIds?: Set<number> | null): Progress {
   for (const ids of groups) {
     for (const e of db.select({ u: enrollments.userId, t: enrollments.trackId, at: enrollments.startedAt }).from(enrollments).where(ids ? inArray(enrollments.userId, ids) : undefined).all()) started.set(`${e.u}:${e.t}`, e.at);
     for (const p of db.select({ u: runs.userId, t: runs.trackId, m: sql<number>`max(${runs.level})` }).from(runs).where(and(eq(runs.passed, true), ids ? inArray(runs.userId, ids) : undefined)).groupBy(runs.userId, runs.trackId).all()) passed.set(`${p.u}:${p.t}`, Math.min(p.m, MAX_LEVEL));
+    // a starting level an admin marked "counts as complete" satisfies required training like an exam pass; ordinary ones only move where someone starts
+    for (const c of db.select({ u: levelCredits.userId, t: levelCredits.trackId, m: sql<number>`max(${levelCredits.level})` }).from(levelCredits).where(and(creditInForce(), eq(levelCredits.countsAsComplete, true), ids ? inArray(levelCredits.userId, ids) : undefined)).groupBy(levelCredits.userId, levelCredits.trackId).all()) {
+      const k = `${c.u}:${c.t}`;
+      passed.set(k, Math.max(passed.get(k) ?? 0, Math.min(c.m, MAX_LEVEL)));
+    }
   }
   return { started, passed, tracks: new Map() };
 }

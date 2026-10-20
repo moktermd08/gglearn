@@ -13,7 +13,7 @@ export type AuthKit = { login: ReactNode; signup: ReactNode; mailReady: boolean 
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]):not([type="hidden"]),select,textarea,[tabindex]:not([tabindex="-1"])';
 
 /** Sign in, create an account and "forgot password" as a dialog over the map, so the visitor keeps their place. The full pages still exist for links and emails. */
-export function AuthModal({ mode, kit, onMode, onClose }: { mode: AuthMode; kit: AuthKit; onMode: (m: AuthMode) => void; onClose: () => void }) {
+export function AuthModal({ mode, kit, next, onMode, onClose }: { mode: AuthMode; kit: AuthKit; next: string; onMode: (m: AuthMode) => void; onClose: () => void }) {
   const box = useRef<HTMLDivElement>(null);
 
   // focus moves in when the dialog opens and back to what opened it when it closes
@@ -40,7 +40,7 @@ export function AuthModal({ mode, kit, onMode, onClose }: { mode: AuthMode; kit:
         className="relative max-h-[100svh] w-full overflow-y-auto rounded-t-2xl bg-[#fbfaf6] p-5 shadow-2xl sm:max-h-[92svh] sm:max-w-md sm:rounded-2xl sm:p-6">
         <button type="button" onClick={onClose} aria-label="Close" className="absolute right-3 top-3 rounded-full p-1.5 text-slate-500 hover:bg-black/5 hover:text-slate-700"><X size={18} /></button>
         {/* signing in returns to the map; creating an account goes on to the first lesson, as it does everywhere else */}
-        {mode === "login" && <LoginForm next="/map" social={kit.login} onMode={onMode} />}
+        {mode === "login" && <LoginForm next={next} social={kit.login} onMode={onMode} />}
         {mode === "signup" && <SignUpForm social={kit.signup} onMode={onMode} />}
         {mode === "forgot" && <ForgotForm mailReady={kit.mailReady} onMode={onMode} />}
       </div>

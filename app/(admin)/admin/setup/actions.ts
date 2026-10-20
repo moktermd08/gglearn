@@ -22,7 +22,7 @@ export async function saveCompanyBranding(_: SetupState, fd: FormData): Promise<
 
 export async function saveCompanyLearningOrder(_: SetupState, fd: FormData): Promise<SetupState> {
   const r = saveLearningOrder(await requireManager(), fd);
-  if (r?.done) { revalidatePath("/admin/setup"); revalidatePath("/map"); revalidatePath("/tracks", "layout"); }
+  if (r?.done) { revalidatePath("/admin/setup"); revalidatePath("/map"); revalidatePath("/map/software"); revalidatePath("/tracks", "layout"); }
   return r;
 }
 

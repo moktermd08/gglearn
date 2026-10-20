@@ -279,7 +279,7 @@ export async function setJourneyMode(fd: FormData) {
   const mode = str(fd.get("mode")) === "soft" ? "soft" : "inherit";
   if (!journeyFor(u.id)?.canSwitch) return;
   db.update(users).set({ journeyMode: mode }).where(eq(users.id, u.id)).run();
-  revalidatePath("/map"); revalidatePath("/dashboard"); revalidatePath("/tracks", "layout");
+  revalidatePath("/map"); revalidatePath("/map/software"); revalidatePath("/dashboard"); revalidatePath("/tracks", "layout");
 }
 
 export async function enroll(fd: FormData) {

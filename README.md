@@ -14,6 +14,20 @@ npm run seed                      # admin user (password printed once), sample b
 npm run dev
 ```
 
+## The maps (`lib/lifecycle/`)
+`/map` is a transit map of how something is run, from first idea to closing it. A map is a definition (`MapDef`: lanes, phases, stops, handoff gates, areas, company stages, optional sizes) that `engine.ts` turns into a layout and routes. Three are listed in `maps.ts`: **Any business** (the default, `/map`), **Public sector** (`/map/public`, a UK public service or programme) and **Software** (`/map/software`). Add one by writing a definition and listing it.
+- **Stages** pick the stops that matter for where a company or service is. **Sizes** (Startup, Small, Medium, Large, Enterprise, on the business and public maps) dim the stops that can wait until an organisation is bigger, and change who usually owns a stop, how formal a handoff is and what usually goes wrong. A stop in no size list matters from the smallest size.
+- Links carry the choice: `/map/public?stage=case&size=large`. `npm run check:maps` checks every definition: ids, gates, stages, sizes, and overlapping labels.
+- The business and public-sector content is a draft for review by someone who works in that field. The public-sector map has its own learning tracks (brand `public-sector`, eight tracks `ps-*`, 128 questions in `content/public-sector/`); a reviewer can edit the JSON and re-run `npm run import:knowledge`.
+
+## Starting points (`lib/credits.ts`)
+A person's level in a track is the highest of three things, and the map shows which one it came from (a diamond marks a level that is not an exam pass):
+- **Exams passed**: saved per person, remembered on every sign-in.
+- **The placement check** (`lib/placement.ts`): a short assessment that finds where to start.
+- **A starting level** (`level_credits`): given by a manager or admin with a reason, or confirmed from what the person's job role normally holds (`suggestedStarts`, which uses the ladder's first ask per track, capped at level 10). It can end on a date and be taken back; rows are never deleted.
+
+Starting levels lift where someone starts and unlock what comes next (`levelsPassed`). They are not exam passes: certificates still need the exam, and required training and promotions (`levelsEarned`) ignore them unless an admin marks one **counts as complete**. Managers can give up to level 10 to people they run (never themselves); admins any level. Managers use **Starting points** in the admin (`/admin/starting-points`) or open a map as someone they run (`/map?as=ID`, or `/map/software?as=ID`). `npm run check:credits` tests the rules.
+
 ## Race to Titan (gamified layer)
 - **Rival per subject**: `lib/rivals.ts` gives every track a stable named rival who earns XP every day (deterministic, so no jobs needed). Rival level = XP / 150. Your level = levels passed. The head-to-head is drawn on the track page and dashboard.
 - **Visuals**: `components/` holds SVG avatars that evolve through 5 ranks (Initiate, Adept, Expert, Master, Titan), rank shields, race track, score rings and confetti. No image assets.

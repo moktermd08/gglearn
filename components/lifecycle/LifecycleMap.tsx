@@ -1,14 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Lock, Minus, Plus, Search, Trophy, X } from "lucide-react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Lock, Minus, Plus, Search, Share2, Trophy, X } from "lucide-react";
 import { setJourneyMode } from "@/app/actions";
 import { AuthModal, type AuthKit, type AuthMode } from "./AuthModal";
+import { PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
+import { pickQuery, type RoutePick } from "@/lib/lifecycle/share";
 import {
-  AI_MODES, FAMILY_ORDER, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
-  aiRoleName, buildRoute, type AiMode, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
-} from "@/lib/lifecycle/model";
+  AI_MODES, FAMILY_ORDER, SIZE_LABEL, aiRoleName, type AiMode, type FocusId, type Gate, type LineId, type MapData, type MapModel, type RaceInfo, type RoleInfo, type StageId, type Station, type TrackInfo,
+} from "@/lib/lifecycle/engine";
+import { MAPS, MAP_LIST } from "@/lib/lifecycle/maps";
+import { acceptRoleStartAction } from "@/app/(map)/map/actions";
+
+const ModelCtx = createContext<MapModel>(MAPS.software);
+const useModel = () => useContext(ModelCtx);
 
 type View = { k: number; x: number; y: number };
 type Sel = { kind: "st" | "gt"; id: string } | null;
@@ -25,89 +31,120 @@ const fmtDate = (sec: number) => new Date(sec * 1000).toLocaleDateString("en-GB"
 type Mark = "none" | "learning" | "solid" | "titan";
 const markOf = (t: TrackInfo | undefined): Mark => !t || t.passed <= 0 ? "none" : t.passed >= 20 ? "titan" : t.passed >= 5 ? "solid" : "learning";
 
-/** `standalone` makes the map a page of its own: full height, with its own slim top bar (brand and a way back) instead of the site header. */
-/** `auth`, when given, makes "Sign in" open a dialog over the map instead of leaving it. */
-export function LifecycleMap({ data, signage, standalone, auth }: { data: MapData; signage: string; standalone?: { brand: string }; auth?: AuthKit }) {
+/** `standalone` makes the map a page of its own: full height, with its own slim top bar (brand and a way back) instead of the site header. `initial` is a route carried by a shared link: it wins over the signed-in person's own defaults. */
+export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }: { mapId: string; data: MapData; signage: string; standalone?: { brand: string }; initial?: RoutePick; auth?: AuthKit }) {
+  const M = MAPS[mapId] ?? MAPS.software;
   const boxRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
+  const [headH, setHeadH] = useState(0); // the header's height, so panels and the camera start below it however many rows it wraps to
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [view, setView] = useState<View>({ k: 0.5, x: 0, y: 0 });
   const [animate, setAnimate] = useState(false);
-  const [focus, setFocus] = useState<FocusId>(data.defaultRole ? "all" : data.defaultFocus);
-  const [roleKey, setRoleKey] = useState<string | null>(data.defaultRole);
+  const linked = !!(initial?.role || initial?.area || initial?.stage);
+  const [focus, setFocus] = useState<FocusId>(initial?.role || initial?.stage ? "all" : initial?.area ?? (data.defaultRole ? "all" : data.defaultFocus));
+  const [roleKey, setRoleKey] = useState<string | null>(linked ? initial!.role : data.defaultRole);
+  const [stage, setStage] = useState<StageId | null>(initial?.role ? null : initial?.stage ?? null);
+  const [stageOpen, setStageOpen] = useState(!!stage); // the panel that explains the chosen company stage
+  const [stagePicker, setStagePicker] = useState(false);
+  const [orgSize, setOrgSize] = useState<string | null>(initial?.size ?? null); // organisation size: what the map lights up depends on how big the body is
+  const [sizeOpen, setSizeOpen] = useState(!!initial?.size);
+  const [sizePicker, setSizePicker] = useState(false);
   const [picker, setPicker] = useState(false);
   const [pq, setPq] = useState("");
   const [races, setRaces] = useState(false);
   const [jpanel, setJpanel] = useState(false);
   const [sel, setSel] = useState<Sel>(null);
   const [hint, setHint] = useState(true);
+  const [ctrl, setCtrl] = useState(false); // on a phone the route controls fold away until asked for
+  const [aiOpen, setAiOpen] = useState(false);
   const [legend, setLegend] = useState(false);
-  const [mode, setMode] = useState<AiMode>("human");
+  useEffect(() => { const t = setTimeout(() => setHint(false), 7000); return () => clearTimeout(t); }, []);
+  const [mode, setMode] = useState<AiMode>(initial?.mode ?? "human");
+  // `auth` makes "Sign in" a dialog over the map; signing in returns to the address the map had when it was opened (route and all)
   const [authMode, setAuthMode] = useState<AuthMode | null>(null);
-  const openSignIn = auth ? () => setAuthMode("login") : undefined;
+  const [back, setBack] = useState("/map");
+  const openSignIn = auth ? () => { setBack(window.location.pathname + window.location.search); setAuthMode("login"); } : undefined;
+  const [copied, setCopied] = useState(false);
   const narrow = size.w > 0 && size.w < 900;
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
 
   const role = useMemo<RoleInfo | null>(() => data.roles.find((r) => r.key === roleKey) ?? null, [roleKey, data.roles]);
   /* The route: the stops a role's career ladder asks for (or an area's hand-picked stops), seen through the chosen AI lens. */
-  const route = useMemo(() => buildRoute(role, focus, mode), [role, focus, mode]);
+  const route = useMemo(() => M.buildRoute(role, focus, mode, stage, orgSize), [M, role, focus, mode, stage, orgSize]);
   const routeIds = route.ids;
-  const litLines = useMemo(() => new Set<LineId>(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.line)), [routeIds]);
-  const dimming = routeIds.size < STATIONS.length;
+  const litLines = useMemo(() => new Set<LineId>(M.STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.line)), [M, routeIds]);
+  const dimming = routeIds.size < M.STATIONS.length;
 
   /* The next stop: the first required, unfinished stop in your lines; else the first one you have not yet passed at level 5. */
   const next = useMemo<Station | null>(() => {
-    const all = STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
+    const all = M.STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
     // never send someone to a stop that is locked for them: the first stop they can open comes first
     const free = all.filter((s) => !data.journey?.locks[s.track]);
     const mine = free.length ? free : all;
     const t = (s: Station) => data.tracks[s.track];
-    const start = mode !== "human" ? STATION_BY_ID.get("aiuse") : !role ? STATION_BY_ID.get(FOCUS_START[focus] ?? "") : undefined;
+    const start = mode !== "human" ? M.STATION_BY_ID.get("aiuse") : !role && stage ? M.STATION_BY_ID.get(M.STAGE_BY_ID.get(stage)!.start) : !role ? M.STATION_BY_ID.get(M.FOCUS_START[focus] ?? "") : undefined;
     return mine.find((s) => t(s)?.open && t(s)?.required && t(s)!.passed < t(s)!.requiredLevel)
       ?? (start && routeIds.has(start.id) && (t(start)?.passed ?? 0) < 5 ? start : undefined)
       ?? mine.find((s) => t(s)?.open && (t(s)?.passed ?? 0) < 5) ?? mine[0] ?? null;
-  }, [routeIds, role, focus, mode, data.tracks, data.journey]);
+  }, [M, routeIds, role, focus, mode, stage, data.tracks, data.journey]);
+
+  /* Where the route starts and where it ends: the goal is the last stop along it. */
+  const ends = useMemo(() => {
+    if (!dimming) return null;
+    const on = M.STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
+    // a company stage names its own first stop; any other route starts at its leftmost stop
+    const from = (!role && stage ? M.STATION_BY_ID.get(M.STAGE_BY_ID.get(stage)!.start) : undefined) ?? on[0];
+    return on.length > 1 ? { from, goal: on[on.length - 1], count: on.length } : null;
+  }, [M, dimming, routeIds, role, stage]);
 
   /* Races: live or upcoming campaigns on the tracks of this route. One flag per track, on the first stop of that track on the route. */
-  const routeTracks = useMemo(() => role ? new Set([...role.tracks, ...(mode !== "human" ? ["ai-llm-practice"] : [])]) : new Set(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.track)), [role, mode, routeIds]);
+  const routeTracks = useMemo(() => role ? new Set([...role.tracks, ...(mode !== "human" ? ["ai-llm-practice"] : [])]) : new Set(M.STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.track)), [M, role, mode, routeIds]);
   const raceList = useMemo(() => data.races.filter((r) => routeTracks.has(r.track)).sort((a, b) => Number(b.state === "live") - Number(a.state === "live") || b.humans - a.humans), [data.races, routeTracks]);
   const racesByTrack = useMemo(() => { const m = new Map<string, RaceInfo[]>(); for (const r of data.races) m.set(r.track, [...(m.get(r.track) ?? []), r]); return m; }, [data.races]);
   const raceAnchor = useMemo(() => {
     const m = new Map<string, number>(), seen = new Set<string>();
-    for (const st of STATIONS.filter((x) => routeIds.has(x.id)).sort((a, b) => a.x - b.x || a.row - b.row)) {
+    for (const st of M.STATIONS.filter((x) => routeIds.has(x.id)).sort((a, b) => a.x - b.x || a.row - b.row)) {
       if (seen.has(st.track) || !racesByTrack.has(st.track)) continue;
       seen.add(st.track); m.set(st.id, racesByTrack.get(st.track)!.length);
     }
     return m;
-  }, [routeIds, racesByTrack]);
+  }, [M, routeIds, racesByTrack]);
 
   /* ---------- camera ---------- */
-  const fitK = size.w && size.h ? Math.min(size.w / W, size.h / H) : 0.5;
+  const fitK = size.w && size.h ? Math.min(size.w / M.W, size.h / M.H) : 0.5;
   const move = useCallback((v: View, smooth: boolean) => { setAnimate(smooth); setView(v); }, []);
   const centreOn = useCallback((cx: number, cy: number, k: number, smooth = true, rightInset = 0, sheet = false) => {
     const kk = Math.min(MAX_K, Math.max(fitK * 0.5, k));
-    const top = (narrow ? (size.w < 640 ? 130 : 215) : 0) + chrome, bottom = sheet ? size.h * 0.4 : size.h;
+    const top = (narrow ? (size.w < 640 ? 110 : 215) : 0) + chrome, bottom = sheet ? size.h * 0.4 : size.h;
     move({ k: kk, x: (size.w - rightInset) / 2 - cx * kk, y: (top + bottom) / 2 - cy * kk }, smooth);
   }, [fitK, size, narrow, chrome, move]);
-  const frameLines = useCallback((lines: Set<LineId>, smooth = true, ids?: ReadonlySet<string>) => {
+  const frameLines = useCallback((lines: Set<LineId>, smooth = true, ids?: ReadonlySet<string>, startId?: string) => {
     const on = (st: Station) => (ids ? ids.has(st.id) : lines.has(st.line));
-    if (narrow) { const s = STATIONS.filter(on).sort((a, b) => a.x - b.x)[0], rs = LINES.filter((l) => lines.has(l.id)).map((l) => l.row); if (s) centreOn(px(s.x) + 120, py((Math.min(...rs) + Math.max(...rs)) / 2), 0.75, smooth); return; }
-    const rows = LINES.filter((l) => lines.has(l.id)).map((l) => l.row);
-    const y0 = py(Math.min(...rows)) - 120, y1 = py(Math.max(...rows)) + 80, top = (narrow ? 100 : 136) + chrome, bottom = narrow ? 96 : 64;
+    if (narrow) { const s = (startId ? M.STATION_BY_ID.get(startId) : undefined) ?? M.STATIONS.filter(on).sort((a, b) => a.x - b.x)[0], rs = M.LINES.filter((l) => lines.has(l.id)).map((l) => l.row); if (s) centreOn(M.px(s.x) + 120, M.py((Math.min(...rs) + Math.max(...rs)) / 2), 0.75, smooth); return; }
+    const rows = M.LINES.filter((l) => lines.has(l.id)).map((l) => l.row);
+    const y0 = M.py(Math.min(...rows)) - 120 - (M.TOP - 170), // a map with more room above its first line keeps its phase titles in view
+       y1 = M.py(Math.max(...rows)) + 80, top = narrow ? 100 + chrome : (headRef.current?.offsetHeight ?? 220) + 6, bottom = narrow ? 96 : 150; // clear of the header above and the route buttons below
     // readable first: about 0.9 unless the lit lines would not fit up and down; the fit button shows the whole map
     const kk = Math.min(1.1, Math.max(0.6, Math.min(0.95, (size.h - top - bottom) / (y1 - y0))));
-    const first = STATIONS.filter(on).sort((p, q) => p.x - q.x)[0], x0 = first ? px(first.x) - 300 : 0;
+    const first = (startId ? M.STATION_BY_ID.get(startId) : undefined) ?? M.STATIONS.filter(on).sort((p, q) => p.x - q.x)[0], x0 = first ? M.px(first.x) - 300 : 0;
     move({ k: kk, x: 16 - Math.max(0, x0) * kk, y: top + Math.max(0, size.h - top - bottom - (y1 - y0) * kk) / 2 - y0 * kk }, smooth);
-  }, [narrow, size, chrome, centreOn, move]);
+  }, [M, narrow, size, chrome, centreOn, move]);
 
-  const fitAll = () => { const k = Math.min((size.w - 32) / W, (size.h - 200 - chrome) / H); move({ k, x: (size.w - W * k) / 2, y: 136 + chrome + (size.h - 200 - chrome - H * k) / 2 }, true); };
+  const fitAll = () => { const k = Math.min((size.w - 32) / M.W, (size.h - 200 - chrome) / M.H); move({ k, x: (size.w - M.W * k) / 2, y: 136 + chrome + (size.h - 200 - chrome - M.H * k) / 2 }, true); };
   useEffect(() => {
     const el = boxRef.current; if (!el) return;
     const ro = new ResizeObserver(() => setSize({ w: el.clientWidth, h: el.clientHeight }));
     ro.observe(el); setSize({ w: el.clientWidth, h: el.clientHeight });
     return () => ro.disconnect();
   }, []);
+  useLayoutEffect(() => {
+    const el = headRef.current; if (!el) return;
+    const ro = new ResizeObserver(() => setHeadH(el.offsetHeight));
+    ro.observe(el); setHeadH(el.offsetHeight);
+    return () => ro.disconnect();
+  }, []);
   const first = useRef(true);
-  useLayoutEffect(() => { if (size.w && first.current) { first.current = false; frameLines(litLines, false, routeIds); } }, [size.w, litLines, routeIds, frameLines]);
+  useLayoutEffect(() => { if (size.w && first.current) { first.current = false; frameLines(litLines, false, routeIds, !roleKey && stage ? M.STAGE_BY_ID.get(stage)?.start : undefined); } }, [size.w, litLines, routeIds, frameLines]); // eslint-disable-line react-hooks/exhaustive-deps -- frames once, from the route the page opened with
 
   /* ---------- pointer: drag to pan, two fingers or ctrl+wheel to zoom ---------- */
   const viewRef = useRef(view);
@@ -163,33 +200,73 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
   const pick = (s: Sel) => {
     setSel(s); setHint(false);
     if (!s) return;
-    const n = s.kind === "st" ? STATION_BY_ID.get(s.id)! : null, g = s.kind === "gt" ? GATE_BY_ID.get(s.id)! : null;
-    const cx = n ? px(n.x) : px(g!.x), cy = n ? py(n.row) : (py(gateRow(g!)) + py(gateBottom(g!))) / 2;
+    const n = s.kind === "st" ? M.STATION_BY_ID.get(s.id)! : null, g = s.kind === "gt" ? M.GATE_BY_ID.get(s.id)! : null;
+    const cx = n ? M.px(n.x) : M.px(g!.x), cy = n ? M.py(n.row) : (M.py(M.gateRow(g!)) + M.py(M.gateBottom(g!))) / 2;
     centreOn(cx, cy, Math.max(viewRef.current.k, narrow ? 0.8 : 1.05), true, narrow ? 0 : 380, narrow);
   };
-  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); const r = buildRoute(null, id, mode); frameLines(new Set<LineId>(STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids); };
+  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); setStagePicker(false); setStage(null); setStageOpen(false); setCtrl(false); const r = M.buildRoute(null, id, mode, null, orgSize); frameLines(new Set<LineId>(M.STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids); };
   const chooseRole = (key: string | null) => {
-    setRoleKey(key); setPicker(false); setPq(""); setSel(null); setHint(false);
+    setRoleKey(key); setPicker(false); setStagePicker(false); setStage(null); setStageOpen(false); setPq(""); setSel(null); setHint(false); setCtrl(false);
     const r = data.roles.find((x) => x.key === key);
-    if (!r) { setFocus("all"); frameLines(new Set<LineId>(LINES.map((l) => l.id))); return; }
-    const rt = buildRoute(r, "all", mode);
-    frameLines(new Set<LineId>(STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
+    if (!r) { setFocus("all"); frameLines(new Set<LineId>(M.LINES.map((l) => l.id))); return; }
+    const rt = M.buildRoute(r, "all", mode, null, orgSize);
+    frameLines(new Set<LineId>(M.STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
+  };
+  const chooseStage = (id: StageId) => {
+    setStage(id); setRoleKey(null); setFocus("all"); setSel(null); setHint(false); setPicker(false); setStagePicker(false); setCtrl(false); setStageOpen(!narrow);
+    const r = M.buildRoute(null, "all", mode, id, orgSize);
+    frameLines(new Set<LineId>(M.STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids, M.STAGE_BY_ID.get(id)?.start);
   };
   const chooseMode = (m: AiMode) => {
     setMode(m); setSel(null); setHint(false);
-    const rt = buildRoute(role, focus, m);
-    frameLines(new Set<LineId>(STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
+    const rt = M.buildRoute(role, focus, m, stage, orgSize);
+    frameLines(new Set<LineId>(M.STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids, !role && stage ? M.STAGE_BY_ID.get(stage)?.start : undefined);
+  };
+  const chooseSize = (id: string | null) => {
+    setOrgSize(id); setSizePicker(false); setStagePicker(false); setPicker(false); setSel(null); setHint(false); setCtrl(false); setSizeOpen(!!id && !narrow);
+    const rt = M.buildRoute(role, focus, mode, stage, id);
+    frameLines(new Set<LineId>(M.STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids, !role && stage ? M.STAGE_BY_ID.get(stage)?.start : undefined);
+  };
+  /** What the chosen size means for one stop: who usually owns it, a note if it differs, and when it starts to matter. */
+  const sizeInfo = (stopId: string) => {
+    const z = orgSize ? M.SIZE_BY_ID.get(orgSize) : null;
+    if (!orgSize || !z) return null;
+    const si = M.SIZES.findIndex((x) => x.id === orgSize), at = M.sizeFrom(stopId);
+    return { label: z.label, text: M.sizeNote(stopId, orgSize) ?? z.owner, later: at > si ? M.SIZES[at].label : null };
   };
   const goNext = () => { if (next) pick({ kind: "st", id: next.id }); };
+
+  /* The address bar always holds the current route, so it can be copied as it is; Share also offers it to the phone's share sheet. */
+  const query = useMemo(() => {
+    const keepAll = !roleKey && !stage && focus === "all" && (!!data.defaultRole || data.defaultFocus !== "all"); // "everything" is a choice when someone's own default is narrower
+    return pickQuery({ role: roleKey, area: !roleKey && !stage && (focus !== "all" || keepAll) ? focus : null, stage: roleKey ? null : stage, size: orgSize, mode });
+  }, [roleKey, focus, stage, orgSize, mode, data.defaultRole, data.defaultFocus]);
+  const asId = data.viewingAs?.id; // a manager's view of someone else's map stays in the address bar, but is never put in a share link
+  useEffect(() => { if (standalone) window.history.replaceState(null, "", `${window.location.pathname}${asId ? `${query ? `${query}&` : "?"}as=${asId}` : query}`); }, [standalone, query, asId]);
+  const share = async () => {
+    const url = `${window.location.origin}${window.location.pathname}${query}`;
+    const title = `${role ? aiRoleName(role.name, mode) : stage ? M.STAGE_BY_ID.get(stage)!.label : "My route"}: ${M.words.routeWord}`;
+    try {
+      if (navigator.share) await navigator.share({ title, url });
+      else { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2200); }
+    } catch { /* closing the share sheet is not an error */ }
+  };
+  const shareButton = standalone && query && (
+    <button type="button" onClick={share} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-black/15 bg-[#fff] px-3 py-1 text-[13px] font-semibold shadow-sm hover:border-indigo-400 hover:text-indigo-300">
+      <Share2 size={14} aria-hidden />{copied ? "Link copied" : "Share this route"}
+    </button>
+  );
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === "Escape") setSel(null); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
 
+  const panel = !!sel || !!(stage && stageOpen) || !!(orgSize && sizeOpen); // something is open on the right
   const showLabels = view.k >= 0.55;
-  const selStation = sel?.kind === "st" ? STATION_BY_ID.get(sel.id) ?? null : null;
-  const selGate = sel?.kind === "gt" ? GATE_BY_ID.get(sel.id) ?? null : null;
+  const selStation = sel?.kind === "st" ? M.STATION_BY_ID.get(sel.id) ?? null : null;
+  const selGate = sel?.kind === "gt" ? M.GATE_BY_ID.get(sel.id) ?? null : null;
 
   return (
-    <section aria-label="Software lifecycle map" className={`lm relative isolate overflow-hidden bg-[#fbfaf6] ${signage}`} style={{ height: standalone ? "100svh" : "calc(100svh - 3.4rem)", minHeight: 520 }}>
-      {auth && authMode && !data.signedIn && <AuthModal mode={authMode} kit={auth} onMode={setAuthMode} onClose={() => setAuthMode(null)} />}
+    <ModelCtx.Provider value={M}>
+    <section aria-label={M.words.aria} className={`lm relative isolate overflow-hidden bg-[#fbfaf6] ${signage}`} style={{ height: standalone ? "100svh" : "calc(100svh - 3.4rem)", minHeight: 520 }}>
+      {auth && authMode && !data.signedIn && <AuthModal mode={authMode} kit={auth} next={back} onMode={setAuthMode} onClose={() => setAuthMode(null)} />}
       <style>{`
         .lm .ln{animation:draw 1.6s cubic-bezier(.4,0,.2,1) both}
         .lm .pulse{animation:lmpulse 2s ease-out infinite;transform-box:fill-box;transform-origin:center}
@@ -200,15 +277,15 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
 
       {/* the map */}
       <div ref={boxRef} className="absolute inset-0 cursor-grab touch-none select-none active:cursor-grabbing" onPointerDown={onPointerDown}>
-        <svg width={size.w} height={size.h} role="group" aria-label="Map of the software lifecycle: ten lines, seven phases, nine handoff gates">
+        <svg width={size.w} height={size.h} role="group" aria-label={`Map: ${M.LINES.length} lines, ${M.ZONES.length} phases, ${M.GATES.length} handoff gates`}>
           <g style={{ transform: `translate(${view.x}px,${view.y}px) scale(${view.k})`, transformOrigin: "0 0", transition: animate ? "transform .75s cubic-bezier(.2,.8,.2,1)" : "none" }}>
             {/* phases */}
-            {ZONES.map((z, i) => {
-              const x0 = i === 0 ? 0 : px(z.from), x1 = i === ZONES.length - 1 ? W : px(z.to);
+            {M.ZONES.map((z, i) => {
+              const x0 = i === 0 ? 0 : M.px(z.from), x1 = i === M.ZONES.length - 1 ? M.W : M.px(z.to);
               return (
                 <g key={z.name}>
-                  <rect x={x0} y={0} width={x1 - x0} height={H} fill={i % 2 ? "#f4f2ea" : "#fbfaf6"} />
-                  {i > 0 && <line x1={x0} x2={x0} y1={0} y2={H} stroke="#14161f" strokeOpacity={0.12} strokeDasharray="3 5" />}
+                  <rect x={x0} y={0} width={x1 - x0} height={M.H} fill={i % 2 ? "#f4f2ea" : "#fbfaf6"} />
+                  {i > 0 && <line x1={x0} x2={x0} y1={0} y2={M.H} stroke="#14161f" strokeOpacity={0.12} strokeDasharray="3 5" />}
                   <text x={x0 + 14} y={36} fontSize={21} fontWeight={700} letterSpacing=".14em" fill="#14161f" fillOpacity={0.78}>{i + 1}  {z.name.toUpperCase()}</text>
                   <text x={x0 + 14} y={60} fontSize={16} fontWeight={500} fill="#5b6375">{z.sub}</text>
                 </g>
@@ -216,15 +293,13 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
             })}
 
             {/* lines */}
-            {LINES.map((l) => {
-              const xs = SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = px(Math.min(...xs)), b = px(Math.max(...xs)), y = py(l.row), c = LINE_COLOUR[l.id];
-              const on = !dimming || litLines.has(l.id), pw = l.name.length * 9.4 + 34;
+            {M.LINES.map((l) => {
+              const xs = M.SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = M.px(Math.min(...xs)), b = M.px(Math.max(...xs)), y = M.py(l.row), c = M.LINE_COLOUR[l.id];
+              const on = !dimming || litLines.has(l.id);
               return (
                 <g key={l.id} style={{ opacity: on ? 1 : 0.16, transition: "opacity .4s" }}>
                   <line className="ln" pathLength={1} strokeDasharray={1} x1={a} x2={b} y1={y} y2={y} stroke={c} strokeWidth={l.hollow ? 13 : 10} strokeLinecap="butt" />
                   {l.hollow && <line x1={a} x2={b} y1={y} y2={y} stroke="#fbfaf6" strokeWidth={4} />}
-                  <rect x={a - 18 - pw} y={y - 17} width={pw} height={34} rx={17} fill={c} />
-                  <text x={a - 18 - pw / 2} y={y + 6.5} textAnchor="middle" fontSize={18} fontWeight={600} fill={l.id === "doc" ? "#14161f" : "#fff"}>{l.name}</text>
                   {on && dimming && !l.hollow && (
                     <g className="train">
                       <rect x={-13} y={-7} width={26} height={14} rx={4} fill="#fff" stroke={c} strokeWidth={3} />
@@ -236,36 +311,49 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
             })}
 
             {/* gates */}
-            {GATES.map((g) => {
-              const X = px(g.x), r0 = gateRow(g), r1 = gateBottom(g), wl = wrapWords(g.name, 12), top0 = 92;
+            {M.GATES.map((g) => {
+              const X = M.px(g.x), r0 = M.gateRow(g), r1 = M.gateBottom(g), wl = wrapWords(g.name, 12), top0 = 92;
               const on = !dimming || g.lines.some((id) => litLines.has(id)), isSel = sel?.kind === "gt" && sel.id === g.id;
               return (
                 <g key={g.id} role="button" tabIndex={0} aria-label={`Handoff gate: ${g.name}`} className="cursor-pointer outline-none" style={{ opacity: on ? 1 : 0.2, transition: "opacity .4s" }}
                   onClick={() => { if (!moved.current) pick({ kind: "gt", id: g.id }); }} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick({ kind: "gt", id: g.id }); } }}>
-                  <line x1={X} x2={X} y1={top0 + wl.length * 23 - 8} y2={py(r0) - 12} stroke="#5b6375" strokeWidth={1.2} strokeDasharray="2 3" />
-                  {r1 > r0 && <rect x={X - 8} y={py(r0)} width={16} height={py(r1) - py(r0)} fill="#fbfaf6" stroke="#14161f" strokeWidth={3} />}
-                  {g.lines.map((id) => <circle key={id} cx={X} cy={py(LINE_BY_ID[id].row)} r={11} fill="#fbfaf6" stroke={isSel ? "#4f46e5" : "#14161f"} strokeWidth={isSel ? 4 : 3} />)}
+                  <line x1={X} x2={X} y1={top0 + wl.length * 23 - 8} y2={M.py(r0) - 12} stroke="#5b6375" strokeWidth={1.2} strokeDasharray="2 3" />
+                  {r1 > r0 && <rect x={X - 8} y={M.py(r0)} width={16} height={M.py(r1) - M.py(r0)} fill="#fbfaf6" stroke="#14161f" strokeWidth={3} />}
+                  {g.lines.map((id) => <circle key={id} cx={X} cy={M.py(M.LINE_BY_ID[id].row)} r={11} fill="#fbfaf6" stroke={isSel ? "#4f46e5" : "#14161f"} strokeWidth={isSel ? 4 : 3} />)}
                   {wl.map((t, i) => <text key={i} x={X} y={top0 + i * 23} textAnchor="middle" fontSize={20} fontWeight={700} fill={isSel ? "#4f46e5" : "#14161f"}>{t}</text>)}
                   <rect x={X - 72} y={top0 - 20} width={144} height={wl.length * 23 + 10} fill="transparent" />
-                  <rect x={X - 15} y={py(r0) - 15} width={30} height={py(r1) - py(r0) + 30} fill="transparent" />
+                  <rect x={X - 15} y={M.py(r0) - 15} width={30} height={M.py(r1) - M.py(r0) + 30} fill="transparent" />
+                </g>
+              );
+            })}
+
+            {/* line names, drawn over the gates so a handoff bar never cuts through one */}
+            {M.LINES.map((l) => {
+              const xs = M.SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = M.px(Math.min(...xs)), y = M.py(l.row), c = M.LINE_COLOUR[l.id];
+              const on = !dimming || litLines.has(l.id), pw = l.name.length * 9.4 + 34;
+              return (
+                <g key={l.id} pointerEvents="none" style={{ opacity: on ? 1 : 0.16, transition: "opacity .4s" }}>
+                  <rect x={a - 18 - pw} y={y - 17} width={pw} height={34} rx={17} fill={c} />
+                  <text x={a - 18 - pw / 2} y={y + 6.5} textAnchor="middle" fontSize={18} fontWeight={600} fill={l.id === "doc" ? "#14161f" : "#fff"}>{l.name}</text>
                 </g>
               );
             })}
 
             {/* stations */}
-            {STATIONS.map((st) => {
-              const X = px(st.x), Y = py(st.row), c = LINE_COLOUR[st.line], t = data.tracks[st.track], mk = markOf(t);
-              const on = !dimming || routeIds.has(st.id), isNext = next?.id === st.id, isSel = sel?.kind === "st" && sel.id === st.id, lift = st.tier * 22, above = true; // labels always sit above the line, on a second tier when they would collide
+            {M.STATIONS.map((st) => {
+              const X = M.px(st.x), Y = M.py(st.row), c = M.LINE_COLOUR[st.line], t = data.tracks[st.track], mk = markOf(t);
+              const on = !dimming || routeIds.has(st.id), isNext = next?.id === st.id, isGoal = ends?.goal.id === st.id && !isNext, isSel = sel?.kind === "st" && sel.id === st.id, lift = st.tier * 22, above = true; // labels always sit above the line, on a second tier when they would collide
               const tx = st.anchor === "start" ? st.L : st.anchor === "end" ? st.R : X, frac = Math.min(1, (t?.passed ?? 0) / 20), C = 2 * Math.PI * 16;
-              const label = showLabels && (on || isSel) || isNext || isSel;
+              const label = showLabels && (on || isSel) || isNext || isGoal || isSel;
               return (
-                <g key={st.id} role="button" tabIndex={0} aria-label={`${st.name}${t ? `, ${t.passed > 0 ? `level ${t.passed} of 20` : "not started"}` : ""}`} className="st cursor-pointer outline-none"
+                <g key={st.id} role="button" tabIndex={0} aria-label={`${st.name}${t ? `, ${t.passed > 0 ? `level ${t.passed} of 20${t.passed > t.earned ? ", a starting level" : ""}` : "not started"}` : ""}`} className="st cursor-pointer outline-none"
                   style={{ opacity: on ? 1 : 0.14, transition: "opacity .4s" }}
                   onClick={() => { if (!moved.current) pick({ kind: "st", id: st.id }); }} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick({ kind: "st", id: st.id }); } }}>
                   {isNext && !isSel && <circle className="pulse" cx={X} cy={Y} r={16} fill="none" stroke={c} strokeWidth={4} />}
                   {(isSel || mk === "learning" || mk === "solid") && <circle cx={X} cy={Y} r={16} fill="none" stroke={isSel ? "#4f46e5" : c} strokeOpacity={isSel ? 1 : 0.9} strokeWidth={isSel ? 4.5 : 4} strokeDasharray={isSel ? undefined : `${C * frac} ${C}`} transform={`rotate(-90 ${X} ${Y})`} />}
                   <circle cx={X} cy={Y} r={mk === "titan" ? 11 : 9} fill={mk === "titan" ? "#f5b800" : mk === "solid" ? c : "#fbfaf6"} stroke={mk === "titan" ? "#14161f" : c} strokeWidth={4} />
                   {t?.required && t.overdue && <circle cx={X + 11} cy={Y - 11} r={5.5} fill="#e11d48" stroke="#fbfaf6" strokeWidth={1.5} />}
+                  {t && t.passed > t.earned && <rect x={X - 17} y={Y - 17} width={9} height={9} transform={`rotate(45 ${X - 12.5} ${Y - 12.5})`} fill="#fbfaf6" stroke={c} strokeWidth={2.5} />}
                   {route.agent.has(st.id) && <circle cx={X} cy={Y} r={17} fill="none" stroke="#6d28d9" strokeWidth={3} strokeDasharray="5 4" />}
                   {mode === "ai" && route.ai.has(st.id) && (
                     <g transform={`translate(${X - 19},${above ? Y + 19 : Y - 19})`}><circle r={10} fill="#6d28d9" stroke="#fbfaf6" strokeWidth={2} /><text y={3.6} textAnchor="middle" fontSize={9.5} fontWeight={800} fill="#fff">AI</text></g>
@@ -292,6 +380,12 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
                       <text y={5} textAnchor="middle" fontSize={15} fontWeight={700} letterSpacing=".06em" fill="#fff">{data.signedIn ? "NEXT STOP" : "START HERE"}</text>
                     </g>
                   )}
+                  {isGoal && !isSel && (
+                    <g transform={`translate(${X},${Y + 36})`}>
+                      <rect x={-34} y={-14} width={68} height={27} rx={13} fill="#4f46e5" />
+                      <text y={5} textAnchor="middle" fontSize={15} fontWeight={700} letterSpacing=".06em" fill="#fff">GOAL</text>
+                    </g>
+                  )}
                   <circle cx={X} cy={Y} r={20} fill="transparent" />
                   {label && <rect x={st.L - 4} y={Y - 46 - lift} width={st.R - st.L + 8} height={46 + lift} fill="transparent" />}
                 </g>
@@ -302,34 +396,96 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
       </div>
 
       {/* welcome and the one question */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-[#fbfaf6] via-[#fbfaf6]/92 to-transparent px-3 pb-6 pt-3 sm:px-5 sm:pt-4">
+      <div ref={headRef} className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-[#fbfaf6] from-85% to-transparent px-3 pb-7 pt-3 sm:px-5 sm:pt-4">
         {standalone && (
           <div className="pointer-events-auto mb-2 flex items-center gap-3 text-sm">
             <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1 font-semibold shadow-sm hover:shadow-md"><ArrowLeft size={14} />{standalone.brand}</Link>
+            {MAP_LIST.length > 1 && (
+              <nav aria-label="Maps" className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm">
+                {MAP_LIST.map((x) => <Link key={x.id} href={data.viewingAs ? `${x.href}?as=${data.viewingAs.id}` : x.href} aria-current={x.id === M.id ? "page" : undefined} className={`px-3 py-1 transition ${x.id === M.id ? "bg-[#14161f] text-[#fff]" : "hover:bg-black/5"}`}>{x.label}</Link>)}
+              </nav>
+            )}
+            {data.viewingAs && (
+              <span className="inline-flex items-center gap-2 rounded-full border border-amber-400 bg-amber-50 px-3 py-1 text-[13px] font-semibold">
+                Viewing {data.viewingAs.name}&apos;s map
+                <Link href={MAP_LIST.find((x) => x.id === M.id)?.href ?? "/map"} className="text-indigo-300 underline">Back to mine</Link>
+              </span>
+            )}
             <span className="ml-auto flex items-center gap-2">
               {data.signedIn ? <Link href="/dashboard" className="font-semibold text-indigo-300 hover:underline">My quest</Link> : openSignIn ? <button type="button" onClick={openSignIn} className="btn !px-3.5 !py-1 text-[13px]">Sign in</button> : <Link href="/login" className="btn !px-3.5 !py-1 text-[13px]">Sign in</Link>}
             </span>
           </div>
         )}
-        <div className="flex flex-wrap items-end gap-x-8 gap-y-2" style={{ paddingRight: !narrow && sel ? "23.5rem" : undefined }}>
+        <div className="flex flex-wrap items-end gap-x-8 gap-y-2">
           <div className="pointer-events-auto">
-            <p className="hidden text-[11px] font-semibold uppercase tracking-[.18em] text-slate-400 sm:block">The software lifecycle, as a map</p>
+            <p className="hidden text-[11px] font-semibold uppercase tracking-[.18em] text-slate-400 sm:block">{M.words.kicker}</p>
             <h1 className="mt-0.5 text-[1.2rem] font-bold leading-[1.05] sm:text-[1.6rem]">
-              {data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>Idea to shutdown. <span className="text-indigo-300">Learn every stop.</span></>}
+              {data.viewingAs ? <>{data.firstName}&apos;s map. <span className="text-indigo-300">Where they are now.</span></> : data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>{M.words.headline[0]} <span className="text-indigo-300">{M.words.headline[1]}</span></>}
             </h1>
           </div>
           <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]">
-            <div className="relative mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-300">
-              <span>I am a</span>
-              <button type="button" onClick={() => setPicker((v) => !v)} aria-expanded={picker} aria-haspopup="listbox"
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${role ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
-                {role ? aiRoleName(role.name, mode) : "Choose your role"}<ChevronDown size={15} />
-              </button>
-              <span className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm" role="group" aria-label="Role as a person or with AI">
-                {AI_MODES.map((m) => <button key={m.id} type="button" aria-pressed={mode === m.id} title={m.hint} onClick={() => chooseMode(m.id)}
-                  className={`px-3 py-1 transition ${mode === m.id ? (m.id === "human" ? "bg-[#14161f] text-[#fff]" : "bg-violet-600 text-[#fff]") : "hover:bg-black/5"}`}>{m.label}</button>)}
-              </span>
-              <span className="hidden lg:inline">or pick an area. We will light up your route.</span>
+            {narrow && !ctrl ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <button type="button" onClick={() => setCtrl(true)} aria-expanded={false}
+                  className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-black/20 bg-[#fff] px-3.5 py-1.5 text-[14px] font-bold shadow-sm hover:border-indigo-400">
+                  <span className="truncate">{role ? aiRoleName(role.name, mode) : stage ? M.STAGE_BY_ID.get(stage)!.label : focus !== "all" ? M.FOCUS.find((f) => f.id === focus)?.label : "Choose your route"}</span><ChevronDown size={15} className="shrink-0" />
+                </button>
+                {shareButton}
+              </div>
+            ) : (
+              <>
+                <p className="mb-1.5 text-[13px] font-semibold text-slate-300">What do you want to work on?</p>
+                <div className="-mx-3 flex gap-1.5 overflow-x-auto px-3 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden" role="group" aria-label="What do you want to work on?">
+                  {M.FOCUS.map((f) => (
+                    <button key={f.id} type="button" aria-pressed={!role && !stage && focus === f.id} onClick={() => choose(f.id)}
+                      className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-[13px] font-semibold transition ${!role && !stage && focus === f.id ? "border-[#14161f] bg-[#14161f] text-[#fff]" : "border-black/15 bg-[#fff] hover:border-indigo-400 hover:text-indigo-300"}`}>{f.label}</button>
+                  ))}
+                </div>
+                <div className="relative mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-300">
+                  <span>or I am a</span>
+                  <button type="button" onClick={() => { setPicker((v) => !v); setStagePicker(false); setSizePicker(false); }} aria-expanded={picker} aria-haspopup="listbox"
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${role ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
+                    {role ? aiRoleName(role.name, mode) : "Choose your role"}<ChevronDown size={15} />
+                  </button>
+                  <span>{M.words.stageIs ?? "or my company is"}</span>
+                  <button type="button" onClick={() => { setStagePicker((v) => !v); setPicker(false); setSizePicker(false); }} aria-expanded={stagePicker} aria-haspopup="listbox"
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${stage ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
+                    <span className="max-w-[11rem] truncate">{stage ? M.STAGE_BY_ID.get(stage)!.label : "At a stage…"}</span><ChevronDown size={15} className="shrink-0" />
+                  </button>
+                  {M.SIZES.length > 0 && (
+                    <>
+                      <span>and it is</span>
+                      <button type="button" onClick={() => { setSizePicker((v) => !v); setPicker(false); setStagePicker(false); }} aria-expanded={sizePicker} aria-haspopup="listbox"
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${orgSize ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
+                        {orgSize ? M.SIZE_BY_ID.get(orgSize)!.label : "Any size"}<ChevronDown size={15} />
+                      </button>
+                    </>
+                  )}
+              {sizePicker && (
+                <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(24rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
+                  <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">How big is your organisation?</p>
+                  <ul role="listbox" aria-label="Organisation sizes">
+                    <li><button type="button" role="option" aria-selected={!orgSize} onClick={() => chooseSize(null)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5"><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Any size</span><span className="block text-[12px] text-slate-400">Show every stop</span></span>{!orgSize && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                    {M.SIZES.map((z, i) => (
+                      <li key={z.id}><button type="button" role="option" aria-selected={z.id === orgSize} onClick={() => chooseSize(z.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
+                        <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#14161f] text-[11px] font-bold text-[#fff]">{i + 1}</span>
+                        <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{z.label}</span><span className="block text-[12px] text-slate-400">{z.people}</span></span>{z.id === orgSize && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {stagePicker && (
+                <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(24rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
+                  <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">{M.words.stageAsk ?? "Where is your company?"}</p>
+                  <ul role="listbox" aria-label="Stages">
+                    {M.STAGES.map((g, i) => (
+                      <li key={g.id}><button type="button" role="option" aria-selected={g.id === stage} onClick={() => chooseStage(g.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
+                        <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#14161f] text-[11px] font-bold text-[#fff]">{i + 1}</span>
+                        <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{g.label}</span><span className="block text-[12px] text-slate-400">{g.ask}</span></span>{g.id === stage && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {picker && (
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                   <label className="flex items-center gap-2 rounded-xl border border-black/10 bg-[#fbfaf6] px-3 py-2"><Search size={15} className="text-slate-400" />
@@ -340,7 +496,7 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
                       const q = pq.trim().toLowerCase();
                       const hit = (r: RoleInfo) => !q || [r.name, r.family, r.blurb, ...r.aliases].some((n) => n.toLowerCase().includes(q));
                       const shown = data.roles.filter(hit);
-                      if (!shown.length) return <li className="px-3 py-2 text-[14px] text-slate-400">No role matches. Try an area below.</li>;
+                      if (!shown.length) return <li className="px-3 py-2 text-[14px] text-slate-400">No role matches “{pq.trim()}”. {M.words.coverage}</li>;
                       const fams = [...new Set(shown.map((r) => r.family))].sort((a, b) => (FAMILY_ORDER.indexOf(a) + 100) % 100 - (FAMILY_ORDER.indexOf(b) + 100) % 100);
                       return fams.map((f) => (
                         <li key={f} role="presentation">
@@ -357,20 +513,30 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
                   </ul>
                 </div>
               )}
-            </div>
-            <div className="-mx-3 flex gap-1.5 overflow-x-auto px-3 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden" role="group" aria-label="What do you do?">
-              {FOCUS.map((f) => (
-                <button key={f.id} type="button" aria-pressed={!role && focus === f.id} onClick={() => choose(f.id)}
-                  className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-[13px] font-semibold transition ${!role && focus === f.id ? "border-[#14161f] bg-[#14161f] text-[#fff]" : "border-black/15 bg-[#fff] hover:border-indigo-400 hover:text-indigo-300"}`}>{f.label}</button>
-              ))}
-            </div>
+                </div>
+                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-slate-300">
+                  {M.hasAi && (aiOpen || mode !== "human" ? (
+                      <span className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm" role="group" aria-label="Role as a person or with AI">
+                        {AI_MODES.map((m) => <button key={m.id} type="button" aria-pressed={mode === m.id} title={m.hint} onClick={() => chooseMode(m.id)}
+                          className={`px-3 py-1 transition ${mode === m.id ? (m.id === "human" ? "bg-[#14161f] text-[#fff]" : "bg-violet-600 text-[#fff]") : "hover:bg-black/5"}`}>{m.label}</button>)}
+                      </span>
+                    ) : (
+                      <button type="button" onClick={() => setAiOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-slate-400 underline decoration-dotted hover:text-indigo-300">Working with AI?</button>
+                    ))}
+                  {ends && <p className="text-[12.5px] text-slate-400">{data.viewingAs ? "Their route" : "Your route"}: {ends.count} stops, from <b className="font-semibold">{ends.from.name}</b> to <b className="font-semibold">{ends.goal.name}</b>.</p>}
+                  {orgSize && !sizeOpen && !sel && <button type="button" onClick={() => setSizeOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-indigo-300 underline decoration-dotted">About this size</button>}
+                  {stage && !stageOpen && !sel && <button type="button" onClick={() => setStageOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-indigo-300 underline decoration-dotted">About this stage</button>}
+                  {shareButton}
+                </div>
+              </>
+            )}
           </div>
           {!standalone && <a href="#below" className="pointer-events-auto hidden shrink-0 items-center gap-1 rounded-full border border-black/10 bg-[#fff] px-3.5 py-1.5 text-[13px] font-semibold shadow-sm hover:shadow-md lg:inline-flex">Explore the academy<ChevronDown size={15} /></a>}
         </div>
       </div>
 
       {/* controls */}
-      <div className="absolute bottom-3 right-3 z-10 flex flex-col gap-1.5 sm:bottom-5 sm:right-5" style={{ right: !narrow && sel ? "25rem" : undefined }}>
+      <div className="absolute bottom-3 right-3 z-10 flex flex-col gap-1.5 sm:bottom-5 sm:right-5" style={{ right: !narrow && panel ? "25rem" : undefined }}>
         <button type="button" onClick={() => zoomBy(1.3)} aria-label="Zoom in" title="Zoom in" className="hidden sm:grid h-10 w-10 place-items-center rounded-xl border border-black/10 bg-[#fff]/95 shadow-md transition hover:bg-[#fff]"><Plus size={18} /></button>
         <button type="button" onClick={() => zoomBy(1 / 1.3)} aria-label="Zoom out" title="Zoom out" className="hidden sm:grid h-10 w-10 place-items-center rounded-xl border border-black/10 bg-[#fff]/95 shadow-md transition hover:bg-[#fff]"><Minus size={18} /></button>
         <button type="button" onClick={() => fitAll()} aria-label="See the whole map" title="See the whole map" className="grid h-10 w-10 place-items-center rounded-xl border border-black/10 bg-[#fff]/95 shadow-md transition hover:bg-[#fff]"><Crosshair size={18} /></button>
@@ -378,7 +544,7 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
 
       <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex flex-col items-center gap-2 sm:bottom-5">
         {hint && <p className="pointer-events-auto rounded-full bg-[#14161f]/85 px-3.5 py-1.5 text-[13px] font-medium text-[#fff]">{narrow ? "Drag to move · pinch to zoom · tap a stop" : "Drag to move · ctrl or ⌘ + scroll to zoom · click a stop"}</p>}
-        <button type="button" onClick={goNext} disabled={!next} className="btn pointer-events-auto !rounded-full !px-4 !py-3 text-[15px] shadow-xl sm:!px-5 sm:text-base">Take me to my next stop<ArrowRight size={18} /></button>
+        <button type="button" onClick={goNext} disabled={!next} className="btn pointer-events-auto !rounded-full !px-4 !py-3 text-[15px] shadow-xl sm:!px-5 sm:text-base">{data.viewingAs ? "Go to their next stop" : data.signedIn ? "Take me to my next stop" : "Start at the first stop"}<ArrowRight size={18} /></button>
       </div>
 
       {data.journey && (
@@ -397,7 +563,7 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
                       <span className={`grid h-5 w-5 place-items-center rounded-full text-[11px] text-[#fff] ${g.state === "done" ? "bg-emerald-500" : g.state === "current" ? "bg-indigo-500" : "bg-slate-400"}`}>{g.state === "done" ? <Check size={12} /> : g.state === "locked" && data.journey!.locked ? <Lock size={11} /> : g.n}</span>
                       Stage {g.n}<span className="font-normal text-slate-400">{g.state === "done" ? " · done" : g.state === "current" ? " · you are here" : data.journey!.locked ? " · locked" : " · later"}</span>
                     </p>
-                    <p className="mt-1 flex flex-wrap gap-1">{g.tracks.map((t) => <button key={t.slug} type="button" onClick={() => { setJpanel(false); const st = STATIONS.filter((x) => x.track === t.slug).sort((a, b) => a.x - b.x)[0]; if (st) pick({ kind: "st", id: st.id }); }}
+                    <p className="mt-1 flex flex-wrap gap-1">{g.tracks.map((t) => <button key={t.slug} type="button" onClick={() => { setJpanel(false); const st = M.STATIONS.filter((x) => x.track === t.slug).sort((a, b) => a.x - b.x)[0]; if (st) pick({ kind: "st", id: st.id }); }}
                       className={`rounded-full border px-2 py-0.5 text-[12px] ${t.need && t.passed >= t.need ? "border-emerald-400 text-emerald-300" : "border-black/15"}`}>{t.name}{t.need ? ` ${Math.min(t.passed, t.need)}/${t.need}` : ""}</button>)}</p>
                   </li>
                 ))}
@@ -429,7 +595,7 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
               <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Races on {role ? `the ${aiRoleName(role.name, mode)} route` : "your route"}</p>
               <ul className="max-h-[22rem] space-y-1.5 overflow-auto">
                 {raceList.slice(0, 12).map((r) => {
-                  const anchor = STATIONS.filter((st) => st.track === r.track && routeIds.has(st.id)).sort((a, b) => a.x - b.x)[0];
+                  const anchor = M.STATIONS.filter((st) => st.track === r.track && routeIds.has(st.id)).sort((a, b) => a.x - b.x)[0];
                   return (
                     <li key={r.id} className="rounded-xl border border-black/10 bg-[#fbfaf6] p-2.5">
                       <div className="flex items-start gap-2">
@@ -466,6 +632,7 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="10" fill="#6d28d9" /></svg><span><b>AI</b>: an AI stop added when a role works with AI</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="10" fill="none" stroke="#6d28d9" strokeWidth="3" strokeDasharray="5 4" /></svg><span><b>Dashed ring</b>: an AI agent does this stop</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="10" fill="#14161f" /><path d="M12.5,13.5 l3,3 l6,-6.5" fill="none" stroke="#fff" strokeWidth="2.2" /></svg><span><b>Tick</b>: where a person checks the agent&apos;s work</span></li>
+              <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="19" cy="13" r="6.5" fill="#fbfaf6" stroke="#1d5ec2" strokeWidth="3" /><rect x="8" y="3" width="8" height="8" transform="rotate(45 12 7)" fill="#fbfaf6" stroke="#1d5ec2" strokeWidth="2.2" /></svg><span><b>Diamond</b>: this level is a starting point (a placement check, your role or a manager), not an exam pass</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="11" fill="#f5b800" stroke="#14161f" strokeWidth="2" /></svg><span><b>Gold flag</b>: a live or upcoming race on this track</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><rect x="11" y="1" width="12" height="24" fill="#fbfaf6" stroke="#14161f" strokeWidth="2.5" /><circle cx="17" cy="6" r="6" fill="#fbfaf6" stroke="#14161f" strokeWidth="2.5" /><circle cx="17" cy="20" r="6" fill="#fbfaf6" stroke="#14161f" strokeWidth="2.5" /></svg><span><b>Gate</b>: a handoff where lines meet. Most projects fail here</span></li>
             </ul>
@@ -473,30 +640,42 @@ export function LifecycleMap({ data, signage, standalone, auth }: { data: MapDat
         )}
       </div>
 
+      {/* where the company is, and how big it is */}
+      {((stage && stageOpen) || (orgSize && sizeOpen)) && !sel && (
+        <aside aria-live="polite" style={{ "--panel-top": `${Math.max(20, headH - 12)}px` } as React.CSSProperties} className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-[var(--panel-top)] sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
+          <button type="button" onClick={() => { setStageOpen(false); setSizeOpen(false); }} aria-label="Close" className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
+          {stage && stageOpen && <StagePanel id={stage} count={routeIds.size} onStop={(sid) => pick({ kind: "st", id: sid })} onGate={(gid) => pick({ kind: "gt", id: gid })} onStage={chooseStage} />}
+          {orgSize && sizeOpen && <SizePanel id={orgSize} later={route.deferred.size} onSize={chooseSize} />}
+        </aside>
+      )}
+
       {/* what is at this stop */}
       {(selStation || selGate) && (
-        <aside aria-live="polite" className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-5 sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
+        <aside aria-live="polite" style={{ "--panel-top": `${Math.max(20, headH - 12)}px` } as React.CSSProperties} className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-[var(--panel-top)] sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGoTrack={(slug) => { const t = STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onSignIn={openSignIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
-          {selGate && <GateCard g={selGate} tracks={data.tracks} />}
+          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onSignIn={openSignIn} who={data.viewingAs} canGrant={data.canGrant} size={sizeInfo(selStation.id)} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selGate && <GateCard g={selGate} tracks={data.tracks} formal={orgSize ? { label: M.SIZE_BY_ID.get(orgSize)?.label ?? "", text: M.SIZE_BY_ID.get(orgSize)?.formal ?? "" } : null} />}
         </aside>
       )}
     </section>
+    </ModelCtx.Provider>
   );
 }
 
-function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName, signedIn, onSignIn, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onSignIn?: () => void; onGo: (s: Station) => void }) {
-  const line = LINE_BY_ID[st.line], c = LINE_COLOUR[st.line], z = zoneOf(st.x);
-  const seq = stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
+function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, onSignIn, who, canGrant, size, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onSignIn?: () => void; who: { id: number; name: string } | null; canGrant: boolean; size: { label: string; text: string; later: string | null } | null; onGo: (s: Station) => void }) {
+  const M = useModel();
+  const line = M.LINE_BY_ID[st.line], c = M.LINE_COLOUR[st.line], z = M.zoneOf(st.x);
+  const seq = M.stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
   const lvl = info?.passed ?? 0;
+  const gate = M.nextGateFor(st), { needs, neededBy } = M.dependenciesOf(st.id);
   return (
     <div>
       <div className="h-2.5 rounded-t-3xl" style={{ background: c }} />
       <div className="space-y-4 p-5">
         <div className="pr-8">
-          <p className="flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: c }} />{line.name} line · {ZONES[z].name}</p>
+          <p className="flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: c }} />{line.name} line · {M.ZONES[z].name}</p>
           <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{st.name}</h2>
-          <p className="mt-1 text-sm text-slate-400">{LINE_BLURB[st.line]} Usually owned by a {st.owner.toLowerCase()}.</p>
+          <p className="mt-1 text-sm text-slate-400">{M.LINE_BLURB[st.line]} Usually owned by {/^[aeiou]/i.test(st.owner) ? "an" : "a"} {st.owner.toLowerCase()}.{SIZE_LABEL[st.scale] && <> {SIZE_LABEL[st.scale]}.</>}</p>
         </div>
 
         {lens === "agent" && (
@@ -524,12 +703,74 @@ function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName,
           <div><h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">You leave with</h3><ul className="space-y-1">{st.outs.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">→</span>{t}</li>)}</ul></div>
         </div>
 
+        {size && (
+          <div className="rounded-2xl bg-indigo-50 p-3 text-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-indigo-300">At {size.label} size</p>
+            <p className="mt-0.5">{size.text}</p>
+            {size.later && <p className="mt-1 text-slate-400">This can wait until you are {size.later} size.</p>}
+          </div>
+        )}
+
+        {gate && (
+          <div className="rounded-2xl border-l-4 border-rose-400 bg-rose-50 p-3 text-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-rose-300">Where it usually breaks</p>
+            <p className="mt-0.5">{gate.fail}</p>
+            <button type="button" onClick={() => onGate(gate.id)} className="mt-1.5 text-[13px] font-semibold text-indigo-300 hover:underline">This work is checked at {gate.name} →</button>
+          </div>
+        )}
+
+        {(needs.length > 0 || neededBy.length > 0) && (
+          <div className="space-y-3">
+            {needs.length > 0 && (
+              <div>
+                <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Builds on</h3>
+                <div className="flex flex-wrap gap-1.5">{needs.map((n) => <button key={n.id} type="button" onClick={() => onGo(n)} className="rounded-full border border-black/15 bg-[#fff] px-3 py-1 text-[13px] font-semibold hover:border-indigo-400 hover:text-indigo-300">{n.name}</button>)}</div>
+              </div>
+            )}
+            {neededBy.length > 0 && (
+              <div>
+                <h3 className="mb-0.5 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Why it matters</h3>
+                <p className="mb-1.5 text-sm text-slate-400">{neededBy.length === 1 ? "One stop depends on it" : `${neededBy.length} stops depend on it`}, so a weak result here is passed on.</p>
+                <div className="flex flex-wrap gap-1.5">{neededBy.map((n) => <button key={n.id} type="button" onClick={() => onGo(n)} className="rounded-full border border-black/15 bg-[#fff] px-3 py-1 text-[13px] font-semibold hover:border-indigo-400 hover:text-indigo-300">{n.name}</button>)}</div>
+              </div>
+            )}
+          </div>
+        )}
+
         {info && (
           <div className="rounded-2xl border border-black/10 bg-[#fbfaf6] p-3.5">
             <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Learn it in</p>
             <p className="mt-0.5 text-base font-bold">{info.name}</p>
             <div className="bar mt-2" title={`Level ${lvl} of 20`}><i style={{ width: `${(lvl / 20) * 100}%` }} /></div>
-            <p className="mt-1.5 text-sm text-slate-400">{lvl > 0 ? `You are on level ${lvl} of 20.` : "20 levels, from Novice to Titan."}{info.required && <> <b className={info.overdue ? "text-rose-300" : "text-amber-300"}>{lvl >= info.requiredLevel ? "Required: done." : info.overdue ? "Required: overdue." : `Required${info.dueAt ? `, due ${fmtDate(info.dueAt)}` : ""}.`}</b></>}</p>
+            <p className="mt-1.5 text-sm text-slate-400">{lvl > 0 ? `You are on level ${lvl} of 20.` : "20 levels, from Novice to Titan."} {lvl < 5 ? `Level 5 earns the Foundation certificate: about ${5 - lvl} quiz${5 - lvl === 1 ? "" : "zes"} of ${QUESTIONS_PER_RUN} questions, ${Math.round(PASS_MARK * 100)}% to pass.` : null}{info.required && <> <b className={info.overdue ? "text-rose-300" : "text-amber-300"}>{lvl >= info.requiredLevel ? "Required: done." : info.overdue ? "Required: overdue." : `Required${info.dueAt ? `, due ${fmtDate(info.dueAt)}` : ""}.`}</b></>}</p>
+            {lvl > 0 && (info.credit || info.placed > 0) && (
+              <div className="mt-2 rounded-xl bg-black/5 p-2.5 text-[13px]">
+                <p className="font-semibold">Where {who ? "their" : "your"} level comes from</p>
+                <ul className="mt-1 space-y-0.5 text-slate-400">
+                  <li>Exams passed: {info.earned > 0 ? `level ${info.earned}` : "none yet"}</li>
+                  {info.placed > 0 && <li>Placement check: level {info.placed}</li>}
+                  {info.credit && (
+                    <li>
+                      Starting level {info.credit.level}: {info.credit.source === "role" ? `from ${who ? "their" : "your"} job role, where a typical holder of it is` : `given by ${info.credit.by} on ${fmtDate(info.credit.at)}: “${info.credit.reason}”`}.
+                      {info.credit.expiresAt ? ` It ends on ${fmtDate(info.credit.expiresAt)}.` : ""}
+                    </li>
+                  )}
+                </ul>
+                <p className="mt-1 text-slate-400">Level {lvl} is the highest of these. A starting level lifts where {who ? "they" : "you"} start and unlocks what comes next; {info.credit?.countsAsComplete ? "an admin marked it as complete for required training." : "the certificate still needs the exam."}</p>
+              </div>
+            )}
+            {info.suggest > 0 && (
+              who ? (
+                <p className="mt-2 text-sm text-slate-400">{who.name.split(" ")[0]}&apos;s job role usually starts at level {info.suggest} here.</p>
+              ) : signedIn ? (
+                <form action={acceptRoleStartAction.bind(null, info.slug)} className="mt-3 rounded-xl border-l-4 border-indigo-400 bg-indigo-50 p-3 text-sm">
+                  <p className="font-bold">Your job role usually starts at level {info.suggest} here.</p>
+                  <p className="mt-0.5 text-slate-400">Already there? Start from it. You still sit the exams for the certificate.</p>
+                  <button type="submit" className="mt-2 rounded-full bg-[#14161f] px-3 py-1 text-[13px] font-bold text-[#fff] hover:bg-black">Use level {info.suggest} as my starting point</button>
+                </form>
+              ) : null
+            )}
+            {who && canGrant && <Link href={`/admin/starting-points?user=${who.id}&track=${info.slug}`} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-indigo-300 hover:underline">Give {who.name.split(" ")[0]} a starting level<ArrowRight size={14} /></Link>}
             {info.rival && <p className="mt-1 text-sm text-slate-400">{info.rival.name} is on level {info.rival.level}{info.rival.level > lvl ? ". Catch up." : lvl > info.rival.level ? ". You are ahead." : ". Dead level."}</p>}
             {lock && (
               <div className="mt-3 rounded-xl border-l-4 border-slate-400 bg-black/5 p-3 text-sm">
@@ -573,23 +814,103 @@ function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName,
   );
 }
 
-function GateCard({ g, tracks }: { g: Gate; tracks: Record<string, TrackInfo> }) {
-  const z = zoneOf(g.x);
-  const near = [...new Set(STATIONS.filter((s) => g.lines.includes(s.line) && Math.abs(s.x - g.x) <= 3).map((s) => s.track))].map((slug) => tracks[slug]).filter(Boolean).slice(0, 5);
+/** What a company at this stage is doing, where to start, where it usually goes wrong, and what comes next. */
+function StagePanel({ id, count, onStop, onGate, onStage }: { id: StageId; count: number; onStop: (id: string) => void; onGate: (id: string) => void; onStage: (id: StageId) => void }) {
+  const M = useModel();
+  const i = M.STAGES.findIndex((g) => g.id === id), g = M.STAGES[i], nxt = M.STAGES[i + 1] ?? null, first = M.STATION_BY_ID.get(g.start)!;
   return (
     <div>
       <div className="h-2.5 rounded-t-3xl bg-[#14161f]" />
       <div className="space-y-4 p-5">
         <div className="pr-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Handoff gate · {ZONES[z].name}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">{M.words.stageWord ?? "Company stage"} {i + 1} of {M.STAGES.length}</p>
+          <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{g.label}</h2>
+          <p className="mt-1 text-sm text-slate-400">{g.blurb}</p>
+        </div>
+        <div className="flex items-center gap-1" aria-hidden>{M.STAGES.map((x, n) => <span key={x.id} className={`h-1.5 flex-1 rounded-full ${n < i ? "bg-indigo-300" : n === i ? "bg-indigo-500" : "bg-black/10"}`} />)}</div>
+        <p className="text-sm"><b>{count} stops</b> on the map matter at this stage. They are lit; the rest can wait.</p>
+        <button type="button" onClick={() => onStop(first.id)} className="btn w-full justify-center">Start with {first.name}<ArrowRight size={16} /></button>
+        <div>
+          <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-rose-300">Where it usually goes wrong</h3>
+          <ul className="space-y-2">
+            {g.watch.map((gid) => { const gate = M.GATE_BY_ID.get(gid)!; return (
+              <li key={gid} className="rounded-2xl border-l-4 border-rose-400 bg-rose-50 p-3 text-sm">
+                <p>{gate.fail}</p>
+                <button type="button" onClick={() => onGate(gid)} className="mt-1 text-[13px] font-semibold text-indigo-300 hover:underline">{gate.name} →</button>
+              </li>
+            ); })}
+          </ul>
+        </div>
+        {nxt && (
+          <div className="rounded-2xl border border-black/10 bg-[#fbfaf6] p-3.5">
+            <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">What comes next</p>
+            <p className="mt-0.5 text-base font-bold">{nxt.label}</p>
+            <p className="mt-0.5 text-sm text-slate-400">{nxt.ask}.</p>
+            <button type="button" onClick={() => onStage(nxt.id)} className="btn btn-ghost mt-2 !px-3 text-[13px]">Show that stage<ArrowRight size={14} /></button>
+          </div>
+        )}
+        <p className="text-xs text-slate-400">Click any lit stop on the map to see what it asks for and how to learn it.</p>
+      </div>
+    </div>
+  );
+}
+
+/** What an organisation of this size looks like, what changes on the map, what usually goes wrong, and what can wait until it is bigger. */
+function SizePanel({ id, later, onSize }: { id: string; later: number; onSize: (id: string) => void }) {
+  const M = useModel();
+  const i = M.SIZES.findIndex((z) => z.id === id), z = M.SIZES[i], bigger = M.SIZES[i + 1] ?? null;
+  if (!z) return null;
+  return (
+    <div>
+      <div className="h-2.5 rounded-t-3xl bg-indigo-500" />
+      <div className="space-y-4 p-5">
+        <div className="pr-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Organisation size {i + 1} of {M.SIZES.length}</p>
+          <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{z.label}</h2>
+          <p className="mt-0.5 text-sm font-semibold text-slate-300">{z.people}</p>
+          <p className="mt-1 text-sm text-slate-400">{z.blurb}</p>
+        </div>
+        <div className="flex items-center gap-1" aria-hidden>{M.SIZES.map((x, n) => <span key={x.id} className={`h-1.5 flex-1 rounded-full ${n < i ? "bg-indigo-300" : n === i ? "bg-indigo-500" : "bg-black/10"}`} />)}</div>
+        <div>
+          <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">What changes at this size</h3>
+          <ul className="space-y-1.5 text-sm">{z.changes.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">→</span>{t}</li>)}</ul>
+        </div>
+        {later > 0 && <p className="text-sm"><b>{later} stop{later === 1 ? "" : "s"}</b> on this route can wait until you are bigger. They are dimmed, not removed.</p>}
+        <div>
+          <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-rose-300">Where it usually goes wrong</h3>
+          <ul className="space-y-1.5">{z.challenges.map((t) => <li key={t} className="rounded-2xl border-l-4 border-rose-400 bg-rose-50 p-3 text-sm">{t}</li>)}</ul>
+        </div>
+        <div className="rounded-2xl border border-black/10 bg-[#fbfaf6] p-3.5 text-sm">
+          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Who usually owns a stop</p>
+          <p className="mt-0.5">{z.owner}</p>
+          <p className="mt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">How formal a handoff is</p>
+          <p className="mt-0.5">{z.formal}</p>
+        </div>
+        {bigger && <button type="button" onClick={() => onSize(bigger.id)} className="btn btn-ghost !px-3 text-[13px]">See {bigger.label}<ArrowRight size={14} /></button>}
+      </div>
+    </div>
+  );
+}
+
+function GateCard({ g, tracks, formal }: { g: Gate; tracks: Record<string, TrackInfo>; formal: { label: string; text: string } | null }) {
+  const M = useModel();
+  const z = M.zoneOf(g.x);
+  const near = [...new Set(M.STATIONS.filter((s) => g.lines.includes(s.line) && Math.abs(s.x - g.x) <= 3).map((s) => s.track))].map((slug) => tracks[slug]).filter(Boolean).slice(0, 5);
+  return (
+    <div>
+      <div className="h-2.5 rounded-t-3xl bg-[#14161f]" />
+      <div className="space-y-4 p-5">
+        <div className="pr-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Handoff gate · {M.ZONES[z].name}</p>
           <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{g.name}</h2>
-          <div className="mt-2 flex flex-wrap gap-1.5">{g.lines.map((id: LineId) => <span key={id} className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fbfaf6] px-2.5 py-0.5 text-xs font-semibold"><i className="h-2.5 w-2.5 rounded-full" style={{ background: LINE_COLOUR[id] }} />{LINE_BY_ID[id].name}</span>)}</div>
+          <div className="mt-2 flex flex-wrap gap-1.5">{g.lines.map((id: LineId) => <span key={id} className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fbfaf6] px-2.5 py-0.5 text-xs font-semibold"><i className="h-2.5 w-2.5 rounded-full" style={{ background: M.LINE_COLOUR[id] }} />{M.LINE_BY_ID[id].name}</span>)}</div>
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div><h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Must arrive</h3><ul className="space-y-1">{g.ins.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">←</span>{t}</li>)}</ul></div>
           <div><h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Leaves the gate</h3><ul className="space-y-1">{g.outs.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">→</span>{t}</li>)}</ul></div>
         </div>
         <div className="rounded-2xl border-l-4 border-rose-400 bg-rose-50 p-3 text-sm"><p className="text-[11px] font-semibold uppercase tracking-[.14em] text-rose-300">Where it usually breaks</p><p className="mt-0.5">{g.fail}</p></div>
+        {formal && <div className="rounded-2xl bg-indigo-50 p-3 text-sm"><p className="text-[11px] font-semibold uppercase tracking-[.14em] text-indigo-300">At {formal.label} size</p><p className="mt-0.5">{formal.text}</p></div>}
         {near.length > 0 && <div><h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Get this right: learn</h3><div className="flex flex-wrap gap-1.5">{near.map((t) => t.open ? <Link key={t.slug} href={`/tracks/${t.slug}`} className="rounded-full border border-black/15 bg-[#fff] px-3 py-1 text-[13px] font-semibold hover:border-indigo-400 hover:text-indigo-300">{t.name}</Link> : <span key={t.slug} className="rounded-full border border-black/10 px-3 py-1 text-[13px] text-slate-400">{t.name}</span>)}</div></div>}
       </div>
     </div>

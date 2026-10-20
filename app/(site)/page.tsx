@@ -19,7 +19,7 @@ import { listFor } from "@/lib/competitions";
 import { CompetitionCard } from "@/components/CompetitionCard";
 import { CertFrame } from "@/components/CertFrame";
 import { RankEmblem } from "@/components/RankEmblem";
-import { GATES, LINES, LINE_COLOUR, STATIONS } from "@/lib/lifecycle/model";
+import { DEFAULT_MAP, MAPS } from "@/lib/lifecycle/maps";
 
 const STEPS = [
   { Icon: Target, title: "Get your path", text: "Sign in and see the subjects your role, brand and project require, each with a deadline.", cls: "text-indigo-300 bg-indigo-500/10" },
@@ -36,6 +36,9 @@ const AUDIENCES = [
   { Icon: Trophy, title: "Brands and companies", text: "Run an academy in your own look, with your own tracks, rewards and certificates, and race against your rivals or your own people." },
   { Icon: ShieldCheck, title: "Managers and admins", text: "See who is on track and who is overdue, manage the question bank, and approve promotions with the evidence in hand." },
 ] as const;
+
+/** The map the home page advertises is the default one (/map). */
+const { GATES, LINES, LINE_COLOUR, STATIONS } = MAPS[DEFAULT_MAP];
 
 export default async function Home() {
   const viewer = await currentUser();
@@ -96,7 +99,7 @@ export default async function Home() {
             {!viewer && <Link href="/try" className="btn btn-ghost"><Zap size={16} className="text-amber-500" />Try 3 questions, no sign-up</Link>}
             {!viewer && <Link href="/login" className="btn btn-ghost">Sign in</Link>}
             <Link href="/campaigns" className="btn btn-ghost"><Flame size={16} className="text-pink-300" />Browse {camps.length} campaigns</Link>
-            <Link href="/map" className="btn btn-ghost">Explore the lifecycle map</Link>
+            <Link href="/map" className="btn btn-ghost">Explore the business map</Link>
             <a href="#subjects" className="btn btn-ghost">Browse subjects</a>
           </div>
           <p className="mt-3 text-sm text-slate-400">{rows.length} subjects · {totalQ.toLocaleString("en-GB")} questions · free to start</p>
@@ -123,12 +126,12 @@ export default async function Home() {
         </div>
       </section>
 
-      <Link href="/map" className="card card-hover group block overflow-hidden" aria-label="Open the software lifecycle map">
+      <Link href="/map" className="card card-hover group block overflow-hidden" aria-label="Open the business map">
         <div className="grid items-center gap-5 p-5 sm:grid-cols-[1.1fr_1fr] sm:p-7">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[.2em] text-indigo-300">The software lifecycle, as a map</p>
-            <h2 className="mt-1.5 text-2xl font-extrabold sm:text-3xl">Every stop from idea to shutdown, drawn like a transit map</h2>
-            <p className="mt-2 text-slate-300">{LINES.length} lines, {STATIONS.length} stops and {GATES.length} handoff gates. Say what you do, see your route, and learn each stop.</p>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-indigo-300">The life of a business, as a map</p>
+            <h2 className="mt-1.5 text-2xl font-extrabold sm:text-3xl">Every stop from first idea to closing the doors, drawn like a transit map</h2>
+            <p className="mt-2 text-slate-300">{LINES.length} lines, {STATIONS.length} stops and {GATES.length} handoff gates. Say where your company is, see what it needs next and where it usually goes wrong.</p>
             <span className="btn mt-4 inline-flex">Open the map<ArrowRight size={16} /></span>
           </div>
           <svg viewBox="0 0 360 150" className="w-full" aria-hidden>
@@ -139,6 +142,7 @@ export default async function Home() {
           </svg>
         </div>
       </Link>
+      <p className="-mt-3 text-center text-sm text-slate-400">Public body? <Link href="/map/public" className="font-semibold text-indigo-300 hover:underline">See the public sector map</Link>. Building software? <Link href="/map/software" className="font-semibold text-indigo-300 hover:underline">See the software lifecycle map</Link></p>
 
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4" aria-label="The academy in numbers">
         <StatTile i={0} Icon={BookOpen} label="Subjects" value={rows.length} color={PALETTE.indigo} />
