@@ -38,6 +38,6 @@ export function mapDataFor(viewer: Viewer | null, m: MapModel, opts: { viewingAs
   return {
     journey: j && { roleName: j.roleName, setting: j.setting, canSwitch: j.canSwitch, locked: j.locked, current: j.current, total: j.total, locks: j.locks, advice: j.advice, stages: j.stages.map((st) => ({ n: st.n, state: st.state, waitingOn: st.waitingOn, tracks: st.tracks.map(({ slug, name, passed, need }) => ({ slug, name, passed, need })) })) },
     signedIn: !!viewer, firstName: viewer ? viewer.name.split(" ")[0] : null, defaultFocus: m.focusForRole(viewer?.jobRole), tracks,
-    roles: roles.map((r) => ({ key: r.key, name: r.name, family: r.family, blurb: r.blurb, aliases: r.aliases, tracks: r.tracks, core: r.core })), races, defaultRole: roles.some((r) => r.key === mine) ? mine : null, viewingAs: opts.viewingAs ?? null, canGrant: !!opts.canGrant,
+    roles: roles.map((r) => ({ key: r.key, name: r.name, family: r.family, blurb: r.blurb, aliases: r.aliases, tracks: r.tracks, firstRung: r.firstRung, rungs: r.rungs, core: r.core })), races, defaultRole: roles.some((r) => r.key === mine) ? mine : null, viewingAs: opts.viewingAs ?? null, canGrant: !!opts.canGrant,
   };
 }

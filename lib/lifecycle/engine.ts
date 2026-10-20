@@ -122,8 +122,10 @@ export type RoleInfo = {
   tracks: string[];
   /** the level the ladder first asks for, per track (server only: left out of what the map receives) */
   entry?: Record<string, number>;
-  /** the first rung (1-based) of the ladder that asks for each track (server only) */
+  /** the first rung (1-based) of the ladder that asks for each track */
   firstRung?: Record<string, number>;
+  /** the rungs of the career ladder, lowest first: what a person at each level is called and does */
+  rungs?: { title: string; summary: string }[];
   /** the tracks that set this role apart: asked for at level 8 or more, or not a basic that nearly every role shares (used for the route) */
   core: string[];
 };
@@ -171,6 +173,7 @@ export type Route = {
   /** where a person checks an agent's work */ review: Set<string>;
   /** stops an AI agent does */ agent: Set<string>;
   /** stops the chosen organisation size leaves out because they can wait until it is bigger */ deferred: Set<string>;
+  /** stops the chosen career level leaves for later: stop id to the rung (1-based) where its track first matters */ waiting: Map<string, number>;
 };
 
 /** Layout of the map, in SVG units. */
@@ -273,7 +276,7 @@ export function buildModel(def: MapDef) {
   const aiFullAreas = new Set(def.focus.filter((f) => f.aiFull).map((f) => f.id));
 
   /** The lit stops for a role, an area or a company stage, seen through an AI lens. */
-  function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode, stage: StageId | null = null, size: SizeId | null = null): Route {
+  function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode, stage: StageId | null = null, size: SizeId | null = null, level: number | null = null): Route {
     let base: Set<string> | null = null;
     if (role) {
       const t = new Set(role.core), fam = def.familyLines?.[role.family], lines = fam ? new Set(fam) : null;
@@ -295,12 +298,20 @@ export function buildModel(def: MapDef) {
       const keep = [...base].filter((id) => sizeFrom(id) <= si);
       if (keep.length) { deferred = new Set([...base].filter((id) => sizeFrom(id) > si)); base = new Set(keep); }
     }
+    // the level lens: a stop whose track only enters the ladder on a higher rung can wait until then
+    const waiting = new Map<string, number>();
+    if (role && level && role.firstRung) {
+      const first = role.firstRung, floor = Math.min(...Object.values(first)), at = Math.max(level, floor); // a ladder's lowest rungs may ask for nothing yet
+      const rungOf = (id: string) => first[STATION_BY_ID.get(id)!.track] ?? 1;
+      const keep = [...base].filter((id) => rungOf(id) <= at);
+      if (keep.length) { for (const id of base) if (rungOf(id) > at) waiting.set(id, rungOf(id)); base = new Set(keep); }
+    }
     const lens = hasAi ? mode : "human";
     const full = role ? isTechRole(role) : st ? st.aiFull : aiFullAreas.has(focus);
     const ai = lens === "human" ? new Set<string>() : new Set(full ? AI_STOPS_FULL : AI_STOPS_LITE);
     const review = lens === "agent" ? new Set(AI_REVIEW_STOPS) : new Set<string>();
     const agent = lens === "agent" ? new Set([...base].filter((id) => !ai.has(id) && !review.has(id))) : new Set<string>();
-    return { ids: new Set([...base, ...ai, ...review]), base, ai, review, agent, deferred };
+    return { ids: new Set([...base, ...ai, ...review]), base, ai, review, agent, deferred, waiting };
   }
 
   /* ---------- what a stop leans on, and what leans on it ---------- */
