@@ -1,4 +1,5 @@
 import type { Gate, LineDef, MapDef, RawStation, SizesDef, StageDef, ZoneDef } from "./engine";
+import { PUBLIC_PROBLEMS } from "./otherProblems";
 
 /**
  * The life of a UK public service or programme, from the first public need to closing it. It follows the stages a service passes through
@@ -371,6 +372,7 @@ export const PUBLIC_DEF: MapDef = {
   zones: ZONES,
   stations: STATIONS,
   gates: GATES,
+  problems: PUBLIC_PROBLEMS,
   trackOverrides: {
     "ps-business-cases": ["options", "impact", "cost", "benefits", "case", "afford", "vfm", "realise"],
     "ps-procurement": ["needs", "marketeng", "route", "spec", "tender", "social", "award", "contract", "mobilise", "supplier", "contractrev", "extend", "contractexit"],
