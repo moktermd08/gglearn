@@ -14,6 +14,14 @@ npm run seed                      # admin user (password printed once), sample b
 npm run dev
 ```
 
+## Starting points (`lib/credits.ts`)
+A person's level in a track is the highest of three things, and the map shows which one it came from (a diamond marks a level that is not an exam pass):
+- **Exams passed**: saved per person, remembered on every sign-in.
+- **The placement check** (`lib/placement.ts`): a short assessment that finds where to start.
+- **A starting level** (`level_credits`): given by a manager or admin with a reason, or confirmed from what the person's job role normally holds (`suggestedStarts`, which uses the ladder's first ask per track, capped at level 10). It can end on a date and be taken back; rows are never deleted.
+
+Starting levels lift where someone starts and unlock what comes next (`levelsPassed`). They are not exam passes: certificates still need the exam, and required training and promotions (`levelsEarned`) ignore them unless an admin marks one **counts as complete**. Managers can give up to level 10 to people they run (never themselves); admins any level. Managers use **Starting points** in the admin (`/admin/starting-points`) or open a map as someone they run (`/map/business?as=ID`). `npm run check:credits` tests the rules.
+
 ## Race to Titan (gamified layer)
 - **Rival per subject**: `lib/rivals.ts` gives every track a stable named rival who earns XP every day (deterministic, so no jobs needed). Rival level = XP / 150. Your level = levels passed. The head-to-head is drawn on the track page and dashboard.
 - **Visuals**: `components/` holds SVG avatars that evolve through 5 ranks (Initiate, Adept, Expert, Master, Titan), rank shields, race track, score rings and confetti. No image assets.

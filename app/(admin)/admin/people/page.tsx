@@ -128,6 +128,7 @@ export default async function People({ searchParams }: { searchParams: Promise<{
                 <details className="mt-3 text-sm">
                   <summary className="cursor-pointer text-slate-400 hover:text-white">Role, access level, where {u.name.split(" ")[0]} belongs, or reset their password</summary>
                   {u.id !== me.id && u.status === "active" && <Link href={`/admin/role-change?user=${u.id}`} className="mt-2 inline-block text-sm text-sky-300 underline">Change role: promote, demote or move, with the learning and tool access it changes</Link>}
+                  {u.id !== me.id && u.status === "active" && <Link href={`/admin/starting-points?user=${u.id}`} className="ml-3 mt-2 inline-block text-sm text-sky-300 underline">Starting points</Link>}
                   {u.id !== me.id && (me.role === "admin" || u.role === "learner") && <ResetPassword userId={u.id} name={u.name} />}
                   {grantable.length > 0 && u.id !== me.id && u.status === "active" && u.audience === "staff" && (u.role !== "admin" || owner) && (
                     <ActionForm action={setAccess} className="mt-2 flex flex-wrap items-center gap-2">
