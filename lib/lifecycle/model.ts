@@ -263,16 +263,63 @@ export type Route = {
   /** human checkpoints on an AI agent's work */ review: Set<string>;
   /** stops an AI agent does itself (agent lens only) */ agent: Set<string>;
 };
+/**
+ * Where a company is, in the order a software company usually passes through. Each stage lights up the stops that matter then,
+ * names the handoff gates where it most often goes wrong, and says where to start. Founders pick one instead of a job role.
+ */
+export const STAGES = [
+  {
+    id: "idea", label: "Just an idea", ask: "I have an idea",
+    blurb: "Find out whether the problem is real, who has it and whether it can pay for itself, before money goes into building.",
+    start: "idea", watch: ["kickoff"], aiFull: false,
+    stops: ["idea", "goals", "market", "feas", "bizcase", "fund", "icp", "compwatch", "position", "valueprop", "research", "personas", "sponsor", "budget", "risk", "regscan"],
+  },
+  {
+    id: "build", label: "Building the first version", ask: "I'm building the first version",
+    blurb: "Decide what the first version must do, design it, and build only that, with tests and a pipeline you can trust.",
+    start: "roadmap", watch: ["reqbase", "designauth", "sprint"], aiFull: true,
+    stops: ["roadmap", "backlog", "accept", "wire", "proto", "usability", "techland", "buildbuy", "nfr", "solarch", "stack", "spike", "dmodel", "schema", "threat", "secrets", "dpia", "devenv", "repo", "skeleton", "frontend", "backend", "unit", "codereview", "merge", "ci", "cd", "hosting", "envs", "method", "team", "dplan"],
+  },
+  {
+    id: "launch", label: "Getting first customers", ask: "I'm launching to my first customers",
+    blurb: "Release safely, price it, find the first customers, and make sure someone can help them when something breaks.",
+    start: "beta", watch: ["gonogo", "live"], aiFull: true,
+    stops: ["beta", "uat", "smoke", "relplan", "rollback", "proddeploy", "hypercare", "relnotes", "userguide", "pricing", "gtm", "landing", "leadcapture", "crm", "playbook", "calls", "launch", "onboard", "servicedesk", "monitor", "obs", "backup", "runbooks"],
+  },
+  {
+    id: "grow", label: "Growing", ask: "I have customers and I'm growing",
+    blurb: "Keep the customers you have, grow what is working, and keep the service fast and reliable as use rises, without burning cash.",
+    start: "kpi", watch: ["live", "change"], aiFull: true,
+    stops: ["kpi", "analytics", "uxiter", "funnel", "contentplan", "paidsocial", "emailseq", "salesen", "pipeline", "feedback", "health", "renewal", "scaling", "captest", "perf", "incident", "slo", "bugfix", "deps", "flags", "resourcing", "burn", "opbudget", "cloudcost", "finops"],
+  },
+  {
+    id: "scale", label: "Scaling up and earning trust", ask: "Bigger customers are asking about security",
+    blurb: "Prove you can be trusted with other people's data and money: security testing, access control, compliance evidence and a tidier platform.",
+    start: "regscan", watch: ["change"], aiFull: true,
+    stops: ["regscan", "dclass", "dpia", "sar", "retain", "iam", "secdesign", "sast", "dast", "pentest", "sbom", "licence", "vulnwatch", "secinc", "recert", "evidence", "audit", "accred", "board", "stagegate", "risk", "adr", "archrev", "techdebt", "refactor", "replat", "target", "patching", "vendorrev"],
+  },
+  {
+    id: "wind", label: "Winding down", ask: "I'm retiring a product or closing",
+    blurb: "Decide, tell customers, switch off safely, and keep or delete data exactly as the rules require.",
+    start: "sunset", watch: ["decom"], aiFull: false,
+    stops: ["sunset", "benefits", "lessons", "custnotice", "decomplan", "shutdown", "archive", "retain", "sanitise", "exit", "vendorrev"],
+  },
+] as const;
+export type StageId = (typeof STAGES)[number]["id"];
+export const STAGE_BY_ID = new Map<string, (typeof STAGES)[number]>(STAGES.map((st) => [st.id, st]));
+
 /** The lit stops for a role (or area) seen through an AI lens. */
-export function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode): Route {
+export function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode, stage: StageId | null = null): Route {
   let base: Set<string> | null = null;
   if (role) { const t = new Set(role.core); const ids = STATIONS.filter((s) => t.has(s.track)).map((s) => s.id); if (ids.length) base = new Set(ids); }
+  const st = !role && stage ? STAGE_BY_ID.get(stage) : undefined;
+  if (!base && st) base = new Set<string>(st.stops);
   if (!base) {
     const stops = FOCUS_STOPS[focus];
     const lines = focusLinesOf(focus);
     base = stops ? new Set<string>(stops) : new Set(STATIONS.filter((s) => lines.has(s.line)).map((s) => s.id));
   }
-  const full = role ? isTechRole(role) : AI_FULL_AREAS.has(focus);
+  const full = role ? isTechRole(role) : st ? st.aiFull : AI_FULL_AREAS.has(focus);
   const ai = mode === "human" ? new Set<string>() : new Set(full ? AI_STOPS_FULL : AI_STOPS_LITE);
   const review = mode === "agent" ? new Set(AI_REVIEW_STOPS) : new Set<string>();
   const agent = mode === "agent" ? new Set([...base].filter((id) => !ai.has(id) && !review.has(id))) : new Set<string>();
