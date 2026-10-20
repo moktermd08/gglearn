@@ -1,7 +1,8 @@
 import type { Gate, LineDef, MapDef, RawStation, StageDef, ZoneDef } from "./engine";
 import { BUSINESS_SIZES } from "./businessSizes";
 import { BUSINESS_PROBLEMS } from "./problems";
-import { MORE_BREAKS, MORE_FROM, MORE_TRACKS, MORE_PROBLEMS, MORE_STAGE, MORE_STOPS } from "./businessMore";
+import { STOP_BREAKS, STOP_HANDOFFS, STOP_OUTCOMES } from "./businessText";
+import { MORE_BREAKS, MORE_FROM, MORE_TRACKS, MORE_LOCAL_NOTE, MORE_OUTCOMES, MORE_PROBLEMS, MORE_PROS, MORE_STAGE, MORE_STOPS } from "./businessMore";
 
 /**
  * The life of any business, from the first idea to closing or handing over. It does not assume software: a cafe, an agency, a
@@ -273,6 +274,7 @@ const STAGES: StageDef[] = [
 for (const [lane, list] of Object.entries(MORE_STOPS)) (STATIONS[lane] ??= []).push(...list);
 for (const [sid, ids] of Object.entries(MORE_STAGE)) STAGES.find((g) => g.id === sid)!.stops.push(...ids.filter((id) => !STAGES.find((g) => g.id === sid)!.stops.includes(id)));
 for (const [size, ids] of Object.entries(MORE_FROM)) BUSINESS_SIZES.from[size].push(...ids);
+const LOCAL_STOPS = [...(STATIONS.leg ?? []).map((s) => s[0]), "tax", "taxrun", "payroll", "paysetup", "books", "invoice", "records", "finalacc"];
 
 export const BUSINESS_DEF: MapDef = {
   id: "business",
@@ -334,7 +336,13 @@ export const BUSINESS_DEF: MapDef = {
   layout: { top: 215 },
   sizes: BUSINESS_SIZES,
   problems: [...BUSINESS_PROBLEMS, ...MORE_PROBLEMS],
+  outcomes: { ...STOP_OUTCOMES, ...MORE_OUTCOMES },
+  handoffs: STOP_HANDOFFS,
+  pros: MORE_PROS,
+  local: { note: MORE_LOCAL_NOTE, stops: LOCAL_STOPS },
+  draft: "Draft content: written to be reviewed by someone who works in this field before you rely on it.",
   breaks: {
+    ...STOP_BREAKS,
     ...MORE_BREAKS,
     mission: "The statement is written once, framed on a wall and never used when anyone makes a decision.",
     decisions: "Choices are made in conversation and not written down, so they are reopened, forgotten or made twice.",
