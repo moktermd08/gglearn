@@ -11,8 +11,33 @@ import { loadRoles } from "@/lib/lifecycle/roles";
 import type { MapModel } from "@/lib/lifecycle/engine";
 import { describeRoute, ogPath, parsePick, pickQuery } from "@/lib/lifecycle/share";
 import { siteUrl } from "@/lib/share";
+import { DEFAULT_MAP, MAPS } from "@/lib/lifecycle/maps";
 
 export type Search = Promise<Record<string, string | string[] | undefined>>;
+
+const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
+/** The query string of a page, as it was written (first value of each), for passing on to another address. */
+export function queryOf(sp: Record<string, string | string[] | undefined>): string {
+  const q = new URLSearchParams();
+  for (const [k, v] of Object.entries(sp)) { const x = one(v); if (x != null) q.set(k, x); }
+  const s = q.toString();
+  return s ? `?${s}` : "";
+}
+
+/**
+ * The map a link was made for, when it is not the default: a link that uses the AI lens, or an area or company stage only another map has,
+ * was made before the default changed. Roles and ids both maps share stay on the default.
+ */
+export function elsewhere(sp: Record<string, string | string[] | undefined>): string | null {
+  const here = MAPS[DEFAULT_MAP], ai = one(sp.ai), area = one(sp.area), stage = one(sp.stage);
+  for (const m of Object.values(MAPS)) {
+    if (m.id === here.id) continue;
+    if (ai && m.hasAi && !here.hasAi) return m.id;
+    if (area && m.FOCUS.some((f) => f.id === area) && !here.FOCUS.some((f) => f.id === area)) return m.id;
+    if (stage && m.STAGES.some((g) => g.id === stage) && !here.STAGES.some((g) => g.id === stage)) return m.id;
+  }
+  return null;
+}
 
 /** A link with a route in it (/map?role=ceo) gets a title and preview picture of its own; the plain map keeps the layout's. */
 export async function mapMetadata(m: MapModel, searchParams: Search): Promise<Metadata> {
