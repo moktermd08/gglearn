@@ -4,8 +4,8 @@ import { currentUser } from "@/lib/auth";
 import { lookFor, themeStyle } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "The software lifecycle, as a map — gglearn",
-  description: "Every stop from first idea to final shutdown, drawn as a transit map. Pick what you do, see your route, and learn each stop.",
+  title: "See where you are, see the way forward: the software lifecycle map — gglearn",
+  description: "Every stage from first idea to final shutdown, drawn as a transit map. Say what you do or where your company is, see your route, and learn each stop.",
 };
 
 /** The map is its own root layout (app/(map)): a single full-screen page with no site header or footer. */
