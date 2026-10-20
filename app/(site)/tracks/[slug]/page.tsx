@@ -25,7 +25,7 @@ import { AvatarPicker } from "@/components/AvatarPicker";
 import { avatarLooks } from "@/lib/avatars";
 import { RankEmblem } from "@/components/RankEmblem";
 import { Ring } from "@/components/Ring";
-import { AlertTriangle, ArrowRight, Hourglass, Info, ShieldCheck, BookOpen, Check, CheckCircle2, Crown, Flame, GraduationCap, ListChecks, Lock, LogIn, Medal, Mountain, Sparkles, Swords, Target, Trophy, Zap } from "lucide-react";
+import { AlertTriangle, ArrowRight, Hourglass, ShieldCheck, BookOpen, Check, CheckCircle2, Crown, Flame, GraduationCap, ListChecks, Lock, LogIn, Medal, Mountain, Sparkles, Swords, Target, Trophy, Zap } from "lucide-react";
 
 const QUEST_ICON = { study: BookOpen, drill: Zap, exam: Trophy } as const;
 
@@ -225,7 +225,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
         {enrolment && <div className="mb-4 flex items-center gap-3 text-xs text-slate-400"><div className="bar flex-1"><i style={{ width: `${(passed / 20) * 100}%` }} /></div><span className="flex items-center gap-1"><Crown size={13} className="text-amber-300" />{passed}/20</span></div>}
         <div className="space-y-10">
           {TIERS.map((tier, ti) => {
-            const got = Math.max(0, Math.min(4, passed - ti * 4)), tierDone = got === 4, tierOpen = !!enrolment && passed >= ti * 4 && !tierDone, tierLocked = !!enrolment && passed < ti * 4;
+            const got = Math.max(0, Math.min(4, passed - ti * 4)), tierDone = got === 4, tierLocked = !!enrolment && passed < ti * 4;
             const col = `hsl(${tier.hue} 70% 45%)`;
             return (
             <div key={tier.name} className="relative space-y-3 md:pl-9">
