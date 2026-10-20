@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Lock, Minus, Plus, Search, Trophy, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Lock, Minus, Plus, Search, Share2, Trophy, X } from "lucide-react";
 import { setJourneyMode } from "@/app/actions";
 import { PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
+import { pickQuery, type RoutePick } from "@/lib/lifecycle/share";
 import {
   AI_MODES, FAMILY_ORDER, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
   SIZE_LABEL, aiRoleName, buildRoute, dependenciesOf, nextGateFor, type AiMode, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
@@ -25,14 +26,15 @@ const fmtDate = (sec: number) => new Date(sec * 1000).toLocaleDateString("en-GB"
 type Mark = "none" | "learning" | "solid" | "titan";
 const markOf = (t: TrackInfo | undefined): Mark => !t || t.passed <= 0 ? "none" : t.passed >= 20 ? "titan" : t.passed >= 5 ? "solid" : "learning";
 
-/** `standalone` makes the map a page of its own: full height, with its own slim top bar (brand and a way back) instead of the site header. */
-export function LifecycleMap({ data, signage, standalone }: { data: MapData; signage: string; standalone?: { brand: string } }) {
+/** `standalone` makes the map a page of its own: full height, with its own slim top bar (brand and a way back) instead of the site header. `initial` is a route carried by a shared link: it wins over the signed-in person's own defaults. */
+export function LifecycleMap({ data, signage, standalone, initial }: { data: MapData; signage: string; standalone?: { brand: string }; initial?: RoutePick }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [view, setView] = useState<View>({ k: 0.5, x: 0, y: 0 });
   const [animate, setAnimate] = useState(false);
-  const [focus, setFocus] = useState<FocusId>(data.defaultRole ? "all" : data.defaultFocus);
-  const [roleKey, setRoleKey] = useState<string | null>(data.defaultRole);
+  const linked = !!(initial?.role || initial?.area);
+  const [focus, setFocus] = useState<FocusId>(initial?.role ? "all" : initial?.area ?? (data.defaultRole ? "all" : data.defaultFocus));
+  const [roleKey, setRoleKey] = useState<string | null>(linked ? initial!.role : data.defaultRole);
   const [picker, setPicker] = useState(false);
   const [pq, setPq] = useState("");
   const [races, setRaces] = useState(false);
@@ -43,7 +45,8 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const [aiOpen, setAiOpen] = useState(false);
   const [legend, setLegend] = useState(false);
   useEffect(() => { const t = setTimeout(() => setHint(false), 7000); return () => clearTimeout(t); }, []);
-  const [mode, setMode] = useState<AiMode>("human");
+  const [mode, setMode] = useState<AiMode>(initial?.mode ?? "human");
+  const [copied, setCopied] = useState(false);
   const narrow = size.w > 0 && size.w < 900;
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
 
@@ -188,6 +191,26 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
     frameLines(new Set<LineId>(STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
   };
   const goNext = () => { if (next) pick({ kind: "st", id: next.id }); };
+
+  /* The address bar always holds the current route, so it can be copied as it is; Share also offers it to the phone's share sheet. */
+  const query = useMemo(() => {
+    const keepAll = !roleKey && focus === "all" && (!!data.defaultRole || data.defaultFocus !== "all"); // "everything" is a choice when someone's own default is narrower
+    return pickQuery({ role: roleKey, area: !roleKey && (focus !== "all" || keepAll) ? focus : null, mode });
+  }, [roleKey, focus, mode, data.defaultRole, data.defaultFocus]);
+  useEffect(() => { if (standalone) window.history.replaceState(null, "", `${window.location.pathname}${query}`); }, [standalone, query]);
+  const share = async () => {
+    const url = `${window.location.origin}${window.location.pathname}${query}`;
+    const title = `${role ? aiRoleName(role.name, mode) : "My route"}: a route through the software lifecycle`;
+    try {
+      if (navigator.share) await navigator.share({ title, url });
+      else { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2200); }
+    } catch { /* closing the share sheet is not an error */ }
+  };
+  const shareButton = standalone && query && (
+    <button type="button" onClick={share} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-black/15 bg-[#fff] px-3 py-1 text-[13px] font-semibold shadow-sm hover:border-indigo-400 hover:text-indigo-300">
+      <Share2 size={14} aria-hidden />{copied ? "Link copied" : "Share this route"}
+    </button>
+  );
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === "Escape") setSel(null); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
 
   const showLabels = view.k >= 0.55;
@@ -342,10 +365,13 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
           </div>
           <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]">
             {narrow && !ctrl ? (
-              <button type="button" onClick={() => setCtrl(true)} aria-expanded={false}
-                className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-black/20 bg-[#fff] px-3.5 py-1.5 text-[14px] font-bold shadow-sm hover:border-indigo-400">
-                <span className="truncate">{role ? aiRoleName(role.name, mode) : focus !== "all" ? FOCUS.find((f) => f.id === focus)?.label : "Choose your route"}</span><ChevronDown size={15} className="shrink-0" />
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <button type="button" onClick={() => setCtrl(true)} aria-expanded={false}
+                  className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-black/20 bg-[#fff] px-3.5 py-1.5 text-[14px] font-bold shadow-sm hover:border-indigo-400">
+                  <span className="truncate">{role ? aiRoleName(role.name, mode) : focus !== "all" ? FOCUS.find((f) => f.id === focus)?.label : "Choose your route"}</span><ChevronDown size={15} className="shrink-0" />
+                </button>
+                {shareButton}
+              </div>
             ) : (
               <>
                 <p className="mb-1.5 text-[13px] font-semibold text-slate-300">What do you want to work on?</p>
@@ -397,7 +423,12 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
                 </div>
               )}
                 </div>
-                {ends && <p className="mt-1.5 text-[12.5px] text-slate-400">Your route: {ends.count} stops, from <b className="font-semibold">{ends.from.name}</b> to <b className="font-semibold">{ends.goal.name}</b>.</p>}
+                {(ends || shareButton) && (
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    {ends && <p className="text-[12.5px] text-slate-400">Your route: {ends.count} stops, from <b className="font-semibold">{ends.from.name}</b> to <b className="font-semibold">{ends.goal.name}</b>.</p>}
+                    {shareButton}
+                  </div>
+                )}
               </>
             )}
           </div>
