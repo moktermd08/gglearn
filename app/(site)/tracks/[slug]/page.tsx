@@ -244,43 +244,58 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
                   <span className="flex gap-1">{[0, 1, 2, 3].map((n) => <i key={n} className="h-2 w-6 rounded-full" style={{ background: ti * 4 + n < passed ? `hsl(${tier.hue} 85% 55%)` : `hsl(${tier.hue} 40% 50% / .18)` }} />)}</span>
                 </span>}
               </div>
-              <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <ol className="relative space-y-3 md:space-y-0">
+                {/* the winding trail behind the four levels; solid where passed, dotted ahead (wide screens only) */}
+                <svg aria-hidden className="pointer-events-none absolute inset-0 hidden h-full w-full md:block" viewBox="0 0 100 400" preserveAspectRatio="none">
+                  {(() => {
+                    const first = ti * 4 + 1, xs = [22, 78, 22, 78];
+                    const seg = (d: string, solid: boolean, k: string) => <path key={k} d={d} fill="none" strokeWidth={5} strokeLinecap="round" vectorEffect="non-scaling-stroke" stroke={solid ? `hsl(${tier.hue} 75% 55%)` : "#b4b2a9"} strokeOpacity={solid ? (enrolment ? 1 : 0.55) : 0.7} strokeDasharray={solid ? undefined : "2 12"} />;
+                    return [
+                      seg(`M 50 0 C 50 25, 22 25, 22 50`, !enrolment || first <= passed, "in"),
+                      ...[0, 1, 2].map((i) => seg(`M ${xs[i]} ${50 + i * 100} C ${xs[i]} ${100 + i * 100}, ${xs[i + 1]} ${100 + i * 100}, ${xs[i + 1]} ${150 + i * 100}`, !enrolment || first + i + 1 <= passed, `s${i}`)),
+                      seg(`M 78 350 C 78 375, 50 375, 50 400`, !enrolment || first + 3 <= passed, "out"),
+                    ];
+                  })()}
+                </svg>
                 {LEVELS.slice(ti * 4, ti * 4 + 4).map((name, j) => {
                   const level = ti * 4 + j + 1, n = counts.get(level) ?? 0;
                   const done = level <= passed, open = !!enrolment && level === passed + 1;
                   const cert = (CERT_LEVELS as readonly number[]).includes(level);
                   const mine = s?.certs.find((c) => c.level === level);
-                  const dim = !!enrolment && !done && !open;
+                  const dim = !!enrolment && !done && !open, right = j % 2 === 1;
+                  const state = done ? "done" : open ? "current" : enrolment ? "locked" : "preview";
                   return (
-                    <li key={level} style={{ "--i": j, borderTop: `3px solid hsl(${tier.hue} 80% 55% / ${done || open || !enrolment ? 1 : 0.35})`, boxShadow: open ? `0 0 34px -8px hsl(${tier.hue} 85% 55%)` : undefined, "--tw-ring-color": `hsl(${tier.hue} 85% 55% / .5)`, background: dim ? undefined : `radial-gradient(120% 70% at 50% 0%, hsl(${tier.hue} 85% 60% / ${open ? 0.2 : 0.12}), #fff 70%)` } as React.CSSProperties}
-                      className={`card card-hover rise relative isolate flex flex-col items-center gap-2 overflow-hidden p-4 text-center [&>*]:pointer-events-none [&>button]:pointer-events-auto [&_a]:pointer-events-auto [&_a]:relative [&_a]:z-10 [&_form]:pointer-events-auto [&_form]:relative [&_form]:z-10 ${dim ? "bg-[#fbfaf6]" : ""} ${open ? "-translate-y-0.5 ring-2" : ""}`}>
-                      <span aria-hidden className="absolute -bottom-5 -left-1 -z-10 select-none text-[84px] font-black italic leading-none" style={{ color: `hsl(${tier.hue} 70% 50% / ${dim ? 0.05 : 0.1})` }}>{level}</span>
-                      <LevelDetail d={detailFor(level, done ? "done" : open ? "current" : enrolment ? "locked" : "preview")} actions={open && n > 0 ? (<>
+                    <li key={level} style={{ "--i": j } as React.CSSProperties}
+                      className={`rise card-hover relative flex items-center gap-4 rounded-2xl p-3 md:h-[150px] md:rounded-none md:p-0 [&>*]:pointer-events-none [&>button]:pointer-events-auto [&_a]:pointer-events-auto [&_a]:relative [&_a]:z-10 [&_form]:pointer-events-auto [&_form]:relative [&_form]:z-10 ${dim ? "md:!bg-transparent" : ""}`}>
+                      <LevelDetail d={detailFor(level, state)} actions={open && n > 0 ? (<>
                         <Link href={`/tracks/${track.slug}/learn/${level}`} className="btn btn-ghost !px-3 !py-1 text-sm"><BookOpen size={14} />Study</Link>
                         {gate ? <span className="inline-flex items-center gap-1 text-xs text-slate-400"><Lock size={13} />Locked</span> : <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} /><button className="btn !px-3 !py-1 text-sm">Take the exam<ArrowRight size={14} /></button></form>}
                       </>) : undefined} />
-                      <span className="absolute right-2 top-2 text-slate-500" aria-hidden><Info size={14} /></span>
-                      {j < 3 && <span className="pointer-events-none absolute -right-3 top-12 hidden w-3 border-t-2 border-dashed border-black/15 lg:block" aria-hidden />}
-                      {open && <span className="absolute -top-3 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#fff] shadow" style={{ background: col }}>You are here</span>}
-                      <RankEmblem level={level} state={done ? "done" : open ? "current" : enrolment ? "locked" : "preview"} size={64} />
-                      <div className={`font-bold ${enrolment && !done && !open ? "text-slate-400" : ""}`}>{name}</div>
-                      <div className="flex w-full items-center gap-2 text-xs text-slate-400" title={`${n} questions`}>
-                        <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-black/10"><i className="grow block h-full rounded-full" style={{ width: `${(n / maxN) * 100}%`, background: `hsl(${tier.hue} 75% 55% / .8)`, "--i": j } as React.CSSProperties} /></span>
-                        <span className="shrink-0">{n} Qs</span>
+                      <div className={`relative shrink-0 md:absolute md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 ${right ? "md:left-[78%]" : "md:left-[22%]"}`}>
+                        {open && <span aria-hidden className="absolute inset-[-10px] rounded-full" style={{ background: `radial-gradient(circle, hsl(${tier.hue} 85% 55% / .35), transparent 70%)` }} />}
+                        <span className="relative block rounded-full bg-[#f7f5ef] p-1.5 md:p-2"><RankEmblem level={level} state={state} size={open ? 84 : 64} /></span>
+                        {open && <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#fff] shadow" style={{ background: col }}>You are here</span>}
                       </div>
-                      {cert && <div className="flex items-center gap-1 rounded-full bg-amber-400/15 px-2 py-0.5 text-xs font-semibold text-amber-300"><GraduationCap size={13} />{certTitle(level)} certificate</div>}
-                      {mine && <Link href={`/cert/${mine.code}`} className="inline-flex items-center gap-1 text-xs text-amber-300 underline"><GraduationCap size={13} />View certificate</Link>}
-                      {open && n > 0 && (
-                        <div className="flex flex-wrap justify-center gap-2">
-                          <Link href={`/tracks/${track.slug}/learn/${level}`} className="btn btn-ghost !px-3 !py-1 text-sm"><BookOpen size={14} />Study</Link>
-                          {gate ? <span className="inline-flex items-center gap-1 text-xs text-slate-400"><Lock size={13} />Locked</span> : <form action={startRun}>
-                            <input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} />
-                            <button className="btn !px-3 !py-1 text-sm">Exam<ArrowRight size={14} /></button>
-                          </form>}
+                      <div className={`min-w-0 flex-1 md:absolute md:top-1/2 md:w-[34%] md:-translate-y-1/2 ${right ? "md:right-[calc(22%+60px)] md:text-right" : "md:left-[calc(22%+60px)]"} ${right ? "md:[&_.row]:justify-end" : ""}`}>
+                        <div className={`font-bold ${open ? "text-lg" : ""} ${dim ? "text-slate-400" : ""}`}>{name}</div>
+                        <div className={`row mt-1 flex items-center gap-2 text-xs text-slate-400`} title={`${n} questions`}>
+                          <span className="h-1.5 w-20 overflow-hidden rounded-full bg-black/10"><i className="grow block h-full rounded-full" style={{ width: `${(n / maxN) * 100}%`, background: `hsl(${tier.hue} 75% 55% / .8)`, "--i": j } as React.CSSProperties} /></span>
+                          <span className="shrink-0">{n} Qs</span>
                         </div>
-                      )}
-                      {open && n === 0 && <span className="text-xs text-amber-400">No questions yet</span>}
-                      {!done && !open && enrolment && <span className="text-[11px] font-semibold text-slate-500">Pass level {level - 1} to unlock</span>}
+                        {cert && <div className={`row mt-1.5 flex ${right ? "md:justify-end" : ""}`}><span className="inline-flex items-center gap-1 rounded-full bg-amber-400/15 px-2 py-0.5 text-xs font-semibold text-amber-300"><GraduationCap size={13} />{certTitle(level)} certificate</span></div>}
+                        {mine && <Link href={`/cert/${mine.code}`} className="mt-1 inline-flex items-center gap-1 text-xs text-amber-300 underline"><GraduationCap size={13} />View certificate</Link>}
+                        {open && n > 0 && (
+                          <div className={`mt-2 flex flex-wrap gap-2 ${right ? "md:justify-end" : ""}`}>
+                            <Link href={`/tracks/${track.slug}/learn/${level}`} className="btn btn-ghost !px-3 !py-1 text-sm"><BookOpen size={14} />Study</Link>
+                            {gate ? <span className="inline-flex items-center gap-1 text-xs text-slate-400"><Lock size={13} />Locked</span> : <form action={startRun}>
+                              <input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} />
+                              <button className="btn !px-3 !py-1 text-sm">Exam<ArrowRight size={14} /></button>
+                            </form>}
+                          </div>
+                        )}
+                        {open && n === 0 && <span className="text-xs text-amber-400">No questions yet</span>}
+                        {dim && <span className="text-[11px] font-semibold text-slate-500">Pass level {level - 1} to unlock</span>}
+                      </div>
                     </li>
                   );
                 })}
