@@ -90,7 +90,7 @@ const TRACK_PILLAR: Record<string, string> = {
 // company-wide policy that everyone in scope must pass
 const MANDATORY = new Set(["governance-compliance"]);
 // shared academy content: applies to every staff member, not tied to one company
-const SHARED_BRANDS = new Set(["foundations", "titan-academy", "software-lifecycle", "sample-brand"]);
+const SHARED_BRANDS = new Set(["foundations", "titan-academy", "software-lifecycle", "public-sector", "sample-brand"]);
 const PERSONAL_BRANDS = new Set(["mhossain"]);
 // brands whose tracks with a job role set are required for that role (the rest stay optional growth tracks)
 const ROLE_REQUIRED_BRANDS = new Set(["gglink", "guru-graphics", "moksy-ai", "software-lifecycle"]);

@@ -15,6 +15,7 @@ const BRANDS: [slug: string, name: string, tagline: string][] = [
   ["moksy-ai", "Moksy AI", "AI platform that automates the software lifecycle"],
   ["mhossain", "M Hossain", "Founder content and personal brand"],
   ["software-lifecycle", "Software Lifecycle", "End-to-end delivery: plan, build, secure, ship, run"],
+  ["public-sector", "Public Sector", "How UK public services are justified, bought, delivered, assured and run"],
 ];
 
 const TRACKS: Record<string, T[]> = {
@@ -46,6 +47,16 @@ const TRACKS: Record<string, T[]> = {
   ],
   mhossain: [
     ["mhossain-content", "Founder content", "process", "", "Voice, post formats and the approve-then-post workflow."],
+  ],
+  "public-sector": [
+    ["ps-business-cases", "Business cases and appraisal", "process", "", "The Green Book, the five case model, options, costs, benefits and value for money."],
+    ["ps-procurement", "Commissioning and procurement", "process", "", "Commissioning, market engagement, the Procurement Act 2023, evaluation, award and contract management."],
+    ["ps-public-money", "Managing public money", "process", "", "Managing Public Money, budgets and forecasts, spending controls, paying suppliers and accounts."],
+    ["ps-legal-duties", "Legal powers and public duties", "process", "", "Powers, judicial review, the equality duty, consultation, human rights, subsidy control and accessibility."],
+    ["ps-information", "Data protection, records and information rights", "process", "", "UK GDPR, DPIAs, privacy notices, subject access, FOI, records, data sharing and open data."],
+    ["ps-service-standard", "Service Standard and delivery phases", "process", "", "Discovery to live, the Service Standard, assessments, go-live and retirement."],
+    ["ps-assurance", "Assurance, audit and scrutiny", "process", "", "Three lines, Gateway reviews, committees, external audit and benefits assurance."],
+    ["ps-governance", "Governance and accountability", "process", "", "Senior responsible owners, accounting officers, boards, delegation, decision records and closure."],
   ],
   "software-lifecycle": [
     ["sdlc-discovery", "1. Discovery and planning", "process", "", "Problem, audience, goals, scope, budget, timeline."],
