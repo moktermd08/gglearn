@@ -4,7 +4,7 @@ import { requireManager } from "@/lib/auth";
 import { applyRoleStarts, grantCredit, revokeCredit } from "@/lib/credits";
 import type { SetupState } from "@/lib/setup";
 
-const refresh = () => { for (const p of ["/admin/starting-points", "/admin/people", "/admin/compliance", "/map", "/map/business", "/dashboard"]) revalidatePath(p); };
+const refresh = () => { for (const p of ["/admin/starting-points", "/admin/people", "/admin/compliance", "/map", "/map/software", "/dashboard"]) revalidatePath(p); };
 
 /** Give a person a starting level in one track. The rules (who, how much, reason) are in lib/credits.ts. */
 export async function giveStartAction(_: SetupState, fd: FormData): Promise<SetupState> {

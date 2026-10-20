@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { DEFAULT_MAP, mapFor } from "@/lib/lifecycle/maps";
-import { MapView, mapMetadata, type Search } from "../mapPage";
+import { MapView, mapMetadata, queryOf, type Search } from "../mapPage";
 
 type Props = { params: Promise<{ id: string }>; searchParams: Search };
 
-/** /map/business and the other maps. The default map lives at /map itself, so its own id is not a second address. */
-async function find(params: Props["params"]) {
+/** /map/software and the other maps. The default map lives at /map itself, so its own id is not a second address: it goes there, keeping the query. */
+async function find({ params, searchParams }: Props) {
   const { id } = await params;
-  const m = id === DEFAULT_MAP ? null : mapFor(id);
+  const m = mapFor(id);
   if (!m) notFound();
+  if (m.id === DEFAULT_MAP) permanentRedirect(`/map${queryOf(await searchParams)}`);
   return m;
 }
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-  return mapMetadata(await find(params), searchParams);
+export async function generateMetadata(p: Props): Promise<Metadata> {
+  return mapMetadata(await find(p), p.searchParams);
 }
 
-export default async function OtherMapPage({ params, searchParams }: Props) {
-  return <MapView m={await find(params)} searchParams={searchParams} />;
+export default async function OtherMapPage(p: Props) {
+  return <MapView m={await find(p)} searchParams={p.searchParams} />;
 }

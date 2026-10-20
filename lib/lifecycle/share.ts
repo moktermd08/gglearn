@@ -1,3 +1,4 @@
+import { DEFAULT_MAP } from "./maps";
 import { AI_MODES, aiRoleName, type AiMode, type FocusId, type MapModel, type RoleInfo, type StageId } from "./engine";
 
 /** What a shared link carries: a role, an area or a company stage, and whether the role works with AI. Nothing about the person. */
@@ -29,7 +30,7 @@ export function pickQuery({ role, area, stage, mode }: RoutePick): string {
 /** The link-preview picture for a pick on a map: /map/og?map=business&stage=launch */
 export function ogPath(m: MapModel, pick: RoutePick): string {
   const q = new URLSearchParams(pickQuery(pick).slice(1));
-  if (m.id !== "software") q.set("map", m.id);
+  if (m.id !== DEFAULT_MAP) q.set("map", m.id);
   const s = q.toString();
   return `/map/og${s ? `?${s}` : ""}`;
 }

@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: at("/campaigns"), changeFrequency: "daily", priority: 0.9 },
     { url: at("/competitions"), changeFrequency: "daily", priority: 0.8 },
     { url: at("/map"), changeFrequency: "monthly", priority: 0.5 },
+    { url: at("/map/software"), changeFrequency: "monthly", priority: 0.4 },
   ];
   for (const c of entryCompanies()) pages.push({ url: at(`/c/${c.slug}`), changeFrequency: "weekly", priority: 0.7 }); // companies that opened a public page
   for (const { track } of publicTracks()) pages.push({ url: at(`/tracks/${track.slug}`), changeFrequency: "weekly", priority: 0.7 });
