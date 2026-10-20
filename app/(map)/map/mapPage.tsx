@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { eq } from "drizzle-orm";
 import { currentUser } from "@/lib/auth";
+import { db, users } from "@/lib/db";
+import { reachOf, userInReach } from "@/lib/tenancy";
 import { lookFor } from "@/lib/brand";
 import { LifecycleMap } from "@/components/lifecycle/LifecycleMap";
 import { mapDataFor } from "@/lib/lifecycle/server";
@@ -24,7 +27,15 @@ export async function mapMetadata(m: MapModel, searchParams: Search): Promise<Me
 }
 
 export async function MapView({ m, searchParams }: { m: MapModel; searchParams: Search }) {
-  const viewer = await currentUser();
-  const pick = parsePick(await searchParams, loadRoles(), m);
-  return <LifecycleMap mapId={m.id} data={mapDataFor(viewer, m)} signage={signage.className} standalone={{ brand: lookFor(viewer?.id).name }} initial={pick} />;
+  const me = await currentUser(), sp = await searchParams;
+  const pick = parsePick(sp, loadRoles(), m);
+  // a manager or admin can open the map as someone they run (?as=ID), to see where that person is and give them a starting level
+  let subject = me, viewingAs: { id: number; name: string } | null = null;
+  const asId = Number(Array.isArray(sp.as) ? sp.as[0] : sp.as);
+  if (me && me.role !== "learner" && asId && asId !== me.id) {
+    const t = db.select().from(users).where(eq(users.id, asId)).get();
+    if (t && t.status === "active" && userInReach(reachOf(me.id), t.id)) { subject = t; viewingAs = { id: t.id, name: t.name }; }
+  }
+  const canGrant = !!me && me.role !== "learner";
+  return <LifecycleMap mapId={m.id} data={mapDataFor(subject, m, { viewingAs, canGrant })} signage={signage.className} standalone={{ brand: lookFor(me?.id).name }} initial={pick} />;
 }

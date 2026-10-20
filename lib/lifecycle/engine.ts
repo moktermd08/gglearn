@@ -108,10 +108,17 @@ export type RoleInfo = {
 export type RaceInfo = {
   id: string; title: string; track: string; trackName: string; state: "live" | "upcoming"; humans: number; slug: string; hook: string; headline: string; goal: number; days: number;
 };
+/** A starting level someone was given in a track, outside the exams (lib/credits.ts). */
+export type CreditInfo = { level: number; source: "manager" | "admin" | "role"; by: string; reason: string; at: number; expiresAt: number | null; countsAsComplete: boolean };
 export type TrackInfo = {
   slug: string; name: string;
-  /** highest level passed, 0 to 20 */
-  passed: number; requiredLevel: number;
+  /** the level shown: the highest of exams passed, the placement check and any starting level, 0 to 20 */
+  passed: number;
+  /** highest level passed by exam */ earned: number;
+  /** level the placement check found */ placed: number;
+  /** the starting level in force, if any */ credit: CreditInfo | null;
+  /** the level this person's job role normally holds here, when they do not have it yet (0 = none) */ suggest: number;
+  requiredLevel: number;
   required: boolean; overdue: boolean; dueAt: number | null;
   /** false when this person's plan does not include the track */
   open: boolean;
@@ -129,6 +136,10 @@ export type MapData = {
   roles: RoleInfo[]; races: RaceInfo[];
   /** the visitor's own job role, when it matches one of the ladders */
   defaultRole: string | null;
+  /** set when a manager or admin is looking at someone else's map: whose */
+  viewingAs: { id: number; name: string } | null;
+  /** the person looking may give starting levels (a manager or admin) */
+  canGrant: boolean;
 };
 export type Route = {
   /** every lit stop */ ids: Set<string>;

@@ -10,6 +10,7 @@ import {
   AI_MODES, FAMILY_ORDER, SIZE_LABEL, aiRoleName, type AiMode, type FocusId, type Gate, type LineId, type MapData, type MapModel, type RaceInfo, type RoleInfo, type StageId, type Station, type TrackInfo,
 } from "@/lib/lifecycle/engine";
 import { MAPS, MAP_LIST } from "@/lib/lifecycle/maps";
+import { acceptRoleStartAction } from "@/app/(map)/map/actions";
 
 const ModelCtx = createContext<MapModel>(MAPS.software);
 const useModel = () => useContext(ModelCtx);
@@ -220,7 +221,8 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
     const keepAll = !roleKey && !stage && focus === "all" && (!!data.defaultRole || data.defaultFocus !== "all"); // "everything" is a choice when someone's own default is narrower
     return pickQuery({ role: roleKey, area: !roleKey && !stage && (focus !== "all" || keepAll) ? focus : null, stage: roleKey ? null : stage, mode });
   }, [roleKey, focus, stage, mode, data.defaultRole, data.defaultFocus]);
-  useEffect(() => { if (standalone) window.history.replaceState(null, "", `${window.location.pathname}${query}`); }, [standalone, query]);
+  const asId = data.viewingAs?.id; // a manager's view of someone else's map stays in the address bar, but is never put in a share link
+  useEffect(() => { if (standalone) window.history.replaceState(null, "", `${window.location.pathname}${asId ? `${query ? `${query}&` : "?"}as=${asId}` : query}`); }, [standalone, query, asId]);
   const share = async () => {
     const url = `${window.location.origin}${window.location.pathname}${query}`;
     const title = `${role ? aiRoleName(role.name, mode) : stage ? M.STAGE_BY_ID.get(stage)!.label : "My route"}: ${M.words.routeWord}`;
@@ -323,13 +325,14 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
               const tx = st.anchor === "start" ? st.L : st.anchor === "end" ? st.R : X, frac = Math.min(1, (t?.passed ?? 0) / 20), C = 2 * Math.PI * 16;
               const label = showLabels && (on || isSel) || isNext || isGoal || isSel;
               return (
-                <g key={st.id} role="button" tabIndex={0} aria-label={`${st.name}${t ? `, ${t.passed > 0 ? `level ${t.passed} of 20` : "not started"}` : ""}`} className="st cursor-pointer outline-none"
+                <g key={st.id} role="button" tabIndex={0} aria-label={`${st.name}${t ? `, ${t.passed > 0 ? `level ${t.passed} of 20${t.passed > t.earned ? ", a starting level" : ""}` : "not started"}` : ""}`} className="st cursor-pointer outline-none"
                   style={{ opacity: on ? 1 : 0.14, transition: "opacity .4s" }}
                   onClick={() => { if (!moved.current) pick({ kind: "st", id: st.id }); }} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick({ kind: "st", id: st.id }); } }}>
                   {isNext && !isSel && <circle className="pulse" cx={X} cy={Y} r={16} fill="none" stroke={c} strokeWidth={4} />}
                   {(isSel || mk === "learning" || mk === "solid") && <circle cx={X} cy={Y} r={16} fill="none" stroke={isSel ? "#4f46e5" : c} strokeOpacity={isSel ? 1 : 0.9} strokeWidth={isSel ? 4.5 : 4} strokeDasharray={isSel ? undefined : `${C * frac} ${C}`} transform={`rotate(-90 ${X} ${Y})`} />}
                   <circle cx={X} cy={Y} r={mk === "titan" ? 11 : 9} fill={mk === "titan" ? "#f5b800" : mk === "solid" ? c : "#fbfaf6"} stroke={mk === "titan" ? "#14161f" : c} strokeWidth={4} />
                   {t?.required && t.overdue && <circle cx={X + 11} cy={Y - 11} r={5.5} fill="#e11d48" stroke="#fbfaf6" strokeWidth={1.5} />}
+                  {t && t.passed > t.earned && <rect x={X - 17} y={Y - 17} width={9} height={9} transform={`rotate(45 ${X - 12.5} ${Y - 12.5})`} fill="#fbfaf6" stroke={c} strokeWidth={2.5} />}
                   {route.agent.has(st.id) && <circle cx={X} cy={Y} r={17} fill="none" stroke="#6d28d9" strokeWidth={3} strokeDasharray="5 4" />}
                   {mode === "ai" && route.ai.has(st.id) && (
                     <g transform={`translate(${X - 19},${above ? Y + 19 : Y - 19})`}><circle r={10} fill="#6d28d9" stroke="#fbfaf6" strokeWidth={2} /><text y={3.6} textAnchor="middle" fontSize={9.5} fontWeight={800} fill="#fff">AI</text></g>
@@ -378,8 +381,14 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
             <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1 font-semibold shadow-sm hover:shadow-md"><ArrowLeft size={14} />{standalone.brand}</Link>
             {MAP_LIST.length > 1 && (
               <nav aria-label="Maps" className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm">
-                {MAP_LIST.map((x) => <Link key={x.id} href={x.href} aria-current={x.id === M.id ? "page" : undefined} className={`px-3 py-1 transition ${x.id === M.id ? "bg-[#14161f] text-[#fff]" : "hover:bg-black/5"}`}>{x.label}</Link>)}
+                {MAP_LIST.map((x) => <Link key={x.id} href={data.viewingAs ? `${x.href}?as=${data.viewingAs.id}` : x.href} aria-current={x.id === M.id ? "page" : undefined} className={`px-3 py-1 transition ${x.id === M.id ? "bg-[#14161f] text-[#fff]" : "hover:bg-black/5"}`}>{x.label}</Link>)}
               </nav>
+            )}
+            {data.viewingAs && (
+              <span className="inline-flex items-center gap-2 rounded-full border border-amber-400 bg-amber-50 px-3 py-1 text-[13px] font-semibold">
+                Viewing {data.viewingAs.name}&apos;s map
+                <Link href={MAP_LIST.find((x) => x.id === M.id)?.href ?? "/map"} className="text-indigo-300 underline">Back to mine</Link>
+              </span>
             )}
             <span className="ml-auto flex items-center gap-2">
               {data.signedIn ? <Link href="/dashboard" className="font-semibold text-indigo-300 hover:underline">My quest</Link> : <Link href="/login" className="btn !px-3.5 !py-1 text-[13px]">Sign in</Link>}
@@ -390,7 +399,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
           <div className="pointer-events-auto">
             <p className="hidden text-[11px] font-semibold uppercase tracking-[.18em] text-slate-400 sm:block">{M.words.kicker}</p>
             <h1 className="mt-0.5 text-[1.2rem] font-bold leading-[1.05] sm:text-[1.6rem]">
-              {data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>{M.words.headline[0]} <span className="text-indigo-300">{M.words.headline[1]}</span></>}
+              {data.viewingAs ? <>{data.firstName}&apos;s map. <span className="text-indigo-300">Where they are now.</span></> : data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>{M.words.headline[0]} <span className="text-indigo-300">{M.words.headline[1]}</span></>}
             </h1>
           </div>
           <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]">
@@ -471,7 +480,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
                     ) : (
                       <button type="button" onClick={() => setAiOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-slate-400 underline decoration-dotted hover:text-indigo-300">Working with AI?</button>
                     ))}
-                  {ends && <p className="text-[12.5px] text-slate-400">Your route: {ends.count} stops, from <b className="font-semibold">{ends.from.name}</b> to <b className="font-semibold">{ends.goal.name}</b>.</p>}
+                  {ends && <p className="text-[12.5px] text-slate-400">{data.viewingAs ? "Their route" : "Your route"}: {ends.count} stops, from <b className="font-semibold">{ends.from.name}</b> to <b className="font-semibold">{ends.goal.name}</b>.</p>}
                   {stage && !stageOpen && !sel && <button type="button" onClick={() => setStageOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-indigo-300 underline decoration-dotted">About this stage</button>}
                   {shareButton}
                 </div>
@@ -491,7 +500,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
 
       <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex flex-col items-center gap-2 sm:bottom-5">
         {hint && <p className="pointer-events-auto rounded-full bg-[#14161f]/85 px-3.5 py-1.5 text-[13px] font-medium text-[#fff]">{narrow ? "Drag to move · pinch to zoom · tap a stop" : "Drag to move · ctrl or ⌘ + scroll to zoom · click a stop"}</p>}
-        <button type="button" onClick={goNext} disabled={!next} className="btn pointer-events-auto !rounded-full !px-4 !py-3 text-[15px] shadow-xl sm:!px-5 sm:text-base">{data.signedIn ? "Take me to my next stop" : "Start at the first stop"}<ArrowRight size={18} /></button>
+        <button type="button" onClick={goNext} disabled={!next} className="btn pointer-events-auto !rounded-full !px-4 !py-3 text-[15px] shadow-xl sm:!px-5 sm:text-base">{data.viewingAs ? "Go to their next stop" : data.signedIn ? "Take me to my next stop" : "Start at the first stop"}<ArrowRight size={18} /></button>
       </div>
 
       {data.journey && (
@@ -579,6 +588,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="10" fill="#6d28d9" /></svg><span><b>AI</b>: an AI stop added when a role works with AI</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="10" fill="none" stroke="#6d28d9" strokeWidth="3" strokeDasharray="5 4" /></svg><span><b>Dashed ring</b>: an AI agent does this stop</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="10" fill="#14161f" /><path d="M12.5,13.5 l3,3 l6,-6.5" fill="none" stroke="#fff" strokeWidth="2.2" /></svg><span><b>Tick</b>: where a person checks the agent&apos;s work</span></li>
+              <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="19" cy="13" r="6.5" fill="#fbfaf6" stroke="#1d5ec2" strokeWidth="3" /><rect x="8" y="3" width="8" height="8" transform="rotate(45 12 7)" fill="#fbfaf6" stroke="#1d5ec2" strokeWidth="2.2" /></svg><span><b>Diamond</b>: this level is a starting point (a placement check, your role or a manager), not an exam pass</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><circle cx="17" cy="13" r="11" fill="#f5b800" stroke="#14161f" strokeWidth="2" /></svg><span><b>Gold flag</b>: a live or upcoming race on this track</span></li>
               <li className="flex items-center gap-2.5"><svg width="34" height="26"><rect x="11" y="1" width="12" height="24" fill="#fbfaf6" stroke="#14161f" strokeWidth="2.5" /><circle cx="17" cy="6" r="6" fill="#fbfaf6" stroke="#14161f" strokeWidth="2.5" /><circle cx="17" cy="20" r="6" fill="#fbfaf6" stroke="#14161f" strokeWidth="2.5" /></svg><span><b>Gate</b>: a handoff where lines meet. Most projects fail here</span></li>
             </ul>
@@ -598,7 +608,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
       {(selStation || selGate) && (
         <aside aria-live="polite" style={{ "--panel-top": `${Math.max(20, headH - 12)}px` } as React.CSSProperties} className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-[var(--panel-top)] sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} who={data.viewingAs} canGrant={data.canGrant} onGo={(s) => pick({ kind: "st", id: s.id })} />}
           {selGate && <GateCard g={selGate} tracks={data.tracks} />}
         </aside>
       )}
@@ -607,7 +617,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
   );
 }
 
-function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onGo: (s: Station) => void }) {
+function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, who, canGrant, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; who: { id: number; name: string } | null; canGrant: boolean; onGo: (s: Station) => void }) {
   const M = useModel();
   const line = M.LINE_BY_ID[st.line], c = M.LINE_COLOUR[st.line], z = M.zoneOf(st.x);
   const seq = M.stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
@@ -680,6 +690,34 @@ function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, r
             <p className="mt-0.5 text-base font-bold">{info.name}</p>
             <div className="bar mt-2" title={`Level ${lvl} of 20`}><i style={{ width: `${(lvl / 20) * 100}%` }} /></div>
             <p className="mt-1.5 text-sm text-slate-400">{lvl > 0 ? `You are on level ${lvl} of 20.` : "20 levels, from Novice to Titan."} {lvl < 5 ? `Level 5 earns the Foundation certificate: about ${5 - lvl} quiz${5 - lvl === 1 ? "" : "zes"} of ${QUESTIONS_PER_RUN} questions, ${Math.round(PASS_MARK * 100)}% to pass.` : null}{info.required && <> <b className={info.overdue ? "text-rose-300" : "text-amber-300"}>{lvl >= info.requiredLevel ? "Required: done." : info.overdue ? "Required: overdue." : `Required${info.dueAt ? `, due ${fmtDate(info.dueAt)}` : ""}.`}</b></>}</p>
+            {lvl > 0 && (info.credit || info.placed > 0) && (
+              <div className="mt-2 rounded-xl bg-black/5 p-2.5 text-[13px]">
+                <p className="font-semibold">Where {who ? "their" : "your"} level comes from</p>
+                <ul className="mt-1 space-y-0.5 text-slate-400">
+                  <li>Exams passed: {info.earned > 0 ? `level ${info.earned}` : "none yet"}</li>
+                  {info.placed > 0 && <li>Placement check: level {info.placed}</li>}
+                  {info.credit && (
+                    <li>
+                      Starting level {info.credit.level}: {info.credit.source === "role" ? `from ${who ? "their" : "your"} job role, where a typical holder of it is` : `given by ${info.credit.by} on ${fmtDate(info.credit.at)}: “${info.credit.reason}”`}.
+                      {info.credit.expiresAt ? ` It ends on ${fmtDate(info.credit.expiresAt)}.` : ""}
+                    </li>
+                  )}
+                </ul>
+                <p className="mt-1 text-slate-400">Level {lvl} is the highest of these. A starting level lifts where {who ? "they" : "you"} start and unlocks what comes next; {info.credit?.countsAsComplete ? "an admin marked it as complete for required training." : "the certificate still needs the exam."}</p>
+              </div>
+            )}
+            {info.suggest > 0 && (
+              who ? (
+                <p className="mt-2 text-sm text-slate-400">{who.name.split(" ")[0]}&apos;s job role usually starts at level {info.suggest} here.</p>
+              ) : signedIn ? (
+                <form action={acceptRoleStartAction.bind(null, info.slug)} className="mt-3 rounded-xl border-l-4 border-indigo-400 bg-indigo-50 p-3 text-sm">
+                  <p className="font-bold">Your job role usually starts at level {info.suggest} here.</p>
+                  <p className="mt-0.5 text-slate-400">Already there? Start from it. You still sit the exams for the certificate.</p>
+                  <button type="submit" className="mt-2 rounded-full bg-[#14161f] px-3 py-1 text-[13px] font-bold text-[#fff] hover:bg-black">Use level {info.suggest} as my starting point</button>
+                </form>
+              ) : null
+            )}
+            {who && canGrant && <Link href={`/admin/starting-points?user=${who.id}&track=${info.slug}`} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-indigo-300 hover:underline">Give {who.name.split(" ")[0]} a starting level<ArrowRight size={14} /></Link>}
             {info.rival && <p className="mt-1 text-sm text-slate-400">{info.rival.name} is on level {info.rival.level}{info.rival.level > lvl ? ". Catch up." : lvl > info.rival.level ? ". You are ahead." : ". Dead level."}</p>}
             {lock && (
               <div className="mt-3 rounded-xl border-l-4 border-slate-400 bg-black/5 p-3 text-sm">
