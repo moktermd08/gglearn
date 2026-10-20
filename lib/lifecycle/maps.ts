@@ -1,10 +1,12 @@
 import { buildModel, type MapModel } from "./engine";
 import { BUSINESS_DEF } from "./business";
+import { PUBLIC_DEF } from "./public";
 import { SOFTWARE_DEF } from "./software";
 
 /** Every map the site offers. Add a map by writing a MapDef and listing it here. */
 export const MAPS: Record<string, MapModel> = {
   business: buildModel(BUSINESS_DEF),
+  public: buildModel(PUBLIC_DEF),
   software: buildModel(SOFTWARE_DEF),
 };
 export type MapId = keyof typeof MAPS;

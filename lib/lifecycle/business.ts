@@ -1,4 +1,5 @@
 import type { Gate, LineDef, MapDef, RawStation, StageDef, ZoneDef } from "./engine";
+import { BUSINESS_SIZES } from "./businessSizes";
 
 /**
  * The life of any business, from the first idea to closing or handing over. It does not assume software: a cafe, an agency, a
@@ -298,7 +299,7 @@ export const BUSINESS_DEF: MapDef = {
   },
   focus: [
     { id: "sell", label: "Market and sell", lines: ["mkt"], start: "talk" },
-    { id: "customers", label: "Look after customers", lines: ["cus"], start: "std" },
+    { id: "customers", label: "Look after customers", lines: ["cus"], start: "first" },
     { id: "make", label: "Make and deliver", lines: ["pro", "ops"], start: "design" },
     { id: "money", label: "Money and finance", lines: ["fin"], start: "startcost" },
     { id: "people", label: "People and hiring", lines: ["peo"], start: "skills" },
@@ -319,6 +320,7 @@ export const BUSINESS_DEF: MapDef = {
   stages: STAGES,
   ai: null,
   layout: { top: 215 },
+  sizes: BUSINESS_SIZES,
   familyLines: {
     Leadership: ["str", "gov", "fin", "peo"],
     "Product & Delivery": ["pro", "ops", "str", "gov"],

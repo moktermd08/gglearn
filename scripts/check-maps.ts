@@ -4,6 +4,11 @@
  * Run: npm run check:maps
  */
 import { MAPS } from "../lib/lifecycle/maps";
+import { BUSINESS_DEF } from "../lib/lifecycle/business";
+import { PUBLIC_DEF } from "../lib/lifecycle/public";
+import type { MapDef } from "../lib/lifecycle/engine";
+
+const DEFS: Record<string, MapDef> = { business: BUSINESS_DEF, public: PUBLIC_DEF };
 
 let bad = 0;
 const fail = (map: string, msg: string) => { bad++; console.error(`FAIL [${map}] ${msg}`); };
@@ -23,6 +28,14 @@ for (const m of Object.values(MAPS)) {
   for (const l of m.LINES) {
     const xs = m.stationsOn(l.id).map((s) => s.x);
     if (new Set(xs).size !== xs.length) fail(id, `line ${l.id}: two stops share a position`);
+  }
+  // labels: two stops on one line must not draw their names on top of each other (the layout picks a tier and side for each)
+  for (const l of m.LINES) {
+    const on = m.stationsOn(l.id);
+    for (let i = 0; i < on.length; i++) for (let j = i + 1; j < on.length; j++) {
+      const a = on[i], b = on[j];
+      if (a.tier === b.tier && a.L < b.R - 2 && b.L < a.R - 2) fail(id, `labels overlap on ${l.id}: "${a.name}" and "${b.name}"`);
+    }
   }
   const gateIds = new Set<string>();
   for (const g of m.GATES) {
@@ -53,6 +66,38 @@ for (const m of Object.values(MAPS)) {
     for (const g of st.watch) if (!m.GATE_BY_ID.has(g)) fail(id, `stage ${st.id}: no gate "${g}"`);
     const n = m.buildRoute(null, "all", "human", st.id).ids.size;
     if (n !== st.stops.length) fail(id, `stage ${st.id}: route has ${n} stops, expected ${st.stops.length}`);
+  }
+  // sizes: ids exist, a bigger size never loses a stop, and a stage's first stop is never one the size lens would hide
+  if (m.SIZES.length) {
+    const sizeIds = new Set(m.SIZES.map((x) => x.id));
+    const def = DEFS[id];
+    for (const [sz, ids] of Object.entries(def?.sizes?.from ?? {})) {
+      if (!sizeIds.has(sz) || sz === m.SIZES[0].id) fail(id, `sizes.from: "${sz}" is not a size after the smallest`);
+      for (const sid of ids) if (!m.STATION_BY_ID.has(sid)) fail(id, `sizes.from.${sz}: no stop "${sid}"`);
+    }
+    const listed = Object.values(def?.sizes?.from ?? {}).flat();
+    if (new Set(listed).size !== listed.length) fail(id, "sizes.from: a stop is listed under two sizes");
+    for (const [sid, by] of Object.entries(def?.sizes?.notes ?? {})) {
+      if (!m.STATION_BY_ID.has(sid)) fail(id, `sizes.notes: no stop "${sid}"`);
+      for (const sz of Object.keys(by)) if (!sizeIds.has(sz)) fail(id, `sizes.notes.${sid}: no size "${sz}"`);
+    }
+    if (sizeIds.size !== m.SIZES.length) fail(id, "two sizes share an id");
+    for (const z of m.SIZES) if (!z.changes.length || !z.challenges.length || !z.owner || !z.formal || !z.blurb || !z.people) fail(id, `size ${z.id}: needs people, a blurb, changes, challenges, an owner line and a handoff line`);
+    for (const st of m.STATIONS) {
+      const first = m.sizeFrom(st.id);
+      if (first < 0 || first >= m.SIZES.length) fail(id, `${st.id}: bad size`);
+    }
+    for (const stage of m.STAGES) if (m.sizeFrom(stage.start) !== 0) fail(id, `stage ${stage.id} starts on "${stage.start}", which the smallest size leaves out`);
+    for (const f of m.FOCUS) if (f.start && m.sizeFrom(f.start) !== 0) fail(id, `area ${f.id} starts on "${f.start}", which the smallest size leaves out`);
+    let prev = 0;
+    for (const z of m.SIZES) {
+      const n = m.buildRoute(null, "all", "human", null, z.id).ids.size;
+      if (n < prev) fail(id, `size ${z.id} lights ${n} stops, fewer than the size below it (${prev})`);
+      prev = n;
+      for (const stage of m.STAGES) if (m.buildRoute(null, "all", "human", stage.id, z.id).ids.size < 3) fail(id, `stage ${stage.id} has fewer than 3 stops at size ${z.id}`);
+    }
+    const sizeCounts = m.SIZES.map((z) => `${z.label} ${m.buildRoute(null, "all", "human", null, z.id).ids.size}`).join(", ");
+    console.log(`          sizes: ${sizeCounts}`);
   }
   // every stop should be reachable from at least one company stage, or the stage view hides it for good
   const inStage = new Set(m.STAGES.flatMap((s) => s.stops));

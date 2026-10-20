@@ -30,6 +30,23 @@ export type AiDef = {
   /** where a person checks an AI agent's work */ review: string[];
   techFamilies: string[]; techRoles: string[];
 };
+/** An organisation size: what it means, what changes on the map at that size, and what usually goes wrong. Sizes run from the smallest to the largest. */
+export type SizeDef = {
+  id: string; label: string;
+  /** who this is, in numbers: "10 to 49 people" */ people: string;
+  blurb: string;
+  /** what changes on the map at this size */ changes: string[];
+  /** what usually goes wrong at this size */ challenges: string[];
+  /** who usually owns a stop at this size */ owner: string;
+  /** how formal a handoff gate is at this size */ formal: string;
+};
+export type SizesDef = {
+  list: SizeDef[];
+  /** size id -> the stops that first matter at that size. A stop in no list matters from the smallest size, and from then on. */
+  from: Record<string, string[]>;
+  /** stop id -> size id -> what is different about that stop at that size */
+  notes?: Record<string, Record<string, string>>;
+};
 export type MapWords = {
   /** the small line above the headline */ kicker: string;
   /** the headline, in two halves (the second is coloured) */ headline: [string, string];
@@ -38,6 +55,9 @@ export type MapWords = {
   /** the kicker on the link-preview picture */ ogKicker: string;
   /** "a route through …", used in share titles */ routeWord: string;
   /** shown when a role search finds nothing */ coverage: string;
+  /** what the stage picker says ("or my company is"); a public service says "or my service is" */ stageIs?: string;
+  /** the stage picker's heading */ stageAsk?: string;
+  /** what a stage is called in titles ("Company stage") */ stageWord?: string;
 };
 export type MapDef = {
   id: string;
@@ -58,6 +78,8 @@ export type MapDef = {
    * ladder asks for broad tracks does not light up the whole map. A family with no entry (or no stop left) keeps every stop its tracks cover.
    */
   familyLines?: Record<string, LineId[]>;
+  /** organisation sizes (startup to enterprise) and what each changes; leave out when size does not change the map */
+  sizes?: SizesDef;
   /** room above the first line, in map units: more when the first line is crowded and its labels would touch the handoff-gate titles above it */
   layout?: { top?: number };
 };
@@ -75,6 +97,7 @@ export type Stop = { kind: "st"; st: Station } | { kind: "gt"; gate: Gate };
 /* ---------- things that do not depend on the map ---------- */
 export type FocusId = string;
 export type StageId = string;
+export type SizeId = string;
 export type AiMode = "human" | "ai" | "agent";
 export const AI_MODES: { id: AiMode; label: string; hint: string }[] = [
   { id: "human", label: "Human", hint: "The role as it is today" },
@@ -147,6 +170,7 @@ export type Route = {
   /** AI stops added by the lens */ ai: Set<string>;
   /** where a person checks an agent's work */ review: Set<string>;
   /** stops an AI agent does */ agent: Set<string>;
+  /** stops the chosen organisation size leaves out because they can wait until it is bigger */ deferred: Set<string>;
 };
 
 /** Layout of the map, in SVG units. */
@@ -228,6 +252,16 @@ export function buildModel(def: MapDef) {
   const STAGES = def.stages;
   const STAGE_BY_ID = new Map<string, StageDef>(STAGES.map((st) => [st.id, st]));
 
+  /* ---------- organisation sizes ---------- */
+  const SIZES = def.sizes?.list ?? [];
+  const SIZE_BY_ID = new Map<string, SizeDef>(SIZES.map((x) => [x.id, x]));
+  const sizeIndex = (id: SizeId) => SIZES.findIndex((x) => x.id === id);
+  const firstSize = new Map<string, number>();
+  for (const [sid, ids] of Object.entries(def.sizes?.from ?? {})) for (const id of ids) firstSize.set(id, Math.max(0, sizeIndex(sid)));
+  /** The smallest size at which a stop matters (0 = the smallest). */
+  const sizeFrom = (stopId: string) => firstSize.get(stopId) ?? 0;
+  const sizeNote = (stopId: string, size: SizeId): string | null => def.sizes?.notes?.[stopId]?.[size] ?? null;
+
   /* ---------- the AI lens ---------- */
   const hasAi = !!def.ai;
   const AI_STOPS_FULL = STATIONS.filter((s) => s.ai).map((s) => s.id);
@@ -239,7 +273,7 @@ export function buildModel(def: MapDef) {
   const aiFullAreas = new Set(def.focus.filter((f) => f.aiFull).map((f) => f.id));
 
   /** The lit stops for a role, an area or a company stage, seen through an AI lens. */
-  function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode, stage: StageId | null = null): Route {
+  function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode, stage: StageId | null = null, size: SizeId | null = null): Route {
     let base: Set<string> | null = null;
     if (role) {
       const t = new Set(role.core), fam = def.familyLines?.[role.family], lines = fam ? new Set(fam) : null;
@@ -254,12 +288,19 @@ export function buildModel(def: MapDef) {
       const lines = focusLinesOf(focus);
       base = stops ? new Set<string>(stops) : new Set(STATIONS.filter((s) => lines.has(s.line)).map((s) => s.id));
     }
+    // the size lens: stops that only matter once an organisation is bigger can wait
+    let deferred = new Set<string>();
+    const si = size ? sizeIndex(size) : -1;
+    if (si >= 0) {
+      const keep = [...base].filter((id) => sizeFrom(id) <= si);
+      if (keep.length) { deferred = new Set([...base].filter((id) => sizeFrom(id) > si)); base = new Set(keep); }
+    }
     const lens = hasAi ? mode : "human";
     const full = role ? isTechRole(role) : st ? st.aiFull : aiFullAreas.has(focus);
     const ai = lens === "human" ? new Set<string>() : new Set(full ? AI_STOPS_FULL : AI_STOPS_LITE);
     const review = lens === "agent" ? new Set(AI_REVIEW_STOPS) : new Set<string>();
     const agent = lens === "agent" ? new Set([...base].filter((id) => !ai.has(id) && !review.has(id))) : new Set<string>();
-    return { ids: new Set([...base, ...ai, ...review]), base, ai, review, agent };
+    return { ids: new Set([...base, ...ai, ...review]), base, ai, review, agent, deferred };
   }
 
   /* ---------- what a stop leans on, and what leans on it ---------- */
@@ -293,6 +334,7 @@ export function buildModel(def: MapDef) {
     STATIONS, STATION_BY_ID, GATE_BY_ID, gateRow, gateBottom, SEQ, stationsOn,
     FOCUS, FOCUS_STOPS, FOCUS_START, focusLinesOf, focusForRole,
     STAGES, STAGE_BY_ID,
+    SIZES, SIZE_BY_ID, sizeFrom, sizeNote,
     AI_STOPS_FULL, AI_STOPS_LITE, AI_REVIEW_STOPS, isTechRole,
     buildRoute, dependenciesOf, nextGateFor,
   };

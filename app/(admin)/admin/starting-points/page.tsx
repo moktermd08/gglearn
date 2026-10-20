@@ -68,6 +68,7 @@ export default async function StartingPoints({ searchParams }: { searchParams: P
         <>
           <Section title={person.name} subtitle={`${person.email} · ${person.jobRole}`} action={<div style={{ display: "flex", gap: 8 }}>
             <LinkButton href={`/map?as=${person.id}`} size="sm" variant="ghost">Their business map</LinkButton>
+            <LinkButton href={`/map/public?as=${person.id}`} size="sm" variant="ghost">Their public sector map</LinkButton>
             <LinkButton href={`/map/software?as=${person.id}`} size="sm" variant="ghost">Their software map</LinkButton>
             <LinkButton href="/admin/starting-points" size="sm" variant="ghost">Someone else</LinkButton></div>}>
             {view.rows.length === 0 ? <p style={{ fontSize: 13, color: "var(--muted)" }}>{firstName} has no level in any track yet.</p> : (

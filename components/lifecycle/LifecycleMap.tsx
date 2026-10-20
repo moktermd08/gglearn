@@ -45,6 +45,9 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
   const [stage, setStage] = useState<StageId | null>(initial?.role ? null : initial?.stage ?? null);
   const [stageOpen, setStageOpen] = useState(!!stage); // the panel that explains the chosen company stage
   const [stagePicker, setStagePicker] = useState(false);
+  const [orgSize, setOrgSize] = useState<string | null>(initial?.size ?? null); // organisation size: what the map lights up depends on how big the body is
+  const [sizeOpen, setSizeOpen] = useState(!!initial?.size);
+  const [sizePicker, setSizePicker] = useState(false);
   const [picker, setPicker] = useState(false);
   const [pq, setPq] = useState("");
   const [races, setRaces] = useState(false);
@@ -62,7 +65,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
 
   const role = useMemo<RoleInfo | null>(() => data.roles.find((r) => r.key === roleKey) ?? null, [roleKey, data.roles]);
   /* The route: the stops a role's career ladder asks for (or an area's hand-picked stops), seen through the chosen AI lens. */
-  const route = useMemo(() => M.buildRoute(role, focus, mode, stage), [M, role, focus, mode, stage]);
+  const route = useMemo(() => M.buildRoute(role, focus, mode, stage, orgSize), [M, role, focus, mode, stage, orgSize]);
   const routeIds = route.ids;
   const litLines = useMemo(() => new Set<LineId>(M.STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.line)), [M, routeIds]);
   const dimming = routeIds.size < M.STATIONS.length;
@@ -196,31 +199,43 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
     const cx = n ? M.px(n.x) : M.px(g!.x), cy = n ? M.py(n.row) : (M.py(M.gateRow(g!)) + M.py(M.gateBottom(g!))) / 2;
     centreOn(cx, cy, Math.max(viewRef.current.k, narrow ? 0.8 : 1.05), true, narrow ? 0 : 380, narrow);
   };
-  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); setStagePicker(false); setStage(null); setStageOpen(false); setCtrl(false); const r = M.buildRoute(null, id, mode); frameLines(new Set<LineId>(M.STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids); };
+  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); setStagePicker(false); setStage(null); setStageOpen(false); setCtrl(false); const r = M.buildRoute(null, id, mode, null, orgSize); frameLines(new Set<LineId>(M.STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids); };
   const chooseRole = (key: string | null) => {
     setRoleKey(key); setPicker(false); setStagePicker(false); setStage(null); setStageOpen(false); setPq(""); setSel(null); setHint(false); setCtrl(false);
     const r = data.roles.find((x) => x.key === key);
     if (!r) { setFocus("all"); frameLines(new Set<LineId>(M.LINES.map((l) => l.id))); return; }
-    const rt = M.buildRoute(r, "all", mode);
+    const rt = M.buildRoute(r, "all", mode, null, orgSize);
     frameLines(new Set<LineId>(M.STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
   };
   const chooseStage = (id: StageId) => {
     setStage(id); setRoleKey(null); setFocus("all"); setSel(null); setHint(false); setPicker(false); setStagePicker(false); setCtrl(false); setStageOpen(!narrow);
-    const r = M.buildRoute(null, "all", mode, id);
+    const r = M.buildRoute(null, "all", mode, id, orgSize);
     frameLines(new Set<LineId>(M.STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids, M.STAGE_BY_ID.get(id)?.start);
   };
   const chooseMode = (m: AiMode) => {
     setMode(m); setSel(null); setHint(false);
-    const rt = M.buildRoute(role, focus, m, stage);
+    const rt = M.buildRoute(role, focus, m, stage, orgSize);
     frameLines(new Set<LineId>(M.STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids, !role && stage ? M.STAGE_BY_ID.get(stage)?.start : undefined);
+  };
+  const chooseSize = (id: string | null) => {
+    setOrgSize(id); setSizePicker(false); setStagePicker(false); setPicker(false); setSel(null); setHint(false); setCtrl(false); setSizeOpen(!!id && !narrow);
+    const rt = M.buildRoute(role, focus, mode, stage, id);
+    frameLines(new Set<LineId>(M.STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids, !role && stage ? M.STAGE_BY_ID.get(stage)?.start : undefined);
+  };
+  /** What the chosen size means for one stop: who usually owns it, a note if it differs, and when it starts to matter. */
+  const sizeInfo = (stopId: string) => {
+    const z = orgSize ? M.SIZE_BY_ID.get(orgSize) : null;
+    if (!orgSize || !z) return null;
+    const si = M.SIZES.findIndex((x) => x.id === orgSize), at = M.sizeFrom(stopId);
+    return { label: z.label, text: M.sizeNote(stopId, orgSize) ?? z.owner, later: at > si ? M.SIZES[at].label : null };
   };
   const goNext = () => { if (next) pick({ kind: "st", id: next.id }); };
 
   /* The address bar always holds the current route, so it can be copied as it is; Share also offers it to the phone's share sheet. */
   const query = useMemo(() => {
     const keepAll = !roleKey && !stage && focus === "all" && (!!data.defaultRole || data.defaultFocus !== "all"); // "everything" is a choice when someone's own default is narrower
-    return pickQuery({ role: roleKey, area: !roleKey && !stage && (focus !== "all" || keepAll) ? focus : null, stage: roleKey ? null : stage, mode });
-  }, [roleKey, focus, stage, mode, data.defaultRole, data.defaultFocus]);
+    return pickQuery({ role: roleKey, area: !roleKey && !stage && (focus !== "all" || keepAll) ? focus : null, stage: roleKey ? null : stage, size: orgSize, mode });
+  }, [roleKey, focus, stage, orgSize, mode, data.defaultRole, data.defaultFocus]);
   const asId = data.viewingAs?.id; // a manager's view of someone else's map stays in the address bar, but is never put in a share link
   useEffect(() => { if (standalone) window.history.replaceState(null, "", `${window.location.pathname}${asId ? `${query ? `${query}&` : "?"}as=${asId}` : query}`); }, [standalone, query, asId]);
   const share = async () => {
@@ -238,7 +253,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
   );
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === "Escape") setSel(null); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, []);
 
-  const panel = !!sel || !!(stage && stageOpen); // something is open on the right
+  const panel = !!sel || !!(stage && stageOpen) || !!(orgSize && sizeOpen); // something is open on the right
   const showLabels = view.k >= 0.55;
   const selStation = sel?.kind === "st" ? M.STATION_BY_ID.get(sel.id) ?? null : null;
   const selGate = sel?.kind === "gt" ? M.GATE_BY_ID.get(sel.id) ?? null : null;
@@ -422,19 +437,41 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
                 </div>
                 <div className="relative mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-300">
                   <span>or I am a</span>
-                  <button type="button" onClick={() => { setPicker((v) => !v); setStagePicker(false); }} aria-expanded={picker} aria-haspopup="listbox"
+                  <button type="button" onClick={() => { setPicker((v) => !v); setStagePicker(false); setSizePicker(false); }} aria-expanded={picker} aria-haspopup="listbox"
                     className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${role ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
                     {role ? aiRoleName(role.name, mode) : "Choose your role"}<ChevronDown size={15} />
                   </button>
-                  <span>or my company is</span>
-                  <button type="button" onClick={() => { setStagePicker((v) => !v); setPicker(false); }} aria-expanded={stagePicker} aria-haspopup="listbox"
+                  <span>{M.words.stageIs ?? "or my company is"}</span>
+                  <button type="button" onClick={() => { setStagePicker((v) => !v); setPicker(false); setSizePicker(false); }} aria-expanded={stagePicker} aria-haspopup="listbox"
                     className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${stage ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
                     <span className="max-w-[11rem] truncate">{stage ? M.STAGE_BY_ID.get(stage)!.label : "At a stage…"}</span><ChevronDown size={15} className="shrink-0" />
                   </button>
+                  {M.SIZES.length > 0 && (
+                    <>
+                      <span>and it is</span>
+                      <button type="button" onClick={() => { setSizePicker((v) => !v); setPicker(false); setStagePicker(false); }} aria-expanded={sizePicker} aria-haspopup="listbox"
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${orgSize ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
+                        {orgSize ? M.SIZE_BY_ID.get(orgSize)!.label : "Any size"}<ChevronDown size={15} />
+                      </button>
+                    </>
+                  )}
+              {sizePicker && (
+                <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(24rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
+                  <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">How big is your organisation?</p>
+                  <ul role="listbox" aria-label="Organisation sizes">
+                    <li><button type="button" role="option" aria-selected={!orgSize} onClick={() => chooseSize(null)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5"><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Any size</span><span className="block text-[12px] text-slate-400">Show every stop</span></span>{!orgSize && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                    {M.SIZES.map((z, i) => (
+                      <li key={z.id}><button type="button" role="option" aria-selected={z.id === orgSize} onClick={() => chooseSize(z.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
+                        <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#14161f] text-[11px] font-bold text-[#fff]">{i + 1}</span>
+                        <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{z.label}</span><span className="block text-[12px] text-slate-400">{z.people}</span></span>{z.id === orgSize && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {stagePicker && (
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(24rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
-                  <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Where is your company?</p>
-                  <ul role="listbox" aria-label="Company stages">
+                  <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">{M.words.stageAsk ?? "Where is your company?"}</p>
+                  <ul role="listbox" aria-label="Stages">
                     {M.STAGES.map((g, i) => (
                       <li key={g.id}><button type="button" role="option" aria-selected={g.id === stage} onClick={() => chooseStage(g.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
                         <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#14161f] text-[11px] font-bold text-[#fff]">{i + 1}</span>
@@ -481,6 +518,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
                       <button type="button" onClick={() => setAiOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-slate-400 underline decoration-dotted hover:text-indigo-300">Working with AI?</button>
                     ))}
                   {ends && <p className="text-[12.5px] text-slate-400">{data.viewingAs ? "Their route" : "Your route"}: {ends.count} stops, from <b className="font-semibold">{ends.from.name}</b> to <b className="font-semibold">{ends.goal.name}</b>.</p>}
+                  {orgSize && !sizeOpen && !sel && <button type="button" onClick={() => setSizeOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-indigo-300 underline decoration-dotted">About this size</button>}
                   {stage && !stageOpen && !sel && <button type="button" onClick={() => setStageOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-indigo-300 underline decoration-dotted">About this stage</button>}
                   {shareButton}
                 </div>
@@ -596,11 +634,12 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
         )}
       </div>
 
-      {/* where the company is */}
-      {stage && stageOpen && !sel && (
+      {/* where the company is, and how big it is */}
+      {((stage && stageOpen) || (orgSize && sizeOpen)) && !sel && (
         <aside aria-live="polite" style={{ "--panel-top": `${Math.max(20, headH - 12)}px` } as React.CSSProperties} className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-[var(--panel-top)] sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
-          <button type="button" onClick={() => setStageOpen(false)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          <StagePanel id={stage} count={routeIds.size} onStop={(sid) => pick({ kind: "st", id: sid })} onGate={(gid) => pick({ kind: "gt", id: gid })} onStage={chooseStage} />
+          <button type="button" onClick={() => { setStageOpen(false); setSizeOpen(false); }} aria-label="Close" className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
+          {stage && stageOpen && <StagePanel id={stage} count={routeIds.size} onStop={(sid) => pick({ kind: "st", id: sid })} onGate={(gid) => pick({ kind: "gt", id: gid })} onStage={chooseStage} />}
+          {orgSize && sizeOpen && <SizePanel id={orgSize} later={route.deferred.size} onSize={chooseSize} />}
         </aside>
       )}
 
@@ -608,8 +647,8 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
       {(selStation || selGate) && (
         <aside aria-live="polite" style={{ "--panel-top": `${Math.max(20, headH - 12)}px` } as React.CSSProperties} className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-[var(--panel-top)] sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} who={data.viewingAs} canGrant={data.canGrant} onGo={(s) => pick({ kind: "st", id: s.id })} />}
-          {selGate && <GateCard g={selGate} tracks={data.tracks} />}
+          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} who={data.viewingAs} canGrant={data.canGrant} size={sizeInfo(selStation.id)} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selGate && <GateCard g={selGate} tracks={data.tracks} formal={orgSize ? { label: M.SIZE_BY_ID.get(orgSize)?.label ?? "", text: M.SIZE_BY_ID.get(orgSize)?.formal ?? "" } : null} />}
         </aside>
       )}
     </section>
@@ -617,7 +656,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
   );
 }
 
-function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, who, canGrant, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; who: { id: number; name: string } | null; canGrant: boolean; onGo: (s: Station) => void }) {
+function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, who, canGrant, size, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; who: { id: number; name: string } | null; canGrant: boolean; size: { label: string; text: string; later: string | null } | null; onGo: (s: Station) => void }) {
   const M = useModel();
   const line = M.LINE_BY_ID[st.line], c = M.LINE_COLOUR[st.line], z = M.zoneOf(st.x);
   const seq = M.stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
@@ -657,6 +696,14 @@ function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, r
           <div><h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">You bring</h3><ul className="space-y-1">{st.ins.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">←</span>{t}</li>)}</ul></div>
           <div><h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">You leave with</h3><ul className="space-y-1">{st.outs.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">→</span>{t}</li>)}</ul></div>
         </div>
+
+        {size && (
+          <div className="rounded-2xl bg-indigo-50 p-3 text-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-indigo-300">At {size.label} size</p>
+            <p className="mt-0.5">{size.text}</p>
+            {size.later && <p className="mt-1 text-slate-400">This can wait until you are {size.later} size.</p>}
+          </div>
+        )}
 
         {gate && (
           <div className="rounded-2xl border-l-4 border-rose-400 bg-rose-50 p-3 text-sm">
@@ -770,7 +817,7 @@ function StagePanel({ id, count, onStop, onGate, onStage }: { id: StageId; count
       <div className="h-2.5 rounded-t-3xl bg-[#14161f]" />
       <div className="space-y-4 p-5">
         <div className="pr-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Company stage {i + 1} of {M.STAGES.length}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">{M.words.stageWord ?? "Company stage"} {i + 1} of {M.STAGES.length}</p>
           <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{g.label}</h2>
           <p className="mt-1 text-sm text-slate-400">{g.blurb}</p>
         </div>
@@ -802,7 +849,44 @@ function StagePanel({ id, count, onStop, onGate, onStage }: { id: StageId; count
   );
 }
 
-function GateCard({ g, tracks }: { g: Gate; tracks: Record<string, TrackInfo> }) {
+/** What an organisation of this size looks like, what changes on the map, what usually goes wrong, and what can wait until it is bigger. */
+function SizePanel({ id, later, onSize }: { id: string; later: number; onSize: (id: string) => void }) {
+  const M = useModel();
+  const i = M.SIZES.findIndex((z) => z.id === id), z = M.SIZES[i], bigger = M.SIZES[i + 1] ?? null;
+  if (!z) return null;
+  return (
+    <div>
+      <div className="h-2.5 rounded-t-3xl bg-indigo-500" />
+      <div className="space-y-4 p-5">
+        <div className="pr-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Organisation size {i + 1} of {M.SIZES.length}</p>
+          <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{z.label}</h2>
+          <p className="mt-0.5 text-sm font-semibold text-slate-300">{z.people}</p>
+          <p className="mt-1 text-sm text-slate-400">{z.blurb}</p>
+        </div>
+        <div className="flex items-center gap-1" aria-hidden>{M.SIZES.map((x, n) => <span key={x.id} className={`h-1.5 flex-1 rounded-full ${n < i ? "bg-indigo-300" : n === i ? "bg-indigo-500" : "bg-black/10"}`} />)}</div>
+        <div>
+          <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">What changes at this size</h3>
+          <ul className="space-y-1.5 text-sm">{z.changes.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">→</span>{t}</li>)}</ul>
+        </div>
+        {later > 0 && <p className="text-sm"><b>{later} stop{later === 1 ? "" : "s"}</b> on this route can wait until you are bigger. They are dimmed, not removed.</p>}
+        <div>
+          <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-rose-300">Where it usually goes wrong</h3>
+          <ul className="space-y-1.5">{z.challenges.map((t) => <li key={t} className="rounded-2xl border-l-4 border-rose-400 bg-rose-50 p-3 text-sm">{t}</li>)}</ul>
+        </div>
+        <div className="rounded-2xl border border-black/10 bg-[#fbfaf6] p-3.5 text-sm">
+          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Who usually owns a stop</p>
+          <p className="mt-0.5">{z.owner}</p>
+          <p className="mt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">How formal a handoff is</p>
+          <p className="mt-0.5">{z.formal}</p>
+        </div>
+        {bigger && <button type="button" onClick={() => onSize(bigger.id)} className="btn btn-ghost !px-3 text-[13px]">See {bigger.label}<ArrowRight size={14} /></button>}
+      </div>
+    </div>
+  );
+}
+
+function GateCard({ g, tracks, formal }: { g: Gate; tracks: Record<string, TrackInfo>; formal: { label: string; text: string } | null }) {
   const M = useModel();
   const z = M.zoneOf(g.x);
   const near = [...new Set(M.STATIONS.filter((s) => g.lines.includes(s.line) && Math.abs(s.x - g.x) <= 3).map((s) => s.track))].map((slug) => tracks[slug]).filter(Boolean).slice(0, 5);
@@ -820,6 +904,7 @@ function GateCard({ g, tracks }: { g: Gate; tracks: Record<string, TrackInfo> })
           <div><h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Leaves the gate</h3><ul className="space-y-1">{g.outs.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">→</span>{t}</li>)}</ul></div>
         </div>
         <div className="rounded-2xl border-l-4 border-rose-400 bg-rose-50 p-3 text-sm"><p className="text-[11px] font-semibold uppercase tracking-[.14em] text-rose-300">Where it usually breaks</p><p className="mt-0.5">{g.fail}</p></div>
+        {formal && <div className="rounded-2xl bg-indigo-50 p-3 text-sm"><p className="text-[11px] font-semibold uppercase tracking-[.14em] text-indigo-300">At {formal.label} size</p><p className="mt-0.5">{formal.text}</p></div>}
         {near.length > 0 && <div><h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Get this right: learn</h3><div className="flex flex-wrap gap-1.5">{near.map((t) => t.open ? <Link key={t.slug} href={`/tracks/${t.slug}`} className="rounded-full border border-black/15 bg-[#fff] px-3 py-1 text-[13px] font-semibold hover:border-indigo-400 hover:text-indigo-300">{t.name}</Link> : <span key={t.slug} className="rounded-full border border-black/10 px-3 py-1 text-[13px] text-slate-400">{t.name}</span>)}</div></div>}
       </div>
     </div>

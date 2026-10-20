@@ -142,7 +142,7 @@ export default async function Home() {
           </svg>
         </div>
       </Link>
-      <p className="-mt-3 text-center text-sm text-slate-400">Building software? <Link href="/map/software" className="font-semibold text-indigo-300 hover:underline">See the software lifecycle map</Link></p>
+      <p className="-mt-3 text-center text-sm text-slate-400">Public body? <Link href="/map/public" className="font-semibold text-indigo-300 hover:underline">See the public sector map</Link>. Building software? <Link href="/map/software" className="font-semibold text-indigo-300 hover:underline">See the software lifecycle map</Link></p>
 
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4" aria-label="The academy in numbers">
         <StatTile i={0} Icon={BookOpen} label="Subjects" value={rows.length} color={PALETTE.indigo} />

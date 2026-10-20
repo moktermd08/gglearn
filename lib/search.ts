@@ -24,6 +24,7 @@ const PAGES: { title: string; href: string; words: string; need?: "in" | "out" |
   { title: "Campaigns", href: "/campaigns", words: "public races leagues careers ai prizes" },
   { title: "Contests", href: "/competitions", words: "races competitions live watch" },
   { title: "Business map", href: "/map", words: "business company founder startup stages lifecycle stops transit map idea launch grow" },
+  { title: "Public sector map", href: "/map/public", words: "public sector council government local authority nhs agency service programme business case procurement stages size small medium large enterprise" },
   { title: "Software lifecycle map", href: "/map/software", words: "software lifecycle stops transit map engineering delivery" },
   { title: "Sign in", href: "/login", words: "log in login password", need: "out" },
   { title: "Create a free account", href: "/signup", words: "sign up register join", need: "out" },

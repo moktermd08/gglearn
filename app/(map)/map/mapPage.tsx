@@ -24,6 +24,9 @@ export function queryOf(sp: Record<string, string | string[] | undefined>): stri
   return s ? `?${s}` : "";
 }
 
+/** Maps whose links were made when /map was theirs: a newer map's names must never capture them. */
+const LEGACY_MAPS = ["software"];
+
 /**
  * The map a link was made for, when it is not the default: a link that uses the AI lens, or an area or company stage only another map has,
  * was made before the default changed. Roles and ids both maps share stay on the default.
@@ -31,7 +34,7 @@ export function queryOf(sp: Record<string, string | string[] | undefined>): stri
 export function elsewhere(sp: Record<string, string | string[] | undefined>): string | null {
   const here = MAPS[DEFAULT_MAP], ai = one(sp.ai), area = one(sp.area), stage = one(sp.stage);
   for (const m of Object.values(MAPS)) {
-    if (m.id === here.id) continue;
+    if (m.id === here.id || !LEGACY_MAPS.includes(m.id)) continue; // only maps whose links existed before the default changed
     if (ai && m.hasAi && !here.hasAi) return m.id;
     if (area && m.FOCUS.some((f) => f.id === area) && !here.FOCUS.some((f) => f.id === area)) return m.id;
     if (stage && m.STAGES.some((g) => g.id === stage) && !here.STAGES.some((g) => g.id === stage)) return m.id;
