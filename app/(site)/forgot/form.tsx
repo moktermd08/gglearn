@@ -5,17 +5,17 @@ import { CircleCheck, Info, KeyRound, Mail, TriangleAlert } from "lucide-react";
 import { requestPasswordReset } from "@/app/actions";
 import { AuthShell } from "@/components/AuthShell";
 
-export default function ForgotForm({ mailReady }: { mailReady: boolean }) {
+export default function ForgotForm({ mailReady, onMode }: { mailReady: boolean; onMode?: (m: "login") => void }) {
   const [res, run, pending] = useActionState(requestPasswordReset, null);
   const sent = res === "ok", input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
   return (
-    <AuthShell title="Locked out? No problem." lead="Tell us your email and we will send a link to choose a new password.">
+    <AuthShell modal={!!onMode} title="Locked out? No problem." lead="Tell us your email and we will send a link to choose a new password.">
       {sent ? (
         <div className="space-y-3 text-center">
           <CircleCheck size={34} className="mx-auto text-emerald-500" />
           <h1 className="text-xl font-extrabold">Check your email</h1>
           <p className="text-sm text-slate-300">If that address has an account, a link to choose a new password is on its way. It works once and lasts an hour. Look in your spam folder if it does not arrive in a few minutes.</p>
-          <Link href="/login" className="btn btn-ghost">Back to sign in</Link>
+          {onMode ? <button type="button" onClick={() => onMode("login")} className="btn btn-ghost">Back to sign in</button> : <Link href="/login" className="btn btn-ghost">Back to sign in</Link>}
         </div>
       ) : (
         <form action={run} className="space-y-3">
@@ -25,7 +25,7 @@ export default function ForgotForm({ mailReady }: { mailReady: boolean }) {
             <input name="email" type="email" placeholder="Your email" required className={`${input} !pl-9`} autoComplete="email" /></div>
           {res && res !== "ok" && <p role="alert" className="flex items-center gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} />{res}</p>}
           <button disabled={pending} className="btn disabled:opacity-50"><Mail size={16} />{pending ? "Sending…" : "Send me a link"}</button>
-          <p className="text-center text-sm text-slate-400">Remembered it? <Link href="/login" className="font-semibold text-indigo-300 underline">Sign in</Link></p>
+          <p className="text-center text-sm text-slate-400">Remembered it? {onMode ? <button type="button" onClick={() => onMode("login")} className="font-semibold text-indigo-300 underline">Sign in</button> : <Link href="/login" className="font-semibold text-indigo-300 underline">Sign in</Link>}</p>
         </form>
       )}
     </AuthShell>

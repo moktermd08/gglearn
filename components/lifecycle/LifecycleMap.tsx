@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Lock, Minus, Plus, Search, Share2, Trophy, X } from "lucide-react";
 import { setJourneyMode } from "@/app/actions";
+import { AuthModal, type AuthKit, type AuthMode } from "./AuthModal";
 import { PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import { pickQuery, type RoutePick } from "@/lib/lifecycle/share";
 import {
@@ -31,7 +32,7 @@ type Mark = "none" | "learning" | "solid" | "titan";
 const markOf = (t: TrackInfo | undefined): Mark => !t || t.passed <= 0 ? "none" : t.passed >= 20 ? "titan" : t.passed >= 5 ? "solid" : "learning";
 
 /** `standalone` makes the map a page of its own: full height, with its own slim top bar (brand and a way back) instead of the site header. `initial` is a route carried by a shared link: it wins over the signed-in person's own defaults. */
-export function LifecycleMap({ mapId, data, signage, standalone, initial }: { mapId: string; data: MapData; signage: string; standalone?: { brand: string }; initial?: RoutePick }) {
+export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }: { mapId: string; data: MapData; signage: string; standalone?: { brand: string }; initial?: RoutePick; auth?: AuthKit }) {
   const M = MAPS[mapId] ?? MAPS.software;
   const boxRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
@@ -59,6 +60,10 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
   const [legend, setLegend] = useState(false);
   useEffect(() => { const t = setTimeout(() => setHint(false), 7000); return () => clearTimeout(t); }, []);
   const [mode, setMode] = useState<AiMode>(initial?.mode ?? "human");
+  // `auth` makes "Sign in" a dialog over the map; signing in returns to the address the map had when it was opened (route and all)
+  const [authMode, setAuthMode] = useState<AuthMode | null>(null);
+  const [back, setBack] = useState("/map");
+  const openSignIn = auth ? () => { setBack(window.location.pathname + window.location.search); setAuthMode("login"); } : undefined;
   const [copied, setCopied] = useState(false);
   const narrow = size.w > 0 && size.w < 900;
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
@@ -261,6 +266,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
   return (
     <ModelCtx.Provider value={M}>
     <section aria-label={M.words.aria} className={`lm relative isolate overflow-hidden bg-[#fbfaf6] ${signage}`} style={{ height: standalone ? "100svh" : "calc(100svh - 3.4rem)", minHeight: 520 }}>
+      {auth && authMode && !data.signedIn && <AuthModal mode={authMode} kit={auth} next={back} onMode={setAuthMode} onClose={() => setAuthMode(null)} />}
       <style>{`
         .lm .ln{animation:draw 1.6s cubic-bezier(.4,0,.2,1) both}
         .lm .pulse{animation:lmpulse 2s ease-out infinite;transform-box:fill-box;transform-origin:center}
@@ -406,7 +412,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
               </span>
             )}
             <span className="ml-auto flex items-center gap-2">
-              {data.signedIn ? <Link href="/dashboard" className="font-semibold text-indigo-300 hover:underline">My quest</Link> : <Link href="/login" className="btn !px-3.5 !py-1 text-[13px]">Sign in</Link>}
+              {data.signedIn ? <Link href="/dashboard" className="font-semibold text-indigo-300 hover:underline">My quest</Link> : openSignIn ? <button type="button" onClick={openSignIn} className="btn !px-3.5 !py-1 text-[13px]">Sign in</button> : <Link href="/login" className="btn !px-3.5 !py-1 text-[13px]">Sign in</Link>}
             </span>
           </div>
         )}
@@ -647,7 +653,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
       {(selStation || selGate) && (
         <aside aria-live="polite" style={{ "--panel-top": `${Math.max(20, headH - 12)}px` } as React.CSSProperties} className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-[var(--panel-top)] sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} who={data.viewingAs} canGrant={data.canGrant} size={sizeInfo(selStation.id)} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onSignIn={openSignIn} who={data.viewingAs} canGrant={data.canGrant} size={sizeInfo(selStation.id)} onGo={(s) => pick({ kind: "st", id: s.id })} />}
           {selGate && <GateCard g={selGate} tracks={data.tracks} formal={orgSize ? { label: M.SIZE_BY_ID.get(orgSize)?.label ?? "", text: M.SIZE_BY_ID.get(orgSize)?.formal ?? "" } : null} />}
         </aside>
       )}
@@ -656,7 +662,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial }: { ma
   );
 }
 
-function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, who, canGrant, size, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; who: { id: number; name: string } | null; canGrant: boolean; size: { label: string; text: string; later: string | null } | null; onGo: (s: Station) => void }) {
+function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, onSignIn, who, canGrant, size, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onSignIn?: () => void; who: { id: number; name: string } | null; canGrant: boolean; size: { label: string; text: string; later: string | null } | null; onGo: (s: Station) => void }) {
   const M = useModel();
   const line = M.LINE_BY_ID[st.line], c = M.LINE_COLOUR[st.line], z = M.zoneOf(st.x);
   const seq = M.stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
@@ -782,7 +788,7 @@ function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, r
                 ? <span className="btn mt-3 w-full cursor-not-allowed justify-center !bg-slate-400 opacity-70" aria-disabled><Lock size={15} />Locked</span>
                 : <Link href={`/tracks/${info.slug}`} className="btn mt-3 w-full justify-center">{lvl > 0 ? "Continue" : "Start learning"}<ArrowRight size={16} /></Link>
               : <p className="mt-3 text-sm text-slate-400">This track is not part of your plan.</p>}
-            {!signedIn && <p className="mt-2 text-center text-xs text-slate-400"><Link href="/login" className="font-semibold text-indigo-300 hover:underline">Sign in</Link> to see your own progress here.</p>}
+            {!signedIn && <p className="mt-2 text-center text-xs text-slate-400">{onSignIn ? <button type="button" onClick={onSignIn} className="font-semibold text-indigo-300 hover:underline">Sign in</button> : <Link href="/login" className="font-semibold text-indigo-300 hover:underline">Sign in</Link>} to see your own progress here.</p>}
           </div>
         )}
 

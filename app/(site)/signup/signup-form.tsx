@@ -5,13 +5,13 @@ import { Eye, EyeOff, KeyRound, Mail, Rocket, TriangleAlert, User } from "lucide
 import { signUp } from "@/app/actions";
 import { AuthShell } from "@/components/AuthShell";
 
-export default function SignUpForm({ next = "", refCode = "", tried = "", social = null }: { next?: string; refCode?: string; tried?: string; social?: React.ReactNode }) {
+export default function SignUpForm({ next = "", refCode = "", tried = "", social = null, onMode }: { next?: string; refCode?: string; tried?: string; social?: React.ReactNode; onMode?: (m: "login") => void }) {
   const [error, run, pending] = useActionState(signUp, null);
   const [show, setShow] = useState(false);
   const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
   const signIn = next ? `/login?next=${encodeURIComponent(next)}` : "/login";
   return (
-    <AuthShell title="Start your climb." lead="Free. Pick a subject, find your level and race a rival in under a minute.">
+    <AuthShell modal={!!onMode} title="Start your climb." lead="Free. Pick a subject, find your level and race a rival in under a minute.">
       {social}
       <form action={run} className="space-y-3">
         <input type="hidden" name="next" value={next} />
@@ -29,7 +29,7 @@ export default function SignUpForm({ next = "", refCode = "", tried = "", social
         {error && <p role="alert" className="slide-in flex items-center gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} />{error}</p>}
         <button disabled={pending} className="btn disabled:opacity-50"><Rocket size={16} />{pending ? "Creating…" : "Create account and start"}</button>
       </form>
-      <p className="mt-4 text-center text-sm text-slate-400">Already have an account? <Link href={signIn} className="font-semibold text-indigo-300 underline">Sign in</Link>. Joining a company or brand? Use the invite link they sent you.</p>
+      <p className="mt-4 text-center text-sm text-slate-400">Already have an account? {onMode ? <button type="button" onClick={() => onMode("login")} className="font-semibold text-indigo-300 underline">Sign in</button> : <Link href={signIn} className="font-semibold text-indigo-300 underline">Sign in</Link>}. Joining a company or brand? Use the invite link they sent you.</p>
     </AuthShell>
   );
 }

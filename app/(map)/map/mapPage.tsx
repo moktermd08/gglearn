@@ -5,6 +5,8 @@ import { db, users } from "@/lib/db";
 import { reachOf, userInReach } from "@/lib/tenancy";
 import { lookFor } from "@/lib/brand";
 import { LifecycleMap } from "@/components/lifecycle/LifecycleMap";
+import { SocialButtons } from "@/components/SocialButtons";
+import { mailConfigured } from "@/lib/mail";
 import { mapDataFor } from "@/lib/lifecycle/server";
 import { signage } from "@/lib/lifecycle/font";
 import { loadRoles } from "@/lib/lifecycle/roles";
@@ -65,5 +67,8 @@ export async function MapView({ m, searchParams }: { m: MapModel; searchParams: 
     if (t && t.status === "active" && userInReach(reachOf(me.id), t.id)) { subject = t; viewingAs = { id: t.id, name: t.name }; }
   }
   const canGrant = !!me && me.role !== "learner";
-  return <LifecycleMap mapId={m.id} data={mapDataFor(subject, m, { viewingAs, canGrant })} signage={signage.className} standalone={{ brand: lookFor(me?.id).name }} initial={pick} />;
+  // signed-out visitors sign in or sign up in a dialog over the map; signing in comes back to it
+  const home = m.id === DEFAULT_MAP ? "/map" : `/map/${m.id}`;
+  const auth = me ? undefined : { login: <SocialButtons next={home} />, signup: <SocialButtons verb="Sign up" />, mailReady: mailConfigured() };
+  return <LifecycleMap mapId={m.id} data={mapDataFor(subject, m, { viewingAs, canGrant })} signage={signage.className} standalone={{ brand: lookFor(me?.id).name }} initial={pick} auth={auth} />;
 }
