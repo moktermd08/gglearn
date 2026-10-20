@@ -4,13 +4,13 @@ import { MAX_LEVEL } from "@/lib/levels";
 import { campaignViews } from "@/lib/campaigns";
 import { loadRoles } from "./roles";
 import { journeyFor } from "@/lib/journeyLock";
-import { STATIONS, focusForRole, type MapData, type RaceInfo, type TrackInfo } from "./model";
+import type { MapData, MapModel, RaceInfo, TrackInfo } from "./engine";
 
 type Viewer = Parameters<typeof requirementsFor>[0] & { name: string; jobRole: string };
 
 /** Everything the home-page map needs about the tracks behind its stations, and how this visitor is doing in each. Signed-out visitors see the map untouched. */
-export function mapDataFor(viewer: Viewer | null): MapData {
-  const slugs = new Set(STATIONS.map((s) => s.track));
+export function mapDataFor(viewer: Viewer | null, m: MapModel): MapData {
+  const slugs = new Set(m.STATIONS.map((s) => s.track));
   const rows = catalog().filter((t) => slugs.has(t.slug));
   const scopes = viewer ? scopesOf(viewer.id) : [];
   const reqs = viewer ? new Map(requirementsFor(viewer, scopes).map((r) => [r.track.slug, r])) : null;
@@ -35,7 +35,7 @@ export function mapDataFor(viewer: Viewer | null): MapData {
   const j = viewer ? journeyFor(viewer.id) : null;
   return {
     journey: j && { roleName: j.roleName, setting: j.setting, canSwitch: j.canSwitch, locked: j.locked, current: j.current, total: j.total, locks: j.locks, advice: j.advice, stages: j.stages.map((st) => ({ n: st.n, state: st.state, waitingOn: st.waitingOn, tracks: st.tracks.map(({ slug, name, passed, need }) => ({ slug, name, passed, need })) })) },
-    signedIn: !!viewer, firstName: viewer ? viewer.name.split(" ")[0] : null, defaultFocus: focusForRole(viewer?.jobRole), tracks,
+    signedIn: !!viewer, firstName: viewer ? viewer.name.split(" ")[0] : null, defaultFocus: m.focusForRole(viewer?.jobRole), tracks,
     roles: roles.map((r) => ({ key: r.key, name: r.name, family: r.family, blurb: r.blurb, aliases: r.aliases, tracks: r.tracks, core: r.core })), races, defaultRole: roles.some((r) => r.key === mine) ? mine : null,
   };
 }

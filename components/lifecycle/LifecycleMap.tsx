@@ -1,15 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Lock, Minus, Plus, Search, Share2, Trophy, X } from "lucide-react";
 import { setJourneyMode } from "@/app/actions";
 import { PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import { pickQuery, type RoutePick } from "@/lib/lifecycle/share";
 import {
-  AI_MODES, FAMILY_ORDER, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
-  SIZE_LABEL, STAGES, STAGE_BY_ID, aiRoleName, buildRoute, dependenciesOf, nextGateFor, type AiMode, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type StageId, type Station, type TrackInfo,
-} from "@/lib/lifecycle/model";
+  AI_MODES, FAMILY_ORDER, SIZE_LABEL, aiRoleName, type AiMode, type FocusId, type Gate, type LineId, type MapData, type MapModel, type RaceInfo, type RoleInfo, type StageId, type Station, type TrackInfo,
+} from "@/lib/lifecycle/engine";
+import { MAPS, MAP_LIST } from "@/lib/lifecycle/maps";
+
+const ModelCtx = createContext<MapModel>(MAPS.software);
+const useModel = () => useContext(ModelCtx);
 
 type View = { k: number; x: number; y: number };
 type Sel = { kind: "st" | "gt"; id: string } | null;
@@ -27,8 +30,11 @@ type Mark = "none" | "learning" | "solid" | "titan";
 const markOf = (t: TrackInfo | undefined): Mark => !t || t.passed <= 0 ? "none" : t.passed >= 20 ? "titan" : t.passed >= 5 ? "solid" : "learning";
 
 /** `standalone` makes the map a page of its own: full height, with its own slim top bar (brand and a way back) instead of the site header. `initial` is a route carried by a shared link: it wins over the signed-in person's own defaults. */
-export function LifecycleMap({ data, signage, standalone, initial }: { data: MapData; signage: string; standalone?: { brand: string }; initial?: RoutePick }) {
+export function LifecycleMap({ mapId, data, signage, standalone, initial }: { mapId: string; data: MapData; signage: string; standalone?: { brand: string }; initial?: RoutePick }) {
+  const M = MAPS[mapId] ?? MAPS.software;
   const boxRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
+  const [headH, setHeadH] = useState(0); // the header's height, so panels and the camera start below it however many rows it wraps to
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [view, setView] = useState<View>({ k: 0.5, x: 0, y: 0 });
   const [animate, setAnimate] = useState(false);
@@ -55,74 +61,81 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
 
   const role = useMemo<RoleInfo | null>(() => data.roles.find((r) => r.key === roleKey) ?? null, [roleKey, data.roles]);
   /* The route: the stops a role's career ladder asks for (or an area's hand-picked stops), seen through the chosen AI lens. */
-  const route = useMemo(() => buildRoute(role, focus, mode, stage), [role, focus, mode, stage]);
+  const route = useMemo(() => M.buildRoute(role, focus, mode, stage), [M, role, focus, mode, stage]);
   const routeIds = route.ids;
-  const litLines = useMemo(() => new Set<LineId>(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.line)), [routeIds]);
-  const dimming = routeIds.size < STATIONS.length;
+  const litLines = useMemo(() => new Set<LineId>(M.STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.line)), [M, routeIds]);
+  const dimming = routeIds.size < M.STATIONS.length;
 
   /* The next stop: the first required, unfinished stop in your lines; else the first one you have not yet passed at level 5. */
   const next = useMemo<Station | null>(() => {
-    const all = STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
+    const all = M.STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
     // never send someone to a stop that is locked for them: the first stop they can open comes first
     const free = all.filter((s) => !data.journey?.locks[s.track]);
     const mine = free.length ? free : all;
     const t = (s: Station) => data.tracks[s.track];
-    const start = mode !== "human" ? STATION_BY_ID.get("aiuse") : !role && stage ? STATION_BY_ID.get(STAGE_BY_ID.get(stage)!.start) : !role ? STATION_BY_ID.get(FOCUS_START[focus] ?? "") : undefined;
+    const start = mode !== "human" ? M.STATION_BY_ID.get("aiuse") : !role && stage ? M.STATION_BY_ID.get(M.STAGE_BY_ID.get(stage)!.start) : !role ? M.STATION_BY_ID.get(M.FOCUS_START[focus] ?? "") : undefined;
     return mine.find((s) => t(s)?.open && t(s)?.required && t(s)!.passed < t(s)!.requiredLevel)
       ?? (start && routeIds.has(start.id) && (t(start)?.passed ?? 0) < 5 ? start : undefined)
       ?? mine.find((s) => t(s)?.open && (t(s)?.passed ?? 0) < 5) ?? mine[0] ?? null;
-  }, [routeIds, role, focus, mode, stage, data.tracks, data.journey]);
+  }, [M, routeIds, role, focus, mode, stage, data.tracks, data.journey]);
 
   /* Where the route starts and where it ends: the goal is the last stop along it. */
   const ends = useMemo(() => {
     if (!dimming) return null;
-    const on = STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
+    const on = M.STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
     // a company stage names its own first stop; any other route starts at its leftmost stop
-    const from = (!role && stage ? STATION_BY_ID.get(STAGE_BY_ID.get(stage)!.start) : undefined) ?? on[0];
+    const from = (!role && stage ? M.STATION_BY_ID.get(M.STAGE_BY_ID.get(stage)!.start) : undefined) ?? on[0];
     return on.length > 1 ? { from, goal: on[on.length - 1], count: on.length } : null;
-  }, [dimming, routeIds, role, stage]);
+  }, [M, dimming, routeIds, role, stage]);
 
   /* Races: live or upcoming campaigns on the tracks of this route. One flag per track, on the first stop of that track on the route. */
-  const routeTracks = useMemo(() => role ? new Set([...role.tracks, ...(mode !== "human" ? ["ai-llm-practice"] : [])]) : new Set(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.track)), [role, mode, routeIds]);
+  const routeTracks = useMemo(() => role ? new Set([...role.tracks, ...(mode !== "human" ? ["ai-llm-practice"] : [])]) : new Set(M.STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.track)), [M, role, mode, routeIds]);
   const raceList = useMemo(() => data.races.filter((r) => routeTracks.has(r.track)).sort((a, b) => Number(b.state === "live") - Number(a.state === "live") || b.humans - a.humans), [data.races, routeTracks]);
   const racesByTrack = useMemo(() => { const m = new Map<string, RaceInfo[]>(); for (const r of data.races) m.set(r.track, [...(m.get(r.track) ?? []), r]); return m; }, [data.races]);
   const raceAnchor = useMemo(() => {
     const m = new Map<string, number>(), seen = new Set<string>();
-    for (const st of STATIONS.filter((x) => routeIds.has(x.id)).sort((a, b) => a.x - b.x || a.row - b.row)) {
+    for (const st of M.STATIONS.filter((x) => routeIds.has(x.id)).sort((a, b) => a.x - b.x || a.row - b.row)) {
       if (seen.has(st.track) || !racesByTrack.has(st.track)) continue;
       seen.add(st.track); m.set(st.id, racesByTrack.get(st.track)!.length);
     }
     return m;
-  }, [routeIds, racesByTrack]);
+  }, [M, routeIds, racesByTrack]);
 
   /* ---------- camera ---------- */
-  const fitK = size.w && size.h ? Math.min(size.w / W, size.h / H) : 0.5;
+  const fitK = size.w && size.h ? Math.min(size.w / M.W, size.h / M.H) : 0.5;
   const move = useCallback((v: View, smooth: boolean) => { setAnimate(smooth); setView(v); }, []);
   const centreOn = useCallback((cx: number, cy: number, k: number, smooth = true, rightInset = 0, sheet = false) => {
     const kk = Math.min(MAX_K, Math.max(fitK * 0.5, k));
     const top = (narrow ? (size.w < 640 ? 110 : 215) : 0) + chrome, bottom = sheet ? size.h * 0.4 : size.h;
     move({ k: kk, x: (size.w - rightInset) / 2 - cx * kk, y: (top + bottom) / 2 - cy * kk }, smooth);
   }, [fitK, size, narrow, chrome, move]);
-  const frameLines = useCallback((lines: Set<LineId>, smooth = true, ids?: ReadonlySet<string>) => {
+  const frameLines = useCallback((lines: Set<LineId>, smooth = true, ids?: ReadonlySet<string>, startId?: string) => {
     const on = (st: Station) => (ids ? ids.has(st.id) : lines.has(st.line));
-    if (narrow) { const s = STATIONS.filter(on).sort((a, b) => a.x - b.x)[0], rs = LINES.filter((l) => lines.has(l.id)).map((l) => l.row); if (s) centreOn(px(s.x) + 120, py((Math.min(...rs) + Math.max(...rs)) / 2), 0.75, smooth); return; }
-    const rows = LINES.filter((l) => lines.has(l.id)).map((l) => l.row);
-    const y0 = py(Math.min(...rows)) - 120, y1 = py(Math.max(...rows)) + 80, top = (narrow ? 100 : 235) + chrome, bottom = narrow ? 96 : 150; // clear of the header above and the route buttons below
+    if (narrow) { const s = (startId ? M.STATION_BY_ID.get(startId) : undefined) ?? M.STATIONS.filter(on).sort((a, b) => a.x - b.x)[0], rs = M.LINES.filter((l) => lines.has(l.id)).map((l) => l.row); if (s) centreOn(M.px(s.x) + 120, M.py((Math.min(...rs) + Math.max(...rs)) / 2), 0.75, smooth); return; }
+    const rows = M.LINES.filter((l) => lines.has(l.id)).map((l) => l.row);
+    const y0 = M.py(Math.min(...rows)) - 120 - (M.TOP - 170), // a map with more room above its first line keeps its phase titles in view
+       y1 = M.py(Math.max(...rows)) + 80, top = narrow ? 100 + chrome : (headRef.current?.offsetHeight ?? 220) + 6, bottom = narrow ? 96 : 150; // clear of the header above and the route buttons below
     // readable first: about 0.9 unless the lit lines would not fit up and down; the fit button shows the whole map
     const kk = Math.min(1.1, Math.max(0.6, Math.min(0.95, (size.h - top - bottom) / (y1 - y0))));
-    const first = STATIONS.filter(on).sort((p, q) => p.x - q.x)[0], x0 = first ? px(first.x) - 300 : 0;
+    const first = (startId ? M.STATION_BY_ID.get(startId) : undefined) ?? M.STATIONS.filter(on).sort((p, q) => p.x - q.x)[0], x0 = first ? M.px(first.x) - 300 : 0;
     move({ k: kk, x: 16 - Math.max(0, x0) * kk, y: top + Math.max(0, size.h - top - bottom - (y1 - y0) * kk) / 2 - y0 * kk }, smooth);
-  }, [narrow, size, chrome, centreOn, move]);
+  }, [M, narrow, size, chrome, centreOn, move]);
 
-  const fitAll = () => { const k = Math.min((size.w - 32) / W, (size.h - 200 - chrome) / H); move({ k, x: (size.w - W * k) / 2, y: 136 + chrome + (size.h - 200 - chrome - H * k) / 2 }, true); };
+  const fitAll = () => { const k = Math.min((size.w - 32) / M.W, (size.h - 200 - chrome) / M.H); move({ k, x: (size.w - M.W * k) / 2, y: 136 + chrome + (size.h - 200 - chrome - M.H * k) / 2 }, true); };
   useEffect(() => {
     const el = boxRef.current; if (!el) return;
     const ro = new ResizeObserver(() => setSize({ w: el.clientWidth, h: el.clientHeight }));
     ro.observe(el); setSize({ w: el.clientWidth, h: el.clientHeight });
     return () => ro.disconnect();
   }, []);
+  useLayoutEffect(() => {
+    const el = headRef.current; if (!el) return;
+    const ro = new ResizeObserver(() => setHeadH(el.offsetHeight));
+    ro.observe(el); setHeadH(el.offsetHeight);
+    return () => ro.disconnect();
+  }, []);
   const first = useRef(true);
-  useLayoutEffect(() => { if (size.w && first.current) { first.current = false; frameLines(litLines, false, routeIds); } }, [size.w, litLines, routeIds, frameLines]);
+  useLayoutEffect(() => { if (size.w && first.current) { first.current = false; frameLines(litLines, false, routeIds, !roleKey && stage ? M.STAGE_BY_ID.get(stage)?.start : undefined); } }, [size.w, litLines, routeIds, frameLines]); // eslint-disable-line react-hooks/exhaustive-deps -- frames once, from the route the page opened with
 
   /* ---------- pointer: drag to pan, two fingers or ctrl+wheel to zoom ---------- */
   const viewRef = useRef(view);
@@ -178,27 +191,27 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
   const pick = (s: Sel) => {
     setSel(s); setHint(false);
     if (!s) return;
-    const n = s.kind === "st" ? STATION_BY_ID.get(s.id)! : null, g = s.kind === "gt" ? GATE_BY_ID.get(s.id)! : null;
-    const cx = n ? px(n.x) : px(g!.x), cy = n ? py(n.row) : (py(gateRow(g!)) + py(gateBottom(g!))) / 2;
+    const n = s.kind === "st" ? M.STATION_BY_ID.get(s.id)! : null, g = s.kind === "gt" ? M.GATE_BY_ID.get(s.id)! : null;
+    const cx = n ? M.px(n.x) : M.px(g!.x), cy = n ? M.py(n.row) : (M.py(M.gateRow(g!)) + M.py(M.gateBottom(g!))) / 2;
     centreOn(cx, cy, Math.max(viewRef.current.k, narrow ? 0.8 : 1.05), true, narrow ? 0 : 380, narrow);
   };
-  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); setStagePicker(false); setStage(null); setStageOpen(false); setCtrl(false); const r = buildRoute(null, id, mode); frameLines(new Set<LineId>(STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids); };
+  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); setStagePicker(false); setStage(null); setStageOpen(false); setCtrl(false); const r = M.buildRoute(null, id, mode); frameLines(new Set<LineId>(M.STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids); };
   const chooseRole = (key: string | null) => {
     setRoleKey(key); setPicker(false); setStagePicker(false); setStage(null); setStageOpen(false); setPq(""); setSel(null); setHint(false); setCtrl(false);
     const r = data.roles.find((x) => x.key === key);
-    if (!r) { setFocus("all"); frameLines(new Set<LineId>(LINES.map((l) => l.id))); return; }
-    const rt = buildRoute(r, "all", mode);
-    frameLines(new Set<LineId>(STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
+    if (!r) { setFocus("all"); frameLines(new Set<LineId>(M.LINES.map((l) => l.id))); return; }
+    const rt = M.buildRoute(r, "all", mode);
+    frameLines(new Set<LineId>(M.STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
   };
   const chooseStage = (id: StageId) => {
     setStage(id); setRoleKey(null); setFocus("all"); setSel(null); setHint(false); setPicker(false); setStagePicker(false); setCtrl(false); setStageOpen(!narrow);
-    const r = buildRoute(null, "all", mode, id);
-    frameLines(new Set<LineId>(STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids);
+    const r = M.buildRoute(null, "all", mode, id);
+    frameLines(new Set<LineId>(M.STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids, M.STAGE_BY_ID.get(id)?.start);
   };
   const chooseMode = (m: AiMode) => {
     setMode(m); setSel(null); setHint(false);
-    const rt = buildRoute(role, focus, m, stage);
-    frameLines(new Set<LineId>(STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids);
+    const rt = M.buildRoute(role, focus, m, stage);
+    frameLines(new Set<LineId>(M.STATIONS.filter((st) => rt.ids.has(st.id)).map((st) => st.line)), true, rt.ids, !role && stage ? M.STAGE_BY_ID.get(stage)?.start : undefined);
   };
   const goNext = () => { if (next) pick({ kind: "st", id: next.id }); };
 
@@ -210,7 +223,7 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
   useEffect(() => { if (standalone) window.history.replaceState(null, "", `${window.location.pathname}${query}`); }, [standalone, query]);
   const share = async () => {
     const url = `${window.location.origin}${window.location.pathname}${query}`;
-    const title = `${role ? aiRoleName(role.name, mode) : stage ? STAGE_BY_ID.get(stage)!.label : "My route"}: a route through the software lifecycle`;
+    const title = `${role ? aiRoleName(role.name, mode) : stage ? M.STAGE_BY_ID.get(stage)!.label : "My route"}: ${M.words.routeWord}`;
     try {
       if (navigator.share) await navigator.share({ title, url });
       else { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2200); }
@@ -225,11 +238,12 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
 
   const panel = !!sel || !!(stage && stageOpen); // something is open on the right
   const showLabels = view.k >= 0.55;
-  const selStation = sel?.kind === "st" ? STATION_BY_ID.get(sel.id) ?? null : null;
-  const selGate = sel?.kind === "gt" ? GATE_BY_ID.get(sel.id) ?? null : null;
+  const selStation = sel?.kind === "st" ? M.STATION_BY_ID.get(sel.id) ?? null : null;
+  const selGate = sel?.kind === "gt" ? M.GATE_BY_ID.get(sel.id) ?? null : null;
 
   return (
-    <section aria-label="Software lifecycle map" className={`lm relative isolate overflow-hidden bg-[#fbfaf6] ${signage}`} style={{ height: standalone ? "100svh" : "calc(100svh - 3.4rem)", minHeight: 520 }}>
+    <ModelCtx.Provider value={M}>
+    <section aria-label={M.words.aria} className={`lm relative isolate overflow-hidden bg-[#fbfaf6] ${signage}`} style={{ height: standalone ? "100svh" : "calc(100svh - 3.4rem)", minHeight: 520 }}>
       <style>{`
         .lm .ln{animation:draw 1.6s cubic-bezier(.4,0,.2,1) both}
         .lm .pulse{animation:lmpulse 2s ease-out infinite;transform-box:fill-box;transform-origin:center}
@@ -240,15 +254,15 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
 
       {/* the map */}
       <div ref={boxRef} className="absolute inset-0 cursor-grab touch-none select-none active:cursor-grabbing" onPointerDown={onPointerDown}>
-        <svg width={size.w} height={size.h} role="group" aria-label="Map of the software lifecycle: ten lines, seven phases, nine handoff gates">
+        <svg width={size.w} height={size.h} role="group" aria-label={`Map: ${M.LINES.length} lines, ${M.ZONES.length} phases, ${M.GATES.length} handoff gates`}>
           <g style={{ transform: `translate(${view.x}px,${view.y}px) scale(${view.k})`, transformOrigin: "0 0", transition: animate ? "transform .75s cubic-bezier(.2,.8,.2,1)" : "none" }}>
             {/* phases */}
-            {ZONES.map((z, i) => {
-              const x0 = i === 0 ? 0 : px(z.from), x1 = i === ZONES.length - 1 ? W : px(z.to);
+            {M.ZONES.map((z, i) => {
+              const x0 = i === 0 ? 0 : M.px(z.from), x1 = i === M.ZONES.length - 1 ? M.W : M.px(z.to);
               return (
                 <g key={z.name}>
-                  <rect x={x0} y={0} width={x1 - x0} height={H} fill={i % 2 ? "#f4f2ea" : "#fbfaf6"} />
-                  {i > 0 && <line x1={x0} x2={x0} y1={0} y2={H} stroke="#14161f" strokeOpacity={0.12} strokeDasharray="3 5" />}
+                  <rect x={x0} y={0} width={x1 - x0} height={M.H} fill={i % 2 ? "#f4f2ea" : "#fbfaf6"} />
+                  {i > 0 && <line x1={x0} x2={x0} y1={0} y2={M.H} stroke="#14161f" strokeOpacity={0.12} strokeDasharray="3 5" />}
                   <text x={x0 + 14} y={36} fontSize={21} fontWeight={700} letterSpacing=".14em" fill="#14161f" fillOpacity={0.78}>{i + 1}  {z.name.toUpperCase()}</text>
                   <text x={x0 + 14} y={60} fontSize={16} fontWeight={500} fill="#5b6375">{z.sub}</text>
                 </g>
@@ -256,8 +270,8 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
             })}
 
             {/* lines */}
-            {LINES.map((l) => {
-              const xs = SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = px(Math.min(...xs)), b = px(Math.max(...xs)), y = py(l.row), c = LINE_COLOUR[l.id];
+            {M.LINES.map((l) => {
+              const xs = M.SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = M.px(Math.min(...xs)), b = M.px(Math.max(...xs)), y = M.py(l.row), c = M.LINE_COLOUR[l.id];
               const on = !dimming || litLines.has(l.id);
               return (
                 <g key={l.id} style={{ opacity: on ? 1 : 0.16, transition: "opacity .4s" }}>
@@ -274,25 +288,25 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
             })}
 
             {/* gates */}
-            {GATES.map((g) => {
-              const X = px(g.x), r0 = gateRow(g), r1 = gateBottom(g), wl = wrapWords(g.name, 12), top0 = 92;
+            {M.GATES.map((g) => {
+              const X = M.px(g.x), r0 = M.gateRow(g), r1 = M.gateBottom(g), wl = wrapWords(g.name, 12), top0 = 92;
               const on = !dimming || g.lines.some((id) => litLines.has(id)), isSel = sel?.kind === "gt" && sel.id === g.id;
               return (
                 <g key={g.id} role="button" tabIndex={0} aria-label={`Handoff gate: ${g.name}`} className="cursor-pointer outline-none" style={{ opacity: on ? 1 : 0.2, transition: "opacity .4s" }}
                   onClick={() => { if (!moved.current) pick({ kind: "gt", id: g.id }); }} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick({ kind: "gt", id: g.id }); } }}>
-                  <line x1={X} x2={X} y1={top0 + wl.length * 23 - 8} y2={py(r0) - 12} stroke="#5b6375" strokeWidth={1.2} strokeDasharray="2 3" />
-                  {r1 > r0 && <rect x={X - 8} y={py(r0)} width={16} height={py(r1) - py(r0)} fill="#fbfaf6" stroke="#14161f" strokeWidth={3} />}
-                  {g.lines.map((id) => <circle key={id} cx={X} cy={py(LINE_BY_ID[id].row)} r={11} fill="#fbfaf6" stroke={isSel ? "#4f46e5" : "#14161f"} strokeWidth={isSel ? 4 : 3} />)}
+                  <line x1={X} x2={X} y1={top0 + wl.length * 23 - 8} y2={M.py(r0) - 12} stroke="#5b6375" strokeWidth={1.2} strokeDasharray="2 3" />
+                  {r1 > r0 && <rect x={X - 8} y={M.py(r0)} width={16} height={M.py(r1) - M.py(r0)} fill="#fbfaf6" stroke="#14161f" strokeWidth={3} />}
+                  {g.lines.map((id) => <circle key={id} cx={X} cy={M.py(M.LINE_BY_ID[id].row)} r={11} fill="#fbfaf6" stroke={isSel ? "#4f46e5" : "#14161f"} strokeWidth={isSel ? 4 : 3} />)}
                   {wl.map((t, i) => <text key={i} x={X} y={top0 + i * 23} textAnchor="middle" fontSize={20} fontWeight={700} fill={isSel ? "#4f46e5" : "#14161f"}>{t}</text>)}
                   <rect x={X - 72} y={top0 - 20} width={144} height={wl.length * 23 + 10} fill="transparent" />
-                  <rect x={X - 15} y={py(r0) - 15} width={30} height={py(r1) - py(r0) + 30} fill="transparent" />
+                  <rect x={X - 15} y={M.py(r0) - 15} width={30} height={M.py(r1) - M.py(r0) + 30} fill="transparent" />
                 </g>
               );
             })}
 
             {/* line names, drawn over the gates so a handoff bar never cuts through one */}
-            {LINES.map((l) => {
-              const xs = SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = px(Math.min(...xs)), y = py(l.row), c = LINE_COLOUR[l.id];
+            {M.LINES.map((l) => {
+              const xs = M.SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = M.px(Math.min(...xs)), y = M.py(l.row), c = M.LINE_COLOUR[l.id];
               const on = !dimming || litLines.has(l.id), pw = l.name.length * 9.4 + 34;
               return (
                 <g key={l.id} pointerEvents="none" style={{ opacity: on ? 1 : 0.16, transition: "opacity .4s" }}>
@@ -303,8 +317,8 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
             })}
 
             {/* stations */}
-            {STATIONS.map((st) => {
-              const X = px(st.x), Y = py(st.row), c = LINE_COLOUR[st.line], t = data.tracks[st.track], mk = markOf(t);
+            {M.STATIONS.map((st) => {
+              const X = M.px(st.x), Y = M.py(st.row), c = M.LINE_COLOUR[st.line], t = data.tracks[st.track], mk = markOf(t);
               const on = !dimming || routeIds.has(st.id), isNext = next?.id === st.id, isGoal = ends?.goal.id === st.id && !isNext, isSel = sel?.kind === "st" && sel.id === st.id, lift = st.tier * 22, above = true; // labels always sit above the line, on a second tier when they would collide
               const tx = st.anchor === "start" ? st.L : st.anchor === "end" ? st.R : X, frac = Math.min(1, (t?.passed ?? 0) / 20), C = 2 * Math.PI * 16;
               const label = showLabels && (on || isSel) || isNext || isGoal || isSel;
@@ -358,20 +372,25 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
       </div>
 
       {/* welcome and the one question */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-[#fbfaf6] from-85% to-transparent px-3 pb-7 pt-3 sm:px-5 sm:pt-4">
+      <div ref={headRef} className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-[#fbfaf6] from-85% to-transparent px-3 pb-7 pt-3 sm:px-5 sm:pt-4">
         {standalone && (
           <div className="pointer-events-auto mb-2 flex items-center gap-3 text-sm">
             <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1 font-semibold shadow-sm hover:shadow-md"><ArrowLeft size={14} />{standalone.brand}</Link>
+            {MAP_LIST.length > 1 && (
+              <nav aria-label="Maps" className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm">
+                {MAP_LIST.map((x) => <Link key={x.id} href={x.href} aria-current={x.id === M.id ? "page" : undefined} className={`px-3 py-1 transition ${x.id === M.id ? "bg-[#14161f] text-[#fff]" : "hover:bg-black/5"}`}>{x.label}</Link>)}
+              </nav>
+            )}
             <span className="ml-auto flex items-center gap-2">
               {data.signedIn ? <Link href="/dashboard" className="font-semibold text-indigo-300 hover:underline">My quest</Link> : <Link href="/login" className="btn !px-3.5 !py-1 text-[13px]">Sign in</Link>}
             </span>
           </div>
         )}
-        <div className="flex flex-wrap items-end gap-x-8 gap-y-2" style={{ paddingRight: !narrow && panel ? "23.5rem" : undefined }}>
+        <div className="flex flex-wrap items-end gap-x-8 gap-y-2">
           <div className="pointer-events-auto">
-            <p className="hidden text-[11px] font-semibold uppercase tracking-[.18em] text-slate-400 sm:block">Idea to shutdown: the software lifecycle, mapped</p>
+            <p className="hidden text-[11px] font-semibold uppercase tracking-[.18em] text-slate-400 sm:block">{M.words.kicker}</p>
             <h1 className="mt-0.5 text-[1.2rem] font-bold leading-[1.05] sm:text-[1.6rem]">
-              {data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>See where you are. <span className="text-indigo-300">See the way forward.</span></>}
+              {data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>{M.words.headline[0]} <span className="text-indigo-300">{M.words.headline[1]}</span></>}
             </h1>
           </div>
           <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]">
@@ -379,7 +398,7 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
               <div className="flex flex-wrap items-center gap-2">
                 <button type="button" onClick={() => setCtrl(true)} aria-expanded={false}
                   className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-black/20 bg-[#fff] px-3.5 py-1.5 text-[14px] font-bold shadow-sm hover:border-indigo-400">
-                  <span className="truncate">{role ? aiRoleName(role.name, mode) : stage ? STAGE_BY_ID.get(stage)!.label : focus !== "all" ? FOCUS.find((f) => f.id === focus)?.label : "Choose your route"}</span><ChevronDown size={15} className="shrink-0" />
+                  <span className="truncate">{role ? aiRoleName(role.name, mode) : stage ? M.STAGE_BY_ID.get(stage)!.label : focus !== "all" ? M.FOCUS.find((f) => f.id === focus)?.label : "Choose your route"}</span><ChevronDown size={15} className="shrink-0" />
                 </button>
                 {shareButton}
               </div>
@@ -387,7 +406,7 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
               <>
                 <p className="mb-1.5 text-[13px] font-semibold text-slate-300">What do you want to work on?</p>
                 <div className="-mx-3 flex gap-1.5 overflow-x-auto px-3 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden" role="group" aria-label="What do you want to work on?">
-                  {FOCUS.map((f) => (
+                  {M.FOCUS.map((f) => (
                     <button key={f.id} type="button" aria-pressed={!role && !stage && focus === f.id} onClick={() => choose(f.id)}
                       className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-[13px] font-semibold transition ${!role && !stage && focus === f.id ? "border-[#14161f] bg-[#14161f] text-[#fff]" : "border-black/15 bg-[#fff] hover:border-indigo-400 hover:text-indigo-300"}`}>{f.label}</button>
                   ))}
@@ -401,13 +420,13 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
                   <span>or my company is</span>
                   <button type="button" onClick={() => { setStagePicker((v) => !v); setPicker(false); }} aria-expanded={stagePicker} aria-haspopup="listbox"
                     className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${stage ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
-                    <span className="max-w-[11rem] truncate">{stage ? STAGE_BY_ID.get(stage)!.label : "At a stage…"}</span><ChevronDown size={15} className="shrink-0" />
+                    <span className="max-w-[11rem] truncate">{stage ? M.STAGE_BY_ID.get(stage)!.label : "At a stage…"}</span><ChevronDown size={15} className="shrink-0" />
                   </button>
               {stagePicker && (
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(24rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                   <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Where is your company?</p>
                   <ul role="listbox" aria-label="Company stages">
-                    {STAGES.map((g, i) => (
+                    {M.STAGES.map((g, i) => (
                       <li key={g.id}><button type="button" role="option" aria-selected={g.id === stage} onClick={() => chooseStage(g.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
                         <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#14161f] text-[11px] font-bold text-[#fff]">{i + 1}</span>
                         <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{g.label}</span><span className="block text-[12px] text-slate-400">{g.ask}</span></span>{g.id === stage && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
@@ -425,7 +444,7 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
                       const q = pq.trim().toLowerCase();
                       const hit = (r: RoleInfo) => !q || [r.name, r.family, r.blurb, ...r.aliases].some((n) => n.toLowerCase().includes(q));
                       const shown = data.roles.filter(hit);
-                      if (!shown.length) return <li className="px-3 py-2 text-[14px] text-slate-400">No role matches “{pq.trim()}”. This map is about software, delivery and business roles: try one of the areas instead.</li>;
+                      if (!shown.length) return <li className="px-3 py-2 text-[14px] text-slate-400">No role matches “{pq.trim()}”. {M.words.coverage}</li>;
                       const fams = [...new Set(shown.map((r) => r.family))].sort((a, b) => (FAMILY_ORDER.indexOf(a) + 100) % 100 - (FAMILY_ORDER.indexOf(b) + 100) % 100);
                       return fams.map((f) => (
                         <li key={f} role="presentation">
@@ -444,14 +463,14 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
               )}
                 </div>
                 <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-slate-300">
-                  {aiOpen || mode !== "human" ? (
-                    <span className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm" role="group" aria-label="Role as a person or with AI">
-                      {AI_MODES.map((m) => <button key={m.id} type="button" aria-pressed={mode === m.id} title={m.hint} onClick={() => chooseMode(m.id)}
-                        className={`px-3 py-1 transition ${mode === m.id ? (m.id === "human" ? "bg-[#14161f] text-[#fff]" : "bg-violet-600 text-[#fff]") : "hover:bg-black/5"}`}>{m.label}</button>)}
-                    </span>
-                  ) : (
-                    <button type="button" onClick={() => setAiOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-slate-400 underline decoration-dotted hover:text-indigo-300">Working with AI?</button>
-                  )}
+                  {M.hasAi && (aiOpen || mode !== "human" ? (
+                      <span className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm" role="group" aria-label="Role as a person or with AI">
+                        {AI_MODES.map((m) => <button key={m.id} type="button" aria-pressed={mode === m.id} title={m.hint} onClick={() => chooseMode(m.id)}
+                          className={`px-3 py-1 transition ${mode === m.id ? (m.id === "human" ? "bg-[#14161f] text-[#fff]" : "bg-violet-600 text-[#fff]") : "hover:bg-black/5"}`}>{m.label}</button>)}
+                      </span>
+                    ) : (
+                      <button type="button" onClick={() => setAiOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-slate-400 underline decoration-dotted hover:text-indigo-300">Working with AI?</button>
+                    ))}
                   {ends && <p className="text-[12.5px] text-slate-400">Your route: {ends.count} stops, from <b className="font-semibold">{ends.from.name}</b> to <b className="font-semibold">{ends.goal.name}</b>.</p>}
                   {stage && !stageOpen && !sel && <button type="button" onClick={() => setStageOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-indigo-300 underline decoration-dotted">About this stage</button>}
                   {shareButton}
@@ -491,7 +510,7 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
                       <span className={`grid h-5 w-5 place-items-center rounded-full text-[11px] text-[#fff] ${g.state === "done" ? "bg-emerald-500" : g.state === "current" ? "bg-indigo-500" : "bg-slate-400"}`}>{g.state === "done" ? <Check size={12} /> : g.state === "locked" && data.journey!.locked ? <Lock size={11} /> : g.n}</span>
                       Stage {g.n}<span className="font-normal text-slate-400">{g.state === "done" ? " · done" : g.state === "current" ? " · you are here" : data.journey!.locked ? " · locked" : " · later"}</span>
                     </p>
-                    <p className="mt-1 flex flex-wrap gap-1">{g.tracks.map((t) => <button key={t.slug} type="button" onClick={() => { setJpanel(false); const st = STATIONS.filter((x) => x.track === t.slug).sort((a, b) => a.x - b.x)[0]; if (st) pick({ kind: "st", id: st.id }); }}
+                    <p className="mt-1 flex flex-wrap gap-1">{g.tracks.map((t) => <button key={t.slug} type="button" onClick={() => { setJpanel(false); const st = M.STATIONS.filter((x) => x.track === t.slug).sort((a, b) => a.x - b.x)[0]; if (st) pick({ kind: "st", id: st.id }); }}
                       className={`rounded-full border px-2 py-0.5 text-[12px] ${t.need && t.passed >= t.need ? "border-emerald-400 text-emerald-300" : "border-black/15"}`}>{t.name}{t.need ? ` ${Math.min(t.passed, t.need)}/${t.need}` : ""}</button>)}</p>
                   </li>
                 ))}
@@ -523,7 +542,7 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
               <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Races on {role ? `the ${aiRoleName(role.name, mode)} route` : "your route"}</p>
               <ul className="max-h-[22rem] space-y-1.5 overflow-auto">
                 {raceList.slice(0, 12).map((r) => {
-                  const anchor = STATIONS.filter((st) => st.track === r.track && routeIds.has(st.id)).sort((a, b) => a.x - b.x)[0];
+                  const anchor = M.STATIONS.filter((st) => st.track === r.track && routeIds.has(st.id)).sort((a, b) => a.x - b.x)[0];
                   return (
                     <li key={r.id} className="rounded-xl border border-black/10 bg-[#fbfaf6] p-2.5">
                       <div className="flex items-start gap-2">
@@ -569,7 +588,7 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
 
       {/* where the company is */}
       {stage && stageOpen && !sel && (
-        <aside aria-live="polite" className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-5 sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
+        <aside aria-live="polite" style={{ "--panel-top": `${Math.max(20, headH - 12)}px` } as React.CSSProperties} className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-[var(--panel-top)] sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setStageOpen(false)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
           <StagePanel id={stage} count={routeIds.size} onStop={(sid) => pick({ kind: "st", id: sid })} onGate={(gid) => pick({ kind: "gt", id: gid })} onStage={chooseStage} />
         </aside>
@@ -577,29 +596,31 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
 
       {/* what is at this stop */}
       {(selStation || selGate) && (
-        <aside aria-live="polite" className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-5 sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
+        <aside aria-live="polite" style={{ "--panel-top": `${Math.max(20, headH - 12)}px` } as React.CSSProperties} className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-[var(--panel-top)] sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
           {selGate && <GateCard g={selGate} tracks={data.tracks} />}
         </aside>
       )}
     </section>
+    </ModelCtx.Provider>
   );
 }
 
 function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onGo: (s: Station) => void }) {
-  const line = LINE_BY_ID[st.line], c = LINE_COLOUR[st.line], z = zoneOf(st.x);
-  const seq = stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
+  const M = useModel();
+  const line = M.LINE_BY_ID[st.line], c = M.LINE_COLOUR[st.line], z = M.zoneOf(st.x);
+  const seq = M.stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
   const lvl = info?.passed ?? 0;
-  const gate = nextGateFor(st), { needs, neededBy } = dependenciesOf(st.id);
+  const gate = M.nextGateFor(st), { needs, neededBy } = M.dependenciesOf(st.id);
   return (
     <div>
       <div className="h-2.5 rounded-t-3xl" style={{ background: c }} />
       <div className="space-y-4 p-5">
         <div className="pr-8">
-          <p className="flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: c }} />{line.name} line · {ZONES[z].name}</p>
+          <p className="flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: c }} />{line.name} line · {M.ZONES[z].name}</p>
           <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{st.name}</h2>
-          <p className="mt-1 text-sm text-slate-400">{LINE_BLURB[st.line]} Usually owned by {/^[aeiou]/i.test(st.owner) ? "an" : "a"} {st.owner.toLowerCase()}.{SIZE_LABEL[st.scale] && <> {SIZE_LABEL[st.scale]}.</>}</p>
+          <p className="mt-1 text-sm text-slate-400">{M.LINE_BLURB[st.line]} Usually owned by {/^[aeiou]/i.test(st.owner) ? "an" : "a"} {st.owner.toLowerCase()}.{SIZE_LABEL[st.scale] && <> {SIZE_LABEL[st.scale]}.</>}</p>
         </div>
 
         {lens === "agent" && (
@@ -704,23 +725,24 @@ function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, r
 
 /** What a company at this stage is doing, where to start, where it usually goes wrong, and what comes next. */
 function StagePanel({ id, count, onStop, onGate, onStage }: { id: StageId; count: number; onStop: (id: string) => void; onGate: (id: string) => void; onStage: (id: StageId) => void }) {
-  const i = STAGES.findIndex((g) => g.id === id), g = STAGES[i], nxt = STAGES[i + 1] ?? null, first = STATION_BY_ID.get(g.start)!;
+  const M = useModel();
+  const i = M.STAGES.findIndex((g) => g.id === id), g = M.STAGES[i], nxt = M.STAGES[i + 1] ?? null, first = M.STATION_BY_ID.get(g.start)!;
   return (
     <div>
       <div className="h-2.5 rounded-t-3xl bg-[#14161f]" />
       <div className="space-y-4 p-5">
         <div className="pr-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Company stage {i + 1} of {STAGES.length}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Company stage {i + 1} of {M.STAGES.length}</p>
           <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{g.label}</h2>
           <p className="mt-1 text-sm text-slate-400">{g.blurb}</p>
         </div>
-        <div className="flex items-center gap-1" aria-hidden>{STAGES.map((x, n) => <span key={x.id} className={`h-1.5 flex-1 rounded-full ${n < i ? "bg-indigo-300" : n === i ? "bg-indigo-500" : "bg-black/10"}`} />)}</div>
+        <div className="flex items-center gap-1" aria-hidden>{M.STAGES.map((x, n) => <span key={x.id} className={`h-1.5 flex-1 rounded-full ${n < i ? "bg-indigo-300" : n === i ? "bg-indigo-500" : "bg-black/10"}`} />)}</div>
         <p className="text-sm"><b>{count} stops</b> on the map matter at this stage. They are lit; the rest can wait.</p>
         <button type="button" onClick={() => onStop(first.id)} className="btn w-full justify-center">Start with {first.name}<ArrowRight size={16} /></button>
         <div>
           <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-rose-300">Where it usually goes wrong</h3>
           <ul className="space-y-2">
-            {g.watch.map((gid) => { const gate = GATE_BY_ID.get(gid)!; return (
+            {g.watch.map((gid) => { const gate = M.GATE_BY_ID.get(gid)!; return (
               <li key={gid} className="rounded-2xl border-l-4 border-rose-400 bg-rose-50 p-3 text-sm">
                 <p>{gate.fail}</p>
                 <button type="button" onClick={() => onGate(gid)} className="mt-1 text-[13px] font-semibold text-indigo-300 hover:underline">{gate.name} →</button>
@@ -743,16 +765,17 @@ function StagePanel({ id, count, onStop, onGate, onStage }: { id: StageId; count
 }
 
 function GateCard({ g, tracks }: { g: Gate; tracks: Record<string, TrackInfo> }) {
-  const z = zoneOf(g.x);
-  const near = [...new Set(STATIONS.filter((s) => g.lines.includes(s.line) && Math.abs(s.x - g.x) <= 3).map((s) => s.track))].map((slug) => tracks[slug]).filter(Boolean).slice(0, 5);
+  const M = useModel();
+  const z = M.zoneOf(g.x);
+  const near = [...new Set(M.STATIONS.filter((s) => g.lines.includes(s.line) && Math.abs(s.x - g.x) <= 3).map((s) => s.track))].map((slug) => tracks[slug]).filter(Boolean).slice(0, 5);
   return (
     <div>
       <div className="h-2.5 rounded-t-3xl bg-[#14161f]" />
       <div className="space-y-4 p-5">
         <div className="pr-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Handoff gate · {ZONES[z].name}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Handoff gate · {M.ZONES[z].name}</p>
           <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{g.name}</h2>
-          <div className="mt-2 flex flex-wrap gap-1.5">{g.lines.map((id: LineId) => <span key={id} className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fbfaf6] px-2.5 py-0.5 text-xs font-semibold"><i className="h-2.5 w-2.5 rounded-full" style={{ background: LINE_COLOUR[id] }} />{LINE_BY_ID[id].name}</span>)}</div>
+          <div className="mt-2 flex flex-wrap gap-1.5">{g.lines.map((id: LineId) => <span key={id} className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fbfaf6] px-2.5 py-0.5 text-xs font-semibold"><i className="h-2.5 w-2.5 rounded-full" style={{ background: M.LINE_COLOUR[id] }} />{M.LINE_BY_ID[id].name}</span>)}</div>
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div><h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Must arrive</h3><ul className="space-y-1">{g.ins.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">←</span>{t}</li>)}</ul></div>
