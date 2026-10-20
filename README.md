@@ -18,7 +18,7 @@ npm run dev
 `/map` is a transit map of how something is run, from first idea to closing it. A map is a definition (`MapDef`: lanes, phases, stops, handoff gates, areas, company stages, optional sizes) that `engine.ts` turns into a layout and routes. Three are listed in `maps.ts`: **Any business** (the default, `/map`), **Public sector** (`/map/public`, a UK public service or programme) and **Software** (`/map/software`). Add one by writing a definition and listing it.
 - **Stages** pick the stops that matter for where a company or service is. **Sizes** (Startup, Small, Medium, Large, Enterprise, on the business and public maps) dim the stops that can wait until an organisation is bigger, and change who usually owns a stop, how formal a handoff is and what usually goes wrong. A stop in no size list matters from the smallest size.
 - Links carry the choice: `/map/public?stage=case&size=large`. `npm run check:maps` checks every definition: ids, gates, stages, sizes, and overlapping labels.
-- The business and public-sector content is a draft for review by someone who works in that field.
+- The business and public-sector content is a draft for review by someone who works in that field. The public-sector map has its own learning tracks (brand `public-sector`, eight tracks `ps-*`, 128 questions in `content/public-sector/`); a reviewer can edit the JSON and re-run `npm run import:knowledge`.
 
 ## Starting points (`lib/credits.ts`)
 A person's level in a track is the highest of three things, and the map shows which one it came from (a diamond marks a level that is not an exam pass):

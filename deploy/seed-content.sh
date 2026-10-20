@@ -69,6 +69,7 @@ run seed:ai
 run seed:cards
 shopt -s nullglob
 run import:knowledge -- content/lifecycle/*.json
+run import:knowledge -- content/public-sector/*.json
 run import:knowledge -- content/products/*.json
 run import:knowledge -- content/tools/*.json
 run seed:structure
