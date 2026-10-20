@@ -33,12 +33,12 @@ export function loadRoles(): RoleInfo[] {
   const levels = new Map<string, Map<string, number>>();
   for (const f of fs.readdirSync(dir).filter((n) => n.endsWith(".json")).sort()) {
     try {
-      const j = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as { role: string; name: string; rungs?: { steps?: [string, number][] }[] };
+      const j = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as { role: string; name: string; rungs?: { title?: string; summary?: string; steps?: [string, number][] }[] };
       const top = new Map<string, number>(), entry: Record<string, number> = {}, firstRung: Record<string, number> = {};
       (j.rungs ?? []).forEach((r, i) => { for (const [t, l] of r.steps ?? []) { top.set(t, Math.max(top.get(t) ?? 0, l)); if (!(t in entry)) { entry[t] = l; firstRung[t] = i + 1; } } });
       levels.set(j.role, top);
       const m = meta[j.role];
-      roles.push({ key: j.role, name: j.name, family: m?.family ?? "Other", blurb: m?.blurb ?? "", aliases: [...new Set([...(ALIASES[j.role] ?? []), ...(m?.aliases ?? [])])], tracks: [...top.keys()], entry, firstRung, core: [] });
+      roles.push({ key: j.role, name: j.name, family: m?.family ?? "Other", blurb: m?.blurb ?? "", aliases: [...new Set([...(ALIASES[j.role] ?? []), ...(m?.aliases ?? [])])], tracks: [...top.keys()], entry, firstRung, rungs: (j.rungs ?? []).map((r, i) => ({ title: r.title ?? `Level ${i + 1}`, summary: r.summary ?? "" })), core: [] });
     } catch { /* a ladder file that does not parse is simply not offered */ }
   }
   // A track most ladders ask for (such as governance and compliance) is a basic, not what sets a role apart, so it only counts as core when this ladder wants it at level 8 or more.
