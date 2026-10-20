@@ -9,7 +9,8 @@ const POINTS = [
 ];
 
 /** Two-panel layout for sign-in and invite pages: brand story on the left, the form on the right. */
-export function AuthShell({ title, lead, children }: { title: string; lead: string; children: ReactNode }) {
+export function AuthShell({ title, lead, children, modal = false }: { title: string; lead: string; children: ReactNode; modal?: boolean }) {
+  if (modal) return <>{children}</>; // inside the map's sign-in dialog the brand panel is left out
   return (
     <div className="card pop mx-auto grid max-w-4xl overflow-hidden md:grid-cols-[1.05fr_1fr]">
       <aside className="relative hidden flex-col justify-between gap-8 overflow-hidden p-8 text-[#fff] md:flex" style={{ background: "linear-gradient(150deg,#4f46e5,#9333ea 70%,#db2777)" }} aria-hidden>

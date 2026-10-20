@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Lock, Minus, Plus, Search, Trophy, X } from "lucide-react";
 import { setJourneyMode } from "@/app/actions";
+import { AuthModal, type AuthKit, type AuthMode } from "./AuthModal";
 import {
   AI_MODES, FAMILY_ORDER, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
   aiRoleName, buildRoute, type AiMode, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
@@ -25,7 +26,8 @@ type Mark = "none" | "learning" | "solid" | "titan";
 const markOf = (t: TrackInfo | undefined): Mark => !t || t.passed <= 0 ? "none" : t.passed >= 20 ? "titan" : t.passed >= 5 ? "solid" : "learning";
 
 /** `standalone` makes the map a page of its own: full height, with its own slim top bar (brand and a way back) instead of the site header. */
-export function LifecycleMap({ data, signage, standalone }: { data: MapData; signage: string; standalone?: { brand: string } }) {
+/** `auth`, when given, makes "Sign in" open a dialog over the map instead of leaving it. */
+export function LifecycleMap({ data, signage, standalone, auth }: { data: MapData; signage: string; standalone?: { brand: string }; auth?: AuthKit }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [view, setView] = useState<View>({ k: 0.5, x: 0, y: 0 });
@@ -40,6 +42,8 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const [hint, setHint] = useState(true);
   const [legend, setLegend] = useState(false);
   const [mode, setMode] = useState<AiMode>("human");
+  const [authMode, setAuthMode] = useState<AuthMode | null>(null);
+  const openSignIn = auth ? () => setAuthMode("login") : undefined;
   const narrow = size.w > 0 && size.w < 900;
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
 
@@ -185,6 +189,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
 
   return (
     <section aria-label="Software lifecycle map" className={`lm relative isolate overflow-hidden bg-[#fbfaf6] ${signage}`} style={{ height: standalone ? "100svh" : "calc(100svh - 3.4rem)", minHeight: 520 }}>
+      {auth && authMode && !data.signedIn && <AuthModal mode={authMode} kit={auth} onMode={setAuthMode} onClose={() => setAuthMode(null)} />}
       <style>{`
         .lm .ln{animation:draw 1.6s cubic-bezier(.4,0,.2,1) both}
         .lm .pulse{animation:lmpulse 2s ease-out infinite;transform-box:fill-box;transform-origin:center}
@@ -302,7 +307,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
           <div className="pointer-events-auto mb-2 flex items-center gap-3 text-sm">
             <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1 font-semibold shadow-sm hover:shadow-md"><ArrowLeft size={14} />{standalone.brand}</Link>
             <span className="ml-auto flex items-center gap-2">
-              {data.signedIn ? <Link href="/dashboard" className="font-semibold text-indigo-300 hover:underline">My quest</Link> : <Link href="/login" className="btn !px-3.5 !py-1 text-[13px]">Sign in</Link>}
+              {data.signedIn ? <Link href="/dashboard" className="font-semibold text-indigo-300 hover:underline">My quest</Link> : openSignIn ? <button type="button" onClick={openSignIn} className="btn !px-3.5 !py-1 text-[13px]">Sign in</button> : <Link href="/login" className="btn !px-3.5 !py-1 text-[13px]">Sign in</Link>}
             </span>
           </div>
         )}
@@ -472,7 +477,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
       {(selStation || selGate) && (
         <aside aria-live="polite" className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-5 sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGoTrack={(slug) => { const t = STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGoTrack={(slug) => { const t = STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onSignIn={openSignIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
           {selGate && <GateCard g={selGate} tracks={data.tracks} />}
         </aside>
       )}
@@ -480,7 +485,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   );
 }
 
-function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName, signedIn, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onGo: (s: Station) => void }) {
+function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName, signedIn, onSignIn, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onSignIn?: () => void; onGo: (s: Station) => void }) {
   const line = LINE_BY_ID[st.line], c = LINE_COLOUR[st.line], z = zoneOf(st.x);
   const seq = stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
   const lvl = info?.passed ?? 0;
@@ -542,7 +547,7 @@ function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName,
                 ? <span className="btn mt-3 w-full cursor-not-allowed justify-center !bg-slate-400 opacity-70" aria-disabled><Lock size={15} />Locked</span>
                 : <Link href={`/tracks/${info.slug}`} className="btn mt-3 w-full justify-center">{lvl > 0 ? "Continue" : "Start learning"}<ArrowRight size={16} /></Link>
               : <p className="mt-3 text-sm text-slate-400">This track is not part of your plan.</p>}
-            {!signedIn && <p className="mt-2 text-center text-xs text-slate-400"><Link href="/login" className="font-semibold text-indigo-300 hover:underline">Sign in</Link> to see your own progress here.</p>}
+            {!signedIn && <p className="mt-2 text-center text-xs text-slate-400">{onSignIn ? <button type="button" onClick={onSignIn} className="font-semibold text-indigo-300 hover:underline">Sign in</button> : <Link href="/login" className="font-semibold text-indigo-300 hover:underline">Sign in</Link>} to see your own progress here.</p>}
           </div>
         )}
 
