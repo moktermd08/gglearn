@@ -278,3 +278,32 @@ export function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode):
   const agent = mode === "agent" ? new Set([...base].filter((id) => !ai.has(id) && !review.has(id))) : new Set<string>();
   return { ids: new Set([...base, ...ai, ...review]), base, ai, review, agent };
 }
+
+/* ---------- what a stop leans on, and what leans on it ---------- */
+const norm = (t: string) => t.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, " ").trim().replace(/s\b/g, "");
+let deps: { needs: Map<string, Station[]>; neededBy: Map<string, Station[]> } | null = null;
+/**
+ * A stop "needs" another when one of its inputs is that stop's name or one of its outputs, and the other is "needed by" it.
+ * Matched on the wording of the map's own inputs and outputs, so only links the map already states appear.
+ */
+export function dependenciesOf(id: string): { needs: Station[]; neededBy: Station[] } {
+  if (!deps) {
+    const byKey = new Map<string, Station[]>();
+    for (const s of STATIONS) for (const k of [s.name, ...s.outs]) { const key = norm(k); byKey.set(key, [...(byKey.get(key) ?? []), s]); }
+    const needs = new Map<string, Station[]>(), neededBy = new Map<string, Station[]>();
+    for (const s of STATIONS) for (const i of s.ins) for (const from of byKey.get(norm(i)) ?? []) {
+      if (from.id === s.id || needs.get(s.id)?.some((x) => x.id === from.id)) continue;
+      needs.set(s.id, [...(needs.get(s.id) ?? []), from]);
+      neededBy.set(from.id, [...(neededBy.get(from.id) ?? []), s]);
+    }
+    deps = { needs, neededBy };
+  }
+  const byX = (a: Station, b: Station) => a.x - b.x || a.row - b.row;
+  return { needs: [...(deps.needs.get(id) ?? [])].sort(byX), neededBy: [...(deps.neededBy.get(id) ?? [])].sort(byX) };
+}
+
+/** The next handoff gate on this stop's line: where its work is passed on, and so where it usually goes wrong. */
+export const nextGateFor = (st: Station): Gate | null => GATES.filter((g) => g.lines.includes(st.line) && g.x >= st.x).sort((a, b) => a.x - b.x)[0] ?? null;
+
+/** How big a piece of work this stop usually is. The map's fourth size, P, is left unlabelled. */
+export const SIZE_LABEL: Partial<Record<Scale, string>> = { S: "A small piece of work", M: "A medium piece of work", L: "A large piece of work" };

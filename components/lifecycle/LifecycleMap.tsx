@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Crosshair, Lock, Minus, Plus, Search, Trophy, X } from "lucide-react";
 import { setJourneyMode } from "@/app/actions";
+import { PASS_MARK, QUESTIONS_PER_RUN } from "@/lib/levels";
 import {
   AI_MODES, FAMILY_ORDER, FOCUS, FOCUS_START, GATES, GATE_BY_ID, H, LINES, LINE_BLURB, LINE_BY_ID, LINE_COLOUR, SEQ, STATIONS, STATION_BY_ID, W, ZONES, gateBottom, gateRow, px, py, stationsOn, zoneOf,
-  aiRoleName, buildRoute, type AiMode, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
+  SIZE_LABEL, aiRoleName, buildRoute, dependenciesOf, nextGateFor, type AiMode, type FocusId, type Gate, type LineId, type MapData, type RaceInfo, type RoleInfo, type Station, type TrackInfo,
 } from "@/lib/lifecycle/model";
 
 type View = { k: number; x: number; y: number };
@@ -512,7 +513,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
       {(selStation || selGate) && (
         <aside aria-live="polite" className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-5 sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGoTrack={(slug) => { const t = STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onGo={(s) => pick({ kind: "st", id: s.id })} />}
           {selGate && <GateCard g={selGate} tracks={data.tracks} />}
         </aside>
       )}
@@ -520,10 +521,11 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   );
 }
 
-function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName, signedIn, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onGo: (s: Station) => void }) {
+function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onGo: (s: Station) => void }) {
   const line = LINE_BY_ID[st.line], c = LINE_COLOUR[st.line], z = zoneOf(st.x);
   const seq = stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
   const lvl = info?.passed ?? 0;
+  const gate = nextGateFor(st), { needs, neededBy } = dependenciesOf(st.id);
   return (
     <div>
       <div className="h-2.5 rounded-t-3xl" style={{ background: c }} />
@@ -531,7 +533,7 @@ function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName,
         <div className="pr-8">
           <p className="flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: c }} />{line.name} line · {ZONES[z].name}</p>
           <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{st.name}</h2>
-          <p className="mt-1 text-sm text-slate-400">{LINE_BLURB[st.line]} Usually owned by {/^[aeiou]/i.test(st.owner) ? "an" : "a"} {st.owner.toLowerCase()}.</p>
+          <p className="mt-1 text-sm text-slate-400">{LINE_BLURB[st.line]} Usually owned by {/^[aeiou]/i.test(st.owner) ? "an" : "a"} {st.owner.toLowerCase()}.{SIZE_LABEL[st.scale] && <> {SIZE_LABEL[st.scale]}.</>}</p>
         </div>
 
         {lens === "agent" && (
@@ -559,12 +561,38 @@ function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName,
           <div><h3 className="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">You leave with</h3><ul className="space-y-1">{st.outs.map((t) => <li key={t} className="flex gap-1.5"><span className="text-slate-500">→</span>{t}</li>)}</ul></div>
         </div>
 
+        {gate && (
+          <div className="rounded-2xl border-l-4 border-rose-400 bg-rose-50 p-3 text-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-rose-300">Where it usually breaks</p>
+            <p className="mt-0.5">{gate.fail}</p>
+            <button type="button" onClick={() => onGate(gate.id)} className="mt-1.5 text-[13px] font-semibold text-indigo-300 hover:underline">This work is checked at {gate.name} →</button>
+          </div>
+        )}
+
+        {(needs.length > 0 || neededBy.length > 0) && (
+          <div className="space-y-3">
+            {needs.length > 0 && (
+              <div>
+                <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Builds on</h3>
+                <div className="flex flex-wrap gap-1.5">{needs.map((n) => <button key={n.id} type="button" onClick={() => onGo(n)} className="rounded-full border border-black/15 bg-[#fff] px-3 py-1 text-[13px] font-semibold hover:border-indigo-400 hover:text-indigo-300">{n.name}</button>)}</div>
+              </div>
+            )}
+            {neededBy.length > 0 && (
+              <div>
+                <h3 className="mb-0.5 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Why it matters</h3>
+                <p className="mb-1.5 text-sm text-slate-400">{neededBy.length === 1 ? "One stop depends on it" : `${neededBy.length} stops depend on it`}, so a weak result here is passed on.</p>
+                <div className="flex flex-wrap gap-1.5">{neededBy.map((n) => <button key={n.id} type="button" onClick={() => onGo(n)} className="rounded-full border border-black/15 bg-[#fff] px-3 py-1 text-[13px] font-semibold hover:border-indigo-400 hover:text-indigo-300">{n.name}</button>)}</div>
+              </div>
+            )}
+          </div>
+        )}
+
         {info && (
           <div className="rounded-2xl border border-black/10 bg-[#fbfaf6] p-3.5">
             <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Learn it in</p>
             <p className="mt-0.5 text-base font-bold">{info.name}</p>
             <div className="bar mt-2" title={`Level ${lvl} of 20`}><i style={{ width: `${(lvl / 20) * 100}%` }} /></div>
-            <p className="mt-1.5 text-sm text-slate-400">{lvl > 0 ? `You are on level ${lvl} of 20.` : "20 levels, from Novice to Titan."}{info.required && <> <b className={info.overdue ? "text-rose-300" : "text-amber-300"}>{lvl >= info.requiredLevel ? "Required: done." : info.overdue ? "Required: overdue." : `Required${info.dueAt ? `, due ${fmtDate(info.dueAt)}` : ""}.`}</b></>}</p>
+            <p className="mt-1.5 text-sm text-slate-400">{lvl > 0 ? `You are on level ${lvl} of 20.` : "20 levels, from Novice to Titan."} {lvl < 5 ? `Level 5 earns the Foundation certificate: about ${5 - lvl} quiz${5 - lvl === 1 ? "" : "zes"} of ${QUESTIONS_PER_RUN} questions, ${Math.round(PASS_MARK * 100)}% to pass.` : null}{info.required && <> <b className={info.overdue ? "text-rose-300" : "text-amber-300"}>{lvl >= info.requiredLevel ? "Required: done." : info.overdue ? "Required: overdue." : `Required${info.dueAt ? `, due ${fmtDate(info.dueAt)}` : ""}.`}</b></>}</p>
             {info.rival && <p className="mt-1 text-sm text-slate-400">{info.rival.name} is on level {info.rival.level}{info.rival.level > lvl ? ". Catch up." : lvl > info.rival.level ? ". You are ahead." : ". Dead level."}</p>}
             {lock && (
               <div className="mt-3 rounded-xl border-l-4 border-slate-400 bg-black/5 p-3 text-sm">
