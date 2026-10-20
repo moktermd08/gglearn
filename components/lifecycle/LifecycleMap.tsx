@@ -371,7 +371,7 @@ export function LifecycleMap({ data, signage, standalone, initial }: { data: Map
           <div className="pointer-events-auto">
             <p className="hidden text-[11px] font-semibold uppercase tracking-[.18em] text-slate-400 sm:block">Idea to shutdown: the software lifecycle, mapped</p>
             <h1 className="mt-0.5 text-[1.2rem] font-bold leading-[1.05] sm:text-[1.6rem]">
-              {data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>Find your stop. <span className="text-indigo-300">Plan your route.</span></>}
+              {data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>See where you are. <span className="text-indigo-300">See the way forward.</span></>}
             </h1>
           </div>
           <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]">

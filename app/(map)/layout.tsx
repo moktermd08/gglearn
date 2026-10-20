@@ -4,7 +4,7 @@ import { currentUser } from "@/lib/auth";
 import { lookFor, themeStyle } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Find your stop, plan your route: the software lifecycle map — gglearn",
+  title: "See where you are, see the way forward: the software lifecycle map — gglearn",
   description: "Every stage from first idea to final shutdown, drawn as a transit map. Say what you do or where your company is, see your route, and learn each stop.",
 };
 
