@@ -181,7 +181,7 @@ const ROLE_WORDS: [RegExp, FocusId][] = [
   [/customer|success|account|support/, "customers"],
   [/sales|market|social|growth|business dev|seo/, "sell"],
   [/service|operat|devops|sre|infrastructure/, "run"],
-  [/manag|lead|director|cto|head|product|project|delivery|owner|executive|ceo/, "lead"],
+  [/manag|lead|director|cto|head|product|project|delivery|owner|executive|ceo|founder/, "lead"],
   [/develop|engineer|programmer|architect|data|ml|qa|test/, "build"],
 ];
 export function focusForRole(role: string | null | undefined): FocusId {

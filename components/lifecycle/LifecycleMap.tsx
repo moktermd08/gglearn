@@ -38,7 +38,10 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const [jpanel, setJpanel] = useState(false);
   const [sel, setSel] = useState<Sel>(null);
   const [hint, setHint] = useState(true);
+  const [ctrl, setCtrl] = useState(false); // on a phone the route controls fold away until asked for
+  const [aiOpen, setAiOpen] = useState(false);
   const [legend, setLegend] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setHint(false), 7000); return () => clearTimeout(t); }, []);
   const [mode, setMode] = useState<AiMode>("human");
   const narrow = size.w > 0 && size.w < 900;
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
@@ -63,6 +66,13 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
       ?? mine.find((s) => t(s)?.open && (t(s)?.passed ?? 0) < 5) ?? mine[0] ?? null;
   }, [routeIds, role, focus, mode, data.tracks, data.journey]);
 
+  /* Where the route starts and where it ends: the goal is the last stop along it. */
+  const ends = useMemo(() => {
+    if (!dimming) return null;
+    const on = STATIONS.filter((s) => routeIds.has(s.id)).sort((a, b) => a.x - b.x || a.row - b.row);
+    return on.length > 1 ? { from: on[0], goal: on[on.length - 1], count: on.length } : null;
+  }, [dimming, routeIds]);
+
   /* Races: live or upcoming campaigns on the tracks of this route. One flag per track, on the first stop of that track on the route. */
   const routeTracks = useMemo(() => role ? new Set([...role.tracks, ...(mode !== "human" ? ["ai-llm-practice"] : [])]) : new Set(STATIONS.filter((s) => routeIds.has(s.id)).map((s) => s.track)), [role, mode, routeIds]);
   const raceList = useMemo(() => data.races.filter((r) => routeTracks.has(r.track)).sort((a, b) => Number(b.state === "live") - Number(a.state === "live") || b.humans - a.humans), [data.races, routeTracks]);
@@ -81,14 +91,14 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
   const move = useCallback((v: View, smooth: boolean) => { setAnimate(smooth); setView(v); }, []);
   const centreOn = useCallback((cx: number, cy: number, k: number, smooth = true, rightInset = 0, sheet = false) => {
     const kk = Math.min(MAX_K, Math.max(fitK * 0.5, k));
-    const top = (narrow ? (size.w < 640 ? 130 : 215) : 0) + chrome, bottom = sheet ? size.h * 0.4 : size.h;
+    const top = (narrow ? (size.w < 640 ? 110 : 215) : 0) + chrome, bottom = sheet ? size.h * 0.4 : size.h;
     move({ k: kk, x: (size.w - rightInset) / 2 - cx * kk, y: (top + bottom) / 2 - cy * kk }, smooth);
   }, [fitK, size, narrow, chrome, move]);
   const frameLines = useCallback((lines: Set<LineId>, smooth = true, ids?: ReadonlySet<string>) => {
     const on = (st: Station) => (ids ? ids.has(st.id) : lines.has(st.line));
     if (narrow) { const s = STATIONS.filter(on).sort((a, b) => a.x - b.x)[0], rs = LINES.filter((l) => lines.has(l.id)).map((l) => l.row); if (s) centreOn(px(s.x) + 120, py((Math.min(...rs) + Math.max(...rs)) / 2), 0.75, smooth); return; }
     const rows = LINES.filter((l) => lines.has(l.id)).map((l) => l.row);
-    const y0 = py(Math.min(...rows)) - 120, y1 = py(Math.max(...rows)) + 80, top = (narrow ? 100 : 136) + chrome, bottom = narrow ? 96 : 64;
+    const y0 = py(Math.min(...rows)) - 120, y1 = py(Math.max(...rows)) + 80, top = (narrow ? 100 : 205) + chrome, bottom = narrow ? 96 : 150; // clear of the header above and the route buttons below
     // readable first: about 0.9 unless the lit lines would not fit up and down; the fit button shows the whole map
     const kk = Math.min(1.1, Math.max(0.6, Math.min(0.95, (size.h - top - bottom) / (y1 - y0))));
     const first = STATIONS.filter(on).sort((p, q) => p.x - q.x)[0], x0 = first ? px(first.x) - 300 : 0;
@@ -163,9 +173,9 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
     const cx = n ? px(n.x) : px(g!.x), cy = n ? py(n.row) : (py(gateRow(g!)) + py(gateBottom(g!))) / 2;
     centreOn(cx, cy, Math.max(viewRef.current.k, narrow ? 0.8 : 1.05), true, narrow ? 0 : 380, narrow);
   };
-  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); const r = buildRoute(null, id, mode); frameLines(new Set<LineId>(STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids); };
+  const choose = (id: FocusId) => { setFocus(id); setRoleKey(null); setSel(null); setHint(false); setPicker(false); setCtrl(false); const r = buildRoute(null, id, mode); frameLines(new Set<LineId>(STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids); };
   const chooseRole = (key: string | null) => {
-    setRoleKey(key); setPicker(false); setPq(""); setSel(null); setHint(false);
+    setRoleKey(key); setPicker(false); setPq(""); setSel(null); setHint(false); setCtrl(false);
     const r = data.roles.find((x) => x.key === key);
     if (!r) { setFocus("all"); frameLines(new Set<LineId>(LINES.map((l) => l.id))); return; }
     const rt = buildRoute(r, "all", mode);
@@ -213,13 +223,11 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
             {/* lines */}
             {LINES.map((l) => {
               const xs = SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = px(Math.min(...xs)), b = px(Math.max(...xs)), y = py(l.row), c = LINE_COLOUR[l.id];
-              const on = !dimming || litLines.has(l.id), pw = l.name.length * 9.4 + 34;
+              const on = !dimming || litLines.has(l.id);
               return (
                 <g key={l.id} style={{ opacity: on ? 1 : 0.16, transition: "opacity .4s" }}>
                   <line className="ln" pathLength={1} strokeDasharray={1} x1={a} x2={b} y1={y} y2={y} stroke={c} strokeWidth={l.hollow ? 13 : 10} strokeLinecap="butt" />
                   {l.hollow && <line x1={a} x2={b} y1={y} y2={y} stroke="#fbfaf6" strokeWidth={4} />}
-                  <rect x={a - 18 - pw} y={y - 17} width={pw} height={34} rx={17} fill={c} />
-                  <text x={a - 18 - pw / 2} y={y + 6.5} textAnchor="middle" fontSize={18} fontWeight={600} fill={l.id === "doc" ? "#14161f" : "#fff"}>{l.name}</text>
                   {on && dimming && !l.hollow && (
                     <g className="train">
                       <rect x={-13} y={-7} width={26} height={14} rx={4} fill="#fff" stroke={c} strokeWidth={3} />
@@ -247,12 +255,24 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
               );
             })}
 
+            {/* line names, drawn over the gates so a handoff bar never cuts through one */}
+            {LINES.map((l) => {
+              const xs = SEQ[l.id].map((n) => (n.kind === "st" ? n.st.x : n.gate.x)), a = px(Math.min(...xs)), y = py(l.row), c = LINE_COLOUR[l.id];
+              const on = !dimming || litLines.has(l.id), pw = l.name.length * 9.4 + 34;
+              return (
+                <g key={l.id} pointerEvents="none" style={{ opacity: on ? 1 : 0.16, transition: "opacity .4s" }}>
+                  <rect x={a - 18 - pw} y={y - 17} width={pw} height={34} rx={17} fill={c} />
+                  <text x={a - 18 - pw / 2} y={y + 6.5} textAnchor="middle" fontSize={18} fontWeight={600} fill={l.id === "doc" ? "#14161f" : "#fff"}>{l.name}</text>
+                </g>
+              );
+            })}
+
             {/* stations */}
             {STATIONS.map((st) => {
               const X = px(st.x), Y = py(st.row), c = LINE_COLOUR[st.line], t = data.tracks[st.track], mk = markOf(t);
-              const on = !dimming || routeIds.has(st.id), isNext = next?.id === st.id, isSel = sel?.kind === "st" && sel.id === st.id, lift = st.tier * 22, above = true; // labels always sit above the line, on a second tier when they would collide
+              const on = !dimming || routeIds.has(st.id), isNext = next?.id === st.id, isGoal = ends?.goal.id === st.id && !isNext, isSel = sel?.kind === "st" && sel.id === st.id, lift = st.tier * 22, above = true; // labels always sit above the line, on a second tier when they would collide
               const tx = st.anchor === "start" ? st.L : st.anchor === "end" ? st.R : X, frac = Math.min(1, (t?.passed ?? 0) / 20), C = 2 * Math.PI * 16;
-              const label = showLabels && (on || isSel) || isNext || isSel;
+              const label = showLabels && (on || isSel) || isNext || isGoal || isSel;
               return (
                 <g key={st.id} role="button" tabIndex={0} aria-label={`${st.name}${t ? `, ${t.passed > 0 ? `level ${t.passed} of 20` : "not started"}` : ""}`} className="st cursor-pointer outline-none"
                   style={{ opacity: on ? 1 : 0.14, transition: "opacity .4s" }}
@@ -287,6 +307,12 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
                       <text y={5} textAnchor="middle" fontSize={15} fontWeight={700} letterSpacing=".06em" fill="#fff">{data.signedIn ? "NEXT STOP" : "START HERE"}</text>
                     </g>
                   )}
+                  {isGoal && !isSel && (
+                    <g transform={`translate(${X},${Y + 36})`}>
+                      <rect x={-34} y={-14} width={68} height={27} rx={13} fill="#4f46e5" />
+                      <text y={5} textAnchor="middle" fontSize={15} fontWeight={700} letterSpacing=".06em" fill="#fff">GOAL</text>
+                    </g>
+                  )}
                   <circle cx={X} cy={Y} r={20} fill="transparent" />
                   {label && <rect x={st.L - 4} y={Y - 46 - lift} width={st.R - st.L + 8} height={46 + lift} fill="transparent" />}
                 </g>
@@ -297,7 +323,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
       </div>
 
       {/* welcome and the one question */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-[#fbfaf6] via-[#fbfaf6]/92 to-transparent px-3 pb-6 pt-3 sm:px-5 sm:pt-4">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-[#fbfaf6] from-85% to-transparent px-3 pb-7 pt-3 sm:px-5 sm:pt-4">
         {standalone && (
           <div className="pointer-events-auto mb-2 flex items-center gap-3 text-sm">
             <Link href="/" className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-[#fff] px-3 py-1 font-semibold shadow-sm hover:shadow-md"><ArrowLeft size={14} />{standalone.brand}</Link>
@@ -314,17 +340,34 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
             </h1>
           </div>
           <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]">
-            <div className="relative mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-300">
-              <span>I am a</span>
-              <button type="button" onClick={() => setPicker((v) => !v)} aria-expanded={picker} aria-haspopup="listbox"
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${role ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
-                {role ? aiRoleName(role.name, mode) : "Choose your role"}<ChevronDown size={15} />
+            {narrow && !ctrl ? (
+              <button type="button" onClick={() => setCtrl(true)} aria-expanded={false}
+                className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-black/20 bg-[#fff] px-3.5 py-1.5 text-[14px] font-bold shadow-sm hover:border-indigo-400">
+                <span className="truncate">{role ? aiRoleName(role.name, mode) : focus !== "all" ? FOCUS.find((f) => f.id === focus)?.label : "Choose your route"}</span><ChevronDown size={15} className="shrink-0" />
               </button>
-              <span className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm" role="group" aria-label="Role as a person or with AI">
-                {AI_MODES.map((m) => <button key={m.id} type="button" aria-pressed={mode === m.id} title={m.hint} onClick={() => chooseMode(m.id)}
-                  className={`px-3 py-1 transition ${mode === m.id ? (m.id === "human" ? "bg-[#14161f] text-[#fff]" : "bg-violet-600 text-[#fff]") : "hover:bg-black/5"}`}>{m.label}</button>)}
-              </span>
-              <span className="hidden lg:inline">or pick an area. We will light up your route.</span>
+            ) : (
+              <>
+                <p className="mb-1.5 text-[13px] font-semibold text-slate-300">What do you want to work on?</p>
+                <div className="-mx-3 flex gap-1.5 overflow-x-auto px-3 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden" role="group" aria-label="What do you want to work on?">
+                  {FOCUS.map((f) => (
+                    <button key={f.id} type="button" aria-pressed={!role && focus === f.id} onClick={() => choose(f.id)}
+                      className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-[13px] font-semibold transition ${!role && focus === f.id ? "border-[#14161f] bg-[#14161f] text-[#fff]" : "border-black/15 bg-[#fff] hover:border-indigo-400 hover:text-indigo-300"}`}>{f.label}</button>
+                  ))}
+                </div>
+                <div className="relative mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-300">
+                  <span>or I am a</span>
+                  <button type="button" onClick={() => setPicker((v) => !v)} aria-expanded={picker} aria-haspopup="listbox"
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1 text-[14px] font-bold shadow-sm transition ${role ? "border-indigo-400 bg-indigo-50 text-indigo-300" : "border-black/20 bg-[#fff] hover:border-indigo-400"}`}>
+                    {role ? aiRoleName(role.name, mode) : "Choose your role"}<ChevronDown size={15} />
+                  </button>
+                  {aiOpen || mode !== "human" ? (
+                    <span className="inline-flex overflow-hidden rounded-full border border-black/15 bg-[#fff] text-[13px] font-semibold shadow-sm" role="group" aria-label="Role as a person or with AI">
+                      {AI_MODES.map((m) => <button key={m.id} type="button" aria-pressed={mode === m.id} title={m.hint} onClick={() => chooseMode(m.id)}
+                        className={`px-3 py-1 transition ${mode === m.id ? (m.id === "human" ? "bg-[#14161f] text-[#fff]" : "bg-violet-600 text-[#fff]") : "hover:bg-black/5"}`}>{m.label}</button>)}
+                    </span>
+                  ) : (
+                    <button type="button" onClick={() => setAiOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-slate-400 underline decoration-dotted hover:text-indigo-300">Working with AI?</button>
+                  )}
               {picker && (
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(22rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                   <label className="flex items-center gap-2 rounded-xl border border-black/10 bg-[#fbfaf6] px-3 py-2"><Search size={15} className="text-slate-400" />
@@ -335,7 +378,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
                       const q = pq.trim().toLowerCase();
                       const hit = (r: RoleInfo) => !q || [r.name, r.family, r.blurb, ...r.aliases].some((n) => n.toLowerCase().includes(q));
                       const shown = data.roles.filter(hit);
-                      if (!shown.length) return <li className="px-3 py-2 text-[14px] text-slate-400">No role matches. Try an area below.</li>;
+                      if (!shown.length) return <li className="px-3 py-2 text-[14px] text-slate-400">No role matches “{pq.trim()}”. This map is about software, delivery and business roles: try one of the areas instead.</li>;
                       const fams = [...new Set(shown.map((r) => r.family))].sort((a, b) => (FAMILY_ORDER.indexOf(a) + 100) % 100 - (FAMILY_ORDER.indexOf(b) + 100) % 100);
                       return fams.map((f) => (
                         <li key={f} role="presentation">
@@ -352,13 +395,10 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
                   </ul>
                 </div>
               )}
-            </div>
-            <div className="-mx-3 flex gap-1.5 overflow-x-auto px-3 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden" role="group" aria-label="What do you do?">
-              {FOCUS.map((f) => (
-                <button key={f.id} type="button" aria-pressed={!role && focus === f.id} onClick={() => choose(f.id)}
-                  className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1 text-[13px] font-semibold transition ${!role && focus === f.id ? "border-[#14161f] bg-[#14161f] text-[#fff]" : "border-black/15 bg-[#fff] hover:border-indigo-400 hover:text-indigo-300"}`}>{f.label}</button>
-              ))}
-            </div>
+                </div>
+                {ends && <p className="mt-1.5 text-[12.5px] text-slate-400">Your route: {ends.count} stops, from <b className="font-semibold">{ends.from.name}</b> to <b className="font-semibold">{ends.goal.name}</b>.</p>}
+              </>
+            )}
           </div>
           {!standalone && <a href="#below" className="pointer-events-auto hidden shrink-0 items-center gap-1 rounded-full border border-black/10 bg-[#fff] px-3.5 py-1.5 text-[13px] font-semibold shadow-sm hover:shadow-md lg:inline-flex">Explore the academy<ChevronDown size={15} /></a>}
         </div>
@@ -373,7 +413,7 @@ export function LifecycleMap({ data, signage, standalone }: { data: MapData; sig
 
       <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex flex-col items-center gap-2 sm:bottom-5">
         {hint && <p className="pointer-events-auto rounded-full bg-[#14161f]/85 px-3.5 py-1.5 text-[13px] font-medium text-[#fff]">{narrow ? "Drag to move · pinch to zoom · tap a stop" : "Drag to move · ctrl or ⌘ + scroll to zoom · click a stop"}</p>}
-        <button type="button" onClick={goNext} disabled={!next} className="btn pointer-events-auto !rounded-full !px-4 !py-3 text-[15px] shadow-xl sm:!px-5 sm:text-base">Take me to my next stop<ArrowRight size={18} /></button>
+        <button type="button" onClick={goNext} disabled={!next} className="btn pointer-events-auto !rounded-full !px-4 !py-3 text-[15px] shadow-xl sm:!px-5 sm:text-base">{data.signedIn ? "Take me to my next stop" : "Start at the first stop"}<ArrowRight size={18} /></button>
       </div>
 
       {data.journey && (
