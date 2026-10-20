@@ -491,7 +491,7 @@ function StationCard({ st, info, lock, advice, onGoTrack, races, lens, roleName,
         <div className="pr-8">
           <p className="flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400"><span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: c }} />{line.name} line · {ZONES[z].name}</p>
           <h2 className="mt-1 text-[1.75rem] font-bold leading-tight">{st.name}</h2>
-          <p className="mt-1 text-sm text-slate-400">{LINE_BLURB[st.line]} Usually owned by a {st.owner.toLowerCase()}.</p>
+          <p className="mt-1 text-sm text-slate-400">{LINE_BLURB[st.line]} Usually owned by {/^[aeiou]/i.test(st.owner) ? "an" : "a"} {st.owner.toLowerCase()}.</p>
         </div>
 
         {lens === "agent" && (
