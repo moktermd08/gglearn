@@ -105,7 +105,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           <Link href={`/competitions/${r.slug}`} className="btn ml-auto !py-1">Back to the race<ArrowRight size={15} /></Link>
         </div>
       ))}
-      <div className="card pop relative flex flex-wrap items-center justify-between gap-x-6 gap-y-4 overflow-hidden p-6" style={{ background: `linear-gradient(120deg, ${accent}26, #ffffff 60%)` }}>
+      <div className="card pop relative flex flex-wrap items-center justify-between gap-x-6 gap-y-4 overflow-hidden p-6" style={{ background: `radial-gradient(${accent}1f 1px, transparent 1.5px) 0 0 / 18px 18px, linear-gradient(120deg, ${accent}26, #ffffff 60%)` }}>
         <svg className="pointer-events-none absolute -right-10 -top-14 h-72 w-72" viewBox="0 0 200 200" aria-hidden><circle cx="120" cy="80" r="90" fill="none" stroke={accent} strokeOpacity=".18" /><circle cx="120" cy="80" r="58" fill="none" stroke={accent} strokeOpacity=".25" strokeDasharray="4 6" className="march" /></svg>
         <div className="flex items-end gap-1">
           <Avatar kind="human" level={passed} size={88} className="bob" look={looks.me} photoUrl={looks.photoUrl} />
@@ -118,7 +118,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           <h1 className="text-3xl font-extrabold">{track.name}</h1>
           <AvatarPicker me={looks.me} rival={looks.rival} photoUrl={looks.photoUrl} signedIn={looks.signedIn} level={passed} rivalLevel={s?.rival.level ?? 0} rivalHue={rival.hue} className="mt-2" />
           <p className="mt-1 text-slate-300">{track.description}</p>
-          <p className="mt-1 flex flex-wrap items-center gap-x-3 text-xs text-slate-400"><span className="inline-flex items-center gap-1"><ListChecks size={12} />{totalQs.toLocaleString("en-GB")} questions</span><span className="inline-flex items-center gap-1"><Mountain size={12} />20 levels</span><span className="inline-flex items-center gap-1"><Target size={12} />{PASS_MARK * 100}% to pass</span></p>
+          <p className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-300">{[[ListChecks, `${totalQs.toLocaleString("en-GB")} questions`], [Mountain, "20 levels"], [Target, `${PASS_MARK * 100}% to pass`]].map(([Ic, txt]) => { const I = Ic as typeof ListChecks; return <span key={txt as string} className="inline-flex items-center gap-1.5 rounded-full border bg-white/60 px-2.5 py-1 backdrop-blur" style={{ borderColor: `${accent}40` }}><I size={13} style={{ color: accent }} />{txt as string}</span>; })}</p>
           <p className="mt-1 text-sm text-slate-400">Your rival: <b className="text-white">{rival.name}</b>, {rival.tagline}.</p>
           {(proof.learners || proof.passedThisMonth) && <p className="mt-1 flex flex-wrap items-center gap-x-3 text-xs font-semibold text-emerald-700">{proof.learners && <span>{proof.learners.toLocaleString("en-GB")} people are learning this</span>}{proof.passedThisMonth && <span>{proof.passedThisMonth.toLocaleString("en-GB")} passed a level in the last 30 days</span>}</p>}
           {user ? <QuickRaceButtons trackId={track.id} className="mt-3" /> : <Link href={`/signup?next=${encodeURIComponent(`/tracks/${slug}`)}`} className="btn mt-3 !py-2 text-sm"><Zap size={15} />Race this topic, free</Link>}
@@ -223,13 +223,17 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
       <section id="levels">
         <h2 className="mb-2 flex flex-wrap items-center gap-2 text-lg font-bold"><Mountain size={20} className="text-violet-300" />The climb <span className="text-sm font-normal text-slate-400">· pass mark {PASS_MARK * 100}% · up to {QUESTIONS_PER_RUN} questions per exam</span></h2>
         {enrolment && <div className="mb-4 flex items-center gap-3 text-xs text-slate-400"><div className="bar flex-1"><i style={{ width: `${(passed / 20) * 100}%` }} /></div><span className="flex items-center gap-1"><Crown size={13} className="text-amber-300" />{passed}/20</span></div>}
-        <div className="space-y-8">
+        <div className="space-y-10">
           {TIERS.map((tier, ti) => {
             const got = Math.max(0, Math.min(4, passed - ti * 4)), tierDone = got === 4, tierOpen = !!enrolment && passed >= ti * 4 && !tierDone, tierLocked = !!enrolment && passed < ti * 4;
             const col = `hsl(${tier.hue} 70% 45%)`;
             return (
-            <div key={tier.name} className="space-y-3">
-              <div className="relative flex flex-wrap items-center gap-3 overflow-hidden rounded-2xl px-4 py-3" style={{ background: `linear-gradient(100deg, hsl(${tier.hue} 85% 55% / ${tierLocked ? 0.1 : 0.22}), transparent 75%)`, border: `1px solid hsl(${tier.hue} 70% 50% / .25)` }}>
+            <div key={tier.name} className="relative space-y-3 md:pl-9">
+              {/* the trail: a rail down the side that runs from this rank into the next, with a waypoint at each rank */}
+              <span aria-hidden className="pointer-events-none absolute -bottom-10 left-[13px] top-6 hidden w-[3px] rounded-full md:block" style={{ background: `linear-gradient(180deg, hsl(${tier.hue} 80% 55% / ${tierLocked ? 0.25 : 0.7}), hsl(${TIERS[Math.min(ti + 1, TIERS.length - 1)].hue} 80% 55% / ${tierLocked ? 0.25 : 0.7}))` }} />
+              <span aria-hidden className="absolute left-0 top-[18px] hidden h-[29px] w-[29px] place-items-center rounded-full border-[3px] border-[#f7f5ef] text-[11px] font-black text-[#fff] shadow md:grid" style={{ background: `hsl(${tier.hue} 75% ${tierLocked ? 70 : 45}%)` }}>{ti + 1}</span>
+              <div className="relative isolate flex flex-wrap items-center gap-3 overflow-hidden rounded-2xl px-4 py-3" style={{ background: `linear-gradient(100deg, hsl(${tier.hue} 85% 55% / ${tierLocked ? 0.1 : 0.22}), transparent 75%)`, border: `1px solid hsl(${tier.hue} 70% 50% / .25)` }}>
+                <span aria-hidden className="pointer-events-none absolute -right-2 -top-6 -z-10 select-none text-[88px] font-black italic leading-none" style={{ color: `hsl(${tier.hue} 70% 50% / .09)` }}>{String(ti * 4 + 1).padStart(2, "0")}–{String(ti * 4 + 4).padStart(2, "0")}</span>
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-[#fff]" style={{ background: `linear-gradient(135deg, hsl(${tier.hue} 85% 58%), hsl(${tier.hue} 80% 38%))`, opacity: tierLocked ? 0.55 : 1 }}>{tierDone ? <Check size={18} /> : tierLocked ? <Lock size={16} /> : <Medal size={18} />}</span>
                 <div className="min-w-0">
                   <div className="text-sm font-extrabold uppercase tracking-widest" style={{ color: col }}>{tier.name} rank</div>
@@ -246,9 +250,11 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
                   const done = level <= passed, open = !!enrolment && level === passed + 1;
                   const cert = (CERT_LEVELS as readonly number[]).includes(level);
                   const mine = s?.certs.find((c) => c.level === level);
+                  const dim = !!enrolment && !done && !open;
                   return (
-                    <li key={level} style={{ "--i": j, borderTop: `3px solid hsl(${tier.hue} 80% 55% / ${done || open || !enrolment ? 1 : 0.35})`, boxShadow: open ? `0 0 34px -8px hsl(${tier.hue} 85% 55%)` : undefined } as React.CSSProperties}
-                      className={`card card-hover rise relative flex flex-col items-center gap-2 p-4 text-center [&>*]:pointer-events-none [&>button]:pointer-events-auto [&_a]:pointer-events-auto [&_a]:relative [&_a]:z-10 [&_form]:pointer-events-auto [&_form]:relative [&_form]:z-10 ${enrolment && !done && !open ? "bg-[#fbfaf6]" : ""}`}>
+                    <li key={level} style={{ "--i": j, borderTop: `3px solid hsl(${tier.hue} 80% 55% / ${done || open || !enrolment ? 1 : 0.35})`, boxShadow: open ? `0 0 34px -8px hsl(${tier.hue} 85% 55%)` : undefined, "--tw-ring-color": `hsl(${tier.hue} 85% 55% / .5)`, background: dim ? undefined : `radial-gradient(120% 70% at 50% 0%, hsl(${tier.hue} 85% 60% / ${open ? 0.2 : 0.12}), #fff 70%)` } as React.CSSProperties}
+                      className={`card card-hover rise relative isolate flex flex-col items-center gap-2 overflow-hidden p-4 text-center [&>*]:pointer-events-none [&>button]:pointer-events-auto [&_a]:pointer-events-auto [&_a]:relative [&_a]:z-10 [&_form]:pointer-events-auto [&_form]:relative [&_form]:z-10 ${dim ? "bg-[#fbfaf6]" : ""} ${open ? "-translate-y-0.5 ring-2" : ""}`}>
+                      <span aria-hidden className="absolute -bottom-5 -left-1 -z-10 select-none text-[84px] font-black italic leading-none" style={{ color: `hsl(${tier.hue} 70% 50% / ${dim ? 0.05 : 0.1})` }}>{level}</span>
                       <LevelDetail d={detailFor(level, done ? "done" : open ? "current" : enrolment ? "locked" : "preview")} actions={open && n > 0 ? (<>
                         <Link href={`/tracks/${track.slug}/learn/${level}`} className="btn btn-ghost !px-3 !py-1 text-sm"><BookOpen size={14} />Study</Link>
                         {gate ? <span className="inline-flex items-center gap-1 text-xs text-slate-400"><Lock size={13} />Locked</span> : <form action={startRun}><input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} /><button className="btn !px-3 !py-1 text-sm">Take the exam<ArrowRight size={14} /></button></form>}
@@ -282,6 +288,13 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
             </div>
             );
           })}
+          <div className="relative md:pl-9">
+            <span aria-hidden className="absolute left-0 top-1/2 hidden h-[29px] w-[29px] -translate-y-1/2 place-items-center rounded-full border-[3px] border-[#f7f5ef] text-[#fff] shadow md:grid" style={{ background: `hsl(${TIERS[TIERS.length - 1].hue} 80% 45%)` }}><Crown size={14} /></span>
+            <div className="flex items-center gap-3 rounded-2xl border border-dashed px-4 py-3 text-sm" style={{ borderColor: `hsl(${TIERS[TIERS.length - 1].hue} 70% 50% / .4)`, background: `hsl(${TIERS[TIERS.length - 1].hue} 85% 55% / .06)` }}>
+              <Crown size={18} style={{ color: `hsl(${TIERS[TIERS.length - 1].hue} 70% 40%)` }} />
+              <span><b>The summit.</b> Pass level 20 and you are a Titan.</span>
+            </div>
+          </div>
         </div>
       </section>
 
