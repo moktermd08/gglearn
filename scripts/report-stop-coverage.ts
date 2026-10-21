@@ -27,6 +27,11 @@ const GENERIC = new Set("business plan check review team customer customers basi
 const stem = (w: string) => w.replace(/(ing|ed|es|s)$/, (x, _g, i) => (i > 3 ? "" : x));
 const words = (s: string) => [...new Set(s.toLowerCase().replace(/&/g, " ").replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter((w) => w.length > 3 && !GENERIC.has(w)).map(stem))];
 
+/** questions drafted for a stop in content/review/ (not in the bank until reviewed and activated) */
+const drafted = new Map<string, number>();
+const reviewDir = path.join(process.cwd(), "content", "review", "business-stops");
+if (mapId === "business" && fs.existsSync(reviewDir)) for (const f of fs.readdirSync(reviewDir).filter((n) => n.endsWith(".json"))) for (const it of JSON.parse(fs.readFileSync(path.join(reviewDir, f), "utf8")).items ?? []) if (it.stop) drafted.set(it.stop, (drafted.get(it.stop) ?? 0) + (it.questions?.length ?? 0));
+
 type Q = { topic: string; prompt: string };
 const cache = new Map<string, Q[]>();
 const questionsOf = (slug: string): Q[] => {
@@ -48,7 +53,9 @@ const measured = rows.filter((r): r is typeof r & { hit: number } => r.hit !== n
 const thinStops = measured.filter((r) => r.hit < thin).sort((a, b) => a.hit - b.hit || a.name.localeCompare(b.name));
 console.log(`Stops with fewer than ${thin} matching questions: ${thinStops.length} of ${measured.length} measured (${rows.length - measured.length} have only generic words in their name and are not measured)\n`);
 console.log("matches  stop                                  track");
-for (const r of thinStops) console.log(`${String(r.hit).padStart(7)}  ${r.name.padEnd(36)}  ${r.track}  (looked for: ${r.ws.join(" + ")})`);
+for (const r of thinStops) console.log(`${String(r.hit).padStart(7)}  ${r.name.padEnd(36)}  ${r.track}  (looked for: ${r.ws.join(" + ")})${drafted.get(r.id) ? `  [+${drafted.get(r.id)} drafted for review]` : ""}`);
+const needDraft = thinStops.filter((r) => !drafted.has(r.id)).length;
+if (drafted.size) console.log(`\n${drafted.size} stops have drafted questions waiting in content/review/ (not live); ${needDraft} thin stops have none yet. A stop needs ${thin} matching questions to stop being thin.`);
 
 console.log("\nBy track: questions, share about this product, and how many stops lean on it\n");
 console.log("track                         questions  product  stops  thin stops");
