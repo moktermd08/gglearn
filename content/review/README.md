@@ -6,7 +6,7 @@ until a person has checked it and an admin has activated it.
 ## What is here
 
 `business-stops/` holds draft teaching passages and questions for stops of the business map that the question bank barely covers
-(see `npm run report:coverage`): 24 stops, one passage each, four multiple-choice questions at levels 1, 3, 5 and 8. They were written
+(see `npm run report:coverage`): 60 stops, one passage each, four multiple-choice questions at levels 1, 3, 5 and 8 (240 questions). Four thin stops are deliberately left out because their names are too generic to write about without more context (Email & Web Address, Data Skills, Better Governance, Sustainability & Responsibility). They were written
 by an AI assistant from general UK small-business knowledge, **not from cited documents**. Treat every fact as unverified.
 
 Each file is shaped for `npm run import:knowledge`: `{ trackSlug, status: "review", items: [{ title, stop, body, questions }] }`.
@@ -35,4 +35,4 @@ Then move the file out of `content/review/`, and re-run `npm run report:coverage
 ## How far this gets
 
 A stop is "thin" below 15 matching questions. Four drafted questions per stop is a start, not a fix: about eleven more per stop are
-needed to leave "thin", and the other thin stops have none drafted. `npm run report:coverage` shows what is drafted per stop.
+needed to leave "thin". `npm run report:coverage` shows what is drafted per stop.
