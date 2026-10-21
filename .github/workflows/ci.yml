@@ -64,3 +64,18 @@ jobs:
           DATABASE_FILE: ${{ github.workspace }}/ci.db
           SESSION_SECRET: ci-throwaway-secret-0123456789abcdef
         run: npm run build
+
+      # Opens the public pages in a real browser and runs axe (WCAG A and AA) on each, at desktop and phone width, so a change that
+      # brings back low contrast or an unlabelled control fails here. Signed-in and admin pages are not covered (they need data).
+      - name: Install Chromium
+        run: npx playwright-core install --with-deps chromium
+
+      - name: Accessibility check
+        env:
+          DATABASE_FILE: ${{ github.workspace }}/ci.db
+          SESSION_SECRET: ci-throwaway-secret-0123456789abcdef
+          BASE_URL: http://localhost:3100
+        run: |
+          npm run start -- -p 3100 > server.log 2>&1 &
+          for i in $(seq 1 60); do curl -fs -o /dev/null "$BASE_URL/login" && break; sleep 1; done
+          if ! npm run check:a11y; then echo "::group::server log"; cat server.log; echo "::endgroup::"; exit 1; fi
