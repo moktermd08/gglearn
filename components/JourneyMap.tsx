@@ -8,7 +8,7 @@ export type MapNode = { title: string; sub?: string; state: "here" | "done" | "n
  */
 export function JourneyMap({ nodes, goalLabel }: { nodes: MapNode[]; goalLabel: string }) {
   return (
-    <div className="relative overflow-x-auto pb-1">
+    <div tabIndex={0} role="region" aria-label="Your journey map" className="relative overflow-x-auto pb-1">
       <ol className="flex min-w-max items-start px-1" aria-label="Route">
         {nodes.map((n, i) => {
           const last = i === nodes.length - 1, joinSolid = n.state === "here" || n.state === "done";

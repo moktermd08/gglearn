@@ -27,7 +27,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
   const best = Math.max(1, ...members.map((m) => m.weekXp));
   const cls = t.kind === "class", roster = cls && owner ? rosterFor(me.id, t.id) : null, mine = cls && !owner ? myAssignments(me.id, t.id) : [];
   const day = (s: number) => new Date(s * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
-  const pill: Record<Status, string> = { done: "bg-emerald-500/15 text-emerald-500", open: "bg-sky-500/15 text-sky-500", late: "bg-rose-500/15 text-rose-500" };
+  const pill: Record<Status, string> = { done: "bg-emerald-500/15 text-emerald-300", open: "bg-sky-500/15 text-sky-300", late: "bg-rose-500/15 text-rose-300" };
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHero Icon={Users} tone="violet" title={t.name} sub={cls ? `${members.length} of ${MAX_TEAM_SIZE} places taken. ${owner ? "You see progress on the assigned topics only." : "Only your teacher sees your progress here."}` : `${members.length} of ${MAX_TEAM_SIZE} places taken. Members see each other's names, levels and XP this week.`}>

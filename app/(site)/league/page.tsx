@@ -64,7 +64,7 @@ export default async function League() {
               {v.down > 0 && i === v.rows.length - v.down && v.tier > 0 && <div className="my-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide text-rose-400"><span className="h-px flex-1 bg-rose-300" />relegation zone<span className="h-px flex-1 bg-rose-300" /></div>}
               <div className={`flex items-center gap-3 rounded-xl px-3 py-2 ${r.mine ? "bg-indigo-500/10 ring-2 ring-indigo-400/60" : r.zone === "up" ? "bg-emerald-500/10" : r.zone === "down" ? "bg-rose-500/10" : "bg-black/[.03]"}`}>
                 <span className="w-7 text-center text-sm font-extrabold text-slate-400">{r.rank === 1 ? <Crown size={16} className="mx-auto text-amber-500" /> : r.rank}</span>
-                <span className="min-w-0 flex-1 truncate font-semibold">{r.name}{r.mine && <span className="ml-2 text-xs font-bold text-indigo-500">you</span>}</span>
+                <span className="min-w-0 flex-1 truncate font-semibold">{r.name}{r.mine && <span className="ml-2 text-xs font-bold text-indigo-300">you</span>}</span>
                 {r.zone === "up" && <ArrowUp size={15} className="text-emerald-500" aria-label="promotion zone" />}
                 {r.zone === "down" && <ArrowDown size={15} className="text-rose-500" aria-label="relegation zone" />}
                 <span className="w-16 text-right font-bold">{r.points}</span>

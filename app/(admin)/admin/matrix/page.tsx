@@ -34,7 +34,7 @@ export default async function Matrix() {
         <li className="flex items-center gap-2"><i className={`inline-block h-3 w-3 rounded-full ${DOT.recommended}`} /><b>Recommended</b> shapes a new joiner&apos;s starter plan</li>
         <li className="flex items-center gap-2"><i className={`inline-block h-1.5 w-1.5 rounded-full ${DOT.optional.split(" ")[0]}`} />Optional</li>
       </ul>
-      <div className="card relative overflow-x-auto p-3">
+      <div tabIndex={0} role="region" aria-label="Role and pillar matrix" className="card relative overflow-x-auto p-3">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs text-slate-400">

@@ -39,7 +39,7 @@ export default async function Notifications({ searchParams }: { searchParams: Pr
   const kind = kinds.find((k) => k === kq);
   const notes = kind ? all.filter((n) => n.kind === kind) : all;
   const groups = ["Today", "Yesterday", "This week", "Earlier"].map((g) => ({ g, items: notes.filter((n) => bucket(n.createdAt) === g) })).filter((x) => x.items.length > 0);
-  const chip = (on: boolean) => `inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition ${on ? "border-sky-400 bg-sky-500/20 text-sky-300" : "border-slate-600/50 text-slate-300 hover:border-slate-400"}`;
+  const chip = (on: boolean) => `inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition ${on ? "border-sky-400 bg-sky-500/20 text-sky-200" : "border-slate-600/50 text-slate-300 hover:border-slate-400"}`;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
