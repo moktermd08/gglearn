@@ -22,6 +22,7 @@ const GROUP: Record<string, { Icon: typeof Flame; color: string; tone: string }>
   Seasons: { Icon: CalendarDays, color: PALETTE.pink, tone: "bg-pink-500/15 text-pink-300" },
   Community: { Icon: Users, color: "#14b8a6", tone: "bg-teal-500/15 text-teal-400" },
 };
+const TIER_TEXT = { bronze: "#9a4a0c", silver: "#475569", gold: "#854d0e", legend: "#a21caf" } as const; // darker twins of TIER_COLOR, for text
 const TIER_COLOR = { bronze: "#ea8a3c", silver: "#94a3b8", gold: "#eab308", legend: "#d946ef" } as const;
 
 /** Percentage ring for a badge that is part-way there. */
@@ -74,7 +75,7 @@ export default async function Achievements() {
           <p className="text-sm text-slate-400">{p.earned === p.badges.length ? "Every badge earned. Nothing left to chase." : `${p.badges.length - p.earned} left to earn across ${BADGE_GROUPS.length} groups.`}</p>
           <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">{tiers.map(({ t, have, all }) => (
             <li key={t} className="rounded-xl p-2.5 ring-1" style={{ background: `${TIER_COLOR[t]}1f`, ["--tw-ring-color" as string]: `${TIER_COLOR[t]}66` }}>
-              <div className="text-[10px] font-extrabold uppercase tracking-wider" style={{ color: TIER_COLOR[t] }}>{TIER[t].label}</div>
+              <div className="text-[10px] font-extrabold uppercase tracking-wider" style={{ color: TIER_TEXT[t] }}>{TIER[t].label}</div>
               <div className="text-lg font-black">{have}<span className="text-xs font-bold text-slate-400"> / {all}</span></div>
             </li>))}</ul>
         </div>
@@ -105,7 +106,7 @@ export default async function Achievements() {
               <span className="bar ml-auto !h-1.5 w-24 sm:w-40"><i style={{ width: `${(have / all.length) * 100}%`, background: color }} /></span>
             </div>); })()}
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{p.badges.filter((b) => b.group === g).sort((a, b) => Number(b.earned) - Number(a.earned)).map((b) => (
-            <li key={b.key} className={`card flex items-center gap-3 border-l-4 p-3 ${b.earned ? "" : "opacity-80"}`} style={{ borderLeftColor: b.earned ? TIER_COLOR[b.tier] : "transparent" }}>
+            <li key={b.key} className="card flex items-center gap-3 border-l-4 p-3" style={{ borderLeftColor: b.earned ? TIER_COLOR[b.tier] : "transparent" }}>
               <div className="w-16 shrink-0"><BadgeTile b={b} /></div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2"><span className="text-sm font-bold">{b.name}</span><span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">{TIER[b.tier].label}</span></div>
