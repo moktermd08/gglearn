@@ -16,7 +16,10 @@ const walk = (d: string): string[] => fs.existsSync(d) ? fs.readdirSync(d, { wit
 
 const dbFile = process.env.DATABASE_FILE ?? path.join(process.cwd(), "data", "gglearn.db");
 const db = fs.existsSync(dbFile) ? new Database(dbFile, { readonly: true }) : null;
-const trackExists = (slug: string) => !db || !!db.prepare("select 1 from tracks where slug=?").get(slug);
+// Track names are only checked against a database that has tracks. A database with none (an empty one built from the schema, as CI uses) has
+// nothing to check them against, so that rule is skipped rather than failing every file; the rest still runs.
+const hasTracks = !!db && ((db.prepare("select count(*) as n from tracks").get() as { n: number }).n > 0);
+const trackExists = (slug: string) => !hasTracks || !!db!.prepare("select 1 from tracks where slug=?").get(slug);
 const liveHas = (slug: string, prompt: string) => !!db?.prepare("select 1 from questions q join tracks t on t.id=q.track_id where t.slug=? and q.prompt=?").get(slug, prompt);
 
 type Q = { level: number; type: string; prompt: string; options?: { key: string; text: string }[]; answer: string; topic?: string };
@@ -66,6 +69,6 @@ for (const file of walk(root)) {
 // the right answer must not sit in one place
 const total = Object.values(letters).reduce((a, b) => a + b, 0);
 for (const [k, n] of Object.entries(letters)) if (total >= 20 && (n / total < 0.15 || n / total > 0.35)) fail(`answer position: "${k}" is ${Math.round((n / total) * 100)}% of answers (15 to 35% expected)`);
-console.log(`review  ${files} files, ${items} items, ${qn} questions; answers a/b/c/d ${Object.values(letters).join("/")}`);
+console.log(`review  ${files} files, ${items} items, ${qn} questions; answers a/b/c/d ${Object.values(letters).join("/")}${hasTracks ? "" : " (track names not checked: the database has no tracks)"}`);
 if (fails) { console.error(`${fails} problem(s)`); process.exit(1); }
 console.log("review content ok");
