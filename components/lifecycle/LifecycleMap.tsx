@@ -605,9 +605,9 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(24rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                   <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">How big is your organisation?</p>
                   <ul role="listbox" aria-label="Organisation sizes">
-                    <li><button type="button" role="option" aria-selected={!orgSize} onClick={() => chooseSize(null)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5"><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Any size</span><span className="block text-[12px] text-slate-400">Show every stop</span></span>{!orgSize && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                    <li role="presentation"><button type="button" role="option" aria-selected={!orgSize} onClick={() => chooseSize(null)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5"><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Any size</span><span className="block text-[12px] text-slate-400">Show every stop</span></span>{!orgSize && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
                     {M.SIZES.map((z, i) => (
-                      <li key={z.id}><button type="button" role="option" aria-selected={z.id === orgSize} onClick={() => chooseSize(z.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
+                      <li key={z.id} role="presentation"><button type="button" role="option" aria-selected={z.id === orgSize} onClick={() => chooseSize(z.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
                         <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#14161f] text-[11px] font-bold text-[#fff]">{i + 1}</span>
                         <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{z.label}</span><span className="block text-[12px] text-slate-400">{z.people}</span></span>{z.id === orgSize && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
                     ))}
@@ -618,9 +618,9 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(26rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                   <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">What kind of business is it?</p>
                   <ul role="listbox" aria-label="Kinds of business" className="max-h-80 overflow-auto">
-                    <li><button type="button" role="option" aria-selected={!sector} onClick={() => chooseSector(null)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5"><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Any kind of business</span><span className="block text-[12px] text-slate-400">No sector notes</span></span>{!sector && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                    <li role="presentation"><button type="button" role="option" aria-selected={!sector} onClick={() => chooseSector(null)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5"><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Any kind of business</span><span className="block text-[12px] text-slate-400">No sector notes</span></span>{!sector && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
                     {M.SECTORS.map((z) => (
-                      <li key={z.id}><button type="button" role="option" aria-selected={z.id === sector} onClick={() => chooseSector(z.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
+                      <li key={z.id} role="presentation"><button type="button" role="option" aria-selected={z.id === sector} onClick={() => chooseSector(z.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
                         <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{z.label}</span><span className="block text-[12px] text-slate-400">{z.blurb}</span></span>{z.id === sector && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
                     ))}
                   </ul>
@@ -630,9 +630,9 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                 <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(24rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                   <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Which level are you at right now?</p>
                   <ul role="listbox" aria-label="Career levels">
-                    <li><button type="button" role="option" aria-selected={!level} onClick={() => chooseLevel(null)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5"><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Any level</span><span className="block text-[12px] text-slate-400">Show every stop for this role</span></span>{!level && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
+                    <li role="presentation"><button type="button" role="option" aria-selected={!level} onClick={() => chooseLevel(null)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5"><span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">Any level</span><span className="block text-[12px] text-slate-400">Show every stop for this role</span></span>{!level && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
                     {role.rungs!.map((r, i) => (
-                      <li key={i}><button type="button" role="option" aria-selected={level === i + 1} onClick={() => chooseLevel(i + 1)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
+                      <li key={i} role="presentation"><button type="button" role="option" aria-selected={level === i + 1} onClick={() => chooseLevel(i + 1)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
                         <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{r.title}</span><span className="block text-[12px] text-slate-400">{r.summary}</span></span>{level === i + 1 && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
                     ))}
                   </ul>
@@ -643,7 +643,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                   <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">{M.words.stageAsk ?? "Where is your company?"}</p>
                   <ul role="listbox" aria-label="Stages">
                     {M.STAGES.map((g, i) => (
-                      <li key={g.id}><button type="button" role="option" aria-selected={g.id === stage} onClick={() => chooseStage(g.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
+                      <li key={g.id} role="presentation"><button type="button" role="option" aria-selected={g.id === stage} onClick={() => chooseStage(g.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
                         <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#14161f] text-[11px] font-bold text-[#fff]">{i + 1}</span>
                         <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{g.label}</span><span className="block text-[12px] text-slate-400">{g.ask}</span></span>{g.id === stage && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
                     ))}
@@ -668,19 +668,19 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                   <label className="flex items-center gap-2 rounded-xl border border-black/10 bg-[#fbfaf6] px-3 py-2"><Search size={15} className="text-slate-400" />
                     <input autoFocus value={pq} onChange={(e) => setPq(e.target.value)} placeholder="Business analyst, CFO, policy advisor, software engineer…" aria-label="Find your role" className="min-w-0 flex-1 bg-transparent text-[14px] outline-none" /></label>
                   <ul role="listbox" aria-label="Roles" className="mt-1.5 max-h-80 overflow-auto">
-                    {role && <li><button type="button" onClick={() => chooseRole(null)} className="w-full rounded-lg px-3 py-2 text-left text-[14px] text-slate-400 hover:bg-black/5">Any role: show everything</button></li>}
+                    {role && <li role="presentation"><button type="button" onClick={() => chooseRole(null)} className="w-full rounded-lg px-3 py-2 text-left text-[14px] text-slate-400 hover:bg-black/5">Any role: show everything</button></li>}
                     {(() => {
                       const q = pq.trim().toLowerCase();
                       const hit = (r: RoleInfo) => !q || [r.name, r.family, r.blurb, ...r.aliases].some((n) => n.toLowerCase().includes(q));
                       const shown = data.roles.filter(hit);
-                      if (!shown.length) return <li className="px-3 py-2 text-[14px] text-slate-400">No role matches “{pq.trim()}”. {M.PROBLEMS.length > 0 ? <button type="button" onClick={() => { setPicker(false); setFq(pq.trim()); setPq(""); setFopen(true); finderRef.current?.focus(); }} className="font-semibold text-indigo-300 underline">Say what you need help with instead</button> : M.words.coverage}</li>;
+                      if (!shown.length) return <li role="presentation" className="px-3 py-2 text-[14px] text-slate-400">No role matches “{pq.trim()}”. {M.PROBLEMS.length > 0 ? <button type="button" onClick={() => { setPicker(false); setFq(pq.trim()); setPq(""); setFopen(true); finderRef.current?.focus(); }} className="font-semibold text-indigo-300 underline">Say what you need help with instead</button> : M.words.coverage}</li>;
                       const fams = [...new Set(shown.map((r) => r.family))].sort((a, b) => (FAMILY_ORDER.indexOf(a) + 100) % 100 - (FAMILY_ORDER.indexOf(b) + 100) % 100);
                       return fams.map((f) => (
                         <li key={f} role="presentation">
                           <p className="sticky top-0 bg-[#fff] px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">{f}</p>
                           <ul role="group" aria-label={f}>
                             {shown.filter((r) => r.family === f).map((r) => (
-                              <li key={r.key}><button type="button" role="option" aria-selected={r.key === roleKey} onClick={() => chooseRole(r.key)} className="flex w-full items-start gap-2 rounded-lg px-3 py-1.5 text-left hover:bg-black/5">
+                              <li key={r.key} role="presentation"><button type="button" role="option" aria-selected={r.key === roleKey} onClick={() => chooseRole(r.key)} className="flex w-full items-start gap-2 rounded-lg px-3 py-1.5 text-left hover:bg-black/5">
                                 <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{r.name}</span><span className="block truncate text-[12px] text-slate-400">{r.blurb}</span></span>{r.key === roleKey && <Check size={15} className="mt-1 shrink-0 text-indigo-300" />}</button></li>
                             ))}
                           </ul>

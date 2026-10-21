@@ -3,6 +3,8 @@ import { inArray, like } from "drizzle-orm";
 import { db, userScopes, users } from "../lib/db";
 import { modeLabel } from "../lib/competitions";
 import { glanceCounts } from "../lib/glance";
+import fs from "node:fs";
+import path from "node:path";
 import { safeNext } from "../lib/nextPath";
 
 process.env.GLANCE_TTL_MS = "0"; // read fresh each time
@@ -43,5 +45,18 @@ try {
 } finally {
   sweep();
 }
+// A list whose items are option buttons: the <li> around each option is only structure, so it must say so (role="presentation").
+// Without it a screen reader sees a listbox with plain list items inside, and axe reports aria-required-children and aria-required-parent
+// as critical (the role, stage, size, level and sector pickers all had this). Read from the source, so no browser is needed.
+{
+  const src = fs.readFileSync(path.join(process.cwd(), "components", "lifecycle", "LifecycleMap.tsx"), "utf8");
+  const wrapped = [...src.matchAll(/<li\b([^>]*)>\s*<button\b[^>]*role="option"/g)];
+  const bare = wrapped.filter((m) => !/role="presentation"/.test(m[1]));
+  check(`every list item around an option button is marked role="presentation" (${wrapped.length} checked)`, wrapped.length >= 10 && bare.length === 0);
+  if (bare.length) for (const m of bare.slice(0, 3)) console.log("     bare: <li" + m[1].slice(0, 60) + ">");
+  const lists = [...src.matchAll(/<ul\b[^>]*role="listbox"[^>]*>/g)].length;
+  check("the option lists are still there to check (a rename must not make the rule pass by finding nothing)", lists >= 6);
+}
+
 console.log(fails ? `\n${fails} FAILED` : "\nall passed");
 process.exit(fails ? 1 : 0);
