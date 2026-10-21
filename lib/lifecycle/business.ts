@@ -1,6 +1,7 @@
 import type { Gate, LineDef, MapDef, RawStation, StageDef, ZoneDef } from "./engine";
 import { BUSINESS_SIZES } from "./businessSizes";
 import { BUSINESS_PROBLEMS } from "./problems";
+import { BUSINESS_SECTORS, SECTOR_PROBLEMS } from "./businessSectors";
 import { STOP_BREAKS, STOP_HANDOFFS, STOP_OUTCOMES } from "./businessText";
 import { MORE_BREAKS, MORE_FROM, MORE_TRACKS, MORE_LOCAL_NOTE, MORE_OUTCOMES, MORE_PROBLEMS, MORE_PROS, MORE_STAGE, MORE_STOPS } from "./businessMore";
 
@@ -335,7 +336,8 @@ export const BUSINESS_DEF: MapDef = {
   ai: null,
   layout: { top: 215 },
   sizes: BUSINESS_SIZES,
-  problems: [...BUSINESS_PROBLEMS, ...MORE_PROBLEMS],
+  problems: [...BUSINESS_PROBLEMS, ...MORE_PROBLEMS, ...SECTOR_PROBLEMS],
+  sectors: BUSINESS_SECTORS,
   outcomes: { ...STOP_OUTCOMES, ...MORE_OUTCOMES },
   handoffs: STOP_HANDOFFS,
   pros: MORE_PROS,
