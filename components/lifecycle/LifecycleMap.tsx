@@ -59,8 +59,10 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
   const [problemId, setProblemId] = useState<string | null>(initial?.problem ?? null); // a problem in the person's own words: it lights its own stops
   const [fq, setFq] = useState(""); // what they typed in the problem finder
   const [fopen, setFopen] = useState(false);
+  const [activeOpt, setActiveOpt] = useState(-1); // which result the arrow keys are on (-1: none yet)
   const [quiz, setQuiz] = useState<Record<string, boolean | undefined> | null>(null); // the "not sure which stage?" questions
   const finderRef = useRef<HTMLInputElement>(null);
+  useEffect(() => { if (activeOpt >= 0) document.getElementById(`finder-opt-${activeOpt}`)?.scrollIntoView({ block: "nearest" }); }, [activeOpt]);
   const problem = useMemo(() => combineProblems(problemId, M.PROBLEMS), [M, problemId]);
   const [ticks, setTicks] = useState<string[]>([]); // "not sure what is wrong": the things that sound like them, ticked
   const [checker, setChecker] = useState(false);
@@ -85,6 +87,8 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
 
   const role = useMemo<RoleInfo | null>(() => data.roles.find((r) => r.key === roleKey) ?? null, [roleKey, data.roles]);
+  /* The finder's results as one list, problems first and then stops, so the arrow keys, the screen reader and the mouse all see the same options. */
+  const finderOptions = useMemo(() => [...finderHits.map((p) => ({ kind: "problem" as const, id: p.id, label: p.say })), ...stopHits.map((s) => ({ kind: "stop" as const, id: s.id, label: s.name }))], [finderHits, stopHits]);
   /* A role whose main subjects mostly live on another map (a cloud engineer on the business map) is pointed there, with the role and level kept. A role this map already covers about as well is left alone. */
   const betterMap = useMemo(() => {
     if (!role || !role.core.length) return null;
@@ -290,6 +294,11 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
   };
   /** What the chosen kind of business means for one stop, when it says anything about it. */
   const sectorInfo = (stopId: string) => { const s = sector ? M.SECTOR_BY_ID.get(sector) : null, text = s ? M.sectorNote(stopId, s.id) : null; return s && text ? { label: s.label, text } : null; };
+  /** Picks one of the finder's results, as a click or Enter on the highlighted one does. */
+  const chooseOption = (o: { kind: "problem" | "stop"; id: string }) => {
+    if (o.kind === "problem") { chooseProblem(o.id); return; }
+    setProblemId(null); setFocus("all"); setFopen(false); setFq(""); setActiveOpt(-1); logPick("stop", [o.id]); pick({ kind: "st", id: o.id });
+  };
   const goNext = () => { if (next) pick({ kind: "st", id: next.id }); };
 
   /* The address bar always holds the current route, so it can be copied as it is; Share also offers it to the phone's share sheet. */
@@ -496,8 +505,21 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                   <div className="relative mb-2.5">
                     <label className="flex items-center gap-2 rounded-2xl border border-black/20 bg-[#fff] px-3.5 py-2 shadow-sm focus-within:border-indigo-400">
                       <Lightbulb size={16} className="shrink-0 text-amber-500" />
-                      <input ref={finderRef} value={fq} onChange={(e) => { setFq(e.target.value); setFopen(true); }} onFocus={() => setFopen(true)} onKeyDown={(e) => { if (e.key === "Escape") setFopen(false); if (e.key === "Enter") { const h = findProblems(fq, M.PROBLEMS, 1)[0]; if (h) chooseProblem(h.id); else if (fq.trim()) logPick("nomatch"); } }}
-                        placeholder="Not sure where to start? Say what is going wrong, in your own words…" aria-label="Say what is going wrong" role="combobox" aria-expanded={fopen} aria-controls="problem-list" className="min-w-0 flex-1 bg-transparent text-[14px] outline-none" />
+                      <input ref={finderRef} value={fq} onChange={(e) => { setFq(e.target.value); setFopen(true); setActiveOpt(-1); }} onFocus={() => setFopen(true)}
+                        onKeyDown={(e) => {
+                          const n = finderOptions.length;
+                          if (e.key === "ArrowDown") { e.preventDefault(); setFopen(true); if (n) setActiveOpt((i) => (i + 1) % n); }
+                          else if (e.key === "ArrowUp") { e.preventDefault(); setFopen(true); if (n) setActiveOpt((i) => (i <= 0 ? n - 1 : i - 1)); }
+                          else if (e.key === "Home" && fopen && n) { e.preventDefault(); setActiveOpt(0); }
+                          else if (e.key === "End" && fopen && n) { e.preventDefault(); setActiveOpt(n - 1); }
+                          else if (e.key === "Escape") { if (fopen) { e.preventDefault(); setFopen(false); setActiveOpt(-1); } }
+                          else if (e.key === "Enter") {
+                            e.preventDefault();
+                            const o = activeOpt >= 0 ? finderOptions[activeOpt] : undefined, h = findProblems(fq, M.PROBLEMS, 1)[0];
+                            if (o) chooseOption(o); else if (h) chooseProblem(h.id); else if (fq.trim()) logPick("nomatch");
+                          }
+                        }}
+                        placeholder="Not sure where to start? Say what is going wrong, in your own words…" aria-label="Say what is going wrong" role="combobox" aria-autocomplete="list" aria-expanded={fopen} aria-controls="problem-list" aria-activedescendant={fopen && activeOpt >= 0 ? `finder-opt-${activeOpt}` : undefined} className="min-w-0 flex-1 bg-transparent text-[14px] outline-none" />
                       {(fq || problem) && <button type="button" aria-label="Clear" onClick={() => { setFq(""); if (problem) chooseProblem(null); finderRef.current?.focus(); }} className="rounded-full p-0.5 text-slate-400 hover:bg-black/5"><X size={14} /></button>}
                     </label>
                     {problem && !fopen && <p className="mt-1 px-1 text-[12.5px] text-slate-300">Showing help for: <b className="font-semibold">{problem.say}</b></p>}
@@ -505,18 +527,16 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                         <div className="absolute left-0 top-full z-40 mt-1.5 w-[min(34rem,calc(100vw-1.5rem))] rounded-2xl border border-black/10 bg-[#fff] p-2 shadow-2xl">
                           <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">{fq.trim() ? (finderHits.length ? "Closest to what you said" : "No match yet") : "Common situations: pick the one that sounds like you"}</p>
                           <ul id="problem-list" role="listbox" aria-label="Problems" className="max-h-80 overflow-auto">
-                            {finderHits.map((p) => (
-                              <li key={p.id}><button type="button" role="option" aria-selected={p.id === problemId} onClick={() => chooseProblem(p.id)} className="flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5">
+                            {finderHits.map((p, i) => (
+                              <li key={p.id} role="presentation"><button type="button" id={`finder-opt-${i}`} role="option" tabIndex={-1} aria-selected={i === activeOpt} onClick={() => chooseProblem(p.id)} onMouseMove={() => setActiveOpt(i)} className={`flex w-full items-start gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-black/5 ${i === activeOpt ? "bg-indigo-50 ring-2 ring-indigo-400" : ""}`}>
                                 <span className="min-w-0 flex-1"><span className="block text-[14px] font-semibold">{p.say}</span><span className="block text-[12px] text-slate-400">{p.stops.length} stops · starts at {M.STATION_BY_ID.get(p.stops[0])?.name}</span></span></button></li>
                             ))}
+                            {stopHits.length > 0 && <li role="presentation" className="mt-1 border-t border-black/10 px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Or go straight to a stop</li>}
+                            {stopHits.map((s, j) => { const i = finderHits.length + j; return (
+                              <li key={s.id} role="presentation"><button type="button" id={`finder-opt-${i}`} role="option" tabIndex={-1} aria-selected={i === activeOpt} onClick={() => chooseOption({ kind: "stop", id: s.id })} onMouseMove={() => setActiveOpt(i)} className={`block w-full rounded-lg px-3 py-1.5 text-left text-[14px] font-semibold hover:bg-black/5 ${i === activeOpt ? "bg-indigo-50 ring-2 ring-indigo-400" : ""}`}>{s.name}</button></li>
+                            ); })}
                             {!finderHits.length && <li className="px-3 py-2 text-[13px] text-slate-400">Try fewer or simpler words (for example “cash”, “hiring”, “customers leave”), or pick one of the areas below.</li>}
                           </ul>
-                          {stopHits.length > 0 && (
-                            <div className="border-t border-black/10 pt-1">
-                              <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Or go straight to a stop</p>
-                              {stopHits.map((s) => <button key={s.id} type="button" onClick={() => { setProblemId(null); setFocus("all"); setFopen(false); setFq(""); logPick("stop", [s.id]); pick({ kind: "st", id: s.id }); }} className="block w-full rounded-lg px-3 py-1.5 text-left text-[14px] font-semibold hover:bg-black/5">{s.name}</button>)}
-                            </div>
-                          )}
                           {!checker ? (
                             <button type="button" onClick={() => setChecker(true)} className="mt-1 w-full rounded-lg px-3 py-2 text-left text-[13px] font-semibold text-indigo-300 hover:bg-black/5">Can&apos;t say what is wrong? Tick everything that sounds like you</button>
                           ) : (
