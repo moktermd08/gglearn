@@ -131,7 +131,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           {[
             { Icon: Sparkles, label: "XP", value: s.xp, cls: "text-sky-300" },
             { Icon: Flame, label: "Day streak", value: s.streak, cls: "text-orange-400" },
-            { Icon: Medal, label: "Rank", value: TIERS[tierOf(passed)].name, color: `hsl(${TIERS[tierOf(passed)].hue} 70% 35%)` },
+            { Icon: Medal, label: "Rank", value: TIERS[tierOf(passed)].name, color: `hsl(${TIERS[tierOf(passed)].hue} 70% 29%)` },
           ].map(({ Icon, label, value, cls, color }, i) => (
             <div key={label} className="card rise p-4 text-center" style={{ "--i": i } as React.CSSProperties}>
               <Icon size={22} className={`mx-auto ${cls ?? ""} ${label === "Day streak" && s.streak > 0 ? "pulse-glow" : ""}`} style={color ? { color } : undefined} />

@@ -50,7 +50,7 @@ export function StreakCard({ s, freezes }: { s: Progression["streak"]; freezes?:
 export function BadgeTile({ b, fresh = false }: { b: BadgeView; fresh?: boolean }) {
   const t = TIER[b.tier];
   return (
-    <div title={`${b.name}: ${b.desc}${b.earnedAt ? ` · earned ${date(b.earnedAt)}` : ""}`} className={`relative flex aspect-square flex-col items-center justify-center rounded-2xl p-1 text-center ${b.earned ? `${fresh ? "pop " : ""}${t.bg} ring-1 ${t.ring}` : "bg-black/[.04] opacity-55 grayscale"}`}>
+    <div title={`${b.name}: ${b.desc}${b.earnedAt ? ` · earned ${date(b.earnedAt)}` : ""}`} className={`relative flex aspect-square flex-col items-center justify-center rounded-2xl p-1 text-center ${b.earned ? `${fresh ? "pop " : ""}${t.bg} ring-1 ${t.ring}` : "bg-black/[.04] opacity-80 grayscale"}`}>
       {!b.earned && <Lock size={10} className="absolute right-1.5 top-1.5 text-slate-400" />}
       <div className="text-2xl" aria-hidden>{b.icon}</div>
       <div className="mt-0.5 px-0.5 text-[9px] font-bold leading-tight">{b.name}</div>
