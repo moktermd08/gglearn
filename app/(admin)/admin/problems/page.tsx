@@ -55,7 +55,7 @@ export default async function Problems({ searchParams }: { searchParams: Promise
               <div className="card p-4">
                 <h3 className="text-sm font-semibold">Never picked in {days} days <span className="font-normal text-slate-400">({m.unpicked.length} of {m.picks.length + m.unpicked.length})</span></h3>
                 <p className="mt-0.5 text-[12.5px] text-slate-400">Reword these, move them into the common situations, or drop them.</p>
-                <ul className="mt-2 max-h-72 space-y-1 overflow-auto text-sm">
+                <ul tabIndex={0} aria-label="Problems never picked" className="mt-2 max-h-72 space-y-1 overflow-auto text-sm">
                   {m.unpicked.map((p) => <li key={p.id}>{p.say}</li>)}
                 </ul>
               </div>
