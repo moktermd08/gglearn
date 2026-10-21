@@ -20,7 +20,7 @@ export function ManagerGlance({ admin, viewer }: { admin: boolean; viewer: { id:
     certLine && { Icon: Hourglass, tone: "bg-amber-500/12 text-amber-500", href: "/admin/certificates?show=expiring", text: certLine },
     overdue > 0 && { Icon: AlertTriangle, tone: "bg-rose-500/12 text-rose-500", href: "/admin/compliance", text: `${overdue} ${overdue === 1 ? "person is" : "people are"} overdue on required learning` },
     unassigned > 0 && { Icon: UserX, tone: "bg-amber-500/12 text-amber-500", href: "/admin/people", text: `${unassigned} ${unassigned === 1 ? "person has" : "people have"} no company, brand or project, so no path` },
-    waiting > 0 && { Icon: MailPlus, tone: "bg-sky-500/12 text-sky-500", href: "/admin/people", text: `${waiting} invite${waiting === 1 ? "" : "s"} not accepted yet` },
+    waiting > 0 && { Icon: MailPlus, tone: "bg-sky-500/12 text-sky-300", href: "/admin/people", text: `${waiting} invite${waiting === 1 ? "" : "s"} not accepted yet` },
     unread > 0 && { Icon: ShieldCheck, tone: "bg-violet-500/12 text-violet-500", href: "/admin/freshness", text: `${unread} company update${unread === 1 ? "" : "s"} still unread by someone` },
     admin && held > 0 && { Icon: FileQuestion, tone: "bg-indigo-500/12 text-indigo-500", href: "/admin/paths", text: `${held.toLocaleString("en-GB")} question${held === 1 ? " is" : "s are"} held for approval` },
   ].filter(Boolean) as { Icon: typeof AlertTriangle; tone: string; href: string; text: string }[];

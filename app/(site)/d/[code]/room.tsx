@@ -124,7 +124,7 @@ export default function DuelRoom({ code, shareUrl }: { code: string; shareUrl: s
                   <span className="flex-1 pt-0.5">{o.text}</span>
                   <span className="flex shrink-0 flex-col items-end gap-0.5 text-[11px] font-bold">
                     {right && <span className="flex items-center gap-1 text-emerald-600"><Check size={12} />correct</span>}
-                    {r.you.choice === o.key && <span className="text-indigo-500">you</span>}
+                    {r.you.choice === o.key && <span className="text-indigo-300">you</span>}
                     {r.them.choice === o.key && <span className="text-pink-500">{st.opponent?.name}</span>}
                   </span>
                 </div>);

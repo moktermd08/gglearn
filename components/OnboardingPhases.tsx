@@ -5,7 +5,7 @@ import type { Onboarding, PhaseState } from "@/lib/onboarding";
 const BADGE: Record<PhaseState, { text: string; cls: string }> = {
   signed: { text: "Signed off", cls: "bg-emerald-500/15 text-emerald-500" },
   ready: { text: "Waiting for sign-off", cls: "bg-violet-500/15 text-violet-500" },
-  open: { text: "In progress", cls: "bg-sky-500/15 text-sky-500" },
+  open: { text: "In progress", cls: "bg-sky-500/15 text-sky-300" },
   locked: { text: "Locked", cls: "bg-slate-500/15 text-slate-500" },
 };
 const date = (t: number) => new Date(t * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
