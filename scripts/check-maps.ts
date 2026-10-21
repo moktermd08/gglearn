@@ -6,10 +6,12 @@
 import { MAPS } from "../lib/lifecycle/maps";
 import { BUSINESS_DEF } from "../lib/lifecycle/business";
 import { PUBLIC_DEF } from "../lib/lifecycle/public";
+import { SOFTWARE_DEF } from "../lib/lifecycle/software";
 import type { MapDef } from "../lib/lifecycle/engine";
 import { combineProblems } from "../lib/lifecycle/problems";
+import { loadRoles } from "../lib/lifecycle/roles";
 
-const DEFS: Record<string, MapDef> = { business: BUSINESS_DEF, public: PUBLIC_DEF };
+const DEFS: Record<string, MapDef> = { business: BUSINESS_DEF, public: PUBLIC_DEF, software: SOFTWARE_DEF };
 
 let bad = 0;
 const fail = (map: string, msg: string) => { bad++; console.error(`FAIL [${map}] ${msg}`); };
@@ -115,14 +117,22 @@ for (const m of Object.values(MAPS)) {
     if (new Set(p.stops).size !== p.stops.length) fail(id, `problem ${p.id}: a stop is listed twice`);
   }
   if (m.PROBLEMS.length >= 2 && !combineProblems(`${m.PROBLEMS[0].id}+${m.PROBLEMS[1].id}`, m.PROBLEMS)) fail(id, "two problems do not combine");
-  // the business map gives every stop its own words for where it breaks and how you know it worked, so no card borrows a gate's note
-  if (id === "business") {
+  // every map gives every stop its own words for where it breaks and how you know it worked, so no card borrows a gate's note
+  {
     for (const s of m.STATIONS) {
       if (!m.breaksFor(s.id)) fail(id, `${s.id}: no own "where it usually breaks" text`);
       if (!m.outcomeFor(s.id)) fail(id, `${s.id}: no "you will know it worked when" text`);
     }
     const known = new Set(m.STATIONS.map((s) => s.id));
-    for (const [what, rec] of [["breaks", DEFS.business.breaks], ["outcomes", DEFS.business.outcomes], ["pros", DEFS.business.pros], ["handoffs", DEFS.business.handoffs]] as const)
+    // how well the question bank backs each stop (content/lifecycle/coverage-<map>.json): only real stops, sane counts, and a stale file is named
+    const cov = DEFS[id]?.coverage ?? {};
+    for (const [sid, c] of Object.entries(cov)) {
+      if (!known.has(sid)) fail(id, `coverage: no stop "${sid}"`);
+      else if (!(c.total > 0) || c.hit < 0 || c.hit > c.total) fail(id, `coverage: bad counts for "${sid}" (${c.hit} of ${c.total})`);
+    }
+    const unmeasured = m.STATIONS.filter((s) => !cov[s.id]).map((s) => s.id);
+    if (unmeasured.length > 8) console.warn(`note [${id}] ${unmeasured.length} stops have no coverage figure (run npm run report:coverage -- --map ${id} --write): ${unmeasured.join(", ")}`);
+    for (const [what, rec] of [["breaks", DEFS[id]?.breaks], ["outcomes", DEFS[id]?.outcomes], ["pros", DEFS[id]?.pros], ["handoffs", DEFS[id]?.handoffs]] as const)
       for (const sid of Object.keys(rec ?? {})) if (!known.has(sid)) fail(id, `${what}: no stop "${sid}"`);
   }
   // kinds of business: unique ids, real stops, something to say, a route of their own in the finder, and a note only on stops that exist
@@ -140,5 +150,16 @@ for (const m of Object.values(MAPS)) {
   const links = m.STATIONS.filter((s) => m.dependenciesOf(s.id).needs.length).length;
   console.log(`${id.padEnd(9)} ${m.STATIONS.length} stops, ${m.LINES.length} lines, ${m.GATES.length} gates, ${m.STAGES.length} stages, ${links} stops with "builds on" links`);
 }
+// every career ladder is served by some map: a role whose main subjects have no stop on any map would show nothing useful anywhere
+// (a role mostly covered by another map is pointed there, see LifecycleMap's "Open it there")
+const maps = Object.values(MAPS);
+let pointed = 0;
+for (const r of loadRoles()) {
+  if (!r.core.length) continue;
+  const cover = maps.map((mm) => mm.roleCoverage(r.core) / r.core.length), best = Math.max(...cover);
+  if (best < 0.25) fail("roles", `${r.key}: only ${Math.round(best * 100)}% of its main subjects have a stop on any map`);
+  if (cover[0] <= 0.5 && best >= 0.3 && best >= cover[0] + 0.25) pointed++;
+}
+console.log(`roles     ${loadRoles().length} ladders, every one served by at least one map; ${pointed} are pointed from the business map to a better-fitting one`);
 if (bad) { console.error(`${bad} problem(s)`); process.exit(1); }
 console.log("maps ok");

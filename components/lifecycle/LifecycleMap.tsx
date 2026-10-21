@@ -85,6 +85,23 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
 
   const role = useMemo<RoleInfo | null>(() => data.roles.find((r) => r.key === roleKey) ?? null, [roleKey, data.roles]);
+  /* A role whose main subjects mostly live on another map (a cloud engineer on the business map) is pointed there, with the role and level kept. A role this map already covers about as well is left alone. */
+  const betterMap = useMemo(() => {
+    if (!role || !role.core.length) return null;
+    const total = role.core.length, here = M.roleCoverage(role.core);
+    let best: { label: string; href: string; n: number } | null = null;
+    for (const o of MAP_LIST) {
+      if (o.id === M.id) continue;
+      const n = MAPS[o.id].roleCoverage(role.core);
+      // only when this map covers half or less of the role, and another covers clearly more: a role this map already fits is left alone
+      if (here / total <= 0.5 && n / total >= 0.3 && n / total >= here / total + 0.25 && (!best || n > best.n)) best = { label: o.label, href: o.href, n };
+    }
+    return best && { ...best, here, total };
+  }, [M, role]);
+  const betterMapNote = betterMap && role && (
+    <p className="text-[12.5px] text-slate-400"><b className="font-semibold text-slate-300">More of this role&apos;s learning is on the {betterMap.label} map</b>: {betterMap.n} of its {betterMap.total} main subjects have stops there, {betterMap.here === 0 ? "none" : betterMap.here} here.{" "}
+      <Link href={`${betterMap.href}${pickQuery({ role: role.key, area: null, stage: null, size: null, level, mode })}`} className="font-semibold text-indigo-300 underline">Open it there →</Link></p>
+  );
   /* The route: the stops a role's career ladder asks for (or an area's hand-picked stops), seen through the chosen AI lens. */
   const route = useMemo(() => M.buildRoute(role, focus, mode, stage, orgSize, level, problem?.stops ?? null), [M, role, focus, mode, stage, orgSize, level, problem]);
   const routeIds = route.ids;
@@ -462,7 +479,8 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
               {data.viewingAs ? <>{data.firstName}&apos;s map. <span className="text-indigo-300">Where they are now.</span></> : data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>{M.words.headline[0]} <span className="text-indigo-300">{M.words.headline[1]}</span></>}
             </h1>
           </div>
-          <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]">
+          {/* The width is measured after the first paint, so until then the page cannot tell a phone from a desktop: showing the full controls would flash them open on a phone and then fold them away (and a tap in that moment lands on the wrong thing). Keep them hidden, with their space reserved, until the width is known. */}
+          <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]" style={size.w > 0 ? undefined : { visibility: "hidden" }}>
             {narrow && !ctrl ? (
               <div className="flex flex-wrap items-center gap-2">
                 <button type="button" onClick={() => setCtrl(true)} aria-expanded={false}
@@ -470,6 +488,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                   <span className="truncate">{role ? aiRoleName(role.name, mode) : stage ? M.STAGE_BY_ID.get(stage)!.label : focus !== "all" ? M.FOCUS.find((f) => f.id === focus)?.label : "Choose your route"}</span><ChevronDown size={15} className="shrink-0" />
                 </button>
                 {shareButton}
+                {betterMapNote}
               </div>
             ) : (
               <>
@@ -667,6 +686,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                   {sector && !sectorOpen && !sel && !problem && <button type="button" onClick={() => setSectorOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-indigo-300 underline decoration-dotted">About this kind of business</button>}
                   {shareButton}
                 </div>
+                {betterMapNote && <div className="mt-1.5">{betterMapNote}</div>}
               </>
             )}
           </div>
@@ -801,7 +821,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
       {(selStation || selGate) && (
         <aside aria-live="polite" style={{ "--panel-top": `${Math.max(20, headH - 12)}px` } as React.CSSProperties} className="absolute inset-x-0 bottom-0 z-20 max-h-[62%] overflow-auto rounded-t-3xl border border-black/10 bg-[#fff] shadow-[0_-18px_44px_-20px_rgba(20,22,31,.5)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:top-[var(--panel-top)] sm:max-h-none sm:w-[22.5rem] sm:rounded-3xl">
           <button type="button" onClick={() => setSel(null)} aria-label="Close" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/5 hover:bg-black/10"><X size={16} /></button>
-          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onSignIn={openSignIn} who={data.viewingAs} canGrant={data.canGrant} size={sizeInfo(selStation.id)} sectorNote={sectorInfo(selStation.id)} levelLater={levelLater(selStation.id)} onGo={(s) => pick({ kind: "st", id: s.id })} />}
+          {selStation && <StationCard st={selStation} lock={data.journey?.locks[selStation.track] ?? null} advice={data.journey?.advice[selStation.track] ?? null} onGate={(id) => pick({ kind: "gt", id })} onGoTrack={(slug) => { const t = M.STATIONS.filter((x) => x.track === slug).sort((a, b) => a.x - b.x)[0]; if (t) pick({ kind: "st", id: t.id }); }} info={data.tracks[selStation.track]} lens={mode === "agent" ? (route.agent.has(selStation.id) ? "agent" : route.review.has(selStation.id) || route.ai.has(selStation.id) ? "review" : null) : mode === "ai" && route.ai.has(selStation.id) ? "ai" : null} roleName={role?.name ?? null} races={racesByTrack.get(selStation.track) ?? []} signedIn={data.signedIn} onSignIn={openSignIn} who={data.viewingAs} canGrant={data.canGrant} size={sizeInfo(selStation.id)} sectorNote={sectorInfo(selStation.id)} coverage={M.coverageFor(selStation.id)} levelLater={levelLater(selStation.id)} onGo={(s) => pick({ kind: "st", id: s.id })} />}
           {selGate && <GateCard g={selGate} tracks={data.tracks} formal={orgSize ? { label: M.SIZE_BY_ID.get(orgSize)?.label ?? "", text: M.SIZE_BY_ID.get(orgSize)?.formal ?? "" } : null} />}
         </aside>
       )}
@@ -810,7 +830,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
   );
 }
 
-function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, onSignIn, who, canGrant, size, levelLater, sectorNote, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onSignIn?: () => void; who: { id: number; name: string } | null; canGrant: boolean; size: { label: string; text: string; later: string | null } | null; levelLater: string | null; sectorNote: { label: string; text: string } | null; onGo: (s: Station) => void }) {
+function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, roleName, signedIn, onSignIn, who, canGrant, size, levelLater, sectorNote, coverage, onGo }: { st: Station; info: TrackInfo | undefined; lock: { stage: number; waitingOn: { slug: string; name: string }[] } | null; advice: { stage: number; waitingOn: { slug: string; name: string }[] } | null; onGoTrack: (slug: string) => void; onGate: (id: string) => void; races: RaceInfo[]; lens: "agent" | "review" | "ai" | null; roleName: string | null; signedIn: boolean; onSignIn?: () => void; who: { id: number; name: string } | null; canGrant: boolean; size: { label: string; text: string; later: string | null } | null; levelLater: string | null; sectorNote: { label: string; text: string } | null; coverage: { level: "thin" | "some" | "good"; hit: number; total: number } | null; onGo: (s: Station) => void }) {
   const M = useModel();
   const line = M.LINE_BY_ID[st.line], c = M.LINE_COLOUR[st.line], z = M.zoneOf(st.x);
   const seq = M.stationsOn(st.line), i = seq.findIndex((s) => s.id === st.id), prev = seq[i - 1], nxt = seq[i + 1];
@@ -908,12 +928,18 @@ function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, r
           </div>
         )}
 
+        {!info && <div className="rounded-2xl border border-black/10 bg-[#fbfaf6] p-3.5 text-sm text-slate-400"><b className="font-semibold text-slate-300">No learning for this stop yet.</b> Its learning track is not set up in this academy, so there is nothing to start here.</div>}
         {info && (
           <div className="rounded-2xl border border-black/10 bg-[#fbfaf6] p-3.5">
             <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Learn it in</p>
             <p className="mt-0.5 text-base font-bold">{info.name}</p>
             <div className="bar mt-2" title={`Level ${lvl} of 20`}><i style={{ width: `${(lvl / 20) * 100}%` }} /></div>
             <p className="mt-1.5 text-sm text-slate-400">{lvl > 0 ? `You are on level ${lvl} of 20.` : "20 levels, from Novice to Titan."} {lvl < 5 ? `Level 5 earns the Foundation certificate: about ${5 - lvl} quiz${5 - lvl === 1 ? "" : "zes"} of ${QUESTIONS_PER_RUN} questions, ${Math.round(PASS_MARK * 100)}% to pass.` : null}{info.required && <> <b className={info.overdue ? "text-rose-300" : "text-amber-300"}>{lvl >= info.requiredLevel ? "Required: done." : info.overdue ? "Required: overdue." : `Required${info.dueAt ? `, due ${fmtDate(info.dueAt)}` : ""}.`}</b></>}</p>
+            {coverage && (
+              <p className={`mt-2 rounded-xl p-2.5 text-[13px] ${coverage.level === "thin" ? "bg-amber-50" : "bg-black/5"}`}>
+                <b className="font-semibold">{coverage.level === "thin" ? "Thin match." : coverage.level === "some" ? "Partly covered." : "Well covered."}</b> {coverage.hit.toLocaleString("en-GB")} of this track&apos;s {coverage.total.toLocaleString("en-GB")} questions mention this subject.{coverage.level === "thin" ? " The track teaches the wider topic, so practise the subject itself with the first step on this card." : ""}
+              </p>
+            )}
             {lvl > 0 && (info.credit || info.placed > 0) && (
               <div className="mt-2 rounded-xl bg-black/5 p-2.5 text-[13px]">
                 <p className="font-semibold">Where {who ? "their" : "your"} level comes from</p>
