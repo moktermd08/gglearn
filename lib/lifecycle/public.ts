@@ -1,5 +1,7 @@
 import type { Gate, LineDef, MapDef, RawStation, SizesDef, StageDef, ZoneDef } from "./engine";
 import { PUBLIC_PROBLEMS } from "./otherProblems";
+import COVERAGE from "../../content/lifecycle/coverage-public.json";
+import { PUBLIC_BREAKS, PUBLIC_OUTCOMES } from "./publicText";
 
 /**
  * The life of a UK public service or programme, from the first public need to closing it. It follows the stages a service passes through
@@ -373,6 +375,10 @@ export const PUBLIC_DEF: MapDef = {
   stations: STATIONS,
   gates: GATES,
   problems: PUBLIC_PROBLEMS,
+  breaks: PUBLIC_BREAKS,
+  outcomes: PUBLIC_OUTCOMES,
+  coverage: COVERAGE.stops,
+  draft: "Draft content: written to be reviewed by someone who works in the public sector before you rely on it.",
   trackOverrides: {
     "ps-business-cases": ["options", "impact", "cost", "benefits", "case", "afford", "vfm", "realise"],
     "ps-procurement": ["needs", "marketeng", "route", "spec", "tender", "social", "award", "contract", "mobilise", "supplier", "contractrev", "extend", "contractexit"],
