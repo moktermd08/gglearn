@@ -10,7 +10,7 @@ import type { ScopeOptions } from "@/lib/paths";
 
 export type LinkRow = { id: number; label: string; role: string; where: string; uses: number; max: number; state: "open" | "revoked" | "expired" | "full"; expires: string; url: string };
 
-const STATE = { open: ["Open", "text-emerald-400"], full: ["Full", "text-amber-400"], expired: ["Expired", "text-slate-400"], revoked: ["Switched off", "text-slate-400"] } as const;
+const STATE = { open: ["Open", "text-emerald-300"], full: ["Full", "text-amber-300"], expired: ["Expired", "text-slate-400"], revoked: ["Switched off", "text-slate-400"] } as const;
 
 /** One link for a whole team: pick where it is for and how many may use it. Copy it again any time; switch it off when the team is in. */
 export default function TeamLinks({ options, roles, links, origin }: { options: ScopeOptions; roles: string[]; links: LinkRow[]; origin: string }) {

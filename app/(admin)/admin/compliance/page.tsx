@@ -70,9 +70,9 @@ export default async function Compliance({ searchParams }: { searchParams: Promi
       </section>
 
       <nav aria-label="Filter by state" className="flex flex-wrap items-center gap-2 text-xs">
-        <Link href="/admin/compliance" className={`rounded-full px-3 py-1 ${!state ? "bg-indigo-500/20 font-bold text-indigo-400" : "bg-black/5 text-slate-400"}`}>Everyone ({every.length.toLocaleString("en-GB")})</Link>
+        <Link href="/admin/compliance" className={`rounded-full px-3 py-1 ${!state ? "bg-indigo-500/20 font-bold text-indigo-300" : "bg-black/5 text-slate-400"}`}>Everyone ({every.length.toLocaleString("en-GB")})</Link>
         {(Object.keys(STATE) as (keyof typeof STATE)[]).filter((k) => count(k) > 0).map((k) => (
-          <Link key={k} href={`/admin/compliance?state=${k}`} className={`rounded-full px-3 py-1 ${state === k ? "bg-indigo-500/20 font-bold text-indigo-400" : "bg-black/5 text-slate-400"}`}>{STATE[k].label} ({count(k).toLocaleString("en-GB")})</Link>
+          <Link key={k} href={`/admin/compliance?state=${k}`} className={`rounded-full px-3 py-1 ${state === k ? "bg-indigo-500/20 font-bold text-indigo-300" : "bg-black/5 text-slate-400"}`}>{STATE[k].label} ({count(k).toLocaleString("en-GB")})</Link>
         ))}
       </nav>
       <ul className="space-y-3">
