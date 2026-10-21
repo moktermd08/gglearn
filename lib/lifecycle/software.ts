@@ -1,5 +1,6 @@
 import { GATES, LINES as LINE_NAMES, RAW } from "./data";
 import { SOFTWARE_PROBLEMS } from "./otherProblems";
+import COVERAGE from "../../content/lifecycle/coverage-software.json";
 import { SOFTWARE_BREAKS, SOFTWARE_OUTCOMES } from "./softwareText";
 import type { LineDef, LineId, MapDef, StageDef, ZoneDef } from "./engine";
 
@@ -189,6 +190,7 @@ export const SOFTWARE_DEF: MapDef = {
   problems: SOFTWARE_PROBLEMS,
   breaks: SOFTWARE_BREAKS,
   outcomes: SOFTWARE_OUTCOMES,
+  coverage: COVERAGE.stops,
   draft: "Draft content: written to be reviewed by someone who builds software before you rely on it.",
   trackOverrides: OVERRIDES,
   focus: FOCUS_BASE.map((f) => ({ id: f.id, label: f.label, lines: [...f.lines] as LineId[], stops: FOCUS_STOPS[f.id], start: FOCUS_START[f.id], aiFull: AI_FULL_AREAS.has(f.id) })),

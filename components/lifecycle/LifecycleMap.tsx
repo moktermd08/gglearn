@@ -927,6 +927,7 @@ function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, r
           </div>
         )}
 
+        {!info && <div className="rounded-2xl border border-black/10 bg-[#fbfaf6] p-3.5 text-sm text-slate-400"><b className="font-semibold text-slate-300">No learning for this stop yet.</b> Its learning track is not set up in this academy, so there is nothing to start here.</div>}
         {info && (
           <div className="rounded-2xl border border-black/10 bg-[#fbfaf6] p-3.5">
             <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Learn it in</p>

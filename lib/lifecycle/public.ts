@@ -1,5 +1,6 @@
 import type { Gate, LineDef, MapDef, RawStation, SizesDef, StageDef, ZoneDef } from "./engine";
 import { PUBLIC_PROBLEMS } from "./otherProblems";
+import COVERAGE from "../../content/lifecycle/coverage-public.json";
 import { PUBLIC_BREAKS, PUBLIC_OUTCOMES } from "./publicText";
 
 /**
@@ -376,6 +377,7 @@ export const PUBLIC_DEF: MapDef = {
   problems: PUBLIC_PROBLEMS,
   breaks: PUBLIC_BREAKS,
   outcomes: PUBLIC_OUTCOMES,
+  coverage: COVERAGE.stops,
   draft: "Draft content: written to be reviewed by someone who works in the public sector before you rely on it.",
   trackOverrides: {
     "ps-business-cases": ["options", "impact", "cost", "benefits", "case", "afford", "vfm", "realise"],
