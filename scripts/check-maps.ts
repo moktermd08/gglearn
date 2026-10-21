@@ -7,6 +7,7 @@ import { MAPS } from "../lib/lifecycle/maps";
 import { BUSINESS_DEF } from "../lib/lifecycle/business";
 import { PUBLIC_DEF } from "../lib/lifecycle/public";
 import type { MapDef } from "../lib/lifecycle/engine";
+import { combineProblems } from "../lib/lifecycle/problems";
 
 const DEFS: Record<string, MapDef> = { business: BUSINESS_DEF, public: PUBLIC_DEF };
 
@@ -103,6 +104,27 @@ for (const m of Object.values(MAPS)) {
   const inStage = new Set(m.STAGES.flatMap((s) => s.stops));
   const orphans = m.STATIONS.filter((s) => !inStage.has(s.id)).map((s) => s.id);
   if (orphans.length) console.warn(`note [${id}] ${orphans.length} stops are in no company stage: ${orphans.join(", ")}`);
+  // problems in plain words: unique ids, real stops, a first step and a way to know it worked, and a combined link must resolve
+  const probIds = new Set<string>();
+  for (const p of m.PROBLEMS) {
+    if (probIds.has(p.id) || p.id.includes("+")) fail(id, `problem "${p.id}" is used twice or has a "+" in its id`);
+    probIds.add(p.id);
+    if (!p.say || !p.first || !p.done || !p.words) fail(id, `problem ${p.id}: needs say, words, first and done`);
+    if (p.stops.length < 2 || p.stops.length > 10) fail(id, `problem ${p.id}: has ${p.stops.length} stops (2 to 10)`);
+    for (const sid of p.stops) if (!m.STATION_BY_ID.has(sid)) fail(id, `problem ${p.id}: no stop "${sid}"`);
+    if (new Set(p.stops).size !== p.stops.length) fail(id, `problem ${p.id}: a stop is listed twice`);
+  }
+  if (m.PROBLEMS.length >= 2 && !combineProblems(`${m.PROBLEMS[0].id}+${m.PROBLEMS[1].id}`, m.PROBLEMS)) fail(id, "two problems do not combine");
+  // the business map gives every stop its own words for where it breaks and how you know it worked, so no card borrows a gate's note
+  if (id === "business") {
+    for (const s of m.STATIONS) {
+      if (!m.breaksFor(s.id)) fail(id, `${s.id}: no own "where it usually breaks" text`);
+      if (!m.outcomeFor(s.id)) fail(id, `${s.id}: no "you will know it worked when" text`);
+    }
+    const known = new Set(m.STATIONS.map((s) => s.id));
+    for (const [what, rec] of [["breaks", DEFS.business.breaks], ["outcomes", DEFS.business.outcomes], ["pros", DEFS.business.pros], ["handoffs", DEFS.business.handoffs]] as const)
+      for (const sid of Object.keys(rec ?? {})) if (!known.has(sid)) fail(id, `${what}: no stop "${sid}"`);
+  }
   const links = m.STATIONS.filter((s) => m.dependenciesOf(s.id).needs.length).length;
   console.log(`${id.padEnd(9)} ${m.STATIONS.length} stops, ${m.LINES.length} lines, ${m.GATES.length} gates, ${m.STAGES.length} stages, ${links} stops with "builds on" links`);
 }

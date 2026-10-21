@@ -34,6 +34,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { label: "Content", items: [
       ...(admin && global ? [{ href: "/admin/bank", label: "Question bank", icon: "database" }] : []),
       { href: "/admin/freshness", label: "Freshness", icon: "clock" },
+      ...(admin && global ? [{ href: "/admin/problems", label: "Map problems", icon: "target" }] : []),
     ] },
     { label: "Plan", items: [
       ...(admin ? [{ href: "/admin/paths", label: "Required learning", icon: "check" }] : []),

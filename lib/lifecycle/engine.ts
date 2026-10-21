@@ -80,6 +80,15 @@ export type MapDef = {
   familyLines?: Record<string, LineId[]>;
   /** organisation sizes (startup to enterprise) and what each changes; leave out when size does not change the map */
   sizes?: SizesDef;
+  /** where a stop usually goes wrong, in its own words; a stop with none shows the note of the next handoff gate on its line */
+  breaks?: Record<string, string>;
+  /** what is true when a stop has done its job, in plain words */ outcomes?: Record<string, string>;
+  /** the everyday handover out of a stop that most often goes wrong (the map's gates are only the big ones) */ handoffs?: Record<string, string>;
+  /** where learning ends and a professional (lawyer, accountant, specialist) begins, per stop */ pros?: Record<string, string>;
+  /** a note for the stops where rules differ by country */ local?: { note: string; stops: string[] };
+  /** a note that the content is a draft awaiting review by someone who works in the field */ draft?: string;
+  /** problems in plain words that point at stops (see problems.ts); leave out when a map has none */
+  problems?: import("./problems").ProblemDef[];
   /** room above the first line, in map units: more when the first line is crowded and its labels would touch the handoff-gate titles above it */
   layout?: { top?: number };
 };
@@ -276,15 +285,18 @@ export function buildModel(def: MapDef) {
   const aiFullAreas = new Set(def.focus.filter((f) => f.aiFull).map((f) => f.id));
 
   /** The lit stops for a role, an area or a company stage, seen through an AI lens. */
-  function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode, stage: StageId | null = null, size: SizeId | null = null, level: number | null = null): Route {
+  function buildRoute(role: RoleInfo | null, focus: FocusId, mode: AiMode, stage: StageId | null = null, size: SizeId | null = null, level: number | null = null, only: readonly string[] | null = null): Route {
     let base: Set<string> | null = null;
-    if (role) {
+    // a chosen problem lights exactly its own stops, whatever role, stage or area was picked before
+    const own = only?.filter((id) => STATION_BY_ID.has(id)) ?? [];
+    if (own.length) base = new Set(own);
+    if (role && !base) {
       const t = new Set(role.core), fam = def.familyLines?.[role.family], lines = fam ? new Set(fam) : null;
       let ids = STATIONS.filter((s) => t.has(s.track) && (!lines || lines.has(s.line))).map((s) => s.id);
       if (!ids.length && lines) ids = STATIONS.filter((s) => lines.has(s.line)).map((s) => s.id);
       if (ids.length) base = new Set(ids);
     }
-    const st = !role && stage ? STAGE_BY_ID.get(stage) : undefined;
+    const st = !base && !role && stage ? STAGE_BY_ID.get(stage) : undefined;
     if (!base && st) base = new Set<string>(st.stops);
     if (!base) {
       const stops = FOCUS_STOPS[focus];
@@ -293,7 +305,7 @@ export function buildModel(def: MapDef) {
     }
     // the size lens: stops that only matter once an organisation is bigger can wait
     let deferred = new Set<string>();
-    const si = size ? sizeIndex(size) : -1;
+    const si = size && !own.length ? sizeIndex(size) : -1;
     if (si >= 0) {
       const keep = [...base].filter((id) => sizeFrom(id) <= si);
       if (keep.length) { deferred = new Set([...base].filter((id) => sizeFrom(id) > si)); base = new Set(keep); }
@@ -346,6 +358,13 @@ export function buildModel(def: MapDef) {
     FOCUS, FOCUS_STOPS, FOCUS_START, focusLinesOf, focusForRole,
     STAGES, STAGE_BY_ID,
     SIZES, SIZE_BY_ID, sizeFrom, sizeNote,
+    PROBLEMS: def.problems ?? [],
+    breaksFor: (stopId: string): string | null => def.breaks?.[stopId] ?? null,
+    outcomeFor: (stopId: string): string | null => def.outcomes?.[stopId] ?? null,
+    handoffFor: (stopId: string): string | null => def.handoffs?.[stopId] ?? null,
+    proFor: (stopId: string): string | null => def.pros?.[stopId] ?? null,
+    localFor: (stopId: string): string | null => (def.local?.stops.includes(stopId) ? def.local.note : null),
+    draftNote: def.draft ?? null,
     AI_STOPS_FULL, AI_STOPS_LITE, AI_REVIEW_STOPS, isTechRole,
     buildRoute, dependenciesOf, nextGateFor,
   };

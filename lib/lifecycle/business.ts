@@ -1,5 +1,8 @@
 import type { Gate, LineDef, MapDef, RawStation, StageDef, ZoneDef } from "./engine";
 import { BUSINESS_SIZES } from "./businessSizes";
+import { BUSINESS_PROBLEMS } from "./problems";
+import { STOP_BREAKS, STOP_HANDOFFS, STOP_OUTCOMES } from "./businessText";
+import { MORE_BREAKS, MORE_FROM, MORE_TRACKS, MORE_LOCAL_NOTE, MORE_OUTCOMES, MORE_PROBLEMS, MORE_PROS, MORE_STAGE, MORE_STOPS } from "./businessMore";
 
 /**
  * The life of any business, from the first idea to closing or handing over. It does not assume software: a cafe, an agency, a
@@ -36,11 +39,12 @@ const S = (id: string, x: number, name: string, size: RawStation[3], owner: stri
 const STATIONS: Record<string, RawStation[]> = {
   str: [
     S("idea", 0, "Business Idea", "S", "Founder", "A problem you have seen|Your own skills and interest", "A one-line idea|Questions to answer first"),
-    S("market", 1, "Market Research", "M", "Founder", "A one-line idea|Existing customers and competitors", "How big the market is|What customers say they need"),
-    S("rivals", 2, "Competitor Check", "S", "Founder", "Market Research|Rivals' prices and offers", "What others do well and badly|A gap you can fill"),
-    S("icp", 3, "Ideal Customer", "S", "Founder", "Market Research|Your own contacts", "Who you serve first|What they would pay to fix"),
+    S("market", 0.75, "Market Research", "M", "Founder", "A one-line idea|Existing customers and competitors", "How big the market is|What customers say they need"),
+    S("rivals", 1.5, "Competitor Check", "S", "Founder", "Market Research|Rivals' prices and offers", "What others do well and badly|A gap you can fill"),
+    S("icp", 2.25, "Ideal Customer", "S", "Founder", "Market Research|Your own contacts", "Who you serve first|What they would pay to fix"),
+    S("mission", 3, "Mission & Vision", "S", "Founder", "Ideal Customer|Why you want to do this", "A mission: why you exist, in one sentence|A vision: where you want to be in five years|Values you will hold to"),
     S("model", 5, "Business Model", "M", "Founder", "Ideal Customer|Competitor Check", "How you make money|Your main costs"),
-    S("promise", 6, "Value Promise", "S", "Founder", "Ideal Customer|Competitor Check", "One sentence on why customers choose you"),
+    S("promise", 6, "Value Promise", "S", "Founder", "Ideal Customer|Competitor Check|Mission & Vision", "One sentence on why customers choose you"),
     S("plan", 7, "Business Plan", "L", "Founder", "Business Model|Market Research", "A written plan|Targets for year one"),
     S("goals", 8, "Goals & Targets", "S", "Founder", "Business Plan", "Targets you can measure|Review dates"),
     S("review", 23, "Quarterly Review", "M", "Owner", "Goals & Targets|Monthly Numbers", "What to keep, change or stop"),
@@ -138,7 +142,7 @@ const STATIONS: Record<string, RawStation[]> = {
     S("wellbeing", 25, "Wellbeing & Retention", "S", "Manager", "Feedback & Performance|Rotas & Workload", "Fewer people leaving"),
     S("growteam", 28, "Grow the Team", "M", "Owner", "Growth Options|Growth Budget", "New roles hired"),
     S("leaders", 29, "Managers & Leaders", "M", "Owner", "Grow the Team|Feedback & Performance", "People who can run teams"),
-    S("culture", 32, "Culture & Values", "S", "Owner", "Managers & Leaders|Customer Feedback", "Shared ways of working"),
+    S("culture", 32, "Culture & Values", "S", "Owner", "Managers & Leaders|Customer Feedback|Mission & Vision", "Shared ways of working"),
     S("tellteam", 35, "Tell the Team", "M", "Owner", "Exit Options|Wind-down Plan", "Staff told fairly|Support for those leaving"),
   ],
   leg: [
@@ -183,16 +187,19 @@ const STATIONS: Record<string, RawStation[]> = {
     S("unknowns", 3, "Risks & Unknowns", "S", "Founder", "Business Idea|Market Research", "What could stop this|What to test first"),
     S("decide", 5, "Who Decides What", "S", "Founder", "Business Model|Legal Structure", "Clear owners for decisions"),
     S("risks", 6, "Risk Register", "M", "Founder", "Risks & Unknowns|Insurance Needs", "Risks, owners and actions"),
+    S("decisions", 7, "Making Decisions", "S", "Owner", "Who Decides What|Risk Register", "A repeatable way to decide: who, on what evidence, by when|Decisions written down with reasons|A date to check each one worked"),
+    S("comms", 13, "Clear Communication", "S", "Owner", "Who Decides What|Meeting Rhythm", "Messages that say what, why and what to do next|Writing people read to the end|Meetings and talks with a clear ask"),
     S("milestones", 8, "Milestone Plan", "M", "Founder", "Business Plan|Goals & Targets", "Dates for set-up and launch"),
     S("rhythm", 10, "Meeting Rhythm", "S", "Owner", "Milestone Plan|Roles & Team Plan", "Weekly and monthly check-ins"),
     S("policies", 11, "Policies & Procedures", "M", "Owner", "Legal Structure|Data Protection Basics", "Simple written rules"),
     S("approvals", 12, "Controls & Approvals", "S", "Owner", "Policies & Procedures|Budget", "Spending and sign-off limits"),
     S("readiness", 14, "Ready to Open Check", "M", "Owner", "Milestone Plan|Practice Run", "A go or no-go for opening"),
     S("weekly", 16, "Weekly Review", "S", "Owner", "Milestone Plan|First Customers", "What to fix this week"),
-    S("board", 22, "Owner or Board Meeting", "M", "Owner", "Monthly Numbers|Quarterly Review", "Decisions recorded"),
+    S("priorities", 18, "Time & Priorities", "S", "Owner", "Goals & Targets|Weekly Review", "A short list of what matters most this week|Work only you must do, and work to hand on|Protected time for the important work"),
+    S("board", 22, "Owner or Board Meeting", "M", "Owner", "Monthly Numbers|Quarterly Review|Making Decisions", "Decisions recorded"),
     S("annual", 24, "Annual Plan", "M", "Owner", "Quarterly Review|Goals & Targets", "Next year's plan and budget"),
     S("perfrep", 25, "Performance Report", "S", "Owner", "Monthly Numbers|Customer Feedback", "What happened and why"),
-    S("strategy", 28, "Strategic Review", "M", "Owner", "Quarterly Review|Market Research", "Priorities for the next phase"),
+    S("strategy", 28, "Strategic Review", "M", "Owner", "Quarterly Review|Market Research|Mission & Vision", "Priorities for the next phase"),
     S("succession", 29, "Succession Planning", "M", "Owner", "Managers & Leaders|Company Valuation", "Who could run it if you could not"),
     S("govup", 32, "Better Governance", "M", "Owner", "Growth Options|Owner or Board Meeting", "Roles and checks that suit a bigger business"),
     S("finalrep", 35, "Final Report", "S", "Owner", "Wind-down Plan|Final Accounts", "What happened and who decides what is next"),
@@ -235,25 +242,25 @@ const STAGES: StageDef[] = [
     id: "setup", label: "Setting up", ask: "I'm setting the business up",
     blurb: "Turn the idea into a plan, choose how the business is owned, get legal and money basics in place and ready what you will sell.",
     start: "model", watch: ["plansign", "readyopen"], aiFull: false,
-    stops: ["model", "promise", "plan", "goals", "forecast", "budget", "design", "pilot", "pricing", "quality", "structure", "trademark", "insure", "licence", "register", "tax", "bank", "books", "brand", "offer", "site", "premises", "suppliers", "process", "tools", "systems", "domain", "secbasics", "backups", "decide", "risks", "milestones", "readiness", "skills", "roles", "std", "stock", "paysetup", "custdata", "rhythm", "policies", "approvals"],
+    stops: ["model", "mission", "promise", "plan", "goals", "forecast", "budget", "design", "pilot", "pricing", "quality", "structure", "trademark", "insure", "licence", "register", "tax", "bank", "books", "brand", "offer", "site", "premises", "suppliers", "process", "tools", "systems", "domain", "secbasics", "backups", "decide", "decisions", "comms", "risks", "milestones", "readiness", "skills", "roles", "std", "stock", "paysetup", "custdata", "rhythm", "policies", "approvals"],
   },
   {
     id: "launch", label: "Opening and first customers", ask: "I'm opening to my first customers",
     blurb: "Open the doors, find your first customers, deliver well and get paid, so you learn what it really takes.",
     start: "open", watch: ["readyopen", "firstserved"], aiFull: false,
-    stops: ["launchplan", "open", "leads", "sales", "first", "onboard", "feedback", "orders", "delivery", "invoice", "payonline", "tracking", "launchoffer", "dry", "support", "terms", "weekly", "cashplan", "train", "induct", "dataprot", "safety", "social", "channels"],
+    stops: ["launchplan", "open", "leads", "sales", "first", "onboard", "feedback", "orders", "delivery", "invoice", "payonline", "tracking", "launchoffer", "dry", "support", "terms", "weekly", "priorities", "cashplan", "train", "induct", "dataprot", "safety", "social", "channels"],
   },
   {
     id: "steady", label: "Up and running", ask: "I'm trading and want it steady",
     blurb: "Make the routine reliable: know your numbers, keep customers, look after people and stay on the right side of the rules.",
     start: "numbers", watch: ["yearend"], aiFull: false,
-    stops: ["daily", "qcheck", "stockctl", "numbers", "cashwatch", "profit", "review", "board", "annual", "perfrep", "cfeed", "complaints", "keep", "reviews", "records", "compliance", "perf", "payreview", "wellbeing", "rota", "automate", "crm", "cyber", "improve", "supreview", "content", "referrals", "dash", "contracts", "employlaw"],
+    stops: ["daily", "qcheck", "stockctl", "numbers", "cashwatch", "profit", "review", "board", "decisions", "priorities", "comms", "annual", "perfrep", "cfeed", "complaints", "keep", "reviews", "records", "compliance", "perf", "payreview", "wellbeing", "rota", "automate", "crm", "cyber", "improve", "supreview", "content", "referrals", "dash", "contracts", "employlaw"],
   },
   {
     id: "grow", label: "Growing", ask: "I want to grow",
     blurb: "Pick where to grow, check you can afford it and deliver it, and build the team and systems to cope with more.",
     start: "growopts", watch: ["growdecide", "yearend"], aiFull: false,
-    stops: ["growopts", "strategy", "growbudget", "ads", "partners", "newmkts", "newoffers", "range", "capacity", "scaleops", "growsys", "growteam", "leaders", "culture", "govup", "ip", "contractrev", "keyacc", "value", "succession", "hire", "recruit"],
+    stops: ["growopts", "strategy", "decisions", "growbudget", "ads", "partners", "newmkts", "newoffers", "range", "capacity", "scaleops", "growsys", "growteam", "leaders", "culture", "govup", "ip", "contractrev", "keyacc", "value", "succession", "hire", "recruit"],
   },
   {
     id: "close", label: "Handing over or closing", ask: "I'm selling, handing over or closing",
@@ -262,6 +269,12 @@ const STAGES: StageDef[] = [
     stops: ["exitopts", "value", "wind", "notice", "tellteam", "retire", "close", "finalacc", "creditors", "legalclose", "dissolve", "archive", "deleteacc", "finalrep", "lessons"],
   },
 ];
+
+// stops added after the first draft (see businessMore.ts): onto their lines, into their company stages, and into the sizes where they start to matter
+for (const [lane, list] of Object.entries(MORE_STOPS)) (STATIONS[lane] ??= []).push(...list);
+for (const [sid, ids] of Object.entries(MORE_STAGE)) STAGES.find((g) => g.id === sid)!.stops.push(...ids.filter((id) => !STAGES.find((g) => g.id === sid)!.stops.includes(id)));
+for (const [size, ids] of Object.entries(MORE_FROM)) BUSINESS_SIZES.from[size].push(...ids);
+const LOCAL_STOPS = [...(STATIONS.leg ?? []).map((s) => s[0]), "trustees", "tax", "taxrun", "payroll", "paysetup", "books", "invoice", "records", "finalacc"];
 
 export const BUSINESS_DEF: MapDef = {
   id: "business",
@@ -316,11 +329,26 @@ export const BUSINESS_DEF: MapDef = {
     [/operat|supply|logist|procure|warehouse|facilit|production|deliver/, "make"],
     [/\bit\b|data|software|developer|engineer|security|analyst|digital/, "tools"],
     [/manag|lead|director|ceo|head|owner|founder|executive|chief|proprietor/, "lead"],
+    [/plumb|electric|builder|carpent|joiner|mechanic|chef|cook|baker|barista|cafe|restaurant|hair|salon|beauty|retail|shop|store|trader|freelanc|self.employed|consultant|contractor|tradesperson|handyman|cleaner|driver|farmer|photograph|designer|tutor|coach/, "lead"],
   ],
   stages: STAGES,
   ai: null,
   layout: { top: 215 },
   sizes: BUSINESS_SIZES,
+  problems: [...BUSINESS_PROBLEMS, ...MORE_PROBLEMS],
+  outcomes: { ...STOP_OUTCOMES, ...MORE_OUTCOMES },
+  handoffs: STOP_HANDOFFS,
+  pros: MORE_PROS,
+  local: { note: MORE_LOCAL_NOTE, stops: LOCAL_STOPS },
+  draft: "Draft content: written to be reviewed by someone who works in this field before you rely on it.",
+  breaks: {
+    ...STOP_BREAKS,
+    ...MORE_BREAKS,
+    mission: "The statement is written once, framed on a wall and never used when anyone makes a decision.",
+    decisions: "Choices are made in conversation and not written down, so they are reopened, forgotten or made twice.",
+    priorities: "Everything is urgent, so the important work waits until it too becomes an emergency.",
+    comms: "People hear different things from different people, and nobody checks that the message was understood.",
+  },
   familyLines: {
     Leadership: ["str", "gov", "fin", "peo"],
     "Product & Delivery": ["pro", "ops", "str", "gov"],
@@ -336,3 +364,6 @@ export const BUSINESS_DEF: MapDef = {
     "Legal & Public Sector": ["leg", "gov", "str"],
   },
 };
+
+// new stops that fit a particular learning track better than their line's default
+for (const [slug, ids] of Object.entries(MORE_TRACKS)) (BUSINESS_DEF.trackOverrides[slug] ??= []).push(...ids);
