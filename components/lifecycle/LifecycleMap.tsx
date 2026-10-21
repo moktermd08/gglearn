@@ -85,6 +85,23 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
   const chrome = standalone ? 40 : 0; // room taken by the standalone top bar
 
   const role = useMemo<RoleInfo | null>(() => data.roles.find((r) => r.key === roleKey) ?? null, [roleKey, data.roles]);
+  /* A role whose main subjects mostly live on another map (a cloud engineer on the business map) is pointed there, with the role and level kept. A role this map already covers about as well is left alone. */
+  const betterMap = useMemo(() => {
+    if (!role || !role.core.length) return null;
+    const total = role.core.length, here = M.roleCoverage(role.core);
+    let best: { label: string; href: string; n: number } | null = null;
+    for (const o of MAP_LIST) {
+      if (o.id === M.id) continue;
+      const n = MAPS[o.id].roleCoverage(role.core);
+      // only when this map covers half or less of the role, and another covers clearly more: a role this map already fits is left alone
+      if (here / total <= 0.5 && n / total >= 0.3 && n / total >= here / total + 0.25 && (!best || n > best.n)) best = { label: o.label, href: o.href, n };
+    }
+    return best && { ...best, here, total };
+  }, [M, role]);
+  const betterMapNote = betterMap && role && (
+    <p className="text-[12.5px] text-slate-400"><b className="font-semibold text-slate-300">More of this role&apos;s learning is on the {betterMap.label} map</b>: {betterMap.n} of its {betterMap.total} main subjects have stops there, {betterMap.here === 0 ? "none" : betterMap.here} here.{" "}
+      <Link href={`${betterMap.href}${pickQuery({ role: role.key, area: null, stage: null, size: null, level, mode })}`} className="font-semibold text-indigo-300 underline">Open it there →</Link></p>
+  );
   /* The route: the stops a role's career ladder asks for (or an area's hand-picked stops), seen through the chosen AI lens. */
   const route = useMemo(() => M.buildRoute(role, focus, mode, stage, orgSize, level, problem?.stops ?? null), [M, role, focus, mode, stage, orgSize, level, problem]);
   const routeIds = route.ids;
@@ -470,6 +487,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                   <span className="truncate">{role ? aiRoleName(role.name, mode) : stage ? M.STAGE_BY_ID.get(stage)!.label : focus !== "all" ? M.FOCUS.find((f) => f.id === focus)?.label : "Choose your route"}</span><ChevronDown size={15} className="shrink-0" />
                 </button>
                 {shareButton}
+                {betterMapNote}
               </div>
             ) : (
               <>
@@ -667,6 +685,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                   {sector && !sectorOpen && !sel && !problem && <button type="button" onClick={() => setSectorOpen(true)} className="rounded-full px-2 py-1 text-[13px] font-semibold text-indigo-300 underline decoration-dotted">About this kind of business</button>}
                   {shareButton}
                 </div>
+                {betterMapNote && <div className="mt-1.5">{betterMapNote}</div>}
               </>
             )}
           </div>

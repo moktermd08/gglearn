@@ -8,6 +8,7 @@ import { BUSINESS_DEF } from "../lib/lifecycle/business";
 import { PUBLIC_DEF } from "../lib/lifecycle/public";
 import type { MapDef } from "../lib/lifecycle/engine";
 import { combineProblems } from "../lib/lifecycle/problems";
+import { loadRoles } from "../lib/lifecycle/roles";
 
 const DEFS: Record<string, MapDef> = { business: BUSINESS_DEF, public: PUBLIC_DEF };
 
@@ -140,5 +141,16 @@ for (const m of Object.values(MAPS)) {
   const links = m.STATIONS.filter((s) => m.dependenciesOf(s.id).needs.length).length;
   console.log(`${id.padEnd(9)} ${m.STATIONS.length} stops, ${m.LINES.length} lines, ${m.GATES.length} gates, ${m.STAGES.length} stages, ${links} stops with "builds on" links`);
 }
+// every career ladder is served by some map: a role whose main subjects have no stop on any map would show nothing useful anywhere
+// (a role mostly covered by another map is pointed there, see LifecycleMap's "Open it there")
+const maps = Object.values(MAPS);
+let pointed = 0;
+for (const r of loadRoles()) {
+  if (!r.core.length) continue;
+  const cover = maps.map((mm) => mm.roleCoverage(r.core) / r.core.length), best = Math.max(...cover);
+  if (best < 0.25) fail("roles", `${r.key}: only ${Math.round(best * 100)}% of its main subjects have a stop on any map`);
+  if (cover[0] <= 0.5 && best >= 0.3 && best >= cover[0] + 0.25) pointed++;
+}
+console.log(`roles     ${loadRoles().length} ladders, every one served by at least one map; ${pointed} are pointed from the business map to a better-fitting one`);
 if (bad) { console.error(`${bad} problem(s)`); process.exit(1); }
 console.log("maps ok");
