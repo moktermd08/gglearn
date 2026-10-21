@@ -1219,3 +1219,19 @@ export const oauthIdentities = sqliteTable("oauth_identities", {
   email: text("email").notNull().default(""), // as the provider reported it when linked; for display only
   createdAt: integer("created_at").notNull().default(now),
 }, (t) => [uniqueIndex("oauth_identity_unique").on(t.provider, t.subject), index("oauth_identity_user").on(t.userId)]);
+
+// What people pick in a map's problem finder, as anonymous daily counts (see lib/problemLog.ts): no person, no address and no typed
+// text, only "this problem was picked this many times on this day". `kind` is a pick of a problem, a jump to a named stop, or a
+// search that found nothing (`problem` is then empty). It shows which of the many problems people really have.
+export const problemPicks = sqliteTable(
+  "problem_picks",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    day: text("day").notNull(), // UTC date, YYYY-MM-DD
+    map: text("map").notNull(), // "business", "public" or "software"
+    kind: text("kind", { enum: ["pick", "stop", "nomatch"] }).notNull(),
+    problem: text("problem").notNull().default(""), // a problem id (pick), a stop id (stop) or "" (nomatch)
+    n: integer("n").notNull().default(0),
+  },
+  (t) => [uniqueIndex("problem_pick_unique").on(t.day, t.map, t.kind, t.problem), index("problem_pick_day").on(t.day)],
+);

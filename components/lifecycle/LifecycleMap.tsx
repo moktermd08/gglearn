@@ -12,7 +12,7 @@ import {
 } from "@/lib/lifecycle/engine";
 import { combineProblems, findProblems, findStops, STAGE_QUESTIONS, suggestStage } from "@/lib/lifecycle/problems";
 import { MAPS, MAP_LIST } from "@/lib/lifecycle/maps";
-import { acceptRoleStartAction } from "@/app/(map)/map/actions";
+import { acceptRoleStartAction, logProblemAction } from "@/app/(map)/map/actions";
 
 const ModelCtx = createContext<MapModel>(MAPS.software);
 const useModel = () => useContext(ModelCtx);
@@ -231,8 +231,11 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
     frameLines(new Set<LineId>(M.STATIONS.filter((st) => r.ids.has(st.id)).map((st) => st.line)), true, r.ids, M.STAGE_BY_ID.get(id)?.start);
   };
   /** Someone says what is wrong in their own words and picks the closest match: its stops light up and the first one opens. */
+  /** An anonymous daily count of what people pick (never who, never what they typed); a failure here must never get in the way. */
+  const logPick = (kind: "pick" | "stop" | "nomatch", ids: string[] = []) => { logProblemAction(kind, mapId, ids).catch(() => {}); };
   const chooseProblem = (id: string | null) => {
     const p = combineProblems(id, M.PROBLEMS);
+    if (p) logPick("pick", p.id.split("+"));
     setProblemId(p ? p.id : null); setChecker(false); setTicks([]); setRoleKey(null); setStage(null); setStageOpen(false); setLevel(null); setLevelPicker(false); setOrgSize(null); setSizeOpen(false); setFocus("all");
     setPicker(false); setStagePicker(false); setSizePicker(false); setFopen(false); setFq(""); setHint(false); setCtrl(false); setSel(null);
     const rt = M.buildRoute(null, "all", mode, null, null, null, p?.stops ?? null);
@@ -466,7 +469,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                   <div className="relative mb-2.5">
                     <label className="flex items-center gap-2 rounded-2xl border border-black/20 bg-[#fff] px-3.5 py-2 shadow-sm focus-within:border-indigo-400">
                       <Lightbulb size={16} className="shrink-0 text-amber-500" />
-                      <input ref={finderRef} value={fq} onChange={(e) => { setFq(e.target.value); setFopen(true); }} onFocus={() => setFopen(true)} onKeyDown={(e) => { if (e.key === "Escape") setFopen(false); if (e.key === "Enter") { const h = findProblems(fq, M.PROBLEMS, 1)[0]; if (h) chooseProblem(h.id); } }}
+                      <input ref={finderRef} value={fq} onChange={(e) => { setFq(e.target.value); setFopen(true); }} onFocus={() => setFopen(true)} onKeyDown={(e) => { if (e.key === "Escape") setFopen(false); if (e.key === "Enter") { const h = findProblems(fq, M.PROBLEMS, 1)[0]; if (h) chooseProblem(h.id); else if (fq.trim()) logPick("nomatch"); } }}
                         placeholder="Not sure where to start? Say what is going wrong, in your own words…" aria-label="Say what is going wrong" role="combobox" aria-expanded={fopen} aria-controls="problem-list" className="min-w-0 flex-1 bg-transparent text-[14px] outline-none" />
                       {(fq || problem) && <button type="button" aria-label="Clear" onClick={() => { setFq(""); if (problem) chooseProblem(null); finderRef.current?.focus(); }} className="rounded-full p-0.5 text-slate-400 hover:bg-black/5"><X size={14} /></button>}
                     </label>
@@ -484,7 +487,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                           {stopHits.length > 0 && (
                             <div className="border-t border-black/10 pt-1">
                               <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[.14em] text-slate-400">Or go straight to a stop</p>
-                              {stopHits.map((s) => <button key={s.id} type="button" onClick={() => { setProblemId(null); setFocus("all"); setFopen(false); setFq(""); pick({ kind: "st", id: s.id }); }} className="block w-full rounded-lg px-3 py-1.5 text-left text-[14px] font-semibold hover:bg-black/5">{s.name}</button>)}
+                              {stopHits.map((s) => <button key={s.id} type="button" onClick={() => { setProblemId(null); setFocus("all"); setFopen(false); setFq(""); logPick("stop", [s.id]); pick({ kind: "st", id: s.id }); }} className="block w-full rounded-lg px-3 py-1.5 text-left text-[14px] font-semibold hover:bg-black/5">{s.name}</button>)}
                             </div>
                           )}
                           {!checker ? (
@@ -501,7 +504,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
                               <button type="button" disabled={!ticks.length} onClick={() => chooseProblem(ticks.join("+"))} className="btn mt-2 w-full !py-1.5 text-[13px] disabled:opacity-40">{ticks.length ? `Show a route for these ${ticks.length}` : "Tick at least one"}</button>
                             </div>
                           )}
-                          <button type="button" onClick={() => setFopen(false)} className="mt-1 w-full rounded-lg px-3 py-1.5 text-left text-[12.5px] font-semibold text-slate-400 hover:bg-black/5">Close</button>
+                          <button type="button" onClick={() => { if (fq.trim() && !finderHits.length && !stopHits.length) logPick("nomatch"); setFopen(false); }} className="mt-1 w-full rounded-lg px-3 py-1.5 text-left text-[12.5px] font-semibold text-slate-400 hover:bg-black/5">Close</button>
                         </div>
                     )}
                   </div>
