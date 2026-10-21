@@ -61,7 +61,7 @@ export function Flashcards({ cards, accent = "#6366f1" }: { cards: Card[]; accen
         <span className="font-semibold">Card {i + 1} of {deck.length}</span>
         <span className="flex items-center gap-1"><Check size={13} className="text-emerald-400" />{gotIt} known</span>
       </div>
-      <div className="flex gap-1" aria-label="Deck progress">
+      <div className="flex gap-1" role="img" aria-label="Deck progress">
         {deck.map((_, n) => <i key={n} className="h-1.5 flex-1 rounded-full transition-all" style={{ background: known[n] === true ? "#10b981" : known[n] === false ? "#f59e0b" : n === i ? accent : "rgba(20,22,31,.12)" }} />)}
       </div>
 
@@ -70,9 +70,9 @@ export function Flashcards({ cards, accent = "#6366f1" }: { cards: Card[]; accen
           <div className={`flip-inner min-h-60 ${flip ? "flipped" : ""}`}>
             <div className="flip-face card relative block min-h-60 w-full overflow-hidden p-6" style={{ background: `linear-gradient(145deg, ${accent}14, #fff 55%)` }}>
               <span className="pointer-events-none absolute -right-2 -top-6 select-none text-[120px] font-black leading-none" style={{ color: accent, opacity: 0.08 }} aria-hidden>{i + 1}</span>
-              <div className="relative flex items-center gap-2 text-xs font-bold uppercase tracking-widest" style={{ color: accent }}><span className="grid h-6 w-6 place-items-center rounded-full" style={{ background: `${accent}22` }}><CircleHelp size={14} /></span>Question{c.topic && <span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] normal-case tracking-normal text-slate-300">{c.topic}</span>}</div>
+              <div className="relative flex items-center gap-2 text-xs font-bold uppercase tracking-widest" style={{ color: `color-mix(in srgb, ${accent} 55%, #000)` }}><span className="grid h-6 w-6 place-items-center rounded-full" style={{ background: `${accent}22` }}><CircleHelp size={14} /></span>Question{c.topic && <span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] normal-case tracking-normal text-slate-300">{c.topic}</span>}</div>
               <div className="relative mt-4 text-xl font-semibold leading-snug">{c.q}</div>
-              {c.code && <pre className="relative mt-3 overflow-x-auto rounded-lg bg-black/5 p-3 text-sm">{c.code}</pre>}
+              {c.code && <pre tabIndex={0} aria-label="Code" className="relative mt-3 overflow-x-auto rounded-lg bg-black/5 p-3 text-sm">{c.code}</pre>}
               <span className="absolute bottom-3 right-4 flex items-center gap-1 text-[11px] text-slate-500"><RotateCw size={11} />tap or press Space to reveal</span>
             </div>
             <div className="flip-face flip-back card min-h-60 w-full overflow-hidden border-emerald-400/50 p-6" style={{ background: "linear-gradient(145deg, rgba(16,185,129,.16), #fff 60%)" }}>

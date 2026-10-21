@@ -59,7 +59,7 @@ export default function Runner({ slug, topic, questions, signedIn }: { slug: str
       <div className="flex gap-1.5" aria-hidden>{questions.map((_, n) => <i key={n} className={`h-1.5 flex-1 rounded-full ${n < results.length ? (results[n].correct ? "bg-emerald-500" : "bg-rose-500") : n === i ? "bg-indigo-400" : "bg-black/10"}`} />)}</div>
       <div className="card space-y-4 p-5">
         <p className="text-lg font-semibold">{q.prompt}</p>
-        {q.code && <pre className="overflow-x-auto rounded bg-black/5 p-3 text-sm">{q.code}</pre>}
+        {q.code && <pre tabIndex={0} aria-label="Code" className="overflow-x-auto rounded bg-black/5 p-3 text-sm">{q.code}</pre>}
         <div className="grid gap-2">
           {q.options.map((o) => {
             const right = shown && o.key.toLowerCase() === shown.answer.toLowerCase(), wrong = shown && shown.picked === o.key && !shown.correct;

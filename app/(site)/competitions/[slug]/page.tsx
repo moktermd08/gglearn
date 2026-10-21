@@ -210,7 +210,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
                     {q ? (
                       <>
                         <div className="font-medium">{q.prompt}</div>
-                        {q.code && <pre className="overflow-x-auto rounded bg-black/5 p-2 text-xs">{q.code}</pre>}
+                        {q.code && <pre tabIndex={0} aria-label="Code" className="overflow-x-auto rounded bg-black/5 p-2 text-xs">{q.code}</pre>}
                         <ul className="text-slate-300">{q.options?.map((o) => <li key={o.key}><span className="font-mono font-bold">{o.key.toUpperCase()}</span> {o.text}{o.key === q.answer && <span className="ml-1 text-emerald-300">(correct)</span>}</li>)}</ul>
                       </>
                     ) : <p className="text-slate-400">Hidden while you are racing: you can read it once you have passed level {x.level}, so you cannot see it before you face it.</p>}

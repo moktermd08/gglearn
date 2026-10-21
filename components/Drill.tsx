@@ -25,12 +25,12 @@ export function Drill({ trackId, back, again, studyHref, trackName, art, accent 
       <svg className="pointer-events-none absolute -right-8 -top-10 h-40 w-40" viewBox="0 0 200 200" aria-hidden><circle cx="120" cy="80" r="80" fill="none" stroke={accent} strokeOpacity=".2" /><circle cx="120" cy="80" r="50" fill="none" stroke={accent} strokeOpacity=".28" strokeDasharray="4 6" className="march" /></svg>
       <div className="relative shrink-0">{art}</div>
       <div className="relative min-w-0 flex-1">
-        <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest" style={{ color: accent }}><Zap size={13} />Quick drill</div>
+        <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest" style={{ color: `color-mix(in srgb, ${accent} 55%, #000)` }}><Zap size={13} />Quick drill</div>
         <div className="truncate text-lg font-extrabold">{trackName}</div>
       </div>
       <div className="relative flex shrink-0 flex-col items-end gap-1">
         <span className="text-xs font-semibold text-slate-400">{Math.min(i + 1, questions.length)}/{questions.length} · {score} right</span>
-        <span className="flex items-center gap-0.5" title={`${streak} in a row`} aria-label={`${streak} in a row`}>
+        <span className="flex items-center gap-0.5" role="img" title={`${streak} in a row`} aria-label={`${streak} in a row`}>
           {[0, 1, 2, 3, 4].map((n) => <Flame key={n} size={16} className={`transition ${n < streak ? "pulse-glow text-orange-500" : "text-black/15"}`} fill={n < streak ? "#f97316" : "none"} />)}
         </span>
       </div>
@@ -99,7 +99,7 @@ export function Drill({ trackId, back, again, studyHref, trackName, art, accent 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       {header}
-      <div className="flex gap-1.5" aria-label="Drill progress">
+      <div className="flex gap-1.5" role="img" aria-label="Drill progress">
         {questions.map((_, n) => {
           const r = results[n];
           return <i key={n} className={`h-2.5 flex-1 rounded-full transition-all ${r ? (r.ok ? "pop bg-emerald-500" : "pop bg-rose-500") : n === i ? "animate-pulse" : "bg-black/10"}`} style={!r && n === i ? { background: accent } : undefined} />;
@@ -108,11 +108,11 @@ export function Drill({ trackId, back, again, studyHref, trackName, art, accent 
       <div key={q.id} className={`card slide-in relative space-y-4 overflow-hidden p-6 ${res && !res.correct ? "shake" : ""}`}>
         <span className="pointer-events-none absolute -right-1 -top-8 select-none text-[130px] font-black leading-none" style={{ color: accent, opacity: 0.07 }} aria-hidden>{i + 1}</span>
         <div className="relative flex flex-wrap items-center gap-2">
-          <span className="rounded-full px-2.5 py-1 text-xs font-extrabold" style={{ background: `${accent}22`, color: accent }}>Question {i + 1}</span>
+          <span className="rounded-full px-2.5 py-1 text-xs font-extrabold" style={{ background: `${accent}22`, color: `color-mix(in srgb, ${accent} 55%, #000)` }}>Question {i + 1}</span>
           {q.topic && <span className="inline-flex items-center gap-1 rounded-full bg-black/5 px-2.5 py-1 text-xs font-semibold text-slate-300"><Tag size={12} />{q.topic}</span>}
         </div>
         <div className="relative text-xl font-semibold leading-snug">{q.prompt}</div>
-        {q.code && <pre className="relative overflow-x-auto rounded-lg bg-black/5 p-3 text-sm">{q.code}</pre>}
+        {q.code && <pre tabIndex={0} aria-label="Code" className="relative overflow-x-auto rounded-lg bg-black/5 p-3 text-sm">{q.code}</pre>}
         <div className="relative grid gap-2">
           {q.options?.map((o, n) => {
             const chosen = res?.key === o.key, right = res && o.key === res.answer;

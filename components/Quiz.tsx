@@ -91,7 +91,7 @@ export function Quiz({ questions, action, level, rivalHue, rivalName, meLook, ri
           {q.topic && <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-slate-300"><Tag size={12} />{q.topic}</span>}
         </div>
         <div className="text-lg font-semibold">{q.prompt}</div>
-        {q.code && <pre className="overflow-x-auto rounded-lg bg-black/5 p-3 text-sm text-emerald-200">{q.code}</pre>}
+        {q.code && <pre tabIndex={0} aria-label="Code" className="overflow-x-auto rounded-lg bg-black/5 p-3 text-sm text-emerald-200">{q.code}</pre>}
         {q.type === "mcq" ? (
           <div className="grid gap-2" role="radiogroup" aria-label="Answer options">
             {q.options?.map((o, n) => {
