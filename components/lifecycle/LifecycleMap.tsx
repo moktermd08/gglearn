@@ -52,7 +52,7 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
   const [sizePicker, setSizePicker] = useState(false);
   const [sector, setSector] = useState<string | null>(initial?.sector ?? null); // the kind of business: adds sector notes to the stops it touches
   const [sectorPicker, setSectorPicker] = useState(false);
-  const [sectorOpen, setSectorOpen] = useState(false);
+  const [sectorOpen, setSectorOpen] = useState(!!initial?.sector); // a link that names a kind of business opens what it says, like a stage or a size link does
   const [level, setLevel] = useState<number | null>(initial?.level ?? null); // where the person is on their role's career ladder (1-based rung): later stops are flagged, not lit
   const [levelPicker, setLevelPicker] = useState(false);
   const [picker, setPicker] = useState(false);
