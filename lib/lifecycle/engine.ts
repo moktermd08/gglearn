@@ -95,6 +95,7 @@ export type MapDef = {
   /** the everyday handover out of a stop that most often goes wrong (the map's gates are only the big ones) */ handoffs?: Record<string, string>;
   /** where learning ends and a professional (lawyer, accountant, specialist) begins, per stop */ pros?: Record<string, string>;
   /** a note for the stops where rules differ by country */ local?: { note: string; stops: string[] };
+  /** per stop: how many of its learning track's questions mention the stop's own subject (see scripts/report-stop-coverage.ts) */ coverage?: Record<string, { hit: number; total: number }>;
   /** a note that the content is a draft awaiting review by someone who works in the field */ draft?: string;
   /** kinds of business, which add notes to stops and a route of their own; leave out when a map has none */
   sectors?: SectorDef[];
@@ -381,6 +382,11 @@ export function buildModel(def: MapDef) {
     proFor: (stopId: string): string | null => def.pros?.[stopId] ?? null,
     localFor: (stopId: string): string | null => (def.local?.stops.includes(stopId) ? def.local.note : null),
     draftNote: def.draft ?? null,
+    /** how well the question bank backs a stop: "thin" under 15 matching questions, "some" under 80, otherwise "good"; null when it was not measured */
+    coverageFor: (stopId: string): { level: "thin" | "some" | "good"; hit: number; total: number } | null => {
+      const c = def.coverage?.[stopId];
+      return c ? { level: c.hit < 15 ? "thin" : c.hit < 80 ? "some" : "good", hit: c.hit, total: c.total } : null;
+    },
     AI_STOPS_FULL, AI_STOPS_LITE, AI_REVIEW_STOPS, isTechRole,
     buildRoute, dependenciesOf, nextGateFor,
   };

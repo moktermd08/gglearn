@@ -123,6 +123,14 @@ for (const m of Object.values(MAPS)) {
       if (!m.outcomeFor(s.id)) fail(id, `${s.id}: no "you will know it worked when" text`);
     }
     const known = new Set(m.STATIONS.map((s) => s.id));
+    // how well the question bank backs each stop (content/lifecycle/coverage-business.json): only real stops, sane counts, and a stale file is named
+    const cov = DEFS.business.coverage ?? {};
+    for (const [sid, c] of Object.entries(cov)) {
+      if (!known.has(sid)) fail(id, `coverage: no stop "${sid}"`);
+      else if (!(c.total > 0) || c.hit < 0 || c.hit > c.total) fail(id, `coverage: bad counts for "${sid}" (${c.hit} of ${c.total})`);
+    }
+    const unmeasured = m.STATIONS.filter((s) => !cov[s.id]).map((s) => s.id);
+    if (unmeasured.length > 6) console.warn(`note [business] ${unmeasured.length} stops have no coverage figure (run npm run report:coverage -- --write): ${unmeasured.join(", ")}`);
     for (const [what, rec] of [["breaks", DEFS.business.breaks], ["outcomes", DEFS.business.outcomes], ["pros", DEFS.business.pros], ["handoffs", DEFS.business.handoffs]] as const)
       for (const sid of Object.keys(rec ?? {})) if (!known.has(sid)) fail(id, `${what}: no stop "${sid}"`);
   }
