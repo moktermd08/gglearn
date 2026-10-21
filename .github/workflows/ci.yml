@@ -1,0 +1,66 @@
+name: CI
+
+# Runs on every pull request, so a change that breaks the build, the types, the lint or one of the project's own checks is caught
+# before it is merged. (The only other workflow, Deploy, runs after a push to main.)
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20 # the server runs Node 20, so CI must too (README: avoid Node 21+ APIs)
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint (errors only)
+        run: npx eslint . --quiet
+
+      # The checks below use a database. A runner has none, so build an empty one from the schema; no real data or secret is involved.
+      - name: Create an empty database from the schema
+        env:
+          DATABASE_FILE: ${{ github.workspace }}/ci.db
+        run: npx drizzle-kit push
+
+      # Only the checks that need no seeded users, tracks or questions run here (the rest need a seeded database, so run them locally
+      # with npm run check:<name>). A check that does not exist on a branch yet is skipped, not failed.
+      - name: Project checks
+        env:
+          DATABASE_FILE: ${{ github.workspace }}/ci.db
+          SESSION_SECRET: ci-throwaway-secret-0123456789abcdef
+        run: |
+          failed=0
+          for c in maps finder review problemlog credits uirules mail nextaction bulkinvite joinlinks linkedin league duelrules reset scim sso social signinlink; do
+            echo "::group::check:$c"
+            if ! npm run --if-present "check:$c"; then
+              echo "::error::check:$c failed"
+              failed=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $failed
+
+      # What deploy/deploy.sh runs after merging, so a broken build fails here and not in the middle of a deploy.
+      - name: Production build
+        env:
+          DATABASE_FILE: ${{ github.workspace }}/ci.db
+          SESSION_SECRET: ci-throwaway-secret-0123456789abcdef
+        run: npm run build

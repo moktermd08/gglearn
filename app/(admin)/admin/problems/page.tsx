@@ -30,7 +30,7 @@ export default async function Problems({ searchParams }: { searchParams: Promise
       </PageHero>
 
       {"error" in report ? (
-        <EmptyState Icon={Lightbulb} title="Nothing is being counted yet">The table that holds the counts has not been created. Run <code>npm run db:push</code> on this server, then come back.</EmptyState>
+        <EmptyState Icon={Lightbulb} title="Nothing is being counted yet">The table that holds the counts has not been created yet. The next deploy creates it (the deploy script pushes the schema), or run <code>npm run db:push</code> on this server now, then come back.</EmptyState>
       ) : report.maps.every((m) => m.total === 0) ? (
         <EmptyState Icon={Lightbulb} title="No picks yet">Nobody has used the finder in the last {days} days. Counts appear here as people pick a problem, jump to a stop or search for something the map cannot match.</EmptyState>
       ) : report.maps.map((m) => {
