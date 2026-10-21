@@ -132,7 +132,7 @@ export const BUSINESS_SECTORS: SectorDef[] = [
     watch: "Product safety and standards bodies, the health and safety regulator, and environmental regulators.",
     rules: ["Products you make must meet safety rules and carry the right marks and labels.", "Keep test records and a technical file for what you make.", "Machinery needs guarding, risk assessments and trained operators.", "Waste, emissions and chemicals can need permits."],
     key: ["prodsafe", "qms", "suppliers", "stock", "stockctl", "qcheck", "capacity", "safety", "trade", "insure"],
-    say: "I make or manufacture products to sell", words: "manufacturing manufacturer factory workshop maker making production product made handmade producer assembly machinery materials batch quality marks ce ukca",
+    say: "I make or manufacture products to sell", words: "manufacturing manufacturer factory workshop maker make makes making production product made handmade homemade craft crafts artisan candles soap jewellery furniture clothing producer assembly machinery materials batch quality marks ce ukca what i make",
     first: "Find the safety rules and marks for your product type, and list the tests, labels and records you need before you sell the next batch.", done: "Before anything ships, you know the safety rules, the marks and labels, and where you keep the test records.", pro: "A testing body or product safety adviser confirms what your product must meet.",
     notes: {
       prodsafe: "What you make must meet safety rules and carry the right marks; keep a technical file and your test records.",
