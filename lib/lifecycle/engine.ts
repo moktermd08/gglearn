@@ -370,6 +370,8 @@ export function buildModel(def: MapDef) {
     STAGES, STAGE_BY_ID,
     SIZES, SIZE_BY_ID, sizeFrom, sizeNote,
     PROBLEMS: def.problems ?? [],
+    /** how many of a role's main learning tracks have a stop on this map */
+    roleCoverage: (core: readonly string[]): number => { const tr = new Set(STATIONS.map((s) => s.track)); return core.filter((t) => tr.has(t)).length; },
     SECTORS: def.sectors ?? [],
     SECTOR_BY_ID: new Map((def.sectors ?? []).map((s) => [s.id, s])),
     sectorNote: (stopId: string, sectorId: string | null): string | null => (sectorId ? def.sectors?.find((s) => s.id === sectorId)?.notes[stopId] ?? null : null),
