@@ -60,7 +60,7 @@ function Card({ v, i }: { v: CampaignView; i: number }) {
           <p className="mt-0.5 text-sm text-slate-300">{v.hook}</p>
         </div>
       </div>
-      <div className={`mt-3 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-extrabold ${REWARD_TONE[v.rewardKind]}`}><Rw size={16} />{v.headline}{v.rewardKind !== "certificate" && <span className="ml-auto text-[11px] font-semibold opacity-80">+ certificates</span>}</div>
+      <div className={`mt-3 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-extrabold ${REWARD_TONE[v.rewardKind]}`}><Rw size={16} />{v.headline}{v.rewardKind !== "certificate" && <span className="ml-auto text-[11px] font-semibold">+ certificates</span>}</div>
       {live && v.endsAt && (
         <div className="mt-3" title={`${Math.round(elapsed * 100)}% of the time has passed`}>
           <div className="mb-1 flex justify-between text-[11px] font-semibold text-slate-400"><span>Ends in {span(left)}</span><span>{Math.round(elapsed * 100)}%</span></div>

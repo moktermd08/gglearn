@@ -261,7 +261,7 @@ export default async function Home() {
             {TIERS.map((t, i) => (
               <div key={t.name} className="rounded-xl border border-black/10 bg-[#fff] p-2 text-center">
                 <Avatar kind="human" level={t.from} size={52} className="mx-auto" />
-                <div className="mt-1 text-xs font-bold" style={{ color: `hsl(${t.hue} 70% 35%)` }}>{t.name}</div>
+                <div className="mt-1 text-xs font-bold" style={{ color: `hsl(${t.hue} 70% 29%)` }}>{t.name}</div>
                 <div className="text-[10px] text-slate-400">L{t.from}–{i === 4 ? 20 : t.from + 3}</div>
               </div>
             ))}

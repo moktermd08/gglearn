@@ -111,7 +111,7 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
           <span className="inline-flex items-center justify-center gap-2">{passed ? <Trophy className="pulse-glow text-yellow-300" /> : <Target />}{passed ? (run.level === MAX_LEVEL ? "You are a Titan." : `Level ${run.level} conquered!`) : (pct >= 60 ? "So close. Review and go again." : "Not yet. Review and go again.")}</span>
         </p>
         <p className="text-slate-300">+{xp} XP · {passed ? `${rival.name} is on level ${rv.level}${run.level > rv.level ? ", and you are ahead!" : run.level === rv.level ? ", and you are level." : ", so keep pushing."}` : `You need ${PASS_MARK * 100}% to pass. ${rival.name} is on level ${rv.level}.`}</p>
-        {tierUp && <p className="pop flex items-center justify-center gap-2 font-bold" style={{ color: `hsl(${TIERS[tierOf(run.level)].hue} 70% 35%)` }}><Medal size={20} />Rank up: {TIERS[tierOf(run.level)].name}!</p>}
+        {tierUp && <p className="pop flex items-center justify-center gap-2 font-bold" style={{ color: `hsl(${TIERS[tierOf(run.level)].hue} 70% 29%)` }}><Medal size={20} />Rank up: {TIERS[tierOf(run.level)].name}!</p>}
         <p className="text-sm text-slate-400">Player level {prog.player.level} · {prog.player.title}{prog.streak.current > 0 && ` · ${prog.streak.current}-day streak`}</p>
         {newBadges.length > 0 && (
           <div className="pop mx-auto max-w-md rounded-2xl bg-yellow-400/10 p-3 ring-1 ring-yellow-400/40"><div className="mb-2 text-sm font-bold text-yellow-600">New badge{newBadges.length === 1 ? "" : "s"} earned!</div><div className="flex flex-wrap justify-center gap-2">{newBadges.map((x) => <div key={x.key} className="w-20"><BadgeTile b={x} fresh /></div>)}</div></div>
