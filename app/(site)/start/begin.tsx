@@ -72,7 +72,7 @@ export default function Begin({ topics }: { topics: Topic[] }) {
           <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by kind">
             {kinds.map((k) => (
               <button type="button" key={k} onClick={() => { setKind(k); setLimit(PAGE); }} aria-pressed={kind === k}
-                className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${kind === k ? "border-indigo-400 bg-indigo-500 text-[#fff]" : "border-black/10 bg-[#fff] text-slate-300 hover:border-indigo-300"}`}>{k}{k !== "All" && <span className="ml-1 opacity-60">{topics.filter((t) => t.kindLabel === k).length}</span>}</button>
+                className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${kind === k ? "border-indigo-400 bg-indigo-500 text-[#fff]" : "border-black/10 bg-[#fff] text-slate-300 hover:border-indigo-300"}`}>{k}{k !== "All" && <span className="ml-1 opacity-80">{topics.filter((t) => t.kindLabel === k).length}</span>}</button>
             ))}
           </div>
 

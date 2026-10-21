@@ -64,7 +64,7 @@ export default async function Profile({ searchParams }: { searchParams: Promise<
             <div className="pb-1"><AvatarPicker me={looks.me} rival={looks.rival} photoUrl={looks.photoUrl} signedIn level={bestLevel} /></div>
           </div>
           <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[#fff]" style={{ background: `hsl(${tier.hue} 70% 45%)` }}><Medal size={13} />{tier.name} rank</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[#fff]" style={{ background: `hsl(${tier.hue} 70% 30%)` }}><Medal size={13} />{tier.name} rank</span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/12 px-3 py-1 text-indigo-300"><ShieldCheck size={13} />{ROLE[me.role] ?? me.role}</span>
             {me.audience === "staff" && <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-500/12 px-3 py-1 text-sky-300"><Briefcase size={13} />{roleLabel(me.jobRole)}</span>}
             {me.audience === "customer" && <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/15 px-3 py-1 text-amber-300">Customer</span>}

@@ -121,8 +121,8 @@ function Ladder({ current }: { current: number }) {
       <h2 className="mb-3 font-bold">The ladder</h2>
       <ol className="flex items-end justify-between gap-1">
         {TIERS.map((t, i) => (
-          <li key={t.name} className={`flex min-w-0 flex-1 flex-col items-center gap-1 text-center ${i === current ? "" : "opacity-55"}`} aria-current={i === current ? "step" : undefined}>
-            <TierGem tier={i} size={i === current ? 44 : 32} />
+          <li key={t.name} className="flex min-w-0 flex-1 flex-col items-center gap-1 text-center" aria-current={i === current ? "step" : undefined}>
+            <span className={i === current ? "" : "opacity-55"}><TierGem tier={i} size={i === current ? 44 : 32} /></span>
             <span className={`truncate text-[10px] font-bold ${i === current ? "text-slate-800" : "text-slate-400"}`}>{t.name}</span>
             {i === current && <span className="h-1 w-6 rounded-full" style={{ background: `hsl(${t.hue} 75% 55%)` }} />}
           </li>

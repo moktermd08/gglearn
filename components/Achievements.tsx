@@ -36,7 +36,7 @@ export function StreakCard({ s, freezes }: { s: Progression["streak"]; freezes?:
         {s.week.map((d) => <span key={d.day} title={d.day} className={`grid h-7 flex-1 place-items-center rounded-lg text-[10px] font-bold ${d.frozen ? "bg-sky-500/20 text-sky-500" : d.active ? "bg-orange-500/20 text-orange-500" : "bg-black/[.05] text-slate-400"}`} aria-label={d.frozen ? `${d.day}, covered by a streak freeze` : d.day}>{new Date(`${d.day}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "narrow", timeZone: "UTC" })}</span>)}
       </div>
       {freezes !== undefined && (
-        <p className="mt-2 flex items-center gap-1.5 rounded-lg bg-sky-500/10 px-2.5 py-1.5 text-xs text-sky-600" title="A streak freeze covers a day you miss, automatically. You get one for your first activity and another for every 7 days in a row. You can hold 2.">
+        <p className="mt-2 flex items-center gap-1.5 rounded-lg bg-sky-500/10 px-2.5 py-1.5 text-xs text-sky-300" title="A streak freeze covers a day you miss, automatically. You get one for your first activity and another for every 7 days in a row. You can hold 2.">
           <Snowflake size={13} aria-hidden /><b>{freezes} streak freeze{freezes === 1 ? "" : "s"}</b>{freezes === 0 ? "Earn one with a 7-day streak." : "Ready to cover a missed day."}
         </p>
       )}
