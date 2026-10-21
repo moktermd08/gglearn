@@ -8,7 +8,8 @@ Readable handouts for checking the drafted learning content in `business-stops/`
 | [HR or employment adviser](2-hr-or-employment-adviser.md) | 11 | 44 |
 | [Solicitor or legal adviser](3-solicitor.md) | 8 | 32 |
 | [Compliance, safety or trade adviser](4-compliance-safety-or-trade-adviser.md) | 5 | 20 |
-| [Business practitioner (sales, marketing, operations, strategy)](5-business-practitioner.md) | 28 | 112 |
+| [Sales and marketing practitioner](5-sales-and-marketing-practitioner.md) | 12 | 48 |
+| [Operations and strategy practitioner](6-operations-and-strategy-practitioner.md) | 16 | 64 |
 
 **Total:** 60 items, 240 questions. Every item is in exactly one pack.
 

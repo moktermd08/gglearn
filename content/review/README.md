@@ -14,7 +14,7 @@ Each file is shaped for `npm run import:knowledge`: `{ trackSlug, status: "revie
 
 ## Review packs
 
-`packs/` holds readable handouts generated from these files, one per kind of reviewer (accountant, HR or employment adviser, solicitor, compliance and safety adviser, and business practitioner), so nobody has to read JSON. Give each reviewer the pack for their field. `npm run review:packs` regenerates them, and `npm run check:review` fails if they are out of date. See `packs/README.md`.
+`packs/` holds readable handouts generated from these files, one per kind of reviewer (accountant, HR or employment adviser, solicitor, compliance and safety adviser, sales and marketing practitioner, and operations and strategy practitioner), so nobody has to read JSON. Give each reviewer the pack for their field; `handoff/` has a ready-to-send cover note for each and a tracker. `npm run review:packs` regenerates them, and `npm run check:review` fails if they are out of date. See `packs/README.md`.
 
 ## How to review
 

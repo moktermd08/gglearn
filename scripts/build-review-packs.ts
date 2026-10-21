@@ -14,7 +14,7 @@ type Q = { level: number; prompt: string; options: { key: string; text: string }
 type Item = { title: string; stop: string; body: string; questions: Q[] };
 type File = { trackSlug: string; items: Item[] };
 
-/** Who should check an item: the stop's id decides. Anything not listed goes to the business practitioner. */
+/** Who should check an item: the stop's id decides. Anything not listed goes to the operations and strategy practitioner. */
 const GROUPS: { id: string; file: string; title: string; who: string; stops: string[] }[] = [
   { id: "accountant", file: "1-accountant-or-bookkeeper.md", title: "Accountant or bookkeeper", who: "someone who keeps small-business books and does tax and payroll for a living",
     stops: ["books", "taxrun", "tax", "insolv", "creditors", "payroll", "annual", "approvals"] },
@@ -24,8 +24,10 @@ const GROUPS: { id: string; file: string; title: string; who: string; stops: str
     stops: ["contractrev", "ipdeep", "register", "legalclose", "dissolve", "trustees", "family", "franch"] },
   { id: "compliance", file: "4-compliance-safety-or-trade-adviser.md", title: "Compliance, safety or trade adviser", who: "someone who advises on health and safety, product safety, licences, accessibility, or customs and shipping",
     stops: ["safety", "prodsafe", "licence", "access", "trade"] },
+  { id: "marketing", file: "5-sales-and-marketing-practitioner.md", title: "Sales and marketing practitioner", who: "someone who has run sales or marketing for a small business",
+    stops: ["launchplan", "open", "leads", "social", "referrals", "cfeed", "feedback", "reviews", "tender", "rivals", "partners", "icp"] },
 ];
-const PRACTITIONER = { id: "practitioner", file: "5-business-practitioner.md", title: "Business practitioner (sales, marketing, operations, strategy)", who: "someone who has run or advised small businesses day to day" };
+const PRACTITIONER = { id: "practitioner", file: "6-operations-and-strategy-practitioner.md", title: "Operations and strategy practitioner", who: "someone who has run or advised small businesses day to day on operations, planning and leadership" };
 
 const root = path.join(process.cwd(), "content", "review");
 const dir = path.join(root, "business-stops"), out = path.join(root, "packs");
