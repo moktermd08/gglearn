@@ -93,7 +93,7 @@ export default function DuelRoom({ code, shareUrl }: { code: string; shareUrl: s
           <div className="flex items-center justify-between text-sm"><b>Question {i + 1} of {st.size}</b><span className="flex items-center gap-1 font-bold tabular-nums text-slate-500"><Clock size={14} />{Math.ceil(left / 1000)}s</span></div>
           <div className="h-2 overflow-hidden rounded-full bg-black/10"><i className="block h-full rounded-full transition-[width] duration-200" style={{ width: `${frac * 100}%`, background: frac > 0.4 ? "#6366f1" : "#f43f5e" }} /></div>
           <p className="text-lg font-semibold">{st.question.prompt}</p>
-          {st.question.code && <pre className="overflow-x-auto rounded bg-black/5 p-3 text-sm">{st.question.code}</pre>}
+          {st.question.code && <pre tabIndex={0} aria-label="Code" className="overflow-x-auto rounded bg-black/5 p-3 text-sm">{st.question.code}</pre>}
           <div className="grid gap-2">
             {st.question.options.map((o) => (
               <button key={o.key} type="button" disabled={!!mine} onClick={() => answer(i, o.key)}
