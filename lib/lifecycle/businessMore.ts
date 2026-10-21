@@ -58,6 +58,7 @@ export const MORE_STOPS: Record<string, RawStation[]> = {
   ],
   gov: [
     S("family", 17, "Co-founder & Family Agreements", "S", "Founder", "Legal Structure|Who Decides What", "Who owns what and who does what|What happens if someone leaves|A way to settle a dispute"),
+    S("trustees", 20, "Trustees & Board Duties", "S", "Chair", "Legal Structure|Who Decides What", "Trustees or directors who know their legal duties|A board with the skills it needs|Minutes and conflicts of interest recorded"),
     S("esg", 27, "Sustainability & Responsibility", "M", "Owner", "Culture & Values|Choose Suppliers", "A few honest goals on the environment and people|Claims you can back up|Customers and staff told the truth"),
   ],
 };
@@ -69,7 +70,7 @@ export const MORE_TRACKS: Record<string, string[]> = {
   "data-analytics": ["datask"],
   "ai-llm-practice": ["aiwork"],
   "product-management-core": ["research"],
-  "governance-compliance": ["prodsafe"],
+  "governance-compliance": ["prodsafe", "trustees"],
 };
 
 /** Where a stop usually breaks, in its own words. */
@@ -102,6 +103,7 @@ export const MORE_BREAKS: Record<string, string> = {
   datask: "Numbers come from several places that disagree, and a chart is trusted because it looks professional.",
   upkeep: "Licences lapse and old systems run until they fail, and the move happens in a crisis.",
   family: "Everyone assumes they agree on who owns what, and the disagreement shows up when there is money or a falling out.",
+  trustees: "The board approves whatever the manager or founder brings, and nobody asks whether its own duties are being met.",
   esg: "Claims are made in marketing before the practice exists, and customers or staff notice.",
 };
 
@@ -135,6 +137,7 @@ export const MORE_OUTCOMES: Record<string, string> = {
   datask: "You can answer your own questions with data you trust, and your charts tell the truth.",
   upkeep: "Licences are tracked, old systems have a replacement date, and moves are planned not forced.",
   family: "Who owns what, who does what and what happens if someone leaves is written down and signed.",
+  trustees: "Every board member can say their duties, the board has the skills it needs, and decisions and conflicts are recorded.",
   esg: "You make a few real commitments on environment and people, and can show evidence for every claim.",
   // existing stops that most need a plain statement of success
   pricing: "You can say why a price is what it is, and what each sale earns after costs.",
@@ -167,6 +170,7 @@ export const MORE_PROS: Record<string, string> = {
   ipdeep: "A patent or trademark attorney should file and advise on registrations.",
   trade: "A freight forwarder or customs broker usually handles filings.",
   family: "A solicitor should draft the agreement; do not rely on a template.",
+  trustees: "A solicitor, or the regulator for your kind of organisation (for example a charity regulator), confirms what trustees or directors owe.",
   franch: "A franchise solicitor must draft the agreements and check the rules in each country.",
   qms: "An accredited body audits and certifies standards such as ISO 9001.",
   access: "An accessibility audit by a specialist shows what to fix on a website or premises.",
@@ -194,16 +198,16 @@ export const MORE_PROS: Record<string, string> = {
 
 /** How much a size changes: the first size at which these stops matter (stops in no list matter from a startup). */
 export const MORE_FROM: Record<string, string[]> = {
-  small: ["delegate", "hrproc", "ethics", "stress", "datask", "swot", "tender", "trade"],
+  small: ["trustees", "delegate", "hrproc", "ethics", "stress", "datask", "swot", "tender", "trade"],
   medium: ["qms", "salesteam", "franch", "upkeep", "esg"],
 };
 
 /** Company stages these stops belong to (the stage's own list is extended). */
 export const MORE_STAGE: Record<string, string[]> = {
   idea: ["research"],
-  setup: ["research", "pmodels", "prodsafe", "payroll", "servskill", "family", "aiwork"],
+  setup: ["research", "pmodels", "prodsafe", "payroll", "servskill", "family", "aiwork", "trustees"],
   launch: ["projects", "sellskills", "ipdeep", "servskill", "payroll", "negotiate"],
-  steady: ["delegate", "hrproc", "stress", "taxrun", "qms", "negotiate", "access", "ethics", "datask", "swot", "insolv", "upkeep"],
+  steady: ["trustees", "delegate", "hrproc", "stress", "taxrun", "qms", "negotiate", "access", "ethics", "datask", "swot", "insolv", "upkeep"],
   grow: ["tender", "salesteam", "adnum", "trade", "invest", "franch", "esg", "swot", "projects"],
 };
 
@@ -243,6 +247,12 @@ export const MORE_PROBLEMS: ProblemDef[] = [
     first: "Pick one question you want answered. Find where the data lives, and whether two sources give the same answer.", done: "You can answer your own questions with data you trust." },
   { id: "upkeep", say: "Our software and systems are old, messy or out of licence", words: "software licences licenses legacy old system migration upgrade technical debt it support renew subscription replace outdated", stops: ["upkeep", "systems", "backups", "secbasics"],
     first: "List every system and licence, who owns it and when it is due to renew or end.", done: "Licences are tracked, old systems have a replacement date, and moves are planned." },
+  { id: "trustee", common: true, say: "I'm a trustee or board member and don't know my legal duties", words: "trustee trustees board member director directors charity nonprofit non profit governance duties liability responsibilities chair committee fiduciary legal duty accountable", stops: ["trustees", "decide", "board", "risks", "approvals", "ethics"],
+    first: "Read your governing document and your regulator's guidance for trustees or directors. Write the three duties that matter most and one way your board shows it meets each.", done: "Every board member can say their duties, and the minutes show they were met.", pro: "A solicitor, or the regulator for your kind of organisation, confirms what trustees or directors owe." },
+  { id: "boardrecruit", say: "I need to recruit a board or fix one that isn't working", words: "recruit board trustees directors skills audit chair succession term limits diversity advisory board non executive vacancies refresh meeting attendance", stops: ["trustees", "advisers", "succession", "govup", "board"],
+    first: "List the skills your board needs for the next three years and tick which members have them. The gaps are your recruitment brief.", done: "The board has the skills it needs, a chair who runs it well, and a plan for who replaces whom." },
+  { id: "charity", say: "I run a charity or social enterprise and want it run properly, like a business", words: "charity charitable nonprofit non profit social enterprise community interest volunteers grants donations impact trustees income mission fundraising shop voluntary organisation cic", stops: ["mission", "trustees", "funding", "numbers", "esg"],
+    first: "Write what the organisation exists to change, who pays for it, and how you would know it worked. Then check each against your governing document.", done: "The purpose, the money and the board all point the same way, and you can show results.", pro: "Your charity or company regulator sets the real rules on trustees, reporting and fundraising." },
   { id: "cofounder", say: "I'm starting with a partner or family and worry about disagreements", words: "co founder cofounder partner partnership family business disagreement dispute split equity ownership leave exit agreement shareholders", stops: ["family", "structure", "decide", "exitopts"],
     first: "Each of you writes separately: who owns what, who does what, and what happens if one of you leaves. Compare the answers.", done: "Who owns what, who does what and what happens if someone leaves is written down and signed.", pro: "A solicitor should draft the agreement." },
   { id: "green", say: "Customers ask about our environmental and social impact and I don't know what to say", words: "sustainability esg environment carbon green social responsibility greenwashing net zero impact ethical sourcing csr claims", stops: ["esg", "suppliers", "culture", "ethics"],

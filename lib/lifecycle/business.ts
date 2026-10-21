@@ -274,7 +274,7 @@ const STAGES: StageDef[] = [
 for (const [lane, list] of Object.entries(MORE_STOPS)) (STATIONS[lane] ??= []).push(...list);
 for (const [sid, ids] of Object.entries(MORE_STAGE)) STAGES.find((g) => g.id === sid)!.stops.push(...ids.filter((id) => !STAGES.find((g) => g.id === sid)!.stops.includes(id)));
 for (const [size, ids] of Object.entries(MORE_FROM)) BUSINESS_SIZES.from[size].push(...ids);
-const LOCAL_STOPS = [...(STATIONS.leg ?? []).map((s) => s[0]), "tax", "taxrun", "payroll", "paysetup", "books", "invoice", "records", "finalacc"];
+const LOCAL_STOPS = [...(STATIONS.leg ?? []).map((s) => s[0]), "trustees", "tax", "taxrun", "payroll", "paysetup", "books", "invoice", "records", "finalacc"];
 
 export const BUSINESS_DEF: MapDef = {
   id: "business",
