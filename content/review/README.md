@@ -12,6 +12,10 @@ by an AI assistant from general UK small-business knowledge, **not from cited do
 Each file is shaped for `npm run import:knowledge`: `{ trackSlug, status: "review", items: [{ title, stop, body, questions }] }`.
 `stop` (which stop of the business map the item is for) and `draftNote` are extra keys the importer ignores.
 
+## Review packs
+
+`packs/` holds readable handouts generated from these files, one per kind of reviewer (accountant, HR or employment adviser, solicitor, compliance and safety adviser, and business practitioner), so nobody has to read JSON. Give each reviewer the pack for their field. `npm run review:packs` regenerates them, and `npm run check:review` fails if they are out of date. See `packs/README.md`.
+
 ## How to review
 
 1. Read each passage as someone who does this work (an accountant for bookkeeping and tax, an HR adviser for the people items, a

@@ -6,6 +6,7 @@
  */
 import Database from "better-sqlite3";
 import fs from "node:fs";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { MAPS } from "../lib/lifecycle/maps";
 
@@ -65,6 +66,11 @@ for (const file of walk(root)) {
       if (q.answer in letters) letters[q.answer]++;
     }
   }
+}
+// the reviewer handouts (content/review/packs) are generated from the JSON: a stale one would have people approving text that is no longer what is in the app
+if (fs.existsSync(path.join(root, "packs"))) {
+  const r = spawnSync("npx", ["tsx", "scripts/build-review-packs.ts", "--check"], { cwd: process.cwd(), encoding: "utf8" });
+  if (r.status !== 0) fail(`review packs are out of date with the JSON; run npm run review:packs${(r.stderr || "").trim() ? ` (${(r.stderr || "").trim().split("\n")[0]})` : ""}`);
 }
 // the right answer must not sit in one place
 const total = Object.values(letters).reduce((a, b) => a + b, 0);
