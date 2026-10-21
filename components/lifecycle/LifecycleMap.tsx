@@ -479,7 +479,8 @@ export function LifecycleMap({ mapId, data, signage, standalone, initial, auth }
               {data.viewingAs ? <>{data.firstName}&apos;s map. <span className="text-indigo-300">Where they are now.</span></> : data.signedIn ? <>Welcome back, {data.firstName}. <span className="text-indigo-300">Here is your route.</span></> : <>{M.words.headline[0]} <span className="text-indigo-300">{M.words.headline[1]}</span></>}
             </h1>
           </div>
-          <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]">
+          {/* The width is measured after the first paint, so until then the page cannot tell a phone from a desktop: showing the full controls would flash them open on a phone and then fold them away (and a tap in that moment lands on the wrong thing). Keep them hidden, with their space reserved, until the width is known. */}
+          <div className="pointer-events-auto min-w-0 flex-1 basis-[22rem]" style={size.w > 0 ? undefined : { visibility: "hidden" }}>
             {narrow && !ctrl ? (
               <div className="flex flex-wrap items-center gap-2">
                 <button type="button" onClick={() => setCtrl(true)} aria-expanded={false}
