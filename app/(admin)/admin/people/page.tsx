@@ -175,7 +175,7 @@ export default async function People({ searchParams }: { searchParams: Promise<{
               {myNotes.map((n) => <p key={n.id} className="mt-2 flex gap-2 whitespace-pre-wrap rounded-lg bg-sky-500/10 p-2.5 text-sm"><NotebookPen size={15} className="mt-0.5 shrink-0 text-sky-300" /><span>{n.notes}</span></p>)}
               <form action={addHandover} className="mt-3 flex flex-wrap gap-2 text-sm">
                 <input type="hidden" name="userId" value={u.id} />
-                <select name="trackId" className={input} defaultValue="">
+                <select name="trackId" className={input} defaultValue="" aria-label={`Track the handover note for ${u.name} is about`}>
                   <option value="">General</option>
                   {(enrolledIn.get(u.id) ?? []).map((id) => <option key={id} value={id}>{trackName.get(id)}</option>)}
                 </select>
