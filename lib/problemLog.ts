@@ -1,4 +1,4 @@
-import { gte, sql } from "drizzle-orm";
+import { and, gte, lte, sql } from "drizzle-orm";
 import { db, problemPicks } from "@/lib/db";
 import { MAPS } from "@/lib/lifecycle/maps";
 
@@ -51,7 +51,7 @@ export function problemReport(days = 30, day: string = today()): ProblemReport {
   let rows: { map: string; kind: PickKind; problem: string; n: number }[];
   try {
     rows = db.select({ map: problemPicks.map, kind: problemPicks.kind, problem: problemPicks.problem, n: sql<number>`sum(${problemPicks.n})` })
-      .from(problemPicks).where(gte(problemPicks.day, cutoff)).groupBy(problemPicks.map, problemPicks.kind, problemPicks.problem).all();
+      .from(problemPicks).where(and(gte(problemPicks.day, cutoff), lte(problemPicks.day, day))).groupBy(problemPicks.map, problemPicks.kind, problemPicks.problem).all();
   } catch {
     return { error: "missing" };
   }

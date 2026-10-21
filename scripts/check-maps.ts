@@ -125,6 +125,18 @@ for (const m of Object.values(MAPS)) {
     for (const [what, rec] of [["breaks", DEFS.business.breaks], ["outcomes", DEFS.business.outcomes], ["pros", DEFS.business.pros], ["handoffs", DEFS.business.handoffs]] as const)
       for (const sid of Object.keys(rec ?? {})) if (!known.has(sid)) fail(id, `${what}: no stop "${sid}"`);
   }
+  // kinds of business: unique ids, real stops, something to say, a route of their own in the finder, and a note only on stops that exist
+  const secIds = new Set<string>();
+  for (const s of m.SECTORS) {
+    if (secIds.has(s.id)) fail(id, `sector "${s.id}" is used twice`);
+    secIds.add(s.id);
+    if (!s.label || !s.blurb || !s.watch || !s.rules.length || !s.say || !s.words || !s.first || !s.done) fail(id, `sector ${s.id}: needs a label, blurb, who sets the rules, rules, and what to say, do first and expect`);
+    if (s.key.length < 5 || s.key.length > 12) fail(id, `sector ${s.id}: has ${s.key.length} key stops (5 to 12)`);
+    for (const sid of s.key) if (!m.STATION_BY_ID.has(sid)) fail(id, `sector ${s.id}: no key stop "${sid}"`);
+    for (const sid of Object.keys(s.notes)) if (!m.STATION_BY_ID.has(sid)) fail(id, `sector ${s.id}: note on missing stop "${sid}"`);
+    if (Object.keys(s.notes).length < 5) fail(id, `sector ${s.id}: has fewer than 5 stop notes`);
+    if (!m.PROBLEMS.some((p) => p.id === `sec-${s.id}`)) fail(id, `sector ${s.id}: has no problem in the finder`);
+  }
   const links = m.STATIONS.filter((s) => m.dependenciesOf(s.id).needs.length).length;
   console.log(`${id.padEnd(9)} ${m.STATIONS.length} stops, ${m.LINES.length} lines, ${m.GATES.length} gates, ${m.STAGES.length} stages, ${links} stops with "builds on" links`);
 }

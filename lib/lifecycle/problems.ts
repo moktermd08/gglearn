@@ -115,7 +115,7 @@ export const BUSINESS_PROBLEMS: ProblemDef[] = [
 
 export const PROBLEM_BY_ID = new Map(BUSINESS_PROBLEMS.map((p) => [p.id, p]));
 
-const STOP = new Set("i a an the and or to of in on for my me we our is are am it its this that with so but not do dont don't how what why can cant can't have has had be been about at as by from up out into than too very just really keep still".split(" "));
+const STOP = new Set("i a an the and or to of in on for my me we our is are am it its this that with so but not do dont don't how what why can cant can't have has had be been about at as by from up out into than too very just really keep still open opening opened want".split(" "));
 const stem = (w: string) => w.replace(/'s$/, "").replace(/(ing|ed|es|s)$/, (m, _x, i) => (i > 3 ? "" : m));
 const tokens = (t: string) => t.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter((w) => w && !STOP.has(w)).map(stem);
 

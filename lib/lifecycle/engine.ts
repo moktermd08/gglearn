@@ -47,6 +47,15 @@ export type SizesDef = {
   /** stop id -> size id -> what is different about that stop at that size */
   notes?: Record<string, Record<string, string>>;
 };
+/** A kind of business (food, retail, trades...): who sets its rules, the rules to expect, the stops that matter most, and a note on the stops it changes. */
+export type SectorDef = {
+  id: string; label: string; blurb: string;
+  /** who sets the rules for this sector */ watch: string;
+  /** the rules to expect, in plain words */ rules: string[];
+  /** the stops that matter most, in the order to meet them */ key: string[];
+  /** how someone describes it, and what to do first (these also make a problem for the finder) */ say: string; words: string; first: string; done: string; pro?: string;
+  /** stop id -> what is different about that stop in this sector */ notes: Record<string, string>;
+};
 export type MapWords = {
   /** the small line above the headline */ kicker: string;
   /** the headline, in two halves (the second is coloured) */ headline: [string, string];
@@ -87,6 +96,8 @@ export type MapDef = {
   /** where learning ends and a professional (lawyer, accountant, specialist) begins, per stop */ pros?: Record<string, string>;
   /** a note for the stops where rules differ by country */ local?: { note: string; stops: string[] };
   /** a note that the content is a draft awaiting review by someone who works in the field */ draft?: string;
+  /** kinds of business, which add notes to stops and a route of their own; leave out when a map has none */
+  sectors?: SectorDef[];
   /** problems in plain words that point at stops (see problems.ts); leave out when a map has none */
   problems?: import("./problems").ProblemDef[];
   /** room above the first line, in map units: more when the first line is crowded and its labels would touch the handoff-gate titles above it */
@@ -359,6 +370,9 @@ export function buildModel(def: MapDef) {
     STAGES, STAGE_BY_ID,
     SIZES, SIZE_BY_ID, sizeFrom, sizeNote,
     PROBLEMS: def.problems ?? [],
+    SECTORS: def.sectors ?? [],
+    SECTOR_BY_ID: new Map((def.sectors ?? []).map((s) => [s.id, s])),
+    sectorNote: (stopId: string, sectorId: string | null): string | null => (sectorId ? def.sectors?.find((s) => s.id === sectorId)?.notes[stopId] ?? null : null),
     breaksFor: (stopId: string): string | null => def.breaks?.[stopId] ?? null,
     outcomeFor: (stopId: string): string | null => def.outcomes?.[stopId] ?? null,
     handoffFor: (stopId: string): string | null => def.handoffs?.[stopId] ?? null,
