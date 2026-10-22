@@ -79,6 +79,7 @@ const TRACK_PILLAR: Record<string, string> = {
   "risk-resilience-leadership": "risk",
   "ggsocial-product": "implementation", "ggmoney-product": "implementation", "gglearn-product": "implementation", "moksy-product": "implementation",
   "moksy-platform-services": "architecture",
+  "moksy-company": "strategy",
   "tools-plan-design": "experience",
   // the Foundations twins of the Titan courses tagged above, the two OpenAI/ChatGPT Titan courses, and the sample brand
   "foundations-angular": "code", "foundations-bootstrap": "code", "foundations-css": "code", "foundations-html": "code", "foundations-javascript": "code", "foundations-laravel": "code", "foundations-nodejs": "code", "foundations-php": "code", "foundations-python": "code", "foundations-react": "code", "foundations-wordpress": "code",
@@ -88,7 +89,7 @@ const TRACK_PILLAR: Record<string, string> = {
 };
 
 // company-wide policy that everyone in scope must pass
-const MANDATORY = new Set(["governance-compliance"]);
+const MANDATORY = new Set(["governance-compliance", "moksy-company"]);
 // shared academy content: applies to every staff member, not tied to one company
 const SHARED_BRANDS = new Set(["foundations", "titan-academy", "software-lifecycle", "public-sector", "sample-brand"]);
 const PERSONAL_BRANDS = new Set(["mhossain"]);
