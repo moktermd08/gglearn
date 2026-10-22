@@ -25,8 +25,8 @@ const TRACKS: Record<string, T[]> = {
     ["moksy-support", "Moksy support", "process", "support,customer success", "Answering Moksy customers from its own published pages: contact routes, plans and limits, MOX and refunds, reviews, error messages, trust and the terms."],
     ["moksy-reviewer-onboarding", "Moksy reviewer onboarding", "process", "support,reviewer coordinator", "How to become a Moksy reviewer and work as one: the route onto the Ladder, the five rungs, how a review works, what it pays and the code of conduct."],
     ["moksy-brand-voice", "Moksy brand & voice", "process", "social media manager,content writer,marketing,designer", "How Moksy names things, looks and sounds: tagline, vocabulary, colour, type, tone and spelling."],
-    ["moksy-platform-services", "Moksy platform services", "subject", "developer", "The foundation services: gateway, auth, permissions, projects, requirements, payments, events, jobs, audit."],
-    ["moksy-patterns-automation", "Patterns and automation", "process", "developer", "Decisions as patterns, flows, and measuring the machine share."],
+    ["moksy-platform-services", "Moksy platform services", "subject", "developer,backend developer,frontend developer,full stack developer,engineer,architect,technical lead,data engineer,devops,security,tester", "The foundation services: gateway, auth, permissions, projects, requirements, payments, events, jobs, audit."],
+    ["moksy-patterns-automation", "Patterns and automation", "process", "developer,backend developer,full stack developer,engineer,architect,technical lead,data engineer,devops", "Decisions as patterns, flows, and measuring the machine share."],
   ],
   gglink: [
     ["ggsocial-product", "GGSocial", "product", "", "Features, admin, moderation, support playbook."],
