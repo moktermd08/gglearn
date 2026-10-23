@@ -1,0 +1,2229 @@
+{
+ "slug": "moksy-working-practice",
+ "name": "Working practice for delivery teams",
+ "description": "General practice for reviewing code, versioning, planning, releasing, handling incidents, debugging, accessibility, scaling and analysis; it is general practice, not a statement of how Moksy works.",
+ "roles": "",
+ "kind": "process",
+ "brand": "moksy-ai",
+ "audience": "staff",
+ "tier": "growth",
+ "scope": "brand",
+ "groups": {
+  "review": "code review practice",
+  "vcs": "version control concept",
+  "agile": "agile or delivery practice",
+  "meeting": "meeting or collaboration practice",
+  "pm": "project management concept",
+  "release": "change or release practice",
+  "incident": "incident or reliability concept",
+  "debug": "debugging or performance concept",
+  "quality": "accessibility or user-experience concept",
+  "locale": "localisation concept",
+  "scale": "scaling or maintenance concept",
+  "analysis": "business analysis concept",
+  "docs": "documentation or standards practice"
+ },
+ "cards": [
+  {
+   "group": "review",
+   "subject": "A pull request",
+   "tier": 1,
+   "says": [
+    "proposes a set of code changes for review before they merge",
+    "carries a description, a diff and the discussion about the change"
+   ],
+   "use": "want a teammate to check a change before it reaches the main branch",
+   "not": [
+    "merges the change automatically without any review"
+   ],
+   "like": [
+    "A draft pull request"
+   ]
+  },
+  {
+   "group": "review",
+   "subject": "A draft pull request",
+   "tier": 2,
+   "says": [
+    "signals that work is not ready for formal review",
+    "lets a developer share progress and get early direction"
+   ],
+   "use": "want early feedback on an unfinished change",
+   "not": [
+    "is merged automatically once the tests pass"
+   ],
+   "like": [
+    "A pull request"
+   ]
+  },
+  {
+   "group": "review",
+   "subject": "A small pull request",
+   "tier": 2,
+   "says": [
+    "limits a change to one purpose a reviewer can hold in their head",
+    "is reviewed faster and reverted more safely than a large one"
+   ],
+   "use": "are about to open a change that touches many unrelated files",
+   "not": [
+    "is only used for typo fixes"
+   ]
+  },
+  {
+   "group": "review",
+   "subject": "A pull request description",
+   "tier": 2,
+   "says": [
+    "explains why a change is made rather than only what changed",
+    "tells the reviewer how the change was tested"
+   ],
+   "use": "want reviewers to understand the intent of a change",
+   "not": [
+    "repeats the diff line by line"
+   ]
+  },
+  {
+   "group": "review",
+   "subject": "A blocking comment",
+   "tier": 3,
+   "says": [
+    "names a problem that must be fixed before the change can merge"
+   ],
+   "use": "find a bug in a change that would break production",
+   "not": [
+    "suggests a stylistic preference the author may ignore"
+   ],
+   "like": [
+    "A nit comment"
+   ]
+  },
+  {
+   "group": "review",
+   "subject": "A nit comment",
+   "tier": 3,
+   "says": [
+    "flags a minor stylistic preference",
+    "may be ignored by the author without blocking the merge"
+   ],
+   "use": "notice a small naming preference in an otherwise sound change",
+   "not": [
+    "must be fixed before the change can merge"
+   ],
+   "like": [
+    "A blocking comment"
+   ]
+  },
+  {
+   "group": "review",
+   "subject": "A review checklist",
+   "tier": 3,
+   "says": [
+    "lists what every reviewer checks, such as tests, naming, security and error handling"
+   ],
+   "use": "want reviews to be consistent between different reviewers",
+   "not": [
+    "replaces the need for a human reviewer"
+   ]
+  },
+  {
+   "group": "review",
+   "subject": "Author-reviewer separation",
+   "tier": 3,
+   "says": [
+    "keeps the person who wrote a change from being its only approver"
+   ],
+   "use": "see an author approving their own change because the tests pass",
+   "not": [
+    "lets an author merge their own change when the tests pass"
+   ]
+  },
+  {
+   "group": "review",
+   "subject": "Review turnaround time",
+   "tier": 4,
+   "says": [
+    "measures how long a change waits for its first review",
+    "grows into a bottleneck when reviewers are overloaded"
+   ],
+   "use": "notice finished changes waiting days for a first look",
+   "not": [
+    "measures how long the author takes to write the change"
+   ]
+  },
+  {
+   "group": "review",
+   "subject": "A stale pull request",
+   "tier": 4,
+   "says": [
+    "stays open long enough for its branch to drift from the main branch",
+    "raises the chance of merge conflicts"
+   ],
+   "use": "find a change that has sat open for weeks while the main branch moved on",
+   "not": [
+    "is one that has been merged and can be deleted"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A commit",
+   "tier": 1,
+   "says": [
+    "records a snapshot of changes with a message",
+    "forms the unit of history in version control"
+   ],
+   "use": "want to save a set of changes with an explanation",
+   "not": [
+    "creates a separate line of development"
+   ],
+   "like": [
+    "A branch"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A branch",
+   "tier": 1,
+   "says": [
+    "is a separate line of development that can later be merged"
+   ],
+   "use": "want to work on a change without disturbing the main line",
+   "not": [
+    "records a single snapshot of changes"
+   ],
+   "like": [
+    "A commit"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A merge",
+   "tier": 1,
+   "says": [
+    "combines the changes of one branch into another"
+   ],
+   "use": "want the work from a finished branch to join the main line",
+   "not": [
+    "throws away the other branch's commits"
+   ],
+   "like": [
+    "Rebasing"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A merge conflict",
+   "tier": 1,
+   "says": [
+    "arises when two branches change the same lines differently",
+    "must be resolved by a person before the merge completes"
+   ],
+   "use": "find that git cannot combine two branches automatically",
+   "not": [
+    "is fixed by git without any input"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "Rebasing",
+   "tier": 4,
+   "says": [
+    "replays commits on top of a new base",
+    "rewrites commit history"
+   ],
+   "use": "want a linear history before merging a branch",
+   "not": [
+    "leaves the commit identifiers unchanged"
+   ],
+   "like": [
+    "A merge"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A feature branch",
+   "tier": 2,
+   "says": [
+    "isolates work on one feature until it is ready to merge",
+    "can grow long-lived and diverge from the main branch"
+   ],
+   "use": "start work on a feature that will take several days",
+   "not": [
+    "is the branch that always holds production code"
+   ],
+   "like": [
+    "Trunk-based development"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "Trunk-based development",
+   "tier": 4,
+   "says": [
+    "keeps developers merging small changes to one main branch often",
+    "relies on feature flags to hide unfinished work"
+   ],
+   "use": "want to avoid long-lived branches and painful merges",
+   "not": [
+    "gives every feature its own branch for weeks"
+   ],
+   "like": [
+    "A feature branch"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A git tag",
+   "tier": 3,
+   "says": [
+    "marks a specific commit such as a release"
+   ],
+   "use": "need a permanent name for the exact code that was released",
+   "not": [
+    "moves forward automatically with each new commit"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "Git revert",
+   "tier": 3,
+   "says": [
+    "creates a new commit that undoes an earlier one",
+    "leaves shared history intact"
+   ],
+   "use": "need to undo a change that is already on a shared branch",
+   "not": [
+    "deletes the earlier commit from history"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "Major, minor and patch numbers",
+   "tier": 3,
+   "says": [
+    "number releases in three parts",
+    "raise the first part for breaking changes"
+   ],
+   "use": "need to show from a version number whether an upgrade may break clients",
+   "not": [
+    "are chosen by the marketing team for each release"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "A hotfix branch",
+   "tier": 4,
+   "says": [
+    "carries an urgent fix to production outside the normal release cycle"
+   ],
+   "use": "must ship a critical fix without releasing unfinished features",
+   "not": [
+    "is created for every planned feature"
+   ]
+  },
+  {
+   "group": "vcs",
+   "subject": "Force pushing",
+   "tier": 4,
+   "says": [
+    "overwrites remote history with local history",
+    "can destroy teammates' commits on a shared branch"
+   ],
+   "use": "are tempted to force push to a shared branch to fix a mistake",
+   "not": [
+    "is the safe way to add a new commit"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A sprint",
+   "tier": 1,
+   "says": [
+    "is a fixed-length period in which a team completes a planned set of work"
+   ],
+   "use": "need a fixed rhythm for planning and delivering work",
+   "not": [
+    "is an open-ended phase with no end date"
+   ],
+   "like": [
+    "A Kanban board"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A product backlog",
+   "tier": 1,
+   "says": [
+    "is the ordered list of work a team may do",
+    "is reordered as priorities change"
+   ],
+   "use": "need one place that holds every idea and request in priority order",
+   "not": [
+    "lists only the work done in the current sprint"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A sprint goal",
+   "tier": 2,
+   "says": [
+    "states the single outcome a sprint aims for",
+    "guides trade-offs when scope changes mid-sprint"
+   ],
+   "use": "must decide what to drop when a sprint runs short of time",
+   "not": [
+    "lists every task in the sprint"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A daily stand-up",
+   "tier": 1,
+   "says": [
+    "is a short daily sync on progress and blockers",
+    "is not a status report for managers"
+   ],
+   "use": "want a team to surface blockers early each day",
+   "not": [
+    "is a long planning meeting for the next quarter"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A sprint review",
+   "tier": 2,
+   "says": [
+    "shows finished work to stakeholders to get feedback"
+   ],
+   "use": "want stakeholders to see and react to what the team built",
+   "not": [
+    "looks back at how the team worked together"
+   ],
+   "like": [
+    "A retrospective"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A retrospective",
+   "tier": 2,
+   "says": [
+    "looks back at how the team worked",
+    "produces improvement actions for the next period"
+   ],
+   "use": "want a team to improve how it works together",
+   "not": [
+    "demonstrates the finished product to customers"
+   ],
+   "like": [
+    "A sprint review"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "Velocity",
+   "tier": 4,
+   "says": [
+    "measures how much work a team finishes per sprint",
+    "is a planning aid rather than a performance target"
+   ],
+   "use": "need to estimate how much a team can take on next sprint",
+   "not": [
+    "is a score used to rank individual developers"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A story point",
+   "tier": 3,
+   "says": [
+    "is a relative unit of effort estimate",
+    "is not a measure of hours"
+   ],
+   "use": "need to compare the size of two pieces of work",
+   "not": [
+    "equals exactly one hour of work"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A WIP limit",
+   "tier": 4,
+   "says": [
+    "caps how many items may be in progress at once",
+    "exposes bottlenecks by forcing work to finish"
+   ],
+   "use": "see a board with many items started and few finished",
+   "not": [
+    "caps how many items can be added to the backlog"
+   ],
+   "like": [
+    "A Kanban board"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A Kanban board",
+   "tier": 1,
+   "says": [
+    "visualises work as cards moving across columns"
+   ],
+   "use": "want everyone to see the state of all work at a glance",
+   "not": [
+    "fixes the team to a time-boxed sprint"
+   ],
+   "like": [
+    "A sprint"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "Definition of ready",
+   "tier": 4,
+   "says": [
+    "lists what a work item needs before a team accepts it into a sprint"
+   ],
+   "use": "find that half the sprint items are unclear when work begins",
+   "not": [
+    "lists what must be true before work counts as finished"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "Scope creep",
+   "tier": 3,
+   "says": [
+    "adds requirements to agreed work without adjusting time or budget"
+   ],
+   "use": "watch a project grow with small unplanned additions",
+   "not": [
+    "is the formal process for approving scope changes"
+   ]
+  },
+  {
+   "group": "agile",
+   "subject": "A technical spike",
+   "tier": 4,
+   "says": [
+    "is a short timeboxed investigation to reduce uncertainty"
+   ],
+   "use": "cannot estimate a task because the technology is unfamiliar",
+   "not": [
+    "is a full delivery of a feature"
+   ]
+  },
+  {
+   "group": "meeting",
+   "subject": "A meeting agenda",
+   "tier": 1,
+   "says": [
+    "lists topics and desired outcomes before a meeting"
+   ],
+   "use": "are about to invite people to a discussion",
+   "not": [
+    "records what was decided afterwards"
+   ],
+   "like": [
+    "Meeting minutes"
+   ]
+  },
+  {
+   "group": "meeting",
+   "subject": "Meeting minutes",
+   "tier": 2,
+   "says": [
+    "record decisions and actions rather than every remark"
+   ],
+   "use": "need a short record of what a meeting decided",
+   "not": [
+    "list the topics before the meeting starts"
+   ],
+   "like": [
+    "A meeting agenda"
+   ]
+  },
+  {
+   "group": "meeting",
+   "subject": "A decision log",
+   "tier": 3,
+   "says": [
+    "records what was decided, by whom and why"
+   ],
+   "use": "need to find out later why a past choice was made",
+   "not": [
+    "lists tasks waiting to be done"
+   ]
+  },
+  {
+   "group": "meeting",
+   "subject": "An action item",
+   "tier": 1,
+   "says": [
+    "names an owner and a due date for a follow-up task"
+   ],
+   "use": "leave a meeting with something that must happen next",
+   "not": [
+    "is a general topic that anyone may pick up"
+   ]
+  },
+  {
+   "group": "meeting",
+   "subject": "Timeboxing",
+   "tier": 1,
+   "says": [
+    "gives an activity a fixed time limit"
+   ],
+   "use": "see a discussion running far beyond its purpose",
+   "not": [
+    "lets a discussion run until everyone agrees"
+   ]
+  },
+  {
+   "group": "meeting",
+   "subject": "An asynchronous update",
+   "tier": 2,
+   "says": [
+    "shares information in writing so people can respond on their own schedule"
+   ],
+   "use": "need to inform a team spread across time zones",
+   "not": [
+    "requires everyone to attend a live call"
+   ]
+  },
+  {
+   "group": "meeting",
+   "subject": "A one-to-one",
+   "tier": 3,
+   "says": [
+    "is a regular private conversation between a manager and a team member"
+   ],
+   "use": "want a safe place to discuss workload, growth and concerns",
+   "not": [
+    "is a meeting of the whole team"
+   ]
+  },
+  {
+   "group": "meeting",
+   "subject": "A working agreement",
+   "tier": 3,
+   "says": [
+    "is a set of norms a team agrees for how it works together"
+   ],
+   "use": "find that team members assume different rules about response times and reviews",
+   "not": [
+    "is a contract with a customer"
+   ]
+  },
+  {
+   "group": "meeting",
+   "subject": "Psychological safety",
+   "tier": 4,
+   "says": [
+    "is the belief that one can raise concerns or mistakes without being punished"
+   ],
+   "use": "notice people hiding problems until they are too big to ignore",
+   "not": [
+    "is a security policy for office doors"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "Project scope",
+   "tier": 1,
+   "says": [
+    "defines what is included in and excluded from a project"
+   ],
+   "use": "need to agree what a project will and will not deliver",
+   "not": [
+    "lists the risks of a project"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A milestone",
+   "tier": 1,
+   "says": [
+    "marks a significant point of progress without taking time itself"
+   ],
+   "use": "want a checkpoint showing a phase is complete",
+   "not": [
+    "is a task that takes several weeks"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "The critical path",
+   "tier": 4,
+   "says": [
+    "is the longest chain of dependent tasks that sets the minimum project duration"
+   ],
+   "use": "need to know which delays will push back the end date",
+   "not": [
+    "is the list of the most expensive tasks"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A work breakdown structure",
+   "tier": 3,
+   "says": [
+    "divides a project into smaller deliverables and tasks"
+   ],
+   "use": "need to turn a large goal into estimable pieces",
+   "not": [
+    "lists the people in a project"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A stakeholder map",
+   "tier": 3,
+   "says": [
+    "groups people by their influence and interest in a project"
+   ],
+   "use": "need to decide how often to update each interested party",
+   "not": [
+    "lists the tasks assigned to each developer"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A RAID log",
+   "tier": 4,
+   "says": [
+    "records risks, assumptions, issues and dependencies"
+   ],
+   "use": "want one place to track what could go wrong and what is assumed",
+   "not": [
+    "records only completed tasks"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A project charter",
+   "tier": 4,
+   "says": [
+    "authorises a project and states its purpose, scope and sponsor"
+   ],
+   "use": "need formal agreement before a project starts",
+   "not": [
+    "is the final report written at project close"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A contingency buffer",
+   "tier": 3,
+   "says": [
+    "adds time or budget to absorb uncertainty"
+   ],
+   "use": "know an estimate rests on unproven assumptions",
+   "not": [
+    "is padding hidden from the sponsor"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A Gantt chart",
+   "tier": 2,
+   "says": [
+    "shows tasks against a calendar with their dependencies"
+   ],
+   "use": "want to see how task timings overlap",
+   "not": [
+    "shows remaining work against sprint days"
+   ],
+   "like": [
+    "A burndown chart"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A burndown chart",
+   "tier": 3,
+   "says": [
+    "plots remaining work against time"
+   ],
+   "use": "want to see whether a sprint is on track to finish",
+   "not": [
+    "shows task dependencies on a calendar"
+   ],
+   "like": [
+    "A Gantt chart"
+   ]
+  },
+  {
+   "group": "pm",
+   "subject": "A range estimate for a project",
+   "tier": 5,
+   "says": [
+    "gives a low and high figure instead of a single number",
+    "shows the uncertainty in the work"
+   ],
+   "use": "are asked for a cost before the requirements are clear",
+   "not": [
+    "gives one figure that is guaranteed"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "A change request",
+   "tier": 2,
+   "says": [
+    "asks formally to alter agreed scope, design or a production system"
+   ],
+   "use": "handle a stakeholder who asks for something outside the agreed scope",
+   "not": [
+    "records a bug found in testing"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "A rollback",
+   "tier": 1,
+   "says": [
+    "returns a system to its previous working version after a bad release"
+   ],
+   "use": "respond to a release that is causing errors for customers",
+   "not": [
+    "adds new features after a release"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "A feature flag",
+   "tier": 4,
+   "says": [
+    "switches a feature on or off without redeploying"
+   ],
+   "use": "want to release code now and enable the feature later",
+   "not": [
+    "rolls back the database schema"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "A canary release",
+   "tier": 4,
+   "says": [
+    "sends a new version to a small share of users first"
+   ],
+   "use": "want to limit the damage of a faulty release",
+   "not": [
+    "switches all traffic at once"
+   ],
+   "like": [
+    "A blue-green deployment"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "A blue-green deployment",
+   "tier": 5,
+   "says": [
+    "runs two identical environments and switches traffic between them"
+   ],
+   "use": "want near-instant switchover and rollback between versions",
+   "not": [
+    "sends a small share of users to the new version"
+   ],
+   "like": [
+    "A canary release"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "Release notes",
+   "tier": 1,
+   "says": [
+    "tell users what changed in a release"
+   ],
+   "use": "are about to publish a new version",
+   "not": [
+    "list every commit message verbatim"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "A change freeze",
+   "tier": 4,
+   "says": [
+    "pauses non-urgent changes during a risky period"
+   ],
+   "use": "approach a period when stability matters more than new features",
+   "not": [
+    "blocks emergency fixes too"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "A smoke test",
+   "tier": 2,
+   "says": [
+    "checks quickly that the most important functions work after a deployment"
+   ],
+   "use": "need fast confirmation that a deploy did not break the basics",
+   "not": [
+    "tests every edge case of every feature"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "A deployment pipeline",
+   "tier": 3,
+   "says": [
+    "automates build, test and release steps in order"
+   ],
+   "use": "want every change to go through the same repeatable steps",
+   "not": [
+    "is a manual checklist kept in a wiki"
+   ]
+  },
+  {
+   "group": "release",
+   "subject": "A change advisory board",
+   "tier": 5,
+   "says": [
+    "reviews higher-risk changes before they go ahead"
+   ],
+   "use": "face a change that could affect many systems at once",
+   "not": [
+    "approves every typo fix"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "An incident severity level",
+   "tier": 2,
+   "says": [
+    "ranks an incident by its impact to decide the response"
+   ],
+   "use": "must decide how fast and how widely to respond to a fault",
+   "not": [
+    "ranks the engineers by experience"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "An incident commander",
+   "tier": 4,
+   "says": [
+    "coordinates the response and makes the calls during an incident"
+   ],
+   "use": "see several people investigating without anyone leading",
+   "not": [
+    "fixes the fault personally"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "A status page update",
+   "tier": 3,
+   "says": [
+    "tells customers what is affected and when the next update will come"
+   ],
+   "use": "have an ongoing outage and anxious customers",
+   "not": [
+    "describes the root cause in technical detail"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "Mean time to recovery",
+   "tier": 4,
+   "says": [
+    "measures the average time to restore service after a failure"
+   ],
+   "use": "want to know how quickly a team gets service back",
+   "not": [
+    "measures how often failures happen"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "An on-call rota",
+   "tier": 2,
+   "says": [
+    "schedules who responds to alerts outside working hours"
+   ],
+   "use": "need someone reachable when a system fails at night",
+   "not": [
+    "lists who attended last week's meetings"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "Alert fatigue",
+   "tier": 5,
+   "says": [
+    "builds when too many low-value alerts cause people to ignore real ones"
+   ],
+   "use": "see responders muting alerts because most are noise",
+   "not": [
+    "is caused by having too few alerts"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "An incident mitigation",
+   "tier": 3,
+   "says": [
+    "reduces the impact of a fault before the root cause is fixed"
+   ],
+   "use": "need to stop customers being hurt while the real fix is still being built",
+   "not": [
+    "is the permanent fix for the underlying cause"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "A root cause",
+   "tier": 3,
+   "says": [
+    "is the underlying reason an incident happened rather than its trigger"
+   ],
+   "use": "want to prevent the same incident recurring",
+   "not": [
+    "is the first alert that fired"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "A service level objective",
+   "tier": 5,
+   "says": [
+    "sets a target for how reliable a service should be"
+   ],
+   "use": "need to agree how much downtime is acceptable",
+   "not": [
+    "promises compensation to customers"
+   ]
+  },
+  {
+   "group": "incident",
+   "subject": "An error budget",
+   "tier": 5,
+   "says": [
+    "is the amount of unreliability an objective allows over a period",
+    "makes a team slow down releases when it is used up"
+   ],
+   "use": "debate whether to ship another risky change after a bad month",
+   "not": [
+    "is the money set aside to fix bugs"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "A reproduction case",
+   "tier": 2,
+   "says": [
+    "is a reliable set of steps that makes a bug appear"
+   ],
+   "use": "cannot fix a bug that only some users report",
+   "not": [
+    "is the fix for the bug"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "A minimal reproducible example",
+   "tier": 3,
+   "says": [
+    "strips a bug down to the smallest code that still shows it"
+   ],
+   "use": "need to ask for help or report a bug to another team",
+   "not": [
+    "is a copy of the whole application"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "Bisecting",
+   "tier": 5,
+   "says": [
+    "halves the range of suspect changes repeatedly to find the one that introduced a bug"
+   ],
+   "use": "know a bug appeared sometime in the last hundred commits",
+   "not": [
+    "reads through every commit in order"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "A debugging hypothesis",
+   "tier": 3,
+   "says": [
+    "is a testable guess about the cause of a bug"
+   ],
+   "use": "have a symptom and want to narrow down the cause",
+   "not": [
+    "is the confirmed explanation of a bug"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "Log levels",
+   "tier": 2,
+   "says": [
+    "separate routine messages from warnings and errors"
+   ],
+   "use": "need to turn down noise but keep serious problems visible",
+   "not": [
+    "encrypt log files"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "Profiling",
+   "tier": 4,
+   "says": [
+    "measures where a program spends time or memory"
+   ],
+   "use": "want to find the real bottleneck before changing code",
+   "not": [
+    "guesses which function is slow"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "A performance bottleneck",
+   "tier": 4,
+   "says": [
+    "is the part of a system that limits overall throughput"
+   ],
+   "use": "find that speeding up one component made no difference overall",
+   "not": [
+    "is the fastest part of a system"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "Premature optimisation",
+   "tier": 3,
+   "says": [
+    "spends effort speeding up code before measurement shows it matters"
+   ],
+   "use": "see a team rewriting code for speed with no measurements",
+   "not": [
+    "is the habit of measuring before optimising"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "The N+1 query problem",
+   "tier": 5,
+   "says": [
+    "runs one query for a list and then one more query for each item"
+   ],
+   "use": "see page load time grow with every extra row shown",
+   "not": [
+    "joins all tables in a single query"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "Tail latency",
+   "tier": 5,
+   "says": [
+    "describes the slowest responses, such as the 95th percentile"
+   ],
+   "use": "find that the average is fine but some users wait very long",
+   "not": [
+    "is the average response time"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "A load test",
+   "tier": 3,
+   "says": [
+    "checks how a system behaves under expected or heavy traffic"
+   ],
+   "use": "need to know if a launch will cope with demand",
+   "not": [
+    "checks each function with one request"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "Cache invalidation",
+   "tier": 5,
+   "says": [
+    "decides when a stored result is no longer valid"
+   ],
+   "use": "see users given stale data after an update",
+   "not": [
+    "removes the need for a cache"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "WCAG",
+   "tier": 2,
+   "says": [
+    "is the set of guidelines for making web content accessible"
+   ],
+   "use": "need a standard to check a website against",
+   "not": [
+    "is a language for building web pages"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Alternative text",
+   "tier": 1,
+   "says": [
+    "describes an image for people who cannot see it"
+   ],
+   "use": "add an informative image to a page",
+   "not": [
+    "is the caption shown to every visitor"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Colour contrast",
+   "tier": 2,
+   "says": [
+    "is the difference between text and background colour that makes text readable"
+   ],
+   "use": "find that grey text on a white page is hard to read",
+   "not": [
+    "is the number of colours used on a page"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Keyboard navigation",
+   "tier": 2,
+   "says": [
+    "lets a person use every control without a mouse"
+   ],
+   "use": "must support people who cannot use a pointing device",
+   "not": [
+    "is only needed for games"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A screen reader",
+   "tier": 1,
+   "says": [
+    "reads page content aloud for people with little or no sight"
+   ],
+   "use": "want to know how a blind user experiences a page",
+   "not": [
+    "magnifies the screen for low vision"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "Semantic HTML",
+   "tier": 3,
+   "says": [
+    "uses elements that describe their meaning, such as headings and buttons"
+   ],
+   "use": "see a page built from generic boxes that assistive technology cannot interpret",
+   "not": [
+    "styles elements with inline colours"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A focus indicator",
+   "tier": 3,
+   "says": [
+    "shows which element has keyboard focus"
+   ],
+   "use": "find that keyboard users cannot tell where they are on a page",
+   "not": [
+    "highlights the pointer position"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A usability test",
+   "tier": 3,
+   "says": [
+    "watches real users attempt tasks to find where they struggle"
+   ],
+   "use": "want evidence about how easy a design is to use",
+   "not": [
+    "checks the code for errors"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A user flow",
+   "tier": 2,
+   "says": [
+    "maps the steps a person takes to complete a goal"
+   ],
+   "use": "need to see where people might drop out of a sign-up",
+   "not": [
+    "lists the database tables behind a feature"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A persona",
+   "tier": 3,
+   "says": [
+    "is a representative profile built from research about a type of user"
+   ],
+   "use": "want the team to design for a specific kind of person",
+   "not": [
+    "is a real customer named in a case study"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "User-centred design",
+   "tier": 3,
+   "says": [
+    "involves users throughout design and testing"
+   ],
+   "use": "want design decisions based on user needs rather than opinion",
+   "not": [
+    "lets the most senior person decide the design"
+   ]
+  },
+  {
+   "group": "quality",
+   "subject": "A feedback loop",
+   "tier": 2,
+   "says": [
+    "feeds the results of an action back to guide the next one"
+   ],
+   "use": "want to learn from what customers do after a release",
+   "not": [
+    "is a single survey sent once"
+   ]
+  },
+  {
+   "group": "locale",
+   "subject": "A locale",
+   "tier": 2,
+   "says": [
+    "combines a language and region that set formats for dates, numbers and currency"
+   ],
+   "use": "must show a date and price the way a local user expects",
+   "not": [
+    "is the physical location of a server"
+   ]
+  },
+  {
+   "group": "locale",
+   "subject": "Internationalisation",
+   "tier": 3,
+   "says": [
+    "prepares a product so it can support many languages and regions"
+   ],
+   "use": "want to design software so adding a language needs no code change",
+   "not": [
+    "translates the text into one language"
+   ],
+   "like": [
+    "Localisation"
+   ]
+  },
+  {
+   "group": "locale",
+   "subject": "Localisation",
+   "tier": 3,
+   "says": [
+    "adapts a product to one language and region"
+   ],
+   "use": "need to launch a product for a specific market",
+   "not": [
+    "prepares the code to support any language"
+   ],
+   "like": [
+    "Internationalisation"
+   ]
+  },
+  {
+   "group": "locale",
+   "subject": "String externalisation",
+   "tier": 3,
+   "says": [
+    "moves user-facing text out of code into translation files"
+   ],
+   "use": "find text hard-coded in the interface",
+   "not": [
+    "encrypts strings in the database"
+   ]
+  },
+  {
+   "group": "locale",
+   "subject": "Pluralisation rules",
+   "tier": 4,
+   "says": [
+    "vary by language, so a simple singular-or-plural test is not enough"
+   ],
+   "use": "see messages like \"1 items\" in a translated interface",
+   "not": [
+    "are the same in every language"
+   ]
+  },
+  {
+   "group": "locale",
+   "subject": "Right-to-left layout",
+   "tier": 4,
+   "says": [
+    "mirrors a page layout for languages such as Arabic and Hebrew"
+   ],
+   "use": "must support a script that is read from right to left",
+   "not": [
+    "only reverses the text colour"
+   ]
+  },
+  {
+   "group": "locale",
+   "subject": "Pseudo-localisation",
+   "tier": 5,
+   "says": [
+    "replaces text with altered characters to expose layout and hard-coded string problems"
+   ],
+   "use": "want to find translation problems before real translations arrive",
+   "not": [
+    "machine-translates the product into every language"
+   ]
+  },
+  {
+   "group": "locale",
+   "subject": "Text expansion",
+   "tier": 4,
+   "says": [
+    "describes translated text becoming longer than the source and breaking layouts"
+   ],
+   "use": "see a button label overflow after translation",
+   "not": [
+    "is the shortening of text when translated"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Vertical scaling",
+   "tier": 1,
+   "says": [
+    "adds more power to one machine"
+   ],
+   "use": "need a quick capacity boost without changing the application",
+   "not": [
+    "adds more machines to share the load"
+   ],
+   "like": [
+    "Horizontal scaling"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Horizontal scaling",
+   "tier": 2,
+   "says": [
+    "adds more machines to share the load"
+   ],
+   "use": "need capacity that can keep growing beyond one machine",
+   "not": [
+    "adds more memory to a single server"
+   ],
+   "like": [
+    "Vertical scaling"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "A stateless service",
+   "tier": 4,
+   "says": [
+    "keeps no session data between requests",
+    "can be added or removed freely behind a load balancer"
+   ],
+   "use": "want to scale a service by simply adding copies",
+   "not": [
+    "stores each user's session in its own memory"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "A load balancer",
+   "tier": 1,
+   "says": [
+    "spreads incoming requests across several servers"
+   ],
+   "use": "have several copies of a service and one public address",
+   "not": [
+    "stores a copy of each user's data"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Technical debt",
+   "tier": 2,
+   "says": [
+    "is the future cost of choosing a quick solution over a better one"
+   ],
+   "use": "see a quick fix making every later change slower",
+   "not": [
+    "is money owed to a supplier"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "A dependency update",
+   "tier": 2,
+   "says": [
+    "upgrades a library to pick up fixes and security patches"
+   ],
+   "use": "learn that a library you use has a known vulnerability",
+   "not": [
+    "removes the library from the project"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "A deprecation notice",
+   "tier": 4,
+   "says": [
+    "warns users that a feature will be removed in a later version"
+   ],
+   "use": "plan to retire an API that clients still call",
+   "not": [
+    "removes the feature immediately"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "The expand-contract pattern",
+   "tier": 5,
+   "says": [
+    "changes a database schema in backwards-compatible steps"
+   ],
+   "use": "need to rename a column without downtime",
+   "not": [
+    "drops the old column first and fixes the code afterwards"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "A data migration",
+   "tier": 3,
+   "says": [
+    "moves or transforms existing data to a new structure or system"
+   ],
+   "use": "must move customer records to a new database",
+   "not": [
+    "copies only the application code"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Backward compatibility",
+   "tier": 3,
+   "says": [
+    "lets existing clients keep working after a change"
+   ],
+   "use": "release a new API version that old clients still use",
+   "not": [
+    "forces every client to upgrade at once"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Capacity planning",
+   "tier": 3,
+   "says": [
+    "estimates the resources needed for expected future demand"
+   ],
+   "use": "expect a large growth in users and must avoid being caught short",
+   "not": [
+    "reacts only after a system runs out of resources"
+   ]
+  },
+  {
+   "group": "scale",
+   "subject": "Preventive maintenance",
+   "tier": 2,
+   "says": [
+    "fixes problems before they cause failures"
+   ],
+   "use": "want to patch and clean up regularly rather than after outages",
+   "not": [
+    "fixes problems only after customers report them"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A competitor analysis",
+   "tier": 2,
+   "says": [
+    "compares rivals on offers, strengths and weaknesses"
+   ],
+   "use": "need to see how an offer compares with others in the market",
+   "not": [
+    "lists the company's own staff and skills"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A case study",
+   "tier": 2,
+   "says": [
+    "tells how a customer faced a problem and what result followed"
+   ],
+   "use": "want evidence that a service works for people like the reader",
+   "not": [
+    "is a technical specification for developers"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A SWOT analysis",
+   "tier": 2,
+   "says": [
+    "lists strengths, weaknesses, opportunities and threats"
+   ],
+   "use": "need a quick structured view of a company's position",
+   "not": [
+    "ranks suppliers by price"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A business plan",
+   "tier": 2,
+   "says": [
+    "sets out an organisation's goals, market, offer and finances"
+   ],
+   "use": "need to explain a business to a lender, partner or new team",
+   "not": [
+    "is a list of next week's tasks"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A value proposition",
+   "tier": 2,
+   "says": [
+    "states the benefit a customer gets and why it beats the alternatives"
+   ],
+   "use": "must explain in a sentence why a customer should choose a product",
+   "not": [
+    "lists the features of a product in detail"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A lean canvas",
+   "tier": 3,
+   "says": [
+    "summarises a business idea on one page of nine blocks"
+   ],
+   "use": "want a quick one-page view of a new business idea",
+   "not": [
+    "is a detailed financial forecast"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "Requirements traceability",
+   "tier": 5,
+   "says": [
+    "links each requirement to its design, test and result"
+   ],
+   "use": "need to prove that every requirement was built and tested",
+   "not": [
+    "lists the people who wrote the requirements"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A stakeholder interview",
+   "tier": 3,
+   "says": [
+    "gathers requirements by asking people with an interest in the outcome"
+   ],
+   "use": "need to learn what a department needs from a new system",
+   "not": [
+    "tests software with real users"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A user story",
+   "tier": 2,
+   "says": [
+    "describes a need from the user's point of view"
+   ],
+   "use": "want to express a requirement in terms of a person's goal",
+   "not": [
+    "lists the technical tasks to build a feature"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "Net promoter score",
+   "tier": 3,
+   "says": [
+    "asks how likely customers are to recommend a product on a zero to ten scale"
+   ],
+   "use": "want a simple measure of customer loyalty",
+   "not": [
+    "counts the number of support tickets"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "An investor update",
+   "tier": 3,
+   "says": [
+    "reports progress, numbers and needs to the people who funded a company"
+   ],
+   "use": "must keep funders informed between funding rounds",
+   "not": [
+    "is a pitch to a new customer"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A due diligence review",
+   "tier": 5,
+   "says": [
+    "checks a company's claims, finances and risks before an investment or deal"
+   ],
+   "use": "are about to invest in or acquire a business",
+   "not": [
+    "is an annual staff survey"
+   ]
+  },
+  {
+   "group": "analysis",
+   "subject": "A market segment",
+   "tier": 2,
+   "says": [
+    "is a group of customers with shared needs"
+   ],
+   "use": "need to decide which customers to focus on",
+   "not": [
+    "is the whole population of a country"
+   ]
+  },
+  {
+   "group": "docs",
+   "subject": "A coding standard",
+   "tier": 2,
+   "says": [
+    "sets agreed rules for style and structure in code"
+   ],
+   "use": "see every developer formatting code differently",
+   "not": [
+    "is a list of approved tools to buy"
+   ]
+  },
+  {
+   "group": "docs",
+   "subject": "A linter",
+   "tier": 2,
+   "says": [
+    "checks code automatically for style problems and likely mistakes"
+   ],
+   "use": "want style and simple errors caught before review",
+   "not": [
+    "runs the full test suite"
+   ]
+  },
+  {
+   "group": "docs",
+   "subject": "An architecture decision record",
+   "tier": 4,
+   "says": [
+    "captures a design decision with its context and consequences"
+   ],
+   "use": "must explain to a future teammate why a technology was chosen",
+   "not": [
+    "lists every file in the repository"
+   ]
+  },
+  {
+   "group": "docs",
+   "subject": "A README",
+   "tier": 1,
+   "says": [
+    "is the first file that explains what a project is and how to run it"
+   ],
+   "use": "set up a new project that others will open",
+   "not": [
+    "is the license text of a project"
+   ]
+  },
+  {
+   "group": "docs",
+   "subject": "A changelog",
+   "tier": 2,
+   "says": [
+    "lists notable changes between versions for readers"
+   ],
+   "use": "want users to see what is new without reading commits",
+   "not": [
+    "lists every file changed in a commit"
+   ]
+  },
+  {
+   "group": "docs",
+   "subject": "API documentation",
+   "tier": 2,
+   "says": [
+    "describes an API's endpoints, inputs and outputs for its consumers"
+   ],
+   "use": "expect other teams to call your service",
+   "not": [
+    "explains the internal data model only to its authors"
+   ]
+  },
+  {
+   "group": "docs",
+   "subject": "A code owners file",
+   "tier": 4,
+   "says": [
+    "names who must review changes to given parts of a codebase"
+   ],
+   "use": "want changes to sensitive code to reach the right reviewers",
+   "not": [
+    "lists who wrote each line of code"
+   ]
+  },
+  {
+   "group": "docs",
+   "subject": "Documentation drift",
+   "tier": 3,
+   "says": [
+    "happens when documents no longer match the system they describe"
+   ],
+   "use": "find a guide describing steps that no longer exist",
+   "not": [
+    "is the habit of writing documents too early"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "A developer wants a teammate to check a change before it reaches the main branch. What should they open?",
+   "right": "A pull request",
+   "wrong": [
+    "A new tag",
+    "A release note",
+    "A force push"
+   ],
+   "tier": 1,
+   "why": "A pull request proposes changes for review before they merge."
+  },
+  {
+   "q": "Which file is the usual first place that explains what a project is and how to run it?",
+   "right": "The README",
+   "wrong": [
+    "The changelog",
+    "The linter configuration",
+    "The code owners file"
+   ],
+   "tier": 1,
+   "why": "A README is the project's front door."
+  },
+  {
+   "q": "What does alternative text do?",
+   "right": "Describes an image for people who cannot see it",
+   "wrong": [
+    "Shows a caption to every visitor",
+    "Compresses the image to load faster",
+    "Adds a border around the image"
+   ],
+   "tier": 1,
+   "why": "Screen readers read alternative text aloud."
+  },
+  {
+   "q": "Which of these lists topics and desired outcomes before a meeting?",
+   "right": "An agenda",
+   "wrong": [
+    "The minutes",
+    "A decision log",
+    "A retrospective"
+   ],
+   "tier": 1,
+   "why": "The agenda comes before; the minutes come after."
+  },
+  {
+   "q": "A team's sprint is running out of time. Which artefact should guide what to drop first?",
+   "right": "The sprint goal",
+   "wrong": [
+    "The oldest backlog item",
+    "The longest task",
+    "The task with the most story points"
+   ],
+   "tier": 2,
+   "why": "The sprint goal names the outcome the sprint is for."
+  },
+  {
+   "q": "Two branches changed the same lines differently. What is this called?",
+   "right": "A merge conflict",
+   "wrong": [
+    "A rebase",
+    "A hotfix",
+    "A fast-forward"
+   ],
+   "tier": 2,
+   "why": "Git needs a person to resolve it."
+  },
+  {
+   "q": "A release is causing errors for customers and a previous version worked. What is the fastest safe step?",
+   "right": "Roll back to the previous version",
+   "wrong": [
+    "Add new features to the release",
+    "Wait for customers to stop reporting",
+    "Rewrite the main branch history"
+   ],
+   "tier": 2,
+   "why": "A rollback returns a system to its last working version."
+  },
+  {
+   "q": "A manager wants each developer's velocity compared in the performance review. What is wrong with that?",
+   "right": "Velocity is a planning aid for a team, not a measure of individual performance",
+   "wrong": [
+    "Velocity cannot be measured at all",
+    "Velocity only applies to Kanban teams",
+    "Individual developers have no velocity because they work in pairs"
+   ],
+   "tier": 2,
+   "why": "Using velocity as a target invites gaming it."
+  },
+  {
+   "q": "Why is it better to open several small pull requests than one large one?",
+   "right": "Each is easier to review and safer to revert",
+   "wrong": [
+    "Large pull requests cannot be merged",
+    "Small pull requests skip the tests",
+    "Reviewers are paid per pull request"
+   ],
+   "tier": 2,
+   "why": "A change with one purpose is quick to understand."
+  },
+  {
+   "q": "A page loads slowly. A developer starts rewriting the biggest function without measuring anything. Which mistake is this?",
+   "right": "Premature optimisation",
+   "wrong": [
+    "Cache invalidation",
+    "Tail latency",
+    "Scope creep"
+   ],
+   "tier": 3,
+   "why": "Measure first with profiling."
+  },
+  {
+   "q": "A team notices that finished changes wait days for a first review. Which measure describes this?",
+   "right": "Review turnaround time",
+   "wrong": [
+    "Mean time to recovery",
+    "Velocity",
+    "Error budget"
+   ],
+   "tier": 3,
+   "why": "Turnaround is the wait for the first review."
+  },
+  {
+   "q": "Users report that data looks stale after an update. Which problem is the likely cause?",
+   "right": "Cache invalidation",
+   "wrong": [
+    "N+1 queries",
+    "Text expansion",
+    "Alert fatigue"
+   ],
+   "tier": 3,
+   "why": "A cached value was not refreshed when the source changed."
+  },
+  {
+   "q": "A bug appeared somewhere in the last hundred commits. What is the efficient way to find the change that caused it?",
+   "right": "Bisect, halving the range of suspect commits each step",
+   "wrong": [
+    "Read every commit message in order",
+    "Revert all hundred commits",
+    "Delete the test that fails"
+   ],
+   "tier": 3,
+   "why": "Bisecting needs only about seven steps for a hundred commits."
+  },
+  {
+   "q": "A developer needs to undo a change that is already on a shared branch. Which command is the safe choice?",
+   "code": "git revert 3f2a1c9",
+   "right": "git revert",
+   "wrong": [
+    "git push --force",
+    "git reset --hard origin/main",
+    "git branch -D main"
+   ],
+   "tier": 3,
+   "why": "Revert adds a new commit and leaves shared history intact."
+  },
+  {
+   "q": "A team wants fewer painful merges and gets by with feature flags for unfinished work. Which approach is this?",
+   "right": "Trunk-based development",
+   "wrong": [
+    "Long-lived feature branches",
+    "A release freeze",
+    "Rebasing every branch daily"
+   ],
+   "tier": 3,
+   "why": "Small changes land on one main branch often."
+  },
+  {
+   "q": "A page works with a mouse but a keyboard user cannot see where they are. What is missing?",
+   "right": "A visible focus indicator",
+   "wrong": [
+    "Alternative text",
+    "A load balancer",
+    "A deprecation notice"
+   ],
+   "tier": 3,
+   "why": "A focus indicator shows keyboard position."
+  },
+  {
+   "q": "A translated button label overflows its box. Which concept describes the cause?",
+   "right": "Text expansion",
+   "wrong": [
+    "Pseudo-localisation",
+    "Tail latency",
+    "Right-to-left layout"
+   ],
+   "tier": 3,
+   "why": "Translations are often longer than the source text."
+  },
+  {
+   "q": "The message \"1 items\" appears after translation work. Which rule was ignored?",
+   "right": "Pluralisation rules vary by language",
+   "wrong": [
+    "Strings must be short",
+    "Locale files must be encrypted",
+    "Dates need a time zone"
+   ],
+   "tier": 3,
+   "why": "A simple singular or plural test is not enough in many languages."
+  },
+  {
+   "q": "A stakeholder asks for extra features mid-project without changing the date or budget. What is this called?",
+   "right": "Scope creep",
+   "wrong": [
+    "Velocity",
+    "A change freeze",
+    "A canary release"
+   ],
+   "tier": 3,
+   "why": "It adds requirements to agreed work without adjusting time or budget."
+  },
+  {
+   "q": "What distinguishes a canary release from a blue-green deployment?",
+   "right": "A canary sends a small share of users to the new version; blue-green switches all traffic between two environments",
+   "wrong": [
+    "A canary needs no monitoring",
+    "Blue-green can only be used for databases",
+    "They are two names for the same thing"
+   ],
+   "tier": 3,
+   "why": "The canary limits blast radius by exposure."
+  },
+  {
+   "q": "An on-call engineer mutes most alerts because nearly all are false alarms. Which problem does this describe?",
+   "right": "Alert fatigue",
+   "wrong": [
+    "Technical debt",
+    "Scope creep",
+    "Documentation drift"
+   ],
+   "tier": 4,
+   "why": "Too many low-value alerts cause people to ignore real ones."
+  },
+  {
+   "q": "During an outage five engineers investigate in parallel and nobody tells customers anything. What is missing?",
+   "right": "An incident commander and a status page update",
+   "wrong": [
+    "A larger sprint backlog",
+    "A code owners file",
+    "A style guide"
+   ],
+   "tier": 4,
+   "why": "Someone must coordinate and communicate."
+  },
+  {
+   "q": "A service's average response time is fine, but a few users wait very long. Which measure shows this?",
+   "right": "Tail latency such as the 95th percentile",
+   "wrong": [
+    "Mean response time",
+    "Velocity",
+    "Burndown"
+   ],
+   "tier": 4,
+   "why": "Averages hide the slow tail."
+  },
+  {
+   "q": "A list page runs one database query for the list and another for every row. What is this problem?",
+   "right": "The N+1 query problem",
+   "wrong": [
+    "Cache invalidation",
+    "Technical debt",
+    "A merge conflict"
+   ],
+   "tier": 4,
+   "why": "Load time grows with every extra row."
+  },
+  {
+   "q": "A team must rename a database column without downtime. Which approach is safest?",
+   "right": "Expand-contract: add the new column, move traffic over, then remove the old one",
+   "wrong": [
+    "Rename the column during a quiet night and hope clients cope",
+    "Drop the old column first and fix the code later",
+    "Copy the whole database to a laptop"
+   ],
+   "tier": 4,
+   "why": "Backwards-compatible steps keep old and new code working."
+  },
+  {
+   "q": "A team cannot estimate a task because the technology is unfamiliar. What fits best?",
+   "right": "A short timeboxed technical spike",
+   "wrong": [
+    "A longer sprint",
+    "A change freeze",
+    "A higher velocity"
+   ],
+   "tier": 4,
+   "why": "A spike reduces uncertainty before estimating."
+  },
+  {
+   "q": "Half the items in a sprint turn out to be unclear when work begins. Which practice would have prevented this?",
+   "right": "A definition of ready",
+   "wrong": [
+    "A definition of done",
+    "A change advisory board",
+    "A canary release"
+   ],
+   "tier": 4,
+   "why": "It lists what an item needs before the team accepts it."
+  },
+  {
+   "q": "Why does a reviewer who is also the author's only approver weaken a review process?",
+   "right": "One person can pass their own work without a second view",
+   "wrong": [
+    "The change cannot be merged at all",
+    "The tests stop running",
+    "The branch gets deleted"
+   ],
+   "tier": 4,
+   "why": "Author-reviewer separation keeps a second pair of eyes on every change."
+  },
+  {
+   "q": "A customer-facing outage is being handled. Which update is more useful to customers?",
+   "right": "What is affected and when the next update will come",
+   "wrong": [
+    "The full technical root cause in detail",
+    "Nothing until the fix is deployed",
+    "An apology with no information"
+   ],
+   "tier": 4,
+   "why": "Customers need impact and a next update time."
+  },
+  {
+   "q": "Why do teams keep decision logs?",
+   "right": "So the reasons behind a past choice can be found later",
+   "wrong": [
+    "To track who attended each meeting",
+    "To replace the backlog",
+    "To measure how fast people type"
+   ],
+   "tier": 4,
+   "why": "A log records what, who and why."
+  },
+  {
+   "q": "A team wants to ship code now and enable the feature next week. What helps most?",
+   "right": "A feature flag",
+   "wrong": [
+    "A hotfix branch",
+    "A force push",
+    "A new locale"
+   ],
+   "tier": 4,
+   "why": "The flag decouples deployment from release."
+  },
+  {
+   "q": "Which statement about the critical path is correct?",
+   "right": "Delaying any task on it delays the end of the project",
+   "wrong": [
+    "It lists the most expensive tasks",
+    "It contains tasks that can slip without consequence",
+    "It is the shortest chain of tasks"
+   ],
+   "tier": 4,
+   "why": "It is the longest chain of dependent tasks."
+  },
+  {
+   "q": "A team has used up its error budget for the month, and another risky change is proposed. What does the budget imply?",
+   "right": "Slow down risky releases and focus on reliability until the budget recovers",
+   "wrong": [
+    "Ship faster to catch up on features",
+    "Delete the service level objective",
+    "Raise the target reliability to compensate"
+   ],
+   "tier": 5,
+   "why": "An error budget links reliability to release pace."
+  },
+  {
+   "q": "A due diligence review finds that a company's headline customer numbers cannot be traced to any record. How should an investor treat the claim?",
+   "right": "As unverified, and ask for the evidence before relying on it",
+   "wrong": [
+    "As true, because the company stated it",
+    "As false, and end the talks immediately",
+    "As irrelevant to the valuation"
+   ],
+   "tier": 5,
+   "why": "Due diligence checks claims against records."
+  },
+  {
+   "q": "Two translations of a product look correct to reviewers, yet a layout still breaks in production for one language. Which earlier check would have exposed it?",
+   "right": "Pseudo-localisation to reveal hard-coded text and layout limits",
+   "wrong": [
+    "A load test",
+    "A retrospective",
+    "A burndown chart"
+   ],
+   "tier": 5,
+   "why": "It replaces text with altered, longer characters before real translations."
+  },
+  {
+   "q": "Documents say the deploy takes three steps, but the real process has changed to five. Which problem is this, and what is the best fix?",
+   "right": "Documentation drift; keep the docs next to the code and update them in the same change",
+   "wrong": [
+    "Technical debt; delete the documents",
+    "Scope creep; freeze the process",
+    "Alert fatigue; mute the checks"
+   ],
+   "tier": 5,
+   "why": "Docs that change with the code stay accurate."
+  },
+  {
+   "q": "A team demands a one-figure cost guarantee for a project whose requirements are still unclear. What is the most defensible response?",
+   "right": "Give a range estimate and state the assumptions",
+   "wrong": [
+    "Give a single figure and add nothing",
+    "Refuse to estimate at all",
+    "Double the figure and hide the buffer"
+   ],
+   "tier": 5,
+   "why": "A range shows real uncertainty."
+  },
+  {
+   "q": "A feature branch has been open for six weeks and the main branch has moved on. What is the best way to reduce the risk of the merge?",
+   "right": "Merge or rebase the main branch into it often, and split the work into smaller changes",
+   "wrong": [
+    "Wait until it is finished and then force push",
+    "Delete the main branch",
+    "Merge it without review to save time"
+   ],
+   "tier": 5,
+   "why": "Long-lived branches grow conflicts; small frequent merges shrink them."
+  }
+ ]
+}
