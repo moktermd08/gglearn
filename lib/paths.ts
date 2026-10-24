@@ -1,6 +1,6 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { matchesRoles } from "@/lib/roleFamily";
-import { brands, companies, db, enrollments, levelCredits, pillars, projects, questions, runs, tracks, userScopes, users } from "@/lib/db";
+import { brands, companies, db, enrollments, levelCredits, pillars, projects, questions, runs, scopeRequirements, tracks, userScopes, users } from "@/lib/db";
 import { creditInForce, levelsEarned } from "@/lib/progress";
 import { MAX_LEVEL } from "@/lib/levels";
 import { tagsFor } from "@/lib/dynamic/tags";
@@ -145,6 +145,36 @@ export function loadProgress(userIds?: Set<number> | null): Progress {
 }
 
 /**
+ * What the companies and brands this person belongs to additionally require of them (scope_requirements): shared academy tracks a company or brand has
+ * made required for itself. A company covers its brands and a person of one of its brands counts as its person; a brand covers the people of that brand
+ * and of its company. Where a track is also required in general, or by two of their scopes, the stricter level and the shorter deadline win.
+ * Each track comes back as a copy carrying the level and days that apply to this person.
+ */
+export function scopeRequiredTracks(person: Person, scopes: Scope[], cat: CatalogTrack[]): CatalogTrack[] {
+  if (person.audience !== "staff" || !scopes.length) return [];
+  const rows = db.select().from(scopeRequirements).all();
+  if (!rows.length) return [];
+  const brandRows = db.select({ id: brands.id, companyId: brands.companyId }).from(brands).all();
+  const projectRows = db.select({ id: projects.id, companyId: projects.companyId, brandId: projects.brandId }).from(projects).all();
+  const has = (kind: ScopeKind, id: number | null) => id != null && scopes.some((s) => s.kind === kind && s.id === id);
+  const myBrands = new Set<number>([...scopes.filter((s) => s.kind === "brand").map((s) => s.id), ...projectRows.filter((p) => has("project", p.id) && p.brandId != null).map((p) => p.brandId!)]);
+  const myCompanies = new Set<number>([...scopes.filter((s) => s.kind === "company").map((s) => s.id),
+    ...brandRows.filter((b) => myBrands.has(b.id) && b.companyId != null).map((b) => b.companyId!), ...projectRows.filter((p) => has("project", p.id) && p.companyId != null).map((p) => p.companyId!)]);
+  const byId = new Map(cat.map((t) => [t.id, t]));
+  const out = new Map<number, CatalogTrack>();
+  for (const r of rows) {
+    const inside = r.scopeKind === "company" ? myCompanies.has(r.scopeId) : myBrands.has(r.scopeId) || brandRows.some((b) => b.id === r.scopeId && b.companyId != null && has("company", b.companyId));
+    const t = byId.get(r.trackId);
+    if (!inside || !t || t.reach < r.requiredLevel) continue; // nobody can be required to pass what cannot be taken
+    const roles = r.roles.split(",").map((x) => x.trim().toLowerCase()).filter(Boolean);
+    if (roles.length && !matchesRoles(roles, person.jobRole)) continue;
+    const have = out.get(t.id);
+    out.set(t.id, { ...t, tier: roles.length ? "role" : "mandatory", requiredLevel: Math.max(r.requiredLevel, have?.requiredLevel ?? 0), dueDays: Math.min(r.dueDays, have?.dueDays ?? r.dueDays), roles: r.roles });
+  }
+  return [...out.values()];
+}
+
+/**
  * Tracks this person must pass. Tracks without enough questions to reach the required level are left out: nobody can be required to pass what cannot be taken.
  * For a list of people pass `prog` (loadProgress) so each person costs no queries of their own.
  */
@@ -164,6 +194,15 @@ export function requirementsFor(person: Person, scopes: Scope[], cat = catalog()
       // the role x pillar matrix (content/blueprints/pillars.json) adds requirements, unless an admin has set this track's policy by hand
       return t.policySource !== "admin" && !isLibraryBrand(t.brand.slug) && pillarStance(person.jobRole, t.pillar) === "required";
     });
+    // what their company or brand has made required of its own people, on top of the academy-wide policy
+    const own = scopeRequiredTracks(person, scopes, cat);
+    if (own.length) {
+      const general = new Map(mine.map((t) => [t.id, t]));
+      mine = [...mine.filter((t) => !own.some((o) => o.id === t.id)), ...own.map((o) => {
+        const g = general.get(o.id);
+        return g ? { ...o, tier: g.tier === "mandatory" || o.tier === "mandatory" ? "mandatory" as const : "role" as const, requiredLevel: Math.max(g.requiredLevel, o.requiredLevel), dueDays: Math.min(g.dueDays, o.dueDays) } : o;
+      })];
+    }
     prog?.tracks.set(shareKey, mine);
   }
   if (!mine.length) return [];
