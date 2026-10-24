@@ -27,7 +27,8 @@ import InviteForm from "./invite-form";
 import TwistForm from "./twist-form";
 import { TimeBoard } from "./time-board";
 import { attemptStart, attemptView, attemptsOf, hallOfFame, settleAttempts } from "@/lib/records";
-import { openTo } from "@/lib/paths";
+import { openTo, parseScopes, scopeLabels, scopeOptions } from "@/lib/paths";
+import { inRaceScope } from "@/lib/tenancy";
 import { PALETTE, StatTile } from "@/components/charts";
 import { Podium } from "@/components/Podium";
 import { Ring } from "@/components/Ring";
@@ -72,7 +73,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
   const isOrganiser = !!user && user.id === c.createdBy;
   // the organiser asked these people, so they may see who has not answered yet (everyone else only sees who joined)
   // the invite link: offered only for topics safe to show someone with no account (lib/guestLink.ts)
-  const guestOk = isOrganiser && guestAudience(c.trackId) !== null;
+  const guestOk = isOrganiser && !c.scope && guestAudience(c.trackId) !== null;
   const guestLink = guestOk && c.guestLinkVersion != null ? `${await siteUrl()}${guestPath(c)}` : null;
   // what to send a friend: the organiser's no-account link when there is one, otherwise the public page (never a private contest's address)
   const shareUrl = guestLink ?? (c.visibility === "public" ? `${await siteUrl()}/competitions/${c.slug}` : null);
@@ -87,7 +88,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
   const humans = rows.filter((r) => !r.isBot).length, bots = rows.filter((r) => r.isBot);
   const over = state === "finished" || state === "canceled";
   const full = humans >= c.maxHumans;
-  const canJoin = !!user && !over && mine?.status !== "joined" && !full &&
+  const canJoin = !!user && !over && mine?.status !== "joined" && !full && inRaceScope(user.id, c.scope) &&
     ((c.visibility === "public" && c.joinPolicy === "open") || mine?.status === "invited");
   const winners = rows.filter((r) => r.rank === 1 && (r.reachedAt !== null || (state === "finished" && r.gained > 0)));
   const reached = rows.filter((r) => r.reachedAt !== null);
@@ -120,6 +121,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
         </div>
         <h1 className="pr-20 text-3xl font-extrabold sm:pr-48">{c.title}</h1>
         {c.description && <p className="text-slate-300">{c.description}</p>}
+        {c.scope && <p className="flex items-center gap-1.5 text-sm font-semibold text-emerald-300"><Lock size={14} />Only for people in {scopeLabels(parseScopes(c.scope), scopeOptions()).join(", ")}</p>}
         {shareUrl && !over && <div className="space-y-1.5"><p className="text-sm font-semibold">{c.maxHumans === 2 ? "Send the challenge. First to the finish line wins." : "Bring a friend. Races are better with someone to beat."}</p><ShareBar url={shareUrl} text={c.maxHumans === 2 ? `I challenge you on gglearn: first to gain ${c.goalLevels} level${c.goalLevels === 1 ? "" : "s"} in ${topicLabel(track.name)} wins. Think you can beat me?` : `Race me on gglearn: ${c.title}. Gain ${c.goalLevels} level${c.goalLevels === 1 ? "" : "s"} in ${topicLabel(track.name)}.`} /></div>}
         <p className="text-sm text-slate-300">
           Topic <Link href={`/tracks/${track.slug}`} className="underline">{track.name}</Link> · goal: gain <b>{c.goalLevels}</b> level{c.goalLevels === 1 ? "" : "s"} · organised by {creator?.name ?? "someone"}{organiserCompany ? ` (${organiserCompany})` : ""}
@@ -369,7 +371,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
           <div className="space-y-2 text-sm">
             <h3 className="flex items-center gap-1.5 font-semibold"><Link2 size={15} className="text-indigo-300" />Invite link</h3>
             {!guestOk ? (
-              <p className="text-slate-400">This topic belongs to a company, so a link cannot bring in people who have no account. Invite colleagues by email below, or ask a manager to add people.</p>
+              <p className="text-slate-400">{c.scope ? "This race is limited to one company or brand, so it has no link. Invite its people by email below." : "This topic belongs to a company, so a link cannot bring in people who have no account. Invite colleagues by email below, or ask a manager to add people."}</p>
             ) : guestLink ? (
               <>
                 <p className="text-slate-300">Send this to friends. They join with one click, and if they have no account they make one in a few seconds. {placesLeft(c)} place{placesLeft(c) === 1 ? "" : "s"} left.</p>

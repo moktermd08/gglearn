@@ -3,7 +3,8 @@ import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { notify } from "@/lib/notifications";
 import { competitionEmailInvites, competitionMembers, competitions, db, enrollments, tracks, users } from "@/lib/db";
-import { openTo } from "@/lib/paths";
+import { formatScopes, openTo, parseScopes, validScopes } from "@/lib/paths";
+import { inRaceScope, raceScopeOptions } from "@/lib/tenancy";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import { type BotTier, makeBots } from "@/lib/bots";
 import { baselineLevel, now } from "@/lib/competitions";
@@ -32,11 +33,12 @@ export const parseEmails = (raw: string) =>
 export function inviteEmails(tx: Tx, competitionId: number, inviterId: number, raw: string): { count: number; fresh: { id: number; email: string }[] } {
   const emails = parseEmails(raw);
   if (!emails.length) return { count: 0, fresh: [] };
-  const found = tx.select({ id: users.id, email: users.email }).from(users).where(and(inArray(users.email, emails), eq(users.status, "active"))).all();
+  const contest = tx.select({ slug: competitions.slug, title: competitions.title, scope: competitions.scope }).from(competitions).where(eq(competitions.id, competitionId)).get();
+  // a race limited to a company or brand invites only its people; the answer to the organiser is the same either way
+  const found = tx.select({ id: users.id, email: users.email }).from(users).where(and(inArray(users.email, emails), eq(users.status, "active"))).all().filter((u) => inRaceScope(u.id, contest?.scope ?? null));
   const before = found.length ? new Map(tx.select({ u: competitionMembers.userId, s: competitionMembers.status }).from(competitionMembers)
     .where(and(eq(competitionMembers.competitionId, competitionId), inArray(competitionMembers.userId, found.map((u) => u.id)))).all().map((m) => [m.u, m.s])) : new Map();
   const fresh = found.filter((u) => !before.has(u.id) || before.get(u.id) === "declined" || before.get(u.id) === "left");
-  const contest = tx.select({ slug: competitions.slug, title: competitions.title }).from(competitions).where(eq(competitions.id, competitionId)).get();
   for (const u of found) {
     if (contest) notify(u.id, { key: `invite-${competitionId}`, kind: "contest", title: "You are invited to a contest", body: contest.title, href: `/competitions/${contest.slug}` }, { tx });
     tx.insert(competitionMembers).values({ competitionId, kind: "human", userId: u.id, status: "invited", invitedBy: inviterId })
@@ -48,7 +50,7 @@ export function inviteEmails(tx: Tx, competitionId: number, inviterId: number, r
   }
   const known = new Set(found.map((u) => u.email));
   const rest = emails.filter((e) => !known.has(e));
-  if (rest.length) {
+  if (rest.length && !contest?.scope) {
     tx.insert(competitionEmailInvites).values(rest.map((email) => ({ competitionId, email, invitedBy: inviterId }))).onConflictDoNothing().run();
   }
   return { count: emails.length, fresh };
@@ -60,7 +62,7 @@ export function claimPendingInvites(tx: Tx, userId: number, email: string) {
   const pending = tx.select().from(competitionEmailInvites).where(eq(competitionEmailInvites.email, mail)).all();
   if (!pending.length) return;
   const open = tx.select({ id: competitions.id }).from(competitions)
-    .where(and(inArray(competitions.id, pending.map((p) => p.competitionId)), isNull(competitions.canceledAt), sql`${competitions.endsAt} > ${now()}`)).all();
+    .where(and(inArray(competitions.id, pending.map((p) => p.competitionId)), isNull(competitions.scope), isNull(competitions.canceledAt), sql`${competitions.endsAt} > ${now()}`)).all();
   const openIds = new Set(open.map((o) => o.id));
   for (const p of pending) {
     if (!openIds.has(p.competitionId)) continue;
@@ -75,6 +77,7 @@ export type NewContest = {
   visibility: "public" | "private"; openJoin: boolean; consent: boolean; bots: BotTier[]; emails: string;
   prizeAmount: number; prizeCurrency: string; prizeSplit: "winner" | "top3"; prizeNote: string;
   twist?: boolean; // Architect twist, see lib/twists.ts
+  scope?: string; // "company:1" or "brand:2": only people there can be invited or join
 };
 
 export const newContestSchema = z.object({
@@ -99,6 +102,13 @@ export function createContest(me: { id: number }, v: NewContest): { slug: string
   const isPublic = v.visibility === "public";
   if (isPublic && !v.consent) return { error: "Confirm that participants' names, photos and progress will be visible to anyone." };
   if (v.prizeAmount > 0 && v.prizeNote.trim() === "") return { error: "Say who pays the prize and how (for example: \"Paid by the L&D budget in the week after the contest\")." };
+  let scope: string | null = null;
+  if (v.scope) {
+    const [s] = validScopes(db, parseScopes(v.scope));
+    const mine = raceScopeOptions(me.id);
+    if (!s || s.kind === "project" || !(s.kind === "company" ? mine.companies : mine.brands).some((x) => x.id === s.id)) return { error: "Pick one of your own companies or brands to limit the race to." };
+    scope = formatScopes([s]);
+  }
   const topic = db.select().from(tracks).where(eq(tracks.id, v.trackId)).get();
   const who = db.select({ a: users.audience }).from(users).where(eq(users.id, me.id)).get();
   if (!topic || !who || !openTo(who.a, topic.audience)) return { error: "Pick a topic from the list." };
@@ -118,7 +128,7 @@ export function createContest(me: { id: number }, v: NewContest): { slug: string
       joinPolicy: isPublic && v.openJoin ? "open" : "invite",
       goalLevels: v.goalLevels, startsAt, endsAt: startsAt + v.days * 86400, maxHumans: v.maxHumans,
       prizeAmount: v.prizeAmount, prizeCurrency: v.prizeCurrency, prizeSplit: v.prizeSplit, prizeNote: v.prizeNote.trim(),
-      twist: v.twist ? "on" : "off",
+      twist: v.twist ? "on" : "off", scope,
     }).returning().get();
     tx.insert(competitionMembers).values({ competitionId: c.id, kind: "human", userId: me.id, status: "joined", joinedAt: now() }).run();
     if (bots.length) {

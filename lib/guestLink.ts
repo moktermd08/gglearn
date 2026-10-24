@@ -5,6 +5,7 @@ import { baselineLevel, now, stateOf } from "@/lib/competitions";
 import { claimPendingInvites, enrol } from "@/lib/contests";
 import { MAX_LEVEL } from "@/lib/levels";
 import { openTo } from "@/lib/paths";
+import { inRaceScope } from "@/lib/tenancy";
 
 /**
  * The invite link of a contest: how a friend with no account gets in. The organiser turns it on; anyone who opens it can join the
@@ -58,7 +59,7 @@ export function entryFor(slug: string, key: string): Entry | { error: EntryError
   if (!c || !keyMatches(c, key)) return { error: "invalid" };
   const track = db.select().from(tracks).where(eq(tracks.id, c.trackId)).get();
   const audience = track ? guestAudience(track.id) : null;
-  if (!track || !audience) return { error: "invalid" };
+  if (!track || !audience || c.scope) return { error: "invalid" };
   if (["finished", "canceled"].includes(stateOf(c))) return { error: "over" };
   const left = placesLeft(c);
   return left > 0 ? { c, track, audience, left } : { error: "full" };
@@ -67,6 +68,7 @@ export function entryFor(slug: string, key: string): Entry | { error: EntryError
 /** Puts a person in the race as a joined member and on its topic. Refuses what joining by invitation refuses. Returns an error message or null. */
 export function admitMember(tx: Tx, c: Contest, user: { id: number; audience: "staff" | "customer" }): string | null {
   if (["finished", "canceled"].includes(stateOf(c))) return "This race is over.";
+  if (!inRaceScope(user.id, c.scope)) return "This race is only for people in " + "its company or brand.";
   const track = tx.select({ a: tracks.audience }).from(tracks).where(eq(tracks.id, c.trackId)).get();
   if (!track || !openTo(user.audience, track.a)) return "This topic is not open to your account.";
   const mine = tx.select().from(competitionMembers).where(and(eq(competitionMembers.competitionId, c.id), eq(competitionMembers.userId, user.id))).get();

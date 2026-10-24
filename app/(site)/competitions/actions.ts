@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { randomBytes } from "node:crypto";
 import { competitionCerts, competitionMembers, competitions, contestAttempts, contestTwists, db, tracks, users } from "@/lib/db";
 import { openTo } from "@/lib/paths";
+import { inRaceScope } from "@/lib/tenancy";
 import { attemptStart, canChallenge, MAX_RUNNING_ATTEMPTS, runningAttempts, settleAttempts } from "@/lib/records";
 import { declineTwist, reviewTwist, submitTwist } from "@/lib/twists";
 import { z } from "zod";
@@ -44,11 +45,12 @@ export async function createCompetition(_: CreateState, fd: FormData): Promise<C
   const r = createContest(me, {
     ...p.data, visibility: p.data.visibility, bots, emails: str(fd.get("emails")),
     openJoin: str(fd.get("openJoin")) === "on", consent: str(fd.get("consent")) === "on", twist: str(fd.get("twist")) === "on",
+    scope: str(fd.get("scope")),
   });
   if ("error" in r) return { error: r.error };
   await emailRaceInvites(r.slug, me, r.fresh);
   // the invite link, when asked for and when the topic is safe to show someone with no account
-  if (str(fd.get("inviteLink")) === "on" && guestAudience(p.data.trackId)) db.update(competitions).set({ guestLinkVersion: now() }).where(eq(competitions.slug, r.slug)).run();
+  if (str(fd.get("inviteLink")) === "on" && !str(fd.get("scope")) && guestAudience(p.data.trackId)) db.update(competitions).set({ guestLinkVersion: now() }).where(eq(competitions.slug, r.slug)).run();
   revalidatePath("/competitions");
   redirect(`/competitions/${r.slug}`);
 }
@@ -76,6 +78,7 @@ export async function joinCompetition(competitionId: number, fd: FormData) {
   const c = db.select().from(competitions).where(eq(competitions.id, competitionId)).get();
   if (!c) return;
   if (c.visibility === "public" && str(fd.get("consent")) !== "on") return;
+  if (!inRaceScope(me.id, c.scope)) return; // limited to a company or brand: nobody else joins, invited or not
   const t = now();
 
   db.transaction((tx) => {
@@ -126,7 +129,7 @@ export async function setGuestLink(competitionId: number, mode: "on" | "off" | "
   const me = await requireUser();
   const c = db.select().from(competitions).where(eq(competitions.id, competitionId)).get();
   if (!c || c.createdBy !== me.id || ["finished", "canceled"].includes(stateOf(c))) return;
-  if (mode !== "off" && !guestAudience(c.trackId)) return;
+  if (mode !== "off" && (c.scope || !guestAudience(c.trackId))) return; // a race limited to a company or brand has no link: people with no account are not in it
   const version = mode === "off" ? null : mode === "on" && c.guestLinkVersion != null ? c.guestLinkVersion : Math.max(now(), (c.guestLinkVersion ?? 0) + 1);
   db.update(competitions).set({ guestLinkVersion: version }).where(eq(competitions.id, c.id)).run();
   revalidatePath(`/competitions/${c.slug}`);
