@@ -154,6 +154,24 @@ export const userScopes = sqliteTable(
   (t) => [uniqueIndex("user_scope_unique").on(t.userId, t.kind, t.refId)],
 );
 
+// A company's or brand's own requirement on a shared academy track (a learning topic, say): "Moksy people must reach level 5 in Accessibility in 30 days".
+// The track's own tier, level and days stay as they are for everyone else. roles "" = everyone in that company or brand, otherwise those job roles.
+export const scopeRequirements = sqliteTable(
+  "scope_requirements",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    scopeKind: text("scope_kind", { enum: ["company", "brand"] }).notNull(),
+    scopeId: integer("scope_id").notNull(),
+    trackId: integer("track_id").notNull().references(() => tracks.id),
+    roles: text("roles").notNull().default(""),
+    requiredLevel: integer("required_level").notNull(),
+    dueDays: integer("due_days").notNull(),
+    createdBy: integer("created_by").references(() => users.id),
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("scope_requirement_unique").on(t.scopeKind, t.scopeId, t.trackId)],
+);
+
 // Source of truth. Authored questions point back to one of these.
 export const knowledgeItems = sqliteTable("knowledge_items", {
   id: integer("id").primaryKey({ autoIncrement: true }),
