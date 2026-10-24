@@ -515,6 +515,9 @@ export const competitions = sqliteTable("competitions", {
   // drizzle-kit drops falsy defaults, which breaks adding a NOT NULL column to a table that already has rows.
   twist: text("twist", { enum: ["off", "on"] }).notNull().default("off"),
   canceledAt: integer("canceled_at"),
+  // "company:1" or "brand:2": only people in that company or brand can be invited or join. Null = anyone the other settings allow.
+  // Nullable on purpose, like canceledAt: adding a NOT NULL column to a table with rows is what drizzle-kit trips on.
+  scope: text("scope"),
   // The invite link (lib/guestLink.ts): null = off, otherwise the version the link's signed key is made from. A new link is a new version,
   // so the old one stops working. Nullable on purpose, like canceledAt: adding a NOT NULL column to a table with rows is what drizzle-kit trips on.
   guestLinkVersion: integer("guest_link_version"),

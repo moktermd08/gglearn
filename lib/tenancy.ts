@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { brands, db, projects, userScopes } from "@/lib/db";
-import { scopesOf, type Scope } from "@/lib/paths";
+import { isPlatformOwner } from "@/lib/arena";
+import { parseScopes, scopeOptions, scopesOf, type Scope } from "@/lib/paths";
 
 /**
  * Which part of the academy a manager or admin may run.
@@ -74,6 +75,21 @@ export function trackInReach(r: Reach, t: { scope: "company" | "brand" | "projec
   const brand = db.select().from(brands).where(eq(brands.id, t.brandId)).get();
   if (!brand || brand.kind === "shared") return false;
   return r.keys.has(key("brand", brand.id)) || (brand.companyId != null && r.keys.has(key("company", brand.companyId)));
+}
+
+/** Is this person in the company or brand a race is limited to? A company covers its brands; a person of the company is in a brand race of that company. */
+export function inRaceScope(userId: number, raw: string | null): boolean {
+  if (!raw) return true;
+  const [s] = parseScopes(raw);
+  return !!s && personInReach(reachFor([s]), scopesOf(userId));
+}
+
+/** The companies and brands a person may limit a race to: their own (and what is under them), or any for the platform owner. Projects are not offered. */
+export function raceScopeOptions(userId: number): { companies: { id: number; name: string }[]; brands: { id: number; name: string; company: string | null }[] } {
+  const o = scopeOptions();
+  if (isPlatformOwner(userId)) return { companies: o.companies, brands: o.brands };
+  const keys = expand(scopesOf(userId));
+  return { companies: o.companies.filter((x) => keys.has(key("company", x.id))), brands: o.brands.filter((x) => keys.has(key("brand", x.id))) };
 }
 
 /** The companies, brands and projects a manager may pick when adding or moving people. */

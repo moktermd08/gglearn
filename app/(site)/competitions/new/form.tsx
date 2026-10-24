@@ -13,13 +13,16 @@ const GOALS = [1, 2, 3, 5, 10];
 const STARTS = [[0, "Right now"], [1, "In 1 day"], [3, "In 3 days"], [7, "In 1 week"]] as const;
 const BOT_LOOK = { casual: "bg-sky-500/15 text-sky-300", steady: "bg-violet-500/15 text-violet-300", fierce: "bg-rose-500/15 text-rose-300" } as const;
 
-export default function NewCompetitionForm({ groups, popular = [] }: { groups: Group[]; popular?: { id: number; name: string }[] }) {
+type ScopeChoice = { value: string; label: string };
+
+export default function NewCompetitionForm({ groups, popular = [], scopes = [] }: { groups: Group[]; popular?: { id: number; name: string }[]; scopes?: ScopeChoice[] }) {
   const [state, run, pending] = useActionState<CreateState, FormData>(createCompetition, null);
   const [title, setTitle] = useState(""), [trackId, setTrackId] = useState(""), [find, setFind] = useState("");
   // typing narrows the list; the chosen topic always stays in it
   const shown = useMemo(() => { const q = find.trim().toLowerCase(); return q ? groups.map(([g, items]) => [g, items.filter((t) => String(t.id) === trackId || t.name.toLowerCase().includes(q))] as Group).filter(([, items]) => items.length) : groups; }, [groups, find, trackId]);
   const [goal, setGoal] = useState(3), [days, setDays] = useState(14), [start, setStart] = useState(0);
   const [bots, setBots] = useState<Record<string, number>>({ casual: 0, steady: 1, fierce: 0 });
+  const [scope, setScope] = useState("");
   const [visibility, setVisibility] = useState("private"), [prize, setPrize] = useState(false), [amount, setAmount] = useState("");
   const topic = useMemo(() => groups.flatMap(([, items]) => items).find((t) => String(t.id) === trackId), [groups, trackId]);
   const botTotal = Object.values(bots).reduce((a, b) => a + b, 0);
@@ -101,6 +104,14 @@ export default function NewCompetitionForm({ groups, popular = [] }: { groups: G
               </div>
             ))}
           </div>
+          {scopes.length > 0 && (
+            <div><label className={label} htmlFor="scope">Who can join</label>
+              <select id="scope" name="scope" value={scope} onChange={(e) => setScope(e.target.value)} className={`${input} mt-1`}>
+                <option value="">Anyone I invite</option>
+                {scopes.map((s) => <option key={s.value} value={s.value}>Only people in {s.label}</option>)}
+              </select>
+              <p className="mt-1 text-xs text-slate-400">{scope ? "Only people in that company or brand can be invited or join. There is no invite link, and anyone else you enter is skipped." : "Choose a company or brand to keep the race inside it."}</p></div>
+          )}
           <div><label className={label} htmlFor="emails">Invite people who already have an account, by email</label>
             <textarea id="emails" name="emails" rows={2} placeholder="ana@example.com, ben@example.com" className={`${input} mt-1`} />
             <p className="mt-1 text-xs text-slate-400">People in other companies can be invited too. Everyone in a race sees each other&apos;s names and progress.</p></div>
@@ -119,7 +130,7 @@ export default function NewCompetitionForm({ groups, popular = [] }: { groups: G
               </label>
             ))}
           </div>
-          {topic?.guest && (
+          {topic?.guest && !scope && (
             <label className="flex items-start gap-2 rounded-2xl bg-black/[.03] p-3 text-sm"><input type="checkbox" name="inviteLink" defaultChecked className="mt-1" />
               <span><b>Create an invite link.</b> A friend with no account can join from it and sign up on the spot. Anyone who has the link can join, up to your limit, so keep it to people you trust. You can switch it off on the race page.</span></label>
           )}
