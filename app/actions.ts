@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { joinLinks, phaseSignoffs, projects, userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExamAnswers, roleExams, runs, tracks, users } from "@/lib/db";
+import { brands, companies, joinLinks, phaseSignoffs, projects, scopeRequirements, userAvatars, answers, careerGoals, careerLevels, careerRequirements, checklistItems, db, enrollments, handovers, invites, knowledgeItems, promotions, questions, roleExamAnswers, roleExams, runs, tracks, users } from "@/lib/db";
 import { offboardUser, provision } from "@/lib/people";
 import { enforcedForDomain, ssoRequired } from "@/lib/sso";
 import { acknowledge, recordChange } from "@/lib/freshness";
@@ -730,6 +730,39 @@ export async function updateTrackPolicy(fd: FormData) {
   const track = db.select().from(tracks).where(eq(tracks.id, trackId)).get();
   if (!track || !trackInReach(reachOf(me.id), track)) return;
   db.update(tracks).set({ ...policy, policySource: "admin" }).where(eq(tracks.id, trackId)).run();
+  resetCatalogCache(); // the catalogue is kept for a while; this change must show at once
+  syncEveryone();
+  revalidatePath("/admin/paths");
+  revalidatePath("/admin/compliance");
+}
+
+/**
+ * A company or brand makes a shared academy track required of its own people, or stops requiring it. Only an admin who runs that company or brand, and
+ * only for shared tracks (a learning topic, say): the track's general policy, and so every other company, stays as it is.
+ */
+export async function setScopeRequirement(fd: FormData) {
+  const me = await requireManager();
+  if (me.role !== "admin") return;
+  const p = z.object({
+    scope: z.string().regex(/^(company|brand):\d+$/),
+    trackId: z.coerce.number().int().positive(),
+    required: z.enum(["yes", "no"]),
+    requiredLevel: z.coerce.number().int().min(1).max(MAX_LEVEL),
+    dueDays: z.coerce.number().int().min(1).max(365),
+    roles: z.string().max(200),
+  }).safeParse({ ...Object.fromEntries(fd), roles: typeof fd.get("roles") === "string" ? fd.get("roles") : "" });
+  if (!p.success) return;
+  const [kind, idText] = p.data.scope.split(":") as ["company" | "brand", string], id = Number(idText);
+  if (!scopeInReach(reachOf(me.id), { kind, id }) || isGlobal(reachOf(me.id)) && !db.select().from(kind === "company" ? companies : brands).where(eq(kind === "company" ? companies.id : brands.id, id)).get()) return;
+  const track = db.select({ id: tracks.id, audience: tracks.audience, kind: brands.kind }).from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).where(eq(tracks.id, p.data.trackId)).get();
+  if (!track || track.kind !== "shared" || track.audience === "customer") return;
+  const where = and(eq(scopeRequirements.scopeKind, kind), eq(scopeRequirements.scopeId, id), eq(scopeRequirements.trackId, track.id));
+  if (p.data.required === "no") db.delete(scopeRequirements).where(where).run();
+  else {
+    const roles = [...new Set(p.data.roles.split(",").map((r) => r.trim().toLowerCase()).filter(Boolean))].join(", ");
+    db.insert(scopeRequirements).values({ scopeKind: kind, scopeId: id, trackId: track.id, roles, requiredLevel: p.data.requiredLevel, dueDays: p.data.dueDays, createdBy: me.id })
+      .onConflictDoUpdate({ target: [scopeRequirements.scopeKind, scopeRequirements.scopeId, scopeRequirements.trackId], set: { roles, requiredLevel: p.data.requiredLevel, dueDays: p.data.dueDays, createdBy: me.id } }).run();
+  }
   resetCatalogCache(); // the catalogue is kept for a while; this change must show at once
   syncEveryone();
   revalidatePath("/admin/paths");
