@@ -16,6 +16,7 @@ const BRANDS: [slug: string, name: string, tagline: string][] = [
   ["mhossain", "M Hossain", "Founder content and personal brand"],
   ["software-lifecycle", "Software Lifecycle", "End-to-end delivery: plan, build, secure, ship, run"],
   ["public-sector", "Public Sector", "How UK public services are justified, bought, delivered, assured and run"],
+  ["civil-service", "UK Civil Service Careers", "Getting into the UK Civil Service: how it works, how to apply, the tests and interview, and the checks before you start"],
 ];
 
 const TRACKS: Record<string, T[]> = {
@@ -47,6 +48,15 @@ const TRACKS: Record<string, T[]> = {
   ],
   mhossain: [
     ["mhossain-content", "Founder content", "process", "", "Voice, post formats and the approve-then-post workflow."],
+  ],
+  "civil-service": [
+    ["cs-how-it-works", "How the Civil Service works", "process", "", "What the Civil Service is, its values and Code, departments and agencies, and the grades most people start at."],
+    ["cs-finding-applying", "Finding and applying for Civil Service jobs", "process", "", "Civil Service Jobs, reading an advert, the stages from application to start date, and fair recruitment and adjustments."],
+    ["cs-success-profiles", "Behaviours, strengths and STAR examples", "process", "", "The five Success Profiles elements, the nine Behaviours, building STAR answers and using unpaid and home experience as evidence."],
+    ["cs-tests", "Civil Service tests", "process", "", "Numerical, verbal reasoning and situational judgement tests, with practice questions."],
+    ["cs-interview", "Civil Service interviews", "process", "", "Preparing for a panel or video interview, behaviour and strengths questions, and what happens afterwards."],
+    ["cs-checks-joining", "Checks, eligibility and joining", "process", "", "Pre-employment checks, nationality and right to work, security clearance levels and the first weeks in the job."],
+    ["cs-core-skills", "Core office skills for entry roles", "process", "", "Plain English, emails and letters, spreadsheet basics and handling information safely."],
   ],
   "public-sector": [
     ["ps-business-cases", "Business cases and appraisal", "process", "", "The Green Book, the five case model, options, costs, benefits and value for money."],
