@@ -14,15 +14,15 @@ type Journey = typeof journeys.$inferSelect;
  * could still be. Each round probes the middle level with a few multiple-choice questions: pass raises `lo`, fail lowers `hi`.
  * Levels without enough questions are skipped by probing the nearest level that has them.
  */
-export function nextProbe(j: Pick<Journey, "lo" | "hi" | "trackId">): { level: number; ids: number[] } | null {
+export function nextProbe(j: Pick<Journey, "lo" | "hi" | "trackId">, batch = PLACEMENT_BATCH): { level: number; ids: number[] } | null {
   const { lo } = j;
   let { hi } = j;
   while (lo < hi) {
     const mid = Math.ceil((lo + hi) / 2);
     const ids = db.select({ id: questions.id }).from(questions)
       .where(and(eq(questions.trackId, j.trackId), eq(questions.level, mid), eq(questions.type, "mcq"), eq(questions.status, "active")))
-      .orderBy(sql`random()`).limit(PLACEMENT_BATCH).all().map((r) => r.id);
-    if (ids.length >= PLACEMENT_BATCH) return { level: mid, ids };
+      .orderBy(sql`random()`).limit(batch).all().map((r) => r.id);
+    if (ids.length >= batch) return { level: mid, ids };
     // not enough material at this level: treat it as untestable and narrow the range from above
     hi = mid - 1;
   }
