@@ -54,7 +54,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <body className="antialiased">
         <Shell nav={<AdminNav groups={groups} scope={scope.value} choices={choices} signedInAs={me.name} />}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 16, fontSize: 12, color: "var(--muted)" }}>
-            <Badge tone={scope.isMaster ? "warn" : "muted"}>{scope.kind === "master" ? "Defaults" : scope.kind === "all" ? "All" : scope.kind === "company" ? "Company" : "Brand"}</Badge>
+            <Badge tone={scope.isMaster ? "warn" : "muted"}>{scope.kind === "master" ? "Defaults" : scope.library ? "Shared" : scope.kind === "all" ? "All" : scope.kind === "company" ? "Company" : "Brand"}</Badge>
             <b style={{ color: "var(--text)" }}>{scope.name}</b>
             <span>{scope.blurb}{scope.isMaster ? " Pages without academy defaults yet show the whole academy." : ""}</span>
           </div>
