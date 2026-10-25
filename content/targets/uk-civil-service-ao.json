@@ -4,12 +4,161 @@
  "short": "UK Civil Service: Administrative Officer",
  "summary": "An entry-level role in a government department, usually handling cases, enquiries and records for the public. Many adverts for this grade ask for no formal qualifications and assess you on your application, tests and interview.",
  "areas": [
-  { "key": "how-it-works", "label": "How the Civil Service works", "why": "Know who you are applying to join, what the values are and which grade to aim for.", "trackSlug": "cs-how-it-works", "target": 4 },
-  { "key": "applying", "label": "Finding and applying for jobs", "why": "Find the right vacancies, read adverts properly and get through the stages to a start date.", "trackSlug": "cs-finding-applying", "target": 5 },
-  { "key": "behaviours", "label": "Behaviours, strengths and STAR examples", "why": "Most of the assessment is about showing how you work. This is where home and unpaid experience becomes evidence.", "trackSlug": "cs-success-profiles", "target": 6 },
-  { "key": "tests", "label": "Civil Service tests", "why": "Many campaigns include timed numerical, verbal and situational judgement tests.", "trackSlug": "cs-tests", "target": 6 },
-  { "key": "interview", "label": "Interviews", "why": "Prepare for a panel or video interview and for strengths-based questions.", "trackSlug": "cs-interview", "target": 5 },
-  { "key": "checks", "label": "Checks, eligibility and joining", "why": "Understand the checks an offer depends on, so nothing surprises you or holds up your start.", "trackSlug": "cs-checks-joining", "target": 4 },
-  { "key": "core-skills", "label": "Core office skills", "why": "Plain English, emails, spreadsheets and handling information safely are used from the first day.", "trackSlug": "cs-core-skills", "target": 5 }
- ]
+  {
+   "key": "how-it-works",
+   "label": "How the Civil Service works",
+   "why": "Know who you are applying to join, what the values are and which grade to aim for.",
+   "trackSlug": "cs-how-it-works",
+   "target": 4,
+   "hoursPerLevel": 3,
+   "stage": 1,
+   "priority": 6
+  },
+  {
+   "key": "applying",
+   "label": "Finding and applying for jobs",
+   "why": "Find the right vacancies, read adverts properly and get through the stages to a start date.",
+   "trackSlug": "cs-finding-applying",
+   "target": 5,
+   "hoursPerLevel": 3,
+   "stage": 2,
+   "priority": 2,
+   "confidence": "digital"
+  },
+  {
+   "key": "behaviours",
+   "label": "Behaviours, strengths and STAR examples",
+   "why": "Most of the assessment is about showing how you work. This is where home and unpaid experience becomes evidence.",
+   "trackSlug": "cs-success-profiles",
+   "target": 6,
+   "hoursPerLevel": 5,
+   "stage": 2,
+   "priority": 1,
+   "confidence": "writing"
+  },
+  {
+   "key": "tests",
+   "label": "Civil Service tests",
+   "why": "Many campaigns include timed numerical, verbal and situational judgement tests.",
+   "trackSlug": "cs-tests",
+   "target": 6,
+   "hoursPerLevel": 6,
+   "stage": 3,
+   "priority": 3
+  },
+  {
+   "key": "interview",
+   "label": "Interviews",
+   "why": "Prepare for a panel or video interview and for strengths-based questions.",
+   "trackSlug": "cs-interview",
+   "target": 5,
+   "hoursPerLevel": 4,
+   "stage": 4,
+   "priority": 4,
+   "confidence": "writing"
+  },
+  {
+   "key": "checks",
+   "label": "Checks, eligibility and joining",
+   "why": "Understand the checks an offer depends on, so nothing surprises you or holds up your start.",
+   "trackSlug": "cs-checks-joining",
+   "target": 4,
+   "hoursPerLevel": 2,
+   "stage": 3,
+   "priority": 7
+  },
+  {
+   "key": "core-skills",
+   "label": "Core office skills",
+   "why": "Plain English, emails, spreadsheets and handling information safely are used from the first day.",
+   "trackSlug": "cs-core-skills",
+   "target": 5,
+   "hoursPerLevel": 4,
+   "stage": 1,
+   "priority": 5,
+   "confidence": "digital"
+  }
+ ],
+ "stages": [
+  {
+   "n": 1,
+   "label": "Get your bearings",
+   "blurb": "Learn how the Civil Service works, build your core skills and set up your search."
+  },
+  {
+   "n": 2,
+   "label": "Build your application",
+   "blurb": "Learn what assessors look for and turn your experience into strong examples."
+  },
+  {
+   "n": 3,
+   "label": "Practise the tests and checks",
+   "blurb": "Get fast and accurate at the tests, and get your documents ready."
+  },
+  {
+   "n": 4,
+   "label": "Prepare for interview",
+   "blurb": "Practise out loud so interviews feel familiar."
+  }
+ ],
+ "actions": [
+  {
+   "key": "jobs-account",
+   "label": "Create your Civil Service Jobs account and set up job alerts",
+   "detail": "Search for Administrative Assistant and Administrative Officer roles near you, save the search and turn on alerts. Read two adverts all the way through, including the selection process.",
+   "stage": 1,
+   "hours": 1.5,
+   "priority": 0
+  },
+  {
+   "key": "eligibility",
+   "label": "Check you are eligible to apply",
+   "detail": "Read the nationality and right to work rules, and ask the recruitment contact in an advert if you are not sure. Do this first so you do not spend months on something you cannot use.",
+   "stage": 3,
+   "hours": 1,
+   "earlyIf": {
+    "workRights": [
+     "no",
+     "unsure"
+    ]
+   },
+   "priority": 5.5
+  },
+  {
+   "key": "star-examples",
+   "label": "Write down six STAR examples from your own life",
+   "detail": "Home, caring, volunteering, school or community: one example for each behaviour that comes up in adverts you like. Use I, give numbers and say the result.",
+   "stage": 2,
+   "hours": 4,
+   "priority": 0.9
+  },
+  {
+   "key": "personal-statement",
+   "label": "Draft a personal statement you can adapt",
+   "detail": "Two or three paragraphs that say who you are, what you have done and why this role. Keep it plain and specific. Ask a friend to read it.",
+   "stage": 2,
+   "hours": 3,
+   "priority": 2.5
+  },
+  {
+   "key": "paperwork",
+   "label": "Gather your documents for the pre-employment checks",
+   "detail": "Photo ID, proof of address, proof of right to work, and a three-year history of what you were doing, with someone who can confirm it.",
+   "stage": 3,
+   "hours": 2,
+   "priority": 5.2
+  },
+  {
+   "key": "mock-interview",
+   "label": "Practise an interview out loud",
+   "detail": "Ask a friend to put three behaviour questions to you, or record yourself on your phone. Check your answers use I, have a result and take about two minutes.",
+   "stage": 4,
+   "hours": 2,
+   "priority": 4.5
+  }
+ ],
+ "apply": {
+  "label": "Apply for roles",
+  "detail": "Apply to roles that fit as they appear: aim for at least one good application a week, well before each closing date. Keep a list of what you sent and its stage, and ask for feedback after every result. You can start before the date above once your examples and personal statement are written: applying for roles you are not quite ready for is good practice."
+ }
 }

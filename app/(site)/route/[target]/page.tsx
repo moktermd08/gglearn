@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, BookOpen, Check, CheckCircle2, Compass, Info, RotateCcw, TriangleAlert } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarClock, Check, CheckCircle2, Compass, Info, RotateCcw, TriangleAlert } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { Ring } from "@/components/Ring";
 import { UNPAID, ROUTE_BATCH, areaRows, assessmentFor, batchQuestions, currentArea, resolveAreas, resultsFor, targetBySlug } from "@/lib/route";
 import { STATUS_LABEL, areaStatus, byGap, levelsToClimb, notes, readiness, type AreaStatus } from "@/lib/routeScore";
+import { planFor } from "@/lib/routePlan";
 import { answerRoute, skipRoute } from "../actions";
 import RouteForm from "./form";
 
@@ -149,7 +150,10 @@ export default async function RouteTarget({ params, searchParams }: { params: Pr
         {scored.length === 0 && <p className="card p-4 text-sm text-slate-400">The learning for this job is not available on this site yet, so there is nothing to check.</p>}
       </section>
 
-      <Link href={`/route/${slug}?retake=1`} className="btn btn-ghost w-fit"><RotateCcw size={16} />Check again or change my timeframe</Link>
+      <div className="flex flex-wrap items-center gap-3">
+        <Link href={`/route/${slug}/plan`} className="btn"><CalendarClock size={16} />{planFor(a.id) ? "See my plan" : "Build my plan"}<ArrowRight size={16} /></Link>
+        <Link href={`/route/${slug}?retake=1`} className="btn btn-ghost"><RotateCcw size={16} />Check again or change my timeframe</Link>
+      </div>
     </div>
   );
 }

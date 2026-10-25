@@ -1301,3 +1301,29 @@ export const routeAreaResults = sqliteTable(
   },
   (t) => [uniqueIndex("route_area_unique").on(t.assessmentId, t.areaKey)],
 );
+
+// The dated plan made from a finished route assessment. The plan is stored as made, so its dates stay put until the person re-plans.
+export const routePlans = sqliteTable(
+  "route_plans",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    assessmentId: integer("assessment_id").notNull().references(() => routeAssessments.id),
+    startsOn: integer("starts_on").notNull(),
+    endsOn: integer("ends_on").notNull(),
+    plan: text("plan", { mode: "json" }).$type<import("@/lib/roadmap").Plan>().notNull(),
+    createdAt: integer("created_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("route_plan_unique").on(t.assessmentId)],
+);
+
+// Steps in a plan that are not learning (set up an account, write examples) that the person has ticked off.
+export const routeTasks = sqliteTable(
+  "route_tasks",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    assessmentId: integer("assessment_id").notNull().references(() => routeAssessments.id),
+    actionKey: text("action_key").notNull(),
+    doneAt: integer("done_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("route_task_unique").on(t.assessmentId, t.actionKey)],
+);
