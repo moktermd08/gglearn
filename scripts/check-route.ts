@@ -21,7 +21,9 @@ check("biggest gap comes first", byGap(sample).map((x) => x.key).join("") === "c
 check("levels to climb ignores areas already above the bar", levelsToClimb(sample) === 2 + 0 + 6);
 const base: RouteAnswers = { education: "none", yearsOut: 8, paidWork: "none", unpaid: ["parenting"], digital: 4, writing: 4, workRights: "yes" };
 check("no paid work with unpaid experience gets an encouraging note", notes(base).some((n) => /unpaid experience counts/.test(n.text)));
-check("unsure about the right to work is a warning", notes({ ...base, workRights: "unsure" }).some((n) => n.tone === "warn"));
+const rtw = { no: "cannot work here", unsure: "not sure" };
+check("unsure about the right to work is a warning", notes({ ...base, workRights: "unsure" }, rtw).some((n) => n.tone === "warn"));
+check("a job that does not ask about the right to work never warns about it", !notes({ ...base, workRights: "no" }).some((n) => n.tone === "warn"));
 check("a confident person with the right to work gets no warning", !notes(base).some((n) => n.tone === "warn"));
 
 // the flow, against the database
