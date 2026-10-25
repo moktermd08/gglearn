@@ -41,6 +41,7 @@ export function AdminNav({ groups, scope, choices, signedInAs }: {
                   ))}
                 </div>
               ))}
+              {choices.library.map((l) => <ScopeItem key={l.id} field="scope" on={scope === `library:${l.id}`} value={`library:${l.id}`} label={l.name} title={`${l.name}: shared learning you can require of your people`} mark={mark("layers")} />)}
             </form>
           </div>
         </>
