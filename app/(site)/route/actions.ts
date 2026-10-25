@@ -1,9 +1,12 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { requireUser } from "@/lib/auth";
-import { MINUTE, allowed, hit } from "@/lib/rate-limit";
+import { currentUser, requireUser, startSession } from "@/lib/auth";
+import { claimAnonymous, createAnonymous, isAnonymous } from "@/lib/anonymous";
+import { hashPassword } from "@/lib/password";
+import { MINUTE, allowed, clientIp, hit } from "@/lib/rate-limit";
 import { HORIZON_MAX, HORIZON_MIN, HOURS_MAX, HOURS_MIN } from "@/lib/routeScore";
 import { createPlan, planFor, setTask } from "@/lib/routePlan";
 import { setReminders } from "@/lib/routeReminders";
@@ -27,11 +30,19 @@ const schema = z.object({
 
 /** Saves the questionnaire and starts the level checks. Doing it again starts over, so a retake can pick a new timeframe. */
 export async function saveRoute(slug: string, _: RouteState, fd: FormData): Promise<RouteState> {
-  const me = await requireUser();
   const target = targetBySlug(slug);
   if (!target) return { error: "That job is not on the list." };
+  let me = await currentUser();
   const p = schema.safeParse(Object.fromEntries(["horizonMonths", "hoursPerWeek", "education", "yearsOut", "paidWork", "digital", "writing", "workRights"].map((k) => [k, str(fd.get(k))])));
   if (!p.success) return { error: `Check your answers: choose a timeframe from ${HORIZON_MIN} to ${HORIZON_MAX} months, ${HOURS_MIN} to ${HOURS_MAX} hours a week, and answer every question.` };
+  if (!me) {
+    // no account needed to start: a private "just looking" account is made now and can be turned into a real one later
+    const ipKey = `route-guest:${await clientIp()}`;
+    if (!allowed(ipKey, 10)) return { error: "Too many people have started from this connection. Try again later, or create an account." };
+    hit(ipKey, 60 * MINUTE);
+    me = createAnonymous();
+    await startSession(me.id);
+  }
   if (!allowed(`route:${me.id}`, 10)) return { error: "You have restarted this a few times already. Try again later." };
   hit(`route:${me.id}`, 60 * MINUTE);
   const known = new Set(UNPAID.map((u) => u.key));
@@ -99,6 +110,23 @@ export async function setRouteReminders(slug: string, on: boolean) {
   const target = targetBySlug(slug);
   const a = target && assessmentFor(me.id, slug);
   if (!target || !a || a.status !== "complete") redirect(`/route/${slug}`);
+  if (on && isAnonymous(me)) redirect(`/route/${slug}/plan`); // no address to write to until they save their progress
   setReminders(me.id, slug, on);
   redirect(`/route/${slug}/plan`);
+}
+
+/** Turns the guest account into a normal one, keeping everything done so far. */
+export async function saveProgress(_: RouteState, fd: FormData): Promise<RouteState> {
+  const me = await currentUser();
+  if (!me || !isAnonymous(me)) return { error: "There is nothing to save here." };
+  const ipKey = `signup:${await clientIp()}`;
+  if (!allowed(ipKey, 8)) return { error: "Too many attempts. Try again later." };
+  hit(ipKey, 60 * MINUTE);
+  const p = z.object({ name: z.string().trim().min(1).max(80), email: z.string().email().max(120), password: z.string().min(8).max(200) })
+    .safeParse({ name: str(fd.get("name")), email: str(fd.get("email")).toLowerCase(), password: str(fd.get("password")) });
+  if (!p.success) return { error: "Enter your name, a valid email and a password of 8 or more characters." };
+  if (!claimAnonymous(me.id, { ...p.data, passwordHash: await hashPassword(p.data.password) }))
+    return { error: "We could not save with those details. If you already have an account, sign in instead." };
+  revalidatePath("/route", "layout");
+  return null;
 }
