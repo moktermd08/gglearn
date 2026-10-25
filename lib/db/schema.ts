@@ -1256,3 +1256,48 @@ export const problemPicks = sqliteTable(
   },
   (t) => [uniqueIndex("problem_pick_unique").on(t.day, t.map, t.kind, t.problem), index("problem_pick_day").on(t.day)],
 );
+
+/** What someone told us when they started a route assessment. Kept as answers, not scores. */
+export type RouteAnswers = {
+  education: "none" | "school" | "college" | "degree";
+  yearsOut: number; // years since last paid work, 0 = currently working
+  paidWork: "none" | "some" | "lots";
+  unpaid: string[]; // kinds of unpaid experience, see UNPAID in lib/route.ts
+  digital: number; // 1-5 self-rating
+  writing: number; // 1-5 self-rating
+  workRights: "yes" | "no" | "unsure"; // can they work in the UK
+};
+
+// A person working out where they stand against a target job (content/targets/*.json) and how long they give themselves to get there.
+export const routeAssessments = sqliteTable(
+  "route_assessments",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    targetSlug: text("target_slug").notNull(),
+    horizonMonths: integer("horizon_months").notNull(), // 1 to 60
+    hoursPerWeek: integer("hours_per_week").notNull(),
+    answers: text("answers", { mode: "json" }).$type<RouteAnswers>().notNull(),
+    status: text("status", { enum: ["in_progress", "complete"] }).notNull().default("in_progress"),
+    createdAt: integer("created_at").notNull().default(now),
+    updatedAt: integer("updated_at").notNull().default(now),
+    completedAt: integer("completed_at"),
+  },
+  (t) => [uniqueIndex("route_assessment_unique").on(t.userId, t.targetSlug)],
+);
+
+// One row per skill area of the target. The level check searches between lo and hi like a placement check; placed is set when it settles.
+export const routeAreaResults = sqliteTable(
+  "route_area_results",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    assessmentId: integer("assessment_id").notNull().references(() => routeAssessments.id),
+    areaKey: text("area_key").notNull(),
+    lo: integer("lo").notNull().default(0),
+    hi: integer("hi").notNull(),
+    round: integer("round").notNull().default(0),
+    pending: text("pending", { mode: "json" }).$type<number[]>(), // question ids of the batch being answered
+    placed: integer("placed"), // the level reached, null until the check for this area is finished
+  },
+  (t) => [uniqueIndex("route_area_unique").on(t.assessmentId, t.areaKey)],
+);
