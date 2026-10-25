@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ArrowRight, BellOff, BellRing, BookOpen, CalendarClock, Check, CheckCircle2, Circle, Flag, Info, RefreshCw, RotateCcw, TriangleAlert } from "lucide-react";
 import { requireUser } from "@/lib/auth";
+import { isAnonymous } from "@/lib/anonymous";
+import SaveProgress from "../../save-progress";
 import { PageHero } from "@/components/charts";
 import { assessmentFor, targetBySlug } from "@/lib/route";
 import { dateAt } from "@/lib/roadmap";
@@ -142,6 +144,7 @@ export default async function RoutePlan({ params }: { params: Promise<{ target: 
         </section>
       )}
 
+      {isAnonymous(me) ? <SaveProgress next={`/route/${slug}/plan`} /> : (
       <section className="card space-y-2 p-5" aria-label="Email reminders">
         <h2 className="flex items-center gap-2 text-xl font-extrabold"><BellRing size={18} className="text-indigo-300" aria-hidden />Weekly email</h2>
         {a.reminders === "on" ? (
@@ -155,7 +158,7 @@ export default async function RoutePlan({ params }: { params: Promise<{ target: 
             <form action={setRouteReminders.bind(null, slug, true)}><button className="btn"><BellRing size={16} />Email me a weekly reminder</button></form>
           </>
         )}
-      </section>
+      </section>)}
 
       <div className="flex flex-wrap items-center gap-3">
         <form action={replanRoute.bind(null, slug)}><button className="btn btn-ghost"><RefreshCw size={16} />Re-plan from today</button></form>
