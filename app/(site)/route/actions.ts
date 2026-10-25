@@ -33,7 +33,7 @@ export async function saveRoute(slug: string, _: RouteState, fd: FormData): Prom
   const target = targetBySlug(slug);
   if (!target) return { error: "That job is not on the list." };
   let me = await currentUser();
-  const p = schema.safeParse(Object.fromEntries(["horizonMonths", "hoursPerWeek", "education", "yearsOut", "paidWork", "digital", "writing", "workRights"].map((k) => [k, str(fd.get(k))])));
+  const p = schema.safeParse(Object.fromEntries(["horizonMonths", "hoursPerWeek", "education", "yearsOut", "paidWork", "digital", "writing", "workRights"].map((k) => [k, k === "workRights" && !target.rightToWork ? "yes" : str(fd.get(k))])));
   if (!p.success) return { error: `Check your answers: choose a timeframe from ${HORIZON_MIN} to ${HORIZON_MAX} months, ${HOURS_MIN} to ${HOURS_MAX} hours a week, and answer every question.` };
   if (!me) {
     // no account needed to start: a private "just looking" account is made now and can be turned into a real one later

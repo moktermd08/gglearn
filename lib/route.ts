@@ -4,7 +4,8 @@ import type { RouteAnswers } from "@/lib/db/schema";
 import { levelsPassed } from "@/lib/progress";
 import { scoreBatch, nextProbe } from "@/lib/placement";
 import { openTo } from "@/lib/paths";
-import civilServiceAo from "../content/targets/uk-civil-service-ao.json";
+import fs from "node:fs";
+import path from "node:path";
 
 type Person = typeof users.$inferSelect;
 type Assessment = typeof routeAssessments.$inferSelect;
@@ -20,13 +21,26 @@ export type TargetArea = {
 };
 export type TargetStage = { n: number; label: string; blurb: string };
 export type TargetAction = { key: string; label: string; detail: string; stage: number; hours: number; priority?: number; earlyIf?: { workRights: string[] } };
+/** Only for jobs that depend on the right to work somewhere: the question is asked, and these are the warnings for "no" and "not sure". Leave it out and the question is not asked. */
+export type RightToWork = { ask: string; why: string; no: string; unsure: string };
 export type Target = {
-  slug: string; title: string; short: string; summary: string; areas: TargetArea[];
+  slug: string; title: string; short: string; summary: string; areas: TargetArea[]; rightToWork?: RightToWork;
   stages?: TargetStage[]; actions?: TargetAction[]; apply?: { label: string; detail: string };
 };
 
-/** The jobs someone can check themselves against. Add one by writing content/targets/<slug>.json and listing it here. */
-export const TARGETS: Target[] = [civilServiceAo];
+/** The jobs someone can check themselves against: every content/targets/<slug>.json. A file that does not parse, or has no areas, is simply not offered. */
+function loadTargets(): Target[] {
+  const dir = path.join(process.cwd(), "content", "targets");
+  const out: Target[] = [];
+  for (const f of fs.readdirSync(dir).filter((n) => n.endsWith(".json") && !n.startsWith("_")).sort()) {
+    try {
+      const t = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as Target;
+      if (t.slug === f.slice(0, -5) && t.title && t.areas?.length) out.push(t);
+    } catch { /* not offered */ }
+  }
+  return out;
+}
+export const TARGETS: Target[] = loadTargets();
 export const targetBySlug = (slug: string) => TARGETS.find((t) => t.slug === slug) ?? null;
 
 /** Kinds of unpaid experience offered in the questionnaire. */

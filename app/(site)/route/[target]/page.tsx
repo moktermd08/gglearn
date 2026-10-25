@@ -35,7 +35,7 @@ export default async function RouteTarget({ params, searchParams }: { params: Pr
         <section className="card space-y-2 p-5 text-sm text-slate-300" aria-label="What happens next">
           <p>First a few questions about you, then a short check in each of {areas.filter((x) => x.available).length || target.areas.length} areas. It takes about 20 to 30 minutes and you can stop and carry on later. Skip any area you know nothing about: that is fine and gives you a clear starting point.</p>
         </section>
-        <RouteForm slug={slug} unpaid={UNPAID} jobTitle={target.short} defaults={a ? { horizonMonths: a.horizonMonths, hoursPerWeek: a.hoursPerWeek, answers: a.answers } : null} />
+        <RouteForm slug={slug} unpaid={UNPAID} jobTitle={target.short} rightToWork={target.rightToWork ? { ask: target.rightToWork.ask, why: target.rightToWork.why } : null} defaults={a ? { horizonMonths: a.horizonMonths, hoursPerWeek: a.hoursPerWeek, answers: a.answers } : null} />
         {!me && <p className="text-center text-sm text-slate-400">No account needed to start. Already have one? <Link href={`/login?next=${encodeURIComponent(back)}`} className="font-semibold underline">Sign in</Link></p>}
       </div>
     );
@@ -107,7 +107,7 @@ export default async function RouteTarget({ params, searchParams }: { params: Pr
   const ordered = byGap(scored.map((r) => ({ ...r })));
   const toClimb = levelsToClimb(scored.map((r) => ({ key: r.key, placed: r.placed, target: r.target })));
   const missing = results.filter((r) => r.placed === null);
-  const observations = notes(a.answers);
+  const observations = notes(a.answers, target.rightToWork);
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHero Icon={Compass} tone="emerald" title="Where you stand today" sub={target.title} />

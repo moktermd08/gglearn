@@ -31,10 +31,10 @@ export const levelsToClimb = (areas: AreaScore[]) => areas.reduce((n, a) => n + 
 export type Note = { tone: "info" | "warn"; text: string };
 
 /** Plain observations from the answers that change what someone should do first. Nothing here is a score. */
-export function notes(a: RouteAnswers): Note[] {
+export function notes(a: RouteAnswers, rightToWork?: { no: string; unsure: string }): Note[] {
   const out: Note[] = [];
-  if (a.workRights === "no") out.push({ tone: "warn", text: "You said you cannot work in the UK at the moment. Civil Service jobs need the right to work here, so check your options before spending time on applications." });
-  if (a.workRights === "unsure") out.push({ tone: "warn", text: "You are not sure about your right to work. Check the eligibility section of the adverts you like, and ask the recruitment contact named in the advert before you apply." });
+  if (rightToWork && a.workRights === "no") out.push({ tone: "warn", text: rightToWork.no });
+  if (rightToWork && a.workRights === "unsure") out.push({ tone: "warn", text: rightToWork.unsure });
   if (a.digital <= 2) out.push({ tone: "info", text: "You rated your computer confidence low. Applications, tests and the job itself are all online, so the Core office skills area is worth doing early." });
   if (a.writing <= 2) out.push({ tone: "info", text: "You rated your writing confidence low. Personal statements carry a lot of weight, so spend time on the examples and plain English areas." });
   if (a.paidWork === "none" && a.unpaid.length) out.push({ tone: "info", text: "You have no paid work to point to, but your unpaid experience counts. The Behaviours area shows how to turn it into evidence." });
