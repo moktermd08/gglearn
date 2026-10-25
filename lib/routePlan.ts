@@ -103,7 +103,7 @@ export function routeSummary(person: Person, target: Target, at = now()): RouteS
   if (a.status !== "complete") return { target, state: "checking" };
   const view = viewPlan(person, target, a, at);
   if (!view) return { target, state: "checked" };
-  return { target, state: "planned", view, progress: progressOf(view.items, (i) => (i as ItemState).done, view.weeksNow, view.plan.totalWeeks) };
+  return { target, state: "planned", view, progress: progressOf(view.items, (i) => (i as ItemState).done, view.weeksNow, (view.row.endsOn - view.row.startsOn) / WEEK) };
 }
 
 /** The first target job this person has started, for places that show one line about it (the dashboard, a mentor's view). */
