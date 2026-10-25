@@ -6,6 +6,7 @@ import { requireUser } from "@/lib/auth";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import { HORIZON_MAX, HORIZON_MIN, HOURS_MAX, HOURS_MIN } from "@/lib/routeScore";
 import { createPlan, planFor, setTask } from "@/lib/routePlan";
+import { setReminders } from "@/lib/routeReminders";
 import { UNPAID, answerCurrent, assessmentFor, resolveAreas, skipCurrent, startAssessment, targetBySlug } from "@/lib/route";
 
 export type RouteState = { error?: string } | null;
@@ -89,5 +90,15 @@ export async function toggleTask(slug: string, key: string, done: boolean) {
   const a = target && assessmentFor(me.id, slug);
   if (!target || !a) redirect(`/route`);
   setTask(a, target, key, done);
+  redirect(`/route/${slug}/plan`);
+}
+
+/** Turns the weekly email about this plan on or off. Off unless the person asks: this is the only place it is switched on. */
+export async function setRouteReminders(slug: string, on: boolean) {
+  const me = await requireUser();
+  const target = targetBySlug(slug);
+  const a = target && assessmentFor(me.id, slug);
+  if (!target || !a || a.status !== "complete") redirect(`/route/${slug}`);
+  setReminders(me.id, slug, on);
   redirect(`/route/${slug}/plan`);
 }

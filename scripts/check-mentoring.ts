@@ -48,7 +48,7 @@ try {
   check("...and the topics worked on, with the best level passed (not one that was failed)", s.topics.find((x) => x.name === "Python")?.passed === 3);
   check("a topic the mentor could not see themselves is not named", s.topics.some((x) => x.name === "a topic") && !JSON.stringify(s).includes(staff.name));
   check("the person who runs the whole academy as mentor sees the topic's name", menteeSummary((() => { acceptMentorship(boss.id, code); return boss.id; })(), mentee.id, t)!.topics.some((x) => x.name !== "a topic" && x.name !== "Python"));
-  check("it carries nothing beyond that: no email, no ids, no other people", !JSON.stringify(s).includes("@") && Object.keys(s).sort().join() === "certificates,goal,name,streak,topics,weekXp");
+  check("it carries nothing beyond that: no email, no ids, no other people", !JSON.stringify(s).includes("@") && Object.keys(s).sort().join() === "certificates,goal,name,route,streak,topics,weekXp");
 
   // ---- caps ----
   const full = mk("full"); for (let i = 0; i < MAX_MENTORS; i++) db.insert(mentorships).values({ mentorId: mk(`m${i}`).id, menteeId: full.id }).run();
@@ -74,7 +74,7 @@ try {
   const par = mk("par"), par2 = mk("parb");
   check("a parent follows a child through the child's own parent link, and the child is told", ok(acceptMentorship(par.id, code, "parent")) && kindOf(par.id, mentee.id) === "parent" && isMentor(par.id, mentee.id)
     && db.select().from(notifications).where(and(eq(notifications.userId, mentee.id), like(notifications.title, "% is now your parent"))).all().length === 1);
-  check("the parent sees the same limited summary and no email", (() => { const x = menteeSummary(par.id, mentee.id, t); return !!x && !JSON.stringify(x).includes("@") && Object.keys(x).sort().join() === "certificates,goal,name,streak,topics,weekXp"; })());
+  check("the parent sees the same limited summary and no email", (() => { const x = menteeSummary(par.id, mentee.id, t); return !!x && !JSON.stringify(x).includes("@") && Object.keys(x).sort().join() === "certificates,goal,name,route,streak,topics,weekXp"; })());
   check("the child does not see the parent's progress", menteeSummary(mentee.id, par.id) === null);
   check("someone cannot be both mentor and parent to the same person", !ok(acceptMentorship(par.id, code, "mentor")) && kindOf(par.id, mentee.id) === "parent");
   check("a parent note says it is from a parent", ok(encourage(par.id, mentee.id, "Proud of you", t)) && db.select().from(notifications).where(and(eq(notifications.userId, mentee.id), like(notifications.title, "%your parent, says:"))).all().length === 1);

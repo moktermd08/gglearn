@@ -422,8 +422,8 @@ export const passwordResets = sqliteTable("password_resets", {
 export const emailLog = sqliteTable("email_log", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").notNull().references(() => users.id),
-  kind: text("kind").notNull(), // "recap" | "streak"
-  key: text("key").notNull(), // the week (recap) or the day (streak) it was for
+  kind: text("kind").notNull(), // "recap" | "streak" | "route"
+  key: text("key").notNull(), // the week (recap), the day (streak) or the week and plan (route) it was for
   sentAt: integer("sent_at").notNull().default(now),
 }, (t) => [uniqueIndex("email_log_unique").on(t.userId, t.kind, t.key)]);
 
@@ -1282,6 +1282,9 @@ export const routeAssessments = sqliteTable(
     createdAt: integer("created_at").notNull().default(now),
     updatedAt: integer("updated_at").notNull().default(now),
     completedAt: integer("completed_at"),
+    // a weekly email about this plan (lib/routeReminders.ts). Off until the person turns it on; remindersAt is when they did.
+    reminders: text("reminders", { enum: ["off", "on"] }).notNull().default("off"),
+    remindersAt: integer("reminders_at"),
   },
   (t) => [uniqueIndex("route_assessment_unique").on(t.userId, t.targetSlug)],
 );
