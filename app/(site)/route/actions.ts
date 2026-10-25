@@ -5,6 +5,7 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import { HORIZON_MAX, HORIZON_MIN, HOURS_MAX, HOURS_MIN } from "@/lib/routeScore";
+import { createPlan, planFor, setTask } from "@/lib/routePlan";
 import { UNPAID, answerCurrent, assessmentFor, resolveAreas, skipCurrent, startAssessment, targetBySlug } from "@/lib/route";
 
 export type RouteState = { error?: string } | null;
@@ -57,4 +58,36 @@ export async function skipRoute(slug: string) {
   if (!target || !a || a.status !== "in_progress") redirect(`/route/${slug}`);
   skipCurrent(a, resolveAreas(target, me));
   redirect(`/route/${slug}`);
+}
+
+/** Builds the dated plan from a finished check. Does nothing if there already is one, so a double click cannot move its dates. */
+export async function makePlan(slug: string) {
+  const me = await requireUser();
+  const target = targetBySlug(slug);
+  const a = target && assessmentFor(me.id, slug);
+  if (!target || !a || a.status !== "complete") redirect(`/route/${slug}`);
+  if (!planFor(a.id)) createPlan(me, target, a);
+  redirect(`/route/${slug}/plan`);
+}
+
+/** Starts the plan again from today with what the person has learned since, keeping the finish date they were working to. */
+export async function replanRoute(slug: string) {
+  const me = await requireUser();
+  const target = targetBySlug(slug);
+  const a = target && assessmentFor(me.id, slug);
+  if (!target || !a || a.status !== "complete") redirect(`/route/${slug}`);
+  if (!allowed(`replan:${me.id}`, 10)) redirect(`/route/${slug}/plan`);
+  hit(`replan:${me.id}`, 60 * MINUTE);
+  createPlan(me, target, a);
+  redirect(`/route/${slug}/plan`);
+}
+
+/** Ticks a non-learning step off, or back on. */
+export async function toggleTask(slug: string, key: string, done: boolean) {
+  const me = await requireUser();
+  const target = targetBySlug(slug);
+  const a = target && assessmentFor(me.id, slug);
+  if (!target || !a) redirect(`/route`);
+  setTask(a, target, key, done);
+  redirect(`/route/${slug}/plan`);
 }

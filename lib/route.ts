@@ -1,5 +1,5 @@
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
-import { db, questions, routeAreaResults, routeAssessments, tracks, users } from "@/lib/db";
+import { db, questions, routeAreaResults, routeAssessments, routePlans, routeTasks, tracks, users } from "@/lib/db";
 import type { RouteAnswers } from "@/lib/db/schema";
 import { levelsPassed } from "@/lib/progress";
 import { scoreBatch, nextProbe } from "@/lib/placement";
@@ -13,8 +13,17 @@ type AreaRow = typeof routeAreaResults.$inferSelect;
 /** A route check asks fewer questions than a placement check, so a person can finish in one sitting. Both must be right to move up a level. */
 export const ROUTE_BATCH = 2;
 
-export type TargetArea = { key: string; label: string; why: string; trackSlug: string; target: number };
-export type Target = { slug: string; title: string; short: string; summary: string; areas: TargetArea[] };
+export type TargetArea = {
+  key: string; label: string; why: string; trackSlug: string; target: number;
+  /** used by the roadmap (lib/roadmap.ts): learning hours a level takes, which stage it belongs to, how much it matters (1 = most), and the self-rating that slows it down */
+  hoursPerLevel?: number; stage?: number; priority?: number; confidence?: string; // "digital" or "writing", a key of the questionnaire answers
+};
+export type TargetStage = { n: number; label: string; blurb: string };
+export type TargetAction = { key: string; label: string; detail: string; stage: number; hours: number; priority?: number; earlyIf?: { workRights: string[] } };
+export type Target = {
+  slug: string; title: string; short: string; summary: string; areas: TargetArea[];
+  stages?: TargetStage[]; actions?: TargetAction[]; apply?: { label: string; detail: string };
+};
 
 /** The jobs someone can check themselves against. Add one by writing content/targets/<slug>.json and listing it here. */
 export const TARGETS: Target[] = [civilServiceAo];
@@ -103,6 +112,8 @@ export function startAssessment(person: Person, target: Target, input: StartInpu
       ? (tx.update(routeAssessments).set(values).where(eq(routeAssessments.id, have.id)).returning().get())
       : tx.insert(routeAssessments).values({ userId: person.id, targetSlug: target.slug, ...values }).returning().get();
     tx.delete(routeAreaResults).where(eq(routeAreaResults.assessmentId, row.id)).run();
+    tx.delete(routePlans).where(eq(routePlans.assessmentId, row.id)).run(); // a plan belongs to the results it was made from
+    tx.delete(routeTasks).where(eq(routeTasks.assessmentId, row.id)).run();
     for (const area of areas) {
       if (!area.trackId) continue;
       if (!area.available) continue;
