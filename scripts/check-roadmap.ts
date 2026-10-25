@@ -1,10 +1,11 @@
 /** Checks the career route roadmap: npm run check:roadmap (uses DATABASE_FILE or data/gglearn.db; adds and removes its own rows). Run db:push first. */
 import { eq, inArray, like } from "drizzle-orm";
-import { brands, db, questions, routeAreaResults, routeAssessments, routePlans, routeTasks, tracks, users } from "../lib/db";
+import { brands, db, mentorships, questions, routeAreaResults, routeAssessments, routePlans, routeTasks, tracks, users } from "../lib/db";
 import type { RouteAnswers } from "../lib/db/schema";
-import { LOW_CONFIDENCE, WEEK, addMonths, applyWeeksFor, buildPlan, hoursForLevel, overdue, type PlanAction, type PlanArea, type PlanInput } from "../lib/roadmap";
-import { answerCurrent, areaRows, assessmentFor, currentArea, resolveAreas, startAssessment, type Target } from "../lib/route";
-import { createPlan, planFor, setTask, viewPlan } from "../lib/routePlan";
+import { LOW_CONFIDENCE, WEEK, addMonths, applyWeeksFor, buildPlan, hoursForLevel, overdue, progressOf, type PlanAction, type PlanArea, type PlanInput } from "../lib/roadmap";
+import { TARGETS, answerCurrent, areaRows, assessmentFor, currentArea, resolveAreas, startAssessment, type Target } from "../lib/route";
+import { createPlan, planFor, routeSummary, routeSummaryFor, setTask, viewPlan } from "../lib/routePlan";
+import { menteeSummary } from "../lib/mentoring";
 
 let fails = 0;
 const check = (name: string, ok: boolean) => { if (!ok) fails++; console.log(`${ok ? "ok  " : "FAIL"} ${name}`); };
@@ -66,11 +67,27 @@ check("two weeks past an unfinished item is behind", overdue(items, nothingDone,
 check("a few days past is not behind", !overdue(items, nothingDone, items[0].endWeek + 0.5).behind);
 check("finished items are never late", !overdue(items, () => true, 500).behind);
 
+// progress laid over a plan
+const none = () => false;
+const p0 = progressOf(items, none, 0, easy.totalWeeks);
+check("a new plan has nothing done and is on track", p0.stepsDone === 0 && p0.stepsTotal === items.length && p0.status === "on-track" && p0.doneShare === 0 && p0.timeShare === 0);
+check("the focus is what starts in the next four weeks, soonest first, at most four", p0.focus.length > 0 && p0.focus.length <= 4 && p0.focus.every((i) => i.startWeek <= 4) && p0.focus.every((i, n) => n === 0 || i.startWeek >= p0.focus[n - 1].startWeek));
+const half = new Set(items.slice(0, Math.floor(items.length / 2)).map((i) => i.key));
+const p1 = progressOf(items, (i) => half.has(i.key), 1, easy.totalWeeks);
+check("done share counts hours, so it is not just steps over steps", p1.doneShare > 0 && p1.doneShare < 1 && p1.stepsDone === half.size);
+check("the focus skips what is done", p1.focus.every((i) => !half.has(i.key)));
+check("when nothing starts soon the next step is still shown", progressOf(items.map((i) => ({ ...i, startWeek: i.startWeek + 50, endWeek: i.endWeek + 50 })), none, 0, easy.totalWeeks).focus.length === 1);
+check("everything done means done, with no focus needed", progressOf(items, () => true, 3, easy.totalWeeks).status === "done");
+check("two weeks late is behind", progressOf(items, none, items[0].endWeek + 2.5, easy.totalWeeks).status === "behind");
+check("past the finish line it is over", progressOf(items, none, easy.totalWeeks + 1, easy.totalWeeks).status === "over");
+check("time share never passes one", progressOf(items, none, 9999, easy.totalWeeks).timeShare === 1);
+
 // the stored plan, against the database
 const MAIL = "%@roadmap.check", SLUG = "roadmap-check";
 function sweep() {
   const ids = db.select({ id: users.id }).from(users).where(like(users.email, MAIL)).all().map((r) => r.id);
   if (ids.length) {
+    db.delete(mentorships).where(inArray(mentorships.menteeId, ids)).run();
     const aids = db.select({ id: routeAssessments.id }).from(routeAssessments).where(inArray(routeAssessments.userId, ids)).all().map((r) => r.id);
     if (aids.length) { db.delete(routePlans).where(inArray(routePlans.assessmentId, aids)).run(); db.delete(routeTasks).where(inArray(routeTasks.assessmentId, aids)).run(); db.delete(routeAreaResults).where(inArray(routeAreaResults.assessmentId, aids)).run(); }
     db.delete(routeAssessments).where(inArray(routeAssessments.userId, ids)).run();
@@ -130,6 +147,22 @@ try {
   check("a re-plan has less time, so it does not defer less", re.plan.deferred.length >= row.plan.deferred.length);
   const after = createPlan(p, target, a, row.endsOn - 3 * 86400)!;
   check("a re-plan with the finish date days away starts the timeframe again", after.endsOn === addMonths(row.endsOn - 3 * 86400, 6));
+  // where it shows up: a summary for the person and a line for a mentor
+  const s0 = routeSummary(p, target, t0 + 20 * WEEK + 1)!;
+  check("a planned route has progress and a view", s0.state === "planned" && !!s0.progress && !!s0.view && s0.progress.status !== "done");
+  check("a person with no assessment has no summary", routeSummary(db.insert(users).values({ email: "t-none@roadmap.check", name: "t-none", jobRole: "developer", role: "learner" }).returning().get(), target) === null);
+  TARGETS.push(target); // the check job stands in for a listed one, so the dashboard and the mentor view can find it
+  check("the first started target is found for the dashboard", routeSummaryFor(p, t0 + 5)?.target.slug === "roadmap-check");
+  const mentor = db.insert(users).values({ email: "t-mentor@roadmap.check", name: "t-mentor", jobRole: "developer", role: "learner" }).returning().get();
+  const stranger = db.insert(users).values({ email: "t-stranger@roadmap.check", name: "t-stranger", jobRole: "developer", role: "learner" }).returning().get();
+  check("someone who is not a mentor sees nothing", menteeSummary(stranger.id, p.id) === null);
+  db.insert(mentorships).values({ mentorId: mentor.id, menteeId: p.id, kind: "mentor" }).run();
+  const seen = menteeSummary(mentor.id, p.id, t0 + 1);
+  check("a mentor sees the route title, steps, status and finish line", seen?.route?.title === "Check job" && seen.route.stepsTotal === planFor(a.id)!.plan.items.length && seen.route.stepsDone === 0 && seen.route.status === "on-track" && seen.route.finishOn === planFor(a.id)!.endsOn);
+  check("a mentor of someone with no plan sees no route", (() => { db.delete(routePlans).where(eq(routePlans.assessmentId, a.id)).run(); const r = menteeSummary(mentor.id, p.id, t0 + 1)!.route === null; createPlan(p, target, a, t0); return r; })());
+  check("a mentor view never carries the questionnaire answers", !JSON.stringify(seen).match(/yearsOut|workRights|education|unsure/));
+  db.delete(mentorships).where(inArray(mentorships.menteeId, [p.id])).run();
+  TARGETS.pop();
   check("there is only ever one plan per assessment", db.select().from(routePlans).where(eq(routePlans.assessmentId, a.id)).all().length === 1);
 } finally {
   sweep();

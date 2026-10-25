@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 import { db, routePlans, routeTasks, users } from "@/lib/db";
 import { levelsPassed } from "@/lib/progress";
-import { type Plan, type PlanAction, type PlanArea, type PlanItem, DEFAULT_HOURS_PER_LEVEL, WEEK, addMonths, buildPlan, overdue, weeksSince } from "@/lib/roadmap";
-import { type ResolvedArea, type Target, areaRows, assessmentFor, resolveAreas } from "@/lib/route";
+import { type Plan, type PlanAction, type PlanArea, type PlanItem, DEFAULT_HOURS_PER_LEVEL, WEEK, addMonths, buildPlan, overdue, progressOf, weeksSince } from "@/lib/roadmap";
+import { type ResolvedArea, type Target, TARGETS, areaRows, assessmentFor, resolveAreas } from "@/lib/route";
 
 type Person = typeof users.$inferSelect;
 type Assessment = NonNullable<ReturnType<typeof assessmentFor>>;
@@ -86,4 +86,28 @@ export function viewPlan(person: Person, target: Target, a: Assessment, at = now
   const weeksNow = weeksSince(row.startsOn, at);
   const o = overdue(items, (i) => (i as ItemState).done, weeksNow);
   return { row, plan: row.plan, items, weeksNow, behind: o.behind, weeksLate: o.weeksLate, over: at >= row.endsOn };
+}
+
+export type RouteSummary = {
+  target: Target;
+  state: "checking" | "checked" | "planned";
+  /** only when planned */
+  progress?: ReturnType<typeof progressOf>;
+  view?: PlanView;
+};
+
+/** Where a person is with one target job: not started (null), mid-check, checked but no plan, or planned with progress laid over it. */
+export function routeSummary(person: Person, target: Target, at = now()): RouteSummary | null {
+  const a = assessmentFor(person.id, target.slug);
+  if (!a) return null;
+  if (a.status !== "complete") return { target, state: "checking" };
+  const view = viewPlan(person, target, a, at);
+  if (!view) return { target, state: "checked" };
+  return { target, state: "planned", view, progress: progressOf(view.items, (i) => (i as ItemState).done, view.weeksNow, view.plan.totalWeeks) };
+}
+
+/** The first target job this person has started, for places that show one line about it (the dashboard, a mentor's view). */
+export function routeSummaryFor(person: Person, at = now()): RouteSummary | null {
+  for (const t of TARGETS) { const s = routeSummary(person, t, at); if (s) return s; }
+  return null;
 }
