@@ -4,6 +4,7 @@ import { allowed, hit } from "@/lib/rate-limit";
 import { notify } from "@/lib/notifications";
 import { pickableTopics } from "@/lib/pickTopics";
 import { goalOf, roleLabel } from "@/lib/journey";
+import { routeSummaryFor } from "@/lib/routePlan";
 import { referrerOf } from "@/lib/referrals";
 import { shortName } from "@/lib/seasons";
 import { topicLabel } from "@/lib/topicName";
@@ -60,6 +61,8 @@ export type MenteeSummary = {
   name: string; weekXp: number; streak: number; certificates: number;
   topics: { name: string; passed: number; lastAt: number }[];
   goal: { role: string; date: number } | null;
+  /** how far they are through a career route plan they made (never the answers behind it): the job, steps done, whether they are on track and the finish line */
+  route: { title: string; stepsDone: number; stepsTotal: number; status: "done" | "on-track" | "behind" | "over"; finishOn: number } | null;
 };
 
 /** What a mentor sees of a mentee: null unless this person really is their mentor. */
@@ -76,10 +79,13 @@ export function menteeSummary(mentorId: number, menteeId: number, at = nowSec())
   const topics = enrolled.map((e) => ({ name: visible.has(e.t) ? topicLabel(names.get(e.t) ?? "a topic") : "a topic", passed: Number(best.get(e.t)?.m ?? 0), lastAt: Number(best.get(e.t)?.l ?? e.at) }))
     .sort((a, b) => b.lastAt - a.lastAt).slice(0, 6);
   const g = goalOf(menteeId);
+  const person = db.select().from(users).where(eq(users.id, menteeId)).get()!;
+  const r = routeSummaryFor(person, at);
   return {
     name: me.name, weekXp: st.weekXp, streak: st.streak, topics,
     certificates: Number(db.select({ n: sql<number>`count(*)` }).from(certificates).where(and(eq(certificates.userId, menteeId), sql`${certificates.revokedAt} is null`)).get()?.n ?? 0),
     goal: g ? { role: roleLabel(g.targetRole), date: g.targetDate } : null,
+    route: r?.state === "planned" && r.progress && r.view ? { title: r.target.title, stepsDone: r.progress.stepsDone, stepsTotal: r.progress.stepsTotal, status: r.progress.status, finishOn: r.view.row.endsOn } : null,
   };
 }
 

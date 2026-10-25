@@ -148,3 +148,34 @@ export function overdue(items: PlanItem[], isDone: (i: PlanItem) => boolean, wee
   const weeksLate = late.length ? Math.max(...late.map((i) => weeksNow - i.endWeek)) : 0;
   return { late, weeksLate: round1(weeksLate), behind: weeksLate >= 2 };
 }
+
+export type Progress = {
+  stepsDone: number; stepsTotal: number;
+  /** share of the planned hours already done, 0 to 1: a long step counts for more than a quick one */
+  doneShare: number;
+  /** how far through the timeframe it is, 0 to 1 */
+  timeShare: number;
+  status: "done" | "on-track" | "behind" | "over";
+  weeksLate: number;
+  /** what to be working on now: unfinished steps due to start within the next four weeks, soonest first (or just the next one if nothing is that close) */
+  focus: PlanItem[];
+};
+
+const FOCUS_AHEAD_WEEKS = 4, FOCUS_MAX = 4;
+
+/** Where someone stands in their stored plan. `weeksNow` counts from the plan's start. */
+export function progressOf(items: PlanItem[], isDone: (i: PlanItem) => boolean, weeksNow: number, totalWeeks: number): Progress {
+  const done = items.filter(isDone);
+  const hoursTotal = items.reduce((n, i) => n + i.hours, 0);
+  const o = overdue(items, isDone, weeksNow);
+  const open = items.filter((i) => !isDone(i)).sort((a, b) => a.startWeek - b.startWeek);
+  const soon = open.filter((i) => i.startWeek <= weeksNow + FOCUS_AHEAD_WEEKS).slice(0, FOCUS_MAX);
+  return {
+    stepsDone: done.length, stepsTotal: items.length,
+    doneShare: hoursTotal ? done.reduce((n, i) => n + i.hours, 0) / hoursTotal : 1,
+    timeShare: totalWeeks > 0 ? Math.min(1, weeksNow / totalWeeks) : 1,
+    status: open.length === 0 ? "done" : weeksNow >= totalWeeks ? "over" : o.behind ? "behind" : "on-track",
+    weeksLate: o.weeksLate,
+    focus: soon.length ? soon : open.slice(0, 1),
+  };
+}

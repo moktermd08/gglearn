@@ -21,6 +21,7 @@ import { SubjectArt } from "@/components/SubjectArt";
 import { Ring } from "@/components/Ring";
 import { requirementsFor, scopesOf } from "@/lib/paths";
 import { careerFor } from "@/lib/careers";
+import { routeSummaryFor } from "@/lib/routePlan";
 import { goalOf, roleLabel } from "@/lib/journey";
 import { pendingFor } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath } from "@/lib/roles";
@@ -61,6 +62,7 @@ export default async function Dashboard() {
   const requiredOpen = required.filter((r) => !r.done), overdue = requiredOpen.filter((r) => r.overdue);
   const onboarding = onboardingFor(user);
   const career = careerFor(user);
+  const route = routeSummaryFor(user);
   const goal = goalOf(user.id);
   const unread = pendingFor(user.id);
   const noRolePath = user.audience === "staff" && user.guest !== "yes" && !(user.role !== "learner" && user.jobRole === "general") && hasNoRolePath(coverageFor(user.jobRole)); // an admin account with no job role is not missing a learning path
@@ -314,6 +316,20 @@ export default async function Dashboard() {
                 <details className="mt-2 text-sm"><summary className="cursor-pointer text-xs font-semibold text-sky-300">Show the other {required.length - reqCap}</summary>
                   <ul className="mt-2 space-y-0.5">{required.slice(reqCap).map(reqRow)}</ul></details>
               )}
+            </section>
+          )}
+
+          {route && route.state !== "checking" && (
+            <section className="card p-5" aria-label="My route">
+              {heading(Compass, "bg-emerald-500/15 text-emerald-300", "My route", <Link href="/route" className="text-xs text-sky-300 underline">{route.target.short}</Link>)}
+              {route.state === "planned" && route.progress ? (
+                <>
+                  <div className="bar mb-2" role="img" aria-label={`${Math.round(route.progress.doneShare * 100)} percent of the plan done`}><i style={{ width: `${route.progress.doneShare * 100}%` }} /></div>
+                  <p className="text-sm text-slate-300">{route.progress.stepsDone} of {route.progress.stepsTotal} steps done{route.progress.status === "behind" ? ". You are a little behind: open your plan to re-plan from today." : route.progress.status === "done" ? ". Every step is done." : "."}</p>
+                  {route.progress.focus[0] && route.progress.status !== "done" && <p className="mt-1 text-sm"><b>Next:</b> {route.progress.focus[0].label}</p>}
+                </>
+              ) : <p className="text-sm text-slate-300">You have checked where you stand. <Link href={`/route/${route.target.slug}/plan`} className="underline">Build your plan</Link> to get dates.</p>}
+              <Link href="/route" className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-sky-300 underline">Open my route<ArrowUpRight size={14} /></Link>
             </section>
           )}
 
