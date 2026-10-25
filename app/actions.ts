@@ -50,7 +50,7 @@ import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/li
 import { offboardingLines, onboardingLines } from "@/lib/access";
 import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
 import { journeyFor, orderLockFor } from "@/lib/journeyLock";
-import { type Audience, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopeLabels, scopeOptions, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
+import { type Audience, catalog, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopeLabels, scopeOptions, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
 
@@ -756,6 +756,9 @@ export async function setScopeRequirement(fd: FormData) {
   if (!scopeInReach(reachOf(me.id), { kind, id }) || isGlobal(reachOf(me.id)) && !db.select().from(kind === "company" ? companies : brands).where(eq(kind === "company" ? companies.id : brands.id, id)).get()) return;
   const track = db.select({ id: tracks.id, audience: tracks.audience, kind: brands.kind }).from(tracks).innerJoin(brands, eq(brands.id, tracks.brandId)).where(eq(tracks.id, p.data.trackId)).get();
   if (!track || track.kind !== "shared" || track.audience === "customer") return;
+  const reach = catalog().find((t) => t.id === track.id)?.reach ?? 0; // nobody can be held to a level the track has no exam for
+  if (p.data.required === "yes" && reach < 1) return;
+  p.data.requiredLevel = Math.min(p.data.requiredLevel, Math.max(1, reach));
   const where = and(eq(scopeRequirements.scopeKind, kind), eq(scopeRequirements.scopeId, id), eq(scopeRequirements.trackId, track.id));
   if (p.data.required === "no") db.delete(scopeRequirements).where(where).run();
   else {

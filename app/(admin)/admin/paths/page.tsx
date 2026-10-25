@@ -34,10 +34,10 @@ export default async function Paths() {
           <input type="hidden" name="scope" value={scope.value} />
           <input type="hidden" name="trackId" value={t.id} />
           <span className="flex min-w-48 flex-1 items-center gap-2 truncate" title={t.slug}><SubjectArt slug={t.slug} name={t.name} kind={t.kind} size={30} />{t.name}
-            <span className="ml-2 text-xs text-slate-500">{t.questions} questions</span></span>
+            <span className="ml-2 text-xs text-slate-500">{t.questions} questions · exams to level {t.reach}</span></span>
           <select name="required" defaultValue={own ? "yes" : "no"} className={input} aria-label={`Required of ${scope.name}`}><option value="no">Not required</option><option value="yes">Required</option></select>
           <input name="roles" defaultValue={own?.roles ?? ""} placeholder="everyone, or roles" aria-label="Only these roles" className={`${input} w-40`} />
-          <label className="flex items-center gap-1 text-xs text-slate-400">pass level<input name="requiredLevel" type="number" min={1} max={MAX_LEVEL} defaultValue={own?.requiredLevel ?? 5} className={`${input} w-16`} /></label>
+          <label className="flex items-center gap-1 text-xs text-slate-400">pass level<input name="requiredLevel" type="number" min={1} max={Math.max(1, t.reach)} defaultValue={own?.requiredLevel ?? Math.min(5, Math.max(1, t.reach))} className={`${input} w-16`} /></label>
           <label className="flex items-center gap-1 text-xs text-slate-400">within<input name="dueDays" type="number" min={1} max={365} defaultValue={own?.dueDays ?? 30} className={`${input} w-16`} />days</label>
           <button className="btn btn-ghost !px-3 !py-1"><Save size={14} />Save</button>
         </form>
@@ -48,6 +48,8 @@ export default async function Paths() {
   const topics = new Map(TOPICS.topics.map((x) => [`topic-${x.slug}`, x.family]));
   const topicTracks = (scoped ? fullCatalog.filter((t) => t.audience !== "customer") : cat).filter((t) => topics.has(t.slug));
   const families = Object.entries(TOPICS.families).map(([key, name]) => ({ key, name, list: topicTracks.filter((t) => topics.get(t.slug) === key).sort((a, b) => a.name.localeCompare(b.name)) })).filter((f) => f.list.length);
+  // the public sector tracks are shared academy content: a company can require them of its own people, but not edit them for everyone
+  const publicTracks = fullCatalog.filter((t) => t.brand.slug === "public-sector" && t.audience !== "customer" && t.questions > 0).sort((a, b) => a.name.localeCompare(b.name));
   const byBrand = new Map<string, typeof cat>();
   for (const t of cat.filter((x) => !topics.has(x.slug))) byBrand.set(t.brand.name, [...(byBrand.get(t.brand.name) ?? []), t]);
   const groups = [...byBrand].map(([name, list]) => ({ name, list: list.sort((a, b) => a.name.localeCompare(b.name)), kind: list[0].brand.kind }))
@@ -79,6 +81,17 @@ export default async function Paths() {
       <section className="card p-5"><div className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">How the {cat.length} tracks and topics are set</div><StackBar parts={[{ label: "Mandatory", value: tierCount("mandatory"), color: PALETTE.rose }, { label: "Role", value: tierCount("role"), color: PALETTE.indigo }, { label: "Growth", value: tierCount("growth"), color: PALETTE.emerald }]} /></section>
       {!scoped && !isGlobal(reach) && (
         <section className="card p-4 text-sm text-slate-400"><b className="text-slate-200">Topics.</b> To make a topic such as version control or accessibility required for your people, choose one company or brand in the scope switcher at the top of the side nav.</section>
+      )}
+      {!isGlobal(reach) && publicTracks.length > 0 && (
+        <section className="card p-4">
+          <h2 className="text-lg font-bold">Public sector <span className="text-xs font-normal text-slate-500">{publicTracks.length} tracks · shared academy{scoped ? ` · ${publicTracks.filter((t) => ownRequirements.has(t.id)).length} required of ${scope.name}` : ""}</span></h2>
+          <p className="mt-1 text-sm text-slate-400">{scoped
+            ? <>Business cases, procurement, public money, legal duties, data and records, the Service Standard, assurance and governance. Mark a track <b>Required</b> to make it required of {scope.name}&apos;s own people, for everyone or only the roles you list. It changes nothing for any other company.</>
+            : "Business cases, procurement, public money, legal duties, data and records, the Service Standard, assurance and governance. Choose one company or brand in the scope switcher to require any of them of its people."}</p>
+          <ul className="mt-3 space-y-2">{publicTracks.map(scoped ? scopedRow : (t) => (
+            <li key={t.id} className="flex flex-wrap items-center gap-2 rounded-xl border border-black/5 p-2 text-sm"><SubjectArt slug={t.slug} name={t.name} kind={t.kind} size={30} />{t.name}<span className="ml-2 text-xs text-slate-500">{t.questions} questions · exams to level {t.reach}</span></li>
+          ))}</ul>
+        </section>
       )}
       {families.length > 0 && (
         <section className="card p-4">
