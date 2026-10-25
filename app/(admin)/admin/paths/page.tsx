@@ -2,7 +2,7 @@ import { PageHero, PALETTE, StackBar } from "@/components/charts";
 import { SubjectArt } from "@/components/SubjectArt";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { db, questions, scopeRequirements } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { setScopeRequirement, updateTrackPolicy } from "@/app/actions";
@@ -10,7 +10,7 @@ import { catalog } from "@/lib/paths";
 import { MAX_LEVEL } from "@/lib/levels";
 import { Save, Route } from "lucide-react";
 import { isGlobal, trackInReach } from "@/lib/tenancy";
-import { adminScopeOf } from "@/lib/adminScope";
+import { adminScopeOf, scopeChoices } from "@/lib/adminScope";
 import TOPICS from "../../../../content/topics/topics.json";
 
 export const metadata = { title: "What is required — gglearn" };
@@ -26,23 +26,26 @@ export default async function Paths() {
   const scoped = scope.kind === "company" || scope.kind === "brand";
   const ownRequirements = new Map(scoped ? db.select().from(scopeRequirements).where(and(eq(scopeRequirements.scopeKind, scope.kind as "company" | "brand"), eq(scopeRequirements.scopeId, scope.id!))).all().map((r) => [r.trackId, r]) : []);
   const waiting = new Map(db.select({ id: questions.trackId, n: sql<number>`count(*)` }).from(questions).where(eq(questions.status, "review")).groupBy(questions.trackId).all().map((r) => [r.id, r.n]));
+  type Own = typeof scopeRequirements.$inferSelect | undefined;
+  /** One company or brand's requirement of one shared track: Required / Not required, roles, level, days. */
+  const reqForm = (t: (typeof cat)[number], scopeValue: string, scopeName: string, own: Own, withName: boolean) => (
+    <form action={setScopeRequirement} className="flex flex-wrap items-center gap-2 text-sm">
+      <input type="hidden" name="scope" value={scopeValue} />
+      <input type="hidden" name="trackId" value={t.id} />
+      {withName
+        ? <span className="flex min-w-48 flex-1 items-center gap-2 truncate" title={t.slug}><SubjectArt slug={t.slug} name={t.name} kind={t.kind} size={30} />{t.name}
+          <span className="ml-2 text-xs text-slate-500">{t.questions} questions · exams to level {t.reach}</span></span>
+        : <span className="min-w-48 flex-1 truncate font-medium">{scopeName}</span>}
+      <select name="required" defaultValue={own ? "yes" : "no"} className={input} aria-label={`Required of ${scopeName}`}><option value="no">Not required</option><option value="yes">Required</option></select>
+      <input name="roles" defaultValue={own?.roles ?? ""} placeholder="everyone, or roles" aria-label="Only these roles" className={`${input} w-40`} />
+      <label className="flex items-center gap-1 text-xs text-slate-400">pass level<input name="requiredLevel" type="number" min={1} max={Math.max(1, t.reach)} defaultValue={own?.requiredLevel ?? Math.min(5, Math.max(1, t.reach))} className={`${input} w-16`} /></label>
+      <label className="flex items-center gap-1 text-xs text-slate-400">within<input name="dueDays" type="number" min={1} max={365} defaultValue={own?.dueDays ?? 30} className={`${input} w-16`} />days</label>
+      <button className="btn btn-ghost !px-3 !py-1"><Save size={14} />Save</button>
+    </form>
+  );
   const scopedRow = (t: (typeof cat)[number]) => {
     const own = ownRequirements.get(t.id);
-    return (
-      <li key={t.id} className={`rounded-xl border border-black/5 p-2 transition hover:bg-indigo-500/5 ${own ? "bg-emerald-500/5" : ""}`}>
-        <form action={setScopeRequirement} className="flex flex-wrap items-center gap-2 text-sm">
-          <input type="hidden" name="scope" value={scope.value} />
-          <input type="hidden" name="trackId" value={t.id} />
-          <span className="flex min-w-48 flex-1 items-center gap-2 truncate" title={t.slug}><SubjectArt slug={t.slug} name={t.name} kind={t.kind} size={30} />{t.name}
-            <span className="ml-2 text-xs text-slate-500">{t.questions} questions · exams to level {t.reach}</span></span>
-          <select name="required" defaultValue={own ? "yes" : "no"} className={input} aria-label={`Required of ${scope.name}`}><option value="no">Not required</option><option value="yes">Required</option></select>
-          <input name="roles" defaultValue={own?.roles ?? ""} placeholder="everyone, or roles" aria-label="Only these roles" className={`${input} w-40`} />
-          <label className="flex items-center gap-1 text-xs text-slate-400">pass level<input name="requiredLevel" type="number" min={1} max={Math.max(1, t.reach)} defaultValue={own?.requiredLevel ?? Math.min(5, Math.max(1, t.reach))} className={`${input} w-16`} /></label>
-          <label className="flex items-center gap-1 text-xs text-slate-400">within<input name="dueDays" type="number" min={1} max={365} defaultValue={own?.dueDays ?? 30} className={`${input} w-16`} />days</label>
-          <button className="btn btn-ghost !px-3 !py-1"><Save size={14} />Save</button>
-        </form>
-      </li>
-    );
+    return <li key={t.id} className={`rounded-xl border border-black/5 p-2 transition hover:bg-indigo-500/5 ${own ? "bg-emerald-500/5" : ""}`}>{reqForm(t, scope.value, scope.name, own, true)}</li>;
   };
   // topic tracks (npm run topics) are listed by subject, not by where their questions came from
   const topics = new Map(TOPICS.topics.map((x) => [`topic-${x.slug}`, x.family]));
@@ -71,6 +74,34 @@ export default async function Paths() {
                 </form>
               </li>
   );
+
+  // one shared academy brand opened from the scope list: every company and brand this admin runs, track by track
+  if (scope.library) {
+    const choices = scopeChoices(me);
+    const targets = choices.companies.flatMap((c) => [{ value: `company:${c.id}`, name: c.name, kind: "company" as const, id: c.id }, ...c.brands.map((b) => ({ value: `brand:${b.id}`, name: `${b.name} (${c.name})`, kind: "brand" as const, id: b.id }))]);
+    const libTracks = publicTracks.filter((t) => t.brandId === scope.library!.brandId);
+    const have = new Map(libTracks.length ? db.select().from(scopeRequirements).where(inArray(scopeRequirements.trackId, libTracks.map((t) => t.id))).all().map((r) => [`${r.scopeKind}:${r.scopeId}:${r.trackId}`, r]) : []);
+    return (
+      <div className="space-y-6">
+        <PageHero Icon={Route} title={scope.name} sub={<>Shared academy learning. It is the same for every company; here you choose which of <b>your</b> companies and brands require it of their own people, for everyone or only some roles, with a level and a deadline. Nothing here changes it for anyone else. Saving enrols the people affected straight away.</>} />
+        <section className="card p-4">
+          <h2 className="text-lg font-bold">{libTracks.length} tracks <span className="text-xs font-normal text-slate-500">· {targets.length} of your companies and brands</span></h2>
+          <div className="mt-3 space-y-2">
+            {libTracks.map((t) => {
+              const by = targets.filter((tg) => have.has(`${tg.kind}:${tg.id}:${t.id}`)).map((tg) => tg.name);
+              return (
+                <details key={t.id} className="rounded-xl border border-black/5 p-3">
+                  <summary className="flex cursor-pointer flex-wrap items-center gap-2 font-semibold"><SubjectArt slug={t.slug} name={t.name} kind={t.kind} size={30} />{t.name}
+                    <span className="text-xs font-normal text-slate-500">{t.questions} questions · exams to level {t.reach}{by.length ? ` · required by ${by.join(", ")}` : " · not required yet"}</span></summary>
+                  <ul className="mt-3 space-y-2">{targets.map((tg) => <li key={tg.value} className={`rounded-xl border border-black/5 p-2 ${have.has(`${tg.kind}:${tg.id}:${t.id}`) ? "bg-emerald-500/5" : ""}`}>{reqForm(t, tg.value, tg.name, have.get(`${tg.kind}:${tg.id}:${t.id}`), false)}</li>)}</ul>
+                </details>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
