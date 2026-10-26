@@ -11,7 +11,7 @@ const PAID = [["none", "None"], ["some", "A little, or a long time ago"], ["lots
 const RIGHTS = [["yes", "Yes"], ["unsure", "I am not sure"], ["no", "No"]] as const;
 const SCALE = ["1 Not confident", "2", "3", "4", "5 Very confident"];
 
-export default function RouteForm({ slug, unpaid, defaults, jobTitle, rightToWork }: { slug: string; rightToWork: { ask: string; why: string } | null; unpaid: { key: string; label: string }[]; defaults: { horizonMonths: number; hoursPerWeek: number; answers: RouteAnswers } | null; jobTitle: string }) {
+export default function RouteForm({ slug, unpaid, defaults, jobTitle, rightToWork, promotion }: { slug: string; promotion: boolean; rightToWork: { ask: string; why: string } | null; unpaid: { key: string; label: string }[]; defaults: { horizonMonths: number; hoursPerWeek: number; answers: RouteAnswers } | null; jobTitle: string }) {
   const [state, run, pending] = useActionState<RouteState, FormData>(saveRoute.bind(null, slug), null);
   const d = defaults?.answers;
   const radios = (name: string, options: readonly (readonly [string, string])[], current?: string) => (
@@ -49,6 +49,7 @@ export default function RouteForm({ slug, unpaid, defaults, jobTitle, rightToWor
         </div>
       </fieldset>
 
+      {!promotion && (<>
       <fieldset className="card space-y-3 p-5"><legend className="text-lg font-extrabold">Your education</legend>{radios("education", EDUCATION, d?.education)}</fieldset>
 
       <fieldset className="card space-y-3 p-5"><legend className="text-lg font-extrabold">Paid work you have done</legend>
@@ -68,6 +69,8 @@ export default function RouteForm({ slug, unpaid, defaults, jobTitle, rightToWor
           ))}
         </div>
       </fieldset>
+
+      </>)}
 
       <fieldset className="card space-y-3 p-5"><legend className="text-lg font-extrabold">How confident are you using a computer?</legend>{scale("digital", d?.digital)}</fieldset>
       <fieldset className="card space-y-3 p-5"><legend className="text-lg font-extrabold">How confident are you writing about yourself?</legend>{scale("writing", d?.writing)}</fieldset>
