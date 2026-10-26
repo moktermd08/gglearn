@@ -23,8 +23,10 @@ export type TargetStage = { n: number; label: string; blurb: string };
 export type TargetAction = { key: string; label: string; detail: string; stage: number; hours: number; priority?: number; earlyIf?: { workRights: string[] } };
 /** Only for jobs that depend on the right to work somewhere: the question is asked, and these are the warnings for "no" and "not sure". Leave it out and the question is not asked. */
 export type RightToWork = { ask: string; why: string; no: string; unsure: string };
+/** "entry" (the default) asks about education and work history; "promotion" is for someone already in work, so those questions are not asked. */
+export type TargetKind = "entry" | "promotion";
 export type Target = {
-  slug: string; title: string; short: string; summary: string; areas: TargetArea[]; rightToWork?: RightToWork;
+  slug: string; title: string; short: string; summary: string; kind?: TargetKind; areas: TargetArea[]; rightToWork?: RightToWork;
   stages?: TargetStage[]; actions?: TargetAction[]; apply?: { label: string; detail: string };
 };
 

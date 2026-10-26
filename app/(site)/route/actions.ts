@@ -20,9 +20,9 @@ const rating = z.coerce.number().int().min(1).max(5);
 const schema = z.object({
   horizonMonths: z.coerce.number().int().min(HORIZON_MIN).max(HORIZON_MAX),
   hoursPerWeek: z.coerce.number().int().min(HOURS_MIN).max(HOURS_MAX),
-  education: z.enum(["none", "school", "college", "degree"]),
-  yearsOut: z.coerce.number().int().min(0).max(50),
-  paidWork: z.enum(["none", "some", "lots"]),
+  education: z.enum(["none", "school", "college", "degree"]).default("college"),
+  yearsOut: z.coerce.number().int().min(0).max(50).default(0),
+  paidWork: z.enum(["none", "some", "lots"]).default("lots"),
   digital: rating,
   writing: rating,
   workRights: z.enum(["yes", "no", "unsure"]),
@@ -33,7 +33,7 @@ export async function saveRoute(slug: string, _: RouteState, fd: FormData): Prom
   const target = targetBySlug(slug);
   if (!target) return { error: "That job is not on the list." };
   let me = await currentUser();
-  const p = schema.safeParse(Object.fromEntries(["horizonMonths", "hoursPerWeek", "education", "yearsOut", "paidWork", "digital", "writing", "workRights"].map((k) => [k, k === "workRights" && !target.rightToWork ? "yes" : str(fd.get(k))])));
+  const p = schema.safeParse(Object.fromEntries(["horizonMonths", "hoursPerWeek", "education", "yearsOut", "paidWork", "digital", "writing", "workRights"].map((k) => [k, k === "workRights" && !target.rightToWork ? "yes" : target.kind === "promotion" && ["education", "yearsOut", "paidWork"].includes(k) ? undefined : str(fd.get(k))])));
   if (!p.success) return { error: `Check your answers: choose a timeframe from ${HORIZON_MIN} to ${HORIZON_MAX} months, ${HOURS_MIN} to ${HOURS_MAX} hours a week, and answer every question.` };
   if (!me) {
     // no account needed to start: a private "just looking" account is made now and can be turned into a real one later
@@ -48,7 +48,9 @@ export async function saveRoute(slug: string, _: RouteState, fd: FormData): Prom
   const known = new Set(UNPAID.map((u) => u.key));
   const unpaid = fd.getAll("unpaid").filter((v): v is string => typeof v === "string" && known.has(v));
   const { horizonMonths, hoursPerWeek, ...answers } = p.data;
-  startAssessment(me, target, { horizonMonths, hoursPerWeek, answers: { ...answers, unpaid } });
+  // someone going for promotion is already in work: nothing about education or work history was asked, so the stored answers say "in work"
+  const given = target.kind === "promotion" ? { ...answers, education: "college" as const, yearsOut: 0, paidWork: "lots" as const } : answers;
+  startAssessment(me, target, { horizonMonths, hoursPerWeek, answers: { ...given, unpaid: target.kind === "promotion" ? [] : unpaid } });
   redirect(`/route/${slug}`);
 }
 
