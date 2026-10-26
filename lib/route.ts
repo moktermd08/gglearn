@@ -6,6 +6,7 @@ import { scoreBatch, nextProbe } from "@/lib/placement";
 import { openTo } from "@/lib/paths";
 import fs from "node:fs";
 import path from "node:path";
+import { roleTarget } from "@/lib/routeRole";
 
 type Person = typeof users.$inferSelect;
 type Assessment = typeof routeAssessments.$inferSelect;
@@ -43,7 +44,8 @@ function loadTargets(): Target[] {
   return out;
 }
 export const TARGETS: Target[] = loadTargets();
-export const targetBySlug = (slug: string) => TARGETS.find((t) => t.slug === slug) ?? null;
+/** A listed job, or a route to a rung of any career ladder (slug role--<role>--<level>, see lib/routeRole.ts). */
+export const targetBySlug = (slug: string) => TARGETS.find((t) => t.slug === slug) ?? roleTarget(slug);
 
 /** Kinds of unpaid experience offered in the questionnaire. */
 export const UNPAID: { key: string; label: string }[] = [
