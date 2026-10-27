@@ -1,7 +1,7 @@
 import type { Rank } from "@/lib/build/types";
 
 /**
- * The whole journey, from nothing to a launched product, in five ranks. Every step ends in something that exists in the person's GitHub repository
+ * The whole journey, from nothing to a launched product, in six ranks. Every step ends in something that exists in the person's GitHub repository
  * (a document, a test, a release, a running site) so the repository is the portfolio. {name}, {pitch}, {customer}, {mvp}, {stack}, {agent} and {launch}
  * in a prompt are replaced with the person's own project. Files are numbered docs/01-... so a reader can follow the story in order.
  * Run `npm run check:build` after editing.
@@ -352,6 +352,7 @@ export const RANKS: Rank[] = [
             title: "Tell people how to report a problem",
             why: "A SECURITY.md makes it safe for a stranger to tell you about a hole instead of using it.",
             doIt: ["Add SECURITY.md with a contact (an email or GitHub's private vulnerability reporting), which versions you support and how fast you will reply.", "Turn on private vulnerability reporting under Settings, then Code security."],
+            prompt: "Write SECURITY.md for {name}: how to report a vulnerability privately (use GitHub private vulnerability reporting), what to include, how fast I will reply, what is in scope and a note that I will not take legal action against good-faith reports. Keep it short and friendly.",
             check: { kind: "files", glob: "SECURITY.md", minBytes: 200 },
           },
         ],
@@ -496,6 +497,129 @@ export const RANKS: Rank[] = [
             prompt: "Interview me to write the case study of {name}, one question at a time: the problem, the research, the tools, where AI helped, where it failed, the launch, the numbers and what I would do differently. Then write docs/14-case-study.md in first person, honest, with specifics and no hype.",
             learn: "ai-sdlc-docs-support-evolve-titan",
             check: { kind: "files", glob: "docs/14-case-study.md", minBytes: 1200 },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    key: "titan",
+    title: "Titan",
+    goal: "Beyond launch: data, privacy, money, risk, contracts and retirement are handled the way a professional product handles them.",
+    stages: [
+      {
+        key: "data-access",
+        title: "Data, privacy and access",
+        blurb: "The unglamorous work that decides whether people can trust you with their information.",
+        steps: [
+          {
+            key: "data-privacy",
+            title: "Write how you handle personal data",
+            why: "Knowing what you keep, why, for how long and how someone can see or delete it is both the law and basic trust.",
+            doIt: ["List every piece of personal data the product stores or sends to a service (including the AI model), why you need it and how long you keep it.", "Describe how a person can ask to see their data and how you delete it on request.", "Save it as docs/15-data-privacy.md and link it from the README and the live site."],
+            prompt: "Read the code and docs for {name} and write docs/15-data-privacy.md: every personal data item stored or sent to a third party, the reason, retention period, who can access it, how a person can get a copy, how I delete it on request and how I wipe it when I retire the product. Flag anything I collect that I do not need.",
+            learn: "sdlc-security",
+            check: { kind: "files", glob: "docs/15-data-privacy.md", minBytes: 800 },
+          },
+          {
+            key: "data-migration",
+            title: "Plan and rehearse a data migration and restore",
+            why: "A backup you have never restored is a hope, and a move you have never rehearsed is a gamble.",
+            doIt: ["Write how you would back up the data, restore it, and move to a new database or host without losing anything.", "Practise a restore from a backup into a fresh copy and write down how long it took and what went wrong.", "Save it as docs/16-migration.md."],
+            prompt: "Write docs/16-migration.md for {name}: how data is backed up, a step-by-step restore, a migration plan to move to a different database or host with checks before and after, and rollback. Then guide me through rehearsing the restore and recording the result.",
+            learn: "sdlc-database",
+            check: { kind: "files", glob: "docs/16-migration.md", minBytes: 600 },
+          },
+          {
+            key: "access-review",
+            title: "Review who can get in",
+            why: "Access piles up. Old keys, old collaborators and forgotten admin accounts are how most breaches begin.",
+            doIt: ["List every person, service and key that can change your code, your hosting, your database and your domain, and what each can do.", "Remove what is not needed, and put in a date to check again (every three months).", "Save it as docs/17-access-review.md."],
+            prompt: "Help me do an access review for {name}. Ask me, one at a time, who and what can change the code, hosting, database, domain and payment or email accounts. Then write docs/17-access-review.md: a table of each access, what it allows, why it is needed, the decision (keep or remove) and the date of the next review.",
+            check: { kind: "files", glob: "docs/17-access-review.md", minBytes: 400 },
+          },
+          {
+            key: "compliance-pack",
+            title: "Collect your evidence in one place",
+            why: "When a customer or an auditor asks \"how do you know it is safe?\", you point at a page instead of scrambling.",
+            doIt: ["Gather links to the proof you already have: the threat model, scan results, test runs, access review, privacy page and backup restore.", "Write which rules apply to you (for example data protection law, accessibility rules, or a customer's security questionnaire) and where the evidence for each is.", "Save it as docs/18-compliance-pack.md."],
+            prompt: "Create docs/18-compliance-pack.md for {name}: a table of the rules that apply (data protection, accessibility, payment or sector rules if any, a typical customer security questionnaire), the evidence I have for each with links into this repository, and the gaps I still need to close.",
+            learn: "security-operations",
+            check: { kind: "files", glob: "docs/18-compliance-pack.md", minBytes: 600 },
+          },
+        ],
+      },
+      {
+        key: "money-risk",
+        title: "Money, risk and decisions",
+        blurb: "Products die of running out of money and unmanaged risk far more often than of bad code.",
+        steps: [
+          {
+            key: "budget",
+            title: "Write the budget and the running costs",
+            why: "If you do not know what it costs to build, to run and to keep, you cannot know whether it can survive.",
+            doIt: ["List what building it costs (your time, tools, any money) and what running it costs each month: hosting, domain, AI model usage, email, payment fees.", "Set a monthly cap on AI and cloud spend, with an alert, and write what you will do when you reach it.", "Review the bill once, find the largest cost, and note one way to cut it. Save it all as docs/19-budget.md."],
+            prompt: "Help me budget {name}. Write docs/19-budget.md: build cost, a monthly running-cost table (hosting, domain, AI usage, email, fees) at 10, 100 and 1,000 users, a spending cap with an alert for AI and cloud usage, the biggest cost and one way to reduce it, and the point at which I should charge or stop.",
+            learn: "service-design-pricing",
+            check: { kind: "files", glob: "docs/19-budget.md", minBytes: 600 },
+          },
+          {
+            key: "risks",
+            title: "Keep a risk register",
+            why: "Writing risks down, with an owner and a response, is what turns worry into decisions.",
+            doIt: ["List the ten biggest things that could go wrong (technical, legal, money, people, a vendor disappearing, an AI model changing).", "For each: how likely, how bad, what you will do to reduce it and what you will do if it happens.", "Save it as docs/20-risk-register.md and review it at each release."],
+            prompt: "Create docs/20-risk-register.md for {name}: ten risks across technical, security, legal, financial, people, vendor and AI-model change, each with likelihood, impact, an owner (me), a mitigation and a contingency. Start with the risks you can see from this repository.",
+            learn: "topic-product",
+            check: { kind: "files", glob: "docs/20-risk-register.md", minBytes: 600 },
+          },
+          {
+            key: "vendors",
+            title: "Choose and review your suppliers",
+            why: "Every service you depend on is a risk and a bill. Knowing how to leave one is as important as knowing how to join.",
+            doIt: ["List every service you rely on (hosting, database, AI model, email, payments, analytics), why you chose it over the alternatives, what it costs and what the terms say about your data.", "For each, write how you would leave it: what you must export and what it would take to move.", "Save it as docs/21-vendors.md."],
+            prompt: "Write docs/21-vendors.md for {name}: a table of every service it relies on (hosting, database, AI model, email, payments, analytics) with why it was chosen, one alternative, cost, what happens to my data under its terms, and how I would leave it. Ask me about anything you cannot see in the repository.",
+            check: { kind: "files", glob: "docs/21-vendors.md", minBytes: 600 },
+          },
+          {
+            key: "governance",
+            title: "Say who decides, and when you stop",
+            why: "A product needs someone who can say yes, no and stop, and an honest check before each big step.",
+            doIt: ["Name the person who decides (a customer, a sponsor, or you) and how decisions and money are agreed.", "Write the checks you hold before each of build, launch and scale: what must be true to go on, and what would make you stop.", "Save it as docs/22-governance.md and hold the launch check for real, on paper, before you announce."],
+            prompt: "Write docs/22-governance.md for {name}: who decides (me, or the customer), how decisions and spending are agreed, and three go/stop checks (before build, before launch, before scaling) each with the questions that must be answered yes. Then run the launch check with me and record the result.",
+            check: { kind: "files", glob: "docs/22-governance.md", minBytes: 500 },
+          },
+          {
+            key: "sustainability",
+            title: "Think about its footprint",
+            why: "Hosting, model calls and storage use energy and money, and leaner usually means cheaper too.",
+            doIt: ["Note the main sources of energy use or waste in the product (large images, heavy model calls, always-on servers).", "Make two changes that reduce them, and record what you changed and what it saved.", "Save it as docs/23-sustainability.md."],
+            prompt: "Review {name} for waste: large images, heavy or repeated model calls, always-on servers and unused data. Propose two changes that cut cost and energy, make them in small pull requests, and write what changed and what it saved in docs/23-sustainability.md.",
+            check: { kind: "files", glob: "docs/23-sustainability.md", minBytes: 300 },
+          },
+        ],
+      },
+      {
+        key: "docs-retire",
+        title: "Documentation and retirement",
+        blurb: "Experts write for the next person, and plan the ending before the beginning is over.",
+        steps: [
+          {
+            key: "api-docs",
+            title: "Document your API or interface",
+            why: "If another person or program uses your product, how to use it must be written down and kept true.",
+            doIt: ["Document every endpoint, command or function others call: what it takes, what it returns, errors and an example.", "Write it as an OpenAPI file, or as a page in docs/api. Check every example actually works.", "Link it from the README."],
+            prompt: "Read the code for {name} and write documentation for everything another person or program can call: an OpenAPI file (openapi.yaml) if there is an HTTP API, otherwise docs/api.md. Include inputs, outputs, errors and a working example for each. List anything undocumented that I should fix.",
+            learn: "ai-sdlc-docs-support-evolve-titan",
+            check: { kind: "files", glob: "{openapi.{yml,yaml,json},**/openapi.{yml,yaml,json},docs/api.md,docs/api/**,swagger.{yml,yaml,json}}", minBytes: 300 },
+          },
+          {
+            key: "retirement",
+            title: "Plan how it ends",
+            why: "Products end. Planning it means users get notice, their data is returned or deleted, and nothing keeps costing you.",
+            doIt: ["Write what you would do to close it: how you tell users and how long they get, how they can export their data, what you delete and when, what you archive and which accounts, domains and subscriptions you cancel.", "Keep a copy of what you must keep, such as accounts, contracts and the records you are required to hold.", "Save it as docs/24-retirement.md."],
+            prompt: "Write docs/24-retirement.md for {name}: a timeline to shut it down safely, a notice to customers, how they export their data, what is deleted and when, what is archived and for how long, every account, subscription and domain to cancel, and the checks to confirm nothing is left running or costing money.",
+            learn: "ai-sdlc-ship-operate-titan",
+            check: { kind: "files", glob: "docs/24-retirement.md", minBytes: 500 },
           },
         ],
       },

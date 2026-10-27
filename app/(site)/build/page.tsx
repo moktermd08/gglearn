@@ -18,7 +18,7 @@ export default async function BuildIndex({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
-      <PageHero Icon={Hammer} tone="indigo" title="Build & launch a real product" sub={`From zero to launched, in ${STEPS.length} steps: idea, plan, design, brand, vibe coding, an AI agent, tests, security, deployment, marketing and sales. Everything you make lives in your own GitHub repository, and every step is checked against it.`} />
+      <PageHero Icon={Hammer} tone="indigo" title="Build & launch a real product" sub={`From zero to launched, in ${STEPS.length} steps: idea, plan, design, brand, vibe coding, an AI agent, tests, security, deployment, marketing and sales, then data, money, risk and retirement. Everything you make lives in your own GitHub repository, and every step is checked against it.`} />
 
       {mine.length > 0 && (
         <section className="space-y-3" aria-labelledby="mine">
@@ -41,7 +41,7 @@ export default async function BuildIndex({ searchParams }: { searchParams: Promi
       )}
 
       <section className="space-y-3" aria-labelledby="journey">
-        <h2 id="journey" className="text-lg font-extrabold">The journey: five ranks</h2>
+        <h2 id="journey" className="text-lg font-extrabold">The journey: {RANKS.length} ranks</h2>
         <ol className="space-y-3">
           {RANKS.map((r, i) => (
             <li key={r.key} className="card p-4">
