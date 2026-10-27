@@ -6,9 +6,11 @@ import { requireUser } from "@/lib/auth";
 import { LEVELS, MAX_LEVEL, PASS_MARK, QUESTIONS_PER_RUN, TIERS, tierOf } from "@/lib/levels";
 import { LEVEL_INFO } from "@/lib/levelInfo";
 import { levelsPassed } from "@/lib/progress";
+import { gateFor } from "@/lib/onboarding";
+import { orderLockFor } from "@/lib/journeyLock";
 import { markStudied, startRun } from "@/app/actions";
 import { Donut, LevelScale, PALETTE } from "@/components/charts";
-import { ArrowLeft, ArrowRight, BookOpen, BookOpenCheck, Clock, GraduationCap, Layers, ListChecks, Quote, Sparkles, Target } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, BookOpenCheck, Clock, GraduationCap, Layers, ListChecks, Lock, Quote, Sparkles, Target } from "lucide-react";
 import { Flashcards } from "@/components/Flashcards";
 import { RankEmblem } from "@/components/RankEmblem";
 import { SubjectArt, TopicChip, artFor } from "@/components/SubjectArt";
@@ -32,6 +34,8 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
   const art = artFor(track.slug, track.name, track.kind), accent = art.color;
   const tier = TIERS[tierOf(level)], info = LEVEL_INFO[level - 1], passed = levelsPassed(user.id, track.id);
   const state = level <= passed ? "done" : level === passed + 1 ? "current" : "preview";
+  const signGate = gateFor(user.id, track.id), orderLock = signGate ? null : orderLockFor(user.id, track.id);
+  const locked = !!signGate || !!orderLock || level > passed + 1;
   const SLICE = [PALETTE.indigo, PALETTE.sky, PALETTE.emerald, PALETTE.amber, PALETTE.pink, PALETTE.violet];
   const topics = [...new Set(qs.map((q) => q.topic).filter(Boolean))] as string[];
   const mins = qs.reduce((n, q) => n + q.timeSec, 0) / 60 + (lesson?.syllabus.length ?? 0);
@@ -126,11 +130,27 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
         <p className="mx-auto mt-1 max-w-md text-sm text-slate-400">{QUESTIONS_PER_RUN} questions, {PASS_MARK * 100}% to pass. Passing earns bonus XP{level < MAX_LEVEL ? <> and opens <b>{LEVELS[level]}</b></> : " and the Titan crown"}.</p>
         <div className="mt-4 flex flex-wrap justify-center gap-3">
           <form action={markStudied.bind(null, track.id)}><button className="btn btn-ghost"><ListChecks size={16} />I have studied this (+20 XP)</button></form>
-          <form action={startRun}>
-            <input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} />
-            <button className="btn !px-6 !py-3 text-base">Take the level {level} exam<ArrowRight size={16} /></button>
-          </form>
+          {locked ? (
+            <span className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-5 py-3 text-base font-semibold text-slate-400"><Lock size={16} />Exam locked</span>
+          ) : (
+            <form action={startRun}>
+              <input type="hidden" name="trackId" value={track.id} /><input type="hidden" name="level" value={level} />
+              <button className="btn !px-6 !py-3 text-base">Take the level {level} exam<ArrowRight size={16} /></button>
+            </form>
+          )}
         </div>
+        {locked && (
+          <div role="status" className="mx-auto mt-4 max-w-md space-y-1.5 rounded-xl border border-violet-300/40 p-3 text-left text-sm">
+            {signGate ? <p><b>Locked for now.</b> This is part of {signGate.phase}, which opens once your manager signs off {signGate.waitingOn}. You can still read the guide.</p>
+              : orderLock ? <>
+                <p><b>Locked for now.</b> This is stage {orderLock.stage} of your learning journey. Pass {orderLock.waitingOn.map((w) => w.name).join(", ") || "the stage before"} first. You can still read the guide.</p>
+                <p className="flex flex-wrap gap-3">
+                  {orderLock.waitingOn[0] && <Link href={`/tracks/${orderLock.waitingOn[0].slug}`} className="font-semibold text-indigo-300 hover:underline">Go to {orderLock.waitingOn[0].name}</Link>}
+                  <Link href={`/start/${track.slug}`} className="font-semibold text-indigo-300 hover:underline">I already know this: test out</Link>
+                </p></>
+              : <p><b>Locked for now.</b> Pass level {passed + 1} first; levels open in order.</p>}
+          </div>
+        )}
         {level < MAX_LEVEL && (
           <div className="mt-5 flex items-center justify-center gap-3 border-t border-black/5 pt-4 text-left">
             <RankEmblem level={level + 1} state="preview" size={40} />
