@@ -1,7 +1,7 @@
 import { Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
 import { eq, sql } from "drizzle-orm";
-import { checklistItems, db, enrollments, handovers, joinLinks, tracks, users } from "@/lib/db";
+import { checklistItems, competitionMembers, competitions, db, enrollments, handovers, joinLinks, tracks, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { addHandover, offboard, toggleChecklistItem } from "@/app/actions";
 import { LEVELS, grantableLevels } from "@/lib/accessLevel";
@@ -33,7 +33,10 @@ export default async function People({ searchParams }: { searchParams: Promise<P
   const { q = "", page: pageParam = "1", company = "", brand = "", role = "", access = "", status = "", edit = "", add = "" } = await searchParams;
   const reach = (await adminScopeOf(me)).reach, mine = usersInReach(reach);
   const tree = placeTree(reachOf(me.id)); // what this person may place people in: all of what they run, whatever the switcher shows
-  const everyone = db.select().from(users).orderBy(users.name).all().filter((u) => !mine || mine.has(u.id));
+  // guests belong to no company, so they are in nobody's reach; show the ones who joined a contest run by someone this manager reaches
+  const guestIds = new Set<number>();
+  if (mine) for (const m of db.select({ u: competitionMembers.userId, by: competitions.createdBy }).from(competitionMembers).innerJoin(competitions, eq(competitions.id, competitionMembers.competitionId)).where(eq(competitionMembers.kind, "human")).all()) if (m.u != null && mine.has(m.by)) guestIds.add(m.u);
+  const everyone = db.select().from(users).orderBy(users.name).all().filter((u) => !mine || mine.has(u.id) || (u.guest === "yes" && guestIds.has(u.id)));
 
   // company and brand mean "belongs to it, or to something under it" (the same reading of scopes as everywhere); only ones this person runs are honoured
   const inCompany = company && tree.companies.some((c) => c.id === Number(company)) ? usersInReach(reachFor([{ kind: "company", id: Number(company) }])) : null;
