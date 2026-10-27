@@ -1327,3 +1327,39 @@ export const routeTasks = sqliteTable(
   },
   (t) => [uniqueIndex("route_task_unique").on(t.assessmentId, t.actionKey)],
 );
+
+// A person's own project in "Build & launch" (/build): a real product taken from idea to a public launch, with its work kept in a GitHub repository.
+// templateSlug is one of content/build/projects.ts, or "custom" for their own idea or a customer's.
+export const buildProjects = sqliteTable(
+  "build_projects",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id").notNull().references(() => users.id),
+    templateSlug: text("template_slug").notNull(),
+    name: text("name").notNull(),
+    pitch: text("pitch").notNull().default(""), // one sentence: who it is for and what it does
+    customer: text("customer").notNull().default(""), // who it is for
+    repo: text("repo"), // "owner/name" on GitHub, null until linked
+    siteUrl: text("site_url"), // where it is live, null until set
+    // what the last check of the repository found: when, and what each step that is not done still needs
+    checked: text("checked", { mode: "json" }).$type<{ at: number; hints: Record<string, string> }>(),
+    createdAt: integer("created_at").notNull().default(now),
+    updatedAt: integer("updated_at").notNull().default(now),
+  },
+  (t) => [index("build_project_user").on(t.userId)],
+);
+
+// A step of the programme (content/build/steps.ts) that a project has done. "github" rows are proved by the repository and are
+// removed again if a later check no longer finds the evidence; "self" rows are the person's own note and stay.
+export const buildSteps = sqliteTable(
+  "build_steps",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    projectId: integer("project_id").notNull().references(() => buildProjects.id),
+    stepKey: text("step_key").notNull(),
+    how: text("how", { enum: ["github", "self"] }).notNull(),
+    evidence: text("evidence").notNull().default(""),
+    doneAt: integer("done_at").notNull().default(now),
+  },
+  (t) => [uniqueIndex("build_step_unique").on(t.projectId, t.stepKey)],
+);
