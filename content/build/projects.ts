@@ -43,6 +43,16 @@ export const TEMPLATES: Template[] = [
     launch: "a GitHub release, plus the package registry (PyPI or npm)",
   },
   {
+    slug: "public-service",
+    title: "A digital public service",
+    pitch: "An online service that helps people get something done with a public body, such as applying, reporting a problem or booking.",
+    customer: "people who use a council, agency or charity service",
+    mvp: ["one clear journey from start to done, in plain words", "it works for people using a phone, a screen reader or the keyboard only", "a way to get help from a person", "a published page saying how the service is performing"],
+    stack: "a small, accessible web app with plain HTML forms first, hosted somewhere you can show to reviewers, with the code in the open",
+    agent: "an assistant that explains the service and helps someone fill in a form, never decides an outcome, and hands over to a person",
+    launch: "a public address anyone can open, ideally on a domain you control, with the code on GitHub",
+  },
+  {
     slug: "custom",
     title: "My own idea, or a customer's project",
     pitch: "Your own idea, or a real project for a real customer, taken through the same journey.",

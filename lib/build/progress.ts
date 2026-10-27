@@ -49,14 +49,18 @@ export function doneFor(projectId: number): Done {
   return new Map(db.select().from(buildSteps).where(eq(buildSteps.projectId, projectId)).all().map((r) => [r.stepKey, { how: r.how, evidence: r.evidence, doneAt: r.doneAt }]));
 }
 
+/** A rank marked for one kind of project (a public service) counts only for that kind. */
+export const rankApplies = (r: Rank, templateSlug: string) => !r.for || r.for === templateSlug;
+
 export type Summary = { done: number; total: number; ranks: { rank: Rank; done: number; total: number }[]; next: string | null };
 
-export function summary(done: Done): Summary {
-  const ranks = RANKS.map((rank) => {
+export function summary(done: Done, templateSlug: string): Summary {
+  const own = STEPS.filter((x) => rankApplies(x.rank, templateSlug));
+  const ranks = RANKS.filter((r) => rankApplies(r, templateSlug)).map((rank) => {
     const keys = rank.stages.flatMap((s) => s.steps.map((x) => x.key));
     return { rank, total: keys.length, done: keys.filter((k) => done.has(k)).length };
   });
-  return { done: STEPS.filter((s) => done.has(s.step.key)).length, total: STEPS.length, ranks, next: STEPS.find((s) => !done.has(s.step.key))?.step.key ?? null };
+  return { done: own.filter((x) => done.has(x.step.key)).length, total: own.length, ranks, next: own.find((x) => !done.has(x.step.key))?.step.key ?? null };
 }
 
 /**

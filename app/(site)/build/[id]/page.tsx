@@ -9,7 +9,7 @@ import { CopyButton } from "@/components/CopyButton";
 import { ConfirmForm } from "@/components/ConfirmForm";
 import { RANKS } from "@/content/build/steps";
 import { templateBySlug } from "@/content/build/projects";
-import { STEPS, doneFor, fill, projectFor, summary } from "@/lib/build/progress";
+import { STEPS, doneFor, fill, projectFor, rankApplies, summary } from "@/lib/build/progress";
 import { removeProject } from "../actions";
 import { CheckButton, LinksForm, SelfForm } from "./forms";
 
@@ -25,7 +25,7 @@ export default async function BuildProject({ params }: { params: Promise<{ id: s
   if (!project) notFound();
 
   const done = doneFor(project.id);
-  const sum = summary(done);
+  const sum = summary(done, project.templateSlug);
   const pct = Math.round((sum.done / sum.total) * 100);
   const template = templateBySlug(project.templateSlug);
   const learnSlugs = [...new Set(STEPS.flatMap((s) => (s.step.learn ? [s.step.learn] : [])))];
@@ -47,7 +47,7 @@ export default async function BuildProject({ params }: { params: Promise<{ id: s
           <span className="text-sm text-slate-400">{pct}%</span>
         </div>
         <div className="bar" role="img" aria-label={`${pct} percent of the steps are done`}><i style={{ width: `${pct}%` }} /></div>
-        <ul className="grid gap-2 text-sm sm:grid-cols-5">
+        <ul className="grid gap-2 text-sm grid-cols-2 sm:grid-cols-4">
           {sum.ranks.map((r) => (
             <li key={r.rank.key} className="rounded-xl border border-black/10 p-2.5">
               <a href={`#rank-${r.rank.key}`} className="font-bold underline">{r.rank.title}</a>
@@ -84,7 +84,7 @@ export default async function BuildProject({ params }: { params: Promise<{ id: s
         </div>
       </section>
 
-      {RANKS.map((rank) => {
+      {RANKS.filter((rank) => rankApplies(rank, project.templateSlug)).map((rank) => {
         const r = sum.ranks.find((x) => x.rank.key === rank.key)!;
         return (
           <section key={rank.key} id={`rank-${rank.key}`} className="space-y-4 scroll-mt-20" aria-labelledby={`h-${rank.key}`}>

@@ -1,6 +1,8 @@
 /** Checks the Build & launch programme (content/build): npm run check:build. Needs no database. */
 import { RANKS } from "../content/build/steps";
 import { TEMPLATES } from "../content/build/projects";
+import { PRACTICAL_BY_MAP, practicalFor } from "../content/build/stops";
+import { MAPS } from "../lib/lifecycle/maps";
 import { matchFiles, parseRepo, parseSite, isPrivateIp } from "../lib/build/github";
 
 let fails = 0;
@@ -8,7 +10,7 @@ const check = (name: string, ok: boolean, more = "") => { if (!ok) fails++; cons
 
 const steps = RANKS.flatMap((r) => r.stages.flatMap((s) => s.steps));
 const keys = steps.map((s) => s.key);
-check("there are five ranks", RANKS.length === 5);
+check("there are eight ranks", RANKS.length === 8);
 check("step keys are unique", new Set(keys).size === keys.length, keys.filter((k, i) => keys.indexOf(k) !== i).join(", "));
 check("every rank has stages and every stage has steps", RANKS.every((r) => r.stages.length > 0 && r.stages.every((s) => s.steps.length > 0)));
 check("every step says why, and what to do", steps.every((s) => s.why.length > 20 && s.doIt.length >= 1 && s.title.length > 3), steps.filter((s) => s.why.length <= 20 || !s.doIt.length).map((s) => s.key).join(", "));
@@ -29,6 +31,10 @@ const sample = [
   "docs/07-agent.md", "evals/cases.jsonl", "evals/run.py", "docs/08-agent-safety.md", "tests/a.test.ts", "tests/b.test.ts", "src/c.spec.ts", ".env.example", ".github/dependabot.yml",
   ".github/workflows/codeql.yml", "docs/09-threat-model.md", "SECURITY.md", "docs/10-runbook.md", "docs/11-launch-plan.md", "docs/launch/hn.md", "docs/launch/reddit.md",
   "docs/12-sales.md", "docs/sales/outreach-log.md", "docs/13-metrics.md", "docs/14-case-study.md",
+  "docs/15-data-privacy.md", "docs/16-migration.md", "docs/17-access-review.md", "docs/18-compliance-pack.md", "docs/19-budget.md", "docs/20-risk-register.md", "docs/21-vendors.md",
+  "docs/22-governance.md", "docs/23-sustainability.md", "openapi.yaml", "docs/24-retirement.md",
+  // the packs name one plain file each
+  ...full.filter((c) => /^docs\/\d+-[a-z-]+\.md$/.test(c.glob) && Number(c.glob.match(/\d+/)![0]) >= 25).map((c) => c.glob),
 ].map((path) => ({ path, size: 5000 }));
 const unmatched = full.filter((c) => matchFiles(sample, c.glob, c.minBytes ?? 0).length < (c.min ?? 1));
 check("a repository that follows every step satisfies every file check", unmatched.length === 0, unmatched.map((c) => c.glob).join(" | "));
@@ -42,6 +48,21 @@ check("repository names are read from addresses", parseRepo("https://github.com/
 check("anything odd is refused as a repository", ["", "a", "a/b/c/d", "../x", "a/..", "a b/c", "-a/b", "a/b?x=1&y=2"].every((s) => { const r = parseRepo(s); return r === null || /^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/.test(r); }) && parseRepo("../x") === null && parseRepo("a/..") === null);
 check("live addresses must be https on a real host", !!parseSite("https://my-app.example.com/x") && ["http://a.com", "https://localhost", "https://127.0.0.1", "https://a.com:8080", "https://u:p@a.com", "https://intranet", "https://[::1]/", "javascript:alert(1)", "https://x.local"].every((s) => parseSite(s) === null));
 check("private network addresses are recognised", ["127.0.0.1", "10.1.2.3", "192.168.0.5", "172.20.0.1", "169.254.169.254", "::1", "fd00::1", "::ffff:10.0.0.1", "100.64.0.1"].every(isPrivateIp) && !isPrivateIp("93.184.216.34") && !isPrivateIp("2606:4700::1111"));
+
+// every stop of every map that has a practical programme must be answered by a step
+const used = Object.values(PRACTICAL_BY_MAP).flat();
+check("every step named in stops.ts exists", used.every(([k]) => keys.includes(k)), used.filter(([k]) => !keys.includes(k)).map(([k]) => k).join(", "));
+check("every step is linked from at least one stop", keys.every((k) => used.some(([s]) => s === k)), keys.filter((k) => !used.some(([s]) => s === k)).join(", "));
+for (const [mapId, rows] of Object.entries(PRACTICAL_BY_MAP)) {
+  const map = MAPS[mapId];
+  const stopIds = map.STATIONS.map((s) => s.id);
+  const unknown = rows.flatMap(([, , ids]) => ids).filter((id) => !stopIds.includes(id));
+  check(`${mapId}: every stop named in stops.ts is on the map`, !!map && unknown.length === 0, unknown.join(", "));
+  const uncovered = stopIds.filter((id) => practicalFor(mapId, id).length === 0);
+  check(`${mapId}: every one of its ${stopIds.length} stops has a practical step`, uncovered.length === 0, uncovered.join(" "));
+}
+check("the maps with a practical programme are the three maps", Object.keys(PRACTICAL_BY_MAP).sort().join() === Object.keys(MAPS).sort().join());
+check("public-service steps are only in the rank marked for public services", RANKS.filter((r) => r.for).every((r) => r.key === "public-service"));
 
 console.log(fails ? `\n${fails} check(s) failed` : `\nall good: ${steps.length} steps in ${RANKS.length} ranks, ${TEMPLATES.length} starting points`);
 process.exit(fails ? 1 : 0);

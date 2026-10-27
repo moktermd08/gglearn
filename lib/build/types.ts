@@ -40,7 +40,8 @@ export type Step = {
 };
 
 export type Stage = { key: string; title: string; blurb: string; steps: Step[] };
-export type Rank = { key: string; title: string; goal: string; stages: Stage[] };
+/** `for` marks a rank that only applies to one kind of project (for example a public service); it is shown to everyone but counted only for that kind. */
+export type Rank = { key: string; title: string; goal: string; for?: "public-service"; stages: Stage[] };
 
 export type Template = {
   slug: string;

@@ -18,14 +18,14 @@ export default async function BuildIndex({ searchParams }: { searchParams: Promi
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
-      <PageHero Icon={Hammer} tone="indigo" title="Build & launch a real product" sub={`From zero to launched, in ${STEPS.length} steps: idea, plan, design, brand, vibe coding, an AI agent, tests, security, deployment, marketing and sales. Everything you make lives in your own GitHub repository, and every step is checked against it.`} />
+      <PageHero Icon={Hammer} tone="indigo" title="Build & launch a real product" sub={`From zero to launched, in ${STEPS.length} steps: idea, plan, design, brand, vibe coding, an AI agent, tests, security, deployment, marketing and sales, then data, money, risk and retirement. Everything you make lives in your own GitHub repository, and every step is checked against it.`} />
 
       {mine.length > 0 && (
         <section className="space-y-3" aria-labelledby="mine">
           <h2 id="mine" className="text-lg font-extrabold">Your projects</h2>
           <ul className="grid gap-3">
             {mine.map((p) => {
-              const s = summary(doneFor(p.id));
+              const s = summary(doneFor(p.id), p.templateSlug);
               return (
                 <li key={p.id} className="card flex flex-wrap items-center gap-4 p-4">
                   <div className="min-w-0 flex-1">
@@ -41,11 +41,11 @@ export default async function BuildIndex({ searchParams }: { searchParams: Promi
       )}
 
       <section className="space-y-3" aria-labelledby="journey">
-        <h2 id="journey" className="text-lg font-extrabold">The journey: five ranks</h2>
+        <h2 id="journey" className="text-lg font-extrabold">The journey: {RANKS.length} ranks</h2>
         <ol className="space-y-3">
           {RANKS.map((r, i) => (
             <li key={r.key} className="card p-4">
-              <h3 className="font-extrabold">{i + 1}. {r.title}</h3>
+              <h3 className="font-extrabold">{i + 1}. {r.title}{r.for && <span className="ml-2 rounded-full bg-indigo-500/15 px-2 py-0.5 text-xs font-semibold text-indigo-300">for public services</span>}</h3>
               <p className="text-sm text-slate-400">{r.goal}</p>
               <p className="mt-2 text-sm">{r.stages.map((s) => s.title).join(" · ")}</p>
             </li>
