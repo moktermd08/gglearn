@@ -4,7 +4,9 @@
  * Kept free of imports so the map can load it without the whole curriculum; `npm run check:build` checks every key and stop id,
  * and lists the stops no step covers yet (those are the next practical steps to write).
  */
-export const PRACTICAL: [step: string, label: string, stops: string[]][] = [
+type Row = [step: string, label: string, stops: string[]];
+
+const SOFTWARE: Row[] = [
   ["problem", "Write the problem in one page", ["idea", "goals", "icp", "valueprop"]],
   ["interviews", "Talk to three real people", ["market", "research", "personas", "journeys", "stake", "blueprint"]],
   ["scope", "Fix the smallest first version", ["feas", "bizcase", "roadmap", "method", "dplan"]],
@@ -61,10 +63,72 @@ export const PRACTICAL: [step: string, label: string, stops: string[]][] = [
   ["case-study", "Write the case study", ["board", "stagegate"]],
 ];
 
+
+/** The business map (lib/lifecycle/business.ts). Most stops are answered by the Operator rank in packs.ts. */
+const BUSINESS: Row[] = [
+  ["problem", "Write the problem in one page", ["idea", "icp", "promise", "mission"]],
+  ["interviews", "Talk to three real people", ["market", "talk", "test", "research"]],
+  ["scope", "Fix the smallest first version", ["model"]],
+  ["brand", "Write your brand", ["brand", "offer", "rivals"]],
+  ["launch-plan", "Write the launch plan", ["launchplan", "channels", "content"]],
+  ["launch-posts", "Write your launch posts", ["open", "social"]],
+  ["discoverable", "Make the repository easy to find", ["site", "leads"]],
+  ["sales", "Write your pitch and your price", ["sales", "pricing", "pmodels", "crm"]],
+  ["first-user", "Get your first real user", ["first", "onboard"]],
+  ["feedback", "Turn feedback into issues", ["feedback", "cfeed", "reviews", "improve"]],
+  ["metrics", "Decide what you measure", ["tracking", "dash", "datask"]],
+  ["threat", "Write a threat model", ["secbasics", "cyber"]],
+  ["data-privacy", "Write how you handle personal data", ["dataprot", "custdata"]],
+  ["data-migration", "Plan and rehearse a migration and restore", ["backups"]],
+  ["deploy", "Deploy it", ["domain"]],
+  ["architecture", "Sketch the architecture", ["tools", "systems"]],
+  ["ai-rules", "Write rules for your AI tool", ["aiwork"]],
+  ["runbook", "Write the runbook", ["upkeep"]],
+  ["v1", "Publish a second release", ["growsys"]],
+  ["ci", "Run the tests on every push", ["automate"]],
+  ["risks", "Keep a risk register", ["unknowns", "risks"]],
+  ["governance", "Say who decides, and when you stop", ["decide", "decisions", "approvals", "readiness", "board", "policies"]],
+  ["compliance-pack", "Collect your evidence in one place", ["compliance", "rules", "records"]],
+  ["sustainability", "Think about its footprint", ["esg"]],
+  ["case-study", "Write the case study", ["lessons", "finalrep"]],
+  ["vendors", "Choose and review your suppliers", ["suppliers", "supreview"]],
+  ["retirement", "Plan how it ends", ["wind", "close", "retire", "deleteacc", "archive", "legalclose", "dissolve", "finalacc", "creditors"]],
+  ["budget", "Write the budget and running costs", ["startcost", "budget", "growbudget"]],
+  ["legal-setup", "Set up the business legally", ["rules", "structure", "register", "tax", "trademark", "licence", "insure", "protect", "ip", "ipdeep"]],
+  ["contracts-terms", "Write your terms and contracts", ["terms", "contracts", "contractrev", "ethics"]],
+  ["quality-safety", "Set quality, safety and service standards", ["std", "quality", "qcheck", "dry", "prodsafe", "safety", "access", "qms"]],
+  ["money-setup", "Set up how money moves", ["startcost", "funding", "bank", "payonline", "books", "invoice", "taxrun", "records"]],
+  ["cash-numbers", "Plan and watch your cash", ["forecast", "cashplan", "cashwatch", "numbers", "profit", "adnum", "growbudget", "insolv", "value", "invest"]],
+  ["team-plan", "Plan the team and hiring", ["skills", "roles", "hire", "recruit", "paysetup", "payroll", "employlaw", "growteam", "leaders"]],
+  ["team-life", "Look after the team", ["induct", "train", "rota", "perf", "payreview", "wellbeing", "culture", "tellteam", "delegate", "hrproc", "stress"]],
+  ["customer-care", "Look after your customers", ["support", "complaints", "keep", "referrals", "keyacc", "research", "servskill", "notice"]],
+  ["operations", "Run the day-to-day", ["premises", "suppliers", "stock", "process", "orders", "delivery", "daily", "stockctl", "capacity", "scaleops", "projects", "trade"]],
+  ["offer-range", "Shape and grow what you sell", ["design", "pilot", "launchoffer", "newoffers", "range", "ads", "partners", "newmkts", "sellskills", "negotiate", "tender", "salesteam", "franch"]],
+  ["leadership-rhythm", "Set your rhythm and your plan", ["mission", "model", "plan", "goals", "swot", "growopts", "exitopts", "milestones", "rhythm", "weekly", "priorities", "comms", "advisers", "policies", "annual", "review", "perfrep", "succession", "family", "trustees", "govup", "strategy", "board", "lessons", "finalrep"]],
+];
+
+/** The public-sector map (lib/lifecycle/public.ts). Most stops are answered by the Public service rank in packs.ts. */
+const PUBLIC: Row[] = [
+  ["policy-case", "Set out the need, powers and outcomes", ["need", "evidence", "powers", "outcomes", "options", "scope", "impact", "pilot", "outcomemon", "evaluate", "decide", "endmandate", "futureopts"]],
+  ["users-inclusion", "Design for everyone who must use it", ["users", "research", "inclusion", "codesign", "journey", "startuse", "support", "feedback", "complaints", "satisfaction", "excluded", "tellusers", "usertest"]],
+  ["service-standard", "Deliver through discovery, alpha, beta and live", ["sowner", "discovery", "alpha", "ways", "design", "beta", "opsready", "golive", "run", "improve", "change", "perf", "continuity", "pir", "lessons", "transfer", "handover"]],
+  ["commissioning", "Commission and buy what you need", ["needs", "marketeng", "route", "spec", "tender", "social", "award", "contract", "mobilise", "supplier", "contractrev", "extend", "contractexit"]],
+  ["public-digital", "Handle digital, data and security", ["datasrc", "datashare", "tech", "standards", "secure", "hosting", "build", "test", "a11ytest", "monitor", "cyber", "dataqual", "opendata", "archive", "switchoff"]],
+  ["public-money", "Show the money and the value", ["funding", "cost", "budgetline", "benefits", "case", "afford", "controls", "finprocess", "forecast", "payments", "monthly", "vfm", "realise", "accounts", "closeacc"]],
+  ["public-workforce", "Plan the workforce", ["roles", "skills", "recruit", "clearance", "induct", "train", "consultstaff", "rota", "perfsup", "wellbeing", "succession", "redeploy"]],
+  ["public-law", "Meet your legal duties", ["legalpowers", "equality", "eia", "dpia", "subsidy", "consultation", "humanrights", "foi", "accessreg", "privacy", "complaintspol", "inforeq", "legalwatch", "records", "legalclose"]],
+  ["assurance", "Plan assurance and scrutiny", ["riskreg", "earlyreview", "assureplan", "auditplan", "indep", "delassure", "ready", "scrutiny", "extaudit", "assurebenefits", "closeassure"]],
+  ["public-governance", "Set decision rights and governance", ["sponsor", "pboard", "delegation", "approval", "rhythm", "appetite", "escalate", "report", "briefing", "strategic", "closereport"]],
+  ["transparency", "Engage and publish", ["stake", "engageplan", "publishplans", "pubcomms", "announce", "pubperf", "annualrep", "ongoing", "tellpublic"]],
+];
+
+/** Per map: [step key, label for the stop's "Do it for real" link, stop ids]. Stops are only looked up in their own map, since ids repeat between maps. */
+export const PRACTICAL_BY_MAP: Record<string, Row[]> = { software: SOFTWARE, business: BUSINESS, public: PUBLIC };
+
 export type Practical = { step: string; label: string };
 
 const BY_STOP = new Map<string, Practical[]>();
-for (const [step, label, stops] of PRACTICAL) for (const id of stops) BY_STOP.set(id, [...(BY_STOP.get(id) ?? []), { step, label }]);
+for (const [map, rows] of Object.entries(PRACTICAL_BY_MAP)) for (const [step, label, stops] of rows) for (const id of stops) BY_STOP.set(`${map}:${id}`, [...(BY_STOP.get(`${map}:${id}`) ?? []), { step, label }]);
 
-/** The steps that make you do this stop of the software map for real; empty when none does yet. */
-export const practicalFor = (stopId: string): Practical[] => BY_STOP.get(stopId) ?? [];
+/** The steps that make you do this stop for real; empty when none does yet. */
+export const practicalFor = (mapId: string, stopId: string): Practical[] => BY_STOP.get(`${mapId}:${stopId}`) ?? [];

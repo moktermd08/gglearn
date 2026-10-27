@@ -6,7 +6,9 @@ import type { Rank } from "@/lib/build/types";
  * in a prompt are replaced with the person's own project. Files are numbered docs/01-... so a reader can follow the story in order.
  * Run `npm run check:build` after editing.
  */
-export const RANKS: Rank[] = [
+import { BUSINESS_RANK, PUBLIC_RANK } from "./packs";
+
+const CORE: Rank[] = [
   {
     key: "spark",
     title: "Spark",
@@ -626,3 +628,5 @@ export const RANKS: Rank[] = [
     ],
   },
 ];
+
+export const RANKS: Rank[] = [...CORE, BUSINESS_RANK, PUBLIC_RANK];

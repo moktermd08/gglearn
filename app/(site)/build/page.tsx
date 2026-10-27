@@ -25,7 +25,7 @@ export default async function BuildIndex({ searchParams }: { searchParams: Promi
           <h2 id="mine" className="text-lg font-extrabold">Your projects</h2>
           <ul className="grid gap-3">
             {mine.map((p) => {
-              const s = summary(doneFor(p.id));
+              const s = summary(doneFor(p.id), p.templateSlug);
               return (
                 <li key={p.id} className="card flex flex-wrap items-center gap-4 p-4">
                   <div className="min-w-0 flex-1">
@@ -45,7 +45,7 @@ export default async function BuildIndex({ searchParams }: { searchParams: Promi
         <ol className="space-y-3">
           {RANKS.map((r, i) => (
             <li key={r.key} className="card p-4">
-              <h3 className="font-extrabold">{i + 1}. {r.title}</h3>
+              <h3 className="font-extrabold">{i + 1}. {r.title}{r.for && <span className="ml-2 rounded-full bg-indigo-500/15 px-2 py-0.5 text-xs font-semibold text-indigo-300">for public services</span>}</h3>
               <p className="text-sm text-slate-400">{r.goal}</p>
               <p className="mt-2 text-sm">{r.stages.map((s) => s.title).join(" · ")}</p>
             </li>

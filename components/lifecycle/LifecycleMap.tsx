@@ -931,11 +931,11 @@ function StationCard({ st, info, lock, advice, onGoTrack, onGate, races, lens, r
         {M.localFor(st.id) && <p className="text-[12.5px] text-slate-400">{M.localFor(st.id)}</p>}
         {M.draftNote && <p className="text-[12px] italic text-slate-400">{M.draftNote}</p>}
 
-        {M.id === "software" && practicalFor(st.id).length > 0 && (
+        {practicalFor(M.id, st.id).length > 0 && (
           <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-3.5 text-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[.14em] text-indigo-300">Do it for real</p>
             <p className="mt-0.5">Build a real project and do this stop on it. Your GitHub repository proves it.</p>
-            <ul className="mt-1.5 space-y-1">{practicalFor(st.id).map((p) => <li key={p.step}><a href={`/build/step/${p.step}`} className="font-semibold text-indigo-300 underline">{p.label} →</a></li>)}</ul>
+            <ul className="mt-1.5 space-y-1">{practicalFor(M.id, st.id).map((p) => <li key={p.step}><a href={`/build/step/${p.step}`} className="font-semibold text-indigo-300 underline">{p.label} →</a></li>)}</ul>
           </div>
         )}
 
