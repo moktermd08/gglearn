@@ -71,6 +71,7 @@ const TRACK_PILLAR: Record<string, string> = {
   "docusaurus-titan": "documentation",
   "agent-mcp-titan": "integration",
   "eval-safety-titan": "ai-governance",
+  "ai-benchmarks-titan": "pattern", "ai-model-selection-titan": "pattern", "ai-speech-audio-titan": "pattern", "ai-video-generation-titan": "pattern", "ai-agent-evaluation-titan": "pattern",
   "agent-automation-titan": "pattern", "agent-design-titan": "pattern", "agent-langchain-titan": "pattern", "api-claude-titan": "pattern", "api-copilot-titan": "pattern", "api-gemini-titan": "pattern", "api-openai-platform-titan": "pattern", "eval-llm-titan": "pattern", "image-diffusion-titan": "pattern", "image-midjourney-titan": "pattern", "llm-aisearch-titan": "pattern", "llm-fundamentals-titan": "pattern", "llm-local-titan": "pattern", "llm-prompting-titan": "pattern", "ml-huggingface-titan": "pattern", "ml-pytorch-titan": "pattern", "ml-sklearn-titan": "pattern", "ml-tensorflow-titan": "pattern", "rag-llamaindex-titan": "pattern", "rag-pipelines-titan": "pattern", "tune-finetuning-titan": "pattern", "claude-chatgpt-everyday-titan": "pattern", "moksy-patterns-automation": "pattern",
   "product-management-core": "strategy", "executive-communication": "strategy", "tech-strategy-roadmap": "strategy",
   "brand-positioning-voice": "content",
