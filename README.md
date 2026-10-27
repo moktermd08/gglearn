@@ -14,6 +14,11 @@ npm run seed                      # admin user (password printed once), sample b
 npm run dev
 ```
 
+## Build & launch (`/build`)
+A hands-on programme, not a quiz: a learner takes a real product (a starting point such as a waitlist site, a support agent, a booking page or a small tool, or their own idea or a customer's) from nothing to a public launch in 5 ranks and 43 steps (idea, plan, design, brand, vibe coding, an AI agent, tests, security, deployment, marketing, sales, operating). Each step ends in something in the learner's own **public GitHub repository**; "Check my GitHub" reads the repository (`lib/build/github.ts`, public API, no sign-in with GitHub needed) and ticks the steps it proves, and un-ticks them if the evidence is deleted. Only a few steps that happen away from GitHub (a conversation, a first customer) are ticked by a written note.
+- The programme is data: `content/build/steps.ts` (ranks, stages, steps, each with a prompt to paste into an AI tool and the check that proves it) and `content/build/projects.ts` (starting points). A check is one of the kinds in `lib/build/types.ts`. `npm run check:build` validates the content and the matching rules, with no database.
+- Optional `GITHUB_TOKEN` (no scopes) raises GitHub's rate limit from 60 an hour for the whole server to 5,000; see `.env.example`. Only public repositories can be checked, and a repository's owner is not proved (there is no GitHub sign-in yet), so nothing here awards a certificate.
+
 ## The maps (`lib/lifecycle/`)
 `/map` is a transit map of how something is run, from first idea to closing it. A map is a definition (`MapDef`: lanes, phases, stops, handoff gates, areas, company stages, optional sizes) that `engine.ts` turns into a layout and routes. Three are listed in `maps.ts`: **Any business** (the default, `/map`), **Public sector** (`/map/public`, a UK public service or programme) and **Software** (`/map/software`). Add one by writing a definition and listing it.
 - **Stages** pick the stops that matter for where a company or service is. **Sizes** (Startup, Small, Medium, Large, Enterprise, on the business and public maps) dim the stops that can wait until an organisation is bigger, and change who usually owns a stop, how formal a handoff is and what usually goes wrong. A stop in no size list matters from the smallest size.
