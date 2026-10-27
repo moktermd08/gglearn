@@ -68,8 +68,14 @@ run seed:curriculum
 run seed:ai
 run seed:cards
 shopt -s nullglob
-run import:knowledge -- content/lifecycle/*.json
+# content/lifecycle also holds coverage-*.json, which are reports and not knowledge files
+lifecycle=(); for f in content/lifecycle/*.json; do case "$(basename "$f")" in coverage-*) ;; *) lifecycle+=("$f");; esac; done
+run import:knowledge -- "${lifecycle[@]}"
 run import:knowledge -- content/public-sector/*.json
+# UK Civil Service: the starter files are active; everything under review/ loads unpublished until an admin activates it at /admin/bank
+run import:knowledge -- content/civil-service/*.json
+review=(content/civil-service/review/*/*.json)
+if [ ${#review[@]} -gt 0 ]; then run import:knowledge -- "${review[@]}"; fi
 run import:knowledge -- content/products/*.json
 run import:knowledge -- content/tools/*.json
 run seed:structure

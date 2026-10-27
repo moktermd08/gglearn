@@ -13,10 +13,10 @@ export type Recap = {
 };
 export type StreakNote = { name: string; academy: string; base: string; unsubscribe: string; streak: number; topic?: string };
 
-const BTN = "display:inline-block;background:#4f46e5;color:#ffffff;text-decoration:none;padding:11px 20px;border-radius:10px;font-weight:600";
-const wrap = (inner: string, why: string, unsub: string) => `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:520px;margin:0 auto;color:#1f2937;line-height:1.5">${inner}
+export const BTN = "display:inline-block;background:#4f46e5;color:#ffffff;text-decoration:none;padding:11px 20px;border-radius:10px;font-weight:600";
+export const wrap = (inner: string, why: string, unsub: string) => `<div style="font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:520px;margin:0 auto;color:#1f2937;line-height:1.5">${inner}
 <p style="font-size:12px;color:#6b7280;border-top:1px solid #e5e7eb;padding-top:12px;margin-top:24px">${escapeHtml(why)} <a href="${escapeHtml(unsub)}" style="color:#6b7280">Unsubscribe in one click</a>.</p></div>`;
-const unsubHeaders = (unsub: string) => ({ "List-Unsubscribe": `<${unsub}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" });
+export const unsubHeaders = (unsub: string) => ({ "List-Unsubscribe": `<${unsub}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" });
 const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
 const streakOf = (n: number) => `${n}-day streak`;
 
