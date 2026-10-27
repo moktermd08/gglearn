@@ -1,7 +1,7 @@
 import { Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
 import { eq, inArray, sql } from "drizzle-orm";
-import { checklistItems, db, enrollments, handovers, joinLinks, tracks, users } from "@/lib/db";
+import { checklistItems, competitionMembers, competitions, db, enrollments, handovers, joinLinks, tracks, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { addHandover, offboard, setAccess, toggleChecklistItem, updateScopes } from "@/app/actions";
 import { ActionForm } from "@/components/admin/ActionForm";
@@ -29,7 +29,10 @@ export default async function People({ searchParams }: { searchParams: Promise<{
   const me = await requireManager();
   const { q = "", page: pageParam = "1" } = await searchParams;
   const reach = (await adminScopeOf(me)).reach, mine = usersInReach(reach);
-  const everyone = db.select().from(users).orderBy(users.name).all().filter((u) => !mine || mine.has(u.id));
+  // guests belong to no company, so they are in nobody's reach; show the ones who joined a contest run by someone this manager reaches
+  const guestIds = new Set<number>();
+  if (mine) for (const m of db.select({ u: competitionMembers.userId, by: competitions.createdBy }).from(competitionMembers).innerJoin(competitions, eq(competitions.id, competitionMembers.competitionId)).where(eq(competitionMembers.kind, "human")).all()) if (m.u != null && mine.has(m.by)) guestIds.add(m.u);
+  const everyone = db.select().from(users).orderBy(users.name).all().filter((u) => !mine || mine.has(u.id) || (u.guest === "yes" && guestIds.has(u.id)));
   // only the people on this page get their checklist, notes, enrolments and onboarding worked out, so a company of thousands is read in pages
   const needle = q.trim().toLowerCase();
   const found = needle ? everyone.filter((u) => `${u.name} ${u.email} ${u.jobRole}`.toLowerCase().includes(needle)) : everyone;
