@@ -2,9 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, BookOpen, CalendarClock, Check, CheckCircle2, Compass, Info, RotateCcw, TriangleAlert } from "lucide-react";
 import { requireUser } from "@/lib/auth";
+import { targetFor } from "@/lib/careerTarget";
 import { PageHero } from "@/components/charts";
 import { Ring } from "@/components/Ring";
-import { UNPAID, ROUTE_BATCH, areaRows, assessmentFor, batchQuestions, currentArea, resolveAreas, resultsFor, targetBySlug } from "@/lib/route";
+import { UNPAID, ROUTE_BATCH, areaRows, assessmentFor, batchQuestions, currentArea, resolveAreas, resultsFor } from "@/lib/route";
 import { STATUS_LABEL, areaStatus, byGap, levelsToClimb, notes, readiness, type AreaStatus } from "@/lib/routeScore";
 import { planFor } from "@/lib/routePlan";
 import { answerRoute, skipRoute } from "../actions";
@@ -19,7 +20,7 @@ const BADGE: Record<AreaStatus, string> = {
 export default async function RouteTarget({ params, searchParams }: { params: Promise<{ target: string }>; searchParams: Promise<{ retake?: string }> }) {
   const me = await requireUser();
   const slug = (await params).target;
-  const target = targetBySlug(slug);
+  const target = targetFor(slug, me);
   if (!target) notFound();
   const a = assessmentFor(me.id, slug);
   const retake = !!(await searchParams).retake;
@@ -32,7 +33,7 @@ export default async function RouteTarget({ params, searchParams }: { params: Pr
         <section className="card space-y-2 p-5 text-sm text-slate-300" aria-label="What happens next">
           <p>First a few questions about you, then a short check in each of {areas.filter((x) => x.available).length || target.areas.length} areas. It takes about 20 to 30 minutes and you can stop and carry on later. Skip any area you know nothing about: that is fine and gives you a clear starting point.</p>
         </section>
-        <RouteForm slug={slug} unpaid={UNPAID} jobTitle={target.short} defaults={a ? { horizonMonths: a.horizonMonths, hoursPerWeek: a.hoursPerWeek, answers: a.answers } : null} />
+        <RouteForm slug={slug} unpaid={UNPAID} jobTitle={target.short} career={slug.startsWith("career~")} defaults={a ? { horizonMonths: a.horizonMonths, hoursPerWeek: a.hoursPerWeek, answers: a.answers } : null} />
       </div>
     );
   }

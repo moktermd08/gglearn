@@ -11,7 +11,7 @@ const PAID = [["none", "None"], ["some", "A little, or a long time ago"], ["lots
 const RIGHTS = [["yes", "Yes"], ["unsure", "I am not sure"], ["no", "No"]] as const;
 const SCALE = ["1 Not confident", "2", "3", "4", "5 Very confident"];
 
-export default function RouteForm({ slug, unpaid, defaults, jobTitle }: { slug: string; unpaid: { key: string; label: string }[]; defaults: { horizonMonths: number; hoursPerWeek: number; answers: RouteAnswers } | null; jobTitle: string }) {
+export default function RouteForm({ slug, unpaid, defaults, jobTitle, career = false }: { career?: boolean; slug: string; unpaid: { key: string; label: string }[]; defaults: { horizonMonths: number; hoursPerWeek: number; answers: RouteAnswers } | null; jobTitle: string }) {
   const [state, run, pending] = useActionState<RouteState, FormData>(saveRoute.bind(null, slug), null);
   const d = defaults?.answers;
   const radios = (name: string, options: readonly (readonly [string, string])[], current?: string) => (
@@ -49,6 +49,8 @@ export default function RouteForm({ slug, unpaid, defaults, jobTitle }: { slug: 
         </div>
       </fieldset>
 
+      {!career && (
+        <>
       <fieldset className="card space-y-3 p-5"><legend className="text-lg font-extrabold">Your education</legend>{radios("education", EDUCATION, d?.education)}</fieldset>
 
       <fieldset className="card space-y-3 p-5"><legend className="text-lg font-extrabold">Paid work you have done</legend>
@@ -76,6 +78,8 @@ export default function RouteForm({ slug, unpaid, defaults, jobTitle }: { slug: 
         <p className="text-sm text-slate-400">Civil Service jobs need the right to work in the UK. We only use this to point you to the right advice.</p>
         {radios("workRights", RIGHTS, d?.workRights)}
       </fieldset>
+        </>
+      )}
 
       {state?.error && <p role="alert" className="slide-in flex items-center gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} />{state.error}</p>}
       <button disabled={pending} className="btn !py-3 text-base disabled:opacity-50">{pending ? "One moment…" : <>Check where I stand for {jobTitle}<ArrowRight size={16} /></>}</button>
