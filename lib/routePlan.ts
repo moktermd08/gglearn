@@ -1,8 +1,8 @@
-import { and, eq } from "drizzle-orm";
-import { db, routePlans, routeTasks, users } from "@/lib/db";
+import { and, asc, eq } from "drizzle-orm";
+import { db, routeAssessments, routePlans, routeTasks, users } from "@/lib/db";
 import { levelsPassed } from "@/lib/progress";
 import { type Plan, type PlanAction, type PlanArea, type PlanItem, DEFAULT_HOURS_PER_LEVEL, WEEK, addMonths, buildPlan, overdue, progressOf, weeksSince } from "@/lib/roadmap";
-import { type ResolvedArea, type Target, TARGETS, areaRows, assessmentFor, resolveAreas } from "@/lib/route";
+import { type ResolvedArea, type Target, TARGETS, areaRows, assessmentFor, resolveAreas, targetBySlug } from "@/lib/route";
 
 type Person = typeof users.$inferSelect;
 type Assessment = NonNullable<ReturnType<typeof assessmentFor>>;
@@ -103,11 +103,17 @@ export function routeSummary(person: Person, target: Target, at = now()): RouteS
   if (a.status !== "complete") return { target, state: "checking" };
   const view = viewPlan(person, target, a, at);
   if (!view) return { target, state: "checked" };
-  return { target, state: "planned", view, progress: progressOf(view.items, (i) => (i as ItemState).done, view.weeksNow, view.plan.totalWeeks) };
+  return { target, state: "planned", view, progress: progressOf(view.items, (i) => (i as ItemState).done, view.weeksNow, (view.row.endsOn - view.row.startsOn) / WEEK) };
 }
 
 /** The first target job this person has started, for places that show one line about it (the dashboard, a mentor's view). */
 export function routeSummaryFor(person: Person, at = now()): RouteSummary | null {
   for (const t of TARGETS) { const s = routeSummary(person, t, at); if (s) return s; }
+  // a route to a rung of a career ladder is not in the list: find it from what this person started
+  for (const row of db.select({ slug: routeAssessments.targetSlug }).from(routeAssessments).where(eq(routeAssessments.userId, person.id)).orderBy(asc(routeAssessments.id)).all()) {
+    const t = TARGETS.some((x) => x.slug === row.slug) ? null : targetBySlug(row.slug);
+    const s = t && routeSummary(person, t, at);
+    if (s) return s;
+  }
   return null;
 }

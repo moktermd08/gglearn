@@ -37,7 +37,7 @@ import { MAX_BULK, parseBulk } from "@/lib/bulkInvite";
 import { MIN_PASSWORD, RESET_TTL_SEC, finishReset, startReset } from "@/lib/passwordReset";
 import { LOGIN_LINK_TTL_SEC, spendLoginLink, startLoginLink } from "@/lib/loginLink";
 import { lookFor } from "@/lib/brand";
-import { noteMembershipChange } from "@/lib/membership";
+import { changePlaces } from "@/lib/placeChange";
 import { entryCompany, entryTopics } from "@/lib/entry";
 import { DEFAULT_LINK_DAYS, DEFAULT_LINK_USES, MAX_LINK_DAYS, MAX_LINK_USES, claimPlace, findOpenLink, linkPath } from "@/lib/joinLinks";
 import { type Level, isLevel, levelForInvite, refuseAccess, setAccessLevel } from "@/lib/accessLevel";
@@ -50,7 +50,7 @@ import { isGlobal, reachOf, scopeInReach, trackInReach, userInReach } from "@/li
 import { offboardingLines, onboardingLines } from "@/lib/access";
 import { canSignOff, gateFor, isPhase, onboardingFor } from "@/lib/onboarding";
 import { journeyFor, orderLockFor } from "@/lib/journeyLock";
-import { type Audience, catalog, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopeLabels, scopeOptions, scopesOf, setScopes, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
+import { type Audience, catalog, formatScopes, openTo, parseScopes, requirementsFor, resetCatalogCache, scopeLabels, scopeOptions, syncEveryone, syncRequired, validScopes } from "@/lib/paths";
 
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
 
@@ -697,19 +697,7 @@ export async function joinAsCustomer(companySlug: string, _: string | null, fd: 
 /** Moves someone to a different set of companies, brands and projects, then enrols them in whatever that now requires. */
 export async function updateScopes(fd: FormData) {
   const me = await requireManager();
-  const u = db.select().from(users).where(eq(users.id, Number(fd.get("userId")))).get();
-  if (!u || u.status !== "active") return;
-  const reach = reachOf(me.id);
-  if (!userInReach(reach, u.id)) return;
-  const next = validScopes(db, formScopes(fd));
-  // someone with no scopes runs everything, so only the platform owner may leave a manager without any
-  if (!isGlobal(reach) && (next.some((s) => !scopeInReach(reach, s)) || (!next.length && u.role !== "learner"))) return;
-  const before = scopesOf(u.id);
-  db.transaction((tx) => {
-    setScopes(tx, u.id, next);
-    syncRequired(u, tx);
-  });
-  noteMembershipChange(u.id, before, next); // tells them if the set of companies they belong to changed, and what that means for them
+  if (changePlaces(me.id, Number(fd.get("userId")), validScopes(db, formScopes(fd)))) return; // refused: nothing changes
   revalidatePath("/admin/people");
   revalidatePath("/admin/compliance");
 }

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, BookOpen, CalendarClock, Check, CheckCircle2, Compass, Info, RotateCcw, TriangleAlert } from "lucide-react";
-import { requireUser } from "@/lib/auth";
-import { targetFor } from "@/lib/careerTarget";
+import { currentUser } from "@/lib/auth";
+import { isAnonymous } from "@/lib/anonymous";
 import { PageHero } from "@/components/charts";
 import { Ring } from "@/components/Ring";
 import { UNPAID, ROUTE_BATCH, areaRows, assessmentFor, batchQuestions, currentArea, resolveAreas, resultsFor } from "@/lib/route";
@@ -10,6 +10,7 @@ import { STATUS_LABEL, areaStatus, byGap, levelsToClimb, notes, readiness, type 
 import { planFor } from "@/lib/routePlan";
 import { answerRoute, skipRoute } from "../actions";
 import RouteForm from "./form";
+import SaveProgress from "../save-progress";
 
 export const metadata = { title: "My route — gglearn" };
 
@@ -18,13 +19,14 @@ const BADGE: Record<AreaStatus, string> = {
 };
 
 export default async function RouteTarget({ params, searchParams }: { params: Promise<{ target: string }>; searchParams: Promise<{ retake?: string }> }) {
-  const me = await requireUser();
+  const me = await currentUser(); // nobody has to sign in to start: the first save makes a private guest account
   const slug = (await params).target;
   const target = targetFor(slug, me);
   if (!target) notFound();
-  const a = assessmentFor(me.id, slug);
+  const a = me ? assessmentFor(me.id, slug) : null;
   const retake = !!(await searchParams).retake;
-  const areas = resolveAreas(target, me);
+  const areas = resolveAreas(target, me ?? { audience: "staff" });
+  const back = `/route/${slug}`;
 
   if (!a || retake) {
     return (
@@ -33,11 +35,13 @@ export default async function RouteTarget({ params, searchParams }: { params: Pr
         <section className="card space-y-2 p-5 text-sm text-slate-300" aria-label="What happens next">
           <p>First a few questions about you, then a short check in each of {areas.filter((x) => x.available).length || target.areas.length} areas. It takes about 20 to 30 minutes and you can stop and carry on later. Skip any area you know nothing about: that is fine and gives you a clear starting point.</p>
         </section>
-        <RouteForm slug={slug} unpaid={UNPAID} jobTitle={target.short} career={slug.startsWith("career~")} defaults={a ? { horizonMonths: a.horizonMonths, hoursPerWeek: a.hoursPerWeek, answers: a.answers } : null} />
+        <RouteForm slug={slug} unpaid={UNPAID} jobTitle={target.short} promotion={target.kind === "promotion"} rightToWork={target.rightToWork ? { ask: target.rightToWork.ask, why: target.rightToWork.why } : null} defaults={a ? { horizonMonths: a.horizonMonths, hoursPerWeek: a.hoursPerWeek, answers: a.answers } : null} />
+        {!me && <p className="text-center text-sm text-slate-400">No account needed to start. Already have one? <Link href={`/login?next=${encodeURIComponent(back)}`} className="font-semibold underline">Sign in</Link></p>}
       </div>
     );
   }
 
+  const anon = !!me && isAnonymous(me);
   const rows = areaRows(a.id);
   const checkable = areas.filter((x) => rows.some((r) => r.areaKey === x.key));
 
@@ -48,6 +52,7 @@ export default async function RouteTarget({ params, searchParams }: { params: Pr
     return (
       <div className="mx-auto max-w-3xl space-y-6">
         <PageHero Icon={Compass} tone="emerald" title="Checking where you stand" sub={`${target.title}: ${doneCount} of ${checkable.length} areas done. You can stop at any point and carry on later.`} />
+        {anon && <SaveProgress next={back} />}
         <ol className="card flex flex-wrap gap-2 p-4 text-sm" aria-label="Areas">
           {checkable.map((x) => {
             const placed = rows.find((r) => r.areaKey === x.key)?.placed;
@@ -102,10 +107,11 @@ export default async function RouteTarget({ params, searchParams }: { params: Pr
   const ordered = byGap(scored.map((r) => ({ ...r })));
   const toClimb = levelsToClimb(scored.map((r) => ({ key: r.key, placed: r.placed, target: r.target })));
   const missing = results.filter((r) => r.placed === null);
-  const observations = notes(a.answers);
+  const observations = notes(a.answers, target.rightToWork);
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHero Icon={Compass} tone="emerald" title="Where you stand today" sub={target.title} />
+      {anon && <SaveProgress next={back} />}
       <section className="card flex flex-wrap items-center gap-5 p-5" aria-label="Overall">
         <Ring pct={pct / 100} size={120} label={`${pct}%`} sub="of the way" color="#10b981" />
         <div className="min-w-0 flex-[1_1_16rem] space-y-1">

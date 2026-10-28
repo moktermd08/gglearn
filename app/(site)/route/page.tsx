@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen, CalendarClock, CheckCircle2, Compass, Flag, TriangleAlert } from "lucide-react";
-import { requireUser } from "@/lib/auth";
+import { currentUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { TARGETS, assessmentFor, resolveAreas, resultsFor } from "@/lib/route";
 import { dateAt } from "@/lib/roadmap";
 import { routeSummary } from "@/lib/routePlan";
+import { startedRoleTargets } from "@/lib/routeRole";
 import { readiness } from "@/lib/routeScore";
 
 export const metadata = { title: "My route — gglearn" };
@@ -18,14 +19,14 @@ const STATUS = {
 } as const;
 
 export default async function RouteIndex() {
-  const me = await requireUser();
+  const me = await currentUser();
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHero Icon={Compass} tone="emerald" title="My route into a new job" sub="Pick the job you are aiming for. We check where you stand, build a plan with dates, and keep track of how you are getting on." />
       <ul className="grid gap-4">
-        {TARGETS.map((t) => {
-          const s = routeSummary(me, t);
-          const a = assessmentFor(me.id, t.slug);
+        {[...(me ? startedRoleTargets(me.id) : []), ...TARGETS].map((t) => {
+          const s = me ? routeSummary(me, t) : null;
+          const a = me ? assessmentFor(me.id, t.slug) : null;
           const head = (<><h2 className="text-lg font-extrabold">{t.title}</h2><p className="text-sm text-slate-400">{t.summary}</p></>);
 
           if (!s) return (
@@ -41,7 +42,7 @@ export default async function RouteIndex() {
             </li>
           );
           if (s.state === "checked") {
-            const pct = Math.round(readiness(resultsFor(a!, resolveAreas(t, me)).filter((r) => r.placed !== null).map((r) => ({ key: r.key, placed: r.placed!, target: r.target }))) * 100);
+            const pct = Math.round(readiness(resultsFor(a!, resolveAreas(t, me!)).filter((r) => r.placed !== null).map((r) => ({ key: r.key, placed: r.placed!, target: r.target }))) * 100);
             return (
               <li key={t.slug} className="card space-y-3 p-5">{head}
                 <p className="text-sm font-semibold">Checked: {pct}% of the way there. Next, turn it into a plan with dates.</p>
@@ -101,6 +102,11 @@ export default async function RouteIndex() {
           );
         })}
       </ul>
+      <section className="card space-y-3 p-5">
+        <h2 className="text-lg font-extrabold">Aiming for a different role or level?</h2>
+        <p className="text-sm text-slate-400">Pick any role gglearn has a career ladder for, in any sector, and the level you want to reach. We check where you stand and plan the learning, step by step, with dates.</p>
+        <Link href="/route/role" className="btn w-fit">Choose a role<ArrowRight size={16} /></Link>
+      </section>
     </div>
   );
 }

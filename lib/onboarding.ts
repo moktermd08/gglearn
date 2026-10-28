@@ -1,6 +1,6 @@
 import { and, desc, eq, gt, isNull } from "drizzle-orm";
 import { db, phaseSignoffs, userScopes, users } from "@/lib/db";
-import { type CatalogTrack, type Progress, type Requirement, type Scope, catalog, loadProgress, requirementsFor, scopesOf } from "@/lib/paths";
+import { type CatalogTrack, type Progress, type Requirement, type Scope, catalog, loadProgress, requirementsFor, scopesOf, worksForCompany } from "@/lib/paths";
 import { type Reach, reachOf, userInReach, usersInReach } from "@/lib/tenancy";
 
 /**
@@ -80,7 +80,12 @@ export function onboardingFor(person: Person, scopes: Scope[] = scopesOf(person.
 export function gateFor(userId: number, trackId: number): { phase: string; waitingOn: string } | null {
   const u = db.select().from(users).where(eq(users.id, userId)).get();
   if (!u) return null;
-  return onboardingFor(u).locked.get(trackId) ?? null;
+  // people are free by default: the gate is a company's onboarding process, so it holds only someone who works for a company.
+  // A guest or anyone with no company is never held, and managers and admins are not either (nobody can sign off their own phase).
+  if (u.guest === "yes" || u.role !== "learner") return null;
+  const scopes = scopesOf(u.id);
+  if (!worksForCompany(scopes)) return null;
+  return onboardingFor(u, scopes).locked.get(trackId) ?? null;
 }
 
 /**

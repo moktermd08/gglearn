@@ -1,5 +1,5 @@
 /**
- * Sends the streak reminders and the Monday recap: npm run send:nudges
+ * Sends the streak reminders, the Monday recap and the Wednesday route reminders: npm run send:nudges
  *   --dry        list what would be sent, send and record nothing
  *   --at=<ISO>   pretend it is this time (UTC), for trying it out
  * Run it every hour (pm2 does, see ecosystem.config.cjs). It only does anything inside the send windows (lib/nudges.ts), only for people who opted in,
@@ -7,6 +7,7 @@
  */
 import { mailConfigured, sendMail } from "../lib/mail";
 import { runNudges } from "../lib/nudges";
+import { runRouteReminders } from "../lib/routeReminders";
 
 const dry = process.argv.includes("--dry");
 const at = process.argv.find((a) => a.startsWith("--at="))?.slice(5);
@@ -23,5 +24,13 @@ async function main() {
   for (const f of r.failed) console.log(`FAILED  ${f.email}: ${f.error}`);
   console.log(`${dry ? "Dry run: " : ""}${r.sent.length} ${dry ? "would be " : ""}sent, ${r.skipped} skipped, ${r.failed.length} failed.`);
   if (r.failed.length) process.exitCode = 1;
+
+  // the weekly route email is separate: its own opt-in, its own unsubscribe, its own window (Wednesday)
+  const rr = await runRouteReminders({ now, base: base || "http://localhost:3000", dry, send: (m, key) => sendMail(m, { key }) });
+  console.log(`route reminders due: ${rr.due ? "yes" : "nothing in this window"}  plans with reminders on: ${rr.considered}`);
+  for (const s of rr.sent) console.log(`${dry ? "would send" : "sent"}  route  ${s.email}  "${s.subject}"`);
+  for (const f of rr.failed) console.log(`FAILED  ${f.email}: ${f.error}`);
+  console.log(`${dry ? "Dry run: " : ""}${rr.sent.length} ${dry ? "would be " : ""}sent, ${rr.skipped} skipped, ${rr.failed.length} failed.`);
+  if (rr.failed.length) process.exitCode = 1;
 }
 main();

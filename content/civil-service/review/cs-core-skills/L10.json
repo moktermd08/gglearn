@@ -1,0 +1,3210 @@
+{
+ "trackSlug": "cs-core-skills",
+ "status": "review",
+ "items": [
+  {
+   "title": "L10: Costing and ratios with SUMPRODUCT",
+   "source": "Microsoft Support: SUMPRODUCT, ROUNDUP; HM Treasury Green Book: appraisal and evaluation in central government",
+   "body": "Cost per case looks simple but is easy to calculate wrongly. Suppose three teams have these figures. Team A has 4 full-time equivalent staff (FTE) at £38,000 each and handled 1,520 cases. Team B has 6 FTE at £34,000 and handled 2,100 cases. Team C has 5 FTE at £36,000 and handled 1,300 cases.\n\nThe total staff cost is a sum of products: =SUMPRODUCT(B2:B4,C2:C4) gives 152,000 + 204,000 + 180,000 = £536,000. Total cases are 4,920, so the overall cost per case is 536,000 divided by 4,920, which is £108.94. The cost per case for each team is its own staff cost divided by its own cases: Team A £100.00, Team B £97.14 and Team C £138.46.\n\nDo not average the three team ratios. The mean of 100.00, 97.14 and 138.46 is £111.87, which is not the overall cost per case because it treats a team of 1,300 cases the same as one of 2,100. To combine ratios correctly, add the numerators and the denominators separately and then divide. This is a weighted average in disguise.\n\nCheck that every figure measures the same thing. If one team's cases include enquiries and another's only formal claims, the ratios are not comparable. Check also that staff costs include the same elements, such as employer's national insurance and pension, for each team.\n\nRounding matters for staffing numbers. If demand is 1,000 cases a week and one person closes 19.5, the number needed is 1,000 divided by 19.5, or 51.28. People come in whole numbers, so use ROUNDUP, which gives 52, not ROUND, which would give 51 and leave a shortfall. At £34,000 each, 52 staff cost £1,768,000.\n\nState clearly any assumptions, such as absence, training time or overheads, and show how the answer changes if they change. A ten per cent absence rate cuts effective capacity to 17.55 cases a person a week, and raises the requirement to 57.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the total staff cost across the three teams?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£108,000"
+      },
+      {
+       "key": "b",
+       "text": "£111,000"
+      },
+      {
+       "key": "c",
+       "text": "£536,000"
+      },
+      {
+       "key": "d",
+       "text": "£568,000"
+      }
+     ],
+     "answer": "c",
+     "hint": "SUMPRODUCT gives 4 x 38,000 + 6 x 34,000 + 5 x 36,000.",
+     "topic": "SUMPRODUCT"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the overall cost per case, to the nearest penny?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£108.94"
+      },
+      {
+       "key": "b",
+       "text": "£100.00"
+      },
+      {
+       "key": "c",
+       "text": "£107.33"
+      },
+      {
+       "key": "d",
+       "text": "£111.87"
+      }
+     ],
+     "answer": "a",
+     "hint": "Divide total cost of £536,000 by total cases of 4,920.",
+     "topic": "weighted ratio"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why is £111.87, the mean of the three team ratios, the wrong overall cost per case?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It uses the wrong staff costs"
+      },
+      {
+       "key": "b",
+       "text": "It includes only two of the three teams, because the third team's costs were not available"
+      },
+      {
+       "key": "c",
+       "text": "It gives a team with fewer cases the same weight as one with more cases"
+      },
+      {
+       "key": "d",
+       "text": "It is calculated before rounding"
+      }
+     ],
+     "answer": "c",
+     "hint": "Combine ratios by adding the numerators and denominators separately before dividing.",
+     "topic": "averaging ratios"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which team has the highest cost per case?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Team C, at about £138.46"
+      },
+      {
+       "key": "b",
+       "text": "Team C, at about £111.87"
+      },
+      {
+       "key": "c",
+       "text": "Team B, at about £97.14"
+      },
+      {
+       "key": "d",
+       "text": "Team A, at £100.00"
+      }
+     ],
+     "answer": "a",
+     "hint": "Team C's £180,000 is spread over only 1,300 cases.",
+     "topic": "comparing teams"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Demand is 1,000 cases a week and each person closes 19.5. How many people are needed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "51, using ROUND, since 51.28 is nearer to 51"
+      },
+      {
+       "key": "b",
+       "text": "53, because one extra person is always needed to cover absence and training time"
+      },
+      {
+       "key": "c",
+       "text": "52, using ROUNDUP, as 51.28 people cannot be part-employed"
+      },
+      {
+       "key": "d",
+       "text": "50, because the figure is truncated"
+      }
+     ],
+     "answer": "c",
+     "hint": "Rounding down leaves a shortfall in capacity, so round up.",
+     "topic": "rounding up"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "With 52 staff at £34,000 each, what is the annual staff cost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£1,768,000"
+      },
+      {
+       "key": "b",
+       "text": "£1,768,000 plus overheads, which cannot be calculated"
+      },
+      {
+       "key": "c",
+       "text": "£1,734,000"
+      },
+      {
+       "key": "d",
+       "text": "£1,700,000"
+      }
+     ],
+     "answer": "a",
+     "hint": "52 multiplied by 34,000 is 1,768,000.",
+     "topic": "costing"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "With a 10% absence rate, one person effectively closes 17.55 cases a week. What happens to the staffing requirement?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It rises to 54 people"
+      },
+      {
+       "key": "b",
+       "text": "It rises to about 57 people"
+      },
+      {
+       "key": "c",
+       "text": "It falls to 47 people"
+      },
+      {
+       "key": "d",
+       "text": "It stays at 52 people"
+      }
+     ],
+     "answer": "b",
+     "hint": "1,000 divided by 17.55 is 56.98, which rounds up to 57.",
+     "topic": "sensitivity"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Team B's cases include general enquiries while Team A's count only formal claims. What does this do to comparing cost per case?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes Team B look less efficient than it is"
+      },
+      {
+       "key": "b",
+       "text": "It has no effect, as the cost is the same"
+      },
+      {
+       "key": "c",
+       "text": "The ratios are not like-for-like, so the comparison may mislead"
+      },
+      {
+       "key": "d",
+       "text": "It means Team A's cost per case should be halved to make the two teams comparable"
+      }
+     ],
+     "answer": "c",
+     "hint": "Check that numerators and denominators have the same definitions across teams.",
+     "topic": "definitions"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What should you check about staff costs when comparing teams?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That each team's cost includes the same elements, such as pension and national insurance"
+      },
+      {
+       "key": "b",
+       "text": "That the teams use the same email system"
+      },
+      {
+       "key": "c",
+       "text": "That all teams have the same number of staff"
+      },
+      {
+       "key": "d",
+       "text": "That costs are shown to the nearest thousand"
+      }
+     ],
+     "answer": "a",
+     "hint": "Inconsistent cost definitions distort comparisons.",
+     "topic": "like-for-like"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which formula gives a number of staff needed, rounded up, from demand in B1 and output per person in B2?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=ROUNDDOWN(B1/B2,0)"
+      },
+      {
+       "key": "b",
+       "text": "=ROUNDUP(B1/B2,0)"
+      },
+      {
+       "key": "c",
+       "text": "=ROUND(B1/B2,0)"
+      },
+      {
+       "key": "d",
+       "text": "=B1/B2"
+      }
+     ],
+     "answer": "b",
+     "hint": "ROUNDUP with zero decimal places gives the next whole number.",
+     "topic": "ROUNDUP"
+    }
+   ]
+  },
+  {
+   "title": "L10: Time series: moving averages and year-on-year change",
+   "source": "Office for National Statistics: seasonal adjustment and time series guidance; Government Analysis Function guidance on charts",
+   "body": "Monthly figures are noisy. A moving average smooths them by averaging the latest few months so that the underlying trend is easier to see. Take monthly cases from January to June: 120, 110, 130, 150, 160 and 140. A three-month moving average for March is (120 + 110 + 130) divided by 3, which is 120. April is (110 + 130 + 150) divided by 3, which is 130. May is (130 + 150 + 160) divided by 3, which is 146.7. June is (150 + 160 + 140) divided by 3, which is 150. The first two months have no value because there are not three months yet.\n\nMoving averages lag behind turning points: they confirm a trend only after it has happened. Choose the window to suit the data. Twelve months removes seasonality entirely, because each average contains one of each month.\n\nSeasonality matters. Many services have predictable peaks, such as more claims in January. Comparing June with May may show a fall simply because of the season. A better comparison is year on year, comparing June with the same month a year earlier. If June last year was 125 and this June is 140, the year-on-year change is (140 - 125) divided by 125, which is 12 per cent. Seasonally adjusted series remove the regular pattern, but they are estimates and can be revised.\n\nAn index with the first month set to 100 shows relative change: June is 140 divided by 120 times 100, which is 116.7. This allows series of different sizes to be plotted together.\n\nAvoid over-reading one month. A rise of 20 cases in a month could be random variation. Look for sustained movement across several periods. Mark any breaks in the series, such as a change in definition or a one-off event, because they can look like a trend.\n\nOn a chart, use a line for time series, keep the time axis evenly spaced, label units and say if the data is seasonally adjusted.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Using monthly cases 120, 110, 130, 150, 160 and 140, what is the three-month moving average for April?",
+     "options": [
+      {
+       "key": "a",
+       "text": "130"
+      },
+      {
+       "key": "b",
+       "text": "140"
+      },
+      {
+       "key": "c",
+       "text": "146.7"
+      },
+      {
+       "key": "d",
+       "text": "120"
+      }
+     ],
+     "answer": "a",
+     "hint": "April averages February, March and April: 110, 130 and 150.",
+     "topic": "moving average"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the three-month moving average for June?",
+     "options": [
+      {
+       "key": "a",
+       "text": "146.7"
+      },
+      {
+       "key": "b",
+       "text": "140"
+      },
+      {
+       "key": "c",
+       "text": "145"
+      },
+      {
+       "key": "d",
+       "text": "150"
+      }
+     ],
+     "answer": "d",
+     "hint": "June averages April, May and June: 150, 160 and 140.",
+     "topic": "moving average"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why does the series have no three-month moving average for January and February?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Seasonal adjustment removes them"
+      },
+      {
+       "key": "b",
+       "text": "Excel cannot average the first two values"
+      },
+      {
+       "key": "c",
+       "text": "The first months are always missing in a series because they are treated as outliers"
+      },
+      {
+       "key": "d",
+       "text": "There are not yet three months of data to average"
+      }
+     ],
+     "answer": "d",
+     "hint": "A three-month window needs three values.",
+     "topic": "moving average"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why do moving averages lag behind turning points?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They always use the previous year's figures"
+      },
+      {
+       "key": "b",
+       "text": "They ignore the latest value"
+      },
+      {
+       "key": "c",
+       "text": "They are calculated at the end of the year"
+      },
+      {
+       "key": "d",
+       "text": "They include older months, so a change shows only after it has been in the data for a while"
+      }
+     ],
+     "answer": "d",
+     "hint": "Averaging past values delays the response to a change.",
+     "topic": "lag"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why does a 12-month moving average remove seasonality?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Twelve months is the length of the financial year, so the averages always match the budget"
+      },
+      {
+       "key": "b",
+       "text": "It ignores the highest and lowest months"
+      },
+      {
+       "key": "c",
+       "text": "It uses only the same month each year"
+      },
+      {
+       "key": "d",
+       "text": "Each window contains one of every month, so seasonal highs and lows cancel out"
+      }
+     ],
+     "answer": "d",
+     "hint": "A full year includes every season once.",
+     "topic": "seasonality"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "June last year was 125 and this June is 140. What is the year-on-year change?",
+     "options": [
+      {
+       "key": "a",
+       "text": "10.7%"
+      },
+      {
+       "key": "b",
+       "text": "15%"
+      },
+      {
+       "key": "c",
+       "text": "8.9%"
+      },
+      {
+       "key": "d",
+       "text": "12%"
+      }
+     ],
+     "answer": "d",
+     "hint": "The change of 15 divided by last year's 125 is 12%.",
+     "topic": "year-on-year"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A service always has a quiet June after a busy May. What is the best comparison to judge performance?",
+     "options": [
+      {
+       "key": "a",
+       "text": "This June compared with this May"
+      },
+      {
+       "key": "b",
+       "text": "This June compared with next June's forecast"
+      },
+      {
+       "key": "c",
+       "text": "This June compared with the annual average"
+      },
+      {
+       "key": "d",
+       "text": "This June compared with last June"
+      }
+     ],
+     "answer": "d",
+     "hint": "Same-month comparisons avoid distortion from seasonal patterns.",
+     "topic": "seasonality"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "With January as 100, what is the index for June (140 cases against 120 in January)?",
+     "options": [
+      {
+       "key": "a",
+       "text": "140.0"
+      },
+      {
+       "key": "b",
+       "text": "116.7"
+      },
+      {
+       "key": "c",
+       "text": "16.7"
+      },
+      {
+       "key": "d",
+       "text": "120.0"
+      }
+     ],
+     "answer": "b",
+     "hint": "140 divided by 120, multiplied by 100.",
+     "topic": "index"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Cases rise by 20 in one month after being flat. How should a briefing treat this?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Report it as a 20% increase"
+      },
+      {
+       "key": "b",
+       "text": "Be cautious, as one month may be random variation, and look for a sustained movement"
+      },
+      {
+       "key": "c",
+       "text": "Describe it as the start of a worrying trend"
+      },
+      {
+       "key": "d",
+       "text": "Ignore it completely"
+      }
+     ],
+     "answer": "b",
+     "hint": "A single point does not make a trend.",
+     "topic": "interpretation"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What should you do when a definition change creates a break in a series?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Hide it by smoothing the data"
+      },
+      {
+       "key": "b",
+       "text": "Delete the earlier years"
+      },
+      {
+       "key": "c",
+       "text": "Mark the break clearly so it is not read as a real change"
+      },
+      {
+       "key": "d",
+       "text": "Use a different colour for the line after the change without adding any comment"
+      }
+     ],
+     "answer": "c",
+     "hint": "Breaks can look like real shifts if they are not flagged.",
+     "topic": "series breaks"
+    }
+   ]
+  },
+  {
+   "title": "L10: Joins and lookups that double count",
+   "source": "Microsoft Support: VLOOKUP, XLOOKUP, SUMIFS and pivot table relationships; Government Analysis Function guidance on data quality",
+   "body": "When you combine two data sets, the way they relate decides whether totals stay correct. A one-to-one or many-to-one lookup is safe: many case rows each look up one customer record. A one-to-many join is a trap: if one case row matches several payment rows, looking up the payment returns only the first match, and bringing in all matching rows duplicates the case row, so any case-level total is inflated.\n\nImagine a case table with 100 cases and a payments table with 250 payments, since some cases have several payments. If you attach the payments to the case list so that each payment becomes its own row, a count of rows is 250, not 100. A pivot table that counts 'cases' on that combined table would therefore overstate the number of cases. To count cases, count distinct case references (in a pivot table, add the data to the data model and use Distinct Count; in dynamic arrays, =COUNTA(UNIQUE(range))).\n\nThe opposite problem is that VLOOKUP and XLOOKUP return only the first match. If a customer ID appears twice in the lookup table because of a duplicate record, the formula quietly uses the first and ignores the second, so the total will look right but be wrong. Check for duplicates in the lookup key with a COUNTIF test: =COUNTIF(A:A,A2)>1.\n\nTo total payments per case without duplicating cases, use SUMIFS on the payments table with the case reference as the criterion. This returns one total for each case. Then check that the grand total of the per-case amounts equals the total of the payments table.\n\nOther checks: confirm that keys have the same format in both tables (text versus number, leading zeros, spaces), count the rows before and after the join, and investigate any row that does not match. Never assume that a join has worked just because there are no error messages.\n\nDocument the relationship between the tables, so a reviewer can follow it.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A case table has 100 cases and a payments table has 250 rows. Each payment is attached to its case as a separate row. What does a count of rows in the combined table show?",
+     "options": [
+      {
+       "key": "a",
+       "text": "350, the cases plus the payments"
+      },
+      {
+       "key": "b",
+       "text": "250, which overstates the number of cases"
+      },
+      {
+       "key": "c",
+       "text": "100, the number of cases"
+      },
+      {
+       "key": "d",
+       "text": "150, the difference between the tables"
+      }
+     ],
+     "answer": "b",
+     "hint": "The combined table has one row per payment, so case-level counts are inflated.",
+     "topic": "one-to-many joins"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the best way to count the number of cases in the combined table?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Count the payment rows and divide by 2"
+      },
+      {
+       "key": "b",
+       "text": "Sum the payment amounts"
+      },
+      {
+       "key": "c",
+       "text": "Count all rows"
+      },
+      {
+       "key": "d",
+       "text": "Count distinct case references"
+      }
+     ],
+     "answer": "d",
+     "hint": "A distinct count removes the duplicated case references.",
+     "topic": "distinct count"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A customer ID appears twice in a lookup table. What does VLOOKUP do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It returns the larger of the two values"
+      },
+      {
+       "key": "b",
+       "text": "It returns #N/A because of the duplicate, as it cannot decide which row to use"
+      },
+      {
+       "key": "c",
+       "text": "It returns the value from the first match and ignores the second"
+      },
+      {
+       "key": "d",
+       "text": "It adds both values together"
+      }
+     ],
+     "answer": "c",
+     "hint": "Lookups do not warn about duplicate keys.",
+     "topic": "duplicate keys"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which formula checks whether the ID in A2 appears more than once in column A?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=SUM(A:A)>A2"
+      },
+      {
+       "key": "b",
+       "text": "=IF(A2=A3,TRUE)"
+      },
+      {
+       "key": "c",
+       "text": "=COUNTIF(A:A,A2)>1"
+      },
+      {
+       "key": "d",
+       "text": "=MATCH(A2,A:A,0)>1"
+      }
+     ],
+     "answer": "c",
+     "hint": "COUNTIF counts how many times the value appears, and a count above one flags a duplicate.",
+     "topic": "duplicate checks"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "You want the total payments for each case without duplicating the case rows. Which approach works?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A pivot table with cases in the values area and payments in the rows area"
+      },
+      {
+       "key": "b",
+       "text": "VLOOKUP on the payments table for each case"
+      },
+      {
+       "key": "c",
+       "text": "A COUNTIF of the payments"
+      },
+      {
+       "key": "d",
+       "text": "SUMIFS on the payments table using the case reference as the criterion"
+      }
+     ],
+     "answer": "d",
+     "hint": "SUMIFS returns one total per case, regardless of how many payments there are.",
+     "topic": "SUMIFS"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "After you total the payments per case, what check shows the process has not lost or duplicated anything?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The number of columns is the same"
+      },
+      {
+       "key": "b",
+       "text": "The per-case totals are all different, which proves that no case has been counted twice"
+      },
+      {
+       "key": "c",
+       "text": "The file size is unchanged"
+      },
+      {
+       "key": "d",
+       "text": "The sum of the per-case totals equals the total of the payments table"
+      }
+     ],
+     "answer": "d",
+     "hint": "A reconciliation to the source confirms completeness.",
+     "topic": "reconciliation"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Case references are numbers in one table and text with leading zeros in the other. What is the likely effect on lookups?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The lookup returns the average of the matches"
+      },
+      {
+       "key": "b",
+       "text": "The lookup works but is slower"
+      },
+      {
+       "key": "c",
+       "text": "Matches fail, producing #N/A or wrong results"
+      },
+      {
+       "key": "d",
+       "text": "Excel converts both automatically"
+      }
+     ],
+     "answer": "c",
+     "hint": "Mismatched formats prevent keys from matching.",
+     "topic": "key formats"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why is the absence of error messages not proof that a join worked?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because Excel always hides errors"
+      },
+      {
+       "key": "b",
+       "text": "Lookups silently return first matches and ignore duplicates, so wrong totals can look fine"
+      },
+      {
+       "key": "c",
+       "text": "Because errors only appear on a second calculation"
+      },
+      {
+       "key": "d",
+       "text": "Because error messages only appear in pivot tables"
+      }
+     ],
+     "answer": "b",
+     "hint": "Silent errors are the most dangerous, so test counts and totals.",
+     "topic": "checking"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What should be counted before and after a join?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The rows in each table, to see if rows were gained or lost"
+      },
+      {
+       "key": "b",
+       "text": "The number of formulas typed in each column of the workbook"
+      },
+      {
+       "key": "c",
+       "text": "The font sizes used"
+      },
+      {
+       "key": "d",
+       "text": "The number of sheets"
+      }
+     ],
+     "answer": "a",
+     "hint": "Row counts reveal duplication or loss immediately.",
+     "topic": "checking"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What helps a reviewer follow a combined data set?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A coloured header"
+      },
+      {
+       "key": "b",
+       "text": "A note of how the tables relate and which field is the key"
+      },
+      {
+       "key": "c",
+       "text": "A hidden sheet with the original tables kept for anyone to find later"
+      },
+      {
+       "key": "d",
+       "text": "A password on the workbook"
+      }
+     ],
+     "answer": "b",
+     "hint": "Documenting the relationship allows the join to be verified.",
+     "topic": "documentation"
+    }
+   ]
+  },
+  {
+   "title": "L10: Margins of error and what a survey can tell you",
+   "source": "Office for National Statistics: confidence intervals and sampling guidance; Government Analysis Function: communicating uncertainty",
+   "body": "A survey asks a sample of people, so its result is an estimate of the whole population with a margin of error. A result of 62 per cent with a margin of error of plus or minus 3 points means the true figure is likely to lie between 59 and 65 per cent, at the usual 95 per cent confidence level. The range is called a confidence interval.\n\nTwo survey results can look different without being so. If survey A gives 62 per cent (59 to 65) and survey B gives 66 per cent (62 to 70), the intervals overlap between 62 and 65. The gap of 4 points is not clearly larger than the uncertainty, so you should not say satisfaction has definitely risen. A statistical test would give a firmer answer. Say 'the difference may be due to chance'.\n\nSample size matters, but with diminishing returns. For a result near 50 per cent, a sample of 400 gives a margin of about 4.9 points, and a sample of 1,600 gives about 2.45 points. Quadrupling the sample halves the margin of error, because the margin shrinks with the square root of the sample size. Doubling a sample brings only a modest improvement.\n\nMargins of error cover random sampling error only. They do not cover bias. If a survey reaches only people who answer online, or if people who are unhappy are less likely to respond, the result can be wrong however large the sample. Check the response rate, who was missed and whether the results were weighted to match the population.\n\nBe careful with subgroups. A survey of 1,600 people may give a precise national figure, but the sample for one region might be only 80, which has a wide margin. Do not report small subgroups as if they were as reliable as the whole.\n\nWhen you report a survey, give the sample size, the dates, the margin of error and any limits. Say 'around 62 per cent' rather than quoting false precision.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A survey finds 62% with a margin of error of 3 points. Which statement is best?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The true figure is exactly 62%"
+      },
+      {
+       "key": "b",
+       "text": "The true figure is somewhere between 52% and 72%, so the survey tells us little"
+      },
+      {
+       "key": "c",
+       "text": "The true figure is likely to lie between 59% and 65%"
+      },
+      {
+       "key": "d",
+       "text": "The survey is wrong by 3%"
+      }
+     ],
+     "answer": "c",
+     "hint": "The margin gives a range around the estimate.",
+     "topic": "confidence intervals"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Survey A gives 62% (59 to 65) and survey B gives 66% (62 to 70). What is the correct conclusion about the 4-point gap?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The surveys must have used different questions"
+      },
+      {
+       "key": "b",
+       "text": "It may be due to chance, as the intervals overlap"
+      },
+      {
+       "key": "c",
+       "text": "Satisfaction has definitely risen by 4 points"
+      },
+      {
+       "key": "d",
+       "text": "Survey B must be more accurate"
+      }
+     ],
+     "answer": "b",
+     "hint": "Overlapping intervals mean the gap is not clearly larger than the uncertainty.",
+     "topic": "comparing surveys"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What happens to the margin of error if a sample is quadrupled?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It roughly halves"
+      },
+      {
+       "key": "b",
+       "text": "It is unchanged"
+      },
+      {
+       "key": "c",
+       "text": "It drops to a quarter"
+      },
+      {
+       "key": "d",
+       "text": "It doubles"
+      }
+     ],
+     "answer": "a",
+     "hint": "The margin shrinks with the square root of the sample size.",
+     "topic": "sample size"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "For a result near 50%, a sample of 400 gives about what margin of error?",
+     "options": [
+      {
+       "key": "a",
+       "text": "9.8 points"
+      },
+      {
+       "key": "b",
+       "text": "2.45 points"
+      },
+      {
+       "key": "c",
+       "text": "4.9 points"
+      },
+      {
+       "key": "d",
+       "text": "1 point"
+      }
+     ],
+     "answer": "c",
+     "hint": "The margin is about 1.96 x the square root of 0.25/400.",
+     "topic": "sample size"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What does the margin of error NOT cover?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The number of people in the sample who answered each question"
+      },
+      {
+       "key": "b",
+       "text": "The confidence level"
+      },
+      {
+       "key": "c",
+       "text": "Random sampling variation"
+      },
+      {
+       "key": "d",
+       "text": "Bias, such as groups of people who were never reached"
+      }
+     ],
+     "answer": "d",
+     "hint": "Margins reflect sampling error only, not systematic problems.",
+     "topic": "bias"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A survey is online only and the people who answer are mostly young. What does a large sample do to this problem?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It does not solve it, because the bias remains however big the sample"
+      },
+      {
+       "key": "b",
+       "text": "It makes the bias smaller in proportion to the number of people who responded"
+      },
+      {
+       "key": "c",
+       "text": "It removes the bias completely"
+      },
+      {
+       "key": "d",
+       "text": "It turns bias into random error"
+      }
+     ],
+     "answer": "a",
+     "hint": "Size reduces random error but not systematic error.",
+     "topic": "bias"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A national survey has 1,600 respondents, but only 80 in one region. How should the regional result be treated?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As reliable as the national result"
+      },
+      {
+       "key": "b",
+       "text": "With caution, as the small sample has a wide margin of error"
+      },
+      {
+       "key": "c",
+       "text": "As unusable, so it must be left out"
+      },
+      {
+       "key": "d",
+       "text": "As having exactly double the national margin of error, so it can be used safely"
+      }
+     ],
+     "answer": "b",
+     "hint": "Subgroups are less precise than the total.",
+     "topic": "subgroups"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which item should always be reported alongside a survey result?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The names of the respondents"
+      },
+      {
+       "key": "b",
+       "text": "The software used for analysis"
+      },
+      {
+       "key": "c",
+       "text": "The sample size, dates and margin of error"
+      },
+      {
+       "key": "d",
+       "text": "The cost of the survey"
+      }
+     ],
+     "answer": "c",
+     "hint": "These details let readers judge reliability.",
+     "topic": "reporting"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why should you say 'around 62%' rather than '61.8%'?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Percentages must always be whole numbers in a published government report"
+      },
+      {
+       "key": "b",
+       "text": "Decimals cannot be used in reports"
+      },
+      {
+       "key": "c",
+       "text": "The extra decimal places imply a precision the survey does not have"
+      },
+      {
+       "key": "d",
+       "text": "61.8% would be an error"
+      }
+     ],
+     "answer": "c",
+     "hint": "False precision misleads readers about the certainty.",
+     "topic": "precision"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A low response rate is a concern mainly because:",
+     "options": [
+      {
+       "key": "a",
+       "text": "It means the margin of error is zero because the whole population was reached"
+      },
+      {
+       "key": "b",
+       "text": "Non-responders may differ from responders, creating bias"
+      },
+      {
+       "key": "c",
+       "text": "It makes the survey too cheap"
+      },
+      {
+       "key": "d",
+       "text": "It breaks the data protection rules"
+      }
+     ],
+     "answer": "b",
+     "hint": "Those who did not respond may hold different views.",
+     "topic": "response rate"
+    }
+   ]
+  },
+  {
+   "title": "L10: Real and nominal terms, deflators and per-head figures",
+   "source": "Office for National Statistics: price indices and GDP deflator; HM Treasury GDP deflators guidance",
+   "body": "Money values change over time because of inflation. A figure in nominal terms (or current prices) is the cash amount in each year. A figure in real terms (or constant prices) has been adjusted for price changes so that it shows purchasing power in a chosen base year. To compare spending over time, you need real terms.\n\nHM Treasury publishes GDP deflators, a price index that is used to convert between years. To convert a later-year amount into base-year prices, divide by the deflator and multiply by 100. Suppose spending was £100 million in 2020 and £115 million in 2024, and the deflator is 100 in 2020 and 120 in 2024. In nominal terms, spending has risen by 15 per cent. In 2020 prices, the 2024 figure is 115 divided by 1.20, which is £95.8 million. In real terms spending has fallen by about 4.2 per cent. The headline 'spending is up' and the statement 'spending is down in real terms' are both true, but they answer different questions. State the base year every time: 'in 2020 prices'.\n\nDo not use a deflator in the wrong direction. Multiplying £115 million by 1.2 would inflate it to £138 million, which is meaningless here.\n\nPer-head figures adjust for population. £115 million for a population of 5 million is £23 a head. If the population has grown, a total can rise while the per-head figure falls. Choose the denominator that fits the question: per head of population, per claimant or per case.\n\nRebasing an index means choosing a different base year. To rebase, divide every value by the value in the new base year and multiply by 100. The relative changes stay the same, but the numbers change.\n\nWatch the financial year and the calendar year: 2024-25 is not the same as 2024. Be explicit about which you are using, and keep the same basis through the paper.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Spending was £100m in 2020 and £115m in 2024, with a deflator of 100 and 120. What is the 2024 figure in 2020 prices, to one decimal place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£138.0m"
+      },
+      {
+       "key": "b",
+       "text": "£115.0m"
+      },
+      {
+       "key": "c",
+       "text": "£95.8m"
+      },
+      {
+       "key": "d",
+       "text": "£104.2m"
+      }
+     ],
+     "answer": "c",
+     "hint": "Divide 115 by 1.20 to remove the effect of price changes.",
+     "topic": "deflators"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the change in real terms between 2020 and 2024 in this example?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A fall of 15%"
+      },
+      {
+       "key": "b",
+       "text": "A fall of about 4.2%"
+      },
+      {
+       "key": "c",
+       "text": "A rise of 4.2%"
+      },
+      {
+       "key": "d",
+       "text": "A rise of 15%"
+      }
+     ],
+     "answer": "b",
+     "hint": "95.8 compared with 100 is a fall of about 4.2%.",
+     "topic": "real terms"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which statement correctly describes the example?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Spending is 15% higher in cash terms but about 4.2% lower in real terms"
+      },
+      {
+       "key": "b",
+       "text": "Spending is unchanged in real terms"
+      },
+      {
+       "key": "c",
+       "text": "Spending fell by 15% in both measures once the deflator is applied to both years"
+      },
+      {
+       "key": "d",
+       "text": "Spending rose by 15% in real terms"
+      }
+     ],
+     "answer": "a",
+     "hint": "Nominal and real figures answer different questions and both can be true.",
+     "topic": "nominal and real"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A colleague multiplies £115m by 1.2 to compare with 2020. What is wrong?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They forgot to round to the nearest million and to apply the deflator to 2020 as well"
+      },
+      {
+       "key": "b",
+       "text": "They used a per-head figure"
+      },
+      {
+       "key": "c",
+       "text": "They used the wrong base year"
+      },
+      {
+       "key": "d",
+       "text": "They inflated the amount instead of deflating it back to 2020 prices"
+      }
+     ],
+     "answer": "d",
+     "hint": "To restate in earlier prices you divide by the later deflator.",
+     "topic": "deflators"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What must you always state when giving a real-terms figure?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The currency exchange rate"
+      },
+      {
+       "key": "b",
+       "text": "The population of the UK"
+      },
+      {
+       "key": "c",
+       "text": "The name of the Chancellor"
+      },
+      {
+       "key": "d",
+       "text": "The base year, for example 'in 2020 prices'"
+      }
+     ],
+     "answer": "d",
+     "hint": "A real-terms figure has no meaning without a price base.",
+     "topic": "base year"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Spending of £115m and a population of 5 million gives what per-head figure?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£2.30"
+      },
+      {
+       "key": "b",
+       "text": "£575"
+      },
+      {
+       "key": "c",
+       "text": "£23"
+      },
+      {
+       "key": "d",
+       "text": "£0.23"
+      }
+     ],
+     "answer": "c",
+     "hint": "115 million divided by 5 million is 23.",
+     "topic": "per-head"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Total spending rises but the population grows faster. What happens to spending per head?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It can fall even though the total rises"
+      },
+      {
+       "key": "b",
+       "text": "It cannot be calculated"
+      },
+      {
+       "key": "c",
+       "text": "It stays the same"
+      },
+      {
+       "key": "d",
+       "text": "It must rise"
+      }
+     ],
+     "answer": "a",
+     "hint": "The per-head figure depends on both numerator and denominator.",
+     "topic": "per-head"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "An index has 2020 = 100 and 2024 = 130. How do you rebase it so that 2024 = 100?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Divide each value by 130 and multiply by 100, so 2020 becomes about 76.9"
+      },
+      {
+       "key": "b",
+       "text": "Divide each value by 100, so 2020 becomes 1"
+      },
+      {
+       "key": "c",
+       "text": "Multiply each value by 1.3, so 2020 becomes 130 and 2024 becomes about 169"
+      },
+      {
+       "key": "d",
+       "text": "Subtract 30 from each value, so 2020 becomes 70"
+      }
+     ],
+     "answer": "a",
+     "hint": "Rebasing divides by the new base value and multiplies by 100.",
+     "topic": "rebasing"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why must you be careful with '2024-25' and '2024'?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A financial year and a calendar year cover different periods and mixing them gives mismatches"
+      },
+      {
+       "key": "b",
+       "text": "The financial year always starts in January"
+      },
+      {
+       "key": "c",
+       "text": "Only calendar years can be used with deflators"
+      },
+      {
+       "key": "d",
+       "text": "They are identical in government statistics"
+      }
+     ],
+     "answer": "a",
+     "hint": "State the period and keep the basis consistent.",
+     "topic": "time periods"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which denominator suits the question 'how much does it cost us per claim handled?'",
+     "options": [
+      {
+       "key": "a",
+       "text": "The UK population"
+      },
+      {
+       "key": "b",
+       "text": "The number of staff"
+      },
+      {
+       "key": "c",
+       "text": "The number of days in the year"
+      },
+      {
+       "key": "d",
+       "text": "The number of claims handled"
+      }
+     ],
+     "answer": "d",
+     "hint": "Choose a denominator that matches the question.",
+     "topic": "denominators"
+    }
+   ]
+  },
+  {
+   "title": "L10: Advising under pressure: integrity, honesty and the Seven Principles",
+   "source": "Civil Service Code; Committee on Standards in Public Life: Seven Principles of Public Life; Ministerial Code; Public Interest Disclosure Act 1998",
+   "body": "Senior officials sometimes face pressure to present information in a more favourable light, or to act where the right course is unclear. Three sources give guidance. The Civil Service Code sets out the four core values: integrity, honesty, objectivity and impartiality. The Seven Principles of Public Life, set out by the Committee on Standards in Public Life (the Nolan Principles), apply to all holders of public office: selflessness, integrity, objectivity, accountability, openness, honesty and leadership. The Ministerial Code sets out how ministers should behave, including the duty to be truthful with Parliament.\n\nUnder the Civil Service Code, you must provide information and advice, including advice to ministers, on the basis of the evidence and accurately and truthfully. You must not deceive or knowingly mislead ministers, Parliament or the public. You must not frustrate the implementation of a policy once decided, but you can give honest advice before it is made.\n\nIf you are asked to do something that you think is illegal, improper, unethical or in breach of constitutional conventions, or if you see others do so, you should first raise it with your line manager or another senior manager, or a nominated officer. If you are not satisfied, you can report the matter to the Civil Service Commission, which takes complaints under the Code. If a concern is serious, the Public Interest Disclosure Act 1998 protects workers who make qualifying disclosures, such as of a criminal offence or a danger to health and safety, from being treated badly because of it.\n\nPractical judgement helps. If data show a politically unwelcome result, report it accurately, with caveats and options. If a figure is wrong after publication, correct it. If asked to leave out a relevant fact, explain why that may mislead, and escalate if needed. Document your advice so there is a record.\n\nSeek advice from your department's propriety and ethics team. They can help you with judgement calls in confidence. Acting early, raising concerns calmly and keeping to the evidence protect both you and the department.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which are the four core values in the Civil Service Code?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Selflessness, accountability, openness and leadership"
+      },
+      {
+       "key": "b",
+       "text": "Loyalty, discretion, efficiency and neutrality"
+      },
+      {
+       "key": "c",
+       "text": "Integrity, honesty, objectivity and impartiality"
+      },
+      {
+       "key": "d",
+       "text": "Speed, accuracy, thrift and courtesy"
+      }
+     ],
+     "answer": "c",
+     "hint": "These four values underpin the Code; the Nolan Principles are a separate list of seven.",
+     "topic": "Civil Service Code"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which list matches the Seven Principles of Public Life?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Selflessness, integrity, objectivity, accountability, openness, honesty and leadership"
+      },
+      {
+       "key": "b",
+       "text": "Selflessness, impartiality, legality, rationality, openness, equality and dignity"
+      },
+      {
+       "key": "c",
+       "text": "Fairness, speed, accuracy, thrift, courtesy, loyalty and discretion"
+      },
+      {
+       "key": "d",
+       "text": "Integrity, honesty, objectivity, impartiality, loyalty, openness and respect"
+      }
+     ],
+     "answer": "a",
+     "hint": "The Nolan Principles are the seven listed in the first option.",
+     "topic": "Nolan Principles"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "You are asked to leave a relevant, unwelcome fact out of a briefing for a minister. What should you do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Tell the press office instead"
+      },
+      {
+       "key": "b",
+       "text": "Put it in a footnote in tiny type"
+      },
+      {
+       "key": "c",
+       "text": "Explain that leaving it out may mislead, and escalate if the request stands"
+      },
+      {
+       "key": "d",
+       "text": "Leave it out, as the minister has the final say on what goes into a briefing"
+      }
+     ],
+     "answer": "c",
+     "hint": "You must not knowingly mislead ministers or conceal relevant information.",
+     "topic": "honesty"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the first step if you are asked to do something you think is improper?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Contact the press"
+      },
+      {
+       "key": "b",
+       "text": "Raise it with your line manager, another senior manager or a nominated officer"
+      },
+      {
+       "key": "c",
+       "text": "Refuse to do any further work on the project until the request has been withdrawn"
+      },
+      {
+       "key": "d",
+       "text": "Take the matter to the Prime Minister"
+      }
+     ],
+     "answer": "b",
+     "hint": "The Code sets out internal routes before external ones.",
+     "topic": "raising concerns"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "If internal routes do not resolve a concern, who handles complaints under the Civil Service Code?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Civil Service Commission"
+      },
+      {
+       "key": "b",
+       "text": "The Parliamentary Ombudsman"
+      },
+      {
+       "key": "c",
+       "text": "The Information Commissioner's Office, which regulates information rights"
+      },
+      {
+       "key": "d",
+       "text": "The National Audit Office"
+      }
+     ],
+     "answer": "a",
+     "hint": "The Commission takes complaints under the Code that are not resolved internally.",
+     "topic": "Civil Service Commission"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What does the Public Interest Disclosure Act 1998 do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Protects workers who make qualifying disclosures from being treated badly because of it"
+      },
+      {
+       "key": "b",
+       "text": "Requires all disclosures to be made to the press"
+      },
+      {
+       "key": "c",
+       "text": "Gives civil servants immunity from the Official Secrets Act"
+      },
+      {
+       "key": "d",
+       "text": "Allows anyone to see government files"
+      }
+     ],
+     "answer": "a",
+     "hint": "It protects whistleblowers who disclose wrongdoing in the right way.",
+     "topic": "whistleblowing"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "After a minister has made a decision you advised against, what does the Civil Service Code expect?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Quietly slow down its implementation so that the decision can be reconsidered later"
+      },
+      {
+       "key": "b",
+       "text": "Delay it until you are asked again"
+      },
+      {
+       "key": "c",
+       "text": "Share your doubts with the media"
+      },
+      {
+       "key": "d",
+       "text": "You should carry it out, as you must not frustrate a policy once decided"
+      }
+     ],
+     "answer": "d",
+     "hint": "Officials give honest advice beforehand and then implement lawful decisions.",
+     "topic": "implementing decisions"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A published figure is found to be wrong. What is the consistent response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Update it quietly on the website"
+      },
+      {
+       "key": "b",
+       "text": "Correct it promptly and transparently"
+      },
+      {
+       "key": "c",
+       "text": "Wait to see if anyone notices"
+      },
+      {
+       "key": "d",
+       "text": "Defend it until the next release"
+      }
+     ],
+     "answer": "b",
+     "hint": "Honesty and openness require correction.",
+     "topic": "correcting errors"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why should you keep a record of advice you give on a sensitive matter?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes the files bigger"
+      },
+      {
+       "key": "b",
+       "text": "It is needed for performance reviews only and should be destroyed after the review"
+      },
+      {
+       "key": "c",
+       "text": "It allows you to pass blame to others"
+      },
+      {
+       "key": "d",
+       "text": "It shows what was advised and why, if the decision is later questioned"
+      }
+     ],
+     "answer": "d",
+     "hint": "A clear record supports accountability.",
+     "topic": "records"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which of the Seven Principles of Public Life is concerned with being willing to be open to scrutiny and giving reasons for decisions?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Openness"
+      },
+      {
+       "key": "b",
+       "text": "Objectivity"
+      },
+      {
+       "key": "c",
+       "text": "Leadership"
+      },
+      {
+       "key": "d",
+       "text": "Selflessness"
+      }
+     ],
+     "answer": "a",
+     "hint": "Openness is about transparency in actions and decisions.",
+     "topic": "Nolan Principles"
+    }
+   ]
+  },
+  {
+   "title": "L10: Handling a personal data breach: assessing risk and notifying",
+   "source": "UK GDPR Articles 33 and 34; ICO guidance: Personal data breaches",
+   "body": "A personal data breach is a breach of security leading to the accidental or unlawful destruction, loss, alteration, unauthorised disclosure of, or access to, personal data. It includes sending an email to the wrong person, losing a laptop and a ransomware attack that makes data unavailable.\n\nWhen a breach occurs, you must do three things: contain it, assess it and record it. Contain it by recalling the message, locking the account or retrieving the device. Assess the risk to the people affected, looking at the type of data, how many people, how easily they can be identified, how sensitive the information is and what harm could follow, such as fraud, discrimination, distress or physical danger. A list of names and email addresses is less risky than health records or financial details.\n\nUnder Article 33, the controller must notify the ICO without undue delay and, where feasible, within 72 hours of becoming aware of it, unless the breach is unlikely to result in a risk to people's rights and freedoms. The 72 hours are calendar hours, so they include weekends. If a department becomes aware at 17:00 on Friday 6 June, the deadline is 17:00 on Monday 9 June. If the notification is made later, it must give reasons for the delay. Information can be given in phases if the facts are not yet complete.\n\nUnder Article 34, if the breach is likely to result in a high risk to people, the controller must also tell the individuals affected without undue delay, in clear language, saying what happened, the likely consequences, what has been done and who to contact. Notification to individuals is not needed if the data was effectively encrypted, or if later measures mean the high risk is no longer likely.\n\nAll breaches must be recorded in a breach log, including those that are not reported to the ICO, with the facts, effects and action taken. A processor must tell the controller without undue delay on becoming aware. Review the breach afterwards to prevent a repeat.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "An officer emails a spreadsheet of 30 customers' names and benefit claim details to the wrong external address. What is the most appropriate first step?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Send a new email without mentioning the error"
+      },
+      {
+       "key": "b",
+       "text": "Wait to see whether the recipient replies"
+      },
+      {
+       "key": "c",
+       "text": "Decide privately whether it is serious before telling anyone"
+      },
+      {
+       "key": "d",
+       "text": "Contain it by trying to recall the message and report it at once to the data protection contact"
+      }
+     ],
+     "answer": "d",
+     "hint": "Quick containment and reporting limit the harm and keep the legal timetable.",
+     "topic": "containment"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which breach is likely to be the greatest risk to individuals?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A meeting invitation sent to the wrong external address"
+      },
+      {
+       "key": "b",
+       "text": "A list of people's health conditions sent to the wrong organisation"
+      },
+      {
+       "key": "c",
+       "text": "A list of staff names and work email addresses sent to the wrong colleague in the same team"
+      },
+      {
+       "key": "d",
+       "text": "A published list of conference speakers' names and organisations"
+      }
+     ],
+     "answer": "b",
+     "hint": "Special category data and potential for harm raise the risk.",
+     "topic": "risk assessment"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "When does the 72-hour period for notifying the ICO start?",
+     "options": [
+      {
+       "key": "a",
+       "text": "When the affected people complain"
+      },
+      {
+       "key": "b",
+       "text": "When the ICO is told"
+      },
+      {
+       "key": "c",
+       "text": "When the breach actually happened"
+      },
+      {
+       "key": "d",
+       "text": "When the controller becomes aware of the breach"
+      }
+     ],
+     "answer": "d",
+     "hint": "The clock starts on awareness, not on the underlying event.",
+     "topic": "72 hours"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A department becomes aware of a breach at 17:00 on Friday 6 June 2025. When is the 72-hour deadline?",
+     "options": [
+      {
+       "key": "a",
+       "text": "17:00 on Tuesday 10 June 2025"
+      },
+      {
+       "key": "b",
+       "text": "17:00 on Monday 9 June 2025"
+      },
+      {
+       "key": "c",
+       "text": "17:00 on Wednesday 11 June 2025"
+      },
+      {
+       "key": "d",
+       "text": "09:00 on Monday 9 June 2025"
+      }
+     ],
+     "answer": "b",
+     "hint": "The 72 hours are calendar hours, so they run through the weekend.",
+     "topic": "72 hours"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "When is notification to the ICO not required?",
+     "options": [
+      {
+       "key": "a",
+       "text": "When the data is classified OFFICIAL"
+      },
+      {
+       "key": "b",
+       "text": "When the breach happens at the weekend"
+      },
+      {
+       "key": "c",
+       "text": "When the breach is unlikely to result in a risk to people's rights and freedoms"
+      },
+      {
+       "key": "d",
+       "text": "When fewer than 100 people are affected and none of them has complained to the department yet"
+      }
+     ],
+     "answer": "c",
+     "hint": "Article 33 sets an exemption for unlikely risk, not a numerical threshold.",
+     "topic": "notification"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "When must the affected individuals be told directly?",
+     "options": [
+      {
+       "key": "a",
+       "text": "For every breach, however minor"
+      },
+      {
+       "key": "b",
+       "text": "Only when the ICO says so"
+      },
+      {
+       "key": "c",
+       "text": "When the breach is likely to result in a high risk to them"
+      },
+      {
+       "key": "d",
+       "text": "Only when the data was held in a paper file rather than on a computer system"
+      }
+     ],
+     "answer": "c",
+     "hint": "Article 34 requires direct notice where the risk is high.",
+     "topic": "individuals"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What should the message to affected individuals include?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A copy of the department's internal investigation report"
+      },
+      {
+       "key": "b",
+       "text": "A request to keep quiet about the breach"
+      },
+      {
+       "key": "c",
+       "text": "What happened, the likely effects, what has been done and who to contact"
+      },
+      {
+       "key": "d",
+       "text": "The name of the member of staff responsible"
+      }
+     ],
+     "answer": "c",
+     "hint": "Plain, useful information helps people protect themselves.",
+     "topic": "notifying individuals"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A breach is judged unlikely to result in a risk and is not reported to the ICO. What must still be done?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Delete the details to save space"
+      },
+      {
+       "key": "b",
+       "text": "Report it to the ICO a week later, once the investigation is complete"
+      },
+      {
+       "key": "c",
+       "text": "Record it in the breach log with the facts, effects and action taken"
+      },
+      {
+       "key": "d",
+       "text": "Nothing, as it is not reportable"
+      }
+     ],
+     "answer": "c",
+     "hint": "All breaches must be documented, even unreportable ones.",
+     "topic": "breach log"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A processor discovers a breach affecting the department's data. What is its duty?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To wait for the controller to notice"
+      },
+      {
+       "key": "b",
+       "text": "To tell the ICO first"
+      },
+      {
+       "key": "c",
+       "text": "To tell the affected individuals directly"
+      },
+      {
+       "key": "d",
+       "text": "To tell the controller without undue delay"
+      }
+     ],
+     "answer": "d",
+     "hint": "The controller is responsible for deciding on notification, so it must be told quickly.",
+     "topic": "processors"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "The full facts of a breach are still unclear after 72 hours. What can the controller do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ask the individuals to report it to the ICO themselves if they are concerned"
+      },
+      {
+       "key": "b",
+       "text": "Notify the ICO with the information it has and provide more in phases"
+      },
+      {
+       "key": "c",
+       "text": "Skip notification"
+      },
+      {
+       "key": "d",
+       "text": "Wait until everything is known"
+      }
+     ],
+     "answer": "b",
+     "hint": "Article 33 allows phased information to avoid delay.",
+     "topic": "phased notification"
+    }
+   ]
+  },
+  {
+   "title": "L10: FOI exemptions and the public interest test",
+   "source": "Freedom of Information Act 2000 sections 21, 22, 35, 36, 40 and 43; ICO guidance on exemptions and the public interest test",
+   "body": "When a public authority holds the information asked for, it must give it unless an exemption applies. Exemptions are either absolute, applying without any further test, or qualified, where the authority must weigh the public interest in withholding against the public interest in disclosing. Information is released unless the balance favours withholding.\n\nCommon exemptions include the following. Section 21 covers information that is reasonably accessible to the applicant by other means, such as a published report, and is absolute. Section 22 covers information intended for future publication, and is qualified. Section 35 protects the formulation or development of government policy, and is qualified. Section 36 covers information whose disclosure would, or would be likely to, prejudice the effective conduct of public affairs, such as free and frank advice, and it needs the reasonable opinion of a qualified person. Section 40 protects personal data. Where the requester asks for their own data, section 40(1) applies and the request is handled as a subject access request. Where the request is for other people's data, section 40(2) applies and disclosure must not breach data protection principles. Section 43 protects commercial interests and is qualified.\n\nThe public interest test looks at the specific facts. Arguments for disclosure include accountability, transparency, public debate and the proper use of public money. Arguments for withholding include the need for a safe space for officials to develop policy and the risk of harm. The mere fact that information is embarrassing is not a reason to withhold.\n\nWhere it is neither confirmed nor denied that information is held, the authority must show that even confirming would itself cause harm. This is used sparingly.\n\nThe refusal notice must state the exemption, explain why it applies and the public interest reasoning, and give the right to an internal review and to complain to the ICO. A refusal to disclose part of a document should be limited to that part, with the rest released.\n\nIf a request is a repeat of a similar request without a reasonable gap, or is vexatious, the authority may refuse it. A vexatious finding considers the burden, motive and value of the request, and is not a way to avoid awkward questions.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A requester asks for a report that the department published last month on its website. Which exemption is most apt?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Section 43, as disclosure would affect the commercial interests of the department"
+      },
+      {
+       "key": "b",
+       "text": "Section 36, as it affects public affairs"
+      },
+      {
+       "key": "c",
+       "text": "Section 35, as it concerns policy"
+      },
+      {
+       "key": "d",
+       "text": "Section 21, as the information is reasonably accessible by other means"
+      }
+     ],
+     "answer": "d",
+     "hint": "Section 21 applies where the applicant can already get the information, such as from a published report, and it is absolute.",
+     "topic": "section 21"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the difference between an absolute and a qualified exemption?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A qualified exemption is used only by the courts"
+      },
+      {
+       "key": "b",
+       "text": "A qualified exemption needs a public interest test, whereas an absolute one does not"
+      },
+      {
+       "key": "c",
+       "text": "An absolute exemption applies only to personal data"
+      },
+      {
+       "key": "d",
+       "text": "A qualified exemption allows information to be withheld without any reasons"
+      }
+     ],
+     "answer": "b",
+     "hint": "Qualified exemptions require balancing the public interest.",
+     "topic": "exemptions"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which exemption protects the formulation or development of government policy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Section 40"
+      },
+      {
+       "key": "b",
+       "text": "Section 22"
+      },
+      {
+       "key": "c",
+       "text": "Section 21"
+      },
+      {
+       "key": "d",
+       "text": "Section 35"
+      }
+     ],
+     "answer": "d",
+     "hint": "Section 35 protects the policy-making process, subject to the public interest test.",
+     "topic": "section 35"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Who must give an opinion that disclosure would prejudice the effective conduct of public affairs under section 36?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Any member of staff"
+      },
+      {
+       "key": "b",
+       "text": "The Information Commissioner"
+      },
+      {
+       "key": "c",
+       "text": "The qualified person, giving a reasonable opinion"
+      },
+      {
+       "key": "d",
+       "text": "The requester"
+      }
+     ],
+     "answer": "c",
+     "hint": "Section 36 requires the reasonable opinion of a qualified person.",
+     "topic": "section 36"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A request asks for a named official's performance review. Which exemption is most likely to be considered?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Section 40(1), as it covers the personal data of the person who made the request"
+      },
+      {
+       "key": "b",
+       "text": "Section 21, as it is published"
+      },
+      {
+       "key": "c",
+       "text": "Section 22, as it is to be published"
+      },
+      {
+       "key": "d",
+       "text": "Section 40(2), as personal data of a third party"
+      }
+     ],
+     "answer": "d",
+     "hint": "Section 40(2) covers other people's personal data.",
+     "topic": "section 40"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A person asks under FOI for their own records. How should the department deal with the request?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Refer it to the press office"
+      },
+      {
+       "key": "b",
+       "text": "Treat it as a subject access request, since section 40(1) applies to the requester's own data"
+      },
+      {
+       "key": "c",
+       "text": "Refuse it because it is personal data"
+      },
+      {
+       "key": "d",
+       "text": "Release the data under FOI"
+      }
+     ],
+     "answer": "b",
+     "hint": "Requests for your own personal data go through data protection law.",
+     "topic": "section 40"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which of these is a valid argument for withholding in the public interest test?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The request came from a journalist"
+      },
+      {
+       "key": "b",
+       "text": "The department would prefer not to publish it"
+      },
+      {
+       "key": "c",
+       "text": "Officials need a safe space to give free and frank advice on a live policy"
+      },
+      {
+       "key": "d",
+       "text": "The information would be embarrassing for the minister and could damage public confidence"
+      }
+     ],
+     "answer": "c",
+     "hint": "Embarrassment is not a valid reason, but protecting the policy process may be.",
+     "topic": "public interest test"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What argument for releasing information counts under the public interest test?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The press will lose interest"
+      },
+      {
+       "key": "b",
+       "text": "The information is old and no one is likely to be interested in it"
+      },
+      {
+       "key": "c",
+       "text": "The requester asked politely"
+      },
+      {
+       "key": "d",
+       "text": "Accountability for how public money has been spent"
+      }
+     ],
+     "answer": "d",
+     "hint": "Transparency about the use of public money is a recognised public interest.",
+     "topic": "public interest test"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What must a refusal notice include?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only the word 'refused'"
+      },
+      {
+       "key": "b",
+       "text": "The names of officials who considered it"
+      },
+      {
+       "key": "c",
+       "text": "A summary of the information withheld"
+      },
+      {
+       "key": "d",
+       "text": "The exemption, why it applies, the public interest reasoning and the right to an internal review"
+      }
+     ],
+     "answer": "d",
+     "hint": "Requesters must be able to understand and challenge the decision.",
+     "topic": "refusal notice"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What does 'neither confirm nor deny' mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The authority does not say whether it holds the information, because confirming would itself cause harm"
+      },
+      {
+       "key": "b",
+       "text": "The authority holds the information but will not release it"
+      },
+      {
+       "key": "c",
+       "text": "The authority has destroyed the information"
+      },
+      {
+       "key": "d",
+       "text": "The authority is unable to find the information"
+      }
+     ],
+     "answer": "a",
+     "hint": "It is used only when the confirmation itself would be harmful.",
+     "topic": "NCND"
+    }
+   ]
+  },
+  {
+   "title": "L10: Judging a data-sharing proposal end to end",
+   "source": "ICO Data sharing code of practice; UK GDPR Articles 5, 6, 13, 26 and 35; Digital Economy Act 2017 codes of practice",
+   "body": "A proposal to share data between organisations tests several judgements at once. This item sets out a method for working through a case from first principles.\n\nStart with purpose. State exactly what the sharing is for. Is it to help deliver a service, to detect fraud, to support research, or something else? Vague purposes like 'to improve services' do not give a clear lawful basis and lead to function creep. Ask whether the purpose is compatible with the original reason the data was collected: UK GDPR purpose limitation says that further use must not be incompatible, unless the person consents or there is a clear legal provision.\n\nNext, power and lawful basis. Check that each public body has the power to share or receive. For example, the Digital Economy Act 2017 provides powers for public service delivery, debt and fraud, but the sharing must follow its codes, and the proposal must be approved through the relevant process. Choose the Article 6 basis, usually public task or legal obligation, and an Article 9 condition if special category data is used.\n\nThen necessity and proportionality. Could the aim be achieved with less data, such as a yes or no answer to a question instead of a full record, or with anonymised data? Share the minimum necessary, for the minimum time.\n\nAssess risk. A DPIA is expected where the sharing is large scale, involves special category data, matches data from different sources or affects vulnerable people. The DPIA should look at risks to individuals, not just to the departments.\n\nClarify roles. If two bodies jointly decide purposes and means, they are joint controllers and must set out their responsibilities in an arrangement (Article 26) that is made available to individuals. If one only follows instructions, it is a processor and needs a contract.\n\nBe transparent. Update privacy notices, and tell people how their data will be used. Document security, retention, accuracy checks, how rights requests are handled and who is responsible for incidents. Review the arrangement regularly, and record the final decision and its reasons.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why is 'to improve services' a weak statement of purpose for data sharing?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is too vague to support a clear lawful basis and allows function creep"
+      },
+      {
+       "key": "b",
+       "text": "It is only needed in contracts and has no part to play in data sharing arrangements"
+      },
+      {
+       "key": "c",
+       "text": "It is too short"
+      },
+      {
+       "key": "d",
+       "text": "It uses plain English"
+      }
+     ],
+     "answer": "a",
+     "hint": "Specific purposes give a lawful basis and limit later reuse.",
+     "topic": "purpose"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What does purpose limitation require?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The data may be shared only once"
+      },
+      {
+       "key": "b",
+       "text": "The data may be kept indefinitely"
+      },
+      {
+       "key": "c",
+       "text": "Further use of the data must not be incompatible with the original purpose, unless there is consent or a clear legal provision"
+      },
+      {
+       "key": "d",
+       "text": "The data may be reused for any public sector purpose"
+      }
+     ],
+     "answer": "c",
+     "hint": "Purpose limitation protects people from unexpected uses of their data.",
+     "topic": "purpose limitation"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A fraud team only needs to know whether a person is on a register. Which approach best follows data minimisation?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Share a yes or no answer to the specific question"
+      },
+      {
+       "key": "b",
+       "text": "Share the whole register"
+      },
+      {
+       "key": "c",
+       "text": "Share the person's whole file"
+      },
+      {
+       "key": "d",
+       "text": "Share a copy of the whole register so the fraud team can use it in future"
+      }
+     ],
+     "answer": "a",
+     "hint": "The minimum necessary data should be shared.",
+     "topic": "minimisation"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "When is a DPIA most clearly expected?",
+     "options": [
+      {
+       "key": "a",
+       "text": "For internal staff phone lists"
+      },
+      {
+       "key": "b",
+       "text": "For sharing data with the individual themselves or with their appointed representative"
+      },
+      {
+       "key": "c",
+       "text": "For any email containing personal data"
+      },
+      {
+       "key": "d",
+       "text": "For large-scale sharing involving special category data or matching of data sets"
+      }
+     ],
+     "answer": "d",
+     "hint": "These factors indicate a high-risk processing activity.",
+     "topic": "DPIA"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What should a DPIA focus on?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The length of the agreement"
+      },
+      {
+       "key": "b",
+       "text": "Software costs"
+      },
+      {
+       "key": "c",
+       "text": "Risks to the department's reputation and finances only, not to individuals"
+      },
+      {
+       "key": "d",
+       "text": "Risks to individuals, such as harm, distress and loss of control"
+      }
+     ],
+     "answer": "d",
+     "hint": "The assessment is about people's rights and freedoms.",
+     "topic": "DPIA"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Two departments jointly decide why and how data is used. What role do they have?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Joint controllers, who must set out their responsibilities in an arrangement"
+      },
+      {
+       "key": "b",
+       "text": "Controller and processor"
+      },
+      {
+       "key": "c",
+       "text": "Independent processors"
+      },
+      {
+       "key": "d",
+       "text": "Data subjects"
+      }
+     ],
+     "answer": "a",
+     "hint": "Article 26 requires an arrangement between joint controllers.",
+     "topic": "joint controllers"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A supplier only processes data on the department's instructions. What must be in place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A written contract with a processor's data protection terms"
+      },
+      {
+       "key": "b",
+       "text": "A consent form signed by every customer whose data is shared"
+      },
+      {
+       "key": "c",
+       "text": "A joint controller arrangement"
+      },
+      {
+       "key": "d",
+       "text": "A public notice in the Gazette"
+      }
+     ],
+     "answer": "a",
+     "hint": "The processor relationship is governed by an Article 28 contract.",
+     "topic": "processors"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why are privacy notices updated for new sharing?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So that the ICO can review the text"
+      },
+      {
+       "key": "b",
+       "text": "So people are told how their data is used, including who it is shared with"
+      },
+      {
+       "key": "c",
+       "text": "So that rights requests from individuals are no longer needed after the sharing starts"
+      },
+      {
+       "key": "d",
+       "text": "So the wording can be shortened"
+      }
+     ],
+     "answer": "b",
+     "hint": "Transparency is a core principle.",
+     "topic": "transparency"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "The Digital Economy Act 2017 provides a power to share data for fraud. What else is needed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A court order each time"
+      },
+      {
+       "key": "b",
+       "text": "Consent from every individual"
+      },
+      {
+       "key": "c",
+       "text": "Nothing more, as the Act covers the sharing fully without any other conditions"
+      },
+      {
+       "key": "d",
+       "text": "Compliance with its code of practice and data protection law"
+      }
+     ],
+     "answer": "d",
+     "hint": "The Act enables sharing but does not remove other legal duties.",
+     "topic": "Digital Economy Act"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "After a sharing arrangement has begun, what is good practice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Review it regularly and record decisions and reasons"
+      },
+      {
+       "key": "b",
+       "text": "Forget about it unless a complaint or a breach is reported to the department"
+      },
+      {
+       "key": "c",
+       "text": "Expand it each year without review"
+      },
+      {
+       "key": "d",
+       "text": "Delete the original agreement"
+      }
+     ],
+     "answer": "a",
+     "hint": "Regular review checks the sharing remains necessary and lawful.",
+     "topic": "review"
+    }
+   ]
+  },
+  {
+   "title": "L10: Writing a decision record that survives challenge",
+   "source": "Public Sector Equality Duty (Equality Act 2010 section 149); Judicial Review guidance (Treasury Solicitor); Civil Service Code",
+   "body": "A decision record is the note of what was decided and why. If someone challenges a decision, for example by complaint, FOI request or judicial review, the record is often the main evidence of whether the decision was made lawfully and fairly. Judicial review asks whether the decision was lawful, rational and procedurally fair; it does not usually ask whether the court would have decided differently.\n\nA good record has these elements. It states the decision and who made it, with the date. It states the question that had to be answered and the powers being used. It lists the relevant facts and evidence considered, including what was not known. It records the options considered and why the chosen one was preferred. It shows that relevant factors were taken into account and irrelevant ones were not. It records consultation or engagement, and how responses were considered. It notes advice received, including legal advice, without waiving privilege by revealing its contents widely. It sets out risks and how they will be managed.\n\nThe Public Sector Equality Duty requires public bodies, when exercising their functions, to have due regard to the need to eliminate discrimination, advance equality of opportunity and foster good relations. This means the decision-maker must consider the effects on people with protected characteristics before the decision, with an open mind. A record that shows how equality was considered, with an assessment where appropriate, helps to show compliance. A note written afterwards to justify a decision already made carries less weight than one that shows the thinking at the time.\n\nWrite in plain language, stay factual and avoid speculation about individuals. Assume that the record may be released in the future. Do not alter or backdate a record, and remember that deleting records after a challenge has begun can have serious consequences.\n\nWhere the decision depends on a complex calculation, keep the working. Where information changed during the process, record the date and what was known at each stage.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What does judicial review mainly ask about a decision?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Whether the decision was the cheapest"
+      },
+      {
+       "key": "b",
+       "text": "Whether the minister was popular"
+      },
+      {
+       "key": "c",
+       "text": "Whether the court would have made the same choice if it had been the decision-maker"
+      },
+      {
+       "key": "d",
+       "text": "Whether it was lawful, rational and procedurally fair"
+      }
+     ],
+     "answer": "d",
+     "hint": "Judicial review tests the legality and process, not the merits.",
+     "topic": "judicial review"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which element is essential in a good decision record?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The press line"
+      },
+      {
+       "key": "b",
+       "text": "The options considered and why the chosen one was preferred"
+      },
+      {
+       "key": "c",
+       "text": "A list of every email sent"
+      },
+      {
+       "key": "d",
+       "text": "The decision-maker's personal opinion of the applicant"
+      }
+     ],
+     "answer": "b",
+     "hint": "Showing alternatives and reasoning is central to rationality.",
+     "topic": "decision records"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What does the Public Sector Equality Duty require a public body to do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Treat everyone identically in all cases"
+      },
+      {
+       "key": "b",
+       "text": "Remove all protected characteristics from consideration"
+      },
+      {
+       "key": "c",
+       "text": "Have due regard to eliminating discrimination, advancing equality and fostering good relations"
+      },
+      {
+       "key": "d",
+       "text": "Produce an annual report only"
+      }
+     ],
+     "answer": "c",
+     "hint": "The duty applies when functions are exercised.",
+     "topic": "equality duty"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "When should equality considerations be assessed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Before the decision, with an open mind"
+      },
+      {
+       "key": "b",
+       "text": "Only if someone complains"
+      },
+      {
+       "key": "c",
+       "text": "After the decision, so that the reasons can be explained"
+      },
+      {
+       "key": "d",
+       "text": "Only for decisions about staff"
+      }
+     ],
+     "answer": "a",
+     "hint": "Due regard must be shown at the time of the decision.",
+     "topic": "equality duty"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why does a note written after the decision to justify it carry less weight?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is not allowed under the Civil Service Code"
+      },
+      {
+       "key": "b",
+       "text": "It uses the wrong template"
+      },
+      {
+       "key": "c",
+       "text": "It may look like a rationalisation, not evidence of the real thinking at the time"
+      },
+      {
+       "key": "d",
+       "text": "It is exempt from disclosure"
+      }
+     ],
+     "answer": "c",
+     "hint": "Contemporaneous records are more credible.",
+     "topic": "contemporaneous records"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "How should legal advice be referred to in a decision record?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Note that advice was received without revealing its contents widely, to protect privilege"
+      },
+      {
+       "key": "b",
+       "text": "Copy the advice in full into the record"
+      },
+      {
+       "key": "c",
+       "text": "Leave out any mention of it"
+      },
+      {
+       "key": "d",
+       "text": "Share it with the applicant"
+      }
+     ],
+     "answer": "a",
+     "hint": "Wide disclosure of the contents can waive legal privilege.",
+     "topic": "legal advice"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A challenge to a decision has begun. What is the position about records?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Add comments to the record to strengthen the department's case before any hearing"
+      },
+      {
+       "key": "b",
+       "text": "Do not alter, backdate or delete relevant records"
+      },
+      {
+       "key": "c",
+       "text": "Tidy the file so it reads better"
+      },
+      {
+       "key": "d",
+       "text": "Delete drafts to avoid confusion"
+      }
+     ],
+     "answer": "b",
+     "hint": "Interfering with records after a challenge can have serious consequences.",
+     "topic": "records"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which style is best for a decision record?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Chatty and informal"
+      },
+      {
+       "key": "b",
+       "text": "Full of speculation about individuals and their likely motives"
+      },
+      {
+       "key": "c",
+       "text": "Brief and without reasons"
+      },
+      {
+       "key": "d",
+       "text": "Plain, factual and written as if it may later be released"
+      }
+     ],
+     "answer": "d",
+     "hint": "Records may be disclosed, so keep them accurate and professional.",
+     "topic": "writing style"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why should a decision record include what was not known at the time?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It lets the department blame others"
+      },
+      {
+       "key": "b",
+       "text": "It makes the record look longer"
+      },
+      {
+       "key": "c",
+       "text": "It shows the decision was made on the information available, with the gaps acknowledged"
+      },
+      {
+       "key": "d",
+       "text": "It removes the need for evidence"
+      }
+     ],
+     "answer": "c",
+     "hint": "Honest acknowledgement of gaps supports the rationality of the decision.",
+     "topic": "uncertainty"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A complex calculation underpins a decision. What should be kept?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing, as the calculation is a technical matter for the analysts to hold"
+      },
+      {
+       "key": "b",
+       "text": "The working, so that the calculation can be checked and repeated"
+      },
+      {
+       "key": "c",
+       "text": "A summary without figures"
+      },
+      {
+       "key": "d",
+       "text": "Only the final number"
+      }
+     ],
+     "answer": "b",
+     "hint": "Keeping the working lets others test how the result was reached.",
+     "topic": "working"
+    }
+   ]
+  },
+  {
+   "title": "L10: Security incident judgement: insiders, suppliers and escalation",
+   "source": "Government Security Classifications Policy; NCSC guidance on insider risk and supply chain security; Civil Service Code",
+   "body": "Complex security incidents rarely come with clear labels. This item sets out how to think through a case and decide who needs to be told and what action to take.\n\nStart with what has happened and what is at risk. Is information lost, disclosed or at risk of attack? What is its classification and its volume? What personal data is involved? Contain first, if you safely can: change passwords, disconnect a device, recall an email. Preserve evidence, so do not delete logs or wipe a device unless told to by security staff, because the evidence may be needed later. Report quickly through the department's security channel, which is normally the security team or incident hotline. Several teams may be involved, including security, data protection, IT, and the press office, so give the facts without speculation.\n\nInsider risk means harm caused by people with legitimate access, whether deliberate or accidental. Signs include unusual access to information that is not related to a person's role, downloading large volumes of data, copying files to personal devices, working at strange hours without reason, or sudden changes in behaviour. A single sign does not prove wrongdoing, and many have innocent explanations. Report concerns to security or your manager so that people trained to assess them can do so, rather than confronting the colleague or investigating on your own. Fair treatment matters: report facts, not rumours.\n\nSupply chain risk arises when suppliers hold or access government data. Check that contracts include security requirements, that suppliers report incidents quickly and that access is limited to what is needed. If a supplier tells you it has had an incident, ask what data is involved, whether it is contained and how many records are affected, then escalate immediately, because the department may have legal duties as controller.\n\nKeep a timeline of events, who was told and when. Do not discuss the incident with the press or on social media. Afterwards, lessons learned should improve controls without blaming individuals for honest mistakes.\n\nIf you are concerned that proper channels are not responding, the Civil Service Code provides further routes for raising concerns.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A supplier tells you it has been hacked and may hold your department's customer data. What should you do first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cancel the contract without telling anyone"
+      },
+      {
+       "key": "b",
+       "text": "Ask what data is involved and whether it is contained, and escalate to security and data protection immediately"
+      },
+      {
+       "key": "c",
+       "text": "Tell the customers directly"
+      },
+      {
+       "key": "d",
+       "text": "Wait for the supplier to complete its own investigation"
+      }
+     ],
+     "answer": "b",
+     "hint": "The department may have legal duties as controller, so it needs the facts and a fast escalation.",
+     "topic": "supplier incidents"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "A laptop shows signs of a possible attack. What is the best approach about evidence?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Preserve it and wait for instructions from security before wiping or deleting anything"
+      },
+      {
+       "key": "b",
+       "text": "Reinstall the operating system"
+      },
+      {
+       "key": "c",
+       "text": "Delete the logs to free space"
+      },
+      {
+       "key": "d",
+       "text": "Wipe the device straight away to remove the threat"
+      }
+     ],
+     "answer": "a",
+     "hint": "Evidence may be needed to understand and investigate the incident.",
+     "topic": "evidence"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "You notice a colleague copying large amounts of data to a personal USB stick with no apparent reason. What is the best action?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say nothing, as it is not your business to question how colleagues use their own data"
+      },
+      {
+       "key": "b",
+       "text": "Report the facts to the security team or your manager, and do not confront them"
+      },
+      {
+       "key": "c",
+       "text": "Confront them and demand an explanation"
+      },
+      {
+       "key": "d",
+       "text": "Delete the files from their stick"
+      }
+     ],
+     "answer": "b",
+     "hint": "Trained staff can assess whether it is innocent or a risk.",
+     "topic": "insider risk"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why should you report facts, not conclusions, about a colleague's behaviour?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because facts are shorter"
+      },
+      {
+       "key": "b",
+       "text": "A single sign does not prove wrongdoing, and fairness requires evidence not rumour"
+      },
+      {
+       "key": "c",
+       "text": "Because conclusions are always wrong"
+      },
+      {
+       "key": "d",
+       "text": "Because security teams dislike detail"
+      }
+     ],
+     "answer": "b",
+     "hint": "Many warning signs have innocent explanations.",
+     "topic": "insider risk"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which is an example of a supply chain control?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Asking the supplier to keep its security arrangements private"
+      },
+      {
+       "key": "b",
+       "text": "Contract terms requiring the supplier to report incidents quickly and limit access to what is needed"
+      },
+      {
+       "key": "c",
+       "text": "Allowing the supplier unlimited access to speed up work"
+      },
+      {
+       "key": "d",
+       "text": "Using the supplier's own terms without review"
+      }
+     ],
+     "answer": "b",
+     "hint": "Security requirements and incident duties belong in the contract.",
+     "topic": "supply chain"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the purpose of keeping a timeline during an incident?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To record what happened, who was told and when, to help the response and review"
+      },
+      {
+       "key": "b",
+       "text": "To assign blame"
+      },
+      {
+       "key": "c",
+       "text": "To fill the incident log"
+      },
+      {
+       "key": "d",
+       "text": "To prepare a press statement"
+      }
+     ],
+     "answer": "a",
+     "hint": "A clear timeline helps decision-making and later investigation.",
+     "topic": "incident records"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the right approach to talking about an incident with the press or on social media?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Post a short comment to stay ahead"
+      },
+      {
+       "key": "b",
+       "text": "Share what you know to be open"
+      },
+      {
+       "key": "c",
+       "text": "Do not discuss it, and refer enquiries to the press office"
+      },
+      {
+       "key": "d",
+       "text": "Discuss it with a trusted journalist off the record to get advice on the story"
+      }
+     ],
+     "answer": "c",
+     "hint": "Communications should be controlled and accurate.",
+     "topic": "communications"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "After an honest mistake leads to an incident, what is a sound approach?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ask the person to pay for the loss"
+      },
+      {
+       "key": "b",
+       "text": "Learn lessons and improve controls without blaming the individual"
+      },
+      {
+       "key": "c",
+       "text": "Keep the mistake secret to avoid embarrassment and protect the team's reputation"
+      },
+      {
+       "key": "d",
+       "text": "Dismiss the person at once"
+      }
+     ],
+     "answer": "b",
+     "hint": "A no-blame culture encourages reporting.",
+     "topic": "lessons learned"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which is a possible sign of insider risk that deserves a report?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Working in the office on time and finishing tasks on schedule each day"
+      },
+      {
+       "key": "b",
+       "text": "Attending a training course"
+      },
+      {
+       "key": "c",
+       "text": "Taking annual leave"
+      },
+      {
+       "key": "d",
+       "text": "Repeated access to files unrelated to the person's job"
+      }
+     ],
+     "answer": "d",
+     "hint": "Unusual access outside a role can indicate misuse.",
+     "topic": "insider risk"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Containment is possible but risks destroying evidence. What is the best judgement?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Leave the device switched on and unattended"
+      },
+      {
+       "key": "b",
+       "text": "Take safe, reversible steps and ask security before doing anything that cannot be undone"
+      },
+      {
+       "key": "c",
+       "text": "Wipe everything and start again"
+      },
+      {
+       "key": "d",
+       "text": "Do nothing until the day after"
+      }
+     ],
+     "answer": "b",
+     "hint": "Balance stopping harm with preserving evidence.",
+     "topic": "containment"
+    }
+   ]
+  },
+  {
+   "title": "L10: Building a defensible staffing model in a spreadsheet",
+   "source": "HM Treasury Green Book: optimism bias and sensitivity analysis; Government Analysis Function spreadsheet guidance",
+   "body": "A staffing model converts expected demand into the number of people needed. Its credibility rests on transparent assumptions and a layout that others can check.\n\nSet up three areas. Inputs hold the assumptions: weekly demand, output per person per week, absence rate, training time and cost per person. Calculations hold the formulas. Outputs give the answer and a summary. Each input appears once, labelled with its unit and source, so changing it updates the whole model.\n\nA simple chain looks like this. Effective output per person is the output multiplied by one minus the absence rate. Staff required is demand divided by effective output, rounded up. Cost is the number of staff multiplied by the cost per person. With demand of 1,000 a week and output of 19.5 per person, staff required without absence is 51.28, which is 52 when rounded up. With a 10 per cent absence rate, effective output is 17.55 and staff required is 56.98, which is 57. At £34,000 a person, the extra five staff add £170,000 a year.\n\nTest the model's sensitivity. Change each input in turn by a set amount and note the effect on the result. The inputs with the largest effects deserve the best evidence. A small table showing staff required for different absence rates and demand levels helps the reader see the range. Use a data table or build it with formulas.\n\nOptimism bias is a tendency to be over-optimistic about costs, benefits and timing, and the Green Book asks appraisers to adjust for it. Do not assume that productivity will be higher than the evidence supports, or that recruitment will be instant. Where there is a lead time to hire and train new staff, model it, because the capacity arrives later than the need.\n\nRound up when you count people, and keep unrounded numbers in intermediate steps. Add checks, such as demand divided by capacity not exceeding one.\n\nState the assumptions in the briefing next to the answer. A single number without its assumptions invites mistrust.",
+   "questions": [
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the effective output per person with an absence rate of 10% and a nominal output of 19.5 cases a week?",
+     "options": [
+      {
+       "key": "a",
+       "text": "1.95"
+      },
+      {
+       "key": "b",
+       "text": "17.55"
+      },
+      {
+       "key": "c",
+       "text": "19.5"
+      },
+      {
+       "key": "d",
+       "text": "21.45"
+      }
+     ],
+     "answer": "b",
+     "hint": "19.5 multiplied by 0.9 gives 17.55.",
+     "topic": "effective capacity"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Demand of 1,000 cases a week and effective output of 17.55 per person: how many staff are needed after rounding up?",
+     "options": [
+      {
+       "key": "a",
+       "text": "56"
+      },
+      {
+       "key": "b",
+       "text": "52"
+      },
+      {
+       "key": "c",
+       "text": "57"
+      },
+      {
+       "key": "d",
+       "text": "58"
+      }
+     ],
+     "answer": "c",
+     "hint": "1,000 divided by 17.55 is 56.98, which rounds up to 57.",
+     "topic": "staffing"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "With the extra five staff needed because of absence and a cost of £34,000 each, what is the added annual cost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£170,000"
+      },
+      {
+       "key": "b",
+       "text": "£34,000"
+      },
+      {
+       "key": "c",
+       "text": "£1,768,000"
+      },
+      {
+       "key": "d",
+       "text": "£340,000"
+      }
+     ],
+     "answer": "a",
+     "hint": "Five multiplied by £34,000.",
+     "topic": "costing"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why should each input appear once in the model?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So that changing it updates every calculation consistently"
+      },
+      {
+       "key": "b",
+       "text": "So that formulas can be typed more quickly and copied without editing them"
+      },
+      {
+       "key": "c",
+       "text": "So it is hidden from users"
+      },
+      {
+       "key": "d",
+       "text": "So the sheet looks smaller"
+      }
+     ],
+     "answer": "a",
+     "hint": "Single-point inputs avoid inconsistencies.",
+     "topic": "modelling practice"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What is the point of a sensitivity test?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To see which inputs most affect the result and so need the best evidence"
+      },
+      {
+       "key": "b",
+       "text": "To prove that the model is right"
+      },
+      {
+       "key": "c",
+       "text": "To make the model run faster"
+      },
+      {
+       "key": "d",
+       "text": "To remove uncertain inputs"
+      }
+     ],
+     "answer": "a",
+     "hint": "Sensitivity analysis shows where the assumptions matter most.",
+     "topic": "sensitivity"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "What does the Green Book say about optimism bias?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It means all costs should be doubled"
+      },
+      {
+       "key": "b",
+       "text": "It applies only to private sector projects"
+      },
+      {
+       "key": "c",
+       "text": "It is a tendency to over-optimism about costs, benefits and timing, and appraisals should adjust for it"
+      },
+      {
+       "key": "d",
+       "text": "It is the tendency to be too pessimistic about demand"
+      }
+     ],
+     "answer": "c",
+     "hint": "Appraisers are expected to challenge unrealistic assumptions.",
+     "topic": "optimism bias"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "New staff take three months to recruit and train. How should this affect the model?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ignore it, as staff are hired immediately"
+      },
+      {
+       "key": "b",
+       "text": "Model the lead time, because capacity arrives after the need"
+      },
+      {
+       "key": "c",
+       "text": "Reduce the demand by three months"
+      },
+      {
+       "key": "d",
+       "text": "Assume productivity is higher after training and that recruitment is instant"
+      }
+     ],
+     "answer": "b",
+     "hint": "Timing mismatches create backlogs even when annual capacity is enough.",
+     "topic": "lead times"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why keep unrounded numbers in intermediate steps?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because rounding is not allowed for staff"
+      },
+      {
+       "key": "b",
+       "text": "Because rounded numbers cannot be formatted as currency in a spreadsheet"
+      },
+      {
+       "key": "c",
+       "text": "Because Excel will not calculate them"
+      },
+      {
+       "key": "d",
+       "text": "Rounding too early can accumulate errors in the final result"
+      }
+     ],
+     "answer": "d",
+     "hint": "Round at the end to avoid compounding rounding errors.",
+     "topic": "rounding"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Which check would be useful in this model?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A flag if the file is larger than 10MB or contains more than twenty separate sheets"
+      },
+      {
+       "key": "b",
+       "text": "A flag if the total is a round number"
+      },
+      {
+       "key": "c",
+       "text": "A flag if demand divided by capacity exceeds one, showing capacity falls short"
+      },
+      {
+       "key": "d",
+       "text": "A flag if the cost is above £1m"
+      }
+     ],
+     "answer": "c",
+     "hint": "Checks that compare demand with capacity expose a shortfall.",
+     "topic": "checks"
+    },
+    {
+     "level": 10,
+     "type": "mcq",
+     "prompt": "Why should the briefing state the assumptions next to the answer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A single figure without its assumptions invites mistrust and cannot be properly challenged"
+      },
+      {
+       "key": "b",
+       "text": "It makes the briefing longer"
+      },
+      {
+       "key": "c",
+       "text": "It is required by the Civil Service Code"
+      },
+      {
+       "key": "d",
+       "text": "It prevents the answer from changing"
+      }
+     ],
+     "answer": "a",
+     "hint": "Transparency about assumptions lets readers judge the result.",
+     "topic": "communicating results"
+    }
+   ]
+  }
+ ]
+}

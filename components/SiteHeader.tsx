@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, Compass, Database, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell, GraduationCap, HeartHandshake } from "lucide-react";
+import { Award, Compass, Database, Hammer, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell, GraduationCap, HeartHandshake } from "lucide-react";
 import { logout } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
@@ -44,6 +44,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
           {user && <NavLink href="/dashboard"><LayoutDashboard size={15} />My quest</NavLink>}
           {user && <NavLink href="/journey"><Mountain size={15} />My career</NavLink>}
           {user && <NavLink href="/route"><Compass size={15} />My route</NavLink>}
+          {user && <NavLink href="/build"><Hammer size={15} />Build</NavLink>}
           {user && <NavLink href="/start"><Rocket size={15} />Start a race</NavLink>}
           <Dropdown prefix={["/competitions", "/campaigns", "/seasons", "/league", "/friends", "/teams"]} label={<><Trophy size={15} />Compete</>}>
             <NavLink href="/competitions"><Trophy size={15} />Contests</NavLink>
@@ -91,6 +92,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
             {user && <Link href="/dashboard" className={mobile}><LayoutDashboard size={18} />My quest</Link>}
             {user && <Link href="/journey" className={mobile}><Mountain size={18} />My career</Link>}
             {user && <Link href="/route" className={mobile}><Compass size={18} />My route</Link>}
+            {user && <Link href="/build" className={mobile}><Hammer size={18} />Build &amp; launch</Link>}
             {user && <Link href="/start" className={mobile}><Rocket size={18} />Start a race</Link>}
             <Link href="/campaigns" className={mobile}><Flame size={18} />Campaigns</Link>
             <Link href="/league" className={mobile}><Medal size={18} />League</Link>
