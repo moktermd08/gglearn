@@ -6,8 +6,8 @@ import { eq, like } from "drizzle-orm";
 import { db, promotions, runs, userScopes, users } from "../lib/db";
 import { resetCatalogCache } from "../lib/paths";
 import { rolesWithLadders } from "../lib/careers";
-import { careerTarget, standingFor, targetFor } from "../lib/careerTarget";
-import { careerSlug, parseCareerSlug, standing, verifiedLevel } from "../lib/standing";
+import { standingFor } from "../lib/careerStanding";
+import { standing, verifiedLevel } from "../lib/standing";
 
 process.env.CATALOG_TTL_MS = "0";
 let fails = 0;
@@ -25,8 +25,6 @@ check("a title above the exams is title-ahead and counts the rungs", standing(la
 check("exams above the title is verified-ahead", standing(ladder, 2, 4).agreement === "verified-ahead" && standing(ladder, 2, 4).level === 2);
 check("the same level is agreement", standing(ladder, 3, 3).agreement === "agree");
 check("no exam evidence is unverified, not a mismatch", standing(ladder, 3, null).agreement === "unverified");
-check("a goal slug round-trips, spaces and all", JSON.stringify(parseCareerSlug(careerSlug("Lead Developer", 3))) === JSON.stringify({ role: "lead developer", level: 3 }));
-check("anything else is not a goal slug", parseCareerSlug("uk-civil-service-ao") === null && parseCareerSlug("career~x~y") === null);
 
 // ---- against the database ----
 const mk = (email: string, jobRole: string) => db.insert(users).values({ email, name: email, role: "learner", jobRole, audience: "staff" }).returning().get();
@@ -51,13 +49,6 @@ try {
     check("with no promotion and no exams they are on the bottom rung, unverified", !!s0 && s0.basis === "default" && s0.verified === null && s0.agreement === "unverified");
 
     const top = [...s0!.titles.keys()].sort((a, b) => a - b).at(-1)!;
-    const goal = top > s0!.level ? careerTarget(dev, role, top) : null;
-    check("a goal further up the ladder becomes a route target with areas to check", !!goal && goal.areas.length > 0 && goal.slug === careerSlug(role, top), goal ? String(goal.areas.length) : "no target");
-    check("each stage is a rung on the way", !!goal && goal.stages!.length >= 1 && goal.areas.every((a) => a.stage! >= 1 && a.stage! <= goal.stages!.length));
-    check("no area asks for more than one entry per track", !!goal && new Set(goal.areas.map((a) => a.trackSlug)).size === goal.areas.length);
-    check("targetFor finds a goal by its slug", !!goal && targetFor(goal.slug, dev)?.slug === goal.slug);
-    check("targetFor finds nothing for a goal at or below where they are", careerTarget(dev, role, s0!.level) === null);
-    check("targetFor finds nothing for an unknown slug", targetFor("nope", dev) === null);
 
     if (top > s0!.level) {
       db.insert(promotions).values({ userId: dev.id, jobRole: role, level: top, decidedBy: dev.id, note: "check" }).run();

@@ -8,9 +8,9 @@ import { DOMAIN_KEYS, domainLabel, mixFor } from "@/lib/blueprint";
 import { ladderFor } from "@/lib/careers";
 import { dateBounds, journeyFor, levelCode, roleLabel, targetsFor, type Leg } from "@/lib/journey";
 import { clearCareerGoal, enroll, setCareerGoal, startRoleExam } from "@/app/actions";
-import { careerTarget, standingFor, type CareerStanding } from "@/lib/careerTarget";
+import { standingFor, type CareerStanding } from "@/lib/careerStanding";
 import { assessmentFor } from "@/lib/route";
-import { careerSlug } from "@/lib/standing";
+import { roleRouteSlug, roleTarget } from "@/lib/routeRole";
 import { ROLE_EXAM_MIN, ROLE_EXAM_SIZE, latestFinishedRoleExam, openRoleExam, roleExamPlan } from "@/lib/roleExam";
 import { ROLE_CHECK_VALID_DAYS, roleExamsAvailable } from "@/lib/roleCheck";
 import { careerFor } from "@/lib/careers";
@@ -145,7 +145,7 @@ export default async function Journey({ searchParams }: { searchParams: Promise<
   const { goal, here, legs, pace, next } = j;
   const reached = !!goal && legs.length === 0;
   const st = standingFor(user);
-  const slug = goal && !reached && careerTarget(user, goal.targetRole, goal.targetLevel) ? careerSlug(goal.targetRole, goal.targetLevel) : null;
+  const slug = goal && !reached && roleTarget(roleRouteSlug(goal.targetRole, goal.targetLevel)) ? roleRouteSlug(goal.targetRole, goal.targetLevel) : null;
   const asmt = slug ? assessmentFor(user.id, slug) : null;
 
   const goalForm = (replace: boolean) => (

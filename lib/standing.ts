@@ -51,11 +51,3 @@ export function standing(levels: number[], promoted: number | null, verified: nu
   if (level < verified) return { level, basis, verified, agreement: "verified-ahead", rungsApart: between(level, verified) };
   return { level, basis, verified, agreement: "agree", rungsApart: 0 };
 }
-
-/** A route target made from a career ladder is named by role and level: `career~lead_developer~3`. Role keys are lower case with spaces. */
-export const careerSlug = (role: string, level: number) => `career~${role.trim().toLowerCase().replace(/ /g, "_")}~${level}`;
-
-export function parseCareerSlug(slug: string): { role: string; level: number } | null {
-  const m = /^career~([^~]+)~(\d{1,3})$/.exec(slug);
-  return m ? { role: m[1].replace(/_/g, " "), level: Number(m[2]) } : null;
-}

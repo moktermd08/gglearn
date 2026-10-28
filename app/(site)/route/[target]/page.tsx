@@ -5,7 +5,7 @@ import { currentUser } from "@/lib/auth";
 import { isAnonymous } from "@/lib/anonymous";
 import { PageHero } from "@/components/charts";
 import { Ring } from "@/components/Ring";
-import { UNPAID, ROUTE_BATCH, areaRows, assessmentFor, batchQuestions, currentArea, resolveAreas, resultsFor } from "@/lib/route";
+import { UNPAID, ROUTE_BATCH, areaRows, assessmentFor, batchQuestions, currentArea, resolveAreas, resultsFor, targetBySlug } from "@/lib/route";
 import { STATUS_LABEL, areaStatus, byGap, levelsToClimb, notes, readiness, type AreaStatus } from "@/lib/routeScore";
 import { planFor } from "@/lib/routePlan";
 import { answerRoute, skipRoute } from "../actions";
@@ -21,7 +21,7 @@ const BADGE: Record<AreaStatus, string> = {
 export default async function RouteTarget({ params, searchParams }: { params: Promise<{ target: string }>; searchParams: Promise<{ retake?: string }> }) {
   const me = await currentUser(); // nobody has to sign in to start: the first save makes a private guest account
   const slug = (await params).target;
-  const target = targetFor(slug, me);
+  const target = targetBySlug(slug);
   if (!target) notFound();
   const a = me ? assessmentFor(me.id, slug) : null;
   const retake = !!(await searchParams).retake;

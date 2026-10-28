@@ -5,7 +5,7 @@ import { requireUser } from "@/lib/auth";
 import { isAnonymous } from "@/lib/anonymous";
 import SaveProgress from "../../save-progress";
 import { PageHero } from "@/components/charts";
-import { assessmentFor } from "@/lib/route";
+import { assessmentFor, targetBySlug } from "@/lib/route";
 import { dateAt } from "@/lib/roadmap";
 import { planFor, viewPlan, type ItemState } from "@/lib/routePlan";
 import { makePlan, replanRoute, setRouteReminders, toggleTask } from "../../actions";
@@ -19,7 +19,7 @@ const monthsLabel = (n: number) => `${n} ${n === 1 ? "month" : "months"}`;
 export default async function RoutePlan({ params }: { params: Promise<{ target: string }> }) {
   const me = await requireUser();
   const slug = (await params).target;
-  const target = targetFor(slug, me);
+  const target = targetBySlug(slug);
   if (!target) notFound();
   const a = assessmentFor(me.id, slug);
   if (!a || a.status !== "complete") redirect(`/route/${slug}`);

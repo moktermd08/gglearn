@@ -48,12 +48,6 @@ const pathTo = (parent: Map<string, Node | null>, to: Node): Node[] | null => {
   return path;
 };
 
-/** The places to pass through from where this person is to `role` at `level` (their own first), or null when it cannot be reached. */
-export function pathFor(person: Person, role: string, level: number, cat = catalog()): { role: string; level: number }[] | null {
-  const c = careerFor(person, cat);
-  return c ? pathTo(reach({ role: c.role, level: c.current.level }), { role, level }) : null;
-}
-
 export type Target = { role: string; label: string; levels: { level: number; title: string }[] };
 
 /** The places this person could aim for, grouped by role. Excludes where they already are. */
