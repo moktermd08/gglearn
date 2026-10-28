@@ -9,6 +9,7 @@ import { requireManager } from "@/lib/auth";
 import { addCareerLevel, addCareerStep, promote, removeCareerStep, saveCareerLevel } from "@/app/actions";
 import { careerFor, ladderFor, rolesWithLadders } from "@/lib/careers";
 import { catalog } from "@/lib/paths";
+import { standingFor } from "@/lib/careerTarget";
 import { MAX_LEVEL } from "@/lib/levels";
 import { AlertTriangle, ArrowUpRight, CheckCircle2, ChevronDown, CircleDashed, Medal, Plus, Save, Trash2, TrendingUp } from "lucide-react";
 import { isGlobal, usersInReach } from "@/lib/tenancy";
@@ -17,6 +18,25 @@ import { adminScopeOf } from "@/lib/adminScope";
 export const metadata = { title: "Careers — gglearn" };
 
 const date = (sec: number) => new Date(sec * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
+/** What exams prove next to the title the promotion record gives. The title is a manager's call and stands; this is evidence to decide with. */
+function Evidence({ p, c, cat }: { p: typeof users.$inferSelect; c: NonNullable<ReturnType<typeof careerFor>>; cat: ReturnType<typeof catalog> }) {
+  const st = standingFor(p, cat, c);
+  if (!st) return null;
+  const proven = st.verified === null ? null : st.titles.get(st.verified) ?? `Level ${st.verified}`;
+  const apart = `${st.rungsApart} level${st.rungsApart === 1 ? "" : "s"}`;
+  const note = {
+    agree: "Exams back up the title.",
+    "title-ahead": `Exams prove ${apart} less than the title.`,
+    "verified-ahead": `Exams show ${apart} more than the title: a case for promotion.`,
+    unverified: "No exam results on this ladder yet.",
+  }[st.agreement];
+  return (
+    <p className={`rounded-xl p-2.5 text-sm ${st.agreement === "verified-ahead" ? "bg-emerald-500/10 text-emerald-300" : st.agreement === "title-ahead" ? "bg-amber-500/10 text-amber-300" : "bg-black/[.04] text-slate-400"}`}>
+      <b>Proven by exams:</b> {proven ?? "nothing yet"}. {note}
+    </p>
+  );
+}
 
 export default async function Careers({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
   const openRole = ((await searchParams).role ?? "").toLowerCase(); // only the ladder being looked at is drawn in full: all 28 at once was a 7 MB page
@@ -60,6 +80,7 @@ export default async function Careers({ searchParams }: { searchParams: Promise<
                   <span className="rounded-full bg-black/5 px-3 py-1 font-semibold">{c.current.title}</span><ArrowUpRight size={15} className="text-slate-400" /><span className="rounded-full bg-violet-500/15 px-3 py-1 font-semibold text-violet-300">{c.next.title}</span>
                 </div>
               ) : <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-400/15 px-3 py-1 text-sm font-semibold text-amber-300"><Medal size={14} />{c.current.title} · top of the path</span>}
+              <Evidence p={p} c={c} cat={cat} />
               {c.hold === "role-check" && <p className="flex items-start gap-2 rounded-xl bg-amber-500/10 p-2.5 text-sm text-amber-300"><AlertTriangle size={15} className="mt-0.5 shrink-0" />Every step is met, but there is no passing role check from the last {ROLE_CHECK_VALID_DAYS} days.</p>}
               {c.hold === "overdue" && <p className="flex items-start gap-2 rounded-xl bg-amber-500/10 p-2.5 text-sm text-amber-300"><AlertTriangle size={15} className="mt-0.5 shrink-0" />Every step is met, but required learning is overdue.</p>}
               {c.hold === "nothing-to-measure" && c.next && <p className="rounded-xl bg-black/[.04] p-2.5 text-sm text-slate-400">No passable steps for {c.next.title} yet, so this needs a manager decision.</p>}

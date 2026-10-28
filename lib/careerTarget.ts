@@ -49,8 +49,7 @@ export function targetFor(slug: string, person: Person): Target | null {
 export type CareerStanding = Standing & { role: string; titles: Map<number, string> };
 
 /** The title a manager gave (or the bottom rung) next to what real exams prove, for this person's own ladder. Null when they have no ladder. */
-export function standingFor(person: Person, cat = catalog()): CareerStanding | null {
-  const c = careerFor(person, cat);
+export function standingFor(person: Person, cat = catalog(), c = careerFor(person, cat)): CareerStanding | null {
   if (!c) return null;
   const scopes = scopesOf(person.id);
   const rungs: RungEvidence[] = c.ladder.map((r) => {
