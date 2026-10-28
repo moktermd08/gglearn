@@ -35,7 +35,7 @@ export function careerTarget(person: Person, role: string, level: number, cat = 
   });
   if (!last || !areas.size) return null;
   const { title, summary } = last as { title: string; summary: string };
-  return { slug: careerSlug(role, level), title: `${title}, ${roleLabel(role)}`, short: title, summary, areas: [...areas.values()], stages };
+  return { slug: careerSlug(role, level), title: title.toLowerCase().includes(roleLabel(role).toLowerCase()) ? title : `${title}, ${roleLabel(role)}`, short: title, summary, areas: [...areas.values()], stages };
 }
 
 /** A listed job by its slug, or a career goal named by role and level. */
