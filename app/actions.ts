@@ -842,6 +842,7 @@ export async function setCareerGoal(fd: FormData) {
   db.insert(careerGoals).values({ userId: me.id, targetRole: p.data.role, targetLevel: p.data.level, targetDate: at })
     .onConflictDoUpdate({ target: careerGoals.userId, set: { targetRole: p.data.role, targetLevel: p.data.level, targetDate: at, createdAt: nowSec } }).run();
   revalidatePath("/journey");
+  revalidatePath("/goal");
   revalidatePath("/dashboard");
 }
 
@@ -849,6 +850,7 @@ export async function clearCareerGoal() {
   const me = await requireUser();
   db.delete(careerGoals).where(eq(careerGoals.userId, me.id)).run();
   revalidatePath("/journey");
+  revalidatePath("/goal");
   revalidatePath("/dashboard");
 }
 
