@@ -38,7 +38,7 @@ export default function RouteForm({ slug, unpaid, defaults, jobTitle, rightToWor
         <legend className="text-lg font-extrabold">How long do you want to give yourself?</legend>
         <p className="text-sm text-slate-400">Pick the time that fits your life. It can be a month or several years. You can change it later.</p>
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="space-y-1 text-sm font-semibold">Months until you want to be ready to apply
+          <label className="space-y-1 text-sm font-semibold">{career ? "Months until you want to be ready" : "Months until you want to be ready to apply"}
             <input name="horizonMonths" type="number" inputMode="numeric" min={HORIZON_MIN} max={HORIZON_MAX} required defaultValue={defaults?.horizonMonths ?? 9} className={input} />
             <span className="block text-xs font-normal text-slate-400">{HORIZON_MIN} to {HORIZON_MAX} months</span>
           </label>

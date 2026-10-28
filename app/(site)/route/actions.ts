@@ -57,7 +57,7 @@ export async function saveRoute(slug: string, _: RouteState, fd: FormData): Prom
 /** Marks the batch on screen and asks the next one. */
 export async function answerRoute(slug: string, fd: FormData) {
   const me = await requireUser();
-  const target = targetBySlug(slug);
+  const target = targetFor(slug, me);
   const a = target && assessmentFor(me.id, slug);
   if (!target || !a || a.status !== "in_progress") redirect(`/route/${slug}`);
   answerCurrent(a, resolveAreas(target, me), (id) => str(fd.get(`q${id}`)));
@@ -67,7 +67,7 @@ export async function answerRoute(slug: string, fd: FormData) {
 /** Leaves the current area at what is already proven (nothing, for a newcomer) and moves on. */
 export async function skipRoute(slug: string) {
   const me = await requireUser();
-  const target = targetBySlug(slug);
+  const target = targetFor(slug, me);
   const a = target && assessmentFor(me.id, slug);
   if (!target || !a || a.status !== "in_progress") redirect(`/route/${slug}`);
   skipCurrent(a, resolveAreas(target, me));
@@ -77,7 +77,7 @@ export async function skipRoute(slug: string) {
 /** Builds the dated plan from a finished check. Does nothing if there already is one, so a double click cannot move its dates. */
 export async function makePlan(slug: string) {
   const me = await requireUser();
-  const target = targetBySlug(slug);
+  const target = targetFor(slug, me);
   const a = target && assessmentFor(me.id, slug);
   if (!target || !a || a.status !== "complete") redirect(`/route/${slug}`);
   if (!planFor(a.id)) createPlan(me, target, a);
@@ -87,7 +87,7 @@ export async function makePlan(slug: string) {
 /** Starts the plan again from today with what the person has learned since, keeping the finish date they were working to. */
 export async function replanRoute(slug: string) {
   const me = await requireUser();
-  const target = targetBySlug(slug);
+  const target = targetFor(slug, me);
   const a = target && assessmentFor(me.id, slug);
   if (!target || !a || a.status !== "complete") redirect(`/route/${slug}`);
   if (!allowed(`replan:${me.id}`, 10)) redirect(`/route/${slug}/plan`);
@@ -99,7 +99,7 @@ export async function replanRoute(slug: string) {
 /** Ticks a non-learning step off, or back on. */
 export async function toggleTask(slug: string, key: string, done: boolean) {
   const me = await requireUser();
-  const target = targetBySlug(slug);
+  const target = targetFor(slug, me);
   const a = target && assessmentFor(me.id, slug);
   if (!target || !a) redirect(`/route`);
   setTask(a, target, key, done);
