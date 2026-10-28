@@ -9,7 +9,7 @@ import { requireManager } from "@/lib/auth";
 import { addCareerLevel, addCareerStep, promote, removeCareerStep, saveCareerLevel } from "@/app/actions";
 import { careerFor, ladderFor, rolesWithLadders } from "@/lib/careers";
 import { catalog } from "@/lib/paths";
-import { standingFor } from "@/lib/careerTarget";
+import { standingFor } from "@/lib/careerStanding";
 import { MAX_LEVEL } from "@/lib/levels";
 import { AlertTriangle, ArrowUpRight, CheckCircle2, ChevronDown, CircleDashed, Medal, Plus, Save, Trash2, TrendingUp } from "lucide-react";
 import { isGlobal, usersInReach } from "@/lib/tenancy";
