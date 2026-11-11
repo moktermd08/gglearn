@@ -79,6 +79,7 @@ export default async function CareerDoctor() {
       {!best ? (
         <EmptyState Icon={Stethoscope} title="No results to read yet" tone="violet">
           <p className="text-sm text-slate-600">Take a placement check in two or three different areas and come back. Each one takes a few minutes.</p>
+          <Link href="/doctor/taster" className="btn btn-primary mt-3 inline-block">Take the career taster (about 3 minutes)</Link>
           <div className="mt-3 flex flex-wrap justify-center gap-2">
             {d.families.slice(0, 8).flatMap((f) => f.untested.slice(0, 1).map((a) => <form key={a.slug} action={checkMyLevel.bind(null, a.trackId)}><button className="btn btn-ghost text-sm" title={f.family}>{a.name}</button></form>))}
           </div>
@@ -94,6 +95,7 @@ export default async function CareerDoctor() {
               Based on {d.testedAreas} of {d.totalAreas} areas you have tried.
               {thin && <> That is not much yet, so treat this as a first guess: the more areas you try, the sharper it gets.</>}
             </p>
+            <Link href="/doctor/taster" className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-700 hover:underline">Sharpen it with the career taster <ArrowRight size={14} /></Link>
           </section>
 
           <section className="space-y-3" aria-label="Fields ranked">
