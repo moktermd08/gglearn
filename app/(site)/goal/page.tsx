@@ -40,7 +40,8 @@ function widestGaps(legs: Leg[], limit: number): Gap[] {
   return [...byTrack.values()].sort((a, b) => (b.need - b.step.passed) - (a.need - a.step.passed)).slice(0, limit);
 }
 
-export default async function GoalAssessment() {
+export default async function GoalAssessment({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
+  const { role: wanted = "" } = await searchParams;
   const user = await requireUser();
   const j = journeyFor(user);
   const enrolled = new Set(db.select({ t: enrollments.trackId }).from(enrollments).where(eq(enrollments.userId, user.id)).all().map((e) => e.t));
@@ -67,6 +68,11 @@ export default async function GoalAssessment() {
 
   const { goal, here, legs, pace } = j;
   const targets = targetsFor(user);
+  // a role chosen on the Career doctor opens already selected, at the first level that can be reached; if it cannot be reached from here, say so
+  const wantedRole = wanted.trim().toLowerCase();
+  const first = wantedRole ? targets.find((t) => t.role === wantedRole)?.levels[0] : undefined;
+  const preselect = first ? `${wantedRole}|${first.level}` : undefined;
+  const wantedNote = wantedRole && !first ? <p role="status" className="text-sm text-amber-300">{roleLabel(wantedRole)} cannot be reached from {here.title} yet. <Link href={`/route/role?role=${encodeURIComponent(wantedRole)}`} className="underline">See its route instead</Link>.</p> : null;
   const st = standingFor(user);
 
   if (!goal) {
@@ -76,7 +82,7 @@ export default async function GoalAssessment() {
         {st && <StandingCard st={st} goalTitle="" slug={null} state="none" />}
         <section className="card space-y-3 p-5">
           <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-pink-500/15 text-pink-300"><Target size={17} /></span>Set your goal</h2>
-          {targets.length ? <GoalForm targets={targets} goal={null} hereRole={here.role} /> : <p className="text-sm text-slate-400">You are already at the top of the path for your role, and no other path leads on from here yet.</p>}
+          {targets.length ? <>{wantedNote}<GoalForm targets={targets} goal={null} hereRole={here.role} preselect={preselect} /></> : <p className="text-sm text-slate-400">You are already at the top of the path for your role, and no other path leads on from here yet.</p>}
         </section>
       </div>
     );
@@ -159,7 +165,8 @@ export default async function GoalAssessment() {
 
       <section className="card space-y-3 p-5">
         <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-pink-500/15 text-pink-300"><Target size={17} /></span>Change your goal</h2>
-        <GoalForm targets={targets} goal={goal} hereRole={here.role} />
+        {wantedNote}
+        <GoalForm targets={targets} goal={goal} hereRole={here.role} preselect={preselect} />
         <div className="flex flex-wrap items-center gap-4 text-sm">
           <Link href="/journey" className="text-sky-300 underline">Every step, in full</Link>
           <form action={clearCareerGoal}><button className="text-slate-400 underline">Remove this goal</button></form>
