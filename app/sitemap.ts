@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: at("/"), changeFrequency: "daily", priority: 1 },
     { url: at("/signup"), changeFrequency: "monthly", priority: 0.8 },
     { url: at("/try"), changeFrequency: "weekly", priority: 0.8 },
+    { url: at("/career-doctor"), changeFrequency: "monthly", priority: 0.7 },
     { url: at("/campaigns"), changeFrequency: "daily", priority: 0.9 },
     { url: at("/competitions"), changeFrequency: "daily", priority: 0.8 },
     { url: at("/map"), changeFrequency: "monthly", priority: 0.5 },
