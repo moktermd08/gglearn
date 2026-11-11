@@ -6,6 +6,9 @@ import { now } from "@/lib/competitions";
 
 type Person = typeof users.$inferSelect;
 
+/** How much a kind of track is preferred for the taster: concrete technologies and tools say more about aptitude than shared process basics. */
+const KIND_WEIGHT: Record<string, number> = { technology: 3, tool: 2 };
+
 /** The level the taster asks at, and how many questions per field. All right counts as that level mastered, the same bar the placement check sets. */
 export const TASTE_LEVEL = 3, TASTE_SIZE = 3, TASTE_FIELDS = 6;
 
@@ -25,8 +28,9 @@ export function tasterFor(person: Person): TasterField[] {
   for (const f of diagnose(person).families) {
     if (out.length >= TASTE_FIELDS) break;
     const count = new Map<number, { name: string; trackId: number; n: number }>();
-    for (const r of f.roles) for (const a of r.areas) if (!a.tested) count.set(a.trackId, { name: a.name, trackId: a.trackId, n: (count.get(a.trackId)?.n ?? 0) + 1 });
-    const pick = [...count.values()].sort((a, b) => b.n - a.n).find((c) => poolSize(c.trackId) >= TASTE_SIZE);
+    const weight = new Map<number, number>();
+    for (const r of f.roles) for (const a of r.areas) if (!a.tested) { count.set(a.trackId, { name: a.name, trackId: a.trackId, n: (count.get(a.trackId)?.n ?? 0) + 1 }); weight.set(a.trackId, KIND_WEIGHT[a.kind] ?? 1); }
+    const pick = [...count.values()].sort((a, b) => b.n * weight.get(b.trackId)! - a.n * weight.get(a.trackId)!).find((c) => poolSize(c.trackId) >= TASTE_SIZE);
     if (!pick) continue;
     const qs = db.select().from(questions).where(pool(pick.trackId)).orderBy(sql`random()`).limit(TASTE_SIZE).all();
     out.push({ family: f.family, trackId: pick.trackId, name: pick.name, questions: qs.map((q) => ({ id: q.id, prompt: q.prompt, code: q.code, options: (q.options ?? []).map((o) => ({ key: o.key, text: o.text })) })) });
