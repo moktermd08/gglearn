@@ -6,13 +6,13 @@ const input = "rounded border border-white/20 bg-[#fff] px-2 py-1";
 const iso = (sec: number) => new Date(sec * 1000).toISOString().slice(0, 10);
 
 /** Pick a role and level to aim for, and a date. Only places the person can actually reach are offered. */
-export function GoalForm({ targets, goal, hereRole }: { targets: Target[]; goal: Goal | null; hereRole: string }) {
+export function GoalForm({ targets, goal, hereRole, preselect }: { targets: Target[]; goal: Goal | null; hereRole: string; /** "role|level" to have chosen when the form opens, such as from the Career doctor */ preselect?: string }) {
   const { tomorrow, nextYear } = dateBounds();
   return (
     <form action={setCareerGoal} className="flex flex-wrap items-end gap-3 text-sm">
       <label className="grid gap-1">
         <span className="text-xs text-slate-400">I want to become</span>
-        <select name="target" required defaultValue={goal ? `${goal.targetRole}|${goal.targetLevel}` : undefined} className={`${input} min-w-64`}>
+        <select name="target" required defaultValue={preselect ?? (goal ? `${goal.targetRole}|${goal.targetLevel}` : undefined)} className={`${input} min-w-64`}>
           {!goal && <option value="">Choose a role and level…</option>}
           {targets.map((t) => (
             <optgroup key={t.role} label={t.role === hereRole ? `${t.label} (your path)` : t.label}>
