@@ -27,6 +27,7 @@ export function SiteFooter({ user, look = DEFAULT_LOOK }: { user: User; look?: L
           <ul className={col}>
             {user && <li><Link href="/dashboard" className={link}>My quest</Link></li>}
             {user && <li><Link href="/journey" className={link}>My career</Link></li>}
+            {user && <li><Link href="/doctor" className={link}>Career doctor</Link></li>}
             {user && <li><Link href="/route" className={link}>My route</Link></li>}
             {user && <li><Link href="/build" className={link}>Build &amp; launch</Link></li>}
             {user && <li><Link href="/start" className={link}>Start a race</Link></li>}

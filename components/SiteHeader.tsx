@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, Compass, Database, Hammer, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell, GraduationCap, HeartHandshake } from "lucide-react";
+import { Award, Stethoscope, Compass, Database, Hammer, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell, GraduationCap, HeartHandshake } from "lucide-react";
 import { logout } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
@@ -43,6 +43,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
         <div className={`ml-2 hidden items-center gap-1 ${staff ? "min-[1040px]:flex" : "min-[940px]:flex"}`}>
           {user && <NavLink href="/dashboard"><LayoutDashboard size={15} />My quest</NavLink>}
           {user && <NavLink href="/journey"><Mountain size={15} />My career</NavLink>}
+          {user && <NavLink href="/doctor"><Stethoscope size={15} />Career doctor</NavLink>}
           {user && <NavLink href="/route"><Compass size={15} />My route</NavLink>}
           {user && <NavLink href="/build"><Hammer size={15} />Build</NavLink>}
           {user && <NavLink href="/start"><Rocket size={15} />Start a race</NavLink>}
@@ -91,6 +92,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
           <div className="space-y-0.5 text-slate-300">
             {user && <Link href="/dashboard" className={mobile}><LayoutDashboard size={18} />My quest</Link>}
             {user && <Link href="/journey" className={mobile}><Mountain size={18} />My career</Link>}
+            {user && <Link href="/doctor" className={mobile}><Stethoscope size={18} />Career doctor</Link>}
             {user && <Link href="/route" className={mobile}><Compass size={18} />My route</Link>}
             {user && <Link href="/build" className={mobile}><Hammer size={18} />Build &amp; launch</Link>}
             {user && <Link href="/start" className={mobile}><Rocket size={18} />Start a race</Link>}
