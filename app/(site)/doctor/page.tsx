@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { EmptyState, PageHero } from "@/components/charts";
 import { diagnose, type FamilyFit, type RoleFit } from "@/lib/careerDoctor";
 import { rolesWithLadders } from "@/lib/careers";
+import { checkMyLevel } from "./actions";
 
 export const metadata = { title: "Career doctor — gglearn" };
 
@@ -52,7 +53,12 @@ function Family({ f, open, myRole }: { f: FamilyFit; open: boolean; myRole: stri
       </summary>
       <ul className="mt-3 space-y-3">{f.roles.slice(0, 4).map((r) => <RoleCard key={r.role} r={r} mine={r.role === myRole} />)}</ul>
       {f.untested.length > 0 && (
-        <p className="mt-3 text-sm text-slate-600">To sharpen this: try {f.untested.map((a) => a.name).join(", ")}. <Link href="/start" className="font-semibold text-indigo-700 hover:underline">Start a race</Link> and the placement check finds your level in minutes.</p>
+        <div className="mt-3 space-y-2">
+          <p className="text-sm text-slate-600">To sharpen this, find your level in an area you have not tried (about a minute each):</p>
+          <div className="flex flex-wrap gap-2">
+            {f.untested.map((a) => <form key={a.slug} action={checkMyLevel.bind(null, a.trackId)}><button className="btn btn-ghost text-sm">{a.name}</button></form>)}
+          </div>
+        </div>
       )}
     </details>
   );
@@ -73,7 +79,10 @@ export default async function CareerDoctor() {
       {!best ? (
         <EmptyState Icon={Stethoscope} title="No results to read yet" tone="violet">
           <p className="text-sm text-slate-600">Take a placement check in two or three different areas and come back. Each one takes a few minutes.</p>
-          <Link href="/start" className="mt-3 inline-flex items-center gap-1 font-semibold text-indigo-700 hover:underline">Start a race <ArrowRight size={14} /></Link>
+          <div className="mt-3 flex flex-wrap justify-center gap-2">
+            {d.families.slice(0, 8).flatMap((f) => f.untested.slice(0, 1).map((a) => <form key={a.slug} action={checkMyLevel.bind(null, a.trackId)}><button className="btn btn-ghost text-sm" title={f.family}>{a.name}</button></form>))}
+          </div>
+          <Link href="/start" className="mt-3 inline-flex items-center gap-1 font-semibold text-indigo-700 hover:underline">Or pick any topic <ArrowRight size={14} /></Link>
         </EmptyState>
       ) : (
         <>

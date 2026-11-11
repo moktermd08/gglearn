@@ -6,7 +6,7 @@ import { hiddenTrackIds } from "@/lib/tracks";
 
 type Person = typeof users.$inferSelect;
 
-export type Area = { slug: string; name: string; need: number; have: number; tested: boolean };
+export type Area = { slug: string; trackId: number; name: string; need: number; have: number; tested: boolean };
 export type RoleFit = {
   role: string; name: string; family: string; blurb: string;
   /** 0..1: how much of the level this role first asks for the person already shows (placement counts: this is about fit, not proof) */
@@ -39,7 +39,7 @@ export function diagnose(person: Person): Diagnosis {
     const slugs = (r.core?.length ? r.core : r.tracks).filter((s) => bySlug.has(s));
     const areas: Area[] = slugs.map((s) => {
       const need = Math.max(1, Math.min(r.entry?.[s] ?? 1, bySlug.get(s)!.reach)), got = have(s) ?? 0;
-      return { slug: s, name: bySlug.get(s)!.name, need, have: got, tested: got > 0 };
+      return { slug: s, trackId: bySlug.get(s)!.id, name: bySlug.get(s)!.name, need, have: got, tested: got > 0 };
     });
     if (areas.length < 2) continue; // too few measurable areas to say anything about the role
     const asked = areas.reduce((n, a) => n + a.need, 0);
