@@ -8,6 +8,8 @@ import { PlanCreateForm } from "@/components/PlanCreateForm";
 import { dateBounds, targetsFor } from "@/lib/journey";
 import { MAX_PLANS } from "@/lib/planSets";
 import { addMyItemAction, addMyPlanAction, logItemAction, removeItemAction, removePlanAction } from "./actions";
+import { RecentActivity, StrengthsWeaknesses, TimeTabs, type When } from "@/components/PlanInsights";
+import { insightsFor, recentActivityFor } from "@/lib/planInsights";
 import { planSetFor, type PlanCard, type PlanItem, type PlanSource, type PlanStatus } from "@/lib/plan";
 
 export const metadata = { title: "My plans — gglearn" };
@@ -74,12 +76,16 @@ function ManualRow({ i }: { i: PlanItem }) {
   );
 }
 
-export default async function Plan({ searchParams }: { searchParams: Promise<{ plan?: string }> }) {
+export default async function Plan({ searchParams }: { searchParams: Promise<{ plan?: string; when?: string }> }) {
   const user = await requireUser();
-  const { plan: wanted } = await searchParams;
+  const { plan: wanted, when: whenRaw } = await searchParams;
   const set = planSetFor(user);
   const sel = set.cards.find((c) => c.key === wanted) ?? null; // no choice: the overview of every plan
   const all = set.all;
+  const when: When = whenRaw === "today" || whenRaw === "week" || whenRaw === "month" ? whenRaw : "all";
+  const ins = insightsFor(user, sel ? sel.plan : all);
+  const recent = recentActivityFor(user);
+  const base = sel ? `plan=${sel.key}` : "";
   const extras = set.cards.filter((c) => c.kind === "extra").length;
   const pct = all.total ? all.done / all.total : 0;
   const g = (sel ?? set.cards[1]).plan.goal;
@@ -106,6 +112,9 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
             </div>
           </section>
 
+          <StrengthsWeaknesses ins={ins} />
+          <TimeTabs ins={ins} when={when} base={base} />
+
           <section aria-label="Every plan" className="grid gap-3 sm:grid-cols-2">
             {set.cards.map((c) => {
               const st = cardStatus(c), p = c.plan, first = p.focus[0], done = p.total ? p.done / p.total : 0;
@@ -124,6 +133,8 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
               );
             })}
           </section>
+
+          <RecentActivity rows={recent} />
 
           <section className="card space-y-3 p-5">
             <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-indigo-500/15 text-indigo-400"><Plus size={17} /></span>Start another plan <span className="text-xs font-normal text-slate-400">{extras} of {MAX_PLANS}</span></h2>
@@ -151,7 +162,10 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
             </div>
           </section>
 
-          {sel.plan.focus.length > 0 && (
+          <StrengthsWeaknesses ins={ins} />
+          <TimeTabs ins={ins} when={when} base={base} />
+
+          {when === "all" && sel.plan.focus.length > 0 && (
             <section className="card space-y-3 p-5" aria-label="Focus">
               <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-amber-500/15 text-amber-300"><Target size={17} /></span>Focus first</h2>
               <ul className="space-y-2">{sel.plan.focus.map((i) => (i.manual ? <ManualRow key={i.key} i={i} /> : <Row key={i.key} i={i} />))}</ul>
@@ -160,7 +174,7 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
 
           {ORDER.map((src) => {
             const rows = sel.plan.items.filter((i) => i.source === src);
-            if (!rows.length) return null;
+            if (!rows.length || when !== "all") return null;
             const done = rows.filter((i) => i.status === "done").length;
             return (
               <section key={src} className="card space-y-3 p-5" aria-label={SOURCE[src]}>
@@ -172,6 +186,8 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
               </section>
             );
           })}
+
+          <RecentActivity rows={recent} />
 
           {sel.kind !== "required" && (
             <section className="card space-y-3 p-5">
