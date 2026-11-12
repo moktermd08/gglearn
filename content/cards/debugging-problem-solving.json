@@ -1,0 +1,1943 @@
+{
+ "slug": "debugging-problem-solving",
+ "name": "Debugging and Problem Solving",
+ "description": "Finding and fixing faults methodically: hypothesis-led method, reproduction, isolation, debugger and log tools, common and concurrent bug classes, performance and production debugging, web and network tools, cognitive pitfalls and prevention.",
+ "roles": "developer,engineer,tester,devops",
+ "kind": "process",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "method": "debugging principle or method",
+  "repro": "reproduction technique",
+  "isolate": "isolation technique",
+  "tool": "debugger or debugging tool feature",
+  "log": "logging or observability concept",
+  "bug": "class of bug",
+  "conc": "concurrency bug or tool",
+  "perf": "performance-debugging concept",
+  "prod": "production-debugging practice",
+  "web": "web or network debugging tool",
+  "mind": "debugging pitfall or habit",
+  "prevent": "bug-prevention practice"
+ },
+ "cards": [
+  {
+   "group": "method",
+   "subject": "Scientific method",
+   "tier": 1,
+   "says": [
+    "forms a hypothesis about the cause and tests it with an experiment",
+    "changes one thing at a time so each result can be explained"
+   ],
+   "use": "need to find a cause instead of guessing",
+   "not": [
+    "rewrites code until the symptom disappears"
+   ],
+   "like": [
+    "Shotgun debugging"
+   ]
+  },
+  {
+   "group": "method",
+   "subject": "Shotgun debugging",
+   "tier": 2,
+   "says": [
+    "makes many unrelated changes at once hoping one of them fixes the fault",
+    "leaves the team unsure which change mattered"
+   ],
+   "use": "feel tempted to change several things at once",
+   "not": [
+    "is the fastest reliable way to find a cause"
+   ],
+   "like": [
+    "Scientific method"
+   ]
+  },
+  {
+   "group": "method",
+   "subject": "Rubber duck debugging",
+   "tier": 1,
+   "says": [
+    "explains the code line by line to an inanimate listener",
+    "exposes a wrong assumption by forcing it to be said aloud"
+   ],
+   "use": "are stuck and have nobody to ask",
+   "like": [
+    "Pairing on a bug"
+   ]
+  },
+  {
+   "group": "method",
+   "subject": "Five whys",
+   "tier": 3,
+   "says": [
+    "asks why repeatedly to move from a symptom to a root cause",
+    "stops at a cause the team can actually change"
+   ],
+   "use": "want to look past the first obvious cause of an incident",
+   "not": [
+    "names the person who made the mistake"
+   ],
+   "like": [
+    "Root cause"
+   ]
+  },
+  {
+   "group": "method",
+   "subject": "Root cause",
+   "tier": 2,
+   "says": [
+    "is the underlying defect whose removal stops the failure recurring",
+    "often lies in a different place from where the failure appears"
+   ],
+   "use": "need to know whether a fix is complete",
+   "like": [
+    "Symptom"
+   ]
+  },
+  {
+   "group": "method",
+   "subject": "Symptom",
+   "tier": 1,
+   "says": [
+    "is the visible failure that users or tests first notice",
+    "may be several steps away from the defect that produced it"
+   ],
+   "use": "are describing what a user saw rather than why",
+   "like": [
+    "Root cause"
+   ]
+  },
+  {
+   "group": "method",
+   "subject": "Hypothesis falsification",
+   "tier": 4,
+   "says": [
+    "designs a test that could prove the current guess wrong",
+    "prefers disconfirming evidence over repeating runs that agree with the theory"
+   ],
+   "use": "have a theory that every run so far seems to support",
+   "like": [
+    "Scientific method"
+   ]
+  },
+  {
+   "group": "method",
+   "subject": "Assumption audit",
+   "tier": 3,
+   "says": [
+    "lists what is believed to be true and checks each belief in turn",
+    "finds a bug hiding in something nobody thought to question"
+   ],
+   "use": "have checked everything you thought could be wrong",
+   "like": [
+    "Working backwards"
+   ]
+  },
+  {
+   "group": "method",
+   "subject": "Working backwards",
+   "tier": 3,
+   "says": [
+    "starts from the first wrong output and traces back to where it became wrong",
+    "suits a failure with a clear bad value in the result"
+   ],
+   "use": "can see exactly which output is incorrect",
+   "like": [
+    "Binary search debugging"
+   ]
+  },
+  {
+   "group": "method",
+   "subject": "Checking recent changes",
+   "tier": 1,
+   "says": [
+    "asks what changed since the system last worked",
+    "finds most regressions faster than reading old code"
+   ],
+   "use": "hear that something worked yesterday and is broken today",
+   "like": [
+    "Git bisect"
+   ]
+  },
+  {
+   "group": "repro",
+   "subject": "Minimal reproducible example",
+   "tier": 1,
+   "says": [
+    "strips a failure down to the smallest code that still shows it",
+    "lets someone else run the failure without the full application"
+   ],
+   "use": "need to report a bug to a library maintainer",
+   "not": [
+    "copies the whole repository into the report"
+   ],
+   "like": [
+    "Steps to reproduce"
+   ]
+  },
+  {
+   "group": "repro",
+   "subject": "Steps to reproduce",
+   "tier": 1,
+   "says": [
+    "lists the exact actions that trigger the failure in order",
+    "states the expected result beside the actual result"
+   ],
+   "use": "write a bug report for a tester",
+   "like": [
+    "Minimal reproducible example"
+   ]
+  },
+  {
+   "group": "repro",
+   "subject": "Environment capture",
+   "tier": 2,
+   "says": [
+    "records versions, configuration and operating system of the failing run",
+    "explains why a bug appears on one machine only"
+   ],
+   "use": "hear it works on my machine",
+   "like": [
+    "Configuration diff"
+   ]
+  },
+  {
+   "group": "repro",
+   "subject": "Record and replay",
+   "tier": 4,
+   "says": [
+    "records a run so the same execution can be replayed deterministically",
+    "lets a developer step backwards through a failure that happened once"
+   ],
+   "use": "must investigate a failure that has happened only once",
+   "like": [
+    "Steps to reproduce"
+   ]
+  },
+  {
+   "group": "repro",
+   "subject": "Fixed random seed",
+   "tier": 2,
+   "says": [
+    "makes a randomised test produce the same inputs on every run",
+    "lets a flaky failure be rerun exactly"
+   ],
+   "use": "have a test that fails on some random inputs",
+   "like": [
+    "Clock control"
+   ]
+  },
+  {
+   "group": "repro",
+   "subject": "Failing test first",
+   "tier": 2,
+   "says": [
+    "turns the reproduction into an automated test that fails before the fix",
+    "proves afterwards that the fix works"
+   ],
+   "use": "have just reproduced a bug by hand",
+   "like": [
+    "Regression test"
+   ]
+  },
+  {
+   "group": "repro",
+   "subject": "Anonymised production sample",
+   "tier": 3,
+   "says": [
+    "uses a scrubbed copy of real records to recreate a data-dependent bug",
+    "avoids copying personal data into development"
+   ],
+   "use": "cannot reproduce a bug with the test data you have",
+   "not": [
+    "copies customer records unchanged into a laptop"
+   ]
+  },
+  {
+   "group": "repro",
+   "subject": "Clock control",
+   "tier": 3,
+   "says": [
+    "freezes or injects time so date-dependent bugs can be reproduced",
+    "exposes failures at month ends, leap days and time-zone changes"
+   ],
+   "use": "see failures only around midnight or month end",
+   "like": [
+    "Fixed random seed"
+   ]
+  },
+  {
+   "group": "repro",
+   "subject": "Flaky test quarantine",
+   "tier": 4,
+   "says": [
+    "isolates a non-deterministic test so it stops blocking the pipeline",
+    "keeps the test and a ticket so the cause still gets fixed"
+   ],
+   "use": "have a test that fails one run in twenty",
+   "not": [
+    "deletes the test to keep the build green"
+   ]
+  },
+  {
+   "group": "isolate",
+   "subject": "Binary search debugging",
+   "tier": 2,
+   "says": [
+    "halves the suspect area with each check",
+    "finds a faulty step among many in a logarithmic number of checks"
+   ],
+   "use": "have a long process and no idea which step breaks it",
+   "like": [
+    "Git bisect",
+    "Divide the pipeline"
+   ]
+  },
+  {
+   "group": "isolate",
+   "subject": "Git bisect",
+   "tier": 2,
+   "says": [
+    "searches commit history for the change that introduced a bug",
+    "needs one known good commit and one known bad commit"
+   ],
+   "use": "know it worked last month and is broken now",
+   "like": [
+    "Binary search debugging"
+   ]
+  },
+  {
+   "group": "isolate",
+   "subject": "Delta debugging",
+   "tier": 5,
+   "says": [
+    "automatically shrinks a failing input to a minimal one",
+    "repeatedly removes parts of the input while the failure persists"
+   ],
+   "use": "have a huge input that crashes a parser",
+   "like": [
+    "Minimal reproducible example"
+   ]
+  },
+  {
+   "group": "isolate",
+   "subject": "Divide the pipeline",
+   "tier": 2,
+   "says": [
+    "checks the data at the boundary between two stages",
+    "decides which side of the boundary holds the fault"
+   ],
+   "use": "have data passing through several stages and a wrong result at the end",
+   "like": [
+    "Binary search debugging"
+   ]
+  },
+  {
+   "group": "isolate",
+   "subject": "Stubbing a dependency",
+   "tier": 3,
+   "says": [
+    "replaces a collaborator with a fixed fake to rule it out",
+    "shows whether the fault lies inside or outside the unit"
+   ],
+   "use": "suspect a downstream service but cannot prove it"
+  },
+  {
+   "group": "isolate",
+   "subject": "Feature flag toggle",
+   "tier": 3,
+   "says": [
+    "switches a suspect feature off in a running system to test whether it is the cause",
+    "is quicker than redeploying older code"
+   ],
+   "use": "suspect one new feature of causing errors in production",
+   "like": [
+    "Rollback as diagnosis"
+   ]
+  },
+  {
+   "group": "isolate",
+   "subject": "Differential comparison",
+   "tier": 3,
+   "says": [
+    "compares a working case with a failing one to spot what differs",
+    "covers inputs, configuration and environment"
+   ],
+   "use": "have one request that works and a similar one that fails",
+   "like": [
+    "Configuration diff"
+   ]
+  },
+  {
+   "group": "isolate",
+   "subject": "Configuration diff",
+   "tier": 2,
+   "says": [
+    "compares settings between a healthy and a broken environment",
+    "finds a setting that was changed by hand"
+   ],
+   "use": "have staging working and production failing",
+   "like": [
+    "Environment capture"
+   ]
+  },
+  {
+   "group": "isolate",
+   "subject": "Rollback as diagnosis",
+   "tier": 3,
+   "says": [
+    "reverts to the last known good release to confirm the release is the cause",
+    "restores service while the investigation continues"
+   ],
+   "use": "see errors begin right after a deployment",
+   "like": [
+    "Feature flag toggle"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Breakpoint",
+   "tier": 1,
+   "says": [
+    "pauses execution at a chosen line",
+    "lets variables be inspected at that moment"
+   ],
+   "use": "want to see program state at one point in the code",
+   "like": [
+    "Conditional breakpoint",
+    "Watchpoint"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Conditional breakpoint",
+   "tier": 2,
+   "says": [
+    "pauses only when an expression is true",
+    "avoids stopping on every iteration of a loop"
+   ],
+   "use": "need to stop on the one bad item among thousands",
+   "like": [
+    "Breakpoint"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Step over",
+   "tier": 1,
+   "says": [
+    "runs the current line including any function it calls and then pauses",
+    "skips the detail of called functions"
+   ],
+   "use": "trust the function on the current line and want to move on",
+   "like": [
+    "Step into"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Step into",
+   "tier": 1,
+   "says": [
+    "enters the function called on the current line",
+    "lets you follow execution into a callee"
+   ],
+   "use": "suspect the function on the current line is wrong",
+   "like": [
+    "Step over"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Watchpoint",
+   "tier": 3,
+   "says": [
+    "pauses when a chosen variable or memory location changes",
+    "finds the line that corrupts a value"
+   ],
+   "use": "know which value is wrong but not which code changes it",
+   "like": [
+    "Breakpoint"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Call stack",
+   "tier": 1,
+   "says": [
+    "lists the chain of function calls that led to the current point",
+    "shows who called the function that is running"
+   ],
+   "use": "are paused in a function and need to know how you got there",
+   "like": [
+    "Stack trace"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Stack trace",
+   "tier": 1,
+   "says": [
+    "prints the call chain at the moment an error was raised",
+    "points to the line where the exception originated"
+   ],
+   "use": "read an error report from a crashed program",
+   "like": [
+    "Call stack"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Core dump",
+   "tier": 4,
+   "says": [
+    "saves the memory image of a crashed process for later analysis",
+    "allows a crash to be examined after the process has gone"
+   ],
+   "use": "need to analyse a crash that happened on a server you cannot attach to",
+   "like": [
+    "Stack trace"
+   ]
+  },
+  {
+   "group": "tool",
+   "subject": "Address sanitizer",
+   "tier": 4,
+   "says": [
+    "instruments code to detect out-of-bounds and use-after-free access at run time",
+    "reports the exact allocation involved in a memory error"
+   ],
+   "use": "suspect memory corruption in native code",
+   "like": [
+    "Thread sanitizer"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Log level",
+   "tier": 1,
+   "says": [
+    "separates debug detail from errors by severity",
+    "lets verbosity be raised without changing code"
+   ],
+   "use": "want detailed output only while investigating",
+   "like": [
+    "Structured logging"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Structured logging",
+   "tier": 2,
+   "says": [
+    "writes log entries as key-value fields instead of free text",
+    "makes entries searchable by field"
+   ],
+   "use": "need to filter millions of log lines by user or order",
+   "like": [
+    "Log level"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Correlation ID",
+   "tier": 3,
+   "says": [
+    "is a unique identifier passed through every service that handles a request",
+    "lets one request's log lines be joined across services"
+   ],
+   "use": "must follow one request through several services",
+   "like": [
+    "Distributed trace"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Distributed trace",
+   "tier": 3,
+   "says": [
+    "records the timed path of one request across services",
+    "shows which hop added the delay"
+   ],
+   "use": "know a request is slow but not which service is responsible",
+   "like": [
+    "Correlation ID"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Metric",
+   "tier": 2,
+   "says": [
+    "is a numeric measurement sampled over time",
+    "shows trends such as error rate and latency"
+   ],
+   "use": "want to see whether a problem is growing",
+   "like": [
+    "Log level"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Log sampling",
+   "tier": 4,
+   "says": [
+    "keeps only a fraction of high-volume log entries",
+    "controls cost while keeping representative detail"
+   ],
+   "use": "have log volume that is too expensive to store in full",
+   "not": [
+    "drops every error entry first"
+   ]
+  },
+  {
+   "group": "log",
+   "subject": "Sensitive data redaction",
+   "tier": 3,
+   "says": [
+    "removes passwords, tokens and personal data before logs are written",
+    "keeps logs safe to share with support"
+   ],
+   "use": "must send logs to a vendor or another team"
+  },
+  {
+   "group": "log",
+   "subject": "Symptom-based alerting",
+   "tier": 4,
+   "says": [
+    "pages on user-visible failure such as error rate rather than on every internal cause",
+    "reduces noise that trains people to ignore alerts"
+   ],
+   "use": "are woken by alerts that turn out to need no action"
+  },
+  {
+   "group": "log",
+   "subject": "Observability",
+   "tier": 3,
+   "says": [
+    "lets you ask new questions about system behaviour from the data it emits",
+    "goes beyond checking dashboards built for known failures"
+   ],
+   "use": "face a failure nobody predicted when the dashboards were built",
+   "like": [
+    "Metric"
+   ]
+  },
+  {
+   "group": "bug",
+   "subject": "Off-by-one error",
+   "tier": 1,
+   "says": [
+    "miscounts a loop or index boundary by exactly one",
+    "reads one element too many or too few"
+   ],
+   "use": "see the first or last item skipped or an index out of range"
+  },
+  {
+   "group": "bug",
+   "subject": "Null reference",
+   "tier": 1,
+   "says": [
+    "uses a value that was never set",
+    "raises an error when a member of nothing is accessed"
+   ],
+   "use": "see a crash on a missing value"
+  },
+  {
+   "group": "bug",
+   "subject": "Integer overflow",
+   "tier": 3,
+   "says": [
+    "exceeds the largest value a numeric type can hold",
+    "turns a large positive number negative in fixed-width types"
+   ],
+   "use": "see a counter or total suddenly become negative",
+   "like": [
+    "Floating-point rounding"
+   ]
+  },
+  {
+   "group": "bug",
+   "subject": "Floating-point rounding",
+   "tier": 2,
+   "says": [
+    "gives 0.1 plus 0.2 a result slightly different from 0.3",
+    "makes exact equality checks on decimals unreliable"
+   ],
+   "use": "compare computed money or measurement values for equality",
+   "like": [
+    "Integer overflow"
+   ]
+  },
+  {
+   "group": "bug",
+   "subject": "Use after free",
+   "tier": 4,
+   "says": [
+    "reads memory after it has been returned to the allocator",
+    "produces corrupted data or exploitable crashes"
+   ],
+   "use": "see random crashes in native code that move when the code changes"
+  },
+  {
+   "group": "bug",
+   "subject": "Stale cache",
+   "tier": 3,
+   "says": [
+    "serves an old copy after the source has changed",
+    "disappears when the cache is cleared"
+   ],
+   "use": "see old data until someone clears something"
+  },
+  {
+   "group": "bug",
+   "subject": "Time zone error",
+   "tier": 3,
+   "says": [
+    "mixes local time and UTC",
+    "shows a one-hour or whole-day shift in stored dates"
+   ],
+   "use": "see dates a day out for users in some countries"
+  },
+  {
+   "group": "bug",
+   "subject": "Encoding error",
+   "tier": 3,
+   "says": [
+    "decodes bytes with the wrong character set",
+    "turns accented characters into garbage"
+   ],
+   "use": "see accented names corrupted after an import"
+  },
+  {
+   "group": "bug",
+   "subject": "Heisenbug",
+   "tier": 4,
+   "says": [
+    "changes or disappears when you try to observe it",
+    "is often hidden by added logging or a debugger"
+   ],
+   "use": "find a failure that stops when you attach the debugger",
+   "like": [
+    "Race condition"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "Race condition",
+   "tier": 2,
+   "says": [
+    "gives different outcomes depending on the timing of threads or requests",
+    "arises when shared state is changed without coordination"
+   ],
+   "use": "see results that differ between identical runs under load",
+   "like": [
+    "Deadlock",
+    "Lost update"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "Deadlock",
+   "tier": 2,
+   "says": [
+    "leaves two or more tasks each waiting for a lock the other holds",
+    "stops progress with no error raised"
+   ],
+   "use": "see a system hang with no CPU use and no errors",
+   "like": [
+    "Livelock"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "Livelock",
+   "tier": 4,
+   "says": [
+    "keeps tasks busy reacting to each other without making progress",
+    "differs from deadlock because the tasks are not blocked"
+   ],
+   "use": "see high CPU use but no work completing",
+   "like": [
+    "Deadlock",
+    "Starvation"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "Starvation",
+   "tier": 4,
+   "says": [
+    "prevents one task from ever getting the resource it needs",
+    "happens when other tasks always take priority"
+   ],
+   "use": "see one low-priority job never finishing",
+   "like": [
+    "Livelock"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "Mutex",
+   "tier": 1,
+   "says": [
+    "allows only one thread into a critical section at a time",
+    "protects shared data from simultaneous change"
+   ],
+   "use": "need exclusive access to shared data",
+   "like": [
+    "Lock ordering"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "Lost update",
+   "tier": 3,
+   "says": [
+    "overwrites another writer's change after both read the same old value",
+    "is prevented by optimistic locking or atomic updates"
+   ],
+   "use": "see two users save at once and one edit vanish",
+   "like": [
+    "Race condition"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "Thread dump",
+   "tier": 3,
+   "says": [
+    "lists what every thread is doing and holding at one instant",
+    "reveals which threads are blocked on which locks"
+   ],
+   "use": "must diagnose a hung process",
+   "like": [
+    "Core dump"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "Thread sanitizer",
+   "tier": 4,
+   "says": [
+    "detects unsynchronised access to shared memory at run time",
+    "reports data races even when no failure occurred"
+   ],
+   "use": "suspect a data race but cannot make it fail",
+   "like": [
+    "Address sanitizer"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "Lock ordering",
+   "tier": 4,
+   "says": [
+    "acquires multiple locks in one agreed sequence",
+    "removes the circular wait that causes deadlock"
+   ],
+   "use": "need code to take two locks safely",
+   "like": [
+    "Mutex"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Profiler",
+   "tier": 1,
+   "says": [
+    "measures where a program spends its time",
+    "shows the functions that dominate run time"
+   ],
+   "use": "want to know why a program is slow",
+   "not": [
+    "guesses the slow function from reading the code"
+   ],
+   "like": [
+    "Flame graph"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Flame graph",
+   "tier": 3,
+   "says": [
+    "stacks sampled call stacks so width shows share of time",
+    "makes the hottest code path visible at a glance"
+   ],
+   "use": "need to read thousands of profile samples quickly",
+   "like": [
+    "Profiler"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Baseline measurement",
+   "tier": 2,
+   "says": [
+    "records performance before any change",
+    "makes it possible to prove an improvement"
+   ],
+   "use": "are about to optimise something",
+   "like": [
+    "Load test"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "N+1 query",
+   "tier": 3,
+   "says": [
+    "runs one extra query per row after an initial list query",
+    "shows up as hundreds of near-identical queries for one page"
+   ],
+   "use": "see a page slow down as the list grows"
+  },
+  {
+   "group": "perf",
+   "subject": "Query plan",
+   "tier": 3,
+   "says": [
+    "shows how the database will execute a query",
+    "reveals a full table scan where an index was expected"
+   ],
+   "use": "have a query that is slow on a large table"
+  },
+  {
+   "group": "perf",
+   "subject": "Percentile latency",
+   "tier": 3,
+   "says": [
+    "reports the time within which a given share of requests finish",
+    "exposes a slow tail that an average hides"
+   ],
+   "use": "hear that the average response time looks fine but users complain",
+   "not": [
+    "is identical to the mean"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Amdahl's law",
+   "tier": 4,
+   "says": [
+    "limits overall speed-up by the part that cannot be improved",
+    "shows why optimising a small hotspot gains little"
+   ],
+   "use": "wonder how much faster the whole system gets from tuning one part"
+  },
+  {
+   "group": "perf",
+   "subject": "Premature optimisation",
+   "tier": 2,
+   "says": [
+    "tunes code before measurement shows a problem",
+    "spends effort on code that is not the bottleneck"
+   ],
+   "use": "are tempted to rewrite code for speed without data",
+   "like": [
+    "Baseline measurement"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "Load test",
+   "tier": 2,
+   "says": [
+    "applies realistic demand to find limits before users do",
+    "reveals failures that only appear under volume"
+   ],
+   "use": "must know whether a release will cope with launch traffic",
+   "like": [
+    "Baseline measurement"
+   ]
+  },
+  {
+   "group": "prod",
+   "subject": "Rollback",
+   "tier": 1,
+   "says": [
+    "returns to the previous release when the new one misbehaves",
+    "restores service faster than a fix forward"
+   ],
+   "use": "see a release cause errors and a fix is not ready",
+   "like": [
+    "Canary release"
+   ]
+  },
+  {
+   "group": "prod",
+   "subject": "Canary release",
+   "tier": 3,
+   "says": [
+    "sends a small share of traffic to the new version first",
+    "limits the damage of a bad release"
+   ],
+   "use": "want evidence a release is safe before everyone gets it",
+   "like": [
+    "Rollback"
+   ]
+  },
+  {
+   "group": "prod",
+   "subject": "Health check",
+   "tier": 2,
+   "says": [
+    "reports whether an instance can serve traffic",
+    "lets a load balancer stop routing to a failing instance"
+   ],
+   "use": "need failing servers removed from rotation automatically"
+  },
+  {
+   "group": "prod",
+   "subject": "Incident commander",
+   "tier": 3,
+   "says": [
+    "coordinates the response and assigns roles during an incident",
+    "stops everyone debugging the same thing at once"
+   ],
+   "use": "have many people and no clear owner in an outage"
+  },
+  {
+   "group": "prod",
+   "subject": "Mitigate before diagnose",
+   "tier": 3,
+   "says": [
+    "restores service first and finds the root cause afterwards",
+    "puts user impact ahead of understanding"
+   ],
+   "use": "face an outage while the cause is still unknown",
+   "like": [
+    "Five whys"
+   ]
+  },
+  {
+   "group": "prod",
+   "subject": "Circuit breaker",
+   "tier": 4,
+   "says": [
+    "stops calls to a failing dependency after repeated errors",
+    "gives the dependency time to recover and protects callers"
+   ],
+   "use": "see one slow dependency drag down every caller",
+   "like": [
+    "Health check"
+   ]
+  },
+  {
+   "group": "prod",
+   "subject": "Idempotency key",
+   "tier": 4,
+   "says": [
+    "lets a retried request be recognised and applied only once",
+    "prevents duplicates when a client retries after a timeout"
+   ],
+   "use": "see customers charged twice after a network timeout"
+  },
+  {
+   "group": "prod",
+   "subject": "Dead-letter queue",
+   "tier": 3,
+   "says": [
+    "holds messages that repeatedly failed processing",
+    "lets them be inspected and replayed without blocking the queue"
+   ],
+   "use": "have one poison message stopping a consumer"
+  },
+  {
+   "group": "prod",
+   "subject": "Runbook",
+   "tier": 2,
+   "says": [
+    "documents the steps to diagnose and fix a known failure",
+    "lets the on-call engineer act without its author"
+   ],
+   "use": "are paged at night for a failure seen before",
+   "like": [
+    "Incident commander"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "Browser inspector",
+   "tier": 1,
+   "says": [
+    "inspects the DOM, styles and console of a live page",
+    "needs no change to the application code"
+   ],
+   "use": "need to see why a page looks or behaves wrongly",
+   "like": [
+    "Network tab"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "Network tab",
+   "tier": 1,
+   "says": [
+    "lists every request a page makes with its status and timing",
+    "shows failed or slow calls"
+   ],
+   "use": "need to see which request fails when a page loads",
+   "like": [
+    "Browser inspector"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "HTTP status code",
+   "tier": 1,
+   "says": [
+    "tells whether a request succeeded, was redirected or failed",
+    "separates client errors in the 4xx range from server errors in the 5xx range"
+   ],
+   "use": "need to know whether the fault is on the client or the server side"
+  },
+  {
+   "group": "web",
+   "subject": "CORS error",
+   "tier": 3,
+   "says": [
+    "is raised by the browser when a cross-origin response lacks permission headers",
+    "cannot be fixed from client code alone"
+   ],
+   "use": "see a call blocked in the browser but working in curl"
+  },
+  {
+   "group": "web",
+   "subject": "curl",
+   "tier": 2,
+   "says": [
+    "sends a raw HTTP request from the command line",
+    "takes the browser out of the equation when testing an endpoint"
+   ],
+   "use": "need to know whether an API or the front end is at fault",
+   "like": [
+    "Intercepting proxy"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "dig",
+   "tier": 3,
+   "says": [
+    "checks which address a name resolves to",
+    "explains failures where a host name still points to the old server"
+   ],
+   "use": "see traffic reaching the wrong server after a migration",
+   "like": [
+    "Certificate inspection"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "Certificate inspection",
+   "tier": 3,
+   "says": [
+    "shows who issued a certificate and when it expires",
+    "explains handshake failures after expiry"
+   ],
+   "use": "see secure connections fail suddenly with no code change",
+   "like": [
+    "dig"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "Intercepting proxy",
+   "tier": 4,
+   "says": [
+    "sits between client and server to view and modify traffic",
+    "helps debug mobile apps whose requests cannot be seen in a browser"
+   ],
+   "use": "need to see the requests a mobile app sends",
+   "like": [
+    "curl"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "Source map",
+   "tier": 3,
+   "says": [
+    "maps minified code back to the original source",
+    "makes production stack traces readable"
+   ],
+   "use": "see an error pointing at line 1 of a minified file"
+  },
+  {
+   "group": "mind",
+   "subject": "Confirmation bias",
+   "tier": 2,
+   "says": [
+    "looks only for evidence that supports the current theory",
+    "stops other causes being considered"
+   ],
+   "use": "keep rerunning tests that agree with your first idea",
+   "like": [
+    "First-error anchoring"
+   ]
+  },
+  {
+   "group": "mind",
+   "subject": "First-error anchoring",
+   "tier": 3,
+   "says": [
+    "treats the first message in a log as the cause",
+    "ignores that it may be an effect of an earlier failure"
+   ],
+   "use": "are reading a long log full of errors",
+   "like": [
+    "Confirmation bias"
+   ]
+  },
+  {
+   "group": "mind",
+   "subject": "Blaming the framework",
+   "tier": 2,
+   "says": [
+    "suspects the library or compiler before checking own code",
+    "is rarely the true cause of a failure"
+   ],
+   "use": "are convinced a well-used library has a bug"
+  },
+  {
+   "group": "mind",
+   "subject": "Fixing the symptom",
+   "tier": 2,
+   "says": [
+    "makes the visible failure stop without removing its cause",
+    "lets the defect return in another place"
+   ],
+   "use": "are tempted to add a check that hides a bad value",
+   "like": [
+    "Root cause"
+   ]
+  },
+  {
+   "group": "mind",
+   "subject": "Tunnel vision",
+   "tier": 3,
+   "says": [
+    "keeps checking the same area after repeated failures",
+    "is broken by a break or a fresh pair of eyes"
+   ],
+   "use": "have spent hours on one component without progress",
+   "like": [
+    "Sunk cost"
+   ]
+  },
+  {
+   "group": "mind",
+   "subject": "Sunk cost",
+   "tier": 3,
+   "says": [
+    "continues a failing line of investigation because of time already spent",
+    "is cured by setting a time limit"
+   ],
+   "use": "are reluctant to abandon a theory after a long investigation",
+   "like": [
+    "Tunnel vision"
+   ]
+  },
+  {
+   "group": "mind",
+   "subject": "Time boxing",
+   "tier": 2,
+   "says": [
+    "sets a limit before asking for help or changing approach",
+    "stops hours disappearing into one theory"
+   ],
+   "use": "want to avoid being stuck all day on a single idea",
+   "like": [
+    "Sunk cost"
+   ]
+  },
+  {
+   "group": "mind",
+   "subject": "Ignoring the error message",
+   "tier": 1,
+   "says": [
+    "skips the text that already names the problem",
+    "leads to guessing instead of reading"
+   ],
+   "use": "have a failure and are about to try random changes"
+  },
+  {
+   "group": "mind",
+   "subject": "Cargo-cult fix",
+   "tier": 3,
+   "says": [
+    "applies a fix found online without understanding why it works",
+    "may hide the real problem"
+   ],
+   "use": "are about to paste a snippet that made someone else's error go away",
+   "like": [
+    "Fixing the symptom"
+   ]
+  },
+  {
+   "group": "prevent",
+   "subject": "Regression test",
+   "tier": 1,
+   "says": [
+    "fails if a fixed bug comes back",
+    "is written from the reproduction of the bug"
+   ],
+   "use": "have just fixed a bug",
+   "like": [
+    "Failing test first"
+   ]
+  },
+  {
+   "group": "prevent",
+   "subject": "Code review",
+   "tier": 2,
+   "says": [
+    "has a second person examine a change before merge",
+    "catches defects the author cannot see"
+   ],
+   "use": "want a second opinion before code reaches production",
+   "like": [
+    "Static analysis"
+   ]
+  },
+  {
+   "group": "prevent",
+   "subject": "Static analysis",
+   "tier": 2,
+   "says": [
+    "inspects code without running it for likely defects",
+    "flags issues such as unused variables and possible null use"
+   ],
+   "use": "want defects found before the code runs",
+   "like": [
+    "Code review"
+   ]
+  },
+  {
+   "group": "prevent",
+   "subject": "Assertion",
+   "tier": 2,
+   "says": [
+    "stops the program when an impossible condition is detected",
+    "brings a failure close to its cause"
+   ],
+   "use": "want a wrong assumption to fail loudly",
+   "like": [
+    "Fail fast"
+   ]
+  },
+  {
+   "group": "prevent",
+   "subject": "Fail fast",
+   "tier": 3,
+   "says": [
+    "reports invalid state as soon as it is detected",
+    "stops corrupted data travelling away from where it began"
+   ],
+   "use": "want errors to surface near their origin",
+   "like": [
+    "Assertion"
+   ]
+  },
+  {
+   "group": "prevent",
+   "subject": "Property-based testing",
+   "tier": 4,
+   "says": [
+    "checks that stated properties hold across generated inputs",
+    "finds edge cases a hand-written example would miss"
+   ],
+   "use": "want to test a rule that must hold for every input",
+   "like": [
+    "Fuzzing"
+   ]
+  },
+  {
+   "group": "prevent",
+   "subject": "Fuzzing",
+   "tier": 4,
+   "says": [
+    "feeds malformed or random input to find crashes",
+    "finds parser and memory-safety bugs"
+   ],
+   "use": "need to harden code that parses untrusted input",
+   "like": [
+    "Property-based testing"
+   ]
+  },
+  {
+   "group": "prevent",
+   "subject": "Blameless postmortem",
+   "tier": 3,
+   "says": [
+    "reviews an incident to learn how the system allowed it",
+    "avoids naming a person as the cause"
+   ],
+   "use": "have just resolved a serious incident",
+   "not": [
+    "assigns the failure to the engineer who deployed"
+   ],
+   "like": [
+    "Five whys"
+   ]
+  },
+  {
+   "group": "prevent",
+   "subject": "Chaos experiment",
+   "tier": 5,
+   "says": [
+    "injects failures deliberately in a controlled way",
+    "checks that recovery works before a real outage"
+   ],
+   "use": "want evidence a system survives losing a dependency"
+  },
+  {
+   "group": "prevent",
+   "subject": "Mutation testing",
+   "tier": 5,
+   "says": [
+    "alters code to see whether tests fail",
+    "reveals tests that would not notice a bug"
+   ],
+   "use": "suspect a high-coverage suite still misses bugs",
+   "like": [
+    "Property-based testing"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "A loop runs for i from 0 to items.length inclusive and reads items[i]. What is the bug?",
+   "right": "An off-by-one error causing an out-of-range read",
+   "wrong": [
+    "A race condition",
+    "A memory leak",
+    "A deadlock"
+   ],
+   "tier": 1,
+   "why": "The loop bound goes one past the last valid index."
+  },
+  {
+   "q": "Your colleague sees a blank page and you do not. What should you check first?",
+   "right": "Compare browser, version and console errors between the two machines",
+   "wrong": [
+    "Rewrite the page component",
+    "Roll back the last release",
+    "Restart the production database"
+   ],
+   "tier": 2,
+   "why": "Finding the difference between working and failing cases is the quickest first step."
+  },
+  {
+   "q": "A bug appeared sometime in the last 200 commits. What is the most efficient way to find the commit?",
+   "right": "Run git bisect with a known good and a known bad commit",
+   "wrong": [
+    "Read every diff in order",
+    "Revert half the files at random",
+    "Ask who last touched the file"
+   ],
+   "tier": 2,
+   "why": "Bisect finds the commit in about eight checks for 200 commits."
+  },
+  {
+   "q": "A test fails once in twenty runs and blocks every build. What is the best immediate action?",
+   "right": "Quarantine it with a ticket and keep investigating the cause",
+   "wrong": [
+    "Delete the test",
+    "Rerun until green and ignore it",
+    "Raise the timeout to one hour"
+   ],
+   "tier": 4,
+   "why": "Quarantine unblocks the pipeline without losing the signal."
+  },
+  {
+   "q": "A user reports that the app is slow. What do you do before changing any code?",
+   "right": "Measure to find where the time goes",
+   "wrong": [
+    "Add caching everywhere",
+    "Upgrade the server size",
+    "Rewrite the slowest-looking function"
+   ],
+   "tier": 2,
+   "why": "Optimising without measurement often targets the wrong part."
+  },
+  {
+   "q": "A page makes 301 database queries: one for the list and one per row. What is this pattern?",
+   "right": "An N+1 query problem",
+   "wrong": [
+    "A deadlock",
+    "A cache stampede",
+    "An off-by-one error"
+   ],
+   "tier": 3,
+   "why": "One query per row after the list query is the N+1 pattern."
+  },
+  {
+   "q": "The average response time is 120 ms but customers complain. Which measure helps most?",
+   "right": "99th percentile latency",
+   "wrong": [
+    "Mean CPU use",
+    "Number of deployments",
+    "Average memory use"
+   ],
+   "tier": 3,
+   "why": "The slow tail is hidden by averages."
+  },
+  {
+   "q": "Two requests update the same record. Both read the same value; one change is lost. What is this?",
+   "right": "A lost update",
+   "wrong": [
+    "A deadlock",
+    "A livelock",
+    "An off-by-one error"
+   ],
+   "tier": 3,
+   "why": "Both writers started from the same old value."
+  },
+  {
+   "q": "A system hangs with no CPU use and no errors. A thread dump shows two threads each waiting on a lock the other holds. What is this?",
+   "right": "A deadlock",
+   "wrong": [
+    "A livelock",
+    "Starvation",
+    "A memory leak"
+   ],
+   "tier": 2,
+   "why": "Circular waiting on locks is a deadlock."
+  },
+  {
+   "q": "Threads are busy and CPU is high but no work completes because they keep yielding to each other. What is this?",
+   "right": "A livelock",
+   "wrong": [
+    "A deadlock",
+    "A null reference",
+    "A stale cache"
+   ],
+   "tier": 4,
+   "why": "In a livelock tasks are active but make no progress."
+  },
+  {
+   "q": "Errors began minutes after a deployment and the fix is not yet known. What should you do first?",
+   "right": "Roll back or switch off the feature to restore service",
+   "wrong": [
+    "Write a postmortem",
+    "Wait for the root cause",
+    "Add more logging in production"
+   ],
+   "tier": 3,
+   "why": "Restoring service comes before understanding the cause."
+  },
+  {
+   "q": "Customers were charged twice after a gateway timeout and client retry. What protects against this?",
+   "right": "An idempotency key on the payment request",
+   "wrong": [
+    "A longer timeout",
+    "A bigger server",
+    "More log levels"
+   ],
+   "tier": 4,
+   "why": "The server can recognise the retried request and apply it once."
+  },
+  {
+   "q": "A call works with curl but fails in the browser with a cross-origin message. What is the likely cause?",
+   "right": "The response lacks the CORS permission headers",
+   "wrong": [
+    "The server is down",
+    "The DNS record is wrong",
+    "The password has expired"
+   ],
+   "tier": 3,
+   "why": "Browsers enforce CORS; curl does not."
+  },
+  {
+   "q": "Production errors show line 1, column 48210 of a single minified file. What helps?",
+   "right": "Source maps",
+   "wrong": [
+    "A deadlock detector",
+    "A core dump",
+    "A flame graph"
+   ],
+   "tier": 3,
+   "why": "Source maps translate minified positions into original source."
+  },
+  {
+   "q": "A fix removes the error shown to users by catching the exception and returning an empty list. What is wrong with it?",
+   "right": "It treats the symptom and hides the cause",
+   "wrong": [
+    "It improves performance",
+    "It adds a race condition",
+    "It is always the best practice"
+   ],
+   "tier": 2,
+   "why": "The defect remains and the data is silently wrong."
+  },
+  {
+   "q": "You have a theory about a bug and every run you try confirms it. What should you do next?",
+   "right": "Design a test that could prove the theory wrong",
+   "wrong": [
+    "Declare it the cause",
+    "Run the same test again",
+    "Stop investigating"
+   ],
+   "tier": 4,
+   "why": "Confirming runs do not distinguish between theories."
+  },
+  {
+   "q": "After a long outage, a manager asks who is to blame. What is the best response in a blameless postmortem?",
+   "right": "Describe the conditions that let the failure happen and the actions that prevent it",
+   "wrong": [
+    "Name the engineer who deployed",
+    "Say nobody did anything",
+    "Avoid writing anything down"
+   ],
+   "tier": 3,
+   "why": "Blameless reviews look at the system rather than individuals."
+  },
+  {
+   "q": "A function returns 0.30000000000000004 for 0.1 + 0.2. Why?",
+   "right": "Binary floating point cannot represent those decimals exactly",
+   "wrong": [
+    "A race condition",
+    "A null reference",
+    "An encoding error"
+   ],
+   "tier": 2,
+   "why": "Many decimal fractions have no exact binary representation."
+  },
+  {
+   "q": "Names such as José are shown as JosÃ© after an import. What is the likely cause?",
+   "right": "Bytes decoded with the wrong character set",
+   "wrong": [
+    "Integer overflow",
+    "A deadlock",
+    "A stale cache"
+   ],
+   "tier": 3,
+   "why": "UTF-8 bytes read as Latin-1 produce this pattern."
+  },
+  {
+   "q": "A server's order counter becomes negative after passing 2,147,483,647. What is the likely cause?",
+   "right": "Integer overflow in a 32-bit signed value",
+   "wrong": [
+    "A stale cache",
+    "A time zone error",
+    "A livelock"
+   ],
+   "tier": 3,
+   "why": "A signed 32-bit integer wraps past its maximum."
+  },
+  {
+   "q": "Users in Sydney see yesterday's date for records created in the evening in London. What is likely wrong?",
+   "right": "Local time and UTC are being mixed",
+   "wrong": [
+    "A memory leak",
+    "An index is missing",
+    "The page is not minified"
+   ],
+   "tier": 3,
+   "why": "Date boundaries differ by zone when stored times are not normalised."
+  },
+  {
+   "q": "A bug disappears when you add a print statement. What kind of bug is it likely to be?",
+   "right": "A timing-dependent bug such as a race condition",
+   "wrong": [
+    "A syntax error",
+    "A typo in a constant",
+    "A missing import"
+   ],
+   "tier": 4,
+   "why": "Observation changes timing and can hide races."
+  },
+  {
+   "q": "An error log has fifty errors. Which one do you investigate first?",
+   "right": "The earliest one, since later ones may be consequences",
+   "wrong": [
+    "The longest message",
+    "The most recent one",
+    "The one with the most familiar name"
+   ],
+   "tier": 3,
+   "why": "A first failure often causes the rest."
+  },
+  {
+   "q": "You have spent three hours on one theory without progress. What is best?",
+   "right": "Step back, list assumptions and ask someone else to look",
+   "wrong": [
+    "Keep going until it works",
+    "Make several changes at once",
+    "Delete the module"
+   ],
+   "tier": 3,
+   "why": "A time box and fresh view break tunnel vision."
+  },
+  {
+   "q": "Where should a correlation ID be generated?",
+   "right": "At the first service that receives the request, then passed on to every downstream call",
+   "wrong": [
+    "In the database after saving",
+    "In each service separately",
+    "Only when an error occurs"
+   ],
+   "tier": 3,
+   "why": "One shared identifier lets logs be joined."
+  },
+  {
+   "q": "Which log line is most useful for debugging a payment failure?",
+   "right": "A structured entry with order ID, error code and correlation ID",
+   "wrong": [
+    "The text 'something went wrong'",
+    "The customer's full card number",
+    "A blank line"
+   ],
+   "tier": 2,
+   "why": "Structured, identifying fields help; card numbers must never be logged."
+  },
+  {
+   "q": "You must send an application log file to a supplier. What do you do first?",
+   "right": "Check it for tokens, passwords and personal data and redact them",
+   "wrong": [
+    "Send it as it is",
+    "Compress it",
+    "Shorten the file name"
+   ],
+   "tier": 3,
+   "why": "Logs often contain secrets that must not leave the organisation."
+  },
+  {
+   "q": "A program uses more memory every hour until it is restarted. What helps most to find the cause?",
+   "right": "Compare heap snapshots taken at different times",
+   "wrong": [
+    "Increase the timeout",
+    "Add a retry",
+    "Disable the debugger"
+   ],
+   "tier": 3,
+   "why": "The objects that grow between snapshots show what is retained."
+  },
+  {
+   "q": "A query is slow on a large table. What do you look at first?",
+   "right": "The query plan",
+   "wrong": [
+    "The variable names",
+    "The log level",
+    "The size of the code file"
+   ],
+   "tier": 3,
+   "why": "The plan shows whether an index is used."
+  },
+  {
+   "q": "After fixing a bug, what should you add before closing the ticket?",
+   "right": "A test that fails without the fix",
+   "wrong": [
+    "A comment saying fixed",
+    "A longer timeout",
+    "A new log level"
+   ],
+   "tier": 1,
+   "why": "A regression test keeps the bug from returning."
+  },
+  {
+   "q": "A parser crashes on malformed uploads from the internet. Which technique finds more such cases?",
+   "right": "Fuzzing",
+   "wrong": [
+    "Code formatting",
+    "Profiling",
+    "Renaming variables"
+   ],
+   "tier": 4,
+   "why": "Fuzzing generates unexpected inputs automatically."
+  },
+  {
+   "q": "Test coverage is 95 percent but bugs still escape. Which technique checks whether the tests would notice a change?",
+   "right": "Mutation testing",
+   "wrong": [
+    "Load testing",
+    "Code formatting",
+    "Log sampling"
+   ],
+   "tier": 5,
+   "why": "Mutation testing changes code and checks that tests fail."
+  },
+  {
+   "q": "A service keeps calling a failing dependency and its own threads are exhausted. What pattern helps?",
+   "right": "A circuit breaker",
+   "wrong": [
+    "A longer log retention",
+    "A bigger font",
+    "More unit tests"
+   ],
+   "tier": 4,
+   "why": "It stops calls to a failing dependency and lets callers fail fast."
+  },
+  {
+   "q": "A message in the queue crashes the consumer every time and blocks the queue. What is the usual answer?",
+   "right": "Move it to a dead-letter queue after a set number of attempts",
+   "wrong": [
+    "Delete the queue",
+    "Restart the consumer every minute",
+    "Increase the message size"
+   ],
+   "tier": 3,
+   "why": "Dead-letter queues remove poison messages while keeping them for inspection."
+  },
+  {
+   "q": "You are paged for a known failure at night. Which document should exist?",
+   "right": "A runbook",
+   "wrong": [
+    "A marketing plan",
+    "A style guide",
+    "A job description"
+   ],
+   "tier": 2,
+   "why": "A runbook lets the on-call engineer follow tested steps."
+  },
+  {
+   "q": "Alerts fire every few minutes for brief CPU spikes and people have started ignoring them. What is the best fix?",
+   "right": "Alert on user-visible symptoms such as error rate",
+   "wrong": [
+    "Mute the alerts",
+    "Add more CPU alerts",
+    "Page everyone"
+   ],
+   "tier": 4,
+   "why": "Actionable symptom alerts keep trust in paging."
+  },
+  {
+   "q": "Which statement about rubber duck debugging is true?",
+   "right": "Explaining the problem aloud often reveals a mistaken assumption",
+   "wrong": [
+    "It requires a real duck",
+    "It needs a second developer",
+    "It only works for syntax errors"
+   ],
+   "tier": 1,
+   "why": "The act of explaining forces each step to be examined."
+  },
+  {
+   "q": "You change three settings at once and the bug disappears. What is the problem?",
+   "right": "You do not know which change fixed it",
+   "wrong": [
+    "The bug is proven fixed",
+    "Three changes is the minimum",
+    "The settings are unrelated"
+   ],
+   "tier": 2,
+   "why": "One change at a time keeps results explainable."
+  },
+  {
+   "q": "A staging environment works and production fails with the same code. What is the best next step?",
+   "right": "Compare configuration and dependency versions between them",
+   "wrong": [
+    "Rewrite the code",
+    "Disable logging",
+    "Delete the staging environment"
+   ],
+   "tier": 2,
+   "why": "Same code and different behaviour points to environment differences."
+  },
+  {
+   "q": "A job with a specific date input crashes only on 29 February. Which technique reproduces it reliably?",
+   "right": "Controlling the clock in a test",
+   "wrong": [
+    "Raising the log level",
+    "Adding more memory",
+    "Restarting the job"
+   ],
+   "tier": 3,
+   "why": "Injecting time lets date-dependent paths run on demand."
+  },
+  {
+   "q": "An engineer wants to speed up a function because it looks slow. There are no measurements. What is wrong?",
+   "right": "The function may not be the bottleneck",
+   "wrong": [
+    "Functions cannot be optimised",
+    "Optimisation is never allowed",
+    "Speed does not matter"
+   ],
+   "tier": 2,
+   "why": "Measurement identifies where the time really goes."
+  },
+  {
+   "q": "A DNS change was made yesterday but some users still reach the old server. Which tool shows the address a name resolves to?",
+   "right": "dig",
+   "wrong": [
+    "A flame graph",
+    "git bisect",
+    "A thread dump"
+   ],
+   "tier": 3,
+   "why": "dig queries name resolution and shows cached or stale answers."
+  },
+  {
+   "q": "Secure connections to an API failed on the same day every year with no code change. What should you check?",
+   "right": "The certificate expiry date",
+   "wrong": [
+    "The log level",
+    "The thread count",
+    "The mutex"
+   ],
+   "tier": 3,
+   "why": "Expired certificates cause sudden handshake failures."
+  },
+  {
+   "q": "You need to see the requests a mobile app sends. What do you use?",
+   "right": "An intercepting proxy",
+   "wrong": [
+    "A profiler",
+    "git bisect",
+    "A mutex"
+   ],
+   "tier": 4,
+   "why": "A proxy between app and server shows and can alter the traffic."
+  },
+  {
+   "q": "Which breakpoint stops only on the thousandth item of a loop?",
+   "right": "A conditional breakpoint",
+   "wrong": [
+    "A plain breakpoint",
+    "A watchpoint on the file",
+    "Step into"
+   ],
+   "tier": 2,
+   "why": "A condition prevents stopping on every iteration."
+  },
+  {
+   "q": "A value in memory becomes corrupted and you do not know which line changes it. What helps?",
+   "right": "A watchpoint on that value",
+   "wrong": [
+    "A conditional log level",
+    "A stack trace of the login",
+    "Step over"
+   ],
+   "tier": 3,
+   "why": "A watchpoint stops when the value changes."
+  },
+  {
+   "q": "A native service crashed on a server where you cannot attach a debugger. What helps you analyse the crash?",
+   "right": "A core dump",
+   "wrong": [
+    "A code review",
+    "A canary release",
+    "A health check"
+   ],
+   "tier": 4,
+   "why": "The memory image can be examined after the process has ended."
+  },
+  {
+   "q": "Which is the right order when an outage begins?",
+   "right": "Restore service, then find the root cause, then write the postmortem",
+   "wrong": [
+    "Find the root cause, then restore service",
+    "Write the postmortem first",
+    "Wait for the next release"
+   ],
+   "tier": 3,
+   "why": "Impact comes first."
+  }
+ ]
+}
