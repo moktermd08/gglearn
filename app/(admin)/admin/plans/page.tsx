@@ -4,9 +4,11 @@ import { Badge, Banner, Button, Field, LinkButton, PageHeader, Section } from "@
 import { db, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { mayManage, manualItemsFor } from "@/lib/planItems";
-import { planFor } from "@/lib/plan";
+import { planSetFor } from "@/lib/plan";
+import { dateBounds, targetsFor } from "@/lib/journey";
+import { PlanCreateForm } from "@/components/PlanCreateForm";
 import { PlanItemForm } from "@/components/PlanItemForm";
-import { addForAction, removeForAction, signOffAction } from "./actions";
+import { addForAction, addPlanForAction, removeForAction, removePlanForAction, signOffAction } from "./actions";
 
 export const metadata = { title: "Plans — gglearn" };
 const day = (t: number) => new Date(t * 1000).toISOString().slice(0, 10);
@@ -19,7 +21,8 @@ export default async function Plans({ searchParams }: { searchParams: Promise<{ 
   const needle = q.trim().toLowerCase();
   const found = !person && needle
     ? db.select().from(users).where(and(eq(users.status, "active"), or(like(users.name, `%${needle}%`), like(users.email, `%${needle}%`)))).orderBy(users.name).limit(60).all().filter((u) => mayManage(me, u.id)).slice(0, 10) : [];
-  const plan = person ? planFor(person) : null;
+  const set = person ? planSetFor(person) : null, plan = set?.all ?? null;
+  const planName = new Map((set?.cards ?? []).map((c) => [c.id, c.name]));
   const items = person ? manualItemsFor(person.id) : [];
   const first = person?.name.split(" ")[0] ?? "";
 
@@ -57,6 +60,18 @@ export default async function Plans({ searchParams }: { searchParams: Promise<{ 
               <div style={{ color: "var(--muted)" }}>{plan.week.activeDays} of the last 7 days active (aim for {plan.week.target})</div>
               {plan.items.filter((i) => i.status === "overdue").length > 0 && <div><Badge tone="bad">Overdue</Badge> {plan.items.filter((i) => i.status === "overdue").map((i) => i.title).slice(0, 5).join(", ")}</div>}
               {plan.focus.length > 0 && <div style={{ color: "var(--muted)" }}>Their focus now: {plan.focus.map((i) => i.title).join(", ")}</div>}
+              <div style={{ display: "grid", gap: 4, marginTop: 6 }}>
+                {set!.cards.map((c) => {
+                  const od = c.plan.items.filter((i) => i.status === "overdue").length, bh = c.plan.items.filter((i) => i.status === "behind").length;
+                  return (
+                    <div key={c.key} style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                      <b>{c.name}</b><span style={{ color: "var(--muted)" }}>{c.plan.done} of {c.plan.total} done · {c.blurb}</span>
+                      {od > 0 && <Badge tone="bad">{od} overdue</Badge>}{bh > 0 && <Badge tone="warn">{bh} behind</Badge>}
+                      {c.kind === "extra" && <form action={removePlanForAction} style={{ marginLeft: "auto" }}><input type="hidden" name="id" value={c.id!} /><button style={{ textDecoration: "underline" }}>Remove plan</button></form>}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </Section>
 
@@ -65,7 +80,7 @@ export default async function Plans({ searchParams }: { searchParams: Promise<{ 
               <div style={{ display: "grid", gap: 10 }}>
                 {items.map((m) => (
                   <div key={m.id} style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", fontSize: 14 }}>
-                    <b>{m.title}</b>
+                    <b>{m.title}</b><Badge tone="muted">{m.planId == null ? "Main plan" : planName.get(m.planId) ?? "Plan"}</Badge>
                     <Badge tone={m.done ? "ok" : m.overdue ? "bad" : "muted"}>{m.done ? (m.signedOff ? "Signed off" : "Done") : `${m.have} of ${m.need}`}</Badge>
                     <span style={{ color: "var(--muted)" }}>{m.period === "weekly" ? `${m.need} a week` : m.dueAt ? `by ${day(m.dueAt)}` : "in total"} · {m.mine ? "their own" : `set by ${m.setBy}`}</span>
                     <span style={{ marginLeft: "auto", display: "flex", gap: 10 }}>
@@ -81,7 +96,11 @@ export default async function Plans({ searchParams }: { searchParams: Promise<{ 
           </Section>
 
           <Section title={`Add something for ${first}`}>
-            <PlanItemForm action={addForAction} hidden={{ userId: person.id }} button={`Add for ${first}`} />
+            <PlanItemForm action={addForAction} hidden={{ userId: person.id }} button={`Add for ${first}`} plans={[{ id: "main", name: "Main plan" }, ...set!.cards.filter((c) => c.kind === "extra").map((c) => ({ id: String(c.id), name: c.name }))]} />
+          </Section>
+
+          <Section title={`Make a plan for ${first}`} subtitle="A separate plan with its own items, and optionally a role to aim for, so its progress is worked out on its own.">
+            <PlanCreateForm action={addPlanForAction} hidden={{ userId: person.id }} targets={targetsFor(person)} tomorrow={dateBounds().tomorrow} button={`Create for ${first}`} />
           </Section>
         </>
       )}

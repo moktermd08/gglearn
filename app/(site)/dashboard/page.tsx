@@ -65,7 +65,7 @@ export default async function Dashboard() {
   const onboarding = onboardingFor(user);
   const career = careerFor(user);
   const route = routeSummaryFor(user);
-  const plan = planGlanceFor(user);
+  const planSet = planGlanceFor(user);
   const goal = goalOf(user.id);
   const unread = pendingFor(user.id);
   const noRolePath = user.audience === "staff" && user.guest !== "yes" && !(user.role !== "learner" && user.jobRole === "general") && hasNoRolePath(coverageFor(user.jobRole)); // an admin account with no job role is not missing a learning path
@@ -241,7 +241,7 @@ export default async function Dashboard() {
         {/* main column: what to do next */}
         <div className="min-w-0 space-y-6">
           {user.role !== "learner" && <ManagerGlance admin={user.role === "admin"} viewer={user} />}
-          <PlanGlance plan={plan} />
+          <PlanGlance set={planSet} />
           {focusTrack && next.kind !== "quest" && (
             <section aria-label="Continue" className="card relative overflow-hidden p-5" style={{ background: `linear-gradient(125deg, hsl(${TIERS[tierOf(focusNext)].hue} 85% 55% / .16), #fff 60%)` }}>
               <div className="flex flex-wrap items-center gap-4">

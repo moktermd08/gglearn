@@ -1,5 +1,5 @@
 import { and, desc, eq, gte, inArray, isNull } from "drizzle-orm";
-import { db, planItems, planLogs, users } from "@/lib/db";
+import { db, planItems, planLogs, plans, users } from "@/lib/db";
 import { reachOf, userInReach } from "@/lib/tenancy";
 import { notify } from "@/lib/notifications";
 import type { SetupState } from "@/lib/setup";
@@ -21,7 +21,7 @@ export function mayManage(me: Me, userId: number): boolean {
 }
 
 export type ManualItem = {
-  id: number; title: string; note: string; period: "once" | "weekly"; need: number; dueAt: number | null;
+  id: number; planId: number | null; title: string; note: string; period: "once" | "weekly"; need: number; dueAt: number | null;
   have: number; done: boolean; overdue: boolean; signedOff: boolean; byManager: boolean; setBy: string; mine: boolean;
 };
 
@@ -29,15 +29,16 @@ export type ManualItem = {
 const countLogs = (itemId: number, period: "once" | "weekly", at: number) =>
   db.select({ id: planLogs.id }).from(planLogs).where(and(eq(planLogs.itemId, itemId), period === "weekly" ? gte(planLogs.at, at - 7 * DAY) : undefined)).all().length;
 
-/** The active manual items for one person, with progress. */
-export function manualItemsFor(userId: number, at = now()): ManualItem[] {
-  const rows = db.select().from(planItems).where(and(eq(planItems.userId, userId), isNull(planItems.removedAt))).orderBy(desc(planItems.createdAt)).all();
+/** The active manual items for one person, with progress. Pass a plan id for one extra plan's items, or null for the main plan's; leave it out for all of them. */
+export function manualItemsFor(userId: number, at = now(), planId?: number | null): ManualItem[] {
+  const where = [eq(planItems.userId, userId), isNull(planItems.removedAt), planId === undefined ? undefined : planId === null ? isNull(planItems.planId) : eq(planItems.planId, planId)];
+  const rows = db.select().from(planItems).where(and(...where)).orderBy(desc(planItems.createdAt)).all();
   if (!rows.length) return [];
   const names = new Map(db.select({ id: users.id, name: users.name }).from(users).where(inArray(users.id, [...new Set(rows.map((r) => r.createdBy))])).all().map((u) => [u.id, u.name]));
   return rows.map((r) => {
     const have = countLogs(r.id, r.period, at), signedOff = r.signedOffAt != null;
     return {
-      id: r.id, title: r.title, note: r.note, period: r.period, need: r.need, dueAt: r.dueAt, have: Math.min(have, r.need),
+      id: r.id, planId: r.planId, title: r.title, note: r.note, period: r.period, need: r.need, dueAt: r.dueAt, have: Math.min(have, r.need),
       done: signedOff || (r.period === "once" && have >= r.need) || (r.period === "weekly" && have >= r.need),
       signedOff, overdue: !signedOff && r.dueAt != null && r.dueAt < at, byManager: r.createdBy !== userId, setBy: r.createdBy === userId ? "You" : names.get(r.createdBy) ?? "A manager", mine: r.createdBy === userId,
     };
@@ -66,8 +67,10 @@ export function addItem(me: Me, userId: number, fd: FormData): SetupState {
   if (!target || target.status !== "active") return { error: "That person is not active." };
   const p = parse(fd);
   if (typeof p === "string") return { error: p };
+  const rawPlan = str(fd.get("planId")), planId = rawPlan && rawPlan !== "main" ? Number(rawPlan) : null;
+  if (planId !== null && !db.select({ id: plans.id }).from(plans).where(and(eq(plans.id, planId), eq(plans.userId, userId), isNull(plans.removedAt))).get()) return { error: "That plan is gone." };
   if (db.select({ id: planItems.id }).from(planItems).where(and(eq(planItems.userId, userId), isNull(planItems.removedAt))).all().length >= MAX_ACTIVE) return { error: `That is ${MAX_ACTIVE} items already: remove one first.` };
-  const row = db.insert(planItems).values({ userId, createdBy: me.id, ...p }).returning({ id: planItems.id }).get();
+  const row = db.insert(planItems).values({ userId, createdBy: me.id, planId, ...p }).returning({ id: planItems.id }).get();
   if (me.id !== userId) notify(userId, { key: `plan-new-${row.id}`, kind: "system", title: "Something new on your plan", body: p.title, href: "/plan" });
   return { done: "Added to the plan." };
 }

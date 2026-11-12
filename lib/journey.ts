@@ -139,10 +139,10 @@ function recentPace(userId: number, at: number): number {
 }
 
 /** The route from where this person is to their goal, with what is done, what is next and whether the date is realistic. */
-export function journeyFor(person: Person, cat = catalog(), at = now()): Journey {
+export function journeyFor(person: Person, cat = catalog(), at = now(), goalOverride?: Goal | null): Journey {
   const c = careerFor(person, cat);
   if (!c) return { state: "no-ladder" };
-  const goal = goalOf(person.id) ?? null;
+  const goal = (goalOverride !== undefined ? goalOverride : goalOf(person.id)) ?? null; // an extra plan passes its own target
   const from: Node = { role: c.role, level: c.current.level };
   const top = c.ladder[c.ladder.length - 1];
   const to: Node = goal ? { role: goal.targetRole, level: goal.targetLevel } : { role: c.role, level: top.level };

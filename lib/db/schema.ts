@@ -1367,6 +1367,20 @@ export const buildSteps = sqliteTable(
   (t) => [uniqueIndex("build_step_unique").on(t.projectId, t.stepKey)],
 );
 
+// An extra plan for a person, beside the main one (their career goal, lib/journey.ts) and the required-learning plan (lib/plan.ts).
+// It may aim at a role, level and date, which then work out its own progress, or be only a list of items. At most a few per person.
+export const plans = sqliteTable("plans", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  createdBy: integer("created_by").notNull().references(() => users.id),
+  name: text("name").notNull(),
+  targetRole: text("target_role"),
+  targetLevel: integer("target_level"),
+  targetDate: integer("target_date"),
+  createdAt: integer("created_at").notNull().default(now),
+  removedAt: integer("removed_at"),
+}, (t) => [index("plan_user").on(t.userId)]);
+
 // Something a person has to do that the app cannot detect on its own (lib/planItems.ts): a manager sets it for someone they run, or a person adds their own.
 // Progress is the number of rows in plan_logs, counted once or per week; a "once" item can also be signed off by a manager.
 export const planItems = sqliteTable("plan_items", {
@@ -1379,6 +1393,8 @@ export const planItems = sqliteTable("plan_items", {
   period: text("period", { enum: ["once", "weekly"] }).notNull().default("once"),
   need: integer("need").notNull().default(1),
   dueAt: integer("due_at"),
+  // the extra plan this belongs to; null = the main plan
+  planId: integer("plan_id").references(() => plans.id),
   signedOffBy: integer("signed_off_by").references(() => users.id),
   signedOffAt: integer("signed_off_at"),
   createdAt: integer("created_at").notNull().default(now),
