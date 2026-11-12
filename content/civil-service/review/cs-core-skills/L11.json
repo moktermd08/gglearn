@@ -1,0 +1,4011 @@
+{
+ "trackSlug": "cs-core-skills",
+ "status": "review",
+ "items": [
+  {
+   "title": "L11: Nested logic: IF, IFS and SWITCH",
+   "source": "Microsoft Support: IF, IFS and SWITCH functions",
+   "body": "Nested logic lets one formula choose between several outcomes. This formula reads days open in A2: =IF(A2<=5,\"Green\",IF(A2<=10,\"Amber\",\"Red\")). It returns Green for 5 or fewer, Amber for 6 to 10 and Red above 10. Excel evaluates the tests from the left and stops at the first one that is TRUE, so order matters. If the tests were reversed, with A2<=10 first, a case open 3 days would be called Amber, because 3 is also at most 10. With upper limits, put the narrowest test first. If the final value_if_false is left out, IF returns the word FALSE rather than a blank.\n\nIFS does the same without nesting: =IFS(A2>10,\"Red\",A2>5,\"Amber\",A2>=0,\"Green\"). It has no built-in \"otherwise\". If no test is TRUE it returns #N/A, so a value of -1 gives an error. To add a default, finish with a test that is always true, such as TRUE,\"Check\".\n\nSWITCH compares one expression with exact values: =SWITCH(B2,\"E\",\"Escalate\",\"C\",\"Close\",\"Unknown\"). A final unpaired argument is the default. Without it, an unmatched value returns #N/A. SWITCH cannot test ranges such as \">10\".\n\nAn empty cell counts as 0 in a comparison, so a blank days-open cell would be shown as Green and could hide missing data. Guard it with =IF(A2=\"\",\"Missing\",...). Excel allows up to 64 nested IF levels, but long nests are hard to check. When there are many bands, or they change often, use a lookup table instead.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A2 holds 6. What does =IF(A2<=5,\"Green\",IF(A2<=10,\"Amber\",\"Red\")) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Green"
+      },
+      {
+       "key": "b",
+       "text": "Red"
+      },
+      {
+       "key": "c",
+       "text": "Amber"
+      },
+      {
+       "key": "d",
+       "text": "#N/A"
+      }
+     ],
+     "answer": "c",
+     "hint": "6 fails the first test but passes A2<=10.",
+     "topic": "Nested IF"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "The tests are reversed: =IF(A2<=10,\"Amber\",IF(A2<=5,\"Green\",\"Red\")). A2 holds 3. What comes back?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Amber"
+      },
+      {
+       "key": "b",
+       "text": "Green"
+      },
+      {
+       "key": "c",
+       "text": "Red"
+      },
+      {
+       "key": "d",
+       "text": "FALSE"
+      }
+     ],
+     "answer": "a",
+     "hint": "The first TRUE test wins, and 3 is at most 10.",
+     "topic": "Test order"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "=IFS(A2>10,\"Red\",A2>5,\"Amber\",A2>=0,\"Green\") is used and A2 holds -1. What is the result?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Green"
+      },
+      {
+       "key": "b",
+       "text": "Red"
+      },
+      {
+       "key": "c",
+       "text": "#N/A"
+      },
+      {
+       "key": "d",
+       "text": "FALSE"
+      }
+     ],
+     "answer": "c",
+     "hint": "No test is TRUE and IFS has no default.",
+     "topic": "IFS"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which change gives the IFS formula a safe default for unexpected values?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Add a final argument of \"Check\" on its own"
+      },
+      {
+       "key": "b",
+       "text": "Wrap each test in IFERROR"
+      },
+      {
+       "key": "c",
+       "text": "Reverse the order of the tests"
+      },
+      {
+       "key": "d",
+       "text": "Add TRUE,\"Check\" as the last pair"
+      }
+     ],
+     "answer": "d",
+     "hint": "IFS needs a test that is always true to catch the rest.",
+     "topic": "IFS default"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "=SWITCH(B2,\"E\",\"Escalate\",\"C\",\"Close\") is used and B2 holds \"X\". What is returned?",
+     "options": [
+      {
+       "key": "a",
+       "text": "An empty cell"
+      },
+      {
+       "key": "b",
+       "text": "\"Close\""
+      },
+      {
+       "key": "c",
+       "text": "FALSE"
+      },
+      {
+       "key": "d",
+       "text": "#N/A"
+      }
+     ],
+     "answer": "d",
+     "hint": "With no default argument, an unmatched SWITCH value is an error.",
+     "topic": "SWITCH"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which job can SWITCH not do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Match a status code to a label"
+      },
+      {
+       "key": "b",
+       "text": "Supply a default for unmatched codes"
+      },
+      {
+       "key": "c",
+       "text": "Compare against text values"
+      },
+      {
+       "key": "d",
+       "text": "Return a label for any value over 10"
+      }
+     ],
+     "answer": "d",
+     "hint": "SWITCH tests equality only, not ranges.",
+     "topic": "SWITCH limits"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "The nested IF formula is applied to an empty A2. What does it show, and what is the risk?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Green, which can hide missing data"
+      },
+      {
+       "key": "b",
+       "text": "Red, because blanks are errors"
+      },
+      {
+       "key": "c",
+       "text": "An error value, which warns the user"
+      },
+      {
+       "key": "d",
+       "text": "Amber, because blank is between the bands"
+      }
+     ],
+     "answer": "a",
+     "hint": "A blank behaves as 0 in comparisons.",
+     "topic": "Blanks"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Someone writes =IF(A2>10,\"Red\",IF(A2>5,\"Amber\")) and A2 holds 3. What does it return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Green"
+      },
+      {
+       "key": "b",
+       "text": "FALSE"
+      },
+      {
+       "key": "c",
+       "text": "A blank cell"
+      },
+      {
+       "key": "d",
+       "text": "#VALUE!"
+      }
+     ],
+     "answer": "b",
+     "hint": "A missing value_if_false returns FALSE.",
+     "topic": "IF defaults"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "The banding has twelve levels and the thresholds change every quarter. What is the best approach?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nest twelve IF functions and edit them each quarter"
+      },
+      {
+       "key": "b",
+       "text": "Keep the bands in a table and use a lookup"
+      },
+      {
+       "key": "c",
+       "text": "Use SWITCH with the twelve thresholds"
+      },
+      {
+       "key": "d",
+       "text": "Type the results by hand"
+      }
+     ],
+     "answer": "b",
+     "hint": "A table is easier to check and update than a long nest.",
+     "topic": "Design choice"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why is it risky to put a wide test such as A2<=10 first in a chain of upper limits?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It catches values meant for narrower bands"
+      },
+      {
+       "key": "b",
+       "text": "It makes Excel run slowly"
+      },
+      {
+       "key": "c",
+       "text": "It converts the result to text"
+      },
+      {
+       "key": "d",
+       "text": "It stops later tests from being read as numbers"
+      }
+     ],
+     "answer": "a",
+     "hint": "Evaluation stops at the first TRUE.",
+     "topic": "Test order"
+    }
+   ]
+  },
+  {
+   "title": "L11: Lookup and reference: approximate matches",
+   "source": "Microsoft Support: VLOOKUP, XLOOKUP and LOOKUP functions",
+   "body": "Lookups often map a number onto a band. Suppose a table in E2:F5 has lower limits in column E and labels in F: 0 is Band 1, 25,000 is Band 2, 40,000 is Band 3 and 60,000 is Band 4. An approximate match finds the largest limit that is less than or equal to the value. So 39,999 is Band 2, 40,000 is Band 3 and 24,999 is Band 1. A value below the smallest limit, such as -5, returns #N/A.\n\nVLOOKUP(A2,E2:F5,2,TRUE) does this, but only if the first column is sorted in ascending order. If it is not, results can be wrong without any error showing. The most dangerous slip is leaving out the fourth argument: VLOOKUP then defaults to approximate match, so an ID lookup can silently return the wrong row. For exact matching, write FALSE or 0.\n\nXLOOKUP defaults to exact match. To band a number, use its match_mode: =XLOOKUP(A2,E2:E5,F2:F5,\"Not found\",-1). Mode -1 means exact match or the next smaller item, and the table does not need sorting. Mode 1 means exact or next larger. The fourth argument is the text shown if nothing matches, instead of #N/A.\n\nLOOKUP(A2,E2:E5,F2:F5) is an older function that always uses approximate matching and needs sorted data. INDEX with MATCH(A2,E2:E5,1) also works for bands. Because MATCH type 1 needs ascending order and type -1 needs descending order, check the sort order whenever approximate matching is used.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Using the band table, which label does a value of 39,999 receive?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Band 3"
+      },
+      {
+       "key": "b",
+       "text": "Band 2"
+      },
+      {
+       "key": "c",
+       "text": "Band 1"
+      },
+      {
+       "key": "d",
+       "text": "#N/A"
+      }
+     ],
+     "answer": "b",
+     "hint": "The match is the largest limit not above the value.",
+     "topic": "Approximate match"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which value in the band table returns Band 3?",
+     "options": [
+      {
+       "key": "a",
+       "text": "39,999"
+      },
+      {
+       "key": "b",
+       "text": "59,999"
+      },
+      {
+       "key": "c",
+       "text": "25,000"
+      },
+      {
+       "key": "d",
+       "text": "40,000"
+      }
+     ],
+     "answer": "d",
+     "hint": "40,000 is exactly the Band 3 limit.",
+     "topic": "Band boundaries"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does a value of -5 return with approximate matching on this table?",
+     "options": [
+      {
+       "key": "a",
+       "text": "#N/A"
+      },
+      {
+       "key": "b",
+       "text": "Band 1"
+      },
+      {
+       "key": "c",
+       "text": "Band 4"
+      },
+      {
+       "key": "d",
+       "text": "0"
+      }
+     ],
+     "answer": "a",
+     "hint": "It is below the smallest limit in the first column.",
+     "topic": "Lower bound"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A colleague omits the fourth argument: =VLOOKUP(A2,E2:F5,2). What is the main danger?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It returns #REF! because the fourth argument is compulsory"
+      },
+      {
+       "key": "b",
+       "text": "It searches the second column instead of the first one"
+      },
+      {
+       "key": "c",
+       "text": "It uses approximate matching and may return a wrong row silently"
+      },
+      {
+       "key": "d",
+       "text": "It looks only at the first few rows of the table range"
+      }
+     ],
+     "answer": "c",
+     "hint": "The default is TRUE, which is approximate.",
+     "topic": "VLOOKUP default"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What must be true of the first column for VLOOKUP with TRUE to work reliably?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It contains only text"
+      },
+      {
+       "key": "b",
+       "text": "It is sorted in ascending order"
+      },
+      {
+       "key": "c",
+       "text": "It has no duplicate values at all"
+      },
+      {
+       "key": "d",
+       "text": "It is formatted as a table"
+      }
+     ],
+     "answer": "b",
+     "hint": "Approximate match relies on sorted limits.",
+     "topic": "Sort order"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "In =XLOOKUP(A2,E2:E5,F2:F5,\"Not found\",-1), what does the -1 mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Exact match, or the next smaller item"
+      },
+      {
+       "key": "b",
+       "text": "Search from the last item upwards"
+      },
+      {
+       "key": "c",
+       "text": "Return the previous row's label"
+      },
+      {
+       "key": "d",
+       "text": "Ignore case differences"
+      }
+     ],
+     "answer": "a",
+     "hint": "This match_mode suits banding.",
+     "topic": "XLOOKUP modes"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does XLOOKUP do by default when match_mode is not given?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Finds the next smaller item"
+      },
+      {
+       "key": "b",
+       "text": "Finds the next larger item"
+      },
+      {
+       "key": "c",
+       "text": "Treats the data as sorted"
+      },
+      {
+       "key": "d",
+       "text": "Looks for an exact match"
+      }
+     ],
+     "answer": "d",
+     "hint": "Unlike VLOOKUP, its default is exact.",
+     "topic": "XLOOKUP default"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why is the \"Not found\" argument useful?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes the lookup treat upper and lower case differently"
+      },
+      {
+       "key": "b",
+       "text": "It speeds up lookups across very large tables of data"
+      },
+      {
+       "key": "c",
+       "text": "It lets one lookup search across several columns at once"
+      },
+      {
+       "key": "d",
+       "text": "It replaces #N/A with your own message when nothing matches"
+      }
+     ],
+     "answer": "d",
+     "hint": "It is the if_not_found argument.",
+     "topic": "If not found"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which MATCH type suits an ascending table of lower limits?",
+     "options": [
+      {
+       "key": "a",
+       "text": "0"
+      },
+      {
+       "key": "b",
+       "text": "-1"
+      },
+      {
+       "key": "c",
+       "text": "1"
+      },
+      {
+       "key": "d",
+       "text": "2"
+      }
+     ],
+     "answer": "c",
+     "hint": "Type 1 finds the largest value not above the lookup value.",
+     "topic": "MATCH types"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "The limits table is unsorted and a banding VLOOKUP uses TRUE. What is the likely outcome?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Every value returns #N/A until the table is sorted"
+      },
+      {
+       "key": "b",
+       "text": "Excel sorts the table automatically before it looks"
+      },
+      {
+       "key": "c",
+       "text": "Some values get the wrong band and no error appears"
+      },
+      {
+       "key": "d",
+       "text": "The formula returns the first label for every row"
+      }
+     ],
+     "answer": "c",
+     "hint": "Approximate matching assumes order.",
+     "topic": "Silent errors"
+    }
+   ]
+  },
+  {
+   "title": "L11: SUMPRODUCT with conditions",
+   "source": "Microsoft Support: SUMPRODUCT function",
+   "body": "SUMPRODUCT multiplies matching items in arrays and adds the results. It can also apply conditions. Take five rows. Region (A2:A6) is N, N, S, S, N. Units (B2:B6) are 10, 20, 30, 40, 50. Unit price (C2:C6) is 2, 3, 4, 5, 6.\n\n=SUMPRODUCT(B2:B6,C2:C6) gives 10x2 + 20x3 + 30x4 + 40x5 + 50x6 = 700. To total only region N, add a test: =SUMPRODUCT((A2:A6=\"N\")*B2:B6*C2:C6). The test gives TRUE or FALSE for each row, and multiplying converts them to 1 or 0. Region N rows give 20 + 60 + 300 = 380. Region S gives 120 + 200 = 320.\n\nIf you write the test as a separate comma-separated argument, such as =SUMPRODUCT((A2:A6=\"N\"),B2:B6), the TRUE and FALSE values are treated as zero, so the result is 0. Either multiply the arrays or convert them with a double minus: =SUMPRODUCT(--(A2:A6=\"N\"),B2:B6), which gives 10 + 20 + 50 = 80.\n\nConditions combine in two ways. Multiplication means AND: (A2:A6=\"N\")*(B2:B6>15) selects rows that are region N and over 15 units, giving 2 rows. Addition means OR: (A2:A6=\"S\")+(B2:B6>45) can give 2 for a row that meets both, so wrap the sum in a test such as >0 if you only want to count rows once.\n\nAll arrays must be the same size, or SUMPRODUCT returns #VALUE!. SUMIFS is faster for simple cases, but SUMPRODUCT handles tests that SUMIFS cannot, such as a calculation inside the test.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is =SUMPRODUCT((A2:A6=\"N\")*B2:B6*C2:C6) for the data described?",
+     "options": [
+      {
+       "key": "a",
+       "text": "700"
+      },
+      {
+       "key": "b",
+       "text": "380"
+      },
+      {
+       "key": "c",
+       "text": "320"
+      },
+      {
+       "key": "d",
+       "text": "80"
+      }
+     ],
+     "answer": "b",
+     "hint": "Only rows 2, 3 and 6 are region N: 20 + 60 + 300.",
+     "topic": "Conditional sum"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =SUMPRODUCT(B2:B6,C2:C6) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "700"
+      },
+      {
+       "key": "b",
+       "text": "150"
+      },
+      {
+       "key": "c",
+       "text": "380"
+      },
+      {
+       "key": "d",
+       "text": "190"
+      }
+     ],
+     "answer": "a",
+     "hint": "It is the sum of units times price for all five rows.",
+     "topic": "Sum of products"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =SUMPRODUCT((A2:A6=\"N\"),B2:B6) return, written with a comma?",
+     "options": [
+      {
+       "key": "a",
+       "text": "0"
+      },
+      {
+       "key": "b",
+       "text": "80"
+      },
+      {
+       "key": "c",
+       "text": "80 as a text value"
+      },
+      {
+       "key": "d",
+       "text": "#VALUE!"
+      }
+     ],
+     "answer": "a",
+     "hint": "Booleans in a separate argument are treated as zero.",
+     "topic": "Boolean coercion"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =SUMPRODUCT(--(A2:A6=\"N\"),B2:B6) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "0"
+      },
+      {
+       "key": "b",
+       "text": "150"
+      },
+      {
+       "key": "c",
+       "text": "80"
+      },
+      {
+       "key": "d",
+       "text": "380"
+      }
+     ],
+     "answer": "c",
+     "hint": "The double minus turns TRUE and FALSE into 1 and 0.",
+     "topic": "Double negative"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "How many rows does =SUMPRODUCT((A2:A6=\"N\")*(B2:B6>15)) count?",
+     "options": [
+      {
+       "key": "a",
+       "text": "3"
+      },
+      {
+       "key": "b",
+       "text": "1"
+      },
+      {
+       "key": "c",
+       "text": "4"
+      },
+      {
+       "key": "d",
+       "text": "2"
+      }
+     ],
+     "answer": "d",
+     "hint": "Only 20 and 50 units are in region N and above 15.",
+     "topic": "AND logic"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does multiplying two condition arrays achieve?",
+     "options": [
+      {
+       "key": "a",
+       "text": "OR, since either gives 1"
+      },
+      {
+       "key": "b",
+       "text": "AND, since both must be TRUE for a 1"
+      },
+      {
+       "key": "c",
+       "text": "A count of the FALSE rows"
+      },
+      {
+       "key": "d",
+       "text": "A comparison of totals"
+      }
+     ],
+     "answer": "b",
+     "hint": "1 times 0 is 0.",
+     "topic": "AND logic"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why can an OR built by adding conditions overcount rows?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Addition ignores the first array"
+      },
+      {
+       "key": "b",
+       "text": "FALSE is converted to 1"
+      },
+      {
+       "key": "c",
+       "text": "SUMPRODUCT only reads numeric columns"
+      },
+      {
+       "key": "d",
+       "text": "A row meeting both conditions scores 2"
+      }
+     ],
+     "answer": "d",
+     "hint": "Wrap the total in >0 if you only want to count rows once.",
+     "topic": "OR logic"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "One range is A2:A6 and another is B2:B7. What is the likely result?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The extra row is ignored"
+      },
+      {
+       "key": "b",
+       "text": "A partial total"
+      },
+      {
+       "key": "c",
+       "text": "0"
+      },
+      {
+       "key": "d",
+       "text": "#VALUE!"
+      }
+     ],
+     "answer": "d",
+     "hint": "The array sizes must match.",
+     "topic": "Array sizes"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Region N is what share of total value, as a percentage to one decimal place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "54.3%"
+      },
+      {
+       "key": "b",
+       "text": "45.7%"
+      },
+      {
+       "key": "c",
+       "text": "50.0%"
+      },
+      {
+       "key": "d",
+       "text": "38.0%"
+      }
+     ],
+     "answer": "a",
+     "hint": "380 divided by 700.",
+     "topic": "Share calculation"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "When would SUMPRODUCT be preferred to SUMIFS?",
+     "options": [
+      {
+       "key": "a",
+       "text": "When the data has fewer than five rows in total"
+      },
+      {
+       "key": "b",
+       "text": "When every value in the data is text, not numbers"
+      },
+      {
+       "key": "c",
+       "text": "When speed on a very large file matters most"
+      },
+      {
+       "key": "d",
+       "text": "When the test needs a calculation that SUMIFS cannot hold"
+      }
+     ],
+     "answer": "d",
+     "hint": "SUMIFS is faster for simple criteria.",
+     "topic": "Choosing a function"
+    }
+   ]
+  },
+  {
+   "title": "L11: Dates: EDATE, EOMONTH, DATEDIF and working days",
+   "source": "Microsoft Support: date and time functions",
+   "body": "Excel stores a date as a whole number of days from a starting point, so subtracting one date from another gives the number of days between them. Calendar days and working days are different. Monday 3 March 2025 to Friday 14 March 2025 is 11 days by subtraction, but NETWORKDAYS counts both end dates and leaves out weekends, so =NETWORKDAYS(3 Mar 2025,14 Mar 2025) returns 10. A holiday list can be given as a third argument: with Friday 7 March in the list, the result is 9.\n\nWORKDAY adds working days to a start date. =WORKDAY(3 Mar 2025,5) returns Monday 10 March 2025, since the 5 working days are Tuesday to Monday. Add a holiday range so bank holidays are skipped.\n\nEDATE moves a date by whole months and keeps the same day where it can. =EDATE(15 Jan 2025,3) is 15 April 2025. When the target month is shorter, it falls back to the last day, so =EDATE(31 Jan 2025,1) is 28 February 2025. EOMONTH returns the last day of a month: EOMONTH(15 Jan 2025,0) is 31 January and EOMONTH(15 Jan 2025,1) is 28 February. To get the first day of the month, use EOMONTH(date,-1)+1.\n\nDATEDIF counts complete units. For 1 January 2024 to 30 June 2025, \"m\" gives 17 complete months, \"y\" gives 1 complete year and plain subtraction gives 546 days. DATEDIF has no help screen in Excel, but it still works.\n\nA date typed as text, such as one imported from another system, will not calculate. Dates that left-align or return #VALUE! in a formula are often text. Convert them with DATEVALUE or a Text to Columns step.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =NETWORKDAYS(3 Mar 2025, 14 Mar 2025) return, with no holiday list?",
+     "options": [
+      {
+       "key": "a",
+       "text": "11"
+      },
+      {
+       "key": "b",
+       "text": "9"
+      },
+      {
+       "key": "c",
+       "text": "12"
+      },
+      {
+       "key": "d",
+       "text": "10"
+      }
+     ],
+     "answer": "d",
+     "hint": "Both end dates count, and the two weekend days are excluded.",
+     "topic": "NETWORKDAYS"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "The same NETWORKDAYS call has Friday 7 March 2025 in the holiday list. What does it return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "9"
+      },
+      {
+       "key": "b",
+       "text": "10"
+      },
+      {
+       "key": "c",
+       "text": "8"
+      },
+      {
+       "key": "d",
+       "text": "11"
+      }
+     ],
+     "answer": "a",
+     "hint": "One working day is removed.",
+     "topic": "Holidays"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does subtracting 3 Mar 2025 from 14 Mar 2025 give?",
+     "options": [
+      {
+       "key": "a",
+       "text": "10"
+      },
+      {
+       "key": "b",
+       "text": "12"
+      },
+      {
+       "key": "c",
+       "text": "11"
+      },
+      {
+       "key": "d",
+       "text": "9"
+      }
+     ],
+     "answer": "c",
+     "hint": "Subtraction gives calendar days between the dates.",
+     "topic": "Date arithmetic"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What date does =WORKDAY(3 Mar 2025,5) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "8 March 2025"
+      },
+      {
+       "key": "b",
+       "text": "7 March 2025"
+      },
+      {
+       "key": "c",
+       "text": "10 March 2025"
+      },
+      {
+       "key": "d",
+       "text": "11 March 2025"
+      }
+     ],
+     "answer": "c",
+     "hint": "Count five working days from Monday 3 March: Tue to Mon.",
+     "topic": "WORKDAY"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =EDATE(31 Jan 2025,1) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "3 March 2025"
+      },
+      {
+       "key": "b",
+       "text": "2 March 2025"
+      },
+      {
+       "key": "c",
+       "text": "31 February 2025"
+      },
+      {
+       "key": "d",
+       "text": "28 February 2025"
+      }
+     ],
+     "answer": "d",
+     "hint": "EDATE falls back to the last day of a shorter month.",
+     "topic": "EDATE"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which formula gives the first day of the month containing a date in A2?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=EOMONTH(A2,0)-30"
+      },
+      {
+       "key": "b",
+       "text": "=EDATE(A2,0)"
+      },
+      {
+       "key": "c",
+       "text": "=EOMONTH(A2,1)-1"
+      },
+      {
+       "key": "d",
+       "text": "=EOMONTH(A2,-1)+1"
+      }
+     ],
+     "answer": "d",
+     "hint": "Last day of the previous month plus one day.",
+     "topic": "EOMONTH"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =DATEDIF(1 Jan 2024, 30 Jun 2025,\"m\") return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "18"
+      },
+      {
+       "key": "b",
+       "text": "17"
+      },
+      {
+       "key": "c",
+       "text": "16"
+      },
+      {
+       "key": "d",
+       "text": "1"
+      }
+     ],
+     "answer": "b",
+     "hint": "Seventeen complete months have passed.",
+     "topic": "DATEDIF"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A column of imported dates is left-aligned and gives #VALUE! when subtracted. What is the likely cause?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The workbook is in manual calculation"
+      },
+      {
+       "key": "b",
+       "text": "The dates are stored as text"
+      },
+      {
+       "key": "c",
+       "text": "The dates are before 1900"
+      },
+      {
+       "key": "d",
+       "text": "The cells need a currency format"
+      }
+     ],
+     "answer": "b",
+     "hint": "Text dates do not calculate.",
+     "topic": "Text dates"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "With a start date of 15 January 2025 and 1 as the months argument, what does EOMONTH return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "28 February 2025"
+      },
+      {
+       "key": "b",
+       "text": "31 January 2025"
+      },
+      {
+       "key": "c",
+       "text": "15 February 2025"
+      },
+      {
+       "key": "d",
+       "text": "1 March 2025"
+      }
+     ],
+     "answer": "a",
+     "hint": "The 1 moves the month on by one, then it returns the month end.",
+     "topic": "EOMONTH"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A team's service standard is 10 working days. Which approach best calculates the due date for a case received on a given date in A2?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=A2+10 (adding ten calendar days)"
+      },
+      {
+       "key": "b",
+       "text": "=EDATE(A2,10) (adding ten whole months)"
+      },
+      {
+       "key": "c",
+       "text": "=NETWORKDAYS(A2,10,HolidayList)"
+      },
+      {
+       "key": "d",
+       "text": "=WORKDAY(A2,10,HolidayList)"
+      }
+     ],
+     "answer": "d",
+     "hint": "WORKDAY skips weekends and listed holidays.",
+     "topic": "Service standards"
+    }
+   ]
+  },
+  {
+   "title": "L11: Data validation: controlling what goes into cells",
+   "source": "Microsoft Support: apply data validation to cells",
+   "body": "Data validation limits what a user can type into a cell. It is found under the Data tab and is one of the cheapest ways to improve data quality. Common types are: List, which gives a drop-down; Whole number or Decimal, with a minimum and maximum; Date, with an earliest and latest allowed; Text length; and Custom, which uses a formula that must evaluate to TRUE. For example, =COUNTIF($A:$A,A2)=1 in a custom rule stops the same reference number being entered twice in column A.\n\nA list can be typed in, for example Open,Closed,Escalated, or can point at a range. A range held in an Excel Table, or a named range that expands, updates the drop-down when items are added. A dependent drop-down, where a second list changes with the first choice, can be built with INDIRECT and named ranges.\n\nThe error alert has three styles. Stop blocks any invalid entry. Warning tells the user that the entry is invalid and lets them choose to keep it. Information shows a message and lets them click OK to keep it. An input message can show guidance when the cell is selected. Choose Stop for fields that must be exact and Warning where exceptions are valid.\n\nValidation has important limits. It does not check values pasted into the cell: pasting overwrites the rule. It does not test data already in the cells when the rule is added, but \"Circle Invalid Data\" under the Data Validation menu marks those entries. A user can also clear the rule, so protect the sheet where the structure must hold. Validation reduces mistakes but does not replace a checking step.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which validation type would stop a reference number being entered twice in column A?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Custom, using =COUNTIF($A:$A,A2)=1"
+      },
+      {
+       "key": "b",
+       "text": "List, drawn from the existing reference numbers"
+      },
+      {
+       "key": "c",
+       "text": "Whole number between 1 and 1000 in each cell"
+      },
+      {
+       "key": "d",
+       "text": "Text length equal to ten characters in each cell"
+      }
+     ],
+     "answer": "a",
+     "hint": "The custom formula must be TRUE for entry to be accepted.",
+     "topic": "Custom rule"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "An alert style is set to Warning. What happens when a user enters an invalid value?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are told, and can choose to keep it"
+      },
+      {
+       "key": "b",
+       "text": "Excel blocks the entry completely"
+      },
+      {
+       "key": "c",
+       "text": "Excel deletes the value silently"
+      },
+      {
+       "key": "d",
+       "text": "Excel replaces it with the nearest valid value"
+      }
+     ],
+     "answer": "a",
+     "hint": "Only Stop blocks entries outright.",
+     "topic": "Alert styles"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which alert style should be used for a field that must always hold an exact value?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Stop"
+      },
+      {
+       "key": "b",
+       "text": "Warning"
+      },
+      {
+       "key": "c",
+       "text": "Information"
+      },
+      {
+       "key": "d",
+       "text": "None, because input messages do the same job"
+      }
+     ],
+     "answer": "a",
+     "hint": "Stop is the only style that blocks invalid entries.",
+     "topic": "Alert styles"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A user copies a cell from another sheet and pastes it into a validated cell. What is the usual result?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Excel checks the pasted value against the rule first"
+      },
+      {
+       "key": "b",
+       "text": "The paste is blocked with a Stop message"
+      },
+      {
+       "key": "c",
+       "text": "The rule is kept and the value is checked later"
+      },
+      {
+       "key": "d",
+       "text": "The value goes in and the validation rule is overwritten"
+      }
+     ],
+     "answer": "d",
+     "hint": "Pasting bypasses and replaces validation.",
+     "topic": "Limits"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Data has been entered for months. A new rule is then added. What does Excel do with the existing entries?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Deletes any that fail the rule"
+      },
+      {
+       "key": "b",
+       "text": "Turns them red automatically"
+      },
+      {
+       "key": "c",
+       "text": "Leaves them alone, but Circle Invalid Data can mark them"
+      },
+      {
+       "key": "d",
+       "text": "Converts them to text"
+      }
+     ],
+     "answer": "c",
+     "hint": "Existing values are not retested.",
+     "topic": "Existing data"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "How can a drop-down list update automatically when new items are added to the source?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Retype the items into the rule each time one is added"
+      },
+      {
+       "key": "b",
+       "text": "Base the list on an Excel Table or expanding named range"
+      },
+      {
+       "key": "c",
+       "text": "Switch off the input message for the cell"
+      },
+      {
+       "key": "d",
+       "text": "Sort the source list alphabetically each week"
+      }
+     ],
+     "answer": "b",
+     "hint": "Tables grow when rows are added.",
+     "topic": "Dynamic lists"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which tool builds a second drop-down that depends on a choice in the first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "SUMPRODUCT with arrays"
+      },
+      {
+       "key": "b",
+       "text": "DATEDIF with a text argument"
+      },
+      {
+       "key": "c",
+       "text": "A pivot table filter"
+      },
+      {
+       "key": "d",
+       "text": "INDIRECT together with named ranges"
+      }
+     ],
+     "answer": "d",
+     "hint": "INDIRECT turns the first choice into a range name.",
+     "topic": "Dependent lists"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is an input message used for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Blocking pasted data"
+      },
+      {
+       "key": "b",
+       "text": "Showing guidance when the cell is selected"
+      },
+      {
+       "key": "c",
+       "text": "Recording who changed the cell"
+      },
+      {
+       "key": "d",
+       "text": "Encrypting the entry"
+      }
+     ],
+     "answer": "b",
+     "hint": "It appears before anything is typed.",
+     "topic": "Input messages"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A whole-number rule allows only 1 to 5. Which entry is rejected under a Stop alert?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5.5"
+      },
+      {
+       "key": "b",
+       "text": "5"
+      },
+      {
+       "key": "c",
+       "text": "1"
+      },
+      {
+       "key": "d",
+       "text": "3"
+      }
+     ],
+     "answer": "a",
+     "hint": "A decimal is not a whole number.",
+     "topic": "Whole number rule"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which statement best describes the value of validation for a shared tracker?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It cuts typing errors but still needs checking"
+      },
+      {
+       "key": "b",
+       "text": "It guarantees that every entry in the tracker is correct"
+      },
+      {
+       "key": "c",
+       "text": "It replaces the need for a named data owner"
+      },
+      {
+       "key": "d",
+       "text": "It continues to work on any pasted data"
+      }
+     ],
+     "answer": "a",
+     "hint": "Validation cannot catch every error.",
+     "topic": "Role of validation"
+    }
+   ]
+  },
+  {
+   "title": "L11: Pivot logic: how a pivot table calculates",
+   "source": "Microsoft Support: create a PivotTable to analyse worksheet data",
+   "body": "A pivot table summarises a list without formulas. You drag fields into four areas: Rows and Columns set the groups, Values sets what is calculated, and Filters limits which records are included. The source must have a single header row, no blank headers, no merged cells and no blank rows inside it, or the pivot may misread it. Converting the source to an Excel Table means new rows join automatically.\n\nA pivot does not update when the source data changes. Use Refresh, or the option to refresh on opening the file. A new row added outside the source range will not be picked up unless the range is extended.\n\nThe calculation chosen for a Values field matters. Excel defaults to Sum if every value in the field is a number, but switches to Count if the field has text or blanks. A pivot showing \"Count of Cost\" when you expected totals usually means a blank or text entry in that column.\n\nAverages are calculated from the underlying rows. If Team A has two rows with 10 and 20 cases and Team B has one row with 30, the pivot shows Team A average 15, Team B average 30 and a grand total average of 20, which is 60 divided by 3. It is not the average of the group averages (22.5). The same applies to percentage fields: use \"Show Values As\" for share of total, for example, instead of averaging percentages.\n\nDates can be grouped by month, quarter or year. Calculated fields do arithmetic on summed fields, so a ratio field is the sum of one divided by the sum of the other. GETPIVOTDATA pulls a value from the pivot into a formula, and it keeps working if the pivot layout changes.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is the grand total Average in the pivot with Team A rows 10 and 20, and Team B row 30?",
+     "options": [
+      {
+       "key": "a",
+       "text": "22.5"
+      },
+      {
+       "key": "b",
+       "text": "15"
+      },
+      {
+       "key": "c",
+       "text": "20"
+      },
+      {
+       "key": "d",
+       "text": "30"
+      }
+     ],
+     "answer": "c",
+     "hint": "Total 60 divided by 3 rows.",
+     "topic": "Pivot averages"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why does the grand total differ from the mean of the group averages (15 and 30)?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The pivot rounds each group average down before combining"
+      },
+      {
+       "key": "b",
+       "text": "It is calculated from all rows, not from the group averages"
+      },
+      {
+       "key": "c",
+       "text": "It leaves out the largest value in each group"
+      },
+      {
+       "key": "d",
+       "text": "It weights the groups by alphabetical order of name"
+      }
+     ],
+     "answer": "b",
+     "hint": "Averages are not averaged.",
+     "topic": "Pivot averages"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A Values field shows \"Count of Cost\" rather than a sum. What is the most likely cause?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Cost column holds text or blanks"
+      },
+      {
+       "key": "b",
+       "text": "The pivot has too many rows"
+      },
+      {
+       "key": "c",
+       "text": "The source is an Excel Table"
+      },
+      {
+       "key": "d",
+       "text": "Filters are switched on"
+      }
+     ],
+     "answer": "a",
+     "hint": "Excel defaults to Count when a field has non-numbers.",
+     "topic": "Default summary"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A new row is typed below the source range, outside it. What happens when the pivot is refreshed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is added automatically"
+      },
+      {
+       "key": "b",
+       "text": "Refresh produces #REF!"
+      },
+      {
+       "key": "c",
+       "text": "It appears in the Filters area"
+      },
+      {
+       "key": "d",
+       "text": "It is not included until the source range is extended"
+      }
+     ],
+     "answer": "d",
+     "hint": "Pivot ranges are fixed unless the source is a Table.",
+     "topic": "Refresh and range"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is the simplest way to make a pivot pick up new rows automatically?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Use the highest number of rows ever expected"
+      },
+      {
+       "key": "b",
+       "text": "Turn off Refresh"
+      },
+      {
+       "key": "c",
+       "text": "Make the source an Excel Table"
+      },
+      {
+       "key": "d",
+       "text": "Merge the header cells"
+      }
+     ],
+     "answer": "c",
+     "hint": "A Table grows when rows are added.",
+     "topic": "Source tables"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which feature on a source range will most reliably break a pivot?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A date column"
+      },
+      {
+       "key": "b",
+       "text": "A column of numbers"
+      },
+      {
+       "key": "c",
+       "text": "Having 5,000 rows"
+      },
+      {
+       "key": "d",
+       "text": "A blank header cell"
+      }
+     ],
+     "answer": "d",
+     "hint": "Every column needs a header name.",
+     "topic": "Source layout"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "When does a pivot table update after a source cell is edited?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Immediately, as with a formula"
+      },
+      {
+       "key": "b",
+       "text": "When it is refreshed"
+      },
+      {
+       "key": "c",
+       "text": "Only when saved"
+      },
+      {
+       "key": "d",
+       "text": "Only when the filters change"
+      }
+     ],
+     "answer": "b",
+     "hint": "A pivot is a snapshot until refreshed.",
+     "topic": "Refresh"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does a calculated field for cost per case calculate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The average of each row's cost per case"
+      },
+      {
+       "key": "b",
+       "text": "Sum of cost divided by sum of cases"
+      },
+      {
+       "key": "c",
+       "text": "The count of cost divided by the count of cases"
+      },
+      {
+       "key": "d",
+       "text": "The mean of the group ratios"
+      }
+     ],
+     "answer": "b",
+     "hint": "Calculated fields work on summed fields.",
+     "topic": "Calculated fields"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why use \"Show Values As\" with percent of column total instead of averaging a percentage column?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is faster to refresh"
+      },
+      {
+       "key": "b",
+       "text": "It removes blank rows"
+      },
+      {
+       "key": "c",
+       "text": "It gives each group's share of the whole correctly"
+      },
+      {
+       "key": "d",
+       "text": "It sorts the groups"
+      }
+     ],
+     "answer": "c",
+     "hint": "Averaging row percentages ignores the size of each row.",
+     "topic": "Show values as"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does GETPIVOTDATA do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Refreshes every pivot table in the workbook at once"
+      },
+      {
+       "key": "b",
+       "text": "Pulls a value by field names, so it survives layout changes"
+      },
+      {
+       "key": "c",
+       "text": "Creates a new pivot table from a typed formula"
+      },
+      {
+       "key": "d",
+       "text": "Locks the pivot table against any further edits"
+      }
+     ],
+     "answer": "b",
+     "hint": "It refers to the pivot item, not the cell address.",
+     "topic": "GETPIVOTDATA"
+    }
+   ]
+  },
+  {
+   "title": "L11: Error handling: IFERROR, IFNA and checks",
+   "source": "Microsoft Support: IFERROR, IFNA and AGGREGATE functions",
+   "body": "Error values tell you something went wrong. Common ones: #DIV/0! for division by zero, #N/A when a lookup finds nothing, #VALUE! for the wrong type of data, #REF! for a deleted reference and #NAME? for an unrecognised name. Handling them is useful, but hiding them carelessly can produce wrong figures.\n\nIFERROR(value, fallback) replaces any error with the fallback. IFNA(value, fallback) replaces only #N/A. Use IFNA with a lookup so that a real fault, such as a deleted column that gives #REF!, still shows and is not disguised as \"not found\". Wrapping an entire long formula in IFERROR can conceal mistakes you needed to see.\n\nThe choice of fallback matters. Suppose =IFERROR(A2/B2,0) is filled down three rows with results 0 (from a zero divisor), 4 and 6. The average of the three is 3.33. If the fallback is \"\" (empty text) the first cell is skipped by AVERAGE, which gives 5. A zero says \"this ratio is zero\", but the true answer is \"no ratio\". Another approach tests the cause: =IF(B2=0,\"\",A2/B2).\n\nA single error in a range makes SUM return that error. AGGREGATE can ignore errors: =AGGREGATE(9,6,C2:C20) sums the range, where 9 means SUM and 6 means ignore error values. It is better to find and fix the cause than to ignore errors when the output is going into a report.\n\nISNUMBER, ISTEXT and ISBLANK return TRUE or FALSE and help to check inputs. ISERROR returns TRUE for any error. Build a check cell that counts errors, for instance =SUMPRODUCT(--ISERROR(C2:C20)), and make it show a warning on the summary sheet.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which function replaces only #N/A and leaves other error values visible?",
+     "options": [
+      {
+       "key": "a",
+       "text": "IFERROR"
+      },
+      {
+       "key": "b",
+       "text": "ISERROR"
+      },
+      {
+       "key": "c",
+       "text": "IFNA"
+      },
+      {
+       "key": "d",
+       "text": "AGGREGATE"
+      }
+     ],
+     "answer": "c",
+     "hint": "It is narrower than IFERROR.",
+     "topic": "IFNA"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why is IFNA often safer than IFERROR around a lookup?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It runs noticeably faster on large workbooks"
+      },
+      {
+       "key": "b",
+       "text": "It returns zero by default instead of blank"
+      },
+      {
+       "key": "c",
+       "text": "A genuine fault such as #REF! stays visible"
+      },
+      {
+       "key": "d",
+       "text": "It works only with exact-match lookups"
+      }
+     ],
+     "answer": "c",
+     "hint": "IFERROR would hide every error type.",
+     "topic": "Hiding errors"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Results of =IFERROR(A2/B2,0) down three rows are 0, 4 and 6. What is their average?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5"
+      },
+      {
+       "key": "b",
+       "text": "3.33"
+      },
+      {
+       "key": "c",
+       "text": "4"
+      },
+      {
+       "key": "d",
+       "text": "10"
+      }
+     ],
+     "answer": "b",
+     "hint": "10 divided by 3.",
+     "topic": "Fallback values"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "The fallback is changed to \"\" and the results are \"\", 4 and 6. What does AVERAGE return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "3.33"
+      },
+      {
+       "key": "b",
+       "text": "10"
+      },
+      {
+       "key": "c",
+       "text": "#VALUE!"
+      },
+      {
+       "key": "d",
+       "text": "5"
+      }
+     ],
+     "answer": "d",
+     "hint": "AVERAGE ignores text in a range.",
+     "topic": "Fallback values"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why can a fallback of 0 be misleading?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It says the ratio is zero when there was no ratio"
+      },
+      {
+       "key": "b",
+       "text": "It makes the column text"
+      },
+      {
+       "key": "c",
+       "text": "It turns the cell into an error"
+      },
+      {
+       "key": "d",
+       "text": "It stops filtering from working"
+      }
+     ],
+     "answer": "a",
+     "hint": "Zero is a real value.",
+     "topic": "Meaning of zero"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =AGGREGATE(9,6,C2:C20) do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Averages the range"
+      },
+      {
+       "key": "b",
+       "text": "Sums the range and ignores error values"
+      },
+      {
+       "key": "c",
+       "text": "Counts the errors"
+      },
+      {
+       "key": "d",
+       "text": "Returns the largest value"
+      }
+     ],
+     "answer": "b",
+     "hint": "9 means SUM and 6 means ignore errors.",
+     "topic": "AGGREGATE"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A SUM over C2:C20 returns #N/A because one cell has that error. What is the best first response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Wrap the SUM in IFERROR so that it returns 0"
+      },
+      {
+       "key": "b",
+       "text": "Delete the row from the sheet and carry on"
+      },
+      {
+       "key": "c",
+       "text": "Find why that cell has #N/A and fix the cause"
+      },
+      {
+       "key": "d",
+       "text": "Format the cell so that the error is not displayed"
+      }
+     ],
+     "answer": "c",
+     "hint": "Ignoring errors can hide wrong totals in a report.",
+     "topic": "Root cause"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which formula checks the range C2:C20 and gives the number of cells with any error?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=ISERROR(C2:C20)"
+      },
+      {
+       "key": "b",
+       "text": "=COUNTBLANK(C2:C20)"
+      },
+      {
+       "key": "c",
+       "text": "=SUMPRODUCT(--ISERROR(C2:C20))"
+      },
+      {
+       "key": "d",
+       "text": "=IFERROR(C2:C20,0)"
+      }
+     ],
+     "answer": "c",
+     "hint": "ISERROR gives TRUE or FALSE for each cell.",
+     "topic": "Check cells"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which error value usually means a cell that a formula referred to has been deleted?",
+     "options": [
+      {
+       "key": "a",
+       "text": "#NAME?"
+      },
+      {
+       "key": "b",
+       "text": "#REF!"
+      },
+      {
+       "key": "c",
+       "text": "#DIV/0!"
+      },
+      {
+       "key": "d",
+       "text": "#N/A"
+      }
+     ],
+     "answer": "b",
+     "hint": "The reference no longer exists.",
+     "topic": "Error types"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which formula avoids the error and leaves a gap when B2 is zero?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=A2/B2+0"
+      },
+      {
+       "key": "b",
+       "text": "=IF(B2=0,\"\",A2/B2)"
+      },
+      {
+       "key": "c",
+       "text": "=IFNA(A2/B2,0)"
+      },
+      {
+       "key": "d",
+       "text": "=IF(A2=0,\"\",A2/B2)"
+      }
+     ],
+     "answer": "b",
+     "hint": "The test must be on the divisor.",
+     "topic": "Testing the cause"
+    }
+   ]
+  },
+  {
+   "title": "L11: What a formula really returns",
+   "source": "Microsoft Support: ROUND, INT, TRUNC, MOD, COUNTA and COUNTBLANK functions",
+   "body": "A formula returns a value, but what you see may differ from what is stored. Number formats change the display only. A cell holding 2.5 and formatted with no decimals shows 3, yet a formula adding it to 1 gives 3.5, not 4. ROUND changes the stored value: ROUND(2.5,0) is 3 and ROUND(-2.5,0) is -3, as halves round away from zero. ROUND(1234,-2) is 1200. INT rounds down towards minus infinity, so INT(-2.5) is -3. TRUNC cuts off the decimal part, so TRUNC(-2.5) is -2.\n\nMOD returns the remainder after division, and takes the sign of the divisor. MOD(17,5) is 2 and MOD(-7,3) is 2. QUOTIENT(17,5) returns the whole-number part, 3.\n\nText and numbers behave differently. A number stored as text, such as \"5\", is ignored by SUM when it is in a cell range, but is converted if used directly in arithmetic: if A2 holds the text \"5\", then =A2+5 returns 10 while =SUM(A2) skips it and returns 0. Percent signs are numbers: 50%*200 is 100. TRUE counts as 1 in arithmetic.\n\nAn empty-looking cell may not be empty. A formula returning \"\" produces empty text. ISBLANK on that cell returns FALSE, and COUNTA counts it. COUNTBLANK counts both truly empty cells and cells holding \"\". This is why a count of \"non-blank\" entries can exceed the number of visible entries.\n\nComparisons are not case-sensitive: \"a\"=\"A\" is TRUE. The EXACT function is case-sensitive. Check what a formula returns with Evaluate Formula, or by typing it into a spare cell, before relying on it.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =ROUND(-2.5,0) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "-2"
+      },
+      {
+       "key": "b",
+       "text": "-3"
+      },
+      {
+       "key": "c",
+       "text": "-2.5"
+      },
+      {
+       "key": "d",
+       "text": "3"
+      }
+     ],
+     "answer": "b",
+     "hint": "Halves round away from zero.",
+     "topic": "ROUND"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =INT(-2.5) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "-2"
+      },
+      {
+       "key": "b",
+       "text": "-2.5"
+      },
+      {
+       "key": "c",
+       "text": "2"
+      },
+      {
+       "key": "d",
+       "text": "-3"
+      }
+     ],
+     "answer": "d",
+     "hint": "INT rounds down towards minus infinity.",
+     "topic": "INT"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =TRUNC(-2.5) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "-3"
+      },
+      {
+       "key": "b",
+       "text": "-2.5"
+      },
+      {
+       "key": "c",
+       "text": "-2"
+      },
+      {
+       "key": "d",
+       "text": "2"
+      }
+     ],
+     "answer": "c",
+     "hint": "TRUNC just removes the decimal part.",
+     "topic": "TRUNC"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =MOD(-7,3) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "2"
+      },
+      {
+       "key": "b",
+       "text": "-1"
+      },
+      {
+       "key": "c",
+       "text": "1"
+      },
+      {
+       "key": "d",
+       "text": "-2"
+      }
+     ],
+     "answer": "a",
+     "hint": "The result takes the sign of the divisor.",
+     "topic": "MOD"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =QUOTIENT(17,5) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "2"
+      },
+      {
+       "key": "b",
+       "text": "3.4"
+      },
+      {
+       "key": "c",
+       "text": "3"
+      },
+      {
+       "key": "d",
+       "text": "4"
+      }
+     ],
+     "answer": "c",
+     "hint": "It returns the whole-number part of the division.",
+     "topic": "QUOTIENT"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A cell holds 2.5, formatted to show no decimals, so it displays 3. A formula adds 1 to it. What is the result?",
+     "options": [
+      {
+       "key": "a",
+       "text": "4"
+      },
+      {
+       "key": "b",
+       "text": "3.5"
+      },
+      {
+       "key": "c",
+       "text": "3"
+      },
+      {
+       "key": "d",
+       "text": "2.5"
+      }
+     ],
+     "answer": "b",
+     "hint": "Formatting does not change the stored value.",
+     "topic": "Display vs value"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A cell A2 holds the text \"5\". What does =A2+5 return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5"
+      },
+      {
+       "key": "b",
+       "text": "#VALUE!"
+      },
+      {
+       "key": "c",
+       "text": "55"
+      },
+      {
+       "key": "d",
+       "text": "10"
+      }
+     ],
+     "answer": "d",
+     "hint": "Arithmetic converts text that looks like a number.",
+     "topic": "Text numbers"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A formula in a cell returns \"\". What does ISBLANK return for that cell?",
+     "options": [
+      {
+       "key": "a",
+       "text": "FALSE"
+      },
+      {
+       "key": "b",
+       "text": "TRUE"
+      },
+      {
+       "key": "c",
+       "text": "#VALUE!"
+      },
+      {
+       "key": "d",
+       "text": "0"
+      }
+     ],
+     "answer": "a",
+     "hint": "The cell holds empty text, not nothing.",
+     "topic": "Empty text"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which function counts cells that are truly empty and also cells holding \"\"?",
+     "options": [
+      {
+       "key": "a",
+       "text": "COUNTA"
+      },
+      {
+       "key": "b",
+       "text": "COUNT"
+      },
+      {
+       "key": "c",
+       "text": "ISBLANK"
+      },
+      {
+       "key": "d",
+       "text": "COUNTBLANK"
+      }
+     ],
+     "answer": "d",
+     "hint": "COUNTBLANK includes empty text.",
+     "topic": "COUNTBLANK"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does =ROUND(1234,-2) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "1230"
+      },
+      {
+       "key": "b",
+       "text": "1200"
+      },
+      {
+       "key": "c",
+       "text": "1300"
+      },
+      {
+       "key": "d",
+       "text": "1234"
+      }
+     ],
+     "answer": "b",
+     "hint": "A negative digit count rounds to the left of the decimal point.",
+     "topic": "ROUND digits"
+    }
+   ]
+  },
+  {
+   "title": "L11: Briefing a senior reader: structure",
+   "source": "GOV.UK: Civil Service Success Profiles, Communicating and Influencing; departmental briefing guidance",
+   "body": "A briefing helps a senior reader decide or act, usually in minutes. Put the point first. Many departments call this the bottom line up front: the first paragraph says what you are asking, what you recommend and by when. Do not make the reader wade through the background to find it.\n\nA common structure, which departments often vary, is: Issue or purpose; Recommendation; Timing; Background; Analysis or Options; Risks; Financial, legal and communications points; Handling; and Annexes. The main text is usually kept to one or two pages, with detail in annexes. Lines to take and Q&A for meetings are separate from the briefing itself.\n\nWrite the summary last, because only then do you know what matters. Test it by asking whether the reader could act on it alone. Use short paragraphs, numbered paragraphs for cross-reference and headings that say something: \"Costs have risen 12% against budget\" tells the reader more than \"Finance\".\n\nSeparate fact, judgement and opinion. Say where figures come from and how reliable they are. If the data is provisional or the sample small, say so near the figure, not in a footnote. Give the reader the risks that matter most and what you are doing about them, not a long list in no order.\n\nA recommendation must be specific and be something the reader can say yes or no to, for example, \"Agree to extend the contract for six months at the current rate.\" Avoid ending with \"views welcome\". Check names, dates and numbers against sources, and have a colleague read it fresh. Mark the right classification and handling instruction.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Where should the recommendation normally appear in a briefing for a senior reader?",
+     "options": [
+      {
+       "key": "a",
+       "text": "After the full background"
+      },
+      {
+       "key": "b",
+       "text": "Only in an annex"
+      },
+      {
+       "key": "c",
+       "text": "In the first paragraph or summary"
+      },
+      {
+       "key": "d",
+       "text": "In the closing paragraph, after the risks"
+      }
+     ],
+     "answer": "c",
+     "hint": "The reader should see the ask immediately.",
+     "topic": "Bottom line first"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does \"bottom line up front\" mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Stating the ask and recommendation at the start"
+      },
+      {
+       "key": "b",
+       "text": "Putting the costs in a paragraph at the very end"
+      },
+      {
+       "key": "c",
+       "text": "Listing the least important points first"
+      },
+      {
+       "key": "d",
+       "text": "Putting all numbers in a single table in the annex"
+      }
+     ],
+     "answer": "a",
+     "hint": "It saves the reader's time.",
+     "topic": "Structure"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which part of a briefing is best written last?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The background"
+      },
+      {
+       "key": "b",
+       "text": "The annex"
+      },
+      {
+       "key": "c",
+       "text": "The summary"
+      },
+      {
+       "key": "d",
+       "text": "The title"
+      }
+     ],
+     "answer": "c",
+     "hint": "You only know what matters after the analysis is done.",
+     "topic": "Writing the summary"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which heading is the most useful to a busy reader?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Finance"
+      },
+      {
+       "key": "b",
+       "text": "Key points"
+      },
+      {
+       "key": "c",
+       "text": "Update"
+      },
+      {
+       "key": "d",
+       "text": "Costs have risen 12% against budget"
+      }
+     ],
+     "answer": "d",
+     "hint": "A heading that says something tells the reader the message.",
+     "topic": "Headings"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Where should a caution about provisional or small-sample data go?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In a footnote at the end"
+      },
+      {
+       "key": "b",
+       "text": "In the annex only"
+      },
+      {
+       "key": "c",
+       "text": "Nowhere, if the figure is small"
+      },
+      {
+       "key": "d",
+       "text": "Next to the figure it affects"
+      }
+     ],
+     "answer": "d",
+     "hint": "The reader must see the caveat when they read the number.",
+     "topic": "Caveats"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which recommendation is best written for a senior reader?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Consider whether the contract might need to be extended in future"
+      },
+      {
+       "key": "b",
+       "text": "Agree to extend the contract for six months at the current rate"
+      },
+      {
+       "key": "c",
+       "text": "Note the current contract situation and the options available"
+      },
+      {
+       "key": "d",
+       "text": "Views would be welcome on possible next steps for the contract"
+      }
+     ],
+     "answer": "b",
+     "hint": "It can be answered yes or no.",
+     "topic": "Recommendations"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is the usual role of annexes in a briefing?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To hide unfavourable facts"
+      },
+      {
+       "key": "b",
+       "text": "To hold detail that supports the main text, keeping it short"
+      },
+      {
+       "key": "c",
+       "text": "To repeat the whole briefing"
+      },
+      {
+       "key": "d",
+       "text": "To carry the recommendation"
+      }
+     ],
+     "answer": "b",
+     "hint": "Detail goes at the back.",
+     "topic": "Annexes"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A draft lists twelve risks in no order. What is the best improvement?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Alphabetise them"
+      },
+      {
+       "key": "b",
+       "text": "Move them to an annex with no comment"
+      },
+      {
+       "key": "c",
+       "text": "Remove the numbers"
+      },
+      {
+       "key": "d",
+       "text": "Lead with the few that matter most and the action for each"
+      }
+     ],
+     "answer": "d",
+     "hint": "Prioritise for the reader.",
+     "topic": "Risks"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which is a statement of judgement rather than fact?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The new process started on 1 April last year"
+      },
+      {
+       "key": "b",
+       "text": "Cases open fell from 400 to 350 over the quarter"
+      },
+      {
+       "key": "c",
+       "text": "The team now has six full-time staff in post"
+      },
+      {
+       "key": "d",
+       "text": "The new process is likely to cut delays"
+      }
+     ],
+     "answer": "d",
+     "hint": "It is a forecast, not a measured fact.",
+     "topic": "Fact vs judgement"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why use numbered paragraphs?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To make the briefing look longer"
+      },
+      {
+       "key": "b",
+       "text": "To satisfy a legal rule"
+      },
+      {
+       "key": "c",
+       "text": "To show which paragraphs are classified"
+      },
+      {
+       "key": "d",
+       "text": "So readers can refer to them precisely in a meeting or reply"
+      }
+     ],
+     "answer": "d",
+     "hint": "They make cross-reference easy.",
+     "topic": "Layout"
+    }
+   ]
+  },
+  {
+   "title": "L11: Writing for ministers and the public",
+   "source": "GOV.UK: Style guide; Civil Service Code; ministerial correspondence guidance",
+   "body": "Draft replies for ministers are written in the minister's voice. Officials draft the text, the private office reviews it and the minister signs, so it uses \"I\" and \"we\" and not \"the Department considers\". Start with the answer to the question asked or the main point. Thank the person for writing in the first line only, if at all, and avoid phrases such as \"I am writing in response to your letter of\".\n\nBe accurate and make no commitments that have not been agreed. A reply must not announce new policy, promise money or pre-empt a decision. If the matter is subject to legal proceedings, check with lawyers before drafting. Say what the government is doing and why, in plain English, and give the person something they can use: a link, a number to call, or what to do next. Check that every fact, figure and date is right and that sources are recorded for the private office.\n\nMost readers are not specialists. The GOV.UK style guide asks for plain English: short sentences, active verbs, no jargon and no unexplained acronyms. Use \"you\" and \"we\". Say \"buy\" not \"purchase\", \"help\" not \"facilitate\". Put one idea in a paragraph. Use numbers, not words, for figures, and write dates in full, such as 5 March 2025. Do not use \"please find attached\"; say what the attachment is.\n\nTone matters. If the person has had a poor experience, acknowledge it before explaining. Do not use \"unfortunately\" as a cushion, and do not be defensive. If the answer is no, give the reason and the next step, such as the right to a review or the route of complaint.\n\nDraft in the public's accessible formats too: if a person has asked for large print or easy read, the reply should be provided that way.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "In whose voice is a draft reply for a minister written?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Department's, using \"the Department\""
+      },
+      {
+       "key": "b",
+       "text": "The minister's, using \"I\" and \"we\""
+      },
+      {
+       "key": "c",
+       "text": "The private office's, using \"we have been asked\""
+      },
+      {
+       "key": "d",
+       "text": "The official who drafted it, using \"I\""
+      }
+     ],
+     "answer": "b",
+     "hint": "The minister signs it.",
+     "topic": "Voice"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What should the first main sentence of a reply do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Quote the date of the letter you received"
+      },
+      {
+       "key": "b",
+       "text": "Answer the question or give the main point"
+      },
+      {
+       "key": "c",
+       "text": "Apologise at length for the delay in replying"
+      },
+      {
+       "key": "d",
+       "text": "Describe the history of the policy since its start"
+      }
+     ],
+     "answer": "b",
+     "hint": "Lead with what the reader wants to know.",
+     "topic": "Opening"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A draft hints that funding will be increased next year, though no decision has been made. What should the drafter do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Remove it, because no commitment can be made before a decision"
+      },
+      {
+       "key": "b",
+       "text": "Keep it, with the word \"may\" added to soften it"
+      },
+      {
+       "key": "c",
+       "text": "Move it to the last paragraph so it is less prominent"
+      },
+      {
+       "key": "d",
+       "text": "Keep it, adding that it is not yet formal policy"
+      }
+     ],
+     "answer": "a",
+     "hint": "Replies must not pre-empt decisions.",
+     "topic": "No commitments"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A subject is the focus of live court proceedings. What is the first step before drafting?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Send the standard reply"
+      },
+      {
+       "key": "b",
+       "text": "Check with departmental lawyers"
+      },
+      {
+       "key": "c",
+       "text": "Copy the court papers into the letter"
+      },
+      {
+       "key": "d",
+       "text": "Leave the matter out of the reply"
+      }
+     ],
+     "answer": "b",
+     "hint": "Legal advice may limit what can be said.",
+     "topic": "Legal risk"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which wording best follows GOV.UK style?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Purchase the form online prior to 5th March 2025"
+      },
+      {
+       "key": "b",
+       "text": "Buy the form online before 5 March 2025"
+      },
+      {
+       "key": "c",
+       "text": "The form may be purchased by the applicant online"
+      },
+      {
+       "key": "d",
+       "text": "It is recommended that the form be bought online"
+      }
+     ],
+     "answer": "b",
+     "hint": "It uses plain words, an active verb and a full date.",
+     "topic": "GOV.UK style"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is wrong with ending a reply with \"please find attached\"?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It does not say what the attachment is or why it matters"
+      },
+      {
+       "key": "b",
+       "text": "It is too informal"
+      },
+      {
+       "key": "c",
+       "text": "It breaks copyright rules"
+      },
+      {
+       "key": "d",
+       "text": "It cannot be read by screen readers"
+      }
+     ],
+     "answer": "a",
+     "hint": "Tell the reader what the attachment is.",
+     "topic": "Attachments"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A person reports a poor experience. What should the reply do first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Explain the policy in detail"
+      },
+      {
+       "key": "b",
+       "text": "Say that the Department stands by its decision"
+      },
+      {
+       "key": "c",
+       "text": "Acknowledge the experience before explaining"
+      },
+      {
+       "key": "d",
+       "text": "Offer compensation"
+      }
+     ],
+     "answer": "c",
+     "hint": "Acknowledging comes first, without promising a remedy.",
+     "topic": "Tone"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "When the answer is no, what should the reply include?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A list of every rule that applies"
+      },
+      {
+       "key": "b",
+       "text": "The reason and the next step, such as how to ask for a review"
+      },
+      {
+       "key": "c",
+       "text": "An apology only"
+      },
+      {
+       "key": "d",
+       "text": "Nothing further, to avoid raising hopes"
+      }
+     ],
+     "answer": "b",
+     "hint": "The reader needs to know what happens next.",
+     "topic": "Refusals"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which figures style best fits GOV.UK style?",
+     "options": [
+      {
+       "key": "a",
+       "text": "twelve thousand five hundred people and 5th of March"
+      },
+      {
+       "key": "b",
+       "text": "12500 people and 05/03/25"
+      },
+      {
+       "key": "c",
+       "text": "12,500 people and 5 March 2025"
+      },
+      {
+       "key": "d",
+       "text": "12.5k people and March 5"
+      }
+     ],
+     "answer": "c",
+     "hint": "Use numerals and write dates in full.",
+     "topic": "Numbers and dates"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "The reader asked for easy read. What should the department do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Send the standard letter with a note"
+      },
+      {
+       "key": "b",
+       "text": "Provide the reply in easy read"
+      },
+      {
+       "key": "c",
+       "text": "Ask them to arrange a translation"
+      },
+      {
+       "key": "d",
+       "text": "Send it as a scanned image"
+      }
+     ],
+     "answer": "b",
+     "hint": "Reasonable adjustments must be provided.",
+     "topic": "Accessible formats"
+    }
+   ]
+  },
+  {
+   "title": "L11: Minutes, decisions and action logs",
+   "source": "Cabinet Office: guidance on minutes and records; ICO guidance on subject access",
+   "body": "Minutes record what a meeting decided and who must do what. They are not a transcript. A good record shows the date, attendees and apologies, each decision with a short reason, and each action. Discussion is summarised only enough to make the decision understandable.\n\nA good action has a verb, one named owner and a date. \"Draft the options paper\" is better than \"Options paper\", and \"Owner: Priya, by 14 March\" is better than \"Policy team, soon\". An action with two owners often has none. If the work is shared, name a lead. Break large tasks into smaller steps that can be closed, and note dependencies, such as \"after budget sign-off\".\n\nAn action log is a live list. At each meeting the chair reviews the open actions first. Record status simply, such as open, due, overdue or closed. Close an action only when it is done, and note what was done and where the evidence is. If an action cannot be met, record the new date and the reason, not a silent change. Repeated overdue items should be raised with the owner's line manager.\n\nCirculate draft minutes soon after the meeting, while memory is fresh, often within two working days, and ask the chair to approve them. Corrections are agreed at the next meeting and the approved version becomes the record. Keep one master copy with version control.\n\nMinutes are official records. They can be disclosed in response to a Freedom of Information request or a subject access request, so write facts and decisions in neutral language. Leave out personal remarks and opinions of individuals, and mark sensitive items clearly.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is the main purpose of minutes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To record decisions, reasons and actions"
+      },
+      {
+       "key": "b",
+       "text": "To provide a full transcript of the discussion"
+      },
+      {
+       "key": "c",
+       "text": "To list who attended and who sent apologies"
+      },
+      {
+       "key": "d",
+       "text": "To set the agenda for the next meeting"
+      }
+     ],
+     "answer": "a",
+     "hint": "They are not a transcript.",
+     "topic": "Purpose of minutes"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which action is best written?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Options paper - Policy team - as soon as possible"
+      },
+      {
+       "key": "b",
+       "text": "Someone to take a look at the options paper"
+      },
+      {
+       "key": "c",
+       "text": "Draft options paper - Priya - by 14 March"
+      },
+      {
+       "key": "d",
+       "text": "Options paper discussed and noted by the group"
+      }
+     ],
+     "answer": "c",
+     "hint": "It has a verb, one owner and a date.",
+     "topic": "SMART actions"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why is an action with two joint owners a problem?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It cannot be recorded in a log"
+      },
+      {
+       "key": "b",
+       "text": "Each may assume the other will do it"
+      },
+      {
+       "key": "c",
+       "text": "It breaks data protection rules"
+      },
+      {
+       "key": "d",
+       "text": "It must be agreed by the chair"
+      }
+     ],
+     "answer": "b",
+     "hint": "Name a lead where the work is shared.",
+     "topic": "Ownership"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What should the chair usually review first at the next meeting?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The open actions from the last meeting"
+      },
+      {
+       "key": "b",
+       "text": "Any other business"
+      },
+      {
+       "key": "c",
+       "text": "The date of the next meeting"
+      },
+      {
+       "key": "d",
+       "text": "The agenda for the following quarter"
+      }
+     ],
+     "answer": "a",
+     "hint": "Action review keeps work moving.",
+     "topic": "Action review"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "An owner cannot meet a deadline. What should the log record?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing until the work is done"
+      },
+      {
+       "key": "b",
+       "text": "The new date and the reason"
+      },
+      {
+       "key": "c",
+       "text": "A deleted action"
+      },
+      {
+       "key": "d",
+       "text": "The original date only"
+      }
+     ],
+     "answer": "b",
+     "hint": "Do not change dates silently.",
+     "topic": "Slipping actions"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "When should an action be marked closed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "When it has been done and the evidence is noted"
+      },
+      {
+       "key": "b",
+       "text": "When the meeting ends"
+      },
+      {
+       "key": "c",
+       "text": "When the owner says they will start"
+      },
+      {
+       "key": "d",
+       "text": "When the date passes"
+      }
+     ],
+     "answer": "a",
+     "hint": "Closure needs proof of completion.",
+     "topic": "Closing actions"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why should draft minutes be circulated quickly?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Memory is fresh and errors are easier to correct"
+      },
+      {
+       "key": "b",
+       "text": "So the chair has less time to read the draft"
+      },
+      {
+       "key": "c",
+       "text": "To meet a legal limit of 24 hours for minutes"
+      },
+      {
+       "key": "d",
+       "text": "So attendees can add their own remarks afterwards"
+      }
+     ],
+     "answer": "a",
+     "hint": "A short delay improves accuracy.",
+     "topic": "Timing"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why must minutes be written in neutral, factual language?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are always published on GOV.UK after approval"
+      },
+      {
+       "key": "b",
+       "text": "They may be disclosed under FOI or a subject access request"
+      },
+      {
+       "key": "c",
+       "text": "They are routinely audited by the National Audit Office"
+      },
+      {
+       "key": "d",
+       "text": "They count as legally binding contracts between attendees"
+      }
+     ],
+     "answer": "b",
+     "hint": "Records can be released.",
+     "topic": "Disclosure"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which entry should be left out of minutes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A remark about a colleague's personal circumstances"
+      },
+      {
+       "key": "b",
+       "text": "A decision to approve the budget"
+      },
+      {
+       "key": "c",
+       "text": "An action with an owner and a date"
+      },
+      {
+       "key": "d",
+       "text": "A reason for deferring the item"
+      }
+     ],
+     "answer": "a",
+     "hint": "Personal remarks and opinions have no place in the record.",
+     "topic": "Content"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Dependencies in an action log are noted so that",
+     "options": [
+      {
+       "key": "a",
+       "text": "The chair can remove the action"
+      },
+      {
+       "key": "b",
+       "text": "The action is shown as closed"
+      },
+      {
+       "key": "c",
+       "text": "Two owners can be named"
+      },
+      {
+       "key": "d",
+       "text": "The reader can see what must happen first"
+      }
+     ],
+     "answer": "d",
+     "hint": "They explain why an action may not yet be due.",
+     "topic": "Dependencies"
+    }
+   ]
+  },
+  {
+   "title": "L11: UK GDPR: choosing a lawful basis and doing a DPIA",
+   "source": "ICO: Guide to the UK GDPR, lawful basis and data protection impact assessments",
+   "body": "Before processing personal data, you need a lawful basis under Article 6 of the UK GDPR. There are six: consent, contract, legal obligation, vital interests, public task and legitimate interests. Choose the one that fits the purpose and record why. No basis is better than another, but they have different consequences.\n\nPublic authorities usually rely on public task: processing needed to perform a task in the public interest or in the exercise of official authority, which must have a basis in law. Legitimate interests cannot be used by a public authority for tasks it performs as a public authority. Consent is rarely suitable where there is a clear imbalance of power, such as a person who depends on a service, because it must be freely given and can be withdrawn. If you rely on consent, you must be able to prove it and stop when it is withdrawn.\n\nSpecial category data, such as health, ethnicity or biometric data, also needs a condition under Article 9, as well as an Article 6 basis. Criminal offence data has its own rules too.\n\nA data protection impact assessment (DPIA) is required before processing that is likely to result in a high risk to people. Examples include large-scale use of special category data, systematic monitoring, new technologies and decisions that affect people through automated processing. A DPIA describes the processing, assesses necessity and proportionality, identifies risks to individuals and sets out the measures to reduce them. The data protection officer must be asked for advice. If a high risk remains after mitigation, the ICO must be consulted before the processing starts.\n\nA DPIA is not a one-off form: update it when the processing changes. A manager's job is to make sure it is done early enough to change the design.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "How many lawful bases for processing does Article 6 of the UK GDPR list?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Four"
+      },
+      {
+       "key": "b",
+       "text": "Five"
+      },
+      {
+       "key": "c",
+       "text": "Eight"
+      },
+      {
+       "key": "d",
+       "text": "Six"
+      }
+     ],
+     "answer": "d",
+     "hint": "They run from consent to legitimate interests.",
+     "topic": "Lawful bases"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which basis do public authorities usually use for their core tasks?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Legitimate interests"
+      },
+      {
+       "key": "b",
+       "text": "Consent"
+      },
+      {
+       "key": "c",
+       "text": "Vital interests"
+      },
+      {
+       "key": "d",
+       "text": "Public task"
+      }
+     ],
+     "answer": "d",
+     "hint": "It needs a basis in law.",
+     "topic": "Public task"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why is consent often a poor choice where a person depends on a government service?",
+     "options": [
+      {
+       "key": "a",
+       "text": "There is an imbalance of power, so it may not be freely given"
+      },
+      {
+       "key": "b",
+       "text": "Consent is banned outright for public bodies"
+      },
+      {
+       "key": "c",
+       "text": "Consent can never be withdrawn once it is given"
+      },
+      {
+       "key": "d",
+       "text": "Consent is valid only for special category data"
+      }
+     ],
+     "answer": "a",
+     "hint": "Consent must be freely given.",
+     "topic": "Consent"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is true of legitimate interests for a public authority?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is always the best choice for government work"
+      },
+      {
+       "key": "b",
+       "text": "It needs the data subject's signature in each case"
+      },
+      {
+       "key": "c",
+       "text": "It applies only to health data and similar records"
+      },
+      {
+       "key": "d",
+       "text": "It cannot be used for tasks done as a public authority"
+      }
+     ],
+     "answer": "d",
+     "hint": "Public tasks have their own basis.",
+     "topic": "Legitimate interests"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A team will process health data. What does it need?",
+     "options": [
+      {
+       "key": "a",
+       "text": "An Article 9 condition only"
+      },
+      {
+       "key": "b",
+       "text": "An Article 6 basis and an Article 9 condition"
+      },
+      {
+       "key": "c",
+       "text": "Consent from the line manager"
+      },
+      {
+       "key": "d",
+       "text": "A Freedom of Information response"
+      }
+     ],
+     "answer": "b",
+     "hint": "Special category data needs both.",
+     "topic": "Special category data"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "When must a DPIA be completed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Within a month after the processing has started"
+      },
+      {
+       "key": "b",
+       "text": "Only if the ICO has asked for one in writing"
+      },
+      {
+       "key": "c",
+       "text": "Before processing likely to result in high risk to people"
+      },
+      {
+       "key": "d",
+       "text": "After the first complaint about the processing arrives"
+      }
+     ],
+     "answer": "c",
+     "hint": "The DPIA has to come first.",
+     "topic": "DPIA trigger"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which project most clearly needs a DPIA?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Updating a team's rota"
+      },
+      {
+       "key": "b",
+       "text": "Systematic monitoring of staff using a new tool"
+      },
+      {
+       "key": "c",
+       "text": "Changing the font on a form"
+      },
+      {
+       "key": "d",
+       "text": "Filing existing paper records"
+      }
+     ],
+     "answer": "b",
+     "hint": "Systematic monitoring and new technology both signal high risk.",
+     "topic": "DPIA trigger"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What must happen if a DPIA shows a high risk that cannot be reduced?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The processing can go ahead with a note on file"
+      },
+      {
+       "key": "b",
+       "text": "The minister must sign it off before it begins"
+      },
+      {
+       "key": "c",
+       "text": "The ICO must be consulted before the processing starts"
+      },
+      {
+       "key": "d",
+       "text": "A new DPIA is done after the launch instead"
+      }
+     ],
+     "answer": "c",
+     "hint": "Prior consultation applies where high risk remains.",
+     "topic": "Prior consultation"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Who must be asked for advice when carrying out a DPIA?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The Cabinet Secretary"
+      },
+      {
+       "key": "b",
+       "text": "The head of procurement"
+      },
+      {
+       "key": "c",
+       "text": "The data protection officer"
+      },
+      {
+       "key": "d",
+       "text": "The data subject's solicitor"
+      }
+     ],
+     "answer": "c",
+     "hint": "The DPO advises on the DPIA.",
+     "topic": "DPO role"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why should a DPIA be started early in a project?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So the findings can change the design"
+      },
+      {
+       "key": "b",
+       "text": "So the record is complete for audit"
+      },
+      {
+       "key": "c",
+       "text": "So the ICO can approve every project"
+      },
+      {
+       "key": "d",
+       "text": "So costs can be cut"
+      }
+     ],
+     "answer": "a",
+     "hint": "Late DPIAs only document decisions already made.",
+     "topic": "Timing"
+    }
+   ]
+  },
+  {
+   "title": "L11: Records management: retention, disposal and the record",
+   "source": "The National Archives: Records management guidance; Public Records Act 1958; Freedom of Information Act 2000 section 46 Code",
+   "body": "A record is information created or received in the course of business that is kept as evidence of what was done and why. Not everything is a record. Drafts, duplicates and personal notes are usually not, though a draft can become one if it shows a decision. What matters is the content and function, not the format: email, a message in a chat tool or a document in a shared drive can all be records.\n\nInformation that matters should be stored in an approved corporate system with the right access controls, not in a personal mailbox, a personal drive or on a device. Use clear file names and version control, so that the final approved version can be found.\n\nA retention schedule says how long each type of record is kept and what happens at the end: destroy, review or transfer. Keep records only as long as there is a business, legal or historical need. The UK GDPR storage limitation principle also means personal data must not be kept longer than necessary for its purpose. Disposal must be authorised, documented and carried out securely. Never destroy information that is the subject of a live FOI request, subject access request or legal hold. Deliberately altering, concealing or destroying information to prevent disclosure after a request is a criminal offence under section 77 of the Freedom of Information Act.\n\nUnder the Public Records Act 1958, records selected for permanent preservation are transferred to The National Archives, generally by the time they are 20 years old. Departments decide with the Archives which records have historic value. Others are destroyed under the schedule.\n\nInformation asset owners are accountable for the records in their area. Managers should make sure leavers' files are transferred, not deleted, and that handovers include where the records live.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which of these items would normally count as a record?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A duplicate copy of a leaflet"
+      },
+      {
+       "key": "b",
+       "text": "A personal reminder note"
+      },
+      {
+       "key": "c",
+       "text": "An earlier draft with no decision shown in it"
+      },
+      {
+       "key": "d",
+       "text": "An email recording a decision and its reason"
+      }
+     ],
+     "answer": "d",
+     "hint": "A record is evidence of business done.",
+     "topic": "What is a record"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What determines whether information is a record?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Its content and the function it serves"
+      },
+      {
+       "key": "b",
+       "text": "The file type"
+      },
+      {
+       "key": "c",
+       "text": "Whether it was printed"
+      },
+      {
+       "key": "d",
+       "text": "How long it is"
+      }
+     ],
+     "answer": "a",
+     "hint": "Format is irrelevant.",
+     "topic": "Definition"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Where should important information be stored?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In a personal mailbox"
+      },
+      {
+       "key": "b",
+       "text": "On a USB stick"
+      },
+      {
+       "key": "c",
+       "text": "In an approved corporate system with access controls"
+      },
+      {
+       "key": "d",
+       "text": "On a personal cloud drive"
+      }
+     ],
+     "answer": "c",
+     "hint": "Records must be findable and protected.",
+     "topic": "Storage"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What does a retention schedule set out?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Who can read each file"
+      },
+      {
+       "key": "b",
+       "text": "Which software is approved"
+      },
+      {
+       "key": "c",
+       "text": "The classification of each record"
+      },
+      {
+       "key": "d",
+       "text": "How long each record type is kept and what happens after"
+      }
+     ],
+     "answer": "d",
+     "hint": "It sets time limits and outcomes.",
+     "topic": "Retention schedule"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which UK GDPR principle relates to keeping personal data only as long as needed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Accuracy"
+      },
+      {
+       "key": "b",
+       "text": "Data minimisation"
+      },
+      {
+       "key": "c",
+       "text": "Integrity and confidentiality"
+      },
+      {
+       "key": "d",
+       "text": "Storage limitation"
+      }
+     ],
+     "answer": "d",
+     "hint": "It is one of the Article 5 principles.",
+     "topic": "UK GDPR link"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A FOI request arrives for emails due to be deleted next week under the schedule. What should happen?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Delete them as scheduled, since the schedule applies"
+      },
+      {
+       "key": "b",
+       "text": "Move them to a personal drive for safe keeping"
+      },
+      {
+       "key": "c",
+       "text": "Hold the emails until the request has been dealt with"
+      },
+      {
+       "key": "d",
+       "text": "Delete only those marked OFFICIAL-SENSITIVE"
+      }
+     ],
+     "answer": "c",
+     "hint": "Destroying requested information is unlawful.",
+     "topic": "Legal hold"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which act makes it an offence to destroy information to stop its disclosure after a request?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Freedom of Information Act 2000, section 77"
+      },
+      {
+       "key": "b",
+       "text": "Official Secrets Act 1989"
+      },
+      {
+       "key": "c",
+       "text": "Data Protection Act 2018, section 170"
+      },
+      {
+       "key": "d",
+       "text": "Public Records Act 1958"
+      }
+     ],
+     "answer": "a",
+     "hint": "Section 77 covers altering, concealing or destroying records.",
+     "topic": "FOI offence"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "By roughly when are records selected for permanent preservation transferred to The National Archives?",
+     "options": [
+      {
+       "key": "a",
+       "text": "After 5 years"
+      },
+      {
+       "key": "b",
+       "text": "After 30 years"
+      },
+      {
+       "key": "c",
+       "text": "When they are 20 years old"
+      },
+      {
+       "key": "d",
+       "text": "After the minister leaves office"
+      }
+     ],
+     "answer": "c",
+     "hint": "The transfer period is generally 20 years.",
+     "topic": "Public Records Act"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Who is accountable for the records in a business area?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The IT helpdesk"
+      },
+      {
+       "key": "b",
+       "text": "The Permanent Secretary alone"
+      },
+      {
+       "key": "c",
+       "text": "The information asset owner"
+      },
+      {
+       "key": "d",
+       "text": "The most recent user"
+      }
+     ],
+     "answer": "c",
+     "hint": "Asset owners are accountable.",
+     "topic": "Accountability"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A member of staff is leaving. What should the manager ensure?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Their files are moved to a shared location, not deleted"
+      },
+      {
+       "key": "b",
+       "text": "Their mailbox is deleted on the day they leave"
+      },
+      {
+       "key": "c",
+       "text": "Their files stay on their laptop until it is reissued"
+      },
+      {
+       "key": "d",
+       "text": "Only emails to the minister are kept; the rest can go"
+      }
+     ],
+     "answer": "a",
+     "hint": "Records belong to the department, not the individual.",
+     "topic": "Leavers"
+    }
+   ]
+  },
+  {
+   "title": "L11: Accessible documents: Word, PDF and the public sector duty",
+   "source": "GOV.UK: Make your documents accessible; Public Sector Bodies Accessibility Regulations 2018; GDS accessibility guidance",
+   "body": "A document is accessible if people with different needs can use it, including those using screen readers, magnification, voice control or a keyboard only. The Public Sector Bodies (Websites and Mobile Applications) Accessibility Regulations 2018 require public sector websites and apps to meet the Web Content Accessibility Guidelines (WCAG) at level AA, and to publish an accessibility statement. Documents published on a website are covered. The Equality Act 2010 also requires reasonable adjustments.\n\nThe best accessibility choice on GOV.UK is often to publish content as a web page (HTML), not as a PDF or Word file. HTML adapts to the user's device and settings. If you do publish a document, build it in Word with the structure in place first.\n\nUse real headings from the Styles gallery, not bold text, so a screen reader can list and jump between sections. Use heading levels in order. Use real bullet and number lists. Write descriptive link text such as \"Read the complaints policy\", not \"click here\". Give images alt text that conveys their purpose, or mark purely decorative images as such. Do not put important text inside an image. Do not rely on colour alone: text must have enough contrast with its background, at least 4.5 to 1 for normal text at level AA. Keep tables simple, with a header row marked, and no merged or split cells. Avoid text boxes, floating objects and blank paragraphs used for spacing.\n\nSet the document language and a meaningful title in the properties. Run the Accessibility Checker, but treat it as a start: it cannot tell if alt text is useful or the reading order makes sense. When saving to PDF, use the built-in export so tags are kept, and check the result.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What do the 2018 accessibility regulations require of public sector websites?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Meet WCAG AAA at all times"
+      },
+      {
+       "key": "b",
+       "text": "Meet WCAG AA and publish an accessibility statement"
+      },
+      {
+       "key": "c",
+       "text": "Offer every page as a PDF"
+      },
+      {
+       "key": "d",
+       "text": "Test with a single screen reader"
+      }
+     ],
+     "answer": "b",
+     "hint": "AA is the standard required.",
+     "topic": "Regulations"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "For public content, which format is often the best choice on GOV.UK?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A web page (HTML)"
+      },
+      {
+       "key": "b",
+       "text": "A scanned PDF"
+      },
+      {
+       "key": "c",
+       "text": "A Word file with images of text"
+      },
+      {
+       "key": "d",
+       "text": "A spreadsheet"
+      }
+     ],
+     "answer": "a",
+     "hint": "HTML adapts to the user's device and settings.",
+     "topic": "Format choice"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why use the Styles gallery for headings rather than bold text?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It keeps the file small"
+      },
+      {
+       "key": "b",
+       "text": "It prints better"
+      },
+      {
+       "key": "c",
+       "text": "It avoids copyright issues"
+      },
+      {
+       "key": "d",
+       "text": "Screen readers can then list and navigate the headings"
+      }
+     ],
+     "answer": "d",
+     "hint": "Real headings carry structure.",
+     "topic": "Headings"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which link text is best for a screen reader user?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Read the complaints policy"
+      },
+      {
+       "key": "b",
+       "text": "Click here"
+      },
+      {
+       "key": "c",
+       "text": "Read more"
+      },
+      {
+       "key": "d",
+       "text": "https://example.gov.uk/policy"
+      }
+     ],
+     "answer": "a",
+     "hint": "Links must make sense out of context.",
+     "topic": "Link text"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is the minimum contrast ratio for normal text at WCAG AA?",
+     "options": [
+      {
+       "key": "a",
+       "text": "2 to 1"
+      },
+      {
+       "key": "b",
+       "text": "3 to 1"
+      },
+      {
+       "key": "c",
+       "text": "4.5 to 1"
+      },
+      {
+       "key": "d",
+       "text": "7 to 1"
+      }
+     ],
+     "answer": "c",
+     "hint": "AA sets 4.5:1 for normal-sized text.",
+     "topic": "Contrast"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which of these makes a table more accessible?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Merged cells for tidy layout"
+      },
+      {
+       "key": "b",
+       "text": "Colour alone to show totals"
+      },
+      {
+       "key": "c",
+       "text": "A marked header row and no merged cells"
+      },
+      {
+       "key": "d",
+       "text": "A picture of the table"
+      }
+     ],
+     "answer": "c",
+     "hint": "Simple tables are easier for assistive technology.",
+     "topic": "Tables"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A chart image carries the key message of a report. What is the best practice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Add alt text and put the key message and data in the text"
+      },
+      {
+       "key": "b",
+       "text": "Leave the alt text empty"
+      },
+      {
+       "key": "c",
+       "text": "Mark it as decorative"
+      },
+      {
+       "key": "d",
+       "text": "Make the chart larger"
+      }
+     ],
+     "answer": "a",
+     "hint": "Do not rely on an image alone.",
+     "topic": "Images"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which action should be avoided in an accessible Word document?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Setting the document language"
+      },
+      {
+       "key": "b",
+       "text": "Using blank lines to create spacing"
+      },
+      {
+       "key": "c",
+       "text": "Giving it a title in the properties"
+      },
+      {
+       "key": "d",
+       "text": "Using real bullet lists"
+      }
+     ],
+     "answer": "b",
+     "hint": "Empty paragraphs confuse screen readers.",
+     "topic": "Layout"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Why is the Accessibility Checker only a starting point?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It only works on Word files and not on any PDF"
+      },
+      {
+       "key": "b",
+       "text": "It cannot judge if alt text is useful or the order makes sense"
+      },
+      {
+       "key": "c",
+       "text": "It deletes any content it cannot read"
+      },
+      {
+       "key": "d",
+       "text": "It needs a live internet connection to run"
+      }
+     ],
+     "answer": "b",
+     "hint": "Human judgement is still needed.",
+     "topic": "Checker limits"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is the best way to save a Word document as an accessible PDF?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Print it to a PDF printer for a clean copy"
+      },
+      {
+       "key": "b",
+       "text": "Take screenshots of each page and join them"
+      },
+      {
+       "key": "c",
+       "text": "Use Save As or Export to PDF so tags are kept, then check it"
+      },
+      {
+       "key": "d",
+       "text": "Scan a printout of the final document"
+      }
+     ],
+     "answer": "c",
+     "hint": "Tagged PDFs keep the structure.",
+     "topic": "PDF"
+    }
+   ]
+  },
+  {
+   "title": "L11: Using AI tools safely at work",
+   "source": "UK Government: Generative AI Framework for HMG; ICO guidance on AI and data protection",
+   "body": "Generative AI tools can help with drafting, summarising and ideas, but they bring risks that every civil servant should understand. The government's Generative AI Framework sets out principles including: know what the tools are and what their limits are; use them lawfully, ethically and responsibly; keep them secure; ensure meaningful human control; and follow your organisation's policies.\n\nKnow the limits. These tools generate plausible text, not verified facts. They can invent sources, figures and quotations, a problem often called hallucination, and they can reflect bias in their training data. Always check output against reliable sources, and never submit something you cannot explain or defend. You remain responsible for anything you send out under your name, however it was drafted.\n\nProtect information. Do not paste personal data, OFFICIAL-SENSITIVE or higher material, commercially sensitive information or unpublished policy into a public tool, because the input may be stored, used to train the model or seen by the provider. Use only tools your department has approved for the kind of information involved. If you are unsure of the classification, treat the content as sensitive and ask.\n\nKeep humans in charge. Under UK GDPR, people have rights regarding decisions made solely by automated means which have legal or similarly significant effects. A tool must not make or effectively make such a decision about a person's benefits, status or services without a lawful basis and safeguards, including human review. A DPIA is usually needed when a new AI tool processes personal data.\n\nBe open and keep records. If AI materially shaped a document, follow departmental guidance on saying so, and keep the prompts and outputs where they are part of the official record. Report any accidental disclosure as an incident straight away.",
+   "questions": [
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is a key risk when a generative AI tool produces a citation or a figure?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is always copied from a government source"
+      },
+      {
+       "key": "b",
+       "text": "It is stored in the departmental record"
+      },
+      {
+       "key": "c",
+       "text": "It may be invented but look plausible"
+      },
+      {
+       "key": "d",
+       "text": "It is automatically checked"
+      }
+     ],
+     "answer": "c",
+     "hint": "This is known as hallucination.",
+     "topic": "Hallucination"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A draft produced with AI contains an error and goes to a senior reader. Who is responsible?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The tool's provider"
+      },
+      {
+       "key": "b",
+       "text": "The IT department"
+      },
+      {
+       "key": "c",
+       "text": "The person who sent it under their name"
+      },
+      {
+       "key": "d",
+       "text": "Nobody, if the tool was approved"
+      }
+     ],
+     "answer": "c",
+     "hint": "Responsibility stays with the user.",
+     "topic": "Accountability"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which material should not be pasted into a public AI tool?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A published GOV.UK page"
+      },
+      {
+       "key": "b",
+       "text": "A request for ideas for a team away day"
+      },
+      {
+       "key": "c",
+       "text": "A draft containing personal data from a case"
+      },
+      {
+       "key": "d",
+       "text": "A generic definition of a term"
+      }
+     ],
+     "answer": "c",
+     "hint": "Inputs may be stored or seen by the provider.",
+     "topic": "Protecting information"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "You are unsure of the classification of a document you want summarised by AI. What is the sensible step?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Treat it as sensitive and ask before using the tool"
+      },
+      {
+       "key": "b",
+       "text": "Use the tool, as the content may be fine"
+      },
+      {
+       "key": "c",
+       "text": "Remove names and use the tool"
+      },
+      {
+       "key": "d",
+       "text": "Use a personal account to be safe"
+      }
+     ],
+     "answer": "a",
+     "hint": "Doubt means treat as sensitive.",
+     "topic": "Classification"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which tools may be used with government information?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Any tool with a free tier"
+      },
+      {
+       "key": "b",
+       "text": "Any tool that does not ask for a login"
+      },
+      {
+       "key": "c",
+       "text": "Those the department has approved for that kind of information"
+      },
+      {
+       "key": "d",
+       "text": "Any tool on a personal phone"
+      }
+     ],
+     "answer": "c",
+     "hint": "Approval is by type of data.",
+     "topic": "Approved tools"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "Which UK GDPR right concerns decisions made solely by automated means?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The right not to be subject to such decisions where they have legal or similarly significant effects"
+      },
+      {
+       "key": "b",
+       "text": "The right to be forgotten in all cases"
+      },
+      {
+       "key": "c",
+       "text": "The right to a free copy of the algorithm"
+      },
+      {
+       "key": "d",
+       "text": "The right to choose the processor"
+      }
+     ],
+     "answer": "a",
+     "hint": "Human review is needed for significant decisions.",
+     "topic": "Automated decisions"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "A team plans a tool that scores benefit claims and sends refusals without a person checking them. What is the problem?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Scoring of claims is banned by law"
+      },
+      {
+       "key": "b",
+       "text": "Refusals of a claim are always unlawful"
+      },
+      {
+       "key": "c",
+       "text": "It needs ministerial consent in every case"
+      },
+      {
+       "key": "d",
+       "text": "It risks a solely automated significant decision without safeguards"
+      }
+     ],
+     "answer": "d",
+     "hint": "Meaningful human control is needed.",
+     "topic": "Human oversight"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "What is usually needed before a new AI tool processes personal data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A press notice"
+      },
+      {
+       "key": "b",
+       "text": "A signature from the data subject"
+      },
+      {
+       "key": "c",
+       "text": "Nothing, if the supplier is UK based"
+      },
+      {
+       "key": "d",
+       "text": "A data protection impact assessment"
+      }
+     ],
+     "answer": "d",
+     "hint": "New technology with personal data signals high risk.",
+     "topic": "DPIA"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "If an AI tool materially shaped a document, what is good practice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say nothing in any circumstances"
+      },
+      {
+       "key": "b",
+       "text": "Follow departmental guidance on disclosure and keep relevant records"
+      },
+      {
+       "key": "c",
+       "text": "Delete the prompts straight away"
+      },
+      {
+       "key": "d",
+       "text": "Credit the tool as the author"
+      }
+     ],
+     "answer": "b",
+     "hint": "Openness and record-keeping are part of responsible use.",
+     "topic": "Transparency"
+    },
+    {
+     "level": 11,
+     "type": "mcq",
+     "prompt": "You pasted a case summary containing names into a public tool by mistake. What should you do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Report it as an incident straight away"
+      },
+      {
+       "key": "b",
+       "text": "Delete the chat and say nothing"
+      },
+      {
+       "key": "c",
+       "text": "Wait to see if anything happens"
+      },
+      {
+       "key": "d",
+       "text": "Tell the supplier only"
+      }
+     ],
+     "answer": "a",
+     "hint": "Prompt reporting limits harm.",
+     "topic": "Incident reporting"
+    }
+   ]
+  }
+ ]
+}

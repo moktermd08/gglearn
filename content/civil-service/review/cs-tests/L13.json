@@ -1,0 +1,3094 @@
+{
+ "trackSlug": "cs-tests",
+ "status": "review",
+ "items": [
+  {
+   "title": "L13: Cost-benefit analysis, discounting and optimism bias",
+   "source": "HM Treasury, The Green Book: appraisal and evaluation in central government",
+   "body": "The Green Book is the Treasury's guidance on appraising policies, programmes and projects. Costs and benefits are compared in present-value terms because a pound received sooner is worth more than a pound received later. The standard discount rate for most appraisals is 3.5% a year, applied by dividing a future amount by 1.035 for each year: a benefit of £1m in year five is worth £1m ÷ 1.035⁵, about £0.84m today. A stream of equal annual amounts for n years has a present value equal to the annual amount multiplied by the annuity factor, (1 − 1.035^−n) ÷ 0.035, which is about 4.515 for five years. The net present value (NPV) is the present value of benefits minus the present value of costs, and the benefit-cost ratio (BCR) is the present value of benefits divided by the present value of costs. A project is worth doing on value-for-money grounds only if the NPV is positive, but ranking options by BCR can mislead when they differ in scale. Optimism bias is a recognised tendency to under-estimate costs and over-estimate benefits, and appraisers are expected to adjust, for example by adding a percentage to capital costs or reducing benefits. Sensitivity analysis changes one assumption at a time to see whether the answer survives; the break-even value is the figure at which the NPV is exactly zero. Timing assumptions matter: costs in year zero are not discounted, as they occur now. Undiscounted totals overstate the value of later benefits. Where an answer is in millions, keep two decimal places for intermediate figures and round at the end.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Using a 3.5% discount rate, what is the present value of £1m received in five years' time?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£1.19m"
+      },
+      {
+       "key": "b",
+       "text": "£0.84m"
+      },
+      {
+       "key": "c",
+       "text": "£0.82m"
+      },
+      {
+       "key": "d",
+       "text": "£0.85m"
+      }
+     ],
+     "answer": "b",
+     "hint": "Divide by 1.035 raised to the power five.",
+     "topic": "discounting"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A project has benefits of £1.8m a year for years 1 to 5, discounted at 3.5%. The annuity factor for five years is 4.515. What is the present value of the benefits?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£8.13m"
+      },
+      {
+       "key": "b",
+       "text": "£7.58m"
+      },
+      {
+       "key": "c",
+       "text": "£8.41m"
+      },
+      {
+       "key": "d",
+       "text": "£9.00m"
+      }
+     ],
+     "answer": "a",
+     "hint": "Multiply £1.8m by the annuity factor.",
+     "topic": "annuity"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "The same project costs £4m now (year 0) and £0.5m a year in running costs in years 1 to 5. At 3.5%, what is the present value of the costs?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£6.50m"
+      },
+      {
+       "key": "b",
+       "text": "£6.10m"
+      },
+      {
+       "key": "c",
+       "text": "£6.40m"
+      },
+      {
+       "key": "d",
+       "text": "£6.26m"
+      }
+     ],
+     "answer": "d",
+     "hint": "Add £4m to £0.5m times the annuity factor.",
+     "topic": "present value of costs"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "The present value of the benefits is £8.13m and the present value of the costs is £6.26m. What is the net present value?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£2.50m"
+      },
+      {
+       "key": "b",
+       "text": "A negative NPV of £1.87m"
+      },
+      {
+       "key": "c",
+       "text": "£1.87m"
+      },
+      {
+       "key": "d",
+       "text": "£1.25m"
+      }
+     ],
+     "answer": "c",
+     "hint": "Subtract costs from benefits.",
+     "topic": "NPV"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "With the benefits at £8.13m and the costs at £6.26m, what is the benefit-cost ratio, to two decimal places?",
+     "options": [
+      {
+       "key": "a",
+       "text": "1.38"
+      },
+      {
+       "key": "b",
+       "text": "1.87"
+      },
+      {
+       "key": "c",
+       "text": "0.77"
+      },
+      {
+       "key": "d",
+       "text": "1.30"
+      }
+     ],
+     "answer": "d",
+     "hint": "Divide benefits by costs.",
+     "topic": "benefit-cost ratio"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "To allow for optimism bias, the capital cost of £4m is increased by 20%, with running costs unchanged. What is the new net present value of the project, to two decimal places?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£1.07m"
+      },
+      {
+       "key": "b",
+       "text": "£1.47m"
+      },
+      {
+       "key": "c",
+       "text": "£0.62m"
+      },
+      {
+       "key": "d",
+       "text": "£2.67m"
+      }
+     ],
+     "answer": "a",
+     "hint": "Capital rises to £4.8m, which reduces the NPV by £0.8m.",
+     "topic": "optimism bias"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Instead of a cost increase, the annual benefits turn out to be 25% lower, at £1.35m a year, with the costs unchanged at £6.26m. What is the net present value?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A positive NPV of £0.16m"
+      },
+      {
+       "key": "b",
+       "text": "A negative NPV of £0.16m"
+      },
+      {
+       "key": "c",
+       "text": "A positive NPV of £0.25m"
+      },
+      {
+       "key": "d",
+       "text": "A positive NPV of £1.87m"
+      }
+     ],
+     "answer": "b",
+     "hint": "£1.35m × 4.515 is £6.09m, below the £6.26m cost.",
+     "topic": "sensitivity"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "What annual benefit, for five years, would make the NPV exactly zero, given costs with a present value of £6.26m? Give the answer to two decimal places.",
+     "options": [
+      {
+       "key": "a",
+       "text": "£1.25m"
+      },
+      {
+       "key": "b",
+       "text": "£1.70m"
+      },
+      {
+       "key": "c",
+       "text": "£1.39m"
+      },
+      {
+       "key": "d",
+       "text": "£1.80m"
+      }
+     ],
+     "answer": "c",
+     "hint": "Divide the cost by the annuity factor.",
+     "topic": "break-even benefit"
+    }
+   ]
+  },
+  {
+   "title": "L13: Probability trees and chained conditional chances",
+   "source": "Civil Service online tests: practice guidance, GOV.UK and Civil Service Jobs",
+   "body": "A probability tree sets out the stages of a process, with a probability on each branch. To find the chance of passing through a sequence of stages, multiply the probabilities along the branches. To find the chance of ending in one of several outcomes, add the results for each route that leads there. Conditional probability describes a chance given that an earlier stage has already happened, so the chance of being appointed given that someone passed the sift ignores the 60% who fell at the sift. Expected numbers are found by multiplying the starting number by the probabilities, for example 1,000 applicants, 40% passing the sift and 30% of those passing a test leaves 120. For independent checks, the chance that an error escapes all checks is the product of the chances that each check misses it, so two checks that catch 80% and 70% leave 0.2 × 0.3 = 6% uncaught, which means 94% are caught. Averaging 80% and 70% to get 75% is wrong, as is multiplying the catch rates to get 56%, which is the chance that both checks catch it. Complements help: the chance of at least one success is one minus the chance of no successes. When working back from an outcome, such as the chance that someone who was not appointed fell at the sift, divide the probability of that route by the probability of the whole outcome. Check that all branches from a node add up to 1. Independence must not be assumed lightly, for the same hard-to-spot error may be missed by two checkers who use the same method.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Of 1,000 applicants, 40% pass the sift. Of those, 30% pass a test. How many pass both?",
+     "options": [
+      {
+       "key": "a",
+       "text": "280"
+      },
+      {
+       "key": "b",
+       "text": "700"
+      },
+      {
+       "key": "c",
+       "text": "120"
+      },
+      {
+       "key": "d",
+       "text": "300"
+      }
+     ],
+     "answer": "c",
+     "hint": "Multiply 1,000 by 0.4 by 0.3.",
+     "topic": "sequential stages"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Of the 120 who pass the test, 60% pass the interview and 75% of those offered a post accept it. How many are appointed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "42"
+      },
+      {
+       "key": "b",
+       "text": "72"
+      },
+      {
+       "key": "c",
+       "text": "90"
+      },
+      {
+       "key": "d",
+       "text": "54"
+      }
+     ],
+     "answer": "d",
+     "hint": "Multiply 120 by 0.6 by 0.75.",
+     "topic": "expected numbers"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Using the same process (40% pass the sift, 30% pass the test, 60% pass the interview, 75% accept), what is the probability that a person who has passed the sift is eventually appointed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "13.5%"
+      },
+      {
+       "key": "b",
+       "text": "55.0%"
+      },
+      {
+       "key": "c",
+       "text": "5.4%"
+      },
+      {
+       "key": "d",
+       "text": "18.0%"
+      }
+     ],
+     "answer": "a",
+     "hint": "The 40% sift stage is already behind them.",
+     "topic": "conditional chance"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "In the same process, what is the probability that a randomly chosen applicant is appointed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "9.0%"
+      },
+      {
+       "key": "b",
+       "text": "5.4%"
+      },
+      {
+       "key": "c",
+       "text": "13.5%"
+      },
+      {
+       "key": "d",
+       "text": "7.2%"
+      }
+     ],
+     "answer": "b",
+     "hint": "Multiply all four stage probabilities.",
+     "topic": "overall chance"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "In the same process, what is the probability that an applicant passes the sift but fails the test?",
+     "options": [
+      {
+       "key": "a",
+       "text": "70.0%"
+      },
+      {
+       "key": "b",
+       "text": "30.0%"
+      },
+      {
+       "key": "c",
+       "text": "42.0%"
+      },
+      {
+       "key": "d",
+       "text": "28.0%"
+      }
+     ],
+     "answer": "d",
+     "hint": "0.4 times 0.7.",
+     "topic": "branch probability"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Two independent checks catch an error with probabilities of 80% and 70%. What is the probability that an error is caught by at least one check?",
+     "options": [
+      {
+       "key": "a",
+       "text": "75%"
+      },
+      {
+       "key": "b",
+       "text": "56%"
+      },
+      {
+       "key": "c",
+       "text": "94%"
+      },
+      {
+       "key": "d",
+       "text": "70%"
+      }
+     ],
+     "answer": "c",
+     "hint": "One minus the chance that both miss it, 1 − 0.2 × 0.3.",
+     "topic": "independent checks"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A third independent check, which catches 60% of errors, is added to the checks that catch 80% and 70%. What proportion of errors now escape all three?",
+     "options": [
+      {
+       "key": "a",
+       "text": "6.0%"
+      },
+      {
+       "key": "b",
+       "text": "2.4%"
+      },
+      {
+       "key": "c",
+       "text": "10.0%"
+      },
+      {
+       "key": "d",
+       "text": "33.6%"
+      }
+     ],
+     "answer": "b",
+     "hint": "Multiply 0.2 by 0.3 by 0.4.",
+     "topic": "adding checks"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "There are 2,000 forms, and 5% contain an error. After two independent checks that catch 80% and 70% of errors, how many forms with errors are expected to remain?",
+     "options": [
+      {
+       "key": "a",
+       "text": "6"
+      },
+      {
+       "key": "b",
+       "text": "25"
+      },
+      {
+       "key": "c",
+       "text": "20"
+      },
+      {
+       "key": "d",
+       "text": "44"
+      }
+     ],
+     "answer": "a",
+     "hint": "100 errors, with 6% escaping both checks.",
+     "topic": "expected escapes"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "In the appointment process, 5.4% of applicants are appointed and 60% fall at the sift. Given that an applicant was not appointed, what is the probability that they fell at the sift stage, to one decimal place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "60.0%"
+      },
+      {
+       "key": "b",
+       "text": "3.2%"
+      },
+      {
+       "key": "c",
+       "text": "63.4%"
+      },
+      {
+       "key": "d",
+       "text": "68.2%"
+      }
+     ],
+     "answer": "c",
+     "hint": "Divide 60% by the 94.6% who were not appointed.",
+     "topic": "working backwards"
+    }
+   ]
+  },
+  {
+   "title": "L13: Weighted scoring and comparing tenders",
+   "source": "Procurement Act 2023, Public Contracts Regulations 2015 and Cabinet Office guidance on most advantageous tender",
+   "body": "Public contracts are normally awarded to the most advantageous tender, judged against criteria that were published in advance. Evaluation usually combines quality and price using weights, such as 70% quality and 30% price. Quality is scored by evaluators against a marking scheme, often out of 100. Price is converted to a score by a formula, and the most common method gives the lowest bid the full price marks and scales the others in proportion: price score = (lowest price ÷ bid price) × the price weighting. The total score is the weighted quality score plus the price score. A quality score of 78 out of 100 at a 70% weighting is worth 54.6 points. Weights are chosen before bids are opened, because changing them afterwards to favour a supplier breaches the principles of transparency and equal treatment. A minimum quality threshold can be set so that a very cheap but poor bid cannot win on price alone. Changing the weights can change the winner: a heavy price weighting favours the cheapest bid and a heavy quality weighting favours the best. Note that if the lowest bidder changes, every other bidder's price score changes, because they are all measured against the new lowest price. Test the result by recalculating with different weights, since a winner that depends heavily on one weighting is fragile. Compare the cost of the contract with its value over its whole life and not only the tendered price. Keep decimals until the end, and compare totals to one or two decimal places.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A tender is scored 70% on quality and 30% on price. Bidder A offers £1.20m and scores 78 out of 100 for quality. The lowest price bid is £1.00m. What is A's price score out of 30?",
+     "options": [
+      {
+       "key": "a",
+       "text": "24.00"
+      },
+      {
+       "key": "b",
+       "text": "36.00"
+      },
+      {
+       "key": "c",
+       "text": "30.00"
+      },
+      {
+       "key": "d",
+       "text": "25.00"
+      }
+     ],
+     "answer": "d",
+     "hint": "Lowest price divided by the bid price, times 30.",
+     "topic": "price score"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Bidder A scores 78 out of 100 for quality, weighted at 70%. What are A's quality points?",
+     "options": [
+      {
+       "key": "a",
+       "text": "54.6"
+      },
+      {
+       "key": "b",
+       "text": "78.0"
+      },
+      {
+       "key": "c",
+       "text": "23.4"
+      },
+      {
+       "key": "d",
+       "text": "46.8"
+      }
+     ],
+     "answer": "a",
+     "hint": "Multiply 78 by 0.7.",
+     "topic": "weighted quality"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Under the 70/30 weighting, bids are A: £1.20m, quality 78; B: £1.00m, quality 70; C: £1.10m, quality 84. What is B's total score?",
+     "options": [
+      {
+       "key": "a",
+       "text": "91.0"
+      },
+      {
+       "key": "b",
+       "text": "79.0"
+      },
+      {
+       "key": "c",
+       "text": "82.0"
+      },
+      {
+       "key": "d",
+       "text": "49.0"
+      }
+     ],
+     "answer": "b",
+     "hint": "B has the lowest price, so earns all 30 price points.",
+     "topic": "total score"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Using the 70/30 weighting, what is the total score for bidder C, to one decimal place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "79.6"
+      },
+      {
+       "key": "b",
+       "text": "88.8"
+      },
+      {
+       "key": "c",
+       "text": "84.0"
+      },
+      {
+       "key": "d",
+       "text": "86.1"
+      }
+     ],
+     "answer": "d",
+     "hint": "C earns 58.8 for quality plus about 27.3 for price.",
+     "topic": "total score"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Which bidder wins under the 70/30 weighting, and by how many points over the runner-up?",
+     "options": [
+      {
+       "key": "a",
+       "text": "C, by 6.5 points"
+      },
+      {
+       "key": "b",
+       "text": "A, by 0.6 points"
+      },
+      {
+       "key": "c",
+       "text": "C, by 0.6 points"
+      },
+      {
+       "key": "d",
+       "text": "C, by 7.1 points"
+      }
+     ],
+     "answer": "a",
+     "hint": "C scores 86.1 against A's 79.6 and B's 79.0.",
+     "topic": "ranking"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "The weightings are changed to 30% quality and 70% price. Which bidder wins?",
+     "options": [
+      {
+       "key": "a",
+       "text": "C, with 86.1"
+      },
+      {
+       "key": "b",
+       "text": "C, with 88.8"
+      },
+      {
+       "key": "c",
+       "text": "B, with 91.0"
+      },
+      {
+       "key": "d",
+       "text": "A, with 81.7"
+      }
+     ],
+     "answer": "c",
+     "hint": "The cheapest bid gains from a heavy price weighting.",
+     "topic": "changing weights"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A minimum quality score of 75 is required, before the 70/30 scoring. Which bidders remain in the competition, and who wins?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only C remains, and C wins"
+      },
+      {
+       "key": "b",
+       "text": "A and C remain, and C wins"
+      },
+      {
+       "key": "c",
+       "text": "B is excluded and A wins"
+      },
+      {
+       "key": "d",
+       "text": "A, B and C remain, and C wins"
+      }
+     ],
+     "answer": "b",
+     "hint": "B scored 70, below the threshold.",
+     "topic": "quality threshold"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Bidder A now lowers its price to £0.95m, quality unchanged, under the 70/30 weighting. The other bids are unchanged. What is C's new total score, to two decimal places?",
+     "options": [
+      {
+       "key": "a",
+       "text": "88.80"
+      },
+      {
+       "key": "b",
+       "text": "86.07"
+      },
+      {
+       "key": "c",
+       "text": "84.71"
+      },
+      {
+       "key": "d",
+       "text": "85.71"
+      }
+     ],
+     "answer": "c",
+     "hint": "The lowest price is now £0.95m, so C's price score falls.",
+     "topic": "new lowest bid"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Using the same lowered bid by A (£0.95m), which bidder wins under the 70/30 weighting, and by how many points over the runner-up?",
+     "options": [
+      {
+       "key": "a",
+       "text": "C, by 0.11 points"
+      },
+      {
+       "key": "b",
+       "text": "C, by 7.21 points"
+      },
+      {
+       "key": "c",
+       "text": "B, by 0.11 points"
+      },
+      {
+       "key": "d",
+       "text": "A, by 0.11 points"
+      }
+     ],
+     "answer": "a",
+     "hint": "A scores 84.60 and C 84.71, so the margin is narrow.",
+     "topic": "narrow margin"
+    }
+   ]
+  },
+  {
+   "title": "L13: Full-time equivalents, shrinkage and capacity planning",
+   "source": "Civil Service workforce data guidance, GOV.UK and Civil Service Employment Policy",
+   "body": "Workforce planning counts people in two ways. Headcount is the number of individuals employed, while full-time equivalent (FTE) converts part-time work into full-time units, so a person working three days of a five-day week is 0.6 FTE. A team of 18 full-time staff and 12 part-timers each at 0.6 FTE has headcount 30 and FTE 18 + 12 × 0.6 = 25.2. Capacity is based on FTE and not headcount. Not all of the time that is paid is available for work: annual leave, public holidays, sickness absence, training and other time away mean that the productive days in a year are fewer than the contractual days. This loss is sometimes called shrinkage. Starting from, say, 260 weekday days, subtracting 27 days' leave, 8 public holidays, 8 days of average sickness and 5 days of training leaves 212 productive days per FTE. Capacity in cases = FTE × productive days × cases per day (or ÷ days per case). To find the FTE needed for a given demand, divide the workload in days by the productive days per FTE; then convert to people according to their FTE, and round up. Staff costs must include on-costs such as employer pension and National Insurance contributions, which are often added as a percentage to salary. The cost per case = total cost ÷ number of cases. Reducing sickness by half a day does not add half a day to the headcount but adds to every FTE's productive time. Always check units: days, FTE and people are different things.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A team has 18 full-time staff and 12 part-time staff, each working 0.6 FTE. What is the team's FTE?",
+     "options": [
+      {
+       "key": "a",
+       "text": "18.0"
+      },
+      {
+       "key": "b",
+       "text": "30.0"
+      },
+      {
+       "key": "c",
+       "text": "22.8"
+      },
+      {
+       "key": "d",
+       "text": "25.2"
+      }
+     ],
+     "answer": "d",
+     "hint": "18 plus 12 times 0.6.",
+     "topic": "FTE"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "In a 260-day working year, one FTE has 27 days' leave, 8 public holidays, 8 days' sickness and 5 days' training. How many productive days does one FTE provide?",
+     "options": [
+      {
+       "key": "a",
+       "text": "247"
+      },
+      {
+       "key": "b",
+       "text": "212"
+      },
+      {
+       "key": "c",
+       "text": "225"
+      },
+      {
+       "key": "d",
+       "text": "217"
+      }
+     ],
+     "answer": "b",
+     "hint": "Subtract all four losses from 260.",
+     "topic": "productive days"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Using 212 productive days, what is the productive capacity of a team with 25.2 FTE, in FTE-days?",
+     "options": [
+      {
+       "key": "a",
+       "text": "6,552"
+      },
+      {
+       "key": "b",
+       "text": "5,342.4"
+      },
+      {
+       "key": "c",
+       "text": "4,274"
+      },
+      {
+       "key": "d",
+       "text": "6,360"
+      }
+     ],
+     "answer": "b",
+     "hint": "25.2 multiplied by 212.",
+     "topic": "capacity in days"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Each case takes half a working day. With 25.2 FTE and 212 productive days each, how many cases can the team complete in a year, to the nearest case?",
+     "options": [
+      {
+       "key": "a",
+       "text": "10,685"
+      },
+      {
+       "key": "b",
+       "text": "12,720"
+      },
+      {
+       "key": "c",
+       "text": "2,671"
+      },
+      {
+       "key": "d",
+       "text": "13,104"
+      }
+     ],
+     "answer": "a",
+     "hint": "Capacity is 5,342.4 days at 0.5 day a case.",
+     "topic": "case capacity"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Demand is 12,000 cases a year at half a day each, with 212 productive days per FTE. How many FTE are needed, to one decimal place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "56.6"
+      },
+      {
+       "key": "b",
+       "text": "26.8"
+      },
+      {
+       "key": "c",
+       "text": "28.3"
+      },
+      {
+       "key": "d",
+       "text": "23.1"
+      }
+     ],
+     "answer": "c",
+     "hint": "Divide 6,000 days of work by 212.",
+     "topic": "FTE needed"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "The team has 25.2 FTE and needs 28.3 FTE. The extra FTE are recruited as part-timers working 0.6 FTE. How many extra part-timers are needed, rounded up?",
+     "options": [
+      {
+       "key": "a",
+       "text": "4"
+      },
+      {
+       "key": "b",
+       "text": "48"
+      },
+      {
+       "key": "c",
+       "text": "2"
+      },
+      {
+       "key": "d",
+       "text": "6"
+      }
+     ],
+     "answer": "d",
+     "hint": "The shortfall of about 3.1 FTE needs 3.1 ÷ 0.6 people.",
+     "topic": "converting FTE to people"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Average sickness is reduced from 8 days to 4 days per FTE a year, with the other losses unchanged. How many productive days does one FTE then provide?",
+     "options": [
+      {
+       "key": "a",
+       "text": "256"
+      },
+      {
+       "key": "b",
+       "text": "204"
+      },
+      {
+       "key": "c",
+       "text": "214"
+      },
+      {
+       "key": "d",
+       "text": "216"
+      }
+     ],
+     "answer": "d",
+     "hint": "Only the sickness loss changes, by 4 days.",
+     "topic": "reducing sickness"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "The average cost of an FTE is £38,000 plus 28% on-costs. What is the cost per case if 25.2 FTE complete 10,685 cases (to the nearest pound)?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£229"
+      },
+      {
+       "key": "b",
+       "text": "£137"
+      },
+      {
+       "key": "c",
+       "text": "£115"
+      },
+      {
+       "key": "d",
+       "text": "£90"
+      }
+     ],
+     "answer": "c",
+     "hint": "Cost per FTE divided by cases per FTE.",
+     "topic": "unit cost"
+    }
+   ]
+  },
+  {
+   "title": "L13: Mean, standard deviation and control limits",
+   "source": "Office for National Statistics, guidance on measures of spread, and Government Analysis Function guidance",
+   "body": "The mean tells you where data are centred, and the standard deviation tells you how far they typically lie from it. To compute the sample standard deviation: find the mean, subtract it from each value, square each difference, add the squares, divide by n − 1 (the sample variance), and take the square root. Dividing by n instead gives the population standard deviation, which is used when the data are the whole population. The variance is in squared units, so the standard deviation (the square root) is easier to interpret, being in the same units as the data. For data that are roughly bell-shaped, about two thirds of values lie within one standard deviation of the mean and about 95% within two. A z-score, (value − mean) ÷ standard deviation, shows how many standard deviations a value is from the mean. A control chart sets limits, often mean ± 2 or ± 3 standard deviations, and a point outside them signals something unusual that needs investigation, although an occasional point outside two standard deviations occurs by chance. Adding a constant to every value shifts the mean by that constant but leaves the standard deviation unchanged, while multiplying every value by a constant multiplies both the mean and the standard deviation by it. The coefficient of variation, standard deviation ÷ mean, compares the spread of series with different units or levels. A small sample gives an uncertain estimate, so do not read much into an apparent outlier from eight data points.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Weekly average processing times (in days) for eight weeks were 8, 10, 9, 12, 11, 10, 14 and 6. What is the mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "10"
+      },
+      {
+       "key": "b",
+       "text": "9.5"
+      },
+      {
+       "key": "c",
+       "text": "11"
+      },
+      {
+       "key": "d",
+       "text": "10.5"
+      }
+     ],
+     "answer": "a",
+     "hint": "The total is 80, divided by 8.",
+     "topic": "mean"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "For the same eight values (mean 10), what is the sum of the squared deviations from the mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5.25"
+      },
+      {
+       "key": "b",
+       "text": "42"
+      },
+      {
+       "key": "c",
+       "text": "0"
+      },
+      {
+       "key": "d",
+       "text": "6.00"
+      }
+     ],
+     "answer": "b",
+     "hint": "4 + 0 + 1 + 4 + 1 + 0 + 16 + 16.",
+     "topic": "squared deviations"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "What is the sample variance of the eight values (sum of squared deviations 42, dividing by n − 1)?",
+     "options": [
+      {
+       "key": "a",
+       "text": "6"
+      },
+      {
+       "key": "b",
+       "text": "42"
+      },
+      {
+       "key": "c",
+       "text": "5.25"
+      },
+      {
+       "key": "d",
+       "text": "2.45"
+      }
+     ],
+     "answer": "a",
+     "hint": "42 divided by 7.",
+     "topic": "variance"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "What is the sample standard deviation of the eight values, to two decimal places?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5.25"
+      },
+      {
+       "key": "b",
+       "text": "2.29"
+      },
+      {
+       "key": "c",
+       "text": "6.00"
+      },
+      {
+       "key": "d",
+       "text": "2.45"
+      }
+     ],
+     "answer": "d",
+     "hint": "The square root of 6.",
+     "topic": "standard deviation"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Using the mean of 10 and the sample standard deviation of 2.45, what is the z-score of the week with a time of 14 days, to two decimal places?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5.72"
+      },
+      {
+       "key": "b",
+       "text": "1.75"
+      },
+      {
+       "key": "c",
+       "text": "1.63"
+      },
+      {
+       "key": "d",
+       "text": "0.67"
+      }
+     ],
+     "answer": "c",
+     "hint": "Divide the difference of 4 by the standard deviation.",
+     "topic": "z-score"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A control chart uses limits of the mean plus or minus two standard deviations. What is the upper limit, to one decimal place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "12.4"
+      },
+      {
+       "key": "b",
+       "text": "14.9"
+      },
+      {
+       "key": "c",
+       "text": "22.0"
+      },
+      {
+       "key": "d",
+       "text": "17.3"
+      }
+     ],
+     "answer": "b",
+     "hint": "10 plus twice 2.45.",
+     "topic": "control limits"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "How many of the eight values lie more than one sample standard deviation from the mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "1"
+      },
+      {
+       "key": "b",
+       "text": "4"
+      },
+      {
+       "key": "c",
+       "text": "3"
+      },
+      {
+       "key": "d",
+       "text": "2"
+      }
+     ],
+     "answer": "d",
+     "hint": "Only 6 and 14 lie outside 7.55 to 12.45.",
+     "topic": "outliers"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Every processing time is reduced by exactly 1 day. What happens to the mean and the standard deviation?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The mean falls by 1 day and the standard deviation falls by 10%"
+      },
+      {
+       "key": "b",
+       "text": "The mean is unchanged and the standard deviation falls by 1 day"
+      },
+      {
+       "key": "c",
+       "text": "The mean falls by 1 day and the standard deviation is unchanged"
+      },
+      {
+       "key": "d",
+       "text": "Both the mean and the standard deviation fall by 1 day"
+      }
+     ],
+     "answer": "c",
+     "hint": "A constant shift moves the centre but not the spread.",
+     "topic": "effect of a shift"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Every processing time is converted from days to hours by multiplying by 24. What happens to the standard deviation of 2.45?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It becomes 26.45"
+      },
+      {
+       "key": "b",
+       "text": "It becomes 58.8"
+      },
+      {
+       "key": "c",
+       "text": "It stays at 2.45"
+      },
+      {
+       "key": "d",
+       "text": "It becomes 1,411"
+      }
+     ],
+     "answer": "b",
+     "hint": "Multiplying every value multiplies the spread by the same factor.",
+     "topic": "change of units"
+    }
+   ]
+  },
+  {
+   "title": "L13: Judging whether a summary is accurate",
+   "source": "Civil Service Success Profiles, Communicating and Influencing, and GOV.UK guidance on writing for GOV.UK",
+   "body": "Summarising a long document accurately is a daily task for officials, and tests often ask which of four summaries is faithful to a passage. An accurate summary keeps the main point, keeps the important qualifications, and adds nothing that is not in the source. Four faults are common. Over-generalising turns 'on average' or 'in some offices' into 'in every office' or 'everywhere'. Dropping a caveat leaves the headline finding but loses the limits that the author placed on it, such as a small sample or a warning that results were uneven. Distorting reverses or twists a relationship, for instance by saying that a measure succeeded only where it was already in place, when the passage says only that the biggest gains came from offices with a head start. Importing a claim adds a recommendation, cause or number that the passage never gave. When checking a summary, test each clause against the source: is it stated, is it implied, or is it new? Check numbers and their units, particularly whether a rise is described in cash or real terms. Check the direction of every verb, such as rose, fell, recommended, warned. Check the strength of every modal word, so that 'may' does not become 'will' and 'recommend' does not become 'require'. A short summary is allowed to leave out detail, but it must not leave out a qualification that would change how a reader acts on it. The best summary is usually neither the shortest nor the longest, but the one in which every part can be traced to the original and nothing important is missing.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"The pilot, run in six offices over nine months, reduced average call-handling time by 12% with no fall in customer satisfaction. However, three offices saw no improvement, and the evaluators warn that the offices with the greatest gains had already adopted similar methods. They recommend extending the scheme gradually, with continued monitoring.\" Which summary is most accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The pilot cut handling time by 12% on average without hurting satisfaction, but gains varied, so a gradual extension is advised"
+      },
+      {
+       "key": "b",
+       "text": "The pilot worked only in offices that already used similar methods, so the evaluators advise that the scheme is stopped"
+      },
+      {
+       "key": "c",
+       "text": "The pilot cut handling time by 12% in every office, so the evaluators advise a swift national rollout without further monitoring"
+      },
+      {
+       "key": "d",
+       "text": "The pilot lowered both handling time and satisfaction, so the evaluators advise a cautious, gradual extension with monitoring"
+      }
+     ],
+     "answer": "a",
+     "hint": "The accurate version keeps both the average and the uneven results.",
+     "topic": "accurate summary"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"Spending rose by 8% over the year, but five percentage points of that rise were due to inflation. The department says that the remainder reflects higher caseloads, which rose by 4%.\" Which summary is most accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Spending rose 8% in cash terms, with about five points due to inflation, so the real rise of about 3% was below the 4% caseload rise"
+      },
+      {
+       "key": "b",
+       "text": "Spending rose 8% in real terms, driven mainly by a 4% rise in caseload that the department says it could not avoid"
+      },
+      {
+       "key": "c",
+       "text": "Inflation explains most of the rise in spending, which shows that caseloads did not really grow over the year"
+      },
+      {
+       "key": "d",
+       "text": "Spending rose 3% in cash terms, so spending per case rose, because caseloads grew by 4% over the same year"
+      }
+     ],
+     "answer": "a",
+     "hint": "Separate the cash rise from the real rise before comparing with caseload.",
+     "topic": "cash and real terms"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"An audit of 40 case files found that 6 contained a recording error. The auditors stress that the files were chosen because staff had flagged concerns about them, and that the results should not be taken as typical of all cases.\" Which summary is most accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "An audit found that 15% of all case files contain recording errors, which confirms the concerns raised by staff"
+      },
+      {
+       "key": "b",
+       "text": "An audit of 40 randomly chosen files found errors in 6, which suggests a fairly low error rate across all cases"
+      },
+      {
+       "key": "c",
+       "text": "Errors were found in 6 of 40 files chosen because of concerns, so the rate should not be generalised"
+      },
+      {
+       "key": "d",
+       "text": "The audit found recording errors in some files, and the auditors recommend that staff should raise fewer concerns"
+      }
+     ],
+     "answer": "c",
+     "hint": "The sample was not random, and the summary must say so.",
+     "topic": "dropped caveat"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"The consultation drew 2,300 replies, of which 1,100 came from individuals and the rest from organisations. A majority of individuals opposed the change, but a majority of organisations supported it. The department says that it will weigh both groups' views.\" Which summary is most accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Individuals and organisations were evenly split, so the department will take no account of either group"
+      },
+      {
+       "key": "b",
+       "text": "Individuals mostly opposed the change and organisations mostly supported it; the department will weigh both groups' views"
+      },
+      {
+       "key": "c",
+       "text": "Most of the 2,300 replies opposed the change, but the department intends to go ahead with it regardless"
+      },
+      {
+       "key": "d",
+       "text": "Most of the replies came from organisations and supported the change, so the views of individuals will carry less weight"
+      }
+     ],
+     "answer": "b",
+     "hint": "The summary must keep the split between the groups and the department's stated approach.",
+     "topic": "splits in evidence"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"The report found that complaints fell in the three regions that introduced the new form. It does not say whether complaints also fell in the two regions that did not introduce it, and it notes that the figures cover only the first six months.\" Which summary is most accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Complaints fell in all five regions, which shows that the new form was not needed to bring them down"
+      },
+      {
+       "key": "b",
+       "text": "The new form has reduced complaints, since complaints fell only in the regions that used it and nowhere else"
+      },
+      {
+       "key": "c",
+       "text": "The new form reduced complaints in the three regions that used it over the whole of a full year"
+      },
+      {
+       "key": "d",
+       "text": "Complaints fell in the three regions using the new form, but the report does not say what happened elsewhere"
+      }
+     ],
+     "answer": "d",
+     "hint": "The report did not say what happened in the other regions.",
+     "topic": "importing a claim"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"The agency may extend the deadline once, by up to 14 days, if it is satisfied that there are good reasons. Applicants who miss a deadline without an extension will not be considered.\" Which summary is most accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The agency will extend the deadline once by 14 days if applicants give a good reason, and will then consider late applications"
+      },
+      {
+       "key": "b",
+       "text": "One extension of up to 14 days is possible for good reasons; applicants missing the deadline without one are not considered"
+      },
+      {
+       "key": "c",
+       "text": "The agency must give a 14-day extension to any applicant who asks for one, and late applicants are not considered"
+      },
+      {
+       "key": "d",
+       "text": "The agency may extend the deadline by 14 days as often as it thinks fit, and late applicants may still be considered"
+      }
+     ],
+     "answer": "b",
+     "hint": "'May' and 'once' limit the extension.",
+     "topic": "strength of modal words"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"Staff turnover in the first year of the programme was 14%, falling to 11% in the second year. The programme manager believes that the fall is due to the new induction scheme, but concedes that the labour market also became weaker in the second year.\" Which summary is most accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Turnover fell by 14% over two years, and the manager attributes the whole fall to a weaker labour market"
+      },
+      {
+       "key": "b",
+       "text": "Turnover fell from 14% to 11%, and the manager says that the weaker labour market alone explains the change"
+      },
+      {
+       "key": "c",
+       "text": "Turnover fell from 14% to 11%; the manager credits induction but admits a weaker labour market may also have contributed"
+      },
+      {
+       "key": "d",
+       "text": "Turnover fell from 14% to 11% because of the new induction scheme, which the programme manager says was the only cause"
+      }
+     ],
+     "answer": "c",
+     "hint": "The manager gives a belief and a concession, and the summary must keep both.",
+     "topic": "attribution"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"The review recommends that the department should simplify its guidance, and says that doing so would probably reduce errors by a third, though the figure is an estimate based on a small trial. The department has accepted the recommendation in principle and will report back in the spring.\" Which summary is most accurate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The review proves that simpler guidance reduces errors by a third, and the department will introduce it in spring"
+      },
+      {
+       "key": "b",
+       "text": "The review recommends simpler guidance, but the department has rejected this and will report back in the spring"
+      },
+      {
+       "key": "c",
+       "text": "The review recommends simpler guidance to cut errors by a third, and the department will act on it immediately"
+      },
+      {
+       "key": "d",
+       "text": "The review recommends simpler guidance and estimates a third fewer errors; the department accepts this in principle"
+      }
+     ],
+     "answer": "d",
+     "hint": "The figure is an estimate and the acceptance is only in principle.",
+     "topic": "hedged findings"
+    }
+   ]
+  },
+  {
+   "title": "L13: Negation, contradiction and what must be false",
+   "source": "Civil Service online tests: practice guidance, GOV.UK and Civil Service Jobs",
+   "body": "Many reasoning errors come from mis-stating the opposite of a claim. The contradiction of a statement is the one that must be true if the original is false, and it is not necessarily the extreme opposite. The opposite of 'every office met the target' is 'at least one office did not meet the target', and it is not 'no office met the target'. The contradiction of 'no complaint was upheld' is 'at least one complaint was upheld', and it is not 'every complaint was upheld'. A conditional, 'if a claim is late, a penalty applies', is contradicted only by a case with the condition true and the result false: a claim that was late and attracted no penalty. A late claim with a penalty, or an on-time claim with a penalty, does not contradict it. The negation of 'A or B' is 'neither A nor B', and the negation of 'A and B' is 'not A or not B', so the denial of 'every scheme saved money and reduced complaints' is that at least one scheme failed to save money or failed to reduce complaints. 'At least 100' is contradicted by 'fewer than 100', and 'more than half' by 'half or fewer'. 'Not all' means 'some do not' and leaves open that most do. 'Only managers can approve' is contradicted by a case where a non-manager validly approves. When asked what must be true if a statement is false, take its contradiction. When asked which statements are inconsistent with each other, look for pairs that cannot both hold, and remember that two statements can both be false without being contradictory.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Which statement contradicts: \"Every office met the target\"?",
+     "options": [
+      {
+       "key": "a",
+       "text": "At least one office did not meet the target"
+      },
+      {
+       "key": "b",
+       "text": "Not one office met the target"
+      },
+      {
+       "key": "c",
+       "text": "Every office missed the target by a small margin"
+      },
+      {
+       "key": "d",
+       "text": "Most offices did not meet the target"
+      }
+     ],
+     "answer": "a",
+     "hint": "The contradiction of 'every' is 'at least one not'.",
+     "topic": "negating every"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Which statement contradicts: \"No complaint was upheld\"?",
+     "options": [
+      {
+       "key": "a",
+       "text": "At least one complaint was upheld"
+      },
+      {
+       "key": "b",
+       "text": "Some complaints were investigated"
+      },
+      {
+       "key": "c",
+       "text": "Every complaint was upheld"
+      },
+      {
+       "key": "d",
+       "text": "Most complaints were upheld"
+      }
+     ],
+     "answer": "a",
+     "hint": "The contradiction of 'none' is 'at least one'.",
+     "topic": "negating none"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Which situation would contradict the rule: \"If a claim is late, a penalty applies\"?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A claim that was late and attracted a penalty"
+      },
+      {
+       "key": "b",
+       "text": "A claim that was not late and attracted no penalty"
+      },
+      {
+       "key": "c",
+       "text": "A claim that was not late and attracted a penalty"
+      },
+      {
+       "key": "d",
+       "text": "A claim that was late and attracted no penalty"
+      }
+     ],
+     "answer": "d",
+     "hint": "A conditional fails only when the condition is true and the result is false.",
+     "topic": "negating a conditional"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Which statement contradicts: \"The unit processes at least 100 cases a day\"?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The unit processes over 100 cases a day"
+      },
+      {
+       "key": "b",
+       "text": "The unit processes fewer than 100 cases a day"
+      },
+      {
+       "key": "c",
+       "text": "The unit processes exactly 100 cases a day"
+      },
+      {
+       "key": "d",
+       "text": "The unit processes no more than 100 cases a day"
+      }
+     ],
+     "answer": "b",
+     "hint": "The complement of 'at least 100' is 'fewer than 100'.",
+     "topic": "negating a minimum"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Which statement is the denial of: \"The team member was either late or absent\"?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The team member was not late, but may have been absent"
+      },
+      {
+       "key": "b",
+       "text": "The team member was late, though not absent from work"
+      },
+      {
+       "key": "c",
+       "text": "The team member was neither late nor absent"
+      },
+      {
+       "key": "d",
+       "text": "The team member was both late and absent on the day"
+      }
+     ],
+     "answer": "c",
+     "hint": "The negation of 'A or B' is 'neither A nor B'.",
+     "topic": "negating or"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"Only managers can approve spending.\" Which finding would contradict this statement?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Some managers approved spending without a receipt"
+      },
+      {
+       "key": "b",
+       "text": "A non-manager gave a valid approval of spending"
+      },
+      {
+       "key": "c",
+       "text": "A manager approved spending and then delegated the payment"
+      },
+      {
+       "key": "d",
+       "text": "A manager refused to approve some spending"
+      }
+     ],
+     "answer": "b",
+     "hint": "One valid approval by a non-manager breaks the 'only'.",
+     "topic": "negating only"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"Not all of the forms were returned.\" Which statement must be true?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Most of the forms were not returned to the office"
+      },
+      {
+       "key": "b",
+       "text": "Not a single form was returned to the office"
+      },
+      {
+       "key": "c",
+       "text": "Some of the forms were returned to the office"
+      },
+      {
+       "key": "d",
+       "text": "At least one form was not returned"
+      }
+     ],
+     "answer": "d",
+     "hint": "'Not all' means that at least one was missing.",
+     "topic": "not all"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"It is not the case that every scheme saved money and every scheme reduced complaints.\" Which statement is equivalent?",
+     "options": [
+      {
+       "key": "a",
+       "text": "At least one scheme failed to save money or failed to cut complaints"
+      },
+      {
+       "key": "b",
+       "text": "Every scheme saved money, but at least one did not reduce complaints"
+      },
+      {
+       "key": "c",
+       "text": "Not one scheme saved money and not one reduced complaints"
+      },
+      {
+       "key": "d",
+       "text": "At least one scheme neither saved money nor reduced complaints"
+      }
+     ],
+     "answer": "a",
+     "hint": "Denying 'A and B' gives 'not A or not B'.",
+     "topic": "De Morgan"
+    }
+   ]
+  },
+  {
+   "title": "L13: How an argument is built: gaps, order and the role of each sentence",
+   "source": "Civil Service online tests: practice guidance, GOV.UK and Civil Service Jobs",
+   "body": "A coherent paragraph has a logical structure: a claim, support for it, a qualification or counter-claim, and a conclusion. Linking words reveal that structure. 'Because', 'since' and 'as' introduce reasons; 'therefore', 'so' and 'hence' introduce conclusions drawn from what came before; 'however', 'but', 'nevertheless' and 'although' signal a contrast; 'moreover' and 'in addition' add further support; 'for example' introduces an illustration. When a sentence is missing, work out what the sentences on each side need from it: if the next sentence begins 'Nevertheless', the gap must supply a point that points the other way from what follows. If the next sentence begins 'This suggests', it must be able to refer back to a finding in the gap. Look at pronouns and references, such as 'this', 'these figures' or 'the second option', since they must have something to refer to. When putting sentences in order, start with the one that introduces the topic and has no back-reference, and put the conclusion last. A strong conclusion follows from the evidence given and does not go beyond it. A sentence that merely repeats an earlier one adds nothing, and a sentence that introduces a new and unrelated topic breaks the flow. To identify the main conclusion in a paragraph, ask which statement the others are there to support. Be careful with evidence that is offered to support one claim but which is then used to prove a different, stronger claim.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Choose the sentence that best fills the gap. \"The helpline's average waiting time fell last year. [GAP] Nevertheless, complaints about waiting rose. This suggests that average waiting time is not the measure that callers care about most.\"",
+     "options": [
+      {
+       "key": "a",
+       "text": "Callers reported that the service had got worse overall"
+      },
+      {
+       "key": "b",
+       "text": "Staff numbers on the helpline fell sharply during the year"
+      },
+      {
+       "key": "c",
+       "text": "More calls were also answered within the 60-second target"
+      },
+      {
+       "key": "d",
+       "text": "The longest waits more than doubled during the year"
+      }
+     ],
+     "answer": "c",
+     "hint": "The gap must support the improvement, which 'nevertheless' then contrasts with.",
+     "topic": "gap-filling"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Choose the sentence that best fills the gap. \"Remote working reduced office costs. [GAP] Therefore, the department concluded that remote working improved value for money.\"",
+     "options": [
+      {
+       "key": "a",
+       "text": "It also did not reduce output, which was unchanged on the previous year"
+      },
+      {
+       "key": "b",
+       "text": "Office costs are only one part of the department's total spending"
+      },
+      {
+       "key": "c",
+       "text": "Some staff said that they preferred working in the office on most days"
+      },
+      {
+       "key": "d",
+       "text": "Remote working began during a period of unusually high absence"
+      }
+     ],
+     "answer": "a",
+     "hint": "A conclusion about value needs cost savings without a loss of output.",
+     "topic": "supporting a conclusion"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Which order makes the most logical paragraph? (1) However, the pilot covered only two areas. (2) The department extended the scheme after a successful pilot. (3) Evaluators therefore advise caution about the national results. (4) Early results from the national roll-out were encouraging.",
+     "options": [
+      {
+       "key": "a",
+       "text": "2, 1, 4, 3"
+      },
+      {
+       "key": "b",
+       "text": "1, 2, 4, 3"
+      },
+      {
+       "key": "c",
+       "text": "2, 4, 1, 3"
+      },
+      {
+       "key": "d",
+       "text": "4, 2, 3, 1"
+      }
+     ],
+     "answer": "c",
+     "hint": "Start with the topic, give results, add the qualification, then the conclusion.",
+     "topic": "ordering"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"The new system is cheaper to run. It is also easier for staff to use. The department should therefore adopt it.\" Which sentence is the main conclusion?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Staff already use the system for much of their work"
+      },
+      {
+       "key": "b",
+       "text": "The new system is cheaper to run than the old one"
+      },
+      {
+       "key": "c",
+       "text": "The new system is easier for staff to use every day"
+      },
+      {
+       "key": "d",
+       "text": "The department should adopt the new system"
+      }
+     ],
+     "answer": "d",
+     "hint": "'Therefore' marks what the other sentences support.",
+     "topic": "main conclusion"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"Applications rose by 20% after the campaign. This shows that the campaign was a success.\" What is the weakness in how the second sentence is supported?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It uses two sentences where one would be clear enough and more direct for the reader"
+      },
+      {
+       "key": "b",
+       "text": "It takes a rise in applications as proof of success, with no link to the campaign shown"
+      },
+      {
+       "key": "c",
+       "text": "It repeats the first sentence without adding anything new to the argument"
+      },
+      {
+       "key": "d",
+       "text": "It does not give the date of the campaign or how long it ran for"
+      }
+     ],
+     "answer": "b",
+     "hint": "The conclusion goes beyond the evidence offered.",
+     "topic": "evidence and conclusion"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Choose the sentence that best fills the gap. \"Several studies find that small teams make decisions faster. [GAP] Yet speed is not the only test of a good decision, and the department should also weigh the quality of advice.\"",
+     "options": [
+      {
+       "key": "a",
+       "text": "Quality of advice is never affected by the size of the team giving it"
+      },
+      {
+       "key": "b",
+       "text": "The department has never reduced the size of any panel in the past"
+      },
+      {
+       "key": "c",
+       "text": "On this evidence, the department considered reducing the size of its decision panels"
+      },
+      {
+       "key": "d",
+       "text": "Large teams are always slower than small ones in every kind of decision"
+      }
+     ],
+     "answer": "c",
+     "hint": "The following 'Yet' contrasts with a point that favours speed.",
+     "topic": "logical link"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"These figures show that the scheme is working.\" What must the preceding sentence supply for 'these figures' to make sense?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A statement that gives the figures, such as the fall in claims over two years"
+      },
+      {
+       "key": "b",
+       "text": "A statement about the history of the scheme and when it began"
+      },
+      {
+       "key": "c",
+       "text": "An opinion about whether the scheme is popular with the public"
+      },
+      {
+       "key": "d",
+       "text": "A recommendation for the future of the scheme and its funding"
+      }
+     ],
+     "answer": "a",
+     "hint": "A reference such as 'these figures' needs something to point to.",
+     "topic": "references"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Which sentence would most disrupt the flow of this paragraph? \"The service handled more calls this year. Average call length also rose. Staff received additional training in March. The new car park opened in April. Together, these changes put pressure on capacity.\"",
+     "options": [
+      {
+       "key": "a",
+       "text": "Together, these changes put pressure on capacity"
+      },
+      {
+       "key": "b",
+       "text": "The new car park opened in April"
+      },
+      {
+       "key": "c",
+       "text": "Staff received additional training in March"
+      },
+      {
+       "key": "d",
+       "text": "Average call length also rose"
+      }
+     ],
+     "answer": "b",
+     "hint": "It is unrelated to the topic of capacity.",
+     "topic": "irrelevant sentence"
+    }
+   ]
+  },
+  {
+   "title": "L13: Ambiguity in drafting and how to remove it",
+   "source": "GOV.UK Content Design guidance and Office of the Parliamentary Counsel, Drafting Guidance",
+   "body": "Ambiguity means that a sentence can be read in more than one reasonable way. In government writing, it causes disputes, errors and wasted correspondence, so officials are expected to spot it and remove it. Common causes are: scope of a modifier (does 'last year' apply to the cards or to the staff in 'review staff and contractor access cards issued last year'?); pronoun reference ('the manager told the officer that she would be promoted': who is 'she'?); and/or ('and/or' is vague, and it is better to write 'A or B or both' where that is meant); 'respectively', which pairs items in order and can be missed; 'between 1 and 5 March', where it is unclear if both dates are included; 'every other' (alternate, or all the rest); 'by Friday' (before Friday, or up to and including Friday); 'twice a week' versus 'every two weeks' and 'biannual' (which can mean twice a year or every two years); and words that can be nouns or verbs. Negatives add further risk: 'all the applicants were not accepted' can mean that none were accepted or that only some were. Fixes include splitting a long sentence, repeating the noun instead of using a pronoun, placing modifiers next to the word they modify, using a list for separate conditions, giving exact dates and times ('by 5pm on Friday 14 March, inclusive'), and defining terms. Test a revised sentence by asking a colleague to paraphrase it, since if two people give different answers, the sentence still needs work. Note that precision is not the same as length, and a rewrite should be shorter or no longer than the original wherever possible. Do not change the meaning that the author intended, even if it seems unsatisfactory.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"The department will review staff and contractor access cards issued last year.\" What is the main ambiguity?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is unclear when the review will begin and when it will finish"
+      },
+      {
+       "key": "b",
+       "text": "It is unclear who will carry out the review and report on the results"
+      },
+      {
+       "key": "c",
+       "text": "It is unclear whether the cards are physical or digital passes"
+      },
+      {
+       "key": "d",
+       "text": "It is unclear whether 'issued last year' covers contractor cards only or both kinds"
+      }
+     ],
+     "answer": "d",
+     "hint": "A modifier can attach to the nearest noun or to a whole list.",
+     "topic": "scope of a modifier"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"The manager told the officer that she would be promoted.\" What is the best way to remove the ambiguity, if the manager is the one to be promoted?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The officer was told that a promotion would take place."
+      },
+      {
+       "key": "b",
+       "text": "The manager said she would be promoted, according to the officer."
+      },
+      {
+       "key": "c",
+       "text": "The manager told her officer that she would be promoted soon."
+      },
+      {
+       "key": "d",
+       "text": "The manager told the officer, 'I will be promoted.'"
+      }
+     ],
+     "answer": "d",
+     "hint": "Direct speech or a repeated noun settles who 'she' is.",
+     "topic": "pronoun reference"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"Forms must be returned between 1 and 5 March.\" Which rewrite removes the main ambiguity?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Forms must be returned between the first and the fifth day of the month"
+      },
+      {
+       "key": "b",
+       "text": "Forms must be returned from 1 March to 5 March, both dates included"
+      },
+      {
+       "key": "c",
+       "text": "Forms must be returned in the first week of March"
+      },
+      {
+       "key": "d",
+       "text": "Forms must be returned about 1 to 5 March"
+      }
+     ],
+     "answer": "b",
+     "hint": "State whether the end dates are included.",
+     "topic": "inclusive dates"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"Staff and contractors must wear passes and/or carry their warrant cards.\" What is the main weakness in the wording?",
+     "options": [
+      {
+       "key": "a",
+       "text": "'And/or' leaves it unclear whether both are required or either is enough"
+      },
+      {
+       "key": "b",
+       "text": "The sentence mixes staff and contractors in a single rule"
+      },
+      {
+       "key": "c",
+       "text": "The sentence does not say where passes are to be worn"
+      },
+      {
+       "key": "d",
+       "text": "The sentence does not say who checks that the passes are worn"
+      }
+     ],
+     "answer": "a",
+     "hint": "Write 'A or B or both' if that is intended.",
+     "topic": "and/or"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"All the applicants were not accepted.\" Which reading is possible?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Every applicant was accepted apart from a single one"
+      },
+      {
+       "key": "b",
+       "text": "Every one of the applicants was accepted"
+      },
+      {
+       "key": "c",
+       "text": "Either none were accepted, or only some were accepted"
+      },
+      {
+       "key": "d",
+       "text": "Not one applicant was considered at all"
+      }
+     ],
+     "answer": "c",
+     "hint": "The negative can apply to 'all' or to 'accepted'.",
+     "topic": "negative scope"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"The panel will meet biannually.\" Which rewrite is clearest?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The panel will meet semi-regularly"
+      },
+      {
+       "key": "b",
+       "text": "The panel will meet every second year or twice a year"
+      },
+      {
+       "key": "c",
+       "text": "The panel will meet on a biannual basis, as has been the practice"
+      },
+      {
+       "key": "d",
+       "text": "The panel will meet twice a year, in March and September"
+      }
+     ],
+     "answer": "d",
+     "hint": "A specific frequency and dates avoid confusion.",
+     "topic": "frequency words"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"Reports and invoices must be submitted by 1 May and 15 May respectively.\" What does 'respectively' mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Reports are due by 1 May and invoices by 15 May"
+      },
+      {
+       "key": "b",
+       "text": "Both must be submitted by 1 May and again by 15 May"
+      },
+      {
+       "key": "c",
+       "text": "Reports are due by 15 May and invoices by 1 May"
+      },
+      {
+       "key": "d",
+       "text": "Either document may be submitted by 1 May or 15 May"
+      }
+     ],
+     "answer": "a",
+     "hint": "'Respectively' pairs items in the order given.",
+     "topic": "respectively"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "\"Applications must be received by Friday.\" Which rewrite is clearest?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Applications must be received by the Friday, or earlier if possible"
+      },
+      {
+       "key": "b",
+       "text": "Applications must be received by 5pm on Friday 14 March, the final day"
+      },
+      {
+       "key": "c",
+       "text": "Applications must be received by the end of the working week"
+      },
+      {
+       "key": "d",
+       "text": "Applications must be received no later than the Friday itself"
+      }
+     ],
+     "answer": "b",
+     "hint": "Give the exact day and time, and say that it is the final day.",
+     "topic": "deadlines"
+    }
+   ]
+  },
+  {
+   "title": "L13: Reading evaluations: additionality, deadweight and displacement",
+   "source": "HM Treasury, The Green Book and Magenta Book (evaluation guidance)",
+   "body": "Evaluations of public programmes need to separate what happened from what the programme caused. The Green Book and the Magenta Book use several terms. The counterfactual is what would have happened without the intervention. Deadweight is the part of the outcome that would have happened anyway, for example jobs that firms would have created without a grant. Displacement is the part of the outcome that came at someone else's expense, for example jobs created in grant-supported firms that were lost in competitors. Leakage is a benefit that goes to people outside the target group. Substitution happens when a recipient replaces one activity with another, for example a firm replacing an unsubsidised worker with a subsidised one. Additionality is the net extra outcome that is attributable to the programme once deadweight, displacement and leakage are removed. The gross outcome counts everyone who benefited, whereas the net outcome is the additional effect. For example, 500 gross jobs with 30% deadweight leaves 350, and if 20% of those are displaced, 280 net jobs are left. The reductions apply one after another to what is left. Costs are compared with the net result, so cost per net job is higher than cost per gross job. A good evaluation uses a comparison group, so that differences can be attributed to the programme and not to other factors. A before-and-after change without a comparison group may reflect economic conditions. A programme that has a high gross impact can have little additionality if it supports activity that would have gone ahead. Say which measure is being quoted whenever a result is described.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A grant scheme is credited with 500 gross new jobs. An evaluation finds that 30% of these jobs would have been created without the grant. How many jobs remain after removing this deadweight?",
+     "options": [
+      {
+       "key": "a",
+       "text": "470"
+      },
+      {
+       "key": "b",
+       "text": "650"
+      },
+      {
+       "key": "c",
+       "text": "350"
+      },
+      {
+       "key": "d",
+       "text": "150"
+      }
+     ],
+     "answer": "c",
+     "hint": "Remove 30% of 500.",
+     "topic": "deadweight"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Of the 350 jobs left after deadweight, 20% were displaced from competitors. How many net additional jobs does the scheme create?",
+     "options": [
+      {
+       "key": "a",
+       "text": "250"
+      },
+      {
+       "key": "b",
+       "text": "330"
+      },
+      {
+       "key": "c",
+       "text": "70"
+      },
+      {
+       "key": "d",
+       "text": "280"
+      }
+     ],
+     "answer": "d",
+     "hint": "Take 20% off the remaining 350.",
+     "topic": "displacement"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "The grant cost £4.2m in total. Using the 280 net additional jobs, what is the cost per net additional job?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£8,400"
+      },
+      {
+       "key": "b",
+       "text": "£15,000"
+      },
+      {
+       "key": "c",
+       "text": "£12,000"
+      },
+      {
+       "key": "d",
+       "text": "£16,800"
+      }
+     ],
+     "answer": "b",
+     "hint": "Divide the cost by net jobs, not gross jobs.",
+     "topic": "cost per net job"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "In an evaluation, 'additionality' refers to which of these?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The extra benefits that arise when more than one programme is used together"
+      },
+      {
+       "key": "b",
+       "text": "The additional spending the programme needed in its later years of operation"
+      },
+      {
+       "key": "c",
+       "text": "The extra outcome attributable to the programme once deadweight, displacement and leakage are removed"
+      },
+      {
+       "key": "d",
+       "text": "The total number of people who benefited from the programme in all its stages"
+      }
+     ],
+     "answer": "c",
+     "hint": "It is the net effect caused by the programme.",
+     "topic": "definition"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A subsidy is meant for long-term unemployed people. An evaluation finds that a third of the subsidised jobs went to people who had been out of work for under a month. Which term describes this?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Leakage, as the benefit reached people outside the target group"
+      },
+      {
+       "key": "b",
+       "text": "Additionality, since the number of jobs overall has risen"
+      },
+      {
+       "key": "c",
+       "text": "Deadweight, since the jobs would have been created anyway"
+      },
+      {
+       "key": "d",
+       "text": "Displacement, since other people lost jobs elsewhere"
+      }
+     ],
+     "answer": "a",
+     "hint": "Benefit going outside the target group is leakage.",
+     "topic": "leakage"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A firm uses a wage subsidy to hire a new worker, and lets go of an unsubsidised worker doing the same job. Which term best describes this?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Deadweight, as the job would have existed anyway"
+      },
+      {
+       "key": "b",
+       "text": "Substitution, as one worker has replaced another"
+      },
+      {
+       "key": "c",
+       "text": "Additionality, as the new job is extra"
+      },
+      {
+       "key": "d",
+       "text": "Leakage, as the subsidy has gone outside the target group"
+      }
+     ],
+     "answer": "b",
+     "hint": "The subsidised worker replaces an unsubsidised one.",
+     "topic": "substitution"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A report says employment among participants rose by 15 percentage points after the programme. It does not say what happened to a comparable group of non-participants. What is the main weakness?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Participants in programmes always do better than other people do"
+      },
+      {
+       "key": "b",
+       "text": "The rise is too small to be of any importance in judging the programme"
+      },
+      {
+       "key": "c",
+       "text": "Percentage points cannot be used to measure changes in employment"
+      },
+      {
+       "key": "d",
+       "text": "Without a comparison group, the rise may reflect wider economic conditions and not the programme"
+      }
+     ],
+     "answer": "d",
+     "hint": "A comparison group shows the counterfactual.",
+     "topic": "comparison group"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "Statement: \"A scheme with 1,000 gross outcomes must have created more additional outcomes than a scheme with 600 gross outcomes.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "False: schemes with more gross outcomes tend to be less efficient"
+      },
+      {
+       "key": "b",
+       "text": "True: gross outcomes are the usual measure of additionality for a scheme"
+      },
+      {
+       "key": "c",
+       "text": "Cannot say: the net effect depends on each scheme's deadweight, displacement and leakage"
+      },
+      {
+       "key": "d",
+       "text": "True: 1,000 is more than 600, and more is therefore better here"
+      }
+     ],
+     "answer": "c",
+     "hint": "Net, not gross, outcomes measure the effect of a programme.",
+     "topic": "gross and net"
+    }
+   ]
+  },
+  {
+   "title": "L13: Challenging a senior leader's proposal constructively",
+   "source": "Civil Service Leadership Statement, Civil Service Code and Success Profiles (Leadership and Communicating and Influencing)",
+   "body": "Officials are expected to give honest advice, and that sometimes means disagreeing with a senior leader. The Civil Service Code requires honesty and objectivity and says that officials should provide information and advice, including advice to ministers, on the basis of the evidence and accurately present the options and facts. The Leadership Statement asks leaders to be open, to welcome challenge and to listen. Challenge works best when it is timely (before decisions are fixed), private first (so that the leader can respond without losing face), evidence-based and constructive. A useful pattern is: acknowledge the aim, state your concern and the evidence, explain the consequence, and offer an alternative or ask a question that opens the issue. Questions such as 'What would we do if the funding fell through?' invite thought without confrontation. Distinguish between preferences, where you may advise and then support the decision, and propriety, where a proposal might breach the law, the Civil Service Code or spending rules, and you must raise it formally. If your challenge is not accepted, you can ask for the decision and your advice to be recorded, escalate to a higher level if the concern is serious, and then carry out lawful decisions. 'Disagree and commit' means that once a decision is made, you support it fully. Staff who challenge should not suffer detriment, and leaders should thank those who bring bad news. Where a leader is dismissive, find allies, use data and choose the moment, and do not go round them in public. Silence from fear is a risk to the organisation, because problems are reported later and cost more.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "In a planning meeting, your director proposes a timetable that your analysis shows is unachievable. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Acknowledge the aim, show your evidence and suggest an achievable alternative"
+      },
+      {
+       "key": "b",
+       "text": "Tell the director the timetable is unrealistic and ask for it to be withdrawn"
+      },
+      {
+       "key": "c",
+       "text": "Accept the timetable in the meeting and share your concerns with colleagues afterwards"
+      },
+      {
+       "key": "d",
+       "text": "Agree to the timetable and plan to explain any slippage once it has happened"
+      }
+     ],
+     "answer": "a",
+     "hint": "Timely, evidence-based challenge with an alternative helps the director decide.",
+     "topic": "constructive challenge"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "You think a senior leader's proposal is a poor idea, but it is lawful and within the department's powers. After you have given your advice, the leader decides to proceed. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Delay the work until the leader changes their mind or the evidence changes"
+      },
+      {
+       "key": "b",
+       "text": "Ask other colleagues to raise the same concern so that it carries more weight"
+      },
+      {
+       "key": "c",
+       "text": "Make sure your advice is recorded, then support the decision and deliver it"
+      },
+      {
+       "key": "d",
+       "text": "Keep arguing against the decision in team meetings until the leader relents"
+      }
+     ],
+     "answer": "c",
+     "hint": "For a matter of preference, advise, then commit.",
+     "topic": "disagree and commit"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A senior leader asks you to change the wording of a report so that it hides a cost overrun. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say the report must be accurate, present the overrun clearly, and escalate if pressed"
+      },
+      {
+       "key": "b",
+       "text": "Soften the wording so that the overrun is mentioned only in an appendix of the report"
+      },
+      {
+       "key": "c",
+       "text": "Make the change, since the leader will be the one accountable for the report"
+      },
+      {
+       "key": "d",
+       "text": "Leave the overrun out of this report and refer to it in the next quarterly one"
+      }
+     ],
+     "answer": "a",
+     "hint": "This is a propriety matter and honest reporting is required.",
+     "topic": "propriety"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "You want to challenge a director's proposal that has been announced to the whole department. When is the best moment to raise your concern?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only once you have more data than the director has on the subject"
+      },
+      {
+       "key": "b",
+       "text": "After the plan has been running for a few months and results are visible"
+      },
+      {
+       "key": "c",
+       "text": "At the next all-staff meeting, so that everyone can discuss it openly"
+      },
+      {
+       "key": "d",
+       "text": "Privately and promptly, before the plan becomes harder to change"
+      }
+     ],
+     "answer": "d",
+     "hint": "Early, private challenge allows a leader to respond without losing face.",
+     "topic": "timing"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A leader reacts angrily when you raise a concern in a one-to-one meeting. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Message their line manager the same afternoon to report their reaction"
+      },
+      {
+       "key": "b",
+       "text": "Stay calm, restate the issue and evidence, and offer to continue later"
+      },
+      {
+       "key": "c",
+       "text": "Withdraw your concern so that the discussion can return to a calmer footing"
+      },
+      {
+       "key": "d",
+       "text": "Raise your voice to match theirs, to show how strongly you feel about it"
+      }
+     ],
+     "answer": "b",
+     "hint": "Staying factual and calm keeps the challenge on the issue.",
+     "topic": "handling a reaction"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "You raised a serious concern about a proposal with a senior leader, and it was not accepted. You believe that the plan may cause real harm to the public. What is the most effective next step?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ask for your advice to be recorded, and escalate through the proper line"
+      },
+      {
+       "key": "b",
+       "text": "Pass the concern to a journalist, on the grounds that the public interest requires it"
+      },
+      {
+       "key": "c",
+       "text": "Drop the matter, since the leader is the one accountable for the decision"
+      },
+      {
+       "key": "d",
+       "text": "Quietly adjust the plan yourself in the way you think would be best for the public"
+      }
+     ],
+     "answer": "a",
+     "hint": "Serious concerns should be escalated through proper channels.",
+     "topic": "escalation"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "In a meeting, the director asks if anyone has concerns. You have one, but no one else speaks up. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Stay quiet in the meeting and speak to the director privately afterwards instead"
+      },
+      {
+       "key": "b",
+       "text": "Raise it clearly and constructively, with the evidence, rather than stay silent"
+      },
+      {
+       "key": "c",
+       "text": "Say that you have no concerns, and raise the matter informally at a later date"
+      },
+      {
+       "key": "d",
+       "text": "Wait for a more senior colleague to speak first and then add your support"
+      }
+     ],
+     "answer": "b",
+     "hint": "Honesty in the room is better than silence.",
+     "topic": "speaking up"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A leader asks 'Does anyone disagree?' after setting out a proposal, but the tone suggests that they do not want challenge. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Stay silent, since the leader has made clear what outcome they want"
+      },
+      {
+       "key": "b",
+       "text": "Say the proposal is flawed and ask the director to justify every part of it"
+      },
+      {
+       "key": "c",
+       "text": "Ask the director to confirm that everyone in the room agrees with the proposal"
+      },
+      {
+       "key": "d",
+       "text": "Ask an open question about risks, such as what happens if a key assumption fails"
+      }
+     ],
+     "answer": "d",
+     "hint": "A well-chosen question can open the issue without confrontation.",
+     "topic": "opening discussion"
+    }
+   ]
+  },
+  {
+   "title": "L13: Running a fair and open recruitment campaign",
+   "source": "Civil Service Commission, Recruitment Principles; Civil Service Nationality Rules; Equality Act 2010",
+   "body": "The Civil Service Commission's Recruitment Principles require that selection for appointment to the Civil Service is on merit, on the basis of fair and open competition. Merit means the appointment of the best available person for the post, and fair and open competition means that vacancies are advertised so that a wide pool can apply, and that every candidate is assessed against the same criteria. Departments may use exceptions to the principle of open competition, such as for short-term appointments, secondments and some others, but they have to follow the published rules and keep records. Panels should assess candidates against the published criteria, using the same questions and scoring scheme, taking notes, and agreeing scores based on evidence of behaviours, strengths or technical skills from Success Profiles. A panel member who has a close relationship with a candidate, whether a family member, friend or someone with whom there is a personal conflict, must declare it and usually withdraw from the panel. Reasonable adjustments must be made for disabled candidates during the process. The Equality Act 2010 prohibits discrimination on the basis of protected characteristics, and panel decisions that are based on 'cultural fit', gut feeling or unconscious bias are a risk. Feedback should be offered to candidates, and records should be kept so that decisions can be explained and defended if challenged. Candidates should be told in good time of the process, and any changes to it should apply to all. Vetting and other checks are applied consistently. Information that candidates provide in confidence should be handled in line with data protection rules and should not be shared with those not involved.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "You discover that one of the candidates for a post on your panel is a close friend. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ask your friend not to mention the relationship during the interview"
+      },
+      {
+       "key": "b",
+       "text": "Stay on the panel and say nothing, since you are confident of being fair"
+      },
+      {
+       "key": "c",
+       "text": "Declare the relationship to the chair and HR, and step down from the panel"
+      },
+      {
+       "key": "d",
+       "text": "Stay on the panel but mark your friend down to avoid any impression of bias"
+      }
+     ],
+     "answer": "c",
+     "hint": "A conflict of interest must be declared, and the panel member usually withdraws.",
+     "topic": "conflict on a panel"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A panel member suggests that the candidate who 'felt like a better fit' should be chosen, although another candidate scored higher against the criteria. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ask the other panel members to vote on which candidate they would prefer"
+      },
+      {
+       "key": "b",
+       "text": "Return to the published criteria and evidence, and base the decision on the scores"
+      },
+      {
+       "key": "c",
+       "text": "Re-score the two candidates until the preferred candidate comes out ahead"
+      },
+      {
+       "key": "d",
+       "text": "Choose the candidate who felt like a better fit, as the panel's judgement is final"
+      }
+     ],
+     "answer": "b",
+     "hint": "Merit means assessment against criteria and evidence.",
+     "topic": "merit"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A disabled candidate asks for extra time in a written test. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Agree a reasonable adjustment promptly, after discussing their needs"
+      },
+      {
+       "key": "b",
+       "text": "Refuse, because the other candidates would not be given any extra time"
+      },
+      {
+       "key": "c",
+       "text": "Suggest they apply for another role where adjustments are more readily available"
+      },
+      {
+       "key": "d",
+       "text": "Allow it, but record that the test has been made easier for this candidate"
+      }
+     ],
+     "answer": "a",
+     "hint": "Reasonable adjustments are a legal duty and part of fair competition.",
+     "topic": "reasonable adjustments"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A hiring manager wants to appoint a former colleague without advertising the post, saying that it is urgent. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Advertise the post, but only within the hiring manager's own team"
+      },
+      {
+       "key": "b",
+       "text": "Appoint the colleague, since urgent posts do not have to be advertised at all"
+      },
+      {
+       "key": "c",
+       "text": "Check whether a permitted exception applies, and if not, advertise the post"
+      },
+      {
+       "key": "d",
+       "text": "Appoint the colleague now, and advertise the post afterwards for the sake of appearance"
+      }
+     ],
+     "answer": "c",
+     "hint": "Open competition is the rule, and exceptions must follow the published rules.",
+     "topic": "open competition"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "After the panel has scored candidates, a member realises that they asked one candidate an extra supportive question that others were not asked. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say nothing, because the candidate's answers were good enough without the prompt"
+      },
+      {
+       "key": "b",
+       "text": "Ask the other candidates the same extra question at a later stage"
+      },
+      {
+       "key": "c",
+       "text": "Lower the candidate's score slightly to compensate for the extra question"
+      },
+      {
+       "key": "d",
+       "text": "Tell the chair, and ask HR whether the process needs to be corrected"
+      }
+     ],
+     "answer": "d",
+     "hint": "An unequal process must be raised and put right.",
+     "topic": "consistency"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "An unsuccessful candidate asks why they were not selected. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say that the panel's discussions are confidential and nothing can be shared"
+      },
+      {
+       "key": "b",
+       "text": "Say that the successful candidate simply came across as the better fit"
+      },
+      {
+       "key": "c",
+       "text": "Tell them how many candidates scored higher, and name the successful ones"
+      },
+      {
+       "key": "d",
+       "text": "Give feedback based on the published criteria and the panel's recorded evidence"
+      }
+     ],
+     "answer": "d",
+     "hint": "Feedback based on criteria helps candidates and shows that decisions were fair.",
+     "topic": "feedback"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A senior manager asks to see the notes of the panel to find out what was said about a named candidate who works in their team. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Refuse to discuss anything with the manager, without checking with HR"
+      },
+      {
+       "key": "b",
+       "text": "Share the notes but ask the manager not to pass them on to anyone"
+      },
+      {
+       "key": "c",
+       "text": "Check with HR what can be shared, applying data protection and need-to-know"
+      },
+      {
+       "key": "d",
+       "text": "Share the notes, since the manager is senior to you and has a reason to ask"
+      }
+     ],
+     "answer": "c",
+     "hint": "Panel records are personal data and need controlled access.",
+     "topic": "confidentiality"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A candidate says that the interview questions were unfair to people who have had career breaks. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Reject the comment, because the same questions were asked of every candidate"
+      },
+      {
+       "key": "b",
+       "text": "Take it seriously, review the criteria and questions with HR, and reply in writing"
+      },
+      {
+       "key": "c",
+       "text": "Ask the candidate to withdraw the comment, and note it on their file"
+      },
+      {
+       "key": "d",
+       "text": "Offer the candidate a place without any further assessment, to settle things"
+      }
+     ],
+     "answer": "b",
+     "hint": "A fair process includes listening to concerns about bias.",
+     "topic": "challenges to the process"
+    }
+   ]
+  },
+  {
+   "title": "L13: Serving ministers through an election or a change of government",
+   "source": "Cabinet Office general election guidance, Civil Service Code and Cabinet Manual",
+   "body": "Civil servants serve the government of the day, whichever party that is, and the Civil Service Code requires them to act with political impartiality. In the weeks before a general election, the government continues in office, but there is a convention of restraint, often called the pre-election period or 'purdah'. Before each election, the Cabinet Office issues guidance. In general, departments should not launch major new policies or make long-term commitments that would bind an incoming government, should be cautious about public appointments and contracts of significant value, and should avoid using official resources or publications in a way that favours one party. Routine business continues, and statutory duties are still carried out. Official contact with opposition parties in this period is authorised by the Prime Minister, and officials should not hold such discussions on their own initiative. Civil servants must not take part in party campaigning in ways that are inconsistent with their role, and rules on political activity depend on the grade, with the most senior staff more restricted. After the election, officials give new ministers briefings prepared in advance, covering the department's responsibilities, key decisions and risks, and the incoming ministers decide their priorities. Officials should serve the new ministers with the same commitment as the old, and should not criticise past ministers' decisions. Briefings must be factual, balanced and not drawn up to favour one party. Documents belonging to the previous ministers' private offices, and in particular party political material, should be handled according to departmental guidance. A change of minister within a government also requires a new relationship, and officials should help the new minister to understand the department's work and to take informed decisions.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "During the pre-election period, a minister's office asks you to prepare for publication a major new policy announcement that would commit funds for ten years. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Check the Cabinet Office guidance, and advise that major commitments should wait"
+      },
+      {
+       "key": "b",
+       "text": "Refuse to take part and tell the press office that the request is improper"
+      },
+      {
+       "key": "c",
+       "text": "Prepare it, but remove the reference to the ten-year length of the commitment"
+      },
+      {
+       "key": "d",
+       "text": "Prepare it as requested, because ministers remain in office until the election"
+      }
+     ],
+     "answer": "a",
+     "hint": "The convention of restraint applies to major new commitments.",
+     "topic": "pre-election restraint"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A member of an opposition party contacts you to ask for briefings on the department's plans before the election. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Provide the briefing, since the opposition may well form the next government"
+      },
+      {
+       "key": "b",
+       "text": "Give only information that has already been published, and tell nobody about it"
+      },
+      {
+       "key": "c",
+       "text": "Do not respond yourself, and refer the request to the permanent secretary"
+      },
+      {
+       "key": "d",
+       "text": "Refuse to speak to the opposition member in any circumstances whatever"
+      }
+     ],
+     "answer": "c",
+     "hint": "Official contact with opposition parties must be authorised.",
+     "topic": "opposition contact"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A new minister of a different party arrives after an election and asks you to revise a draft briefing that praised the previous government's policies. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Make it factual and balanced, with no praise or criticism of either government"
+      },
+      {
+       "key": "b",
+       "text": "Rewrite it to criticise the previous government's policies, to suit the new minister"
+      },
+      {
+       "key": "c",
+       "text": "Leave it as it is, because it was prepared for the previous ministers"
+      },
+      {
+       "key": "d",
+       "text": "Delete every reference to the previous government's policies and results"
+      }
+     ],
+     "answer": "a",
+     "hint": "Briefings must be factual and impartial.",
+     "topic": "impartial briefing"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "You worked closely with the previous minister and shared their approach. The new minister proposes a different policy. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Tell the new minister the old approach delivered results, and leave it there"
+      },
+      {
+       "key": "b",
+       "text": "Advise against the new policy, because the previous minister had strong reasons"
+      },
+      {
+       "key": "c",
+       "text": "Carry out the policy slowly so that it can be reversed later if needed"
+      },
+      {
+       "key": "d",
+       "text": "Give honest advice on the options and then serve the new minister fully"
+      }
+     ],
+     "answer": "d",
+     "hint": "Officials serve the government of the day impartially.",
+     "topic": "serving a new minister"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A colleague posts on social media strongly supporting a party during an election campaign. They are a mid-ranking official. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say nothing, because staff have a right to hold and express opinions"
+      },
+      {
+       "key": "b",
+       "text": "Remind them of the Code and the political activity rules for their grade"
+      },
+      {
+       "key": "c",
+       "text": "Reply publicly on the platform to show that you disagree with them"
+      },
+      {
+       "key": "d",
+       "text": "Report them at once for gross misconduct, without looking at the rules"
+      }
+     ],
+     "answer": "b",
+     "hint": "Rules on political activity depend on the grade and role.",
+     "topic": "political activity"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "During the pre-election period, a routine statutory decision falls due. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Carry it out, since statutory duties and routine business continue"
+      },
+      {
+       "key": "b",
+       "text": "Ask the opposition parties for their views before taking the decision"
+      },
+      {
+       "key": "c",
+       "text": "Postpone it until after the election has taken place and a government formed"
+      },
+      {
+       "key": "d",
+       "text": "Refer it to the Prime Minister's office for approval before acting"
+      }
+     ],
+     "answer": "a",
+     "hint": "Routine and statutory business continues in the period.",
+     "topic": "routine business"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A new minister is anxious about a decision that officials prepared for the previous minister. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Delay the decision indefinitely until the minister is more settled in post"
+      },
+      {
+       "key": "b",
+       "text": "Tell the new minister that the previous minister's decision stands"
+      },
+      {
+       "key": "c",
+       "text": "Brief them fully on the history, options and risks, and let them decide"
+      },
+      {
+       "key": "d",
+       "text": "Ask the previous minister how the new minister ought to decide"
+      }
+     ],
+     "answer": "c",
+     "hint": "The new minister is entitled to full information and takes the decision.",
+     "topic": "new minister"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "You are asked to use a department's mailing list to share a party political message. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Share the message, since the minister has requested it in person"
+      },
+      {
+       "key": "b",
+       "text": "Share it but mark it clearly as a personal view of the sender"
+      },
+      {
+       "key": "c",
+       "text": "Share it only with senior officials, who are best placed to understand it"
+      },
+      {
+       "key": "d",
+       "text": "Decline, explaining that official resources cannot be used for party purposes"
+      }
+     ],
+     "answer": "d",
+     "hint": "Official resources must not support a party.",
+     "topic": "use of resources"
+    }
+   ]
+  },
+  {
+   "title": "L13: Appearing before a parliamentary committee or auditor",
+   "source": "Departmental Evidence and Response to Select Committees (Osmotherly Rules), Managing Public Money and National Audit Office guidance",
+   "body": "Departments are held to account by Parliament and its committees, and by the National Audit Office (NAO), which examines spending and reports to Parliament. The Public Accounts Committee takes evidence from accounting officers on NAO reports about value for money. The permanent secretary is normally the accounting officer, personally answerable for the regularity, propriety, value for money and feasibility of the department's spending. Select committees scrutinise departments' work, and civil servants who give evidence do so on behalf of their ministers, in line with Cabinet Office guidance (known as the Osmotherly Rules). Under that guidance, officials should be as helpful as possible, and should give full and accurate information, but they do not give advice to ministers in public, or comment on the merits of policy decisions, which are matters for ministers. Evidence must be accurate, and if an official finds that something said was wrong, they should correct it promptly in writing. Preparation includes reading the NAO report, clearing the facts with the relevant teams, agreeing who answers which questions, and knowing where gaps lie. Officials should be honest about what they do not know and offer to write after the hearing, rather than guess. Documents should be provided where requested, subject to rules on national security, legal professional privilege and the like, and any refusal should be explained. Press and social media may follow the hearing, so statements should be considered. Learning from audit reports means agreeing an action plan, assigning owners and reporting progress. A defensive attitude damages trust, and openness about failure, with an explanation of what is being done, serves the department and the public better.",
+   "questions": [
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "You are preparing to give evidence to a committee about a project that the NAO has criticised. Some of the facts are unclear to you. What is the most effective preparation?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Learn the department's key messages and use them in answer to every question"
+      },
+      {
+       "key": "b",
+       "text": "Check facts with the responsible teams, agree who answers what, and note gaps"
+      },
+      {
+       "key": "c",
+       "text": "Avoid reading the NAO report, so that you do not form fixed views beforehand"
+      },
+      {
+       "key": "d",
+       "text": "Rely on your own recollection of events instead of checking the records"
+      }
+     ],
+     "answer": "b",
+     "hint": "Preparation means accurate facts and clear roles.",
+     "topic": "preparing evidence"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A committee member asks you a question about a fact that you do not know. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say that the information is confidential, without having checked whether it is"
+      },
+      {
+       "key": "b",
+       "text": "Give your best guess, so that you do not look unprepared to the committee"
+      },
+      {
+       "key": "c",
+       "text": "Say that the question is not relevant to the committee's inquiry"
+      },
+      {
+       "key": "d",
+       "text": "Say you do not know, and offer to write with the answer after checking"
+      }
+     ],
+     "answer": "d",
+     "hint": "Honesty about gaps is better than a guess.",
+     "topic": "not knowing"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "During a hearing, a committee member asks you whether you think that the minister's decision was right. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say that you disagree with it, in order to appear candid to the committee"
+      },
+      {
+       "key": "b",
+       "text": "Explain the facts and options, and say that merits are for the minister"
+      },
+      {
+       "key": "c",
+       "text": "Decline to answer, as officials may not discuss any decision at all"
+      },
+      {
+       "key": "d",
+       "text": "Give your personal view of the decision, since you were involved in making it"
+      }
+     ],
+     "answer": "b",
+     "hint": "Officials give evidence on behalf of ministers and do not comment on policy merits.",
+     "topic": "policy questions"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "After the hearing, you realise that a figure you gave to the committee was wrong. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Tell your accounting officer and private office, and write to correct the record"
+      },
+      {
+       "key": "b",
+       "text": "Wait to see whether the committee notices that the figure was wrong"
+      },
+      {
+       "key": "c",
+       "text": "Correct it in the next set of published accounts, as the accounts are public"
+      },
+      {
+       "key": "d",
+       "text": "Tell the media that a mistake was made before the committee hears of it"
+      }
+     ],
+     "answer": "a",
+     "hint": "Errors in evidence must be corrected promptly in writing.",
+     "topic": "correcting evidence"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "The NAO's draft report on your area includes a finding which you think is factually inaccurate. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ask the NAO to remove the finding on the ground that it is unfavourable"
+      },
+      {
+       "key": "b",
+       "text": "Ignore the draft and wait to see what the final report says about it"
+      },
+      {
+       "key": "c",
+       "text": "Use the factual accuracy process to give evidence, and accept what it supports"
+      },
+      {
+       "key": "d",
+       "text": "Brief the press on the NAO's errors before the final report is published"
+      }
+     ],
+     "answer": "c",
+     "hint": "There is a formal process for checking factual accuracy.",
+     "topic": "factual accuracy"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "A committee asks for a document that includes some advice given to ministers. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say that the document does not exist, to avoid the difficulty of releasing it"
+      },
+      {
+       "key": "b",
+       "text": "Take advice on what can be released, and explain any withholding and why"
+      },
+      {
+       "key": "c",
+       "text": "Refuse to provide it, without giving the committee any reason for refusing"
+      },
+      {
+       "key": "d",
+       "text": "Release it at once without any checks, as the committee has asked for it"
+      }
+     ],
+     "answer": "b",
+     "hint": "Disclosure follows guidance, and refusals should be explained.",
+     "topic": "providing documents"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "The NAO report finds that your department's controls on a programme were weak. What is the most effective response from the programme's senior leadership?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Move the programme to another team without explaining the reasons for moving it"
+      },
+      {
+       "key": "b",
+       "text": "Challenge every finding in turn, to show that the department's controls are robust"
+      },
+      {
+       "key": "c",
+       "text": "Accept supported findings, agree an action plan with owners, and report progress"
+      },
+      {
+       "key": "d",
+       "text": "Say that the report is out of date, and take no action on its recommendations"
+      }
+     ],
+     "answer": "c",
+     "hint": "A constructive response supports accountability and learning.",
+     "topic": "responding to audit"
+    },
+    {
+     "level": 13,
+     "type": "mcq",
+     "prompt": "In the hearing, a colleague gives an answer which you know to be incomplete in a way that could mislead the committee. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Add the missing information, or write to the committee, so the record is accurate"
+      },
+      {
+       "key": "b",
+       "text": "Say nothing, since each witness is responsible for their own answers to the committee"
+      },
+      {
+       "key": "c",
+       "text": "Contradict the colleague in front of the committee in a way that embarrasses them"
+      },
+      {
+       "key": "d",
+       "text": "Wait until the press picks up the point before deciding what to do about it"
+      }
+     ],
+     "answer": "a",
+     "hint": "Everyone giving evidence shares a duty not to mislead.",
+     "topic": "completeness"
+    }
+   ]
+  }
+ ]
+}

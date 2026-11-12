@@ -1,0 +1,3399 @@
+{
+ "trackSlug": "cs-core-skills",
+ "status": "review",
+ "items": [
+  {
+   "title": "L14: LET: naming parts of a formula",
+   "source": "Microsoft Support: LET function",
+   "body": "LET lets you give names to values or calculations inside a single formula, then use those names. The syntax is LET(name1, value1, name2, value2, ..., calculation). The last argument is always the calculation that produces the result. Suppose B2:B6 holds 12, 18, 9, 21 and 15. The formula =LET(t,SUM(B2:B6),n,COUNT(B2:B6),t/n) defines t as the total, 75, and n as the count, 5, and returns 75/5 = 15.\n\nThe benefits are practical. A long formula that repeats the same sub-calculation, for example SUM(B2:B6) three times, can name it once. The formula is shorter, easier to read and quicker to audit. In large files it can also calculate faster, because the repeated part is evaluated once.\n\nNames exist only inside the formula. They cannot be used in other cells, and they are not workbook names. A name must start with a letter, cannot look like a cell reference such as A1 or R1C1, and must not contain spaces. Each name can use the names defined before it. In =LET(a,5,b,a*2,b+1), b is 10 and the result is 11. A name cannot refer to one defined after it.\n\nLET is available in current Microsoft 365 and recent Excel versions. A workbook opened in an older version shows #NAME? where LET is used, so check what the users have before relying on it. LET works well with dynamic array functions; for example, a filtered list can be held in a name and then counted and summed from the same name.\n\nLAMBDA goes a step further and lets you define your own reusable function, but this needs careful documentation. Name, test and describe anything that other people will rely on. Do not use LET to make a formula more clever than the team can maintain.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "B2:B6 holds 12, 18, 9, 21 and 15. What does =LET(t,SUM(B2:B6),n,COUNT(B2:B6),t/n) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "15"
+      },
+      {
+       "key": "b",
+       "text": "75"
+      },
+      {
+       "key": "c",
+       "text": "5"
+      },
+      {
+       "key": "d",
+       "text": "18"
+      }
+     ],
+     "answer": "a",
+     "hint": "The total 75 is divided by the count 5.",
+     "topic": "LET result"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does =LET(a,5,b,a*2,b+1) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "6"
+      },
+      {
+       "key": "b",
+       "text": "10"
+      },
+      {
+       "key": "c",
+       "text": "16"
+      },
+      {
+       "key": "d",
+       "text": "11"
+      }
+     ],
+     "answer": "d",
+     "hint": "b is 10, so b+1 is 11.",
+     "topic": "LET order"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "In the LET syntax, what is the final argument?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The calculation that produces the result"
+      },
+      {
+       "key": "b",
+       "text": "The name defined last, which is then returned"
+      },
+      {
+       "key": "c",
+       "text": "A comment explaining what the formula does"
+      },
+      {
+       "key": "d",
+       "text": "The cell reference where the answer is placed"
+      }
+     ],
+     "answer": "a",
+     "hint": "Everything before it is name and value pairs.",
+     "topic": "LET syntax"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which benefit does naming a repeated sub-calculation in LET give?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The named result becomes available in every other cell of the sheet"
+      },
+      {
+       "key": "b",
+       "text": "The result is converted into a fixed value that cannot change"
+      },
+      {
+       "key": "c",
+       "text": "It is evaluated once, so the formula is shorter and quicker to audit"
+      },
+      {
+       "key": "d",
+       "text": "The formula can then be used in older versions of Excel without change"
+      }
+     ],
+     "answer": "c",
+     "hint": "Repeated parts are calculated once.",
+     "topic": "Benefits"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Where can a name defined inside LET be used?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only inside that LET formula"
+      },
+      {
+       "key": "b",
+       "text": "In any formula on the same sheet"
+      },
+      {
+       "key": "c",
+       "text": "In any sheet of the workbook"
+      },
+      {
+       "key": "d",
+       "text": "In the Name Manager, once defined"
+      }
+     ],
+     "answer": "a",
+     "hint": "LET names are local.",
+     "topic": "Scope"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which is not an allowed LET name?",
+     "options": [
+      {
+       "key": "a",
+       "text": "total"
+      },
+      {
+       "key": "b",
+       "text": "count_items"
+      },
+      {
+       "key": "c",
+       "text": "A1"
+      },
+      {
+       "key": "d",
+       "text": "rate"
+      }
+     ],
+     "answer": "c",
+     "hint": "A name must not look like a cell reference.",
+     "topic": "Naming rules"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A colleague with an older version of Excel opens the file. What do they probably see where LET is used?",
+     "options": [
+      {
+       "key": "a",
+       "text": "#REF!"
+      },
+      {
+       "key": "b",
+       "text": "The correct result"
+      },
+      {
+       "key": "c",
+       "text": "A blank cell"
+      },
+      {
+       "key": "d",
+       "text": "#NAME?"
+      }
+     ],
+     "answer": "d",
+     "hint": "The function is not recognised.",
+     "topic": "Compatibility"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "In =LET(b,a*2,a,5,b+1), what is the problem?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A name cannot refer to one defined after it"
+      },
+      {
+       "key": "b",
+       "text": "The result of LET must always be text, not a number"
+      },
+      {
+       "key": "c",
+       "text": "LET does not allow arithmetic inside its arguments"
+      },
+      {
+       "key": "d",
+       "text": "The first name defined must always hold a fixed number"
+      }
+     ],
+     "answer": "a",
+     "hint": "Definitions are evaluated in order.",
+     "topic": "Order of definitions"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the right attitude to using LAMBDA for team workbooks?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Use it wherever possible so the formulas look more advanced"
+      },
+      {
+       "key": "b",
+       "text": "Keep the function unnamed so that it stays hidden from other users"
+      },
+      {
+       "key": "c",
+       "text": "Document and test any custom function that others will rely on"
+      },
+      {
+       "key": "d",
+       "text": "Treat the formula itself as the documentation and add nothing further"
+      }
+     ],
+     "answer": "c",
+     "hint": "Maintainability matters more than cleverness.",
+     "topic": "Maintainability"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why is the repeated SUM(B2:B6) a problem in a long formula?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It changes the answer slightly each time it is repeated"
+      },
+      {
+       "key": "b",
+       "text": "Excel permits a repeated calculation only twice in a formula"
+      },
+      {
+       "key": "c",
+       "text": "It makes the formula longer, harder to read and slower to calculate"
+      },
+      {
+       "key": "d",
+       "text": "It turns the range into text after the second use"
+      }
+     ],
+     "answer": "c",
+     "hint": "Repeated sub-calculations invite errors.",
+     "topic": "Readability"
+    }
+   ]
+  },
+  {
+   "title": "L14: Multi-criteria totals and averages with dates",
+   "source": "Microsoft Support: SUMPRODUCT, SUMIFS and AVERAGEIFS functions",
+   "body": "Consider six invoices. Ops: 10 January £400; Ops: 15 February £250; HR: 20 February £300; Ops: 5 March £150; HR: 25 March £500; HR: 30 March £100. The dates are in column B, departments in column A and amounts in column C.\n\nA manager asks for spending between 1 February and 31 March. The qualifying invoices are all those from 15 February onwards, so the total is 250 + 300 + 150 + 500 + 100 = £1,300. Of that, Ops accounts for 250 + 150 = £400, which is 400/1,300 = 30.8%, and HR for £900. The formula =SUMIFS(C:C,A:A,\"Ops\",B:B,\">=\"&DATE(2025,2,1),B:B,\"<\"&DATE(2025,4,1)) returns 400. Using \"<\"&DATE(2025,4,1) rather than \"<=31 March\" protects against dates that carry a time.\n\nAn average needs a matching count. Ops across the whole period has three invoices totalling £800, so the average invoice is £266.67. =AVERAGEIFS(C:C,A:A,\"Ops\") gives it directly. Note that AVERAGEIFS returns #DIV/0! if no rows meet the criteria, whereas SUMIFS returns 0. The equivalent with SUMPRODUCT is =SUMPRODUCT((A2:A7=\"Ops\")*C2:C7)/SUMPRODUCT(--(A2:A7=\"Ops\")).\n\nA weighted average is not the average of averages. If Ops averages £266.67 on three invoices and HR averages £300 on three invoices, the overall average is £283.33, which happens to equal the simple mean here only because the counts are equal. With unequal counts, the larger group counts for more. Always compute total divided by total.\n\nCheck by reconciling: the department totals should add to the overall total, and the sum of the monthly totals should equal the whole. A mismatch usually means a boundary has been missed or counted twice, such as a date at the end of a month.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is total spending from 1 February to 31 March 2025 across the six invoices?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£1,700"
+      },
+      {
+       "key": "b",
+       "text": "£1,300"
+      },
+      {
+       "key": "c",
+       "text": "£1,150"
+      },
+      {
+       "key": "d",
+       "text": "£900"
+      }
+     ],
+     "answer": "b",
+     "hint": "All invoices dated 15 February or later are in scope.",
+     "topic": "Date-range total"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "How much of that total belongs to Ops?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£800"
+      },
+      {
+       "key": "b",
+       "text": "£250"
+      },
+      {
+       "key": "c",
+       "text": "£550"
+      },
+      {
+       "key": "d",
+       "text": "£400"
+      }
+     ],
+     "answer": "d",
+     "hint": "Ops has 15 February (£250) and 5 March (£150).",
+     "topic": "Departmental total"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Ops's share of the £1,300 is approximately what percentage?",
+     "options": [
+      {
+       "key": "a",
+       "text": "30.8%"
+      },
+      {
+       "key": "b",
+       "text": "33.3%"
+      },
+      {
+       "key": "c",
+       "text": "50.0%"
+      },
+      {
+       "key": "d",
+       "text": "25.0%"
+      }
+     ],
+     "answer": "a",
+     "hint": "400 divided by 1,300.",
+     "topic": "Share"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why is \"<\"&DATE(2025,4,1) safer than \"<=31 March 2025\" as an upper limit?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It makes the formula shorter than the alternative"
+      },
+      {
+       "key": "b",
+       "text": "It makes Excel skip weekends within the date range"
+      },
+      {
+       "key": "c",
+       "text": "It converts the dates in the range into text first"
+      },
+      {
+       "key": "d",
+       "text": "A date carrying a time on 31 March would otherwise be missed"
+      }
+     ],
+     "answer": "d",
+     "hint": "Times make a date later than midnight.",
+     "topic": "Boundaries"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the average Ops invoice for the whole period?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£266.67"
+      },
+      {
+       "key": "b",
+       "text": "£300.00"
+      },
+      {
+       "key": "c",
+       "text": "£250.00"
+      },
+      {
+       "key": "d",
+       "text": "£800.00"
+      }
+     ],
+     "answer": "a",
+     "hint": "£800 over three invoices.",
+     "topic": "AVERAGEIFS"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "No row meets the criteria. What do SUMIFS and AVERAGEIFS return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Both give 0, as nothing was found"
+      },
+      {
+       "key": "b",
+       "text": "SUMIFS gives 0; AVERAGEIFS gives #DIV/0!"
+      },
+      {
+       "key": "c",
+       "text": "Both give #DIV/0!, as nothing can be divided"
+      },
+      {
+       "key": "d",
+       "text": "SUMIFS gives #N/A; AVERAGEIFS gives 0"
+      }
+     ],
+     "answer": "b",
+     "hint": "AVERAGEIFS divides by a count of zero.",
+     "topic": "Empty matches"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which approach correctly combines the averages of two groups of different sizes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Take the simple average of the two group averages"
+      },
+      {
+       "key": "b",
+       "text": "Use the larger group's average as the overall figure"
+      },
+      {
+       "key": "c",
+       "text": "Add the group totals and divide by the total count"
+      },
+      {
+       "key": "d",
+       "text": "Take the median of the two group averages"
+      }
+     ],
+     "answer": "c",
+     "hint": "Averages cannot be averaged unless counts are equal.",
+     "topic": "Weighted average"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Ops averages £266.67 on three invoices and HR £300 on three. What is the overall average?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£283.00"
+      },
+      {
+       "key": "b",
+       "text": "£566.67"
+      },
+      {
+       "key": "c",
+       "text": "£283.33"
+      },
+      {
+       "key": "d",
+       "text": "£300.00"
+      }
+     ],
+     "answer": "c",
+     "hint": "Ops £800 plus HR £900 is £1,700, divided by six invoices.",
+     "topic": "Overall average"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does a mismatch between monthly totals and the overall total usually indicate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That Excel has rounded the numbers"
+      },
+      {
+       "key": "b",
+       "text": "A boundary date missed or counted twice"
+      },
+      {
+       "key": "c",
+       "text": "That the file is in manual calculation mode"
+      },
+      {
+       "key": "d",
+       "text": "That the data is correct but the pivot is wrong"
+      }
+     ],
+     "answer": "b",
+     "hint": "Reconciliation exposes boundary errors.",
+     "topic": "Reconciliation"
+    }
+   ]
+  },
+  {
+   "title": "L14: Budget profiles, variance and forecast outturn",
+   "source": "HM Treasury: Managing Public Money; departmental financial management guidance",
+   "body": "A manager is responsible for a budget and must explain how it is going. Take an annual budget of £120,000 phased evenly, so £10,000 a month. After four months the profiled budget is £40,000. Actual spend to date is £46,000. Variance is usually actual minus budget, so +£6,000 means an overspend. As a percentage of the year-to-date budget it is 6,000/40,000 = 15%. State the sign convention, because some reports show underspends as positive.\n\nA simple forecast of outturn, the expected year-end position, extends the run rate: 46,000 / 4 months x 12 months = £138,000, which is £18,000 over budget. That assumes spending continues at the same rate. It is a starting point, not a conclusion, because spending is often lumpy.\n\nSuppose £12,000 of the spend was a one-off item. The underlying run rate is (46,000 - 12,000) / 4 x 12 = £102,000 a year. Adding the one-off back gives a forecast outturn of £114,000, which is £6,000 under budget. The same figures lead to opposite messages, so identify one-off and timing items before you forecast.\n\nPhasing matters. A budget phased evenly does not suit a cost that falls in one quarter, such as an annual licence. Profile the budget in line with expected timing, so that variances reflect real overspending, not timing.\n\nSpend is recorded when the cost is incurred, not when the invoice is paid. Goods received but not yet invoiced should be accrued. Check the accounting period, otherwise a cost may fall in the wrong month.\n\nA typical tolerance for reporting is plus or minus a few per cent, often with a RAG status. Report the variance, the reason, the forecast and the action. Do not hide an overspend: raise it early with finance and your line manager.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "With a £120,000 annual budget phased evenly, what is the profiled budget after four months?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£30,000"
+      },
+      {
+       "key": "b",
+       "text": "£36,000"
+      },
+      {
+       "key": "c",
+       "text": "£48,000"
+      },
+      {
+       "key": "d",
+       "text": "£40,000"
+      }
+     ],
+     "answer": "d",
+     "hint": "120,000 divided by 12 is 10,000 a month.",
+     "topic": "Profiled budget"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Actual spend is £46,000 after four months. What is the variance, using actual minus budget?",
+     "options": [
+      {
+       "key": "a",
+       "text": "-£6,000"
+      },
+      {
+       "key": "b",
+       "text": "+£6,000"
+      },
+      {
+       "key": "c",
+       "text": "+£46,000"
+      },
+      {
+       "key": "d",
+       "text": "+£18,000"
+      }
+     ],
+     "answer": "b",
+     "hint": "46,000 minus 40,000.",
+     "topic": "Variance"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is that variance as a percentage of the year-to-date budget?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5%"
+      },
+      {
+       "key": "b",
+       "text": "15%"
+      },
+      {
+       "key": "c",
+       "text": "13%"
+      },
+      {
+       "key": "d",
+       "text": "6%"
+      }
+     ],
+     "answer": "b",
+     "hint": "6,000 divided by 40,000.",
+     "topic": "Percentage variance"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the simple run-rate forecast outturn for the year?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£138,000"
+      },
+      {
+       "key": "b",
+       "text": "£184,000"
+      },
+      {
+       "key": "c",
+       "text": "£120,000"
+      },
+      {
+       "key": "d",
+       "text": "£132,000"
+      }
+     ],
+     "answer": "a",
+     "hint": "46,000 divided by 4, times 12.",
+     "topic": "Run rate"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "£12,000 of the £46,000 was a one-off. What is the forecast outturn if the one-off is added back to the underlying run rate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£114,000"
+      },
+      {
+       "key": "b",
+       "text": "£102,000"
+      },
+      {
+       "key": "c",
+       "text": "£138,000"
+      },
+      {
+       "key": "d",
+       "text": "£126,000"
+      }
+     ],
+     "answer": "a",
+     "hint": "102,000 plus 12,000.",
+     "topic": "Underlying forecast"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Compared with budget, what does the adjusted forecast of £114,000 show?",
+     "options": [
+      {
+       "key": "a",
+       "text": "An underspend of £6,000"
+      },
+      {
+       "key": "b",
+       "text": "An overspend of £6,000"
+      },
+      {
+       "key": "c",
+       "text": "An overspend of £18,000"
+      },
+      {
+       "key": "d",
+       "text": "On budget exactly"
+      }
+     ],
+     "answer": "a",
+     "hint": "120,000 minus 114,000.",
+     "topic": "Interpreting forecast"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why should a sign convention be stated in a variance report?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Some reports show underspends as positive"
+      },
+      {
+       "key": "b",
+       "text": "Excel cannot display negative numbers in a variance column"
+      },
+      {
+       "key": "c",
+       "text": "The Treasury requires a sign convention in every departmental report"
+      },
+      {
+       "key": "d",
+       "text": "It stops variance percentages being rounded in error"
+      }
+     ],
+     "answer": "a",
+     "hint": "The same number can mean opposite things.",
+     "topic": "Sign convention"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "An annual licence is paid in month 2 but the budget is phased evenly. What problem results?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The annual budget has been set too high for the year"
+      },
+      {
+       "key": "b",
+       "text": "The licence is left out of year-to-date reports"
+      },
+      {
+       "key": "c",
+       "text": "Phasing has no effect on variances at all"
+      },
+      {
+       "key": "d",
+       "text": "The variance reflects timing, not real overspending"
+      }
+     ],
+     "answer": "d",
+     "hint": "Profile the budget to match when costs fall.",
+     "topic": "Phasing"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Goods have been received but not yet invoiced at month end. How should this be treated?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Accrue the cost in the month it was incurred"
+      },
+      {
+       "key": "b",
+       "text": "Record it in the month the invoice is eventually paid"
+      },
+      {
+       "key": "c",
+       "text": "Ignore it until the following financial year begins"
+      },
+      {
+       "key": "d",
+       "text": "Record it in whichever month has the lower overspend"
+      }
+     ],
+     "answer": "a",
+     "hint": "Costs are recorded when incurred.",
+     "topic": "Accruals"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A manager spots a likely overspend. What is the right step?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Wait until the overspend is confirmed at year end"
+      },
+      {
+       "key": "b",
+       "text": "Raise it early with finance and the line manager, with the reason and proposed action"
+      },
+      {
+       "key": "c",
+       "text": "Move the cost into next year's budget without comment"
+      },
+      {
+       "key": "d",
+       "text": "Report it only if it is more than ten per cent over"
+      }
+     ],
+     "answer": "b",
+     "hint": "Early warning gives time to act.",
+     "topic": "Raising overspends"
+    }
+   ]
+  },
+  {
+   "title": "L14: Reconciling a pivot to its source",
+   "source": "Government Analysis Function: Quality guidance; Microsoft Support: PivotTable data",
+   "body": "A pivot table that does not agree with its source is a common and embarrassing error. Suppose the source of 1,000 rows totals £250,000, but the pivot grand total is £248,500. The difference is £1,500. A systematic approach finds the cause.\n\nStart with the basics. Is the pivot refreshed? Does the source range cover all rows, or has it stopped short? Are any report filters, slicers or row-label filters hiding items? Does the pivot show a \"(blank)\" item, which means a blank in the row field and tells you that some records have no department?\n\nNext, check how the amounts are stored. A pivot set to Sum treats numbers stored as text as zero, so these rows add nothing. If three rows of £500 are stored as text, the pivot is short by £1,500, which would explain the gap here. Find them with =SUMPRODUCT(--ISTEXT(C2:C1001)) or by checking the cells' alignment. Convert them to numbers, refresh and compare again. Note that a pivot field containing any text will tend to default to Count. If the field shows Count of Amount, change it to Sum.\n\nThen look at logic. A calculated field is the sum of its parts, so a ratio field gives total divided by total, not the average of row ratios. Hidden rows in the source still count in a pivot.\n\nDocument what you found and fix it in the source, not in the pivot. Record the reconciliation as a short table: source total, pivot total, difference, cause, and the corrected figure. Include the check cell on the report page so that a future reader can see it agrees.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "The source totals £250,000 and the pivot £248,500. What is the difference?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£2,500"
+      },
+      {
+       "key": "b",
+       "text": "£150"
+      },
+      {
+       "key": "c",
+       "text": "£15,000"
+      },
+      {
+       "key": "d",
+       "text": "£1,500"
+      }
+     ],
+     "answer": "d",
+     "hint": "250,000 minus 248,500.",
+     "topic": "Size of gap"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Three rows of £500 are stored as text. What effect do they have on a pivot Sum?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are counted twice, so the pivot is £1,500 higher"
+      },
+      {
+       "key": "b",
+       "text": "They make the pivot return an error value instead"
+      },
+      {
+       "key": "c",
+       "text": "They are counted once each as £500, so the totals agree"
+      },
+      {
+       "key": "d",
+       "text": "They are treated as zero, so the pivot is £1,500 short"
+      }
+     ],
+     "answer": "d",
+     "hint": "Text is not added.",
+     "topic": "Text numbers"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which formula counts the text entries in C2:C1001?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=SUMPRODUCT(--ISNUMBER(C2:C1001))"
+      },
+      {
+       "key": "b",
+       "text": "=COUNTBLANK(C2:C1001)"
+      },
+      {
+       "key": "c",
+       "text": "=SUM(C2:C1001)"
+      },
+      {
+       "key": "d",
+       "text": "=SUMPRODUCT(--ISTEXT(C2:C1001))"
+      }
+     ],
+     "answer": "d",
+     "hint": "ISTEXT identifies the text values.",
+     "topic": "Finding text"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does a \"(blank)\" item in a pivot row field indicate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The pivot has been refreshed more than once"
+      },
+      {
+       "key": "b",
+       "text": "The pivot contains a calculation error"
+      },
+      {
+       "key": "c",
+       "text": "Some records have no value in that field"
+      },
+      {
+       "key": "d",
+       "text": "The source data has been deleted from the file"
+      }
+     ],
+     "answer": "c",
+     "hint": "The field is empty for those records.",
+     "topic": "Blank item"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A pivot value field shows \"Count of Amount\". What is the likely cause and fix?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The pivot is corrupt and should be deleted and rebuilt"
+      },
+      {
+       "key": "b",
+       "text": "The field includes text or blanks; correct the data and set it to Sum"
+      },
+      {
+       "key": "c",
+       "text": "The amounts are too large, so Average should be used"
+      },
+      {
+       "key": "d",
+       "text": "The source is protected and must be unprotected first"
+      }
+     ],
+     "answer": "b",
+     "hint": "Excel defaults to Count when non-numbers are present.",
+     "topic": "Count vs Sum"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "The pivot total is higher than the source. What is a likely cause?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Numbers stored as text"
+      },
+      {
+       "key": "b",
+       "text": "Rows filtered out in the pivot"
+      },
+      {
+       "key": "c",
+       "text": "Blank rows in the pivot"
+      },
+      {
+       "key": "d",
+       "text": "Duplicate rows in the source"
+      }
+     ],
+     "answer": "d",
+     "hint": "Duplicates are added twice.",
+     "topic": "Duplicates"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Hidden rows in the source worksheet are included in a pivot table. What is the effect?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are left out of the pivot totals"
+      },
+      {
+       "key": "b",
+       "text": "They make the pivot return an error value"
+      },
+      {
+       "key": "c",
+       "text": "They are listed in the pivot in a separate colour"
+      },
+      {
+       "key": "d",
+       "text": "They still count in the pivot totals"
+      }
+     ],
+     "answer": "d",
+     "hint": "Hiding rows does not remove them from the data.",
+     "topic": "Hidden rows"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Where should an error found in a pivot be corrected?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the source data"
+      },
+      {
+       "key": "b",
+       "text": "In the pivot grand total"
+      },
+      {
+       "key": "c",
+       "text": "In the pivot cell formatting"
+      },
+      {
+       "key": "d",
+       "text": "In a text box on the report"
+      }
+     ],
+     "answer": "a",
+     "hint": "Fixing the pivot output leaves the source wrong.",
+     "topic": "Fix at source"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why include a check cell on the report page?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So the pivot itself can be hidden from the reader"
+      },
+      {
+       "key": "b",
+       "text": "So the file size of the workbook is reduced"
+      },
+      {
+       "key": "c",
+       "text": "So a reader can see the pivot agrees with the source"
+      },
+      {
+       "key": "d",
+       "text": "So that the pivot can be edited by anyone"
+      }
+     ],
+     "answer": "c",
+     "hint": "It makes the assurance visible.",
+     "topic": "Check cell"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A pivot's ratio field gives a different figure from the average of row ratios. What explains this?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The pivot rounds each row ratio before averaging"
+      },
+      {
+       "key": "b",
+       "text": "The calculated field divides total by total"
+      },
+      {
+       "key": "c",
+       "text": "The pivot leaves out the largest row in each group"
+      },
+      {
+       "key": "d",
+       "text": "The pivot averages the ratios first and divides afterwards"
+      }
+     ],
+     "answer": "b",
+     "hint": "A calculated field works on summed fields.",
+     "topic": "Calculated field"
+    }
+   ]
+  },
+  {
+   "title": "L14: Sensitivity and scenarios: testing a cost model",
+   "source": "HM Treasury: The Green Book and Aqua Book guidance on uncertainty and sensitivity",
+   "body": "A cost model multiplies a volume by a unit cost. In the base case, 2,000 units at £45 each give £90,000. Decision-makers want to know how sure that figure is. Sensitivity analysis changes one input at a time to see its effect. A 10% rise in volume gives 2,200 x £45 = £99,000. A 5% rise in unit cost gives 2,000 x £47.25 = £94,500. Together they give 2,200 x £47.25 = £103,950, a rise of 15.5%, slightly more than the 15% you get by adding 10% and 5%. When inputs multiply, effects combine multiplicatively.\n\nScenario analysis changes several inputs at once to describe a coherent situation, such as a low, central and high case. Label the scenarios and state what each assumes. A range is more honest than a single point. Put all inputs in separate cells so that the scenarios can be switched, for example with a selector cell and CHOOSE or INDEX.\n\nGoal Seek works backwards. To find the volume that gives a cost of £100,000 at £45 a unit, divide 100,000 by 45, which is 2,222.2. Because volume is a whole number, 2,222 units cost £99,990 and 2,223 cost £100,035. Think about rounding direction: a cap on spend is breached by 2,223. Goal Seek changes a cell and leaves the result there, so record what it was before.\n\nA one-way data table can show results across a range of inputs without copying formulas. \n\nShow what drives the answer. A tornado chart or a ranked table of impacts shows which inputs matter most. Spend effort on checking those inputs. State the main assumptions on the page, with their source. An unlabelled central case invites the question \"how did you get that?\"",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the base-case cost of 2,000 units at £45?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£45,000"
+      },
+      {
+       "key": "b",
+       "text": "£92,000"
+      },
+      {
+       "key": "c",
+       "text": "£90,000"
+      },
+      {
+       "key": "d",
+       "text": "£9,000"
+      }
+     ],
+     "answer": "c",
+     "hint": "2,000 x 45.",
+     "topic": "Base case"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does a 10% rise in volume alone give?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£94,500"
+      },
+      {
+       "key": "b",
+       "text": "£100,000"
+      },
+      {
+       "key": "c",
+       "text": "£99,000"
+      },
+      {
+       "key": "d",
+       "text": "£103,950"
+      }
+     ],
+     "answer": "c",
+     "hint": "2,200 x 45.",
+     "topic": "One-way sensitivity"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does a 5% rise in unit cost alone give?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£99,000"
+      },
+      {
+       "key": "b",
+       "text": "£94,500"
+      },
+      {
+       "key": "c",
+       "text": "£92,250"
+      },
+      {
+       "key": "d",
+       "text": "£103,950"
+      }
+     ],
+     "answer": "b",
+     "hint": "2,000 x 47.25.",
+     "topic": "One-way sensitivity"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What do both rises together give?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£103,950"
+      },
+      {
+       "key": "b",
+       "text": "£103,500"
+      },
+      {
+       "key": "c",
+       "text": "£101,250"
+      },
+      {
+       "key": "d",
+       "text": "£99,000"
+      }
+     ],
+     "answer": "a",
+     "hint": "2,200 x 47.25.",
+     "topic": "Combined effect"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why does the combined rise (15.5%) exceed 10% plus 5%?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The inputs multiply, so the effects compound"
+      },
+      {
+       "key": "b",
+       "text": "Excel rounds the combined result upward"
+      },
+      {
+       "key": "c",
+       "text": "The unit cost has been rounded to the nearest penny"
+      },
+      {
+       "key": "d",
+       "text": "The volume figures are whole numbers"
+      }
+     ],
+     "answer": "a",
+     "hint": "1.10 x 1.05 = 1.155.",
+     "topic": "Compounding"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What distinguishes scenario analysis from one-at-a-time sensitivity?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It changes only the largest input in the model"
+      },
+      {
+       "key": "b",
+       "text": "It removes the inputs that are most uncertain"
+      },
+      {
+       "key": "c",
+       "text": "It replaces the inputs with their averages"
+      },
+      {
+       "key": "d",
+       "text": "It changes several inputs together to describe a coherent situation"
+      }
+     ],
+     "answer": "d",
+     "hint": "Scenarios are coherent sets of assumptions.",
+     "topic": "Scenarios"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which volume first breaches a £100,000 cap at £45 a unit?",
+     "options": [
+      {
+       "key": "a",
+       "text": "2,223"
+      },
+      {
+       "key": "b",
+       "text": "2,222"
+      },
+      {
+       "key": "c",
+       "text": "2,000"
+      },
+      {
+       "key": "d",
+       "text": "2,250"
+      }
+     ],
+     "answer": "a",
+     "hint": "2,222 x 45 = 99,990 and 2,223 x 45 = 100,035.",
+     "topic": "Goal Seek"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What should you record when you use Goal Seek?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing, since the answer is now saved"
+      },
+      {
+       "key": "b",
+       "text": "The original value of the changed cell"
+      },
+      {
+       "key": "c",
+       "text": "The time taken"
+      },
+      {
+       "key": "d",
+       "text": "The author of the formula"
+      }
+     ],
+     "answer": "b",
+     "hint": "Goal Seek overwrites the cell.",
+     "topic": "Goal Seek"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "How can scenarios be switched cleanly in a model?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Retype the numbers each time a scenario is needed"
+      },
+      {
+       "key": "b",
+       "text": "Hold inputs in separate cells and select with CHOOSE or INDEX"
+      },
+      {
+       "key": "c",
+       "text": "Hide the inputs and display only the results"
+      },
+      {
+       "key": "d",
+       "text": "Copy the sheet for each scenario and edit each by hand"
+      }
+     ],
+     "answer": "b",
+     "hint": "A selector keeps one set of formulas.",
+     "topic": "Switching"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the value of showing which inputs drive the result?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It reduces the number of inputs that must be kept"
+      },
+      {
+       "key": "b",
+       "text": "It makes the model look more thorough and complex"
+      },
+      {
+       "key": "c",
+       "text": "It removes the need to state assumptions"
+      },
+      {
+       "key": "d",
+       "text": "It focuses checking on the inputs that matter most"
+      }
+     ],
+     "answer": "d",
+     "hint": "Effort should go where the effect is largest.",
+     "topic": "Drivers"
+    }
+   ]
+  },
+  {
+   "title": "L14: Rolling windows and moving averages",
+   "source": "Microsoft Support: EDATE, EOMONTH and AVERAGE functions; ONS: guidance on time series",
+   "body": "Reports often need a rolling 12 months, which moves forward each month, so that the latest figure always covers a full year. To total the 12 months to a month end in cell E1, such as 31 March 2025, the lower limit is the end of the same month a year earlier, 31 March 2024, used with \"greater than\". The formula is =SUMIFS(Amt,Date,\">\"&EOMONTH(E1,-12),Date,\"<=\"&E1). It covers 1 April 2024 to 31 March 2025, which is 12 months. A common slip is to use \">=\"&EDATE(E1,-12), which gives 31 March 2024 and includes one day too many from the previous year.\n\nEOMONTH is the better choice for month-end reporting, because EDATE keeps the same day number and can behave inconsistently across months of different lengths. \n\nA moving average smooths short-term ups and downs. Suppose four months show 100, 120, 90 and 110. The three-month moving average for March is (100 + 120 + 90)/3 = 103.33. For April it is (120 + 90 + 110)/3 = 106.67. The first two months have no value, because there are not enough previous points. Write the formula so that it only appears when a full window exists, and do not fill the early cells with zeros, which would drag the line down.\n\nA moving average lags the data. It reacts late to a turning point and the lag grows with the window. A rolling total of 12 months removes seasonality, which is why it is useful for annual comparisons.\n\nDo not compare a rolling figure with a single month. Compare like with like: 12 months against 12 months, or one month against the same month last year. State the period in the title and say if the latest month is provisional.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "For month end 31 March 2025, what lower limit does \">\"&EOMONTH(E1,-12) give?",
+     "options": [
+      {
+       "key": "a",
+       "text": "1 April 2024"
+      },
+      {
+       "key": "b",
+       "text": "1 March 2024"
+      },
+      {
+       "key": "c",
+       "text": "31 March 2024"
+      },
+      {
+       "key": "d",
+       "text": "31 March 2025"
+      }
+     ],
+     "answer": "c",
+     "hint": "EOMONTH(...,-12) returns the end of the same month a year earlier.",
+     "topic": "EOMONTH"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What period does that SUMIFS formula cover?",
+     "options": [
+      {
+       "key": "a",
+       "text": "31 March 2024 to 31 March 2025"
+      },
+      {
+       "key": "b",
+       "text": "1 March 2024 to 28 February 2025"
+      },
+      {
+       "key": "c",
+       "text": "1 January to 31 March 2025"
+      },
+      {
+       "key": "d",
+       "text": "1 April 2024 to 31 March 2025"
+      }
+     ],
+     "answer": "d",
+     "hint": "The lower limit is exclusive.",
+     "topic": "Rolling 12"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why does \">=\"&EDATE(E1,-12) overcount?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It leaves out the final month of the period"
+      },
+      {
+       "key": "b",
+       "text": "It skips weekends within the period"
+      },
+      {
+       "key": "c",
+       "text": "It returns the first day of the month instead"
+      },
+      {
+       "key": "d",
+       "text": "It includes 31 March of the previous year"
+      }
+     ],
+     "answer": "d",
+     "hint": "EDATE keeps the day number, and >= includes it.",
+     "topic": "Boundary error"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why is EOMONTH preferred for month-end reporting?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It returns consistent month-end dates whatever the month length"
+      },
+      {
+       "key": "b",
+       "text": "It is quicker to type than the alternatives"
+      },
+      {
+       "key": "c",
+       "text": "It rounds dates to the nearest week"
+      },
+      {
+       "key": "d",
+       "text": "It ignores the year of the date supplied"
+      }
+     ],
+     "answer": "a",
+     "hint": "Month ends vary in length.",
+     "topic": "Month ends"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Using 100, 120 and 90 as the three latest months, what is the moving average for March?",
+     "options": [
+      {
+       "key": "a",
+       "text": "110.00"
+      },
+      {
+       "key": "b",
+       "text": "90.00"
+      },
+      {
+       "key": "c",
+       "text": "103.33"
+      },
+      {
+       "key": "d",
+       "text": "100.00"
+      }
+     ],
+     "answer": "c",
+     "hint": "310 divided by 3.",
+     "topic": "Moving average"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Moving the window on one month to 120, 90 and 110, what does the April average become?",
+     "options": [
+      {
+       "key": "a",
+       "text": "110.00"
+      },
+      {
+       "key": "b",
+       "text": "106.67"
+      },
+      {
+       "key": "c",
+       "text": "103.33"
+      },
+      {
+       "key": "d",
+       "text": "100.00"
+      }
+     ],
+     "answer": "b",
+     "hint": "320 divided by 3.",
+     "topic": "Moving average"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why should the first two months have no moving-average value?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The first months of any series are always wrong"
+      },
+      {
+       "key": "b",
+       "text": "Excel cannot calculate a moving average before March"
+      },
+      {
+       "key": "c",
+       "text": "Moving averages start from the third quarter of the year"
+      },
+      {
+       "key": "d",
+       "text": "There are not enough previous points for a full window"
+      }
+     ],
+     "answer": "d",
+     "hint": "A full window needs three values.",
+     "topic": "Window"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why should the early cells not be filled with zeros?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Charts cannot display zero values at all"
+      },
+      {
+       "key": "b",
+       "text": "Zeros would drag the line down and mislead"
+      },
+      {
+       "key": "c",
+       "text": "Zeros slow down the calculation of the workbook"
+      },
+      {
+       "key": "d",
+       "text": "Zeros are displayed as errors in a chart"
+      }
+     ],
+     "answer": "b",
+     "hint": "A zero is a real value.",
+     "topic": "Missing values"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is a feature of a moving average?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It reacts faster than the raw data"
+      },
+      {
+       "key": "b",
+       "text": "It lags behind turning points"
+      },
+      {
+       "key": "c",
+       "text": "It removes all random changes"
+      },
+      {
+       "key": "d",
+       "text": "It always exceeds the raw data"
+      }
+     ],
+     "answer": "b",
+     "hint": "Lag grows with the window.",
+     "topic": "Lag"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which comparison is like for like?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The 12 months to March against the single month of March"
+      },
+      {
+       "key": "b",
+       "text": "The latest month against its own rolling average"
+      },
+      {
+       "key": "c",
+       "text": "A rolling annual total against a single day's figure"
+      },
+      {
+       "key": "d",
+       "text": "The 12 months to March against the 12 months to March a year earlier"
+      }
+     ],
+     "answer": "d",
+     "hint": "Periods must be of the same length.",
+     "topic": "Comparisons"
+    }
+   ]
+  },
+  {
+   "title": "L14: What clearance changes in a submission: finance, legal and equalities",
+   "source": "HM Treasury: Managing Public Money; Equality Act 2010, section 149; Cabinet Office guidance on submissions",
+   "body": "Before a submission reaches a minister, specialists check it. A manager should know what each is checking and when to ask.\n\nFinance checks affordability and value for money. Is the spend within the budget and delegated limits? Are the costs and assumptions sound? Does the proposal need Treasury approval? Spending above a department's delegated authority needs Treasury consent, so involve finance early. The accounting officer, usually the permanent secretary, has personal responsibility for propriety, regularity, value for money and feasibility. If a minister proposes something the accounting officer judges to breach one of these tests, the accounting officer can ask for a written ministerial direction.\n\nLegal advice covers whether the department has the power to act (often called vires), the risk of legal challenge, and procedural duties, such as consultation. Legal advice is privileged. Do not quote it in documents that may be disclosed or shared outside government unless lawyers agree, and mark legally privileged documents.\n\nThe public sector equality duty requires due regard to the effect of decisions on people with protected characteristics. An equality analysis should be done before the decision, not after, and be based on evidence. It shows how the minister has considered the impact, and it must be real, not a form filled in later.\n\nDevolved administrations or other departments may need to see the paper where their interests are affected, and a submission should say what consultation has taken place. Clearances take time, so plan them into the timetable and record who cleared what and when.\n\nNever state that a paper has been cleared when it has not. If advisers disagree, say so and set out the difference.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What do finance colleagues mainly check in a submission?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Whether the grammar and layout follow house style"
+      },
+      {
+       "key": "b",
+       "text": "Whether the policy is likely to be popular with the public"
+      },
+      {
+       "key": "c",
+       "text": "Affordability, value for money and whether Treasury approval is needed"
+      },
+      {
+       "key": "d",
+       "text": "Whether the minister will have time to read the paper"
+      }
+     ],
+     "answer": "c",
+     "hint": "They test the spending case.",
+     "topic": "Finance"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the accounting officer personally responsible for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Every decision the minister makes in the department"
+      },
+      {
+       "key": "b",
+       "text": "The department's press releases and public statements"
+      },
+      {
+       "key": "c",
+       "text": "Setting the department's overall policy direction"
+      },
+      {
+       "key": "d",
+       "text": "Propriety, regularity, value for money and feasibility"
+      }
+     ],
+     "answer": "d",
+     "hint": "These are the four tests.",
+     "topic": "Accounting officer"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What can an accounting officer ask for if a proposal fails one of the four tests?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A new minister for the portfolio"
+      },
+      {
+       "key": "b",
+       "text": "A loan from the Treasury"
+      },
+      {
+       "key": "c",
+       "text": "A written ministerial direction"
+      },
+      {
+       "key": "d",
+       "text": "A public inquiry into the proposal"
+      }
+     ],
+     "answer": "c",
+     "hint": "Direction records the minister's instruction.",
+     "topic": "Ministerial direction"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does \"vires\" mean in legal advice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The legal power to take the action"
+      },
+      {
+       "key": "b",
+       "text": "The value for money of the action"
+      },
+      {
+       "key": "c",
+       "text": "The visual style of the paper"
+      },
+      {
+       "key": "d",
+       "text": "The very urgent status of the paper"
+      }
+     ],
+     "answer": "a",
+     "hint": "Does the department have the legal authority?",
+     "topic": "Vires"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why should legal advice not be quoted in papers that may be shared outside government?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is privileged and disclosure could waive that privilege"
+      },
+      {
+       "key": "b",
+       "text": "It is always classified SECRET and cannot be shared"
+      },
+      {
+       "key": "c",
+       "text": "It is too technical for non-lawyers to read"
+      },
+      {
+       "key": "d",
+       "text": "It is owned by the minister, who must approve any use"
+      }
+     ],
+     "answer": "a",
+     "hint": "Lawyers must agree before it is shared.",
+     "topic": "Privilege"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "When should an equality analysis be done?",
+     "options": [
+      {
+       "key": "a",
+       "text": "After the decision, to record what was decided"
+      },
+      {
+       "key": "b",
+       "text": "Before the decision, using real evidence"
+      },
+      {
+       "key": "c",
+       "text": "Only if someone complains about the decision"
+      },
+      {
+       "key": "d",
+       "text": "Only for decisions above a set financial value"
+      }
+     ],
+     "answer": "b",
+     "hint": "The duty is to have due regard at the time.",
+     "topic": "PSED"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the risk of completing an equality analysis after the decision?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is not due regard at the right time, and it may be challenged"
+      },
+      {
+       "key": "b",
+       "text": "It takes longer to write after the event"
+      },
+      {
+       "key": "c",
+       "text": "It has to be longer than usual"
+      },
+      {
+       "key": "d",
+       "text": "It no longer needs to be signed off by anyone"
+      }
+     ],
+     "answer": "a",
+     "hint": "Retrofitting is vulnerable to challenge.",
+     "topic": "PSED timing"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A paper affects a devolved administration. What should the submission say?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing, as it is a reserved matter always"
+      },
+      {
+       "key": "b",
+       "text": "That the devolved administration agrees"
+      },
+      {
+       "key": "c",
+       "text": "Only the cost to Whitehall"
+      },
+      {
+       "key": "d",
+       "text": "What consultation has taken place with it"
+      }
+     ],
+     "answer": "d",
+     "hint": "The reader needs to know who has been consulted.",
+     "topic": "Consultation"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which statement about clearances is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Say the paper is cleared if most of the advisers agree"
+      },
+      {
+       "key": "b",
+       "text": "Leave clearances out of the paper to save space"
+      },
+      {
+       "key": "c",
+       "text": "State that the paper has been cleared once it is sent"
+      },
+      {
+       "key": "d",
+       "text": "Say who cleared the paper and when, and say so if advisers disagree"
+      }
+     ],
+     "answer": "d",
+     "hint": "Never claim a clearance that was not given.",
+     "topic": "Accuracy of clearances"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why should clearances be planned into the timetable?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They can be skipped whenever the paper is urgent"
+      },
+      {
+       "key": "b",
+       "text": "They are needed only for papers about large sums"
+      },
+      {
+       "key": "c",
+       "text": "They take time and cannot be rushed at the last minute"
+      },
+      {
+       "key": "d",
+       "text": "They are carried out after the decision is taken"
+      }
+     ],
+     "answer": "c",
+     "hint": "Late clearance causes errors.",
+     "topic": "Planning"
+    }
+   ]
+  },
+  {
+   "title": "L14: Correcting an error in advice, figures or statements",
+   "source": "Ministerial Code; Civil Service Code; UK Statistics Authority: Code of Practice for Statistics",
+   "body": "Errors happen. What matters is how quickly and openly they are corrected. The Civil Service Code requires honesty and integrity: officials must not deceive or knowingly mislead ministers, Parliament or the public. If you discover that a figure or fact you provided was wrong, tell your line manager at once, and tell those who have relied on it. Do not wait to see if anyone notices.\n\nIf a minister has used the wrong information in Parliament, the Ministerial Code says ministers who have inadvertently misled Parliament must correct the record at the earliest opportunity. The private office, with the relevant policy team, will arrange for a correction to be made, for example through a written statement or a letter to the relevant committee. Your job is to provide the right facts, an explanation of what went wrong and the effect, quickly.\n\nFor published statistics, the Code of Practice for Statistics requires that errors are corrected promptly and transparently. The correction is published with a clear explanation of what changed and why, and users are told. Quietly replacing a file does not meet this standard. Keep a revisions log, and notify anyone who may have used the earlier numbers.\n\nWhen you find an error, do these things: establish the facts, assess the effect (who has seen it and what decisions might have depended on it), correct the source, tell those affected, and find the cause so that it does not recur. Record the incident and the action.\n\nA culture that blames individuals hides errors. Managers should make it safe to report problems early, while expecting people to check their work. Learn from near misses as well as actual errors. Where the error involves personal data, the breach process may also apply.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What should an official do first on discovering that a figure they gave was wrong?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Wait and see whether anyone notices the error"
+      },
+      {
+       "key": "b",
+       "text": "Quietly correct the file and say nothing"
+      },
+      {
+       "key": "c",
+       "text": "Wait for the next planned update to put it right"
+      },
+      {
+       "key": "d",
+       "text": "Tell their line manager and those relying on it straight away"
+      }
+     ],
+     "answer": "d",
+     "hint": "Prompt, open correction is required.",
+     "topic": "Honesty"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does the Ministerial Code require of a minister who has inadvertently misled Parliament?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To resign automatically from office"
+      },
+      {
+       "key": "b",
+       "text": "To wait for a parliamentary question before correcting"
+      },
+      {
+       "key": "c",
+       "text": "To correct the record at the earliest opportunity"
+      },
+      {
+       "key": "d",
+       "text": "To ask the Speaker for a ruling before acting"
+      }
+     ],
+     "answer": "c",
+     "hint": "The correction should be prompt.",
+     "topic": "Ministerial Code"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the official's role in a correction to Parliament?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Draft a defence of the original figure"
+      },
+      {
+       "key": "b",
+       "text": "Make the correction personally in the chamber"
+      },
+      {
+       "key": "c",
+       "text": "Wait to be asked before saying anything"
+      },
+      {
+       "key": "d",
+       "text": "Provide the right facts and an explanation quickly"
+      }
+     ],
+     "answer": "d",
+     "hint": "The private office arranges the correction.",
+     "topic": "Supporting correction"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "How should an error in published statistics be corrected under the Code of Practice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "By replacing the file quietly without comment"
+      },
+      {
+       "key": "b",
+       "text": "Promptly and transparently, with an explanation of what changed"
+      },
+      {
+       "key": "c",
+       "text": "By waiting until the next scheduled release to correct it"
+      },
+      {
+       "key": "d",
+       "text": "By telling only the largest users of the statistics"
+      }
+     ],
+     "answer": "b",
+     "hint": "Quiet fixes break user trust.",
+     "topic": "Statistics correction"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the purpose of a revisions log?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To keep earlier versions out of sight"
+      },
+      {
+       "key": "b",
+       "text": "To record changes and the reasons for them"
+      },
+      {
+       "key": "c",
+       "text": "To rank errors by their size"
+      },
+      {
+       "key": "d",
+       "text": "To record who is to blame for each change"
+      }
+     ],
+     "answer": "b",
+     "hint": "It makes changes transparent.",
+     "topic": "Revisions"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which step should follow establishing the facts of an error?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Delete the incorrect version from the system"
+      },
+      {
+       "key": "b",
+       "text": "Assess who has seen it and what depended on it"
+      },
+      {
+       "key": "c",
+       "text": "Announce who was at fault for the error"
+      },
+      {
+       "key": "d",
+       "text": "Wait for further instructions from the minister"
+      }
+     ],
+     "answer": "b",
+     "hint": "The impact assessment shapes the response.",
+     "topic": "Impact"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why does blaming individuals make errors worse?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It speeds up the correction of errors"
+      },
+      {
+       "key": "b",
+       "text": "It improves the quality of checking"
+      },
+      {
+       "key": "c",
+       "text": "People hide mistakes rather than reporting them"
+      },
+      {
+       "key": "d",
+       "text": "It reduces the number of errors made"
+      }
+     ],
+     "answer": "c",
+     "hint": "Safe reporting leads to earlier fixes.",
+     "topic": "Culture"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the value of recording near misses?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It increases the workload without any benefit"
+      },
+      {
+       "key": "b",
+       "text": "It allows staff to be disciplined for slips"
+      },
+      {
+       "key": "c",
+       "text": "It shows that checking is not needed"
+      },
+      {
+       "key": "d",
+       "text": "It shows weaknesses before they cause real errors"
+      }
+     ],
+     "answer": "d",
+     "hint": "Learning from near misses prevents future errors.",
+     "topic": "Near misses"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "An error involves personal data being sent to the wrong person. Which other process applies?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The personal data breach process"
+      },
+      {
+       "key": "b",
+       "text": "The FOI process"
+      },
+      {
+       "key": "c",
+       "text": "The ministerial direction process"
+      },
+      {
+       "key": "d",
+       "text": "The parliamentary question process"
+      }
+     ],
+     "answer": "a",
+     "hint": "Breach reporting rules may apply too.",
+     "topic": "Breach link"
+    }
+   ]
+  },
+  {
+   "title": "L14: Consultation principles and the duty to consider responses",
+   "source": "Cabinet Office: Consultation principles; R v Brent LBC ex parte Gunning (the Gunning principles)",
+   "body": "Government consultation asks the public or groups for views before a decision. The Cabinet Office Consultation Principles (2018) set the expectation that consultations are proportionate, accessible, clear and open to those affected. They no longer set a default 12 week period: the length should suit the proposal and the people affected, and departments should justify a short consultation. The longer period may be right for complex or contentious proposals, or for consultations covering holiday periods.\n\nThe courts have set four legal tests, known as the Gunning principles. First, consultation must happen when proposals are still at a formative stage, so a decision must not already have been made. Second, the consultation must give sufficient reasons and information so that people can respond intelligently. Third, adequate time must be given for consideration and response. Fourth, the product of consultation must be conscientiously taken into account when the decision is made. Breaching any of these can mean a court overturning the decision.\n\nPractical points follow. Ask clear questions, in plain English, and say what is fixed and what is open. Be careful about leading questions. Record every response, and analyse them carefully, not only counting those in favour. Respondents' personal data must be handled under the UK GDPR: say in the consultation how data will be used and published, and that responses may be disclosed under FOI.\n\nAfter the consultation, publish a response that explains what was heard, how it influenced the decision, and the reasons for any changes or for not changing. Keep the evidence trail. Officials advising ministers must present the responses accurately, including the unwelcome ones, so that the minister can take them into account conscientiously.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What do the Consultation Principles say about the length of consultations?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It should be proportionate, with no default 12 week period"
+      },
+      {
+       "key": "b",
+       "text": "It must be exactly 12 weeks in every case"
+      },
+      {
+       "key": "c",
+       "text": "It must be at least six months for major changes"
+      },
+      {
+       "key": "d",
+       "text": "It need not be stated in the consultation document"
+      }
+     ],
+     "answer": "a",
+     "hint": "The 2018 principles removed the default.",
+     "topic": "Length"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "At what stage must a consultation begin to satisfy the first Gunning test?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Once the final decision has been drafted"
+      },
+      {
+       "key": "b",
+       "text": "While proposals are still at a formative stage"
+      },
+      {
+       "key": "c",
+       "text": "After the minister has announced the preferred option"
+      },
+      {
+       "key": "d",
+       "text": "When the impact assessment has been published"
+      }
+     ],
+     "answer": "b",
+     "hint": "A decision must not already have been made.",
+     "topic": "Gunning 1"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A consultation paper gives only a one-line summary of the proposal. Which Gunning test does it risk failing?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Sufficient reasons and information to respond intelligently"
+      },
+      {
+       "key": "b",
+       "text": "Adequate time for consideration and response"
+      },
+      {
+       "key": "c",
+       "text": "Conscientious consideration of the product of consultation"
+      },
+      {
+       "key": "d",
+       "text": "Consultation while proposals are at a formative stage"
+      }
+     ],
+     "answer": "a",
+     "hint": "People cannot respond sensibly without enough information.",
+     "topic": "Gunning 2"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does the fourth Gunning test require once responses have been received?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That they are conscientiously taken into account in the decision"
+      },
+      {
+       "key": "b",
+       "text": "That the decision follows the view of the majority of respondents"
+      },
+      {
+       "key": "c",
+       "text": "That every respondent is answered individually in writing"
+      },
+      {
+       "key": "d",
+       "text": "That the results are sent to the press before the decision"
+      }
+     ],
+     "answer": "a",
+     "hint": "Responses must be weighed, not necessarily followed.",
+     "topic": "Gunning 4"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A department consults but has already decided. Which principle is breached?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Adequate time must be given"
+      },
+      {
+       "key": "b",
+       "text": "The proposals must be at a formative stage"
+      },
+      {
+       "key": "c",
+       "text": "Sufficient reasons must be given"
+      },
+      {
+       "key": "d",
+       "text": "The product must be conscientiously considered"
+      }
+     ],
+     "answer": "b",
+     "hint": "The decision was already made.",
+     "topic": "Formative stage"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What should a consultation make clear about its questions?",
+     "options": [
+      {
+       "key": "a",
+       "text": "What is fixed and what is open to change"
+      },
+      {
+       "key": "b",
+       "text": "Which answers the department would prefer to receive"
+      },
+      {
+       "key": "c",
+       "text": "How long each answer should be"
+      },
+      {
+       "key": "d",
+       "text": "Which groups are unlikely to be heard"
+      }
+     ],
+     "answer": "a",
+     "hint": "People need to know what they can influence.",
+     "topic": "Clarity"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why are leading questions a risk?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They can undermine the fairness of the consultation"
+      },
+      {
+       "key": "b",
+       "text": "They are harder to analyse afterwards"
+      },
+      {
+       "key": "c",
+       "text": "They make responses longer than needed"
+      },
+      {
+       "key": "d",
+       "text": "They cost more to publish in accessible formats"
+      }
+     ],
+     "answer": "a",
+     "hint": "They steer respondents.",
+     "topic": "Leading questions"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What should the consultation say about respondents' data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That it will not be shared under any circumstances"
+      },
+      {
+       "key": "b",
+       "text": "That it is exempt from the UK GDPR as consultation data"
+      },
+      {
+       "key": "c",
+       "text": "How it will be used and published, and that it may be disclosed under FOI"
+      },
+      {
+       "key": "d",
+       "text": "Nothing, since responses to consultations are public"
+      }
+     ],
+     "answer": "c",
+     "hint": "Transparency is required.",
+     "topic": "Data"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What should the published consultation response include?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only the number of respondents in favour"
+      },
+      {
+       "key": "b",
+       "text": "What was heard, how it influenced the decision and why"
+      },
+      {
+       "key": "c",
+       "text": "The names and addresses of all respondents"
+      },
+      {
+       "key": "d",
+       "text": "Only the department's original proposal"
+      }
+     ],
+     "answer": "b",
+     "hint": "It shows how responses were taken into account.",
+     "topic": "Response"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What must officials do when presenting responses to a minister?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Present only the responses that support the proposal"
+      },
+      {
+       "key": "b",
+       "text": "Summarise them all in one line"
+      },
+      {
+       "key": "c",
+       "text": "Present them accurately, including the unwelcome ones"
+      },
+      {
+       "key": "d",
+       "text": "Leave out responses from campaign groups"
+      }
+     ],
+     "answer": "c",
+     "hint": "Conscientious consideration needs an honest picture.",
+     "topic": "Honest advice"
+    }
+   ]
+  },
+  {
+   "title": "L14: Lawful basis in awkward cases: staff, children and changed purposes",
+   "source": "ICO: Guide to the UK GDPR, lawful basis, children and purpose limitation",
+   "body": "Lawful basis choices become harder in real cases. Consider the common examples.\n\nStaff data. Consent is a poor basis for processing employee data because of the imbalance of power: an employee may feel unable to refuse. Employers usually rely on contract (to pay staff and manage employment), legal obligation (tax and right to work checks) and, for public bodies, public task. Health data about staff also needs an Article 9 condition, often employment law.\n\nChildren. Children's data deserves particular care. If consent is the basis for online services offered directly to a child, the UK sets the age at 13 below which parental consent is needed.\n\nConsent. When used, consent must be a clear, affirmative, specific and informed choice; silence or pre-ticked boxes do not count. It must be as easy to withdraw as to give, and withdrawal must be actioned. Do not treat consent as a back-up basis: if you ask for consent and then cannot honour a refusal, you have misled the person. If consent is not the real basis, do not ask for it.\n\nVital interests applies only to matters of life and death where the person cannot give consent.\n\nChanging purpose. Data collected for one purpose cannot be reused for an incompatible one. Test compatibility by looking at the link between purposes, the context and reasonable expectations, the nature of the data, the consequences, and safeguards. Use for a new purpose usually needs a new lawful basis or fresh consent unless it is compatible, or the new use is required by law. Always tell people through a privacy notice.\n\nRecord the decision, the reasoning and the person who made it.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why is consent usually a poor basis for processing employee data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Employee data is exempt from the UK GDPR"
+      },
+      {
+       "key": "b",
+       "text": "There is an imbalance of power, so consent may not be free"
+      },
+      {
+       "key": "c",
+       "text": "Employers are not allowed to hold health data"
+      },
+      {
+       "key": "d",
+       "text": "Consent cannot be recorded for staff"
+      }
+     ],
+     "answer": "b",
+     "hint": "Consent must be freely given.",
+     "topic": "Staff data"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which basis would an employer typically use to pay staff?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Contract"
+      },
+      {
+       "key": "b",
+       "text": "Vital interests"
+      },
+      {
+       "key": "c",
+       "text": "Consent"
+      },
+      {
+       "key": "d",
+       "text": "Legitimate interests only"
+      }
+     ],
+     "answer": "a",
+     "hint": "Pay is part of the employment contract.",
+     "topic": "Contract"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Below what age is parental consent needed for online services offered directly to a child, where consent is the basis?",
+     "options": [
+      {
+       "key": "a",
+       "text": "16"
+      },
+      {
+       "key": "b",
+       "text": "18"
+      },
+      {
+       "key": "c",
+       "text": "13"
+      },
+      {
+       "key": "d",
+       "text": "11"
+      }
+     ],
+     "answer": "c",
+     "hint": "The UK sets it at 13.",
+     "topic": "Children"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which is a valid consent under the UK GDPR?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A clear affirmative action by an informed person"
+      },
+      {
+       "key": "b",
+       "text": "A pre-ticked box on a form"
+      },
+      {
+       "key": "c",
+       "text": "Silence after a notice has been sent"
+      },
+      {
+       "key": "d",
+       "text": "Continued use of the service after a change"
+      }
+     ],
+     "answer": "a",
+     "hint": "Consent must be an affirmative choice.",
+     "topic": "Valid consent"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is wrong with asking for consent as a back-up when another basis really applies?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It costs more to administer than other bases"
+      },
+      {
+       "key": "b",
+       "text": "It is allowed only for children's data"
+      },
+      {
+       "key": "c",
+       "text": "It breaches the Official Secrets Act"
+      },
+      {
+       "key": "d",
+       "text": "It misleads the person if you cannot honour a refusal"
+      }
+     ],
+     "answer": "d",
+     "hint": "The choice must be real.",
+     "topic": "Back-up consent"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "When does the vital interests basis apply?",
+     "options": [
+      {
+       "key": "a",
+       "text": "To any matter that is in the public interest"
+      },
+      {
+       "key": "b",
+       "text": "To business continuity planning"
+      },
+      {
+       "key": "c",
+       "text": "To life-and-death matters where the person cannot consent"
+      },
+      {
+       "key": "d",
+       "text": "To staff welfare and wellbeing schemes"
+      }
+     ],
+     "answer": "c",
+     "hint": "It is narrow.",
+     "topic": "Vital interests"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Data collected for casework is to be used for an unrelated marketing exercise. What is the first question?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Is it cheaper to reuse the data than to collect new data?"
+      },
+      {
+       "key": "b",
+       "text": "Is the new purpose compatible with the original?"
+      },
+      {
+       "key": "c",
+       "text": "Has the team collected enough data for the exercise?"
+      },
+      {
+       "key": "d",
+       "text": "Is the data stored in the UK?"
+      }
+     ],
+     "answer": "b",
+     "hint": "Purpose limitation applies.",
+     "topic": "Purpose"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which factor helps to test compatibility of a new purpose?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The size of the team holding the data"
+      },
+      {
+       "key": "b",
+       "text": "The cost of the system that stores it"
+      },
+      {
+       "key": "c",
+       "text": "The person's reasonable expectations"
+      },
+      {
+       "key": "d",
+       "text": "The age of the database itself"
+      }
+     ],
+     "answer": "c",
+     "hint": "Expectations are part of the test.",
+     "topic": "Compatibility"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What should happen if the new purpose is incompatible?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing, because the data is already held"
+      },
+      {
+       "key": "b",
+       "text": "The ICO decides whether the use may proceed"
+      },
+      {
+       "key": "c",
+       "text": "The data subject is charged for the new use"
+      },
+      {
+       "key": "d",
+       "text": "A new lawful basis or fresh consent is usually needed"
+      }
+     ],
+     "answer": "d",
+     "hint": "Otherwise the processing is unlawful.",
+     "topic": "Incompatible purposes"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What should be recorded about a lawful basis decision?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The decision, the reasoning and who made it"
+      },
+      {
+       "key": "b",
+       "text": "Only the decision reached"
+      },
+      {
+       "key": "c",
+       "text": "Only the name of the team responsible"
+      },
+      {
+       "key": "d",
+       "text": "Nothing, since the choice is obvious"
+      }
+     ],
+     "answer": "a",
+     "hint": "Accountability needs a trail.",
+     "topic": "Records"
+    }
+   ]
+  },
+  {
+   "title": "L14: Sending personal data abroad: transfers and cloud tools",
+   "source": "ICO: International transfers; UK GDPR Chapter V; Data Protection Act 2018",
+   "body": "Personal data can only be sent outside the UK, known as a restricted transfer, if there is a lawful route. Access from abroad also counts: a supplier's support staff viewing UK data from another country can amount to a transfer.\n\nThe usual routes in the UK GDPR are, in order of preference. First, adequacy regulations, where the UK government has decided that a country or territory provides an essentially equivalent level of protection. If an adequacy decision covers the destination, data can flow without further safeguards. Second, appropriate safeguards, such as the International Data Transfer Agreement (IDTA), or the UK Addendum to the EU's standard contractual clauses. Where these are used, the exporter should carry out a transfer risk assessment, considering whether the destination's laws and practices could undermine the protection. Third, in limited cases, exceptions such as explicit consent or necessity for important reasons of public interest. The exceptions are for occasional and specific cases, not routine transfers.\n\nA manager buying or using a service should ask where the data is stored and processed, where support staff are based, who the sub-processors are, and whether data can be accessed from other countries. Contracts should include the processor terms required by Article 28 and cover transfers.\n\nFor government data, security classification also matters. Some material cannot go overseas at all, regardless of data protection routes, and a security assessment may be needed. Hosting UK government data abroad needs specific approval and advice from security and data protection teams.\n\nA DPIA should record the transfers. Tell people in your privacy notice that their data may be transferred and on what basis.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is a restricted transfer?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Sending data between two UK departments"
+      },
+      {
+       "key": "b",
+       "text": "Sending data by post rather than electronically"
+      },
+      {
+       "key": "c",
+       "text": "Sending personal data to a recipient outside the UK"
+      },
+      {
+       "key": "d",
+       "text": "Sending data to a different building"
+      }
+     ],
+     "answer": "c",
+     "hint": "The term concerns transfers across the UK border.",
+     "topic": "Definition"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A supplier's support team in another country can view UK personal data. What does this amount to?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing, as the data stays on the UK server"
+      },
+      {
+       "key": "b",
+       "text": "A breach in every case"
+      },
+      {
+       "key": "c",
+       "text": "An FOI disclosure"
+      },
+      {
+       "key": "d",
+       "text": "A transfer that needs a lawful route"
+      }
+     ],
+     "answer": "d",
+     "hint": "Remote access can count as a transfer.",
+     "topic": "Remote access"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does an adequacy decision mean?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The destination has signed up to the IDTA"
+      },
+      {
+       "key": "b",
+       "text": "The data is encrypted while it is in transit"
+      },
+      {
+       "key": "c",
+       "text": "The data subject has agreed to the transfer"
+      },
+      {
+       "key": "d",
+       "text": "The destination's protection is judged essentially equivalent, so no further safeguard is needed"
+      }
+     ],
+     "answer": "d",
+     "hint": "It is the first route.",
+     "topic": "Adequacy"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which is an appropriate safeguard where there is no adequacy?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A verbal assurance from the supplier"
+      },
+      {
+       "key": "b",
+       "text": "The International Data Transfer Agreement (IDTA)"
+      },
+      {
+       "key": "c",
+       "text": "A press statement from the receiving organisation"
+      },
+      {
+       "key": "d",
+       "text": "A signed FOI request from the supplier"
+      }
+     ],
+     "answer": "b",
+     "hint": "It is a standard contract for transfers.",
+     "topic": "IDTA"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What should the exporter assess when relying on the IDTA?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The price of the service being bought"
+      },
+      {
+       "key": "b",
+       "text": "The size of the data file being sent"
+      },
+      {
+       "key": "c",
+       "text": "The staffing levels of the supplier"
+      },
+      {
+       "key": "d",
+       "text": "Whether the destination's laws could undermine the protection"
+      }
+     ],
+     "answer": "d",
+     "hint": "This is a transfer risk assessment.",
+     "topic": "TRA"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What are the exceptions such as explicit consent suited to?",
+     "options": [
+      {
+       "key": "a",
+       "text": "All routine cloud services"
+      },
+      {
+       "key": "b",
+       "text": "Regular large transfers to one supplier"
+      },
+      {
+       "key": "c",
+       "text": "Occasional and specific transfers, not routine ones"
+      },
+      {
+       "key": "d",
+       "text": "Transfers by processors only"
+      }
+     ],
+     "answer": "c",
+     "hint": "They are for limited cases.",
+     "topic": "Exceptions"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Before approving a cloud tool, which question is most relevant?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Does the tool have a recognisable brand?"
+      },
+      {
+       "key": "b",
+       "text": "How many other organisations use the tool?"
+      },
+      {
+       "key": "c",
+       "text": "Where is the data stored and who can access it from where?"
+      },
+      {
+       "key": "d",
+       "text": "Is the tool free to try for a month?"
+      }
+     ],
+     "answer": "c",
+     "hint": "Location and access decide the transfer position.",
+     "topic": "Due diligence"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why might some government material be barred from overseas hosting whatever the data protection route?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Security classification can restrict where it may be held"
+      },
+      {
+       "key": "b",
+       "text": "Because the UK GDPR forbids all transfers"
+      },
+      {
+       "key": "c",
+       "text": "Because encryption is not allowed outside the UK"
+      },
+      {
+       "key": "d",
+       "text": "Because overseas suppliers cannot sign contracts"
+      }
+     ],
+     "answer": "a",
+     "hint": "Security rules apply separately.",
+     "topic": "Security"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Where should transfers be recorded and explained?",
+     "options": [
+      {
+       "key": "a",
+       "text": "In the press office log"
+      },
+      {
+       "key": "b",
+       "text": "In the DPIA and the privacy notice"
+      },
+      {
+       "key": "c",
+       "text": "In the minutes of the board"
+      },
+      {
+       "key": "d",
+       "text": "In the supplier's marketing material"
+      }
+     ],
+     "answer": "b",
+     "hint": "Transparency and risk assessment both need to cover it.",
+     "topic": "Records"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which contract term is required where a processor handles the data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A non-compete clause"
+      },
+      {
+       "key": "b",
+       "text": "A clause on use of the supplier's branding"
+      },
+      {
+       "key": "c",
+       "text": "The Article 28 processor terms"
+      },
+      {
+       "key": "d",
+       "text": "A clause on the supplier's staff holidays"
+      }
+     ],
+     "answer": "c",
+     "hint": "Article 28 sets the mandatory content.",
+     "topic": "Contracts"
+    }
+   ]
+  },
+  {
+   "title": "L14: Official business in chat apps and the corporate record",
+   "source": "Cabinet Office: Guidance on use of non-corporate communication channels; The National Archives: Records management",
+   "body": "Messaging apps and chat tools are convenient, and decisions are often made in them. If the discussion relates to official business, the content is official information and may be a record. It can be requested under the Freedom of Information Act or a subject access request, and it may be needed for a public inquiry or litigation. The medium does not change that.\n\nGovernment guidance says that official business should be conducted on corporate systems wherever possible. Non-corporate channels, such as personal text messaging or WhatsApp on a personal phone, should be used only if there is no practical alternative, and any substantive business, such as a decision or an instruction, should be moved to the corporate record as soon as possible. Do not rely on disappearing messages: turning them on may mean the record is lost, and deliberate deletion to avoid disclosure is an offence under section 77 of the Freedom of Information Act.\n\nCorporate chat tools, such as those inside the department's collaboration platform, are subject to a retention setting. Find out how long messages are kept, and do not assume chats are permanent. If a chat contains a decision, copy it to the file. Keep chat for the quick questions it suits, and use email or a document for formal instructions, advice and approvals.\n\nGroup chats raise special risks. Messages can be forwarded or screenshotted, members can join and leave, and sensitive material can end up with people who should not have it. Classification still applies: do not put OFFICIAL-SENSITIVE material into a channel not approved for it.\n\nA manager sets the tone: agree team rules on what goes in chat and what is recorded, and make them explicit.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the status of a chat message that records an official decision?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is private because of the medium used"
+      },
+      {
+       "key": "b",
+       "text": "It is official information and may be a record"
+      },
+      {
+       "key": "c",
+       "text": "It is exempt from the Freedom of Information Act"
+      },
+      {
+       "key": "d",
+       "text": "It is automatically deleted after 24 hours"
+      }
+     ],
+     "answer": "b",
+     "hint": "The medium does not change the nature of the content.",
+     "topic": "Official information"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Where should official business be conducted?",
+     "options": [
+      {
+       "key": "a",
+       "text": "On personal phones, if staff prefer"
+      },
+      {
+       "key": "b",
+       "text": "On corporate systems wherever possible"
+      },
+      {
+       "key": "c",
+       "text": "On any app the team finds convenient"
+      },
+      {
+       "key": "d",
+       "text": "In disappearing message groups"
+      }
+     ],
+     "answer": "b",
+     "hint": "Guidance favours corporate systems.",
+     "topic": "Corporate systems"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A decision is taken on a personal messaging app because no alternative was available. What should happen?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Leave it in the app, which already counts as the record"
+      },
+      {
+       "key": "b",
+       "text": "Delete it to protect the people involved"
+      },
+      {
+       "key": "c",
+       "text": "Move it to the corporate record as soon as possible"
+      },
+      {
+       "key": "d",
+       "text": "Wait until an FOI request arrives"
+      }
+     ],
+     "answer": "c",
+     "hint": "The record must be captured.",
+     "topic": "Capturing records"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why is relying on disappearing messages risky?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Records may be lost, and deliberate deletion to avoid disclosure is an offence"
+      },
+      {
+       "key": "b",
+       "text": "They use too much storage on the device"
+      },
+      {
+       "key": "c",
+       "text": "They are not supported on all phones"
+      },
+      {
+       "key": "d",
+       "text": "They do not allow attachments to be sent"
+      }
+     ],
+     "answer": "a",
+     "hint": "Section 77 covers destruction to prevent disclosure.",
+     "topic": "Disappearing messages"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What should a manager check about the department's chat tool?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Which emojis the tool supports"
+      },
+      {
+       "key": "b",
+       "text": "Which colour themes the tool offers"
+      },
+      {
+       "key": "c",
+       "text": "How long messages are retained"
+      },
+      {
+       "key": "d",
+       "text": "How many users may join a channel"
+      }
+     ],
+     "answer": "c",
+     "hint": "Do not assume permanence.",
+     "topic": "Retention"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which communication suits a formal instruction?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Email or a document, kept on the file"
+      },
+      {
+       "key": "b",
+       "text": "A group chat with the team"
+      },
+      {
+       "key": "c",
+       "text": "A voice note on a messaging app"
+      },
+      {
+       "key": "d",
+       "text": "A direct message to the individual"
+      }
+     ],
+     "answer": "a",
+     "hint": "Formal advice and approvals need a durable record.",
+     "topic": "Choosing a channel"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is a particular risk of group chats?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are always encrypted end to end"
+      },
+      {
+       "key": "b",
+       "text": "Messages can be forwarded, and sensitive material can reach the wrong people"
+      },
+      {
+       "key": "c",
+       "text": "They cannot be searched by the department"
+      },
+      {
+       "key": "d",
+       "text": "They are limited to ten members at a time"
+      }
+     ],
+     "answer": "b",
+     "hint": "Control over the audience is weak.",
+     "topic": "Group chats"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Does classification still apply in a chat channel?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It does not, if the chat is informal"
+      },
+      {
+       "key": "b",
+       "text": "It does, so OFFICIAL-SENSITIVE material must not go in an unapproved channel"
+      },
+      {
+       "key": "c",
+       "text": "It applies only to emails sent outside the department"
+      },
+      {
+       "key": "d",
+       "text": "It applies only to attachments, not messages"
+      }
+     ],
+     "answer": "b",
+     "hint": "Handling rules apply to the information.",
+     "topic": "Classification"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the manager's role in setting team practice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ban all use of chat tools in the team"
+      },
+      {
+       "key": "b",
+       "text": "Agree explicit rules on what goes in chat and what is recorded"
+      },
+      {
+       "key": "c",
+       "text": "Leave each member of staff to decide"
+      },
+      {
+       "key": "d",
+       "text": "Review every chat personally each week"
+      }
+     ],
+     "answer": "b",
+     "hint": "Clear rules prevent lost records.",
+     "topic": "Team rules"
+    }
+   ]
+  },
+  {
+   "title": "L14: Governing an AI tool: assessment, bias and transparency",
+   "source": "UK Government: Generative AI Framework for HMG; Algorithmic Transparency Recording Standard; ICO: AI and data protection guidance",
+   "body": "When a team wants to use an AI tool in a service, not just for personal drafting, there are more questions to ask. A manager should expect these steps.\n\nDefine the purpose and the decision. What is the tool for? Does it inform a human decision, or make one? Where it could affect people's rights or services, it needs a higher level of care. The UK GDPR restricts decisions based solely on automated processing that have legal or similarly significant effects. If a tool is used, a person must be able to review, challenge and change the outcome, and the review must be real.\n\nDo a DPIA. A new AI use that involves personal data is likely to be high risk. It should consider the data used to train and operate the tool, how it is secured, where it is processed, whether the supplier can use the data for its own purposes, and what the supplier's contract says about retention and sub-processors.\n\nTest for accuracy and bias. Check the tool on realistic data and for different groups. A tool can perform well on average but poorly for some groups. Agree measures of success before testing. Test again after changes, since performance can drift.\n\nBe able to explain. People should be told when AI is used and be able to understand, in plain terms, how a decision was reached. A tool that cannot be explained is hard to defend if challenged. Publish information about the tool: government has a recording standard for algorithmic transparency, which public bodies are encouraged to use for tools that affect decisions about people.\n\nSet accountability. Name an owner, plan monitoring, and decide when to stop using it.\n\nNever treat approval of a tool for one use as approval for all uses.",
+   "questions": [
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which question matters most when assessing an AI tool in a service?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Does it inform a human decision, or make one?"
+      },
+      {
+       "key": "b",
+       "text": "How modern does the interface look?"
+      },
+      {
+       "key": "c",
+       "text": "How many languages does the supplier support?"
+      },
+      {
+       "key": "d",
+       "text": "How long has the supplier been trading?"
+      }
+     ],
+     "answer": "a",
+     "hint": "Solely automated significant decisions are restricted.",
+     "topic": "Purpose and decision"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does the UK GDPR require when decisions with significant effects use an AI tool?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The tool must make all of the final decisions"
+      },
+      {
+       "key": "b",
+       "text": "Each decision must be sent to the ICO for approval"
+      },
+      {
+       "key": "c",
+       "text": "A person must be able to review, challenge and change the outcome"
+      },
+      {
+       "key": "d",
+       "text": "The tool must be built in-house"
+      }
+     ],
+     "answer": "c",
+     "hint": "Human review must be genuine.",
+     "topic": "Automated decisions"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why is a DPIA likely for a new AI use involving personal data?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is cheaper than the alternative"
+      },
+      {
+       "key": "b",
+       "text": "The ICO asks for one for every project"
+      },
+      {
+       "key": "c",
+       "text": "The tool is unlawful by default"
+      },
+      {
+       "key": "d",
+       "text": "It is likely to present a high risk to individuals"
+      }
+     ],
+     "answer": "d",
+     "hint": "New technology and personal data signal high risk.",
+     "topic": "DPIA"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Which supplier question belongs in the DPIA?",
+     "options": [
+      {
+       "key": "a",
+       "text": "How many staff does the supplier employ?"
+      },
+      {
+       "key": "b",
+       "text": "Can the supplier use the data for its own purposes?"
+      },
+      {
+       "key": "c",
+       "text": "Which other departments have bought from the supplier?"
+      },
+      {
+       "key": "d",
+       "text": "Does the supplier offer volume discounts?"
+      }
+     ],
+     "answer": "b",
+     "hint": "Supplier reuse of data changes the risk.",
+     "topic": "Supplier use"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why test an AI tool on different groups of people?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Different groups have different budgets"
+      },
+      {
+       "key": "b",
+       "text": "It makes the testing quicker to complete"
+      },
+      {
+       "key": "c",
+       "text": "It may perform well on average but poorly for some groups"
+      },
+      {
+       "key": "d",
+       "text": "Groups must be tested separately by law"
+      }
+     ],
+     "answer": "c",
+     "hint": "Averages can hide unfair performance.",
+     "topic": "Bias testing"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why should success measures be agreed before testing?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It shortens the time the testing takes"
+      },
+      {
+       "key": "b",
+       "text": "It avoids the need for a DPIA"
+      },
+      {
+       "key": "c",
+       "text": "It satisfies the supplier's contract"
+      },
+      {
+       "key": "d",
+       "text": "So the results cannot be bent to suit the outcome"
+      }
+     ],
+     "answer": "d",
+     "hint": "Pre-agreed measures keep tests honest.",
+     "topic": "Success measures"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "Why re-test after changes?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Testing is cheaper after changes are made"
+      },
+      {
+       "key": "b",
+       "text": "The supplier requires it under the contract"
+      },
+      {
+       "key": "c",
+       "text": "The ICO checks the results each time"
+      },
+      {
+       "key": "d",
+       "text": "Performance can drift when the tool or data changes"
+      }
+     ],
+     "answer": "d",
+     "hint": "Updates can alter behaviour.",
+     "topic": "Drift"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What is the Algorithmic Transparency Recording Standard for?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Recording staff hours spent on automation"
+      },
+      {
+       "key": "b",
+       "text": "Certifying software for security"
+      },
+      {
+       "key": "c",
+       "text": "Publishing information about algorithmic tools used in decisions"
+      },
+      {
+       "key": "d",
+       "text": "Setting maximum prices for AI tools"
+      }
+     ],
+     "answer": "c",
+     "hint": "It supports public transparency.",
+     "topic": "Transparency"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "What does naming an owner and planning monitoring achieve?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A lower cost for running the tool"
+      },
+      {
+       "key": "b",
+       "text": "Clear accountability for performance, complaints and when to stop"
+      },
+      {
+       "key": "c",
+       "text": "Less need for a contract with the supplier"
+      },
+      {
+       "key": "d",
+       "text": "A faster procurement process"
+      }
+     ],
+     "answer": "b",
+     "hint": "Someone must be answerable.",
+     "topic": "Accountability"
+    },
+    {
+     "level": 14,
+     "type": "mcq",
+     "prompt": "A tool is approved for drafting internal notes. Can it then be used to score customers' claims?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It can, as the tool itself is now approved for all uses"
+      },
+      {
+       "key": "b",
+       "text": "It can, if the team agrees in a meeting"
+      },
+      {
+       "key": "c",
+       "text": "Not automatically, because approval for one use does not cover another"
+      },
+      {
+       "key": "d",
+       "text": "It can, if it proves cheaper than the current method"
+      }
+     ],
+     "answer": "c",
+     "hint": "Each use needs its own assessment.",
+     "topic": "Scope of approval"
+    }
+   ]
+  }
+ ]
+}

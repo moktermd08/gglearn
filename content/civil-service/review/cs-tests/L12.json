@@ -1,0 +1,3042 @@
+{
+ "trackSlug": "cs-tests",
+ "status": "review",
+ "items": [
+  {
+   "title": "L12: Break-even with step costs and capacity limits",
+   "source": "Civil Service online tests: practice guidance, GOV.UK and Civil Service Jobs",
+   "body": "Real services rarely have a single fixed-cost figure. Costs often move in steps: a team of staff can handle only a set number of cases, and when demand goes beyond that capacity another team must be added, which raises fixed costs by a whole block. A step-cost model needs three checks at every level of demand: how many teams are needed (volume ÷ capacity per team, rounded up), what the total fixed costs are with that many teams, and what the contribution is. Contribution per unit = price − variable cost per unit. Profit = volume × contribution − fixed costs. Break-even volume for a given number of teams = fixed costs ÷ contribution, but it is only valid if it falls within that number of teams' capacity. If break-even exceeds capacity, the service makes a loss at every volume it can handle with those teams. Break-even therefore has to be tested against capacity before it is accepted. When demand exceeds capacity, a manager can choose between adding a team and turning demand away, and the sound way to decide is to compute the profit of each option. Extra capacity that is only partly used can lower profit even though all demand is met. To find the fee that would break even at an expected volume, divide the fixed costs by the volume to get the fixed cost per unit, and then add the variable cost. Margin of safety = (expected volume − break-even volume) ÷ expected volume. Always say whether an answer is a profit or a loss.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A fee-charging service has fixed overheads of £60,000 a year. Each team costs £90,000 a year and can handle up to 4,000 cases. The fee is £60 a case and the variable cost is £24 a case. With one team working at full capacity, what is the result for the year?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A loss of £6,000"
+      },
+      {
+       "key": "b",
+       "text": "A loss of £150,000"
+      },
+      {
+       "key": "c",
+       "text": "A profit of £144,000"
+      },
+      {
+       "key": "d",
+       "text": "A profit of £6,000"
+      }
+     ],
+     "answer": "a",
+     "hint": "4,000 × £36 is £144,000 against fixed costs of £150,000.",
+     "topic": "capacity limit"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Using the same figures, what is the break-even volume with two teams?",
+     "options": [
+      {
+       "key": "a",
+       "text": "4,167"
+      },
+      {
+       "key": "b",
+       "text": "4,000"
+      },
+      {
+       "key": "c",
+       "text": "6,667"
+      },
+      {
+       "key": "d",
+       "text": "8,000"
+      }
+     ],
+     "answer": "c",
+     "hint": "Fixed costs with two teams are £240,000, divided by £36.",
+     "topic": "step costs"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Using the same figures, demand is 5,000 cases. Teams are added only as needed. What is the result?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A profit of £30,000"
+      },
+      {
+       "key": "b",
+       "text": "A loss of £60,000"
+      },
+      {
+       "key": "c",
+       "text": "A loss of £150,000"
+      },
+      {
+       "key": "d",
+       "text": "A profit of £60,000"
+      }
+     ],
+     "answer": "b",
+     "hint": "5,000 cases need two teams, so fixed costs are £240,000.",
+     "topic": "step profit"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Using the same figures, demand is 7,000 cases and two teams are in place. What is the profit?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£252,000"
+      },
+      {
+       "key": "b",
+       "text": "£102,000"
+      },
+      {
+       "key": "c",
+       "text": "£180,000"
+      },
+      {
+       "key": "d",
+       "text": "£12,000"
+      }
+     ],
+     "answer": "d",
+     "hint": "7,000 × £36 is £252,000, less £240,000.",
+     "topic": "profit at volume"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Demand is 9,000 cases. The service can either add a third team or stay with two teams and turn away 1,000 cases. Which option gives the better result, using the same figures?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Two teams, with a profit of £48,000"
+      },
+      {
+       "key": "b",
+       "text": "Three teams, with a profit of £84,000"
+      },
+      {
+       "key": "c",
+       "text": "Three teams, with a profit of £6,000"
+      },
+      {
+       "key": "d",
+       "text": "Two teams, with a profit of £84,000"
+      }
+     ],
+     "answer": "a",
+     "hint": "A third team costs £90,000 and earns only 1,000 × £36.",
+     "topic": "adding capacity"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The fee rises by 10% to £66, other figures unchanged. What is the break-even volume with two teams, rounded up?",
+     "options": [
+      {
+       "key": "a",
+       "text": "6,000"
+      },
+      {
+       "key": "b",
+       "text": "5,715"
+      },
+      {
+       "key": "c",
+       "text": "6,667"
+      },
+      {
+       "key": "d",
+       "text": "3,637"
+      }
+     ],
+     "answer": "b",
+     "hint": "The new contribution is £66 − £24 = £42.",
+     "topic": "price change"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "With two teams and expected demand of 7,000 cases, what fee per case would just break even? (Variable cost stays at £24.)",
+     "options": [
+      {
+       "key": "a",
+       "text": "£54.00"
+      },
+      {
+       "key": "b",
+       "text": "£60.00"
+      },
+      {
+       "key": "c",
+       "text": "£58.29"
+      },
+      {
+       "key": "d",
+       "text": "£34.29"
+      }
+     ],
+     "answer": "c",
+     "hint": "Divide £240,000 by 7,000 and add £24.",
+     "topic": "break-even fee"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "At 7,000 cases with two teams, break-even is 6,667 cases. What is the margin of safety as a percentage of expected volume?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5.0%"
+      },
+      {
+       "key": "b",
+       "text": "95.2%"
+      },
+      {
+       "key": "c",
+       "text": "12.5%"
+      },
+      {
+       "key": "d",
+       "text": "4.8%"
+      }
+     ],
+     "answer": "d",
+     "hint": "Divide the 333 cases above break-even by 7,000.",
+     "topic": "margin of safety"
+    }
+   ]
+  },
+  {
+   "title": "L12: Splitting a change in a rate into mix and rate effects",
+   "source": "Civil Service online tests: practice guidance, GOV.UK and Civil Service Jobs",
+   "body": "An overall rate is a weighted average of the rates of its parts, so it can change because the rates inside each part changed, because the weights changed, or both. Separating the two prevents mistaken conclusions. Take a service with two routes. The overall pass rate = (route A applicants × A's rate + route B applicants × B's rate) ÷ total applicants. A common error is to take the simple average of the two rates, which is correct only when the groups are equal in size. To split a change, compute a middle figure: the overall rate that would result if the old mix were combined with the new rates. The rate effect is the difference between that middle figure and the old overall rate; the mix effect is the difference between the new overall rate and the middle figure. The two add to the total change. Differences between two rates are given in percentage points, and a relative change divides by the starting figure. It is possible for every part's rate to rise and the overall rate to fall (Simpson's paradox) when the mix moves towards the part with the lower rate. The reverse also happens. Counts and rates can move differently: more people may pass even when the pass rate falls, if the number of applicants grows more. To check any answer, rebuild the counts: multiply each rate by its group size, add the passes and divide by the total. Round only at the end, and keep one decimal place for rates unless told otherwise.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "In 2022, route A had 600 applicants with a 50% pass rate, and route B had 400 applicants with an 80% pass rate. What was the overall pass rate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "65.0%"
+      },
+      {
+       "key": "b",
+       "text": "70.0%"
+      },
+      {
+       "key": "c",
+       "text": "60.0%"
+      },
+      {
+       "key": "d",
+       "text": "62.0%"
+      }
+     ],
+     "answer": "d",
+     "hint": "Passes were 300 + 320 out of 1,000.",
+     "topic": "weighted average"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "For 2023 the figures were 400 applicants at 55% on route A and 600 applicants at 85% on route B. What was the overall pass rate that year?",
+     "options": [
+      {
+       "key": "a",
+       "text": "67.0%"
+      },
+      {
+       "key": "b",
+       "text": "73.0%"
+      },
+      {
+       "key": "c",
+       "text": "76.0%"
+      },
+      {
+       "key": "d",
+       "text": "70.0%"
+      }
+     ],
+     "answer": "b",
+     "hint": "Passes were 220 + 510 out of 1,000.",
+     "topic": "weighted average"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Using the overall rates of 62.0% and 73.0%, what was the change in the pass rate?",
+     "options": [
+      {
+       "key": "a",
+       "text": "11.0%"
+      },
+      {
+       "key": "b",
+       "text": "15.1%"
+      },
+      {
+       "key": "c",
+       "text": "11.0 percentage points"
+      },
+      {
+       "key": "d",
+       "text": "17.7 percentage points"
+      }
+     ],
+     "answer": "c",
+     "hint": "Subtract the two overall rates.",
+     "topic": "percentage points"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What overall pass rate would 2023's route rates (55% and 85%) have given if the 2022 mix of applicants (60% on route A, 40% on route B) had stayed the same?",
+     "options": [
+      {
+       "key": "a",
+       "text": "67.0%"
+      },
+      {
+       "key": "b",
+       "text": "62.0%"
+      },
+      {
+       "key": "c",
+       "text": "70.0%"
+      },
+      {
+       "key": "d",
+       "text": "73.0%"
+      }
+     ],
+     "answer": "a",
+     "hint": "Weight 55% by 0.6 and 85% by 0.4.",
+     "topic": "middle figure"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Using the overall rates 62.0% in 2022, 73.0% in 2023 and 67.0% with 2023 rates on the 2022 mix, how many percentage points of the rise are due to the change in mix of applicants?",
+     "options": [
+      {
+       "key": "a",
+       "text": "6.0 points"
+      },
+      {
+       "key": "b",
+       "text": "11.0 points"
+      },
+      {
+       "key": "c",
+       "text": "3.0 points"
+      },
+      {
+       "key": "d",
+       "text": "5.0 points"
+      }
+     ],
+     "answer": "a",
+     "hint": "The mix effect is the new overall rate minus the middle figure.",
+     "topic": "mix effect"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Using the same data, how many percentage points of the rise are due to the improvement in the pass rates on each route?",
+     "options": [
+      {
+       "key": "a",
+       "text": "8.1%"
+      },
+      {
+       "key": "b",
+       "text": "11.0 points"
+      },
+      {
+       "key": "c",
+       "text": "5.0 points"
+      },
+      {
+       "key": "d",
+       "text": "6.0 points"
+      }
+     ],
+     "answer": "c",
+     "hint": "The rate effect is the middle figure minus the old overall rate.",
+     "topic": "rate effect"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Route B had 400 applicants in 2022 and 600 in 2023. What was the percentage increase in the number of applicants on route B?",
+     "options": [
+      {
+       "key": "a",
+       "text": "33.3%"
+      },
+      {
+       "key": "b",
+       "text": "50%"
+      },
+      {
+       "key": "c",
+       "text": "20%"
+      },
+      {
+       "key": "d",
+       "text": "200%"
+      }
+     ],
+     "answer": "b",
+     "hint": "Divide the increase of 200 by the starting figure of 400.",
+     "topic": "relative change"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The total number of passes was 620 in 2022 and 730 in 2023. What was the percentage increase in the number of people passing, to one decimal place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "11.0%"
+      },
+      {
+       "key": "b",
+       "text": "15.1%"
+      },
+      {
+       "key": "c",
+       "text": "8.1%"
+      },
+      {
+       "key": "d",
+       "text": "17.7%"
+      }
+     ],
+     "answer": "d",
+     "hint": "Divide the rise of 110 by 620.",
+     "topic": "counts and rates"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Suppose route A's 2023 pass rate had stayed at 50%, with route B at 85% and the 2023 numbers of applicants (400 on A, 600 on B). What would the overall pass rate have been?",
+     "options": [
+      {
+       "key": "a",
+       "text": "67.5%"
+      },
+      {
+       "key": "b",
+       "text": "70.5%"
+      },
+      {
+       "key": "c",
+       "text": "71.0%"
+      },
+      {
+       "key": "d",
+       "text": "73.0%"
+      }
+     ],
+     "answer": "c",
+     "hint": "400 × 0.5 plus 600 × 0.85, over 1,000.",
+     "topic": "what-if"
+    }
+   ]
+  },
+  {
+   "title": "L12: Spending profiles, run-rates and forecast outturn",
+   "source": "HM Treasury Managing Public Money and Green Book guidance on forecasting",
+   "body": "Finance questions often give spending to date and ask what is likely to happen by the year end. The simplest approach is straight-line profiling, which assumes that spending is spread evenly over twelve months, so after five months you would expect five twelfths of the annual budget to have been spent. A run-rate forecast takes spending to date, divides by the months elapsed and multiplies by twelve. It is quick, but it assumes that every month is like the average so far, which is wrong when spending is front-loaded, back-loaded or seasonal. A profile-based forecast uses the share of the year's spending that normally falls in the months elapsed: if previous years show that 52% of spending occurs in the first five months, then forecast outturn = spend to date ÷ 0.52. The forecast outturn is the amount expected to be spent by the year end, and the forecast variance is the outturn minus the budget (positive means overspend). If a budget has been partly used, the remaining budget divided by the remaining months gives the monthly spend that must not be exceeded. The cut needed in the current monthly run-rate is (current rate − affordable rate) ÷ current rate. A savings target, for example 4% of the budget, reduces the sum available. Managing Public Money requires departments to forecast carefully and to tell the Treasury about expected significant over- or underspends early. Say whether each result is an overspend or underspend, and keep monthly amounts to the nearest pound.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A budget is £7,200,000 for the year. After five months, how much would you expect to have been spent on a straight-line profile?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£3,600,000"
+      },
+      {
+       "key": "b",
+       "text": "£3,000,000"
+      },
+      {
+       "key": "c",
+       "text": "£600,000"
+      },
+      {
+       "key": "d",
+       "text": "£4,200,000"
+      }
+     ],
+     "answer": "b",
+     "hint": "Five twelfths of the annual budget.",
+     "topic": "straight-line profile"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Spending after five months is £3,400,000 against a straight-line expectation of £3,000,000. How far ahead of profile is the spending, as a percentage of the profile?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5.6%"
+      },
+      {
+       "key": "b",
+       "text": "47.2%"
+      },
+      {
+       "key": "c",
+       "text": "11.8%"
+      },
+      {
+       "key": "d",
+       "text": "13.3%"
+      }
+     ],
+     "answer": "d",
+     "hint": "Divide the £0.4m excess by the £3.0m expected.",
+     "topic": "ahead of profile"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Spending is £3,400,000 after five months. Using the run-rate method, what is the forecast outturn?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£8,160,000"
+      },
+      {
+       "key": "b",
+       "text": "£6,800,000"
+      },
+      {
+       "key": "c",
+       "text": "£7,200,000"
+      },
+      {
+       "key": "d",
+       "text": "£5,828,571"
+      }
+     ],
+     "answer": "a",
+     "hint": "Divide by 5 and multiply by 12.",
+     "topic": "run-rate"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The run-rate forecast outturn is £8,160,000 against a budget of £7,200,000. What is the forecast variance?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£400,000 overspend"
+      },
+      {
+       "key": "b",
+       "text": "£960,000 underspend"
+      },
+      {
+       "key": "c",
+       "text": "£960,000 overspend"
+      },
+      {
+       "key": "d",
+       "text": "£8,160,000 overspend"
+      }
+     ],
+     "answer": "c",
+     "hint": "Outturn minus budget is positive, so it is an overspend.",
+     "topic": "forecast variance"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "In previous years, 52% of the year's spending fell in the first five months. Spending is £3,400,000 after five months. What is the profile-based forecast outturn, to the nearest £10,000?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£6,540,000"
+      },
+      {
+       "key": "b",
+       "text": "£1,768,000"
+      },
+      {
+       "key": "c",
+       "text": "£8,160,000"
+      },
+      {
+       "key": "d",
+       "text": "£5,168,000"
+      }
+     ],
+     "answer": "a",
+     "hint": "Divide £3.4m by 0.52.",
+     "topic": "profile forecast"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "After spending £3,400,000, how much can be spent in each of the remaining seven months if the full-year budget of £7,200,000 is not to be exceeded? Round to the nearest pound.",
+     "options": [
+      {
+       "key": "a",
+       "text": "£600,000"
+      },
+      {
+       "key": "b",
+       "text": "£542,857"
+      },
+      {
+       "key": "c",
+       "text": "£680,000"
+      },
+      {
+       "key": "d",
+       "text": "£316,667"
+      }
+     ],
+     "answer": "b",
+     "hint": "The remaining £3.8m is shared across seven months.",
+     "topic": "remaining budget"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The current spending rate is £680,000 a month and only £542,857 a month is affordable. What reduction in the monthly rate is needed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "13.3%"
+      },
+      {
+       "key": "b",
+       "text": "25.3%"
+      },
+      {
+       "key": "c",
+       "text": "11.8%"
+      },
+      {
+       "key": "d",
+       "text": "20.2%"
+      }
+     ],
+     "answer": "d",
+     "hint": "Divide the £137,143 reduction by the current £680,000.",
+     "topic": "required cut"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A savings target of 4% of the £7,200,000 budget must also be met, and £3,400,000 has been spent in five months. What is the most that can be spent in each of the remaining seven months, to the nearest pound?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£523,429"
+      },
+      {
+       "key": "b",
+       "text": "£292,667"
+      },
+      {
+       "key": "c",
+       "text": "£501,714"
+      },
+      {
+       "key": "d",
+       "text": "£542,857"
+      }
+     ],
+     "answer": "c",
+     "hint": "The available budget becomes 96% of £7.2m.",
+     "topic": "savings target"
+    }
+   ]
+  },
+  {
+   "title": "L12: Unit cost, overhead apportionment and full cost recovery",
+   "source": "HM Treasury Managing Public Money, Annex 6.5 (fees and charges)",
+   "body": "Managing Public Money says that, unless Parliament or the Treasury has said otherwise, public bodies that charge for services should usually set fees to recover the full cost of providing them, and not to make a profit. Full cost includes direct costs, such as staff and materials used by the service, plus a fair share of overheads such as HR, IT and accommodation. Overheads are apportioned using a driver chosen to reflect what causes the cost: headcount for HR and IT support, floor space for accommodation, or transactions for finance. Different drivers give different shares, so the choice should be reasoned and consistent. Unit cost = full cost ÷ number of units. When volumes fall and fixed costs remain, unit cost rises, so a fee set on forecast volumes can under-recover if demand is lower. If some customers do not pay, the fee must be raised so that the money actually collected covers the cost: fee = unit cost ÷ proportion collected, and not unit cost plus the bad debt percentage. Subsidy or cross-subsidy needs authority. Two sums are often confused: the average cost of the service and the extra cost of one more unit, so use the one that suits the decision. Fees are set per unit, so the answer should be stated per unit and in pounds and pence if it is not a round number. To check the apportionment, make sure that the shares add up to the total overhead. Keep the full workings and justify each assumption, as fees may be challenged.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A licensing unit has 14 of an organisation's 120 staff. The organisation's overheads are £1,200,000, apportioned by headcount. What overhead is charged to the unit?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£140,000"
+      },
+      {
+       "key": "b",
+       "text": "£168,000"
+      },
+      {
+       "key": "c",
+       "text": "£85,714.29"
+      },
+      {
+       "key": "d",
+       "text": "£10,000"
+      }
+     ],
+     "answer": "a",
+     "hint": "14/120 of the £1.2m.",
+     "topic": "apportionment"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The unit's direct staff costs are £420,000, its other direct costs £60,000 and its overhead share £140,000. What is its full cost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£480,000"
+      },
+      {
+       "key": "b",
+       "text": "£200,000"
+      },
+      {
+       "key": "c",
+       "text": "£560,000"
+      },
+      {
+       "key": "d",
+       "text": "£620,000"
+      }
+     ],
+     "answer": "d",
+     "hint": "Add direct, other and overhead costs.",
+     "topic": "full cost"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The unit issues 2,480 licences a year and its full cost is £620,000. What fee per licence recovers full cost?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£225.81"
+      },
+      {
+       "key": "b",
+       "text": "£250"
+      },
+      {
+       "key": "c",
+       "text": "£193.55"
+      },
+      {
+       "key": "d",
+       "text": "£262.50"
+      }
+     ],
+     "answer": "b",
+     "hint": "Divide £620,000 by 2,480.",
+     "topic": "unit cost"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The full cost per licence is £250, but 5% of fees are never collected. What fee per licence must be set so that the amount actually collected covers the cost, to the nearest penny?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£263.16"
+      },
+      {
+       "key": "b",
+       "text": "£255.00"
+      },
+      {
+       "key": "c",
+       "text": "£262.50"
+      },
+      {
+       "key": "d",
+       "text": "£237.50"
+      }
+     ],
+     "answer": "a",
+     "hint": "Collected fee = 95% of the fee set.",
+     "topic": "bad debts"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "If the overhead were apportioned by floor space instead, the unit would occupy 10% of the space, giving an overhead share of £120,000. What would the unit cost per licence be, with the direct costs and 2,480 licences, to the nearest penny?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£298.39"
+      },
+      {
+       "key": "b",
+       "text": "£250.00"
+      },
+      {
+       "key": "c",
+       "text": "£217.74"
+      },
+      {
+       "key": "d",
+       "text": "£241.94"
+      }
+     ],
+     "answer": "d",
+     "hint": "Direct costs of £480,000 plus £120,000.",
+     "topic": "choice of driver"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Volume falls by 20% to 1,984 licences while the full cost of £620,000 stays the same. What is the unit cost, to the nearest penny?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£200.00"
+      },
+      {
+       "key": "b",
+       "text": "£312.50"
+      },
+      {
+       "key": "c",
+       "text": "£208.33"
+      },
+      {
+       "key": "d",
+       "text": "£300.00"
+      }
+     ],
+     "answer": "b",
+     "hint": "Divide the fixed full cost by the lower volume.",
+     "topic": "falling volume"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A fee of £250 is charged. Volume falls to 1,984 licences, with total cost still £620,000. What is the shortfall in cost recovery?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£155,000"
+      },
+      {
+       "key": "b",
+       "text": "£62,000"
+      },
+      {
+       "key": "c",
+       "text": "£124,000"
+      },
+      {
+       "key": "d",
+       "text": "£496,000"
+      }
+     ],
+     "answer": "c",
+     "hint": "1,984 × £250 is £496,000, against £620,000.",
+     "topic": "under-recovery"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The organisation cuts its overheads by 10%, so the unit's headcount share falls to £126,000. With direct costs of £480,000 and 2,480 licences, what is the new unit cost, to the nearest penny?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£225.00"
+      },
+      {
+       "key": "b",
+       "text": "£244.35"
+      },
+      {
+       "key": "c",
+       "text": "£250.00"
+      },
+      {
+       "key": "d",
+       "text": "£239.27"
+      }
+     ],
+     "answer": "b",
+     "hint": "Add £480,000 and £126,000, then divide.",
+     "topic": "overhead saving"
+    }
+   ]
+  },
+  {
+   "title": "L12: Trends, moving averages and seasonal adjustment",
+   "source": "Office for National Statistics, guidance on seasonal adjustment and time series",
+   "body": "Monthly figures move up and down for reasons that have little to do with the underlying trend: some months are busier, some have fewer working days, and one-off events distort individual points. Two simple tools help. A moving average replaces each figure with the mean of a fixed number of consecutive figures, so a three-month moving average for the middle of January to March is (Jan + Feb + Mar) ÷ 3. Moving averages smooth the noise, but they need several periods of data, so the first and last points are lost, and they lag behind turning points. The trend can be summarised by the average change between successive moving averages. Seasonal adjustment goes further: each month has a seasonal factor (an index near 1) showing how much busier or quieter it normally is. A factor of 1.08 means that the month is usually 8% above trend. To remove the seasonal effect, divide the actual figure by the factor, and not subtract a percentage. The Office for National Statistics publishes seasonally adjusted series so that users can compare successive months fairly, while the unadjusted series is used when the real number is needed, for example for staffing. Year-on-year comparisons, that is, comparing the same period in successive years, avoid the seasonal problem without an adjustment, but they are slow to show turning points. Percentage change should always be calculated from the earlier figure. A fall on a raw figure can turn into a smaller fall, or even a rise, after seasonal adjustment, so say which series you are quoting.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Monthly cases from January to June were 1,200; 1,050; 1,350; 1,400; 1,260; 1,500. What is the three-month moving average for January to March?",
+     "options": [
+      {
+       "key": "a",
+       "text": "1,200"
+      },
+      {
+       "key": "b",
+       "text": "1,050"
+      },
+      {
+       "key": "c",
+       "text": "1,350"
+      },
+      {
+       "key": "d",
+       "text": "1,250"
+      }
+     ],
+     "answer": "a",
+     "hint": "Add the three figures and divide by 3.",
+     "topic": "moving average"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Using the same monthly figures (1,200; 1,050; 1,350; 1,400; 1,260; 1,500), what is the three-month moving average for February to April, to the nearest whole number?",
+     "options": [
+      {
+       "key": "a",
+       "text": "1,337"
+      },
+      {
+       "key": "b",
+       "text": "1,200"
+      },
+      {
+       "key": "c",
+       "text": "1,400"
+      },
+      {
+       "key": "d",
+       "text": "1,267"
+      }
+     ],
+     "answer": "d",
+     "hint": "1,050 + 1,350 + 1,400 = 3,800, then divide by 3.",
+     "topic": "moving average"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Using the same figures, what is the three-month moving average for April to June, to the nearest whole number?",
+     "options": [
+      {
+       "key": "a",
+       "text": "1,400"
+      },
+      {
+       "key": "b",
+       "text": "1,337"
+      },
+      {
+       "key": "c",
+       "text": "1,387"
+      },
+      {
+       "key": "d",
+       "text": "1,500"
+      }
+     ],
+     "answer": "c",
+     "hint": "1,400 + 1,260 + 1,500 = 4,160, then divide by 3.",
+     "topic": "latest moving average"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The moving averages run 1,200; 1,267; 1,337; 1,387 over four successive overlapping windows. What is the average monthly increase between successive moving averages, to the nearest whole number?",
+     "options": [
+      {
+       "key": "a",
+       "text": "187"
+      },
+      {
+       "key": "b",
+       "text": "62"
+      },
+      {
+       "key": "c",
+       "text": "60"
+      },
+      {
+       "key": "d",
+       "text": "47"
+      }
+     ],
+     "answer": "b",
+     "hint": "There are three steps between four values.",
+     "topic": "trend"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "June's actual figure is 1,500 and its seasonal factor is 1.08. What is the seasonally adjusted figure, to the nearest whole number?",
+     "options": [
+      {
+       "key": "a",
+       "text": "1,389"
+      },
+      {
+       "key": "b",
+       "text": "1,380"
+      },
+      {
+       "key": "c",
+       "text": "1,620"
+      },
+      {
+       "key": "d",
+       "text": "1,370"
+      }
+     ],
+     "answer": "a",
+     "hint": "Divide by the seasonal factor.",
+     "topic": "seasonal adjustment"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The six months total 7,760 cases and the same six months last year totalled 6,800. What is the year-on-year increase, to one decimal place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "12.4%"
+      },
+      {
+       "key": "b",
+       "text": "2.1%"
+      },
+      {
+       "key": "c",
+       "text": "16.0%"
+      },
+      {
+       "key": "d",
+       "text": "14.1%"
+      }
+     ],
+     "answer": "d",
+     "hint": "Divide the rise of 960 by last year's 6,800.",
+     "topic": "year on year"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "January was 1,200 and February was 1,050. What was the raw percentage fall from January to February?",
+     "options": [
+      {
+       "key": "a",
+       "text": "14.3%"
+      },
+      {
+       "key": "b",
+       "text": "8.3%"
+      },
+      {
+       "key": "c",
+       "text": "12.5%"
+      },
+      {
+       "key": "d",
+       "text": "15.0%"
+      }
+     ],
+     "answer": "c",
+     "hint": "Divide 150 by the January figure.",
+     "topic": "raw change"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "January has a seasonal factor of 0.95 and February 0.90. Using January 1,200 and February 1,050, what is the percentage fall in the seasonally adjusted series, to one decimal place?",
+     "options": [
+      {
+       "key": "a",
+       "text": "12.5%"
+      },
+      {
+       "key": "b",
+       "text": "5.0%"
+      },
+      {
+       "key": "c",
+       "text": "7.6%"
+      },
+      {
+       "key": "d",
+       "text": "8.3%"
+      }
+     ],
+     "answer": "c",
+     "hint": "Adjusted figures are 1,263 and 1,167.",
+     "topic": "adjusted change"
+    }
+   ]
+  },
+  {
+   "title": "L12: Verdicts on what was claimed, by whom and on what basis",
+   "source": "Civil Service online tests: practice guidance, GOV.UK and Civil Service Jobs",
+   "body": "Passages in official settings are often reports of what someone said, found or claimed, and not statements of fact. A careful reader separates three layers: the claim itself, the person or body making it, and the basis on which it is made. 'The minister said that waiting times are falling' tells you what the minister said, not that waiting times are falling. Verbs signal the strength of a claim: 'found', 'showed' and 'confirmed' imply evidence, while 'claimed', 'alleged', 'argued' and 'suggested' do not. A press release by a body that is describing its own performance is a self-report and is not independent evidence. A review commissioned or chaired by someone closely connected to the subject may carry less weight, but that is a reason for caution and not proof that its conclusion is wrong, and an argument is not refuted by pointing to the source. A denial of one claim does not necessarily deny a related claim: a department that says it has no plans to close offices 'at present' is still telling you it is reviewing its estate, if that is what it adds. Two statements can look inconsistent when they use different measures, so check what each one counts. When a figure is described as 'the great majority', check it against the numbers given, because 60% is a majority but not a great majority. Evidence from different sources (witnesses and logs) may be partial: a log timestamp shows when something was recorded, not necessarily when it began. If the passage gives the facts that settle a statement, calculate; if it leaves a key fact open, the right verdict is 'cannot say'.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The department's press release says the scheme 'has reached 90% of eligible households'. The audit office noted that the 90% figure rests entirely on the department's own estimate of how many households are eligible.\" Statement: \"The 90% figure is based on an independent estimate of eligibility.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: the audit office has examined the figure and found it acceptable"
+      },
+      {
+       "key": "b",
+       "text": "False: the estimate of eligibility comes from the department itself"
+      },
+      {
+       "key": "c",
+       "text": "Cannot say: the passage does not say how many households were eligible"
+      },
+      {
+       "key": "d",
+       "text": "Cannot say: the passage does not say when the audit office wrote its note"
+      }
+     ],
+     "answer": "b",
+     "hint": "The basis of the figure is the department's own estimate.",
+     "topic": "self-reported figures"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"A union official said that 'staff morale has collapsed'. The department's survey found that 62% of staff were 'satisfied or very satisfied' with their working lives.\" Statement: \"The survey shows that the union official's claim is wrong.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: a majority of staff are satisfied, so morale cannot have collapsed"
+      },
+      {
+       "key": "b",
+       "text": "True: the union official has given no figures to support the claim"
+      },
+      {
+       "key": "c",
+       "text": "False: the survey was carried out by the department, so it proves nothing"
+      },
+      {
+       "key": "d",
+       "text": "Cannot say: satisfaction and morale may be different measures"
+      }
+     ],
+     "answer": "d",
+     "hint": "The two statements may not measure the same thing.",
+     "topic": "different measures"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The inspector's report states that three of the five sites visited had out-of-date fire certificates.\" Statement: \"The report found that the great majority of sites visited had out-of-date certificates.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "False: three of five is a majority but not a great majority"
+      },
+      {
+       "key": "b",
+       "text": "Cannot say: the report does not say which sites were affected"
+      },
+      {
+       "key": "c",
+       "text": "Cannot say: five sites is too few to judge"
+      },
+      {
+       "key": "d",
+       "text": "True: more than half of the sites visited had out-of-date certificates"
+      }
+     ],
+     "answer": "a",
+     "hint": "Check the strength of the wording against the figures.",
+     "topic": "strength of words"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The review was commissioned by the department and chaired by a former director of the department. It concluded that no change to the funding model was needed.\" Statement: \"The review's conclusion is wrong.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cannot say: doubts about independence do not show the conclusion is mistaken"
+      },
+      {
+       "key": "b",
+       "text": "False: the review was commissioned by the right people"
+      },
+      {
+       "key": "c",
+       "text": "True: the review should have recommended a change"
+      },
+      {
+       "key": "d",
+       "text": "True: a review chaired by a former director cannot be trusted"
+      }
+     ],
+     "answer": "a",
+     "hint": "Doubts about a source are not proof that its conclusion is wrong.",
+     "topic": "source and conclusion"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"A consultation received 4,200 responses. The department said that 'the great majority' supported the proposal. Analysis showed that 3,100 responses were identical template emails from one campaign group, all supportive.\" Statement: \"Template emails made up more than 70% of all the responses.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "False: the department said that the great majority supported the proposal"
+      },
+      {
+       "key": "b",
+       "text": "Cannot say: the passage does not say how many other responses were supportive"
+      },
+      {
+       "key": "c",
+       "text": "True: 3,100 out of 4,200 is about 74%"
+      },
+      {
+       "key": "d",
+       "text": "False: identical emails count as a single response"
+      }
+     ],
+     "answer": "c",
+     "hint": "Divide 3,100 by 4,200.",
+     "topic": "consultation evidence"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"A newspaper reported that the department 'plans to close 40 offices'. The department denied this, saying that it 'has no plans to close offices at present but is reviewing its estate'.\" Statement: \"The department has said that it is reviewing its estate.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cannot say: the review might not lead to any closures"
+      },
+      {
+       "key": "b",
+       "text": "True: the department's own statement says so"
+      },
+      {
+       "key": "c",
+       "text": "False: the department denied the newspaper's report"
+      },
+      {
+       "key": "d",
+       "text": "Cannot say: the newspaper's figure of 40 offices is not confirmed"
+      }
+     ],
+     "answer": "b",
+     "hint": "A denial of one claim can include an admission of another.",
+     "topic": "denials"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Of 12 witnesses, nine said that the incident began before 9am. The log, recorded by the duty manager, shows an alarm at 9.12am.\" Statement: \"The incident began before 9am.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: nine of 12 witnesses is a clear majority"
+      },
+      {
+       "key": "b",
+       "text": "False: the log gives the time as 9.12am"
+      },
+      {
+       "key": "c",
+       "text": "False: witnesses are unreliable compared with a log"
+      },
+      {
+       "key": "d",
+       "text": "Cannot say: the log records the alarm, which may not be the start"
+      }
+     ],
+     "answer": "d",
+     "hint": "A log shows when something was recorded, not necessarily when it began.",
+     "topic": "different kinds of evidence"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The minister said: 'Waiting times are down for the third year running.' The department's published figures show that median waiting times fell in each of the last three years, while the 90th percentile fell in two of those years and rose in the other.\" Statement: \"The minister's statement is accurate whichever measure of waiting time is used.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cannot say: the minister did not say which measure was meant"
+      },
+      {
+       "key": "b",
+       "text": "Cannot say: the passage does not explain what a percentile is"
+      },
+      {
+       "key": "c",
+       "text": "False: the 90th percentile rose in one of the three years"
+      },
+      {
+       "key": "d",
+       "text": "True: the median fell in each of the three years"
+      }
+     ],
+     "answer": "c",
+     "hint": "'Whichever measure' fails if one measure did not fall every year.",
+     "topic": "selective measures"
+    }
+   ]
+  },
+  {
+   "title": "L12: Reading rules written with must, may, should and unless",
+   "source": "Plain English Campaign guidance and Office of the Parliamentary Counsel, Drafting Guidance",
+   "body": "Rules and policies use modal verbs with settled meanings, and a small word changes who is bound. 'Must' (and in older texts 'shall') creates a duty. 'Must not' creates a prohibition. 'May' gives a power or discretion, so an authority that 'may' extend a deadline is allowed to, not required to; in some texts 'may not' means 'must not', so context matters. 'Should' states good practice or an expectation and is not usually a binding requirement. 'Unless' introduces an exception: the rule applies except where the stated condition is met. 'Subject to' means that another provision overrides this one where the two conflict. 'Provided that' adds a condition that must be met. 'Where' and 'if' set the circumstances in which the rule operates. In lists, 'and' means that all items are needed and 'or' normally means that any one is enough, including more than one, so a person who presents both a receipt and a bank statement still satisfies a rule asking for one or the other. 'At least', 'no more than' and 'within' set minimums and maximums, and dates must be counted exactly. Definitions apply only where the text says so: 'includes' normally adds to the ordinary meaning, whereas 'means' fixes the meaning. When two rules seem to give different answers, check which is expressed to be 'subject to' the other. If the text does not say what happens in a particular case, you cannot conclude that it is permitted or forbidden. Test any statement against the exact words, and ignore what you think the sensible policy should be.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The authority must publish its accounts by 30 September. It may publish them earlier.\" Statement: \"An authority that publishes its accounts on 15 September complies with this rule.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: publishing earlier is allowed and meets the deadline"
+      },
+      {
+       "key": "b",
+       "text": "False: the rule requires publication on 30 September itself"
+      },
+      {
+       "key": "c",
+       "text": "False: 'may' means the authority needs permission to publish early"
+      },
+      {
+       "key": "d",
+       "text": "Cannot say: the rule does not say how accounts should be published"
+      }
+     ],
+     "answer": "a",
+     "hint": "A deadline sets the latest date, and early publication is expressly allowed.",
+     "topic": "must and may"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"A shop must not sell the product to a person under 18 unless the person is accompanied by a parent.\" Statement: \"A 15-year-old accompanied by a parent may be sold the product.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "False: a person under 18 can never be sold the product"
+      },
+      {
+       "key": "b",
+       "text": "True: the prohibition does not apply where the person is accompanied by a parent"
+      },
+      {
+       "key": "c",
+       "text": "Cannot say: the rule does not say how old the parent must be"
+      },
+      {
+       "key": "d",
+       "text": "False: the shop must also check the child's age"
+      }
+     ],
+     "answer": "b",
+     "hint": "'Unless' creates an exception to the prohibition.",
+     "topic": "unless"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The panel may extend the deadline once, by up to 14 days, if it is satisfied that there are good reasons.\" Statement: \"According to this passage, the panel must extend the deadline whenever good reasons exist.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cannot say: the passage does not define 'good reasons'"
+      },
+      {
+       "key": "b",
+       "text": "True: the condition of good reasons has been met"
+      },
+      {
+       "key": "c",
+       "text": "True: the panel is limited to 14 days, so it must use them"
+      },
+      {
+       "key": "d",
+       "text": "False: 'may' gives the panel a discretion and not a duty"
+      }
+     ],
+     "answer": "d",
+     "hint": "'May' permits; it does not require.",
+     "topic": "discretion"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Applicants must provide a passport or a driving licence, and proof of address, which may be a utility bill or a bank statement dated within the last three months.\" Statement: \"An applicant with a passport and a bank statement dated five months ago meets the requirement.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: a passport and a bank statement are both on the accepted list"
+      },
+      {
+       "key": "b",
+       "text": "False: the proof of address must be dated within the last three months"
+      },
+      {
+       "key": "c",
+       "text": "Cannot say: the passage does not say whether the bank statement was recent"
+      },
+      {
+       "key": "d",
+       "text": "True: the date limit applies only to utility bills"
+      }
+     ],
+     "answer": "b",
+     "hint": "Read how far the date condition extends.",
+     "topic": "conditions on documents"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Subject to paragraph 4, officers may disclose information to the police. Paragraph 4: Officers must not disclose information about a person's health.\" Statement: \"An officer may disclose health information about a person to the police.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cannot say: the passage does not say why the police need the information"
+      },
+      {
+       "key": "b",
+       "text": "True: a power overrides a prohibition"
+      },
+      {
+       "key": "c",
+       "text": "True: the first sentence allows disclosure to the police"
+      },
+      {
+       "key": "d",
+       "text": "False: the power to disclose is subject to the prohibition in paragraph 4"
+      }
+     ],
+     "answer": "d",
+     "hint": "'Subject to' means the other paragraph prevails.",
+     "topic": "subject to"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"A claim must be supported by a receipt or a bank statement.\" Statement: \"A claim supported by both a receipt and a bank statement is invalid.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "False: 'or' is satisfied by either, and providing both does not breach the rule"
+      },
+      {
+       "key": "b",
+       "text": "Cannot say: the rule does not say what happens with extra documents"
+      },
+      {
+       "key": "c",
+       "text": "True: both documents duplicate each other"
+      },
+      {
+       "key": "d",
+       "text": "True: the rule allows only one type of evidence"
+      }
+     ],
+     "answer": "a",
+     "hint": "Giving more than is needed does not breach the rule.",
+     "topic": "and and or"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"In these Regulations, 'employee' includes a part-time worker but excludes a contractor.\" Statement: \"A part-time contractor is an employee under the Regulations.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: part-time workers are expressly included"
+      },
+      {
+       "key": "b",
+       "text": "False: contractors are expressly excluded"
+      },
+      {
+       "key": "c",
+       "text": "Cannot say: the definition includes part-timers but excludes contractors"
+      },
+      {
+       "key": "d",
+       "text": "False: part-time work is not covered by the definition"
+      }
+     ],
+     "answer": "c",
+     "hint": "The two limbs of the definition overlap for this person.",
+     "topic": "definitions"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Officers should keep records for six years and must keep them for at least two years.\" Statement: \"An officer who destroys records after three years has breached the mandatory requirement.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: officers are required to keep records for six years"
+      },
+      {
+       "key": "b",
+       "text": "Cannot say: the passage does not say what happens after two years"
+      },
+      {
+       "key": "c",
+       "text": "True: any destruction before six years breaches the rule"
+      },
+      {
+       "key": "d",
+       "text": "False: three years exceeds the two-year minimum, and 'should' is not binding"
+      }
+     ],
+     "answer": "d",
+     "hint": "'Must' sets the minimum, and 'should' is only guidance.",
+     "topic": "must and should"
+    }
+   ]
+  },
+  {
+   "title": "L12: Arguments by analogy and where comparisons break down",
+   "source": "Civil Service online tests: practice guidance, GOV.UK and Civil Service Jobs",
+   "body": "An argument by analogy says that because two things are alike in some respects, what is true of one will be true of the other. The strength of such an argument depends on how many relevant similarities there are, how important they are to the outcome, and whether there are relevant differences that undermine the comparison. A pilot scheme that reduced errors in one office is a good guide to another office if the offices share the same systems, staffing structure and kinds of work, but it is a weaker guide if the second office is much larger, serves a different population or has a feature that already addresses the problem. To weaken an analogy, point to a relevant difference or to something that makes the effect unnecessary or impossible in the new case. To strengthen it, show that the cases share the features that actually caused the result. Not every difference matters: that two towns have different names is irrelevant, but that one already bans traffic outside schools is crucial. Be wary of analogies that borrow persuasive power from a vivid image, such as comparing a government department to a ship that needs one captain, without showing that the key feature of the image applies. Another common flaw is to assume that scale does not matter, since what works with 20 people may fail with 2,000. Analogies can support a conclusion as probable but never prove it, so verdict questions often ask what can be said when only one similar case is known. Choose the answer that picks out the feature that matters for the outcome.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Lower speed limits near schools cut accidents in Town X, so lower limits near schools will cut accidents in Town Y.\" Which fact would most weaken the argument?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Town Y's school roads are already closed to traffic at school times"
+      },
+      {
+       "key": "b",
+       "text": "Town X introduced its lower limits two years ago"
+      },
+      {
+       "key": "c",
+       "text": "Town Y has a larger population than Town X"
+      },
+      {
+       "key": "d",
+       "text": "Town Y's schools are of a different age to those in Town X"
+      }
+     ],
+     "answer": "a",
+     "hint": "A feature of Y may already remove the problem.",
+     "topic": "relevant difference"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Retailers improved efficiency by running like businesses, so a hospital will be more efficient if it runs like a business.\" What is the weakness in this argument?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It assumes that retailers are efficient, which has not been proved"
+      },
+      {
+       "key": "b",
+       "text": "It draws a general conclusion from two examples"
+      },
+      {
+       "key": "c",
+       "text": "It does not show that a hospital has the features that made retail work"
+      },
+      {
+       "key": "d",
+       "text": "It argues from the opinion of those who work in retail"
+      }
+     ],
+     "answer": "c",
+     "hint": "The comparison needs the relevant features to be shared.",
+     "topic": "testing similarity"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"A flexible-hours trial in a 20-person team improved morale, so flexible hours will improve morale across a 2,000-person department.\" Which is the best criticism?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Flexible hours were tried in the wrong team"
+      },
+      {
+       "key": "b",
+       "text": "A team of 20 may not be representative of a department 100 times its size"
+      },
+      {
+       "key": "c",
+       "text": "The trial team was too old to be valid"
+      },
+      {
+       "key": "d",
+       "text": "Morale cannot be measured"
+      }
+     ],
+     "answer": "b",
+     "hint": "Scale can change how a measure works.",
+     "topic": "scale"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A policy-maker argues that a lower age limit will work in Country Z because it worked in Country Y. Which additional fact would most strengthen the argument?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Country Y has a larger land area than Country Z"
+      },
+      {
+       "key": "b",
+       "text": "The policy was introduced in Country Y by a popular government"
+      },
+      {
+       "key": "c",
+       "text": "Country Z and Country Y share the same enforcement system and age profile"
+      },
+      {
+       "key": "d",
+       "text": "Country Z has a longer history of the age limit"
+      }
+     ],
+     "answer": "c",
+     "hint": "Shared features that drive the result strengthen the argument.",
+     "topic": "strengthening an analogy"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"A ship needs a single captain in an emergency, so a department should be run by one individual rather than by a board.\" What is the main weakness?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The argument is based on a single captain's experience"
+      },
+      {
+       "key": "b",
+       "text": "Fast command in an emergency may not suit everyday departmental work"
+      },
+      {
+       "key": "c",
+       "text": "The argument assumes boards are always slow"
+      },
+      {
+       "key": "d",
+       "text": "The argument shows ships are better than departments"
+      }
+     ],
+     "answer": "b",
+     "hint": "The key feature of the image may not carry over.",
+     "topic": "vivid analogy"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The pilot of a new claims form in Wales cut errors by 18%. Which fact about England would most weaken the case for using the form there?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Most errors in England arise at a later stage, which the new form does not affect"
+      },
+      {
+       "key": "b",
+       "text": "The form was developed by staff in Wales"
+      },
+      {
+       "key": "c",
+       "text": "England has a larger population than Wales"
+      },
+      {
+       "key": "d",
+       "text": "England uses a different colour of paper for claims"
+      }
+     ],
+     "answer": "a",
+     "hint": "The form can help only where errors occur at the point it changes.",
+     "topic": "where the effect arises"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The merger of two agencies last decade saved 15% of costs. A proposed merger of two other agencies is similar.\" Statement: \"The proposed merger will save about 15%.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: the two mergers are similar"
+      },
+      {
+       "key": "b",
+       "text": "True: the earlier saving is the best estimate available"
+      },
+      {
+       "key": "c",
+       "text": "False: no two mergers save the same amount"
+      },
+      {
+       "key": "d",
+       "text": "Cannot say: the agencies may not share the features that produced the saving"
+      }
+     ],
+     "answer": "d",
+     "hint": "One similar case supports a probable outcome, not a certain figure.",
+     "topic": "limits of one case"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which of these arguments by analogy is the strongest?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The scheme worked in one council, so it will work in all other councils in the country"
+      },
+      {
+       "key": "b",
+       "text": "The scheme worked in a council next to the fourth, so it should work there as well"
+      },
+      {
+       "key": "c",
+       "text": "The scheme worked in a council with the same name as the fourth, so it should work there"
+      },
+      {
+       "key": "d",
+       "text": "The scheme worked in three similar councils, so it should work in a fourth with the same features"
+      }
+     ],
+     "answer": "d",
+     "hint": "Several relevant similarities and more than one case make it stronger.",
+     "topic": "strength of an analogy"
+    }
+   ]
+  },
+  {
+   "title": "L12: Approximate, hedged and range language in numerical prose",
+   "source": "Civil Service online tests: practice guidance, GOV.UK and Civil Service Jobs",
+   "body": "Passages often describe numbers with approximate or range words, and the verdict depends on exactly what the words allow. 'About', 'around', 'approximately' and 'roughly' mean that the figure may be slightly higher or lower, so a statement that depends on the exact value cannot be settled. 'Nearly' and 'almost' mean slightly below the figure, while 'just over' and 'more than' mean slightly above it. 'At least' sets a minimum, 'no more than' and 'up to' set a maximum, and 'between a third and a half' sets an interval with both limits, so any value in the interval is allowed. 'Fewer than 30' means 29 or fewer, and 'over half' means more than 50%. Combine bounds carefully. If fewer than 30 of 120 sites had no inspection, then more than 90 were inspected. If between a third and a half of 200 people work part-time, the number is between about 67 and 100, so a claim of more than 100 is impossible. Where an exact result is needed but only an approximate input is given, the answer is a range, and statements can be tested against the range. Percentages of approximate totals are approximate. Be careful with 'up to', which sets a ceiling but does not say that the ceiling was reached, and with 'no more than' costs per household multiplied by 'at least' a number of households, which gives a maximum cost only if the number of households is also capped. When the possible values lie wholly on one side of the claim, the verdict is true or false; if the claim falls inside the range, say 'cannot say'.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Nearly 5,000 people applied and the department accepted just over 1,000.\" Statement: \"More than 20% of applicants were accepted.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cannot say: 'nearly' and 'just over' are not precise"
+      },
+      {
+       "key": "b",
+       "text": "False: 1,000 out of 5,000 is exactly 20%"
+      },
+      {
+       "key": "c",
+       "text": "True: under 5,000 applicants and over 1,000 accepted gives over 20%"
+      },
+      {
+       "key": "d",
+       "text": "False: accepted applicants are always fewer than 20%"
+      }
+     ],
+     "answer": "c",
+     "hint": "Bounding both numbers pushes the ratio above 20%.",
+     "topic": "bounds"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The unit has 200 staff, of whom between a third and a half work part-time.\" Statement: \"More than 100 staff in the unit work part-time.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: a half is more than a third"
+      },
+      {
+       "key": "b",
+       "text": "False: half of 200 is 100, which is the most it can be"
+      },
+      {
+       "key": "c",
+       "text": "Cannot say: the passage does not say how many are full-time"
+      },
+      {
+       "key": "d",
+       "text": "True: 100 is within the range, so more than 100 is possible"
+      }
+     ],
+     "answer": "b",
+     "hint": "The upper limit is 100, so more than 100 is impossible.",
+     "topic": "range"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Fewer than 30 of the 120 sites had no inspection.\" Statement: \"At least 90 sites were inspected.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: if 29 or fewer were not inspected, 91 or more were"
+      },
+      {
+       "key": "b",
+       "text": "Cannot say: the passage does not say which sites were inspected"
+      },
+      {
+       "key": "c",
+       "text": "False: 90 sites is exactly 120 less 30"
+      },
+      {
+       "key": "d",
+       "text": "False: some sites may have been inspected twice"
+      }
+     ],
+     "answer": "a",
+     "hint": "Work out the minimum number inspected.",
+     "topic": "fewer than"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Up to 40% of the budget may be carried forward.\" Statement: \"At least 40% of the budget was carried forward.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "True: 40% is the amount that is allowed"
+      },
+      {
+       "key": "b",
+       "text": "Cannot say: 'up to' sets a ceiling and does not say that it was reached"
+      },
+      {
+       "key": "c",
+       "text": "True: the budget must be carried forward"
+      },
+      {
+       "key": "d",
+       "text": "False: only less than 40% may be carried forward"
+      }
+     ],
+     "answer": "b",
+     "hint": "A ceiling is not a target.",
+     "topic": "ceilings"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Over half of the 80 respondents, but fewer than two thirds, said yes.\" Statement: \"Between 41 and 53 respondents said yes.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cannot say: the number who said no is not given"
+      },
+      {
+       "key": "b",
+       "text": "False: half of 80 is 40, so 40 is possible"
+      },
+      {
+       "key": "c",
+       "text": "False: two thirds of 80 is 60"
+      },
+      {
+       "key": "d",
+       "text": "True: over half of 80 is at least 41, and below two thirds is at most 53"
+      }
+     ],
+     "answer": "d",
+     "hint": "Convert both limits to whole numbers.",
+     "topic": "interval"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The project cost approximately £2m, with at least £0.5m coming from other departments.\" Statement: \"The department paid no more than about £1.5m.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "False: other departments must have paid exactly £0.5m"
+      },
+      {
+       "key": "b",
+       "text": "False: the project cost £2m and the department paid £2m"
+      },
+      {
+       "key": "c",
+       "text": "True: the department paid the total less at least £0.5m"
+      },
+      {
+       "key": "d",
+       "text": "Cannot say: 'approximately' makes the total unclear"
+      }
+     ],
+     "answer": "c",
+     "hint": "A minimum from others gives a maximum for the department.",
+     "topic": "complementary bounds"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Response times improved by roughly a fifth, from around 10 days.\" Statement: \"Response times fell to exactly 8 days.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cannot say: 'roughly' and 'around' make the new time approximate"
+      },
+      {
+       "key": "b",
+       "text": "False: a fifth is less than 2 days"
+      },
+      {
+       "key": "c",
+       "text": "False: times can never be exactly 8 days"
+      },
+      {
+       "key": "d",
+       "text": "True: a fifth of 10 days is 2 days"
+      }
+     ],
+     "answer": "a",
+     "hint": "Approximate inputs do not support an exact conclusion.",
+     "topic": "approximation"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The scheme costs no more than £50 per household and covers at least 4,000 households.\" Statement: \"The scheme costs no more than £200,000.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "False: the scheme costs exactly £50 per household"
+      },
+      {
+       "key": "b",
+       "text": "True: 4,000 multiplied by £50 is £200,000"
+      },
+      {
+       "key": "c",
+       "text": "Cannot say: the number of households has a minimum but no maximum"
+      },
+      {
+       "key": "d",
+       "text": "True: the scheme costs less than £50 for each household"
+      }
+     ],
+     "answer": "c",
+     "hint": "A cap on cost per unit does not cap the total without a cap on units.",
+     "topic": "maximum and minimum"
+    }
+   ]
+  },
+  {
+   "title": "L12: Timing, thresholds and feedback in cause and effect",
+   "source": "Civil Service online tests: practice guidance, GOV.UK and Civil Service Jobs",
+   "body": "Cause and effect in public services is rarely immediate or linear, and verbal reasoning questions test whether you allow for this. A lag is a delay between a cause and its effect: a recruitment campaign launched in April does not produce fully productive staff in July if training takes six months. A threshold effect is a sudden change after a limit is passed: turnover may stay stable until workload goes above a level and then climb steeply, so a move within the safe zone says little about what happens beyond it. A feedback loop is circular: understaffing causes delays, delays cause more enquiries, and the enquiries take staff time away from processing and so cause further delays. Reinforcing loops make small problems grow, while balancing loops push a system back towards a target. Displacement happens when a measure removes a problem in one place and moves it to another, so a fall in claims in one area alongside a rise in a neighbouring area should lead you to test whether the problem has moved rather than disappeared. Regression to the mean happens because unusually bad (or good) results tend to be followed by results nearer the average, even without any intervention, so improvement among the worst performers is not by itself evidence that support worked unless a comparison group is used. Targets can distort behaviour: if a speed target is set for calls, staff may end calls early and repeat calls will rise. When groups differ in who is eligible, a change in outcomes may reflect the change in who takes part. Look at order, delay, size of changes and who is included before accepting a causal claim.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Eight offices with the worst error rates last year were given extra support. This year their average error rate fell by 20%. Offices with the best error rates last year saw their rates worsen slightly.\" Which explanation should be tested first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Errors are always lower in the second year"
+      },
+      {
+       "key": "b",
+       "text": "The extra support was too costly to be effective"
+      },
+      {
+       "key": "c",
+       "text": "The best offices became complacent because of the support"
+      },
+      {
+       "key": "d",
+       "text": "Regression to the mean, as extreme groups drift towards the average"
+      }
+     ],
+     "answer": "d",
+     "hint": "A comparison group is needed to separate the effect of support.",
+     "topic": "regression to the mean"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Understaffing causes delays. Delays generate more enquiries. Enquiries take staff time away from processing, which increases delays.\" Which description fits the pattern?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Displacement, in which the problem moves to another team"
+      },
+      {
+       "key": "b",
+       "text": "A reinforcing feedback loop, in which a small initial delay can grow"
+      },
+      {
+       "key": "c",
+       "text": "A lag, in which the effect arrives only after months"
+      },
+      {
+       "key": "d",
+       "text": "A threshold effect, in which nothing changes until a limit is passed"
+      }
+     ],
+     "answer": "b",
+     "hint": "Each effect feeds back into its own cause.",
+     "topic": "feedback"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Staff turnover is stable until workload exceeds 110% of capacity, and above that level it climbs steeply.\" Statement: \"A rise in workload from 95% to 105% of capacity is likely to increase turnover sharply.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "False: both levels are below the 110% threshold at which turnover starts to climb"
+      },
+      {
+       "key": "b",
+       "text": "True: a higher workload always increases turnover"
+      },
+      {
+       "key": "c",
+       "text": "True: 105% is close to the point at which turnover rises"
+      },
+      {
+       "key": "d",
+       "text": "Cannot say: the passage does not give the turnover rate"
+      }
+     ],
+     "answer": "a",
+     "hint": "Threshold effects apply only after the limit is crossed.",
+     "topic": "threshold"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"A recruitment campaign launched in April brings in new staff, who take about six months to become fully productive.\" Statement: \"The new staff will be fully productive by July.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "False: staff cannot start before April, so six months ends after July"
+      },
+      {
+       "key": "b",
+       "text": "True: the campaign was launched in April, so July is possible"
+      },
+      {
+       "key": "c",
+       "text": "True: staff are productive as soon as they are recruited"
+      },
+      {
+       "key": "d",
+       "text": "Cannot say: the date on which staff will start is not given"
+      }
+     ],
+     "answer": "a",
+     "hint": "A lag of six months from April cannot end by July.",
+     "topic": "lag"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"After a crackdown on benefit fraud in Region A, claims fell by 15% in A and rose by 9% in neighbouring Region B, where there was no crackdown.\" Which interpretation should be examined before the crackdown is called a success?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The crackdown cut fraud everywhere, including in Region B"
+      },
+      {
+       "key": "b",
+       "text": "Region B's population must have been larger"
+      },
+      {
+       "key": "c",
+       "text": "Some of the problem may have been displaced to Region B and not removed"
+      },
+      {
+       "key": "d",
+       "text": "Claims fall in every region after a crackdown"
+      }
+     ],
+     "answer": "c",
+     "hint": "A measure can move a problem without reducing it.",
+     "topic": "displacement"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"A call-answering target was introduced. Average answering time fell by 40%, but repeat calls on the same issue rose by 25%.\" What is the most likely explanation?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The target was set too low to have any effect"
+      },
+      {
+       "key": "b",
+       "text": "Staff ended calls early to meet the speed target"
+      },
+      {
+       "key": "c",
+       "text": "Repeat calls are counted twice in the figures"
+      },
+      {
+       "key": "d",
+       "text": "Callers became more demanding after the target was introduced"
+      }
+     ],
+     "answer": "b",
+     "hint": "A narrow target can distort behaviour.",
+     "topic": "targets"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"Teams with more training days had lower error rates, so training reduces errors.\" Which alternative explanation reverses the direction of cause?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Errors are counted differently in teams that train more"
+      },
+      {
+       "key": "b",
+       "text": "Larger teams have more training days than small teams"
+      },
+      {
+       "key": "c",
+       "text": "Training days are recorded inaccurately in some teams"
+      },
+      {
+       "key": "d",
+       "text": "Teams with low error rates have more time and freedom to take training"
+      }
+     ],
+     "answer": "d",
+     "hint": "The cause could run from low errors to more training.",
+     "topic": "reverse causation"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "\"The first-time pass rate rose after the exam was changed. At the same time, only candidates with a prior qualification were made eligible to take it.\" Statement: \"The change to the exam made it easier to pass.\" Which verdict is correct?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Cannot say: the change in who is eligible could explain the higher pass rate"
+      },
+      {
+       "key": "b",
+       "text": "True: the eligible candidates found the exam easier"
+      },
+      {
+       "key": "c",
+       "text": "True: the pass rate rose after the exam was changed"
+      },
+      {
+       "key": "d",
+       "text": "False: a prior qualification makes passing harder"
+      }
+     ],
+     "answer": "a",
+     "hint": "Who takes part changed as well as the exam.",
+     "topic": "changed population"
+    }
+   ]
+  },
+  {
+   "title": "L12: Responding to a leak of sensitive information",
+   "source": "Government Security Classifications Policy, Official Secrets Act 1989 and the Civil Service Code, GOV.UK",
+   "body": "Government information is classified as OFFICIAL, SECRET or TOP SECRET, and some official material carries the handling caveat OFFICIAL-SENSITIVE for information whose disclosure would be particularly damaging. Staff are responsible for handling it according to its marking and the need-to-know principle. The Official Secrets Act 1989 makes unauthorised disclosure of certain categories of information, including security and intelligence, defence, international relations and information that could assist crime, a criminal offence for those who have, or had, access to it. Separate from criminal law, the Civil Service Code requires officials to protect information, and unauthorised disclosure may lead to disciplinary action. A leak is the unauthorised release of information to the media or others. When a leak is suspected, managers should report it quickly to the departmental security unit, who will decide whether and how to investigate. They should avoid accusing anyone, avoid trying to find the source on their own, preserve any relevant records, and limit further circulation of the material if it is still sensitive. Staff who are approached by journalists about material they believe is leaked should refer the enquiry to the press office and should not confirm or deny. A distinction exists between a leak and a protected disclosure: a worker raising a concern about wrongdoing through the proper channels, such as the nominated officers or the Civil Service Commission, is protected, and the leak procedure must not be used to identify or penalise a genuine whistleblower. Lessons from leaks include reviewing circulation lists, marking documents correctly and reminding staff of their responsibilities.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Draft policy proposals marked OFFICIAL-SENSITIVE appear in a newspaper. You manage the team that held the drafts. What is the most effective first step?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Ask each team member in turn whether they were the source of the leak"
+      },
+      {
+       "key": "b",
+       "text": "Email the journalist to ask them to delete the story"
+      },
+      {
+       "key": "c",
+       "text": "Tell the whole department, to warn everyone about what has happened"
+      },
+      {
+       "key": "d",
+       "text": "Report it to the security unit and follow their instructions"
+      }
+     ],
+     "answer": "d",
+     "hint": "Security specialists decide how a leak is investigated.",
+     "topic": "reporting a leak"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "You strongly suspect a particular colleague of leaking the drafts, but you have no evidence. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Watch the colleague's emails yourself until you find proof"
+      },
+      {
+       "key": "b",
+       "text": "Ask the colleague to sign a statement denying that they were the source"
+      },
+      {
+       "key": "c",
+       "text": "Share your concern with the security unit and do not confront the colleague"
+      },
+      {
+       "key": "d",
+       "text": "Remove the colleague from the project immediately and tell the others why"
+      }
+     ],
+     "answer": "c",
+     "hint": "Suspicion is not proof, and the investigation belongs to the specialists.",
+     "topic": "avoiding accusation"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A journalist telephones you at your desk, quoting from the leaked draft and asking you to confirm it. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Deny the story, since it is based on a leak and cannot be verified"
+      },
+      {
+       "key": "b",
+       "text": "Do not confirm or deny, and refer the enquiry to the press office"
+      },
+      {
+       "key": "c",
+       "text": "Ask the journalist who gave them the draft and report their answer"
+      },
+      {
+       "key": "d",
+       "text": "Confirm it quickly so that the story is not published inaccurately"
+      }
+     ],
+     "answer": "b",
+     "hint": "Press enquiries go through the press office.",
+     "topic": "media enquiries"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Copies of the material are still circulating on a wide email list. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Delete all copies you can reach, including those held by other teams"
+      },
+      {
+       "key": "b",
+       "text": "Leave the list as it is to avoid drawing more attention"
+      },
+      {
+       "key": "c",
+       "text": "Send a message to the whole list saying that the material has been leaked"
+      },
+      {
+       "key": "d",
+       "text": "Ask security whether to restrict circulation, and limit access to those who need it"
+      }
+     ],
+     "answer": "d",
+     "hint": "Limiting circulation reduces further harm, with advice from security.",
+     "topic": "containing harm"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A junior member of your team tells you privately that they gave the draft to a journalist because they believed that the policy was unlawful. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Pass it to the security unit and HR, and point them to proper channels"
+      },
+      {
+       "key": "b",
+       "text": "Keep it between the two of you, as the member is acting in good faith"
+      },
+      {
+       "key": "c",
+       "text": "Advise them to tell the journalist to withdraw the story"
+      },
+      {
+       "key": "d",
+       "text": "Dismiss them on the spot, since they have admitted the disclosure"
+      }
+     ],
+     "answer": "a",
+     "hint": "A disclosure admitted must be reported, and the concern itself should be channelled properly.",
+     "topic": "dealing with an admission"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A colleague raises a concern about wrongdoing through the nominated officer for whistleblowing. Soon after, the department begins a leak inquiry on the same subject. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Pause the whistleblowing concern until the leak inquiry is over"
+      },
+      {
+       "key": "b",
+       "text": "Share the colleague's identity with the leak inquiry team to help it"
+      },
+      {
+       "key": "c",
+       "text": "Make sure the leak process is not used to identify or penalise them"
+      },
+      {
+       "key": "d",
+       "text": "Merge the two processes so that all information is dealt with in one place"
+      }
+     ],
+     "answer": "c",
+     "hint": "Genuine whistleblowers must be protected from detriment.",
+     "topic": "whistleblower protection"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "After the inquiry, the leak is traced to a lack of controls on who could view the drafts. What is the most effective response from a team manager?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Move the drafts to a shared drive that everyone in the department can access"
+      },
+      {
+       "key": "b",
+       "text": "Review circulation, mark documents properly and remind staff of their duties"
+      },
+      {
+       "key": "c",
+       "text": "Tell staff that future leaks will result in dismissal and leave it there"
+      },
+      {
+       "key": "d",
+       "text": "Stop sharing any drafts with anyone outside the immediate team"
+      }
+     ],
+     "answer": "b",
+     "hint": "Fix the controls as well as the individual case.",
+     "topic": "preventing a repeat"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "You find a paper marked OFFICIAL-SENSITIVE left on a train seat by a colleague. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Leave it where it is, since it is no longer your responsibility"
+      },
+      {
+       "key": "b",
+       "text": "Secure it, report the loss to the security unit and tell the colleague's manager"
+      },
+      {
+       "key": "c",
+       "text": "Hand it to the train staff and tell nobody in the department"
+      },
+      {
+       "key": "d",
+       "text": "Read it to find out whose it is, and then post it back to them"
+      }
+     ],
+     "answer": "b",
+     "hint": "A security incident must be reported even if the cause is innocent.",
+     "topic": "handling security incidents"
+    }
+   ]
+  },
+  {
+   "title": "L12: Leading staff through a restructure",
+   "source": "ACAS guidance on redundancy and collective consultation, Trade Union and Labour Relations (Consolidation) Act 1992 and Civil Service Management Code",
+   "body": "A restructure means that roles are closed, merged or created and staff may be redeployed, offered new roles or made redundant. Leading it well requires fairness, legal compliance and honest communication. An employer proposing to dismiss 20 or more employees as redundant at one establishment within 90 days must consult recognised trade unions or elected employee representatives, starting at least 30 days before the first dismissal takes effect, or 45 days where 100 or more are proposed. Consultation must be genuine, and it takes place while the proposals can still be changed. It should cover ways of avoiding dismissals, reducing the numbers and softening the effects, such as redeployment, retraining and voluntary options. The Civil Service has its own compensation scheme, and departments usually follow similar principles even for smaller changes, as well as their own agreements with the trade unions. Selection must use fair and objective criteria, applied consistently and kept free from discrimination: for example, staff on maternity leave or with protected characteristics must not be placed at a disadvantage, and an equality analysis is usually carried out. Managers should be open with their teams, explaining what is known, what is not yet decided and when more information will come, and should not make promises that they cannot keep. They should keep records of the process, support staff wellbeing, and recognise that those who remain also experience stress, a feeling known as survivor guilt, and may need support. Rumour fills a vacuum, so regular, honest updates are better than silence. Rules vary by department, so managers should work with HR and the trade unions at each stage.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Your department proposes to cut 60 posts at one site. When must consultation with the trade unions begin?",
+     "options": [
+      {
+       "key": "a",
+       "text": "After the individual selection interviews are complete"
+      },
+      {
+       "key": "b",
+       "text": "Once the final decision has been taken, so that the unions know the outcome"
+      },
+      {
+       "key": "c",
+       "text": "Only if more than 100 posts are affected"
+      },
+      {
+       "key": "d",
+       "text": "At least 30 days before the first dismissal, while proposals can still change"
+      }
+     ],
+     "answer": "d",
+     "hint": "Consultation is legally required for 20 or more, and must start early.",
+     "topic": "collective consultation"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A staff member asks you privately whether their post is safe. The decisions have not yet been taken. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Reassure them that their post is safe, to keep them calm"
+      },
+      {
+       "key": "b",
+       "text": "Tell them to start looking for another job just in case"
+      },
+      {
+       "key": "c",
+       "text": "Be honest about what is known, and say when more will be available"
+      },
+      {
+       "key": "d",
+       "text": "Tell them that you cannot discuss the matter at all"
+      }
+     ],
+     "answer": "c",
+     "hint": "Honesty without false promises maintains trust.",
+     "topic": "honest communication"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "You must select staff for redundancy from a group doing the same job. What is the most effective approach?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Use fair, objective criteria agreed in advance, applied consistently and recorded"
+      },
+      {
+       "key": "b",
+       "text": "Select the staff you judge to be the weakest performers, based on your experience"
+      },
+      {
+       "key": "c",
+       "text": "Select those who have been in post the shortest time without reference to any criteria"
+      },
+      {
+       "key": "d",
+       "text": "Ask the team to volunteer and select the first to respond"
+      }
+     ],
+     "answer": "a",
+     "hint": "Selection should be objective, consistent and documented.",
+     "topic": "fair selection"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "One of the staff at risk of redundancy is on maternity leave. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Inform and consult them on the same basis, and offer suitable alternative roles"
+      },
+      {
+       "key": "b",
+       "text": "Delay all contact with them until they return from maternity leave"
+      },
+      {
+       "key": "c",
+       "text": "Remove them from the pool altogether, since they are not at work at present"
+      },
+      {
+       "key": "d",
+       "text": "Include them in the selection pool without contacting them while they are away"
+      }
+     ],
+     "answer": "a",
+     "hint": "Staff on maternity leave have protections and must not be put at a disadvantage.",
+     "topic": "protected groups"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Rumours that 'half the department is going' are damaging morale, but no decisions have been made. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Deny that there will be any changes"
+      },
+      {
+       "key": "b",
+       "text": "Tell the team who you think is most at risk"
+      },
+      {
+       "key": "c",
+       "text": "Say nothing until a final decision is made, to avoid contradicting the rumours"
+      },
+      {
+       "key": "d",
+       "text": "Give regular, honest updates about what is and is not decided, and when more will be known"
+      }
+     ],
+     "answer": "d",
+     "hint": "Silence lets rumour fill the gap.",
+     "topic": "rumours"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "After a restructure, staff who remain say that they feel guilty and overloaded. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Tell them that the strain is temporary and will pass by itself"
+      },
+      {
+       "key": "b",
+       "text": "Acknowledge the strain, review workload and offer support"
+      },
+      {
+       "key": "c",
+       "text": "Remind them that they are fortunate to still have jobs"
+      },
+      {
+       "key": "d",
+       "text": "Hold a celebration of the new structure to lift morale"
+      }
+     ],
+     "answer": "b",
+     "hint": "Those who stay also need support.",
+     "topic": "survivor guilt"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A senior colleague suggests that consultation with the unions is a formality and that decisions can be treated as final. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Postpone the consultation until after the decisions have been implemented"
+      },
+      {
+       "key": "b",
+       "text": "Agree, but hold the consultation meetings so that the process looks proper"
+      },
+      {
+       "key": "c",
+       "text": "Explain that consultation must be genuine, with proposals open to change"
+      },
+      {
+       "key": "d",
+       "text": "Tell the unions privately what has already been decided"
+      }
+     ],
+     "answer": "c",
+     "hint": "Sham consultation can be challenged legally.",
+     "topic": "genuine consultation"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Before selecting people for the new structure, you realise that the proposed criteria might disadvantage part-time staff. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Remove part-time staff from the exercise"
+      },
+      {
+       "key": "b",
+       "text": "Carry out an equality analysis and adjust the criteria first"
+      },
+      {
+       "key": "c",
+       "text": "Apply the criteria anyway, as part-time staff were not named in them"
+      },
+      {
+       "key": "d",
+       "text": "Wait for a complaint before reviewing the criteria"
+      }
+     ],
+     "answer": "b",
+     "hint": "Check for indirect discrimination before applying criteria.",
+     "topic": "equality analysis"
+    }
+   ]
+  },
+  {
+   "title": "L12: Reporting honestly on a project that is going wrong",
+   "source": "Government Functional Standard for Project Delivery, Cabinet Office guidance on assurance and delivery confidence assessments",
+   "body": "Major projects are often reported with a delivery confidence rating, usually shown as green, amber-green, amber, amber-red or red, summarising how likely the project is to deliver to time, cost and quality. Independent assurance, such as a Gateway review, tests whether a project is ready to move to its next stage and gives an honest view to the senior responsible owner, the person who is accountable for the project's success. Early honest reporting is a central principle of project delivery: problems found early cost less to fix, and a rating that is inflated to avoid a difficult conversation (sometimes called 'watermelon' reporting, green on the outside and red inside) deprives decision-makers of the chance to act. Good reporting states what the issue is, its effect on time, cost and benefits, what is being done and what decisions are needed. Optimism bias is a known tendency to under-estimate cost and time and over-estimate benefits, and the Treasury's Green Book requires appraisals to adjust for it. When a project is failing, options include reset (with a new baseline), descoping, stopping or changing delivery partner; each should be assessed against value for money, and recorded decisions should explain why. Those delivering have a duty under the Civil Service Code to be honest, and accounting officers can ask for a written ministerial direction when they have a concern about regularity, propriety, value for money or feasibility. Staff should be able to report bad news without fear, and leaders should reward early warnings and not punish messengers.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Your project is three months late and £2m over budget, but your sponsor has asked you to keep the rating green until a funding decision is made. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Change it to amber, as a compromise between the two views"
+      },
+      {
+       "key": "b",
+       "text": "Keep it green and aim to catch up before anyone notices"
+      },
+      {
+       "key": "c",
+       "text": "Keep it green and mention the delay in the narrative comments"
+      },
+      {
+       "key": "d",
+       "text": "Report the rating honestly, set out the impact and the decisions needed"
+      }
+     ],
+     "answer": "d",
+     "hint": "Honest rating gives decision-makers the chance to act.",
+     "topic": "delivery confidence"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A team member reports a serious technical problem, but fears that the news will be unwelcome. What is the most effective response from the project manager?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Thank them, assess the impact and escalate it with options"
+      },
+      {
+       "key": "b",
+       "text": "Ask them to hold the news until a fix is available"
+      },
+      {
+       "key": "c",
+       "text": "Tell them to present it at the next scheduled board meeting"
+      },
+      {
+       "key": "d",
+       "text": "Keep it within the team until the cost of a fix is known"
+      }
+     ],
+     "answer": "a",
+     "hint": "Early warning is better than a late surprise.",
+     "topic": "early warning"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "An independent assurance review gives the project an amber-red rating. The senior responsible owner asks you to challenge the reviewers' findings. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Withhold the report from the board until it is amended"
+      },
+      {
+       "key": "b",
+       "text": "Commission a second review from a more friendly team"
+      },
+      {
+       "key": "c",
+       "text": "Check factual errors with the reviewers, but accept a rating the evidence supports"
+      },
+      {
+       "key": "d",
+       "text": "Ask the reviewers to change the rating to amber"
+      }
+     ],
+     "answer": "c",
+     "hint": "Assurance must remain independent and honest.",
+     "topic": "independent assurance"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The business case for a project assumed that benefits would arrive in year one, but similar projects have usually been late. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Apply optimism bias adjustments in line with the Green Book"
+      },
+      {
+       "key": "b",
+       "text": "Delay the case until a similar project has finished"
+      },
+      {
+       "key": "c",
+       "text": "Keep the assumption, as the team is more capable than most"
+      },
+      {
+       "key": "d",
+       "text": "Remove the benefits from the case altogether"
+      }
+     ],
+     "answer": "a",
+     "hint": "The Green Book requires adjustments for optimism bias.",
+     "topic": "optimism bias"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A project is failing, and an options paper shows that continuing, resetting and stopping would each cost different amounts. What is the most effective approach?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Recommend continuing, because money has already been spent"
+      },
+      {
+       "key": "b",
+       "text": "Present the options without a view, to avoid taking responsibility"
+      },
+      {
+       "key": "c",
+       "text": "Compare the options on value for money and risk, and recommend one"
+      },
+      {
+       "key": "d",
+       "text": "Recommend stopping, because the project has had bad publicity"
+      }
+     ],
+     "answer": "c",
+     "hint": "Past spending is sunk and should not decide the choice.",
+     "topic": "options appraisal"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "As a project manager you realise that a decision by the senior responsible owner will cause the project to breach spending rules. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Follow the decision and say nothing, as the owner is accountable"
+      },
+      {
+       "key": "b",
+       "text": "Raise it with the owner and finance, and ask for the instruction in writing"
+      },
+      {
+       "key": "c",
+       "text": "Quietly delay the decision until the owner changes their mind"
+      },
+      {
+       "key": "d",
+       "text": "Report the owner to the press office"
+      }
+     ],
+     "answer": "b",
+     "hint": "Propriety concerns need to be raised properly and recorded.",
+     "topic": "propriety"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A weekly report shows a red risk, but an executive says that red reports 'cause panic' and asks you to describe it as 'a challenge'. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Remove the risk from the weekly report and discuss it verbally"
+      },
+      {
+       "key": "b",
+       "text": "Use the word 'challenge', as the executive is more senior"
+      },
+      {
+       "key": "c",
+       "text": "Colour the risk amber, so that it can be changed back later"
+      },
+      {
+       "key": "d",
+       "text": "State the risk factually and explain why plain language helps decisions"
+      }
+     ],
+     "answer": "d",
+     "hint": "Softening language can hide the severity of a risk.",
+     "topic": "plain reporting"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "After an honest red report, the board asks who is to blame. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Avoid answering until after the next report"
+      },
+      {
+       "key": "b",
+       "text": "Focus on what happened and what is being done, and encourage learning"
+      },
+      {
+       "key": "c",
+       "text": "Say that the problem is down to the supplier alone"
+      },
+      {
+       "key": "d",
+       "text": "Name the individual who made the earliest mistake"
+      }
+     ],
+     "answer": "b",
+     "hint": "A learning culture encourages early reporting.",
+     "topic": "blame"
+    }
+   ]
+  },
+  {
+   "title": "L12: Accountability when work crosses departmental boundaries",
+   "source": "HM Treasury Managing Public Money, and Cabinet Office guidance on cross-government working",
+   "body": "Many outcomes, for example reducing homelessness or improving digital services, depend on several departments and agencies working together. Each body still has its own minister, budget and accounting officer. Under Managing Public Money, an accounting officer is personally answerable to Parliament for the regularity, propriety, value for money and feasibility of the spending in their organisation, and that responsibility cannot be handed to another department. When departments work together, good practice is to agree in writing who is responsible for what: a memorandum of understanding or a service-level agreement sets out the aims, roles, funding, how decisions are made, how information is shared and how disputes are resolved. Often one organisation is named as lead, and a single senior responsible owner is given the accountability for delivery. Shared data requires a lawful basis and a data-sharing agreement. Funding can be transferred by agreed mechanisms, and spending in one body cannot be treated as spending in another unless this is properly authorised. Where partners disagree, issues should be raised early and escalated through the governance structure, for example a programme board, and then to senior officials or ministers if needed. Behaviours that help include being open about constraints, understanding partners' priorities, keeping commitments and sharing credit. Behaviours that harm include blame-shifting, unclear decision rights, duplicated work and surprises. Records of decisions help when accountability is later questioned.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Two departments agree to jointly fund a service, but nobody is clearly in charge of decisions. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Propose a written agreement setting out roles, funding and a named lead"
+      },
+      {
+       "key": "b",
+       "text": "Make the decisions yourself as you are the most closely involved"
+      },
+      {
+       "key": "c",
+       "text": "Leave it unclear, so that everyone is free to adapt as things change"
+      },
+      {
+       "key": "d",
+       "text": "Wait to see who takes the initiative in practice"
+      }
+     ],
+     "answer": "a",
+     "hint": "Clear written roles prevent later disputes.",
+     "topic": "roles and agreements"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Your department is asked to pay for part of a service delivered by another department, but the arrangement has not been approved by your finance team. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Agree informally and sort out the finance later"
+      },
+      {
+       "key": "b",
+       "text": "Pay the sum, since the other department is responsible for the service"
+      },
+      {
+       "key": "c",
+       "text": "Seek approval from your finance team and accounting officer before agreeing to pay"
+      },
+      {
+       "key": "d",
+       "text": "Refuse to discuss funding with any other department"
+      }
+     ],
+     "answer": "c",
+     "hint": "An accounting officer is answerable for the spending of their own department.",
+     "topic": "accounting officer"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A partner department wants a set of personal data from your service to help its own project. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Send the data, because both bodies are part of government"
+      },
+      {
+       "key": "b",
+       "text": "Refuse, because personal data can never be shared between departments"
+      },
+      {
+       "key": "c",
+       "text": "Send it by email and review the agreement later"
+      },
+      {
+       "key": "d",
+       "text": "Check for a lawful basis and a data-sharing agreement first"
+      }
+     ],
+     "answer": "d",
+     "hint": "Data sharing needs a lawful basis and an agreement.",
+     "topic": "data sharing"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A shared programme is behind schedule, and the other department is blaming yours in front of ministers. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Blame the other department's staff in return"
+      },
+      {
+       "key": "b",
+       "text": "Say nothing and hope that the matter is forgotten"
+      },
+      {
+       "key": "c",
+       "text": "Offer the facts calmly, agree a joint account and escalate through the board"
+      },
+      {
+       "key": "d",
+       "text": "Brief your minister on the other department's failures"
+      }
+     ],
+     "answer": "c",
+     "hint": "Joint, factual accounts and agreed governance resolve blame disputes.",
+     "topic": "handling blame"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "You discover that the partner body's decision will damage your department's part of the programme. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Raise it early with your counterpart, then use the board if it is unresolved"
+      },
+      {
+       "key": "b",
+       "text": "Change your own plans quietly to avoid the damage"
+      },
+      {
+       "key": "c",
+       "text": "Tell the press that the partner's decision is a problem"
+      },
+      {
+       "key": "d",
+       "text": "Wait until the effect is clear before telling anyone"
+      }
+     ],
+     "answer": "a",
+     "hint": "Early, direct communication comes before escalation.",
+     "topic": "early escalation"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Your minister wants to claim credit for a joint outcome that also relied heavily on a partner department's work. What is the most effective advice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Advise omitting the partner, to make the message simpler"
+      },
+      {
+       "key": "b",
+       "text": "Advise that the contribution of the partner should be acknowledged accurately"
+      },
+      {
+       "key": "c",
+       "text": "Advise saying nothing about the outcome until the partner has spoken"
+      },
+      {
+       "key": "d",
+       "text": "Advise claiming the credit, since the minister's department led"
+      }
+     ],
+     "answer": "b",
+     "hint": "Honest, shared credit supports trust in joint working.",
+     "topic": "sharing credit"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A joint decision was made at a meeting, but afterwards two departments recall it differently. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Rely on your own memory since you were present"
+      },
+      {
+       "key": "b",
+       "text": "Ask your minister to tell the other minister"
+      },
+      {
+       "key": "c",
+       "text": "Assume the other department will follow its own version"
+      },
+      {
+       "key": "d",
+       "text": "Circulate a written note of decisions and actions, and confirm this one now"
+      }
+     ],
+     "answer": "d",
+     "hint": "Records of decisions help when accountability is questioned.",
+     "topic": "records"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Your department is named as lead for a cross-government project, but the partner departments do not fully cooperate. What is the most effective response?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Set out what is needed and by when, use governance, and escalate if it persists"
+      },
+      {
+       "key": "b",
+       "text": "Reduce the scope of the project without telling them"
+      },
+      {
+       "key": "c",
+       "text": "Ask the partners to replace their staff"
+      },
+      {
+       "key": "d",
+       "text": "Do the partners' work yourself to keep things moving"
+      }
+     ],
+     "answer": "a",
+     "hint": "A lead should use governance and escalation, not take over or hide problems.",
+     "topic": "leading across boundaries"
+    }
+   ]
+  }
+ ]
+}

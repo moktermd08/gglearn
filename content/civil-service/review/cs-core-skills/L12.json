@@ -1,0 +1,3210 @@
+{
+ "trackSlug": "cs-core-skills",
+ "status": "review",
+ "items": [
+  {
+   "title": "L12: Compound logic with AND, OR and NOT",
+   "source": "Microsoft Support: AND, OR, NOT and IF functions",
+   "body": "Real rules combine several conditions. A rule might read: =IF(AND(B2>=18,OR(C2=\"UK\",C2=\"IE\"),NOT(D2=\"Yes\")),\"Eligible\",\"Refer\"). B2 is age, C2 is country and D2 is a flag for a previous refusal. AND returns TRUE only if every condition is TRUE. OR returns TRUE if at least one is. NOT reverses a result. Four rows show the effect. Age 17, UK, No gives Refer, because the age test fails. Age 18, IE, No gives Eligible. Age 30, FR, No gives Refer, because the country test fails. Age 40, UK, Yes gives Refer, because NOT(D2=\"Yes\") is FALSE. Text comparisons are not case-sensitive, so \"uk\" matches \"UK\".\n\nTwo points catch people out. First, AND and OR do not stop early. AND(A2<>0,10/A2>1) still works out the second test when A2 is 0, and returns #DIV/0!. IF does choose between its branches, so =IF(A2=0,\"\",10/A2) is safe. Second, an empty B2 counts as 0, so B2>=18 is FALSE and the row is sent to Refer, which may be right for the wrong reason. Test for blanks explicitly if missing data should be reported differently.\n\nNOT(AND(x,y)) is the same as OR(NOT(x),NOT(y)), and NOT(OR(x,y)) is the same as AND(NOT(x),NOT(y)). Use whichever is easier to read. When the rule is for a policy decision, put each condition in its own labelled column, so that a reviewer can see which test failed. The final formula then simply combines the TRUE or FALSE flags. Test every boundary: age exactly 18, age 17, and each country.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "With the formula given, what does a row of age 18, country IE and previous refusal No return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Eligible"
+      },
+      {
+       "key": "b",
+       "text": "Refer, because IE is not UK"
+      },
+      {
+       "key": "c",
+       "text": "Refer, because 18 is not above 18"
+      },
+      {
+       "key": "d",
+       "text": "FALSE, because OR returned two values"
+      }
+     ],
+     "answer": "a",
+     "hint": "All three conditions are met: 18 or over, a listed country and no previous refusal.",
+     "topic": "AND, OR, NOT"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does the row age 40, country UK and previous refusal Yes return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Eligible, since age and country pass"
+      },
+      {
+       "key": "b",
+       "text": "Eligible, because OR is already TRUE"
+      },
+      {
+       "key": "c",
+       "text": "Refer"
+      },
+      {
+       "key": "d",
+       "text": "#VALUE!, because Yes is text"
+      }
+     ],
+     "answer": "c",
+     "hint": "NOT(D2=\"Yes\") is FALSE, which makes the AND fail.",
+     "topic": "NOT"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which condition causes the row age 30, country FR, previous refusal No to be referred?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The age test"
+      },
+      {
+       "key": "b",
+       "text": "The NOT test on the refusal flag"
+      },
+      {
+       "key": "c",
+       "text": "The IF function itself"
+      },
+      {
+       "key": "d",
+       "text": "The OR test on country"
+      }
+     ],
+     "answer": "d",
+     "hint": "FR is neither UK nor IE.",
+     "topic": "Reading a rule"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A2 holds 0. What does =AND(A2<>0,10/A2>1) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "FALSE"
+      },
+      {
+       "key": "b",
+       "text": "#DIV/0!"
+      },
+      {
+       "key": "c",
+       "text": "TRUE"
+      },
+      {
+       "key": "d",
+       "text": "0"
+      }
+     ],
+     "answer": "b",
+     "hint": "AND evaluates every argument and does not stop early.",
+     "topic": "No short-circuit"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which formula safely avoids the divide-by-zero error when A2 might be 0?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=AND(A2<>0,10/A2>0)"
+      },
+      {
+       "key": "b",
+       "text": "=IF(A2=0,\"\",10/A2)"
+      },
+      {
+       "key": "c",
+       "text": "=OR(A2=0,10/A2>0)"
+      },
+      {
+       "key": "d",
+       "text": "=IFNA(10/A2,\"\")+0"
+      }
+     ],
+     "answer": "b",
+     "hint": "IF only evaluates the branch it chooses.",
+     "topic": "Safe division"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "B2 is empty. What does B2>=18 return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "TRUE"
+      },
+      {
+       "key": "b",
+       "text": "#N/A"
+      },
+      {
+       "key": "c",
+       "text": "An empty cell"
+      },
+      {
+       "key": "d",
+       "text": "FALSE"
+      }
+     ],
+     "answer": "d",
+     "hint": "A blank is treated as zero in comparisons.",
+     "topic": "Blanks"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which expression is equivalent to NOT(AND(x,y))?",
+     "options": [
+      {
+       "key": "a",
+       "text": "AND(NOT(x),NOT(y))"
+      },
+      {
+       "key": "b",
+       "text": "OR(x,y)"
+      },
+      {
+       "key": "c",
+       "text": "NOT(OR(x,y))"
+      },
+      {
+       "key": "d",
+       "text": "OR(NOT(x),NOT(y))"
+      }
+     ],
+     "answer": "d",
+     "hint": "This is De Morgan's rule.",
+     "topic": "De Morgan"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "How does the test C2=\"UK\" treat a cell that contains \"uk\" in lower case?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It counts as a match, because the comparison ignores case"
+      },
+      {
+       "key": "b",
+       "text": "It fails, because the capital letters are different"
+      },
+      {
+       "key": "c",
+       "text": "It matches only if the cell is formatted as text"
+      },
+      {
+       "key": "d",
+       "text": "It returns #VALUE! until the case is corrected"
+      }
+     ],
+     "answer": "a",
+     "hint": "The = operator ignores case.",
+     "topic": "Text comparison"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why put each condition in its own labelled column before combining them?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Excel evaluates separate columns faster than one formula"
+      },
+      {
+       "key": "b",
+       "text": "The AND function will not accept more than two tests"
+      },
+      {
+       "key": "c",
+       "text": "A reviewer can see which test failed for each row"
+      },
+      {
+       "key": "d",
+       "text": "It removes the need to test the boundary values"
+      }
+     ],
+     "answer": "c",
+     "hint": "It makes the rule auditable.",
+     "topic": "Auditable design"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which test set best checks the eligibility rule?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Age exactly 18, age 17, and each country listed"
+      },
+      {
+       "key": "b",
+       "text": "Five random rows taken from the live data"
+      },
+      {
+       "key": "c",
+       "text": "Only rows that are expected to come out Eligible"
+      },
+      {
+       "key": "d",
+       "text": "Only the oldest and youngest ages in the data"
+      }
+     ],
+     "answer": "a",
+     "hint": "Boundaries and each branch need a test.",
+     "topic": "Testing"
+    }
+   ]
+  },
+  {
+   "title": "L12: Lookup keys: data types, spaces and duplicates",
+   "source": "Microsoft Support: XLOOKUP, MATCH, COUNTIF and TRIM functions",
+   "body": "Most lookup failures come from keys that look the same but are not. The commonest is a data type mismatch. A reference of 1001 stored as a number will not match \"1001\" stored as text, so VLOOKUP, XLOOKUP and MATCH all return #N/A. Left-aligned numbers are a clue that they are text. COUNTIF behaves differently: it treats 1001 and \"1001\" as the same, so COUNTIF can say the key exists while XLOOKUP says it does not.\n\nThe second cause is hidden spaces. TRIM removes leading and trailing spaces and reduces runs of spaces between words to one. It does not remove non-breaking spaces, which often arrive in data copied from web pages. Those are character 160, and =SUBSTITUTE(A2,CHAR(160),\" \") replaces them with ordinary spaces. LEN is a quick test: if LEN(A2) is larger than the number of characters you can see, something is hidden.\n\nDuplicates cause quieter errors. When a key appears more than once, VLOOKUP, MATCH and XLOOKUP return the first match. With XLOOKUP, search_mode -1 searches from the last item to the first and returns the last match. Check for duplicates with =COUNTIF(A:A,A2)>1, and decide which record is correct before you look anything up.\n\nXLOOKUP can use wildcards if match_mode is 2. In that mode, an asterisk stands for any number of characters and a question mark for exactly one. So \"Sm*\" would match \"Smith\" and \"Smythe\". A tilde before a wildcard character, as in ~*, searches for the actual symbol. Exact-match lookups ignore case.\n\nFix the data, not the formula. Clean keys in a helper column using TRIM and VALUE, and look up on that column. Never turn off the error handling to make a lookup appear to work.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A key of 1001 is a number in the list but text in the lookup table. What does XLOOKUP return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The first row of the table"
+      },
+      {
+       "key": "b",
+       "text": "#N/A"
+      },
+      {
+       "key": "c",
+       "text": "0"
+      },
+      {
+       "key": "d",
+       "text": "1001 as text"
+      }
+     ],
+     "answer": "b",
+     "hint": "A number and its text equivalent do not match in a lookup.",
+     "topic": "Data types"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the clue that numbers have been stored as text?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They display with a green triangle in every cell"
+      },
+      {
+       "key": "b",
+       "text": "They line up on the left of the cell"
+      },
+      {
+       "key": "c",
+       "text": "They are shown with extra decimal places"
+      },
+      {
+       "key": "d",
+       "text": "They sort to the top of the column"
+      }
+     ],
+     "answer": "b",
+     "hint": "Numbers align right by default.",
+     "topic": "Text numbers"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "COUNTIF(A:A,\"1001\") returns 1 although XLOOKUP cannot find 1001. Why?",
+     "options": [
+      {
+       "key": "a",
+       "text": "COUNTIF searches every sheet, while lookups search one"
+      },
+      {
+       "key": "b",
+       "text": "XLOOKUP is case-sensitive, so the key never matches"
+      },
+      {
+       "key": "c",
+       "text": "COUNTIF treats a number and its text form as the same, but lookups do not"
+      },
+      {
+       "key": "d",
+       "text": "COUNTIF ignores the final digit of each key"
+      }
+     ],
+     "answer": "c",
+     "hint": "The two functions compare differently.",
+     "topic": "COUNTIF vs lookup"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does TRIM not remove?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Leading spaces at the start of text"
+      },
+      {
+       "key": "b",
+       "text": "Non-breaking spaces (character 160)"
+      },
+      {
+       "key": "c",
+       "text": "Trailing spaces at the end of text"
+      },
+      {
+       "key": "d",
+       "text": "Repeated spaces between two words"
+      }
+     ],
+     "answer": "b",
+     "hint": "Web data often contains character 160.",
+     "topic": "TRIM limits"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which formula replaces non-breaking spaces with ordinary spaces?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=SUBSTITUTE(A2,CHAR(160),\" \")"
+      },
+      {
+       "key": "b",
+       "text": "=TRIM(SUBSTITUTE(A2,160))"
+      },
+      {
+       "key": "c",
+       "text": "=CLEAN(A2,CHAR(160))"
+      },
+      {
+       "key": "d",
+       "text": "=REPLACE(A2,160,\" \")"
+      }
+     ],
+     "answer": "a",
+     "hint": "SUBSTITUTE swaps specific characters.",
+     "topic": "SUBSTITUTE"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A cell shows five visible characters but LEN returns 7. What is the likely cause?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The cell is formatted as a date"
+      },
+      {
+       "key": "b",
+       "text": "The formula contains a circular reference"
+      },
+      {
+       "key": "c",
+       "text": "Hidden spaces or non-printing characters"
+      },
+      {
+       "key": "d",
+       "text": "The column width is too narrow to show all of it"
+      }
+     ],
+     "answer": "c",
+     "hint": "LEN counts what you cannot see.",
+     "topic": "LEN test"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A key appears twice in the list. Which row does XLOOKUP return by default?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The last match"
+      },
+      {
+       "key": "b",
+       "text": "An error value"
+      },
+      {
+       "key": "c",
+       "text": "The average of both"
+      },
+      {
+       "key": "d",
+       "text": "The first match"
+      }
+     ],
+     "answer": "d",
+     "hint": "Search runs top to bottom unless changed.",
+     "topic": "Duplicates"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which XLOOKUP setting returns the last match for a duplicated key?",
+     "options": [
+      {
+       "key": "a",
+       "text": "match_mode of -1"
+      },
+      {
+       "key": "b",
+       "text": "match_mode of 2"
+      },
+      {
+       "key": "c",
+       "text": "search_mode of -1"
+      },
+      {
+       "key": "d",
+       "text": "search_mode of 2"
+      }
+     ],
+     "answer": "c",
+     "hint": "-1 searches last to first.",
+     "topic": "Search mode"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does \"Sm*\" match when match_mode is 2?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only Smith"
+      },
+      {
+       "key": "b",
+       "text": "Any text ending in Sm"
+      },
+      {
+       "key": "c",
+       "text": "Smith and Smythe"
+      },
+      {
+       "key": "d",
+       "text": "Names of exactly three letters"
+      }
+     ],
+     "answer": "c",
+     "hint": "The asterisk stands for any characters.",
+     "topic": "Wildcards"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the best fix for a lookup that fails because of messy keys?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Wrap the lookup in IFERROR so it returns a blank"
+      },
+      {
+       "key": "b",
+       "text": "Switch to approximate matching to be more forgiving"
+      },
+      {
+       "key": "c",
+       "text": "Sort the lookup table and try the formula again"
+      },
+      {
+       "key": "d",
+       "text": "Clean the keys in a helper column and look up on that"
+      }
+     ],
+     "answer": "d",
+     "hint": "Fix the data rather than hide the error.",
+     "topic": "Fixing causes"
+    }
+   ]
+  },
+  {
+   "title": "L12: Weighted scoring and ranking with SUMPRODUCT",
+   "source": "Microsoft Support: SUMPRODUCT, RANK.EQ and COUNTIF functions",
+   "body": "Evaluating options against weighted criteria is a routine job. Four candidates, A to D, are scored out of 100 against three criteria weighted 50%, 30% and 20%. The scores are: A 80, 70, 60; B 90, 60, 50; C 70, 90, 80; D 85, 65, 75. For each candidate, =SUMPRODUCT(weights,scores) multiplies each score by its weight and adds them. The totals are A 73, B 73, C 78 and D 77. The ranking is therefore C first, D second, and A and B tied on 73.\n\nCheck that the weights add up to 100%, with a cell such as =SUM(weights)=1. The arrays in SUMPRODUCT must be the same shape. If the weights run across a row and the scores down a column, the formula returns #VALUE!.\n\nRANK.EQ gives tied scores the same rank and skips the next number. A and B both rank 3 and nothing ranks 4. To break ties with a clear rule, add a counter: =RANK.EQ(E2,$E$2:$E$5)+COUNTIF($E$2:E2,E2)-1. That gives A rank 3 and B rank 4, by order in the list. The tiebreak is arbitrary, so a better method is to apply an agreed second criterion, such as the highest score on the most important criterion.\n\nTest how sensitive the result is to the weights. If the weights are changed to 20%, 30% and 50%, the totals become A 67, B 61, C 81 and D 74. The order is still C, D, A and B, but the gaps differ. When a decision flips on a small change to the weights, say so in the paper. Agree the weights before you see the scores, otherwise they can be bent to fit a preferred outcome.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Under the first weights (50%, 30%, 20%), what total does candidate D score?",
+     "options": [
+      {
+       "key": "a",
+       "text": "75"
+      },
+      {
+       "key": "b",
+       "text": "76.5"
+      },
+      {
+       "key": "c",
+       "text": "77"
+      },
+      {
+       "key": "d",
+       "text": "78"
+      }
+     ],
+     "answer": "c",
+     "hint": "85x0.5 + 65x0.3 + 75x0.2 = 42.5 + 19.5 + 15.",
+     "topic": "Weighted total"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is candidate C's total score under the first set of weights?",
+     "options": [
+      {
+       "key": "a",
+       "text": "78"
+      },
+      {
+       "key": "b",
+       "text": "80"
+      },
+      {
+       "key": "c",
+       "text": "77"
+      },
+      {
+       "key": "d",
+       "text": "240"
+      }
+     ],
+     "answer": "a",
+     "hint": "70x0.5 + 90x0.3 + 80x0.2 = 35 + 27 + 16.",
+     "topic": "Weighted total"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "How do candidates A and B compare under the first weights?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A leads by 3 points"
+      },
+      {
+       "key": "b",
+       "text": "B leads by 3 points"
+      },
+      {
+       "key": "c",
+       "text": "A leads by 1 point"
+      },
+      {
+       "key": "d",
+       "text": "They tie on 73"
+      }
+     ],
+     "answer": "d",
+     "hint": "Both produce a total of 73.",
+     "topic": "Ties"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The weights run across a row and the scores down a column. What does SUMPRODUCT return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "#VALUE!"
+      },
+      {
+       "key": "b",
+       "text": "0"
+      },
+      {
+       "key": "c",
+       "text": "The total of the weights"
+      },
+      {
+       "key": "d",
+       "text": "The first product only"
+      }
+     ],
+     "answer": "a",
+     "hint": "The arrays are different shapes.",
+     "topic": "Array shapes"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which check should be built next to the weights?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A test that none is above 50%"
+      },
+      {
+       "key": "b",
+       "text": "A test that they sum to 1 (100%)"
+      },
+      {
+       "key": "c",
+       "text": "A count of the candidates"
+      },
+      {
+       "key": "d",
+       "text": "A test that the scores are integers"
+      }
+     ],
+     "answer": "b",
+     "hint": "Weights that do not total 100% distort every score.",
+     "topic": "Checks"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A and B tie. What does RANK.EQ give them?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A ranks 3 and B ranks 4, by list order"
+      },
+      {
+       "key": "b",
+       "text": "Both rank 4, as the lower of the places"
+      },
+      {
+       "key": "c",
+       "text": "Both rank 3.5, as the average of the places"
+      },
+      {
+       "key": "d",
+       "text": "Both rank 3, and nobody ranks 4"
+      }
+     ],
+     "answer": "d",
+     "hint": "RANK.EQ skips a number after a tie.",
+     "topic": "RANK.EQ"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does adding +COUNTIF($E$2:E2,E2)-1 to RANK.EQ do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Removes tied items from the final ranking"
+      },
+      {
+       "key": "b",
+       "text": "Gives tied items different ranks by list order"
+      },
+      {
+       "key": "c",
+       "text": "Rounds the scores before they are compared"
+      },
+      {
+       "key": "d",
+       "text": "Counts the criteria used in the scoring"
+      }
+     ],
+     "answer": "b",
+     "hint": "It adds one for each earlier equal score.",
+     "topic": "Tiebreak"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the best way to break a tie in a real appraisal?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Pick the one listed first"
+      },
+      {
+       "key": "b",
+       "text": "Apply a second criterion agreed beforehand"
+      },
+      {
+       "key": "c",
+       "text": "Choose whichever the senior reader prefers"
+      },
+      {
+       "key": "d",
+       "text": "Lower one candidate's score by a point"
+      }
+     ],
+     "answer": "b",
+     "hint": "Arbitrary list order is not a defensible rule.",
+     "topic": "Fair tiebreak"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "If the weights are reversed to 20%, 30% and 50%, what total does candidate D reach?",
+     "options": [
+      {
+       "key": "a",
+       "text": "74"
+      },
+      {
+       "key": "b",
+       "text": "77"
+      },
+      {
+       "key": "c",
+       "text": "73"
+      },
+      {
+       "key": "d",
+       "text": "72"
+      }
+     ],
+     "answer": "a",
+     "hint": "85x0.2 + 65x0.3 + 75x0.5 = 17 + 19.5 + 37.5.",
+     "topic": "Sensitivity"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why is it important to agree weights before seeing the scores?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Excel locks the weights as soon as scores are entered"
+      },
+      {
+       "key": "b",
+       "text": "The weights must be calculated from the scores"
+      },
+      {
+       "key": "c",
+       "text": "Otherwise they can be adjusted to favour a preferred result"
+      },
+      {
+       "key": "d",
+       "text": "It makes the SUMPRODUCT calculation run faster"
+      }
+     ],
+     "answer": "c",
+     "hint": "Fixing weights first keeps the process fair.",
+     "topic": "Integrity"
+    }
+   ]
+  },
+  {
+   "title": "L12: Dates: financial years and quarters",
+   "source": "HMRC and GOV.UK: UK tax year and financial year; Microsoft Support: date functions",
+   "body": "Government finance works on a financial year from 1 April to 31 March. A date in February 2025 belongs to the 2024-25 year. Excel has no built-in function for this, so you build it from YEAR and MONTH. The year in which the financial year starts is =YEAR(A2)-(MONTH(A2)<4). The comparison returns TRUE (1) when the month is January to March, so one is subtracted. For 15 February 2025 this gives 2024, and for 1 April 2025 it gives 2025.\n\nThe financial quarter is =INT(MOD(MONTH(A2)-4,12)/3)+1. Quarter 1 is April to June, Quarter 2 is July to September, Quarter 3 is October to December and Quarter 4 is January to March. February gives MOD(-2,12) = 10, then 10/3 = 3.33, INT gives 3, plus 1 is Quarter 4. October gives 6/3 = 2, so Quarter 3. MOD returns a positive result here because it takes the sign of the divisor.\n\nTo count the days remaining in the financial year, subtract the date from the final day: =DATE(start_year+1,3,31)-A2. From 15 February 2025 this gives 44 days.\n\nWatch for leap years. DATE(2025,2,29) does not give an error. It overflows to 1 March 2025. February 2024 had 29 days. EDATE and EOMONTH handle month lengths correctly, so use them rather than adding 30.\n\nDates imported from other systems can be read the wrong way round. A text date such as 03/04/2025 may be 3 April in the UK but 4 March in the US format. Check a few rows where the day is above 12, such as 25/04/2025, since those can only be read one way. Store dates as real dates, and format them clearly, for instance 3 April 2025.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does =YEAR(A2)-(MONTH(A2)<4) return for 15 February 2025?",
+     "options": [
+      {
+       "key": "a",
+       "text": "2025"
+      },
+      {
+       "key": "b",
+       "text": "2024"
+      },
+      {
+       "key": "c",
+       "text": "2023"
+      },
+      {
+       "key": "d",
+       "text": "2026"
+      }
+     ],
+     "answer": "b",
+     "hint": "February falls in the year that started in April 2024.",
+     "topic": "Financial year"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does the same formula return for 1 April 2025?",
+     "options": [
+      {
+       "key": "a",
+       "text": "2024"
+      },
+      {
+       "key": "b",
+       "text": "2026"
+      },
+      {
+       "key": "c",
+       "text": "4"
+      },
+      {
+       "key": "d",
+       "text": "2025"
+      }
+     ],
+     "answer": "d",
+     "hint": "April starts a new financial year, so nothing is subtracted.",
+     "topic": "Financial year"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which financial quarter does 15 February 2025 fall in?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Quarter 1"
+      },
+      {
+       "key": "b",
+       "text": "Quarter 2"
+      },
+      {
+       "key": "c",
+       "text": "Quarter 4"
+      },
+      {
+       "key": "d",
+       "text": "Quarter 3"
+      }
+     ],
+     "answer": "c",
+     "hint": "January to March is Q4.",
+     "topic": "Quarters"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which financial quarter does 12 October 2025 fall in?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Quarter 3"
+      },
+      {
+       "key": "b",
+       "text": "Quarter 2"
+      },
+      {
+       "key": "c",
+       "text": "Quarter 4"
+      },
+      {
+       "key": "d",
+       "text": "Quarter 1"
+      }
+     ],
+     "answer": "a",
+     "hint": "October to December is Q3.",
+     "topic": "Quarters"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does MOD(-2,12) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "-2"
+      },
+      {
+       "key": "b",
+       "text": "2"
+      },
+      {
+       "key": "c",
+       "text": "-10"
+      },
+      {
+       "key": "d",
+       "text": "10"
+      }
+     ],
+     "answer": "d",
+     "hint": "MOD takes the sign of the divisor.",
+     "topic": "MOD"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "How many days remain in the financial year from 15 February 2025 up to 31 March 2025?",
+     "options": [
+      {
+       "key": "a",
+       "text": "44"
+      },
+      {
+       "key": "b",
+       "text": "45"
+      },
+      {
+       "key": "c",
+       "text": "43"
+      },
+      {
+       "key": "d",
+       "text": "14"
+      }
+     ],
+     "answer": "a",
+     "hint": "13 days to the end of February plus 31 days of March.",
+     "topic": "Days remaining"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does =DATE(2025,2,29) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "28 February 2025"
+      },
+      {
+       "key": "b",
+       "text": "1 March 2025"
+      },
+      {
+       "key": "c",
+       "text": "#VALUE!"
+      },
+      {
+       "key": "d",
+       "text": "29 February 2025"
+      }
+     ],
+     "answer": "b",
+     "hint": "The date overflows into the next month.",
+     "topic": "Leap years"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why prefer EDATE to adding 30 days to move a date on by a month?",
+     "options": [
+      {
+       "key": "a",
+       "text": "EDATE recalculates faster than adding days"
+      },
+      {
+       "key": "b",
+       "text": "Adding a number to a date is not allowed"
+      },
+      {
+       "key": "c",
+       "text": "EDATE always returns the last day of the month"
+      },
+      {
+       "key": "d",
+       "text": "EDATE moves by calendar months whatever their length"
+      }
+     ],
+     "answer": "d",
+     "hint": "Months vary in length.",
+     "topic": "EDATE"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which date from an import can only be read one way, and so helps check the format?",
+     "options": [
+      {
+       "key": "a",
+       "text": "03/04/2025"
+      },
+      {
+       "key": "b",
+       "text": "25/04/2025"
+      },
+      {
+       "key": "c",
+       "text": "05/06/2025"
+      },
+      {
+       "key": "d",
+       "text": "01/02/2025"
+      }
+     ],
+     "answer": "b",
+     "hint": "There is no 25th month, so it must be day first.",
+     "topic": "Date formats"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the best way to store imported dates?",
+     "options": [
+      {
+       "key": "a",
+       "text": "As text in the form 03/04/2025"
+      },
+      {
+       "key": "b",
+       "text": "As numbers in the form 20250403"
+      },
+      {
+       "key": "c",
+       "text": "As real dates, formatted clearly such as 3 April 2025"
+      },
+      {
+       "key": "d",
+       "text": "As text with the month name shortened"
+      }
+     ],
+     "answer": "c",
+     "hint": "Real dates calculate and sort correctly.",
+     "topic": "Date storage"
+    }
+   ]
+  },
+  {
+   "title": "L12: Spreadsheet controls: tables, assumptions and protection",
+   "source": "HM Treasury: Review of quality assurance of government analytical models (Macpherson Review); AQuA Book; Microsoft Support",
+   "body": "Spreadsheets that inform decisions need controls. The Macpherson review of government models and the AQuA Book both stress structure, documentation, checking and accountability. A manager does not need to build the formulas but should expect these features.\n\nSeparate the sheet into inputs, calculations and outputs. Put every assumption, such as a rate or a date, in one labelled cell and refer to it. A formula such as =B2*1.2 hides the 20% in the formula; if the rate changes you have to find every copy of it. Use =B2*(1+VATRate) instead. Colour or label input cells consistently and say what the colours mean.\n\nExcel Tables, created with Ctrl+T, extend automatically and allow structured references such as Table1[Cost], which are easier to read than C2:C500 and do not miss new rows. Named ranges give meaningful labels to key cells.\n\nAdd checks. A reconciliation cell compares a total with an independent figure, for example =ROUND(SUM(Detail[Cost])-Summary!B2,2)=0. A single overall check cell on the front sheet should show any failed test. Keep an explanatory sheet: purpose, owner, version, source of data, assumptions and known limits.\n\nProtection stops accidental overwriting but is not security. A sheet-protection password is easy to remove, and hidden sheets can be unhidden. For sensitive content use encrypted storage and access controls. Before sharing, remove hidden data and comments. Use clear version names, record who reviewed the model, and keep the reviewed version read-only. Avoid links to other workbooks where possible, since they break when files move. Check that calculation mode is automatic; in manual mode figures may be out of date.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why is =B2*1.2 poor practice for adding VAT?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The rate is hidden in the formula and must be changed in every copy"
+      },
+      {
+       "key": "b",
+       "text": "1.2 is not accepted as a valid multiplier"
+      },
+      {
+       "key": "c",
+       "text": "It stops the cell being formatted as currency"
+      },
+      {
+       "key": "d",
+       "text": "It makes the formula circular once copied down"
+      }
+     ],
+     "answer": "a",
+     "hint": "Assumptions belong in labelled cells.",
+     "topic": "Hard-coding"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the main advantage of an Excel Table for a growing data list?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It stops anyone from editing the data"
+      },
+      {
+       "key": "b",
+       "text": "It extends automatically and formulas using it include new rows"
+      },
+      {
+       "key": "c",
+       "text": "It stores the data in encrypted form"
+      },
+      {
+       "key": "d",
+       "text": "It sorts the data again every time the file is saved"
+      }
+     ],
+     "answer": "b",
+     "hint": "Structured references adjust to the table size.",
+     "topic": "Excel Tables"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which formula is an example of a structured reference?",
+     "options": [
+      {
+       "key": "a",
+       "text": "=SUM(C2:C500)"
+      },
+      {
+       "key": "b",
+       "text": "=SUM(Sheet1!C:C)"
+      },
+      {
+       "key": "c",
+       "text": "=SUM(Table1[Cost])"
+      },
+      {
+       "key": "d",
+       "text": "=SUM(INDIRECT(\"C2:C500\"))"
+      }
+     ],
+     "answer": "c",
+     "hint": "It names the table and column.",
+     "topic": "Structured references"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What should a reconciliation check compare?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Two cells that are driven by the same formula"
+      },
+      {
+       "key": "b",
+       "text": "The number of sheets with the number of rows"
+      },
+      {
+       "key": "c",
+       "text": "The first and the last rows of the data"
+      },
+      {
+       "key": "d",
+       "text": "A total in the model with an independent figure for the same thing"
+      }
+     ],
+     "answer": "d",
+     "hint": "A check is only useful if independent.",
+     "topic": "Checks"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A sheet is protected with a password. What is the correct view of this?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is strong enough for OFFICIAL-SENSITIVE data"
+      },
+      {
+       "key": "b",
+       "text": "It prevents accidental changes but is not real security"
+      },
+      {
+       "key": "c",
+       "text": "It encrypts everything held on the sheet"
+      },
+      {
+       "key": "d",
+       "text": "It stops anyone copying the file elsewhere"
+      }
+     ],
+     "answer": "b",
+     "hint": "Sheet passwords are easy to remove.",
+     "topic": "Protection"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does Excel's manual calculation mode risk?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Figures may be out of date with no warning in the cells"
+      },
+      {
+       "key": "b",
+       "text": "The workbook cannot be saved until recalculated"
+      },
+      {
+       "key": "c",
+       "text": "Every formula is converted to a fixed value"
+      },
+      {
+       "key": "d",
+       "text": "Data validation stops working on the sheet"
+      }
+     ],
+     "answer": "a",
+     "hint": "Results update only when you recalculate.",
+     "topic": "Calculation mode"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What should an explanatory sheet include?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Purpose, owner, version, data sources, assumptions and limits"
+      },
+      {
+       "key": "b",
+       "text": "Only the author's name and the date saved"
+      },
+      {
+       "key": "c",
+       "text": "A printed list of every formula used"
+      },
+      {
+       "key": "d",
+       "text": "The file's password and its storage location"
+      }
+     ],
+     "answer": "a",
+     "hint": "It lets a reviewer understand and trust the model.",
+     "topic": "Documentation"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why are links to other workbooks risky?",
+     "options": [
+      {
+       "key": "a",
+       "text": "They are blocked on government networks by default"
+      },
+      {
+       "key": "b",
+       "text": "They push the file size beyond what email allows"
+      },
+      {
+       "key": "c",
+       "text": "They stop formulas using absolute references"
+      },
+      {
+       "key": "d",
+       "text": "They break when files are moved and can show stale values"
+      }
+     ],
+     "answer": "d",
+     "hint": "External links are fragile.",
+     "topic": "External links"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which structure do the Macpherson and AQuA guidance favour?",
+     "options": [
+      {
+       "key": "a",
+       "text": "All formulas gathered on one overview sheet"
+      },
+      {
+       "key": "b",
+       "text": "Outputs placed next to the raw data they use"
+      },
+      {
+       "key": "c",
+       "text": "Inputs, calculations and outputs kept separate"
+      },
+      {
+       "key": "d",
+       "text": "Inputs typed directly into the output cells"
+      }
+     ],
+     "answer": "c",
+     "hint": "Separation makes checking easier.",
+     "topic": "Model structure"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Before sending a model outside the department, what should be done about hidden content?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Check that hidden sheets stay hidden for the recipient"
+      },
+      {
+       "key": "b",
+       "text": "Remove hidden sheets, comments and personal data first"
+      },
+      {
+       "key": "c",
+       "text": "Protect the sheet with a password and send it"
+      },
+      {
+       "key": "d",
+       "text": "Save the file under a different name"
+      }
+     ],
+     "answer": "b",
+     "hint": "Hidden content can be revealed by the recipient.",
+     "topic": "Sharing safely"
+    }
+   ]
+  },
+  {
+   "title": "L12: Cleaning text data with functions",
+   "source": "Microsoft Support: TRIM, MID, FIND, SUBSTITUTE, TEXT and TEXTJOIN functions",
+   "body": "Case references often arrive as one block of text. Suppose A2 holds \"  CASE-2025-0042  \" with two spaces at each end. LEN(A2) is 18, while LEN(TRIM(A2)) is 14, since TRIM removes the extra spaces. The clean reference is CASE-2025-0042.\n\nMID extracts text from the middle: =MID(TRIM(A2),6,4) starts at the sixth character and takes four, giving \"2025\". RIGHT(TRIM(A2),4) gives \"0042\" as text. Wrap it in VALUE and you get the number 42. FIND returns the position of one string in another and is case-sensitive: FIND(\"-\",TRIM(A2)) returns 5. SEARCH is similar but not case-sensitive, and allows wildcards. SUBSTITUTE swaps specified text: SUBSTITUTE(TRIM(A2),\"-\",\"\") returns \"CASE20250042\".\n\nTo bring back leading zeros, use TEXT: =TEXT(42,\"0000\") returns \"0042\". The result is text, so it cannot be relied on for numbers in later calculations. TEXT is also used for display, for example =TEXT(0.256,\"0.0%\") gives \"25.6%\" and =TEXT(A2,\"d mmmm yyyy\") shows a date in words. Build the display text in a separate cell from the underlying number.\n\nTEXTJOIN joins items with a separator and can skip empty cells: =TEXTJOIN(\", \",TRUE,A2:A5) joins four cells, leaving out blanks. PROPER capitalises each word, but is not reliable for names: \"mcdonald\" becomes \"Mcdonald\". CLEAN removes non-printing characters. After cleaning with formulas, copy and paste as values into a new column and keep the original.\n\nTest cleaning formulas on awkward rows, such as short entries, entries with no hyphen and entries with extra spaces, since a formula that works on one row may fail on another.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A2 holds \"  CASE-2025-0042  \" (two spaces at each end). What does LEN(TRIM(A2)) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "18"
+      },
+      {
+       "key": "b",
+       "text": "16"
+      },
+      {
+       "key": "c",
+       "text": "14"
+      },
+      {
+       "key": "d",
+       "text": "10"
+      }
+     ],
+     "answer": "c",
+     "hint": "TRIM removes the four extra spaces from 18 characters.",
+     "topic": "TRIM and LEN"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does =MID(TRIM(A2),6,4) return for the same cell?",
+     "options": [
+      {
+       "key": "a",
+       "text": "2025"
+      },
+      {
+       "key": "b",
+       "text": "CASE"
+      },
+      {
+       "key": "c",
+       "text": "0042"
+      },
+      {
+       "key": "d",
+       "text": "-202"
+      }
+     ],
+     "answer": "a",
+     "hint": "Character 6 is the first digit of the year.",
+     "topic": "MID"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does =RIGHT(TRIM(A2),4) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The number 42"
+      },
+      {
+       "key": "b",
+       "text": "The text 0042"
+      },
+      {
+       "key": "c",
+       "text": "The number 4"
+      },
+      {
+       "key": "d",
+       "text": "The text 2025"
+      }
+     ],
+     "answer": "b",
+     "hint": "RIGHT returns text, so leading zeros remain.",
+     "topic": "RIGHT"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does =VALUE(RIGHT(TRIM(A2),4)) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The text 0042"
+      },
+      {
+       "key": "b",
+       "text": "The number 42"
+      },
+      {
+       "key": "c",
+       "text": "The text 42"
+      },
+      {
+       "key": "d",
+       "text": "#VALUE!"
+      }
+     ],
+     "answer": "b",
+     "hint": "VALUE converts text that looks like a number.",
+     "topic": "VALUE"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does =FIND(\"-\",TRIM(A2)) return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "4"
+      },
+      {
+       "key": "b",
+       "text": "5"
+      },
+      {
+       "key": "c",
+       "text": "6"
+      },
+      {
+       "key": "d",
+       "text": "1"
+      }
+     ],
+     "answer": "b",
+     "hint": "The first hyphen follows CASE, so it is character 5.",
+     "topic": "FIND"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does =SUBSTITUTE(TRIM(A2),\"-\",\"\") return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "CASE20250042"
+      },
+      {
+       "key": "b",
+       "text": "CASE 2025 0042"
+      },
+      {
+       "key": "c",
+       "text": "CASE-20250042"
+      },
+      {
+       "key": "d",
+       "text": "2025 0042"
+      }
+     ],
+     "answer": "a",
+     "hint": "All hyphens are replaced with nothing.",
+     "topic": "SUBSTITUTE"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the difference between FIND and SEARCH?",
+     "options": [
+      {
+       "key": "a",
+       "text": "FIND works on numbers; SEARCH works on text"
+      },
+      {
+       "key": "b",
+       "text": "SEARCH returns the last position; FIND returns the first"
+      },
+      {
+       "key": "c",
+       "text": "FIND is case-sensitive; SEARCH is not and allows wildcards"
+      },
+      {
+       "key": "d",
+       "text": "FIND ignores spaces; SEARCH counts them as characters"
+      }
+     ],
+     "answer": "c",
+     "hint": "This is the standard distinction.",
+     "topic": "FIND vs SEARCH"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does =TEXT(42,\"0000\") return?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The text 0042"
+      },
+      {
+       "key": "b",
+       "text": "The number 42"
+      },
+      {
+       "key": "c",
+       "text": "The number 0042"
+      },
+      {
+       "key": "d",
+       "text": "The text 42"
+      }
+     ],
+     "answer": "a",
+     "hint": "The format code pads with zeros but returns text.",
+     "topic": "TEXT"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why should a TEXT result not feed later calculations?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It always rounds down"
+      },
+      {
+       "key": "b",
+       "text": "It cannot be copied"
+      },
+      {
+       "key": "c",
+       "text": "It changes with the system date"
+      },
+      {
+       "key": "d",
+       "text": "It is text, not a number"
+      }
+     ],
+     "answer": "d",
+     "hint": "Keep the number in its own cell.",
+     "topic": "Text vs number"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does TEXTJOIN do with TRUE as its second argument?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Returns the result as a number"
+      },
+      {
+       "key": "b",
+       "text": "Adds a space after each item"
+      },
+      {
+       "key": "c",
+       "text": "Skips empty cells when joining"
+      },
+      {
+       "key": "d",
+       "text": "Joins only the TRUE values"
+      }
+     ],
+     "answer": "c",
+     "hint": "The second argument is ignore_empty.",
+     "topic": "TEXTJOIN"
+    }
+   ]
+  },
+  {
+   "title": "L12: Options appraisal: weighing options and discounting",
+   "source": "HM Treasury: The Green Book; Business case guidance (five case model)",
+   "body": "A submission with options must compare like with like. HM Treasury's Green Book sets the standard for appraising proposals. Options should include a \"do nothing\" or \"business as usual\" baseline, so that the benefit of each alternative is measured against what would happen anyway. A long list of options is narrowed to a shortlist against the objectives and critical success factors.\n\nBusiness cases use five dimensions, often called the five case model: strategic (is there a case for change), economic (value for money), commercial (can it be procured), financial (is it affordable) and management (can it be delivered). A submission to a minister does not repeat the whole business case but should tell the reader which of these dimensions is weak.\n\nCosts and benefits arising at different times are discounted, since a pound today is worth more than a pound in future. The Green Book's standard rate is 3.5 per cent a year. The present value of £100 received in one year is 100 divided by 1.035, or £96.62. In two years it is 100 divided by 1.035 squared, £93.35. The present value of £100 in each of the next three years is £280.16, which is less than £300. Costs in future years are discounted in the same way. Compare options on net present value, and also on whether they can be afforded in the budget year.\n\nAppraisal also deals with risk and optimism bias. Early estimates of cost and time are often too low, so the Green Book asks for an uplift or an adjustment that is reduced as evidence improves. Show sensitivity: say what happens if costs rise by 20 per cent or benefits arrive late. A good submission states the preferred option, the evidence for it, the risks, and what would change the recommendation.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why should options include a \"do nothing\" baseline?",
+     "options": [
+      {
+       "key": "a",
+       "text": "So each option's benefit is measured against what would happen anyway"
+      },
+      {
+       "key": "b",
+       "text": "Because ministers are required to choose it first"
+      },
+      {
+       "key": "c",
+       "text": "So that no cost calculations are needed for it"
+      },
+      {
+       "key": "d",
+       "text": "To keep the number of options down to four"
+      }
+     ],
+     "answer": "a",
+     "hint": "Benefits are incremental to the baseline.",
+     "topic": "Baseline"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What are the five dimensions of the five case model?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Strategic, legal, commercial, political and operational"
+      },
+      {
+       "key": "b",
+       "text": "Strategic, economic, commercial, financial and management"
+      },
+      {
+       "key": "c",
+       "text": "Economic, social, technical, financial and legal"
+      },
+      {
+       "key": "d",
+       "text": "Policy, delivery, risk, legal and communications"
+      }
+     ],
+     "answer": "b",
+     "hint": "It is the Treasury's standard structure.",
+     "topic": "Five case model"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the Green Book's standard annual discount rate used in this passage?",
+     "options": [
+      {
+       "key": "a",
+       "text": "5 per cent"
+      },
+      {
+       "key": "b",
+       "text": "3.5 per cent"
+      },
+      {
+       "key": "c",
+       "text": "2 per cent"
+      },
+      {
+       "key": "d",
+       "text": "7 per cent"
+      }
+     ],
+     "answer": "b",
+     "hint": "The passage gives the standard rate.",
+     "topic": "Discount rate"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the present value of £100 received in one year at 3.5 per cent, to the nearest penny?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£96.62"
+      },
+      {
+       "key": "b",
+       "text": "£96.50"
+      },
+      {
+       "key": "c",
+       "text": "£103.50"
+      },
+      {
+       "key": "d",
+       "text": "£93.35"
+      }
+     ],
+     "answer": "a",
+     "hint": "100 divided by 1.035.",
+     "topic": "Discounting"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the present value of £100 received in two years at 3.5 per cent?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£96.62"
+      },
+      {
+       "key": "b",
+       "text": "£93.35"
+      },
+      {
+       "key": "c",
+       "text": "£93.00"
+      },
+      {
+       "key": "d",
+       "text": "£92.80"
+      }
+     ],
+     "answer": "b",
+     "hint": "100 divided by 1.035 squared.",
+     "topic": "Discounting"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "If £100 is received at the end of each of the next three years, what is the total present value at 3.5 per cent?",
+     "options": [
+      {
+       "key": "a",
+       "text": "£300.00"
+      },
+      {
+       "key": "b",
+       "text": "£289.50"
+      },
+      {
+       "key": "c",
+       "text": "£310.50"
+      },
+      {
+       "key": "d",
+       "text": "£280.16"
+      }
+     ],
+     "answer": "d",
+     "hint": "It is less than £300 because later amounts are discounted.",
+     "topic": "Present value"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why are future costs discounted too?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because costs always rise faster than prices"
+      },
+      {
+       "key": "b",
+       "text": "To reduce the headline cost of the preferred option"
+      },
+      {
+       "key": "c",
+       "text": "Because future costs are less certain than benefits"
+      },
+      {
+       "key": "d",
+       "text": "So costs and benefits are compared in today's value"
+      }
+     ],
+     "answer": "d",
+     "hint": "The same method applies to both.",
+     "topic": "Consistency"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which dimension asks whether an option is affordable in the budget?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Economic"
+      },
+      {
+       "key": "b",
+       "text": "Commercial"
+      },
+      {
+       "key": "c",
+       "text": "Financial"
+      },
+      {
+       "key": "d",
+       "text": "Management"
+      }
+     ],
+     "answer": "c",
+     "hint": "The economic case is about value for money.",
+     "topic": "Financial case"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "In appraisal, what does the term optimism bias describe?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The habit of choosing the cheapest option"
+      },
+      {
+       "key": "b",
+       "text": "A preference for options with more benefits"
+      },
+      {
+       "key": "c",
+       "text": "The tendency for early cost and time estimates to be too low"
+      },
+      {
+       "key": "d",
+       "text": "The assumption that risks are higher than they are"
+      }
+     ],
+     "answer": "c",
+     "hint": "The Green Book requires adjustments for it.",
+     "topic": "Optimism bias"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What should a submission say about sensitivity?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Which minister is likely to favour each option"
+      },
+      {
+       "key": "b",
+       "text": "How the figures were entered into the spreadsheet"
+      },
+      {
+       "key": "c",
+       "text": "Which option is the cheapest in the first year"
+      },
+      {
+       "key": "d",
+       "text": "What happens to the result if costs rise or benefits arrive late"
+      }
+     ],
+     "answer": "d",
+     "hint": "Sensitivity shows how robust the recommendation is.",
+     "topic": "Sensitivity"
+    }
+   ]
+  },
+  {
+   "title": "L12: Explaining a decision to the public: choosing the best wording",
+   "source": "GOV.UK: Style guide, A to Z and words to avoid; Content design: planning, writing and managing content",
+   "body": "The GOV.UK style guide helps writers choose wording that people understand at first reading. Several rules apply to decision letters and web pages.\n\nUse \"must\" for an obligation set by law or policy, and avoid \"should\", which is unclear about whether the thing is required. \"You must tell us within 28 days\" is clearer than \"You should tell us\". Use \"need to\" where it is about what a person has to do to get something.\n\nPut the thing the reader most needs first. If the decision is a refusal, the first line says so, with the reason following. Do not hide it behind a history. Write in the active voice: \"We have decided to refuse your application\" rather than \"It has been decided that your application is to be refused\". The active voice names who did what.\n\nTurn abstract nouns back into verbs. \"We carried out an assessment of your income\" becomes \"We assessed your income\". Keep sentences short, aiming at an average of about 15 to 20 words, and keep one idea in each paragraph. Use \"you\" and \"we\", and contractions such as \"we'll\" where the tone is friendly.\n\nAvoid words that sound impressive but say little. The style guide lists words to avoid, including \"deliver\" (for services or promises), \"facilitate\", \"leverage\", \"robust\", \"tackling\", \"strengthen\", \"going forward\", \"key\" (as in \"key priorities\") and \"impact\" as a verb. Say what you will actually do. Do not use Latin abbreviations such as \"e.g.\" or \"i.e.\" Write \"for example\" and \"that is\". Do not use \"etc.\"\n\nUse numerals and the % sign with a number: \"5%\". Write \"per cent\" only in text where %, a symbol, cannot be used. Explain any acronym the first time, and do not assume the reader knows it.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which sentence best uses \"must\"?",
+     "options": [
+      {
+       "key": "a",
+       "text": "You should tell us within 28 days if your address changes."
+      },
+      {
+       "key": "b",
+       "text": "You are advised to tell us within 28 days if your address changes."
+      },
+      {
+       "key": "c",
+       "text": "You must tell us within 28 days if your address changes."
+      },
+      {
+       "key": "d",
+       "text": "It is recommended that you tell us within 28 days if your address changes."
+      }
+     ],
+     "answer": "c",
+     "hint": "\"Must\" shows a requirement; \"should\" is unclear.",
+     "topic": "Must and should"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A decision letter refuses an application. Where should the refusal go?",
+     "options": [
+      {
+       "key": "a",
+       "text": "After a summary of the relevant law"
+      },
+      {
+       "key": "b",
+       "text": "In the final paragraph, after the background"
+      },
+      {
+       "key": "c",
+       "text": "In a leaflet attached to the letter"
+      },
+      {
+       "key": "d",
+       "text": "In the first sentence, followed by the reason"
+      }
+     ],
+     "answer": "d",
+     "hint": "The reader should not have to hunt for the answer.",
+     "topic": "Front-loading"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which version is in the active voice?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It has been decided that your application is to be refused."
+      },
+      {
+       "key": "b",
+       "text": "We have decided to refuse your application."
+      },
+      {
+       "key": "c",
+       "text": "Your application has been refused by the team."
+      },
+      {
+       "key": "d",
+       "text": "Your application was not able to be accepted."
+      }
+     ],
+     "answer": "b",
+     "hint": "The active voice names who did what.",
+     "topic": "Active voice"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which rewrite turns the abstract noun back into a verb?",
+     "options": [
+      {
+       "key": "a",
+       "text": "We carried out an assessment of your income."
+      },
+      {
+       "key": "b",
+       "text": "An assessment of your income has been undertaken."
+      },
+      {
+       "key": "c",
+       "text": "Your income was the subject of an assessment."
+      },
+      {
+       "key": "d",
+       "text": "We assessed your income."
+      }
+     ],
+     "answer": "d",
+     "hint": "A nominalisation hides the action.",
+     "topic": "Nominalisations"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which of these is one of the words the style guide asks writers to avoid?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Facilitate"
+      },
+      {
+       "key": "b",
+       "text": "Help"
+      },
+      {
+       "key": "c",
+       "text": "Make"
+      },
+      {
+       "key": "d",
+       "text": "Show"
+      }
+     ],
+     "answer": "a",
+     "hint": "Say what you will actually do.",
+     "topic": "Words to avoid"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What should replace \"e.g.\" in a public letter?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Such as per the above"
+      },
+      {
+       "key": "b",
+       "text": "For example"
+      },
+      {
+       "key": "c",
+       "text": "As follows"
+      },
+      {
+       "key": "d",
+       "text": "For instance, see below"
+      }
+     ],
+     "answer": "b",
+     "hint": "Latin abbreviations are avoided.",
+     "topic": "Abbreviations"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What should be done the first time an acronym appears?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Use it without any explanation, as readers will know it"
+      },
+      {
+       "key": "b",
+       "text": "Put the acronym in bold so that it stands out"
+      },
+      {
+       "key": "c",
+       "text": "Spell it out in full with the acronym after it"
+      },
+      {
+       "key": "d",
+       "text": "Explain it in an annex at the end only"
+      }
+     ],
+     "answer": "c",
+     "hint": "Do not assume the reader knows it.",
+     "topic": "Acronyms"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which sentence length is the guide's rough target for average sentences?",
+     "options": [
+      {
+       "key": "a",
+       "text": "About 15 to 20 words"
+      },
+      {
+       "key": "b",
+       "text": "About 35 to 40 words"
+      },
+      {
+       "key": "c",
+       "text": "About 5 words"
+      },
+      {
+       "key": "d",
+       "text": "There is no target"
+      }
+     ],
+     "answer": "a",
+     "hint": "Short sentences are easier to read.",
+     "topic": "Sentence length"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which sentence is the clearest way to give a percentage?",
+     "options": [
+      {
+       "key": "a",
+       "text": "About 5% of cases are reviewed."
+      },
+      {
+       "key": "b",
+       "text": "About five per cent. of cases are reviewed."
+      },
+      {
+       "key": "c",
+       "text": "Roughly 5 percent of cases are reviewed."
+      },
+      {
+       "key": "d",
+       "text": "Approximately five % of cases are reviewed."
+      }
+     ],
+     "answer": "a",
+     "hint": "Use numerals with the % sign.",
+     "topic": "Numbers"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which phrase shows vague, impressive-sounding language?",
+     "options": [
+      {
+       "key": "a",
+       "text": "We will open three new offices by the end of June."
+      },
+      {
+       "key": "b",
+       "text": "We will deliver a robust programme going forward."
+      },
+      {
+       "key": "c",
+       "text": "We will reply to your letter within 10 working days."
+      },
+      {
+       "key": "d",
+       "text": "We will send our decision to you by post."
+      }
+     ],
+     "answer": "b",
+     "hint": "It says little about what will actually happen.",
+     "topic": "Vague language"
+    }
+   ]
+  },
+  {
+   "title": "L12: RAID logs: risks, assumptions, issues and dependencies",
+   "source": "HM Government: Orange Book (management of risk); Government Functional Standard GovS 002: Project delivery",
+   "body": "A RAID log is a single list of Risks, Assumptions, Issues and Dependencies. It is used by project and programme teams, and managers read it to see what could knock delivery off course. Each type has a precise meaning.\n\nA risk is something that might happen in future and would affect objectives. An issue is something that has already happened and needs managing now. When a risk occurs, it is closed as a risk and becomes an issue. An assumption is something taken to be true without proof, such as \"the supplier will deliver by June\". An assumption should be tested and given a date for confirmation, or it can become a risk. A dependency is something you need from another team or project, with a date, or something others need from you.\n\nEach risk entry has a description (cause, event and effect), an owner, a score, a mitigation, and a review date. Scores are usually likelihood multiplied by impact, each rated on a scale such as 1 to 5. A risk with likelihood 3 and impact 5 scores 15. A risk with likelihood 4 and impact 3 scores 12, and likelihood 2 with impact 5 scores 10. A threshold, such as 15 or above, can trigger escalation. The score before mitigation is the inherent score. The score after the controls are in place is the residual score, which should be lower if the controls work.\n\nName one owner for each entry. Close an entry with the reason, such as \"occurred and moved to issues\" or \"no longer applies\", and keep the closed items for the record. Do not allow a log to become a list of generic worries. If the same risk never changes and no mitigation exists, the entry is not being managed.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which entry belongs in the issues column, not the risks column?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The supplier may fail to deliver the software"
+      },
+      {
+       "key": "b",
+       "text": "The supplier has failed to deliver the software"
+      },
+      {
+       "key": "c",
+       "text": "The supplier could be late if staff leave"
+      },
+      {
+       "key": "d",
+       "text": "The software might not integrate"
+      }
+     ],
+     "answer": "b",
+     "hint": "An issue has already happened.",
+     "topic": "Risk vs issue"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What happens when a risk occurs?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It stays on the log as a risk, with a higher score"
+      },
+      {
+       "key": "b",
+       "text": "It is converted into an assumption"
+      },
+      {
+       "key": "c",
+       "text": "It is closed as a risk and logged as an issue"
+      },
+      {
+       "key": "d",
+       "text": "It is deleted from the log, as it is no longer a risk"
+      }
+     ],
+     "answer": "c",
+     "hint": "It needs managing now.",
+     "topic": "Risk lifecycle"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is a RAID assumption?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A known fact that has been checked against evidence"
+      },
+      {
+       "key": "b",
+       "text": "A decision recorded by the programme board"
+      },
+      {
+       "key": "c",
+       "text": "A problem that has already happened"
+      },
+      {
+       "key": "d",
+       "text": "Something taken to be true without proof"
+      }
+     ],
+     "answer": "d",
+     "hint": "It should be tested and dated.",
+     "topic": "Assumptions"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A risk has likelihood 3 and impact 5 on 1-5 scales. What is its score?",
+     "options": [
+      {
+       "key": "a",
+       "text": "8"
+      },
+      {
+       "key": "b",
+       "text": "10"
+      },
+      {
+       "key": "c",
+       "text": "15"
+      },
+      {
+       "key": "d",
+       "text": "35"
+      }
+     ],
+     "answer": "c",
+     "hint": "Likelihood multiplied by impact.",
+     "topic": "Risk score"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Likelihood 4 and impact 3: what is the score?",
+     "options": [
+      {
+       "key": "a",
+       "text": "7"
+      },
+      {
+       "key": "b",
+       "text": "10"
+      },
+      {
+       "key": "c",
+       "text": "43"
+      },
+      {
+       "key": "d",
+       "text": "12"
+      }
+     ],
+     "answer": "d",
+     "hint": "4 x 3.",
+     "topic": "Risk score"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "With an escalation threshold of 15 or above, which risk is escalated?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Likelihood 4, impact 3"
+      },
+      {
+       "key": "b",
+       "text": "Likelihood 3, impact 5"
+      },
+      {
+       "key": "c",
+       "text": "Likelihood 2, impact 5"
+      },
+      {
+       "key": "d",
+       "text": "Likelihood 1, impact 5"
+      }
+     ],
+     "answer": "b",
+     "hint": "Only 3 x 5 reaches 15.",
+     "topic": "Thresholds"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is a residual risk score?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The score before any controls are applied"
+      },
+      {
+       "key": "b",
+       "text": "The highest score the risk has reached"
+      },
+      {
+       "key": "c",
+       "text": "The score allocated by the programme board"
+      },
+      {
+       "key": "d",
+       "text": "The score after the controls are in place"
+      }
+     ],
+     "answer": "d",
+     "hint": "It should be lower than the inherent score.",
+     "topic": "Residual risk"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which statement is a dependency?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The data feed may not arrive on time"
+      },
+      {
+       "key": "b",
+       "text": "The data feed has arrived late"
+      },
+      {
+       "key": "c",
+       "text": "The data feed is expected to be of good quality"
+      },
+      {
+       "key": "d",
+       "text": "The team needs the data feed from another department by 30 April"
+      }
+     ],
+     "answer": "d",
+     "hint": "A dependency is something needed from another party, with a date.",
+     "topic": "Dependencies"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "How many owners should each RAID entry have?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Two, to share responsibility"
+      },
+      {
+       "key": "b",
+       "text": "The whole team"
+      },
+      {
+       "key": "c",
+       "text": "One named owner"
+      },
+      {
+       "key": "d",
+       "text": "None until it is scored"
+      }
+     ],
+     "answer": "c",
+     "hint": "Clear ownership drives action.",
+     "topic": "Ownership"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What indicates that a risk is not really being managed?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It has a review date set for next month"
+      },
+      {
+       "key": "b",
+       "text": "It is scored by likelihood and impact"
+      },
+      {
+       "key": "c",
+       "text": "It is owned by a senior manager"
+      },
+      {
+       "key": "d",
+       "text": "It never changes and has no mitigation"
+      }
+     ],
+     "answer": "d",
+     "hint": "A static entry with no action is just a worry.",
+     "topic": "Management"
+    }
+   ]
+  },
+  {
+   "title": "L12: Controllers, joint controllers and processors",
+   "source": "ICO: Controllers and processors; UK GDPR Articles 26, 28 and 33",
+   "body": "The UK GDPR gives different duties to controllers and processors. A controller decides why and how personal data is processed. A processor processes data on behalf of a controller and follows its instructions. The roles are about who decides, not about what the contract says: an organisation that decides its own purposes for the data is a controller, even if it is called a supplier.\n\nWhen a controller uses a processor, Article 28 requires a written contract. It must set out the subject matter, duration, nature and purpose of the processing, the type of personal data and the categories of data subject. It must also require the processor to: act only on the controller's documented instructions; use a sub-processor only with the controller's authorisation, and keep the same obligations in place down the chain; help the controller respond to individuals' rights requests and to breaches; delete or return the data at the end of the contract; and allow audits and inspections.\n\nIf two or more organisations jointly decide purposes and means, they are joint controllers. Article 26 requires a transparent arrangement setting out who does what, particularly for individuals' rights and information, and the essence of it must be made available to individuals.\n\nA processor must tell the controller of a breach without undue delay. The controller must notify the ICO within 72 hours of becoming aware of a breach that is likely to risk individuals' rights and freedoms, unless the risk is unlikely. Contract terms should set the processor's notice period short enough to allow the controller to meet that limit.\n\nA processor that starts to decide its own purposes for the data, for example using it for its own product, takes on the role of a controller for that processing and may be in breach.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What mainly decides whether an organisation is a controller or a processor?",
+     "options": [
+      {
+       "key": "a",
+       "text": "What the contract between the parties calls it"
+      },
+      {
+       "key": "b",
+       "text": "Whether it decides why and how the data is processed"
+      },
+      {
+       "key": "c",
+       "text": "Whether it is a private company or a public body"
+      },
+      {
+       "key": "d",
+       "text": "How much personal data it holds"
+      }
+     ],
+     "answer": "b",
+     "hint": "The test is about decisions, not labels.",
+     "topic": "Roles"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which article of the UK GDPR requires a written contract with a processor?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Article 5"
+      },
+      {
+       "key": "b",
+       "text": "Article 26"
+      },
+      {
+       "key": "c",
+       "text": "Article 33"
+      },
+      {
+       "key": "d",
+       "text": "Article 28"
+      }
+     ],
+     "answer": "d",
+     "hint": "Article 28 deals with processors.",
+     "topic": "Article 28"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which is a required term of a processor contract?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The processor decides the purposes of use"
+      },
+      {
+       "key": "b",
+       "text": "The processor may use any sub-processor it chooses"
+      },
+      {
+       "key": "c",
+       "text": "The processor keeps the data indefinitely"
+      },
+      {
+       "key": "d",
+       "text": "The processor acts only on documented instructions"
+      }
+     ],
+     "answer": "d",
+     "hint": "The controller directs the processing.",
+     "topic": "Contract terms"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "When may a processor engage a sub-processor?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Only with the controller's authorisation"
+      },
+      {
+       "key": "b",
+       "text": "At any time without telling the controller"
+      },
+      {
+       "key": "c",
+       "text": "Only if it is in the UK"
+      },
+      {
+       "key": "d",
+       "text": "Only if the data is not special category"
+      }
+     ],
+     "answer": "a",
+     "hint": "Authorisation and flow-down obligations are required.",
+     "topic": "Sub-processors"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What must happen to personal data when the contract ends?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is archived by the processor for future audit"
+      },
+      {
+       "key": "b",
+       "text": "It is deleted or returned, at the controller's choice"
+      },
+      {
+       "key": "c",
+       "text": "It is anonymised and kept for the processor's research"
+      },
+      {
+       "key": "d",
+       "text": "It is passed to the next supplier"
+      }
+     ],
+     "answer": "b",
+     "hint": "The contract must provide for this.",
+     "topic": "End of contract"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Two departments jointly decide the purposes and means of a data project. What are they?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Joint controllers, needing an Article 26 arrangement"
+      },
+      {
+       "key": "b",
+       "text": "Processor and sub-processor, bound by Article 28"
+      },
+      {
+       "key": "c",
+       "text": "Independent processors with separate contracts"
+      },
+      {
+       "key": "d",
+       "text": "Controller and data subject, under Article 15"
+      }
+     ],
+     "answer": "a",
+     "hint": "They share responsibility.",
+     "topic": "Joint controllers"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A supplier uses the data it holds for a client to train its own product. What is the effect?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It remains a processor, because the data came from the client"
+      },
+      {
+       "key": "b",
+       "text": "It becomes a joint controller with the client automatically"
+      },
+      {
+       "key": "c",
+       "text": "It acts as a controller for that use, and may be breaching the contract"
+      },
+      {
+       "key": "d",
+       "text": "It is in the clear, if the data is encrypted"
+      }
+     ],
+     "answer": "c",
+     "hint": "Deciding its own purposes makes it a controller.",
+     "topic": "Role change"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Within what time must a controller notify the ICO of a notifiable breach?",
+     "options": [
+      {
+       "key": "a",
+       "text": "24 hours of the breach occurring"
+      },
+      {
+       "key": "b",
+       "text": "7 days of discovery"
+      },
+      {
+       "key": "c",
+       "text": "72 hours of becoming aware"
+      },
+      {
+       "key": "d",
+       "text": "One month of becoming aware"
+      }
+     ],
+     "answer": "c",
+     "hint": "This is the Article 33 limit.",
+     "topic": "Breach notification"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Who must tell the controller about a breach affecting data the processor holds?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The ICO, at the processor's request"
+      },
+      {
+       "key": "b",
+       "text": "The processor, without undue delay"
+      },
+      {
+       "key": "c",
+       "text": "The data subject first"
+      },
+      {
+       "key": "d",
+       "text": "Nobody until the controller finds out"
+      }
+     ],
+     "answer": "b",
+     "hint": "The controller's clock depends on prompt notice.",
+     "topic": "Processor duty"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why should a contract set a short deadline for the processor to report a breach?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Because processors must notify the ICO themselves"
+      },
+      {
+       "key": "b",
+       "text": "So the controller can still meet its own 72-hour limit"
+      },
+      {
+       "key": "c",
+       "text": "So the processor can reduce what it charges"
+      },
+      {
+       "key": "d",
+       "text": "Because every breach must be fixed within 24 hours"
+      }
+     ],
+     "answer": "b",
+     "hint": "The limit applies to the controller.",
+     "topic": "Contract design"
+    }
+   ]
+  },
+  {
+   "title": "L12: Subject access requests: scope, third-party data and exemptions",
+   "source": "ICO: Right of access; UK GDPR Article 15; Data Protection Act 2018, Schedule 2",
+   "body": "A subject access request (SAR) gives a person the right to a copy of their personal data and other information about the processing. It can be made in any form, including by email or on social media, and does not need to mention the law. Time starts when the request is received, or when you receive any ID or clarification you have reasonably asked for. The deadline is one calendar month, ending on the corresponding date in the next month. A request received on 15 January is due by 15 February. If there is no such date, as with a request received on 31 January, it falls on the last day of the following month, so 28 February in 2025. The time can be extended by up to two further months if the request is complex or the person has made a number of requests, and the person must be told within the first month.\n\nThe right is to personal data, not documents. You may provide the data in a new document, but it is often easier to supply copies with redactions. Fees cannot normally be charged. A request that is manifestly unfounded or excessive can be refused or a reasonable fee charged, but the bar is high.\n\nWhere the information also identifies another person, you must weigh competing interests. You do not have to disclose it unless the other person consents or it is reasonable to do so without consent. The rest of the data is still provided. Exemptions include legal professional privilege, confidential references given by the department, and management forecasting. Each is applied case by case and recorded, and the person is told of the right to complain to the ICO and to go to court.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A SAR is received on 15 January. What is the usual deadline?",
+     "options": [
+      {
+       "key": "a",
+       "text": "14 February"
+      },
+      {
+       "key": "b",
+       "text": "1 March"
+      },
+      {
+       "key": "c",
+       "text": "15 April"
+      },
+      {
+       "key": "d",
+       "text": "15 February"
+      }
+     ],
+     "answer": "d",
+     "hint": "One calendar month to the corresponding date.",
+     "topic": "Deadline"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A SAR is received on 31 January 2025. By when must it be answered?",
+     "options": [
+      {
+       "key": "a",
+       "text": "31 March 2025"
+      },
+      {
+       "key": "b",
+       "text": "1 March 2025"
+      },
+      {
+       "key": "c",
+       "text": "28 February 2025"
+      },
+      {
+       "key": "d",
+       "text": "3 March 2025"
+      }
+     ],
+     "answer": "c",
+     "hint": "There is no corresponding date, so it is the last day of the next month.",
+     "topic": "Deadline"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "How long can the time be extended for a complex request?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Up to one further month"
+      },
+      {
+       "key": "b",
+       "text": "Up to six months"
+      },
+      {
+       "key": "c",
+       "text": "Up to two further months"
+      },
+      {
+       "key": "d",
+       "text": "Indefinitely, if the department decides"
+      }
+     ],
+     "answer": "c",
+     "hint": "The person must be told in the first month.",
+     "topic": "Extensions"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does a request need in order to count as a valid SAR?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It can come in any form and need not cite the law"
+      },
+      {
+       "key": "b",
+       "text": "It must cite Article 15 of the UK GDPR"
+      },
+      {
+       "key": "c",
+       "text": "It must be made in writing on the department's form"
+      },
+      {
+       "key": "d",
+       "text": "It must be addressed to the data protection officer"
+      }
+     ],
+     "answer": "a",
+     "hint": "The law does not require a particular wording.",
+     "topic": "Valid request"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "The requester's right is to which of the following?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Every document in which their name appears"
+      },
+      {
+       "key": "b",
+       "text": "Copies of all internal discussions about their case"
+      },
+      {
+       "key": "c",
+       "text": "Access to the complete case file held on them"
+      },
+      {
+       "key": "d",
+       "text": "A copy of their personal data and information about the processing"
+      }
+     ],
+     "answer": "d",
+     "hint": "It is about personal data, not documents.",
+     "topic": "Scope"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A letter also contains another person's details. What should be done first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Withhold the whole letter to protect the other person"
+      },
+      {
+       "key": "b",
+       "text": "Send the letter unredacted, as the requester is entitled to it"
+      },
+      {
+       "key": "c",
+       "text": "Ask the requester to obtain the other person's consent"
+      },
+      {
+       "key": "d",
+       "text": "Weigh whether to disclose, considering consent and whether it is reasonable"
+      }
+     ],
+     "answer": "d",
+     "hint": "The rest of the data is still provided.",
+     "topic": "Third-party data"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which exemption can apply to a SAR?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Legal professional privilege"
+      },
+      {
+       "key": "b",
+       "text": "Embarrassment to the department"
+      },
+      {
+       "key": "c",
+       "text": "A heavy workload in the team"
+      },
+      {
+       "key": "d",
+       "text": "The age of the records"
+      }
+     ],
+     "answer": "a",
+     "hint": "Exemptions are specific and recorded.",
+     "topic": "Exemptions"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is the normal rule on fees for a SAR?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Nothing can normally be charged"
+      },
+      {
+       "key": "b",
+       "text": "A flat fee of £10 applies to every request"
+      },
+      {
+       "key": "c",
+       "text": "A fee of up to £50 applies for large searches"
+      },
+      {
+       "key": "d",
+       "text": "The department sets whatever fee it thinks right"
+      }
+     ],
+     "answer": "a",
+     "hint": "A fee may be charged only for manifestly unfounded or excessive requests.",
+     "topic": "Fees"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What does the response also have to tell the person?",
+     "options": [
+      {
+       "key": "a",
+       "text": "About the right to complain to the ICO and to go to court"
+      },
+      {
+       "key": "b",
+       "text": "Who else has made a request about them"
+      },
+      {
+       "key": "c",
+       "text": "Which manager handled the case"
+      },
+      {
+       "key": "d",
+       "text": "The department's budget for subject access work"
+      }
+     ],
+     "answer": "a",
+     "hint": "The person's remedies must be set out.",
+     "topic": "Response content"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A team says it only needs to supply the documents, not the data. What is wrong with that?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Documents are always exempt from a subject access request"
+      },
+      {
+       "key": "b",
+       "text": "Documents are provided only if the requester asks for them"
+      },
+      {
+       "key": "c",
+       "text": "The right is to personal data, which may need extracting or redacting from documents"
+      },
+      {
+       "key": "d",
+       "text": "The right covers emails and no other type of record"
+      }
+     ],
+     "answer": "c",
+     "hint": "Information about the person is what counts.",
+     "topic": "Data vs documents"
+    }
+   ]
+  },
+  {
+   "title": "L12: Information assets and using AI notetakers",
+   "source": "Cabinet Office: Government Functional Standard GovS 007 (Security) and information management guidance; ICO guidance on AI and data protection",
+   "body": "Departments keep an information asset register (IAR): a list of the important sets of information they hold, such as a case database or a shared drive of contracts. Each entry names an information asset owner (IAO), a senior person who is accountable for it, what the asset contains, how it is classified, who may access it, where it is stored, how long it is kept, and what the risks are. The senior information risk owner (SIRO), a board-level role, takes overall responsibility for information risk, and the IAOs report to them. Managers are expected to know which assets they use and to make sure changes, such as a new system or supplier, are recorded.\n\nAI meeting tools that record, transcribe or summarise calls are now common. A transcript or summary of a meeting is a record and may contain personal data, so the usual rules apply. Use only a tool that your department has approved for the classification of the discussion. Tell participants that the meeting is being recorded and why, and do not use it for confidential personnel, security or legal matters unless the policy allows. Check the summary for errors before it is circulated: tools can mishear names, invent action owners or miss the decision.\n\nTreat the output as a draft that a named person must check and agree. Store the approved version in the proper system, and delete the raw audio and transcripts in line with the retention schedule. A recording can be requested under FOI or a subject access request, so do not keep more than you need. Do not let a tool join a meeting uninvited with an external provider, and do not forward a transcript outside the department without checking.",
+   "questions": [
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is an information asset register?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A list of all staff who hold a security clearance"
+      },
+      {
+       "key": "b",
+       "text": "A register of every FOI request the department receives"
+      },
+      {
+       "key": "c",
+       "text": "A list of important sets of information with an owner, risks and handling details"
+      },
+      {
+       "key": "d",
+       "text": "A log of the software licences the department owns"
+      }
+     ],
+     "answer": "c",
+     "hint": "It shows what is held and who is accountable.",
+     "topic": "IAR"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Who is accountable for an individual information asset?",
+     "options": [
+      {
+       "key": "a",
+       "text": "The IT helpdesk"
+      },
+      {
+       "key": "b",
+       "text": "Any user of the asset"
+      },
+      {
+       "key": "c",
+       "text": "The information asset owner"
+      },
+      {
+       "key": "d",
+       "text": "The data protection officer alone"
+      }
+     ],
+     "answer": "c",
+     "hint": "IAOs are senior people responsible for their assets.",
+     "topic": "IAO"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which responsibility sits with the senior information risk owner?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Day-to-day running of the IT systems"
+      },
+      {
+       "key": "b",
+       "text": "Handling all FOI requests"
+      },
+      {
+       "key": "c",
+       "text": "Checking staff clearances"
+      },
+      {
+       "key": "d",
+       "text": "Overall responsibility for information risk at board level"
+      }
+     ],
+     "answer": "d",
+     "hint": "IAOs report to the SIRO.",
+     "topic": "SIRO"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "A team introduces a new case system. What should its manager do?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Wait for the IAO to notice the change"
+      },
+      {
+       "key": "b",
+       "text": "Add it only when an audit asks for it"
+      },
+      {
+       "key": "c",
+       "text": "Make sure the system is recorded on the information asset register"
+      },
+      {
+       "key": "d",
+       "text": "Record it in the team's own rota instead"
+      }
+     ],
+     "answer": "c",
+     "hint": "Changes must be reflected in the register.",
+     "topic": "Maintaining the IAR"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What is true of an AI-generated transcript of a meeting?",
+     "options": [
+      {
+       "key": "a",
+       "text": "It is likely to be a record and may contain personal data"
+      },
+      {
+       "key": "b",
+       "text": "It is not a record, because a machine produced it"
+      },
+      {
+       "key": "c",
+       "text": "It is exempt from FOI, as it is only a draft"
+      },
+      {
+       "key": "d",
+       "text": "It can be kept for ever without a retention period"
+      }
+     ],
+     "answer": "a",
+     "hint": "The same information rules apply.",
+     "topic": "Records"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Before using an AI notetaker, what must be checked first?",
+     "options": [
+      {
+       "key": "a",
+       "text": "That the tool is approved for the classification of the discussion"
+      },
+      {
+       "key": "b",
+       "text": "That the tool is free to use for the whole team"
+      },
+      {
+       "key": "c",
+       "text": "That all of the attendees speak clearly"
+      },
+      {
+       "key": "d",
+       "text": "That the tool is installed on a personal laptop"
+      }
+     ],
+     "answer": "a",
+     "hint": "Approval depends on classification.",
+     "topic": "Approved tools"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Which meeting is least suitable for an AI notetaker unless policy allows it?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A team planning session about a public leaflet"
+      },
+      {
+       "key": "b",
+       "text": "A confidential discussion about a staff disciplinary case"
+      },
+      {
+       "key": "c",
+       "text": "A weekly update on a project timeline"
+      },
+      {
+       "key": "d",
+       "text": "A training session on a public-facing service"
+      }
+     ],
+     "answer": "b",
+     "hint": "Sensitive personnel matters need extra care.",
+     "topic": "Sensitive meetings"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What should happen to an AI-generated summary before it is circulated?",
+     "options": [
+      {
+       "key": "a",
+       "text": "A named person checks and corrects it"
+      },
+      {
+       "key": "b",
+       "text": "It is sent immediately to speed things up"
+      },
+      {
+       "key": "c",
+       "text": "It is deleted without being read"
+      },
+      {
+       "key": "d",
+       "text": "It is sent only to external attendees"
+      }
+     ],
+     "answer": "a",
+     "hint": "Tools can mishear names or invent action owners.",
+     "topic": "Checking output"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "What should be done with the raw recording once the approved record exists?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Keep it permanently in case it is needed later"
+      },
+      {
+       "key": "b",
+       "text": "Send a copy to every attendee to confirm the notes"
+      },
+      {
+       "key": "c",
+       "text": "Store it on a personal drive for backup"
+      },
+      {
+       "key": "d",
+       "text": "Delete it in line with the retention schedule"
+      }
+     ],
+     "answer": "d",
+     "hint": "Do not keep more than you need.",
+     "topic": "Retention"
+    },
+    {
+     "level": 12,
+     "type": "mcq",
+     "prompt": "Why should participants be told that a meeting is being recorded?",
+     "options": [
+      {
+       "key": "a",
+       "text": "Transparency about the processing is required and they can raise concerns"
+      },
+      {
+       "key": "b",
+       "text": "Recordings are only lawful if attendees pay for them"
+      },
+      {
+       "key": "c",
+       "text": "Each recording must be sent to the ICO for approval"
+      },
+      {
+       "key": "d",
+       "text": "It makes the transcript more accurate"
+      }
+     ],
+     "answer": "a",
+     "hint": "People should know how their data is used.",
+     "topic": "Transparency"
+    }
+   ]
+  }
+ ]
+}
