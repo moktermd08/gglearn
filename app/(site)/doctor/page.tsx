@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Compass, Gauge, Stethoscope } from "lucide-react";
+import { ArrowRight, ClipboardList, Compass, Gauge, Stethoscope } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { EmptyState, PageHero } from "@/components/charts";
 import { diagnose, type FamilyFit, type RoleFit } from "@/lib/careerDoctor";
@@ -105,6 +105,7 @@ export default async function CareerDoctor() {
         </>
       )}
       {rolesWithLadders().length === 0 && <p className="text-sm text-slate-500">No career ladders are set up yet.</p>}
+      <p className="flex flex-wrap items-center gap-1 text-sm"><ClipboardList size={14} className="text-indigo-700" />See what to do about it, how often, and how you are doing on <Link href="/plan" className="font-semibold text-indigo-700 hover:underline">My plan</Link>.</p>
       <p className="text-xs text-slate-500">Fit counts placement results as well as passed exams, because it shows where you are likely to do well. What your exams prove for a role is on <Link href="/goal" className="underline">Goal assessment</Link>.</p>
     </div>
   );
