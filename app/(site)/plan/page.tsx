@@ -10,7 +10,7 @@ import { MAX_PLANS } from "@/lib/planSets";
 import { addMyItemAction, addMyPlanAction, logItemAction, removeItemAction, removePlanAction } from "./actions";
 import { RecentActivity, StrengthsWeaknesses, TimeTabs, type When } from "@/components/PlanInsights";
 import { insightsFor, recentActivityFor } from "@/lib/planInsights";
-import { planSetFor, type PlanCard, type PlanItem, type PlanSource, type PlanStatus } from "@/lib/plan";
+import { lateTracksOf, planSetFor, type PlanCard, type PlanItem, type PlanSource, type PlanStatus } from "@/lib/plan";
 
 export const metadata = { title: "My plans — gglearn" };
 
@@ -83,11 +83,11 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
   const sel = set.cards.find((c) => c.key === wanted) ?? null; // no choice: the overview of every plan
   const all = set.all;
   const when: When = whenRaw === "today" || whenRaw === "week" || whenRaw === "month" ? whenRaw : "all";
-  const ins = insightsFor(user, sel ? sel.plan : all);
+  const ins = insightsFor(user, sel ? sel.plan : all, undefined, lateTracksOf(set.cards));
   const recent = recentActivityFor(user);
   const base = sel ? `plan=${sel.key}` : "";
   const extras = set.cards.filter((c) => c.kind === "extra").length;
-  const pct = all.total ? all.done / all.total : 0;
+  const pct = all.progress;
   const g = (sel ?? set.cards[1]).plan.goal;
   const targets = targetsFor(user), { tomorrow } = dateBounds();
 
@@ -104,10 +104,10 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
       {!sel && (
         <>
           <section className="card flex flex-wrap items-center gap-5 p-5" aria-label="Overall">
-            <Ring pct={pct} label={`${Math.round(pct * 100)}%`} sub="done" size={104} color="#6366f1" />
+            <Ring pct={pct} label={`${Math.round(pct * 100)}%`} sub="complete" size={104} color="#6366f1" />
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-lg font-bold">{all.done} of {all.total} things done across {set.cards.length} plans</p>
-              <p className="text-xs text-slate-400">A subject that is in two plans counts once here.</p>
+              <p className="text-lg font-bold">{all.done} of {all.total} things finished across {set.cards.length} plans</p>
+              <p className="text-xs text-slate-400">The ring counts partial progress, so 3 of 5 levels is 60% of that item. A subject that is in two plans counts once.</p>
               <p className="flex items-center gap-1 text-xs text-slate-400"><Flame size={13} />{all.week.activeDays} of the last 7 days active (aim for {all.week.target})</p>
             </div>
           </section>
@@ -117,7 +117,7 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
 
           <section aria-label="Every plan" className="grid gap-3 sm:grid-cols-2">
             {set.cards.map((c) => {
-              const st = cardStatus(c), p = c.plan, first = p.focus[0], done = p.total ? p.done / p.total : 0;
+              const st = cardStatus(c), p = c.plan, first = p.focus[0], done = p.progress;
               return (
                 <Link key={c.key} href={`/plan?plan=${c.key}`} className="card block space-y-2 p-4 transition hover:border-indigo-400/50">
                   <div className="flex items-start justify-between gap-2">
@@ -148,9 +148,9 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
       {sel && (
         <>
           <section className="card flex flex-wrap items-center gap-5 p-5" aria-label="This plan">
-            <Ring pct={sel.plan.total ? sel.plan.done / sel.plan.total : 0} label={`${sel.plan.total ? Math.round((sel.plan.done / sel.plan.total) * 100) : 0}%`} sub="done" size={104} color="#6366f1" />
+            <Ring pct={sel.plan.progress} label={`${Math.round(sel.plan.progress * 100)}%`} sub="complete" size={104} color="#6366f1" />
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-lg font-bold">{sel.plan.done} of {sel.plan.total} things done</p>
+              <p className="text-lg font-bold">{sel.plan.done} of {sel.plan.total} things finished</p>
               {g && (
                 <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-400">
                   <span className="inline-flex items-center gap-1"><Flag size={13} />{g.title}</span>
@@ -158,7 +158,8 @@ export default async function Plan({ searchParams }: { searchParams: Promise<{ p
                 </p>
               )}
               {g && g.perWeekNeeded > 0 && <p className="text-xs text-slate-400">To stay on this date you need about <b className="text-slate-300">{g.perWeekNeeded.toFixed(1)}</b> level{g.perWeekNeeded === 1 ? "" : "s"} a week. Over the last four weeks you passed <b className="text-slate-300">{g.perWeekNow.toFixed(1)}</b> a week.</p>}
-              {!g && sel.kind === "main" && <p className="text-xs text-slate-400">You have no goal set. <Link href="/goal" className="underline">Set one</Link> and this plan gets dates and a weekly pace.</p>}
+              {!g && sel.kind === "main" && <p className="text-xs text-slate-400">No goal yet, so these come from the Career doctor and have no dates.</p>}
+              {!g && sel.kind === "main" && <Link href="/goal" className="btn mt-1 inline-flex">Set my career goal<ArrowRight size={15} /></Link>}
             </div>
           </section>
 

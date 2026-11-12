@@ -36,7 +36,7 @@ export default async function Plans({ searchParams }: { searchParams: Promise<{ 
             <Field label="Name or email"><input name="q" defaultValue={q} placeholder="Search people you run" autoFocus /></Field>
             <Button variant="primary">Search</Button>
           </form>
-          {needle && found.length === 0 && <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 12 }}>Nobody you run matches.</p>}
+          {needle && found.length === 0 && <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 12 }}>Nobody you run matches. People who are not placed in a company, brand or project cannot be reached from here: place them on the <Link href="/admin/people">People</Link> page first.</p>}
           {found.length > 0 && (
             <div style={{ display: "grid", gap: 6, marginTop: 12 }}>
               {found.map((u) => (
