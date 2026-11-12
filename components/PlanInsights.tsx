@@ -36,11 +36,12 @@ function Mini({ i }: { i: PlanItem }) {
   return <li><Link href={i.href} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm transition hover:bg-black/[.03]"><span className="min-w-0 truncate font-semibold">{i.title}</span><span className="text-[11px] text-slate-400">{i.have} of {i.need} {i.unit} · {i.cadence}</span></Link></li>;
 }
 
-function Pace({ label, done, needed }: { label: string; done: number; needed: number | null }) {
+/** `exact` for a target that is a plain number (4 days), not an estimate (the levels a goal date works out to). */
+function Pace({ label, done, needed, exact = false }: { label: string; done: number; needed: number | null; exact?: boolean }) {
   const pct = needed ? Math.min(100, (done / needed) * 100) : done > 0 ? 100 : 0;
   return (
     <div className="space-y-1">
-      <div className="flex justify-between text-xs"><span className="text-slate-400">{label}</span><span className="font-semibold">{done}{needed ? ` of about ${Math.ceil(needed)}` : ""}</span></div>
+      <div className="flex justify-between text-xs"><span className="text-slate-400">{label}</span><span className="font-semibold">{done}{needed ? ` of ${exact ? "" : "about "}${Math.ceil(needed)}` : ""}</span></div>
       <span className="block h-1.5 overflow-hidden rounded-full bg-black/10"><i className="block h-full rounded-full" style={{ width: `${pct}%`, background: needed && done < needed * 0.5 ? "#f59e0b" : "#10b981" }} /></span>
     </div>
   );
@@ -71,7 +72,7 @@ export function TimeTabs({ ins, when, base }: { ins: Insights; when: When; base:
         <div className="space-y-3">
           <div className="grid gap-3 sm:grid-cols-2">
             <Pace label="Levels passed in the last 7 days" done={ins.week.levels} needed={ins.week.levelsNeeded} />
-            <Pace label="Days active in the last 7 days" done={ins.week.days.active} needed={ins.week.days.target} />
+            <Pace label="Days active in the last 7 days" done={ins.week.days.active} needed={ins.week.days.target} exact />
           </div>
           {ins.week.due.length > 0 ? <><p className="text-xs text-slate-400">Due this week, or already late</p><ul className="space-y-1.5">{ins.week.due.map((i) => <Mini key={i.key} i={i} />)}</ul></> : <p className="text-sm text-slate-400">Nothing due in the next 7 days.</p>}
         </div>

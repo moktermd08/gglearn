@@ -7,7 +7,7 @@ export function PlanGlance({ set, compact = false }: { set: PlanSet; compact?: b
   const plan = set.all, many = set.cards.length > 2;
   const overdue = plan.items.filter((i) => i.status === "overdue").length, behind = plan.items.filter((i) => i.status === "behind").length;
   const worst = needsMost(set.cards), first = worst?.plan.focus[0] ?? plan.focus[0];
-  const pct = plan.total ? Math.round((plan.done / plan.total) * 100) : 0;
+  const pct = Math.round(plan.progress * 100);
   return (
     <section aria-label="My plan" className={`card ${compact ? "p-4" : "p-5"} ${overdue ? "border-rose-400/40" : ""}`}>
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -16,7 +16,7 @@ export function PlanGlance({ set, compact = false }: { set: PlanSet; compact?: b
       </div>
       <div className="mt-3 flex items-center gap-3">
         <span className="h-2 flex-1 overflow-hidden rounded-full bg-black/10"><i className="block h-full rounded-full bg-indigo-500" style={{ width: `${pct}%` }} /></span>
-        <span className="shrink-0 text-xs text-slate-400">{plan.done} of {plan.total} done{many ? ` across ${set.cards.length} plans` : ""}</span>
+        <span className="shrink-0 text-xs text-slate-400">{pct}% complete{many ? ` across ${set.cards.length} plans` : ""}</span>
       </div>
       <p className="mt-2 text-sm text-slate-400">
         {overdue > 0 && <b className="text-rose-300">{overdue} overdue. </b>}
@@ -24,6 +24,7 @@ export function PlanGlance({ set, compact = false }: { set: PlanSet; compact?: b
         {plan.week.activeDays} of the last 7 days active (aim for {plan.week.target}).
       </p>
       {worst && many && <p className="mt-1 text-sm text-slate-400">Needs you most: <Link href={`/plan?plan=${worst.key}`} className="font-semibold text-slate-200 underline">{worst.name}</Link></p>}
+      {!plan.goal && <p className="mt-1 text-sm text-slate-400">No career goal yet. <Link href="/goal" className="font-semibold text-slate-200 underline">Set one</Link> to get dates and a weekly pace.</p>}
       {first && <p className="mt-2 text-sm">Do first: <Link href={first.href} className="font-semibold underline">{first.title}</Link> <span className="text-slate-400">· {first.cadence}</span></p>}
     </section>
   );

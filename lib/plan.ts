@@ -5,6 +5,7 @@ import { requirementsFor, scopesOf } from "@/lib/paths";
 import { factsOf } from "@/lib/progression";
 import { manualItemsFor } from "@/lib/planItems";
 import { plansOf } from "@/lib/planSets";
+import { topicLabel } from "@/lib/topicName";
 
 type Person = typeof users.$inferSelect;
 
@@ -43,6 +44,8 @@ export type Plan = {
   focus: PlanItem[];
   done: number;
   total: number;
+  /** 0..1: how much of everything asked is done, each item counting for its share (3 of 5 levels is 60%), so partial progress shows */
+  progress: number;
   week: { activeDays: number; target: number; streakDays: number[] };
   goal: PlanGoal | null;
 };
@@ -66,7 +69,9 @@ const byUrgency = (a: PlanItem, b: PlanItem) => RANK[a.status] - RANK[b.status] 
 type Week = Plan["week"];
 function build(list: PlanItem[], week: Week, goal: PlanGoal | null): Plan {
   const items = [...list].sort(byUrgency);
-  return { items, focus: items.filter((i) => i.status !== "done" && i.source !== "habit").slice(0, 3), done: items.filter((i) => i.status === "done").length, total: items.length, week, goal };
+  const work = items.filter((i) => i.source !== "habit");
+  const progress = work.length ? work.reduce((n, i) => n + (i.need ? Math.min(1, i.have / i.need) : 0), 0) / work.length : 0;
+  return { items, focus: items.filter((i) => i.status !== "done" && i.source !== "habit").slice(0, 3), done: items.filter((i) => i.status === "done").length, total: items.length, progress, week, goal };
 }
 
 /** The plan items a journey says: each subject still to pass, once, at the highest level any step asks. */
@@ -83,7 +88,7 @@ function goalItems(j: Extract<Journey, { state: "ok" }>, keyPrefix: string): { i
     const done = s.passed >= need;
     if (done && !j.goal) continue; // without a goal there is nothing to celebrate yet
     items.push({
-      key: `${keyPrefix}goal-${s.track.id}`, track: s.track.id, source: "goal", title: s.track.name,
+      key: `${keyPrefix}goal-${s.track.id}`, track: s.track.id, source: "goal", title: topicLabel(s.track.name),
       why: `For ${leg}${j.goal ? ` on the way to ${j.target.title}` : ""}`,
       have: Math.min(s.passed, need), need, unit: "levels",
       cadence: j.goal && dueAt ? `Finish by ${shortDate(dueAt)}` : "Pass at your own pace",
@@ -129,7 +134,7 @@ export function planSetFor(person: Person, at = now()): PlanSet {
   const required: PlanItem[] = requirementsFor(person, scopesOf(person.id)).map((r) => {
     const daysLeft = Math.ceil((r.dueAt - at) / DAY);
     return {
-      key: `req-${r.track.id}`, track: r.track.id, source: "required" as const, title: r.track.name,
+      key: `req-${r.track.id}`, track: r.track.id, source: "required" as const, title: topicLabel(r.track.name),
       why: r.why === "role" ? "Required for your role" : "Required for everyone",
       have: Math.min(r.passed, r.track.requiredLevel), need: r.track.requiredLevel, unit: "levels",
       cadence: r.done ? "Complete" : r.overdue ? `${Math.abs(daysLeft)} day${Math.abs(daysLeft) === 1 ? "" : "s"} overdue` : `Due in ${Math.max(daysLeft, 0)} day${daysLeft === 1 ? "" : "s"}`,
@@ -148,7 +153,7 @@ export function planSetFor(person: Person, at = now()): PlanSet {
       if (seen.has(a.trackId)) continue;
       seen.add(a.trackId);
       main.push({
-        key: `doc-${a.slug}`, track: a.trackId, source: "doctor", title: a.name, why: `Career doctor: needed for ${top.name}`,
+        key: `doc-${a.slug}`, track: a.trackId, source: "doctor", title: topicLabel(a.name), why: `Career doctor: needed for ${top.name}`,
         have: Math.min(a.have, a.need), need: a.need, unit: "levels", cadence: a.tested ? "Keep climbing" : "Not tried yet: find your level",
         dueAt: null, status: a.have >= a.need ? "done" : "open", href: `/tracks/${a.slug}`,
       });
@@ -185,6 +190,13 @@ export function planSetFor(person: Person, at = now()): PlanSet {
 
 /** One plan with everything in it: what most places that only need the total use. */
 export const planFor = (person: Person, at = now()): Plan => planSetFor(person, at).all;
+
+/** Subjects that are overdue or behind in any plan, so a plan never calls one of them a strength while another plan has it late. */
+export function lateTracksOf(cards: PlanCard[]): Set<number> {
+  const out = new Set<number>();
+  for (const c of cards) for (const i of c.plan.items) if (i.track != null && (i.status === "overdue" || i.status === "behind")) out.add(i.track);
+  return out;
+}
 
 /** The plan that most needs attention: the most overdue, then the most behind, then the least done. Plans with nothing left to do are ignored. */
 export function needsMost(cards: PlanCard[]): PlanCard | null {

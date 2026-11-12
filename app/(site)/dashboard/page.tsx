@@ -240,8 +240,8 @@ export default async function Dashboard() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
         {/* main column: what to do next */}
         <div className="min-w-0 space-y-6">
-          {user.role !== "learner" && <ManagerGlance admin={user.role === "admin"} viewer={user} />}
           <PlanGlance set={planSet} />
+          {user.role !== "learner" && <ManagerGlance admin={user.role === "admin"} viewer={user} />}
           {focusTrack && next.kind !== "quest" && (
             <section aria-label="Continue" className="card relative overflow-hidden p-5" style={{ background: `linear-gradient(125deg, hsl(${TIERS[tierOf(focusNext)].hue} 85% 55% / .16), #fff 60%)` }}>
               <div className="flex flex-wrap items-center gap-4">
