@@ -1393,8 +1393,9 @@ export const planItems = sqliteTable("plan_items", {
   period: text("period", { enum: ["once", "weekly"] }).notNull().default("once"),
   need: integer("need").notNull().default(1),
   dueAt: integer("due_at"),
-  // the extra plan this belongs to; null = the main plan
-  planId: integer("plan_id").references(() => plans.id),
+  // the extra plan this belongs to; null = the main plan. Deliberately no foreign key: SQLite cannot add one to an existing table, so drizzle-kit added the
+  // column without it, and declaring it here made every later push try to rebuild the table and then fail on a duplicate index. lib/planItems.ts checks the plan exists.
+  planId: integer("plan_id"),
   signedOffBy: integer("signed_off_by").references(() => users.id),
   signedOffAt: integer("signed_off_at"),
   createdAt: integer("created_at").notNull().default(now),
