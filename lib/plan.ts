@@ -142,3 +142,18 @@ export function planFor(person: Person, at = now()): Plan {
     goal,
   };
 }
+
+const GLANCE_TTL = 60;
+const glance = new Map<number, { at: number; plan: Plan }>();
+/**
+ * The plan for the small summary on the dashboard, reused for a minute per person so every page view does not redo the work.
+ * The full /plan page always works it out fresh, so what someone just did there is never stale where it matters.
+ */
+export function planGlanceFor(person: Person, at = now()): Plan {
+  const hit = glance.get(person.id);
+  if (hit && at - hit.at < GLANCE_TTL) return hit.plan;
+  if (glance.size > 2000) glance.clear(); // a small bound: this is a cache, not a store
+  const plan = planFor(person, at);
+  glance.set(person.id, { at, plan });
+  return plan;
+}

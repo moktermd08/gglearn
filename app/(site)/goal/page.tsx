@@ -162,6 +162,7 @@ export default async function GoalAssessment() {
         <GoalForm targets={targets} goal={goal} hereRole={here.role} />
         <div className="flex flex-wrap items-center gap-4 text-sm">
           <Link href="/journey" className="text-sky-300 underline">Every step, in full</Link>
+          <Link href="/plan" className="text-sky-300 underline">My plan</Link>
           <form action={clearCareerGoal}><button className="text-slate-400 underline">Remove this goal</button></form>
         </div>
       </section>
