@@ -3,6 +3,8 @@ import { AlertTriangle, ArrowRight, CalendarCheck, CheckCircle2, ClipboardList, 
 import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { Ring } from "@/components/Ring";
+import { PlanItemForm } from "@/components/PlanItemForm";
+import { addMyItemAction, logItemAction, removeItemAction } from "./actions";
 import { planFor, type PlanItem, type PlanSource, type PlanStatus } from "@/lib/plan";
 
 export const metadata = { title: "My plan — gglearn" };
@@ -14,8 +16,8 @@ const STATUS: Record<PlanStatus, { label: string; cls: string; bar: string }> = 
   "on-track": { label: "On track", cls: "bg-emerald-500/15 text-emerald-300", bar: "#10b981" },
   open: { label: "To do", cls: "bg-sky-500/15 text-sky-300", bar: "#6366f1" },
 };
-const SOURCE: Record<PlanSource, string> = { required: "Required learning", goal: "Your career ladder and goal", doctor: "From the Career doctor", habit: "Your habit" };
-const ORDER: PlanSource[] = ["required", "goal", "doctor", "habit"];
+const SOURCE: Record<PlanSource, string> = { required: "Required learning", goal: "Your career ladder and goal", doctor: "From the Career doctor", manual: "Set by your manager, and your own", habit: "Your habit" };
+const ORDER: PlanSource[] = ["required", "goal", "doctor", "manual", "habit"];
 
 function Row({ i }: { i: PlanItem }) {
   const s = STATUS[i.status];
@@ -35,6 +37,27 @@ function Row({ i }: { i: PlanItem }) {
         </div>
         <div className="mt-1 text-[11px] text-slate-400">{i.cadence}</div>
       </Link>
+    </li>
+  );
+}
+
+function ManualRow({ i }: { i: PlanItem }) {
+  const s = STATUS[i.status], m = i.manual!;
+  return (
+    <li className="rounded-2xl border border-black/10 p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="min-w-0"><div className="truncate font-semibold">{i.title}</div><div className="text-[11px] text-slate-400">{i.why}</div></div>
+        <span className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${s.cls}`}>{s.label}</span>
+      </div>
+      <div className="mt-2 flex items-center gap-3">
+        <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-black/10"><i className="block h-full rounded-full" style={{ width: `${i.need ? (i.have / i.need) * 100 : 0}%`, background: s.bar }} /></span>
+        <span className="shrink-0 text-[11px] text-slate-400">{i.have} of {i.need} {i.unit}</span>
+      </div>
+      <div className="mt-1 flex flex-wrap items-center gap-3 text-[11px] text-slate-400">
+        <span>{i.cadence}</span>
+        {i.status !== "done" && <form action={logItemAction}><input type="hidden" name="id" value={m.id} /><button className="btn !px-3 !py-1 text-xs">I did this</button></form>}
+        {m.mine && <form action={removeItemAction}><input type="hidden" name="id" value={m.id} /><button className="underline">Remove</button></form>}
+      </div>
     </li>
   );
 }
@@ -74,7 +97,7 @@ export default async function Plan() {
 
       {ORDER.map((src) => {
         const rows = p.items.filter((i) => i.source === src);
-        if (!rows.length) return null;
+        if (!rows.length && src !== "manual") return null;
         const done = rows.filter((i) => i.status === "done").length;
         return (
           <section key={src} className="card space-y-3 p-5" aria-label={SOURCE[src]}>
@@ -82,7 +105,9 @@ export default async function Plan() {
               <span className="flex items-center gap-2.5">{rows.some((i) => i.status === "overdue") ? <AlertTriangle size={17} className="text-rose-400" /> : done === rows.length ? <CheckCircle2 size={17} className="text-emerald-400" /> : <ArrowRight size={17} className="text-indigo-400" />}{SOURCE[src]}</span>
               <span className="text-xs font-normal text-slate-400">{done} of {rows.length} done</span>
             </h2>
-            <ul className="space-y-2">{rows.map((i) => <Row key={i.key} i={i} />)}</ul>
+            {src === "manual" && rows.length === 0 && <p className="text-sm text-slate-400">Nothing here yet. Add something the app cannot measure itself, like shadowing a release or a monthly 1:1.</p>}
+            <ul className="space-y-2">{rows.map((i) => (i.manual ? <ManualRow key={i.key} i={i} /> : <Row key={i.key} i={i} />))}</ul>
+            {src === "manual" && <details className="text-sm"><summary className="cursor-pointer text-sky-300 underline">Add one of your own</summary><div className="mt-3"><PlanItemForm action={addMyItemAction} /></div></details>}
           </section>
         );
       })}

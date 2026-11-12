@@ -3,6 +3,7 @@ import { diagnose } from "@/lib/careerDoctor";
 import { journeyFor, roleLabel } from "@/lib/journey";
 import { requirementsFor, scopesOf } from "@/lib/paths";
 import { factsOf } from "@/lib/progression";
+import { manualItemsFor } from "@/lib/planItems";
 
 type Person = typeof users.$inferSelect;
 
@@ -11,10 +12,12 @@ const now = () => Math.floor(Date.now() / 1000);
 /** Active days in a week we ask for: enough to build the habit, not so many that a missed day feels like failure. */
 export const WEEKLY_DAYS_TARGET = 4;
 
-export type PlanSource = "required" | "goal" | "doctor" | "habit";
+export type PlanSource = "required" | "goal" | "doctor" | "manual" | "habit";
 export type PlanStatus = "done" | "overdue" | "behind" | "on-track" | "open";
 export type PlanItem = {
   key: string;
+  /** set for manual items: the plan_items row, and whether the person added it themself (they may remove it) */
+  manual?: { id: number; mine: boolean; period: "once" | "weekly"; signedOff: boolean };
   source: PlanSource;
   title: string;
   /** why this is on the plan, in a few words */
@@ -109,7 +112,19 @@ export function planFor(person: Person, at = now()): Plan {
     }
   }
 
-  // 4. the habit: how often you showed up this week, from the activity the app already records
+  // 4. things a manager set, or the person added, that the app cannot detect
+  for (const m of manualItemsFor(person.id, at)) {
+    const date = m.dueAt ? new Date(m.dueAt * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : null;
+    items.push({
+      key: `man-${m.id}`, source: "manual", title: m.title, why: m.note ? `${m.setBy}: ${m.note}` : `Set by ${m.setBy}`,
+      have: m.have, need: m.need, unit: m.period === "weekly" ? "this week" : m.need === 1 ? "time" : "times",
+      cadence: m.signedOff ? "Signed off" : m.period === "weekly" ? `${m.need} a week, every week` : date ? `${m.need} in total, by ${date}` : `${m.need} in total`,
+      dueAt: m.dueAt, status: m.done ? "done" : m.overdue ? "overdue" : "open", href: "/plan",
+      manual: { id: m.id, mine: m.mine, period: m.period, signedOff: m.signedOff },
+    });
+  }
+
+  // 5. the habit: how often you showed up this week, from the activity the app already records
   const days = factsOf(person.id).days;
   const week = Array.from({ length: 7 }, (_, i) => new Date((at - (6 - i) * DAY) * 1000).toISOString().slice(0, 10));
   const hits = week.filter((d) => days.has(d)).length;
