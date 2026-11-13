@@ -5,6 +5,7 @@ import { glanceCounts } from "@/lib/glance";
 import { awaitingSignoff } from "@/lib/onboarding";
 import { catalog } from "@/lib/paths";
 import { trackInReach, usersInReach } from "@/lib/tenancy";
+import { headcount } from "@/lib/roster";
 import { db, users } from "@/lib/db";
 import { count } from "drizzle-orm";
 import { Icon, PageHeader, Section, StatTile, Stats } from "@gg/ui";
@@ -24,6 +25,11 @@ export default async function Overview() {
   const choices = scopeChoices(me);
   const companyCount = scope.kind === "company" || scope.kind === "brand" ? 1 : choices.companies.length;
   const expiring = g.certs.expiring + g.certs.expired;
+
+  // the global view is the summary of everything; below it, each company on its own (inside a company, each brand), and the people nobody has placed
+  const parts = scope.kind === "all" ? choices.companies.map((c) => ({ kind: "company" as const, id: c.id, name: c.name, href: `/admin/people?company=${c.id}` }))
+    : scope.kind === "company" ? (choices.companies.find((c) => c.id === scope.id)?.brands ?? []).map((b) => ({ kind: "brand" as const, id: b.id, name: b.name, href: `/admin/people?brand=${b.id}` })) : [];
+  const hc = headcount(scope.reach, parts);
 
   const rows: Row[] = [
     signoffs > 0 && { href: "/admin/people", icon: "check", tone: "warn" as const, text: `${signoffs} onboarding phase${signoffs === 1 ? " is" : "s are"} finished and waiting for sign-off` },
@@ -46,6 +52,23 @@ export default async function Overview() {
         <StatTile icon="database" label="Tracks" value={tracks.toLocaleString("en-GB")} hint="in this scope" />
         <StatTile icon="briefcase" label={companyCount === 1 ? "Company" : "Companies"} value={companyCount} href={me.role === "admin" ? "/admin/setup" : undefined} />
       </Stats>
+
+      {(parts.length > 0 || hc.unplaced > 0) && (
+        <Section icon="users" title={scope.kind === "all" ? "People by company" : "People by brand"} subtitle={`${hc.total.toLocaleString("en-GB")} in ${scope.name}, ${hc.active.toLocaleString("en-GB")} active. A person in two places is counted in both.`}>
+          <div style={{ display: "grid", gap: 2 }}>
+            {parts.map((p) => (
+              <Link key={`${p.kind}${p.id}`} href={p.href} className="nav-link">
+                <Icon name={p.kind === "company" ? "briefcase" : "layers"} size={15} /><span style={{ flex: 1 }}>{p.name}</span><b>{(hc.of.get(`${p.kind}:${p.id}`) ?? 0).toLocaleString("en-GB")}</b><Icon name="arrow" size={14} />
+              </Link>
+            ))}
+            {hc.unplaced > 0 && (
+              <Link href="/admin/people?placed=no" className="nav-link" style={{ color: "var(--warn)" }}>
+                <Icon name="alert" size={15} /><span style={{ flex: 1 }}>Registered but not in any company, brand or project</span><b>{hc.unplaced.toLocaleString("en-GB")}</b><Icon name="arrow" size={14} />
+              </Link>
+            )}
+          </div>
+        </Section>
+      )}
 
       <Section icon="inbox" title="Needs your attention" subtitle={rows.length ? "Each line goes to the screen where it is dealt with." : undefined}>
         {rows.length === 0 ? (

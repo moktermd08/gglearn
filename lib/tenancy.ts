@@ -16,7 +16,7 @@ const key = (kind: Scope["kind"], id: number) => `${kind}:${id}`;
 
 type Structure = { brands: { id: number; companyId: number | null }[]; projects: { id: number; companyId: number | null; brandId: number | null }[] };
 /** The brands and projects, read once so a list of many people does not read them again for each person. */
-const structure = (): Structure => ({ brands: db.select({ id: brands.id, companyId: brands.companyId }).from(brands).all(), projects: db.select({ id: projects.id, companyId: projects.companyId, brandId: projects.brandId }).from(projects).all() });
+export const structure = (): Structure => ({ brands: db.select({ id: brands.id, companyId: brands.companyId }).from(brands).all(), projects: db.select({ id: projects.id, companyId: projects.companyId, brandId: projects.brandId }).from(projects).all() });
 
 /** Scopes plus everything beneath them, as "kind:id" keys. */
 function expand(scopes: Scope[], st: Structure = structure()): Set<string> {
