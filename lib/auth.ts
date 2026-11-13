@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { eq, sql } from "drizzle-orm";
 import { db, users } from "@/lib/db";
 import { safeNext } from "@/lib/nextPath";
+import { clearViewAsCookie, viewingAs } from "@/lib/impersonation";
 
 const COOKIE = "gglearn_session";
 const SESSION_TTL_SEC = 60 * 60 * 24 * 30;
@@ -29,6 +30,7 @@ export async function startSession(userId: number) {
 
 export async function endSession() {
   (await cookies()).delete(COOKIE);
+  await clearViewAsCookie();
 }
 
 /** Signs out every device: all sessions issued before now stop working. */
@@ -36,7 +38,8 @@ export function revokeSessions(userId: number) {
   db.update(users).set({ sessionVersion: sql`${users.sessionVersion} + 1` }).where(eq(users.id, userId)).run();
 }
 
-export async function currentUser() {
+/** The person who is actually signed in, whatever they are viewing as. Use this, not currentUser, to know who is really acting. */
+export async function realUser() {
   const raw = (await cookies()).get(COOKIE)?.value;
   if (!raw) return null;
   const parts = raw.split(".");
@@ -65,4 +68,27 @@ export async function requireManager() {
   const u = await requireUser();
   if (u.role === "learner") redirect("/dashboard");
   return u;
+}
+
+/**
+ * Who the app treats as signed in: the person a super admin is viewing as, when they are, otherwise the person who is really signed in.
+ * (The real session is never replaced; see lib/impersonation.ts.)
+ */
+export async function currentUser() {
+  const real = await realUser();
+  if (!real) return null;
+  const view = await viewingAs(real);
+  return view ? view.target : real;
+}
+
+/** For the banner: the super admin, who they are viewing as, and when it ends; null when no view-as is on. */
+export async function viewAsState() {
+  const real = await realUser();
+  const view = real ? await viewingAs(real) : null;
+  return real && view ? { actor: real, target: view.target, minutesLeft: Math.max(1, Math.ceil((view.expiresAt * 1000 - Date.now()) / 60000)) } : null;
+}
+
+/** Actions that would lock someone out or take over their account call this first: true means refuse. */
+export async function refuseWhileViewingAs(): Promise<boolean> {
+  return (await viewAsState()) !== null;
 }

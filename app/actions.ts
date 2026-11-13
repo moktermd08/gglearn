@@ -12,7 +12,7 @@ import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
 import { canReach } from "@/lib/journey";
-import { currentUser, endSession, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
+import { currentUser, endSession, refuseWhileViewingAs, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
 import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@/lib/password";
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
 import { grade } from "@/lib/grading";
@@ -57,6 +57,7 @@ const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() 
 /** Scope checkboxes in a form are all named "scope" with values like "company:1". */
 const formScopes = (fd: FormData) => parseScopes(fd.getAll("scope").filter((v): v is string => typeof v === "string").join(","));
 
+const VIEWING_AS = "Not available while you are viewing as someone else. Exit the view first.";
 const TOO_MANY = "Too many attempts. Please wait a few minutes and try again.";
 
 /** Account creation is invite-only: a manager issues a single-use link bound to one email address. */
@@ -161,6 +162,7 @@ export async function logout() {
  * People whose manager set a temporary password use this to replace it.
  */
 export async function changePassword(_: string | null, fd: FormData): Promise<string | null> {
+  if (await refuseWhileViewingAs()) return VIEWING_AS;
   const me = await requireUser();
   const key = `pw-change:${me.id}`;
   if (!allowed(key, 5)) return TOO_MANY;
@@ -251,6 +253,7 @@ export async function signInWithLink(token: string, next: string) {
 
 /** A manager sets a temporary password for someone who is locked out; every session they had ends. Managers can only do this for learners. */
 export async function resetPassword(_: string | null, fd: FormData): Promise<string | null> {
+  if (await refuseWhileViewingAs()) return VIEWING_AS;
   const me = await requireManager();
   const userId = Number(fd.get("userId")), temp = str(fd.get("password")).slice(0, 200);
   if (!Number.isInteger(userId) || userId <= 0) return "Choose a person.";
@@ -267,6 +270,7 @@ export async function resetPassword(_: string | null, fd: FormData): Promise<str
 
 /** Signs this person out on every device, including this one. */
 export async function logoutEverywhere() {
+  if (await refuseWhileViewingAs()) return; // would end the real person's sessions
   const u = await requireUser();
   revokeSessions(u.id);
   await endSession();
@@ -907,6 +911,7 @@ export async function addHandover(fd: FormData) {
 }
 
 export async function offboard(fd: FormData) {
+  if (await refuseWhileViewingAs()) return;
   const me = await requireManager();
   const userId = Number(fd.get("userId"));
   if (userId === me.id) return; // cannot lock yourself out

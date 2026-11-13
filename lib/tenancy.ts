@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
-import { brands, db, projects, userScopes } from "@/lib/db";
+import { brands, db, projects, userScopes, users } from "@/lib/db";
+import { isSuperAdmin, superAdminEmails } from "@/lib/superAdmin";
 import { isPlatformOwner } from "@/lib/arena";
 import { parseScopes, scopeOptions, scopesOf, type Scope } from "@/lib/paths";
 
@@ -30,6 +31,9 @@ function expand(scopes: Scope[], st: Structure = structure()): Set<string> {
 }
 
 export function reachOf(userId: number): Reach {
+  // a super admin (lib/superAdmin.ts) runs the whole academy whatever companies they are placed in; nobody else is widened
+  const supers = superAdminEmails();
+  if (supers.size && isSuperAdmin(db.select({ email: users.email, role: users.role, status: users.status }).from(users).where(eq(users.id, userId)).get(), supers)) return { all: true };
   const scopes = scopesOf(userId);
   return scopes.length ? { all: false, keys: expand(scopes) } : { all: true };
 }

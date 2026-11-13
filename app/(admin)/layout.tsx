@@ -8,6 +8,7 @@ import { expiryWatchFor } from "@/lib/certsAdmin";
 import { queueCount } from "@/lib/integrityAdmin";
 import { isGlobal, reachOf } from "@/lib/tenancy";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { ViewAsBanner } from "@/components/ViewAsBanner";
 
 export const metadata: Metadata = { title: "Admin — gglearn" };
 
@@ -53,6 +54,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <html lang="en" data-theme="light">
       <body className="antialiased">
+        <ViewAsBanner />
         <Shell nav={<AdminNav groups={groups} scope={scope.value} choices={choices} signedInAs={me.name} />}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 16, fontSize: 12, color: "var(--muted)" }}>
             <Badge tone={scope.isMaster ? "warn" : "muted"}>{scope.kind === "master" ? "Defaults" : scope.library ? "Shared" : scope.kind === "all" ? "All" : scope.kind === "company" ? "Company" : "Brand"}</Badge>

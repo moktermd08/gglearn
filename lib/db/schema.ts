@@ -498,6 +498,18 @@ export const joinLinks = sqliteTable("join_links", {
   createdAt: integer("created_at").notNull().default(now),
 });
 
+// An append-only record of the sensitive things a super admin does to someone else's account: starting and ending "view as" sessions
+// (with the reason they gave) and editing someone's name or email. Nothing in the app updates or deletes a row (lib/securityLog.ts).
+export const securityLog = sqliteTable("security_log", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  at: integer("at").notNull().default(now),
+  actorId: integer("actor_id").notNull().references(() => users.id),
+  targetId: integer("target_id").notNull().references(() => users.id),
+  action: text("action", { enum: ["impersonate_start", "impersonate_end", "details_edit"] }).notNull(),
+  detail: text("detail").notNull().default(""), // the reason, or what changed
+  ip: text("ip").notNull().default(""),
+});
+
 // A profile photo is optional and opt-in; people without one get a generated face. Kept out of `users` so
 // ordinary user queries never load image bytes.
 export const userAvatars = sqliteTable("user_avatars", {
