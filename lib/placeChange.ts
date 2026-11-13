@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { db, users } from "@/lib/db";
 import { noteMembershipChange } from "@/lib/membership";
 import { type Scope, scopesOf, setScopes, syncRequired } from "@/lib/paths";
+import { isClaimable, mayClaim } from "@/lib/unplaced";
 import { isGlobal, reachOf, scopeInReach, userInReach } from "@/lib/tenancy";
 
 /**
@@ -13,8 +14,12 @@ export function changePlaces(meId: number, userId: number, next: Scope[]): strin
   const u = db.select().from(users).where(eq(users.id, userId)).get();
   if (!u || u.status !== "active") return "That person is not active.";
   const reach = reachOf(meId);
-  if (!userInReach(reach, u.id)) return "You do not run that person.";
+  const me = db.select().from(users).where(eq(users.id, meId)).get();
+  // someone who registered on their own and is in no place yet: an admin may place them, but only into places they run
+  const claim = !!me && mayClaim(me) && isClaimable(u) && scopesOf(u.id).length === 0;
+  if (!userInReach(reach, u.id) && !claim) return "You do not run that person.";
   if (!isGlobal(reach)) {
+    if (claim && !next.length) return "Pick a company, brand or project to place them in.";
     if (next.some((s) => !scopeInReach(reach, s))) return "You can only place people in the companies, brands and projects you run.";
     if (!next.length && u.role !== "learner") return "A manager or admin must belong to something. With none, they would run the whole academy.";
   }
