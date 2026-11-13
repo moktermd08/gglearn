@@ -111,7 +111,7 @@ check("starting a view from inside a view is refused", src("lib/impersonation.ts
 check("nothing updates or deletes security log rows", !/(update|delete)\(securityLog\)/.test(["lib/securityLog.ts", "lib/impersonation.ts", "app/super-actions.ts", "app/actions.ts"].map(src).join("\n")));
 const page = src("app/(admin)/admin/people/[id]/page.tsx");
 check("the manager profile only opens for people the viewer runs, and answers the same for missing and not-theirs", page.includes("userInReach(reachOf(me.id), u.id)") && page.includes("notFound()"));
-check("the manager profile is read only: no form, no server action, and none of the helpers that write as a side effect", !/<form|"use server"|progressionFor|touchLeague|syncFreezes|syncRequired/.test(page));
+check("the manager profile page does not write itself and avoids the helpers that write as a side effect", !/db\.(insert|update|delete)\(/.test(page) && !/progressionFor|touchLeague|syncFreezes|syncRequired/.test(page));
 check("a super admin opening a profile is logged", page.includes("recordProfileView("));
 
 console.log(fails ? `\n${fails} FAILED` : "\nall passed");

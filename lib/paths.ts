@@ -1,6 +1,6 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { matchesRoles } from "@/lib/roleFamily";
-import { brands, companies, db, enrollments, levelCredits, pillars, projects, questions, runs, scopeRequirements, tracks, userScopes, users } from "@/lib/db";
+import { brands, companies, db, deadlineExtensions, enrollments, levelCredits, pillars, projects, questions, runs, scopeRequirements, tracks, userScopes, users } from "@/lib/db";
 import { creditInForce, levelsEarned } from "@/lib/progress";
 import { MAX_LEVEL } from "@/lib/levels";
 import { tagsFor } from "@/lib/dynamic/tags";
@@ -108,6 +108,7 @@ export type Requirement = {
   assignedAt: number | null; // null until the person has been enrolled
   dueAt: number;
   overdue: boolean;
+  extendedTo: number | null; // a manager gave this person more time: the later date that now applies (deadline_extensions)
 };
 
 /**
@@ -125,23 +126,26 @@ export function worksForCompany(scopes: Scope[]): boolean {
 export type Progress = {
   started: Map<string, number>;
   passed: Map<string, number>;
+  /** "userId:trackId" -> the latest date a manager has extended that person's deadline to */
+  extended: Map<string, number>;
   /** The required tracks worked out for each distinct (audience, role, scopes), since many people share one. Belongs to one catalogue: make a new Progress per report. */
   tracks: Map<string, CatalogTrack[]>;
 };
 export function loadProgress(userIds?: Set<number> | null): Progress {
-  const started = new Map<string, number>(), passed = new Map<string, number>();
+  const started = new Map<string, number>(), passed = new Map<string, number>(), extended = new Map<string, number>();
   // a few thousand ids at a time (SQLite caps the number of parameters); no filter reads everyone in one go
   const groups = userIds ? Array.from({ length: Math.ceil(userIds.size / 5000) }, (_, i) => [...userIds].slice(i * 5000, (i + 1) * 5000)) : [null];
   for (const ids of groups) {
     for (const e of db.select({ u: enrollments.userId, t: enrollments.trackId, at: enrollments.startedAt }).from(enrollments).where(ids ? inArray(enrollments.userId, ids) : undefined).all()) started.set(`${e.u}:${e.t}`, e.at);
     for (const p of db.select({ u: runs.userId, t: runs.trackId, m: sql<number>`max(${runs.level})` }).from(runs).where(and(eq(runs.passed, true), ids ? inArray(runs.userId, ids) : undefined)).groupBy(runs.userId, runs.trackId).all()) passed.set(`${p.u}:${p.t}`, Math.min(p.m, MAX_LEVEL));
+    for (const x of db.select({ u: deadlineExtensions.userId, t: deadlineExtensions.trackId, m: sql<number>`max(${deadlineExtensions.newDueAt})` }).from(deadlineExtensions).where(and(sql`${deadlineExtensions.revokedAt} is null`, ids ? inArray(deadlineExtensions.userId, ids) : undefined)).groupBy(deadlineExtensions.userId, deadlineExtensions.trackId).all()) extended.set(`${x.u}:${x.t}`, x.m);
     // a starting level an admin marked "counts as complete" satisfies required training like an exam pass; ordinary ones only move where someone starts
     for (const c of db.select({ u: levelCredits.userId, t: levelCredits.trackId, m: sql<number>`max(${levelCredits.level})` }).from(levelCredits).where(and(creditInForce(), eq(levelCredits.countsAsComplete, true), ids ? inArray(levelCredits.userId, ids) : undefined)).groupBy(levelCredits.userId, levelCredits.trackId).all()) {
       const k = `${c.u}:${c.t}`;
       passed.set(k, Math.max(passed.get(k) ?? 0, Math.min(c.m, MAX_LEVEL)));
     }
   }
-  return { started, passed, tracks: new Map() };
+  return { started, passed, extended, tracks: new Map() };
 }
 
 /**
@@ -211,12 +215,15 @@ export function requirementsFor(person: Person, scopes: Scope[], cat = catalog()
     db.select({ t: enrollments.trackId, at: enrollments.startedAt }).from(enrollments)
       .where(and(eq(enrollments.userId, person.id), inArray(enrollments.trackId, picked.map((t) => t.id)))).all().map((r) => [r.t, r.at]),
   );
+  const extendedBy = prog ? null : new Map(db.select({ t: deadlineExtensions.trackId, m: sql<number>`max(${deadlineExtensions.newDueAt})` }).from(deadlineExtensions).where(and(eq(deadlineExtensions.userId, person.id), sql`${deadlineExtensions.revokedAt} is null`)).groupBy(deadlineExtensions.trackId).all().map((r) => [r.t, r.m]));
   return picked.map((t) => {
     const passed = prog ? prog.passed.get(`${person.id}:${t.id}`) ?? 0 : levelsEarned(person.id, t.id); // real exams only: a placement guess never counts as compliance
     const assignedAt = (prog ? prog.started.get(`${person.id}:${t.id}`) : started!.get(t.id)) ?? null;
-    const dueAt = (assignedAt ?? at) + t.dueDays * DAY;
+    const own = (assignedAt ?? at) + t.dueDays * DAY;
+    const ext = (prog ? prog.extended.get(`${person.id}:${t.id}`) : extendedBy!.get(t.id)) ?? null;
+    const dueAt = ext != null && ext > own ? ext : own; // more time from a manager; never less than the course's own deadline
     const done = passed >= t.requiredLevel;
-    return { track: t, why: t.tier === "mandatory" ? "mandatory" : "role", passed, done, assignedAt, dueAt, overdue: !done && at > dueAt } as Requirement;
+    return { track: t, why: t.tier === "mandatory" ? "mandatory" : "role", passed, done, assignedAt, dueAt, overdue: !done && at > dueAt, extendedTo: ext != null && ext > own ? ext : null } as Requirement;
   }).sort((a, b) => Number(a.done) - Number(b.done) || Number(b.why === "mandatory") - Number(a.why === "mandatory") || a.dueAt - b.dueAt);
 }
 
