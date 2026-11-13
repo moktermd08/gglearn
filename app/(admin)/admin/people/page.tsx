@@ -10,7 +10,7 @@ import { LEVELS, grantableLevels } from "@/lib/accessLevel";
 import { mailConfigured } from "@/lib/mail";
 import { catalog, loadProgress, parseScopes, scopeLabels, scopeOptions, scopesOf } from "@/lib/paths";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
-import { Building2, CheckSquare, ClipboardList, NotebookPen, Pencil, Plus, Search, Shield, ShieldCheck, Square, UserCheck, UserCog, UserMinus, Users } from "lucide-react";
+import { Building2, CheckSquare, ClipboardList, NotebookPen, Pencil, Plus, Search, Shield, ShieldCheck, Square, UserCheck, UserCog, UserMinus, UserRound, Users } from "lucide-react";
 import AddPeople from "./add-people";
 import TeamLinkList, { type LinkRow } from "./team-link-list";
 import { linkPath, stateOfLink } from "@/lib/joinLinks";
@@ -171,6 +171,7 @@ export default async function People({ searchParams }: { searchParams: Promise<P
                     <div className="truncate text-sm text-slate-400">{u.email} · {u.jobRole}{u.audience === "staff" && u.status === "active" && hasNoRolePath(coverageFor(u.jobRole, cat)) && <span title={`Nothing is set up for the role "${u.jobRole}", so they only get company-wide learning. Change their role, or add learning for it.`} className="ml-2 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-800">no role learning</span>}</div>
                     <div className="mt-1 flex flex-wrap gap-1.5 text-[11px]">{labels.length ? labels.slice(0, 4).map((l) => <span key={l} className="inline-flex items-center gap-1 rounded-full bg-black/5 px-2 py-0.5 text-slate-300"><Building2 size={10} aria-hidden />{l}</span>) : <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-amber-800">Not placed in any company, brand or project yet</span>}{labels.length > 4 && <span className="px-1 py-0.5 text-slate-400">+{labels.length - 4} more</span>}</div>
                   </div>
+                  {mineRule(u) && <Link href={`/admin/people/${u.id}`} aria-label={`Open profile of ${u.name}`} className="btn btn-ghost !px-3 !py-1.5 text-sm"><UserRound size={14} aria-hidden /><span className="hidden sm:inline">Profile</span></Link>}
                   <Link href={editHref(u.id)} scroll={false} aria-label={`Edit ${u.name}`} className="btn btn-ghost !px-3 !py-1.5 text-sm"><Pencil size={14} aria-hidden /><span className="hidden sm:inline">Edit</span></Link>
                 </div>
               </li>
@@ -210,6 +211,7 @@ export default async function People({ searchParams }: { searchParams: Promise<P
         );
         return (
           <Drawer title={u.name} sub={`${u.email} · ${u.jobRole} · ${u.role}${off ? " · offboarded" : ""}`} closeHref={closeHref}>
+            <p className="text-sm"><Link href={`/admin/people/${u.id}`} className="text-sky-700 underline">Open full profile</Link> <span className="text-slate-400">(what a manager sees: required learning, onboarding, certificates, mentoring)</span></p>
             {off ? <p className="card p-4 text-sm text-slate-300">{first} has been offboarded, so their role, access and place can no longer be changed. Their notes are below.</p> : (
               <>
                 <section className={sec} aria-labelledby="ed-role">
