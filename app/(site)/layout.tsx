@@ -10,6 +10,7 @@ import { lookFor, themeStyle } from "@/lib/brand";
 import { latestCelebration } from "@/lib/celebrate";
 import { CelebrationToast } from "@/components/CelebrationToast";
 import { siteUrl } from "@/lib/share";
+import { ViewAsBanner } from "@/components/ViewAsBanner";
 
 export async function generateMetadata(): Promise<Metadata> {
   const look = lookFor((await currentUser())?.id);
@@ -32,6 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" style={themeStyle(look) as React.CSSProperties | undefined}>
       <body className="flex min-h-screen flex-col antialiased">
+        <ViewAsBanner />
         <SiteHeader user={user} unread={user ? unreadCount(user.id) : 0} look={look} />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
         <SiteFooter user={user} look={look} />

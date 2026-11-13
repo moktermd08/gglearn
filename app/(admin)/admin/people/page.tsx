@@ -2,7 +2,9 @@ import { Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
 import { eq, sql } from "drizzle-orm";
 import { checklistItems, competitionMembers, competitions, db, enrollments, handovers, joinLinks, tracks, userScopes, users } from "@/lib/db";
-import { requireManager } from "@/lib/auth";
+import { realUser, requireManager, viewAsState } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/superAdmin";
+import { SuperTools } from "./super-tools";
 import { addHandover, offboard, toggleChecklistItem } from "@/app/actions";
 import { LEVELS, grantableLevels } from "@/lib/accessLevel";
 import { mailConfigured } from "@/lib/mail";
@@ -33,6 +35,7 @@ const ACCESS = ["learner", "manager", "admin"];
 
 export default async function People({ searchParams }: { searchParams: Promise<Params> }) {
   const me = await requireManager();
+  const real = await realUser(), superMe = isSuperAdmin(real) && !(await viewAsState()); // only a super admin, and not while viewing as someone
   const { q = "", page: pageParam = "1", company = "", brand = "", role = "", access = "", status = "", placed = "", edit = "", add = "" } = await searchParams;
   const scope = await adminScopeOf(me), reach = scope.reach, mine = usersInReach(reach);
   const tree = placeTree(reachOf(me.id)); // what this person may place people in: all of what they run, whatever the switcher shows
@@ -241,6 +244,12 @@ export default async function People({ searchParams }: { searchParams: Promise<P
                   </section>
                 )}
               </>
+            )}
+            {superMe && real && u.id !== real.id && !isSuperAdmin(u) && (
+              <section className={sec} aria-labelledby="ed-super">
+                <h3 id="ed-super" className={h}>Super admin</h3>
+                <SuperTools key={u.id} userId={u.id} name={u.name} email={u.email} canView={!off} />
+              </section>
             )}
             <section className={sec} aria-labelledby="ed-notes">
               <h3 id="ed-notes" className={h}>Checklist and notes</h3>

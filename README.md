@@ -135,3 +135,9 @@ Until the `companies.cert_valid_months` column was made nullable, `drizzle-kit p
 ### Auto-deploy (GitHub Actions)
 
 `.github/workflows/deploy.yml` runs `deploy/deploy.sh` on every push to `main` (or manually via "Run workflow"). Required repo secrets: `DEPLOY_SSH_KEY` (private key authorised on the server), `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_KNOWN_HOSTS` (output of `ssh-keyscan <host>`), and optionally `DEPLOY_PORT`.
+
+## Super admin and "view as"
+
+`SUPER_ADMIN_EMAILS` (server `.env.local`, comma separated, restart to apply) names the super admins. It is only ever read from the server's environment, so nothing inside the app, no database row and no form can grant it, and an address on it gives nothing unless that account is an active admin. A super admin runs the whole academy whatever companies they are placed in (`lib/tenancy.ts`), can change any account's name and email in People, and can **view as** another person (`lib/impersonation.ts`).
+
+View as rides on top of the super admin's own session: a second signed cookie (bound to them, the person and their session version, one hour at most) that only counts while the real session is a valid super admin session. A red bar with a one-click exit shows on every page. It needs a reason, cannot be started on yourself, another super admin, someone offboarded, or from inside another view, and while it runs the password, sign-out, offboarding and email changes are refused. Every start, end and name/email edit is appended to `security_log` (nothing edits or deletes a row). `npm run check:impersonation` covers it.
