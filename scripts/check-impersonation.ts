@@ -9,7 +9,7 @@ import { createHmac } from "node:crypto";
 import { eq, inArray } from "drizzle-orm";
 import { companies, db, securityLog, userScopes, users } from "../lib/db";
 import { VIEWAS_TTL_SEC, makeToken, readToken, whyNotViewAs } from "../lib/impersonation";
-import { recordSecurityEvent } from "../lib/securityLog";
+import { recordProfileView, recordSecurityEvent } from "../lib/securityLog";
 import { isSuperAdmin } from "../lib/superAdmin";
 import { isGlobal, reachOf } from "../lib/tenancy";
 
@@ -87,6 +87,9 @@ try {
   recordSecurityEvent({ actorId: sup.id, targetId: plain.id, action: "impersonate_start", detail: "x".repeat(900), ip: "1.2.3.4" });
   const row = db.select().from(securityLog).where(eq(securityLog.actorId, sup.id)).get();
   check("an event is recorded, with an over-long reason cut short", !!row && row.action === "impersonate_start" && row.detail.length === 400 && row.ip === "1.2.3.4");
+  recordProfileView(sup.id, plain.id); recordProfileView(sup.id, plain.id); recordProfileView(sup.id, learner.id);
+  const views = db.select().from(securityLog).where(eq(securityLog.action, "profile_view")).all().filter((r) => r.actorId === sup.id);
+  check("a super admin's profile view is logged once per person per ten minutes", views.length === 2 && views.some((r) => r.targetId === plain.id) && views.some((r) => r.targetId === learner.id));
 } finally {
   if (made.length) {
     db.delete(securityLog).where(inArray(securityLog.actorId, made)).run();
@@ -106,6 +109,10 @@ check("every super admin action starts from the real session user and checks sup
 check("editing details is refused while viewing", sa.includes("refuseWhileViewingAs()"));
 check("starting a view from inside a view is refused", src("lib/impersonation.ts").includes("alreadyViewing"));
 check("nothing updates or deletes security log rows", !/(update|delete)\(securityLog\)/.test(["lib/securityLog.ts", "lib/impersonation.ts", "app/super-actions.ts", "app/actions.ts"].map(src).join("\n")));
+const page = src("app/(admin)/admin/people/[id]/page.tsx");
+check("the manager profile only opens for people the viewer runs, and answers the same for missing and not-theirs", page.includes("userInReach(reachOf(me.id), u.id)") && page.includes("notFound()"));
+check("the manager profile is read only: no form, no server action, and none of the helpers that write as a side effect", !/<form|"use server"|progressionFor|touchLeague|syncFreezes|syncRequired/.test(page));
+check("a super admin opening a profile is logged", page.includes("recordProfileView("));
 
 console.log(fails ? `\n${fails} FAILED` : "\nall passed");
 process.exit(fails ? 1 : 0);
