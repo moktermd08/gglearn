@@ -1,5 +1,6 @@
 import { db, userScopes, users } from "@/lib/db";
 import type { Scope } from "@/lib/paths";
+import { isClaimable } from "@/lib/unplaced";
 import { type Reach, personInReach, reachFor, structure } from "@/lib/tenancy";
 
 /**
@@ -8,7 +9,7 @@ import { type Reach, personInReach, reachFor, structure } from "@/lib/tenancy";
  *
  * A person who belongs to two companies counts under both, so the parts can add up to more than the whole. People with no
  * company, brand or project (they registered on their own, or came in by single sign-on) belong to no company's list: only
- * the platform owner (reach "all") can see or place them, so only the owner is told how many there are.
+ * the platform owner (reach "all") can see them, plus an admin, who may place them (lib/unplaced.ts).
  */
 export type Place = { kind: "company" | "brand"; id: number };
 export type Headcount = {
@@ -18,8 +19,8 @@ export type Headcount = {
   of: Map<string, number>; // "company:3" -> people in it, for each place asked about
 };
 
-export function headcount(reach: Reach, places: Place[]): Headcount {
-  const everyone = db.select({ id: users.id, status: users.status }).from(users).all();
+export function headcount(reach: Reach, places: Place[], admin = false): Headcount {
+  const everyone = db.select({ id: users.id, status: users.status, role: users.role, email: users.email }).from(users).all();
   const by = new Map<number, Scope[]>();
   for (const s of db.select().from(userScopes).all()) by.set(s.userId, [...(by.get(s.userId) ?? []), { kind: s.kind, id: s.refId }]);
   const st = structure();
@@ -33,7 +34,7 @@ export function headcount(reach: Reach, places: Place[]): Headcount {
   return {
     total: mine.length,
     active: mine.filter((u) => u.status === "active").length,
-    unplaced: reach.all ? everyone.filter((u) => !by.has(u.id)).length : 0,
+    unplaced: reach.all ? everyone.filter((u) => !by.has(u.id)).length : admin ? everyone.filter((u) => !by.has(u.id) && isClaimable(u)).length : 0, // an admin who is not the owner sees only the ones they may place
     of,
   };
 }

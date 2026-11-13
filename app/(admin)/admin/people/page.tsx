@@ -21,6 +21,7 @@ import { canSignOff, onboardingFor } from "@/lib/onboarding";
 import { isGlobal, reachFor, reachOf, usersInReach } from "@/lib/tenancy";
 import { adminScopeOf } from "@/lib/adminScope";
 import { headcount } from "@/lib/roster";
+import { claimableIds, mayClaim } from "@/lib/unplaced";
 import { setAdminScope } from "../scope-action";
 import { mayChangeRole } from "@/lib/roleChange";
 import { placeTree } from "@/lib/placeTree";
@@ -38,7 +39,12 @@ export default async function People({ searchParams }: { searchParams: Promise<P
   // guests belong to no company, so they are in nobody's reach; show the ones who joined a contest run by someone this manager reaches
   const guestIds = new Set<number>();
   if (mine) for (const m of db.select({ u: competitionMembers.userId, by: competitions.createdBy }).from(competitionMembers).innerJoin(competitions, eq(competitions.id, competitionMembers.competitionId)).where(eq(competitionMembers.kind, "human")).all()) if (m.u != null && mine.has(m.by)) guestIds.add(m.u);
-  const everyone = db.select().from(users).orderBy(users.name).all().filter((u) => !mine || mine.has(u.id) || (u.guest === "yes" && guestIds.has(u.id)));
+  // an admin may also see (only in the "Not placed yet" view) people who registered on their own, so they can place them; see lib/unplaced.ts
+  const peek = mine && mayClaim(me) && scope.kind === "all" ? claimableIds() : new Set<number>();
+  const allUsers = db.select().from(users).orderBy(users.name).all();
+  const mineRule = (u: (typeof allUsers)[number]) => !mine || mine.has(u.id) || (u.guest === "yes" && guestIds.has(u.id));
+  const baseCount = allUsers.filter(mineRule).length;
+  const everyone = placed === "no" ? allUsers.filter((u) => mineRule(u) || peek.has(u.id)) : allUsers.filter(mineRule);
 
   // company and brand mean "belongs to it, or to something under it" (the same reading of scopes as everywhere); only ones this person runs are honoured
   const inCompany = company && tree.companies.some((c) => c.id === Number(company)) ? usersInReach(reachFor([{ kind: "company", id: Number(company) }])) : null;
@@ -95,7 +101,7 @@ export default async function People({ searchParams }: { searchParams: Promise<P
   // the head-count strip: the whole of what this person is looking at, then each company (or, inside a company, each brand), then the people nobody has placed yet
   const places = scope.kind === "company" ? tree.brands.filter((b) => b.companyId === scope.id).map((b) => ({ kind: "brand" as const, id: b.id, name: b.name }))
     : scope.kind === "all" ? tree.companies.map((c) => ({ kind: "company" as const, id: c.id, name: c.name })) : [];
-  const hc = headcount(reach, places);
+  const hc = headcount(reach, places, mayClaim(me) && scope.kind === "all");
   const unplacedElsewhere = owner && !reach.all ? headcount(reachOf(me.id), []).unplaced : 0; // the owner looking at one company: the unplaced are in no company's list
   const chip = (on: boolean) => `inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition ${on ? "border-sky-600 bg-sky-500/15 font-semibold text-sky-900" : "border-black/10 hover:bg-black/5"}`;
   const nothingPicked = !company && !brand && placed !== "no";
@@ -115,7 +121,7 @@ export default async function People({ searchParams }: { searchParams: Promise<P
         <h2 id="everyone" className="flex items-center gap-2.5 text-lg font-bold">Everyone <span className="text-sm font-normal text-slate-400">{found.length.toLocaleString("en-GB")}{filtered && ` of ${everyone.length.toLocaleString("en-GB")}`} · {scope.name}</span></h2>
         <div className="card space-y-2 p-3">
           <nav aria-label="People by place" className="flex flex-wrap items-center gap-2">
-            <Link href="/admin/people" className={chip(nothingPicked && !needle)}><Users size={14} aria-hidden />{scope.kind === "all" ? "Everyone" : scope.name}<b>{everyone.length.toLocaleString("en-GB")}</b></Link>
+            <Link href="/admin/people" className={chip(nothingPicked && !needle)}><Users size={14} aria-hidden />{scope.kind === "all" ? "Everyone" : scope.name}<b>{baseCount.toLocaleString("en-GB")}</b></Link>
             {places.map((p) => <Link key={`${p.kind}${p.id}`} href={url({ [p.kind]: String(p.id) })} className={chip((p.kind === "company" ? company : brand) === String(p.id))}><Building2 size={14} aria-hidden />{p.name}<b>{(hc.of.get(`${p.kind}:${p.id}`) ?? 0).toLocaleString("en-GB")}</b></Link>)}
             {hc.unplaced > 0 && <Link href={url({ placed: "no" })} className={chip(placed === "no")}><UserMinus size={14} aria-hidden />Not placed yet<b>{hc.unplaced.toLocaleString("en-GB")}</b></Link>}
           </nav>
@@ -126,7 +132,8 @@ export default async function People({ searchParams }: { searchParams: Promise<P
               {unplacedElsewhere.toLocaleString("en-GB")} registered {unplacedElsewhere === 1 ? "person is" : "people are"} not in any company, so not in {scope.name}. <button className="text-sky-700 underline">Show them</button>
             </form>
           )}
-          {!owner && <p className="text-xs text-slate-400">People who registered on their own and are not in a company yet are managed by the platform owner.</p>}
+          {!owner && !mayClaim(me) && <p className="text-xs text-slate-400">People who registered on their own and are not in a company yet can only be placed by an admin.</p>}
+          {!owner && mayClaim(me) && hc.unplaced > 0 && placed !== "no" && <p className="text-xs text-slate-400">&ldquo;Not placed yet&rdquo; are people who registered on their own. Open one and choose where they belong, and they join that company.</p>}
         </div>
         <form role="search" className="card flex flex-wrap items-end gap-2 p-3 text-sm">
           <label className="block min-w-56 flex-1 space-y-1"><span className={label}>Search</span><input name="q" defaultValue={q} placeholder="Name, email or role" className={`${input} w-full`} /></label>
@@ -188,6 +195,16 @@ export default async function People({ searchParams }: { searchParams: Promise<P
         const roleWhy = mayChangeRole(me, u);
         const accessWhy = me.role !== "admin" || !grantable.length ? "Only an admin can change access." : self ? "Nobody changes their own access." : u.audience !== "staff" ? "Customers can only be learners." : u.role === "admin" && !owner ? "Only the platform owner can change an admin's access." : undefined;
         const sec = "card space-y-3 p-4", h = "text-base font-bold";
+        // someone who registered on their own: the only thing open to an admin is placing them; everything else waits until they are in a company they run
+        if (!mineRule(u)) return (
+          <Drawer title={u.name} sub={`${u.email} · registered on their own`} closeHref={closeHref}>
+            <section className={sec} aria-labelledby="ed-place">
+              <h3 id="ed-place" className={h}>Where {first} belongs</h3>
+              <p className="text-sm text-slate-400">{first} signed up without a company. Choose where they belong, and they join it and are enrolled in what it requires. After that you can change their role and access here too.</p>
+              <PlaceEditor key={u.id} userId={u.id} tree={tree} selected={[]} />
+            </section>
+          </Drawer>
+        );
         return (
           <Drawer title={u.name} sub={`${u.email} · ${u.jobRole} · ${u.role}${off ? " · offboarded" : ""}`} closeHref={closeHref}>
             {off ? <p className="card p-4 text-sm text-slate-300">{first} has been offboarded, so their role, access and place can no longer be changed. Their notes are below.</p> : (

@@ -4,13 +4,14 @@
  * (changePlaces): the same rules the page always had, so a manager still cannot reach, move or promote beyond what they run.
  */
 import { eq, inArray } from "drizzle-orm";
-import { brands, companies, db, notifications, projects, userScopes, users } from "../lib/db";
+import { brands, companies, db, enrollments, notifications, projects, userScopes, users } from "../lib/db";
 import { changePlaces } from "../lib/placeChange";
 import { placeTree } from "../lib/placeTree";
 import { summarisePlaces, tidyScopes, coveredBrand, type PlaceTree } from "../lib/placeSummary";
 import { mayChangeRole } from "../lib/roleChange";
 import { grantableLevels, refuseAccess } from "../lib/accessLevel";
 import { reachOf, scopeInReach } from "../lib/tenancy";
+import { claimableIds } from "../lib/unplaced";
 import { scopesOf, type Scope } from "../lib/paths";
 
 let fails = 0;
@@ -91,8 +92,17 @@ try {
   check("a brand manager cannot place a learner in the whole company", !!changePlaces(mgrBrand.id, learnerA.id, [co(A)]));
   check("a manager cannot leave a manager with no place (that would run everything)", !!changePlaces(mgrA.id, mgrB2.id, []) && placesOf(mgrB2.id) === `company:${B}`);
   check("a company admin may clear a learner's places", changePlaces(adminA.id, learnerA.id, []) === null && placesOf(learnerA.id) === "");
-  check("...but then a company admin no longer reaches that learner", !!changePlaces(adminA.id, learnerA.id, [co(A)]) && placesOf(learnerA.id) === "");
-  check("only the owner reaches someone with no place", changePlaces(owner.id, learnerA.id, [co(A)]) === null && placesOf(learnerA.id) === `company:${A}`);
+  // someone with no place (registered on their own): only an admin may place them, and only into places that admin runs
+  const loose = person("loose", "manager", []), looseAnon = person("looseAnon", "learner", [], { email: "t-anon@guest.invalid" }), looseOff = person("looseOff", "learner", [], { status: "offboarded" });
+  check("...then a manager no longer reaches that learner", !!changePlaces(mgrA.id, learnerA.id, [co(A)]) && placesOf(learnerA.id) === "");
+  check("...an admin may not place them in a company the admin does not run", !!changePlaces(adminA.id, learnerA.id, [co(B)]) && placesOf(learnerA.id) === "");
+  check("...nor place them nowhere", !!changePlaces(adminA.id, learnerA.id, []) && placesOf(learnerA.id) === "");
+  check("...but may place them in a company they run", changePlaces(adminA.id, learnerA.id, [co(A)]) === null && placesOf(learnerA.id) === `company:${A}`);
+  check("an admin cannot take an unplaced manager or admin (that is the owner's)", !!changePlaces(adminA.id, loose.id, [co(A)]) && placesOf(loose.id) === "");
+  check("...nor a just-looking guest account", !!changePlaces(adminA.id, looseAnon.id, [co(A)]) && placesOf(looseAnon.id) === "");
+  check("...nor an offboarded person", !!changePlaces(adminA.id, looseOff.id, [co(A)]) && placesOf(looseOff.id) === "");
+  check("which of them an admin may claim is just the real, active learners", claimableIds().has(learnerB.id) === false && !claimableIds().has(loose.id) && !claimableIds().has(looseAnon.id) && !claimableIds().has(looseOff.id));
+  check("the owner may place anyone with no place", changePlaces(owner.id, learnerA.id, [co(A)]) === null && placesOf(learnerA.id) === `company:${A}`);
   check("the owner may put a person anywhere", changePlaces(owner.id, learnerB.id, [co(A), co(B)]) === null && placesOf(learnerB.id) === [`company:${A}`, `company:${B}`].sort().join());
   check("the owner may leave a manager with no place", changePlaces(owner.id, mgrB2.id, []) === null && placesOf(mgrB2.id) === "");
   check("an offboarded person cannot be moved", !!changePlaces(owner.id, gone.id, [co(B)]) && placesOf(gone.id) === `company:${A}`);
@@ -100,6 +110,7 @@ try {
 } finally {
   if (made.length) {
     db.delete(notifications).where(inArray(notifications.userId, made)).run();
+    db.delete(enrollments).where(inArray(enrollments.userId, made)).run(); // placing someone enrols them in what is required
     db.delete(userScopes).where(inArray(userScopes.userId, made)).run();
     db.delete(users).where(inArray(users.id, made)).run();
   }
