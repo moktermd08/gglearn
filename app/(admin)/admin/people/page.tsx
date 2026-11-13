@@ -1,7 +1,7 @@
 import { Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
 import { eq, sql } from "drizzle-orm";
-import { checklistItems, competitionMembers, competitions, db, enrollments, handovers, joinLinks, tracks, users } from "@/lib/db";
+import { checklistItems, competitionMembers, competitions, db, enrollments, handovers, joinLinks, tracks, userScopes, users } from "@/lib/db";
 import { requireManager } from "@/lib/auth";
 import { addHandover, offboard, toggleChecklistItem } from "@/app/actions";
 import { LEVELS, grantableLevels } from "@/lib/accessLevel";
@@ -20,18 +20,20 @@ import { OnboardingPhases } from "@/components/OnboardingPhases";
 import { canSignOff, onboardingFor } from "@/lib/onboarding";
 import { isGlobal, reachFor, reachOf, usersInReach } from "@/lib/tenancy";
 import { adminScopeOf } from "@/lib/adminScope";
+import { headcount } from "@/lib/roster";
+import { setAdminScope } from "../scope-action";
 import { mayChangeRole } from "@/lib/roleChange";
 import { placeTree } from "@/lib/placeTree";
 
 const PAGE = 50;
-type Params = { q?: string; page?: string; company?: string; brand?: string; role?: string; access?: string; status?: string; edit?: string; add?: string };
+type Params = { q?: string; page?: string; company?: string; brand?: string; role?: string; access?: string; status?: string; placed?: string; edit?: string; add?: string };
 const input = "rounded border border-white/20 bg-[#fff] px-2 py-1.5";
 const ACCESS = ["learner", "manager", "admin"];
 
 export default async function People({ searchParams }: { searchParams: Promise<Params> }) {
   const me = await requireManager();
-  const { q = "", page: pageParam = "1", company = "", brand = "", role = "", access = "", status = "", edit = "", add = "" } = await searchParams;
-  const reach = (await adminScopeOf(me)).reach, mine = usersInReach(reach);
+  const { q = "", page: pageParam = "1", company = "", brand = "", role = "", access = "", status = "", placed = "", edit = "", add = "" } = await searchParams;
+  const scope = await adminScopeOf(me), reach = scope.reach, mine = usersInReach(reach);
   const tree = placeTree(reachOf(me.id)); // what this person may place people in: all of what they run, whatever the switcher shows
   // guests belong to no company, so they are in nobody's reach; show the ones who joined a contest run by someone this manager reaches
   const guestIds = new Set<number>();
@@ -41,13 +43,14 @@ export default async function People({ searchParams }: { searchParams: Promise<P
   // company and brand mean "belongs to it, or to something under it" (the same reading of scopes as everywhere); only ones this person runs are honoured
   const inCompany = company && tree.companies.some((c) => c.id === Number(company)) ? usersInReach(reachFor([{ kind: "company", id: Number(company) }])) : null;
   const inBrand = brand && tree.brands.some((b) => b.id === Number(brand)) ? usersInReach(reachFor([{ kind: "brand", id: Number(brand) }])) : null;
+  const placedIds = new Set(db.select({ u: userScopes.userId }).from(userScopes).all().map((r) => r.u)); // people in some company, brand or project
   const needle = q.trim().toLowerCase();
   const found = everyone.filter((u) =>
     (!needle || `${u.name} ${u.email} ${u.jobRole}`.toLowerCase().includes(needle))
-    && (!inCompany || inCompany.has(u.id)) && (!inBrand || inBrand.has(u.id))
+    && (!inCompany || inCompany.has(u.id)) && (!inBrand || inBrand.has(u.id)) && (placed !== "no" || !placedIds.has(u.id))
     && (!role || u.jobRole === role) && (!ACCESS.includes(access) || u.role === access)
     && (status !== "active" && status !== "offboarded" || u.status === status));
-  const filtered = !!(needle || inCompany || inBrand || role || ACCESS.includes(access) || status === "active" || status === "offboarded");
+  const filtered = !!(needle || placed === "no" || inCompany || inBrand || role || ACCESS.includes(access) || status === "active" || status === "offboarded");
   const pages = Math.max(1, Math.ceil(found.length / PAGE)), page = Math.min(pages, Math.max(1, Number.parseInt(pageParam, 10) || 1));
   const all = found.slice((page - 1) * PAGE, page * PAGE);
   const editing = edit ? everyone.find((u) => u.id === Number(edit)) ?? null : null;
@@ -75,7 +78,7 @@ export default async function People({ searchParams }: { searchParams: Promise<P
   const inScope = (id: number) => !mine || mine.has(id);
   const openTasks = db.select({ u: checklistItems.userId, n: sql<number>`count(*)` }).from(checklistItems).where(eq(checklistItems.done, false)).groupBy(checklistItems.userId).all().filter((r) => inScope(r.u)).reduce((a, r) => a + r.n, 0);
   const noteCount = db.select({ u: handovers.userId, n: sql<number>`count(*)` }).from(handovers).groupBy(handovers.userId).all().filter((r) => inScope(r.u)).reduce((a, r) => a + r.n, 0);
-  const keep: Record<string, string> = { ...(q ? { q } : {}), ...(company ? { company } : {}), ...(brand ? { brand } : {}), ...(role ? { role } : {}), ...(access ? { access } : {}), ...(status ? { status } : {}) };
+  const keep: Record<string, string> = { ...(q ? { q } : {}), ...(company ? { company } : {}), ...(brand ? { brand } : {}), ...(role ? { role } : {}), ...(access ? { access } : {}), ...(status ? { status } : {}), ...(placed === "no" ? { placed } : {}) };
   const url = (p: Record<string, string>) => { const s = new URLSearchParams(p).toString(); return s ? `/admin/people?${s}` : "/admin/people"; };
   const pageHref = (n: number) => url({ ...keep, ...(n > 1 ? { page: String(n) } : {}) });
   const editHref = (id: number) => url({ ...keep, ...(page > 1 ? { page: String(page) } : {}), edit: String(id) });
@@ -89,6 +92,14 @@ export default async function People({ searchParams }: { searchParams: Promise<P
   const distinctRoles = [...new Set(everyone.map((u) => u.jobRole))].sort();
   const label = "block text-xs font-semibold text-slate-400";
 
+  // the head-count strip: the whole of what this person is looking at, then each company (or, inside a company, each brand), then the people nobody has placed yet
+  const places = scope.kind === "company" ? tree.brands.filter((b) => b.companyId === scope.id).map((b) => ({ kind: "brand" as const, id: b.id, name: b.name }))
+    : scope.kind === "all" ? tree.companies.map((c) => ({ kind: "company" as const, id: c.id, name: c.name })) : [];
+  const hc = headcount(reach, places);
+  const unplacedElsewhere = owner && !reach.all ? headcount(reachOf(me.id), []).unplaced : 0; // the owner looking at one company: the unplaced are in no company's list
+  const chip = (on: boolean) => `inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition ${on ? "border-sky-600 bg-sky-500/15 font-semibold text-sky-900" : "border-black/10 hover:bg-black/5"}`;
+  const nothingPicked = !company && !brand && placed !== "no";
+
   return (
     <div className="space-y-6">
       <PageHero Icon={Users} title="People" sub="Add people, give them a role and a place, and keep it up to date. Each person's company, brands and projects decide what they must learn.">
@@ -101,7 +112,22 @@ export default async function People({ searchParams }: { searchParams: Promise<P
       </div>
 
       <section aria-labelledby="everyone" className="space-y-3">
-        <h2 id="everyone" className="flex items-center gap-2.5 text-lg font-bold">Everyone <span className="text-sm font-normal text-slate-400">{found.length.toLocaleString("en-GB")}{filtered && ` of ${everyone.length.toLocaleString("en-GB")}`}</span></h2>
+        <h2 id="everyone" className="flex items-center gap-2.5 text-lg font-bold">Everyone <span className="text-sm font-normal text-slate-400">{found.length.toLocaleString("en-GB")}{filtered && ` of ${everyone.length.toLocaleString("en-GB")}`} · {scope.name}</span></h2>
+        <div className="card space-y-2 p-3">
+          <nav aria-label="People by place" className="flex flex-wrap items-center gap-2">
+            <Link href="/admin/people" className={chip(nothingPicked && !needle)}><Users size={14} aria-hidden />{scope.kind === "all" ? "Everyone" : scope.name}<b>{everyone.length.toLocaleString("en-GB")}</b></Link>
+            {places.map((p) => <Link key={`${p.kind}${p.id}`} href={url({ [p.kind]: String(p.id) })} className={chip((p.kind === "company" ? company : brand) === String(p.id))}><Building2 size={14} aria-hidden />{p.name}<b>{(hc.of.get(`${p.kind}:${p.id}`) ?? 0).toLocaleString("en-GB")}</b></Link>)}
+            {hc.unplaced > 0 && <Link href={url({ placed: "no" })} className={chip(placed === "no")}><UserMinus size={14} aria-hidden />Not placed yet<b>{hc.unplaced.toLocaleString("en-GB")}</b></Link>}
+          </nav>
+          {places.reduce((a, p) => a + (hc.of.get(`${p.kind}:${p.id}`) ?? 0), 0) > hc.total - hc.unplaced && <p className="text-xs text-slate-400">A person in two {scope.kind === "all" ? "companies" : "brands"} is counted in both, so the parts can add up to more than the total.</p>}
+          {unplacedElsewhere > 0 && (
+            <form action={setAdminScope} className="text-xs text-slate-500">
+              <input type="hidden" name="scope" value="all" /><input type="hidden" name="next" value="/admin/people?placed=no" />
+              {unplacedElsewhere.toLocaleString("en-GB")} registered {unplacedElsewhere === 1 ? "person is" : "people are"} not in any company, so not in {scope.name}. <button className="text-sky-700 underline">Show them</button>
+            </form>
+          )}
+          {!owner && <p className="text-xs text-slate-400">People who registered on their own and are not in a company yet are managed by the platform owner.</p>}
+        </div>
         <form role="search" className="card flex flex-wrap items-end gap-2 p-3 text-sm">
           <label className="block min-w-56 flex-1 space-y-1"><span className={label}>Search</span><input name="q" defaultValue={q} placeholder="Name, email or role" className={`${input} w-full`} /></label>
           {tree.companies.length > 0 && <label className="block space-y-1"><span className={label}>Company</span><select name="company" defaultValue={company} className={input}><option value="">Any</option>{tree.companies.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>}
