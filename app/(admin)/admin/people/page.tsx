@@ -39,12 +39,12 @@ export default async function People({ searchParams }: { searchParams: Promise<P
   // guests belong to no company, so they are in nobody's reach; show the ones who joined a contest run by someone this manager reaches
   const guestIds = new Set<number>();
   if (mine) for (const m of db.select({ u: competitionMembers.userId, by: competitions.createdBy }).from(competitionMembers).innerJoin(competitions, eq(competitions.id, competitionMembers.competitionId)).where(eq(competitionMembers.kind, "human")).all()) if (m.u != null && mine.has(m.by)) guestIds.add(m.u);
-  // an admin may also see (only in the "Not placed yet" view) people who registered on their own, so they can place them; see lib/unplaced.ts
+  // an admin also sees, in "Everything I run", people who registered on their own and are in no company yet, so they can place them; see lib/unplaced.ts
   const peek = mine && mayClaim(me) && scope.kind === "all" ? claimableIds() : new Set<number>();
   const allUsers = db.select().from(users).orderBy(users.name).all();
   const mineRule = (u: (typeof allUsers)[number]) => !mine || mine.has(u.id) || (u.guest === "yes" && guestIds.has(u.id));
-  const baseCount = allUsers.filter(mineRule).length;
-  const everyone = placed === "no" ? allUsers.filter((u) => mineRule(u) || peek.has(u.id)) : allUsers.filter(mineRule);
+  const everyone = allUsers.filter((u) => mineRule(u) || peek.has(u.id));
+  const baseCount = everyone.length;
 
   // company and brand mean "belongs to it, or to something under it" (the same reading of scopes as everywhere); only ones this person runs are honoured
   const inCompany = company && tree.companies.some((c) => c.id === Number(company)) ? usersInReach(reachFor([{ kind: "company", id: Number(company) }])) : null;
