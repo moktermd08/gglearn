@@ -505,7 +505,7 @@ export const securityLog = sqliteTable("security_log", {
   at: integer("at").notNull().default(now),
   actorId: integer("actor_id").notNull().references(() => users.id),
   targetId: integer("target_id").notNull().references(() => users.id),
-  action: text("action", { enum: ["impersonate_start", "impersonate_end", "details_edit", "profile_view"] }).notNull(),
+  action: text("action", { enum: ["impersonate_start", "impersonate_end", "details_edit", "profile_view", "deadline_extend", "run_void", "run_restore", "credit_grant", "credit_revoke", "cert_revoke", "cert_reinstate"] }).notNull(),
   detail: text("detail").notNull().default(""), // the reason, or what changed
   ip: text("ip").notNull().default(""),
 });
@@ -1420,3 +1420,31 @@ export const planLogs = sqliteTable("plan_logs", {
   by: integer("by").notNull().references(() => users.id),
   at: integer("at").notNull().default(now),
 }, (t) => [index("plan_log_item").on(t.itemId)]);
+
+// A manager giving one person more time on one required course. The course's own deadline never changes, so nobody else is affected;
+// requirementsFor takes the later of the two. Revoking an extension marks it (the row stays as the record).
+export const deadlineExtensions = sqliteTable("deadline_extensions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  trackId: integer("track_id").notNull().references(() => tracks.id),
+  newDueAt: integer("new_due_at").notNull(),
+  reason: text("reason").notNull(),
+  grantedBy: integer("granted_by").notNull().references(() => users.id),
+  createdAt: integer("created_at").notNull().default(now),
+  revokedAt: integer("revoked_at"),
+}, (t) => [index("deadline_ext_user").on(t.userId, t.trackId)]);
+
+// An exam attempt a manager marked as not counting (a technical fault, a mistaken attempt). The attempt itself stays; what it scored and
+// whether it passed are kept here and zeroed on the run, so everything that counts passes and XP follows without each place needing to
+// know. Restoring puts the original back. At most one open (not restored) void per run.
+export const runVoids = sqliteTable("run_voids", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  runId: integer("run_id").notNull().references(() => runs.id),
+  originalScore: real("original_score"),
+  originalPassed: integer("original_passed", { mode: "boolean" }),
+  reason: text("reason").notNull(),
+  voidedBy: integer("voided_by").notNull().references(() => users.id),
+  voidedAt: integer("voided_at").notNull().default(now),
+  restoredBy: integer("restored_by").references(() => users.id),
+  restoredAt: integer("restored_at"),
+}, (t) => [index("run_voids_run").on(t.runId)]);

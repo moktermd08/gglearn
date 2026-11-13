@@ -2,7 +2,7 @@ import { and, eq, gte } from "drizzle-orm";
 import { db, securityLog } from "@/lib/db";
 
 /** Appends one row to the security log. There is deliberately no function here (or anywhere) that edits or removes a row. */
-export function recordSecurityEvent(e: { actorId: number; targetId: number; action: "impersonate_start" | "impersonate_end" | "details_edit" | "profile_view"; detail?: string; ip?: string }) {
+export function recordSecurityEvent(e: { actorId: number; targetId: number; action: "impersonate_start" | "impersonate_end" | "details_edit" | "profile_view" | "deadline_extend" | "run_void" | "run_restore" | "credit_grant" | "credit_revoke" | "cert_revoke" | "cert_reinstate"; detail?: string; ip?: string }) {
   db.insert(securityLog).values({ actorId: e.actorId, targetId: e.targetId, action: e.action, detail: (e.detail ?? "").slice(0, 400), ip: (e.ip ?? "").slice(0, 64) }).run();
 }
 
