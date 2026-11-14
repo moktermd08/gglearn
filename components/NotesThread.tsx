@@ -1,5 +1,6 @@
 import { Lightbulb, MessageCircleQuestion, ThumbsUp } from "lucide-react";
-import { DeleteNote, LearnerNoteActions } from "@/components/NoteControls";
+import Link from "next/link";
+import { DeleteNote, LearnerNoteActions, WithdrawQuote } from "@/components/NoteControls";
 import { KIND_LABEL, type NoteKind } from "@/lib/questionNoteText";
 import type { NoteView } from "@/lib/questionNotes";
 
@@ -27,6 +28,8 @@ export function NotesThread({ notes, as, meId, mayModerate = false }: { notes: N
               {as === "reviewer" && (n.authorId === meId || mayModerate) && <span className="ml-auto"><DeleteNote noteId={n.id} /></span>}
             </div>
             <p className="whitespace-pre-wrap">{n.body}</p>
+            {n.quotable && as === "learner" && <p className="text-xs text-emerald-700">{n.author} said you may quote this on your CV. <Link href="/profile/cv#quotes" className="underline">Feature it</Link></p>}
+            {n.quotable && as === "reviewer" && n.authorId === meId && <p className="text-xs text-slate-500">You allowed this to be quoted on their CV. <WithdrawQuote noteId={n.id} /></p>}
             {n.reply && <p className="whitespace-pre-wrap rounded-md bg-black/5 p-2 text-xs"><b>{as === "learner" ? "Your reply" : "Their reply"}:</b> {n.reply}</p>}
             {as === "learner" && <LearnerNoteActions noteId={n.id} acked={!!n.ackAt} replied={!!n.repliedAt} />}
           </li>

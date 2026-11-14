@@ -1462,6 +1462,8 @@ export const answerNotes = sqliteTable("answer_notes", {
   authorId: integer("author_id").notNull().references(() => users.id),
   kind: text("kind", { enum: ["suggestion", "praise", "question"] }).notNull().default("suggestion"),
   body: text("body").notNull(),
+  // the author agrees this praise may be quoted, with their name, on the learner's CV if the learner chooses to feature it (lib/cv). Off unless they tick it; they can withdraw it.
+  quotable: integer("quotable", { mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at").notNull().default(now),
   deletedAt: integer("deleted_at"),
   deletedBy: integer("deleted_by").references(() => users.id),
@@ -1469,3 +1471,65 @@ export const answerNotes = sqliteTable("answer_notes", {
   reply: text("reply").notNull().default(""), // the learner's one reply
   repliedAt: integer("replied_at"),
 }, (t) => [index("answer_notes_answer").on(t.answerId), index("answer_notes_learner").on(t.learnerId, t.ackAt)]);
+
+// ---- CV manager (docs/cv/design.md). Private by default: nothing here is readable by anyone but its owner until they make a share link.
+
+// One row per person: the parts of a CV that are one value each. Contact details are chosen for the CV, not taken from the login.
+export const cvProfiles = sqliteTable("cv_profiles", {
+  userId: integer("user_id").primaryKey().references(() => users.id),
+  headline: text("headline").notNull().default(""),
+  summary: text("summary").notNull().default(""),
+  location: text("location").notNull().default(""),
+  contactEmail: text("contact_email").notNull().default(""), // the address a reader may use, if the owner shows it; "" = none
+  phone: text("phone").notNull().default(""),
+  links: text("links").notNull().default("[]"), // JSON: [{ label, url }], https only
+  template: text("template", { enum: ["classic", "modern", "compact"] }).notNull().default("classic"),
+  accent: text("accent").notNull().default(""), // "#rrggbb" or ""
+  hidden: text("hidden").notNull().default("[]"), // JSON: keys of platform items the owner left off ("cert:12", "skill:4", "quote:3")
+  updatedAt: integer("updated_at").notNull().default(now),
+});
+
+// What a person adds by hand: jobs, education, projects, volunteering, awards, languages and skills.
+export const cvEntries = sqliteTable("cv_entries", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  kind: text("kind", { enum: ["experience", "education", "project", "volunteer", "award", "language", "skill"] }).notNull(),
+  title: text("title").notNull(),
+  org: text("org").notNull().default(""),
+  location: text("location").notNull().default(""),
+  startsOn: text("starts_on").notNull().default(""), // "YYYY-MM" or "YYYY"
+  endsOn: text("ends_on").notNull().default(""),
+  current: integer("current", { mode: "boolean" }).notNull().default(false),
+  body: text("body").notNull().default(""), // one bullet per line
+  sort: integer("sort").notNull().default(0),
+  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
+  createdAt: integer("created_at").notNull().default(now),
+}, (t) => [index("cv_entries_user").on(t.userId, t.kind)]);
+
+// A way for someone else to read a CV: the link is the row id plus a signature, not a stored secret (lib/cv/links.ts), so it can be revoked
+// at once. Each link has its own view of the CV (which sections, which contact details), whether the PDF may be downloaded, and an end date.
+export const cvLinks = sqliteTable("cv_links", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  label: text("label").notNull().default(""), // who it is for, in the owner's words
+  kind: text("kind", { enum: ["public", "private", "passcode"] }).notNull(),
+  nonce: text("nonce").notNull(), // mixed into the signature so a link cannot be worked out from its id
+  passHash: text("pass_hash").notNull().default(""), // salted hash of the passcode, for kind "passcode"
+  sections: text("sections").notNull(), // JSON: { summary: true, ... } what this link shows
+  contact: text("contact").notNull(), // JSON: { email, phone, location, links }
+  allowPdf: integer("allow_pdf", { mode: "boolean" }).notNull().default(true),
+  indexable: integer("indexable", { mode: "boolean" }).notNull().default(false), // a public link only: may search engines list it
+  expiresAt: integer("expires_at"),
+  revokedAt: integer("revoked_at"),
+  views: integer("views").notNull().default(0),
+  lastViewedAt: integer("last_viewed_at"),
+  createdAt: integer("created_at").notNull().default(now),
+}, (t) => [index("cv_links_user").on(t.userId)]);
+
+// A reviewer's praise the owner has chosen to feature on their CV. Only a note its author marked quotable can be featured (answer_notes.quotable).
+export const cvQuotes = sqliteTable("cv_quotes", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  noteId: integer("note_id").notNull().unique().references(() => answerNotes.id),
+  createdAt: integer("created_at").notNull().default(now),
+});

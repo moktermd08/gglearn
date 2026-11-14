@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, ClipboardList, Stethoscope, Compass, Database, Hammer, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell, GraduationCap, HeartHandshake } from "lucide-react";
+import { Award, FileText, ClipboardList, Stethoscope, Compass, Database, Hammer, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell, GraduationCap, HeartHandshake } from "lucide-react";
 import { logout } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
@@ -72,6 +72,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
             <Dropdown align="right" label={<><Initials name={user.name} size={26} /><span className="max-w-32 truncate">{user.name}</span></>}>
               <div className="border-b border-black/5 px-3 pb-2 pt-1.5"><div className="font-semibold">{user.name}</div><div className="truncate text-xs text-slate-400">{user.email}</div></div>
               <Link href="/profile" className="mt-1 items-center gap-2 hover:bg-black/5"><UserRound size={15} />Your profile</Link>
+              <Link href="/profile/cv" className="items-center gap-2 hover:bg-black/5"><FileText size={15} />Your CV</Link>
               <Link href="/achievements" className="items-center gap-2 hover:bg-black/5"><Medal size={15} />Achievements</Link>
               <Link href="/mentoring" className="items-center gap-2 hover:bg-black/5"><GraduationCap size={15} />Mentoring</Link>
               <Link href="/sponsoring" className="items-center gap-2 hover:bg-black/5"><HeartHandshake size={15} />Sponsoring</Link>
@@ -111,6 +112,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
               <>
                 <Link href="/profile" className={mobile}><UserRound size={18} />{user.name}</Link>
                 <Link href="/notifications" className={mobile}><Bell size={18} />Notifications{unread > 0 && <span className="ml-auto rounded-full bg-pink-600 px-2 text-xs font-bold text-[#fff]">{unread}</span>}</Link>
+                <Link href="/profile/cv" className={mobile}><FileText size={18} />Your CV</Link>
                 <Link href="/achievements" className={mobile}><Medal size={18} />Achievements</Link>
                 <Link href="/mentoring" className={mobile}><GraduationCap size={18} />Mentoring</Link>
                 <Link href="/sponsoring" className={mobile}><HeartHandshake size={18} />Sponsoring</Link>
