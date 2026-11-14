@@ -2,6 +2,7 @@
 import { useActionState, useTransition } from "react";
 import { Check, Send, UserMinus } from "lucide-react";
 import { becomeMentor, sendNote, stopMentoring, type MentorState } from "./actions";
+import { setReviewAnswers } from "@/app/note-actions";
 
 export function AcceptMentee({ code, kind = "mentor" }: { code: string; kind?: "mentor" | "parent" }) {
   const [state, run, pending] = useActionState<MentorState, FormData>(async () => becomeMentor(code, kind), null);
@@ -29,4 +30,15 @@ export function NoteForm({ menteeId }: { menteeId: number }) {
 export function StopButton({ otherId, label }: { otherId: number; label: string }) {
   const [pending, start] = useTransition();
   return <button disabled={pending} onClick={() => start(async () => { await stopMentoring(otherId); })} className="inline-flex items-center gap-1 text-xs text-slate-400 underline disabled:opacity-50"><UserMinus size={12} />{label}</button>;
+}
+
+/** The learner lets one mentor review their exam answers and leave notes under single questions, or takes that back. Off until they turn it on. */
+export function ReviewToggle({ mentorId, name, on }: { mentorId: number; name: string; on: boolean }) {
+  const [pending, start] = useTransition();
+  return (
+    <label className="flex items-start gap-2 text-xs text-slate-600">
+      <input type="checkbox" checked={on} disabled={pending} onChange={(e) => start(async () => { await setReviewAnswers(mentorId, e.target.checked); })} className="mt-0.5" aria-label={`Let ${name} review my exam answers`} />
+      <span>Let {name.split(" ")[0]} read my exam answers and leave notes on single questions. I will see each note under the question, and can reply. I can switch this off whenever I like.</span>
+    </label>
+  );
 }

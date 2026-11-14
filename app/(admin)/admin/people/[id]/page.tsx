@@ -24,6 +24,9 @@ import { isSuperAdmin } from "@/lib/superAdmin";
 import { clientIp } from "@/lib/rate-limit";
 import { isGlobal, reachOf, userInReach } from "@/lib/tenancy";
 import { extendDeadlineAction, grantCreditAction, reinstateCertAction, restoreRunAction, revokeCertAction, revokeCreditAction, voidRunAction } from "@/app/fix-actions";
+import { NoteComposer } from "@/components/NoteControls";
+import { NotesThread } from "@/components/NotesThread";
+import { notesForAnswers, whyNotReview } from "@/lib/questionNotes";
 
 export const metadata = { title: "Person — gglearn admin" };
 
@@ -53,6 +56,7 @@ export default async function Person({ params }: { params: Promise<{ id: string 
   if (real && isSuperAdmin(real)) recordProfileView(real.id, u.id, await clientIp());
   const viewing = (await viewAsState()) !== null;
   const canFix = !viewing && whyNotCorrect(me, u) === null; // corrections are made as yourself, never while viewing as someone
+  const canNote = !viewing && whyNotReview(me, u.id) === null; // notes on their answers, likewise written as yourself
 
   const off = u.status === "offboarded", first = u.name.split(" ")[0];
   const scopes = scopesOf(u.id), opts = scopeOptions(), places = scopeLabels(scopes, opts);
@@ -78,6 +82,7 @@ export default async function Person({ params }: { params: Promise<{ id: string 
   const runIds = attempts.map((a) => a.r.id);
   const givenBy = new Map<number, { a: typeof answers.$inferSelect; q: typeof questions.$inferSelect }[]>();
   if (runIds.length) for (const x of db.select({ a: answers, q: questions }).from(answers).innerJoin(questions, eq(questions.id, answers.questionId)).where(inArray(answers.runId, runIds)).all()) givenBy.set(x.a.runId, [...(givenBy.get(x.a.runId) ?? []), x]);
+  const qnotes = notesForAnswers([...givenBy.values()].flat().map((x) => x.a.id));
   const voided = new Map(runIds.length ? db.select().from(runVoids).where(and(inArray(runVoids.runId, runIds), isNull(runVoids.restoredAt))).all().map((v) => [v.runId, v]) : []);
 
   // where they want to go, and the route they planned to get there
@@ -216,11 +221,12 @@ export default async function Person({ params }: { params: Promise<{ id: string 
                           {given.map(({ a, q }) => {
                             const chosen = q.options?.find((o) => o.key === a.response), right = q.options?.find((o) => o.key === q.answer);
                             return (
-                              <li key={a.id}>
+                              <li key={a.id} id={`q${a.id}`}>
                                 <p className="font-medium">{short(q.prompt, 220)}</p>
                                 <p className={a.score >= 0.5 ? "text-emerald-700" : "text-rose-700"}>Answered: {chosen ? `${chosen.key}. ${chosen.text}` : short(a.response || "(no answer)", 240)} · {Math.round(a.score * 100)}%</p>
                                 {q.type === "mcq" && right && a.score < 0.5 && <p className="text-slate-500">Correct: {right.key}. {right.text}</p>}
                                 {a.feedback && <p className="text-slate-500">{short(a.feedback, 240)}</p>}
+                                <div className="mt-1.5 space-y-2"><NotesThread notes={qnotes.get(a.id) ?? []} as="reviewer" meId={me.id} mayModerate={canNote && me.role !== "learner"} />{canNote && <NoteComposer answerId={a.id} />}</div>
                               </li>
                             );
                           })}
