@@ -7,6 +7,7 @@ import { db, users } from "@/lib/db";
 import { realUser, refuseWhileViewingAs, revokeSessions, viewAsState } from "@/lib/auth";
 import { startViewAs, stopViewAs } from "@/lib/impersonation";
 import { isSuperAdmin } from "@/lib/superAdmin";
+import { blockAccount, clearMessage, setMessage, unblockAccount } from "@/lib/accountControl";
 import { recordSecurityEvent } from "@/lib/securityLog";
 import { clientIp } from "@/lib/rate-limit";
 
@@ -58,4 +59,39 @@ export async function saveDetailsAction(_: string | null, fd: FormData): Promise
   recordSecurityEvent({ actorId: real.id, targetId: target.id, action: "details_edit", detail: changes.join("; "), ip: await clientIp() });
   revalidatePath("/admin/people");
   return "ok";
+}
+
+// ---- blocking an account and leaving a message (lib/accountControl.ts holds the rules and the log)
+
+/** The real signed-in super admin, or why not. These are the super admin's own acts, so never through a view. */
+async function superAdminOnly(): Promise<{ real: NonNullable<Awaited<ReturnType<typeof realUser>>> } | string> {
+  const real = await realUser();
+  if (!real || !isSuperAdmin(real)) return "Only a super admin can do this.";
+  if (await refuseWhileViewingAs()) return "Exit the view first.";
+  return { real };
+}
+const done = (r: { error?: string; done?: string }) => { if (r.error) return r.error; revalidatePath("/admin/people"); revalidatePath("/admin/people/[id]", "page"); return "ok"; };
+
+export async function blockAccountAction(_: string | null, fd: FormData): Promise<string | null> {
+  const s = await superAdminOnly();
+  if (typeof s === "string") return s;
+  return done(blockAccount(s.real, Number(fd.get("userId")), fd.get("reason"), await clientIp()));
+}
+
+export async function unblockAccountAction(_: string | null, fd: FormData): Promise<string | null> {
+  const s = await superAdminOnly();
+  if (typeof s === "string") return s;
+  return done(unblockAccount(s.real, Number(fd.get("userId")), await clientIp()));
+}
+
+export async function setMessageAction(_: string | null, fd: FormData): Promise<string | null> {
+  const s = await superAdminOnly();
+  if (typeof s === "string") return s;
+  return done(setMessage(s.real, Number(fd.get("userId")), fd.get("message"), fd.get("tone"), await clientIp()));
+}
+
+export async function clearMessageAction(_: string | null, fd: FormData): Promise<string | null> {
+  const s = await superAdminOnly();
+  if (typeof s === "string") return s;
+  return done(clearMessage(s.real, Number(fd.get("userId")), await clientIp()));
 }

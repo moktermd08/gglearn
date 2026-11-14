@@ -12,6 +12,8 @@ import { acknowledge, recordChange } from "@/lib/freshness";
 import { coverageFor, hasNoRolePath, knownRoles } from "@/lib/roles";
 import { careerFor, roleKey } from "@/lib/careers";
 import { canReach } from "@/lib/journey";
+import { controlOf } from "@/lib/accountControl";
+import { isSuperAdmin } from "@/lib/superAdmin";
 import { currentUser, endSession, refuseWhileViewingAs, requireManager, requireUser, revokeSessions, startSession } from "@/lib/auth";
 import { hashPassword, needsRehash, verifyAgainstDummy, verifyPassword } from "@/lib/password";
 import { MINUTE, allowed, clear, clientIp, hit } from "@/lib/rate-limit";
@@ -144,6 +146,8 @@ export async function login(_: string | null, fd: FormData): Promise<string | nu
     return "Wrong email or password.";
   }
   clear(pairKey);
+  const control = controlOf(u.id); // a blocked account is told why, but only now that the password is right, so nothing tells an outsider who has one
+  if (control?.blockedAt != null) return `Your account has been blocked. ${control.blockReason || "Please contact your administrator."}`;
   if (needsRehash(u.passwordHash)) {
     db.update(users).set({ passwordHash: await hashPassword(pw) }).where(eq(users.id, u.id)).run(); // legacy or weaker params
   }
@@ -261,6 +265,7 @@ export async function resetPassword(_: string | null, fd: FormData): Promise<str
   const u = db.select().from(users).where(eq(users.id, userId)).get();
   if (!u || u.status !== "active") return "That person is not active.";
   if (u.id === me.id) return "Use Your profile to change your own password.";
+  if (isSuperAdmin(u)) return "A super admin\u2019s account is only changed by themselves."; // or a company admin whose reach overlaps could take it over
   if (!userInReach(reachOf(me.id), u.id)) return "That person is outside the companies you run."; // or one manager could sign in as anyone
   if (me.role !== "admin" && u.role !== "learner") return "Only an admin can reset a manager's password.";
   db.update(users).set({ passwordHash: await hashPassword(temp) }).where(eq(users.id, u.id)).run();
@@ -917,6 +922,7 @@ export async function offboard(fd: FormData) {
   if (userId === me.id) return; // cannot lock yourself out
   const u = db.select().from(users).where(eq(users.id, userId)).get();
   if (!u || u.status === "offboarded" || !userInReach(reachOf(me.id), u.id)) return;
+  if (isSuperAdmin(u)) return; // a super admin\u2019s account is only changed by themselves
   if (me.role !== "admin" && u.role !== "learner") return; // managers can only offboard learners
   offboardUser(userId); // access ends now (lib/people.ts)
   revalidatePath("/admin/people");
