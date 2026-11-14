@@ -4,7 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { answerNotes, answers, db, mentorships, runs, users } from "@/lib/db";
 import { realUser, refuseWhileViewingAs, requireUser } from "@/lib/auth";
 import { notify } from "@/lib/notifications";
-import { addNote, ackNote, deleteNote, replyToNote } from "@/lib/questionNotes";
+import { addNote, ackNote, deleteNote, replyToNote, withdrawQuotable } from "@/lib/questionNotes";
 import { clientIp } from "@/lib/rate-limit";
 import type { SetupState } from "@/lib/setup";
 
@@ -39,6 +39,15 @@ export async function deleteNoteAction(_: SetupState, fd: FormData): Promise<Set
   const where = learnerOfNote(fd);
   const r = deleteNote(me, fd, await clientIp());
   if (r?.done) refresh(where);
+  return r;
+}
+
+export async function withdrawQuotableAction(_: SetupState, fd: FormData): Promise<SetupState> {
+  const me = await actor();
+  if (!me) return BLOCKED;
+  const where = learnerOfNote(fd);
+  const r = withdrawQuotable(me, fd);
+  if (r?.done) { refresh(where); revalidatePath("/profile/cv"); }
   return r;
 }
 

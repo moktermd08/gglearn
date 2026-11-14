@@ -46,7 +46,7 @@ export function whyNotReview(me: Me, learnerId: number, reach = reachOf(me.id)):
   return "You do not run them, and they have not let you review their answers.";
 }
 
-export type NoteView = { id: number; kind: NoteKind; body: string; authorId: number; author: string; createdAt: number; ackAt: number | null; reply: string; repliedAt: number | null };
+export type NoteView = { id: number; kind: NoteKind; quotable: boolean; body: string; authorId: number; author: string; createdAt: number; ackAt: number | null; reply: string; repliedAt: number | null };
 
 /** The notes on these answers (deleted ones left out), oldest first, by answer id. */
 export function notesForAnswers(answerIds: number[]): Map<number, NoteView[]> {
@@ -54,7 +54,7 @@ export function notesForAnswers(answerIds: number[]): Map<number, NoteView[]> {
   if (!answerIds.length) return out;
   const rows = db.select({ n: answerNotes, who: users.name }).from(answerNotes).innerJoin(users, eq(users.id, answerNotes.authorId))
     .where(and(inArray(answerNotes.answerId, answerIds), isNull(answerNotes.deletedAt))).orderBy(answerNotes.id).all();
-  for (const { n, who } of rows) out.set(n.answerId, [...(out.get(n.answerId) ?? []), { id: n.id, kind: n.kind, body: n.body, authorId: n.authorId, author: who, createdAt: n.createdAt, ackAt: n.ackAt, reply: n.reply, repliedAt: n.repliedAt }]);
+  for (const { n, who } of rows) out.set(n.answerId, [...(out.get(n.answerId) ?? []), { id: n.id, kind: n.kind, quotable: n.quotable, body: n.body, authorId: n.authorId, author: who, createdAt: n.createdAt, ackAt: n.ackAt, reply: n.reply, repliedAt: n.repliedAt }]);
   return out;
 }
 
@@ -81,7 +81,8 @@ export function addNote(me: Me, fd: FormData): SetupState {
   if (mine >= MAX_BY_ONE_PER_ANSWER) return { error: `You have already left ${MAX_BY_ONE_PER_ANSWER} notes on this question. Delete one, or add to an existing note.` };
   if (all >= MAX_PER_ANSWER) return { error: "This question already has plenty of notes." };
   hit(key, DAY * 1000);
-  const note = db.insert(answerNotes).values({ answerId, runId: row.r.id, learnerId, authorId: me.id, kind, body }).returning().get();
+  const quotable = kind === "praise" && fd.get("quotable") === "on"; // the author's own say-so that this may be quoted, with their name, on the learner's CV
+  const note = db.insert(answerNotes).values({ answerId, runId: row.r.id, learnerId, authorId: me.id, kind, body, quotable }).returning().get();
   const t = db.select({ name: tracks.name }).from(tracks).where(eq(tracks.id, row.r.trackId)).get();
   const who = db.select({ n: users.name }).from(users).where(eq(users.id, me.id)).get()?.n ?? "Someone";
   // one notification per reviewer per attempt per day, so ten notes do not send ten
@@ -98,6 +99,14 @@ export function deleteNote(me: Me, fd: FormData, ip = ""): SetupState {
   db.update(answerNotes).set({ deletedAt: now(), deletedBy: me.id }).where(eq(answerNotes.id, n.id)).run();
   if (n.authorId !== me.id) recordSecurityEvent({ actorId: me.id, targetId: n.learnerId, action: "note_delete", detail: `a note by user ${n.authorId} was removed`, ip });
   return { done: "Removed." };
+}
+
+/** The author takes back permission to quote their praise on the learner's CV. It disappears from the CV at once. */
+export function withdrawQuotable(me: { id: number }, fd: FormData): SetupState {
+  const n = db.select().from(answerNotes).where(eq(answerNotes.id, Number(fd.get("noteId")))).get();
+  if (!n || n.deletedAt || n.authorId !== me.id) return { error: "That note is not yours." };
+  db.update(answerNotes).set({ quotable: false }).where(eq(answerNotes.id, n.id)).run();
+  return { done: "Withdrawn. It is no longer on their CV." };
 }
 
 /** The learner says they have read it. */
