@@ -22,7 +22,7 @@ The job: let anyone turn what they do on the platform, plus what they add by han
 
 **A mentor or manager.**
 - Their words should be able to work in the person's favour, but only with their say-so. A note written to a learner for coaching is not a public reference. So: when a reviewer writes praise on an answer they choose whether it may be quoted on the person's CV (off by default); the owner then chooses whether to feature it; the reviewer can withdraw it. A quote always carries the reviewer's name and the fact that it came from reviewing real answers.
-- Later: a mentor the owner has let in can comment on CV sections (same pattern as notes on exam answers), and write a free-text endorsement.
+- A mentor or manager the owner has invited can read the draft (never the owner's email, phone, location or links) and comment on a section or one item. Comments are private between that reviewer and the owner; the owner marks each done or dismisses it and may reply once; the reviewer is told. A reviewer may also write a free-text reference (lib/cv/endorse.ts), which goes on the CV only if the owner approves it.
 
 **The platform and its operators.**
 - Nothing that is private may leak through the CV: not through the public page, the PDF, the link, a search engine, or a referrer header.
@@ -49,4 +49,6 @@ The job: let anyone turn what they do on the platform, plus what they add by han
 
 Now: content editor (summary, headline, experience, education, projects, volunteering, awards, languages, skills, links), derived platform sections with per-item hide, suggestions and completeness, templates (three), share links (public, private, passcode) with per-link view, expiry, PDF permission, counts and revoke, the reader page, the PDF, quoting of reviewer praise.
 
-Next (deliberately not rushed): free-text endorsements from mentors and managers; mentor comments on CV sections; AI-assisted rewriting; import from LinkedIn or JSON Resume; per-link view history; a photo option.
+Also built: references from managers and mentors (written by them, approved by the owner, withdrawable by either), and invited reviewers' comments on the draft (lib/cv/review.ts).
+
+Next (deliberately not rushed): AI-assisted rewriting; import from LinkedIn or JSON Resume; per-link view history; a photo option.

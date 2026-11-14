@@ -20,6 +20,7 @@ export type CvItem = {
   verify?: { code: string; url: string; status: "valid" | "expiring" | "expired" | "permanent" };
   level?: { n: number; of: number; title: string };
   key?: string; // for platform items: what the owner hides by ("cert:12")
+  anchor?: string; // what a reviewer's comment points at: "entry:12" for something the owner typed, or the same as key for a platform item
 };
 export type CvSection = { key: SectionKey; title: string; items: CvItem[]; chips?: boolean; note?: string };
 export type CvContact = { kind: "email" | "phone" | "location" | "link"; label: string; value: string; href?: string };
@@ -76,10 +77,10 @@ export function buildCv(userId: number, view: View, base: string): CvDoc | null 
   const keep = (items: CvItem[]) => items.filter((i) => !i.key || !hidden.has(i.key));
 
   const byKind = (kind: (typeof entries)[number]["kind"]): CvItem[] => entries.filter((e) => e.kind === kind).map((e) => ({
-    title: e.title, subtitle: [e.org, e.location].filter(Boolean).join(" · ") || undefined, dates: dateRange(e.startsOn, e.endsOn, e.current) || undefined, body: e.body ? e.body.split("\n") : undefined,
+    anchor: `entry:${e.id}`, title: e.title, subtitle: [e.org, e.location].filter(Boolean).join(" · ") || undefined, dates: dateRange(e.startsOn, e.endsOn, e.current) || undefined, body: e.body ? e.body.split("\n") : undefined,
   }));
   const sections: CvSection[] = [];
-  const add = (key: SectionKey, items: CvItem[], extra: Partial<CvSection> = {}) => { if (showing(key) && items.length) sections.push({ key, title: SECTION_TITLE[key], items, ...extra }); };
+  const add = (key: SectionKey, items: CvItem[], extra: Partial<CvSection> = {}) => { if (showing(key) && items.length) sections.push({ key, title: SECTION_TITLE[key], items: items.map((i) => ({ ...i, anchor: i.anchor ?? i.key })), ...extra }); };
 
   add("summary", p?.summary ? [{ title: "", body: p.summary.split("\n") }] : []);
   add("experience", byKind("experience"));

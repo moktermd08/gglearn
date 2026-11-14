@@ -52,3 +52,7 @@ export type TemplateKey = (typeof TEMPLATES)[number]["key"];
 /** What an endorsement may say. */
 export const ENDORSE = { min: 60, max: 800, context: 120, shown: 5, perDay: 20, reaskDays: 30 } as const;
 export const RELATIONSHIP_LABEL = { manager: "Manager", mentor: "Mentor" } as const;
+
+/** What a reviewer's comment on a CV may say, and how many they may leave. */
+export const CV_COMMENT = { min: 3, max: 600, reply: 300, perItem: 5, perDay: 40 } as const;
+export const CV_REVIEW_VIEW: View = { sections: Object.fromEntries(SECTION_KEYS.map((k) => [k, true])) as View["sections"], contact: { email: false, phone: false, location: false, links: false } };

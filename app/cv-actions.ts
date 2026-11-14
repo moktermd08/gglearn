@@ -4,6 +4,7 @@ import { and, asc, eq, sql } from "drizzle-orm";
 import { answerNotes, cvEntries, cvProfiles, cvQuotes, db } from "@/lib/db";
 import { actingUser, logViewAsUse } from "@/lib/auth";
 import { createLink, revokeLink, updateLink } from "@/lib/cv/links";
+import { addComment, deleteComment, endReviewer, inviteReviewer, replyToComment, resolveComment } from "@/lib/cv/review";
 import { cancelRequest, decideEndorsement, requestEndorsement, withdrawEndorsement, writeEndorsement } from "@/lib/cv/endorse";
 import { cleanBlock, cleanLine, isEmail, isHexColour, parseJson, safeUrl } from "@/lib/cv/text";
 import { ENTRY_KIND_LIST, LIMITS, SECTION_KEYS, TEMPLATES, type EntryKind } from "@/lib/cv/types";
@@ -221,5 +222,61 @@ export async function withdrawEndorsementAction(_: Res, fd: FormData): Promise<R
   if (!me) return BLOCKED;
   const r = withdrawEndorsement(me, Number(fd.get("id")));
   if (r?.done) tidy(Number(fd.get("personId")));
+  return r;
+}
+
+// ---- comments on a CV draft (lib/cv/review.ts holds the rules)
+
+const tidyReview = (ownerId?: number) => { refresh(); if (ownerId) { revalidatePath(`/cv-review/${ownerId}`); revalidatePath(`/mentoring`); revalidatePath(`/admin/people/${ownerId}`); } };
+
+/** The owner lets a mentor or manager read the draft and comment. */
+export async function inviteReviewerAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("inviteReviewerAction");
+  if (!me) return BLOCKED;
+  const r = inviteReviewer(me, Number(fd.get("reviewerId")));
+  if (r?.done) tidyReview(me.id);
+  return r;
+}
+
+export async function endReviewerAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("endReviewerAction");
+  if (!me) return BLOCKED;
+  const r = endReviewer(me, Number(fd.get("reviewerId")));
+  if (r?.done) tidyReview(me.id);
+  return r;
+}
+
+/** A reviewer comments on a section or one item of someone's draft. */
+export async function addCvCommentAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("addCvCommentAction");
+  if (!me) return BLOCKED;
+  const r = addComment(me, fd);
+  if (r?.done) tidyReview(Number(fd.get("ownerId")));
+  return r;
+}
+
+/** The owner marks a comment done, dismisses it, or reopens it. */
+export async function resolveCommentAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("resolveCommentAction");
+  if (!me) return BLOCKED;
+  const to = fd.get("to") === "done" ? "done" : fd.get("to") === "open" ? "open" : "dismissed";
+  const r = resolveComment(me, Number(fd.get("id")), to);
+  if (r?.done) tidyReview(me.id);
+  return r;
+}
+
+export async function replyCommentAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("replyCommentAction");
+  if (!me) return BLOCKED;
+  const r = replyToComment(me, Number(fd.get("id")), fd.get("reply"));
+  if (r?.done) tidyReview(me.id);
+  return r;
+}
+
+export async function deleteCommentAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("deleteCommentAction");
+  if (!me) return BLOCKED;
+  const r = deleteComment(me, Number(fd.get("id")));
+  if (r?.done) tidyReview(Number(fd.get("ownerId")));
   return r;
 }
