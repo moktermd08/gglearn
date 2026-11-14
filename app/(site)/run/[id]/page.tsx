@@ -14,6 +14,8 @@ import { BadgeTile } from "@/components/Achievements";
 import { exact } from "@/lib/competitions-shared";
 import { startRun, submitRun } from "@/app/actions";
 import { Quiz } from "@/components/Quiz";
+import { NotesThread } from "@/components/NotesThread";
+import { notesForAnswers } from "@/lib/questionNotes";
 import { ExamGuard } from "@/components/ExamGuard";
 import { clientPolicy, describePolicy, needsGuard } from "@/lib/integrity/policy";
 import { policyFor, sessionOf } from "@/lib/integrity/session";
@@ -84,6 +86,8 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
   const took = Math.max(1, run.finishedAt - run.startedAt), speed = examStanding(user.id, run);
   const tierUp = passed && run.level > 1 && tierOf(run.level) > tierOf(run.level - 1);
   const check = sessionOf("run", runId); // set only when this exam was watched
+  const notes = notesForAnswers(rows.map(({ a }) => a.id)); // what reviewers have written under each question
+  const unread = [...notes.values()].flat().filter((n) => !n.ackAt).length;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -179,12 +183,13 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
       )}
 
       <h2 className="flex items-center gap-2 text-lg font-bold"><MessageSquareText size={20} className="text-indigo-300" />Review</h2>
+      {unread > 0 && <p role="status" className="card border-l-4 border-sky-400 p-3 text-sm">You have <b>{unread} {unread === 1 ? "note" : "notes"}</b> from the people helping you. They are under the questions below: say &ldquo;Got it&rdquo;, or reply.</p>}
       <ol className="space-y-3">
         {rows.map(({ a, q }, i) => {
           const t = tone(a.score), V = Verdict[t];
           const correct = q.options?.find((o) => o.key === q.answer)?.text;
           return (
-            <li key={a.id} className={`card rise p-4 ${BORDER[t]}`} style={{ "--i": i } as React.CSSProperties}>
+            <li key={a.id} id={`q${a.id}`} className={`card rise scroll-mt-24 p-4 ${BORDER[t]}`} style={{ "--i": i } as React.CSSProperties}>
               <div className="flex items-start gap-3">
                 <V size={22} className={`mt-0.5 shrink-0 ${TEXT[t]}`} />
                 <div className="min-w-0 flex-1 space-y-2">
@@ -207,6 +212,7 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
                     </div>
                   )}
                   {a.feedback && <div className="flex gap-2 text-sm text-slate-400"><Lightbulb size={15} className="mt-0.5 shrink-0 text-amber-300" /><span>{a.feedback}</span></div>}
+                  <NotesThread notes={notes.get(a.id) ?? []} as="learner" />
                 </div>
               </div>
             </li>

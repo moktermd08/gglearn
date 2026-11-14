@@ -5,8 +5,12 @@ import { ShareBar } from "@/components/ShareBar";
 import { requireUser } from "@/lib/auth";
 import { menteeSummary, menteesOf, mentorsOf } from "@/lib/mentoring";
 import { referralCode } from "@/lib/referrals";
+import { mentorMayReview } from "@/lib/questionNotes";
+import { and, eq } from "drizzle-orm";
+import Link from "next/link";
+import { db, mentorships } from "@/lib/db";
 import { siteUrl } from "@/lib/share";
-import { NoteForm, StopButton } from "./forms";
+import { NoteForm, ReviewToggle, StopButton } from "./forms";
 
 export const metadata: Metadata = { title: "Mentoring — gglearn", robots: { index: false, follow: false } };
 
@@ -15,6 +19,7 @@ const day = (s: number) => new Date(s * 1000).toLocaleDateString("en-GB", { day:
 export default async function Mentoring() {
   const me = await requireUser();
   const base = await siteUrl(), code = referralCode(me.id), url = `${base}/m/${code}`, parentUrl = `${base}/p/${code}`, all = mentorsOf(me.id), mentors = all.filter((m) => m.kind === "mentor"), parents = all.filter((m) => m.kind === "parent");
+  const reviewOn = new Set(db.select({ m: mentorships.mentorId }).from(mentorships).where(and(eq(mentorships.menteeId, me.id), eq(mentorships.reviewAnswers, true))).all().map((r) => r.m)); // mentors this person has let read their answers
   const mentees = menteesOf(me.id).map((m) => ({ ...m, s: menteeSummary(me.id, m.id) })).filter((m) => m.s);
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -22,8 +27,8 @@ export default async function Mentoring() {
 
       <section className="card space-y-3 p-5" aria-label="Your mentors">
         <h2 className="font-bold">Your mentors</h2>
-        {mentors.length ? <ul className="space-y-1 text-sm">{mentors.map((m) => <li key={m.id} className="flex items-center gap-2"><b className="flex-1">{m.name}</b><StopButton otherId={m.id} label="Stop sharing" /></li>)}</ul> : <p className="text-sm text-slate-400">Nobody yet.</p>}
-        <p className="text-sm text-slate-300">A mentor sees your week, streak, certificates, goal, how far you are through a career route plan (never your answers to its questions) and the topics you work on (a topic they could not see themselves shows as &ldquo;a topic&rdquo;). Never your email. Send them this link; they press one button.</p>
+        {mentors.length ? <ul className="space-y-1 text-sm">{mentors.map((m) => <li key={m.id} className="space-y-1"><div className="flex items-center gap-2"><b className="flex-1">{m.name}</b><StopButton otherId={m.id} label="Stop sharing" /></div><ReviewToggle mentorId={m.id} name={m.name} on={reviewOn.has(m.id)} /></li>)}</ul> : <p className="text-sm text-slate-400">Nobody yet.</p>}
+        <p className="text-sm text-slate-300">A mentor sees your week, streak, certificates, goal, how far you are through a career route plan (never your answers to its questions) and the topics you work on (a topic they could not see themselves shows as &ldquo;a topic&rdquo;). Never your email, and never your exam answers unless you choose to let a mentor read them (the box under their name). Send them this link; they press one button.</p>
         <label className="block text-sm text-slate-400">Your mentor invitation<input readOnly value={url} className="mt-1 w-full rounded-lg border border-black/15 bg-[#fff] px-3 py-2 text-sm text-slate-800" /></label>
         <ShareBar url={url} text="Will you be my mentor on gglearn? You would see my progress and could cheer me on." />
       </section>
@@ -46,6 +51,9 @@ export default async function Mentoring() {
             {s.goal && <p className="flex items-center gap-1.5 text-sm"><Target size={14} className="text-indigo-400" />Goal: {s.goal.role} by {day(s.goal.date)}</p>}
             {s.route && <p className="flex items-center gap-1.5 text-sm"><Target size={14} className="text-emerald-500" />Route to {s.route.title}: {s.route.stepsDone} of {s.route.stepsTotal} steps done, {({ done: "all done", "on-track": "on track", behind: "a little behind", over: "timeframe ended" })[s.route.status]}, finish line {day(s.route.finishOn)}</p>}
             {s.topics.length > 0 && <ul className="flex flex-wrap gap-2 text-xs">{s.topics.map((t, i) => <li key={i} className="rounded-full bg-black/5 px-2.5 py-1">{t.name}: level {t.passed}</li>)}</ul>}
+            {kind === "mentor" && (mentorMayReview(me.id, id)
+              ? <Link href={`/mentoring/${id}`} className="inline-block text-sm text-sky-700 underline">Review their exam answers and leave notes</Link>
+              : <p className="text-xs text-slate-400">They have not turned on answer review for you. They can, on their Mentoring page.</p>)}
             <NoteForm menteeId={id} />
           </article>
         ))}

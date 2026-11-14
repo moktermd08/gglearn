@@ -465,6 +465,8 @@ export const mentorships = sqliteTable("mentorships", {
   menteeId: integer("mentee_id").notNull().references(() => users.id),
   // mentor: chosen by the learner to coach them. parent: a parent or guardian following a child's progress (lib/mentoring.ts). Same consent, different words and caps.
   kind: text("kind", { enum: ["mentor", "parent"] }).notNull().default("mentor"),
+  // the learner has let this mentor read their exam answers and leave notes on them (lib/questionNotes.ts). Off until the learner turns it on, per mentor; a parent never gets it.
+  reviewAnswers: integer("review_answers", { mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at").notNull().default(now),
 }, (t) => [uniqueIndex("mentorship_pair").on(t.mentorId, t.menteeId), index("mentorship_mentee").on(t.menteeId)]);
 
@@ -505,7 +507,7 @@ export const securityLog = sqliteTable("security_log", {
   at: integer("at").notNull().default(now),
   actorId: integer("actor_id").notNull().references(() => users.id),
   targetId: integer("target_id").notNull().references(() => users.id),
-  action: text("action", { enum: ["impersonate_start", "impersonate_end", "details_edit", "profile_view", "deadline_extend", "run_void", "run_restore", "credit_grant", "credit_revoke", "cert_revoke", "cert_reinstate"] }).notNull(),
+  action: text("action", { enum: ["impersonate_start", "impersonate_end", "details_edit", "profile_view", "deadline_extend", "run_void", "run_restore", "credit_grant", "credit_revoke", "cert_revoke", "cert_reinstate", "note_delete"] }).notNull(),
   detail: text("detail").notNull().default(""), // the reason, or what changed
   ip: text("ip").notNull().default(""),
 });
@@ -1448,3 +1450,22 @@ export const runVoids = sqliteTable("run_voids", {
   restoredBy: integer("restored_by").references(() => users.id),
   restoredAt: integer("restored_at"),
 }, (t) => [index("run_voids_run").on(t.runId)]);
+
+// A note on one question of one finished exam attempt, from someone reviewing it (a manager or admin who runs the learner, or a mentor the
+// learner has let review their answers). The learner sees it under that question, can say "got it" and reply once. Nothing is edited or
+// removed from the learner's attempt: a note is a separate record, and a deleted one is only marked (lib/questionNotes.ts).
+export const answerNotes = sqliteTable("answer_notes", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  answerId: integer("answer_id").notNull().references(() => answers.id),
+  runId: integer("run_id").notNull().references(() => runs.id),
+  learnerId: integer("learner_id").notNull().references(() => users.id),
+  authorId: integer("author_id").notNull().references(() => users.id),
+  kind: text("kind", { enum: ["suggestion", "praise", "question"] }).notNull().default("suggestion"),
+  body: text("body").notNull(),
+  createdAt: integer("created_at").notNull().default(now),
+  deletedAt: integer("deleted_at"),
+  deletedBy: integer("deleted_by").references(() => users.id),
+  ackAt: integer("ack_at"), // the learner pressed "Got it"
+  reply: text("reply").notNull().default(""), // the learner's one reply
+  repliedAt: integer("replied_at"),
+}, (t) => [index("answer_notes_answer").on(t.answerId), index("answer_notes_learner").on(t.learnerId, t.ackAt)]);
