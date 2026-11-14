@@ -1571,3 +1571,30 @@ export const accountControls = sqliteTable("account_controls", {
   dismissedAt: integer("dismissed_at"), // when the person pressed OK on the current message
   updatedAt: integer("updated_at").notNull().default(now),
 });
+
+// Who the owner has let read their CV draft and comment on it (lib/cv/review.ts). The owner chooses, per person, and can end it at any time; ending it keeps the
+// comments as a record but the person can no longer open the draft. New tables only: nothing here alters one that has rows.
+export const cvReviewers = sqliteTable("cv_reviewers", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id), // the CV's owner
+  reviewerId: integer("reviewer_id").notNull().references(() => users.id),
+  createdAt: integer("created_at").notNull().default(now),
+  endedAt: integer("ended_at"), // null while the person may still review
+}, (t) => [uniqueIndex("cv_reviewer_pair").on(t.userId, t.reviewerId)]);
+
+// A comment on one section of a CV, or on one item in it (a job, a certificate). Private between the reviewer who wrote it and the owner.
+export const cvComments = sqliteTable("cv_comments", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id), // the CV's owner
+  reviewerId: integer("reviewer_id").notNull().references(() => users.id),
+  section: text("section").notNull(), // a section key (lib/cv/types.ts)
+  anchor: text("anchor").notNull().default(""), // "" for the whole section, or "entry:12" / "cert:5" / "skill:3" for one item
+  kind: text("kind", { enum: ["suggestion", "praise", "question"] }).notNull().default("suggestion"),
+  body: text("body").notNull(),
+  status: text("status", { enum: ["open", "done", "dismissed"] }).notNull().default("open"),
+  reply: text("reply").notNull().default(""), // the owner's one reply
+  createdAt: integer("created_at").notNull().default(now),
+  resolvedAt: integer("resolved_at"),
+  repliedAt: integer("replied_at"),
+  deletedAt: integer("deleted_at"),
+}, (t) => [index("cv_comments_owner").on(t.userId, t.status), index("cv_comments_pair").on(t.reviewerId, t.userId)]);

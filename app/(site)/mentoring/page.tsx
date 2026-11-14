@@ -5,6 +5,7 @@ import { ShareBar } from "@/components/ShareBar";
 import { requireUser } from "@/lib/auth";
 import { menteeSummary, menteesOf, mentorsOf } from "@/lib/mentoring";
 import { referralCode } from "@/lib/referrals";
+import { toReview } from "@/lib/cv/review";
 import { mentorMayReview } from "@/lib/questionNotes";
 import { and, eq } from "drizzle-orm";
 import Link from "next/link";
@@ -20,6 +21,7 @@ export default async function Mentoring() {
   const me = await requireUser();
   const base = await siteUrl(), code = referralCode(me.id), url = `${base}/m/${code}`, parentUrl = `${base}/p/${code}`, all = mentorsOf(me.id), mentors = all.filter((m) => m.kind === "mentor"), parents = all.filter((m) => m.kind === "parent");
   const reviewOn = new Set(db.select({ m: mentorships.mentorId }).from(mentorships).where(and(eq(mentorships.menteeId, me.id), eq(mentorships.reviewAnswers, true))).all().map((r) => r.m)); // mentors this person has let read their answers
+  const cvToReview = new Set(toReview(me).map((x) => x.id)); // CV drafts people have let this person read
   const mentees = menteesOf(me.id).map((m) => ({ ...m, s: menteeSummary(me.id, m.id) })).filter((m) => m.s);
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -54,6 +56,7 @@ export default async function Mentoring() {
             {kind === "mentor" && (mentorMayReview(me.id, id)
               ? <Link href={`/mentoring/${id}`} className="inline-block text-sm text-sky-700 underline">Review their exam answers and leave notes</Link>
               : <p className="text-xs text-slate-400">They have not turned on answer review for you. They can, on their Mentoring page.</p>)}
+            {kind === "mentor" && cvToReview.has(id) && <Link href={`/cv-review/${id}`} className="block text-sm text-sky-700 underline">Review their CV draft and leave comments</Link>}
             {kind === "mentor" && <Link href={`/endorse/${id}`} className="block text-sm text-sky-700 underline">Write a reference for their CV</Link>}
             <NoteForm menteeId={id} />
           </article>

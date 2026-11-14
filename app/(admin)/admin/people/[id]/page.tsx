@@ -27,6 +27,7 @@ import { isGlobal, reachOf, userInReach } from "@/lib/tenancy";
 import { extendDeadlineAction, grantCreditAction, reinstateCertAction, restoreRunAction, revokeCertAction, revokeCreditAction, voidRunAction } from "@/app/fix-actions";
 import { NoteComposer } from "@/components/NoteControls";
 import { whyNotEndorse } from "@/lib/cv/endorse";
+import { whyNotReviewCv } from "@/lib/cv/review";
 import { cvEndorsements } from "@/lib/db";
 import { NotesThread } from "@/components/NotesThread";
 import { notesForAnswers, whyNotReview } from "@/lib/questionNotes";
@@ -346,6 +347,14 @@ export default async function Person({ params }: { params: Promise<{ id: string 
           )}
         </section>
       </div>
+
+      {whyNotReviewCv(me, u.id) === null && (
+        <section className={sect} aria-labelledby="p-cvreview">
+          <h2 id="p-cvreview" className={h}><NotebookPen size={16} aria-hidden />CV draft</h2>
+          <p className="text-sm text-slate-500">{first} has let you read their CV draft and comment on it. You will not see their email, phone, location or links.</p>
+          <Link href={`/cv-review/${u.id}`} className="text-sm text-sky-700 underline">Review their CV draft</Link>
+        </section>
+      )}
 
       {whyNotEndorse(me, u.id) === null && (() => {
         const mine = db.select().from(cvEndorsements).where(and(eq(cvEndorsements.userId, u.id), eq(cvEndorsements.authorId, me.id))).get();

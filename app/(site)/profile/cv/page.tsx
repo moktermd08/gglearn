@@ -6,14 +6,16 @@ import { answerNotes, cvEntries, cvLinks, cvProfiles, cvQuotes, db, users } from
 import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { CopyField, CvForm, InlineAction, UseSuggestion } from "@/components/cv/CvForms";
-import { hiddenKeys, platformFacts } from "@/lib/cv/build";
+import { buildCv, hiddenKeys, platformFacts } from "@/lib/cv/build";
+import { CommentThread } from "@/components/cv/CommentThread";
+import { commentsForOwner, openCommentCount, reviewersOf } from "@/lib/cv/review";
 import { DAYS, pathOf, stateOf, viewOf, type Link as CvLink } from "@/lib/cv/links";
 import { askable, endorsementsOf } from "@/lib/cv/endorse";
 import { suggestFor } from "@/lib/cv/suggest";
 import { parseJson } from "@/lib/cv/text";
 import { ENTRY_KIND_LIST, ENTRY_LABEL, PRESETS, SECTION_HELP, SECTION_KEYS, SECTION_TITLE, TEMPLATES, type EntryKind } from "@/lib/cv/types";
 import { siteUrl } from "@/lib/share";
-import { cancelRequestAction, createLinkAction, decideEndorsementAction, deleteEntryAction, featureQuoteAction, moveEntryAction, requestEndorsementAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
+import { cancelRequestAction, createLinkAction, endReviewerAction, inviteReviewerAction, decideEndorsementAction, deleteEntryAction, featureQuoteAction, moveEntryAction, requestEndorsementAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
 
 export const metadata: Metadata = { title: "Your CV — gglearn", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -84,6 +86,9 @@ export default async function CvPage() {
   const featured = new Set(db.select({ n: cvQuotes.noteId }).from(cvQuotes).where(eq(cvQuotes.userId, me.id)).all().map((r) => r.n));
   const refs = endorsementsOf(me.id), live0 = new Set(refs.filter((r) => ["requested", "pending", "approved"].includes(r.status)).map((r) => r.authorId));
   const toAsk = askable(me).filter((a) => !live0.has(a.id));
+  const comments = commentsForOwner(me.id), openComments = openCommentCount(me.id), rv = reviewersOf(me.id);
+  const fullDoc = buildCv(me.id, PRESETS.full.view, base);
+  const titleOf = new Map((fullDoc?.sections ?? []).flatMap((x) => x.items.map((i) => [i.anchor ?? "", i.title || x.title] as const)));
   const links0 = parseJson<{ label: string; url: string }[]>(p?.links ?? "[]", []).map((l) => (l.label ? `${l.label} | ${l.url}` : l.url)).join("\n");
   const platform = [
     { title: "Verified certificates", items: facts.certs }, { title: "Assessed skills", items: facts.skills.slice(0, 15) },
@@ -101,6 +106,29 @@ export default async function CvPage() {
         <div className="h-2 overflow-hidden rounded-full bg-black/10" role="img" aria-label={`${sug.percent} percent complete`}><div className="h-full rounded-full bg-emerald-500" style={{ width: `${sug.percent}%` }} /></div>
         {sug.tips.length > 0 ? <ul className="space-y-1 text-sm">{sug.tips.map((t) => <li key={t.id}><a href={`#${t.section}`} className="text-sky-700 underline">{t.text}</a></li>)}</ul> : <p className="text-sm text-emerald-700">Nothing missing. Keep it up to date as you learn.</p>}
         <p className="text-xs text-slate-400">From the platform: {facts.certs.length} verified {facts.certs.length === 1 ? "certificate" : "certificates"}, {facts.topics} assessed {facts.topics === 1 ? "topic" : "topics"}, {facts.levels} levels passed. These appear automatically; you can hide any of them below.</p>
+      </section>
+
+      <section id="feedback" className={sec} aria-labelledby="cv-feedback">
+        <h2 id="cv-feedback" className={h2}>Feedback on your CV{openComments > 0 && <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-800">{openComments} open</span>}</h2>
+        <p className="text-xs text-slate-400">Let a mentor or manager read your draft and comment on any section or item. They see your work, skills and certificates, never your email, phone, location or links, and you can end it at any time. You decide what to change: mark each comment done, or say you will not.</p>
+        {rv.active.length > 0 && (
+          <ul className="space-y-1 text-sm">{rv.active.map((a) => <li key={a.id} className="flex flex-wrap items-center gap-2"><span className="min-w-0 flex-1">{a.name} <span className="text-slate-400">· can read your draft</span></span><InlineAction action={endReviewerAction} fields={{ reviewerId: a.id }} label="End access" tone="danger" confirm="Stop them reading your draft? Their comments stay here." /></li>)}</ul>
+        )}
+        {rv.invitable.length > 0 && (
+          <div className="space-y-1.5"><h3 className="text-sm font-bold">Ask someone to review it</h3>
+            <ul className="space-y-1 text-sm">{rv.invitable.slice(0, 20).map((a) => <li key={a.id} className="flex flex-wrap items-center gap-2"><span className="min-w-0 flex-1">{a.name} <span className="text-slate-400">· {a.label}</span></span><InlineAction action={inviteReviewerAction} fields={{ reviewerId: a.id }} label="Let them review" /></li>)}</ul></div>
+        )}
+        {rv.active.length === 0 && rv.invitable.length === 0 && <p className="text-xs text-slate-400">You have no manager or mentor to ask yet. A mentor is someone you invite from the Mentoring page.</p>}
+        {comments.length === 0 ? <p className="text-sm text-slate-400">No comments yet.</p> : (
+          <ul className="space-y-3">
+            {[...comments.filter((c) => c.status === "open"), ...comments.filter((c) => c.status !== "open")].map((c) => (
+              <li key={c.id} className="space-y-1">
+                <p className="text-xs font-semibold text-slate-500"><a href={`#${c.section === "assessed" || c.section === "certificates" ? "certificates" : c.section}`} className="underline">{SECTION_TITLE[c.section as keyof typeof SECTION_TITLE] ?? c.section}</a>{c.anchor ? ` · ${titleOf.get(c.anchor) ?? "an item that has since changed"}` : ""}</p>
+                <CommentThread comments={[c]} as="owner" ownerId={me.id} showAuthor />
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section id="profile" className={sec} aria-labelledby="cv-profile">
