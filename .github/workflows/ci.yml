@@ -48,7 +48,7 @@ jobs:
           SESSION_SECRET: ci-throwaway-secret-0123456789abcdef
         run: |
           failed=0
-          for c in build maps finder review problemlog credits uirules mail nextaction bulkinvite joinlinks linkedin league duelrules reset scim sso social signinlink impersonation corrections notes cv; do
+          for c in build maps finder review problemlog credits uirules mail nextaction bulkinvite joinlinks linkedin league duelrules reset scim sso social signinlink impersonation corrections notes cv endorse; do
             echo "::group::check:$c"
             if ! npm run --if-present "check:$c"; then
               echo "::error::check:$c failed"

@@ -465,9 +465,11 @@ export const mentorships = sqliteTable("mentorships", {
   menteeId: integer("mentee_id").notNull().references(() => users.id),
   // mentor: chosen by the learner to coach them. parent: a parent or guardian following a child's progress (lib/mentoring.ts). Same consent, different words and caps.
   kind: text("kind", { enum: ["mentor", "parent"] }).notNull().default("mentor"),
-  // the learner has let this mentor read their exam answers and leave notes on them (lib/questionNotes.ts). Off until the learner turns it on, per mentor; a parent never gets it.
-  reviewAnswers: integer("review_answers", { mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at").notNull().default(now),
+  // the learner has let this mentor read their exam answers and leave notes on them (lib/questionNotes.ts). Off until the learner turns it on, per mentor; a parent never gets it.
+  // Declared LAST, and keeping default(false) because that is what production's table has: a column added to a table that has rows is appended by SQLite, and
+  // drizzle-kit rebuilds the table (and then fails on duplicate indexes) if the schema puts it anywhere else or its default differs.
+  reviewAnswers: integer("review_answers", { mode: "boolean" }).notNull().default(false),
 }, (t) => [uniqueIndex("mentorship_pair").on(t.mentorId, t.menteeId), index("mentorship_mentee").on(t.menteeId)]);
 
 // Someone who backs a learner to reach a level in one topic (lib/sponsors.ts). The learner asks (a signed link naming the topic and level); the sponsor presses a button.
@@ -1462,15 +1464,17 @@ export const answerNotes = sqliteTable("answer_notes", {
   authorId: integer("author_id").notNull().references(() => users.id),
   kind: text("kind", { enum: ["suggestion", "praise", "question"] }).notNull().default("suggestion"),
   body: text("body").notNull(),
-  // the author agrees this praise may be quoted, with their name, on the learner's CV if the learner chooses to feature it (lib/cv). Off unless they tick it; they can withdraw it.
-  // default(sql`0`), not default(false): a falsy default makes drizzle-kit think a NOT NULL column has none, and refuse to add it to a table that has rows (which stopped a deploy).
-  quotable: integer("quotable", { mode: "boolean" }).notNull().default(sql`0`),
   createdAt: integer("created_at").notNull().default(now),
   deletedAt: integer("deleted_at"),
   deletedBy: integer("deleted_by").references(() => users.id),
   ackAt: integer("ack_at"), // the learner pressed "Got it"
   reply: text("reply").notNull().default(""), // the learner's one reply
   repliedAt: integer("replied_at"),
+  // the author agrees this praise may be quoted, with their name, on the learner's CV if the learner chooses to feature it (lib/cv). Off unless they tick it; they can withdraw it.
+  // Declared LAST, and the default is the NUMBER 0 on purpose. Production added this column to a table that had rows, so SQLite appended it with DEFAULT 0, and drizzle-kit
+  // compares that text: default(false), sql`0` and sql`false` each make it plan a table rebuild on every push, which then fails on duplicate indexes and stops the deploy
+  // (checked against a replay of production's deploy history). New code that adds a boolean column to a table with rows: add it, deploy, then align the schema.
+  quotable: integer("quotable", { mode: "boolean" }).notNull().default(0 as never),
 }, (t) => [index("answer_notes_answer").on(t.answerId), index("answer_notes_learner").on(t.learnerId, t.ackAt)]);
 
 // ---- CV manager (docs/cv/design.md). Private by default: nothing here is readable by anyone but its owner until they make a share link.
@@ -1534,3 +1538,21 @@ export const cvQuotes = sqliteTable("cv_quotes", {
   noteId: integer("note_id").notNull().unique().references(() => answerNotes.id),
   createdAt: integer("created_at").notNull().default(now),
 });
+
+// A reference a manager or mentor writes for someone's CV (lib/cv/endorse.ts). One row per author and person: writing again updates it.
+// requested: the person asked, nothing written yet. pending: written, waiting for the person to approve. approved: the person agreed to show it on
+// their CV. declined: the person chose not to. withdrawn: the author took it back (it leaves the CV at once). Editing an approved one puts it back to
+// pending, so what is published is always what the person last approved. A new table only: nothing here alters one that has rows.
+export const cvEndorsements = sqliteTable("cv_endorsements", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id), // the person endorsed
+  authorId: integer("author_id").notNull().references(() => users.id),
+  status: text("status", { enum: ["requested", "pending", "approved", "declined", "withdrawn"] }).notNull(),
+  relationship: text("relationship", { enum: ["manager", "mentor"] }).notNull(), // how the author relates to them, worked out by the platform when written, never typed
+  body: text("body").notNull().default(""),
+  context: text("context").notNull().default(""), // "Worked together on the 2026 onboarding", in the author's words
+  createdAt: integer("created_at").notNull().default(now),
+  writtenAt: integer("written_at"),
+  decidedAt: integer("decided_at"), // when the person approved or declined, or the author withdrew
+  updatedAt: integer("updated_at").notNull().default(now),
+}, (t) => [uniqueIndex("cv_endorsement_pair").on(t.userId, t.authorId), index("cv_endorsement_user").on(t.userId, t.status)]);

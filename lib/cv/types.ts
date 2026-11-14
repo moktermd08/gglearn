@@ -1,10 +1,10 @@
 /** What a CV is made of, and what a reader may be shown. No database here, so forms in the browser can use it (docs/cv/design.md). */
 
-export const SECTION_KEYS = ["summary", "experience", "projects", "education", "certificates", "assessed", "skills", "highlights", "quotes", "volunteer", "awards", "languages", "goal"] as const;
+export const SECTION_KEYS = ["summary", "experience", "projects", "education", "certificates", "assessed", "skills", "highlights", "endorsements", "quotes", "volunteer", "awards", "languages", "goal"] as const;
 export type SectionKey = (typeof SECTION_KEYS)[number];
 export const SECTION_TITLE: Record<SectionKey, string> = {
   summary: "Profile", experience: "Experience", projects: "Projects", education: "Education", certificates: "Verified certificates", assessed: "Assessed skills",
-  skills: "Other skills", highlights: "Learning record", quotes: "What reviewers say", volunteer: "Volunteering", awards: "Awards", languages: "Languages", goal: "Career goal",
+  skills: "Other skills", highlights: "Learning record", endorsements: "References", quotes: "What reviewers say", volunteer: "Volunteering", awards: "Awards", languages: "Languages", goal: "Career goal",
 };
 /** One line for the person, saying what each part is. */
 export const SECTION_HELP: Record<SectionKey, string> = {
@@ -13,6 +13,7 @@ export const SECTION_HELP: Record<SectionKey, string> = {
   certificates: "Certificates you have earned here. Each links to a public page that proves it is real.",
   assessed: "Topics you have passed timed exams in, with the level reached.",
   skills: "Skills you list yourself.", highlights: "Levels passed, certificates held, how active you have been.",
+  endorsements: "References written for you by a manager or mentor that you have approved.",
   quotes: "Praise from mentors and managers who let you feature it.", volunteer: "Volunteering you add by hand.", awards: "Awards you add by hand.",
   languages: "Languages you add by hand.", goal: "The role you are aiming for, and by when.",
 };
@@ -47,3 +48,7 @@ export const LINK_KINDS = ["public", "private", "passcode"] as const;
 export type LinkKind = (typeof LINK_KINDS)[number];
 export const TEMPLATES = [{ key: "classic", label: "Classic", help: "Plain and traditional. The safest for recruiting software." }, { key: "modern", label: "Modern", help: "A coloured header and accent headings." }, { key: "compact", label: "Compact", help: "Tighter, to fit more on a page." }] as const;
 export type TemplateKey = (typeof TEMPLATES)[number]["key"];
+
+/** What an endorsement may say. */
+export const ENDORSE = { min: 60, max: 800, context: 120, shown: 5, perDay: 20, reaskDays: 30 } as const;
+export const RELATIONSHIP_LABEL = { manager: "Manager", mentor: "Mentor" } as const;

@@ -44,7 +44,8 @@ export function CvView({ doc, pdfHref, printable = true }: { doc: CvDoc; pdfHref
   const accent = doc.accent || ACCENT[doc.template], modern = doc.template === "modern", compact = doc.template === "compact";
   const certs = doc.sections.find((s) => s.key === "certificates")?.items.filter((i) => i.verify && i.verify.status !== "expired").length ?? 0;
   const strongest = doc.sections.find((s) => s.key === "assessed")?.items.slice(0, 3) ?? [];
-  const glance = certs > 0 || strongest.length > 0;
+  const refs = doc.sections.find((s) => s.key === "endorsements")?.items.length ?? 0;
+  const glance = certs > 0 || strongest.length > 0 || refs > 0;
   return (
     <article className={`cv mx-auto max-w-3xl bg-[#fff] text-[#0f172a] shadow-sm ring-1 ring-black/5 print:shadow-none print:ring-0 ${compact ? "p-6 text-[14px] sm:p-8" : "p-6 sm:p-10"}`} style={{ "--cv-accent": accent } as React.CSSProperties}>
       <header className={modern ? "-mx-6 -mt-6 mb-6 px-6 py-6 text-[#fff] sm:-mx-10 sm:-mt-10 sm:px-10 sm:py-8 print:text-[#0f172a]" : "mb-5 border-b border-[#e2e8f0] pb-4"} style={modern ? { background: accent } : undefined}>
@@ -62,6 +63,7 @@ export function CvView({ doc, pdfHref, printable = true }: { doc: CvDoc; pdfHref
           <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-semibold">
             <ShieldCheck size={16} className="text-[#059669]" aria-hidden />At a glance
             {certs > 0 && <span className="font-normal text-[#334155]">{certs} verified {certs === 1 ? "certificate" : "certificates"}, each one checkable</span>}
+            {refs > 0 && <span className="font-normal text-[#334155]">{refs} {refs === 1 ? "reference" : "references"} from managers and mentors</span>}
           </p>
           {strongest.length > 0 && <p className="mt-1 text-[#475569]">Strongest: {strongest.map((s) => `${s.title} (level ${s.level?.n} of ${s.level?.of})`).join(" · ")}</p>}
         </section>

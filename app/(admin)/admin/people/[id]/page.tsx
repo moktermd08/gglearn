@@ -25,6 +25,8 @@ import { clientIp } from "@/lib/rate-limit";
 import { isGlobal, reachOf, userInReach } from "@/lib/tenancy";
 import { extendDeadlineAction, grantCreditAction, reinstateCertAction, restoreRunAction, revokeCertAction, revokeCreditAction, voidRunAction } from "@/app/fix-actions";
 import { NoteComposer } from "@/components/NoteControls";
+import { whyNotEndorse } from "@/lib/cv/endorse";
+import { cvEndorsements } from "@/lib/db";
 import { NotesThread } from "@/components/NotesThread";
 import { notesForAnswers, whyNotReview } from "@/lib/questionNotes";
 
@@ -342,6 +344,17 @@ export default async function Person({ params }: { params: Promise<{ id: string 
           )}
         </section>
       </div>
+
+      {!viewing && whyNotEndorse(me, u.id) === null && (() => {
+        const mine = db.select().from(cvEndorsements).where(and(eq(cvEndorsements.userId, u.id), eq(cvEndorsements.authorId, me.id))).get();
+        return (
+          <section className={sect} aria-labelledby="p-ref">
+            <h2 id="p-ref" className={h}><NotebookPen size={16} aria-hidden />Reference for their CV</h2>
+            <p className="text-sm text-slate-500">{mine ? `Your reference for ${first}: ${mine.status === "requested" ? "they asked you for one" : mine.status === "pending" ? "waiting for their approval" : mine.status === "approved" ? "on their CV" : mine.status}.` : `You can write a reference for ${first}\u2019s CV, with your name and role. It shows only if ${first} approves it.`}</p>
+            <Link href={`/endorse/${u.id}`} className="text-sm text-sky-700 underline">{mine && mine.status !== "declined" ? "Open it" : "Write a reference"}</Link>
+          </section>
+        );
+      })()}
 
       <section className={sect} aria-labelledby="p-notes">
         <h2 id="p-notes" className={h}><NotebookPen size={16} aria-hidden />Checklist and handover notes</h2>

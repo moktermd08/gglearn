@@ -7,6 +7,8 @@ import { activityFor } from "@/lib/stats";
 import { topicLabel } from "@/lib/topicName";
 import { SECTION_KEYS, SECTION_TITLE, type SectionKey, type TemplateKey, type View } from "@/lib/cv/types";
 import { dateRange, isHexColour, monthYear, parseJson, safeUrl } from "@/lib/cv/text";
+import { approvedFor } from "@/lib/cv/endorse";
+import { ENDORSE } from "@/lib/cv/types";
 
 /**
  * Turns a person, what they have saved, what the platform knows about them and a VIEW (what this reader may be shown) into one plain document.
@@ -88,6 +90,8 @@ export function buildCv(userId: number, view: View, base: string): CvDoc | null 
   add("skills", byKind("skill"), { chips: true });
   const lines = [facts.topics ? `${facts.levels} levels passed across ${facts.topics} ${facts.topics === 1 ? "topic" : "topics"}` : "", facts.validCerts ? `${facts.validCerts} verified ${facts.validCerts === 1 ? "certificate" : "certificates"}` : "", facts.activeDays ? `Active on ${facts.activeDays} of the last 84 days` : ""].filter(Boolean);
   add("highlights", hidden.has("stat:highlights") ? [] : lines.length ? [{ title: "", body: lines }] : []);
+  // references the person approved (and has not hidden); the author is named, and the relationship is the platform's own record
+  add("endorsements", keep(approvedFor(userId).slice(0, ENDORSE.shown).map((e): CvItem => ({ key: `endorsement:${e.id}`, title: `${e.author} · ${e.label}`, subtitle: [e.context, monthYear(new Date((e.decidedAt ?? e.updatedAt) * 1000).toISOString().slice(0, 7))].filter(Boolean).join(" · "), body: e.body.split("\n").filter(Boolean) }))));
   add("quotes", keep(facts.quotes));
   add("volunteer", byKind("volunteer"));
   add("awards", byKind("award"));
