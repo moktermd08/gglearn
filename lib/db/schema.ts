@@ -1463,7 +1463,8 @@ export const answerNotes = sqliteTable("answer_notes", {
   kind: text("kind", { enum: ["suggestion", "praise", "question"] }).notNull().default("suggestion"),
   body: text("body").notNull(),
   // the author agrees this praise may be quoted, with their name, on the learner's CV if the learner chooses to feature it (lib/cv). Off unless they tick it; they can withdraw it.
-  quotable: integer("quotable", { mode: "boolean" }).notNull().default(false),
+  // default(sql`0`), not default(false): a falsy default makes drizzle-kit think a NOT NULL column has none, and refuse to add it to a table that has rows (which stopped a deploy).
+  quotable: integer("quotable", { mode: "boolean" }).notNull().default(sql`0`),
   createdAt: integer("created_at").notNull().default(now),
   deletedAt: integer("deleted_at"),
   deletedBy: integer("deleted_by").references(() => users.id),
