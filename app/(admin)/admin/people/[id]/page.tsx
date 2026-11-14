@@ -58,8 +58,8 @@ export default async function Person({ params }: { params: Promise<{ id: string 
   const real = await realUser();
   if (real && isSuperAdmin(real)) recordProfileView(real.id, u.id, await clientIp());
   const viewing = (await viewAsState()) !== null;
-  const canFix = !viewing && whyNotCorrect(me, u) === null; // corrections are made as yourself, never while viewing as someone
-  const canNote = !viewing && whyNotReview(me, u.id) === null; // notes on their answers, likewise written as yourself
+  const canFix = !viewing && whyNotCorrect(me, u) === null; // corrections change OTHER people's records, so they are made as yourself, never through a view
+  const canNote = whyNotReview(me, u.id) === null; // notes on their answers: the viewed person's own power, logged under the super admin when done through a view
 
   const off = u.status === "offboarded", first = u.name.split(" ")[0];
   const scopes = scopesOf(u.id), opts = scopeOptions(), places = scopeLabels(scopes, opts);
@@ -347,7 +347,7 @@ export default async function Person({ params }: { params: Promise<{ id: string 
         </section>
       </div>
 
-      {!viewing && whyNotEndorse(me, u.id) === null && (() => {
+      {whyNotEndorse(me, u.id) === null && (() => {
         const mine = db.select().from(cvEndorsements).where(and(eq(cvEndorsements.userId, u.id), eq(cvEndorsements.authorId, me.id))).get();
         return (
           <section className={sect} aria-labelledby="p-ref">

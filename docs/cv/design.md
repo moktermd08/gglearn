@@ -26,7 +26,7 @@ The job: let anyone turn what they do on the platform, plus what they add by han
 
 **The platform and its operators.**
 - Nothing that is private may leak through the CV: not through the public page, the PDF, the link, a search engine, or a referrer header.
-- Not an identity risk: a super admin viewing as someone cannot create share links or change a CV in their name.
+- Not an identity risk: a super admin viewing as someone may use their CV as that person could, but every use is logged under the super admin, and the things that take over an account (password, email, sign-out) stay refused.
 
 ## Design decisions
 

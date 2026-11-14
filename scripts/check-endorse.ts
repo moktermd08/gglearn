@@ -23,7 +23,7 @@ const GOOD = "I managed them on the 2026 onboarding project. They rebuilt the ne
 const BASE = "https://example.test";
 
 const src = (f: string) => readFileSync(new URL(`../${f}`, import.meta.url), "utf8");
-check("every reference action refuses while viewing as someone", (src("app/cv-actions.ts").match(/const me = await owner\(\);/g) ?? []).length >= 15 && ["requestEndorsementAction", "decideEndorsementAction", "cancelRequestAction", "writeEndorsementAction", "withdrawEndorsementAction"].every((n) => src("app/cv-actions.ts").includes(`function ${n}(`)));
+check("every reference action is named in the log when done through a view", (src("app/cv-actions.ts").match(/const me = await owner\("\w+"\);/g) ?? []).length >= 15 && ["requestEndorsementAction", "decideEndorsementAction", "cancelRequestAction", "writeEndorsementAction", "withdrawEndorsementAction"].every((n) => src("app/cv-actions.ts").includes(`function ${n}(`)));
 check("the author's page is a 404 unless the rule allows it", src("app/(site)/endorse/[id]/page.tsx").includes("whyNotEndorse(me, id) !== null") && src("app/(site)/endorse/[id]/page.tsx").includes("notFound()"));
 check("only approved references can reach the CV builder", src("lib/cv/endorse.ts").includes("eq(cvEndorsements.status, \"approved\")") && src("lib/cv/build.ts").includes("approvedFor(userId)"));
 check("text is tidied and cut", cleanEndorsement("  a   b\r\n\r\n\r\n\r\nc ", 50) === "a b\n\nc" && cleanEndorsement("x".repeat(900), 10).length === 10);

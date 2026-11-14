@@ -6,6 +6,8 @@ import { db, users } from "@/lib/db";
 import { safeNext } from "@/lib/nextPath";
 import { clearViewAsCookie, viewingAs } from "@/lib/impersonation";
 import { controlOf, isBlocked } from "@/lib/accountControl";
+import { recordSecurityEvent } from "@/lib/securityLog";
+import { clientIp } from "@/lib/rate-limit";
 
 const COOKIE = "gglearn_session";
 const SESSION_TTL_SEC = 60 * 60 * 24 * 30;
@@ -109,4 +111,24 @@ export async function viewAsState() {
 /** Actions that would lock someone out or take over their account call this first: true means refuse. */
 export async function refuseWhileViewingAs(): Promise<boolean> {
   return (await viewAsState()) !== null;
+}
+
+/**
+ * For an action a learner may take on their own account, which is therefore also allowed while a super admin is viewing as them (their CV, notes,
+ * replies, settings). Returns who the action is done as, and, when it is done through a view, the super admin who is really doing it. Nothing
+ * here widens what a person may do: it is the viewed person's own power, used by the person who is viewing as them.
+ * The things that would lock someone out or take over their account (password, email, sign-out everywhere, offboarding) are NOT done through
+ * this: they call refuseWhileViewingAs and stay refused.
+ */
+export async function actingUser() {
+  const me = await requireUser();
+  const view = await viewAsState();
+  if (view) return { me, viewedBy: view.actor };
+  const real = await realUser();
+  return real && real.id === me.id ? { me, viewedBy: null } : null;
+}
+
+/** Every use of someone's account through a view is written to the security log under the REAL person, with what was done. */
+export async function logViewAsUse(viewedBy: { id: number } | null, me: { id: number }, what: string) {
+  if (viewedBy) recordSecurityEvent({ actorId: viewedBy.id, targetId: me.id, action: "viewas_action", detail: what, ip: await clientIp() });
 }
