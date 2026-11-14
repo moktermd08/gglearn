@@ -3,7 +3,7 @@ import Link from "next/link";
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { Download, Eye, EyeOff, FileText, Globe, KeyRound, Link2, Plus, ShieldCheck } from "lucide-react";
 import { answerNotes, cvEntries, cvLinks, cvProfiles, cvQuotes, db, users } from "@/lib/db";
-import { requireUser, viewAsState } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { CopyField, CvForm, InlineAction, UseSuggestion } from "@/components/cv/CvForms";
 import { hiddenKeys, platformFacts } from "@/lib/cv/build";
@@ -73,7 +73,6 @@ function ViewBoxes({ view }: { view: ReturnType<typeof viewOf> }) {
 
 export default async function CvPage() {
   const me = await requireUser();
-  const viewing = (await viewAsState()) !== null;
   const base = await siteUrl();
   const p = db.select().from(cvProfiles).where(eq(cvProfiles.userId, me.id)).get();
   const entries = db.select().from(cvEntries).where(eq(cvEntries.userId, me.id)).orderBy(cvEntries.sort, cvEntries.id).all();
@@ -96,7 +95,6 @@ export default async function CvPage() {
         <Link href="/profile/cv/preview" className={ghost}><Eye size={15} aria-hidden />Preview</Link>
         <a href="/profile/cv/pdf" className={ghost}><Download size={15} aria-hidden />Download PDF</a>
       </PageHero>
-      {viewing && <p className="card border-l-4 border-amber-500 p-3 text-sm text-amber-900">You are viewing as someone else, so their CV cannot be changed here. Exit the view (red bar) to change your own.</p>}
 
       <section className={sec} aria-labelledby="cv-score">
         <h2 id="cv-score" className={h2}><ShieldCheck size={18} aria-hidden />How complete it is: {sug.percent}%</h2>

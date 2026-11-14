@@ -509,7 +509,7 @@ export const securityLog = sqliteTable("security_log", {
   at: integer("at").notNull().default(now),
   actorId: integer("actor_id").notNull().references(() => users.id),
   targetId: integer("target_id").notNull().references(() => users.id),
-  action: text("action", { enum: ["impersonate_start", "impersonate_end", "details_edit", "profile_view", "deadline_extend", "run_void", "run_restore", "credit_grant", "credit_revoke", "cert_revoke", "cert_reinstate", "note_delete", "account_block", "account_unblock", "account_message_set", "account_message_clear"] }).notNull(),
+  action: text("action", { enum: ["impersonate_start", "impersonate_end", "details_edit", "profile_view", "deadline_extend", "run_void", "run_restore", "credit_grant", "credit_revoke", "cert_revoke", "cert_reinstate", "note_delete", "account_block", "account_unblock", "account_message_set", "account_message_clear", "viewas_action"] }).notNull(),
   detail: text("detail").notNull().default(""), // the reason, or what changed
   ip: text("ip").notNull().default(""),
 });

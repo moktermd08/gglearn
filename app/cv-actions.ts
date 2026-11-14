@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { and, asc, eq, sql } from "drizzle-orm";
 import { answerNotes, cvEntries, cvProfiles, cvQuotes, db } from "@/lib/db";
-import { realUser, refuseWhileViewingAs, requireUser } from "@/lib/auth";
+import { actingUser, logViewAsUse } from "@/lib/auth";
 import { createLink, revokeLink, updateLink } from "@/lib/cv/links";
 import { cancelRequest, decideEndorsement, requestEndorsement, withdrawEndorsement, writeEndorsement } from "@/lib/cv/endorse";
 import { cleanBlock, cleanLine, isEmail, isHexColour, parseJson, safeUrl } from "@/lib/cv/text";
@@ -10,23 +10,22 @@ import { ENTRY_KIND_LIST, LIMITS, SECTION_KEYS, TEMPLATES, type EntryKind } from
 import { allowed, hit } from "@/lib/rate-limit";
 
 /**
- * Everything a person does to their own CV. Each action works as the real signed-in person, never while a super admin is viewing as someone
- * (a CV, and who may read it, is the owner's own), checks that what it touches is theirs, and cleans what it saves. The CV itself stays private
+ * Everything a person does to their own CV. Each action works as the person, or as a super admin viewing as them (every such use is logged under the
+ * super admin, lib/auth.ts logViewAsUse), checks that what it touches is theirs, and cleans what it saves. The CV itself stays private
  * until a share link exists (lib/cv/links.ts).
  */
 type Res = { error?: string; done?: string } | null;
-const BLOCKED: Res = { error: "Exit the view first: your CV is changed as yourself, not as the person you are viewing." };
+const BLOCKED: Res = { error: "You cannot do that right now. Sign in again and try once more." };
 const text = (v: FormDataEntryValue | null) => (typeof v === "string" ? v : "");
 
-async function owner() {
-  const me = await requireUser();
-  if (await refuseWhileViewingAs()) return null;
-  const real = await realUser();
-  if (!real || real.id !== me.id) return null;
-  const key = `cv-write:${me.id}`;
+async function owner(what: string) {
+  const a = await actingUser(); // the person themselves, or a super admin using their account through a view (then logged under the super admin)
+  if (!a) return null;
+  const key = `cv-write:${a.me.id}`;
   if (!allowed(key, 400)) return null;
   hit(key, 60 * 60 * 1000);
-  return me;
+  await logViewAsUse(a.viewedBy, a.me, what);
+  return a.me;
 }
 const refresh = () => revalidatePath("/profile/cv");
 
@@ -34,7 +33,7 @@ const refresh = () => revalidatePath("/profile/cv");
 const normDate = (v: string) => { const m = /^(\d{4})(?:-(0[1-9]|1[0-2]))?$/.exec(v.trim()); return m && Number(m[1]) >= 1950 && Number(m[1]) <= 2100 ? v.trim() : ""; };
 
 export async function saveProfileAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("saveProfileAction");
   if (!me) return BLOCKED;
   const email = cleanLine(fd.get("contactEmail"), LIMITS.email).toLowerCase();
   if (email && !isEmail(email)) return { error: "That email does not look right." };
@@ -56,7 +55,7 @@ export async function saveProfileAction(_: Res, fd: FormData): Promise<Res> {
 }
 
 export async function saveEntryAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("saveEntryAction");
   if (!me) return BLOCKED;
   const kind = ENTRY_KIND_LIST.find((k) => k === fd.get("kind")) as EntryKind | undefined;
   if (!kind) return { error: "Choose what you are adding." };
@@ -82,7 +81,7 @@ export async function saveEntryAction(_: Res, fd: FormData): Promise<Res> {
 }
 
 export async function deleteEntryAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("deleteEntryAction");
   if (!me) return BLOCKED;
   const r = db.delete(cvEntries).where(and(eq(cvEntries.id, Number(fd.get("id"))), eq(cvEntries.userId, me.id))).returning().get();
   refresh();
@@ -90,7 +89,7 @@ export async function deleteEntryAction(_: Res, fd: FormData): Promise<Res> {
 }
 
 export async function toggleEntryAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("toggleEntryAction");
   if (!me) return BLOCKED;
   const e = db.select().from(cvEntries).where(and(eq(cvEntries.id, Number(fd.get("id"))), eq(cvEntries.userId, me.id))).get();
   if (!e) return { error: "That entry is not yours." };
@@ -101,7 +100,7 @@ export async function toggleEntryAction(_: Res, fd: FormData): Promise<Res> {
 
 /** Moves an entry up or down among those of its own kind. */
 export async function moveEntryAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("moveEntryAction");
   if (!me) return BLOCKED;
   const e = db.select().from(cvEntries).where(and(eq(cvEntries.id, Number(fd.get("id"))), eq(cvEntries.userId, me.id))).get();
   if (!e) return { error: "That entry is not yours." };
@@ -117,7 +116,7 @@ export async function moveEntryAction(_: Res, fd: FormData): Promise<Res> {
 
 /** Leaves a platform item (a certificate, a skill, a quote, the highlights line) off the CV, or puts it back. */
 export async function toggleHiddenAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("toggleHiddenAction");
   if (!me) return BLOCKED;
   const key = text(fd.get("key"));
   if (!/^(?:(?:cert|skill|quote|endorsement):\d{1,9}|stat:highlights)$/.test(key)) return { error: "Not something on your CV." };
@@ -131,7 +130,7 @@ export async function toggleHiddenAction(_: Res, fd: FormData): Promise<Res> {
 
 /** Features, or stops featuring, a reviewer's praise on the CV. Only praise whose author allowed quoting, and only on the learner's own notes. */
 export async function featureQuoteAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("featureQuoteAction");
   if (!me) return BLOCKED;
   const noteId = Number(fd.get("noteId"));
   if (fd.get("on") === "0") { db.delete(cvQuotes).where(and(eq(cvQuotes.noteId, noteId), eq(cvQuotes.userId, me.id))).run(); refresh(); return { done: "No longer featured." }; }
@@ -151,7 +150,7 @@ function chosenView(fd: FormData) {
 }
 
 export async function createLinkAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("createLinkAction");
   if (!me) return BLOCKED;
   const r = await createLink(me.id, { label: fd.get("label"), kind: fd.get("kind"), preset: fd.get("preset"), passcode: fd.get("passcode"), days: fd.get("days"), allowPdf: fd.get("allowPdf") === "on", indexable: fd.get("indexable") === "on", ...chosenView(fd) });
   if ("error" in r) return r;
@@ -160,7 +159,7 @@ export async function createLinkAction(_: Res, fd: FormData): Promise<Res> {
 }
 
 export async function updateLinkAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("updateLinkAction");
   if (!me) return BLOCKED;
   const r = updateLink(me.id, Number(fd.get("id")), { label: fd.get("label"), days: fd.get("days") === "keep" ? undefined : fd.get("days") === "none" ? "none" : fd.get("days"), allowPdf: fd.get("allowPdf") === "on", indexable: fd.get("indexable") === "on", ...chosenView(fd) });
   if ("error" in r) return r;
@@ -169,7 +168,7 @@ export async function updateLinkAction(_: Res, fd: FormData): Promise<Res> {
 }
 
 export async function revokeLinkAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("revokeLinkAction");
   if (!me) return BLOCKED;
   const r = revokeLink(me.id, Number(fd.get("id")));
   if ("error" in r) return r;
@@ -183,7 +182,7 @@ const tidy = (personId?: number) => { refresh(); if (personId) { revalidatePath(
 
 /** The owner asks a manager or mentor for a reference. */
 export async function requestEndorsementAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("requestEndorsementAction");
   if (!me) return BLOCKED;
   const r = requestEndorsement(me, Number(fd.get("authorId")));
   if (r?.done) tidy();
@@ -192,7 +191,7 @@ export async function requestEndorsementAction(_: Res, fd: FormData): Promise<Re
 
 /** The owner approves a written reference (on=1) or declines one (on=0). */
 export async function decideEndorsementAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("decideEndorsementAction");
   if (!me) return BLOCKED;
   const r = decideEndorsement(me, Number(fd.get("id")), fd.get("on") === "1");
   if (r?.done) tidy();
@@ -200,7 +199,7 @@ export async function decideEndorsementAction(_: Res, fd: FormData): Promise<Res
 }
 
 export async function cancelRequestAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("cancelRequestAction");
   if (!me) return BLOCKED;
   const r = cancelRequest(me, Number(fd.get("id")));
   if (r?.done) tidy();
@@ -209,7 +208,7 @@ export async function cancelRequestAction(_: Res, fd: FormData): Promise<Res> {
 
 /** An author writes or rewrites a reference for someone they manage or mentor. */
 export async function writeEndorsementAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("writeEndorsementAction");
   if (!me) return BLOCKED;
   const personId = Number(fd.get("personId"));
   const r = writeEndorsement(me, personId, fd);
@@ -218,7 +217,7 @@ export async function writeEndorsementAction(_: Res, fd: FormData): Promise<Res>
 }
 
 export async function withdrawEndorsementAction(_: Res, fd: FormData): Promise<Res> {
-  const me = await owner();
+  const me = await owner("withdrawEndorsementAction");
   if (!me) return BLOCKED;
   const r = withdrawEndorsement(me, Number(fd.get("id")));
   if (r?.done) tidy(Number(fd.get("personId")));

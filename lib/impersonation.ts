@@ -17,8 +17,10 @@ import { allowed, clientIp, hit } from "@/lib/rate-limit";
  *    person, and the super admin's session version, and expires after an hour whatever else happens.
  *  - Only a super admin can start it; not on themselves, not on another super admin, not on someone who is offboarded, and not from
  *    inside another view-as. A reason is required and kept with every start and end in the security log.
- *  - While it runs, the things that would lock the person out or take over the account (password, sign-out, offboarding, email, starting
- *    another view-as) are refused (see `refuseWhileViewingAs` in lib/auth.ts).
+ *  - Through a view the super admin can do what that person can do on their own account (CV, notes, replies, references, settings). Each such use
+ *    is logged under the REAL super admin with what was done (`actingUser` and `logViewAsUse` in lib/auth.ts).
+ *  - The things that would lock the person out or take over the account (password, sign-out, offboarding, email, starting another view-as) and a
+ *    manager's corrections to other people's records are still refused (see `refuseWhileViewingAs` in lib/auth.ts).
  */
 const COOKIE = "gglearn_viewas";
 export const VIEWAS_TTL_SEC = 60 * 60;

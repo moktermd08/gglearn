@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { and, desc, eq, inArray, isNotNull } from "drizzle-orm";
 import { ArrowLeft, GraduationCap, ShieldCheck } from "lucide-react";
 import { answers, db, questions, runs, tracks, users } from "@/lib/db";
-import { realUser, requireUser, viewAsState } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import { NoteComposer } from "@/components/NoteControls";
 import { NotesThread } from "@/components/NotesThread";
 import { PageHero } from "@/components/charts";
@@ -26,10 +26,9 @@ export default async function ReviewExams({ params }: { params: Promise<{ id: st
   const me = await requireUser();
   const id = Number((await params).id);
   if (!Number.isInteger(id) || whyNotReview(me, id) !== null) notFound(); // the same answer for "no such person" and "not allowed"
-  const viewing = (await viewAsState()) !== null, real = await realUser();
   const learner = db.select({ name: users.name }).from(users).where(eq(users.id, id)).get()!;
   const asManager = (me.role === "manager" || me.role === "admin") && userInReach(reachOf(me.id), id);
-  const canNote = !viewing && !!real && real.id === me.id;
+  const canNote = true; // the person, or a super admin using their account through a view (logged under the super admin)
 
   const attempts = db.select({ r: runs, t: tracks }).from(runs).innerJoin(tracks, eq(tracks.id, runs.trackId)).where(and(eq(runs.userId, id), isNotNull(runs.finishedAt))).orderBy(desc(runs.finishedAt)).limit(30).all();
   const runIds = attempts.map((a) => a.r.id);
@@ -45,7 +44,6 @@ export default async function ReviewExams({ params }: { params: Promise<{ id: st
       </PageHero>
       <p className="card flex items-start gap-2 p-3 text-sm text-slate-600"><ShieldCheck size={16} className="mt-0.5 shrink-0 text-emerald-600" aria-hidden />
         {asManager ? "You can see this because you run them." : `You can see this because ${learner.name.split(" ")[0]} chose to let you review their exam answers. They can switch it off at any time.`} Be kind and specific: say what worked, and one thing to try next.</p>
-      {viewing && <p className="card border-l-4 border-amber-500 p-3 text-sm text-amber-900">You are viewing as someone else, so notes are switched off. Exit the view to write them as yourself.</p>}
       {waiting > 0 && <p className="text-sm text-slate-500">{waiting} {waiting === 1 ? "note is" : "notes are"} waiting for them to read.</p>}
 
       {attempts.length === 0 ? <p className="card p-4 text-sm text-slate-400">No finished exams yet.</p> : (
