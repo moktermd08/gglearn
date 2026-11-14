@@ -18,7 +18,14 @@ exec 9>/tmp/gglearn-deploy.lock
 flock -n 9 || { echo "another deploy is already running on the server" >&2; exit 1; }
 cd $DIR
 npm ci
-npx drizzle-kit push
+# drizzle-kit exits 0 even when it refuses to apply a change (a data-loss warning, or no terminal to ask its question in), so read what it said.
+# A push that did not apply must stop the deploy here, before the build and the restart: new code running on an old database takes pages down.
+out=\$(npx drizzle-kit push 2>&1) || { echo "\$out" >&2; exit 1; }
+echo "\$out"
+if echo "\$out" | grep -qE "Found data-loss|Interactive prompts require|^Error"; then
+  echo "drizzle-kit push did not apply the schema change: stopping before the build and the restart (the running app is untouched)" >&2
+  exit 1
+fi
 npm run build
 pm2 startOrRestart ecosystem.config.cjs
 pm2 save
