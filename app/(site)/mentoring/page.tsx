@@ -54,6 +54,7 @@ export default async function Mentoring() {
             {kind === "mentor" && (mentorMayReview(me.id, id)
               ? <Link href={`/mentoring/${id}`} className="inline-block text-sm text-sky-700 underline">Review their exam answers and leave notes</Link>
               : <p className="text-xs text-slate-400">They have not turned on answer review for you. They can, on their Mentoring page.</p>)}
+            {kind === "mentor" && <Link href={`/endorse/${id}`} className="block text-sm text-sky-700 underline">Write a reference for their CV</Link>}
             <NoteForm menteeId={id} />
           </article>
         ))}

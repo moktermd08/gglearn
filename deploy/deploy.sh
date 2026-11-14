@@ -22,7 +22,7 @@ npm ci
 # A push that did not apply must stop the deploy here, before the build and the restart: new code running on an old database takes pages down.
 out=\$(npx drizzle-kit push 2>&1) || { echo "\$out" >&2; exit 1; }
 echo "\$out"
-if echo "\$out" | grep -qE "Found data-loss|Interactive prompts require|^Error"; then
+if echo "\$out" | grep -qE "Found data-loss|Interactive prompts require|^Error|SqliteError|SQLITE_"; then
   echo "drizzle-kit push did not apply the schema change: stopping before the build and the restart (the running app is untouched)" >&2
   exit 1
 fi

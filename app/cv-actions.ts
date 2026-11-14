@@ -4,6 +4,7 @@ import { and, asc, eq, sql } from "drizzle-orm";
 import { answerNotes, cvEntries, cvProfiles, cvQuotes, db } from "@/lib/db";
 import { realUser, refuseWhileViewingAs, requireUser } from "@/lib/auth";
 import { createLink, revokeLink, updateLink } from "@/lib/cv/links";
+import { cancelRequest, decideEndorsement, requestEndorsement, withdrawEndorsement, writeEndorsement } from "@/lib/cv/endorse";
 import { cleanBlock, cleanLine, isEmail, isHexColour, parseJson, safeUrl } from "@/lib/cv/text";
 import { ENTRY_KIND_LIST, LIMITS, SECTION_KEYS, TEMPLATES, type EntryKind } from "@/lib/cv/types";
 import { allowed, hit } from "@/lib/rate-limit";
@@ -119,7 +120,7 @@ export async function toggleHiddenAction(_: Res, fd: FormData): Promise<Res> {
   const me = await owner();
   if (!me) return BLOCKED;
   const key = text(fd.get("key"));
-  if (!/^(?:(?:cert|skill|quote):\d{1,9}|stat:highlights)$/.test(key)) return { error: "Not something on your CV." };
+  if (!/^(?:(?:cert|skill|quote|endorsement):\d{1,9}|stat:highlights)$/.test(key)) return { error: "Not something on your CV." };
   const have = parseJson<string[]>(db.select({ h: cvProfiles.hidden }).from(cvProfiles).where(eq(cvProfiles.userId, me.id)).get()?.h ?? "[]", []);
   const next = have.includes(key) ? have.filter((k) => k !== key) : [...have, key];
   const hidden = JSON.stringify(next.slice(0, 500));
@@ -174,4 +175,52 @@ export async function revokeLinkAction(_: Res, fd: FormData): Promise<Res> {
   if ("error" in r) return r;
   refresh();
   return { done: "Revoked. The link no longer works." };
+}
+
+// ---- references (lib/cv/endorse.ts holds the rules; these only run them as the real signed-in person)
+
+const tidy = (personId?: number) => { refresh(); if (personId) { revalidatePath(`/endorse/${personId}`); revalidatePath(`/admin/people/${personId}`); revalidatePath(`/mentoring/${personId}`); } };
+
+/** The owner asks a manager or mentor for a reference. */
+export async function requestEndorsementAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner();
+  if (!me) return BLOCKED;
+  const r = requestEndorsement(me, Number(fd.get("authorId")));
+  if (r?.done) tidy();
+  return r;
+}
+
+/** The owner approves a written reference (on=1) or declines one (on=0). */
+export async function decideEndorsementAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner();
+  if (!me) return BLOCKED;
+  const r = decideEndorsement(me, Number(fd.get("id")), fd.get("on") === "1");
+  if (r?.done) tidy();
+  return r;
+}
+
+export async function cancelRequestAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner();
+  if (!me) return BLOCKED;
+  const r = cancelRequest(me, Number(fd.get("id")));
+  if (r?.done) tidy();
+  return r;
+}
+
+/** An author writes or rewrites a reference for someone they manage or mentor. */
+export async function writeEndorsementAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner();
+  if (!me) return BLOCKED;
+  const personId = Number(fd.get("personId"));
+  const r = writeEndorsement(me, personId, fd);
+  if (r?.done) tidy(personId);
+  return r;
+}
+
+export async function withdrawEndorsementAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner();
+  if (!me) return BLOCKED;
+  const r = withdrawEndorsement(me, Number(fd.get("id")));
+  if (r?.done) tidy(Number(fd.get("personId")));
+  return r;
 }

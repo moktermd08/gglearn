@@ -8,11 +8,12 @@ import { PageHero } from "@/components/charts";
 import { CopyField, CvForm, InlineAction, UseSuggestion } from "@/components/cv/CvForms";
 import { hiddenKeys, platformFacts } from "@/lib/cv/build";
 import { DAYS, pathOf, stateOf, viewOf, type Link as CvLink } from "@/lib/cv/links";
+import { askable, endorsementsOf } from "@/lib/cv/endorse";
 import { suggestFor } from "@/lib/cv/suggest";
 import { parseJson } from "@/lib/cv/text";
 import { ENTRY_KIND_LIST, ENTRY_LABEL, PRESETS, SECTION_HELP, SECTION_KEYS, SECTION_TITLE, TEMPLATES, type EntryKind } from "@/lib/cv/types";
 import { siteUrl } from "@/lib/share";
-import { createLinkAction, deleteEntryAction, featureQuoteAction, moveEntryAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
+import { cancelRequestAction, createLinkAction, decideEndorsementAction, deleteEntryAction, featureQuoteAction, moveEntryAction, requestEndorsementAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
 
 export const metadata: Metadata = { title: "Your CV — gglearn", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -82,6 +83,8 @@ export default async function CvPage() {
   const praise = db.select({ n: answerNotes, who: users.name }).from(answerNotes).innerJoin(users, eq(users.id, answerNotes.authorId))
     .where(and(eq(answerNotes.learnerId, me.id), eq(answerNotes.quotable, true), eq(answerNotes.kind, "praise"), isNull(answerNotes.deletedAt))).orderBy(desc(answerNotes.id)).all();
   const featured = new Set(db.select({ n: cvQuotes.noteId }).from(cvQuotes).where(eq(cvQuotes.userId, me.id)).all().map((r) => r.n));
+  const refs = endorsementsOf(me.id), live0 = new Set(refs.filter((r) => ["requested", "pending", "approved"].includes(r.status)).map((r) => r.authorId));
+  const toAsk = askable(me).filter((a) => !live0.has(a.id));
   const links0 = parseJson<{ label: string; url: string }[]>(p?.links ?? "[]", []).map((l) => (l.label ? `${l.label} | ${l.url}` : l.url)).join("\n");
   const platform = [
     { title: "Verified certificates", items: facts.certs }, { title: "Assessed skills", items: facts.skills.slice(0, 15) },
@@ -179,6 +182,35 @@ export default async function CvPage() {
           </div>
         ))}
         <div className="flex flex-wrap items-center gap-2 border-t border-black/5 pt-2 text-sm"><span className="flex-1">Learning record line (levels passed, certificates, how active you have been)</span><InlineAction action={toggleHiddenAction} fields={{ key: "stat:highlights" }} label={hidden.has("stat:highlights") ? "Show" : "Hide"} /></div>
+      </section>
+
+      <section id="endorsements" className={sec} aria-labelledby="cv-refs">
+        <h2 id="cv-refs" className={h2}>References</h2>
+        <p className="text-xs text-slate-400">A reference is the one thing on a CV that someone else says about you. Ask a manager or mentor, or they can offer one. Nothing appears on your CV until you approve it, and the person who wrote it can withdraw it at any time.</p>
+        {refs.length === 0 && <p className="text-sm text-slate-400">No references yet.</p>}
+        <ul className="space-y-2">
+          {refs.map((r) => (
+            <li key={r.id} className={`space-y-1.5 rounded-lg border border-black/5 p-2.5 text-sm ${r.status === "declined" || r.status === "withdrawn" ? "opacity-60" : ""}`}>
+              <div className="flex flex-wrap items-center gap-2">
+                <b className="min-w-0 flex-1">{r.author} <span className="font-normal text-slate-500">· {r.label}{r.context ? ` · ${r.context}` : ""}</span></b>
+                <span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-bold uppercase text-slate-600">{r.status === "requested" ? "waiting for them" : r.status === "pending" ? "needs your approval" : r.status === "approved" ? (hidden.has(`endorsement:${r.id}`) ? "approved, hidden" : "on your CV") : r.status}</span>
+              </div>
+              {r.body && r.status !== "withdrawn" && <p className="whitespace-pre-wrap italic">“{r.body}”</p>}
+              <div className="flex flex-wrap items-center gap-2">
+                {r.status === "pending" && <><InlineAction action={decideEndorsementAction} fields={{ id: r.id, on: 1 }} label="Approve: show on my CV" /><InlineAction action={decideEndorsementAction} fields={{ id: r.id, on: 0 }} label="Decline" tone="danger" confirm="Decline this reference? It will not appear anywhere." /></>}
+                {r.status === "approved" && <><InlineAction action={toggleHiddenAction} fields={{ key: `endorsement:${r.id}` }} label={hidden.has(`endorsement:${r.id}`) ? "Show again" : "Hide for now"} /><InlineAction action={decideEndorsementAction} fields={{ id: r.id, on: 0 }} label="Remove" tone="danger" confirm="Remove this reference from your CV?" /></>}
+                {r.status === "requested" && <InlineAction action={cancelRequestAction} fields={{ id: r.id }} label="Cancel request" />}
+              </div>
+            </li>
+          ))}
+        </ul>
+        {toAsk.length > 0 && (
+          <div className="space-y-1.5 border-t border-black/5 pt-2">
+            <h3 className="text-sm font-bold">Ask for a reference</h3>
+            <ul className="space-y-1 text-sm">{toAsk.slice(0, 20).map((a) => <li key={a.id} className="flex flex-wrap items-center gap-2"><span className="min-w-0 flex-1">{a.name} <span className="text-slate-400">· {a.label}</span></span><InlineAction action={requestEndorsementAction} fields={{ authorId: a.id }} label="Ask" /></li>)}</ul>
+          </div>
+        )}
+        {toAsk.length === 0 && refs.length === 0 && <p className="text-xs text-slate-400">You have no manager or mentor to ask yet. A mentor is someone you invite from the Mentoring page.</p>}
       </section>
 
       <section id="quotes" className={sec} aria-labelledby="cv-quotes">

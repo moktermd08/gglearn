@@ -2,6 +2,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import { companies, cvEntries, cvLinks, cvProfiles, db, userScopes, users } from "@/lib/db";
 import { roleLabel } from "@/lib/journey";
 import { platformFacts } from "@/lib/cv/build";
+import { approvedFor } from "@/lib/cv/endorse";
 
 /**
  * What the platform can offer to write for the owner, and what is still missing. Nothing here is ever published by itself: a suggestion is a
@@ -43,7 +44,8 @@ export function suggestFor(userId: number, base: string) {
     { id: "education", weight: 10, ok: count("education") >= 1, tip: "Add your education or training.", section: "education" },
     { id: "verified", weight: 10, ok: f.certs.length >= 1, tip: "Earn a certificate: employers can check it is real, which no typed CV can offer.", section: "certificates" },
     { id: "assessed", weight: 5, ok: f.skills.length >= 3, tip: "Pass levels in three topics so your skills are backed by exams.", section: "assessed" },
-    { id: "skills", weight: 10, ok: count("skill") >= 3, tip: "List at least three skills of your own.", section: "skills" },
+    { id: "skills", weight: 5, ok: count("skill") >= 3, tip: "List at least three skills of your own.", section: "skills" },
+    { id: "reference", weight: 5, ok: approvedFor(userId).length >= 1, tip: "Ask a manager or mentor for a reference: it is the one thing on a CV that someone else says about you.", section: "endorsements" },
     { id: "links", weight: 5, ok: links >= 1, tip: "Add a link, such as LinkedIn or a portfolio.", section: "profile" },
     { id: "share", weight: 5, ok: shared >= 1, tip: "Make a share link so an employer can read it, or download the PDF.", section: "share" },
   ];
