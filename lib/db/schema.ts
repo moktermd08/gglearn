@@ -509,7 +509,7 @@ export const securityLog = sqliteTable("security_log", {
   at: integer("at").notNull().default(now),
   actorId: integer("actor_id").notNull().references(() => users.id),
   targetId: integer("target_id").notNull().references(() => users.id),
-  action: text("action", { enum: ["impersonate_start", "impersonate_end", "details_edit", "profile_view", "deadline_extend", "run_void", "run_restore", "credit_grant", "credit_revoke", "cert_revoke", "cert_reinstate", "note_delete"] }).notNull(),
+  action: text("action", { enum: ["impersonate_start", "impersonate_end", "details_edit", "profile_view", "deadline_extend", "run_void", "run_restore", "credit_grant", "credit_revoke", "cert_revoke", "cert_reinstate", "note_delete", "account_block", "account_unblock", "account_message_set", "account_message_clear"] }).notNull(),
   detail: text("detail").notNull().default(""), // the reason, or what changed
   ip: text("ip").notNull().default(""),
 });
@@ -1556,3 +1556,18 @@ export const cvEndorsements = sqliteTable("cv_endorsements", {
   decidedAt: integer("decided_at"), // when the person approved or declined, or the author withdrew
   updatedAt: integer("updated_at").notNull().default(now),
 }, (t) => [uniqueIndex("cv_endorsement_pair").on(t.userId, t.authorId), index("cv_endorsement_user").on(t.userId, t.status)]);
+
+// What a super admin has set on one account (lib/accountControl.ts): a block, and a message for the person. One row per person. A new table, so
+// nothing here alters one that has rows. A block is enforced where sessions are recognised (lib/auth.ts), so no sign-in route can get round it.
+export const accountControls = sqliteTable("account_controls", {
+  userId: integer("user_id").primaryKey().references(() => users.id),
+  blockedAt: integer("blocked_at"), // set while the account is blocked
+  blockReason: text("block_reason").notNull().default(""), // what the person is told when they try to sign in
+  blockedBy: integer("blocked_by").references(() => users.id),
+  message: text("message").notNull().default(""), // shown to the person on every page until they press OK
+  tone: text("tone", { enum: ["info", "warning"] }).notNull().default("info"),
+  messageAt: integer("message_at"),
+  messageBy: integer("message_by").references(() => users.id),
+  dismissedAt: integer("dismissed_at"), // when the person pressed OK on the current message
+  updatedAt: integer("updated_at").notNull().default(now),
+});

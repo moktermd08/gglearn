@@ -1,9 +1,10 @@
 import { Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import Link from "next/link";
-import { eq, sql } from "drizzle-orm";
-import { checklistItems, competitionMembers, competitions, db, enrollments, handovers, joinLinks, tracks, userScopes, users } from "@/lib/db";
+import { eq, isNotNull, sql } from "drizzle-orm";
+import { accountControls, checklistItems, competitionMembers, competitions, db, enrollments, handovers, joinLinks, tracks, userScopes, users } from "@/lib/db";
 import { realUser, requireManager, viewAsState } from "@/lib/auth";
 import { isSuperAdmin } from "@/lib/superAdmin";
+import { controlOf } from "@/lib/accountControl";
 import { SuperTools } from "./super-tools";
 import { addHandover, offboard, toggleChecklistItem } from "@/app/actions";
 import { LEVELS, grantableLevels } from "@/lib/accessLevel";
@@ -52,6 +53,7 @@ export default async function People({ searchParams }: { searchParams: Promise<P
   // company and brand mean "belongs to it, or to something under it" (the same reading of scopes as everywhere); only ones this person runs are honoured
   const inCompany = company && tree.companies.some((c) => c.id === Number(company)) ? usersInReach(reachFor([{ kind: "company", id: Number(company) }])) : null;
   const inBrand = brand && tree.brands.some((b) => b.id === Number(brand)) ? usersInReach(reachFor([{ kind: "brand", id: Number(brand) }])) : null;
+  const blockedIds = new Set(db.select({ u: accountControls.userId }).from(accountControls).where(isNotNull(accountControls.blockedAt)).all().map((r) => r.u)); // accounts a super admin has blocked
   const placedIds = new Set(db.select({ u: userScopes.userId }).from(userScopes).all().map((r) => r.u)); // people in some company, brand or project
   const needle = q.trim().toLowerCase();
   const found = everyone.filter((u) =>
@@ -166,6 +168,7 @@ export default async function People({ searchParams }: { searchParams: Promise<P
                       {u.audience === "customer" && <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-800">customer</span>}
                       {u.role !== "learner" && <span className="inline-flex items-center gap-1 rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-violet-800">{u.role === "admin" ? <Shield size={10} aria-hidden /> : <UserCog size={10} aria-hidden />}{u.role}</span>}
                       {off && <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-rose-800"><UserMinus size={10} aria-hidden />offboarded</span>}
+                      {blockedIds.has(u.id) && <span className="inline-flex items-center gap-1 rounded-full bg-rose-600/20 px-2 py-0.5 text-[10px] font-bold uppercase text-rose-900">blocked</span>}
                       {waiting && <span className="rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-violet-800">waiting for sign-off</span>}
                     </div>
                     <div className="truncate text-sm text-slate-400">{u.email} · {u.jobRole}{u.audience === "staff" && u.status === "active" && hasNoRolePath(coverageFor(u.jobRole, cat)) && <span title={`Nothing is set up for the role "${u.jobRole}", so they only get company-wide learning. Change their role, or add learning for it.`} className="ml-2 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-800">no role learning</span>}</div>
@@ -195,7 +198,7 @@ export default async function People({ searchParams }: { searchParams: Promise<P
         const outside = scopeLabels(myScopes.filter((s) => !inTree.includes(s)), options);
         const phases = off ? null : onboardingFor(u, myScopes, onboarding);
         const done = items.filter((c) => c.done).length;
-        const canTouch = !self && (me.role === "admin" || u.role === "learner");
+        const canTouch = !self && !isSuperAdmin(u) && (me.role === "admin" || u.role === "learner"); // a super admin's account is only changed by themselves
         const roleWhy = mayChangeRole(me, u);
         const accessWhy = me.role !== "admin" || !grantable.length ? "Only an admin can change access." : self ? "Nobody changes their own access." : u.audience !== "staff" ? "Customers can only be learners." : u.role === "admin" && !owner ? "Only the platform owner can change an admin's access." : undefined;
         const sec = "card space-y-3 p-4", h = "text-base font-bold";
@@ -250,7 +253,7 @@ export default async function People({ searchParams }: { searchParams: Promise<P
             {superMe && real && u.id !== real.id && !isSuperAdmin(u) && (
               <section className={sec} aria-labelledby="ed-super">
                 <h3 id="ed-super" className={h}>Super admin</h3>
-                <SuperTools key={u.id} userId={u.id} name={u.name} email={u.email} canView={!off} />
+                <SuperTools key={u.id} userId={u.id} name={u.name} email={u.email} canView={!off} control={(() => { const c = controlOf(u.id); return { blocked: c?.blockedAt != null, reason: c?.blockReason ?? "", since: c?.blockedAt ? new Date(c.blockedAt * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "", message: c?.message ?? "", tone: c?.tone ?? "info" }; })()} />
               </section>
             )}
             <section className={sec} aria-labelledby="ed-notes">

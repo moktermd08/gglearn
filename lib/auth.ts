@@ -5,6 +5,7 @@ import { eq, sql } from "drizzle-orm";
 import { db, users } from "@/lib/db";
 import { safeNext } from "@/lib/nextPath";
 import { clearViewAsCookie, viewingAs } from "@/lib/impersonation";
+import { controlOf, isBlocked } from "@/lib/accountControl";
 
 const COOKIE = "gglearn_session";
 const SESSION_TTL_SEC = 60 * 60 * 24 * 30;
@@ -38,8 +39,8 @@ export function revokeSessions(userId: number) {
   db.update(users).set({ sessionVersion: sql`${users.sessionVersion} + 1` }).where(eq(users.id, userId)).run();
 }
 
-/** The person who is actually signed in, whatever they are viewing as. Use this, not currentUser, to know who is really acting. */
-export async function realUser() {
+/** The account the session cookie is genuinely for (signature, age and version all checked), whether or not that account is blocked. */
+async function sessionUser() {
   const raw = (await cookies()).get(COOKIE)?.value;
   if (!raw) return null;
   const parts = raw.split(".");
@@ -52,6 +53,23 @@ export async function realUser() {
   const user = db.select().from(users).where(eq(users.id, Number(id))).get();
   // offboarded people lose access immediately; a bumped version signs out old sessions
   return user && user.status === "active" && user.sessionVersion === Number(ver) ? user : null;
+}
+
+/**
+ * The person who is actually signed in, whatever they are viewing as. Use this, not currentUser, to know who is really acting.
+ * A BLOCKED account is never signed in, however its session or sign-in was obtained: this is the one place every route's session is recognised,
+ * so a password, an emailed link, single sign-on, a social sign-in and a contest link are all covered at once (lib/accountControl.ts).
+ */
+export async function realUser() {
+  const user = await sessionUser();
+  return user && !isBlocked(user.id) ? user : null;
+}
+
+/** For the sign-in page: when this browser holds a genuine session for an account that is now blocked, what the person is told. Otherwise nothing. */
+export async function blockedNotice(): Promise<string | null> {
+  const user = await sessionUser();
+  const c = user ? controlOf(user.id) : undefined;
+  return c?.blockedAt != null ? `Your account has been blocked. ${c.blockReason || "Please contact your administrator."}` : null;
 }
 
 export async function requireUser() {

@@ -4,6 +4,7 @@ import { and, desc, eq, inArray, isNotNull, isNull, sql } from "drizzle-orm";
 import { Award, CalendarDays, CheckCircle2, ClipboardList, Compass, Eye, Flame, GraduationCap, Mail, NotebookPen, ShieldCheck, Target, TriangleAlert, UserCog, Users } from "lucide-react";
 import { answers, certificates, checklistItems, dailyQuests, db, enrollments, handovers, levelCredits, questions, runVoids, runs, tracks, users } from "@/lib/db";
 import { realUser, requireManager, viewAsState } from "@/lib/auth";
+import { controlOf } from "@/lib/accountControl";
 import { Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import { ActionForm } from "@/components/admin/ActionForm";
 import { OnboardingPhases } from "@/components/OnboardingPhases";
@@ -129,6 +130,7 @@ export default async function Person({ params }: { params: Promise<{ id: string 
               {u.guest === "yes" && <span className="rounded-full bg-sky-500/20 px-2 py-0.5 text-sky-800">guest</span>}
               {u.audience === "customer" && <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-amber-800">customer</span>}
               {off ? <span className="rounded-full bg-rose-500/20 px-2 py-0.5 text-rose-800">offboarded</span> : <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-emerald-800">active</span>}
+              {controlOf(u.id)?.blockedAt != null && <span className="rounded-full bg-rose-600/20 px-2 py-0.5 text-rose-900">blocked</span>}
             </div>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
               <span className="inline-flex items-center gap-1"><Mail size={13} aria-hidden />{u.email}</span>
