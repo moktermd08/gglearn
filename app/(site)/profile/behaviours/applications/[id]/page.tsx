@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Download, FileText } from "lucide-react";
-import { CvForm, InlineAction } from "@/components/cv/CvForms";
+import { InlineAction } from "@/components/cv/CvForms";
+import { KeepForm } from "@/components/star/KeepForm";
 import { PickEditor } from "@/components/star/PickEditor";
 import { deleteApplicationAction, saveApplicationAction } from "@/app/star-actions";
 import { requireUser } from "@/lib/auth";
@@ -36,7 +37,7 @@ export default async function ApplicationPage({ params, searchParams }: { params
 
       <section className="card p-5" aria-labelledby="job">
         <h2 id="job" className="mb-3 text-lg font-bold">The job</h2>
-        <CvForm action={saveApplicationAction} className="space-y-3">
+        <KeepForm action={saveApplicationAction} className="space-y-3">
           {app && <input type="hidden" name="id" value={app.id} />}
           <div className="grid gap-3 sm:grid-cols-2">
             <label className={lab}>Job title<input name="title" required maxLength={120} defaultValue={app?.title} className={field} /></label>
@@ -56,7 +57,7 @@ export default async function ApplicationPage({ params, searchParams }: { params
           </fieldset>
           <label className={lab}>Notes to yourself<textarea name="note" rows={2} maxLength={600} defaultValue={app?.note} className={field} /></label>
           <button className="btn !py-1.5 text-sm">{app ? "Save job details" : "Create application"}</button>
-        </CvForm>
+        </KeepForm>
       </section>
 
       {app && (

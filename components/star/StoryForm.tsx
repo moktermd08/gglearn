@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, Lightbulb } from "lucide-react";
-import { CvForm } from "@/components/cv/CvForms";
+import { KeepForm } from "@/components/star/KeepForm";
 import { saveStoryAction } from "@/app/star-actions";
 import { reviewStory } from "@/lib/star/coach";
 import { BEHAVIOURS, PARTS, STORY_LIMITS, wordCount, type BehaviourKey } from "@/lib/star/framework";
@@ -18,7 +18,7 @@ export function StoryForm({ init, suggested }: { init: Init; suggested?: Behavio
   const r = reviewStory(t);
   const toggle = (k: BehaviourKey) => setPicked((p) => (p.includes(k) ? p.filter((x) => x !== k) : p.length >= STORY_LIMITS.behaviours ? p : [...p, k]));
   return (
-    <CvForm action={saveStoryAction} className="space-y-4">
+    <KeepForm action={saveStoryAction} className="space-y-4">
       {init.id && <input type="hidden" name="id" value={init.id} />}
       <div className="grid gap-3 sm:grid-cols-[2fr_1fr]">
         <label className={lab}>Title (only you see it)<input name="title" required maxLength={STORY_LIMITS.title} defaultValue={init.title} placeholder="Cutting call waits at the contact centre" className={field} /></label>
@@ -57,6 +57,6 @@ export function StoryForm({ init, suggested }: { init: Init; suggested?: Behavio
 
       <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="ready" defaultChecked={init.ready} />This story is ready to use in an application</label>
       <button className="btn !py-1.5 text-sm">{init.id ? "Save story" : "Create story"}</button>
-    </CvForm>
+    </KeepForm>
   );
 }

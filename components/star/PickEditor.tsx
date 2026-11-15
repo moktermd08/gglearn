@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { CvForm } from "@/components/cv/CvForms";
+import { KeepForm } from "@/components/star/KeepForm";
 import { savePickAction } from "@/app/star-actions";
 import { composeAnswer, wordCount, type StoryText } from "@/lib/star/framework";
 
@@ -20,7 +20,7 @@ export function PickEditor({ applicationId, behaviour, title, gist, stories, sto
     if (s && (!text.trim() || window.confirm("Replace the wording below with this story as written?"))) setText(composeAnswer(s.text));
   };
   return (
-    <CvForm action={savePickAction} className="card space-y-2 p-4">
+    <KeepForm action={savePickAction} className="card space-y-2 p-4">
       <input type="hidden" name="applicationId" value={applicationId} /><input type="hidden" name="behaviour" value={behaviour} />
       <div><h3 className="font-bold">{title}</h3><p className="text-xs text-slate-500">{gist}</p></div>
       <label className="block space-y-1 text-xs font-semibold text-slate-500">Story
@@ -38,6 +38,6 @@ export function PickEditor({ applicationId, behaviour, title, gist, stories, sto
         <button type="button" className="btn btn-ghost !py-1.5 text-sm" onClick={() => void navigator.clipboard?.writeText(text)}>Copy text</button>
         <button name="reset" value="1" className="btn btn-ghost !py-1.5 text-sm" title="Go back to the story as written">Use story as written</button>
       </div>
-    </CvForm>
+    </KeepForm>
   );
 }
