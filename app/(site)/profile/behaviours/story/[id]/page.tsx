@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { InlineAction } from "@/components/cv/CvForms";
+import { Crumbs } from "@/components/profile/Crumbs";
 import { StoryForm } from "@/components/star/StoryForm";
 import { deleteStoryAction } from "@/app/star-actions";
 import { requireUser } from "@/lib/auth";
@@ -21,7 +20,7 @@ export default async function StoryPage({ params, searchParams }: { params: Prom
   const hint = suggested ? BEHAVIOURS.find((x) => x.key === suggested) : undefined;
   return (
     <div className="mx-auto max-w-3xl space-y-4">
-      <Link href="/profile/behaviours" className="btn btn-ghost !py-1 text-sm"><ArrowLeft size={15} aria-hidden />Back to your stories</Link>
+      <Crumbs trail={[{ label: "Profile", href: "/profile" }, { label: "Behaviour stories", href: "/profile/behaviours" }, { label: story ? story.title : "New story" }]} />
       <h1 className="text-2xl font-extrabold">{story ? "Edit story" : "New story"}</h1>
       {hint && <div className="card p-4 text-sm"><p className="font-semibold">Ideas for {hint.title}</p><ul className="ml-5 list-disc text-slate-600">{hint.prompts.map((p) => <li key={p}>{p}</li>)}</ul></div>}
       <div className="card p-5">

@@ -1626,7 +1626,8 @@ export const starApplications = sqliteTable("star_applications", {
   grade: text("grade").notNull().default("other"),
   closesOn: text("closes_on").notNull().default(""), // YYYY-MM-DD or ""
   advertUrl: text("advert_url").notNull().default(""),
-  wordLimit: integer("word_limit").notNull().default(250), // for each behaviour
+  wordLimit: integer("word_limit").notNull().default(250), // the limit for each behaviour, in the unit below (the column keeps its first name)
+  limitUnit: text("limit_unit", { enum: ["words", "characters"] }).notNull().default("words"), // adverts limit by words or by characters; text, not a boolean, so it can be added to a table with rows
   status: text("status", { enum: ["preparing", "submitted", "interview", "closed"] }).notNull().default("preparing"),
   note: text("note").notNull().default(""),
   createdAt: integer("created_at").notNull().default(now),

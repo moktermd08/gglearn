@@ -3,6 +3,7 @@ import path from "node:path";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, PDFFont, PDFPage, rgb } from "pdf-lib";
 import type { Pack } from "@/lib/star/data";
+import { unitName } from "@/lib/star/framework";
 
 /**
  * An application pack as a PDF: A4, one column, real selectable text, an embedded font, like the CV (lib/cv/pdf.ts). Two layouts: the written
@@ -71,7 +72,7 @@ export async function renderPack(pack: Pack, mode: "statements" | "cue", opts: {
     need(60); y -= 14;
     block(e.title, bold, 12.5);
     if (mode === "statements") {
-      block(`${e.words} ${e.words === 1 ? "word" : "words"}${e.over ? `  ·  ${e.over} over the limit of ${pack.wordLimit}` : `  ·  limit ${pack.wordLimit}`}`, regular, 8.5, e.over ? WARN : MUTED);
+      block(`${e.size} ${unitName(pack.limitUnit, e.size)}${e.over ? `  ·  ${e.over} over the limit of ${pack.wordLimit}` : `  ·  limit ${pack.wordLimit}`}`, regular, 8.5, e.over ? WARN : MUTED);
       y -= 3;
       for (const para of e.answer.split("\n").filter(Boolean)) { block(para, regular, 10.2, INK, 0, 1.45); y -= 4; }
     } else {

@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Briefcase, CheckCircle2, Circle, Plus, Target } from "lucide-react";
 import { PageHero } from "@/components/charts";
+import { CareerTabs } from "@/components/profile/CareerTabs";
+import { Crumbs } from "@/components/profile/Crumbs";
 import { requireUser } from "@/lib/auth";
-import { applicationsOf, coverage, storiesOf } from "@/lib/star/data";
+import { applicationsOf, coverage, nextStep, storiesOf } from "@/lib/star/data";
 import { BEHAVIOURS, STATUSES, behaviourTitle } from "@/lib/star/framework";
 
 export const metadata: Metadata = { title: "Behaviour stories — gglearn", robots: { index: false, follow: false } };
@@ -12,13 +14,21 @@ export const dynamic = "force-dynamic";
 export default async function Behaviours() {
   const me = await requireUser();
   const stories = storiesOf(me.id), apps = applicationsOf(me.id), cov = coverage(stories);
-  const covered = cov.filter((c) => c.ready > 0).length;
+  const covered = cov.filter((c) => c.ready > 0).length, next = nextStep(me.id);
   return (
     <div className="mx-auto max-w-4xl space-y-6">
+      <div className="space-y-2"><Crumbs trail={[{ label: "Profile", href: "/profile" }, { label: "Behaviour stories" }]} /><CareerTabs current="behaviours" /></div>
       <PageHero Icon={Target} tone="indigo" title="Behaviour stories" sub="Write your real examples once in the STAR way, see which Civil Service behaviours they cover, and build an application pack from them. Private: only you can see this.">
         <Link href="/profile/behaviours/story/new" className="btn !py-1.5 text-sm"><Plus size={15} aria-hidden />New story</Link>
         <Link href="/profile/behaviours/applications/new" className="btn btn-ghost !py-1.5 text-sm"><Briefcase size={15} aria-hidden />New application</Link>
       </PageHero>
+
+      {next && (
+        <section className="card flex flex-wrap items-center gap-x-4 gap-y-2 border-indigo-200 bg-indigo-50/60 p-4" aria-labelledby="next">
+          <div className="min-w-0 flex-1"><h2 id="next" className="text-xs font-bold uppercase tracking-wide text-indigo-700">Next step</h2><p className="text-sm text-slate-700">{next.text}</p></div>
+          <Link href={next.href} className="btn !py-1.5 text-sm">{next.label}</Link>
+        </section>
+      )}
 
       <section className="card space-y-3 p-5" aria-labelledby="cov">
         <h2 id="cov" className="text-lg font-bold">Your coverage <span className="text-sm font-normal text-slate-500">{covered} of {BEHAVIOURS.length} behaviours have a story that is ready</span></h2>

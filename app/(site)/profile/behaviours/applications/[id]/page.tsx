@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Download, FileText } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import { InlineAction } from "@/components/cv/CvForms";
+import { Crumbs } from "@/components/profile/Crumbs";
 import { KeepForm } from "@/components/star/KeepForm";
+import { LimitField } from "@/components/star/LimitField";
 import { PickEditor } from "@/components/star/PickEditor";
 import { deleteApplicationAction, saveApplicationAction } from "@/app/star-actions";
 import { requireUser } from "@/lib/auth";
 import { applicationOf, buildPack, picksOf, storiesOf } from "@/lib/star/data";
-import { BEHAVIOURS, DEFAULT_WORD_LIMIT, GRADES, STATUSES, isBehaviour } from "@/lib/star/framework";
+import { BEHAVIOURS, GRADES, STATUSES, isBehaviour } from "@/lib/star/framework";
 
 export const metadata: Metadata = { title: "Application pack — gglearn", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -32,11 +34,23 @@ export default async function ApplicationPage({ params, searchParams }: { params
 
   return (
     <div className="mx-auto max-w-4xl space-y-5">
-      <Link href="/profile/behaviours" className="btn btn-ghost !py-1 text-sm"><ArrowLeft size={15} aria-hidden />Back to your stories</Link>
+      <Crumbs trail={[{ label: "Profile", href: "/profile" }, { label: "Behaviour stories", href: "/profile/behaviours" }, { label: app ? app.title : "New application" }]} />
       <h1 className="text-2xl font-extrabold">{app ? app.title : "New application"}</h1>
 
-      <section className="card p-5" aria-labelledby="job">
-        <h2 id="job" className="mb-3 text-lg font-bold">The job</h2>
+      {app && (
+        <nav aria-label="On this page" className="relative -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 text-xs font-semibold">
+          <a href="#job" className="shrink-0 rounded-full border border-black/10 bg-[#fff] px-3 py-1 text-slate-600 hover:bg-slate-50">The job</a>
+          {BEHAVIOURS.filter((b) => asked.has(b.key)).map((b) => {
+            const e = pack?.entries.find((x) => x.behaviour === b.key);
+            const tone = !e ? "border-amber-300 bg-amber-50 text-amber-800" : e.over > 0 ? "border-rose-300 bg-rose-50 text-rose-800" : "border-emerald-300 bg-emerald-50 text-emerald-800";
+            return <a key={b.key} href={`#b-${b.key}`} className={`shrink-0 rounded-full border px-3 py-1 hover:brightness-95 ${tone}`}>{b.title}<span className="sr-only">{!e ? ": needs a story" : e.over > 0 ? `: ${e.over} over the limit` : ": ready"}</span><span aria-hidden>{!e ? " · needs a story" : e.over > 0 ? ` · ${e.over} over` : " · ready"}</span></a>;
+          })}
+          <a href="#out" className="shrink-0 rounded-full border border-black/10 bg-[#fff] px-3 py-1 text-slate-600 hover:bg-slate-50">Download</a>
+        </nav>
+      )}
+
+      <section id="job" className="card scroll-mt-24 p-5" aria-labelledby="job-h">
+        <h2 id="job-h" className="mb-3 text-lg font-bold">The job</h2>
         <KeepForm action={saveApplicationAction} className="space-y-3">
           {app && <input type="hidden" name="id" value={app.id} />}
           <div className="grid gap-3 sm:grid-cols-2">
@@ -44,7 +58,7 @@ export default async function ApplicationPage({ params, searchParams }: { params
             <label className={lab}>Department or organisation<input name="department" maxLength={120} defaultValue={app?.department} className={field} /></label>
             <label className={lab}>Grade<select name="grade" defaultValue={app?.grade ?? "other"} className={field}>{GRADES.map((g) => <option key={g.key} value={g.key}>{g.label}</option>)}</select></label>
             <label className={lab}>Closing date<input name="closesOn" type="date" defaultValue={app?.closesOn} className={field} /></label>
-            <label className={lab}>Words allowed for each behaviour<input name="wordLimit" type="number" min={50} max={1500} defaultValue={app?.wordLimit ?? DEFAULT_WORD_LIMIT} className={field} /></label>
+            <LimitField unit={app?.limitUnit ?? "words"} limit={app?.wordLimit ?? 250} />
             <label className={lab}>Where you are<select name="status" defaultValue={app?.status ?? "preparing"} className={field}>{STATUSES.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}</select></label>
           </div>
           <label className={lab}>Advert address (optional)<input name="advertUrl" maxLength={300} defaultValue={app?.advertUrl} placeholder="https://www.civilservicejobs.service.gov.uk/…" className={field} /></label>
@@ -68,15 +82,15 @@ export default async function ApplicationPage({ params, searchParams }: { params
             {BEHAVIOURS.filter((b) => asked.has(b.key)).map((b) => {
               const p = picks.find((x) => x.behaviour === b.key);
               if (!p) return null;
-              return <PickEditor key={`${b.key}-${p.updatedAt}-${p.storyId}`} applicationId={app.id} behaviour={b.key} title={b.title} gist={b.gist} limit={app.wordLimit} storyId={p.storyId} answer={p.answer}
-                stories={stories.map((s) => ({ id: s.id, title: s.title, ready: s.ready, tagged: s.behaviours.includes(b.key), text: { situation: s.situation, task: s.task, action: s.action, result: s.result } })).sort((x, y) => Number(y.tagged) - Number(x.tagged))} />;
+              return <div key={b.key} id={`b-${b.key}`} className="scroll-mt-24"><PickEditor key={`${b.key}-${p.updatedAt}-${p.storyId}`} applicationId={app.id} behaviour={b.key} title={b.title} gist={b.gist} limit={app.wordLimit} unit={app.limitUnit} storyId={p.storyId} answer={p.answer}
+                stories={stories.map((s) => ({ id: s.id, title: s.title, ready: s.ready, tagged: s.behaviours.includes(b.key), text: { situation: s.situation, task: s.task, action: s.action, result: s.result } })).sort((x, y) => Number(y.tagged) - Number(x.tagged))} /></div>;
             })}
           </section>
 
-          <section className="card space-y-3 p-5" aria-labelledby="out">
-            <h2 id="out" className="flex items-center gap-2 text-lg font-bold"><FileText size={18} aria-hidden />Take it with your application</h2>
+          <section id="out" className="card scroll-mt-24 space-y-3 p-5" aria-labelledby="out-h">
+            <h2 id="out-h" className="flex items-center gap-2 text-lg font-bold"><FileText size={18} aria-hidden />Take it with your application</h2>
             {pack && pack.missing.length > 0 && <p className="text-sm text-amber-700">Still to cover: {pack.missing.join(", ")}.</p>}
-            {pack && pack.entries.some((e) => e.over) && <p className="text-sm text-rose-700">Over the word limit: {pack.entries.filter((e) => e.over).map((e) => `${e.title} (${e.over} over)`).join(", ")}.</p>}
+            {pack && pack.entries.some((e) => e.over) && <p className="text-sm text-rose-700">Over the limit: {pack.entries.filter((e) => e.over).map((e) => `${e.title} (${e.over} over)`).join(", ")}.</p>}
             <div className="space-y-2 text-sm">
               <p className="font-semibold">Written statements</p>
               <div className="flex flex-wrap gap-2">
