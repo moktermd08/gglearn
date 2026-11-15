@@ -1598,3 +1598,47 @@ export const cvComments = sqliteTable("cv_comments", {
   repliedAt: integer("replied_at"),
   deletedAt: integer("deleted_at"),
 }, (t) => [index("cv_comments_owner").on(t.userId, t.status), index("cv_comments_pair").on(t.reviewerId, t.userId)]);
+
+// ---- STAR behaviour stories for Civil Service applications (docs/star/design.md). Private to their owner: no share link, never part of the CV page.
+
+// One real example from someone's work or life, written as Situation, Task, Action, Result, and tagged with the behaviours it can evidence.
+export const starStories = sqliteTable("star_stories", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  title: text("title").notNull(),
+  context: text("context").notNull().default(""), // where it happened: "Contact centre, 2024"
+  situation: text("situation").notNull().default(""),
+  task: text("task").notNull().default(""),
+  action: text("action").notNull().default(""),
+  result: text("result").notNull().default(""),
+  behaviours: text("behaviours").notNull().default("[]"), // JSON: behaviour keys (lib/star/framework.ts)
+  ready: integer("ready", { mode: "boolean" }).notNull().default(false), // the owner calls it ready to use
+  createdAt: integer("created_at").notNull().default(now),
+  updatedAt: integer("updated_at").notNull().default(now),
+}, (t) => [index("star_stories_user").on(t.userId)]);
+
+// A job someone is applying for, with the behaviours it asks for.
+export const starApplications = sqliteTable("star_applications", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  title: text("title").notNull(), // the job
+  department: text("department").notNull().default(""),
+  grade: text("grade").notNull().default("other"),
+  closesOn: text("closes_on").notNull().default(""), // YYYY-MM-DD or ""
+  advertUrl: text("advert_url").notNull().default(""),
+  wordLimit: integer("word_limit").notNull().default(250), // for each behaviour
+  status: text("status", { enum: ["preparing", "submitted", "interview", "closed"] }).notNull().default("preparing"),
+  note: text("note").notNull().default(""),
+  createdAt: integer("created_at").notNull().default(now),
+  updatedAt: integer("updated_at").notNull().default(now),
+}, (t) => [index("star_applications_user").on(t.userId)]);
+
+// For one behaviour in one application: which story answers it, and the wording tailored to that job.
+export const starPicks = sqliteTable("star_picks", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  applicationId: integer("application_id").notNull().references(() => starApplications.id),
+  behaviour: text("behaviour").notNull(),
+  storyId: integer("story_id").references(() => starStories.id),
+  answer: text("answer").notNull().default(""),
+  updatedAt: integer("updated_at").notNull().default(now),
+}, (t) => [uniqueIndex("star_pick_pair").on(t.applicationId, t.behaviour)]);
