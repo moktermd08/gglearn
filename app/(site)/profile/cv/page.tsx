@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { and, desc, eq, isNull } from "drizzle-orm";
-import { Download, Eye, EyeOff, FileText, Globe, KeyRound, Link2, Plus, ShieldCheck } from "lucide-react";
+import { Download, FileDown, FileUp, Eye, EyeOff, FileText, Globe, KeyRound, Link2, Plus, ShieldCheck } from "lucide-react";
 import { answerNotes, cvEntries, cvLinks, cvProfiles, cvQuotes, db, users } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
@@ -99,6 +99,8 @@ export default async function CvPage() {
       <PageHero Icon={FileText} tone="indigo" title="Your CV" sub="Built from what you do here and what you add. Private until you share it, and you choose what each reader sees.">
         <Link href="/profile/cv/preview" className={ghost}><Eye size={15} aria-hidden />Preview</Link>
         <a href="/profile/cv/pdf" className={ghost}><Download size={15} aria-hidden />Download PDF</a>
+        <Link href="/profile/cv/import" className={ghost}><FileUp size={15} aria-hidden />Import</Link>
+        <a href="/profile/cv/export" className={ghost}><FileDown size={15} aria-hidden />Export</a>
       </PageHero>
 
       <section className={sec} aria-labelledby="cv-score">

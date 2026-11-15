@@ -51,4 +51,6 @@ Now: content editor (summary, headline, experience, education, projects, volunte
 
 Also built: references from managers and mentors (written by them, approved by the owner, withdrawable by either), and invited reviewers' comments on the draft (lib/cv/review.ts).
 
-Next (deliberately not rushed): AI-assisted rewriting; import from LinkedIn or JSON Resume; per-link view history; a photo option.
+Also built: import from a JSON Resume file or a LinkedIn data export (a preview with a tick beside everything first, nothing saved until confirmed, nothing duplicated or overwritten unless chosen, everything in the file treated as untrusted and cleaned again on save) and export as JSON Resume (their own data, including verified certificates with their check links; what they hid is left out). Connections and other people's details in a LinkedIn export are never imported.
+
+Next (deliberately not rushed): AI-assisted rewriting; per-link view history; a photo option.
