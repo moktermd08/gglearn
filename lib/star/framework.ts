@@ -49,7 +49,21 @@ export const STATUSES = [
 export type AppStatus = (typeof STATUSES)[number]["key"];
 export const isStatus = (k: unknown): k is AppStatus => STATUSES.some((s) => s.key === k);
 
-export const wordCount = (s: string) => (s.trim() ? s.trim().split(/\s+/).length : 0);
+const segmenter = typeof Intl !== "undefined" && "Segmenter" in Intl ? new Intl.Segmenter(undefined, { granularity: "word" }) : null;
+/** Words in some text. Uses the language's own word rules, so Chinese, Japanese and Thai (written without spaces) are counted too. */
+export const wordCount = (s: string) => {
+  if (!s.trim()) return 0;
+  if (!segmenter) return s.trim().split(/\s+/).length;
+  let n = 0;
+  for (const seg of segmenter.segment(s)) if (seg.isWordLike) n++;
+  return n;
+};
+
+/** The share of letters in some text that are Latin. The English-only advice in the coach is skipped when this is low. */
+export const latinShare = (s: string) => {
+  const letters = s.match(/\p{L}/gu) ?? [];
+  return letters.length ? letters.filter((c) => /\p{Script=Latin}/u.test(c)).length / letters.length : 1;
+};
 
 export type StoryText = { situation: string; task: string; action: string; result: string };
 

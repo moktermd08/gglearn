@@ -8,6 +8,7 @@ import { cleanBlock, cleanLine, safeUrl } from "@/lib/cv/text";
 import { reviewStory } from "@/lib/star/coach";
 import { STORY_LIMITS, composeAnswer, isBehaviour, isGrade, isStatus, isUnit, unitOf, type BehaviourKey } from "@/lib/star/framework";
 import { allowed, hit } from "@/lib/rate-limit";
+import { eraseStories } from "@/lib/star/data";
 
 /**
  * Everything a person does to their own behaviour stories and applications. Each action works as the person (or a super admin viewing as them, logged
@@ -140,4 +141,14 @@ export async function savePickAction(_: Res, fd: FormData): Promise<Res> {
   db.update(starApplications).set({ updatedAt: now() }).where(eq(starApplications.id, aid)).run();
   refresh();
   return { done: "Saved." };
+}
+
+/** Removes every story, application and answer the person has. Asks for the word "erase" so a stray call cannot do it. */
+export async function eraseStoriesAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("eraseStoriesAction");
+  if (!me) return BLOCKED;
+  if (text(fd.get("confirm")) !== "erase") return { error: "Nothing was erased." };
+  eraseStories(me.id);
+  refresh();
+  redirect("/profile/behaviours");
 }

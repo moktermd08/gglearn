@@ -17,7 +17,7 @@ Civil Service applications are scored on *behaviours* (Success Profiles), usuall
 4. **Coverage** shows, per behaviour, ready stories, drafts, and none, with a link to write one using prompts for that behaviour.
 5. **Applications** hold the job, grade, closing date, advert link, a limit per behaviour, counted in words (default 250) or characters with spaces (default 1,250), whichever the advert uses, status, and the behaviours asked for. Changing the ticked behaviours keeps the story and wording of those still ticked and removes the rest.
 6. **Export** (`/profile/behaviours/applications/[id]/export`): written statements or an interview cue sheet (short S, T, A, R lines), as PDF or plain text (to paste into a form). A PDF may have the person's CV (recruiter view) in front, and may leave their name and contact details off for applications marked without names; employers and other details remain, and the page says so. Downloads are private, uncached, not indexed, and rate-limited.
-7. **Nothing leaves the person's control.** No sending to anyone, no review by others in this version.
+7. **Nothing leaves the person's control.** No sending to anyone, no review by others in this version. The person can download all their stories and applications as JSON (`/profile/behaviours/export`) and erase them for good, and can erase their whole CV (`lib/cv/erase.ts`, which also ends every share link). Offboarding by an administrator ends access but keeps records, so a returning employee finds them; erasing is the person's own choice.
 
 ## Not built yet
 

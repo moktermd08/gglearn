@@ -80,3 +80,30 @@ export function nextStep(userId: number): { text: string; href: string; label: s
   if (gap) return { text: `You have no ready story for ${gap.title}.`, href: `/profile/behaviours/story/new?b=${gap.key}`, label: `Write one for ${gap.title}` };
   return null;
 }
+
+const iso = (sec: number | null) => (sec ? new Date(sec * 1000).toISOString() : null);
+
+/** Everything a person has written here, as plain data they can keep: their stories, their applications, and the wording for each behaviour. */
+export function exportStories(userId: number) {
+  const stories = storiesOf(userId);
+  const title = new Map(stories.map((s) => [s.id, s.title]));
+  return {
+    format: "gglearn-behaviour-stories", version: 1, exportedAt: new Date().toISOString(),
+    stories: stories.map((s) => ({ id: s.id, title: s.title, context: s.context, situation: s.situation, task: s.task, action: s.action, result: s.result, behaviours: s.behaviours, ready: s.ready, createdAt: iso(s.createdAt), updatedAt: iso(s.updatedAt) })),
+    applications: applicationsOf(userId).map((a) => ({
+      id: a.id, title: a.title, department: a.department, grade: a.grade, closesOn: a.closesOn, advertUrl: a.advertUrl, wordLimit: a.wordLimit, status: a.status, note: a.note, createdAt: iso(a.createdAt), updatedAt: iso(a.updatedAt),
+      answers: picksOf(a.id).map((p) => ({ behaviour: p.behaviour, storyId: p.storyId, storyTitle: p.storyId ? title.get(p.storyId) ?? null : null, tailoredAnswer: p.answer, updatedAt: iso(p.updatedAt) })),
+    })),
+  };
+}
+
+/** Removes every story, application and answer this person has, and nothing of anyone else's. Returns how many of each. */
+export function eraseStories(userId: number) {
+  return db.transaction((tx) => {
+    const apps = tx.select({ id: starApplications.id }).from(starApplications).where(eq(starApplications.userId, userId)).all().map((a) => a.id);
+    if (apps.length) tx.delete(starPicks).where(inArray(starPicks.applicationId, apps)).run();
+    tx.delete(starApplications).where(eq(starApplications.userId, userId)).run();
+    const stories = tx.delete(starStories).where(eq(starStories.userId, userId)).returning({ id: starStories.id }).all().length;
+    return { stories, applications: apps.length };
+  });
+}

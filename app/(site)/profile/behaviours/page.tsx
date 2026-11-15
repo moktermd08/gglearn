@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Briefcase, CheckCircle2, Circle, Plus, Target } from "lucide-react";
+import { Briefcase, CheckCircle2, Circle, Download, Plus, Target } from "lucide-react";
 import { PageHero } from "@/components/charts";
 import { CareerTabs } from "@/components/profile/CareerTabs";
 import { Crumbs } from "@/components/profile/Crumbs";
+import { InlineAction } from "@/components/cv/CvForms";
+import { eraseStoriesAction } from "@/app/star-actions";
 import { requireUser } from "@/lib/auth";
 import { applicationsOf, coverage, nextStep, storiesOf } from "@/lib/star/data";
 import { BEHAVIOURS, STATUSES, behaviourTitle } from "@/lib/star/framework";
@@ -72,6 +74,15 @@ export default async function Behaviours() {
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="card space-y-2 p-5" aria-labelledby="data">
+        <h2 id="data" className="text-lg font-bold">Your data</h2>
+        <p className="text-sm text-slate-600">Your stories and applications are private to you. Download them to keep, or erase them for good.</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <a href="/profile/behaviours/export" className="btn btn-ghost !py-1.5 text-sm"><Download size={15} aria-hidden />Download everything (JSON)</a>
+          {(stories.length > 0 || apps.length > 0) && <InlineAction action={eraseStoriesAction} fields={{ confirm: "erase" }} label="Erase all stories and applications" tone="danger" confirm={`Erase all ${stories.length} stories and ${apps.length} applications? This cannot be undone. Download first if you want a copy.`} />}
+        </div>
       </section>
     </div>
   );

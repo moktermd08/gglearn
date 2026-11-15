@@ -17,7 +17,7 @@ import { suggestFor } from "@/lib/cv/suggest";
 import { parseJson } from "@/lib/cv/text";
 import { ENTRY_KIND_LIST, ENTRY_LABEL, PRESETS, SECTION_HELP, SECTION_KEYS, SECTION_TITLE, TEMPLATES, type EntryKind } from "@/lib/cv/types";
 import { siteUrl } from "@/lib/share";
-import { cancelRequestAction, createLinkAction, endReviewerAction, inviteReviewerAction, decideEndorsementAction, deleteEntryAction, featureQuoteAction, moveEntryAction, requestEndorsementAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
+import { cancelRequestAction, createLinkAction, endReviewerAction, inviteReviewerAction, decideEndorsementAction, deleteEntryAction, featureQuoteAction, moveEntryAction, requestEndorsementAction, eraseCvAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
 
 export const metadata: Metadata = { title: "Your CV — gglearn", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -311,6 +311,12 @@ export default async function CvPage() {
         )}
         {past.length > 0 && <details className="text-sm"><summary className="cursor-pointer text-xs text-slate-500">{past.length} ended {past.length === 1 ? "link" : "links"}</summary><ul className="mt-1 space-y-0.5 text-xs text-slate-500">{past.map((l) => <li key={l.id}>{l.label || "Untitled link"} · {l.kind} · {l.revokedAt ? "revoked" : "ended"} · {l.views} views</li>)}</ul></details>}
         <p className="flex items-center gap-1.5 text-xs text-slate-400"><EyeOff size={12} aria-hidden />We keep a count of views and the time of the last one. We do not record who looked.</p>
+      </section>
+
+      <section className="card space-y-2 p-5" aria-labelledby="erase-cv">
+        <h2 id="erase-cv" className="text-lg font-bold">Erase your CV</h2>
+        <p className="text-sm text-slate-600">Removes everything you typed here, every share link (they stop working at once), the reviewers you invited with their comments, and the references written for you. Your exam results and certificates on gglearn are not touched. Use Export above first if you want a copy.</p>
+        <InlineAction action={eraseCvAction} fields={{ confirm: "erase" }} label="Erase my CV" tone="danger" confirm="Erase your whole CV, its share links, reviewers and references? This cannot be undone." />
       </section>
     </div>
   );
