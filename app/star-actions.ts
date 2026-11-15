@@ -6,7 +6,7 @@ import { actingUser, logViewAsUse } from "@/lib/auth";
 import { db, starApplications, starPicks, starStories } from "@/lib/db";
 import { cleanBlock, cleanLine, safeUrl } from "@/lib/cv/text";
 import { reviewStory } from "@/lib/star/coach";
-import { DEFAULT_WORD_LIMIT, STORY_LIMITS, composeAnswer, isBehaviour, isGrade, isStatus, type BehaviourKey } from "@/lib/star/framework";
+import { STORY_LIMITS, composeAnswer, isBehaviour, isGrade, isStatus, isUnit, unitOf, type BehaviourKey } from "@/lib/star/framework";
 import { allowed, hit } from "@/lib/rate-limit";
 import { eraseStories } from "@/lib/star/data";
 
@@ -85,12 +85,13 @@ export async function saveApplicationAction(_: Res, fd: FormData): Promise<Res> 
   const advertRaw = cleanLine(fd.get("advertUrl"), STORY_LIMITS.advert);
   const advertUrl = advertRaw ? safeUrl(advertRaw) : "";
   if (advertRaw && !advertUrl) return { error: "That advert address does not look right. Use https://…" };
-  const limit = Math.round(Number(text(fd.get("wordLimit"))) || DEFAULT_WORD_LIMIT);
-  if (limit < 50 || limit > STORY_LIMITS.wordLimit) return { error: `Word limit should be between 50 and ${STORY_LIMITS.wordLimit}.` };
+  const unit = unitOf(isUnit(text(fd.get("limitUnit"))) ? text(fd.get("limitUnit")) : "words");
+  const limit = Math.round(Number(text(fd.get("wordLimit"))) || unit.fallback);
+  if (limit < unit.min || limit > unit.max) return { error: `The limit should be between ${unit.min} and ${unit.max} ${unit.label}.` };
   const asked = [...new Set(fd.getAll("behaviours").map(text).filter(isBehaviour))] as BehaviourKey[];
   const grade = isGrade(text(fd.get("grade"))) ? text(fd.get("grade")) : "other";
   const statusIn = text(fd.get("status"));
-  const row = { title, department: cleanLine(fd.get("department"), STORY_LIMITS.title), grade, closesOn: closes, advertUrl: advertUrl ?? "", wordLimit: limit, status: isStatus(statusIn) ? statusIn : "preparing", note: cleanBlock(fd.get("note"), STORY_LIMITS.note), updatedAt: now() };
+  const row = { title, department: cleanLine(fd.get("department"), STORY_LIMITS.title), grade, closesOn: closes, advertUrl: advertUrl ?? "", wordLimit: limit, limitUnit: unit.key, status: isStatus(statusIn) ? statusIn : "preparing", note: cleanBlock(fd.get("note"), STORY_LIMITS.note), updatedAt: now() };
   let appId = aid;
   if (aid) {
     const r = db.update(starApplications).set(row).where(and(eq(starApplications.id, aid), eq(starApplications.userId, me.id))).run();

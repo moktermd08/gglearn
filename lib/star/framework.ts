@@ -71,3 +71,15 @@ export type StoryText = { situation: string; task: string; action: string; resul
 export function composeAnswer(s: StoryText): string {
   return [s.situation, s.task, s.action, s.result].map((p) => p.trim()).filter(Boolean).join("\n\n");
 }
+
+/** Adverts limit each answer by words (often 250) or by characters with spaces (often 1,250). The person picks which, and the number, for each application. */
+export const LIMIT_UNITS = [
+  { key: "words", label: "words", min: 50, max: 1500, fallback: 250 },
+  { key: "characters", label: "characters (with spaces)", min: 200, max: STORY_LIMITS.answer, fallback: 1250 },
+] as const;
+export type LimitUnit = (typeof LIMIT_UNITS)[number]["key"];
+export const isUnit = (k: unknown): k is LimitUnit => LIMIT_UNITS.some((u) => u.key === k);
+export const unitOf = (k: unknown) => LIMIT_UNITS.find((u) => u.key === k) ?? LIMIT_UNITS[0];
+/** How big some text is in the advert's unit. A character is one letter, digit, space or line break (an emoji counts once). */
+export const sizeOf = (s: string, unit: LimitUnit) => (unit === "characters" ? [...s.replace(/\r\n?/g, "\n")].length : wordCount(s));
+export const unitName = (unit: LimitUnit, n: number) => (unit === "characters" ? (n === 1 ? "character" : "characters") : n === 1 ? "word" : "words");

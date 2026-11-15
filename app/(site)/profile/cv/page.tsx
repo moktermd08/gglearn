@@ -5,6 +5,8 @@ import { Download, FileDown, FileUp, Eye, EyeOff, FileText, Globe, KeyRound, Lin
 import { answerNotes, cvEntries, cvLinks, cvProfiles, cvQuotes, db, users } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
+import { CareerTabs } from "@/components/profile/CareerTabs";
+import { Crumbs } from "@/components/profile/Crumbs";
 import { CopyField, CvForm, InlineAction, UseSuggestion } from "@/components/cv/CvForms";
 import { buildCv, hiddenKeys, platformFacts } from "@/lib/cv/build";
 import { CommentThread } from "@/components/cv/CommentThread";
@@ -96,6 +98,7 @@ export default async function CvPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
+      <div className="space-y-2"><Crumbs trail={[{ label: "Profile", href: "/profile" }, { label: "Your CV" }]} /><CareerTabs current="cv" /></div>
       <PageHero Icon={FileText} tone="indigo" title="Your CV" sub="Built from what you do here and what you add. Private until you share it, and you choose what each reader sees.">
         <Link href="/profile/cv/preview" className={ghost}><Eye size={15} aria-hidden />Preview</Link>
         <a href="/profile/cv/pdf" className={ghost}><Download size={15} aria-hidden />Download PDF</a>

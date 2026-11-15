@@ -2,17 +2,17 @@
 import { useState } from "react";
 import { KeepForm } from "@/components/star/KeepForm";
 import { savePickAction } from "@/app/star-actions";
-import { composeAnswer, wordCount, type StoryText } from "@/lib/star/framework";
+import { composeAnswer, sizeOf, unitName, type LimitUnit, type StoryText } from "@/lib/star/framework";
 
 const field = "w-full rounded-lg border border-black/15 bg-[#fff] px-2.5 py-1.5 text-sm text-slate-800";
 
 type StoryOpt = { id: number; title: string; tagged: boolean; ready: boolean; text: StoryText };
 
 /** For one behaviour of one application: pick the story, then tailor the words to this job with a live word count against the limit. */
-export function PickEditor({ applicationId, behaviour, title, gist, stories, storyId, answer, limit }: { applicationId: number; behaviour: string; title: string; gist: string; stories: StoryOpt[]; storyId: number | null; answer: string; limit: number }) {
+export function PickEditor({ applicationId, behaviour, title, gist, stories, storyId, answer, limit, unit }: { applicationId: number; behaviour: string; title: string; gist: string; stories: StoryOpt[]; storyId: number | null; answer: string; limit: number; unit: LimitUnit }) {
   const [sid, setSid] = useState<number | null>(storyId);
   const [text, setText] = useState(answer || (storyId ? composeAnswer(stories.find((s) => s.id === storyId)?.text ?? { situation: "", task: "", action: "", result: "" }) : ""));
-  const words = wordCount(text), over = words - limit;
+  const used = sizeOf(text, unit), over = used - limit;
   const choose = (v: string) => {
     const n = v ? Number(v) : null;
     setSid(n);
@@ -32,7 +32,7 @@ export function PickEditor({ applicationId, behaviour, title, gist, stories, sto
       <label className="block space-y-1 text-xs font-semibold text-slate-500">Your answer for this job (tailor it: use the words of the advert where they are true)
         <textarea name="answer" rows={9} value={text} onChange={(e) => setText(e.target.value)} className={field} />
       </label>
-      <p className={`text-xs ${over > 0 ? "font-semibold text-rose-700" : "text-slate-500"}`} aria-live="polite">{words} / {limit} words{over > 0 ? `: ${over} over the limit` : ""}</p>
+      <p className={`text-xs ${over > 0 ? "font-semibold text-rose-700" : "text-slate-500"}`} aria-live="polite">{used.toLocaleString("en-GB")} / {limit.toLocaleString("en-GB")} {unitName(unit, limit)}{over > 0 ? `: ${over.toLocaleString("en-GB")} over the limit` : ""}</p>
       <div className="flex flex-wrap items-center gap-2">
         <button className="btn !py-1.5 text-sm">Save</button>
         <button type="button" className="btn btn-ghost !py-1.5 text-sm" onClick={() => void navigator.clipboard?.writeText(text)}>Copy text</button>

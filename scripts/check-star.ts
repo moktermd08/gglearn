@@ -8,8 +8,8 @@ import { eq, inArray } from "drizzle-orm";
 import { PDFDocument } from "pdf-lib";
 import { db, starApplications, starPicks, starStories, users } from "../lib/db";
 import { reviewStory } from "../lib/star/coach";
-import { BEHAVIOURS, composeAnswer, wordCount } from "../lib/star/framework";
-import { applicationOf, buildPack, coverage, packText, storiesOf, storyOf } from "../lib/star/data";
+import { BEHAVIOURS, LIMIT_UNITS, composeAnswer, sizeOf, unitName, wordCount } from "../lib/star/framework";
+import { applicationOf, buildPack, coverage, nextStep, packText, storiesOf, storyOf } from "../lib/star/data";
 import { renderPack } from "../lib/star/pdf";
 
 let fails = 0;
@@ -56,6 +56,19 @@ async function main() {
     const pack = buildPack(a.id, app.id)!;
     check("the pack follows the story, uses tailored wording when there is some, and lists what is missing", pack.entries.length === 2 && pack.entries.find((e) => e.behaviour === "pace")!.answer === composeAnswer(good) && pack.entries.find((e) => e.behaviour === "decisions")!.tailored && pack.missing.join() === "Leadership");
     check("a pack entry over the limit says by how much", pack.entries.find((e) => e.behaviour === "pace")!.over === wordCount(composeAnswer(good)) - 60);
+    // limits by characters as well as words
+    check("size is counted in the unit the advert uses", sizeOf("a b\r\nc", "characters") === 5 && sizeOf("a b c", "words") === 3 && sizeOf("😀😀", "characters") === 2 && unitName("characters", 1) === "character" && unitName("words", 2) === "words");
+    check("each unit has a sensible range and a usual number inside it", LIMIT_UNITS.every((u) => u.min < u.fallback && u.fallback < u.max));
+    const chars = db.insert(starApplications).values({ userId: a.id, title: "check char job", wordLimit: 200, limitUnit: "characters" }).returning().get();
+    apps.push(chars.id);
+    db.insert(starPicks).values({ applicationId: chars.id, behaviour: "pace", storyId: s.id }).run();
+    const cp = buildPack(a.id, chars.id)!, ce = cp.entries[0];
+    check("a pack measured in characters says by how many characters it is over", cp.limitUnit === "characters" && ce.size === sizeOf(composeAnswer(good), "characters") && ce.over === ce.size - 200 && ce.words === wordCount(composeAnswer(good)));
+    check("the text export names the unit", packText(cp, "statements").includes(`${ce.size} characters, ${ce.over} over the 200 limit`));
+    check("the PDF still draws when the limit is in characters", (await PDFDocument.load(await renderPack(cp, "statements", {}))).getPageCount() >= 1);
+    const guide = nextStep(a.id);
+    check("the next step points at an application that is short of answers, soonest first", !!guide && guide.href.startsWith("/profile/behaviours/applications/") && /still to cover|over the limit/.test(guide.text));
+    check("a person with no stories is told to write the first", nextStep(b.id)?.href === "/profile/behaviours/story/new" || storiesOf(b.id).length > 0);
     check("plain text export has the job, the statements and what is missing", packText(pack, "statements").includes("check job") && packText(pack, "statements").includes("Still to cover: Leadership") && packText(pack, "cue").includes("S: In my team"));
 
     const bytes = await renderPack(pack, "statements", { name: "Test Person" });
