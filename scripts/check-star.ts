@@ -25,6 +25,16 @@ async function main() {
   check("saying we more than I is a fix on the action", we.tips.some((t) => t.level === "fix" && t.part === "action"));
   check("a result with no measure gets a suggestion, not a block", reviewStory({ ...good, result: "It went well and everyone was pleased with the way things turned out in the end." }).tips.some((t) => t.part === "result" && t.level === "improve"));
   check("word counting is exact", wordCount("  one two\nthree  ") === 3 && wordCount("") === 0);
+  // edge cases from real people (docs/star/design.md): other scripts, short clear parts, leaders, loose number words
+  check("Chinese text without spaces is counted by word, not as one", wordCount("我在联络中心管理一个六人团队并把等待时间缩短到七分钟") >= 8);
+  const bn = reviewStory({ situation: "আমি একটি ছয় জনের দল পরিচালনা করতাম এবং কলের সংখ্যা দ্বিগুণ হয়েছিল", task: "আমাকে অপেক্ষার সময় দশ মিনিটের নিচে আনতে হবে", action: "আমি প্রশ্নগুলো তালিকা করেছি এবং একটি নির্দেশিকা লিখেছি আর দলকে প্রশিক্ষণ দিয়েছি এবং প্রতিদিন সকালে অপেক্ষার সময় পরীক্ষা করেছি", result: "অপেক্ষার সময় সাত মিনিটে নেমেছে এবং ৩০% কম ফোন এসেছে" });
+  check("a story in Bengali is not blocked by the English first-person rule", bn.ready && !bn.tips.some((t) => t.level === "fix"));
+  check("a short but complete action is advice, not a block", reviewStory({ ...good, action: "I rewrote the call script, trained all six advisers in a twenty minute huddle, and checked the wait times every morning for two weeks, changing the script twice." }).ready);
+  check("a part with only a few words is still a fix", !reviewStory({ ...good, action: "I did it." }).ready);
+  const lead = reviewStory({ ...good, action: "I set our plan and briefed the team every morning. I agreed our targets with the director, I coached two new starters, I removed a blocker with our supplier, and I asked the team to review progress weekly so that our team owned the result." });
+  check("our and the team do not count as we", lead.ready);
+  check("“all” is not a measurable result", reviewStory({ ...good, result: "It was all fine in the end and I learned a lot from it." }).tips.some((t) => t.part === "result" && t.level === "improve"));
+  check("a number written as a word counts as a measure", !reviewStory({ ...good, result: "Waits fell to seven minutes and I now share the guide with other sites." }).tips.some((t) => t.text.startsWith("Add a measurable")));
   check("composeAnswer joins the four parts in order", composeAnswer(good).split("\n\n").length === 4 && composeAnswer(good).startsWith("In my team"));
   check("every behaviour has a title, a gist and prompts", BEHAVIOURS.length === 9 && BEHAVIOURS.every((b) => b.title && b.gist && b.prompts.length >= 3));
 
