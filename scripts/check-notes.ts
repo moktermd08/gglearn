@@ -26,7 +26,7 @@ const src = (f: string) => readFileSync(new URL(`../${f}`, import.meta.url), "ut
 const act = src("app/note-actions.ts");
 check("every note action works as the person, or as a super admin through a view where it is logged under the super admin, and none refuses a view outright", act.includes("actingUser()") && act.includes("logViewAsUse(") && !act.includes("refuseWhileViewingAs") && ["addNoteAction", "deleteNoteAction", "ackNoteAction", "replyNoteAction", "setReviewAnswers"].every((n) => act.includes(`function ${n}(`)));
 check("a parent can never be let review answers", src("lib/questionNotes.ts").includes('eq(mentorships.kind, "mentor")') && act.includes('eq(mentorships.kind, "mentor")'));
-check("the learner page and the feedback page show notes only to the learner themselves", src("app/(site)/feedback/page.tsx").includes("waitingNotes(me.id)") && src("app/(site)/run/[id]/page.tsx").includes("eq(runs.userId, user.id)"));
+check("the learner page and the feedback page show notes only to the learner themselves", src("app/(site)/feedback/page.tsx").includes("feedbackItems(me.id, side)") && src("lib/feedback.ts").includes("eq(answerNotes.learnerId, me)") && src("lib/feedback.ts").includes("eq(answerNotes.authorId, me)") && src("app/(site)/run/[id]/page.tsx").includes("eq(runs.userId, user.id)"));
 check("a mentor's review page shows nothing unless the rule allows it", src("app/(site)/mentoring/[id]/page.tsx").includes("whyNotReview(me, id) !== null"));
 
 // ---- database
