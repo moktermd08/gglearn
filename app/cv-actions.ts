@@ -5,6 +5,7 @@ import { answerNotes, cvEntries, cvProfiles, cvQuotes, db } from "@/lib/db";
 import { actingUser, logViewAsUse } from "@/lib/auth";
 import { createLink, revokeLink, updateLink } from "@/lib/cv/links";
 import { eraseCv } from "@/lib/cv/erase";
+import { DATED_KINDS, arrange, arrangeAfterSave } from "@/lib/cv/order";
 import { addComment, deleteComment, endReviewer, inviteReviewer, replyToComment, resolveComment } from "@/lib/cv/review";
 import { cancelRequest, decideEndorsement, requestEndorsement, withdrawEndorsement, writeEndorsement } from "@/lib/cv/endorse";
 import { cleanBlock, cleanLine, isEmail, isHexColour, parseJson, safeUrl } from "@/lib/cv/text";
@@ -80,6 +81,7 @@ export async function saveEntryAction(_: Res, fd: FormData): Promise<Res> {
     if (full) return { error: full };
     db.insert(cvEntries).values({ userId: me.id, ...row, sort: (have?.lo ?? 1) - 1 }).run(); // newest on top
   }
+  arrangeAfterSave(me.id, kind, Number.isInteger(id) && id > 0 ? id : undefined); // where its dates belong, when the list was in date order
   refresh();
   return { done: "Saved." };
 }
@@ -292,4 +294,15 @@ export async function eraseCvAction(_: Res, fd: FormData): Promise<Res> {
   eraseCv(me.id);
   refresh();
   return { done: "Your CV has been erased." };
+}
+
+/** Puts one kind of entry (jobs, study, projects...) in date order, most recent first. */
+export async function sortEntriesAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("sortEntriesAction");
+  if (!me) return BLOCKED;
+  const kind = DATED_KINDS.find((k) => k === fd.get("kind"));
+  if (!kind) return { error: "That cannot be sorted by date." };
+  const moved = arrange(me.id, kind, { force: true });
+  refresh();
+  return { done: moved ? "Newest first." : "Already in date order." };
 }

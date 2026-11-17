@@ -16,10 +16,11 @@ import { commentsForOwner, openCommentCount, reviewersOf } from "@/lib/cv/review
 import { DAYS, historyOf, pathOf, stateOf, viewOf, type Link as CvLink } from "@/lib/cv/links";
 import { askable, endorsementsOf } from "@/lib/cv/endorse";
 import { suggestFor } from "@/lib/cv/suggest";
+import { DATED_KINDS, inDateOrder } from "@/lib/cv/order";
 import { parseJson } from "@/lib/cv/text";
 import { ENTRY_KIND_LIST, ENTRY_LABEL, PRESETS, SECTION_HELP, SECTION_KEYS, SECTION_TITLE, TEMPLATES, type EntryKind } from "@/lib/cv/types";
 import { siteUrl } from "@/lib/share";
-import { cancelRequestAction, createLinkAction, endReviewerAction, inviteReviewerAction, decideEndorsementAction, deleteEntryAction, featureQuoteAction, moveEntryAction, requestEndorsementAction, eraseCvAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
+import { cancelRequestAction, createLinkAction, endReviewerAction, inviteReviewerAction, decideEndorsementAction, deleteEntryAction, featureQuoteAction, moveEntryAction, sortEntriesAction, requestEndorsementAction, eraseCvAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
 
 export const metadata: Metadata = { title: "Your CV — gglearn", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -187,6 +188,9 @@ export default async function CvPage() {
                 <span className="min-w-0 flex-1">You belong to <b>{s.org}</b> here. Add it as experience (<i>{s.title}</i>, from {s.startsOn})?</span><button className={ghost}><Plus size={14} aria-hidden />Add</button>
               </CvForm>
             ))}
+            {mine.length > 1 && DATED_KINDS.includes(kind) && !inDateOrder(mine) && (
+              <p className="flex flex-wrap items-center gap-2 text-xs text-slate-500">Not in date order.<InlineAction action={sortEntriesAction} fields={{ kind }} label="Put newest first" /></p>
+            )}
             {mine.length > 0 && (
               <ul className="space-y-2">
                 {mine.map((e, i) => (
