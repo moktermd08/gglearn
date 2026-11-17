@@ -8,7 +8,7 @@ import { Competitor } from "@/components/Competitor";
 import { AvatarPicker } from "@/components/AvatarPicker";
 import { RankEmblem } from "@/components/RankEmblem";
 import { SubjectArt } from "@/components/SubjectArt";
-import { ArrowRight, Calendar, FileText, Flame, GraduationCap, Mail, Medal, Mountain, Shield, ShieldCheck, Sparkles, Swords, Trash2, TrendingUp, UserRound, Activity, Briefcase } from "lucide-react";
+import { ArrowRight, Calendar, FileText, Flame, GraduationCap, Mail, Medal, Mountain, Shield, ShieldCheck, Sparkles, Swords, Trash2, TrendingUp, UserRound, Activity, Briefcase, Target } from "lucide-react";
 import { certState } from "@/lib/certs";
 import { LEVELS, MAX_LEVEL, TIERS, certTitle, tierOf } from "@/lib/levels";
 import { activityFor, trackStats } from "@/lib/stats";
@@ -89,6 +89,12 @@ export default async function Profile({ searchParams }: { searchParams: Promise<
       <Link href="/profile/cv" className="card card-hover flex items-center gap-4 p-4" aria-label="Your CV">
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-indigo-500/10 text-indigo-600"><FileText size={22} /></span>
         <span className="min-w-0 flex-1"><span className="block font-bold">Turn this into a CV</span><span className="block text-sm text-slate-500">Your certificates and results, plus what you add, as an online CV and a PDF you can share with an employer. Private until you say so.</span></span>
+        <ArrowRight size={18} className="shrink-0 text-slate-400" aria-hidden />
+      </Link>
+
+      <Link href="/profile/behaviours" className="card card-hover flex items-center gap-4 p-4" aria-label="Behaviour stories">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-emerald-500/10 text-emerald-600"><Target size={22} /></span>
+        <span className="min-w-0 flex-1"><span className="block font-bold">Prepare behaviour examples for a job application</span><span className="block text-sm text-slate-500">Write your STAR stories once, see which Civil Service behaviours they cover, and download a pack to go with your CV. Private to you.</span></span>
         <ArrowRight size={18} className="shrink-0 text-slate-400" aria-hidden />
       </Link>
 
