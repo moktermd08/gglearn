@@ -4,6 +4,7 @@ import { currentUser } from "@/lib/auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { unreadCount } from "@/lib/notifications";
+import { feedbackWaiting } from "@/lib/feedback";
 import { noteExpiringCertificates } from "@/lib/certs";
 import { keepCampaignsFresh } from "@/lib/campaigns";
 import { lookFor, themeStyle } from "@/lib/brand";
@@ -36,7 +37,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="flex min-h-screen flex-col antialiased">
         <ViewAsBanner />
         <AccountMessage />
-        <SiteHeader user={user} unread={user ? unreadCount(user.id) : 0} look={look} />
+        <SiteHeader user={user} unread={user ? unreadCount(user.id) : 0} feedback={user ? feedbackWaiting(user.id) : 0} look={look} />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
         <SiteFooter user={user} look={look} />
         {celebration && <CelebrationToast key={celebration.id} c={celebration} />}
