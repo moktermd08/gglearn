@@ -71,3 +71,13 @@ export const RELATIONSHIP_LABEL = { manager: "Manager", mentor: "Mentor" } as co
 /** What a reviewer's comment on a CV may say, and how many they may leave. */
 export const CV_COMMENT = { min: 3, max: 600, reply: 300, perItem: 5, perDay: 40 } as const;
 export const CV_REVIEW_VIEW: View = { sections: Object.fromEntries(SECTION_KEYS.map((k) => [k, true])) as View["sections"], contact: { email: false, phone: false, location: false, links: false } };
+
+/**
+ * A career break is a line in Experience with dates and, if the person wants, a plain reason: so a gap is shown as a gap, not left for a reader to
+ * wonder about and not dressed up as a job. The first has no reason at all; saying why is always the person's choice.
+ */
+export const BREAK_REASONS = [
+  "Career break", "Career break: caring responsibilities", "Career break: family", "Career break: health and recovery",
+  "Career break: study or training", "Career break: travel", "Career break: relocation", "Career break: redundancy and looking for work",
+] as const;
+export const isCareerBreak = (title: string) => title === "Career break" || title.startsWith("Career break: ");

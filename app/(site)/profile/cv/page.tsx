@@ -18,7 +18,7 @@ import { askable, endorsementsOf } from "@/lib/cv/endorse";
 import { suggestFor } from "@/lib/cv/suggest";
 import { DATED_KINDS, inDateOrder } from "@/lib/cv/order";
 import { parseJson } from "@/lib/cv/text";
-import { ENTRY_KIND_LIST, ENTRY_LABEL, PRESETS, SECTION_HELP, SECTION_KEYS, SECTION_TITLE, TEMPLATES, type EntryKind } from "@/lib/cv/types";
+import { BREAK_REASONS, ENTRY_KIND_LIST, ENTRY_LABEL, PRESETS, SECTION_HELP, SECTION_KEYS, SECTION_TITLE, TEMPLATES, type EntryKind } from "@/lib/cv/types";
 import { siteUrl } from "@/lib/share";
 import { cancelRequestAction, createLinkAction, endReviewerAction, inviteReviewerAction, decideEndorsementAction, deleteEntryAction, featureQuoteAction, moveEntryAction, sortEntriesAction, requestEndorsementAction, eraseCvAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
 
@@ -59,6 +59,25 @@ function EntryForm({ kind, e }: { kind: EntryKind; e?: typeof cvEntries.$inferSe
       {w.dates && !w.yearOnly && <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="current" defaultChecked={e?.current} />I am still doing this</label>}
       {w.body && <label className={lab}>What you did and achieved (one point per line)<textarea name="body" rows={4} maxLength={1500} defaultValue={e?.body} placeholder={"Handled 60+ customer contacts a day\nCut average handling time by 12%"} className={field} /></label>}
       <button className={btn}>{e ? "Save changes" : `Add ${ENTRY_LABEL[kind].one}`}</button>
+    </CvForm>
+  );
+}
+
+/** A gap in work, shown plainly as a line in Experience. The reason is optional and entirely the person's choice. */
+function BreakForm() {
+  return (
+    <CvForm action={saveEntryAction} resetOnDone className="space-y-2">
+      <input type="hidden" name="kind" value="experience" />
+      <div className="grid gap-2 sm:grid-cols-2">
+        <label className={`${lab} sm:col-span-2`}>What to show (you do not have to give a reason)
+          <select name="title" className={field}>{BREAK_REASONS.map((r) => <option key={r} value={r}>{r === "Career break" ? "Career break (no reason given)" : r}</option>)}</select>
+        </label>
+        <label className={lab}>From (2024 or 2024-05)<input name="startsOn" required maxLength={7} placeholder="2024-05" className={field} /></label>
+        <label className={lab}>To<input name="endsOn" maxLength={7} placeholder="leave empty if still on a break" className={field} /></label>
+      </div>
+      <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="current" />I am still on a break</label>
+      <label className={lab}>Anything you want to say, such as skills kept up (one point per line, optional)<textarea name="body" rows={3} maxLength={1500} placeholder={"Volunteered at a food bank\nCompleted a short project management course"} className={field} /></label>
+      <button className={btn}>Add career break</button>
     </CvForm>
   );
 }
@@ -208,6 +227,9 @@ export default async function CvPage() {
               </ul>
             )}
             <details open={mine.length === 0}><summary className="cursor-pointer text-sm font-semibold text-sky-700 underline"><Plus size={13} className="mr-1 inline" aria-hidden />Add {L.one}</summary><div className="mt-2"><EntryForm kind={kind} /></div></details>
+            {kind === "experience" && (
+              <details><summary className="cursor-pointer text-sm font-semibold text-sky-700 underline"><Plus size={13} className="mr-1 inline" aria-hidden />Add a career break</summary><div className="mt-2"><BreakForm /></div></details>
+            )}
           </section>
         );
       })}
