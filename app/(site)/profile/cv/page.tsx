@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { and, desc, eq, isNull } from "drizzle-orm";
-import { Download, FileDown, FileUp, Eye, EyeOff, FileText, Globe, KeyRound, Link2, Plus, ShieldCheck } from "lucide-react";
+import { Download, FileDown, FileUp, Eye, EyeOff, FileText, Globe, Link2, Plus, ShieldCheck } from "lucide-react";
 import { answerNotes, cvEntries, cvLinks, cvProfiles, cvQuotes, db, users } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
@@ -9,9 +9,11 @@ import { CareerTabs } from "@/components/profile/CareerTabs";
 import { Crumbs } from "@/components/profile/Crumbs";
 import { CopyField, CvForm, InlineAction, UseSuggestion } from "@/components/cv/CvForms";
 import { buildCv, hiddenKeys, platformFacts } from "@/lib/cv/build";
+import { Exposure, LinkActivity, LinkHead, LinksOverview, Lifespan, KIND } from "@/components/cv/LinkViz";
+import { Ring } from "@/components/Ring";
 import { CommentThread } from "@/components/cv/CommentThread";
 import { commentsForOwner, openCommentCount, reviewersOf } from "@/lib/cv/review";
-import { DAYS, pathOf, stateOf, viewOf, type Link as CvLink } from "@/lib/cv/links";
+import { DAYS, historyOf, pathOf, stateOf, viewOf, type Link as CvLink } from "@/lib/cv/links";
 import { askable, endorsementsOf } from "@/lib/cv/endorse";
 import { suggestFor } from "@/lib/cv/suggest";
 import { parseJson } from "@/lib/cv/text";
@@ -83,6 +85,8 @@ export default async function CvPage() {
   const facts = platformFacts(me.id, base), hidden = hiddenKeys(me.id), sug = suggestFor(me.id, base)!;
   const links = db.select().from(cvLinks).where(eq(cvLinks.userId, me.id)).orderBy(desc(cvLinks.id)).all();
   const live = links.filter((l) => stateOf(l) === "open"), past = links.filter((l) => stateOf(l) !== "open");
+  const nowS = Math.floor(new Date().getTime() / 1000);
+  const hist = new Map(live.map((l) => [l.id, historyOf(me.id, l.id) ?? []] as const));
   const praise = db.select({ n: answerNotes, who: users.name }).from(answerNotes).innerJoin(users, eq(users.id, answerNotes.authorId))
     .where(and(eq(answerNotes.learnerId, me.id), eq(answerNotes.quotable, true), eq(answerNotes.kind, "praise"), isNull(answerNotes.deletedAt))).orderBy(desc(answerNotes.id)).all();
   const featured = new Set(db.select({ n: cvQuotes.noteId }).from(cvQuotes).where(eq(cvQuotes.userId, me.id)).all().map((r) => r.n));
@@ -106,12 +110,23 @@ export default async function CvPage() {
         <a href="/profile/cv/export" className={ghost}><FileDown size={15} aria-hidden />Export</a>
       </PageHero>
 
-      <section className={sec} aria-labelledby="cv-score">
-        <h2 id="cv-score" className={h2}><ShieldCheck size={18} aria-hidden />How complete it is: {sug.percent}%</h2>
-        <div className="h-2 overflow-hidden rounded-full bg-black/10" role="img" aria-label={`${sug.percent} percent complete`}><div className="h-full rounded-full bg-emerald-500" style={{ width: `${sug.percent}%` }} /></div>
-        {sug.tips.length > 0 ? <ul className="space-y-1 text-sm">{sug.tips.map((t) => <li key={t.id}><a href={`#${t.section}`} className="text-sky-700 underline">{t.text}</a></li>)}</ul> : <p className="text-sm text-emerald-700">Nothing missing. Keep it up to date as you learn.</p>}
-        <p className="text-xs text-slate-400">From the platform: {facts.certs.length} verified {facts.certs.length === 1 ? "certificate" : "certificates"}, {facts.topics} assessed {facts.topics === 1 ? "topic" : "topics"}, {facts.levels} levels passed. These appear automatically; you can hide any of them below.</p>
+      <section className={`${sec} !p-0 overflow-hidden`} aria-labelledby="cv-score">
+        <div className="flex flex-wrap items-center gap-5 bg-gradient-to-br from-emerald-500/[0.07] via-white to-sky-500/[0.07] p-5">
+          <Ring pct={sug.percent / 100} size={104} label={`${sug.percent}%`} sub="complete" color="#10b981" />
+          <div className="min-w-0 flex-1 space-y-2">
+            <h2 id="cv-score" className={h2}><ShieldCheck size={18} aria-hidden />{sug.percent >= 100 ? "Your CV is complete" : "Next steps to finish it"}</h2>
+            {sug.tips.length > 0 ? <ol className="space-y-1.5 text-sm">{sug.tips.map((t, i) => <li key={t.id}><a href={`#${t.section}`} className="group flex items-center gap-2"><span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/15 text-[11px] font-bold text-emerald-800">{i + 1}</span><span className="text-sky-800 group-hover:underline">{t.text}</span></a></li>)}</ol> : <p className="text-sm text-emerald-700">Nothing missing. Keep it up to date as you learn.</p>}
+          </div>
+          <dl className="grid grid-cols-3 gap-2 text-center">
+            {[[facts.certs.length, facts.certs.length === 1 ? "certificate" : "certificates"], [facts.topics, facts.topics === 1 ? "topic" : "topics"], [facts.levels, "levels passed"]].map(([n, w]) => <div key={w as string} className="rounded-xl bg-white/80 px-3 py-2 ring-1 ring-black/5"><dt className="text-xl font-extrabold leading-none">{n}</dt><dd className="mt-1 text-[11px] text-slate-500">{w}</dd></div>)}
+          </dl>
+        </div>
+        <p className="border-t border-black/5 px-5 py-2 text-xs text-slate-400">Verified results appear on your CV automatically; you can hide any of them below.</p>
       </section>
+
+      <nav aria-label="CV sections" className="sticky top-14 z-10 -mx-1 flex gap-1.5 overflow-x-auto rounded-xl bg-white/90 p-1.5 text-xs font-semibold shadow-sm ring-1 ring-black/5 backdrop-blur">
+        {[["profile", "Headline"], ["experience", "Experience"], ["education", "Education"], ["certificates", "Certificates"], ["endorsements", "References"], ["feedback", "Feedback"], ["share", "Share links"]].map(([id, n]) => <a key={id} href={`#${id}`} className="shrink-0 rounded-lg px-3 py-1.5 text-slate-600 hover:bg-sky-500/10 hover:text-sky-800">{n}{id === "feedback" && openComments > 0 ? <span className="ml-1 rounded-full bg-amber-500 px-1.5 text-[10px] text-white">{openComments}</span> : null}{id === "share" && live.length > 0 ? <span className="ml-1 rounded-full bg-sky-600 px-1.5 text-[10px] text-white">{live.length}</span> : null}</a>)}
+      </nav>
 
       <section id="feedback" className={sec} aria-labelledby="cv-feedback">
         <h2 id="cv-feedback" className={h2}>Feedback on your CV{openComments > 0 && <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-800">{openComments} open</span>}</h2>
@@ -278,20 +293,23 @@ export default async function CvPage() {
           <button className={btn}><Link2 size={14} aria-hidden />Create link</button>
         </CvForm>
 
-        {live.length === 0 ? <p className="text-sm text-slate-400">No live links yet.</p> : (
-          <ul className="space-y-3">
+        <LinksOverview links={live.map((l) => ({ id: l.id, label: l.label, kind: l.kind, days: hist.get(l.id)! }))} />
+        {live.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-black/15 p-6 text-center"><Link2 size={22} className="mx-auto text-slate-300" aria-hidden /><p className="mt-2 text-sm font-semibold text-slate-600">No live links yet</p><p className="text-xs text-slate-400">Make one above. You will see here how often it is read, day by day.</p></div>
+        ) : (
+          <ul className="space-y-4">
             {live.map((l: CvLink) => (
-              <li key={l.id} className="space-y-2 rounded-lg border border-black/10 p-3 text-sm">
-                <div className="flex flex-wrap items-center gap-2">
-                  <b className="min-w-0 flex-1">{l.label || "Untitled link"}</b>
-                  <span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-bold uppercase text-slate-600">{l.kind === "passcode" ? <><KeyRound size={10} className="mr-1 inline" aria-hidden />passcode</> : l.kind}</span>
-                  <span className="text-xs text-slate-500">{l.views} {l.views === 1 ? "view" : "views"}{l.lastViewedAt ? ` · last ${day(l.lastViewedAt)}` : ""}{l.expiresAt ? ` · ends ${day(l.expiresAt)}` : " · no end"}{l.allowPdf ? " · PDF allowed" : " · no PDF"}</span>
-                </div>
+              <li key={l.id} className={`space-y-3 rounded-2xl border border-l-4 border-black/10 bg-white p-4 text-sm shadow-sm ${KIND[l.kind].edge}`}>
+                <LinkHead label={l.label} kind={l.kind} views={l.views} last={l.lastViewedAt ? day(l.lastViewedAt) : null} />
                 <CopyField value={`${base}${pathOf(l)}`} label={`Link for ${l.label || "this link"}`} />
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div className="space-y-3"><LinkActivity days={hist.get(l.id)!} /><Lifespan createdAt={l.createdAt} expiresAt={l.expiresAt} now={nowS} /></div>
+                  <Exposure view={viewOf(l)} allowPdf={l.allowPdf} indexable={l.indexable} kind={l.kind} />
+                </div>
                 {l.kind === "passcode" && <p className="text-xs text-slate-500">Give them the passcode you chose when you made it. It is not stored in a form that can be shown again.</p>}
                 <div className="flex flex-wrap items-center gap-2">
-                  <Link href={`/profile/cv/preview?as=${l.id}`} className="text-xs font-semibold text-sky-700 underline">Preview as this reader</Link>
-                  <a href={`/profile/cv/pdf?as=${l.id}`} className="text-xs font-semibold text-sky-700 underline">Download PDF as this reader</a>
+                  <Link href={`/profile/cv/preview?as=${l.id}`} className="inline-flex items-center gap-1 rounded-lg bg-sky-500/10 px-2.5 py-1 text-xs font-semibold text-sky-800 hover:bg-sky-500/20"><Eye size={12} aria-hidden />Preview as this reader</Link>
+                  <a href={`/profile/cv/pdf?as=${l.id}`} className="inline-flex items-center gap-1 rounded-lg bg-black/5 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-black/10"><Download size={12} aria-hidden />PDF as this reader</a>
                   <span className="flex-1" /><InlineAction action={revokeLinkAction} fields={{ id: l.id }} label="Revoke" tone="danger" confirm="Revoke this link? Anyone using it will no longer be able to open your CV." />
                 </div>
                 <details><summary className="cursor-pointer text-xs font-semibold text-sky-700 underline">Change what it shows</summary>

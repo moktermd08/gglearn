@@ -1599,6 +1599,16 @@ export const cvComments = sqliteTable("cv_comments", {
   deletedAt: integer("deleted_at"),
 }, (t) => [index("cv_comments_owner").on(t.userId, t.status), index("cv_comments_pair").on(t.reviewerId, t.userId)]);
 
+// How often a share link was read, per day (lib/cv/links.ts): a count of page views and of PDF downloads for each link and day, and nothing about the
+// reader (no address, no browser, no account). Days are UTC day numbers. Old days are pruned. A new table only: nothing here alters one that has rows.
+export const cvLinkDays = sqliteTable("cv_link_days", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  linkId: integer("link_id").notNull().references(() => cvLinks.id),
+  day: integer("day").notNull(), // days since 1970-01-01, UTC
+  views: integer("views").notNull().default(0),
+  pdfs: integer("pdfs").notNull().default(0),
+}, (t) => [uniqueIndex("cv_link_day").on(t.linkId, t.day)]);
+
 // ---- STAR behaviour stories for Civil Service applications (docs/star/design.md). Private to their owner: no share link, never part of the CV page.
 
 // One real example from someone's work or life, written as Situation, Task, Action, Result, and tagged with the behaviours it can evidence.
