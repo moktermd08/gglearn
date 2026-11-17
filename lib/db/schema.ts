@@ -1598,3 +1598,13 @@ export const cvComments = sqliteTable("cv_comments", {
   repliedAt: integer("replied_at"),
   deletedAt: integer("deleted_at"),
 }, (t) => [index("cv_comments_owner").on(t.userId, t.status), index("cv_comments_pair").on(t.reviewerId, t.userId)]);
+
+// How often a share link was read, per day (lib/cv/links.ts): a count of page views and of PDF downloads for each link and day, and nothing about the
+// reader (no address, no browser, no account). Days are UTC day numbers. Old days are pruned. A new table only: nothing here alters one that has rows.
+export const cvLinkDays = sqliteTable("cv_link_days", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  linkId: integer("link_id").notNull().references(() => cvLinks.id),
+  day: integer("day").notNull(), // days since 1970-01-01, UTC
+  views: integer("views").notNull().default(0),
+  pdfs: integer("pdfs").notNull().default(0),
+}, (t) => [uniqueIndex("cv_link_day").on(t.linkId, t.day)]);

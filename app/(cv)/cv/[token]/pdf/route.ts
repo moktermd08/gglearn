@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { buildCv } from "@/lib/cv/build";
-import { gateName, gateOpen, openLink, viewOf } from "@/lib/cv/links";
+import { gateName, gateOpen, looksAutomated, openLink, recordView, viewOf } from "@/lib/cv/links";
 import { renderPdf } from "@/lib/cv/pdf";
 import { allowed, hit, MINUTE, pickClientIp } from "@/lib/rate-limit";
 import { siteUrl } from "@/lib/share";
@@ -22,6 +22,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ toke
   const doc = buildCv(link.userId, viewOf(link), await siteUrl());
   if (!doc) return NO();
   const bytes = await renderPdf(doc);
+  if (!looksAutomated(req.headers.get("user-agent"))) recordView(link.id, "pdf");
   const file = `${doc.name.normalize("NFD").replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-") || "CV"}-CV.pdf`;
   return new NextResponse(Buffer.from(bytes), { headers: { "Content-Type": "application/pdf", "Content-Disposition": `attachment; filename="${file}"`, "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow", "Referrer-Policy": "no-referrer" } });
 }

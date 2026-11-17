@@ -7,9 +7,9 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { and, eq, inArray } from "drizzle-orm";
 import { PDFDocument } from "pdf-lib";
-import { answerNotes, answers, certificates, cvEntries, cvLinks, cvProfiles, cvQuotes, db, questions, runs, tracks, users } from "../lib/db";
+import { answerNotes, answers, certificates, cvEntries, cvLinks, cvProfiles, cvQuotes, db, questions, runs, tracks, users, cvLinkDays } from "../lib/db";
 import { buildCv } from "../lib/cv/build";
-import { createLink, gateOpen, gateValue, linkByToken, openLink, recordView, revokeLink, tokenOf, updateLink, viewOf, viewForOwner } from "../lib/cv/links";
+import { createLink, gateOpen, gateValue, linkByToken, openLink, historyOf, looksAutomated, recordView, revokeLink, tokenOf, updateLink, viewOf, viewForOwner } from "../lib/cv/links";
 import { renderPdf } from "../lib/cv/pdf";
 import { cleanBlock, cleanLine, dateRange, isEmail, monthYear, safeUrl } from "../lib/cv/text";
 import { LIMITS, PRESETS, SECTION_KEYS } from "../lib/cv/types";
@@ -102,6 +102,16 @@ try {
   check("the owner changes what it shows, and a change only changes that link", (() => { const r = updateLink(owner.id, L.id, { sections: { goal: true }, contact: { phone: false } }); return "link" in r && viewOf(r.link).sections.goal === true && viewOf(r.link).contact.phone === false && viewOf(r.link).contact.email === true; })());
   recordView(L.id); recordView(L.id);
   check("a view is counted, with a time and nothing about the reader", (() => { const r = db.select().from(cvLinks).where(eq(cvLinks.id, L.id)).get()!; return r.views === 2 && r.lastViewedAt != null; })());
+  recordView(L.id, "pdf");
+  const now = Math.floor(Date.now() / 1000), old = now - 5 * 86400;
+  recordView(L.id, "view", old);
+  const h = historyOf(owner.id, L.id, 30)!;
+  check("history is one entry per day for 30 days, oldest first, empty days filled", h.length === 30 && h.every((d, i) => i === 0 || d.day - h[i - 1].day === 86400));
+  check("today has two views and one PDF; a view five days ago is on its own day", h[29].views === 2 && h[29].pdfs === 1 && h[24].views === 1 && h.reduce((a, d) => a + d.views, 0) === 3);
+  check("a PDF download is not counted as a page view", db.select().from(cvLinks).where(eq(cvLinks.id, L.id)).get()!.views === 3);
+  check("only the owner can read a link's history", historyOf(other.id, L.id) === null);
+  check("the history holds counts only: no reader details in the table", Object.keys(cvLinkDays).filter((k) => !k.startsWith("_") && k !== "getSQL").sort().join() === ["day", "id", "linkId", "pdfs", "views"].sort().join());
+  check("link previews and crawlers are not counted, people are", ["Slackbot-LinkExpanding 1.0", "WhatsApp/2.23", "Googlebot/2.1", "curl/8.1", ""].every((u) => looksAutomated(u)) && !looksAutomated("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1") && looksAutomated(null));
   check("the owner can only preview their own links", viewForOwner(other.id, String(L.id)).link === null && viewForOwner(owner.id, String(L.id)).link?.id === L.id);
 
   // the builder: what a reader gets
@@ -158,6 +168,7 @@ try {
     if (runIds.length) db.delete(runs).where(inArray(runs.id, runIds)).run();
     if (certIds.length) db.delete(certificates).where(inArray(certificates.id, certIds)).run();
     db.delete(cvQuotes).where(inArray(cvQuotes.userId, made)).run();
+    { const ids = db.select({ id: cvLinks.id }).from(cvLinks).where(inArray(cvLinks.userId, made)).all().map((r) => r.id); if (ids.length) db.delete(cvLinkDays).where(inArray(cvLinkDays.linkId, ids)).run(); }
     db.delete(cvLinks).where(inArray(cvLinks.userId, made)).run();
     db.delete(cvEntries).where(inArray(cvEntries.userId, made)).run();
     db.delete(cvProfiles).where(inArray(cvProfiles.userId, made)).run();
