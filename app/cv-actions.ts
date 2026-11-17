@@ -8,7 +8,7 @@ import { eraseCv } from "@/lib/cv/erase";
 import { addComment, deleteComment, endReviewer, inviteReviewer, replyToComment, resolveComment } from "@/lib/cv/review";
 import { cancelRequest, decideEndorsement, requestEndorsement, withdrawEndorsement, writeEndorsement } from "@/lib/cv/endorse";
 import { cleanBlock, cleanLine, isEmail, isHexColour, parseJson, safeUrl } from "@/lib/cv/text";
-import { ENTRY_KIND_LIST, LIMITS, SECTION_KEYS, TEMPLATES, type EntryKind } from "@/lib/cv/types";
+import { ENTRY_KIND_LIST, LIMITS, SECTION_KEYS, TEMPLATES, whyNoRoom, type EntryKind } from "@/lib/cv/types";
 import { allowed, hit } from "@/lib/rate-limit";
 
 /**
@@ -74,8 +74,10 @@ export async function saveEntryAction(_: Res, fd: FormData): Promise<Res> {
     const r = db.update(cvEntries).set(row).where(and(eq(cvEntries.id, id), eq(cvEntries.userId, me.id))).returning().get();
     if (!r) return { error: "That entry is not yours." };
   } else {
-    const have = db.select({ n: sql<number>`count(*)`, lo: sql<number | null>`min(${cvEntries.sort})` }).from(cvEntries).where(eq(cvEntries.userId, me.id)).get();
-    if ((have?.n ?? 0) >= LIMITS.entries) return { error: `That is plenty: ${LIMITS.entries} entries. Remove one first.` };
+    const have = db.select({ lo: sql<number | null>`min(${cvEntries.sort})` }).from(cvEntries).where(eq(cvEntries.userId, me.id)).get();
+    const byKind = Object.fromEntries(db.select({ k: cvEntries.kind, n: sql<number>`count(*)` }).from(cvEntries).where(eq(cvEntries.userId, me.id)).groupBy(cvEntries.kind).all().map((r) => [r.k, r.n]));
+    const full = whyNoRoom(byKind, kind);
+    if (full) return { error: full };
     db.insert(cvEntries).values({ userId: me.id, ...row, sort: (have?.lo ?? 1) - 1 }).run(); // newest on top
   }
   refresh();

@@ -2,7 +2,7 @@ import { eq, sql } from "drizzle-orm";
 import { cvEntries, cvProfiles, db } from "@/lib/db";
 import { IMPORT_LIMITS, sanitizeCandidate, sanitizeProfile, type Candidate, type ProfileFields } from "@/lib/cv/import";
 import { parseJson } from "@/lib/cv/text";
-import { LIMITS } from "@/lib/cv/types";
+import { LIMITS, whyNoRoom, type EntryKind } from "@/lib/cv/types";
 
 /**
  * Saves what the person ticked in the preview. The browser sends back what it was shown, but it is not trusted: every candidate and every profile
@@ -24,9 +24,14 @@ export function applyImport(userId: number, payload: unknown): ImportResult {
   const fresh: Candidate[] = [];
   let skipped = 0;
   for (const c of incoming) { const k = keyOf(c); if (known.has(k)) { skipped++; continue; } known.add(k); fresh.push(c); }
-  const room = Math.max(0, LIMITS.entries - have.length);
-  if (fresh.length > room) { skipped += fresh.length - room; fresh.length = room; }
-  if (!fresh.length && incoming.length && !Object.keys(fields).length) return { error: have.length >= LIMITS.entries ? `Your CV already has ${LIMITS.entries} entries, the most it can hold. Remove some first.` : "Everything you chose is already on your CV." };
+  const counts: Partial<Record<EntryKind, number>> = {};
+  for (const e of have) counts[e.kind] = (counts[e.kind] ?? 0) + 1;
+  let full = "";
+  for (let i = 0; i < fresh.length; ) { // each kind has its own room (ENTRY_CAPS); what does not fit is skipped
+    const why = whyNoRoom(counts, fresh[i].kind);
+    if (why) { skipped++; full = why; fresh.splice(i, 1); } else { counts[fresh[i].kind] = (counts[fresh[i].kind] ?? 0) + 1; i++; }
+  }
+  if (!fresh.length && incoming.length && !Object.keys(fields).length) return { error: full ? full : "Everything you chose is already on your CV." };
 
   db.transaction((tx) => {
     const top = tx.select({ lo: sql<number | null>`min(${cvEntries.sort})` }).from(cvEntries).where(eq(cvEntries.userId, userId)).get()?.lo ?? 1;
