@@ -5,7 +5,7 @@
  */
 import { readFileSync } from "node:fs";
 import { eq, inArray } from "drizzle-orm";
-import { cvComments, cvEndorsements, cvEntries, cvLinks, cvProfiles, cvReviewers, db, starApplications, starPicks, starStories, users } from "../lib/db";
+import { cvComments, cvEndorsements, cvEntries, cvLinkDays, cvLinks, cvProfiles, cvReviewers, db, starApplications, starPicks, starStories, users } from "../lib/db";
 import { eraseCv } from "../lib/cv/erase";
 import { eraseStories, exportStories } from "../lib/star/data";
 
@@ -26,7 +26,7 @@ function main() {
       db.insert(starPicks).values({ applicationId: app.id, behaviour: "pace", storyId: s.id, answer: `words ${tag}` }).run();
       db.insert(cvProfiles).values({ userId: u.id, headline: `erase check ${tag}` }).onConflictDoUpdate({ target: cvProfiles.userId, set: { headline: `erase check ${tag}` } }).run();
       db.insert(cvEntries).values({ userId: u.id, kind: "experience", title: `erase check ${tag}` }).run();
-      db.insert(cvLinks).values({ userId: u.id, label: `erase check ${tag}`, kind: "private", nonce: "n", sections: "{}", contact: "{}" }).run();
+      { const l = db.insert(cvLinks).values({ userId: u.id, label: `erase check ${tag}`, kind: "private", nonce: "n", sections: "{}", contact: "{}" }).returning().get(); db.insert(cvLinkDays).values({ linkId: l.id, day: 1, views: 2, pdfs: 1 }).run(); }
     }
     db.insert(cvReviewers).values({ userId: a.id, reviewerId: b.id }).run();
     db.insert(cvComments).values({ userId: a.id, reviewerId: b.id, section: "summary", body: "erase check comment" }).run();
@@ -46,12 +46,14 @@ function main() {
       && !db.select().from(cvProfiles).where(eq(cvProfiles.userId, a.id)).get() && !db.select().from(cvEntries).where(eq(cvEntries.userId, a.id)).all().length && !db.select().from(cvLinks).where(eq(cvLinks.userId, a.id)).all().length
       && !db.select().from(cvReviewers).where(eq(cvReviewers.userId, a.id)).all().length && !db.select().from(cvEndorsements).where(eq(cvEndorsements.userId, a.id)).all().length);
     check("erasing the CV leaves another person's CV and the reference this person wrote for them", !!db.select().from(cvProfiles).where(eq(cvProfiles.userId, b.id)).get() && db.select().from(cvEntries).where(eq(cvEntries.userId, b.id)).all().length >= 1 && db.select().from(cvLinks).where(eq(cvLinks.userId, b.id)).all().length >= 1 && db.select().from(cvEndorsements).where(eq(cvEndorsements.userId, b.id)).all().length === 1);
+    check("erasing the CV also removes the link view counts, and only this person's", !db.select().from(cvLinkDays).innerJoin(cvLinks, eq(cvLinks.id, cvLinkDays.linkId)).where(eq(cvLinks.userId, a.id)).all().length && db.select().from(cvLinkDays).innerJoin(cvLinks, eq(cvLinks.id, cvLinkDays.linkId)).where(eq(cvLinks.userId, b.id)).all().length === 1);
     check("erasing twice is harmless", eraseStories(a.id).stories === 0 && eraseCv(a.id).entries === 0);
   } finally {
     db.delete(cvComments).where(eq(cvComments.body, "erase check comment")).run();
     for (const u of [a, b]) {
       db.delete(cvReviewers).where(eq(cvReviewers.userId, u.id)).run();
       db.delete(cvEndorsements).where(eq(cvEndorsements.authorId, u.id)).run();
+      db.delete(cvLinkDays).where(inArray(cvLinkDays.linkId, db.select({ id: cvLinks.id }).from(cvLinks).where(eq(cvLinks.userId, u.id)))).run();
       db.delete(cvLinks).where(eq(cvLinks.userId, u.id)).run();
     }
     for (const u of [a, b]) { db.delete(cvEntries).where(eq(cvEntries.userId, u.id)).run(); }
