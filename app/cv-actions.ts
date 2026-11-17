@@ -4,6 +4,7 @@ import { and, asc, eq, sql } from "drizzle-orm";
 import { answerNotes, cvEntries, cvProfiles, cvQuotes, db } from "@/lib/db";
 import { actingUser, logViewAsUse } from "@/lib/auth";
 import { createLink, revokeLink, updateLink } from "@/lib/cv/links";
+import { eraseCv } from "@/lib/cv/erase";
 import { addComment, deleteComment, endReviewer, inviteReviewer, replyToComment, resolveComment } from "@/lib/cv/review";
 import { cancelRequest, decideEndorsement, requestEndorsement, withdrawEndorsement, writeEndorsement } from "@/lib/cv/endorse";
 import { cleanBlock, cleanLine, isEmail, isHexColour, parseJson, safeUrl } from "@/lib/cv/text";
@@ -279,4 +280,14 @@ export async function deleteCommentAction(_: Res, fd: FormData): Promise<Res> {
   const r = deleteComment(me, Number(fd.get("id")));
   if (r?.done) tidyReview(Number(fd.get("ownerId")));
   return r;
+}
+
+/** Removes the person's whole CV: what they typed, their share links, reviewers and references (lib/cv/erase.ts). Asks for the word "erase". */
+export async function eraseCvAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("eraseCvAction");
+  if (!me) return BLOCKED;
+  if (text(fd.get("confirm")) !== "erase") return { error: "Nothing was erased." };
+  eraseCv(me.id);
+  refresh();
+  return { done: "Your CV has been erased." };
 }
