@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { and, desc, eq, isNull } from "drizzle-orm";
-import { Download, FileDown, FileUp, Eye, EyeOff, FileText, Globe, KeyRound, Link2, Plus, ShieldCheck } from "lucide-react";
+import { Download, FileDown, FileUp, Eye, EyeOff, FileText, Globe, Link2, Plus, ShieldCheck } from "lucide-react";
 import { answerNotes, cvEntries, cvLinks, cvProfiles, cvQuotes, db, users } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
@@ -85,6 +85,7 @@ export default async function CvPage() {
   const facts = platformFacts(me.id, base), hidden = hiddenKeys(me.id), sug = suggestFor(me.id, base)!;
   const links = db.select().from(cvLinks).where(eq(cvLinks.userId, me.id)).orderBy(desc(cvLinks.id)).all();
   const live = links.filter((l) => stateOf(l) === "open"), past = links.filter((l) => stateOf(l) !== "open");
+  const nowS = Math.floor(new Date().getTime() / 1000);
   const hist = new Map(live.map((l) => [l.id, historyOf(me.id, l.id) ?? []] as const));
   const praise = db.select({ n: answerNotes, who: users.name }).from(answerNotes).innerJoin(users, eq(users.id, answerNotes.authorId))
     .where(and(eq(answerNotes.learnerId, me.id), eq(answerNotes.quotable, true), eq(answerNotes.kind, "praise"), isNull(answerNotes.deletedAt))).orderBy(desc(answerNotes.id)).all();
@@ -302,7 +303,7 @@ export default async function CvPage() {
                 <LinkHead label={l.label} kind={l.kind} views={l.views} last={l.lastViewedAt ? day(l.lastViewedAt) : null} />
                 <CopyField value={`${base}${pathOf(l)}`} label={`Link for ${l.label || "this link"}`} />
                 <div className="grid gap-3 md:grid-cols-2">
-                  <div className="space-y-3"><LinkActivity days={hist.get(l.id)!} /><Lifespan createdAt={l.createdAt} expiresAt={l.expiresAt} now={Math.floor(Date.now() / 1000)} /></div>
+                  <div className="space-y-3"><LinkActivity days={hist.get(l.id)!} /><Lifespan createdAt={l.createdAt} expiresAt={l.expiresAt} now={nowS} /></div>
                   <Exposure view={viewOf(l)} allowPdf={l.allowPdf} indexable={l.indexable} kind={l.kind} />
                 </div>
                 {l.kind === "passcode" && <p className="text-xs text-slate-500">Give them the passcode you chose when you made it. It is not stored in a form that can be shown again.</p>}
