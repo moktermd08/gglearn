@@ -7,11 +7,11 @@ import { checkMyLevel } from "@/app/(site)/doctor/actions";
 
 /**
  * The Career doctor's reading of one person, shared by the person's own page and the read-only view a manager gets of someone they run.
- * `self` shows the person their own reading, with the buttons that act as them (take the taster, find a level, set a goal, what others said).
- * Otherwise it is a reference: the same fit and consistency, in the third person, with nothing to press and nothing others wrote about them,
- * because exam notes and CV comments are private between the writer and the person.
+ * `self` shows the person their own reading, with the buttons that act as them (take the taster, find a level, set a goal, a link to all feedback).
+ * `manager` is a reference: the same fit, consistency and what others said, in the third person, with nothing to press. What others said is only
+ * ever counts (how many people, how often, when), never their words, because exam notes and CV comments are private between the writer and the person.
  */
-export type Reader = { kind: "self"; others: Others } | { kind: "manager"; first: string };
+export type Reader = { kind: "self"; others: Others } | { kind: "manager"; first: string; others: Others };
 
 export const pct = (n: number) => `${Math.round(n * 100)}%`;
 /** How far to trust a fit: one tested area out of six says little. */
@@ -29,18 +29,18 @@ export function momentumLine(m: FamilyMomentum) {
 }
 
 /** What other people said or decided in this field, in words, or null when there is nothing (so a quiet field says nothing rather than something sad). */
-function othersLine(o: FamilyOthers) {
+function othersLine(o: FamilyOthers, self: boolean) {
   const parts: string[] = [];
-  if (o.notes > 0) parts.push(`${plural(o.people, "reviewer")} praised your answers in this field (${plural(o.notes, "note")} over ${plural(o.periods, "month")}, latest ${when(o.lastPraiseAt)})`);
-  if (o.promotions > 0) parts.push(`a manager promoted you into ${plural(o.promotions, "role")} here (latest ${when(o.lastPromotionAt)})`);
+  if (o.notes > 0) parts.push(`${plural(o.people, "reviewer")} praised ${self ? "your" : "their"} answers in this field (${plural(o.notes, "note")} over ${plural(o.periods, "month")}, latest ${when(o.lastPraiseAt)})`);
+  if (o.promotions > 0) parts.push(`a manager promoted ${self ? "you" : "them"} into ${plural(o.promotions, "role")} here (latest ${when(o.lastPromotionAt)})`);
   return parts.length ? `${parts.join("; ")}.` : null;
 }
 
 /** What belongs to the person and not to one field: references a manager or mentor wrote and they approved, and praise on their CV. */
-function generalLine(o: Others) {
-  const refs = o.references.manager + o.references.mentor, parts: string[] = [];
-  if (refs > 0) parts.push(`${plural(refs, "reference")} on your CV (${[o.references.manager && `${o.references.manager} from a manager`, o.references.mentor && `${o.references.mentor} from a mentor`].filter(Boolean).join(", ")})`);
-  if (o.cvPraise.comments > 0) parts.push(`${plural(o.cvPraise.people, "reviewer")} praised your CV`);
+function generalLine(o: Others, self: boolean) {
+  const refs = o.references.manager + o.references.mentor, parts: string[] = [], their = self ? "your" : "their";
+  if (refs > 0) parts.push(`${plural(refs, "reference")} on ${their} CV (${[o.references.manager && `${o.references.manager} from a manager`, o.references.mentor && `${o.references.mentor} from a mentor`].filter(Boolean).join(", ")})`);
+  if (o.cvPraise.comments > 0) parts.push(`${plural(o.cvPraise.people, "reviewer")} praised ${their} CV`);
   return parts.length ? `${parts.join("; ")}.` : null;
 }
 
@@ -87,7 +87,7 @@ function Family({ f, open, myRole, m, reader, o }: { f: FamilyFit; open: boolean
         <div className="basis-full"><Bar value={f.fit} /></div>
       </summary>
       <p className="mt-3 text-sm text-slate-700"><b>Consistency:</b> {momentumLine(m)}</p>
-      {self && o && hasOthers(o) && <p className="mt-1 text-sm text-slate-700"><b>Others say:</b> {othersLine(o)}</p>}
+      {o && hasOthers(o) && <p className="mt-1 text-sm text-slate-700"><b>Others say:</b> {othersLine(o, self)}</p>}
       <ul className="mt-3 space-y-3">{f.roles.slice(0, 4).map((r) => <RoleCard key={r.role} r={r} mine={r.role === myRole} reader={reader} />)}</ul>
       {self && f.untested.length > 0 && (
         <div className="mt-3 space-y-2">
@@ -103,13 +103,13 @@ function Family({ f, open, myRole, m, reader, o }: { f: FamilyFit; open: boolean
 
 /** The diagnosis, where the person keeps showing up, and every field ranked. The caller supplies the page around it. */
 export function DoctorReading({ d, mom, jobRole, reader }: { d: Diagnosis; mom: Map<string, FamilyMomentum>; jobRole: string; reader: Reader }) {
-  const self = reader.kind === "self", others = self ? reader.others : null;
+  const self = reader.kind === "self", others = reader.others;
   const who = self ? "you" : reader.kind === "manager" ? reader.first : "they";
   const mine = jobRole.trim().toLowerCase();
   const known = d.families.filter((f) => f.coverage > 0);
   const best = known[0], top = known.flatMap((f) => f.roles).filter((r) => r.coverage > 0).sort((a, b) => b.fit - a.fit || b.coverage - a.coverage).slice(0, 3);
   const thin = d.testedAreas < 4;
-  const general = others ? generalLine(others) : null;
+  const general = generalLine(others, self);
   const steady = d.families.map((f) => ({ f, m: mom.get(f.family)! })).filter((x) => x.m.label === "Steady" || x.m.label === "Building").sort((a, b) => b.m.score - a.m.score).slice(0, 3);
 
   if (!best) return null;
@@ -133,17 +133,17 @@ export function DoctorReading({ d, mom, jobRole, reader }: { d: Diagnosis; mom: 
             {steady.map(({ f, m }) => <li key={f.family}><b>{f.family}</b> <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${MOM_CLS[m.label]}`}>{m.label}</span> {momentumLine(m)}</li>)}
           </ul>
         ) : <p className="text-sm text-slate-600">{self ? "Nothing recent yet. A field shows up here once you have practised or sat an exam in it over a few different weeks." : "Nothing recent yet. A field shows up here once they have practised or sat an exam in it over a few different weeks."}</p>}
-        {general && <p className="text-sm text-slate-700"><b>Others say:</b> {general} <Link href="/feedback" className="font-semibold text-indigo-700 hover:underline">See all feedback</Link></p>}
+        {general && <p className="text-sm text-slate-700"><b>Others say:</b> {general}{self && <> <Link href="/feedback" className="font-semibold text-indigo-700 hover:underline">See all feedback</Link></>}</p>}
         <p className="text-xs text-slate-500">
           {self
             ? "Consistency is about habit: how often you practise and how well your results hold. What others say is kept apart because it is their view, not a score. Neither measures the value you add at work, and a field with nothing said is simply untouched, not weak."
-            : "Consistency is about habit: how often they practise and how well their results hold. It does not measure the value they add at work, and a field with no practice is simply untried, not weak."}
+            : "Consistency is about habit: how often they practise and how well their results hold. What others say is only counted here, never quoted, because notes and comments are private between the writer and the person; it is kept apart because it is their view, not a score. Neither measures the value they add at work, and a field with nothing said is simply untouched, not weak."}
         </p>
       </section>
 
       <section className="space-y-3" aria-label="Fields ranked">
         <h2 className="text-lg font-bold">Every field, strongest first</h2>
-        {d.families.map((f, i) => <Family key={f.family} f={f} open={i < 2 && f.coverage > 0} myRole={mine} m={mom.get(f.family)!} reader={reader} o={others?.byFamily.get(f.family)} />)}
+        {d.families.map((f, i) => <Family key={f.family} f={f} open={i < 2 && f.coverage > 0} myRole={mine} m={mom.get(f.family)!} reader={reader} o={others.byFamily.get(f.family)} />)}
       </section>
     </>
   );
