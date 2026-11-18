@@ -2,7 +2,8 @@
  * Checks the Career doctor's momentum: npm run check:momentum. Pure, touches no database. Steady practice reads as steady, a one-off pass long ago
  * fades, an empty history is "Not yet", and old results never count as recent.
  */
-import { momentumOf, WEEKS, type Event } from "../lib/careerMomentum";
+import { familyMomentum, momentumOf, WEEKS, type Event } from "../lib/careerMomentum";
+import type { FamilyFit } from "../lib/careerDoctor";
 
 let fails = 0;
 const check = (name: string, ok: boolean) => { if (!ok) fails++; console.log(`${ok ? "ok  " : "FAIL"} ${name}`); };
@@ -34,6 +35,14 @@ check("quests alone count for regularity but give no reliability", habit.weeks =
 
 check("activity after the window is ignored", momentumOf([{ ...exam(0, 1, 1), at: NOW + WEEK }], NOW).weeks === 0);
 check("window is twelve weeks", WEEKS === 12 && momentumOf([exam(WEEKS * 7 + 1, 1, 1)], NOW).weeks === 0 && momentumOf([exam(WEEKS * 7 - 1, 1, 1)], NOW).weeks === 1);
+{
+  // two areas in one field, each with levels 1..3 passed this week: the field reports 3, not 6
+  const area = (trackId: number) => ({ slug: `t${trackId}`, trackId, kind: "technology", name: `T${trackId}`, need: 1, have: 3, tested: true });
+  const field = { family: "F", fit: 0, coverage: 1, untested: [], roles: [{ role: "r", name: "R", family: "F", blurb: "", fit: 0, coverage: 1, areas: [area(1), area(2)] }] } as FamilyFit;
+  const levels = () => [exam(1, 0.9, 1), exam(2, 0.9, 2), exam(3, 0.9, 3)];
+  const by = new Map([[1, levels()], [2, levels()]]);
+  check("a field's new levels are the most in any one area, not the sum", familyMomentum(field, by, NOW).gained === 3);
+}
 check("score stays within 0..1", [none, steady, oldPass, burst, regain, habit].every((m) => m.score >= 0 && m.score <= 1));
 
 console.log(fails ? `\n${fails} FAILED` : "\nall ok");

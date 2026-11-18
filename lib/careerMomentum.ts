@@ -20,7 +20,7 @@ export type Momentum = {
   /** distinct weeks with any activity, out of WEEKS */ weeks: number;
   /** days since the last activity of any time, null when there has never been any */ daysSince: number | null;
   /** average score of finished exams in the window, null when there were none */ reliability: number | null;
-  /** levels newly passed in the window, above the best before it */ gained: number;
+  /** levels newly passed in the window, above the best before it; for a field, the most in any one area */ gained: number;
   label: "Steady" | "Building" | "Fading" | "Not yet";
 };
 
@@ -71,7 +71,7 @@ export function familyMomentum(f: FamilyFit, by: Map<number, Event[]>, at = Math
   return {
     score, weeks, daysSince: Math.min(...top.map((p) => p.daysSince ?? Infinity)),
     reliability: rel.length ? rel.reduce((n, p) => n + p.reliability!, 0) / rel.length : null,
-    gained: top.reduce((n, p) => n + p.gained, 0),
+    gained: Math.max(...top.map((p) => p.gained)), // the most in any one area: levels in different areas are not the same ladder, so they are not added up
     label: score >= 0.6 && weeks >= 4 ? "Steady" : "Building", active: live.length,
   };
 }
