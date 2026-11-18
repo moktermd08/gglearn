@@ -19,6 +19,8 @@ sweep();
 
 const rsa = generateKeyPairSync("rsa", { modulusLength: 2048 }), evil = generateKeyPairSync("rsa", { modulusLength: 2048 }), ec = generateKeyPairSync("ec", { namedCurve: "P-256" });
 const jwk = (k: typeof rsa, kid: string, extra: object = {}) => ({ ...(k.publicKey.export({ format: "jwk" }) as object), kid, use: "sig", ...extra });
+/** Changes a sealed secret in its last character, always to a different one. (Replacing it with a fixed "A" changed nothing when it already ended in A, about one run in 64, and the check failed for no reason.) */
+const corrupt = (sealed: string) => sealed.replace(/.$/, (c) => (c === "A" ? "B" : "A"));
 const b = (o: object | Buffer) => (Buffer.isBuffer(o) ? o : Buffer.from(JSON.stringify(o))).toString("base64url");
 
 let issuer = "", nextToken = "", lastToken: URLSearchParams | null = null, lastAuth = "", tokenStatus = 200; const keys = [jwk(rsa, "k1"), jwk(ec as unknown as typeof rsa, "e1", { alg: "ES256" })];
@@ -41,6 +43,11 @@ async function main() {
 
     // ---- the pieces ----
     check("a client secret is stored encrypted and comes back", (() => { const s = sealSecret("s3cret"); return !s.includes("s3cret") && openSecret(s) === "s3cret" && sealSecret("s3cret") !== s; })());
+    check("damaging a sealed secret always stops it opening, even when it already ends in A", (() => {
+      let sealed = sealSecret("s3cret"); // about one in 64 ends in A, which a fixed replacement with A left unchanged: seal until we have exactly that one
+      for (let i = 0; i < 2000 && !sealed.endsWith("A"); i++) sealed = sealSecret("s3cret");
+      return sealed.endsWith("A") && corrupt(sealed) !== sealed && openSecret(corrupt(sealed)) === null && openSecret(sealed) === "s3cret" && corrupt("x:y:z:q") === "x:y:z:A" && corrupt("x:y:z:A") === "x:y:z:B";
+    })());
     check("a damaged or foreign secret is not read", openSecret("v1:a:b:c") === null && openSecret("plain") === null && (() => { const p = sealSecret("x").split(":"); p[2] = "A".repeat(22); return openSecret(p.join(":")) === null; })());
     check("private and special addresses are recognised", ["127.0.0.1", "10.1.2.3", "192.168.0.1", "172.16.0.1", "172.31.255.255", "169.254.169.254", "100.64.0.1", "0.0.0.0", "::1", "fd00::1", "fe80::1", "::ffff:10.0.0.1", "224.0.0.1"].every(privateAddress) && !["8.8.8.8", "172.32.0.1", "1.1.1.1", "2606:4700::1111"].some(privateAddress));
     process.env.SSO_ALLOW_LOCAL = "";
@@ -119,7 +126,7 @@ async function main() {
       tokenStatus = 400;
       check("a refused code exchange is a refusal", ((await complete(s2.box, { code: "c", state: openBox(s2.box)!.s }, REDIR)) as { error?: string }).error === "token");
       tokenStatus = 200;
-      cfg({ clientSecret: sealSecret("s3cret").replace(/.$/, "A") });
+      cfg({ clientSecret: corrupt(sealSecret("s3cret")) });
       check("a client secret that cannot be read is a setup problem, not a way in", ((await complete(s2.box, { code: "c", state: openBox(s2.box)!.s }, REDIR)) as { error?: string }).error === "provider");
       cfg();
     }
