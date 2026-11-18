@@ -50,7 +50,7 @@ const since = (d: number | null) => (d === null ? "" : d <= 1 ? "today or yester
 function momentumLine(m: FamilyMomentum) {
   if (m.label === "Not yet") return "No practice recorded here yet.";
   if (m.label === "Fading") return `Nothing in the last ${WEEKS} weeks. Last activity ${since(m.daysSince)}.`;
-  return `Active in ${m.weeks} of the last ${WEEKS} weeks${m.reliability !== null ? `, scoring ${pct(m.reliability)} on average` : ""}${m.gained > 0 ? `, ${m.gained} new ${m.gained === 1 ? "level" : "levels"}` : ""}. Last activity ${since(m.daysSince)}.`;
+  return `Active in ${m.weeks} of the last ${WEEKS} weeks${m.reliability !== null ? `, scoring ${pct(m.reliability)} on average` : ""}${m.gained > 0 ? `, ${m.gained} new ${m.gained === 1 ? "level" : "levels"} in one area` : ""}. Last activity ${since(m.daysSince)}.`;
 }
 
 const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
