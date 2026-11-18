@@ -95,7 +95,26 @@ function DatesBoxes({ dates }: { dates: { education: boolean; older: boolean } }
   );
 }
 
-function ViewBoxes({ view }: { view: ReturnType<typeof viewOf> }) {
+/** Which of your jobs, courses and projects this reader does not see. Ticked means left off. It stays on your CV for everyone else. */
+function SkipBoxes({ entries, skip }: { entries: (typeof cvEntries.$inferSelect)[]; skip: number[] }) {
+  const mine = entries.filter((e) => e.visible && DATED_KINDS.includes(e.kind));
+  if (mine.length === 0) return null;
+  const left = new Set(skip);
+  return (
+    <details className="text-sm" open={skip.length > 0}>
+      <summary className="cursor-pointer text-xs font-semibold text-slate-500">Leave some of these off for this reader{skip.length ? ` (${skip.length} left off)` : ""}</summary>
+      <input type="hidden" name="skipForm" value="1" />
+      <p className="mt-1 text-xs text-slate-500">Tick anything this reader should not see, such as work that has nothing to do with the job. It stays on your CV for everyone else.</p>
+      <ul className="mt-2 grid gap-x-4 gap-y-1.5 sm:grid-cols-2">
+        {mine.map((e) => (
+          <li key={e.id}><label className="flex items-start gap-2"><input type="checkbox" name="skip" value={e.id} defaultChecked={left.has(e.id)} className="mt-1" /><span className="min-w-0"><span className="break-words">{e.title}</span><span className="block truncate text-xs text-slate-500">{[ENTRY_LABEL[e.kind].one, e.org].filter(Boolean).join(" · ")}</span></span></label></li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+function ViewBoxes({ view, entries }: { view: ReturnType<typeof viewOf>; entries: (typeof cvEntries.$inferSelect)[] }) {
   return (
     <>
     <fieldset className="space-y-1.5 text-sm">
@@ -109,6 +128,7 @@ function ViewBoxes({ view }: { view: ReturnType<typeof viewOf> }) {
       </div>
     </fieldset>
     <DatesBoxes dates={datesOf(view)} />
+    <SkipBoxes entries={entries} skip={view.skip ?? []} />
     </>
   );
 }
@@ -333,6 +353,7 @@ export default async function CvPage() {
             <div className="space-y-1.5 pt-5 text-sm"><label className="flex items-center gap-2"><input type="checkbox" name="allowPdf" defaultChecked />Let them download a PDF</label><label className="flex items-center gap-2"><input type="checkbox" name="indexable" />Public only: let search engines list it</label></div>
           </div>
           <DatesBoxes dates={DEFAULT_DATES} />
+          <SkipBoxes entries={entries} skip={[]} />
           <button className={btn}><Link2 size={14} aria-hidden />Create link</button>
         </CvForm>
 
@@ -363,7 +384,7 @@ export default async function CvPage() {
                       <label className={lab}>Ends<select name="days" defaultValue="keep" className={field}><option value="keep">Keep as it is</option><option value="none">Never</option>{DAYS.map((d) => <option key={d} value={d}>Restart: {d} days from now</option>)}</select></label>
                       <div className="space-y-1.5 pt-5"><label className="flex items-center gap-2"><input type="checkbox" name="allowPdf" defaultChecked={l.allowPdf} />PDF download</label>{l.kind === "public" && <label className="flex items-center gap-2"><input type="checkbox" name="indexable" defaultChecked={l.indexable} />Search engines</label>}</div>
                     </div>
-                    <ViewBoxes view={viewOf(l)} /><button className={btn}>Save changes</button>
+                    <ViewBoxes view={viewOf(l)} entries={entries} /><button className={btn}>Save changes</button>
                   </CvForm>
                 </details>
               </li>

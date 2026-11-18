@@ -1522,6 +1522,7 @@ export const cvLinks = sqliteTable("cv_links", {
   passHash: text("pass_hash").notNull().default(""), // salted hash of the passcode, for kind "passcode"
   sections: text("sections").notNull(), // JSON: { summary: true, ... } what this link shows
   contact: text("contact").notNull(), // JSON: { email, phone, location, links }
+  skip: text("skip").notNull().default("[]"), // JSON: ids of the owner's entries (jobs, courses...) left off for this reader; "[]" leaves none off. Text with a default, so it can be added to a table with rows
   dates: text("dates").notNull().default("{}"), // JSON: { education, older }, false = leave those dates off for this reader; "{}" shows every date. Text with a default, so it can be added to a table with rows
   allowPdf: integer("allow_pdf", { mode: "boolean" }).notNull().default(true),
   indexable: integer("indexable", { mode: "boolean" }).notNull().default(false), // a public link only: may search engines list it
