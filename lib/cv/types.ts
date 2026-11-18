@@ -46,7 +46,7 @@ export function whyNoRoom(have: Partial<Record<EntryKind, number>>, kind: EntryK
 }
 
 export type ContactView = { email: boolean; phone: boolean; location: boolean; links: boolean };
-export type View = { sections: Record<SectionKey, boolean>; contact: ContactView };
+export type View = { sections: Record<SectionKey, boolean>; contact: ContactView; dates?: DatesView };
 
 const all = (on: boolean, off: SectionKey[] = []): Record<SectionKey, boolean> => Object.fromEntries(SECTION_KEYS.map((k) => [k, on && !off.includes(k)])) as Record<SectionKey, boolean>;
 
@@ -81,3 +81,12 @@ export const BREAK_REASONS = [
   "Career break: study or training", "Career break: travel", "Career break: relocation", "Career break: redundancy and looking for work",
 ] as const;
 export const isCareerBreak = (title: string) => title === "Career break" || title.startsWith("Career break: ");
+
+/**
+ * Which dates a reader is shown. Years of study and the dates of old jobs can tell a reader a person's age before they have read a word of the CV,
+ * so the person can leave them off for any link. A view with no `dates` shows every date, as before.
+ */
+export type DatesView = { education: boolean; older: boolean };
+export const OLD_YEARS = 15;
+export const DEFAULT_DATES: DatesView = { education: true, older: true };
+export const datesOf = (v: Pick<View, "dates">): DatesView => ({ ...DEFAULT_DATES, ...(v.dates ?? {}) });

@@ -58,5 +58,16 @@ try {
   check("the option lists are still there to check (a rename must not make the rule pass by finding nothing)", lists >= 6);
 }
 
+// a form must not sit inside a paragraph: it is invalid HTML and React fails to hydrate the page ("<form> cannot be a descendant of <p>")
+{
+  const files: string[] = [];
+  const walk = (dir: string) => { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const f = path.join(dir, e.name); if (e.isDirectory()) walk(f); else if (f.endsWith(".tsx")) files.push(f); } };
+  walk(path.join(process.cwd(), "app")); walk(path.join(process.cwd(), "components"));
+  const bad: string[] = [];
+  for (const f of files) fs.readFileSync(f, "utf8").split("\n").forEach((line, i) => { if (/<p\b[^>]*>(?:(?!<\/p>).)*<(?:InlineAction|CvForm|KeepForm|form)\b/.test(line)) bad.push(`${path.relative(process.cwd(), f)}:${i + 1}`); });
+  check(`no form sits inside a paragraph (${files.length} pages and components checked)`, files.length > 100 && bad.length === 0);
+  for (const b of bad.slice(0, 5)) console.log("     form inside <p>: " + b);
+}
+
 console.log(fails ? `\n${fails} FAILED` : "\nall passed");
 process.exit(fails ? 1 : 0);

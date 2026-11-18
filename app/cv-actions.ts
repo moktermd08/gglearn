@@ -150,9 +150,11 @@ export async function featureQuoteAction(_: Res, fd: FormData): Promise<Res> {
 // ---- share links
 
 function chosenView(fd: FormData) {
-  if (fd.get("custom") !== "1") return {};
+  // the dates boxes come with their own marker, so they work on the create form (which only picks a preset) as well as on the full view form
+  const dates = fd.get("datesForm") === "1" ? { dates: { education: fd.get("d_education") === "on", older: fd.get("d_older") === "on" } } : {};
+  if (fd.get("custom") !== "1") return dates;
   const sections = Object.fromEntries(SECTION_KEYS.map((k) => [k, fd.get(`sec_${k}`) === "on"]));
-  return { sections, contact: { email: fd.get("c_email") === "on", phone: fd.get("c_phone") === "on", location: fd.get("c_location") === "on", links: fd.get("c_links") === "on" } };
+  return { ...dates, sections, contact: { email: fd.get("c_email") === "on", phone: fd.get("c_phone") === "on", location: fd.get("c_location") === "on", links: fd.get("c_links") === "on" } };
 }
 
 export async function createLinkAction(_: Res, fd: FormData): Promise<Res> {
