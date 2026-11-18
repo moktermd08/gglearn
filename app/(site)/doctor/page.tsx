@@ -5,6 +5,7 @@ import { EmptyState, PageHero } from "@/components/charts";
 import { diagnose, type FamilyFit, type RoleFit } from "@/lib/careerDoctor";
 import { rolesWithLadders } from "@/lib/careers";
 import { momentumFor, WEEKS, type FamilyMomentum } from "@/lib/careerMomentum";
+import { hasOthers, othersFor, type FamilyOthers, type Others } from "@/lib/careerOthers";
 import { checkMyLevel } from "./actions";
 
 export const metadata = { title: "Career doctor — gglearn" };
@@ -52,7 +53,26 @@ function momentumLine(m: FamilyMomentum) {
   return `Active in ${m.weeks} of the last ${WEEKS} weeks${m.reliability !== null ? `, scoring ${pct(m.reliability)} on average` : ""}${m.gained > 0 ? `, ${m.gained} new ${m.gained === 1 ? "level" : "levels"}` : ""}. Last activity ${since(m.daysSince)}.`;
 }
 
-function Family({ f, open, myRole, m }: { f: FamilyFit; open: boolean; myRole: string; m: FamilyMomentum }) {
+const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
+const when = (sec: number | null) => (sec === null ? "" : new Date(sec * 1000).toLocaleDateString("en-GB", { month: "short", year: "numeric" }));
+
+/** What other people said or decided in this field, in words, or null when there is nothing (so a quiet field says nothing rather than something sad). */
+function othersLine(o: FamilyOthers) {
+  const parts: string[] = [];
+  if (o.notes > 0) parts.push(`${plural(o.people, "reviewer")} praised your answers in this field (${plural(o.notes, "note")} over ${plural(o.periods, "month")}, latest ${when(o.lastPraiseAt)})`);
+  if (o.promotions > 0) parts.push(`a manager promoted you into ${plural(o.promotions, "role")} here (latest ${when(o.lastPromotionAt)})`);
+  return parts.length ? `${parts.join("; ")}.` : null;
+}
+
+/** What belongs to the person and not to one field: references a manager or mentor wrote and they approved, and praise on their CV. */
+function generalLine(o: Others) {
+  const refs = o.references.manager + o.references.mentor, parts: string[] = [];
+  if (refs > 0) parts.push(`${plural(refs, "reference")} on your CV (${[o.references.manager && `${o.references.manager} from a manager`, o.references.mentor && `${o.references.mentor} from a mentor`].filter(Boolean).join(", ")})`);
+  if (o.cvPraise.comments > 0) parts.push(`${plural(o.cvPraise.people, "reviewer")} praised your CV`);
+  return parts.length ? `${parts.join("; ")}.` : null;
+}
+
+function Family({ f, open, myRole, m, o }: { f: FamilyFit; open: boolean; myRole: string; m: FamilyMomentum; o: FamilyOthers }) {
   const t = trust(f.coverage);
   return (
     <details open={open} className="card group p-4">
@@ -64,6 +84,7 @@ function Family({ f, open, myRole, m }: { f: FamilyFit; open: boolean; myRole: s
         <div className="basis-full"><Bar value={f.fit} /></div>
       </summary>
       <p className="mt-3 text-sm text-slate-700"><b>Consistency:</b> {momentumLine(m)}</p>
+      {hasOthers(o) && <p className="mt-1 text-sm text-slate-700"><b>Others say:</b> {othersLine(o)}</p>}
       <ul className="mt-3 space-y-3">{f.roles.slice(0, 4).map((r) => <RoleCard key={r.role} r={r} mine={r.role === myRole} />)}</ul>
       {f.untested.length > 0 && (
         <div className="mt-3 space-y-2">
@@ -85,6 +106,8 @@ export default async function CareerDoctor() {
   const best = known[0], top = known.flatMap((f) => f.roles).filter((r) => r.coverage > 0).sort((a, b) => b.fit - a.fit || b.coverage - a.coverage).slice(0, 3);
   const thin = d.testedAreas < 4;
   const mom = momentumFor(user, d);
+  const others = othersFor(user, d);
+  const general = generalLine(others);
   const steady = d.families.map((f) => ({ f, m: mom.get(f.family)! })).filter((x) => x.m.label === "Steady" || x.m.label === "Building").sort((a, b) => b.m.score - a.m.score).slice(0, 3);
 
   return (
@@ -120,12 +143,13 @@ export default async function CareerDoctor() {
                 {steady.map(({ f, m }) => <li key={f.family}><b>{f.family}</b> <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${MOM_CLS[m.label]}`}>{m.label}</span> {momentumLine(m)}</li>)}
               </ul>
             ) : <p className="text-sm text-slate-600">Nothing recent yet. A field shows up here once you have practised or sat an exam in it over a few different weeks.</p>}
-            <p className="text-xs text-slate-500">This is about habit, not job performance: how often you practise and how well your results hold. It cannot see the value you add at work.</p>
+            {general && <p className="text-sm text-slate-700"><b>Others say:</b> {general} <Link href="/feedback" className="font-semibold text-indigo-700 hover:underline">See all feedback</Link></p>}
+            <p className="text-xs text-slate-500">Consistency is about habit: how often you practise and how well your results hold. What others say is kept apart because it is their view, not a score. Neither measures the value you add at work, and a field with nothing said is simply untouched, not weak.</p>
           </section>
 
           <section className="space-y-3" aria-label="Fields ranked">
             <h2 className="text-lg font-bold">Every field, strongest first</h2>
-            {d.families.map((f, i) => <Family key={f.family} f={f} open={i < 2 && f.coverage > 0} myRole={mine} m={mom.get(f.family)!} />)}
+            {d.families.map((f, i) => <Family key={f.family} f={f} open={i < 2 && f.coverage > 0} myRole={mine} m={mom.get(f.family)!} o={others.byFamily.get(f.family)!} />)}
           </section>
         </>
       )}
