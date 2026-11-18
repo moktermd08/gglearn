@@ -46,7 +46,7 @@ export function whyNoRoom(have: Partial<Record<EntryKind, number>>, kind: EntryK
 }
 
 export type ContactView = { email: boolean; phone: boolean; location: boolean; links: boolean };
-export type View = { sections: Record<SectionKey, boolean>; contact: ContactView; dates?: DatesView };
+export type View = { sections: Record<SectionKey, boolean>; contact: ContactView; dates?: DatesView; skip?: number[] };
 
 const all = (on: boolean, off: SectionKey[] = []): Record<SectionKey, boolean> => Object.fromEntries(SECTION_KEYS.map((k) => [k, on && !off.includes(k)])) as Record<SectionKey, boolean>;
 
@@ -90,3 +90,8 @@ export type DatesView = { education: boolean; older: boolean };
 export const OLD_YEARS = 15;
 export const DEFAULT_DATES: DatesView = { education: true, older: true };
 export const datesOf = (v: Pick<View, "dates">): DatesView => ({ ...DEFAULT_DATES, ...(v.dates ?? {}) });
+
+/** Entries the person left off for this reader (View.skip), as a set. A view with no `skip` leaves none off. */
+export const skipOf = (v: Pick<View, "skip">): Set<number> => new Set(v.skip ?? []);
+/** The most entries one link may leave off. */
+export const SKIP_MAX = 200;

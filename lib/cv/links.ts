@@ -1,8 +1,8 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
-import { and, eq, gte, isNull, lt, sql } from "drizzle-orm";
-import { cvLinkDays, cvLinks, db, users } from "@/lib/db";
+import { and, eq, gte, inArray, isNull, lt, sql } from "drizzle-orm";
+import { cvEntries, cvLinkDays, cvLinks, db, users } from "@/lib/db";
 import { hashPassword } from "@/lib/password";
-import { LIMITS, LINK_KINDS, PRESETS, SECTION_KEYS, datesOf, type ContactView, type DatesView, type LinkKind, type PresetKey, type View } from "@/lib/cv/types";
+import { LIMITS, LINK_KINDS, PRESETS, SECTION_KEYS, SKIP_MAX, datesOf, type ContactView, type DatesView, type LinkKind, type PresetKey, type View } from "@/lib/cv/types";
 import { cleanLine, parseJson } from "@/lib/cv/text";
 
 /**
@@ -45,17 +45,23 @@ export function openLink(raw: string): Link | null {
 }
 
 /** What this link shows, with anything missing treated as hidden. */
-export function viewOf(l: Pick<Link, "sections" | "contact"> & Partial<Pick<Link, "dates">>): View {
+export function viewOf(l: Pick<Link, "sections" | "contact"> & Partial<Pick<Link, "dates" | "skip">>): View {
   const s = parseJson<Record<string, unknown>>(l.sections, {}), c = parseJson<Record<string, unknown>>(l.contact, {}), d = parseJson<Record<string, unknown>>(l.dates ?? "{}", {});
   return {
     sections: Object.fromEntries(SECTION_KEYS.map((k) => [k, s[k] === true])) as View["sections"],
     contact: { email: c.email === true, phone: c.phone === true, location: c.location === true, links: c.links === true },
     dates: { education: d.education !== false, older: d.older !== false }, // anything not said shows
+    skip: idsOf(parseJson<unknown[]>(l.skip ?? "[]", [])),
   };
 }
 
+/** Positive whole numbers only, no repeats, and no more than SKIP_MAX. */
+const idsOf = (v: unknown): number[] => [...new Set((Array.isArray(v) ? v : []).filter((n): n is number => Number.isInteger(n) && n > 0))].slice(0, SKIP_MAX);
+/** Of these ids, the ones that are really this person's entries: a link can only leave off what the owner has. */
+const ownedIds = (userId: number, ids: number[]): number[] => (ids.length ? db.select({ id: cvEntries.id }).from(cvEntries).where(and(eq(cvEntries.userId, userId), inArray(cvEntries.id, ids))).all().map((r) => r.id) : []);
+
 export const DAYS = [7, 30, 90, 180, 365] as const;
-export type LinkInput = { label?: unknown; kind?: unknown; preset?: unknown; sections?: Record<string, boolean>; contact?: Partial<ContactView>; dates?: Partial<DatesView>; passcode?: unknown; days?: unknown; allowPdf?: unknown; indexable?: unknown };
+export type LinkInput = { label?: unknown; kind?: unknown; preset?: unknown; sections?: Record<string, boolean>; contact?: Partial<ContactView>; dates?: Partial<DatesView>; skip?: unknown; passcode?: unknown; days?: unknown; allowPdf?: unknown; indexable?: unknown };
 
 function viewFrom(i: LinkInput, kind: LinkKind): View {
   const base = PRESETS[(i.preset as PresetKey) in PRESETS ? (i.preset as PresetKey) : kind === "public" ? "public" : "recruiter"].view;
@@ -64,7 +70,7 @@ function viewFrom(i: LinkInput, kind: LinkKind): View {
   if (i.contact) for (const k of ["email", "phone", "location", "links"] as const) if (typeof i.contact[k] === "boolean") contact[k] = i.contact[k]!;
   const dates = datesOf(base);
   if (i.dates) for (const k of ["education", "older"] as const) if (typeof i.dates[k] === "boolean") dates[k] = i.dates[k]!;
-  return { sections, contact, dates };
+  return { sections, contact, dates, skip: i.skip === undefined ? [] : idsOf(i.skip) };
 }
 
 /** A new share link. Returns why it was refused, or the row. */
@@ -83,8 +89,9 @@ export async function createLink(userId: number, i: LinkInput): Promise<{ error:
   }
   const days = DAYS.find((d) => d === Number(i.days));
   const view = viewFrom(i, kind);
+  view.skip = ownedIds(userId, view.skip ?? []);
   const row = db.insert(cvLinks).values({
-    userId, label, kind, nonce: randomBytes(12).toString("base64url"), passHash, sections: JSON.stringify(view.sections), contact: JSON.stringify(view.contact), dates: JSON.stringify(view.dates),
+    userId, label, kind, nonce: randomBytes(12).toString("base64url"), passHash, sections: JSON.stringify(view.sections), contact: JSON.stringify(view.contact), dates: JSON.stringify(view.dates), skip: JSON.stringify(view.skip ?? []),
     allowPdf: i.allowPdf !== false && i.allowPdf !== "off", indexable: kind === "public" && (i.indexable === true || i.indexable === "on"), expiresAt: days ? nowSec() + days * 86400 : null,
   }).returning().get();
   return { link: row };
@@ -95,10 +102,11 @@ export function updateLink(userId: number, id: number, i: LinkInput): { error: s
   const l = db.select().from(cvLinks).where(and(eq(cvLinks.id, id), eq(cvLinks.userId, userId))).get();
   if (!l) return { error: "That link is not yours." };
   if (l.revokedAt) return { error: "That link has been revoked." };
-  const view = viewFrom({ ...i, preset: undefined, sections: { ...viewOf(l).sections, ...(i.sections ?? {}) }, contact: { ...viewOf(l).contact, ...(i.contact ?? {}) }, dates: { ...viewOf(l).dates, ...(i.dates ?? {}) } }, l.kind);
+  const view = viewFrom({ ...i, preset: undefined, sections: { ...viewOf(l).sections, ...(i.sections ?? {}) }, contact: { ...viewOf(l).contact, ...(i.contact ?? {}) }, dates: { ...viewOf(l).dates, ...(i.dates ?? {}) }, skip: i.skip === undefined ? viewOf(l).skip : i.skip }, l.kind);
+  view.skip = ownedIds(userId, view.skip ?? []);
   const days = i.days === "none" ? null : DAYS.find((d) => d === Number(i.days));
   const row = db.update(cvLinks).set({
-    label: i.label === undefined ? l.label : cleanLine(i.label, LIMITS.label), sections: JSON.stringify(view.sections), contact: JSON.stringify(view.contact), dates: JSON.stringify(view.dates),
+    label: i.label === undefined ? l.label : cleanLine(i.label, LIMITS.label), sections: JSON.stringify(view.sections), contact: JSON.stringify(view.contact), dates: JSON.stringify(view.dates), skip: JSON.stringify(view.skip ?? []),
     allowPdf: i.allowPdf === undefined ? l.allowPdf : i.allowPdf === true || i.allowPdf === "on",
     indexable: l.kind === "public" && (i.indexable === undefined ? l.indexable : i.indexable === true || i.indexable === "on"),
     expiresAt: i.days === undefined ? l.expiresAt : days ? nowSec() + days * 86400 : null,

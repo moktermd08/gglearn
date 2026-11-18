@@ -104,6 +104,7 @@ export function Exposure({ view, allowPdf, indexable, kind }: { view: View; allo
       <div className="flex flex-wrap gap-1">{SECTION_KEYS.map((k) => <span key={k} className={chip(view.sections[k])}>{SECTION_TITLE[k]}</span>)}</div>
       <div className="flex flex-wrap gap-1 border-t border-black/5 pt-2">
         {contact.map(([k, Ic, n]) => <span key={k} className={chip(view.contact[k])}><Ic size={11} aria-hidden />{n}</span>)}
+        {(view.skip?.length ?? 0) > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-800 ring-1 ring-amber-500/25"><EyeOff size={11} aria-hidden />{view.skip!.length} left off</span>}
         <span className={chip(datesOf(view).education)}><CalendarClock size={11} aria-hidden />Study years</span>
         <span className={chip(datesOf(view).older)}><CalendarClock size={11} aria-hidden />Older dates</span>
         <span className={chip(allowPdf)}><Download size={11} aria-hidden />PDF</span>

@@ -5,7 +5,7 @@ import { goalOf, roleLabel } from "@/lib/journey";
 import { LEVELS, MAX_LEVEL, certTitle } from "@/lib/levels";
 import { activityFor } from "@/lib/stats";
 import { topicLabel } from "@/lib/topicName";
-import { OLD_YEARS, SECTION_KEYS, SECTION_TITLE, datesOf, type SectionKey, type TemplateKey, type View } from "@/lib/cv/types";
+import { OLD_YEARS, SECTION_KEYS, SECTION_TITLE, datesOf, skipOf, type SectionKey, type TemplateKey, type View } from "@/lib/cv/types";
 import { dateRange, isHexColour, monthYear, parseJson, safeUrl } from "@/lib/cv/text";
 import { approvedFor } from "@/lib/cv/endorse";
 import { ENDORSE } from "@/lib/cv/types";
@@ -77,13 +77,14 @@ export function buildCv(userId: number, view: View, base: string): CvDoc | null 
   const keep = (items: CvItem[]) => items.filter((i) => !i.key || !hidden.has(i.key));
 
   // dates the person chose to leave off for this reader (lib/cv/types.ts DatesView): the years of study, and anything that ended more than OLD_YEARS ago
+  const left = skipOf(view); // entries the person chose to leave off for this reader
   const show = datesOf(view), cutoff = new Date().getUTCFullYear() - OLD_YEARS;
   const datesShown = (e: (typeof entries)[number]) => {
     if (e.kind === "education" && !show.education) return false;
     if (!show.older && !e.current) { const y = Number((e.endsOn || e.startsOn).slice(0, 4)); if (y && y < cutoff) return false; }
     return true;
   };
-  const byKind = (kind: (typeof entries)[number]["kind"]): CvItem[] => entries.filter((e) => e.kind === kind).map((e) => ({
+  const byKind = (kind: (typeof entries)[number]["kind"]): CvItem[] => entries.filter((e) => e.kind === kind && !left.has(e.id)).map((e) => ({
     anchor: `entry:${e.id}`, title: e.title, subtitle: [e.org, e.location].filter(Boolean).join(" · ") || undefined, dates: (datesShown(e) && dateRange(e.startsOn, e.endsOn, e.current)) || undefined, body: e.body ? e.body.split("\n") : undefined,
   }));
   const sections: CvSection[] = [];
