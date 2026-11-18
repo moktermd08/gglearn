@@ -18,7 +18,7 @@ import { askable, endorsementsOf } from "@/lib/cv/endorse";
 import { suggestFor } from "@/lib/cv/suggest";
 import { DATED_KINDS, inDateOrder } from "@/lib/cv/order";
 import { parseJson } from "@/lib/cv/text";
-import { BREAK_REASONS, ENTRY_KIND_LIST, ENTRY_LABEL, PRESETS, SECTION_HELP, SECTION_KEYS, SECTION_TITLE, TEMPLATES, type EntryKind } from "@/lib/cv/types";
+import { DEFAULT_DATES, OLD_YEARS, datesOf, BREAK_REASONS, ENTRY_KIND_LIST, ENTRY_LABEL, PRESETS, SECTION_HELP, SECTION_KEYS, SECTION_TITLE, TEMPLATES, type EntryKind } from "@/lib/cv/types";
 import { siteUrl } from "@/lib/share";
 import { cancelRequestAction, createLinkAction, endReviewerAction, inviteReviewerAction, decideEndorsementAction, deleteEntryAction, featureQuoteAction, moveEntryAction, sortEntriesAction, requestEndorsementAction, eraseCvAction, revokeLinkAction, saveEntryAction, saveProfileAction, toggleEntryAction, toggleHiddenAction, updateLinkAction } from "@/app/cv-actions";
 
@@ -82,8 +82,22 @@ function BreakForm() {
   );
 }
 
+/** Which dates this reader is shown. Years of study and the dates of old jobs can give away a person's age, so they can be left off for any link. */
+function DatesBoxes({ dates }: { dates: { education: boolean; older: boolean } }) {
+  return (
+    <fieldset className="space-y-1.5 text-sm">
+      <legend className="text-xs font-semibold text-slate-500">Dates this reader sees</legend>
+      <input type="hidden" name="datesForm" value="1" />
+      <label className="flex items-center gap-2"><input type="checkbox" name="d_education" defaultChecked={dates.education} />Show the years I studied</label>
+      <label className="flex items-center gap-2"><input type="checkbox" name="d_older" defaultChecked={dates.older} />Show dates on anything older than {OLD_YEARS} years</label>
+      <p className="text-xs text-slate-500">Leaving dates off can stop a reader guessing your age. Your jobs and courses still show.</p>
+    </fieldset>
+  );
+}
+
 function ViewBoxes({ view }: { view: ReturnType<typeof viewOf> }) {
   return (
+    <>
     <fieldset className="space-y-1.5 text-sm">
       <legend className="text-xs font-semibold text-slate-500">What this link shows</legend>
       <input type="hidden" name="custom" value="1" />
@@ -94,6 +108,8 @@ function ViewBoxes({ view }: { view: ReturnType<typeof viewOf> }) {
         {(["email", "phone", "location", "links"] as const).map((k) => <label key={k} className="flex items-center gap-2"><input type="checkbox" name={`c_${k}`} defaultChecked={view.contact[k]} />Show my {k === "links" ? "links" : k}</label>)}
       </div>
     </fieldset>
+    <DatesBoxes dates={datesOf(view)} />
+    </>
   );
 }
 
@@ -208,7 +224,7 @@ export default async function CvPage() {
               </CvForm>
             ))}
             {mine.length > 1 && DATED_KINDS.includes(kind) && !inDateOrder(mine) && (
-              <p className="flex flex-wrap items-center gap-2 text-xs text-slate-500">Not in date order.<InlineAction action={sortEntriesAction} fields={{ kind }} label="Put newest first" /></p>
+              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">Not in date order.<InlineAction action={sortEntriesAction} fields={{ kind }} label="Put newest first" /></div>
             )}
             {mine.length > 0 && (
               <ul className="space-y-2">
@@ -316,6 +332,7 @@ export default async function CvPage() {
             <label className={lab}>Ends<select name="days" defaultValue="90" className={field}><option value="">Never</option>{DAYS.map((d) => <option key={d} value={d}>After {d} days</option>)}</select></label>
             <div className="space-y-1.5 pt-5 text-sm"><label className="flex items-center gap-2"><input type="checkbox" name="allowPdf" defaultChecked />Let them download a PDF</label><label className="flex items-center gap-2"><input type="checkbox" name="indexable" />Public only: let search engines list it</label></div>
           </div>
+          <DatesBoxes dates={DEFAULT_DATES} />
           <button className={btn}><Link2 size={14} aria-hidden />Create link</button>
         </CvForm>
 
