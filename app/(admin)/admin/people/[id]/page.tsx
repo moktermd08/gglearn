@@ -117,6 +117,7 @@ export default async function Person({ params }: { params: Promise<{ id: string 
     <div className="space-y-6">
       <PageHero Icon={Users} title={u.name} sub={<>{u.email} · {u.audience === "customer" ? "customer" : roleLabel(u.jobRole)}</>}>
         <Link href={`/admin/people?edit=${u.id}`} className="btn btn-ghost !py-1 text-sm"><UserCog size={15} />Edit or place</Link>
+        <Link href={`/admin/people/${u.id}/doctor`} className="btn btn-ghost !py-1 text-sm"><Compass size={15} />Career doctor</Link>
         <Link href="/admin/people" className="btn btn-ghost !py-1 text-sm">All people</Link>
       </PageHero>
 
