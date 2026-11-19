@@ -418,6 +418,7 @@ export default async function Dashboard() {
             </div>
             <AreaChart data={last30} height={120} />
             <div className="mt-3"><div className="mb-1 text-[11px] uppercase tracking-wider text-slate-400">Last 24 weeks</div><Heatmap days={activity} /></div>
+            <Link href="/activity" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-sky-300">See all activity <ArrowUpRight size={14} /></Link>
           </section>
 
           <section className="card p-5">
