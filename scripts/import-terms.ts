@@ -24,6 +24,8 @@ const BANKS: { slug: string; name: string; description: string; roles: string; h
     headings: { strat: "Technology strategy", arch: "Architecture", org: "Delivery and organisation", ppl: "People leadership", fin: "Finance for technology leaders", risk: "Risk and resilience", gov: "Governance and legal", ven: "Vendors and commercial", data: "Data and AI", exec: "Board and executive" } },
   { slug: "finance-admin-core", name: "Financial admin core", description: "The terms a finance or accounts team member needs, from accounts assistant to head of finance.", roles: "accounting",
     headings: { book: "Bookkeeping", arap: "Receivables and payables", bank: "Banking and cash", tax: "Tax and payroll", stmt: "Financial statements", close: "Month-end and year-end", mgmt: "Budgeting and management accounting", ctl: "Financial control and audit", sys: "Finance systems and compliance", lead: "Finance leadership" } },
+  { slug: "security-core", name: "Security core", description: "The terms a security professional needs, from junior analyst to CISO.", roles: "security analyst,ciso,security",
+    headings: { fund: "Security fundamentals", iam: "Identity and access", net: "Network security", app: "Application security", crypto: "Cryptography", atk: "Attacks and threats", ops: "Security operations", ir: "Incident response", grc: "Governance, risk and compliance", assure: "Security assurance" } },
 ];
 
 let banks = 0, added = 0, kept = 0;
