@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, BookOpen, FileText, ClipboardList, Stethoscope, Compass, Database, Hammer, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell, GraduationCap, HeartHandshake } from "lucide-react";
+import { Award, BookOpen, FileText, ClipboardList, Stethoscope, Compass, Database, Hammer, Gift, Settings2, Flame, LayoutDashboard, LogIn, Mountain, Newspaper, Rocket, ShieldCheck, Swords, TrendingUp, Trophy, Users, UserRound, Medal, CalendarDays, Bell, GraduationCap, HeartHandshake, MessageSquareText } from "lucide-react";
 import { logout } from "@/app/actions";
 import { NavLink } from "@/components/NavLink";
 import { Dropdown } from "@/components/Dropdown";
@@ -26,7 +26,7 @@ export const ADMIN_LINKS = [
 /** Managers see everything except the policy pages only an admin may change. */
 export const adminLinksFor = (role: string) => ADMIN_LINKS.filter((l) => !("adminOnly" in l && l.adminOnly) || role === "admin");
 
-export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: User; unread?: number; look?: Look }) {
+export function SiteHeader({ user, unread = 0, feedback = 0, look = DEFAULT_LOOK }: { user: User; unread?: number; feedback?: number; look?: Look }) {
   const staff = !!user && user.role !== "learner";
   const mobile = "flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-base";
   return (
@@ -75,6 +75,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
               <Link href="/profile" className="mt-1 items-center gap-2 hover:bg-black/5"><UserRound size={15} />Your profile</Link>
               <Link href="/profile/cv" className="items-center gap-2 hover:bg-black/5"><FileText size={15} />Your CV</Link>
               <Link href="/achievements" className="items-center gap-2 hover:bg-black/5"><Medal size={15} />Achievements</Link>
+              <Link href="/feedback" className="items-center gap-2 hover:bg-black/5"><MessageSquareText size={15} />Feedback{feedback > 0 && <span className="ml-auto rounded-full bg-pink-600 px-2 text-[10px] font-bold text-[#fff]">{feedback}</span>}</Link>
               <Link href="/mentoring" className="items-center gap-2 hover:bg-black/5"><GraduationCap size={15} />Mentoring</Link>
               <Link href="/sponsoring" className="items-center gap-2 hover:bg-black/5"><HeartHandshake size={15} />Sponsoring</Link>
               <Link href="/rewards" className="items-center gap-2 hover:bg-black/5"><Gift size={15} />My rewards</Link>
@@ -116,6 +117,7 @@ export function SiteHeader({ user, unread = 0, look = DEFAULT_LOOK }: { user: Us
                 <Link href="/notifications" className={mobile}><Bell size={18} />Notifications{unread > 0 && <span className="ml-auto rounded-full bg-pink-600 px-2 text-xs font-bold text-[#fff]">{unread}</span>}</Link>
                 <Link href="/profile/cv" className={mobile}><FileText size={18} />Your CV</Link>
                 <Link href="/achievements" className={mobile}><Medal size={18} />Achievements</Link>
+                <Link href="/feedback" className={mobile}><MessageSquareText size={18} />Feedback{feedback > 0 && <span className="ml-auto rounded-full bg-pink-600 px-2 text-xs font-bold text-[#fff]">{feedback}</span>}</Link>
                 <Link href="/mentoring" className={mobile}><GraduationCap size={18} />Mentoring</Link>
                 <Link href="/sponsoring" className={mobile}><HeartHandshake size={18} />Sponsoring</Link>
                 <Link href="/rewards" className={mobile}><Gift size={18} />My rewards</Link>

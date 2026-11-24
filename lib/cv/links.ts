@@ -1,8 +1,8 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
-import { and, eq, isNull, sql } from "drizzle-orm";
-import { cvLinks, db, users } from "@/lib/db";
+import { and, eq, gte, inArray, isNull, lt, sql } from "drizzle-orm";
+import { cvEntries, cvLinkDays, cvLinks, db, users } from "@/lib/db";
 import { hashPassword } from "@/lib/password";
-import { LIMITS, LINK_KINDS, PRESETS, SECTION_KEYS, type ContactView, type LinkKind, type PresetKey, type View } from "@/lib/cv/types";
+import { LIMITS, LINK_KINDS, PRESETS, SECTION_KEYS, SKIP_MAX, datesOf, type ContactView, type DatesView, type LinkKind, type PresetKey, type View } from "@/lib/cv/types";
 import { cleanLine, parseJson } from "@/lib/cv/text";
 
 /**
@@ -45,23 +45,32 @@ export function openLink(raw: string): Link | null {
 }
 
 /** What this link shows, with anything missing treated as hidden. */
-export function viewOf(l: Pick<Link, "sections" | "contact">): View {
-  const s = parseJson<Record<string, unknown>>(l.sections, {}), c = parseJson<Record<string, unknown>>(l.contact, {});
+export function viewOf(l: Pick<Link, "sections" | "contact"> & Partial<Pick<Link, "dates" | "skip">>): View {
+  const s = parseJson<Record<string, unknown>>(l.sections, {}), c = parseJson<Record<string, unknown>>(l.contact, {}), d = parseJson<Record<string, unknown>>(l.dates ?? "{}", {});
   return {
     sections: Object.fromEntries(SECTION_KEYS.map((k) => [k, s[k] === true])) as View["sections"],
     contact: { email: c.email === true, phone: c.phone === true, location: c.location === true, links: c.links === true },
+    dates: { education: d.education !== false, older: d.older !== false }, // anything not said shows
+    skip: idsOf(parseJson<unknown[]>(l.skip ?? "[]", [])),
   };
 }
 
+/** Positive whole numbers only, no repeats, and no more than SKIP_MAX. */
+const idsOf = (v: unknown): number[] => [...new Set((Array.isArray(v) ? v : []).filter((n): n is number => Number.isInteger(n) && n > 0))].slice(0, SKIP_MAX);
+/** Of these ids, the ones that are really this person's entries: a link can only leave off what the owner has. */
+const ownedIds = (userId: number, ids: number[]): number[] => (ids.length ? db.select({ id: cvEntries.id }).from(cvEntries).where(and(eq(cvEntries.userId, userId), inArray(cvEntries.id, ids))).all().map((r) => r.id) : []);
+
 export const DAYS = [7, 30, 90, 180, 365] as const;
-export type LinkInput = { label?: unknown; kind?: unknown; preset?: unknown; sections?: Record<string, boolean>; contact?: Partial<ContactView>; passcode?: unknown; days?: unknown; allowPdf?: unknown; indexable?: unknown };
+export type LinkInput = { label?: unknown; kind?: unknown; preset?: unknown; sections?: Record<string, boolean>; contact?: Partial<ContactView>; dates?: Partial<DatesView>; skip?: unknown; passcode?: unknown; days?: unknown; allowPdf?: unknown; indexable?: unknown };
 
 function viewFrom(i: LinkInput, kind: LinkKind): View {
   const base = PRESETS[(i.preset as PresetKey) in PRESETS ? (i.preset as PresetKey) : kind === "public" ? "public" : "recruiter"].view;
   const sections = { ...base.sections }, contact = { ...base.contact };
   if (i.sections) for (const k of SECTION_KEYS) if (typeof i.sections[k] === "boolean") sections[k] = i.sections[k];
   if (i.contact) for (const k of ["email", "phone", "location", "links"] as const) if (typeof i.contact[k] === "boolean") contact[k] = i.contact[k]!;
-  return { sections, contact };
+  const dates = datesOf(base);
+  if (i.dates) for (const k of ["education", "older"] as const) if (typeof i.dates[k] === "boolean") dates[k] = i.dates[k]!;
+  return { sections, contact, dates, skip: i.skip === undefined ? [] : idsOf(i.skip) };
 }
 
 /** A new share link. Returns why it was refused, or the row. */
@@ -80,8 +89,9 @@ export async function createLink(userId: number, i: LinkInput): Promise<{ error:
   }
   const days = DAYS.find((d) => d === Number(i.days));
   const view = viewFrom(i, kind);
+  view.skip = ownedIds(userId, view.skip ?? []);
   const row = db.insert(cvLinks).values({
-    userId, label, kind, nonce: randomBytes(12).toString("base64url"), passHash, sections: JSON.stringify(view.sections), contact: JSON.stringify(view.contact),
+    userId, label, kind, nonce: randomBytes(12).toString("base64url"), passHash, sections: JSON.stringify(view.sections), contact: JSON.stringify(view.contact), dates: JSON.stringify(view.dates), skip: JSON.stringify(view.skip ?? []),
     allowPdf: i.allowPdf !== false && i.allowPdf !== "off", indexable: kind === "public" && (i.indexable === true || i.indexable === "on"), expiresAt: days ? nowSec() + days * 86400 : null,
   }).returning().get();
   return { link: row };
@@ -92,10 +102,11 @@ export function updateLink(userId: number, id: number, i: LinkInput): { error: s
   const l = db.select().from(cvLinks).where(and(eq(cvLinks.id, id), eq(cvLinks.userId, userId))).get();
   if (!l) return { error: "That link is not yours." };
   if (l.revokedAt) return { error: "That link has been revoked." };
-  const view = viewFrom({ ...i, preset: undefined, sections: { ...viewOf(l).sections, ...(i.sections ?? {}) }, contact: { ...viewOf(l).contact, ...(i.contact ?? {}) } }, l.kind);
+  const view = viewFrom({ ...i, preset: undefined, sections: { ...viewOf(l).sections, ...(i.sections ?? {}) }, contact: { ...viewOf(l).contact, ...(i.contact ?? {}) }, dates: { ...viewOf(l).dates, ...(i.dates ?? {}) }, skip: i.skip === undefined ? viewOf(l).skip : i.skip }, l.kind);
+  view.skip = ownedIds(userId, view.skip ?? []);
   const days = i.days === "none" ? null : DAYS.find((d) => d === Number(i.days));
   const row = db.update(cvLinks).set({
-    label: i.label === undefined ? l.label : cleanLine(i.label, LIMITS.label), sections: JSON.stringify(view.sections), contact: JSON.stringify(view.contact),
+    label: i.label === undefined ? l.label : cleanLine(i.label, LIMITS.label), sections: JSON.stringify(view.sections), contact: JSON.stringify(view.contact), dates: JSON.stringify(view.dates), skip: JSON.stringify(view.skip ?? []),
     allowPdf: i.allowPdf === undefined ? l.allowPdf : i.allowPdf === true || i.allowPdf === "on",
     indexable: l.kind === "public" && (i.indexable === undefined ? l.indexable : i.indexable === true || i.indexable === "on"),
     expiresAt: i.days === undefined ? l.expiresAt : days ? nowSec() + days * 86400 : null,
@@ -108,9 +119,28 @@ export function revokeLink(userId: number, id: number): { error: string } | { do
   return r ? { done: true } : { error: "That link is already gone, or is not yours." };
 }
 
-/** Counts one reader. Only a count and the time: no address, no viewer details are kept. */
-export function recordView(id: number) {
-  db.update(cvLinks).set({ views: sql`${cvLinks.views} + 1`, lastViewedAt: nowSec() }).where(eq(cvLinks.id, id)).run();
+/** Link previews, crawlers and monitors fetch a page without anyone reading it. They are not counted. */
+export const looksAutomated = (ua: string | null | undefined) => !ua || /bot|crawl|spider|slurp|preview|fetch|monitor|scan|curl|wget|python|node|java|go-http|facebookexternalhit|whatsapp|slack|discord|telegram|linkedin|skype|embedly|headless/i.test(ua);
+
+const DAY_KEEP = 90;
+const dayNo = (t = nowSec()) => Math.floor(t / 86400);
+
+/** Counts one reader, or one PDF download. Only counts and times: no address, no browser, no account. Pruned to the last 90 days. */
+export function recordView(id: number, what: "view" | "pdf" = "view", t = nowSec()) {
+  const d = dayNo(t), v = what === "view" ? 1 : 0, p = what === "pdf" ? 1 : 0;
+  db.insert(cvLinkDays).values({ linkId: id, day: d, views: v, pdfs: p })
+    .onConflictDoUpdate({ target: [cvLinkDays.linkId, cvLinkDays.day], set: { views: sql`${cvLinkDays.views} + ${v}`, pdfs: sql`${cvLinkDays.pdfs} + ${p}` } }).run();
+  if (what === "view") db.update(cvLinks).set({ views: sql`${cvLinks.views} + 1`, lastViewedAt: sql`max(coalesce(${cvLinks.lastViewedAt}, 0), ${t})` }).where(eq(cvLinks.id, id)).run();
+  if (Math.random() < 0.02) db.delete(cvLinkDays).where(and(eq(cvLinkDays.linkId, id), lt(cvLinkDays.day, d - DAY_KEEP))).run();
+}
+
+/** The last `days` days for one of the owner's own links, oldest first, with empty days filled in. Null when the link is not theirs. */
+export function historyOf(userId: number, linkId: number, days = 30, t = nowSec()): { day: number; views: number; pdfs: number }[] | null {
+  const l = db.select({ id: cvLinks.id }).from(cvLinks).where(and(eq(cvLinks.id, linkId), eq(cvLinks.userId, userId))).get();
+  if (!l) return null;
+  const end = dayNo(t), from = end - days + 1;
+  const rows = new Map(db.select().from(cvLinkDays).where(and(eq(cvLinkDays.linkId, linkId), gte(cvLinkDays.day, from))).all().map((r) => [r.day, r]));
+  return Array.from({ length: days }, (_, i) => { const r = rows.get(from + i); return { day: (from + i) * 86400, views: r?.views ?? 0, pdfs: r?.pdfs ?? 0 }; });
 }
 
 // ---- the passcode gate: after the right code, a short-lived signed cookie for that link alone

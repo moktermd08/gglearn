@@ -42,7 +42,7 @@ The job: let anyone turn what they do on the platform, plus what they add by han
    - Nothing derived from required company training: that is an employer's record, not the person's to publish.
 5. **Smart, but not presumptuous.** The editor suggests: a headline (from role and goal), a summary written from their real numbers (editable text, never auto-published), skills worth featuring, an experience entry for the company they belong to on the platform (a one-click suggestion, never added silently), and a completeness score with the next three things to do. No AI is needed for this; an optional AI rewrite can follow.
 6. **ATS-safe PDF.** A4, single column, selectable text, standard section names, an embedded font so names with accents survive, links as text (the verification address printed in full). Generated on the server from the same document structure, so it matches the web view and honours the link's visibility.
-7. **Privacy by default.** Everything starts private. No photo (opt-in later; photos on CVs are discouraged in many hiring contexts and add bias risk). Contact email on a CV is a separate address the owner chooses, not their login email. Private and passcode pages are `noindex` and send no referrer, so a link in the CV cannot leak the CV's own address. External links are `noopener noreferrer`. No viewer IPs are stored: only a count and a last-viewed time.
+7. **Privacy by default.** Everything starts private. No photo (opt-in later; photos on CVs are discouraged in many hiring contexts and add bias risk). Contact email on a CV is a separate address the owner chooses, not their login email. Private and passcode pages are `noindex` and send no referrer, so a link in the CV cannot leak the CV's own address. External links are `noopener noreferrer`. No viewer IPs are stored: only counts per day and a last-viewed time.
 8. **Standalone reader layout.** The reader's page has no site chrome and no login prompts: it is a document.
 
 ## What is built now, and what follows
@@ -53,4 +53,6 @@ Also built: references from managers and mentors (written by them, approved by t
 
 Also built: import from a JSON Resume file or a LinkedIn data export (a preview with a tick beside everything first, nothing saved until confirmed, nothing duplicated or overwritten unless chosen, everything in the file treated as untrusted and cleaned again on save) and export as JSON Resume (their own data, including verified certificates with their check links; what they hid is left out). Connections and other people's details in a LinkedIn export are never imported.
 
-Next (deliberately not rushed): AI-assisted rewriting; per-link view history; a photo option.
+Also built: a 30-day activity chart for each live link (page views and PDF downloads per day, with the last 7 days and the totals in words). It keeps counts per link per day and nothing about the reader (no address, browser or account); link previews and crawlers are not counted; the owner reading their own link is not counted; days older than 90 are pruned (lib/cv/links.ts, table cv_link_days, a new table).
+
+Next (deliberately not rushed): AI-assisted rewriting; a photo option.

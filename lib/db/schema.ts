@@ -1522,6 +1522,8 @@ export const cvLinks = sqliteTable("cv_links", {
   passHash: text("pass_hash").notNull().default(""), // salted hash of the passcode, for kind "passcode"
   sections: text("sections").notNull(), // JSON: { summary: true, ... } what this link shows
   contact: text("contact").notNull(), // JSON: { email, phone, location, links }
+  skip: text("skip").notNull().default("[]"), // JSON: ids of the owner's entries (jobs, courses...) left off for this reader; "[]" leaves none off. Text with a default, so it can be added to a table with rows
+  dates: text("dates").notNull().default("{}"), // JSON: { education, older }, false = leave those dates off for this reader; "{}" shows every date. Text with a default, so it can be added to a table with rows
   allowPdf: integer("allow_pdf", { mode: "boolean" }).notNull().default(true),
   indexable: integer("indexable", { mode: "boolean" }).notNull().default(false), // a public link only: may search engines list it
   expiresAt: integer("expires_at"),
@@ -1649,3 +1651,58 @@ export const termExamAnswers = sqliteTable("term_exam_answers", {
   chosen: integer("chosen"), // null until answered
   right: integer("right", { mode: "boolean" }),
 }, (t) => [index("term_exam_answers_exam").on(t.examId), index("term_exam_answers_term").on(t.termId)]);
+
+// How often a share link was read, per day (lib/cv/links.ts): a count of page views and of PDF downloads for each link and day, and nothing about the
+// reader (no address, no browser, no account). Days are UTC day numbers. Old days are pruned. A new table only: nothing here alters one that has rows.
+export const cvLinkDays = sqliteTable("cv_link_days", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  linkId: integer("link_id").notNull().references(() => cvLinks.id),
+  day: integer("day").notNull(), // days since 1970-01-01, UTC
+  views: integer("views").notNull().default(0),
+  pdfs: integer("pdfs").notNull().default(0),
+}, (t) => [uniqueIndex("cv_link_day").on(t.linkId, t.day)]);
+
+// ---- STAR behaviour stories for Civil Service applications (docs/star/design.md). Private to their owner: no share link, never part of the CV page.
+
+// One real example from someone's work or life, written as Situation, Task, Action, Result, and tagged with the behaviours it can evidence.
+export const starStories = sqliteTable("star_stories", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  title: text("title").notNull(),
+  context: text("context").notNull().default(""), // where it happened: "Contact centre, 2024"
+  situation: text("situation").notNull().default(""),
+  task: text("task").notNull().default(""),
+  action: text("action").notNull().default(""),
+  result: text("result").notNull().default(""),
+  behaviours: text("behaviours").notNull().default("[]"), // JSON: behaviour keys (lib/star/framework.ts)
+  ready: integer("ready", { mode: "boolean" }).notNull().default(false), // the owner calls it ready to use
+  createdAt: integer("created_at").notNull().default(now),
+  updatedAt: integer("updated_at").notNull().default(now),
+}, (t) => [index("star_stories_user").on(t.userId)]);
+
+// A job someone is applying for, with the behaviours it asks for.
+export const starApplications = sqliteTable("star_applications", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  title: text("title").notNull(), // the job
+  department: text("department").notNull().default(""),
+  grade: text("grade").notNull().default("other"),
+  closesOn: text("closes_on").notNull().default(""), // YYYY-MM-DD or ""
+  advertUrl: text("advert_url").notNull().default(""),
+  wordLimit: integer("word_limit").notNull().default(250), // the limit for each behaviour, in the unit below (the column keeps its first name)
+  limitUnit: text("limit_unit", { enum: ["words", "characters"] }).notNull().default("words"), // adverts limit by words or by characters; text, not a boolean, so it can be added to a table with rows
+  status: text("status", { enum: ["preparing", "submitted", "interview", "closed"] }).notNull().default("preparing"),
+  note: text("note").notNull().default(""),
+  createdAt: integer("created_at").notNull().default(now),
+  updatedAt: integer("updated_at").notNull().default(now),
+}, (t) => [index("star_applications_user").on(t.userId)]);
+
+// For one behaviour in one application: which story answers it, and the wording tailored to that job.
+export const starPicks = sqliteTable("star_picks", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  applicationId: integer("application_id").notNull().references(() => starApplications.id),
+  behaviour: text("behaviour").notNull(),
+  storyId: integer("story_id").references(() => starStories.id),
+  answer: text("answer").notNull().default(""),
+  updatedAt: integer("updated_at").notNull().default(now),
+}, (t) => [uniqueIndex("star_pick_pair").on(t.applicationId, t.behaviour)]);

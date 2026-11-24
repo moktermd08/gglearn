@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { CvView } from "@/components/cv/CvView";
 import { db, users } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { buildCv } from "@/lib/cv/build";
-import { gateName, gateOpen, openLink, recordView, viewOf } from "@/lib/cv/links";
+import { gateName, gateOpen, looksAutomated, openLink, recordView, viewOf } from "@/lib/cv/links";
 import { siteUrl } from "@/lib/share";
 import { UnlockForm } from "./unlock";
 
@@ -33,6 +33,6 @@ export default async function ReadCv({ params }: { params: Promise<{ token: stri
   if (link.kind === "passcode" && !gateOpen(link.id, (await cookies()).get(gateName(link.id))?.value)) return <UnlockForm token={token} name={nameOf(link.userId)} />;
   const doc = buildCv(link.userId, viewOf(link), await siteUrl());
   if (!doc) notFound();
-  if ((await currentUser())?.id !== link.userId) recordView(link.id);
+  if ((await currentUser())?.id !== link.userId && !looksAutomated((await headers()).get("user-agent"))) recordView(link.id);
   return <CvView doc={doc} pdfHref={link.allowPdf ? `/cv/${token}/pdf` : undefined} />;
 }

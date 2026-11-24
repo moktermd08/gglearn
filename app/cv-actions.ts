@@ -4,10 +4,12 @@ import { and, asc, eq, sql } from "drizzle-orm";
 import { answerNotes, cvEntries, cvProfiles, cvQuotes, db } from "@/lib/db";
 import { actingUser, logViewAsUse } from "@/lib/auth";
 import { createLink, revokeLink, updateLink } from "@/lib/cv/links";
+import { eraseCv } from "@/lib/cv/erase";
+import { DATED_KINDS, arrange, arrangeAfterSave } from "@/lib/cv/order";
 import { addComment, deleteComment, endReviewer, inviteReviewer, replyToComment, resolveComment } from "@/lib/cv/review";
 import { cancelRequest, decideEndorsement, requestEndorsement, withdrawEndorsement, writeEndorsement } from "@/lib/cv/endorse";
 import { cleanBlock, cleanLine, isEmail, isHexColour, parseJson, safeUrl } from "@/lib/cv/text";
-import { ENTRY_KIND_LIST, LIMITS, SECTION_KEYS, TEMPLATES, type EntryKind } from "@/lib/cv/types";
+import { ENTRY_KIND_LIST, LIMITS, SECTION_KEYS, TEMPLATES, whyNoRoom, type EntryKind } from "@/lib/cv/types";
 import { allowed, hit } from "@/lib/rate-limit";
 
 /**
@@ -73,10 +75,13 @@ export async function saveEntryAction(_: Res, fd: FormData): Promise<Res> {
     const r = db.update(cvEntries).set(row).where(and(eq(cvEntries.id, id), eq(cvEntries.userId, me.id))).returning().get();
     if (!r) return { error: "That entry is not yours." };
   } else {
-    const have = db.select({ n: sql<number>`count(*)`, lo: sql<number | null>`min(${cvEntries.sort})` }).from(cvEntries).where(eq(cvEntries.userId, me.id)).get();
-    if ((have?.n ?? 0) >= LIMITS.entries) return { error: `That is plenty: ${LIMITS.entries} entries. Remove one first.` };
+    const have = db.select({ lo: sql<number | null>`min(${cvEntries.sort})` }).from(cvEntries).where(eq(cvEntries.userId, me.id)).get();
+    const byKind = Object.fromEntries(db.select({ k: cvEntries.kind, n: sql<number>`count(*)` }).from(cvEntries).where(eq(cvEntries.userId, me.id)).groupBy(cvEntries.kind).all().map((r) => [r.k, r.n]));
+    const full = whyNoRoom(byKind, kind);
+    if (full) return { error: full };
     db.insert(cvEntries).values({ userId: me.id, ...row, sort: (have?.lo ?? 1) - 1 }).run(); // newest on top
   }
+  arrangeAfterSave(me.id, kind, Number.isInteger(id) && id > 0 ? id : undefined); // where its dates belong, when the list was in date order
   refresh();
   return { done: "Saved." };
 }
@@ -145,9 +150,13 @@ export async function featureQuoteAction(_: Res, fd: FormData): Promise<Res> {
 // ---- share links
 
 function chosenView(fd: FormData) {
-  if (fd.get("custom") !== "1") return {};
+  // the dates boxes come with their own marker, so they work on the create form (which only picks a preset) as well as on the full view form
+  const dates = fd.get("datesForm") === "1" ? { dates: { education: fd.get("d_education") === "on", older: fd.get("d_older") === "on" } } : {};
+  // entries the person ticked to leave off for this reader; the marker says the list was on the form, so an empty list means "leave none off"
+  const skip = fd.get("skipForm") === "1" ? { skip: fd.getAll("skip").map((v) => Number(v)).filter((n) => Number.isInteger(n) && n > 0) } : {};
+  if (fd.get("custom") !== "1") return { ...dates, ...skip };
   const sections = Object.fromEntries(SECTION_KEYS.map((k) => [k, fd.get(`sec_${k}`) === "on"]));
-  return { sections, contact: { email: fd.get("c_email") === "on", phone: fd.get("c_phone") === "on", location: fd.get("c_location") === "on", links: fd.get("c_links") === "on" } };
+  return { ...dates, ...skip, sections, contact: { email: fd.get("c_email") === "on", phone: fd.get("c_phone") === "on", location: fd.get("c_location") === "on", links: fd.get("c_links") === "on" } };
 }
 
 export async function createLinkAction(_: Res, fd: FormData): Promise<Res> {
@@ -279,4 +288,25 @@ export async function deleteCommentAction(_: Res, fd: FormData): Promise<Res> {
   const r = deleteComment(me, Number(fd.get("id")));
   if (r?.done) tidyReview(Number(fd.get("ownerId")));
   return r;
+}
+
+/** Removes the person's whole CV: what they typed, their share links, reviewers and references (lib/cv/erase.ts). Asks for the word "erase". */
+export async function eraseCvAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("eraseCvAction");
+  if (!me) return BLOCKED;
+  if (text(fd.get("confirm")) !== "erase") return { error: "Nothing was erased." };
+  eraseCv(me.id);
+  refresh();
+  return { done: "Your CV has been erased." };
+}
+
+/** Puts one kind of entry (jobs, study, projects...) in date order, most recent first. */
+export async function sortEntriesAction(_: Res, fd: FormData): Promise<Res> {
+  const me = await owner("sortEntriesAction");
+  if (!me) return BLOCKED;
+  const kind = DATED_KINDS.find((k) => k === fd.get("kind"));
+  if (!kind) return { error: "That cannot be sorted by date." };
+  const moved = arrange(me.id, kind, { force: true });
+  refresh();
+  return { done: moved ? "Newest first." : "Already in date order." };
 }

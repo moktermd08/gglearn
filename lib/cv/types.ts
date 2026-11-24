@@ -30,8 +30,23 @@ export const ENTRY_LABEL: Record<EntryKind, { one: string; many: string; section
 };
 export const ENTRY_KIND_LIST: EntryKind[] = ["experience", "project", "education", "volunteer", "award", "language", "skill"];
 
+/**
+ * How many of each kind a CV may hold. Each kind has its own room, so a long career does not run out of space because of its skills, and
+ * LIMITS.entries is only the most in all, to stop abuse.
+ */
+export const ENTRY_CAPS: Record<EntryKind, number> = { experience: 40, project: 30, education: 20, volunteer: 20, award: 30, language: 20, skill: 80 };
+const PLURAL: Record<EntryKind, string> = { experience: "jobs", project: "projects", education: "courses or qualifications", volunteer: "volunteering roles", award: "awards", language: "languages", skill: "skills" };
+
+/** Why one more entry of this kind cannot be added (what the person has, by kind), or null when there is room. */
+export function whyNoRoom(have: Partial<Record<EntryKind, number>>, kind: EntryKind): string | null {
+  const n = have[kind] ?? 0;
+  if (n >= ENTRY_CAPS[kind]) return `You already have ${n} ${PLURAL[kind]}, the most a CV can hold. Remove one first.`;
+  if (Object.values(have).reduce((a, b) => a + (b ?? 0), 0) >= LIMITS.entries) return `Your CV already has ${LIMITS.entries} entries, the most it can hold. Remove some first.`;
+  return null;
+}
+
 export type ContactView = { email: boolean; phone: boolean; location: boolean; links: boolean };
-export type View = { sections: Record<SectionKey, boolean>; contact: ContactView };
+export type View = { sections: Record<SectionKey, boolean>; contact: ContactView; dates?: DatesView; skip?: number[] };
 
 const all = (on: boolean, off: SectionKey[] = []): Record<SectionKey, boolean> => Object.fromEntries(SECTION_KEYS.map((k) => [k, on && !off.includes(k)])) as Record<SectionKey, boolean>;
 
@@ -43,7 +58,7 @@ export const PRESETS: Record<"public" | "recruiter" | "full", { label: string; h
 };
 export type PresetKey = keyof typeof PRESETS;
 
-export const LIMITS = { headline: 120, summary: 1200, location: 80, phone: 30, email: 120, title: 120, org: 120, body: 1500, label: 80, linkLabel: 40, url: 300, links: 6, entries: 60, activeLinks: 20, passcodeMin: 6, passcodeMax: 64 } as const;
+export const LIMITS = { headline: 120, summary: 1200, location: 80, phone: 30, email: 120, title: 120, org: 120, body: 1500, label: 80, linkLabel: 40, url: 300, links: 6, entries: 200, activeLinks: 20, passcodeMin: 6, passcodeMax: 64 } as const;
 export const LINK_KINDS = ["public", "private", "passcode"] as const;
 export type LinkKind = (typeof LINK_KINDS)[number];
 export const TEMPLATES = [{ key: "classic", label: "Classic", help: "Plain and traditional. The safest for recruiting software." }, { key: "modern", label: "Modern", help: "A coloured header and accent headings." }, { key: "compact", label: "Compact", help: "Tighter, to fit more on a page." }] as const;
@@ -56,3 +71,27 @@ export const RELATIONSHIP_LABEL = { manager: "Manager", mentor: "Mentor" } as co
 /** What a reviewer's comment on a CV may say, and how many they may leave. */
 export const CV_COMMENT = { min: 3, max: 600, reply: 300, perItem: 5, perDay: 40 } as const;
 export const CV_REVIEW_VIEW: View = { sections: Object.fromEntries(SECTION_KEYS.map((k) => [k, true])) as View["sections"], contact: { email: false, phone: false, location: false, links: false } };
+
+/**
+ * A career break is a line in Experience with dates and, if the person wants, a plain reason: so a gap is shown as a gap, not left for a reader to
+ * wonder about and not dressed up as a job. The first has no reason at all; saying why is always the person's choice.
+ */
+export const BREAK_REASONS = [
+  "Career break", "Career break: caring responsibilities", "Career break: family", "Career break: health and recovery",
+  "Career break: study or training", "Career break: travel", "Career break: relocation", "Career break: redundancy and looking for work",
+] as const;
+export const isCareerBreak = (title: string) => title === "Career break" || title.startsWith("Career break: ");
+
+/**
+ * Which dates a reader is shown. Years of study and the dates of old jobs can tell a reader a person's age before they have read a word of the CV,
+ * so the person can leave them off for any link. A view with no `dates` shows every date, as before.
+ */
+export type DatesView = { education: boolean; older: boolean };
+export const OLD_YEARS = 15;
+export const DEFAULT_DATES: DatesView = { education: true, older: true };
+export const datesOf = (v: Pick<View, "dates">): DatesView => ({ ...DEFAULT_DATES, ...(v.dates ?? {}) });
+
+/** Entries the person left off for this reader (View.skip), as a set. A view with no `skip` leaves none off. */
+export const skipOf = (v: Pick<View, "skip">): Set<number> => new Set(v.skip ?? []);
+/** The most entries one link may leave off. */
+export const SKIP_MAX = 200;
