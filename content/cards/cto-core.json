@@ -1,0 +1,2059 @@
+{
+ "slug": "cto-core",
+ "name": "CTO core vocabulary",
+ "description": "The 100 terms a technology leader needs to know, from engineering manager to CTO.",
+ "roles": "cto",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "strat": "technology strategy term",
+  "arch": "architecture term",
+  "org": "engineering delivery or organisation term",
+  "ppl": "people leadership term",
+  "fin": "finance term for technology leaders",
+  "risk": "risk or resilience term",
+  "gov": "governance or legal term",
+  "ven": "vendor or commercial term",
+  "data": "data or AI term",
+  "exec": "board or executive term"
+ },
+ "cards": [
+  {
+   "group": "strat",
+   "subject": "technology strategy",
+   "tier": 4,
+   "says": [
+    "sets how technology will help the organisation reach its goals",
+    "chooses where to invest and what to leave alone"
+   ],
+   "use": "need to explain how technology supports the business goals over the next few years",
+   "not": [
+    "lists the tasks of one team for the next sprint"
+   ],
+   "like": [
+    "roadmap"
+   ]
+  },
+  {
+   "group": "strat",
+   "subject": "roadmap",
+   "tier": 1,
+   "says": [
+    "shows the planned direction and sequence of work over time",
+    "is a plan for outcomes that changes as priorities change"
+   ],
+   "use": "need to show stakeholders what is planned and in what order",
+   "not": [
+    "is a fixed contract of dates and features that cannot change"
+   ],
+   "like": [
+    "technology strategy"
+   ]
+  },
+  {
+   "group": "strat",
+   "subject": "OKR",
+   "tier": 2,
+   "says": [
+    "pairs an ambitious objective with measurable key results",
+    "is reviewed regularly to show progress"
+   ],
+   "use": "want a team's goals to be ambitious and measurable",
+   "not": [
+    "is a legal obligation written into a supplier contract"
+   ]
+  },
+  {
+   "group": "strat",
+   "subject": "build versus buy",
+   "tier": 3,
+   "says": [
+    "is the decision whether to make a capability in-house or acquire it",
+    "weighs differentiation, cost, speed and long-term control"
+   ],
+   "use": "need to decide whether to write your own tool or purchase one",
+   "not": [
+    "is the choice of which cloud region to use"
+   ],
+   "like": [
+    "core versus context"
+   ]
+  },
+  {
+   "group": "strat",
+   "subject": "vendor lock-in",
+   "tier": 3,
+   "says": [
+    "makes it costly to switch away from a supplier",
+    "grows when your data and code depend on one provider's proprietary features"
+   ],
+   "use": "worry that moving away from a supplier later would be very expensive",
+   "not": [
+    "is a contract term that guarantees a price for several years"
+   ]
+  },
+  {
+   "group": "strat",
+   "subject": "technology radar",
+   "tier": 4,
+   "says": [
+    "tracks technologies and places each as adopt, trial, assess or hold",
+    "helps an organisation choose what to use and what to avoid"
+   ],
+   "use": "need a shared view of which technologies to adopt or avoid",
+   "not": [
+    "is a tool that monitors servers for outages"
+   ],
+   "like": [
+    "Wardley map"
+   ]
+  },
+  {
+   "group": "strat",
+   "subject": "platform team",
+   "tier": 4,
+   "says": [
+    "builds shared tools and services that other teams use",
+    "aims to make other teams faster and more consistent"
+   ],
+   "use": "want other teams to stop rebuilding the same tools",
+   "not": [
+    "owns a single customer-facing feature from end to end"
+   ]
+  },
+  {
+   "group": "strat",
+   "subject": "core versus context",
+   "tier": 4,
+   "says": [
+    "separates what makes the business different from what everyone needs",
+    "suggests putting scarce talent on the core and buying the context"
+   ],
+   "use": "need to decide where scarce engineers should spend their time",
+   "not": [
+    "separates production from test environments"
+   ],
+   "like": [
+    "build versus buy"
+   ]
+  },
+  {
+   "group": "strat",
+   "subject": "time to market",
+   "tier": 2,
+   "says": [
+    "is how long it takes to get an idea from concept to customers",
+    "is shortened by removing delays and limiting work in progress"
+   ],
+   "use": "need to judge how quickly a new product can reach customers",
+   "not": [
+    "is the total price of owning a product"
+   ]
+  },
+  {
+   "group": "strat",
+   "subject": "Wardley map",
+   "tier": 5,
+   "says": [
+    "maps components by user need and how evolved they are",
+    "helps show what to build, buy or leave to the market"
+   ],
+   "use": "want to see how components evolve and where to invest",
+   "not": [
+    "is a diagram of the servers in a data centre"
+   ],
+   "like": [
+    "technology radar"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "enterprise architecture",
+   "tier": 4,
+   "says": [
+    "describes how an organisation's business, data, applications and technology fit together",
+    "guides decisions that span several teams"
+   ],
+   "use": "need a view of how all of the organisation's systems relate",
+   "not": [
+    "describes the code structure of one application"
+   ],
+   "like": [
+    "reference architecture"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "reference architecture",
+   "tier": 4,
+   "says": [
+    "is a proven template that teams use as a starting point for a type of system",
+    "encourages consistency across projects"
+   ],
+   "use": "want several teams to follow the same proven pattern",
+   "not": [
+    "is a diagram of one specific running system"
+   ],
+   "like": [
+    "enterprise architecture"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "single point of failure",
+   "tier": 2,
+   "says": [
+    "is one component whose failure stops the whole system",
+    "is removed by adding redundancy"
+   ],
+   "use": "find that one server going down would take the whole service offline",
+   "not": [
+    "is a test that must pass before a release"
+   ],
+   "like": [
+    "high availability"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "high availability",
+   "tier": 3,
+   "says": [
+    "is designing a system to keep running when parts fail",
+    "uses redundancy and automatic failover"
+   ],
+   "use": "need a service to stay up even if a server fails",
+   "not": [
+    "is making a system faster for a single user"
+   ],
+   "like": [
+    "single point of failure"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "legacy modernisation",
+   "tier": 3,
+   "says": [
+    "updates or replaces old systems that still run the business",
+    "is often done in stages to limit risk"
+   ],
+   "use": "need to move off an ageing system without stopping the business",
+   "not": [
+    "is adding more features to a brand-new system"
+   ],
+   "like": [
+    "strangler fig pattern"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "strangler fig pattern",
+   "tier": 5,
+   "says": [
+    "replaces a legacy system piece by piece behind a common front",
+    "lets old and new run side by side until the old can be switched off"
+   ],
+   "use": "want to replace a legacy system gradually rather than in one risky switch-over",
+   "not": [
+    "rewrites the whole system and switches over in one big step"
+   ],
+   "like": [
+    "legacy modernisation"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "domain-driven design",
+   "tier": 5,
+   "says": [
+    "structures software around the business domain and its language",
+    "splits systems into bounded contexts"
+   ],
+   "use": "need software boundaries to follow how the business is organised",
+   "not": [
+    "designs the whole database before any code is written"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "multi-tenancy",
+   "tier": 4,
+   "says": [
+    "serves many customers from one shared instance of a system",
+    "keeps each customer's data separate"
+   ],
+   "use": "need one platform to serve many customers cost-effectively",
+   "not": [
+    "runs a separate copy of the system for each customer"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "cloud-native",
+   "tier": 3,
+   "says": [
+    "builds software to exploit cloud features such as elasticity and managed services",
+    "often uses containers and automation"
+   ],
+   "use": "want applications designed to scale and recover in the cloud",
+   "not": [
+    "means a system hosted in the company's own data centre"
+   ],
+   "like": [
+    "multi-cloud"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "multi-cloud",
+   "tier": 4,
+   "says": [
+    "uses services from more than one cloud provider",
+    "can reduce dependence on one supplier but adds complexity"
+   ],
+   "use": "want to avoid depending on a single cloud provider",
+   "not": [
+    "means running everything in one data centre"
+   ],
+   "like": [
+    "cloud-native"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "DORA framework",
+   "tier": 3,
+   "says": [
+    "defines four measures of software delivery performance",
+    "includes deployment frequency, lead time, change failure rate and time to restore service"
+   ],
+   "use": "need research-backed measures of how well a team delivers",
+   "not": [
+    "counts lines of code written per developer"
+   ],
+   "like": [
+    "cycle time"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "lead time for changes",
+   "tier": 3,
+   "says": [
+    "is the time from a code commit to running in production",
+    "is a DORA measure of delivery speed"
+   ],
+   "use": "want to know how long a change takes to reach users after it is committed",
+   "not": [
+    "is the share of releases that cause a failure"
+   ],
+   "like": [
+    "cycle time",
+    "change failure rate"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "change failure rate",
+   "tier": 3,
+   "says": [
+    "is the share of releases that cause a failure needing a fix",
+    "is a DORA measure of delivery quality"
+   ],
+   "use": "want to know how often releases cause problems",
+   "not": [
+    "is the time taken to recover from an outage"
+   ],
+   "like": [
+    "mean time to restore",
+    "lead time for changes"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "mean time to restore",
+   "tier": 3,
+   "says": [
+    "is the average time taken to recover from a failure in production",
+    "is a DORA measure of resilience"
+   ],
+   "use": "want to know how quickly service returns after an outage",
+   "not": [
+    "is the share of releases that cause a failure"
+   ],
+   "like": [
+    "change failure rate"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "cycle time",
+   "tier": 2,
+   "says": [
+    "is the time work takes from being started to being finished",
+    "shows where work waits"
+   ],
+   "use": "want to see how long items take to finish once started",
+   "not": [
+    "is the amount of work a team completes in an iteration"
+   ],
+   "like": [
+    "lead time for changes",
+    "velocity",
+    "DORA framework"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "velocity",
+   "tier": 2,
+   "says": [
+    "is the amount of work a team completes in an iteration",
+    "is meant for a team's own planning rather than comparing teams"
+   ],
+   "use": "need a team to forecast what it can take on next sprint",
+   "not": [
+    "is a measure of how quickly one individual writes code"
+   ],
+   "like": [
+    "cycle time"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "Conway's law",
+   "tier": 4,
+   "says": [
+    "says a system's design will mirror the communication structure of the organisation",
+    "is why team structure shapes architecture"
+   ],
+   "use": "see system boundaries that match team boundaries",
+   "not": [
+    "says that adding people to a late project makes it later"
+   ],
+   "like": [
+    "Team Topologies"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "Team Topologies",
+   "tier": 5,
+   "says": [
+    "offers four team types and three ways for teams to interact",
+    "aims to reduce the cognitive load on teams"
+   ],
+   "use": "need a model for how teams should be shaped and interact",
+   "not": [
+    "is a list of the servers used by each team"
+   ],
+   "like": [
+    "Conway's law"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "span of control",
+   "tier": 3,
+   "says": [
+    "is the number of people who report directly to one manager",
+    "is set to balance support with the manager's workload"
+   ],
+   "use": "need to decide how many people one manager should lead",
+   "not": [
+    "is the range of tasks that one engineer can handle"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "on-call rotation",
+   "tier": 2,
+   "says": [
+    "shares out responsibility for responding to production problems out of hours",
+    "needs fair scheduling and clear escalation"
+   ],
+   "use": "need engineers to take turns responding to incidents",
+   "not": [
+    "is a daily meeting of the whole team"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "psychological safety",
+   "tier": 1,
+   "says": [
+    "is a shared belief that people can raise problems and ideas without being punished",
+    "is strongly linked with learning teams"
+   ],
+   "use": "want people to admit mistakes and speak up",
+   "not": [
+    "is the physical safety of an office"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "bus factor",
+   "tier": 2,
+   "says": [
+    "is the number of people whose sudden absence would stop a project",
+    "is raised by spreading knowledge"
+   ],
+   "use": "worry that one person's absence would halt a project",
+   "not": [
+    "is how many releases a team ships per month"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "headcount",
+   "tier": 1,
+   "says": [
+    "is the number of people employed or approved to be hired",
+    "is a main driver of people cost"
+   ],
+   "use": "need to say how many people a team has or may hire",
+   "not": [
+    "is the number of tasks in a backlog"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "attrition",
+   "tier": 3,
+   "says": [
+    "is the rate at which people leave an organisation",
+    "can be measured for a team or for the whole organisation"
+   ],
+   "use": "want to know how many people are leaving",
+   "not": [
+    "is the time it takes to hire someone"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "succession planning",
+   "tier": 4,
+   "says": [
+    "prepares people to take over key roles when they become vacant",
+    "reduces the risk when a leader leaves"
+   ],
+   "use": "worry about who could replace a key leader who leaves",
+   "not": [
+    "lists the tasks a leaver must hand over"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "skip-level meeting",
+   "tier": 4,
+   "says": [
+    "is a meeting between a leader and people who report to their direct reports",
+    "helps leaders hear what is happening several levels down"
+   ],
+   "use": "want to hear directly from people two levels below you",
+   "not": [
+    "is a meeting between two people at the same level"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "career ladder",
+   "tier": 3,
+   "says": [
+    "sets out the levels of a role and what is expected at each",
+    "makes promotion and pay decisions more consistent"
+   ],
+   "use": "need clear expectations for each engineering level",
+   "not": [
+    "is a list of open vacancies"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "performance improvement plan",
+   "tier": 3,
+   "says": [
+    "sets out expectations and support for someone who is below the required standard",
+    "is time-limited and documented"
+   ],
+   "use": "need to give someone a fair, documented chance to reach the standard",
+   "not": [
+    "is a reward given for strong performance"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "360 feedback",
+   "tier": 3,
+   "says": [
+    "gathers views on a person from peers, reports and managers",
+    "gives a rounded picture of how they work"
+   ],
+   "use": "want input on a leader from the people around them",
+   "not": [
+    "is feedback given only by the person's manager"
+   ]
+  },
+  {
+   "group": "ppl",
+   "subject": "org design",
+   "tier": 4,
+   "says": [
+    "shapes how teams, roles and reporting lines are arranged",
+    "aims to match structure to strategy"
+   ],
+   "use": "need to reorganise teams to match a new strategy",
+   "not": [
+    "is the layout of the office floor"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "CapEx",
+   "tier": 3,
+   "says": [
+    "is spending on assets that provide value over several years",
+    "is recorded on the balance sheet and written off over time"
+   ],
+   "use": "buy hardware or build an asset that will last for years",
+   "not": [
+    "is the day-to-day cost of running the business"
+   ],
+   "like": [
+    "OpEx",
+    "capitalised development cost"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "OpEx",
+   "tier": 3,
+   "says": [
+    "is the day-to-day spending needed to run the business",
+    "includes subscriptions and cloud usage billed as it is used"
+   ],
+   "use": "need to describe regular running costs such as subscriptions",
+   "not": [
+    "is spending on long-lived assets"
+   ],
+   "like": [
+    "CapEx"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "total cost of ownership",
+   "tier": 3,
+   "says": [
+    "counts all the costs of a system across its life",
+    "includes running, support and exit costs as well as the purchase price"
+   ],
+   "use": "need to compare two options over several years",
+   "not": [
+    "is the price on a supplier's quote"
+   ],
+   "like": [
+    "return on investment"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "return on investment",
+   "tier": 2,
+   "says": [
+    "compares the benefit from an investment with its cost",
+    "is shown as a ratio or a percentage"
+   ],
+   "use": "need to show whether a project is worth what it costs",
+   "not": [
+    "is the total cost of owning a system"
+   ],
+   "like": [
+    "total cost of ownership"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "FinOps",
+   "tier": 4,
+   "says": [
+    "manages cloud spending through shared accountability across engineering and finance",
+    "aims to get more value from every pound spent on cloud"
+   ],
+   "use": "see cloud bills rising with nobody owning them",
+   "not": [
+    "is a regulation that governs financial reporting"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "burn rate",
+   "tier": 3,
+   "says": [
+    "is how fast an organisation spends its cash",
+    "is usually stated per month"
+   ],
+   "use": "need to know how quickly cash is being used",
+   "not": [
+    "is the speed at which a server uses power"
+   ],
+   "like": [
+    "runway"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "runway",
+   "tier": 4,
+   "says": [
+    "is how long an organisation can operate before its cash runs out",
+    "is calculated from the cash held and the burn rate"
+   ],
+   "use": "need to know how many months the cash will last",
+   "not": [
+    "is the rate at which cash is spent"
+   ],
+   "like": [
+    "burn rate"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "unit economics",
+   "tier": 4,
+   "says": [
+    "measures the revenue and cost for a single unit such as one customer",
+    "shows whether growth actually makes money"
+   ],
+   "use": "need to know whether each customer is profitable",
+   "not": [
+    "is the total profit across the whole business"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "cost of delay",
+   "tier": 4,
+   "says": [
+    "estimates the value lost for each period a piece of work is late",
+    "helps order work by its economic urgency"
+   ],
+   "use": "need to decide which of several projects to do first",
+   "not": [
+    "is the penalty clause in a supplier contract"
+   ]
+  },
+  {
+   "group": "fin",
+   "subject": "capitalised development cost",
+   "tier": 5,
+   "says": [
+    "is development spending that accounting rules allow to be recorded as an asset",
+    "is written off over its useful life"
+   ],
+   "use": "need to know when software development spending can be treated as an asset",
+   "not": [
+    "is the running cost of a live service"
+   ],
+   "like": [
+    "CapEx"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "risk register",
+   "tier": 1,
+   "says": [
+    "is a list of identified risks with their owners and treatments",
+    "is reviewed regularly"
+   ],
+   "use": "need one place that records risks and who owns them",
+   "not": [
+    "is a log of past outages only"
+   ],
+   "like": [
+    "risk appetite"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "risk appetite",
+   "tier": 4,
+   "says": [
+    "is the amount and type of risk an organisation is willing to accept",
+    "is set by the board or senior leaders"
+   ],
+   "use": "need to decide how much risk the organisation will accept to pursue a goal",
+   "not": [
+    "is the list of identified risks"
+   ],
+   "like": [
+    "risk register"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "recovery time objective",
+   "tier": 3,
+   "says": [
+    "is the longest acceptable time for a system to be down after a failure",
+    "guides how much to invest in recovery"
+   ],
+   "use": "need to say how quickly a system must be back after an outage",
+   "not": [
+    "is the amount of data that may be lost"
+   ],
+   "like": [
+    "recovery point objective"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "recovery point objective",
+   "tier": 3,
+   "says": [
+    "is the most data loss, measured in time, that is acceptable",
+    "determines how often backups or replication must happen"
+   ],
+   "use": "need to say how much recent data can be lost",
+   "not": [
+    "is the longest acceptable downtime"
+   ],
+   "like": [
+    "recovery time objective"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "business continuity plan",
+   "tier": 3,
+   "says": [
+    "sets out how critical activities carry on during a disruption",
+    "covers people, premises, suppliers and technology"
+   ],
+   "use": "need to keep critical services running during a major disruption",
+   "not": [
+    "is a list of growth targets for the year"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "zero trust",
+   "tier": 4,
+   "says": [
+    "assumes no user or device is trusted just because it is on the network",
+    "verifies every request explicitly"
+   ],
+   "use": "want access decisions that do not trust the internal network",
+   "not": [
+    "trusts anything inside the company firewall"
+   ],
+   "like": [
+    "defence in depth"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "defence in depth",
+   "tier": 3,
+   "says": [
+    "uses several layers of security controls",
+    "means the failure of one layer does not expose everything"
+   ],
+   "use": "want several overlapping protections instead of relying on one",
+   "not": [
+    "relies on one strong perimeter firewall"
+   ],
+   "like": [
+    "zero trust"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "penetration test",
+   "tier": 3,
+   "says": [
+    "is an authorised simulated attack that looks for weaknesses",
+    "produces a report of findings to fix"
+   ],
+   "use": "need to find out whether an attacker could break in",
+   "not": [
+    "is a test of whether the system handles heavy traffic"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "ISO 27001",
+   "tier": 4,
+   "says": [
+    "is an international standard for an information security management system",
+    "can be certified by an independent auditor"
+   ],
+   "use": "need an internationally recognised security certification",
+   "not": [
+    "is a report on a service provider's controls, issued by an auditor"
+   ],
+   "like": [
+    "SOC 2"
+   ]
+  },
+  {
+   "group": "risk",
+   "subject": "SOC 2",
+   "tier": 4,
+   "says": [
+    "is an independent report on a service provider's controls for security and related criteria",
+    "is often requested by customers when they buy software"
+   ],
+   "use": "need to show customers an independent report on your security controls",
+   "not": [
+    "is a standard that can be held only by government bodies"
+   ],
+   "like": [
+    "ISO 27001"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "GDPR",
+   "tier": 1,
+   "says": [
+    "is a data protection law that governs how personal data is handled",
+    "gives individuals rights over their data"
+   ],
+   "use": "handle the personal data of people in Europe",
+   "not": [
+    "applies only to companies that are based in the EU"
+   ],
+   "like": [
+    "data processing agreement"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "data residency",
+   "tier": 4,
+   "says": [
+    "is the requirement or choice to keep data in a particular country or region",
+    "can be driven by law, contract or customer demand"
+   ],
+   "use": "need to keep customer data within a specific country",
+   "not": [
+    "is the backup of data kept at a second site"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "data protection impact assessment",
+   "tier": 4,
+   "says": [
+    "assesses the privacy risks of a proposed use of personal data before it begins",
+    "is required for processing that is likely to be high risk"
+   ],
+   "use": "plan a new system that uses personal data in a risky way",
+   "not": [
+    "tests software for security holes"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "data processing agreement",
+   "tier": 4,
+   "says": [
+    "is a contract that sets how a supplier handles personal data on your behalf",
+    "is needed between a controller and a processor"
+   ],
+   "use": "need a contract with a supplier that will process personal data for you",
+   "not": [
+    "is a contract that sets how fast a supplier must respond"
+   ],
+   "like": [
+    "GDPR"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "segregation of duties",
+   "tier": 4,
+   "says": [
+    "splits key tasks between people so that no one can complete a risky process alone",
+    "reduces the chance of fraud and error"
+   ],
+   "use": "need to stop one person both writing and approving a payment",
+   "not": [
+    "gives one administrator control over every step of a process"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "change advisory board",
+   "tier": 3,
+   "says": [
+    "reviews and approves significant changes to live systems",
+    "weighs the risk and timing of a change"
+   ],
+   "use": "need a group to approve risky changes to production",
+   "not": [
+    "is a team that writes the release notes"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "copyleft licence",
+   "tier": 4,
+   "says": [
+    "requires that derived work is shared under the same licence terms",
+    "can affect whether you must publish your own code"
+   ],
+   "use": "need to know whether using an open-source library forces you to open your own code",
+   "not": [
+    "lets anyone use the code with no conditions at all"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "software bill of materials",
+   "tier": 5,
+   "says": [
+    "lists the components and dependencies that make up a piece of software",
+    "helps find affected systems when a vulnerability is announced"
+   ],
+   "use": "need to know whether a newly announced vulnerability affects your software",
+   "not": [
+    "is the list of costs of building the software"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "intellectual property",
+   "tier": 3,
+   "says": [
+    "is the legal rights over creations such as code, designs and inventions",
+    "may belong to the employer or to a contractor unless agreed otherwise"
+   ],
+   "use": "need to know who owns the code written by a contractor",
+   "not": [
+    "is the physical equipment that the company owns"
+   ],
+   "like": [
+    "source code escrow"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "source code escrow",
+   "tier": 5,
+   "says": [
+    "is an arrangement where a third party holds a supplier's code",
+    "lets the customer obtain it if the supplier fails"
+   ],
+   "use": "worry that a key software supplier might go out of business",
+   "not": [
+    "is a backup of your own repositories"
+   ],
+   "like": [
+    "intellectual property"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "service level agreement",
+   "tier": 1,
+   "says": [
+    "is a contract that sets the level of service a supplier will provide",
+    "often states remedies such as service credits"
+   ],
+   "use": "need a supplier to commit to uptime and response times",
+   "not": [
+    "is the internal target for how reliable a service should be"
+   ],
+   "like": [
+    "statement of work"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "request for proposal",
+   "tier": 2,
+   "says": [
+    "is a document that asks suppliers to bid to meet stated requirements",
+    "lets a buyer compare offers on the same basis"
+   ],
+   "use": "need several suppliers to bid for the same requirement",
+   "not": [
+    "is a small trial to test a technology"
+   ],
+   "like": [
+    "proof of concept"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "proof of concept",
+   "tier": 1,
+   "says": [
+    "is a small trial to show that an idea or technology can work",
+    "is done before committing to a full project"
+   ],
+   "use": "want to test whether a technology works before buying it",
+   "not": [
+    "is a document inviting suppliers to bid"
+   ],
+   "like": [
+    "request for proposal"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "master services agreement",
+   "tier": 4,
+   "says": [
+    "sets the general legal terms that apply to all work between two parties",
+    "lets later work be agreed in short orders under those terms"
+   ],
+   "use": "need standard legal terms that cover a long-term relationship with a supplier",
+   "not": [
+    "describes one specific piece of work and its price"
+   ],
+   "like": [
+    "statement of work",
+    "service level agreement"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "statement of work",
+   "tier": 3,
+   "says": [
+    "describes the specific work, deliverables and price for one engagement",
+    "sits under the general terms of a master agreement"
+   ],
+   "use": "need to define exactly what a supplier will deliver for a project",
+   "not": [
+    "sets the general legal terms for all future work"
+   ],
+   "like": [
+    "master services agreement",
+    "service level agreement"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "exit strategy",
+   "tier": 4,
+   "says": [
+    "is the plan for leaving a supplier or system without losing data or service",
+    "is best agreed before a contract is signed"
+   ],
+   "use": "need to know how you would leave a supplier if things go wrong",
+   "not": [
+    "is the plan for when a senior employee retires"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "shelfware",
+   "tier": 3,
+   "says": [
+    "is software that is paid for but hardly used",
+    "wastes licence spend"
+   ],
+   "use": "find that many paid licences are never used",
+   "not": [
+    "is software that is stored in a data centre"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "nearshoring",
+   "tier": 4,
+   "says": [
+    "moves work to a supplier in a nearby country or time zone",
+    "eases collaboration compared with distant locations"
+   ],
+   "use": "want outsourced work done by a team in a similar time zone",
+   "not": [
+    "moves work back to the home country"
+   ],
+   "like": [
+    "managed service"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "managed service",
+   "tier": 3,
+   "says": [
+    "is a service in which a supplier runs and maintains a system for you",
+    "is paid for as an ongoing service"
+   ],
+   "use": "want a supplier to run and look after a system for you",
+   "not": [
+    "is software that you install and operate yourself"
+   ],
+   "like": [
+    "nearshoring"
+   ]
+  },
+  {
+   "group": "ven",
+   "subject": "vendor due diligence",
+   "tier": 4,
+   "says": [
+    "checks a supplier's finances, security and capability before a contract",
+    "reduces the risk of choosing a weak supplier"
+   ],
+   "use": "need to check that a supplier is sound before signing",
+   "not": [
+    "is a review of your own team's performance"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "data governance",
+   "tier": 3,
+   "says": [
+    "sets who owns data, how it is defined and who may use it",
+    "covers quality, access and compliance"
+   ],
+   "use": "need clear ownership and rules for the organisation's data",
+   "not": [
+    "is the storage hardware for the data"
+   ],
+   "like": [
+    "data quality"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "data warehouse",
+   "tier": 3,
+   "says": [
+    "stores structured, cleaned data organised for reporting and analysis",
+    "brings data from many source systems together"
+   ],
+   "use": "need one place for clean, structured data for reports",
+   "not": [
+    "stores raw data in any format with no set structure"
+   ],
+   "like": [
+    "data lake"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "data lake",
+   "tier": 3,
+   "says": [
+    "stores large amounts of raw data in its original form",
+    "defers deciding on a structure until the data is used"
+   ],
+   "use": "need to keep raw data of many types for later use",
+   "not": [
+    "holds only cleaned, structured data for reporting"
+   ],
+   "like": [
+    "data warehouse"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "data quality",
+   "tier": 3,
+   "says": [
+    "is how accurate, complete and consistent data is",
+    "limits how far analytics and AI can be trusted"
+   ],
+   "use": "find that reports disagree because the data is wrong or missing",
+   "not": [
+    "is how much data an organisation holds"
+   ],
+   "like": [
+    "data governance"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "large language model",
+   "tier": 2,
+   "says": [
+    "is a model trained on large amounts of text to generate and understand language",
+    "predicts likely next tokens"
+   ],
+   "use": "need to describe the technology behind a modern AI assistant",
+   "not": [
+    "is a database that stores documents"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "hallucination",
+   "tier": 3,
+   "says": [
+    "is when an AI model produces confident but false output",
+    "is reduced by grounding answers in trusted sources"
+   ],
+   "use": "see an AI assistant invent a source that does not exist",
+   "not": [
+    "is when a model refuses to answer"
+   ],
+   "like": [
+    "prompt injection"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "retrieval-augmented generation",
+   "tier": 4,
+   "says": [
+    "fetches relevant documents and adds them to a model's prompt",
+    "grounds answers in your own up-to-date data"
+   ],
+   "use": "want an AI assistant to answer from your company documents",
+   "not": [
+    "retrains the model from scratch on your data"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "prompt injection",
+   "tier": 4,
+   "says": [
+    "is an attack where text in the input tricks a model into ignoring its instructions",
+    "is a risk when a model reads untrusted content"
+   ],
+   "use": "worry that a web page a model reads could carry hidden instructions",
+   "not": [
+    "is a way of writing better prompts"
+   ],
+   "like": [
+    "hallucination"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "model drift",
+   "tier": 5,
+   "says": [
+    "is when a model's accuracy falls because real-world data changes over time",
+    "is caught by monitoring performance"
+   ],
+   "use": "see a model's accuracy fall as customer behaviour changes",
+   "not": [
+    "is a model being deleted from production"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "human in the loop",
+   "tier": 4,
+   "says": [
+    "keeps a person reviewing or approving an automated or AI decision",
+    "reduces the risk from mistakes in high-stakes decisions"
+   ],
+   "use": "need a person to approve an AI recommendation before it affects a customer",
+   "not": [
+    "lets an AI act with no review at all"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "board pack",
+   "tier": 3,
+   "says": [
+    "is the set of papers sent to board members before a meeting",
+    "summarises performance, risks and decisions needed"
+   ],
+   "use": "need to prepare material for a board meeting",
+   "not": [
+    "is the set of minutes written after a meeting"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "audit committee",
+   "tier": 4,
+   "says": [
+    "is a board committee that oversees financial reporting, risk and internal control",
+    "receives reports from auditors"
+   ],
+   "use": "need to report on controls and risks to a committee of the board",
+   "not": [
+    "is a team of external auditors"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "technical due diligence",
+   "tier": 4,
+   "says": [
+    "is an independent review of a company's technology, team and risks",
+    "is done before an investment or an acquisition"
+   ],
+   "use": "face an investor reviewing your technology before a deal",
+   "not": [
+    "is a review of the finances of a supplier"
+   ],
+   "like": [
+    "post-merger integration"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "steering committee",
+   "tier": 1,
+   "says": [
+    "is a group of senior stakeholders that guides a major project",
+    "makes decisions that the project team cannot"
+   ],
+   "use": "need senior stakeholders to guide a big programme",
+   "not": [
+    "is the team that does the day-to-day work"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "RACI",
+   "tier": 1,
+   "says": [
+    "is a matrix that shows who is responsible, accountable, consulted and informed",
+    "clarifies who does what on a piece of work"
+   ],
+   "use": "need to clear up who owns a decision",
+   "not": [
+    "is a ranking of risks by cost"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "operating model",
+   "tier": 4,
+   "says": [
+    "describes how an organisation arranges people, process and technology to deliver value",
+    "links strategy to day-to-day work"
+   ],
+   "use": "need to describe how the organisation works to deliver its strategy",
+   "not": [
+    "is a forecast of next year's revenue"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "digital transformation",
+   "tier": 3,
+   "says": [
+    "changes how an organisation works by using digital technology",
+    "involves process and culture change as well as technology"
+   ],
+   "use": "are asked to change how a whole organisation works through technology",
+   "not": [
+    "is replacing office computers with new ones"
+   ],
+   "like": [
+    "change management"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "change management",
+   "tier": 2,
+   "says": [
+    "helps people adopt a change in the way they work",
+    "covers communication, training and support"
+   ],
+   "use": "need people to adopt a new system or way of working",
+   "not": [
+    "is the approval of changes to live servers"
+   ],
+   "like": [
+    "digital transformation",
+    "change advisory board"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "business case",
+   "tier": 2,
+   "says": [
+    "sets out the reasons, costs, benefits and risks of a proposal",
+    "is used to decide whether to go ahead"
+   ],
+   "use": "need to persuade leaders to fund a project",
+   "not": [
+    "is a plan for how a project will be tested"
+   ]
+  },
+  {
+   "group": "exec",
+   "subject": "post-merger integration",
+   "tier": 5,
+   "says": [
+    "combines the systems, teams and processes of two organisations after a deal",
+    "often decides whether the deal's expected value is achieved"
+   ],
+   "use": "need to merge the technology of two companies after an acquisition",
+   "not": [
+    "is the review done before a deal is agreed"
+   ],
+   "like": [
+    "technical due diligence"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What best describes a roadmap?",
+   "right": "The planned direction and sequence of work, which changes as priorities change",
+   "wrong": [
+    "A fixed contract of dates and features",
+    "A list of every bug found",
+    "The organisation chart"
+   ],
+   "tier": 1,
+   "why": "A roadmap is a plan for outcomes, not a fixed contract."
+  },
+  {
+   "q": "A supplier commits in a contract to 99.9 per cent uptime. What is this contract term called?",
+   "right": "A service level agreement",
+   "wrong": [
+    "A RACI",
+    "A steering committee",
+    "A proof of concept"
+   ],
+   "tier": 1,
+   "why": "An SLA sets the service a supplier will provide."
+  },
+  {
+   "q": "Two teams each think the other owns a decision. Which tool helps clear it up?",
+   "right": "A RACI",
+   "wrong": [
+    "A risk register",
+    "A burn rate",
+    "A roadmap"
+   ],
+   "tier": 1,
+   "why": "A RACI shows who is responsible, accountable, consulted and informed."
+  },
+  {
+   "q": "You want to test whether a new technology works before buying it. What do you run?",
+   "right": "A proof of concept",
+   "wrong": [
+    "A request for proposal",
+    "An audit committee",
+    "A change advisory board"
+   ],
+   "tier": 1,
+   "why": "A proof of concept is a small trial before commitment."
+  },
+  {
+   "q": "An engineer hides a mistake because they fear being blamed. What is lacking?",
+   "right": "Psychological safety",
+   "wrong": [
+    "Headcount",
+    "A steering committee",
+    "Shelfware"
+   ],
+   "tier": 1,
+   "why": "People need to feel safe to admit mistakes."
+  },
+  {
+   "q": "Where do you record a newly spotted risk and its owner?",
+   "right": "In the risk register",
+   "wrong": [
+    "In the board pack",
+    "In the roadmap",
+    "In the statement of work"
+   ],
+   "tier": 1,
+   "why": "A risk register lists risks with owners and treatments."
+  },
+  {
+   "q": "Which measure compares the benefit of a project with its cost?",
+   "right": "Return on investment",
+   "wrong": [
+    "Burn rate",
+    "Velocity",
+    "Span of control"
+   ],
+   "tier": 2,
+   "why": "ROI compares benefit with cost."
+  },
+  {
+   "q": "One server going down would take the whole service offline. What is this?",
+   "right": "A single point of failure",
+   "wrong": [
+    "A copyleft licence",
+    "Shelfware",
+    "A skip-level meeting"
+   ],
+   "tier": 2,
+   "why": "A single point of failure stops everything when it fails."
+  },
+  {
+   "q": "A new system launches but staff keep using the old spreadsheet. Which discipline was neglected?",
+   "right": "Change management",
+   "wrong": [
+    "Penetration testing",
+    "FinOps",
+    "Data residency"
+   ],
+   "tier": 2,
+   "why": "Change management helps people adopt new ways of working."
+  },
+  {
+   "q": "Only one engineer understands how billing works. What risk is this?",
+   "right": "A low bus factor",
+   "wrong": [
+    "High attrition",
+    "Vendor lock-in",
+    "Model drift"
+   ],
+   "tier": 2,
+   "why": "Knowledge held by one person is a bus factor risk."
+  },
+  {
+   "q": "You need to persuade leaders to fund a project. What do you prepare?",
+   "right": "A business case",
+   "wrong": [
+    "A post-incident review",
+    "A software bill of materials",
+    "An on-call rotation"
+   ],
+   "tier": 2,
+   "why": "A business case sets out costs, benefits and risks."
+  },
+  {
+   "q": "Which technology generates language after being trained on large amounts of text?",
+   "right": "A large language model",
+   "wrong": [
+    "A data warehouse",
+    "A reference architecture",
+    "A load balancer"
+   ],
+   "tier": 2,
+   "why": "An LLM is trained on text to generate language."
+  },
+  {
+   "q": "Which DORA measure is the share of releases that cause a failure needing a fix?",
+   "right": "Change failure rate",
+   "wrong": [
+    "Lead time for changes",
+    "Mean time to restore",
+    "Cycle time"
+   ],
+   "tier": 3,
+   "why": "Change failure rate measures delivery quality."
+  },
+  {
+   "q": "The business can accept losing at most 15 minutes of data. Which objective is that?",
+   "right": "The recovery point objective",
+   "wrong": [
+    "The recovery time objective",
+    "The burn rate",
+    "The span of control"
+   ],
+   "tier": 3,
+   "why": "RPO is the acceptable data loss measured in time."
+  },
+  {
+   "q": "A system must be back within two hours of a failure. Which objective is that?",
+   "right": "The recovery time objective",
+   "wrong": [
+    "The recovery point objective",
+    "The risk appetite",
+    "The runway"
+   ],
+   "tier": 3,
+   "why": "RTO is the longest acceptable downtime."
+  },
+  {
+   "q": "Option A is cheaper to buy but costs far more to run and to leave. Which measure gives the fair comparison?",
+   "right": "Total cost of ownership",
+   "wrong": [
+    "Headcount",
+    "Burn rate",
+    "Velocity"
+   ],
+   "tier": 3,
+   "why": "Total cost of ownership counts all costs over the life."
+  },
+  {
+   "q": "A tool is needed by everyone but gives the company no advantage. What is the usual approach?",
+   "right": "Buy it rather than build it",
+   "wrong": [
+    "Build it in-house",
+    "Put it on the technology radar as hold",
+    "Place it under legacy modernisation"
+   ],
+   "tier": 3,
+   "why": "Commodity capability is usually bought; build the differentiating parts."
+  },
+  {
+   "q": "An AI assistant invents a source that does not exist. What is this?",
+   "right": "A hallucination",
+   "wrong": [
+    "Prompt injection",
+    "Model drift",
+    "Data residency"
+   ],
+   "tier": 3,
+   "why": "A hallucination is a confident but false output."
+  },
+  {
+   "q": "Analysts need clean, structured data for monthly reports. Where should it live?",
+   "right": "In a data warehouse",
+   "wrong": [
+    "In a data lake",
+    "In an escrow account",
+    "In a risk register"
+   ],
+   "tier": 3,
+   "why": "A warehouse holds structured, cleaned data for reporting."
+  },
+  {
+   "q": "You want to find out whether an attacker could break into your systems. What do you commission?",
+   "right": "A penetration test",
+   "wrong": [
+    "A stress test",
+    "A business case",
+    "An RFP"
+   ],
+   "tier": 3,
+   "why": "A penetration test simulates an authorised attack."
+  },
+  {
+   "q": "A manager has 20 direct reports and struggles to support them. What is the issue?",
+   "right": "The span of control is too wide",
+   "wrong": [
+    "The bus factor is too high",
+    "The velocity is too low",
+    "The runway is too short"
+   ],
+   "tier": 3,
+   "why": "Too many direct reports overloads a manager."
+  },
+  {
+   "q": "A contractor wrote core code but the contract is silent on ownership. What is the risk?",
+   "right": "Unclear ownership of the intellectual property",
+   "wrong": [
+    "High shelfware",
+    "A copyleft licence",
+    "Vendor lock-in only"
+   ],
+   "tier": 3,
+   "why": "Unless agreed, ownership may sit with the contractor."
+  },
+  {
+   "q": "Many paid licences are never used. What do you call this?",
+   "right": "Shelfware",
+   "wrong": [
+    "Attrition",
+    "Cost of delay",
+    "A managed service"
+   ],
+   "tier": 3,
+   "why": "Shelfware is paid for but hardly used."
+  },
+  {
+   "q": "You want several overlapping security protections, not just a perimeter firewall. Which approach is that?",
+   "right": "Defence in depth",
+   "wrong": [
+    "Source code escrow",
+    "Nearshoring",
+    "A single point of failure"
+   ],
+   "tier": 3,
+   "why": "Defence in depth uses several layers."
+  },
+  {
+   "q": "Your system boundaries keep matching team boundaries. Which idea explains this?",
+   "right": "Conway's law",
+   "wrong": [
+    "The strangler fig pattern",
+    "Velocity",
+    "Cost of delay"
+   ],
+   "tier": 4,
+   "why": "Systems mirror the communication structure of the organisation."
+  },
+  {
+   "q": "An assistant must answer from the latest company policies without retraining. What do you use?",
+   "right": "Retrieval-augmented generation",
+   "wrong": [
+    "Prompt injection",
+    "Model drift",
+    "A data lake only"
+   ],
+   "tier": 4,
+   "why": "RAG adds relevant documents to the prompt."
+  },
+  {
+   "q": "A web page that a model reads contains hidden instructions that change the model's behaviour. What is this attack?",
+   "right": "Prompt injection",
+   "wrong": [
+    "Hallucination",
+    "Model drift",
+    "Segregation of duties"
+   ],
+   "tier": 4,
+   "why": "Untrusted text tricks the model into ignoring its instructions."
+  },
+  {
+   "q": "An AI recommendation will affect a customer's credit. What control reduces the risk of mistakes?",
+   "right": "A human in the loop who approves it",
+   "wrong": [
+    "More tokens",
+    "A bigger data lake",
+    "A faster roadmap"
+   ],
+   "tier": 4,
+   "why": "A person reviews high-stakes decisions."
+  },
+  {
+   "q": "Cloud bills keep rising and nobody owns them. Which practice should you adopt?",
+   "right": "FinOps",
+   "wrong": [
+    "Zero trust",
+    "Succession planning",
+    "A copyleft licence"
+   ],
+   "tier": 4,
+   "why": "FinOps creates shared accountability for cloud spend."
+  },
+  {
+   "q": "A company has six million in cash and spends half a million a month. What is its runway?",
+   "right": "About 12 months",
+   "wrong": [
+    "About 6 months",
+    "About 24 months",
+    "It cannot be worked out"
+   ],
+   "tier": 4,
+   "why": "Cash divided by monthly spend gives the runway."
+  },
+  {
+   "q": "A customer demands that their data stays inside one country. Which concept is this?",
+   "right": "Data residency",
+   "wrong": [
+    "Data quality",
+    "Hallucination",
+    "Cost of delay"
+   ],
+   "tier": 4,
+   "why": "Data residency keeps data in a region."
+  },
+  {
+   "q": "A new system will profile customers using personal data in a high-risk way. What should happen before launch?",
+   "right": "A data protection impact assessment",
+   "wrong": [
+    "A penetration test only",
+    "A velocity review",
+    "A skip-level meeting"
+   ],
+   "tier": 4,
+   "why": "A DPIA assesses privacy risks before processing starts."
+  },
+  {
+   "q": "One person can both write and approve a payment. Which control would prevent this?",
+   "right": "Segregation of duties",
+   "wrong": [
+    "Zero trust",
+    "Shelfware review",
+    "Defence in depth"
+   ],
+   "tier": 4,
+   "why": "Splitting tasks stops one person completing a risky process alone."
+  },
+  {
+   "q": "Enterprise customers ask for an independent report on your security controls. Which is most likely to be requested?",
+   "right": "A SOC 2 report",
+   "wrong": [
+    "A copyleft licence",
+    "A statement of work",
+    "A risk appetite statement"
+   ],
+   "tier": 4,
+   "why": "SOC 2 is an independent report on a provider's controls."
+  },
+  {
+   "q": "Before signing with a new supplier you want to know how you would leave them. What do you agree?",
+   "right": "An exit strategy",
+   "wrong": [
+    "A velocity target",
+    "An OKR",
+    "A skip-level meeting"
+   ],
+   "tier": 4,
+   "why": "An exit strategy is agreed before the contract is signed."
+  },
+  {
+   "q": "The board says it will accept some risk in new markets but none with customer data. What has it defined?",
+   "right": "Its risk appetite",
+   "wrong": [
+    "Its runway",
+    "Its span of control",
+    "Its bus factor"
+   ],
+   "tier": 4,
+   "why": "Risk appetite is the amount and type of risk it will accept."
+  },
+  {
+   "q": "Which action best helps a senior leader hear what is happening two levels down?",
+   "right": "A skip-level meeting",
+   "wrong": [
+    "A board pack",
+    "An audit committee",
+    "A change advisory board"
+   ],
+   "tier": 4,
+   "why": "Skip-level meetings reach people who report to your reports."
+  },
+  {
+   "q": "An investor wants an independent review of your technology, team and risks before a deal. What is that?",
+   "right": "Technical due diligence",
+   "wrong": [
+    "Post-merger integration",
+    "A post-incident review",
+    "A steering committee"
+   ],
+   "tier": 4,
+   "why": "Technical due diligence happens before a deal."
+  },
+  {
+   "q": "Two projects cost the same: A saves 10,000 a month and B earns 100,000 a month. Using cost of delay, which should go first?",
+   "right": "B, because each month of delay loses more value",
+   "wrong": [
+    "A, because it is smaller",
+    "Either, because the cost is the same",
+    "Neither, until there is more budget"
+   ],
+   "tier": 4,
+   "why": "Cost of delay orders work by value lost per period."
+  },
+  {
+   "q": "A critical library vulnerability is announced. What helps you find which systems are affected quickly?",
+   "right": "A software bill of materials",
+   "wrong": [
+    "A source code escrow",
+    "A reference architecture",
+    "A succession plan"
+   ],
+   "tier": 5,
+   "why": "An SBOM lists components and dependencies."
+  },
+  {
+   "q": "You need to replace a legacy system without one risky switch-over. Which pattern fits?",
+   "right": "The strangler fig pattern",
+   "wrong": [
+    "A big-bang rewrite",
+    "Multi-tenancy",
+    "A skip-level meeting"
+   ],
+   "tier": 5,
+   "why": "The old system is replaced piece by piece."
+  },
+  {
+   "q": "A key software supplier may go out of business and you depend on their code. What protection could you arrange?",
+   "right": "Source code escrow",
+   "wrong": [
+    "A copyleft licence",
+    "A technology radar",
+    "A velocity target"
+   ],
+   "tier": 5,
+   "why": "Escrow lets you obtain the code if the supplier fails."
+  },
+  {
+   "q": "Software development spending can be treated as an asset under accounting rules. What is it called?",
+   "right": "Capitalised development cost",
+   "wrong": [
+    "OpEx",
+    "Burn rate",
+    "Shelfware"
+   ],
+   "tier": 5,
+   "why": "It is recorded as an asset and written off over its life."
+  },
+  {
+   "q": "Teams are overloaded by too many responsibilities. Which model aims to reduce cognitive load?",
+   "right": "Team Topologies",
+   "wrong": [
+    "Conway's law",
+    "The DORA framework",
+    "A RACI"
+   ],
+   "tier": 5,
+   "why": "Team Topologies shapes teams to reduce cognitive load."
+  },
+  {
+   "q": "A model's accuracy falls as customer behaviour changes. What is this?",
+   "right": "Model drift",
+   "wrong": [
+    "Hallucination",
+    "Prompt injection",
+    "Attrition"
+   ],
+   "tier": 5,
+   "why": "Real-world data changes over time."
+  },
+  {
+   "q": "After buying a company you need to combine its systems, teams and processes with yours. What is this?",
+   "right": "Post-merger integration",
+   "wrong": [
+    "Technical due diligence",
+    "A proof of concept",
+    "A business continuity plan"
+   ],
+   "tier": 5,
+   "why": "Integration follows the deal and decides whether the expected value is achieved."
+  },
+  {
+   "q": "You want to see how components of your technology are evolving and where to invest. Which tool helps?",
+   "right": "A Wardley map",
+   "wrong": [
+    "A RACI",
+    "A risk register",
+    "A burn-down chart"
+   ],
+   "tier": 5,
+   "why": "A Wardley map shows evolution of components."
+  },
+  {
+   "q": "Software boundaries should follow how the business is organised, with bounded contexts. Which approach is this?",
+   "right": "Domain-driven design",
+   "wrong": [
+    "Zero trust",
+    "Multi-cloud",
+    "FinOps"
+   ],
+   "tier": 5,
+   "why": "Domain-driven design structures software around the business domain."
+  },
+  {
+   "q": "A board asks who will take over if the head of engineering leaves unexpectedly. Which practice answers this?",
+   "right": "Succession planning",
+   "wrong": [
+    "A post-incident review",
+    "Change management",
+    "Span of control"
+   ],
+   "tier": 5,
+   "why": "Succession planning prepares replacements for key roles."
+  },
+  {
+   "q": "The CTO is asked why the organisation cannot simply compare team productivity by velocity. What is the best answer?",
+   "right": "Velocity is meant for a team's own planning and is not comparable across teams",
+   "wrong": [
+    "Velocity measures only individuals",
+    "Velocity is a financial measure",
+    "Velocity is banned by the DORA framework"
+   ],
+   "tier": 5,
+   "why": "Velocity is a team-level planning measure."
+  }
+ ]
+}

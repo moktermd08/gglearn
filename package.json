@@ -96,7 +96,9 @@
     "check:sso": "tsx scripts/check-sso.ts",
     "check:social": "tsx scripts/check-social.ts",
     "check:signinlink": "tsx scripts/check-signinlink.ts",
-    "send:nudges": "tsx --env-file=.env.local scripts/send-nudges.ts"
+    "send:nudges": "tsx --env-file=.env.local scripts/send-nudges.ts",
+    "import:terms": "tsx --env-file=.env.local scripts/import-terms.ts",
+    "check:terms": "tsx scripts/check-terms.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",

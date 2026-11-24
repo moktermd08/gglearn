@@ -1,0 +1,2113 @@
+{
+ "slug": "full-stack-core",
+ "name": "Full stack developer core vocabulary",
+ "description": "The 100 terms a full stack developer needs to know, from the web basics to architecture and reliability.",
+ "roles": "developer",
+ "kind": "technology",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "web": "web fundamentals term",
+  "front": "front-end term",
+  "api": "back-end or API term",
+  "data": "database term",
+  "sec": "web security term",
+  "vc": "version control or teamwork term",
+  "test": "testing or code quality term",
+  "ship": "build or deployment term",
+  "run": "reliability or performance term",
+  "arch": "delivery or architecture term"
+ },
+ "cards": [
+  {
+   "group": "web",
+   "subject": "HTTP",
+   "tier": 1,
+   "says": [
+    "is the request and response protocol that browsers and servers use to exchange web content",
+    "is stateless, so each request stands alone"
+   ],
+   "use": "need to explain how a browser asks a server for a page",
+   "not": [
+    "encrypts every request by default"
+   ],
+   "like": [
+    "TLS"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "status code",
+   "tier": 1,
+   "says": [
+    "is a three-digit number in a response that tells the client how the request went",
+    "groups results by first digit, such as 2xx for success and 4xx for client errors"
+   ],
+   "use": "see 404 or 500 returned by a server",
+   "not": [
+    "is chosen by the browser rather than the server"
+   ],
+   "like": [
+    "HTTP method",
+    "header"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "HTTP method",
+   "tier": 2,
+   "says": [
+    "tells the server what action is wanted on a resource",
+    "includes GET to read, POST to create and DELETE to remove"
+   ],
+   "use": "need to say whether a request reads or changes data",
+   "not": [
+    "is a number that shows whether a request succeeded"
+   ],
+   "like": [
+    "status code"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "header",
+   "tier": 2,
+   "says": [
+    "carries extra information about a request or response as name and value pairs",
+    "can tell the server the content type or carry an authorisation token"
+   ],
+   "use": "need to send metadata such as the content type with a request",
+   "not": [
+    "holds the main body of the page"
+   ],
+   "like": [
+    "cookie"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "cookie",
+   "tier": 2,
+   "says": [
+    "is a small piece of data that a server asks the browser to store and send back",
+    "is often used to keep a user logged in"
+   ],
+   "use": "need the browser to remember who the user is across requests",
+   "not": [
+    "is always deleted as soon as the tab is closed"
+   ],
+   "like": [
+    "header"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "DNS",
+   "tier": 2,
+   "says": [
+    "translates a domain name into an IP address",
+    "is consulted before a browser can contact a server by name"
+   ],
+   "use": "need to point a domain name at a server",
+   "not": [
+    "encrypts traffic between the browser and the server"
+   ],
+   "like": [
+    "TLS"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "TLS",
+   "tier": 3,
+   "says": [
+    "encrypts traffic between a client and a server",
+    "is what turns HTTP into HTTPS"
+   ],
+   "use": "need to stop others reading traffic while it is in transit",
+   "not": [
+    "converts a domain name into an IP address"
+   ],
+   "like": [
+    "DNS",
+    "HTTP"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "CDN",
+   "tier": 3,
+   "says": [
+    "serves copies of content from servers close to the user",
+    "reduces load on the origin server and speeds up delivery of static files"
+   ],
+   "use": "want images and scripts delivered quickly to users around the world",
+   "not": [
+    "stores the main database for the site"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "CORS",
+   "tier": 4,
+   "says": [
+    "is a browser mechanism that lets a server say which other origins may read its responses",
+    "blocks a page from reading a response from another origin unless the server allows it"
+   ],
+   "use": "see a browser block a request from your front end to a different domain",
+   "not": [
+    "is a server-side firewall that blocks all traffic from other countries"
+   ],
+   "like": [
+    "cookie"
+   ]
+  },
+  {
+   "group": "web",
+   "subject": "WebSocket",
+   "tier": 4,
+   "says": [
+    "keeps a two-way connection open between a browser and a server",
+    "lets the server push messages without waiting for a request"
+   ],
+   "use": "need live updates such as a chat or a price feed",
+   "not": [
+    "sends a new request each time the data is wanted"
+   ],
+   "like": [
+    "HTTP method"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "DOM",
+   "tier": 1,
+   "says": [
+    "is the browser's tree-shaped model of a page that scripts can read and change",
+    "represents each element of the HTML as a node"
+   ],
+   "use": "need to change what is on the page from JavaScript",
+   "not": [
+    "is a language for describing how a page looks"
+   ],
+   "like": [
+    "semantic HTML"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "semantic HTML",
+   "tier": 2,
+   "says": [
+    "uses elements that describe the meaning of content, such as nav and article",
+    "helps screen readers and search engines understand a page"
+   ],
+   "use": "want a page that assistive technology can navigate",
+   "not": [
+    "uses only div elements for every part of the layout"
+   ],
+   "like": [
+    "DOM",
+    "accessibility"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "responsive design",
+   "tier": 2,
+   "says": [
+    "adapts a layout to different screen sizes",
+    "often uses flexible grids and media queries"
+   ],
+   "use": "need one site to work on phones and on desktops",
+   "not": [
+    "builds a separate site for each device"
+   ],
+   "like": [
+    "accessibility"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "accessibility",
+   "tier": 2,
+   "says": [
+    "makes a site usable by people with disabilities",
+    "covers keyboard use, screen readers, colour contrast and alternative text"
+   ],
+   "use": "need people who use only a keyboard or a screen reader to use the site",
+   "not": [
+    "only matters for visitors who use mobile phones"
+   ],
+   "like": [
+    "responsive design",
+    "semantic HTML"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "component",
+   "tier": 2,
+   "says": [
+    "is a reusable piece of interface with its own markup, logic and style",
+    "can be combined with others to build a page"
+   ],
+   "use": "need to reuse the same button or card in many places",
+   "not": [
+    "is a database table that stores page content"
+   ],
+   "like": [
+    "state"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "state",
+   "tier": 3,
+   "says": [
+    "is the data in an interface that can change over time",
+    "triggers an update to the interface when it changes"
+   ],
+   "use": "need an interface to update when a user toggles something",
+   "not": [
+    "is the fixed markup that never changes"
+   ],
+   "like": [
+    "component"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "server-side rendering",
+   "tier": 3,
+   "says": [
+    "builds the HTML for a page on the server before sending it",
+    "gives the browser content to show before the JavaScript has loaded"
+   ],
+   "use": "want search engines and users to receive full content on the first load",
+   "not": [
+    "builds the whole page in the browser from an empty HTML shell"
+   ],
+   "like": [
+    "client-side rendering",
+    "hydration"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "client-side rendering",
+   "tier": 3,
+   "says": [
+    "builds the page in the browser using JavaScript",
+    "often starts from an almost empty HTML shell"
+   ],
+   "use": "need a highly interactive app that runs mainly in the browser",
+   "not": [
+    "sends fully built HTML from the server for each page"
+   ],
+   "like": [
+    "server-side rendering",
+    "hydration"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "hydration",
+   "tier": 4,
+   "says": [
+    "attaches JavaScript behaviour to HTML that was already rendered on the server",
+    "makes server-rendered markup interactive"
+   ],
+   "use": "have server-rendered HTML that now needs click handlers",
+   "not": [
+    "removes JavaScript from a page to make it faster"
+   ],
+   "like": [
+    "server-side rendering",
+    "client-side rendering"
+   ]
+  },
+  {
+   "group": "front",
+   "subject": "bundler",
+   "tier": 3,
+   "says": [
+    "combines and optimises source files into fewer files for the browser",
+    "can split code so users load only what they need"
+   ],
+   "use": "need to ship many modules as optimised files",
+   "not": [
+    "runs the database migrations"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "API",
+   "tier": 1,
+   "says": [
+    "is a defined way for one piece of software to ask another for data or actions",
+    "hides how the other system works internally"
+   ],
+   "use": "need your front end to get data from the server",
+   "not": [
+    "is a type of database"
+   ],
+   "like": [
+    "endpoint",
+    "REST"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "REST",
+   "tier": 2,
+   "says": [
+    "is a style of API built around resources and standard HTTP methods",
+    "treats each URL as a resource that clients read or change"
+   ],
+   "use": "need to design an API around resources such as users and orders",
+   "not": [
+    "requires clients to write a query that picks the exact fields they want"
+   ],
+   "like": [
+    "GraphQL"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "GraphQL",
+   "tier": 3,
+   "says": [
+    "lets a client ask for exactly the fields it needs in one query",
+    "exposes a typed schema that describes what can be queried"
+   ],
+   "use": "need clients to choose which fields come back and avoid several round trips",
+   "not": [
+    "gives every resource its own fixed URL as its main design idea"
+   ],
+   "like": [
+    "REST"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "endpoint",
+   "tier": 1,
+   "says": [
+    "is a specific URL where an API receives requests",
+    "combines with an HTTP method to define one operation"
+   ],
+   "use": "need to name the exact address that a client calls",
+   "not": [
+    "is the final step of a deployment"
+   ],
+   "like": [
+    "API"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "middleware",
+   "tier": 3,
+   "says": [
+    "runs between the incoming request and the final handler",
+    "is used for things like logging, authentication and parsing"
+   ],
+   "use": "need to run the same check on every request",
+   "not": [
+    "stores data between server restarts"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "webhook",
+   "tier": 3,
+   "says": [
+    "is a call that one system makes to a URL of yours when an event happens",
+    "pushes events to you instead of making you poll for them"
+   ],
+   "use": "need to be told when a payment succeeds without checking repeatedly",
+   "not": [
+    "is a request that your code makes on a schedule to check for changes"
+   ],
+   "like": [
+    "background job"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "rate limiting",
+   "tier": 4,
+   "says": [
+    "caps how many requests a client may make in a period",
+    "protects a service from overload and abuse"
+   ],
+   "use": "need to stop one client flooding the API",
+   "not": [
+    "sorts requests into the order they arrived"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "idempotency",
+   "tier": 5,
+   "says": [
+    "means repeating the same request has the same effect as making it once",
+    "makes it safe to retry after a timeout"
+   ],
+   "use": "need a payment request to be safe to retry",
+   "not": [
+    "means a request can never be sent twice"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "pagination",
+   "tier": 3,
+   "says": [
+    "splits a large result into pages that a client requests one at a time",
+    "keeps responses small and fast"
+   ],
+   "use": "need an endpoint to return thousands of records without sending them all at once",
+   "not": [
+    "encrypts the results of a query"
+   ]
+  },
+  {
+   "group": "api",
+   "subject": "background job",
+   "tier": 4,
+   "says": [
+    "runs work outside the request that triggered it",
+    "is often placed on a queue and processed by a worker"
+   ],
+   "use": "need to send emails without making the user wait",
+   "not": [
+    "blocks the response until all of the work is finished"
+   ],
+   "like": [
+    "webhook"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "schema",
+   "tier": 2,
+   "says": [
+    "describes the structure of a database, including tables, columns and types",
+    "defines what shape the stored data must have"
+   ],
+   "use": "need to define the tables and columns for an application",
+   "not": [
+    "is a copy of the data kept in case of loss"
+   ],
+   "like": [
+    "migration"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "primary key",
+   "tier": 2,
+   "says": [
+    "uniquely identifies each row in a table",
+    "cannot be empty or duplicated"
+   ],
+   "use": "need a way to identify each record exactly",
+   "not": [
+    "points at a row in another table"
+   ],
+   "like": [
+    "foreign key"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "foreign key",
+   "tier": 2,
+   "says": [
+    "is a column that refers to the primary key of another table",
+    "keeps the link between related records consistent"
+   ],
+   "use": "need an order row to point at the customer who placed it",
+   "not": [
+    "uniquely identifies each row in its own table"
+   ],
+   "like": [
+    "primary key"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "index",
+   "tier": 3,
+   "says": [
+    "speeds up lookups on a column by keeping a sorted structure",
+    "makes writes slightly slower"
+   ],
+   "use": "see a slow query that filters on one column",
+   "not": [
+    "is a column that must hold a unique value"
+   ],
+   "like": [
+    "primary key",
+    "cache"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "join",
+   "tier": 3,
+   "says": [
+    "combines rows from two tables based on a related column",
+    "returns data that is stored in separate tables"
+   ],
+   "use": "need customer names alongside their orders",
+   "not": [
+    "adds a new column to a table"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "migration",
+   "tier": 3,
+   "says": [
+    "is a versioned change to the database schema",
+    "can be applied in order and tracked in source control"
+   ],
+   "use": "need to add a column to the production database safely",
+   "not": [
+    "is a one-off copy of production data to a laptop"
+   ],
+   "like": [
+    "schema"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "transaction",
+   "tier": 4,
+   "says": [
+    "groups several database operations so that they all succeed or all fail",
+    "protects data from being left half-updated"
+   ],
+   "use": "need to move money between two accounts without losing either side",
+   "not": [
+    "speeds up a query by sorting the data"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "ORM",
+   "tier": 3,
+   "says": [
+    "maps database tables to objects in code",
+    "lets developers query with code instead of hand-written SQL"
+   ],
+   "use": "want to work with database rows as objects",
+   "not": [
+    "encrypts the values stored in columns"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "NoSQL",
+   "tier": 3,
+   "says": [
+    "describes databases that do not use fixed tables and relational joins by default",
+    "includes document, key-value and graph stores"
+   ],
+   "use": "need flexible documents rather than fixed tables",
+   "not": [
+    "is a newer version of the SQL language"
+   ]
+  },
+  {
+   "group": "data",
+   "subject": "cache",
+   "tier": 3,
+   "says": [
+    "keeps a copy of costly-to-get data in fast storage",
+    "speeds up repeated reads but can serve stale data"
+   ],
+   "use": "see the same expensive query run again and again",
+   "not": [
+    "is the permanent copy of record for the data"
+   ],
+   "like": [
+    "index"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "authentication",
+   "tier": 2,
+   "says": [
+    "proves who a user is",
+    "is usually done with a password, a token or another factor"
+   ],
+   "use": "need to check that the person logging in is who they claim to be",
+   "not": [
+    "decides what a user is allowed to do"
+   ],
+   "like": [
+    "authorisation"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "authorisation",
+   "tier": 2,
+   "says": [
+    "decides what an authenticated user is allowed to do",
+    "controls access to resources and actions"
+   ],
+   "use": "need to stop ordinary users opening admin pages",
+   "not": [
+    "proves who a user is"
+   ],
+   "like": [
+    "authentication"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "hashing",
+   "tier": 3,
+   "says": [
+    "turns data into a fixed-size value that cannot practically be reversed",
+    "is the right way to store passwords, together with a salt"
+   ],
+   "use": "need to store passwords safely",
+   "not": [
+    "scrambles data so that it can be decrypted later with a key"
+   ],
+   "like": [
+    "encryption"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "encryption",
+   "tier": 3,
+   "says": [
+    "scrambles data so that only someone with the key can read it",
+    "can be reversed with the right key"
+   ],
+   "use": "need to protect data so that the right people can read it later",
+   "not": [
+    "produces a value that cannot practically be reversed"
+   ],
+   "like": [
+    "hashing"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "cross-site scripting",
+   "tier": 4,
+   "says": [
+    "lets an attacker run their script in another user's browser through your page",
+    "is prevented by escaping or sanitising output"
+   ],
+   "use": "find that user comments are inserted into a page without being escaped",
+   "not": [
+    "tricks a logged-in user's browser into sending an unwanted request"
+   ],
+   "like": [
+    "CSRF"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "CSRF",
+   "tier": 4,
+   "says": [
+    "tricks a logged-in user's browser into making an unwanted request",
+    "is reduced with anti-forgery tokens and same-site cookies"
+   ],
+   "use": "worry that a malicious site could make a user's browser submit a form to your site",
+   "not": [
+    "injects attacker script into your own page"
+   ],
+   "like": [
+    "cross-site scripting"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "SQL injection",
+   "tier": 4,
+   "says": [
+    "lets an attacker change a database query through unsafe input",
+    "is prevented by parameterised queries"
+   ],
+   "use": "see user input joined straight into a query string",
+   "not": [
+    "steals a session cookie through a script in the page"
+   ],
+   "like": [
+    "cross-site scripting"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "OAuth",
+   "tier": 4,
+   "says": [
+    "lets a user give an app limited access to their account without sharing the password",
+    "issues access tokens with a set scope"
+   ],
+   "use": "need a user to let your app read their calendar without giving you their password",
+   "not": [
+    "is a method of hashing passwords"
+   ],
+   "like": [
+    "authentication"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "least privilege",
+   "tier": 5,
+   "says": [
+    "gives each user or service only the access it needs",
+    "limits the damage when an account is compromised"
+   ],
+   "use": "need to decide how much access a service account should have",
+   "not": [
+    "gives every developer full admin access for speed"
+   ]
+  },
+  {
+   "group": "sec",
+   "subject": "secrets management",
+   "tier": 5,
+   "says": [
+    "keeps passwords, keys and tokens out of source code",
+    "stores them in a controlled place and rotates them"
+   ],
+   "use": "find an API key committed to a repository",
+   "not": [
+    "puts every key in the code so that nothing is lost"
+   ],
+   "like": [
+    "least privilege"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "repository",
+   "tier": 1,
+   "says": [
+    "stores a project's files and their full history",
+    "can be local or hosted on a service"
+   ],
+   "use": "need a place that keeps a project's code and its history",
+   "not": [
+    "is a single saved change"
+   ],
+   "like": [
+    "commit"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "commit",
+   "tier": 1,
+   "says": [
+    "records a snapshot of changes with a message",
+    "forms a point in history that can be returned to"
+   ],
+   "use": "need to save a set of changes with a description",
+   "not": [
+    "is a separate line of development"
+   ],
+   "like": [
+    "branch",
+    "repository"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "branch",
+   "tier": 1,
+   "says": [
+    "is a separate line of development",
+    "lets work happen without affecting the main code"
+   ],
+   "use": "need to work on a feature without disturbing the main code",
+   "not": [
+    "is a permanent label on one release"
+   ],
+   "like": [
+    "tag",
+    "commit",
+    "fork"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "pull request",
+   "tier": 2,
+   "says": [
+    "proposes merging one branch into another",
+    "is where teammates review and discuss changes"
+   ],
+   "use": "need others to review your work before it is merged",
+   "not": [
+    "downloads the latest changes from the remote repository"
+   ],
+   "like": [
+    "code review"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "code review",
+   "tier": 2,
+   "says": [
+    "is when teammates examine changes before they are merged",
+    "catches bugs and shares knowledge"
+   ],
+   "use": "want a second pair of eyes on your change",
+   "not": [
+    "is an automated tool that formats code"
+   ],
+   "like": [
+    "pull request"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "merge conflict",
+   "tier": 3,
+   "says": [
+    "happens when two changes touch the same lines and git cannot combine them",
+    "needs a person to choose the correct result"
+   ],
+   "use": "see git refuse to combine two branches that edit the same lines",
+   "not": [
+    "happens when a repository is deleted"
+   ],
+   "like": [
+    "rebase"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "rebase",
+   "tier": 4,
+   "says": [
+    "replays a branch's commits on top of another base",
+    "gives a cleaner linear history but rewrites commits"
+   ],
+   "use": "want your feature branch to sit on top of the latest main",
+   "not": [
+    "joins two histories with a new merge commit"
+   ],
+   "like": [
+    "merge conflict"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "tag",
+   "tier": 3,
+   "says": [
+    "marks a specific commit, often a release",
+    "does not move as new commits are added"
+   ],
+   "use": "need to mark exactly what shipped as version 2.0",
+   "not": [
+    "is a branch that moves with each new commit"
+   ],
+   "like": [
+    "branch"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "fork",
+   "tier": 3,
+   "says": [
+    "is a personal copy of someone else's repository",
+    "lets you propose changes without write access to the original"
+   ],
+   "use": "want to contribute to a project that you cannot write to",
+   "not": [
+    "is a branch inside the same repository"
+   ],
+   "like": [
+    "branch"
+   ]
+  },
+  {
+   "group": "vc",
+   "subject": "monorepo",
+   "tier": 5,
+   "says": [
+    "keeps the code for many projects in one repository",
+    "makes sharing code and changing several projects at once easier"
+   ],
+   "use": "need to change a shared library and all of its users in one commit",
+   "not": [
+    "gives every service its own repository"
+   ],
+   "like": [
+    "repository"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "unit test",
+   "tier": 1,
+   "says": [
+    "checks one small piece of code in isolation",
+    "runs fast and pinpoints where a failure is"
+   ],
+   "use": "want to check one function quickly",
+   "not": [
+    "tests the whole system through the browser"
+   ],
+   "like": [
+    "integration test",
+    "end-to-end test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "integration test",
+   "tier": 3,
+   "says": [
+    "checks that several parts work together",
+    "may use a real database or service"
+   ],
+   "use": "need to confirm that the API and the database work together",
+   "not": [
+    "checks a single function with all of its dependencies replaced"
+   ],
+   "like": [
+    "unit test",
+    "end-to-end test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "end-to-end test",
+   "tier": 3,
+   "says": [
+    "drives the whole application as a user would",
+    "covers the full path from the interface to the data"
+   ],
+   "use": "need to check that login, checkout and email all work together",
+   "not": [
+    "checks one function in isolation"
+   ],
+   "like": [
+    "unit test",
+    "integration test"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "test coverage",
+   "tier": 3,
+   "says": [
+    "measures how much of the code is run by the tests",
+    "does not prove that the tests check the right things"
+   ],
+   "use": "want to know which code no test touches",
+   "not": [
+    "measures how fast the tests run"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "regression",
+   "tier": 2,
+   "says": [
+    "is a bug where something that used to work stops working",
+    "is guarded against by automated tests"
+   ],
+   "use": "find that an old feature broke after a new change",
+   "not": [
+    "is a new feature added to a product"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "mock",
+   "tier": 3,
+   "says": [
+    "replaces a real dependency with a controlled fake in a test",
+    "lets a test run without calling a real service"
+   ],
+   "use": "need to test code that calls a payment service without really charging anyone",
+   "not": [
+    "is a test that runs against production data"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "linting",
+   "tier": 2,
+   "says": [
+    "analyses code for likely errors and style problems without running it",
+    "catches issues before review"
+   ],
+   "use": "want unused variables and style slips caught automatically",
+   "not": [
+    "runs the application and clicks through it"
+   ],
+   "like": [
+    "type checking"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "type checking",
+   "tier": 3,
+   "says": [
+    "checks that values are used in ways their types allow",
+    "catches mismatches before the code runs"
+   ],
+   "use": "want mistakes such as passing a string where a number is needed caught early",
+   "not": [
+    "measures how many lines are covered by tests"
+   ],
+   "like": [
+    "linting"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "refactoring",
+   "tier": 4,
+   "says": [
+    "restructures code without changing what it does",
+    "makes code easier to understand and change"
+   ],
+   "use": "need to tidy code without changing its behaviour",
+   "not": [
+    "adds new features while the code is being rewritten"
+   ],
+   "like": [
+    "technical debt"
+   ]
+  },
+  {
+   "group": "test",
+   "subject": "technical debt",
+   "tier": 4,
+   "says": [
+    "is the future cost of shortcuts taken in design or code",
+    "builds up when quick fixes are never revisited"
+   ],
+   "use": "see old shortcuts slowing down every change",
+   "not": [
+    "is money owed to a software supplier"
+   ],
+   "like": [
+    "refactoring"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "continuous integration",
+   "tier": 3,
+   "says": [
+    "merges and tests code changes automatically and often",
+    "catches broken builds soon after a change"
+   ],
+   "use": "want every push to be built and tested automatically",
+   "not": [
+    "releases every change to users automatically"
+   ],
+   "like": [
+    "continuous delivery"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "continuous delivery",
+   "tier": 3,
+   "says": [
+    "keeps software always in a state that can be released",
+    "automates the steps up to the release"
+   ],
+   "use": "want any good build to be ready to release at the push of a button",
+   "not": [
+    "runs tests only on one developer's machine"
+   ],
+   "like": [
+    "continuous integration"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "staging environment",
+   "tier": 2,
+   "says": [
+    "is a copy of production used to test changes before release",
+    "should be as like production as possible"
+   ],
+   "use": "need to try a release before real users see it",
+   "not": [
+    "is the live environment that customers use"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "container",
+   "tier": 3,
+   "says": [
+    "packages an application with what it needs to run",
+    "runs the same way on different machines"
+   ],
+   "use": "need an app to run identically on a laptop and a server",
+   "not": [
+    "is a full virtual computer with its own operating system kernel"
+   ],
+   "like": [
+    "serverless"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "rollback",
+   "tier": 3,
+   "says": [
+    "returns a system to a previous working version",
+    "is the first thing to consider when a release breaks production"
+   ],
+   "use": "see a new release break production",
+   "not": [
+    "adds new features to a release that is already live"
+   ],
+   "like": [
+    "feature flag",
+    "blue-green deployment"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "feature flag",
+   "tier": 4,
+   "says": [
+    "switches a feature on or off without a new deployment",
+    "lets code be released but kept hidden"
+   ],
+   "use": "want to release code but show it to only some users",
+   "not": [
+    "marks a bug as fixed in the tracker"
+   ],
+   "like": [
+    "rollback"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "infrastructure as code",
+   "tier": 4,
+   "says": [
+    "describes servers and networks in files kept in version control",
+    "makes environments repeatable"
+   ],
+   "use": "need to recreate the same environment reliably",
+   "not": [
+    "means setting servers up by hand using a console"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "serverless",
+   "tier": 4,
+   "says": [
+    "runs code on a platform that manages the servers",
+    "scales with demand and is billed by use"
+   ],
+   "use": "want to run small functions without managing servers",
+   "not": [
+    "means the code runs with no computer involved"
+   ],
+   "like": [
+    "container"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "load balancer",
+   "tier": 4,
+   "says": [
+    "spreads incoming requests across several servers",
+    "can stop sending traffic to a server that has failed"
+   ],
+   "use": "need to share traffic between several servers",
+   "not": [
+    "translates domain names into IP addresses"
+   ]
+  },
+  {
+   "group": "ship",
+   "subject": "blue-green deployment",
+   "tier": 5,
+   "says": [
+    "keeps two identical environments and switches traffic from one to the other",
+    "allows an instant switch back if the new version fails"
+   ],
+   "use": "want a release with almost no downtime and an instant fallback",
+   "not": [
+    "updates servers one at a time in place with no spare environment"
+   ],
+   "like": [
+    "rollback"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "latency",
+   "tier": 2,
+   "says": [
+    "is the time a request takes to get a response",
+    "is affected by distance, the work done and waiting"
+   ],
+   "use": "hear users say that pages feel slow",
+   "not": [
+    "is the number of requests handled per second"
+   ],
+   "like": [
+    "throughput"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "throughput",
+   "tier": 3,
+   "says": [
+    "is how much work a system handles in a given time",
+    "is often measured in requests per second"
+   ],
+   "use": "need to know how many requests a service can handle each second",
+   "not": [
+    "is the time that one request takes"
+   ],
+   "like": [
+    "latency"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "horizontal scaling",
+   "tier": 4,
+   "says": [
+    "adds more machines to share the load",
+    "needs the application not to depend on one machine's memory"
+   ],
+   "use": "need to handle more traffic by adding servers",
+   "not": [
+    "adds more CPU and memory to a single machine"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "logging",
+   "tier": 2,
+   "says": [
+    "records events as an application runs",
+    "helps explain what happened after a failure"
+   ],
+   "use": "need a record of what the application did before it failed",
+   "not": [
+    "checks values against the types they should have"
+   ],
+   "like": [
+    "monitoring"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "monitoring",
+   "tier": 3,
+   "says": [
+    "watches the health of a system through metrics and alerts",
+    "tells a team when something is wrong"
+   ],
+   "use": "need to know when the error rate rises",
+   "not": [
+    "stores every message the application writes"
+   ],
+   "like": [
+    "logging",
+    "observability"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "observability",
+   "tier": 4,
+   "says": [
+    "lets a team understand a system's internal state from its outputs",
+    "combines logs, metrics and traces"
+   ],
+   "use": "need to find why a request was slow across several services",
+   "not": [
+    "is a list of scheduled releases"
+   ],
+   "like": [
+    "monitoring"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "service level objective",
+   "tier": 4,
+   "says": [
+    "is a target for how reliable a service should be",
+    "is measured against an indicator such as availability"
+   ],
+   "use": "need to say how reliable a service should be",
+   "not": [
+    "is a legal contract that carries penalties"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "post-incident review",
+   "tier": 5,
+   "says": [
+    "looks at what happened after an outage and why",
+    "aims to learn without blaming individuals"
+   ],
+   "use": "have just fixed an outage and want to stop it happening again",
+   "not": [
+    "decides which engineer should be disciplined"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "race condition",
+   "tier": 5,
+   "says": [
+    "is a bug where the result depends on the unpredictable timing of events",
+    "can appear only occasionally"
+   ],
+   "use": "see a bug that appears only when two requests arrive at nearly the same moment",
+   "not": [
+    "is a bug that always occurs on the first request"
+   ],
+   "like": [
+    "memory leak"
+   ]
+  },
+  {
+   "group": "run",
+   "subject": "memory leak",
+   "tier": 5,
+   "says": [
+    "is memory that is never released so that usage grows over time",
+    "can make a long-running service slow or crash"
+   ],
+   "use": "see a server's memory use rise until it falls over",
+   "not": [
+    "is a bug that depends on the timing of two requests"
+   ],
+   "like": [
+    "race condition"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "user story",
+   "tier": 2,
+   "says": [
+    "describes a feature from the user's point of view",
+    "is often written as 'as a user, I want ..., so that ...'"
+   ],
+   "use": "need to describe a feature in terms of what a user wants",
+   "not": [
+    "is a technical design for the database"
+   ],
+   "like": [
+    "backlog"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "sprint",
+   "tier": 2,
+   "says": [
+    "is a fixed short period in which a team works on agreed items",
+    "ends with a review and a retrospective"
+   ],
+   "use": "need to plan two weeks of work",
+   "not": [
+    "is a list of everything that might be built"
+   ],
+   "like": [
+    "backlog"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "backlog",
+   "tier": 2,
+   "says": [
+    "is the ordered list of work a team might do",
+    "is re-ordered as priorities change"
+   ],
+   "use": "need a list of everything still to build, in priority order",
+   "not": [
+    "is the fixed set of work agreed for one sprint"
+   ],
+   "like": [
+    "sprint",
+    "user story"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "definition of done",
+   "tier": 3,
+   "says": [
+    "is the shared checklist that work must meet to count as finished",
+    "covers things like tests, review and documentation"
+   ],
+   "use": "need agreement on what finished means",
+   "not": [
+    "is the date on which a project must end"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "MVP",
+   "tier": 3,
+   "says": [
+    "is the smallest version of a product that delivers value and teaches the team something",
+    "is used to test an idea before building more"
+   ],
+   "use": "want to test an idea with real users before building everything",
+   "not": [
+    "is the final polished version with every planned feature"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "monolith",
+   "tier": 3,
+   "says": [
+    "is an application built and deployed as one unit",
+    "keeps all of its code in one codebase and process"
+   ],
+   "use": "have one application that is deployed as a single piece",
+   "not": [
+    "splits an application into many independently deployed services"
+   ],
+   "like": [
+    "microservice architecture"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "microservice architecture",
+   "tier": 4,
+   "says": [
+    "splits an application into many small, independently deployed services",
+    "lets teams release parts of the system separately"
+   ],
+   "use": "need teams to deploy parts of a system on their own schedules",
+   "not": [
+    "deploys the whole application as one unit"
+   ],
+   "like": [
+    "monolith",
+    "event-driven architecture"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "architecture decision record",
+   "tier": 5,
+   "says": [
+    "is a short document capturing an important design decision and why it was made",
+    "lets later developers see the reasoning"
+   ],
+   "use": "need to record why the team chose one design over another",
+   "not": [
+    "is a diagram of the servers"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "breaking change",
+   "tier": 4,
+   "says": [
+    "is a change that makes existing users of an API or library stop working",
+    "calls for a new version or a migration path"
+   ],
+   "use": "need to rename a field that other clients rely on",
+   "not": [
+    "is a fix that makes no difference to anyone"
+   ]
+  },
+  {
+   "group": "arch",
+   "subject": "event-driven architecture",
+   "tier": 5,
+   "says": [
+    "has parts of a system react to events rather than call each other directly",
+    "lets producers and consumers work independently"
+   ],
+   "use": "need services to react to things that happen, such as an order being placed",
+   "not": [
+    "has every service call the others and wait for an answer"
+   ],
+   "like": [
+    "microservice architecture"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "What does the status code 404 mean?",
+   "right": "The requested resource was not found",
+   "wrong": [
+    "The server crashed",
+    "The request succeeded",
+    "The user is not logged in"
+   ],
+   "tier": 1,
+   "why": "404 means the server could not find what was asked for."
+  },
+  {
+   "q": "Which HTTP method is normally used to read data?",
+   "right": "GET",
+   "wrong": [
+    "POST",
+    "DELETE",
+    "PUT"
+   ],
+   "tier": 1,
+   "why": "GET reads; the others create, change or remove."
+  },
+  {
+   "q": "What does DNS do?",
+   "right": "Translates a domain name into an IP address",
+   "wrong": [
+    "Encrypts traffic between browser and server",
+    "Spreads requests across servers",
+    "Stores the user's cookies"
+   ],
+   "tier": 1,
+   "why": "DNS turns names into addresses."
+  },
+  {
+   "q": "Which of these is a primary key?",
+   "right": "A column that uniquely identifies each row",
+   "wrong": [
+    "A column that links to another table",
+    "A sorted structure that speeds up lookups",
+    "A copy of the whole table"
+   ],
+   "tier": 1,
+   "why": "A primary key identifies each row uniquely."
+  },
+  {
+   "q": "What is a commit?",
+   "right": "A snapshot of changes saved with a message",
+   "wrong": [
+    "A separate line of development",
+    "A review of someone else's work",
+    "A copy of someone else's repository"
+   ],
+   "tier": 1,
+   "why": "A commit records a point in history."
+  },
+  {
+   "q": "What does a unit test check?",
+   "right": "One small piece of code in isolation",
+   "wrong": [
+    "The whole system through the browser",
+    "The load on the production servers",
+    "How the page looks on a phone"
+   ],
+   "tier": 1,
+   "why": "Unit tests check one small piece quickly."
+  },
+  {
+   "q": "Why do developers use a branch?",
+   "right": "To work on a change without disturbing the main code",
+   "wrong": [
+    "To mark a release permanently",
+    "To store the database",
+    "To delete old commits"
+   ],
+   "tier": 1,
+   "why": "Branches isolate work in progress."
+  },
+  {
+   "q": "A page you changed no longer fits properly on a phone. Which concept is affected?",
+   "right": "Responsive design",
+   "wrong": [
+    "Hydration",
+    "Bundling",
+    "Hashing"
+   ],
+   "tier": 1,
+   "why": "Responsive design adapts layout to screen sizes."
+  },
+  {
+   "q": "Which is the safest way for a database to store a user's password?",
+   "right": "A salted hash of the password",
+   "wrong": [
+    "The password encrypted with a key kept in the same database",
+    "The password in plain text",
+    "The password encoded in base64"
+   ],
+   "tier": 2,
+   "why": "Hashing with a salt cannot practically be reversed."
+  },
+  {
+   "q": "A logged-in user who is not an admin opens the admin page and is refused. What decided that?",
+   "right": "Authorisation",
+   "wrong": [
+    "Authentication",
+    "Hashing",
+    "CORS"
+   ],
+   "tier": 2,
+   "why": "Authorisation decides what an authenticated user may do."
+  },
+  {
+   "q": "Which URL and method most closely follows REST for fetching user 42?",
+   "right": "GET /users/42",
+   "wrong": [
+    "POST /getUser?id=42",
+    "GET /doThing?action=user&id=42",
+    "DELETE /users/42"
+   ],
+   "tier": 2,
+   "why": "REST uses resource URLs and standard methods."
+  },
+  {
+   "q": "Why do teams use pull requests?",
+   "right": "So that others can review changes before they are merged",
+   "wrong": [
+    "To copy a repository to a new place",
+    "To delete old branches",
+    "To run the database migrations"
+   ],
+   "tier": 2,
+   "why": "Pull requests are the place for review and discussion."
+  },
+  {
+   "q": "Where should you try a release before real users see it?",
+   "right": "In a staging environment",
+   "wrong": [
+    "In production",
+    "On the CDN",
+    "In the backlog"
+   ],
+   "tier": 2,
+   "why": "Staging mirrors production so releases can be tested safely."
+  },
+  {
+   "q": "Users say a page takes six seconds to respond. Which measure is this?",
+   "right": "Latency",
+   "wrong": [
+    "Throughput",
+    "Test coverage",
+    "Pagination"
+   ],
+   "tier": 2,
+   "why": "Latency is the time one request takes."
+  },
+  {
+   "q": "A keyboard-only user cannot reach your menu. Which concern is this?",
+   "right": "Accessibility",
+   "wrong": [
+    "Hydration",
+    "Caching",
+    "Rate limiting"
+   ],
+   "tier": 2,
+   "why": "Accessibility covers keyboard use and assistive technology."
+  },
+  {
+   "q": "An old feature breaks after a new change. What is this called?",
+   "right": "A regression",
+   "wrong": [
+    "A migration",
+    "A breaking change",
+    "A race condition"
+   ],
+   "tier": 2,
+   "why": "A regression is something that used to work and stops."
+  },
+  {
+   "q": "A query that filters on email is slow on a table of millions of rows. What should you consider first?",
+   "right": "Adding an index on the email column",
+   "wrong": [
+    "Adding more columns to the table",
+    "Removing the primary key",
+    "Moving the table into the browser"
+   ],
+   "tier": 3,
+   "why": "An index speeds up lookups on a column."
+  },
+  {
+   "q": "A marketing page must show full content to search engines on first load. Which rendering suits it?",
+   "right": "Server-side rendering",
+   "wrong": [
+    "Client-side rendering from an empty shell",
+    "Hydration without any HTML",
+    "A WebSocket connection"
+   ],
+   "tier": 3,
+   "why": "Server-side rendering sends complete HTML."
+  },
+  {
+   "q": "A payment provider tells your server when a payment succeeds. What is the mechanism?",
+   "right": "A webhook",
+   "wrong": [
+    "Pagination",
+    "A cache",
+    "A rebase"
+   ],
+   "tier": 3,
+   "why": "A webhook is a call to your URL when an event happens."
+  },
+  {
+   "q": "Git says both branches changed the same lines. What do you do?",
+   "right": "Open the file, choose or combine the correct lines and commit the resolution",
+   "wrong": [
+    "Delete the other branch",
+    "Force-push over the other branch",
+    "Ignore the message"
+   ],
+   "tier": 3,
+   "why": "A merge conflict needs a person to decide."
+  },
+  {
+   "q": "A release breaks checkout in production. What is the first priority?",
+   "right": "Restore service, for example by rolling back",
+   "wrong": [
+    "Write the post-incident review",
+    "Add a new feature",
+    "Wait to see if it fixes itself"
+   ],
+   "tier": 3,
+   "why": "Restoring service comes first."
+  },
+  {
+   "q": "Which practice builds and tests every push automatically?",
+   "right": "Continuous integration",
+   "wrong": [
+    "Blue-green deployment",
+    "Horizontal scaling",
+    "Refactoring"
+   ],
+   "tier": 3,
+   "why": "Continuous integration merges and tests often."
+  },
+  {
+   "q": "Product prices change but the page still shows the old ones. What is the likely trade-off?",
+   "right": "The cache can serve stale data until it is refreshed or invalidated",
+   "wrong": [
+    "The index has become too large",
+    "The schema has been migrated twice",
+    "The unit tests are not run"
+   ],
+   "tier": 3,
+   "why": "Caches trade freshness for speed."
+  },
+  {
+   "q": "You need to test code that calls a payment service without really charging anyone. What do you use?",
+   "right": "A mock of the payment service",
+   "wrong": [
+    "The production payment service",
+    "A bigger database",
+    "A load balancer"
+   ],
+   "tier": 3,
+   "why": "A mock replaces a real dependency in tests."
+  },
+  {
+   "q": "Clients need to choose exactly which fields come back and avoid several round trips. Which API style helps?",
+   "right": "GraphQL",
+   "wrong": [
+    "A fixed set of REST URLs only",
+    "WebSocket only",
+    "A webhook"
+   ],
+   "tier": 3,
+   "why": "GraphQL lets the client pick fields in one query."
+  },
+  {
+   "q": "A search endpoint builds its SQL by joining in user text. What is the fix?",
+   "right": "Use parameterised queries",
+   "wrong": [
+    "Hash the search text",
+    "Add a CDN",
+    "Rebase the branch"
+   ],
+   "tier": 4,
+   "why": "Parameterised queries prevent SQL injection."
+  },
+  {
+   "q": "A comment containing a script tag runs for other visitors. What is the flaw and the fix?",
+   "right": "Cross-site scripting; escape or sanitise output",
+   "wrong": [
+    "CSRF; add an index",
+    "SQL injection; add a rate limit",
+    "A merge conflict; rebase"
+   ],
+   "tier": 4,
+   "why": "Unescaped output lets attacker scripts run."
+  },
+  {
+   "q": "A user logged into your site visits a malicious page that submits a transfer. What defends against this?",
+   "right": "Anti-forgery tokens and same-site cookies",
+   "wrong": [
+    "Parameterised queries",
+    "A larger cache",
+    "A bundler"
+   ],
+   "tier": 4,
+   "why": "These defend against CSRF."
+  },
+  {
+   "q": "A browser blocks your front end at app.example.com from calling api.example.com. Where is it fixed?",
+   "right": "The API sends CORS headers that allow the front end's origin",
+   "wrong": [
+    "The browser's JavaScript is switched off",
+    "The request is changed to POST",
+    "An index is added to the table"
+   ],
+   "tier": 4,
+   "why": "CORS is configured by the server being called."
+  },
+  {
+   "q": "One client's script sends thousands of requests a minute and slows everyone down. What do you add?",
+   "right": "Rate limiting",
+   "wrong": [
+    "A feature flag",
+    "A mock",
+    "A tag"
+   ],
+   "tier": 4,
+   "why": "Rate limiting caps requests per client."
+  },
+  {
+   "q": "You want to ship code to production but show it only to staff. What do you use?",
+   "right": "A feature flag",
+   "wrong": [
+    "A rollback",
+    "A fork",
+    "A hash"
+   ],
+   "tier": 4,
+   "why": "A feature flag switches a feature on or off without a deployment."
+  },
+  {
+   "q": "A transfer debits one account and the server crashes before the credit. Which database feature prevents money disappearing?",
+   "right": "A transaction",
+   "wrong": [
+    "An index",
+    "A join",
+    "A cache"
+   ],
+   "tier": 4,
+   "why": "A transaction makes the group of operations all succeed or all fail."
+  },
+  {
+   "q": "Why should you avoid rebasing a branch others already use?",
+   "right": "It rewrites commits that other people have built on",
+   "wrong": [
+    "It deletes the repository",
+    "It makes the branch private",
+    "It merges the branch into main"
+   ],
+   "tier": 4,
+   "why": "Rebasing changes history that others depend on."
+  },
+  {
+   "q": "After adding a second server, users are logged out at random. Sessions were held in the first server's memory. What is the issue?",
+   "right": "The application depends on one machine's memory, so sessions must move to shared storage",
+   "wrong": [
+    "The CDN is out of date",
+    "The database needs a new index",
+    "The tests are not run"
+   ],
+   "tier": 4,
+   "why": "Horizontal scaling needs shared state."
+  },
+  {
+   "q": "A request is slow, and it passes through five services. What helps you find which one?",
+   "right": "Observability, including traces across services",
+   "wrong": [
+    "A bigger monolith",
+    "A fork",
+    "Pagination"
+   ],
+   "tier": 4,
+   "why": "Traces show where time is spent across services."
+  },
+  {
+   "q": "You need to rename a response field that mobile apps use. What should you do?",
+   "right": "Treat it as a breaking change and version the API or keep the old field during a migration",
+   "wrong": [
+    "Rename it and tell nobody",
+    "Rename it and delete the old tests",
+    "Hash the field"
+   ],
+   "tier": 4,
+   "why": "Breaking changes need a migration path."
+  },
+  {
+   "q": "A user lets your app read their calendar without giving you their password. What lets that happen?",
+   "right": "OAuth",
+   "wrong": [
+    "Hashing",
+    "A feature flag",
+    "A cache"
+   ],
+   "tier": 4,
+   "why": "OAuth grants limited access with tokens."
+  },
+  {
+   "q": "A network times out on a payment request; the client retries and the customer is charged twice. What was missing?",
+   "right": "Idempotency",
+   "wrong": [
+    "Pagination",
+    "Hydration",
+    "A tag"
+   ],
+   "tier": 5,
+   "why": "Idempotent requests are safe to retry."
+  },
+  {
+   "q": "A reporting service connects with the database admin account. Which principle is broken?",
+   "right": "Least privilege",
+   "wrong": [
+    "Idempotency",
+    "Observability",
+    "Test coverage"
+   ],
+   "tier": 5,
+   "why": "Services should have only the access they need."
+  },
+  {
+   "q": "An API key is found in git history. What do you do?",
+   "right": "Revoke and rotate the key, then remove it from the code",
+   "wrong": [
+    "Delete the file and keep the same key",
+    "Rebase the branch",
+    "Encrypt the commit message"
+   ],
+   "tier": 5,
+   "why": "Removing the file does not remove the key from history, so it must be revoked."
+  },
+  {
+   "q": "Two requests both read a stock level of 1 and both sell the last item. What kind of bug is this?",
+   "right": "A race condition",
+   "wrong": [
+    "A memory leak",
+    "A regression",
+    "A breaking change"
+   ],
+   "tier": 5,
+   "why": "The outcome depends on the timing of the requests."
+  },
+  {
+   "q": "A release needs almost no downtime and an instant way back. Which approach fits?",
+   "right": "Blue-green deployment",
+   "wrong": [
+    "Editing files directly on the live server",
+    "A monorepo",
+    "Hydration"
+   ],
+   "tier": 5,
+   "why": "Blue-green keeps two environments and switches traffic."
+  },
+  {
+   "q": "Six months later nobody knows why the team chose a queue over direct calls. What would have helped?",
+   "right": "An architecture decision record",
+   "wrong": [
+    "More unit tests",
+    "A larger sprint",
+    "A load balancer"
+   ],
+   "tier": 5,
+   "why": "An ADR captures the reasoning behind a decision."
+  },
+  {
+   "q": "After an outage a manager wants to name who is to blame. What is the better approach?",
+   "right": "A blameless review that looks at causes and fixes",
+   "wrong": [
+    "Hide the cause",
+    "Skip the review to save time",
+    "Remove the monitoring"
+   ],
+   "tier": 5,
+   "why": "Blameless reviews help teams learn."
+  },
+  {
+   "q": "A five-person start-up with one product wants twenty microservices. What is a sensible concern?",
+   "right": "The operational complexity may outweigh the benefits; a monolith may be enough",
+   "wrong": [
+    "Microservices cannot use a database",
+    "A monolith cannot be deployed",
+    "Containers cannot run more than one service"
+   ],
+   "tier": 5,
+   "why": "Microservices add operational cost."
+  },
+  {
+   "q": "A team has skipped tests for months to hit deadlines, and every change is now slower. What is this?",
+   "right": "Technical debt",
+   "wrong": [
+    "A merge conflict",
+    "Throughput",
+    "A webhook"
+   ],
+   "tier": 5,
+   "why": "Shortcuts build up a future cost."
+  },
+  {
+   "q": "A server's memory use climbs until it crashes, then restarts and does it again. What is the likely problem?",
+   "right": "A memory leak",
+   "wrong": [
+    "A race condition",
+    "A CSRF attack",
+    "A rollback"
+   ],
+   "tier": 5,
+   "why": "Memory that is never released grows over time."
+  },
+  {
+   "q": "Services must react when an order is placed without calling each other directly. Which architecture fits?",
+   "right": "Event-driven architecture",
+   "wrong": [
+    "A monolith",
+    "A single database transaction",
+    "Client-side rendering"
+   ],
+   "tier": 5,
+   "why": "Services react to events instead of direct calls."
+  },
+  {
+   "q": "Which describes a feature from the user's point of view, such as 'as a user, I want to reset my password'?",
+   "right": "A user story",
+   "wrong": [
+    "A migration",
+    "A tag",
+    "A mock"
+   ],
+   "tier": 3,
+   "why": "A user story states what a user wants."
+  }
+ ]
+}
