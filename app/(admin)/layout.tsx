@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "../globals.css"; // the existing admin pages are still written for gglearn's own styles
 import "../../src/gg-ui/styles.css"; // the shared GG kit; only this document loads it, so the learner site never sees it
 import { Badge, Shell, type NavGroup } from "@gg/ui";
-import { requireManager } from "@/lib/auth";
+import { realUser, requireManager } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/superAdmin";
 import { adminScopeOf, scopeChoices } from "@/lib/adminScope";
 import { expiryWatchFor } from "@/lib/certsAdmin";
 import { queueCount } from "@/lib/integrityAdmin";
@@ -18,6 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const me = await requireManager();
   const scope = await adminScopeOf(me);
   const choices = scopeChoices(me);
+  const superMe = isSuperAdmin(await realUser());
   const admin = me.role === "admin", global = isGlobal(reachOf(me.id));
   const watch = expiryWatchFor(scope.reach); // only the holders of the few certificates in the window are looked up, so this costs next to nothing on every admin page
 
@@ -36,6 +38,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ] },
     { label: "Content", items: [
       ...(admin && global ? [{ href: "/admin/bank", label: "Question bank", icon: "database" }] : []),
+      ...(superMe ? [{ href: "/admin/terms", label: "Terms", icon: "database" }] : []),
       { href: "/admin/freshness", label: "Freshness", icon: "clock" },
       ...(admin && global ? [{ href: "/admin/problems", label: "Map problems", icon: "target" }] : []),
     ] },

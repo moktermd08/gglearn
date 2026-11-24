@@ -1601,6 +1601,57 @@ export const cvComments = sqliteTable("cv_comments", {
   deletedAt: integer("deleted_at"),
 }, (t) => [index("cv_comments_owner").on(t.userId, t.status), index("cv_comments_pair").on(t.reviewerId, t.userId)]);
 
+// ---- Term bank (lib/terms.ts): the vocabulary people at work need to know, in banks (a bank is a set such as "Office core" or "CTO core"), each term at one of
+// five tiers (the five ranks in lib/levels.ts). A super admin keeps the shared terms. A candidate may add their own: those are personal (ownerUserId set) and
+// only appear in that person's own exams until a super admin promotes one into a bank (which clears ownerUserId).
+export const termBanks = sqliteTable("term_banks", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  description: text("description").notNull().default(""),
+  roles: text("roles").notNull().default(""), // comma separated lower case job roles this bank is for; "" = everyone
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: integer("created_at").notNull().default(now),
+});
+
+export const terms = sqliteTable("terms", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  bankId: integer("bank_id").references(() => termBanks.id), // null for a personal term that has not been promoted
+  ownerUserId: integer("owner_user_id").references(() => users.id), // null for a shared term
+  groupName: text("group_name").notNull().default(""), // the heading the term sits under inside its bank
+  term: text("term").notNull(),
+  meaning: text("meaning").notNull(),
+  tier: integer("tier").notNull().default(1), // 1..5, the rank it belongs to
+  similar: text("similar").notNull().default("[]"), // JSON array of terms that are easy to confuse with this one: never used as its wrong answers
+  status: text("status", { enum: ["active", "hidden"] }).notNull().default("active"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: integer("created_at").notNull().default(now),
+  updatedAt: integer("updated_at").notNull().default(now),
+}, (t) => [index("terms_bank").on(t.bankId, t.status), index("terms_owner").on(t.ownerUserId)]);
+
+// A person's own term check: the terms they picked, the rank they think they are at, and how it went.
+export const termExams = sqliteTable("term_exams", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  claimedTier: integer("claimed_tier").notNull(), // 1..5
+  score: real("score"), // 0..1, null until finished
+  startedAt: integer("started_at").notNull().default(now),
+  finishedAt: integer("finished_at"),
+}, (t) => [index("term_exams_user").on(t.userId)]);
+
+// One question in a term check. The prompt and the options are stored as asked, so the check can be marked and reviewed exactly as it was shown.
+export const termExamAnswers = sqliteTable("term_exam_answers", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  examId: integer("exam_id").notNull().references(() => termExams.id),
+  termId: integer("term_id").notNull().references(() => terms.id),
+  tier: integer("tier").notNull(), // the term's tier when it was asked, so a later edit does not rewrite the result
+  prompt: text("prompt").notNull(),
+  options: text("options").notNull(), // JSON array of strings
+  correct: integer("correct").notNull(), // index into options
+  chosen: integer("chosen"), // null until answered
+  right: integer("right", { mode: "boolean" }),
+}, (t) => [index("term_exam_answers_exam").on(t.examId), index("term_exam_answers_term").on(t.termId)]);
+
 // How often a share link was read, per day (lib/cv/links.ts): a count of page views and of PDF downloads for each link and day, and nothing about the
 // reader (no address, no browser, no account). Days are UTC day numbers. Old days are pruned. A new table only: nothing here alters one that has rows.
 export const cvLinkDays = sqliteTable("cv_link_days", {

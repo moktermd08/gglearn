@@ -1,0 +1,2153 @@
+{
+ "slug": "security-core",
+ "name": "Security core vocabulary",
+ "description": "The 100 terms a security professional needs to know, from junior analyst to CISO.",
+ "roles": "security analyst,ciso",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "fund": "security fundamentals term",
+  "iam": "identity and access term",
+  "net": "network security term",
+  "app": "application security term",
+  "crypto": "cryptography term",
+  "atk": "attack or threat term",
+  "ops": "security operations term",
+  "ir": "incident response term",
+  "grc": "governance, risk or compliance term",
+  "assure": "security assurance term"
+ },
+ "cards": [
+  {
+   "group": "fund",
+   "subject": "confidentiality",
+   "tier": 1,
+   "says": [
+    "means information is seen only by those allowed to see it",
+    "is protected by access control and encryption"
+   ],
+   "use": "need to stop sensitive information being read by the wrong people",
+   "not": [
+    "means information stays correct and unaltered"
+   ],
+   "like": [
+    "integrity",
+    "availability"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "integrity",
+   "tier": 1,
+   "says": [
+    "means information stays accurate and is not changed without permission",
+    "is protected by hashing, signatures and change controls"
+   ],
+   "use": "need to know a record has not been tampered with",
+   "not": [
+    "means information is kept secret from outsiders"
+   ],
+   "like": [
+    "confidentiality",
+    "availability"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "availability",
+   "tier": 1,
+   "says": [
+    "means systems and data can be used when they are needed",
+    "is protected by redundancy, backups and defence against denial of service"
+   ],
+   "use": "need a service to keep working when users need it",
+   "not": [
+    "means information is hidden from unauthorised people"
+   ],
+   "like": [
+    "confidentiality",
+    "integrity"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "threat",
+   "tier": 1,
+   "says": [
+    "is anything that could cause harm to a system or its data",
+    "may be a person, a malicious program or a natural event"
+   ],
+   "use": "need to name something that could damage the organisation's assets",
+   "not": [
+    "is a weakness in a system that can be exploited"
+   ],
+   "like": [
+    "vulnerability",
+    "threat actor"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "vulnerability",
+   "tier": 1,
+   "says": [
+    "is a weakness that could be used to harm a system",
+    "can be a flaw in software, a misconfiguration or a gap in process"
+   ],
+   "use": "find an unpatched server that an attacker could use",
+   "not": [
+    "is the person or group who carries out an attack"
+   ],
+   "like": [
+    "threat",
+    "exploit"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "exploit",
+   "tier": 2,
+   "says": [
+    "is a method or piece of code that takes advantage of a vulnerability",
+    "turns a weakness into an actual compromise"
+   ],
+   "use": "need to name the code that takes advantage of a known flaw",
+   "not": [
+    "is the weakness itself that is waiting to be used"
+   ],
+   "like": [
+    "vulnerability"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "attack surface",
+   "tier": 3,
+   "says": [
+    "is the sum of the points where an attacker could try to get in",
+    "grows with every exposed service, account and interface"
+   ],
+   "use": "need to count everything an attacker could reach",
+   "not": [
+    "is the part of a system that has been fully patched"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "threat actor",
+   "tier": 2,
+   "says": [
+    "is a person or group that carries out or intends to carry out an attack",
+    "may be a criminal gang, a state, an activist or an insider"
+   ],
+   "use": "need to describe who might attack the organisation",
+   "not": [
+    "is a weakness that can be exploited"
+   ],
+   "like": [
+    "threat"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "security control",
+   "tier": 2,
+   "says": [
+    "is a safeguard that prevents, detects or reduces a security risk",
+    "can be technical, physical or procedural"
+   ],
+   "use": "need to name a measure that reduces a risk",
+   "not": [
+    "is the likelihood that an attack will succeed"
+   ],
+   "like": [
+    "residual risk"
+   ]
+  },
+  {
+   "group": "fund",
+   "subject": "residual risk",
+   "tier": 4,
+   "says": [
+    "is the risk that remains after controls have been applied",
+    "is accepted, transferred or reduced further"
+   ],
+   "use": "need to say what risk is left after the safeguards are in place",
+   "not": [
+    "is the risk that exists before any control is applied"
+   ],
+   "like": [
+    "security control"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "multi-factor authentication",
+   "tier": 1,
+   "says": [
+    "requires two or more different kinds of proof of identity",
+    "combines something you know, have or are"
+   ],
+   "use": "want a stolen password alone to be useless to an attacker",
+   "not": [
+    "uses two passwords of the same kind"
+   ],
+   "like": [
+    "passkey"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "single sign-on",
+   "tier": 2,
+   "says": [
+    "lets a person sign in once to reach many applications",
+    "relies on an identity provider that vouches for the user"
+   ],
+   "use": "want people to log in once rather than separately to each app",
+   "not": [
+    "gives every user the same shared password"
+   ],
+   "like": [
+    "identity provider"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "role-based access control",
+   "tier": 3,
+   "says": [
+    "grants permissions according to a person's role",
+    "avoids assigning rights one person at a time"
+   ],
+   "use": "need access to follow a job role, such as finance clerk",
+   "not": [
+    "gives every user the same access"
+   ],
+   "like": [
+    "least privilege",
+    "privileged access management"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "privileged access management",
+   "tier": 4,
+   "says": [
+    "controls, records and limits the use of administrator accounts",
+    "can grant high-level access only for a short time"
+   ],
+   "use": "need admin rights granted for a short time and recorded",
+   "not": [
+    "gives all staff administrator rights by default"
+   ],
+   "like": [
+    "role-based access control",
+    "service account"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "least privilege",
+   "tier": 2,
+   "says": [
+    "gives each user or system only the access it needs",
+    "limits the damage if an account is compromised"
+   ],
+   "use": "need to decide how much access a new account should have",
+   "not": [
+    "gives every administrator full access to everything"
+   ],
+   "like": [
+    "role-based access control"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "access review",
+   "tier": 3,
+   "says": [
+    "checks regularly that people still need the access they hold",
+    "removes rights that are no longer justified"
+   ],
+   "use": "need to find access left over from people who changed roles",
+   "not": [
+    "is the first sign-in of a new user"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "service account",
+   "tier": 3,
+   "says": [
+    "is a non-human identity used by an application or process",
+    "often has long-lived credentials that need careful control"
+   ],
+   "use": "need an application to log in to another system",
+   "not": [
+    "is a personal login for a named employee"
+   ],
+   "like": [
+    "privileged access management"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "passkey",
+   "tier": 4,
+   "says": [
+    "replaces a password with a cryptographic key pair kept on a device",
+    "resists phishing because the key works only for the real site"
+   ],
+   "use": "want sign-in that cannot be phished into giving away a password",
+   "not": [
+    "is a six-digit code sent by text message"
+   ],
+   "like": [
+    "multi-factor authentication"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "session token",
+   "tier": 3,
+   "says": [
+    "is a value that proves a user is already signed in",
+    "can be stolen and reused if it is not protected"
+   ],
+   "use": "need to keep a user signed in between requests",
+   "not": [
+    "is the password the user typed to sign in"
+   ]
+  },
+  {
+   "group": "iam",
+   "subject": "identity provider",
+   "tier": 3,
+   "says": [
+    "is the service that holds identities and confirms who a user is",
+    "issues the proof that other applications accept"
+   ],
+   "use": "need one trusted place that confirms who users are",
+   "not": [
+    "is an application that only stores files"
+   ],
+   "like": [
+    "single sign-on"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "firewall",
+   "tier": 1,
+   "says": [
+    "filters network traffic according to rules",
+    "sits between networks and allows or blocks connections"
+   ],
+   "use": "need to block unwanted connections into a network",
+   "not": [
+    "scans code for flaws before it is released"
+   ],
+   "like": [
+    "web application firewall"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "network segmentation",
+   "tier": 3,
+   "says": [
+    "splits a network into separate zones",
+    "limits how far an attacker can move once inside"
+   ],
+   "use": "need a breach in one area not to reach everything",
+   "not": [
+    "joins every system into one flat network"
+   ],
+   "like": [
+    "DMZ"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "VPN",
+   "tier": 2,
+   "says": [
+    "creates an encrypted tunnel across a less trusted network",
+    "lets remote users reach internal systems securely"
+   ],
+   "use": "need staff working remotely to connect safely to the office network",
+   "not": [
+    "blocks all traffic from the internet"
+   ],
+   "like": [
+    "bastion host"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "DMZ",
+   "tier": 4,
+   "says": [
+    "is a separate network zone that holds services exposed to the internet",
+    "keeps outside-facing servers apart from the internal network"
+   ],
+   "use": "need public-facing servers kept away from internal systems",
+   "not": [
+    "is a secure room for storing backups"
+   ],
+   "like": [
+    "network segmentation"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "intrusion detection system",
+   "tier": 3,
+   "says": [
+    "monitors traffic or hosts and raises alerts about suspicious activity",
+    "does not itself block the activity"
+   ],
+   "use": "want to be told about suspicious traffic without interrupting it",
+   "not": [
+    "blocks suspicious traffic automatically as it passes"
+   ],
+   "like": [
+    "intrusion prevention system"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "intrusion prevention system",
+   "tier": 3,
+   "says": [
+    "inspects traffic and blocks it when it looks malicious",
+    "acts in line with the traffic it inspects"
+   ],
+   "use": "want suspicious traffic stopped automatically",
+   "not": [
+    "only records suspicious traffic and sends an alert"
+   ],
+   "like": [
+    "intrusion detection system"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "web application firewall",
+   "tier": 4,
+   "says": [
+    "filters HTTP traffic to a web application",
+    "blocks common attacks such as injection and cross-site scripting"
+   ],
+   "use": "need to shield a web app from common web attacks",
+   "not": [
+    "filters traffic at the network level by address and port only"
+   ],
+   "like": [
+    "firewall"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "DDoS attack",
+   "tier": 2,
+   "says": [
+    "floods a service with traffic from many sources to make it unavailable",
+    "targets availability rather than secrecy"
+   ],
+   "use": "see a site knocked offline by a flood of requests",
+   "not": [
+    "steals data by tricking users into giving up passwords"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "bastion host",
+   "tier": 4,
+   "says": [
+    "is a hardened server that is the only way in to a private network",
+    "is closely monitored because it is exposed"
+   ],
+   "use": "need one tightly controlled entry point to administer private servers",
+   "not": [
+    "is a backup server kept offline"
+   ],
+   "like": [
+    "VPN"
+   ]
+  },
+  {
+   "group": "net",
+   "subject": "egress filtering",
+   "tier": 5,
+   "says": [
+    "controls and monitors traffic leaving a network",
+    "can stop malware from sending data out or contacting attackers"
+   ],
+   "use": "need to stop compromised machines talking to an attacker's server",
+   "not": [
+    "blocks traffic coming in from the internet"
+   ],
+   "like": [
+    "firewall"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "OWASP Top 10",
+   "tier": 2,
+   "says": [
+    "is a regularly updated list of the most critical web application security risks",
+    "is widely used as an awareness and training reference"
+   ],
+   "use": "need a common list of the biggest web application risks",
+   "not": [
+    "is a legal standard that every website must pass"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "SQL injection",
+   "tier": 3,
+   "says": [
+    "inserts attacker-controlled input into a database query",
+    "is prevented by parameterised queries"
+   ],
+   "use": "see user input joined directly into a database query",
+   "not": [
+    "makes a victim's browser run attacker script"
+   ],
+   "like": [
+    "cross-site scripting"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "cross-site scripting",
+   "tier": 3,
+   "says": [
+    "runs attacker script in another user's browser through a vulnerable page",
+    "is reduced by encoding output and a content security policy"
+   ],
+   "use": "find user comments shown on a page without being encoded",
+   "not": [
+    "changes a database query through unsafe input"
+   ],
+   "like": [
+    "SQL injection",
+    "server-side request forgery"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "server-side request forgery",
+   "tier": 4,
+   "says": [
+    "tricks a server into making requests on the attacker's behalf",
+    "can reach internal services that the attacker could not reach directly"
+   ],
+   "use": "see an app fetch any URL a user supplies, including internal ones",
+   "not": [
+    "tricks a user's browser into sending a request"
+   ],
+   "like": [
+    "cross-site scripting"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "static application security testing",
+   "tier": 4,
+   "says": [
+    "analyses source code for security flaws without running it",
+    "finds issues early in development"
+   ],
+   "use": "want to scan code for flaws before it is run",
+   "not": [
+    "tests a running application by sending it attack traffic"
+   ],
+   "like": [
+    "dynamic application security testing",
+    "software composition analysis",
+    "security code review"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "dynamic application security testing",
+   "tier": 4,
+   "says": [
+    "tests a running application from the outside by sending attack traffic",
+    "finds flaws that appear only when the code runs"
+   ],
+   "use": "want to test a deployed application as an attacker would",
+   "not": [
+    "analyses source code without running it"
+   ],
+   "like": [
+    "static application security testing"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "software composition analysis",
+   "tier": 4,
+   "says": [
+    "identifies the open-source components in an application",
+    "flags components with known vulnerabilities or risky licences"
+   ],
+   "use": "need to know which libraries in the product have known flaws",
+   "not": [
+    "tests the code you wrote for logic errors"
+   ],
+   "like": [
+    "static application security testing"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "threat modelling",
+   "tier": 4,
+   "says": [
+    "works out what could go wrong with a design before it is built",
+    "identifies threats and the controls to address them"
+   ],
+   "use": "need to find security problems in a design before any code exists",
+   "not": [
+    "scans a finished application for known vulnerabilities"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "input validation",
+   "tier": 2,
+   "says": [
+    "checks that data meets the expected rules before it is used",
+    "is a first defence against many injection attacks"
+   ],
+   "use": "need to reject unexpected data before the application processes it",
+   "not": [
+    "encrypts data before it is sent"
+   ]
+  },
+  {
+   "group": "app",
+   "subject": "security code review",
+   "tier": 3,
+   "says": [
+    "has a person read code specifically to look for security flaws",
+    "catches issues that automated tools miss"
+   ],
+   "use": "need a person to look for security weaknesses in a change",
+   "not": [
+    "is an automated scan of a running application"
+   ],
+   "like": [
+    "static application security testing"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "symmetric encryption",
+   "tier": 2,
+   "says": [
+    "uses one shared key to both encrypt and decrypt",
+    "is fast and suited to large amounts of data"
+   ],
+   "use": "need to encrypt a large file quickly with a shared secret",
+   "not": [
+    "uses a public key to encrypt and a different private key to decrypt"
+   ],
+   "like": [
+    "asymmetric encryption"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "asymmetric encryption",
+   "tier": 3,
+   "says": [
+    "uses a pair of keys, one public and one private",
+    "lets people communicate without first sharing a secret"
+   ],
+   "use": "need to exchange data securely with someone you have never met",
+   "not": [
+    "uses the same key to encrypt and decrypt"
+   ],
+   "like": [
+    "symmetric encryption"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "hash function",
+   "tier": 2,
+   "says": [
+    "turns data of any size into a fixed-size fingerprint",
+    "cannot practically be reversed to recover the input"
+   ],
+   "use": "need to check that data has not changed",
+   "not": [
+    "scrambles data so that a key can unscramble it"
+   ],
+   "like": [
+    "salt"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "salt",
+   "tier": 3,
+   "says": [
+    "is random data added to a password before it is hashed",
+    "stops identical passwords producing identical hashes"
+   ],
+   "use": "need to make precomputed password tables useless",
+   "not": [
+    "is a second key used to decrypt a file"
+   ],
+   "like": [
+    "hash function"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "digital signature",
+   "tier": 3,
+   "says": [
+    "proves who created a message and that it was not changed",
+    "is made with a private key and checked with a public key"
+   ],
+   "use": "need to prove that a document came from a specific sender unaltered",
+   "not": [
+    "is a picture of someone's handwritten name"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "public key infrastructure",
+   "tier": 4,
+   "says": [
+    "is the set of people, policies and systems that issue and manage digital certificates",
+    "lets others trust that a public key belongs to a named owner"
+   ],
+   "use": "need to issue and manage certificates across an organisation",
+   "not": [
+    "is the infrastructure that stores only private keys"
+   ],
+   "like": [
+    "certificate authority"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "certificate authority",
+   "tier": 3,
+   "says": [
+    "is a trusted body that issues digital certificates",
+    "vouches that a public key belongs to a named site or person"
+   ],
+   "use": "need a trusted party to vouch for a website's identity",
+   "not": [
+    "is a tool that scans websites for vulnerabilities"
+   ],
+   "like": [
+    "public key infrastructure"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "key rotation",
+   "tier": 4,
+   "says": [
+    "replaces cryptographic keys regularly or after a suspected compromise",
+    "limits how much data any one key protects"
+   ],
+   "use": "need to retire a key that has been used for a long time",
+   "not": [
+    "stores keys in one place forever"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "hardware security module",
+   "tier": 5,
+   "says": [
+    "is a tamper-resistant device that stores keys and performs cryptographic operations",
+    "keeps private keys from ever leaving the device"
+   ],
+   "use": "need to keep the most important keys in tamper-resistant hardware",
+   "not": [
+    "is a software library for encrypting files"
+   ]
+  },
+  {
+   "group": "crypto",
+   "subject": "perfect forward secrecy",
+   "tier": 5,
+   "says": [
+    "uses a fresh session key for each connection",
+    "means a stolen long-term key cannot reveal past recorded sessions"
+   ],
+   "use": "need past traffic to stay safe even if the server's key is stolen later",
+   "not": [
+    "uses one key for every session"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "phishing",
+   "tier": 1,
+   "says": [
+    "tricks people into revealing information or running malware with a fake message",
+    "often imitates a trusted sender"
+   ],
+   "use": "receive a fake email that asks you to sign in on a copied site",
+   "not": [
+    "floods a server with traffic until it fails"
+   ],
+   "like": [
+    "spear phishing",
+    "social engineering"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "spear phishing",
+   "tier": 2,
+   "says": [
+    "is phishing aimed at a specific person or organisation",
+    "uses personal details to look convincing"
+   ],
+   "use": "see a message that names you and your manager and asks for an urgent payment",
+   "not": [
+    "sends the same generic message to millions of people"
+   ],
+   "like": [
+    "phishing"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "ransomware",
+   "tier": 1,
+   "says": [
+    "encrypts or locks data and demands payment to restore it",
+    "can also threaten to publish stolen data"
+   ],
+   "use": "find files locked with a note demanding money",
+   "not": [
+    "quietly records keystrokes without damaging files"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "social engineering",
+   "tier": 1,
+   "says": [
+    "manipulates people into giving up access or information",
+    "exploits trust, urgency or fear rather than technical flaws"
+   ],
+   "use": "hear a caller pretending to be IT and asking for a password",
+   "not": [
+    "exploits a flaw in software code"
+   ],
+   "like": [
+    "phishing"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "credential stuffing",
+   "tier": 3,
+   "says": [
+    "tries username and password pairs leaked from other breaches",
+    "works because people reuse passwords"
+   ],
+   "use": "see many login attempts that use real leaked passwords",
+   "not": [
+    "tries every possible password in order"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "man-in-the-middle attack",
+   "tier": 3,
+   "says": [
+    "secretly sits between two parties and reads or alters their messages",
+    "is made harder by encryption and certificate checks"
+   ],
+   "use": "worry that someone could read traffic on a public wifi network",
+   "not": [
+    "floods a server from many machines"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "zero-day vulnerability",
+   "tier": 3,
+   "says": [
+    "is a flaw unknown to the vendor so that no fix exists",
+    "can be used by attackers before defenders can patch it"
+   ],
+   "use": "need to name a flaw that attackers are using and that has no patch",
+   "not": [
+    "is a flaw that was fixed years ago"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "advanced persistent threat",
+   "tier": 4,
+   "says": [
+    "is a well-resourced attacker that stays hidden in a network for a long time",
+    "often pursues a specific goal such as espionage"
+   ],
+   "use": "need to name a patient, well-funded attacker targeting you over months",
+   "not": [
+    "is a quick opportunistic attack by a lone amateur"
+   ],
+   "like": [
+    "insider threat"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "insider threat",
+   "tier": 3,
+   "says": [
+    "is a risk from someone with legitimate access, such as an employee or contractor",
+    "may be malicious or careless"
+   ],
+   "use": "worry about harm from a trusted person inside the organisation",
+   "not": [
+    "is a risk only from outside attackers"
+   ],
+   "like": [
+    "advanced persistent threat"
+   ]
+  },
+  {
+   "group": "atk",
+   "subject": "supply chain attack",
+   "tier": 4,
+   "says": [
+    "compromises a supplier or software dependency to reach its customers",
+    "can spread through a trusted update"
+   ],
+   "use": "see malicious code arrive in a trusted vendor's update",
+   "not": [
+    "attacks an organisation directly through its own front door"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "SIEM",
+   "tier": 3,
+   "says": [
+    "collects and correlates logs from many systems",
+    "raises alerts when events together suggest an attack"
+   ],
+   "use": "need one place that gathers logs and alerts on suspicious patterns",
+   "not": [
+    "blocks traffic at the network edge"
+   ],
+   "like": [
+    "SOAR",
+    "endpoint detection and response"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "security operations centre",
+   "tier": 2,
+   "says": [
+    "is the team and facility that monitors and responds to security events",
+    "works around the clock in many organisations"
+   ],
+   "use": "need people watching for and responding to threats",
+   "not": [
+    "is the room where backups are stored"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "alert triage",
+   "tier": 2,
+   "says": [
+    "sorts security alerts by seriousness",
+    "decides which to investigate first and which to dismiss"
+   ],
+   "use": "face hundreds of alerts and need to decide what to look at first",
+   "not": [
+    "closes every alert without review"
+   ],
+   "like": [
+    "false positive",
+    "threat hunting"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "false positive",
+   "tier": 2,
+   "says": [
+    "is an alert for activity that is actually harmless",
+    "wastes analyst time when there are too many"
+   ],
+   "use": "see a security tool flag normal behaviour as an attack",
+   "not": [
+    "is a real attack that the tool failed to notice"
+   ],
+   "like": [
+    "alert triage"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "indicator of compromise",
+   "tier": 3,
+   "says": [
+    "is a piece of evidence that a system may have been breached",
+    "includes things such as a malicious file hash or IP address"
+   ],
+   "use": "have a known bad file hash to search for across machines",
+   "not": [
+    "is a weakness that could be exploited in future"
+   ],
+   "like": [
+    "threat intelligence"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "threat intelligence",
+   "tier": 3,
+   "says": [
+    "is information about attackers, their methods and their targets",
+    "helps defenders anticipate and spot attacks"
+   ],
+   "use": "need to know which attackers target your industry and how",
+   "not": [
+    "is a log of every login on the network"
+   ],
+   "like": [
+    "indicator of compromise"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "threat hunting",
+   "tier": 4,
+   "says": [
+    "is proactively searching a network for attackers that alerts have missed",
+    "starts from a hypothesis about how an attacker might behave"
+   ],
+   "use": "want to look for hidden attackers rather than wait for an alert",
+   "not": [
+    "is responding to an alert as it arrives"
+   ],
+   "like": [
+    "alert triage"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "endpoint detection and response",
+   "tier": 3,
+   "says": [
+    "monitors laptops and servers for malicious behaviour",
+    "lets analysts investigate and isolate a compromised device"
+   ],
+   "use": "need to see and contain an attack on a laptop",
+   "not": [
+    "filters traffic at the network perimeter"
+   ],
+   "like": [
+    "SIEM"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "SOAR",
+   "tier": 5,
+   "says": [
+    "automates security workflows and responses",
+    "runs playbooks to enrich alerts and take action"
+   ],
+   "use": "want routine alert handling and responses to run automatically",
+   "not": [
+    "gathers logs from many systems for correlation"
+   ],
+   "like": [
+    "SIEM"
+   ]
+  },
+  {
+   "group": "ops",
+   "subject": "mean time to detect",
+   "tier": 4,
+   "says": [
+    "is the average time between an attack starting and being noticed",
+    "falls as monitoring improves"
+   ],
+   "use": "need to measure how quickly attacks are spotted",
+   "not": [
+    "is the average time to recover after an attack is found"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "incident response plan",
+   "tier": 2,
+   "says": [
+    "sets out who does what when a security incident happens",
+    "covers detection, containment, recovery and communication"
+   ],
+   "use": "need agreed steps to follow when a breach is discovered",
+   "not": [
+    "lists the risks the organisation has already accepted"
+   ],
+   "like": [
+    "playbook"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "containment",
+   "tier": 3,
+   "says": [
+    "stops an incident from spreading",
+    "may isolate a device, disable an account or block an address"
+   ],
+   "use": "need to stop an attack spreading while it is investigated",
+   "not": [
+    "removes the attacker's tools from every system"
+   ],
+   "like": [
+    "eradication"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "eradication",
+   "tier": 4,
+   "says": [
+    "removes the cause of an incident, such as malware and attacker access",
+    "comes after containment"
+   ],
+   "use": "need to remove the attacker's foothold completely",
+   "not": [
+    "stops the incident spreading while it is investigated"
+   ],
+   "like": [
+    "containment"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "digital forensics",
+   "tier": 4,
+   "says": [
+    "collects and examines digital evidence to establish what happened",
+    "is done so that the evidence stays reliable"
+   ],
+   "use": "need to establish exactly what an attacker did",
+   "not": [
+    "restores systems from backup"
+   ],
+   "like": [
+    "chain of custody"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "chain of custody",
+   "tier": 5,
+   "says": [
+    "records who handled evidence and when",
+    "shows the evidence has not been altered"
+   ],
+   "use": "need to show that evidence is trustworthy if it is used in a legal case",
+   "not": [
+    "is the order in which alerts are investigated"
+   ],
+   "like": [
+    "digital forensics"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "playbook",
+   "tier": 3,
+   "says": [
+    "is a step-by-step guide for handling a particular type of incident",
+    "can be partly automated"
+   ],
+   "use": "need a ready procedure for a phishing or ransomware case",
+   "not": [
+    "is the overall plan for the whole organisation's security"
+   ],
+   "like": [
+    "incident response plan"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "tabletop exercise",
+   "tier": 4,
+   "says": [
+    "is a discussion-based rehearsal of how a team would handle an incident",
+    "tests plans without touching live systems"
+   ],
+   "use": "want to practise an incident response without real systems at risk",
+   "not": [
+    "is a live attack run against production systems"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "breach notification",
+   "tier": 4,
+   "says": [
+    "is telling regulators and affected people that personal data was exposed",
+    "is often required within a set time by law"
+   ],
+   "use": "find that customer data was exposed and the people affected must be told",
+   "not": [
+    "is an internal alert that a server is down"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "root cause analysis",
+   "tier": 3,
+   "says": [
+    "finds the underlying reason an incident happened",
+    "aims to fix the cause rather than just the symptom"
+   ],
+   "use": "need to find why an incident happened so that it does not recur",
+   "not": [
+    "restores service as quickly as possible"
+   ]
+  },
+  {
+   "group": "ir",
+   "subject": "immutable backup",
+   "tier": 4,
+   "says": [
+    "is a backup that cannot be changed or deleted for a set period",
+    "protects recovery data from ransomware"
+   ],
+   "use": "need backups that an attacker cannot encrypt or erase",
+   "not": [
+    "is a backup stored on the same server as the original"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "risk assessment",
+   "tier": 2,
+   "says": [
+    "identifies risks and judges their likelihood and impact",
+    "ranks risks so effort goes where it matters most"
+   ],
+   "use": "need to decide which security risks matter most",
+   "not": [
+    "tests whether a system can be broken into"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "security policy",
+   "tier": 1,
+   "says": [
+    "sets out the organisation's rules and expectations for security",
+    "applies to all staff and systems it covers"
+   ],
+   "use": "need to state what staff must and must not do",
+   "not": [
+    "is the technical setting on one firewall"
+   ],
+   "like": [
+    "acceptable use policy"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "data classification",
+   "tier": 2,
+   "says": [
+    "labels data by how sensitive it is",
+    "decides how each label must be handled and protected"
+   ],
+   "use": "need to decide how carefully a document must be handled",
+   "not": [
+    "encrypts every file on a disk"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "acceptable use policy",
+   "tier": 1,
+   "says": [
+    "tells staff what they may and may not do with company systems",
+    "is usually agreed when someone joins"
+   ],
+   "use": "need to tell staff how they may use work devices and accounts",
+   "not": [
+    "sets the technical rules for a firewall"
+   ],
+   "like": [
+    "security policy"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "NIST Cybersecurity Framework",
+   "tier": 4,
+   "says": [
+    "organises security activity into functions such as identify, protect, detect, respond and recover",
+    "is a voluntary framework from a US standards body"
+   ],
+   "use": "need a common structure to describe and improve security",
+   "not": [
+    "is a certification awarded by a UK scheme"
+   ],
+   "like": [
+    "Cyber Essentials",
+    "PCI DSS"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "Cyber Essentials",
+   "tier": 3,
+   "says": [
+    "is a UK scheme that certifies a set of basic technical controls",
+    "covers things like firewalls, patching and access control"
+   ],
+   "use": "need a basic UK certification for core security controls",
+   "not": [
+    "is a payment card industry standard"
+   ],
+   "like": [
+    "NIST Cybersecurity Framework",
+    "PCI DSS"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "PCI DSS",
+   "tier": 4,
+   "says": [
+    "is a standard for organisations that handle payment card data",
+    "sets requirements for protecting cardholder information"
+   ],
+   "use": "need to protect and handle card payments correctly",
+   "not": [
+    "is a framework that organises security into five functions"
+   ],
+   "like": [
+    "NIST Cybersecurity Framework",
+    "Cyber Essentials"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "third-party risk assessment",
+   "tier": 4,
+   "says": [
+    "evaluates the security risks of a supplier before and during a relationship",
+    "may use questionnaires, evidence and audits"
+   ],
+   "use": "need to judge whether a supplier is safe to give access to your data",
+   "not": [
+    "tests your own network for weaknesses"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "security audit",
+   "tier": 3,
+   "says": [
+    "is a formal review of whether security controls and policies are followed",
+    "produces findings that need fixing"
+   ],
+   "use": "need an independent check of whether security rules are followed",
+   "not": [
+    "is a simulated attack by a hired team"
+   ],
+   "like": [
+    "red team"
+   ]
+  },
+  {
+   "group": "grc",
+   "subject": "security awareness training",
+   "tier": 1,
+   "says": [
+    "teaches staff to recognise and report security threats",
+    "includes things like spotting phishing messages"
+   ],
+   "use": "want staff to spot phishing and report it",
+   "not": [
+    "is a technical control that blocks malware"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "vulnerability scan",
+   "tier": 2,
+   "says": [
+    "is an automated check of systems for known weaknesses",
+    "produces a list of findings to fix"
+   ],
+   "use": "need a regular automated check for known flaws",
+   "not": [
+    "is a person manually trying to break in"
+   ],
+   "like": [
+    "patch management"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "patch management",
+   "tier": 2,
+   "says": [
+    "is the process of testing and installing software updates",
+    "closes known vulnerabilities"
+   ],
+   "use": "need to make sure known flaws are fixed promptly",
+   "not": [
+    "is a scan that finds weaknesses"
+   ],
+   "like": [
+    "vulnerability scan"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "CVE",
+   "tier": 3,
+   "says": [
+    "is a public identifier for a specific known vulnerability",
+    "lets everyone refer to the same flaw"
+   ],
+   "use": "need a standard name for a published vulnerability",
+   "not": [
+    "is a score for how severe a flaw is"
+   ],
+   "like": [
+    "CVSS"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "CVSS",
+   "tier": 4,
+   "says": [
+    "is a standard scoring system for the severity of vulnerabilities",
+    "gives a score from zero to ten"
+   ],
+   "use": "need a standard measure of how serious a vulnerability is",
+   "not": [
+    "is the public identifier assigned to a vulnerability"
+   ],
+   "like": [
+    "CVE"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "red team",
+   "tier": 4,
+   "says": [
+    "is a group that simulates a real attacker to test defences",
+    "tests people and processes as well as technology"
+   ],
+   "use": "want to test whether the organisation could detect and stop a realistic attack",
+   "not": [
+    "is the group that defends systems from attack"
+   ],
+   "like": [
+    "blue team"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "blue team",
+   "tier": 3,
+   "says": [
+    "is the group that defends systems and responds to attacks",
+    "monitors, detects and recovers"
+   ],
+   "use": "need to name the defenders in an exercise",
+   "not": [
+    "is the group that simulates an attacker"
+   ],
+   "like": [
+    "red team"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "bug bounty programme",
+   "tier": 4,
+   "says": [
+    "invites outside researchers to report vulnerabilities for a reward",
+    "pays for valid findings"
+   ],
+   "use": "want outside researchers to report flaws responsibly for a reward",
+   "not": [
+    "is a paid internal team that scans every system"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "security champion",
+   "tier": 4,
+   "says": [
+    "is someone in a delivery team who promotes security practices",
+    "links the team to the security function"
+   ],
+   "use": "want security knowledge inside each product team",
+   "not": [
+    "is the most senior security executive"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "DevSecOps",
+   "tier": 3,
+   "says": [
+    "builds security into the development and operations pipeline",
+    "automates security checks alongside testing"
+   ],
+   "use": "want security checks to run automatically in the delivery pipeline",
+   "not": [
+    "adds a security review only after release"
+   ],
+   "like": [
+    "shift left"
+   ]
+  },
+  {
+   "group": "assure",
+   "subject": "shift left",
+   "tier": 5,
+   "says": [
+    "moves security work earlier in the development lifecycle",
+    "finds problems when they are cheapest to fix"
+   ],
+   "use": "want design and code flaws found before testing or release",
+   "not": [
+    "delays security checks until just before launch"
+   ],
+   "like": [
+    "DevSecOps"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Which part of the CIA triad means that information is seen only by people allowed to see it?",
+   "right": "Confidentiality",
+   "wrong": [
+    "Integrity",
+    "Availability",
+    "Authentication"
+   ],
+   "tier": 1,
+   "why": "Confidentiality is about keeping information from unauthorised people."
+  },
+  {
+   "q": "You get an email asking you to sign in through a link to keep your account. What attack could this be?",
+   "right": "Phishing",
+   "wrong": [
+    "A DDoS attack",
+    "A zero-day vulnerability",
+    "Credential rotation"
+   ],
+   "tier": 1,
+   "why": "Phishing uses a fake message to get people to give up information."
+  },
+  {
+   "q": "A caller says they are from IT and asks for your password to fix a problem. What is this?",
+   "right": "Social engineering",
+   "wrong": [
+    "A vulnerability scan",
+    "A penetration test",
+    "Ransomware"
+   ],
+   "tier": 1,
+   "why": "It manipulates a person rather than a system."
+  },
+  {
+   "q": "What does multi-factor authentication require?",
+   "right": "Two or more different kinds of proof of identity",
+   "wrong": [
+    "Two passwords",
+    "A longer password",
+    "A password changed monthly"
+   ],
+   "tier": 1,
+   "why": "The factors must be of different kinds, such as a password and a device."
+  },
+  {
+   "q": "All your files are locked and a note demands payment to open them. What is this?",
+   "right": "Ransomware",
+   "wrong": [
+    "Phishing",
+    "A man-in-the-middle attack",
+    "Credential stuffing"
+   ],
+   "tier": 1,
+   "why": "Ransomware locks data and demands payment."
+  },
+  {
+   "q": "Which document tells staff what they may and may not do with work laptops and accounts?",
+   "right": "An acceptable use policy",
+   "wrong": [
+    "A playbook",
+    "A risk register",
+    "A penetration test report"
+   ],
+   "tier": 1,
+   "why": "An acceptable use policy sets out permitted use."
+  },
+  {
+   "q": "You receive a suspicious email. What should you do?",
+   "right": "Report it through the agreed route and do not click anything",
+   "wrong": [
+    "Forward it to colleagues to ask what they think",
+    "Reply and ask the sender if it is real",
+    "Delete it without telling anyone"
+   ],
+   "tier": 1,
+   "why": "Reporting lets the security team protect others too."
+  },
+  {
+   "q": "What does a firewall do?",
+   "right": "Filters network traffic according to rules",
+   "wrong": [
+    "Encrypts every file on a disk",
+    "Scans source code for flaws",
+    "Trains staff to spot phishing"
+   ],
+   "tier": 1,
+   "why": "A firewall allows or blocks connections."
+  },
+  {
+   "q": "Which team monitors and responds to security events around the clock?",
+   "right": "A security operations centre",
+   "wrong": [
+    "A change advisory board",
+    "A red team",
+    "A steering committee"
+   ],
+   "tier": 2,
+   "why": "A SOC watches for and responds to threats."
+  },
+  {
+   "q": "A website is knocked offline by a flood of requests from many machines. Which part of the CIA triad was attacked?",
+   "right": "Availability",
+   "wrong": [
+    "Confidentiality",
+    "Integrity",
+    "Non-repudiation"
+   ],
+   "tier": 2,
+   "why": "A DDoS attack stops people using a service."
+  },
+  {
+   "q": "A new intern needs to read one shared folder. What should you grant?",
+   "right": "Read access to that folder only",
+   "wrong": [
+    "The same access as their manager",
+    "Administrator rights for convenience",
+    "Read access to every folder in case they need it"
+   ],
+   "tier": 2,
+   "why": "Least privilege gives only the access needed."
+  },
+  {
+   "q": "How should a system store users' passwords?",
+   "right": "As salted hashes",
+   "wrong": [
+    "Encrypted with a key kept in the same database",
+    "In plain text, protected by the firewall",
+    "Encoded in base64"
+   ],
+   "tier": 2,
+   "why": "Hashing with a salt cannot practically be reversed."
+  },
+  {
+   "q": "Code that takes advantage of a published flaw is called what?",
+   "right": "An exploit",
+   "wrong": [
+    "A vulnerability",
+    "A threat actor",
+    "A control"
+   ],
+   "tier": 2,
+   "why": "An exploit turns a weakness into a compromise."
+  },
+  {
+   "q": "A tool alerts on your normal nightly backup as if it were an attack. What is this?",
+   "right": "A false positive",
+   "wrong": [
+    "A zero-day",
+    "An indicator of compromise",
+    "A true positive"
+   ],
+   "tier": 2,
+   "why": "A false positive is an alert for harmless activity."
+  },
+  {
+   "q": "Which concept decides how carefully a document must be handled, based on how sensitive it is?",
+   "right": "Data classification",
+   "wrong": [
+    "Network segmentation",
+    "Key rotation",
+    "Patch management"
+   ],
+   "tier": 2,
+   "why": "Classification labels data and sets how it must be handled."
+  },
+  {
+   "q": "An email names you and your manager and asks for an urgent payment. What is it likely to be?",
+   "right": "Spear phishing",
+   "wrong": [
+    "A DDoS attack",
+    "A vulnerability scan",
+    "Ransomware"
+   ],
+   "tier": 2,
+   "why": "Spear phishing is aimed at a specific person using personal details."
+  },
+  {
+   "q": "Remote staff need to reach internal systems safely over the internet. What do you provide?",
+   "right": "A VPN",
+   "wrong": [
+    "A DMZ",
+    "An intrusion detection system",
+    "A password vault"
+   ],
+   "tier": 2,
+   "why": "A VPN creates an encrypted tunnel."
+  },
+  {
+   "q": "A search page builds its database query by joining in user text. What is the fix?",
+   "right": "Use parameterised queries",
+   "wrong": [
+    "Hash the search text",
+    "Add a DDoS filter",
+    "Rotate the database keys"
+   ],
+   "tier": 3,
+   "why": "Parameterised queries prevent SQL injection."
+  },
+  {
+   "q": "A comment containing a script runs in other visitors' browsers. What is the flaw?",
+   "right": "Cross-site scripting",
+   "wrong": [
+    "SQL injection",
+    "Server-side request forgery",
+    "A zero-day vulnerability"
+   ],
+   "tier": 3,
+   "why": "Unencoded output lets attacker script run."
+  },
+  {
+   "q": "How can you reduce the risk of someone reading your traffic on public wifi?",
+   "right": "Use encrypted connections such as HTTPS or a VPN",
+   "wrong": [
+    "Turn off the screen lock",
+    "Use a shorter password",
+    "Connect to every open network to find the best one"
+   ],
+   "tier": 3,
+   "why": "Encryption stops a man in the middle reading the data."
+  },
+  {
+   "q": "Many login attempts use real passwords leaked from another company's breach. What helps most?",
+   "right": "Multi-factor authentication and unique passwords",
+   "wrong": [
+    "A longer session timeout",
+    "A bigger firewall",
+    "Hiding the login page"
+   ],
+   "tier": 3,
+   "why": "Credential stuffing works because passwords are reused."
+  },
+  {
+   "q": "Which tool blocks suspicious traffic automatically as it passes?",
+   "right": "An intrusion prevention system",
+   "wrong": [
+    "An intrusion detection system",
+    "A SIEM",
+    "A vulnerability scanner"
+   ],
+   "tier": 3,
+   "why": "A prevention system acts in line with the traffic."
+  },
+  {
+   "q": "A laptop is infected and spreading malware. What is the first step?",
+   "right": "Contain it by isolating it from the network",
+   "wrong": [
+    "Wipe and reinstall it straight away",
+    "Keep using it so you can watch it",
+    "Email everyone to warn them from it"
+   ],
+   "tier": 3,
+   "why": "Containment stops the spread while evidence is kept."
+  },
+  {
+   "q": "You need to isolate a compromised laptop remotely and investigate what it did. Which tool helps?",
+   "right": "Endpoint detection and response",
+   "wrong": [
+    "A VPN",
+    "A web application firewall",
+    "A certificate authority"
+   ],
+   "tier": 3,
+   "why": "EDR monitors and can isolate endpoints."
+  },
+  {
+   "q": "A breach on the guest wifi must not be able to reach the finance servers. What do you use?",
+   "right": "Network segmentation",
+   "wrong": [
+    "A longer password policy",
+    "Key rotation",
+    "A security champion"
+   ],
+   "tier": 3,
+   "why": "Segmentation limits movement between zones."
+  },
+  {
+   "q": "A contractor left six months ago but still has access to a system. Which practice would have found this?",
+   "right": "An access review",
+   "wrong": [
+    "A tabletop exercise",
+    "A vulnerability scan",
+    "A threat model"
+   ],
+   "tier": 3,
+   "why": "Access reviews remove rights that are no longer justified."
+  },
+  {
+   "q": "An engineer with legitimate access copies customer data to take to a competitor. What kind of threat is this?",
+   "right": "An insider threat",
+   "wrong": [
+    "A zero-day",
+    "A DDoS attack",
+    "A supply chain attack"
+   ],
+   "tier": 3,
+   "why": "An insider already has legitimate access."
+  },
+  {
+   "q": "Which tool proves that a document came from a specific sender and was not altered?",
+   "right": "A digital signature",
+   "wrong": [
+    "A hash alone",
+    "A VPN",
+    "A firewall rule"
+   ],
+   "tier": 3,
+   "why": "A signature uses a private key to prove origin and integrity."
+  },
+  {
+   "q": "Which scheme gives a basic UK certification for core technical security controls?",
+   "right": "Cyber Essentials",
+   "wrong": [
+    "PCI DSS",
+    "The NIST Cybersecurity Framework",
+    "SOAR"
+   ],
+   "tier": 3,
+   "why": "Cyber Essentials is the UK basic certification scheme."
+  },
+  {
+   "q": "You want security checks to run automatically each time code is built. Which approach fits?",
+   "right": "DevSecOps",
+   "wrong": [
+    "An annual audit",
+    "A red team exercise",
+    "A bug bounty programme"
+   ],
+   "tier": 3,
+   "why": "DevSecOps builds checks into the pipeline."
+  },
+  {
+   "q": "An application fetches any URL a user gives it, and an attacker uses it to reach an internal metadata service. What is the flaw?",
+   "right": "Server-side request forgery",
+   "wrong": [
+    "Cross-site scripting",
+    "SQL injection",
+    "Credential stuffing"
+   ],
+   "tier": 4,
+   "why": "The server is tricked into making requests for the attacker."
+  },
+  {
+   "q": "You want to scan source code for flaws in the build pipeline before anything is run. Which testing is this?",
+   "right": "Static application security testing",
+   "wrong": [
+    "Dynamic application security testing",
+    "A penetration test",
+    "Software composition analysis"
+   ],
+   "tier": 4,
+   "why": "Static testing examines code without running it."
+  },
+  {
+   "q": "Which analysis finds known vulnerabilities in the open-source libraries you use?",
+   "right": "Software composition analysis",
+   "wrong": [
+    "Static application security testing",
+    "A tabletop exercise",
+    "Threat hunting"
+   ],
+   "tier": 4,
+   "why": "It identifies components and their known flaws."
+  },
+  {
+   "q": "A malicious update arrives from a trusted vendor and spreads to its customers. What is this attack?",
+   "right": "A supply chain attack",
+   "wrong": [
+    "Spear phishing",
+    "A DDoS attack",
+    "Credential stuffing"
+   ],
+   "tier": 4,
+   "why": "Attackers compromised a supplier to reach customers."
+  },
+  {
+   "q": "After isolating an infected server you remove the malware and the attacker's access. What stage is this?",
+   "right": "Eradication",
+   "wrong": [
+    "Containment",
+    "Detection",
+    "Lessons learned"
+   ],
+   "tier": 4,
+   "why": "Eradication removes the cause after containment."
+  },
+  {
+   "q": "Customer personal data has been exposed. What is the legal duty?",
+   "right": "Notify the regulator and affected people within the time the law requires",
+   "wrong": [
+    "Wait to see if anyone notices",
+    "Delete the logs",
+    "Tell only the board"
+   ],
+   "tier": 4,
+   "why": "Breach notification is often time-limited."
+  },
+  {
+   "q": "Attackers encrypt your servers and try to delete your backups. Which backup protection helps?",
+   "right": "Immutable backups",
+   "wrong": [
+    "Backups on the same server",
+    "Backups kept only on a laptop",
+    "Weekly backups that overwrite the last one"
+   ],
+   "tier": 4,
+   "why": "Immutable backups cannot be changed or deleted for a period."
+  },
+  {
+   "q": "You need admin rights granted for two hours and the actions recorded. What do you use?",
+   "right": "Privileged access management",
+   "wrong": [
+    "Single sign-on",
+    "A passkey",
+    "Network segmentation"
+   ],
+   "tier": 4,
+   "why": "PAM controls, records and limits admin use."
+  },
+  {
+   "q": "A private key may have been exposed. What should you do?",
+   "right": "Replace it by rotating the key",
+   "wrong": [
+    "Keep it, since nothing has happened",
+    "Hash it and keep using it",
+    "Email the team to ask"
+   ],
+   "tier": 4,
+   "why": "Key rotation replaces a possibly compromised key."
+  },
+  {
+   "q": "The team rehearses a ransomware incident by talking it through, without touching live systems. What is this?",
+   "right": "A tabletop exercise",
+   "wrong": [
+    "A red team exercise",
+    "A vulnerability scan",
+    "A bug bounty"
+   ],
+   "tier": 4,
+   "why": "A tabletop is a discussion-based rehearsal."
+  },
+  {
+   "q": "You handle card payments and need to know which standard applies. Which is it?",
+   "right": "PCI DSS",
+   "wrong": [
+    "Cyber Essentials",
+    "The NIST Cybersecurity Framework",
+    "OWASP Top 10"
+   ],
+   "tier": 4,
+   "why": "PCI DSS covers payment card data."
+  },
+  {
+   "q": "After you add controls, some risk remains. What is it called?",
+   "right": "Residual risk",
+   "wrong": [
+    "Inherent risk",
+    "A threat actor",
+    "An exploit"
+   ],
+   "tier": 4,
+   "why": "Residual risk is what is left after controls."
+  },
+  {
+   "q": "You hire a team to simulate a realistic attacker and see whether you detect it. What is this?",
+   "right": "A red team exercise",
+   "wrong": [
+    "A security audit",
+    "A vulnerability scan",
+    "A tabletop exercise"
+   ],
+   "tier": 4,
+   "why": "A red team tests defences as a real attacker would."
+  },
+  {
+   "q": "Before giving a supplier access to customer data, you check their security. What is this called?",
+   "right": "A third-party risk assessment",
+   "wrong": [
+    "A penetration test of your network",
+    "An access review",
+    "A SIEM correlation"
+   ],
+   "tier": 4,
+   "why": "It evaluates a supplier's risks."
+  },
+  {
+   "q": "Attacks are on average noticed 80 days after they begin. Which measure shows this?",
+   "right": "Mean time to detect",
+   "wrong": [
+    "Mean time to restore",
+    "Residual risk",
+    "Change failure rate"
+   ],
+   "tier": 4,
+   "why": "It measures how quickly attacks are spotted."
+  },
+  {
+   "q": "Your analysts go looking for hidden attackers without waiting for an alert. What is this?",
+   "right": "Threat hunting",
+   "wrong": [
+    "Alert triage",
+    "Vulnerability scanning",
+    "Patch management"
+   ],
+   "tier": 4,
+   "why": "Threat hunting is proactive."
+  },
+  {
+   "q": "Malware on a server keeps contacting an attacker's address. Which control could stop the data leaving?",
+   "right": "Egress filtering",
+   "wrong": [
+    "A DMZ",
+    "Role-based access control",
+    "A hash function"
+   ],
+   "tier": 5,
+   "why": "Egress filtering controls outbound traffic."
+  },
+  {
+   "q": "A server's long-term key is stolen, but past recorded sessions stay safe. Which property is this?",
+   "right": "Perfect forward secrecy",
+   "wrong": [
+    "Key rotation",
+    "Salting",
+    "Segmentation"
+   ],
+   "tier": 5,
+   "why": "Each session uses a fresh key."
+  },
+  {
+   "q": "You need to keep the most important keys in tamper-resistant hardware. What do you use?",
+   "right": "A hardware security module",
+   "wrong": [
+    "A password manager",
+    "A VPN",
+    "A web application firewall"
+   ],
+   "tier": 5,
+   "why": "An HSM keeps keys inside tamper-resistant hardware."
+  },
+  {
+   "q": "You want routine alert handling to run automatically through playbooks. What do you use?",
+   "right": "SOAR",
+   "wrong": [
+    "A SIEM",
+    "A firewall",
+    "A bastion host"
+   ],
+   "tier": 5,
+   "why": "SOAR automates workflows and responses."
+  },
+  {
+   "q": "Evidence from a laptop may be used in court. What record shows it was not altered?",
+   "right": "A chain of custody",
+   "wrong": [
+    "A playbook",
+    "A risk register",
+    "A change request"
+   ],
+   "tier": 5,
+   "why": "It records who handled the evidence and when."
+  },
+  {
+   "q": "A team wants design flaws found before any code is written. Which principle fits?",
+   "right": "Shift left, with threat modelling at design time",
+   "wrong": [
+    "Do a penetration test after release",
+    "Add a WAF",
+    "Wait for a bug bounty report"
+   ],
+   "tier": 5,
+   "why": "Shifting left finds problems when they are cheapest to fix."
+  },
+  {
+   "q": "A critical flaw has no vendor patch and is being used in attacks. What is it?",
+   "right": "A zero-day vulnerability",
+   "wrong": [
+    "A false positive",
+    "A residual risk",
+    "A known exploit with a patch"
+   ],
+   "tier": 5,
+   "why": "A zero-day has no fix when attackers use it."
+  },
+  {
+   "q": "A new public-facing server must sit apart from the internal network. What design places it?",
+   "right": "A DMZ",
+   "wrong": [
+    "A flat network",
+    "A VPN endpoint on the finance network",
+    "An internal wiki"
+   ],
+   "tier": 5,
+   "why": "A DMZ holds services exposed to the internet."
+  }
+ ]
+}
