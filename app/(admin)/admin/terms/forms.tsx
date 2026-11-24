@@ -35,16 +35,16 @@ export function TermForm({ banks, term, bankId, defaultGroup }: { banks: { id: n
   const [gone, remove, removing] = useActionState(removeTermAction, null);
   return (
     <div className={term ? "border-b border-black/10 py-2" : "card p-4"}>
-      <form action={run} className="grid gap-2 text-sm md:grid-cols-12">
+      <form action={run} className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2 xl:grid-cols-12">
         {term && <input type="hidden" name="id" value={term.id} />}
-        <input name="term" required maxLength={80} defaultValue={term?.term} placeholder="Term" aria-label="Term" className={`${input} md:col-span-2`} />
-        <input name="meaning" required maxLength={300} defaultValue={term?.meaning} placeholder="Meaning" aria-label="Meaning" className={`${input} md:col-span-4`} />
-        <input name="groupName" maxLength={60} defaultValue={term?.groupName ?? defaultGroup} placeholder="Group" aria-label="Group" className={`${input} md:col-span-2`} />
-        <select name="tier" defaultValue={term?.tier ?? 1} aria-label="Rank" className={`${input} md:col-span-1`}>{RANKS.map((r, i) => <option key={r} value={i + 1}>{i + 1} {r}</option>)}</select>
-        <select name="bankId" defaultValue={bankId} aria-label="Bank" className={`${input} md:col-span-2`}>{banks.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select>
-        <select name="status" defaultValue={term?.status ?? "active"} aria-label="Shown" className={`${input} md:col-span-1`}><option value="active">Shown</option><option value="hidden">Hidden</option></select>
-        <input name="similar" defaultValue={term ? (JSON.parse(term.similar) as string[]).join(", ") : ""} placeholder="Easily confused with (comma separated)" aria-label="Easily confused with" className={`${input} md:col-span-9`} />
-        <div className="flex items-center gap-2 md:col-span-3"><button className="btn" disabled={pending}>{term ? "Save" : <><Plus size={15} />Add term</>}</button></div>
+        <input name="term" required maxLength={80} defaultValue={term?.term} placeholder="Term" aria-label="Term" className={`${input} xl:col-span-2`} />
+        <input name="meaning" required maxLength={300} defaultValue={term?.meaning} placeholder="Meaning" aria-label="Meaning" className={`${input} sm:col-span-2 xl:col-span-4`} />
+        <input name="groupName" maxLength={60} defaultValue={term?.groupName ?? defaultGroup} placeholder="Group" aria-label="Group" className={`${input} xl:col-span-2`} />
+        <select name="tier" defaultValue={term?.tier ?? 1} aria-label="Rank" className={`${input} xl:col-span-1`}>{RANKS.map((r, i) => <option key={r} value={i + 1}>{i + 1} {r}</option>)}</select>
+        <select name="bankId" defaultValue={bankId} aria-label="Bank" className={`${input} xl:col-span-2`}>{banks.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select>
+        <select name="status" defaultValue={term?.status ?? "active"} aria-label="Shown" className={`${input} xl:col-span-1`}><option value="active">Shown</option><option value="hidden">Hidden</option></select>
+        <input name="similar" defaultValue={term ? (JSON.parse(term.similar) as string[]).join(", ") : ""} placeholder="Easily confused with (comma separated)" aria-label="Easily confused with" className={`${input} sm:col-span-2 xl:col-span-9`} />
+        <div className="flex items-center gap-2 sm:col-span-2 xl:col-span-3"><button className="btn" disabled={pending}>{term ? "Save" : <><Plus size={15} />Add term</>}</button></div>
       </form>
       {term && (
         <form action={remove} className="mt-1 flex items-center gap-2 text-xs">

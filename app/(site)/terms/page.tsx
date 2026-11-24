@@ -5,7 +5,7 @@ import { EmptyState, PageHero } from "@/components/charts";
 import { TermPicker, type PickBank } from "@/components/TermPicker";
 import { AddTermForm } from "@/components/AddTermForm";
 import { allBanks, bankFitsRole, goalNeed, myTerms, recentChecks, sharedTerms, standingFor, termsAvailable, type BankStanding } from "@/lib/terms";
-import { RANKS, rankName } from "@/lib/termsCore";
+import { MIN_TIER_TESTED, RANKS, rankName } from "@/lib/termsCore";
 import { removeOwnTermAction } from "@/app/terms-actions";
 
 export const metadata = { title: "Terms — gglearn" };
@@ -18,7 +18,7 @@ function Standing({ s, need }: { s: BankStanding; need: number | null }) {
     <div className="card space-y-2 p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="font-semibold">{s.bank.name}</h3>
-        <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-semibold text-indigo-700">{s.asked ? rankName(reached) : "Not tested yet"}</span>
+        <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-semibold text-indigo-700">{s.asked === 0 ? "Not tested yet" : reached > 0 ? rankName(reached) : Object.values(s.stats).some((t) => t.tested >= MIN_TIER_TESTED) ? "Not yet at Initiate" : "Not enough tested yet"}</span>
       </div>
       <p className="text-xs text-slate-500">{s.known} known · {s.asked} asked · {s.total} in the bank</p>
       <div className="grid grid-cols-5 gap-1 text-center text-[11px]">
