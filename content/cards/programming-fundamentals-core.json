@@ -1,0 +1,2084 @@
+{
+ "slug": "programming-fundamentals-core",
+ "name": "Programming fundamentals vocabulary",
+ "description": "The 100 terms every software developer needs: programming basics, data structures, design, debugging, git and concurrency.",
+ "roles": "developer",
+ "kind": "technology",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "basic": "programming basics term",
+  "types": "data type term",
+  "flow": "control flow term",
+  "algo": "algorithm term",
+  "ds": "data structure term",
+  "oop": "object-oriented design term",
+  "qual": "code quality term",
+  "debug": "debugging and tooling term",
+  "git": "version control term",
+  "conc": "concurrency and memory term"
+ },
+ "cards": [
+  {
+   "group": "basic",
+   "subject": "variable",
+   "tier": 1,
+   "says": [
+    "is a named place in a program that holds a value",
+    "can change its value as the program runs"
+   ],
+   "use": "need to store a value and refer to it by name",
+   "not": [
+    "is a value that can never change once it is set"
+   ],
+   "like": [
+    "constant"
+   ]
+  },
+  {
+   "group": "basic",
+   "subject": "constant",
+   "tier": 1,
+   "says": [
+    "is a named value that does not change once it is set",
+    "is used for fixed values such as a tax rate or a limit"
+   ],
+   "use": "need a named value that must not be changed by accident",
+   "not": [
+    "is a value that changes every time the program runs"
+   ],
+   "like": [
+    "variable"
+   ]
+  },
+  {
+   "group": "basic",
+   "subject": "data type",
+   "tier": 1,
+   "says": [
+    "describes what kind of value something is, such as a number or text",
+    "decides which operations are allowed on it"
+   ],
+   "use": "need to say whether a value is a number, text or something else",
+   "not": [
+    "is the name given to a variable"
+   ]
+  },
+  {
+   "group": "basic",
+   "subject": "function",
+   "tier": 1,
+   "says": [
+    "is a named block of code that does one job and can be used again",
+    "can take inputs and give back a result"
+   ],
+   "use": "need to reuse the same steps in many places",
+   "not": [
+    "is a single line that stores a value"
+   ]
+  },
+  {
+   "group": "basic",
+   "subject": "parameter",
+   "tier": 1,
+   "says": [
+    "is a named input that a function expects to receive",
+    "takes the value that the caller passes in"
+   ],
+   "use": "need a function to work on whatever value it is given",
+   "not": [
+    "is the value a function sends back"
+   ],
+   "like": [
+    "return value"
+   ]
+  },
+  {
+   "group": "basic",
+   "subject": "return value",
+   "tier": 1,
+   "says": [
+    "is the result a function hands back to the code that called it",
+    "ends the function's work for that call"
+   ],
+   "use": "need a function to give an answer to the caller",
+   "not": [
+    "is an input passed in when the function is called"
+   ],
+   "like": [
+    "parameter"
+   ]
+  },
+  {
+   "group": "basic",
+   "subject": "scope",
+   "tier": 2,
+   "says": [
+    "is the part of a program in which a name can be used",
+    "limits where a variable can be read or changed"
+   ],
+   "use": "find that a variable cannot be seen outside the function that made it",
+   "not": [
+    "is the amount of work in a project"
+   ]
+  },
+  {
+   "group": "basic",
+   "subject": "loop",
+   "tier": 1,
+   "says": [
+    "repeats a block of code while a condition holds or for each item",
+    "saves writing the same steps many times"
+   ],
+   "use": "need to do the same thing for every item in a list",
+   "not": [
+    "runs a block of code exactly once"
+   ],
+   "like": [
+    "conditional"
+   ]
+  },
+  {
+   "group": "basic",
+   "subject": "conditional",
+   "tier": 1,
+   "says": [
+    "runs a block of code only when a condition is true",
+    "lets a program take different paths"
+   ],
+   "use": "need a program to do one thing if a test passes and another if it does not",
+   "not": [
+    "repeats code until the program ends"
+   ],
+   "like": [
+    "loop"
+   ]
+  },
+  {
+   "group": "basic",
+   "subject": "expression",
+   "tier": 2,
+   "says": [
+    "is a piece of code that works out to a single value",
+    "can combine values, variables and operators"
+   ],
+   "use": "need to name a piece of code such as 2 plus 3 that produces a value",
+   "not": [
+    "is a complete instruction that always changes something"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "string",
+   "tier": 1,
+   "says": [
+    "is a sequence of characters used for text",
+    "is usually written between quotation marks"
+   ],
+   "use": "need to store a name or a sentence",
+   "not": [
+    "is a whole number"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "integer",
+   "tier": 1,
+   "says": [
+    "is a whole number with no fractional part",
+    "can be positive, negative or zero"
+   ],
+   "use": "need to count items",
+   "not": [
+    "is a number that can hold decimals"
+   ],
+   "like": [
+    "floating-point number"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "floating-point number",
+   "tier": 2,
+   "says": [
+    "is a number that can have a fractional part",
+    "can be slightly inexact because of how computers store it"
+   ],
+   "use": "need to store a measurement such as 3.14",
+   "not": [
+    "is always exact for every decimal fraction"
+   ],
+   "like": [
+    "integer"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "boolean",
+   "tier": 1,
+   "says": [
+    "is a value that is either true or false",
+    "is the result of a comparison"
+   ],
+   "use": "need to record whether something is on or off",
+   "not": [
+    "is a value that can be any whole number"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "null",
+   "tier": 2,
+   "says": [
+    "is a value that stands for no value",
+    "can cause errors if code assumes something is there"
+   ],
+   "use": "need to show that a value is missing",
+   "not": [
+    "is the number zero"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "array",
+   "tier": 1,
+   "says": [
+    "is an ordered list of values reached by their position",
+    "usually starts counting positions from zero"
+   ],
+   "use": "need to keep many values in order",
+   "not": [
+    "is a collection of values reached by a name rather than a position"
+   ],
+   "like": [
+    "dictionary"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "object",
+   "tier": 2,
+   "says": [
+    "groups related data and the behaviour that works on it",
+    "is made from a class or written out directly"
+   ],
+   "use": "need to model one thing, such as a customer, with its data",
+   "not": [
+    "is a single number"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "dictionary",
+   "tier": 2,
+   "says": [
+    "stores values that are looked up by a key",
+    "lets you find an entry without searching through all of them"
+   ],
+   "use": "need to look up a value by name, such as a price by product",
+   "not": [
+    "keeps values in a fixed order reached by position"
+   ],
+   "like": [
+    "array",
+    "hash table"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "set",
+   "tier": 2,
+   "says": [
+    "is a collection of values with no duplicates",
+    "answers the question of whether a value is in it quickly"
+   ],
+   "use": "need a collection in which each value appears once",
+   "not": [
+    "is an ordered list that allows repeats"
+   ]
+  },
+  {
+   "group": "types",
+   "subject": "enumeration",
+   "tier": 3,
+   "says": [
+    "is a type with a fixed list of named values",
+    "stops a variable taking a value that was never intended"
+   ],
+   "use": "need a value that can only be one of a few named options",
+   "not": [
+    "is a counter that goes up by one each time"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "recursion",
+   "tier": 3,
+   "says": [
+    "is when a function calls itself to solve a smaller version of the problem",
+    "needs a stopping case to end"
+   ],
+   "use": "need to solve a problem that is made of smaller copies of itself",
+   "not": [
+    "is repeating a block with a loop counter"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "exception",
+   "tier": 2,
+   "says": [
+    "is an error condition that interrupts normal flow",
+    "can be caught and handled by code written for it"
+   ],
+   "use": "need to deal with something going wrong, such as a missing file",
+   "not": [
+    "is a rule that has no exceptions"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "callback",
+   "tier": 3,
+   "says": [
+    "is a function passed to other code to be called later",
+    "lets code react when something finishes"
+   ],
+   "use": "need code to run once a slow task completes",
+   "not": [
+    "is the value returned when a function ends"
+   ],
+   "like": [
+    "promise"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "promise",
+   "tier": 3,
+   "says": [
+    "stands for a result that will be available later",
+    "can succeed with a value or fail with an error"
+   ],
+   "use": "need to represent the eventual result of an asynchronous task",
+   "not": [
+    "is a function that is called straight away"
+   ],
+   "like": [
+    "callback"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "asynchronous code",
+   "tier": 3,
+   "says": [
+    "starts a task and carries on without waiting for it to finish",
+    "handles the result when it arrives"
+   ],
+   "use": "need the program to keep working while it waits for a slow request",
+   "not": [
+    "runs each step to completion before starting the next"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "closure",
+   "tier": 4,
+   "says": [
+    "is a function that remembers the variables from where it was created",
+    "keeps them available after that scope has ended"
+   ],
+   "use": "need a function to keep access to values from its surroundings",
+   "not": [
+    "is a function that closes a file"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "higher-order function",
+   "tier": 4,
+   "says": [
+    "takes a function as input, returns one, or both",
+    "lets behaviour be passed around like data"
+   ],
+   "use": "need to pass the rule for a task into a general-purpose function",
+   "not": [
+    "is a function that runs faster than others"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "event loop",
+   "tier": 4,
+   "says": [
+    "is the mechanism that picks up waiting tasks and runs them one at a time",
+    "lets a single-threaded program handle many asynchronous events"
+   ],
+   "use": "need to explain how a program handles events without blocking",
+   "not": [
+    "is a loop that runs the same code forever on every machine"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "side effect",
+   "tier": 3,
+   "says": [
+    "is a change a function makes beyond returning a value",
+    "includes writing to a file or changing a variable outside it"
+   ],
+   "use": "find that calling a function changes something outside itself",
+   "not": [
+    "is the value a function returns"
+   ],
+   "like": [
+    "pure function"
+   ]
+  },
+  {
+   "group": "flow",
+   "subject": "pure function",
+   "tier": 4,
+   "says": [
+    "gives the same result for the same inputs",
+    "has no side effects"
+   ],
+   "use": "want a function that is easy to test and reason about",
+   "not": [
+    "changes shared state each time it runs"
+   ],
+   "like": [
+    "side effect"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "Big O notation",
+   "tier": 2,
+   "says": [
+    "describes how the work of an algorithm grows as its input grows",
+    "ignores constant factors to show the overall trend"
+   ],
+   "use": "need to compare how two approaches scale with more data",
+   "not": [
+    "measures the exact running time in seconds"
+   ],
+   "like": [
+    "time complexity"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "time complexity",
+   "tier": 3,
+   "says": [
+    "is how the number of steps an algorithm takes grows with the size of its input",
+    "is usually written in Big O notation"
+   ],
+   "use": "need to know how slow an approach will become with more data",
+   "not": [
+    "is how much memory an algorithm uses"
+   ],
+   "like": [
+    "space complexity"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "space complexity",
+   "tier": 3,
+   "says": [
+    "is how the memory an algorithm uses grows with the size of its input",
+    "includes extra data it creates while it runs"
+   ],
+   "use": "need to know whether an approach will run out of memory",
+   "not": [
+    "is how long an algorithm takes to run"
+   ],
+   "like": [
+    "time complexity"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "binary search",
+   "tier": 2,
+   "says": [
+    "finds a value in a sorted list by repeatedly halving the part to search",
+    "is far faster than checking each item in turn"
+   ],
+   "use": "need to find a value quickly in a sorted list",
+   "not": [
+    "works on a list in any order"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "sorting algorithm",
+   "tier": 2,
+   "says": [
+    "puts items into a defined order",
+    "differs from others in speed, memory use and stability"
+   ],
+   "use": "need items arranged in order, such as by date",
+   "not": [
+    "finds a single item in a collection"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "divide and conquer",
+   "tier": 3,
+   "says": [
+    "splits a problem into smaller parts, solves each and combines the results",
+    "underlies merge sort and binary search"
+   ],
+   "use": "need to solve a big problem by breaking it into smaller ones",
+   "not": [
+    "tries every possible answer in turn"
+   ],
+   "like": [
+    "brute force"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "dynamic programming",
+   "tier": 4,
+   "says": [
+    "solves a problem by combining answers to overlapping smaller problems",
+    "stores each answer so that it is worked out only once"
+   ],
+   "use": "see the same sub-problems being calculated again and again",
+   "not": [
+    "is programming that changes itself while it runs"
+   ],
+   "like": [
+    "memoisation"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "greedy algorithm",
+   "tier": 4,
+   "says": [
+    "makes the best-looking choice at each step",
+    "does not always give the best overall answer"
+   ],
+   "use": "need a quick approach that picks the best option available at every step",
+   "not": [
+    "always finds the best overall answer"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "brute force",
+   "tier": 2,
+   "says": [
+    "tries every possible answer until one works",
+    "is simple but becomes very slow as the problem grows"
+   ],
+   "use": "need the simplest approach that is guaranteed to find an answer on a small problem",
+   "not": [
+    "uses clever shortcuts to avoid checking most answers"
+   ],
+   "like": [
+    "divide and conquer"
+   ]
+  },
+  {
+   "group": "algo",
+   "subject": "memoisation",
+   "tier": 4,
+   "says": [
+    "stores the result of a function call so that it is not calculated again",
+    "trades memory for speed"
+   ],
+   "use": "need to avoid repeating an expensive calculation with the same input",
+   "not": [
+    "deletes a function's result after it is used"
+   ],
+   "like": [
+    "dynamic programming"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "linked list",
+   "tier": 2,
+   "says": [
+    "is a chain of items, each pointing to the next",
+    "makes adding or removing in the middle cheap but reaching an item slow"
+   ],
+   "use": "need to insert items often without moving the others",
+   "not": [
+    "stores items side by side so that any one can be reached instantly"
+   ],
+   "like": [
+    "array"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "stack",
+   "tier": 2,
+   "says": [
+    "adds and removes items only at one end",
+    "gives back the most recently added item first"
+   ],
+   "use": "need last-in, first-out behaviour such as undo",
+   "not": [
+    "gives back the oldest item first"
+   ],
+   "like": [
+    "queue"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "queue",
+   "tier": 2,
+   "says": [
+    "adds items at one end and removes them from the other",
+    "gives back the oldest item first"
+   ],
+   "use": "need first-in, first-out behaviour such as a line of jobs",
+   "not": [
+    "gives back the most recently added item first"
+   ],
+   "like": [
+    "stack",
+    "priority queue"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "binary tree",
+   "tier": 3,
+   "says": [
+    "is a structure in which each item has at most two children",
+    "is the basis of many searching structures"
+   ],
+   "use": "need a branching structure with at most two paths from each item",
+   "not": [
+    "is a list in which each item has one successor"
+   ],
+   "like": [
+    "binary search tree"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "binary search tree",
+   "tier": 3,
+   "says": [
+    "is a binary tree in which smaller values go left and larger go right",
+    "allows fast searching when it stays balanced"
+   ],
+   "use": "need ordered data that supports quick lookup and insertion",
+   "not": [
+    "is a tree in which values are stored in no particular order"
+   ],
+   "like": [
+    "binary tree"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "graph",
+   "tier": 3,
+   "says": [
+    "is a set of points joined by connections",
+    "models networks such as roads or friendships"
+   ],
+   "use": "need to model things and the links between them",
+   "not": [
+    "is a chart that plots numbers on two axes"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "heap",
+   "tier": 4,
+   "says": [
+    "is a tree-shaped structure that keeps the smallest or largest item at the top",
+    "allows the top item to be removed quickly"
+   ],
+   "use": "need to repeatedly take out the smallest or largest item",
+   "not": [
+    "is the memory where a program's functions run"
+   ],
+   "like": [
+    "priority queue"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "hash table",
+   "tier": 3,
+   "says": [
+    "stores values by turning each key into a position",
+    "finds an entry in roughly constant time on average"
+   ],
+   "use": "need very fast lookup by key",
+   "not": [
+    "keeps its entries sorted by key"
+   ],
+   "like": [
+    "dictionary"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "trie",
+   "tier": 5,
+   "says": [
+    "is a tree that stores words by their shared prefixes",
+    "makes prefix searches, such as autocomplete, quick"
+   ],
+   "use": "need to find all words that start with a given prefix",
+   "not": [
+    "is a tree that stores numbers in sorted order"
+   ]
+  },
+  {
+   "group": "ds",
+   "subject": "priority queue",
+   "tier": 4,
+   "says": [
+    "gives back the item with the highest priority first, not the oldest",
+    "is often built on a heap"
+   ],
+   "use": "need to process the most urgent job first",
+   "not": [
+    "gives back items strictly in the order they arrived"
+   ],
+   "like": [
+    "queue",
+    "heap"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "class",
+   "tier": 1,
+   "says": [
+    "is a blueprint for creating objects with shared data and behaviour",
+    "defines what its objects know and can do"
+   ],
+   "use": "need a template for many similar objects",
+   "not": [
+    "is one specific object in memory"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "inheritance",
+   "tier": 2,
+   "says": [
+    "lets one class take on the data and behaviour of another",
+    "supports reuse by sharing what is common"
+   ],
+   "use": "need a specialised class that builds on a general one",
+   "not": [
+    "hides the inner workings of a class"
+   ],
+   "like": [
+    "composition"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "polymorphism",
+   "tier": 3,
+   "says": [
+    "lets different types respond to the same call in their own way",
+    "allows code to work with a general type"
+   ],
+   "use": "need code to treat different kinds of object through the same interface",
+   "not": [
+    "means a class can only ever take one form"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "encapsulation",
+   "tier": 2,
+   "says": [
+    "keeps an object's data and the code that works on it together",
+    "hides the inner details behind a controlled interface"
+   ],
+   "use": "need to stop other code changing an object's data directly",
+   "not": [
+    "copies one object's data into another"
+   ],
+   "like": [
+    "abstraction"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "abstraction",
+   "tier": 3,
+   "says": [
+    "shows only what is needed and hides the detail",
+    "lets people use something without knowing how it works inside"
+   ],
+   "use": "need to present a simple view of something complicated",
+   "not": [
+    "keeps data and code together in one place"
+   ],
+   "like": [
+    "encapsulation"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "interface",
+   "tier": 2,
+   "says": [
+    "defines what something can do without saying how",
+    "lets different implementations be used in the same way"
+   ],
+   "use": "need several types to be used interchangeably",
+   "not": [
+    "is the screen that a user sees"
+   ],
+   "like": [
+    "abstract class"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "composition",
+   "tier": 3,
+   "says": [
+    "builds a larger object from smaller ones it holds",
+    "is often preferred to inheritance for flexibility"
+   ],
+   "use": "need an object to be made by combining other objects",
+   "not": [
+    "makes one class a special case of another"
+   ],
+   "like": [
+    "inheritance"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "constructor",
+   "tier": 2,
+   "says": [
+    "is the code that sets up a new object when it is created",
+    "can take values that give the object its starting state"
+   ],
+   "use": "need to set up an object's starting values as it is made",
+   "not": [
+    "is the code that deletes an object"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "abstract class",
+   "tier": 3,
+   "says": [
+    "is a class that cannot be used directly and is meant to be extended",
+    "may supply some behaviour and leave the rest to subclasses"
+   ],
+   "use": "need a shared base that is never created on its own",
+   "not": [
+    "is a class with no methods at all"
+   ],
+   "like": [
+    "interface"
+   ]
+  },
+  {
+   "group": "oop",
+   "subject": "dependency injection",
+   "tier": 4,
+   "says": [
+    "gives an object the things it depends on instead of letting it create them",
+    "makes code easier to test and change"
+   ],
+   "use": "need to swap a real service for a fake one in a test",
+   "not": [
+    "makes an object create all its own dependencies"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "code smell",
+   "tier": 3,
+   "says": [
+    "is a sign in the code that something may be wrong with the design",
+    "does not itself stop the program working"
+   ],
+   "use": "see a function that has grown huge and does many things",
+   "not": [
+    "is a bug that crashes the program"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "DRY principle",
+   "tier": 2,
+   "says": [
+    "says that each piece of knowledge should live in one place",
+    "reduces the risk of changing one copy and forgetting another"
+   ],
+   "use": "see the same logic copied in several places",
+   "not": [
+    "says to repeat code so that each part stands alone"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "KISS principle",
+   "tier": 2,
+   "says": [
+    "says to keep a design as simple as it can be",
+    "favours the simplest solution that works"
+   ],
+   "use": "are tempted to build something more complicated than the problem needs",
+   "not": [
+    "says to add every feature that might be useful"
+   ],
+   "like": [
+    "YAGNI"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "YAGNI",
+   "tier": 3,
+   "says": [
+    "says not to build something until it is actually needed",
+    "stands for you aren't going to need it"
+   ],
+   "use": "are asked to add a feature just in case it is wanted later",
+   "not": [
+    "says to build everything up front"
+   ],
+   "like": [
+    "KISS principle"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "single responsibility principle",
+   "tier": 3,
+   "says": [
+    "says a unit of code should have one reason to change",
+    "keeps each class or function focused on one job"
+   ],
+   "use": "see a class that handles several unrelated jobs",
+   "not": [
+    "says a class may have as many responsibilities as it likes"
+   ],
+   "like": [
+    "separation of concerns"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "open-closed principle",
+   "tier": 4,
+   "says": [
+    "says code should be open to extension but closed to modification",
+    "lets behaviour grow without rewriting what already works"
+   ],
+   "use": "want to add new behaviour without editing tested code",
+   "not": [
+    "says code should be closed to any change at all"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "separation of concerns",
+   "tier": 3,
+   "says": [
+    "splits a program into parts that each deal with a separate matter",
+    "stops one change from rippling through everything"
+   ],
+   "use": "need to keep user interface code apart from business rules",
+   "not": [
+    "puts all the code for a feature into one place"
+   ],
+   "like": [
+    "single responsibility principle"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "magic number",
+   "tier": 2,
+   "says": [
+    "is an unexplained number written directly in code",
+    "is better replaced by a named constant"
+   ],
+   "use": "see the number 86400 in code with no explanation",
+   "not": [
+    "is a number that always gives the right answer"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "dead code",
+   "tier": 2,
+   "says": [
+    "is code that can never run or whose result is never used",
+    "clutters the program and should be removed"
+   ],
+   "use": "find a function that nothing calls",
+   "not": [
+    "is code that is running too slowly"
+   ]
+  },
+  {
+   "group": "qual",
+   "subject": "technical documentation",
+   "tier": 2,
+   "says": [
+    "explains how a system works and how to use or change it",
+    "helps new people learn the code"
+   ],
+   "use": "need to explain to the next developer how a system fits together",
+   "not": [
+    "is a list of every bug that was ever fixed"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "debugger",
+   "tier": 1,
+   "says": [
+    "is a tool that lets you run a program step by step and inspect its state",
+    "shows the values of variables as it goes"
+   ],
+   "use": "need to see what a program is doing at a particular line",
+   "not": [
+    "is a tool that writes the program for you"
+   ],
+   "like": [
+    "breakpoint",
+    "print debugging"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "breakpoint",
+   "tier": 1,
+   "says": [
+    "is a marker that pauses a program at a chosen line",
+    "lets you inspect variables at that moment"
+   ],
+   "use": "want the program to stop at a particular line so that you can look around",
+   "not": [
+    "is a point at which the program crashes for good"
+   ],
+   "like": [
+    "debugger"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "stack trace",
+   "tier": 2,
+   "says": [
+    "lists the chain of calls that led to an error",
+    "shows where in the code the error happened"
+   ],
+   "use": "need to find which call caused an error report",
+   "not": [
+    "is a list of all the files in a project"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "log level",
+   "tier": 2,
+   "says": [
+    "sets how serious a log message is, such as debug, warning or error",
+    "lets people choose how much detail to see"
+   ],
+   "use": "need to show only warnings and errors in production",
+   "not": [
+    "is the amount of memory used by the log file"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "reproduction steps",
+   "tier": 1,
+   "says": [
+    "are the exact actions that make a bug happen",
+    "let someone else see the problem for themselves"
+   ],
+   "use": "need to report a bug so that a colleague can see it",
+   "not": [
+    "are the steps taken to fix a bug"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "bisecting",
+   "tier": 4,
+   "says": [
+    "finds the change that introduced a bug by repeatedly halving the range of history",
+    "works by testing a version in the middle each time"
+   ],
+   "use": "know that a bug appeared sometime in the last hundred commits",
+   "not": [
+    "tests every commit one at a time from the start"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "print debugging",
+   "tier": 1,
+   "says": [
+    "adds output statements to see what values a program has",
+    "is simple and needs no special tool"
+   ],
+   "use": "need a quick look at a value without setting up a debugger",
+   "not": [
+    "means printing out the source code to read it"
+   ],
+   "like": [
+    "debugger"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "profiler",
+   "tier": 3,
+   "says": [
+    "measures where a program spends its time or memory",
+    "shows which parts are worth making faster"
+   ],
+   "use": "need to find out why a program is slow",
+   "not": [
+    "checks whether the code follows the style rules"
+   ],
+   "like": [
+    "memory profiler"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "memory profiler",
+   "tier": 4,
+   "says": [
+    "measures how a program uses memory over time",
+    "helps find where memory is being kept and not released"
+   ],
+   "use": "see a program's memory use rise and not fall",
+   "not": [
+    "measures how long each function takes to run"
+   ],
+   "like": [
+    "profiler"
+   ]
+  },
+  {
+   "group": "debug",
+   "subject": "heisenbug",
+   "tier": 5,
+   "says": [
+    "is a bug that changes or disappears when you try to observe it",
+    "often depends on timing or on the debugger itself"
+   ],
+   "use": "find a bug that stops happening as soon as you add logging",
+   "not": [
+    "is a bug that always happens in the same place"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "staging area",
+   "tier": 2,
+   "says": [
+    "is where changes are collected before they are committed",
+    "lets you choose exactly which changes go into the next commit"
+   ],
+   "use": "want to commit only some of the changes you have made",
+   "not": [
+    "is the remote server that holds the repository"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "HEAD",
+   "tier": 2,
+   "says": [
+    "is a pointer to the commit you are currently working from",
+    "normally moves forward when you make a commit"
+   ],
+   "use": "need to know which commit your working copy is based on",
+   "not": [
+    "is the first commit ever made in the repository"
+   ],
+   "like": [
+    "detached HEAD"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "stash",
+   "tier": 2,
+   "says": [
+    "sets aside uncommitted changes so that you can come back to them",
+    "leaves the working copy clean"
+   ],
+   "use": "need to switch branch without committing half-finished work",
+   "not": [
+    "permanently deletes your changes"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "cherry-pick",
+   "tier": 3,
+   "says": [
+    "copies the changes of a chosen commit onto the current branch",
+    "lets one fix be applied without merging a whole branch"
+   ],
+   "use": "need one specific fix from another branch",
+   "not": [
+    "merges all the commits of a branch"
+   ],
+   "like": [
+    "squash merge"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "squash merge",
+   "tier": 3,
+   "says": [
+    "combines all the commits of a branch into a single commit when merging",
+    "keeps the main branch history short"
+   ],
+   "use": "want a feature branch's many small commits to appear as one",
+   "not": [
+    "keeps every commit of the branch in the history"
+   ],
+   "like": [
+    "cherry-pick"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "fast-forward",
+   "tier": 3,
+   "says": [
+    "moves a branch pointer forward when the other side has no new commits",
+    "needs no merge commit"
+   ],
+   "use": "merge a branch where main has not moved since the branch began",
+   "not": [
+    "creates a new commit joining two diverged branches"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "fetch",
+   "tier": 2,
+   "says": [
+    "downloads new commits from a remote without changing your working files",
+    "lets you look at changes before combining them"
+   ],
+   "use": "want to see what others have pushed without merging it yet",
+   "not": [
+    "downloads and immediately merges the new commits"
+   ],
+   "like": [
+    "upstream"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "upstream",
+   "tier": 3,
+   "says": [
+    "is the remote branch that a local branch tracks",
+    "decides where pushes and pulls go by default"
+   ],
+   "use": "need to know which remote branch yours is linked to",
+   "not": [
+    "is the oldest branch in the repository"
+   ],
+   "like": [
+    "fetch"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "detached HEAD",
+   "tier": 4,
+   "says": [
+    "is the state of working from a particular commit rather than a branch",
+    "means new commits belong to no branch unless you save them"
+   ],
+   "use": "check out an old commit and start making changes",
+   "not": [
+    "is a branch that has been deleted from the remote"
+   ],
+   "like": [
+    "HEAD"
+   ]
+  },
+  {
+   "group": "git",
+   "subject": "force push",
+   "tier": 4,
+   "says": [
+    "overwrites the history on a remote with your local history",
+    "can destroy other people's work if it is misused"
+   ],
+   "use": "have rewritten commits and need the remote to match",
+   "not": [
+    "is a safe way to share changes that never loses anything"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "thread",
+   "tier": 3,
+   "says": [
+    "is a path of execution within a program",
+    "shares memory with the other threads of the same program"
+   ],
+   "use": "need a program to do several things at once inside one process",
+   "not": [
+    "is a separate program with its own memory"
+   ],
+   "like": [
+    "process"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "process",
+   "tier": 3,
+   "says": [
+    "is a running program with its own memory",
+    "is isolated from other processes"
+   ],
+   "use": "need to describe a running program that is separate from others",
+   "not": [
+    "is one path of execution that shares memory with others"
+   ],
+   "like": [
+    "thread"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "concurrency",
+   "tier": 3,
+   "says": [
+    "is dealing with many tasks at once by overlapping them in time",
+    "does not need them to run at the same instant"
+   ],
+   "use": "need a program to make progress on several tasks together",
+   "not": [
+    "is running tasks at the same instant on separate processors"
+   ],
+   "like": [
+    "parallelism"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "parallelism",
+   "tier": 4,
+   "says": [
+    "is running several tasks at the same instant on separate processors",
+    "speeds up work that can be split up"
+   ],
+   "use": "need to use several processor cores to finish a job faster",
+   "not": [
+    "is switching quickly between tasks on one core"
+   ],
+   "like": [
+    "concurrency"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "mutex",
+   "tier": 4,
+   "says": [
+    "lets only one thread at a time use a shared resource",
+    "makes other threads wait until it is released"
+   ],
+   "use": "need to stop two threads changing the same data at once",
+   "not": [
+    "lets any number of threads use a resource at the same time"
+   ],
+   "like": [
+    "deadlock"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "deadlock",
+   "tier": 4,
+   "says": [
+    "is when threads wait for each other forever",
+    "happens when each holds something that the other needs"
+   ],
+   "use": "see two threads stuck, each waiting for the other to let go",
+   "not": [
+    "is a thread that finishes too quickly"
+   ],
+   "like": [
+    "mutex"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "thread safety",
+   "tier": 4,
+   "says": [
+    "means code behaves correctly when several threads use it at once",
+    "needs care with shared data"
+   ],
+   "use": "need code to work correctly when it is called from many threads",
+   "not": [
+    "means code is protected against hackers"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "garbage collection",
+   "tier": 3,
+   "says": [
+    "frees memory that a program no longer uses, automatically",
+    "saves the developer from releasing memory by hand"
+   ],
+   "use": "need memory cleaned up without writing code to free it",
+   "not": [
+    "deletes files from the disk"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "heap memory",
+   "tier": 4,
+   "says": [
+    "is the area of memory used for data that lives beyond a single function call",
+    "is shared between the parts of a program"
+   ],
+   "use": "need to explain where long-lived objects are stored",
+   "not": [
+    "is the area that records the chain of function calls"
+   ],
+   "like": [
+    "call stack"
+   ]
+  },
+  {
+   "group": "conc",
+   "subject": "call stack",
+   "tier": 3,
+   "says": [
+    "records the chain of function calls that are in progress",
+    "adds a frame when a function is called and removes it when it returns"
+   ],
+   "use": "need to understand where an error occurred in a chain of calls",
+   "not": [
+    "is the area that holds long-lived objects"
+   ],
+   "like": [
+    "heap memory"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "A tax rate must not be changed by accident. What should it be stored in?",
+   "right": "A constant",
+   "wrong": [
+    "A variable that is reassigned each time",
+    "A loop",
+    "A comment"
+   ],
+   "tier": 1,
+   "why": "A constant holds a value that does not change."
+  },
+  {
+   "q": "You need to do the same thing for every item in a list. What do you use?",
+   "right": "A loop",
+   "wrong": [
+    "A conditional",
+    "A constant",
+    "A comment"
+   ],
+   "tier": 1,
+   "why": "A loop repeats code for each item."
+  },
+  {
+   "q": "You need the same steps in many places in a program. What do you write?",
+   "right": "A function",
+   "wrong": [
+    "A longer variable name",
+    "A separate program for each place",
+    "A comment"
+   ],
+   "tier": 1,
+   "why": "A function can be reused."
+  },
+  {
+   "q": "Which value is a boolean?",
+   "right": "true",
+   "wrong": [
+    "42",
+    "'hello'",
+    "3.14"
+   ],
+   "tier": 1,
+   "why": "A boolean is true or false."
+  },
+  {
+   "q": "How do you reach the first item of an array in most languages?",
+   "right": "By position 0",
+   "wrong": [
+    "By position 1",
+    "By position -1",
+    "By its name"
+   ],
+   "tier": 1,
+   "why": "Positions usually start at zero."
+  },
+  {
+   "q": "You want a program to stop at a chosen line so you can look at its variables. What do you set?",
+   "right": "A breakpoint",
+   "wrong": [
+    "A constant",
+    "A loop",
+    "A parameter"
+   ],
+   "tier": 1,
+   "why": "A breakpoint pauses the program."
+  },
+  {
+   "q": "You report a bug. What makes it easiest for a colleague to see it?",
+   "right": "The exact steps that make it happen",
+   "wrong": [
+    "A description of how annoyed you are",
+    "A guess at the cause",
+    "The date you first noticed it"
+   ],
+   "tier": 1,
+   "why": "Reproduction steps let others see the problem."
+  },
+  {
+   "q": "What is a class?",
+   "right": "A blueprint for creating objects",
+   "wrong": [
+    "One particular object in memory",
+    "A kind of loop",
+    "A value that cannot change"
+   ],
+   "tier": 1,
+   "why": "A class defines what its objects know and do."
+  },
+  {
+   "q": "You need a quick look at a value without setting up a debugger. What can you do?",
+   "right": "Print it to the output",
+   "wrong": [
+    "Delete the function",
+    "Rewrite the program",
+    "Restart the computer"
+   ],
+   "tier": 1,
+   "why": "Print debugging is simple and needs no tool."
+  },
+  {
+   "q": "Which describes how the work of an algorithm grows as its input grows?",
+   "right": "Big O notation",
+   "wrong": [
+    "A breakpoint",
+    "A stack trace",
+    "A constant"
+   ],
+   "tier": 2,
+   "why": "Big O shows the growth trend."
+  },
+  {
+   "q": "What must be true of a list for binary search to work?",
+   "right": "It must be sorted",
+   "wrong": [
+    "It must be short",
+    "It must contain only numbers",
+    "It must be a linked list"
+   ],
+   "tier": 2,
+   "why": "Binary search halves a sorted range."
+  },
+  {
+   "q": "You need to look up a product's price by its name. Which structure suits it?",
+   "right": "A dictionary",
+   "wrong": [
+    "An array searched by position",
+    "A stack",
+    "A queue"
+   ],
+   "tier": 2,
+   "why": "A dictionary looks values up by key."
+  },
+  {
+   "q": "An undo feature reverses the most recent action first. Which structure fits?",
+   "right": "A stack",
+   "wrong": [
+    "A queue",
+    "A set",
+    "A tree"
+   ],
+   "tier": 2,
+   "why": "A stack gives back the last item added."
+  },
+  {
+   "q": "Print jobs must be handled in the order they arrive. Which structure fits?",
+   "right": "A queue",
+   "wrong": [
+    "A stack",
+    "A set",
+    "A dictionary"
+   ],
+   "tier": 2,
+   "why": "A queue gives back the oldest item first."
+  },
+  {
+   "q": "Why does adding 0.1 and 0.2 not give exactly 0.3 in many languages?",
+   "right": "Floating-point numbers are stored in binary and can be slightly inexact",
+   "wrong": [
+    "The computer cannot add",
+    "Integers are used instead",
+    "The language has a bug in addition"
+   ],
+   "tier": 2,
+   "why": "Some decimals cannot be stored exactly."
+  },
+  {
+   "q": "The same discount logic is copied into five places. Which principle does this break?",
+   "right": "DRY: each piece of knowledge should live in one place",
+   "wrong": [
+    "KISS",
+    "YAGNI",
+    "Open-closed"
+   ],
+   "tier": 2,
+   "why": "Repeated logic risks changing one copy and missing another."
+  },
+  {
+   "q": "An error report lists the chain of calls that led to it. What is this?",
+   "right": "A stack trace",
+   "wrong": [
+    "A log level",
+    "A breakpoint",
+    "A constant"
+   ],
+   "tier": 2,
+   "why": "A stack trace shows where the error happened."
+  },
+  {
+   "q": "You want to commit only some of the changes you have made. What helps?",
+   "right": "The staging area",
+   "wrong": [
+    "A force push",
+    "A fast-forward",
+    "A detached HEAD"
+   ],
+   "tier": 2,
+   "why": "The staging area lets you choose what goes into a commit."
+  },
+  {
+   "q": "You must switch branch but have half-finished work. What can you do?",
+   "right": "Stash the changes",
+   "wrong": [
+    "Delete them",
+    "Force push them",
+    "Commit them to the wrong branch"
+   ],
+   "tier": 2,
+   "why": "A stash sets work aside."
+  },
+  {
+   "q": "You see the number 86400 in code with no explanation. What is it?",
+   "right": "A magic number, better replaced by a named constant",
+   "wrong": [
+    "A constant",
+    "A parameter",
+    "An exception"
+   ],
+   "tier": 2,
+   "why": "Unexplained numbers hide their meaning."
+  },
+  {
+   "q": "A recursive function never ends. What is it missing?",
+   "right": "A stopping case",
+   "wrong": [
+    "A loop",
+    "A constant",
+    "A return type"
+   ],
+   "tier": 3,
+   "why": "Recursion needs a case that ends it."
+  },
+  {
+   "q": "A page freezes while it waits for a slow request. What approach avoids this?",
+   "right": "Asynchronous code that carries on while it waits",
+   "wrong": [
+    "Making the request slower",
+    "Adding a loop that waits",
+    "Using a bigger array"
+   ],
+   "tier": 3,
+   "why": "Asynchronous code does not block."
+  },
+  {
+   "q": "A loop inside another loop, both over n items, takes roughly how many steps?",
+   "right": "About n squared",
+   "wrong": [
+    "About n",
+    "About 2",
+    "About log n"
+   ],
+   "tier": 3,
+   "why": "Nested loops multiply."
+  },
+  {
+   "q": "You need very fast lookup by key on average. Which structure fits?",
+   "right": "A hash table",
+   "wrong": [
+    "A linked list",
+    "A stack",
+    "An unsorted array"
+   ],
+   "tier": 3,
+   "why": "A hash table finds an entry in roughly constant time."
+  },
+  {
+   "q": "Different shapes each draw themselves when you call draw on a general shape. What is this?",
+   "right": "Polymorphism",
+   "wrong": [
+    "Encapsulation",
+    "Memoisation",
+    "Recursion"
+   ],
+   "tier": 3,
+   "why": "Different types respond to the same call in their own way."
+  },
+  {
+   "q": "Which is often preferred to inheritance for flexibility?",
+   "right": "Composition",
+   "wrong": [
+    "Recursion",
+    "A constant",
+    "A loop"
+   ],
+   "tier": 3,
+   "why": "Building from smaller objects is more flexible."
+  },
+  {
+   "q": "A class sends emails, saves to the database and draws the page. Which principle does this break?",
+   "right": "The single responsibility principle",
+   "wrong": [
+    "DRY",
+    "YAGNI",
+    "Open-closed"
+   ],
+   "tier": 3,
+   "why": "A unit of code should have one reason to change."
+  },
+  {
+   "q": "A function has grown to hundreds of lines and does many things. What is this called?",
+   "right": "A code smell",
+   "wrong": [
+    "A magic number",
+    "A constant",
+    "A spike"
+   ],
+   "tier": 3,
+   "why": "It is a sign of a design problem."
+  },
+  {
+   "q": "You need one specific fix from another branch without merging the whole branch. What do you use?",
+   "right": "Cherry-pick",
+   "wrong": [
+    "Squash merge",
+    "Force push",
+    "Stash"
+   ],
+   "tier": 3,
+   "why": "Cherry-pick copies a chosen commit."
+  },
+  {
+   "q": "What is the difference between a thread and a process?",
+   "right": "A thread shares memory with others in the same program; a process has its own memory",
+   "wrong": [
+    "A thread is bigger than a process",
+    "They mean the same thing",
+    "A process shares memory with every other process"
+   ],
+   "tier": 3,
+   "why": "Threads live inside a process."
+  },
+  {
+   "q": "What is the difference between concurrency and parallelism?",
+   "right": "Concurrency overlaps tasks in time; parallelism runs them at the same instant on separate processors",
+   "wrong": [
+    "They mean the same thing",
+    "Concurrency needs several processors",
+    "Parallelism runs only one task"
+   ],
+   "tier": 3,
+   "why": "Concurrency does not need simultaneous execution."
+  },
+  {
+   "q": "Memory is freed for you automatically when it is no longer used. What does this?",
+   "right": "Garbage collection",
+   "wrong": [
+    "A profiler",
+    "A mutex",
+    "A closure"
+   ],
+   "tier": 3,
+   "why": "Garbage collection frees unused memory."
+  },
+  {
+   "q": "Calling a function changes a variable outside it. What is this called?",
+   "right": "A side effect",
+   "wrong": [
+    "A return value",
+    "A parameter",
+    "A constant"
+   ],
+   "tier": 3,
+   "why": "It changes something beyond the returned value."
+  },
+  {
+   "q": "Merge sort splits a list, sorts each half and combines them. Which approach is this?",
+   "right": "Divide and conquer",
+   "wrong": [
+    "Brute force",
+    "A greedy algorithm",
+    "Memoisation"
+   ],
+   "tier": 3,
+   "why": "It breaks a problem into smaller parts."
+  },
+  {
+   "q": "You need to find out why a program is slow. What do you use?",
+   "right": "A profiler",
+   "wrong": [
+    "A constant",
+    "A mutex",
+    "A linter that checks style"
+   ],
+   "tier": 3,
+   "why": "A profiler shows where time goes."
+  },
+  {
+   "q": "A naive calculation repeats the same sub-problems over and over. What fixes it?",
+   "right": "Memoisation: store each result and reuse it",
+   "wrong": [
+    "A bigger loop",
+    "A longer function",
+    "A stack"
+   ],
+   "tier": 4,
+   "why": "Storing results avoids repeating work."
+  },
+  {
+   "q": "Picking the largest coin each time does not always give the fewest coins. What does this show?",
+   "right": "A greedy algorithm does not always give the best overall answer",
+   "wrong": [
+    "Greedy algorithms are always optimal",
+    "The coins were sorted wrongly",
+    "Recursion cannot be used"
+   ],
+   "tier": 4,
+   "why": "Locally best choices can miss the best overall result."
+  },
+  {
+   "q": "Two threads each hold something the other needs and both wait forever. What is this?",
+   "right": "A deadlock",
+   "wrong": [
+    "A race of two loops",
+    "A closure",
+    "A side effect"
+   ],
+   "tier": 4,
+   "why": "Each waits for the other to let go."
+  },
+  {
+   "q": "You need to stop two threads changing the same data at once. What can you use?",
+   "right": "A mutex",
+   "wrong": [
+    "A constant",
+    "A closure",
+    "A queue of strings"
+   ],
+   "tier": 4,
+   "why": "A mutex lets one thread at a time in."
+  },
+  {
+   "q": "A function keeps access to variables from where it was created, even after that scope ended. What is it?",
+   "right": "A closure",
+   "wrong": [
+    "A pure function",
+    "A constant",
+    "A mutex"
+   ],
+   "tier": 4,
+   "why": "A closure remembers its surroundings."
+  },
+  {
+   "q": "You want to swap a real service for a fake one in a test. What technique helps?",
+   "right": "Dependency injection",
+   "wrong": [
+    "Inheritance",
+    "A bigger class",
+    "A global variable"
+   ],
+   "tier": 4,
+   "why": "Giving an object its dependencies makes testing easier."
+  },
+  {
+   "q": "A bug appeared somewhere in the last hundred commits. What finds the commit that caused it fastest?",
+   "right": "Bisecting",
+   "wrong": [
+    "Testing every commit from the start",
+    "Rewriting the history",
+    "Reading every change"
+   ],
+   "tier": 4,
+   "why": "Bisecting halves the range each time."
+  },
+  {
+   "q": "You check out an old commit and start making changes. What state are you in?",
+   "right": "A detached HEAD",
+   "wrong": [
+    "A fast-forward",
+    "A stash",
+    "An upstream branch"
+   ],
+   "tier": 4,
+   "why": "You are working from a commit, not a branch."
+  },
+  {
+   "q": "A function always gives the same result for the same inputs and changes nothing else. What is it?",
+   "right": "A pure function",
+   "wrong": [
+    "A closure",
+    "A callback",
+    "A constructor"
+   ],
+   "tier": 4,
+   "why": "Pure functions have no side effects."
+  },
+  {
+   "q": "The most urgent job must always be processed first. Which structure fits?",
+   "right": "A priority queue",
+   "wrong": [
+    "A queue",
+    "A stack",
+    "A set"
+   ],
+   "tier": 4,
+   "why": "A priority queue gives back the highest priority first."
+  },
+  {
+   "q": "You want to add new behaviour without editing tested code. Which principle fits?",
+   "right": "The open-closed principle",
+   "wrong": [
+    "DRY",
+    "YAGNI",
+    "KISS"
+   ],
+   "tier": 4,
+   "why": "Code open to extension but closed to modification."
+  },
+  {
+   "q": "A program's memory use rises and never falls. What tool helps find why?",
+   "right": "A memory profiler",
+   "wrong": [
+    "A stack trace",
+    "A breakpoint",
+    "A constant"
+   ],
+   "tier": 4,
+   "why": "It shows where memory is being held."
+  },
+  {
+   "q": "A bug disappears whenever you add logging. What is it called?",
+   "right": "A heisenbug",
+   "wrong": [
+    "A false positive",
+    "A stack trace",
+    "A closure"
+   ],
+   "tier": 5,
+   "why": "It changes when observed."
+  },
+  {
+   "q": "You need to find all words that start with a given prefix, as in autocomplete. Which structure fits?",
+   "right": "A trie",
+   "wrong": [
+    "A stack",
+    "A heap",
+    "A queue"
+   ],
+   "tier": 5,
+   "why": "A trie stores words by shared prefixes."
+  },
+  {
+   "q": "A colleague has rewritten commits and wants to force push. What is the risk?",
+   "right": "It can overwrite other people's work on the remote",
+   "wrong": [
+    "It deletes the local repository",
+    "It cannot be undone locally",
+    "It merges every branch"
+   ],
+   "tier": 5,
+   "why": "Force pushing replaces remote history."
+  },
+  {
+   "q": "A function passed to another function so that it can be called later is used to react when something finishes. What is it?",
+   "right": "A callback",
+   "wrong": [
+    "A constant",
+    "A constructor",
+    "A heap"
+   ],
+   "tier": 5,
+   "why": "A callback is called when a task completes."
+  }
+ ],
+ "termBank": {
+  "name": "Programming fundamentals",
+  "description": "The terms every software developer needs, from the first line of code to concurrency.",
+  "roles": "developer,full stack developer,backend developer,frontend developer,mobile developer,engineer,ai engineer,machine learning engineer,data engineer",
+  "order": 11,
+  "headings": {
+   "basic": "Programming basics",
+   "types": "Types and data",
+   "flow": "Control flow",
+   "algo": "Algorithms",
+   "ds": "Data structures",
+   "oop": "Object-oriented design",
+   "qual": "Code quality",
+   "debug": "Debugging and tools",
+   "git": "Working with git",
+   "conc": "Concurrency and memory"
+  }
+ }
+}

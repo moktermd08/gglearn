@@ -39,8 +39,10 @@ const gen = await import("../lib/termQuestions");
 const fsm = await import("node:fs");
 const cardsDir = new URL("../content/cards/", import.meta.url).pathname;
 const corpus: TermLite[] = [];
-for (const slug of ["office-core", "civil-service-core", "full-stack-core", "cto-core", "finance-admin-core", "security-core"]) {
-  const spec = JSON.parse(fsm.readFileSync(cardsDir + slug + ".json", "utf8"));
+for (const file of fsm.readdirSync(cardsDir).filter((f) => f.endsWith(".json")).sort()) {
+  const spec = JSON.parse(fsm.readFileSync(cardsDir + file, "utf8"));
+  if (!spec.termBank) continue; // not a term bank
+  const slug = file.slice(0, -5);
   for (const c of spec.cards) corpus.push({ id: corpus.length + 1, term: c.subject, meaning: "It " + c.says[0], tier: c.tier, group: slug + c.group, bankId: 1, source: "shared", similar: c.like ?? [], facts: c.says.slice(1), useWhen: c.use ?? "", mistakes: c.not ?? [] });
 }
 const ctx = gen.makeCtx(corpus);
@@ -198,7 +200,7 @@ ok("a role's list is its own banks plus everyone's, up to the ranks its level re
   assert.ok(l1.terms.every((t) => t.tier <= 2));
   const names = (l: typeof l1) => l.banks.map((b) => b.name);
   assert.ok(names(l1).includes("CTO core") && names(l1).includes("Office core"));
-  assert.ok(!names(l1).includes("Security core"), "a bank for another role is left out");
+  assert.ok(!names(l1).includes("Financial admin core"), "a bank for another role is left out");
   assert.ok(l4.terms.length > l1.terms.length, "the list grows with the level");
   assert.equal(l4.ceiling, 5);
   assert.equal(l1.banks[0].forRole, true, "what is made for the role comes first");
