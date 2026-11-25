@@ -4,9 +4,11 @@ import { requireUser } from "@/lib/auth";
 import { EmptyState, PageHero } from "@/components/charts";
 import { TermPicker, type PickBank } from "@/components/TermPicker";
 import { AddTermForm } from "@/components/AddTermForm";
+import { RolePicker } from "@/components/RolePicker";
+import { myStudyRoles, roleLabel, roleList, roleOptions, roleSlug, roleSummary } from "@/lib/termStudy";
 import { allBanks, bankFitsRole, goalNeed, myTerms, recentChecks, sharedTerms, standingFor, termsAvailable, type BankStanding } from "@/lib/terms";
 import { MIN_TIER_TESTED, RANKS, rankName } from "@/lib/termsCore";
-import { removeOwnTermAction } from "@/app/terms-actions";
+import { removeOwnTermAction, removeStudyRoleAction } from "@/app/terms-actions";
 
 export const metadata = { title: "Terms — gglearn" };
 
@@ -61,9 +63,38 @@ export default async function Terms() {
   if (own.length) pickBanks.unshift({ key: "mine", name: "My own terms", groups: [{ name: "Added by me", terms: own.map((t) => ({ id: t.id, term: t.term, tier: t.tier })) }], open: true });
   const checks = recentChecks(user.id);
 
+  // learning a role: pick a role and level, and the list of terms for it is made; the roles already chosen show their progress
+  const roles = roleOptions();
+  const studying = myStudyRoles(user.id).map((r) => ({ r, list: roleList(r.role, r.level) })).filter((x) => x.list !== null)
+    .map(({ r, list }) => ({ r, list: list!, sum: roleSummary(user.id, list!) }));
+  const pickRoles = roles.map((o) => ({ role: o.role, label: roleLabel(o.role), hasTerms: o.hasTerms, levels: o.levels }));
+  const startRole = goal && roles.some((o) => o.role === goal.role) ? goal.role : roles.some((o) => o.role === user.jobRole.toLowerCase()) ? user.jobRole.toLowerCase() : "";
+
   return (
     <div className="mx-auto max-w-4xl space-y-8">
-      <PageHero Icon={BookOpen} tone="violet" title="Terms" sub="The words people in your kind of work need to know, at five ranks from Initiate to Titan. Pick the terms you want to be tested on, say which rank you think you are at, and see where you really stand." />
+      <PageHero Icon={BookOpen} tone="violet" title="Terms" sub="The words people in your kind of work need to know, at five ranks from Initiate to Titan. Choose a role to get its list, study the terms, then test yourself, or pick your own terms and see where you really stand." />
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Learn the terms for a role</h2>
+        <p className="text-sm text-slate-600">Choose a role and the level you are aiming at. You get the list of terms you must know to do that job, to study and then be tested on.</p>
+        <RolePicker roles={pickRoles} defaultRole={startRole} defaultLevel={goal?.role === startRole ? goal.level : 1} />
+        {studying.length > 0 && (
+          <div className="grid gap-3 md:grid-cols-2">
+            {studying.map(({ r, list, sum }) => (
+              <div key={r.id} className="card space-y-2 p-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-2"><h3 className="font-semibold">{roleLabel(r.role)}</h3><span className="text-xs text-slate-500">{list.title}</span></div>
+                <div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full bg-emerald-500" style={{ width: `${sum.total ? Math.round((sum.counts.known / sum.total) * 100) : 0}%` }} /></div>
+                <p className="text-xs text-slate-600">{sum.counts.known} of {sum.total} known{sum.due ? ` · ${sum.due} due to see again` : ""}</p>
+                <div className="flex flex-wrap items-center gap-3 text-sm">
+                  <Link href={`/terms/study?role=${roleSlug(r.role)}&level=${r.level}`} className="btn">Study</Link>
+                  <Link href={`/terms/role/${roleSlug(r.role)}?level=${r.level}`} className="underline">Open the list</Link>
+                  <form action={removeStudyRoleAction} className="ml-auto"><input type="hidden" name="role" value={r.role} /><button className="text-xs text-rose-600 underline" aria-label={`Stop learning ${roleLabel(r.role)}`}>Remove</button></form>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Where you stand</h2>

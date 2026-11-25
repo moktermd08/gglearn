@@ -14,7 +14,7 @@ function Result({ state }: { state: SetupState }) {
 }
 
 type Bank = { id: number; name: string; description: string; roles: string };
-export type TermRow = { id: number; bankId: number; term: string; meaning: string; groupName: string; tier: number; similar: string; status: "active" | "hidden" };
+export type TermRow = { id: number; bankId: number; term: string; meaning: string; groupName: string; tier: number; similar: string; facts: string; useWhen: string; mistakes: string; status: "active" | "hidden" };
 
 export function BankForm({ bank }: { bank?: Bank }) {
   const [state, run, pending] = useActionState(saveBankAction, null);
@@ -44,6 +44,14 @@ export function TermForm({ banks, term, bankId, defaultGroup }: { banks: { id: n
         <select name="bankId" defaultValue={bankId} aria-label="Bank" className={`${input} xl:col-span-2`}>{banks.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select>
         <select name="status" defaultValue={term?.status ?? "active"} aria-label="Shown" className={`${input} xl:col-span-1`}><option value="active">Shown</option><option value="hidden">Hidden</option></select>
         <input name="similar" defaultValue={term ? (JSON.parse(term.similar) as string[]).join(", ") : ""} placeholder="Easily confused with (comma separated)" aria-label="Easily confused with" className={`${input} sm:col-span-2 xl:col-span-9`} />
+        <details className="sm:col-span-2 xl:col-span-12">
+          <summary className="cursor-pointer text-xs font-semibold text-slate-600">Study details: more facts, when you would use it, common mistakes</summary>
+          <div className="mt-2 grid gap-2 md:grid-cols-2">
+            <label className="grid gap-1 text-xs">More facts (one per line)<textarea name="facts" rows={3} defaultValue={term ? (JSON.parse(term.facts) as string[]).join("\n") : ""} className={input} /></label>
+            <label className="grid gap-1 text-xs">Common mistakes: believable but false (one per line)<textarea name="mistakes" rows={3} defaultValue={term ? (JSON.parse(term.mistakes) as string[]).join("\n") : ""} className={input} /></label>
+            <label className="grid gap-1 text-xs md:col-span-2">When you would use it (finishes the sentence “when you…”)<input name="useWhen" maxLength={200} defaultValue={term?.useWhen ?? ""} className={input} /></label>
+          </div>
+        </details>
         <div className="flex items-center gap-2 sm:col-span-2 xl:col-span-3"><button className="btn" disabled={pending}>{term ? "Save" : <><Plus size={15} />Add term</>}</button></div>
       </form>
       {term && (

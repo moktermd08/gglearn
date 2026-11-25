@@ -1623,6 +1623,9 @@ export const terms = sqliteTable("terms", {
   meaning: text("meaning").notNull(),
   tier: integer("tier").notNull().default(1), // 1..5, the rank it belongs to
   similar: text("similar").notNull().default("[]"), // JSON array of terms that are easy to confuse with this one: never used as its wrong answers
+  facts: text("facts").notNull().default("[]"), // JSON array: more true things about the term, beyond the meaning (study cards and the harder questions use them)
+  useWhen: text("use_when").notNull().default(""), // a situation that points to this term, written to read after "when you ..."
+  mistakes: text("mistakes").notNull().default("[]"), // JSON array: believable but false statements about the term (the best wrong answers)
   status: text("status", { enum: ["active", "hidden"] }).notNull().default("active"),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: integer("created_at").notNull().default(now),
@@ -1706,3 +1709,24 @@ export const starPicks = sqliteTable("star_picks", {
   answer: text("answer").notNull().default(""),
   updatedAt: integer("updated_at").notNull().default(now),
 }, (t) => [uniqueIndex("star_pick_pair").on(t.applicationId, t.behaviour)]);
+
+// ---- Study (lib/termStudy.ts): where a person is with each term they have studied, as a Leitner box with a due time (spaced repetition). No row = not met yet.
+export const termProgress = sqliteTable("term_progress", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  termId: integer("term_id").notNull().references(() => terms.id),
+  box: integer("box").notNull().default(1), // 1..5; 4 and 5 count as known
+  dueAt: integer("due_at").notNull().default(now), // unix seconds: when it is next worth seeing
+  seen: integer("seen").notNull().default(0),
+  lapses: integer("lapses").notNull().default(0), // times it was forgotten after being known
+  updatedAt: integer("updated_at").notNull().default(now),
+}, (t) => [uniqueIndex("term_progress_pair").on(t.userId, t.termId), index("term_progress_due").on(t.userId, t.dueAt)]);
+
+// The roles a person is learning the terms for, each at the level they are aiming at (the level number in career_levels).
+export const termStudyRoles = sqliteTable("term_study_roles", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  role: text("role").notNull(), // matches career_levels.job_role, lower case
+  level: integer("level").notNull(),
+  createdAt: integer("created_at").notNull().default(now),
+}, (t) => [uniqueIndex("term_study_role_pair").on(t.userId, t.role)]);
