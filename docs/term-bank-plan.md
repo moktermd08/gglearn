@@ -17,20 +17,20 @@ Then `npx tsx scripts/ai/check.ts --cards <slug> --sample` must print OK, and `n
 
 | Role family | Written | Total | Still to write for about 1,000 |
 |---|---|---|---|
-| **Everyone** | Office core | 100 | Office core 2 (working life), +100 for every role |
-| **CTO** (and CIO) | Office core, CTO core, Security core, Engineering management | **400** | Strategy and architecture 2, Data and AI leadership, Cloud and infrastructure leadership, Governance, risk and compliance for leaders, Finance and commercial for leaders, Product and delivery, Board and executive communication |
-| **Software developer** (developer, backend, frontend, mobile, engineer, AI and data engineers) | Office core, Programming fundamentals, and for full stack Full stack core | **300** (full stack **300**) | Data structures in practice, Frontend, Backend and APIs, Databases and SQL, Cloud and DevOps, Testing and quality, Secure development, Architecture and design patterns, Agile and engineering practice |
+| **Everyone** | Office core, Office core 2 (working life) | 201 | A third set only if reviewers find gaps |
+| **CTO** (and CIO) | Office core 1 and 2, CTO core, Security core, Engineering management, Data and AI leadership, Cloud and infrastructure leadership | **701** | Strategy and architecture 2, Governance, risk and compliance for leaders, Finance and commercial for leaders, Product and delivery, Board and executive communication |
+| **Software developer** (developer, backend, frontend, mobile, engineer, AI and data engineers) | Office core 1 and 2, Programming fundamentals, and for full stack Full stack core | **301** (full stack **401**) | Data structures in practice, Frontend, Backend and APIs, Databases and SQL, Cloud and DevOps, Testing and quality, Secure development, Architecture and design patterns, Agile and engineering practice |
 | **Full stack developer** | as above, plus Full stack core | **300** | as software developer |
-| **Civil Service** (AO to Grade 6, policy advisor) | Office core, Civil Service core, Policy profession | **300** | Operational delivery and casework, Public finance and procurement, Digital, data and technology in government, Law, constitution and Parliament, Leadership and people management, Communications and engagement, Programme and project delivery, Equality, ethics and standards, Security and information assurance |
+| **Civil Service** (AO to Grade 6, policy advisor) | Office core 1 and 2, Civil Service core, Policy profession | **401** | Operational delivery and casework, Public finance and procurement, Digital, data and technology in government, Law, constitution and Parliament, Leadership and people management, Communications and engagement, Programme and project delivery, Equality, ethics and standards, Security and information assurance |
 
 By level, the lists today are:
 
 | Role | Level 1 | Top level |
 |---|---|---|
-| CTO | 125 | 400 |
-| Developer | 132 | 300 |
-| Full stack developer | 132 | 300 |
-| Civil Service | AO 92 | Grade 6 300 |
+| CTO | 125 (before Office core 2) | 701 |
+| Developer | 132 (before Office core 2) | 301 |
+| Full stack developer | 132 (before Office core 2) | 401 |
+| Civil Service | AO 92 (before Office core 2) | Grade 6 401 |
 
 ## What to check when reviewing a batch
 
@@ -41,7 +41,7 @@ By level, the lists today are:
 
 ## Order I would write the rest in
 
-1. Office core 2 (helps every role at once).
+1. ~~Office core 2~~ (written).
 2. The remaining CTO banks (the list nearest to the goal).
 3. The software developer banks (shared by about nine roles).
 4. The remaining Civil Service banks.

@@ -206,7 +206,8 @@ ok("a role's list is its own banks plus everyone's, up to the ranks its level re
   assert.equal(l1.banks[0].forRole, true, "what is made for the role comes first");
   assert.ok(study.roleList("cto", 9) === null && study.roleList("nobody", 1) === null);
   const g = study.roleList("gardener", 2)!;
-  assert.deepEqual(g.banks.map((b) => b.name), ["Office core"], "a role with no bank of its own gets the terms for everyone");
+  assert.ok(g.banks.length >= 1 && g.banks.every((b) => !b.forRole), "a role with no bank of its own gets only the terms for everyone");
+  assert.ok(g.banks.map((b) => b.name).includes("Office core"));
 });
 
 let stuId = 0;
