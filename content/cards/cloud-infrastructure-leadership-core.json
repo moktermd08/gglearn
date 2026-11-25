@@ -1,0 +1,1852 @@
+{
+ "slug": "cloud-infrastructure-leadership-core",
+ "name": "Cloud and infrastructure leadership vocabulary",
+ "description": "The 100 terms a technology leader needs for cloud strategy, platforms, resilience, cost, delivery, operations and migration.",
+ "roles": "cto",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "cstrat": "cloud strategy term",
+  "cmod": "cloud service model or building block",
+  "cnet": "networking and delivery term",
+  "cres": "resilience and scale term",
+  "ccost": "cloud cost term",
+  "dlv": "delivery platform term",
+  "obs": "observability and operations term",
+  "plat": "platform engineering term",
+  "dc": "data centre and hardware term",
+  "mig": "migration and modernisation term"
+ },
+ "cards": [
+  {
+   "group": "cstrat",
+   "subject": "public cloud",
+   "tier": 1,
+   "says": [
+    "is computing delivered by a provider to many customers over the internet",
+    "charges for what is used"
+   ],
+   "use": "want to rent servers and storage instead of buying them",
+   "not": [
+    "is a private data centre owned only by one company"
+   ],
+   "like": [
+    "private cloud"
+   ]
+  },
+  {
+   "group": "cstrat",
+   "subject": "private cloud",
+   "tier": 2,
+   "says": [
+    "is cloud-style computing run for one organisation only",
+    "may sit in its own data centre or be hosted for it"
+   ],
+   "use": "need cloud-style flexibility but cannot share infrastructure with other customers",
+   "not": [
+    "is a service shared openly by many customers"
+   ],
+   "like": [
+    "public cloud"
+   ]
+  },
+  {
+   "group": "cstrat",
+   "subject": "hybrid cloud",
+   "tier": 2,
+   "says": [
+    "combines on-premises or private systems with public cloud services",
+    "lets workloads move or work across both"
+   ],
+   "use": "keep some systems in your own data centre and others with a cloud provider",
+   "not": [
+    "uses only one public cloud provider"
+   ]
+  },
+  {
+   "group": "cstrat",
+   "subject": "sovereign cloud",
+   "tier": 5,
+   "says": [
+    "is cloud service designed to keep data and control under a particular country's laws",
+    "limits access by foreign authorities and operators"
+   ],
+   "use": "must keep government data under national legal control",
+   "not": [
+    "is a cloud run by a monarch"
+   ]
+  },
+  {
+   "group": "cstrat",
+   "subject": "shared responsibility model",
+   "tier": 2,
+   "says": [
+    "divides security duties between the cloud provider and the customer",
+    "leaves the customer responsible for its own data and configuration"
+   ],
+   "use": "must know who secures what when you use a public cloud",
+   "not": [
+    "makes the provider responsible for everything you put in the cloud"
+   ]
+  },
+  {
+   "group": "cstrat",
+   "subject": "landing zone",
+   "tier": 4,
+   "says": [
+    "is a pre-configured, secure foundation in the cloud in which workloads are placed",
+    "sets up accounts, networking and controls up front"
+   ],
+   "use": "want every new team to start in a cloud environment with security already set",
+   "not": [
+    "is the first page a customer sees on a website"
+   ]
+  },
+  {
+   "group": "cstrat",
+   "subject": "cloud-first policy",
+   "tier": 3,
+   "says": [
+    "says that new systems should use cloud services unless there is a reason not to",
+    "sets cloud as the default choice"
+   ],
+   "use": "want teams to justify any decision not to use the cloud",
+   "not": [
+    "bans the use of any on-premises system"
+   ]
+  },
+  {
+   "group": "cstrat",
+   "subject": "workload placement",
+   "tier": 4,
+   "says": [
+    "decides which environment each system should run in",
+    "weighs cost, performance, risk and rules"
+   ],
+   "use": "must choose whether a payment system sits in the cloud or in your data centre",
+   "not": [
+    "assigns each employee to a desk"
+   ]
+  },
+  {
+   "group": "cstrat",
+   "subject": "cloud exit plan",
+   "tier": 4,
+   "says": [
+    "describes how a service could be moved away from a cloud provider",
+    "reduces the risk of being stuck with one supplier"
+   ],
+   "use": "are asked how you would leave the provider if you had to",
+   "not": [
+    "is a plan for closing the company's cloud accounts at the end of each year"
+   ]
+  },
+  {
+   "group": "cstrat",
+   "subject": "lift and shift",
+   "tier": 3,
+   "says": [
+    "moves an application to the cloud with little or no change",
+    "is quick but may miss cloud benefits"
+   ],
+   "use": "need to leave a data centre by a fixed date and cannot redesign the application",
+   "not": [
+    "rebuilds the application to use cloud services fully"
+   ],
+   "like": [
+    "rehosting"
+   ]
+  },
+  {
+   "group": "cmod",
+   "subject": "infrastructure as a service",
+   "tier": 2,
+   "says": [
+    "rents basic computing, storage and networking that the customer manages from the operating system up",
+    "gives the most control of the service models"
+   ],
+   "use": "want virtual servers that you configure and patch yourself",
+   "not": [
+    "delivers a finished application ready to use"
+   ],
+   "like": [
+    "platform as a service",
+    "software as a service"
+   ]
+  },
+  {
+   "group": "cmod",
+   "subject": "platform as a service",
+   "tier": 3,
+   "says": [
+    "provides an environment in which customers run their code without managing servers",
+    "handles the operating system and runtime"
+   ],
+   "use": "want developers to deploy applications without looking after servers",
+   "not": [
+    "delivers a finished application to end users"
+   ],
+   "like": [
+    "infrastructure as a service",
+    "software as a service"
+   ]
+  },
+  {
+   "group": "cmod",
+   "subject": "software as a service",
+   "tier": 1,
+   "says": [
+    "delivers a finished application over the internet",
+    "is used through a browser or app and managed by the provider"
+   ],
+   "use": "want to use email or a CRM without installing or running anything",
+   "not": [
+    "gives the customer raw servers to configure"
+   ],
+   "like": [
+    "infrastructure as a service"
+   ]
+  },
+  {
+   "group": "cmod",
+   "subject": "virtual machine",
+   "tier": 1,
+   "says": [
+    "is a software-based computer running on shared physical hardware",
+    "has its own operating system"
+   ],
+   "use": "want several separate servers on one physical machine",
+   "not": [
+    "is a physical server with no virtualisation"
+   ]
+  },
+  {
+   "group": "cmod",
+   "subject": "managed database",
+   "tier": 3,
+   "says": [
+    "is a database run by the provider, who handles patching, backups and failover",
+    "reduces the operating burden on the customer"
+   ],
+   "use": "want a database without hiring staff to patch and back it up",
+   "not": [
+    "is a database that needs no security configuration"
+   ]
+  },
+  {
+   "group": "cmod",
+   "subject": "edge computing",
+   "tier": 4,
+   "says": [
+    "processes data close to where it is produced instead of in a distant data centre",
+    "reduces delay"
+   ],
+   "use": "need very fast responses from sensors in a factory",
+   "not": [
+    "moves all processing to a single central site"
+   ]
+  },
+  {
+   "group": "cmod",
+   "subject": "object storage",
+   "tier": 3,
+   "says": [
+    "stores data as objects with identifiers instead of files in folders",
+    "scales to very large amounts of data"
+   ],
+   "use": "want to keep large numbers of images and backups cheaply",
+   "not": [
+    "is the fast disk attached to one server"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "content delivery network",
+   "tier": 3,
+   "says": [
+    "caches content at locations close to users",
+    "speeds up delivery and reduces load on the origin"
+   ],
+   "use": "want pages and images to load quickly for people far from your servers",
+   "not": [
+    "is a database that holds a company's contacts"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "virtual private cloud",
+   "tier": 3,
+   "says": [
+    "is a private, isolated network inside a public cloud",
+    "lets the customer control addressing and traffic rules"
+   ],
+   "use": "want your cloud systems in their own network, separate from other customers",
+   "not": [
+    "is a physical cable that links two offices"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "private connectivity",
+   "tier": 4,
+   "says": [
+    "gives a dedicated link from a company's network to a cloud provider",
+    "avoids sending the traffic over the public internet"
+   ],
+   "use": "need consistent, private connection between your office network and the cloud",
+   "not": [
+    "is a free public wireless network"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "API gateway",
+   "tier": 3,
+   "says": [
+    "is a single entry point that handles requests to many services",
+    "can apply authentication and rate limits"
+   ],
+   "use": "want one controlled front door for several back-end services",
+   "not": [
+    "stores the data used by every service"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "bandwidth",
+   "tier": 2,
+   "says": [
+    "is the maximum amount of data that can pass over a connection in a given time",
+    "limits how fast large files move"
+   ],
+   "use": "find that large file transfers take too long over a narrow link",
+   "not": [
+    "is the delay before the first byte arrives"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "software-defined networking",
+   "tier": 5,
+   "says": [
+    "controls network behaviour through software instead of by configuring each device",
+    "allows rules to change centrally"
+   ],
+   "use": "want to change network rules across many sites from one place",
+   "not": [
+    "is a type of physical cable"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "network segmentation policy",
+   "tier": 4,
+   "says": [
+    "states how networks are divided and what traffic may cross between them",
+    "limits how far a breach can spread"
+   ],
+   "use": "want a breach in one area to be contained",
+   "not": [
+    "gives all systems the same access to each other"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "availability zone",
+   "tier": 3,
+   "says": [
+    "is a separate location within a cloud region with independent power and networking",
+    "lets a service survive the loss of one zone"
+   ],
+   "use": "want a service to carry on if one data centre in a region fails",
+   "not": [
+    "is a whole geographic area made of many regions"
+   ],
+   "like": [
+    "region"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "region",
+   "tier": 3,
+   "says": [
+    "is a geographic area where a provider has cloud data centres",
+    "contains more than one availability zone"
+   ],
+   "use": "must keep data in a specific country",
+   "not": [
+    "is a single data centre room"
+   ],
+   "like": [
+    "availability zone"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "autoscaling",
+   "tier": 2,
+   "says": [
+    "adds or removes capacity automatically as demand changes",
+    "saves cost at quiet times"
+   ],
+   "use": "want the service to grow at peak and shrink when quiet without anyone acting",
+   "not": [
+    "means someone must add servers by hand"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "failover",
+   "tier": 2,
+   "says": [
+    "switches work to a standby system when the main one fails",
+    "aims to keep a service running"
+   ],
+   "use": "want the standby database to take over when the main one fails",
+   "not": [
+    "is the process of restoring files from a backup"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "active-active",
+   "tier": 4,
+   "says": [
+    "runs a service in several places at once, all serving users",
+    "continues without interruption if one site fails"
+   ],
+   "use": "want two regions to share live traffic all the time",
+   "not": [
+    "keeps a second site idle until it is needed"
+   ],
+   "like": [
+    "active-passive"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "active-passive",
+   "tier": 4,
+   "says": [
+    "keeps a standby site ready but unused until the main one fails",
+    "costs less than running two live sites"
+   ],
+   "use": "want a second site waiting in reserve to take over",
+   "not": [
+    "serves traffic from all sites at once"
+   ],
+   "like": [
+    "active-active"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "multi-region",
+   "tier": 4,
+   "says": [
+    "runs a service in more than one geographic region",
+    "protects against the loss of a whole region"
+   ],
+   "use": "want the service to survive a regional outage",
+   "not": [
+    "means that the service uses several zones in one region"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "load testing",
+   "tier": 3,
+   "says": [
+    "checks how a system behaves under expected or heavy numbers of users",
+    "finds limits before real users do"
+   ],
+   "use": "want to know whether the service can cope with the launch day crowd",
+   "not": [
+    "checks only that the code compiles"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "blast radius",
+   "tier": 4,
+   "says": [
+    "is the extent of damage a failure or change can cause",
+    "can be limited by isolating parts of a system"
+   ],
+   "use": "want a bad deployment to affect few users rather than all",
+   "not": [
+    "is the time it takes to repair a failure"
+   ]
+  },
+  {
+   "group": "cres",
+   "subject": "graceful degradation",
+   "tier": 4,
+   "says": [
+    "keeps the main functions working at reduced quality when something fails",
+    "avoids a complete outage"
+   ],
+   "use": "want the site to show basic content when the recommendation service is down",
+   "not": [
+    "shuts the whole system down on the first error"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "pay-as-you-go",
+   "tier": 1,
+   "says": [
+    "charges only for what is used",
+    "needs no long commitment"
+   ],
+   "use": "want to start small and only pay for the resources you run",
+   "not": [
+    "requires a long-term contract for fixed capacity"
+   ],
+   "like": [
+    "commitment discount"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "commitment discount",
+   "tier": 3,
+   "says": [
+    "lowers the price in return for agreeing to use a set amount over a period",
+    "rewards predictable use"
+   ],
+   "use": "have steady demand and want a lower unit price",
+   "not": [
+    "is a charge for using more than planned"
+   ],
+   "like": [
+    "pay-as-you-go"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "spot instance",
+   "tier": 4,
+   "says": [
+    "uses spare provider capacity at a reduced price",
+    "can be taken back at short notice"
+   ],
+   "use": "run batch work that can be restarted and want the lowest price",
+   "not": [
+    "is guaranteed to stay running for a year"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "right-sizing",
+   "tier": 3,
+   "says": [
+    "matches the size of a resource to what it really needs",
+    "cuts waste from over-sized servers"
+   ],
+   "use": "find servers using a tenth of the capacity you pay for",
+   "not": [
+    "adds capacity before a rush"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "idle resource",
+   "tier": 2,
+   "says": [
+    "is a cloud resource running but doing no useful work",
+    "still adds to the bill"
+   ],
+   "use": "find test servers left on over the weekend",
+   "not": [
+    "is a resource that is fully used"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "egress charge",
+   "tier": 4,
+   "says": [
+    "is a fee for data that leaves a provider's network",
+    "can make moving large data out costly"
+   ],
+   "use": "are surprised that moving data out of the cloud adds to the bill",
+   "not": [
+    "is a fee for loading data into the cloud"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "cost anomaly detection",
+   "tier": 4,
+   "says": [
+    "flags unusual changes in spending",
+    "lets a team react before the bill grows"
+   ],
+   "use": "want to be told when spending jumps unexpectedly",
+   "not": [
+    "sets the price of each resource"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "budget alert",
+   "tier": 2,
+   "says": [
+    "notifies people when spending approaches a limit",
+    "allows a response before the limit is passed"
+   ],
+   "use": "want to be told when a project reaches 80 percent of its monthly budget",
+   "not": [
+    "stops all activity automatically when the budget is set"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "storage tiering",
+   "tier": 3,
+   "says": [
+    "moves data to cheaper storage as it is used less",
+    "trades speed of access for lower cost"
+   ],
+   "use": "want old logs kept cheaply but still available",
+   "not": [
+    "deletes data after a fixed time"
+   ]
+  },
+  {
+   "group": "ccost",
+   "subject": "cost per transaction",
+   "tier": 4,
+   "says": [
+    "divides the cost of running a service by the transactions it handles",
+    "shows whether cost grows in line with use"
+   ],
+   "use": "want to know whether the unit cost of an order falls as volume grows",
+   "not": [
+    "is the total yearly cloud bill"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "CI/CD pipeline",
+   "tier": 2,
+   "says": [
+    "automatically builds, tests and releases changes",
+    "shortens the path from code to production"
+   ],
+   "use": "want every change checked and released without manual steps",
+   "not": [
+    "is a document that lists release dates"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "canary release",
+   "tier": 4,
+   "says": [
+    "sends a new version to a small share of users first",
+    "widens only if it behaves well"
+   ],
+   "use": "want to expose a risky change to a few users before everyone",
+   "not": [
+    "switches all traffic between two identical environments at once"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "immutable infrastructure",
+   "tier": 5,
+   "says": [
+    "replaces servers with new ones instead of changing them in place",
+    "avoids unplanned differences between servers"
+   ],
+   "use": "want servers rebuilt from a known image instead of patched by hand",
+   "not": [
+    "allows engineers to log in and tweak running servers"
+   ],
+   "like": [
+    "configuration drift"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "configuration drift",
+   "tier": 4,
+   "says": [
+    "is when systems gradually differ from their intended setup",
+    "often results from manual changes"
+   ],
+   "use": "find that servers that should match behave differently",
+   "not": [
+    "is a planned change to configuration"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "GitOps",
+   "tier": 5,
+   "says": [
+    "uses version-controlled definitions as the source of truth for a system's state",
+    "applies changes by merging them into the repository"
+   ],
+   "use": "want every change to infrastructure reviewed and recorded in version control",
+   "not": [
+    "means that code is never reviewed"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "container registry",
+   "tier": 3,
+   "says": [
+    "stores and distributes container images",
+    "lets environments pull the same image"
+   ],
+   "use": "need a place to keep the images your deployments use",
+   "not": [
+    "schedules containers across servers"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "artifact repository",
+   "tier": 4,
+   "says": [
+    "stores built files and packages so that they can be reused and traced",
+    "keeps each version available"
+   ],
+   "use": "want built packages stored once and reused by later pipeline steps",
+   "not": [
+    "holds only the source code"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "log aggregation",
+   "tier": 3,
+   "says": [
+    "collects logs from many systems into one searchable place",
+    "speeds up the search for causes"
+   ],
+   "use": "want to search the logs of dozens of servers from one screen",
+   "not": [
+    "deletes old logs automatically"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "distributed tracing",
+   "tier": 4,
+   "says": [
+    "follows a single request as it passes through many services",
+    "shows where time is spent"
+   ],
+   "use": "want to see which service makes a slow request slow",
+   "not": [
+    "counts the number of requests per minute"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "synthetic monitoring",
+   "tier": 4,
+   "says": [
+    "runs scripted checks against a service as if a user were using it",
+    "finds problems before real users do"
+   ],
+   "use": "want a test login every minute to see whether the service responds",
+   "not": [
+    "measures what real users experienced in the past"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "alert fatigue",
+   "tier": 3,
+   "says": [
+    "is when too many alerts cause people to ignore or miss important ones",
+    "is reduced by tuning what pages people"
+   ],
+   "use": "find on-call engineers ignoring pages because most are noise",
+   "not": [
+    "is the tiredness caused by a long on-call shift"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "capacity forecast",
+   "tier": 3,
+   "says": [
+    "predicts the resources a service will need in future",
+    "is based on growth and past use"
+   ],
+   "use": "want to know when the current setup will run out of room",
+   "not": [
+    "lists the resources already bought"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "ChatOps",
+   "tier": 4,
+   "says": [
+    "runs operational actions and alerts from a shared chat tool",
+    "keeps a visible record of what was done"
+   ],
+   "use": "want deployments and incident updates to happen in the team chat",
+   "not": [
+    "is the practice of chatting with customers by text"
+   ]
+  },
+  {
+   "group": "plat",
+   "subject": "Kubernetes",
+   "tier": 3,
+   "says": [
+    "is a system that schedules and manages containers across many servers",
+    "restarts failed containers and scales them"
+   ],
+   "use": "need to run many containers reliably across a cluster",
+   "not": [
+    "is a database for storing files"
+   ]
+  },
+  {
+   "group": "plat",
+   "subject": "service mesh",
+   "tier": 5,
+   "says": [
+    "manages communication between services using proxies alongside them",
+    "handles things like encryption and retries"
+   ],
+   "use": "want consistent encryption and retries between many services",
+   "not": [
+    "is a network cable standard"
+   ]
+  },
+  {
+   "group": "plat",
+   "subject": "platform engineering",
+   "tier": 3,
+   "says": [
+    "builds shared tools and services that other engineering teams use",
+    "aims to make delivery easier and safer"
+   ],
+   "use": "want product teams to deploy without learning every detail of the infrastructure",
+   "not": [
+    "is the maintenance of office furniture"
+   ]
+  },
+  {
+   "group": "plat",
+   "subject": "internal developer platform",
+   "tier": 4,
+   "says": [
+    "is a self-service set of tools through which developers build, deploy and run software",
+    "hides infrastructure complexity"
+   ],
+   "use": "want developers to create environments themselves in minutes",
+   "not": [
+    "is a public marketplace for apps"
+   ]
+  },
+  {
+   "group": "plat",
+   "subject": "configuration management",
+   "tier": 3,
+   "says": [
+    "keeps systems in a defined and consistent state",
+    "applies settings automatically"
+   ],
+   "use": "want hundreds of servers set up the same way",
+   "not": [
+    "manages employees' desk arrangements"
+   ]
+  },
+  {
+   "group": "plat",
+   "subject": "policy as code",
+   "tier": 5,
+   "says": [
+    "writes rules for security and compliance in code that is checked automatically",
+    "blocks changes that break the rules"
+   ],
+   "use": "want infrastructure changes automatically checked against company rules",
+   "not": [
+    "is a printed policy kept in a folder"
+   ]
+  },
+  {
+   "group": "plat",
+   "subject": "multi-account structure",
+   "tier": 4,
+   "says": [
+    "separates workloads into several cloud accounts",
+    "limits the damage and sets clear boundaries"
+   ],
+   "use": "want production and testing kept in separate accounts with their own limits",
+   "not": [
+    "means that everyone shares one login"
+   ]
+  },
+  {
+   "group": "plat",
+   "subject": "developer self-service",
+   "tier": 3,
+   "says": [
+    "lets developers get what they need without raising a ticket",
+    "relies on safe defaults and automation"
+   ],
+   "use": "want teams to create a test environment without waiting for another team",
+   "not": [
+    "asks the operations team to do every task"
+   ]
+  },
+  {
+   "group": "plat",
+   "subject": "reference implementation",
+   "tier": 4,
+   "says": [
+    "is a working example of the recommended way to build something",
+    "helps teams follow the standard"
+   ],
+   "use": "want teams to copy a proven, approved setup",
+   "not": [
+    "is a list of the vendor's requirements"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "on-premises",
+   "tier": 1,
+   "says": [
+    "means systems run on hardware the organisation owns and hosts itself",
+    "puts maintenance on the organisation"
+   ],
+   "use": "run servers in a room in your own building",
+   "not": [
+    "means that systems are rented from a provider"
+   ],
+   "like": [
+    "colocation"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "colocation",
+   "tier": 3,
+   "says": [
+    "rents space in someone else's data centre for your own hardware",
+    "provides power, cooling and connectivity"
+   ],
+   "use": "want to own your servers but not run a data centre building",
+   "not": [
+    "rents virtual servers from a cloud provider"
+   ],
+   "like": [
+    "on-premises"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "data centre",
+   "tier": 1,
+   "says": [
+    "is a facility housing servers, storage and networking",
+    "provides power, cooling and security"
+   ],
+   "use": "want to describe the building that hosts many servers",
+   "not": [
+    "is a single office computer"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "virtualisation",
+   "tier": 2,
+   "says": [
+    "lets one physical machine run several separate virtual machines",
+    "uses hardware more efficiently"
+   ],
+   "use": "want to run several servers on one physical machine",
+   "not": [
+    "joins several machines into a single physical server"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "hyperconverged infrastructure",
+   "tier": 5,
+   "says": [
+    "combines compute, storage and networking in one software-managed system",
+    "scales by adding more identical units"
+   ],
+   "use": "want to simplify the datacentre with building blocks that scale out",
+   "not": [
+    "is a type of backup tape"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "hardware refresh cycle",
+   "tier": 3,
+   "says": [
+    "is the planned period after which equipment is replaced",
+    "avoids using unsupported or failing equipment"
+   ],
+   "use": "are planning to replace servers when they get too old",
+   "not": [
+    "is a cleaning schedule for equipment"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "mainframe",
+   "tier": 4,
+   "says": [
+    "is a large, highly reliable computer used for heavy transaction processing",
+    "often runs long-lived business systems"
+   ],
+   "use": "run decades-old banking processing on a large central machine",
+   "not": [
+    "is a laptop issued to executives"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "power usage effectiveness",
+   "tier": 5,
+   "says": [
+    "is the ratio of a data centre's total energy to the energy used by its computing equipment",
+    "is closer to one when the facility is more efficient"
+   ],
+   "use": "want to measure how efficiently a data centre uses power",
+   "not": [
+    "is the cost of a server per year"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "end-user computing",
+   "tier": 2,
+   "says": [
+    "covers laptops, phones and software that staff use for their work",
+    "includes support and management of those devices"
+   ],
+   "use": "must manage the devices and tools employees use daily",
+   "not": [
+    "covers the servers that run company applications"
+   ]
+  },
+  {
+   "group": "dc",
+   "subject": "mobile device management",
+   "tier": 4,
+   "says": [
+    "lets an organisation set up, secure and wipe staff mobile devices from a central tool",
+    "enforces rules like screen locks"
+   ],
+   "use": "want to remotely wipe a lost company phone",
+   "not": [
+    "is a charging station for phones"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "rehosting",
+   "tier": 3,
+   "says": [
+    "moves a system to new infrastructure unchanged",
+    "is the quickest migration approach"
+   ],
+   "use": "want to move a server to the cloud with no changes",
+   "not": [
+    "rewrites the system to use new services"
+   ],
+   "like": [
+    "lift and shift"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "replatforming",
+   "tier": 4,
+   "says": [
+    "moves a system to new infrastructure with small changes to use cloud features",
+    "does not change the core design"
+   ],
+   "use": "want to move a database to a managed service with only minor changes",
+   "not": [
+    "leaves the system exactly as it was"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "application rationalisation",
+   "tier": 4,
+   "says": [
+    "reviews the applications an organisation owns to decide which to keep, merge or retire",
+    "reduces duplication and cost"
+   ],
+   "use": "find that the company runs five different tools for the same job",
+   "not": [
+    "adds new applications to the portfolio"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "migration wave",
+   "tier": 3,
+   "says": [
+    "is a group of systems moved together in one planned phase",
+    "spreads risk across the programme"
+   ],
+   "use": "want to move systems in planned batches rather than all at once",
+   "not": [
+    "is a sudden rise in cloud spending"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "cutover",
+   "tier": 3,
+   "says": [
+    "is the point at which users switch from the old system to the new one",
+    "is planned carefully to limit disruption"
+   ],
+   "use": "are choosing the weekend when live users move to the new system",
+   "not": [
+    "is the start of the project planning"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "dual running",
+   "tier": 4,
+   "says": [
+    "keeps the old and new systems operating in parallel for a time",
+    "allows results to be compared and a way back"
+   ],
+   "use": "want to run the old and new payroll side by side before switching",
+   "not": [
+    "shuts down the old system at once"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "data migration",
+   "tier": 3,
+   "says": [
+    "moves data from one system to another and checks it arrived correctly",
+    "needs cleaning, mapping and validation"
+   ],
+   "use": "are moving customer records to a new platform and must confirm nothing is lost",
+   "not": [
+    "is the backup of data kept for safety"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "decommissioning",
+   "tier": 3,
+   "says": [
+    "is the controlled shutdown and removal of an old system",
+    "includes handling its data and contracts"
+   ],
+   "use": "want to switch off the old servers safely after the move",
+   "not": [
+    "is the launch of a new system"
+   ]
+  },
+  {
+   "group": "cmod",
+   "subject": "block storage",
+   "tier": 3,
+   "says": [
+    "provides raw storage volumes that attach to a server like a disk",
+    "suits databases and systems that need fast, frequent changes"
+   ],
+   "use": "need a fast disk for a database server",
+   "not": [
+    "stores data as objects with identifiers"
+   ],
+   "like": [
+    "object storage"
+   ]
+  },
+  {
+   "group": "cmod",
+   "subject": "hypervisor",
+   "tier": 3,
+   "says": [
+    "is the software that creates and runs virtual machines on a physical host",
+    "shares the host's resources among them"
+   ],
+   "use": "want to know what lets one physical server run several virtual machines",
+   "not": [
+    "is a program that scans emails for viruses"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "IP address",
+   "tier": 1,
+   "says": [
+    "is a number that identifies a device on a network",
+    "lets data find its destination"
+   ],
+   "use": "want to know how data finds one computer among many on a network",
+   "not": [
+    "is the name of a website"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "subnet",
+   "tier": 3,
+   "says": [
+    "is a smaller section of a larger network",
+    "lets traffic be grouped and controlled by section"
+   ],
+   "use": "want to keep database servers in a part of the network separate from web servers",
+   "not": [
+    "is the whole internet viewed as one network"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "reverse proxy",
+   "tier": 3,
+   "says": [
+    "sits in front of servers and passes client requests on to them",
+    "can add caching, encryption and protection"
+   ],
+   "use": "want a single front door that hides your servers from clients",
+   "not": [
+    "is a service that hides a user's identity when browsing"
+   ]
+  },
+  {
+   "group": "cnet",
+   "subject": "network peering",
+   "tier": 4,
+   "says": [
+    "links two networks so that traffic flows directly between them",
+    "avoids sending the traffic through a third party"
+   ],
+   "use": "want two of your cloud networks to talk to each other privately",
+   "not": [
+    "is a rule that blocks traffic"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "smoke test",
+   "tier": 3,
+   "says": [
+    "is a quick set of checks that confirms the main functions work after a release",
+    "finds an obviously broken build early"
+   ],
+   "use": "want a fast check straight after each deployment that nothing is badly broken",
+   "not": [
+    "is a full test of every feature before launch"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "environment parity",
+   "tier": 4,
+   "says": [
+    "keeps development, test and production as alike as possible",
+    "reduces surprises when code moves on"
+   ],
+   "use": "find that a release works in test but fails in production",
+   "not": [
+    "means every environment has the same number of users"
+   ]
+  },
+  {
+   "group": "dlv",
+   "subject": "pipeline as code",
+   "tier": 4,
+   "says": [
+    "defines the steps of a delivery pipeline in version-controlled files",
+    "makes the pipeline reviewable and repeatable"
+   ],
+   "use": "want changes to the release process reviewed like code",
+   "not": [
+    "is a pipeline that is clicked together in a web page"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "uptime",
+   "tier": 1,
+   "says": [
+    "is the share of time a service is running and available",
+    "is often shown as a percentage"
+   ],
+   "use": "want to say a service was available for 99.9 percent of the month",
+   "not": [
+    "is the time a service takes to respond"
+   ],
+   "like": [
+    "downtime"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "downtime",
+   "tier": 1,
+   "says": [
+    "is a period when a service is not available",
+    "may be planned or unplanned"
+   ],
+   "use": "want to describe the time a system was unavailable",
+   "not": [
+    "is the share of time a service is running"
+   ],
+   "like": [
+    "uptime"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "health check",
+   "tier": 2,
+   "says": [
+    "is a regular test that shows whether a service is working",
+    "lets a load balancer remove unhealthy servers"
+   ],
+   "use": "want to detect that a server has stopped responding",
+   "not": [
+    "is a medical check for staff"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "mean time between failures",
+   "tier": 4,
+   "says": [
+    "is the average time a system runs before it fails",
+    "is used to describe how reliable it is"
+   ],
+   "use": "want to say how long a component typically runs before breaking",
+   "not": [
+    "is the average time taken to repair a failure"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "golden signals",
+   "tier": 4,
+   "says": [
+    "are four key measures of a service: latency, traffic, errors and saturation",
+    "give a short list of what to watch"
+   ],
+   "use": "want a short standard list of measures for every service",
+   "not": [
+    "are the metrics used in a sales report"
+   ]
+  },
+  {
+   "group": "obs",
+   "subject": "log retention",
+   "tier": 3,
+   "says": [
+    "sets how long logs are kept before they are deleted",
+    "balances investigation needs, cost and privacy"
+   ],
+   "use": "must decide how many months of logs to keep",
+   "not": [
+    "is the process of collecting logs into one place"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "big bang migration",
+   "tier": 3,
+   "says": [
+    "switches everything to the new system at one time",
+    "is simple to plan but carries high risk"
+   ],
+   "use": "are tempted to move every system over a single weekend",
+   "not": [
+    "moves systems in small stages over time"
+   ],
+   "like": [
+    "phased migration"
+   ]
+  },
+  {
+   "group": "mig",
+   "subject": "phased migration",
+   "tier": 3,
+   "says": [
+    "moves systems in stages over time",
+    "limits risk and allows lessons to be learned"
+   ],
+   "use": "want to move a few systems first and learn before moving the rest",
+   "not": [
+    "switches everything at one moment"
+   ],
+   "like": [
+    "big bang migration"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Which service model delivers a finished application through a browser?",
+   "right": "Software as a service",
+   "wrong": [
+    "Infrastructure as a service",
+    "Platform as a service",
+    "Colocation"
+   ],
+   "tier": 1,
+   "why": "SaaS is a finished application managed by the provider."
+  },
+  {
+   "q": "Which system translates a site name into the address computers use?",
+   "right": "DNS",
+   "wrong": [
+    "A load balancer",
+    "A firewall",
+    "A container"
+   ],
+   "tier": 1,
+   "why": "DNS maps names to addresses."
+  },
+  {
+   "q": "Which service model gives you virtual servers that you configure and patch yourself?",
+   "right": "Infrastructure as a service",
+   "wrong": [
+    "Software as a service",
+    "Platform as a service",
+    "Serverless"
+   ],
+   "tier": 2,
+   "why": "IaaS gives control from the operating system up."
+  },
+  {
+   "q": "Who is responsible for the security of your data and configuration in a public cloud?",
+   "right": "You, the customer",
+   "wrong": [
+    "The provider alone",
+    "The internet service provider",
+    "Nobody"
+   ],
+   "tier": 2,
+   "why": "The shared responsibility model leaves data and configuration with the customer."
+  },
+  {
+   "q": "A website must stay up when one server fails and share traffic. What do you add?",
+   "right": "A load balancer",
+   "wrong": [
+    "A backup tape",
+    "A password manager",
+    "A data lake"
+   ],
+   "tier": 2,
+   "why": "A load balancer spreads requests and avoids unhealthy servers."
+  },
+  {
+   "q": "Test servers are left running over the weekend doing nothing. What are they?",
+   "right": "Idle resources",
+   "wrong": [
+    "Spot instances",
+    "Reserved capacity",
+    "Edge nodes"
+   ],
+   "tier": 2,
+   "why": "They add to the bill without doing useful work."
+  },
+  {
+   "q": "Which release approach returns you to the last good version?",
+   "right": "Rollback",
+   "wrong": [
+    "Autoscaling",
+    "Load testing",
+    "Colocation"
+   ],
+   "tier": 2,
+   "why": "A rollback restores the previous version."
+  },
+  {
+   "q": "The service should grow at peak and shrink when quiet automatically. What provides this?",
+   "right": "Autoscaling",
+   "wrong": [
+    "Right-sizing",
+    "Failover",
+    "Rehosting"
+   ],
+   "tier": 2,
+   "why": "Autoscaling adds and removes capacity automatically."
+  },
+  {
+   "q": "You need to leave a data centre by a fixed date and cannot redesign the application. What approach?",
+   "right": "Lift and shift",
+   "wrong": [
+    "Refactoring",
+    "Replatforming",
+    "Rebuilding from scratch"
+   ],
+   "tier": 3,
+   "why": "It moves the application with little change."
+  },
+  {
+   "q": "A release is risky and you want a few users to see it first. Which approach?",
+   "right": "A canary release",
+   "wrong": [
+    "A blue-green switch",
+    "A rollback",
+    "A cutover"
+   ],
+   "tier": 3,
+   "why": "A canary sends the new version to a small share of users."
+  },
+  {
+   "q": "You want an instant way back after a release. Which approach keeps two identical environments?",
+   "right": "Blue-green deployment",
+   "wrong": [
+    "Canary release",
+    "Load testing",
+    "Drift"
+   ],
+   "tier": 3,
+   "why": "Traffic switches between the two environments."
+  },
+  {
+   "q": "You want a service to survive the loss of one data centre in a region. What do you use?",
+   "right": "Several availability zones",
+   "wrong": [
+    "One larger server",
+    "A longer backup",
+    "A bigger disk"
+   ],
+   "tier": 3,
+   "why": "Zones have independent power and networking."
+  },
+  {
+   "q": "Servers that should match behave differently because of manual changes. What is this?",
+   "right": "Configuration drift",
+   "wrong": [
+    "Autoscaling",
+    "Blast radius",
+    "Right-sizing"
+   ],
+   "tier": 3,
+   "why": "Systems drift from their intended setup."
+  },
+  {
+   "q": "A team is surprised by a bill for data leaving the cloud. What charge is this?",
+   "right": "An egress charge",
+   "wrong": [
+    "A commitment discount",
+    "A budget alert",
+    "A right-sizing fee"
+   ],
+   "tier": 3,
+   "why": "Providers charge for data leaving their network."
+  },
+  {
+   "q": "You have steady demand and want a lower unit price. What fits?",
+   "right": "A commitment discount",
+   "wrong": [
+    "Spot instances",
+    "Pay-as-you-go",
+    "Idle resources"
+   ],
+   "tier": 3,
+   "why": "A commitment rewards predictable use."
+  },
+  {
+   "q": "Which tool follows one request through many services to find where time is lost?",
+   "right": "Distributed tracing",
+   "wrong": [
+    "Log aggregation",
+    "A budget alert",
+    "Synthetic monitoring"
+   ],
+   "tier": 3,
+   "why": "Tracing follows a request across services."
+  },
+  {
+   "q": "On-call engineers ignore pages because most are noise. What is this?",
+   "right": "Alert fatigue",
+   "wrong": [
+    "Capacity forecasting",
+    "Blast radius",
+    "Cost anomaly"
+   ],
+   "tier": 3,
+   "why": "Too many alerts hide the important ones."
+  },
+  {
+   "q": "Developers should create test environments without raising a ticket. What do you provide?",
+   "right": "Developer self-service through a platform",
+   "wrong": [
+    "More tickets",
+    "Longer approvals",
+    "Manual change windows"
+   ],
+   "tier": 3,
+   "why": "Self-service removes waiting for another team."
+  },
+  {
+   "q": "Database passwords are stored in source code. What should you adopt?",
+   "right": "Secrets management",
+   "wrong": [
+    "Load balancing",
+    "Autoscaling",
+    "Colocation"
+   ],
+   "tier": 3,
+   "why": "Secrets belong in a secure store with controlled access."
+  },
+  {
+   "q": "A bad deployment should only hurt a few users. Which idea limits the damage?",
+   "right": "Reducing the blast radius",
+   "wrong": [
+    "Increasing the budget",
+    "Adding more alerts",
+    "Faster rollouts"
+   ],
+   "tier": 4,
+   "why": "Isolate parts of the system so a failure is contained."
+  },
+  {
+   "q": "You want a standby site that waits until the main one fails. What is this?",
+   "right": "Active-passive",
+   "wrong": [
+    "Active-active",
+    "Multi-region",
+    "Autoscaling"
+   ],
+   "tier": 4,
+   "why": "The second site is held in reserve."
+  },
+  {
+   "q": "Two regions should share live traffic all the time. What is this?",
+   "right": "Active-active",
+   "wrong": [
+    "Active-passive",
+    "A canary",
+    "Cold storage"
+   ],
+   "tier": 4,
+   "why": "All sites serve users at once."
+  },
+  {
+   "q": "You run batch work that can be restarted and want the lowest price. What fits?",
+   "right": "Spot instances",
+   "wrong": [
+    "Commitment discounts",
+    "Idle resources",
+    "Managed databases"
+   ],
+   "tier": 4,
+   "why": "Spare capacity is cheaper but can be taken back."
+  },
+  {
+   "q": "You want a secure, pre-configured foundation for every new team in the cloud. What do you build?",
+   "right": "A landing zone",
+   "wrong": [
+    "A canary release",
+    "A data lake",
+    "A mainframe"
+   ],
+   "tier": 4,
+   "why": "A landing zone sets up accounts, networking and controls."
+  },
+  {
+   "q": "Real users complain before you notice anything. What would have found the fault first?",
+   "right": "Synthetic monitoring",
+   "wrong": [
+    "A hardware refresh",
+    "A budget alert",
+    "Log retention"
+   ],
+   "tier": 4,
+   "why": "Scripted checks act like a user and catch problems early."
+  },
+  {
+   "q": "The whole site must show basic content if the recommendation service is down. What is this?",
+   "right": "Graceful degradation",
+   "wrong": [
+    "Failover",
+    "Rollback",
+    "Autoscaling"
+   ],
+   "tier": 4,
+   "why": "The main functions work at reduced quality."
+  },
+  {
+   "q": "You must know how to leave your cloud provider if needed. What do you prepare?",
+   "right": "A cloud exit plan",
+   "wrong": [
+    "A landing zone",
+    "A budget alert",
+    "A load test"
+   ],
+   "tier": 4,
+   "why": "An exit plan reduces the risk of being stuck."
+  },
+  {
+   "q": "The company runs five tools for the same job. What review helps?",
+   "right": "Application rationalisation",
+   "wrong": [
+    "Load testing",
+    "A hardware refresh",
+    "Rehosting"
+   ],
+   "tier": 4,
+   "why": "It decides which applications to keep, merge or retire."
+  },
+  {
+   "q": "You want the old and new payroll systems to run side by side before the switch. What is this?",
+   "right": "Dual running",
+   "wrong": [
+    "Cutover",
+    "Decommissioning",
+    "Rollback"
+   ],
+   "tier": 4,
+   "why": "The systems run in parallel for comparison."
+  },
+  {
+   "q": "A critical system for card transactions has run reliably for decades on one large central machine. What is it?",
+   "right": "A mainframe",
+   "wrong": [
+    "A container host",
+    "A load balancer",
+    "A virtual machine"
+   ],
+   "tier": 4,
+   "why": "Mainframes handle heavy, reliable transaction processing."
+  },
+  {
+   "q": "A government must keep citizens' data under national legal control. What cloud type fits?",
+   "right": "Sovereign cloud",
+   "wrong": [
+    "Public cloud with no controls",
+    "Edge computing",
+    "Platform as a service"
+   ],
+   "tier": 5,
+   "why": "It limits foreign legal access and operators."
+  },
+  {
+   "q": "You want every change to infrastructure to be reviewed and recorded. Which practice fits?",
+   "right": "GitOps",
+   "wrong": [
+    "ChatOps",
+    "Manual change tickets",
+    "Load testing"
+   ],
+   "tier": 5,
+   "why": "The repository is the source of truth for the system's state."
+  },
+  {
+   "q": "You want infrastructure changes checked against company rules before they apply. What do you use?",
+   "right": "Policy as code",
+   "wrong": [
+    "Alert fatigue",
+    "A rollback",
+    "A mailing list"
+   ],
+   "tier": 5,
+   "why": "Rules are written in code and enforced automatically."
+  },
+  {
+   "q": "Servers are rebuilt from a known image and never patched by hand. What is this?",
+   "right": "Immutable infrastructure",
+   "wrong": [
+    "Configuration drift",
+    "Autoscaling",
+    "Colocation"
+   ],
+   "tier": 5,
+   "why": "Servers are replaced, not changed in place."
+  },
+  {
+   "q": "A bank worries that a hardware failure in one region would stop trading. Which design best protects it?",
+   "right": "A multi-region design with tested failover",
+   "wrong": [
+    "A larger server in one region",
+    "More frequent backups in the same place",
+    "A longer retention period"
+   ],
+   "tier": 5,
+   "why": "A whole-region outage needs a design that spans regions."
+  },
+  {
+   "q": "A new cloud cost shows a steep rise in cost per transaction as volume grows. What should you check first?",
+   "right": "Whether the architecture scales efficiently or has wasteful resources",
+   "wrong": [
+    "Whether to switch off monitoring",
+    "Whether to hire more engineers",
+    "Whether to change provider at once"
+   ],
+   "tier": 5,
+   "why": "Unit cost should normally fall with scale; rising cost signals waste."
+  },
+  {
+   "q": "A migration plan moves everything in one weekend with no way back. What is the main flaw?",
+   "right": "No staged waves or rollback plan",
+   "wrong": [
+    "It uses too much automation",
+    "It runs too many tests",
+    "It involves too few meetings"
+   ],
+   "tier": 5,
+   "why": "Risk is reduced by waves and a route back."
+  },
+  {
+   "q": "A data centre's power efficiency ratio is far above one. What does this suggest?",
+   "right": "Much of the energy goes on cooling and overhead instead of computing",
+   "wrong": [
+    "The servers are very efficient",
+    "The facility has no cooling",
+    "The facility uses no electricity"
+   ],
+   "tier": 5,
+   "why": "The ratio compares total energy with energy used by the computing equipment."
+  },
+  {
+   "q": "Team A built a standard approved setup that other teams copy. What is this?",
+   "right": "A reference implementation",
+   "wrong": [
+    "A canary",
+    "A landing page",
+    "A blast radius"
+   ],
+   "tier": 5,
+   "why": "It is a working example of the recommended approach."
+  }
+ ],
+ "termBank": {
+  "name": "Cloud and infrastructure leadership",
+  "description": "Cloud strategy, platforms, resilience, cost, delivery, operations and migration for technology leaders.",
+  "roles": "cto,cio",
+  "order": 14,
+  "headings": {
+   "cstrat": "Cloud strategy",
+   "cmod": "Service models and building blocks",
+   "cnet": "Networking and delivery",
+   "cres": "Resilience and scale",
+   "ccost": "Cloud cost",
+   "dlv": "Delivery platforms",
+   "obs": "Observability and operations",
+   "plat": "Platform engineering",
+   "dc": "Data centres and hardware",
+   "mig": "Migration and modernisation"
+  }
+ }
+}

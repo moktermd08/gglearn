@@ -1,0 +1,1862 @@
+{
+ "slug": "data-ai-leadership-core",
+ "name": "Data and AI leadership vocabulary",
+ "description": "The 100 terms a technology leader needs for data strategy, platforms, analytics, machine learning, generative AI, governance and privacy.",
+ "roles": "cto",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "dstrat": "data strategy term",
+  "dplat": "data platform term",
+  "anal": "analytics term",
+  "ml": "machine learning term",
+  "mlops": "machine learning operations term",
+  "gen": "generative AI term",
+  "aigov": "AI governance term",
+  "priv": "privacy term",
+  "dsec": "data security term",
+  "dorg": "data and AI organisation term"
+ },
+ "cards": [
+  {
+   "group": "dstrat",
+   "subject": "data strategy",
+   "tier": 2,
+   "says": [
+    "sets out how an organisation will collect, manage and use data to meet its goals",
+    "links data work to business outcomes"
+   ],
+   "use": "are asked how data investment will support the company's goals",
+   "not": [
+    "is a list of the databases currently in use"
+   ]
+  },
+  {
+   "group": "dstrat",
+   "subject": "data product",
+   "tier": 3,
+   "says": [
+    "is a dataset or service managed like a product, with an owner, users and quality standards",
+    "is built to be reused by other teams"
+   ],
+   "use": "want a team to publish a trusted customer dataset that others can rely on",
+   "not": [
+    "is any file saved on a shared drive"
+   ],
+   "like": [
+    "data mart"
+   ]
+  },
+  {
+   "group": "dstrat",
+   "subject": "data mesh",
+   "tier": 4,
+   "says": [
+    "gives each business domain ownership of its own data as products",
+    "shares common standards across domains instead of using one central team"
+   ],
+   "use": "find that a central data team is a bottleneck for every business area",
+   "not": [
+    "puts all data into one central store managed by one team"
+   ],
+   "like": [
+    "data lakehouse"
+   ]
+  },
+  {
+   "group": "dstrat",
+   "subject": "data catalogue",
+   "tier": 2,
+   "says": [
+    "is a searchable inventory of an organisation's data with descriptions and owners",
+    "helps people find and understand data"
+   ],
+   "use": "hear analysts say they cannot tell which dataset to trust",
+   "not": [
+    "stores the data itself"
+   ]
+  },
+  {
+   "group": "dstrat",
+   "subject": "data lineage",
+   "tier": 3,
+   "says": [
+    "records where data came from and how it was changed on the way",
+    "lets people trace a number back to its source"
+   ],
+   "use": "are asked why a figure in a board report differs from last month's",
+   "not": [
+    "is the order in which files were saved"
+   ]
+  },
+  {
+   "group": "dstrat",
+   "subject": "master data management",
+   "tier": 4,
+   "says": [
+    "keeps one agreed record of core entities such as customers and products",
+    "removes conflicting versions held in different systems"
+   ],
+   "use": "find the same customer recorded differently in sales, billing and support",
+   "not": [
+    "is a backup of the main database"
+   ]
+  },
+  {
+   "group": "dstrat",
+   "subject": "single source of truth",
+   "tier": 3,
+   "says": [
+    "is one agreed place where a given piece of data is held and trusted",
+    "stops teams from using conflicting copies"
+   ],
+   "use": "see two departments reporting different revenue totals from separate spreadsheets",
+   "not": [
+    "means that a single person owns all the data"
+   ]
+  },
+  {
+   "group": "dstrat",
+   "subject": "data owner",
+   "tier": 2,
+   "says": [
+    "is the accountable person for a dataset and decisions about its use",
+    "decides who may access the data"
+   ],
+   "use": "need a named person to approve access to payroll data",
+   "not": [
+    "writes the daily scripts that move the data"
+   ],
+   "like": [
+    "data steward"
+   ]
+  },
+  {
+   "group": "dstrat",
+   "subject": "data steward",
+   "tier": 3,
+   "says": [
+    "looks after the quality, definitions and day-to-day rules of a dataset",
+    "works within the policy set by the owner"
+   ],
+   "use": "need someone to keep the definitions and quality of customer data consistent",
+   "not": [
+    "is accountable for approving access at the senior level"
+   ],
+   "like": [
+    "data owner"
+   ]
+  },
+  {
+   "group": "dstrat",
+   "subject": "data literacy",
+   "tier": 2,
+   "says": [
+    "is the ability to read, question and use data and charts sensibly",
+    "can be built across a whole organisation"
+   ],
+   "use": "want managers to understand and challenge the numbers in reports",
+   "not": [
+    "is the skill of building data pipelines"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "data lakehouse",
+   "tier": 4,
+   "says": [
+    "combines low-cost lake storage with warehouse-style management and queries",
+    "serves analytics and machine learning from one platform"
+   ],
+   "use": "want one platform for both reporting and data science",
+   "not": [
+    "is a building that houses servers"
+   ],
+   "like": [
+    "data mesh"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "ETL",
+   "tier": 2,
+   "says": [
+    "extracts data, transforms it, then loads it into a target store",
+    "cleans data before it reaches the destination"
+   ],
+   "use": "need to reshape data from a source system before it goes into the warehouse",
+   "not": [
+    "loads raw data first and transforms it later inside the target"
+   ],
+   "like": [
+    "ELT"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "ELT",
+   "tier": 3,
+   "says": [
+    "loads raw data into the target first and transforms it there",
+    "uses the processing power of the destination platform"
+   ],
+   "use": "want to land raw data quickly and shape it later in the warehouse",
+   "not": [
+    "transforms data before loading it"
+   ],
+   "like": [
+    "ETL"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "data pipeline",
+   "tier": 2,
+   "says": [
+    "is an automated series of steps that moves and prepares data",
+    "runs on a schedule or in response to events"
+   ],
+   "use": "need data from several systems to arrive in the warehouse every night",
+   "not": [
+    "is a physical cable between servers"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "batch processing",
+   "tier": 2,
+   "says": [
+    "handles data in large groups at set times",
+    "suits work that does not need an instant result"
+   ],
+   "use": "produce a report overnight from the whole day's transactions",
+   "not": [
+    "handles each event as soon as it occurs"
+   ],
+   "like": [
+    "stream processing"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "stream processing",
+   "tier": 3,
+   "says": [
+    "handles data continuously as events arrive",
+    "supports near-real-time reactions"
+   ],
+   "use": "must flag a suspicious card payment within seconds",
+   "not": [
+    "waits and processes a day's data in one run"
+   ],
+   "like": [
+    "batch processing"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "change data capture",
+   "tier": 4,
+   "says": [
+    "detects changes made in a source database and passes them on",
+    "avoids copying the whole table each time"
+   ],
+   "use": "want the warehouse to reflect changes in the live system without full reloads",
+   "not": [
+    "restores a database from a backup"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "schema on read",
+   "tier": 4,
+   "says": [
+    "applies structure to data when it is queried, not when it is stored",
+    "suits raw data in lakes"
+   ],
+   "use": "store raw files first and decide how to interpret them later",
+   "not": [
+    "forces data into a fixed structure before it can be saved"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "data mart",
+   "tier": 3,
+   "says": [
+    "is a smaller store of data focused on one business area",
+    "draws from a wider warehouse"
+   ],
+   "use": "want finance to have its own curated set of tables for reporting",
+   "not": [
+    "is the central store that holds all company data"
+   ],
+   "like": [
+    "data product"
+   ]
+  },
+  {
+   "group": "dplat",
+   "subject": "orchestration",
+   "tier": 3,
+   "says": [
+    "schedules and coordinates the steps in data workflows",
+    "handles order, retries and dependencies"
+   ],
+   "use": "need many data jobs to run in the right order and rerun if one fails",
+   "not": [
+    "is the design of a database table"
+   ]
+  },
+  {
+   "group": "anal",
+   "subject": "business intelligence",
+   "tier": 2,
+   "says": [
+    "turns data into reports and dashboards that support decisions",
+    "focuses on describing what has happened"
+   ],
+   "use": "want weekly sales and stock reports available to managers",
+   "not": [
+    "builds predictive models from raw data"
+   ]
+  },
+  {
+   "group": "anal",
+   "subject": "self-service analytics",
+   "tier": 3,
+   "says": [
+    "lets business users explore data themselves without needing a data specialist",
+    "relies on trusted, well-described data"
+   ],
+   "use": "want managers to answer routine questions without waiting for a report",
+   "not": [
+    "means every employee builds their own data pipeline"
+   ]
+  },
+  {
+   "group": "anal",
+   "subject": "cohort analysis",
+   "tier": 3,
+   "says": [
+    "compares groups of users who share a starting point over time",
+    "shows how behaviour changes as a group ages"
+   ],
+   "use": "want to see how customers who joined in the same month keep returning",
+   "not": [
+    "compares all users in one single average"
+   ]
+  },
+  {
+   "group": "anal",
+   "subject": "A/B test",
+   "tier": 2,
+   "says": [
+    "compares two versions by showing each to a different, similar group",
+    "measures which version performs better"
+   ],
+   "use": "want to know whether a new checkout page raises sales",
+   "not": [
+    "asks a single group to rank two designs verbally"
+   ]
+  },
+  {
+   "group": "anal",
+   "subject": "correlation versus causation",
+   "tier": 3,
+   "says": [
+    "warns that two things moving together does not mean one causes the other",
+    "needs controlled evidence to show a cause"
+   ],
+   "use": "see ice cream sales and sunburn rising together and are asked what causes what",
+   "not": [
+    "says that correlated things always share a cause"
+   ]
+  },
+  {
+   "group": "anal",
+   "subject": "sampling bias",
+   "tier": 4,
+   "says": [
+    "occurs when the group studied does not represent the whole population",
+    "makes results misleading"
+   ],
+   "use": "survey only customers who contact support and draw conclusions about all customers",
+   "not": [
+    "is a mistake in arithmetic during a calculation"
+   ]
+  },
+  {
+   "group": "anal",
+   "subject": "data storytelling",
+   "tier": 3,
+   "says": [
+    "presents data as a clear narrative with a point and a recommendation",
+    "combines charts, context and a message"
+   ],
+   "use": "must explain quarterly results to executives so they act on them",
+   "not": [
+    "is the writing of fiction using real names"
+   ]
+  },
+  {
+   "group": "anal",
+   "subject": "semantic layer",
+   "tier": 4,
+   "says": [
+    "defines business terms and measures once so every tool uses the same meaning",
+    "stops different dashboards computing 'revenue' differently"
+   ],
+   "use": "find that two dashboards show different figures for the same measure",
+   "not": [
+    "is the storage hardware under the database"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "supervised learning",
+   "tier": 2,
+   "says": [
+    "trains a model on examples that have known answers",
+    "learns to predict the label for new cases"
+   ],
+   "use": "want a model to predict whether a loan will default using past outcomes",
+   "not": [
+    "finds patterns in data that has no labels"
+   ],
+   "like": [
+    "unsupervised learning"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "unsupervised learning",
+   "tier": 3,
+   "says": [
+    "finds patterns in data without labelled answers",
+    "is used for tasks such as grouping similar customers"
+   ],
+   "use": "want to discover natural groups of customers with no preset categories",
+   "not": [
+    "learns from examples labelled with the right answer"
+   ],
+   "like": [
+    "supervised learning"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "reinforcement learning",
+   "tier": 4,
+   "says": [
+    "learns by trying actions and receiving rewards or penalties",
+    "improves its choices through trial and error"
+   ],
+   "use": "want a system to learn the best moves through repeated play",
+   "not": [
+    "needs a labelled answer for every example"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "training data",
+   "tier": 2,
+   "says": [
+    "is the set of examples a model learns from",
+    "shapes what the model can and cannot do"
+   ],
+   "use": "are told a model works poorly because it learned from unrepresentative examples",
+   "not": [
+    "is the data used only to give the final grade of the model"
+   ],
+   "like": [
+    "test set"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "test set",
+   "tier": 3,
+   "says": [
+    "is data held back to check how well a model works on unseen cases",
+    "is not used during training"
+   ],
+   "use": "want an honest measure of how a trained model will perform",
+   "not": [
+    "is the data the model learns from"
+   ],
+   "like": [
+    "training data"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "overfitting",
+   "tier": 3,
+   "says": [
+    "is when a model fits its training data too closely and does poorly on new data",
+    "learns noise as if it were a pattern"
+   ],
+   "use": "see excellent results on training data but poor ones in real use",
+   "not": [
+    "is when a model is too simple to learn any pattern"
+   ],
+   "like": [
+    "underfitting"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "underfitting",
+   "tier": 4,
+   "says": [
+    "is when a model is too simple to capture the pattern in the data",
+    "does poorly on both training and new data"
+   ],
+   "use": "find a model that scores badly even on the data it was trained on",
+   "not": [
+    "is when a model memorises its training examples"
+   ],
+   "like": [
+    "overfitting"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "feature engineering",
+   "tier": 4,
+   "says": [
+    "creates or transforms input variables to help a model learn",
+    "uses knowledge of the problem to shape the data"
+   ],
+   "use": "turn a timestamp into day of week to help predict demand",
+   "not": [
+    "is the selection of hardware to run a model"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "precision and recall",
+   "tier": 4,
+   "says": [
+    "measure how many flagged cases are correct and how many true cases are found",
+    "trade off against each other"
+   ],
+   "use": "are choosing how a fraud model should balance missed fraud against false alarms",
+   "not": [
+    "both measure only how fast a model runs"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "baseline model",
+   "tier": 3,
+   "says": [
+    "is a simple reference model used to judge whether a complex one is worth it",
+    "sets the bar a new model must beat"
+   ],
+   "use": "want to know whether a costly model really improves on a simple rule",
+   "not": [
+    "is the final model released to customers"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "MLOps",
+   "tier": 3,
+   "says": [
+    "applies engineering and operations practice to build, deploy and run models reliably",
+    "covers testing, release and monitoring of models"
+   ],
+   "use": "want models moved from a notebook into dependable production use",
+   "not": [
+    "is the study of statistics used in models"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "model registry",
+   "tier": 3,
+   "says": [
+    "stores versions of models with their details and status",
+    "records which version is in production"
+   ],
+   "use": "need to know which model version is live and who approved it",
+   "not": [
+    "is a list of the users who may query a model"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "feature store",
+   "tier": 4,
+   "says": [
+    "holds shared, reusable input features for training and serving",
+    "keeps training and live features consistent"
+   ],
+   "use": "want teams to reuse the same customer features without rebuilding them",
+   "not": [
+    "is the place where finished models are stored"
+   ],
+   "like": [
+    "model registry"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "model monitoring",
+   "tier": 3,
+   "says": [
+    "tracks a deployed model's inputs, outputs and accuracy over time",
+    "raises an alert when behaviour changes"
+   ],
+   "use": "need to know when a live model starts giving worse results",
+   "not": [
+    "checks the model only once before release"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "data drift",
+   "tier": 4,
+   "says": [
+    "is a change in the data a model sees compared with the data it was trained on",
+    "can reduce accuracy without any code change"
+   ],
+   "use": "see customer behaviour shift so live inputs differ from the training data",
+   "not": [
+    "is data being lost during a transfer"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "shadow deployment",
+   "tier": 4,
+   "says": [
+    "runs a new model on live traffic without acting on its results",
+    "lets its output be compared with the current model"
+   ],
+   "use": "want to see how a new model behaves on real requests without risking customers",
+   "not": [
+    "sends all users to the new model at once"
+   ],
+   "like": [
+    "champion-challenger"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "champion-challenger",
+   "tier": 5,
+   "says": [
+    "runs a proposed model against the current best one on the same task",
+    "replaces the current model only if the challenger does better"
+   ],
+   "use": "want a controlled contest between the live model and a new candidate",
+   "not": [
+    "retires the older model before testing the new one"
+   ],
+   "like": [
+    "shadow deployment"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "model card",
+   "tier": 3,
+   "says": [
+    "documents a model's purpose, data, limits and tested performance",
+    "helps users judge whether it is suitable"
+   ],
+   "use": "need a short document explaining what a model is for and where it should not be used",
+   "not": [
+    "is a card that gives physical access to a data centre"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "inference",
+   "tier": 2,
+   "says": [
+    "is using a trained model to make predictions on new data",
+    "happens after training is complete"
+   ],
+   "use": "send a new customer's details to a model and get a score back",
+   "not": [
+    "is the process of teaching a model"
+   ]
+  },
+  {
+   "group": "mlops",
+   "subject": "retraining",
+   "tier": 3,
+   "says": [
+    "updates a model with fresher data to restore or improve its accuracy",
+    "may be scheduled or triggered by monitoring"
+   ],
+   "use": "find that accuracy has fallen because the world changed since the model was built",
+   "not": [
+    "means rewriting the model's code from scratch every release"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "foundation model",
+   "tier": 3,
+   "says": [
+    "is a large model trained on broad data that can be adapted to many tasks",
+    "serves as a base for further tuning"
+   ],
+   "use": "want one general model that many teams can adapt for different uses",
+   "not": [
+    "is a model trained for a single narrow task only"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "prompt engineering",
+   "tier": 2,
+   "says": [
+    "is crafting the input to a model to get better output",
+    "uses clear instructions, context and examples"
+   ],
+   "use": "improve answers from a language model by rewording the question",
+   "not": [
+    "is the retraining of the model's weights"
+   ],
+   "like": [
+    "fine-tuning"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "fine-tuning",
+   "tier": 4,
+   "says": [
+    "continues training a model on specific data to specialise it",
+    "changes the model's weights"
+   ],
+   "use": "want a model to follow your organisation's style and terminology consistently",
+   "not": [
+    "only changes the wording of the question sent to the model"
+   ],
+   "like": [
+    "prompt engineering"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "embedding",
+   "tier": 4,
+   "says": [
+    "turns text or other content into a list of numbers that capture its meaning",
+    "places similar items close together"
+   ],
+   "use": "want to find documents that mean the same as a question even if the words differ",
+   "not": [
+    "is a model's final written answer"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "vector database",
+   "tier": 4,
+   "says": [
+    "stores embeddings and finds the closest matches quickly",
+    "supports search by meaning"
+   ],
+   "use": "need to retrieve the most similar passages to a question",
+   "not": [
+    "is a database for storing drawing files only"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "context window",
+   "tier": 3,
+   "says": [
+    "is the amount of text a model can consider at one time",
+    "includes both the input and the output"
+   ],
+   "use": "find that a long document does not fit into one request",
+   "not": [
+    "is the time a model takes to answer"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "token",
+   "tier": 2,
+   "says": [
+    "is a small piece of text that a language model reads and writes",
+    "is a unit for measuring length and usage"
+   ],
+   "use": "want to understand how the length of a prompt is measured",
+   "not": [
+    "is a physical security device used to log in"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "AI agent",
+   "tier": 4,
+   "says": [
+    "uses a model to decide on and carry out steps, often calling tools",
+    "works towards a goal over several steps"
+   ],
+   "use": "want a system that plans a task and calls tools such as search or a database",
+   "not": [
+    "is a person who represents a company in contract talks"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "guardrails",
+   "tier": 3,
+   "says": [
+    "are controls that limit what an AI system will accept or produce",
+    "can block unsafe, off-topic or private content"
+   ],
+   "use": "want to stop a chatbot answering outside its allowed scope",
+   "not": [
+    "are the physical barriers in a data centre"
+   ]
+  },
+  {
+   "group": "gen",
+   "subject": "grounding",
+   "tier": 4,
+   "says": [
+    "ties a model's answers to trusted sources supplied with the request",
+    "reduces the chance of invented answers"
+   ],
+   "use": "want a model to answer only from your approved policy documents",
+   "not": [
+    "is the earthing of electrical equipment"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "responsible AI",
+   "tier": 3,
+   "says": [
+    "is designing and using AI in line with principles such as fairness and accountability",
+    "covers the whole lifecycle of a system"
+   ],
+   "use": "are asked how the company will make sure its AI is used safely and fairly",
+   "not": [
+    "is any AI system that has passed its tests"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "algorithmic bias",
+   "tier": 3,
+   "says": [
+    "is systematic unfairness in a system's results for some groups",
+    "often stems from skewed data or design choices"
+   ],
+   "use": "find a hiring model that scores one group of applicants lower for no good reason",
+   "not": [
+    "is a random error that affects all people equally"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "explainability",
+   "tier": 4,
+   "says": [
+    "is the ability to give understandable reasons for a model's output",
+    "helps people challenge and trust a decision"
+   ],
+   "use": "must tell a customer why an application was declined by a model",
+   "not": [
+    "is the speed at which a model returns an answer"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "AI impact assessment",
+   "tier": 4,
+   "says": [
+    "examines the possible harms and benefits of an AI system before it is used",
+    "is done early and revisited as the system changes"
+   ],
+   "use": "are about to deploy a model that affects customers' access to a service",
+   "not": [
+    "is a test of a model's speed under load"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "model risk management",
+   "tier": 4,
+   "says": [
+    "controls the risks that come from errors or misuse of models",
+    "includes validation, limits and ongoing review"
+   ],
+   "use": "must show regulators that models used in decisions are validated and monitored",
+   "not": [
+    "is the insurance purchased against server failures"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "AI usage policy",
+   "tier": 2,
+   "says": [
+    "sets out what staff may and may not do with AI tools",
+    "covers matters such as confidential data and review of outputs"
+   ],
+   "use": "find staff pasting customer data into public chatbots",
+   "not": [
+    "lists the models a company has trained"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "human oversight",
+   "tier": 3,
+   "says": [
+    "keeps a person able to review, override or stop an automated decision",
+    "is stronger where the effects on people are serious"
+   ],
+   "use": "want a person to check the system's decisions before they affect customers",
+   "not": [
+    "means a person writes every decision by hand"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "automated decision-making",
+   "tier": 4,
+   "says": [
+    "is deciding about people using only automated processing",
+    "can have specific legal limits and rights"
+   ],
+   "use": "use a system that approves or rejects loans with no person involved",
+   "not": [
+    "is the use of a calculator in a meeting"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "AI red teaming",
+   "tier": 5,
+   "says": [
+    "tests an AI system by deliberately trying to make it fail or misbehave",
+    "looks for harmful or unsafe outputs"
+   ],
+   "use": "want to find ways a chatbot could be pushed into unsafe answers before release",
+   "not": [
+    "is a plan to buy red-coloured hardware"
+   ]
+  },
+  {
+   "group": "aigov",
+   "subject": "fairness metric",
+   "tier": 5,
+   "says": [
+    "is a measure used to compare a model's outcomes across groups",
+    "different measures can conflict with one another"
+   ],
+   "use": "want to check whether error rates are similar between groups",
+   "not": [
+    "is a measure of how quickly a model trains"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "personal data",
+   "tier": 1,
+   "says": [
+    "is information that relates to an identifiable living person",
+    "includes names, identifiers and online data"
+   ],
+   "use": "must decide whether a dataset falls under privacy law",
+   "not": [
+    "is any information stored on a computer"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "special category data",
+   "tier": 3,
+   "says": [
+    "is a more sensitive kind of personal data, such as health or ethnicity",
+    "needs extra protection and a further condition for use"
+   ],
+   "use": "are asked to process staff health records",
+   "not": [
+    "is any data stored in a special database"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "lawful basis",
+   "tier": 3,
+   "says": [
+    "is the legal reason that allows personal data to be used",
+    "must be identified before the processing starts"
+   ],
+   "use": "want to know what permits you to process customer data for a service",
+   "not": [
+    "is the chosen method for encrypting data"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "consent",
+   "tier": 2,
+   "says": [
+    "is a person's free, specific and informed agreement to the use of their data",
+    "can be withdrawn"
+   ],
+   "use": "ask users to opt in to marketing messages",
+   "not": [
+    "is the same as a data processing agreement"
+   ],
+   "like": [
+    "lawful basis"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "data subject access request",
+   "tier": 3,
+   "says": [
+    "is a person's request to see the personal data held about them",
+    "must be answered within a set time"
+   ],
+   "use": "receive a letter from a customer asking for a copy of all data you hold on them",
+   "not": [
+    "is a request to delete the company's whole database"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "data minimisation",
+   "tier": 3,
+   "says": [
+    "means collecting only the personal data that is needed for the purpose",
+    "reduces risk by holding less"
+   ],
+   "use": "are about to add an optional birth date field that nothing uses",
+   "not": [
+    "means storing as much data as possible for later"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "pseudonymisation",
+   "tier": 4,
+   "says": [
+    "replaces identifying details with a code, with the key held separately",
+    "still counts as personal data"
+   ],
+   "use": "want analysts to work on records without seeing names but keep the ability to link back",
+   "not": [
+    "permanently removes any way to identify a person"
+   ],
+   "like": [
+    "anonymisation"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "anonymisation",
+   "tier": 4,
+   "says": [
+    "removes identifying details so a person can no longer be identified",
+    "makes data fall outside personal data rules when done properly"
+   ],
+   "use": "want to publish statistics that cannot be traced to anyone",
+   "not": [
+    "replaces names with codes that can be reversed with a key"
+   ],
+   "like": [
+    "pseudonymisation"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "data retention",
+   "tier": 2,
+   "says": [
+    "sets how long data is kept before it is deleted",
+    "is based on legal and business need"
+   ],
+   "use": "must decide how many years to keep old customer records",
+   "not": [
+    "is the backup of data kept in case of loss"
+   ]
+  },
+  {
+   "group": "priv",
+   "subject": "privacy by design",
+   "tier": 4,
+   "says": [
+    "builds data protection into a system from the start",
+    "treats privacy as a default and not an add-on"
+   ],
+   "use": "are starting a new product and want to include privacy from the first design",
+   "not": [
+    "adds privacy controls only after a breach"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "data masking",
+   "tier": 3,
+   "says": [
+    "hides sensitive values in a copy of data by replacing them with realistic substitutes",
+    "lets teams test without real personal data"
+   ],
+   "use": "want developers to test with data that looks real but contains no genuine customers",
+   "not": [
+    "permanently deletes a dataset"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "tokenisation",
+   "tier": 4,
+   "says": [
+    "replaces a sensitive value with a token that has no usable meaning",
+    "keeps the original in a separate secure vault"
+   ],
+   "use": "want to store a payment card reference without holding the real number",
+   "not": [
+    "scrambles data with a key that can reverse it everywhere"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "encryption at rest",
+   "tier": 2,
+   "says": [
+    "protects stored data by encrypting it on the disk or in the database",
+    "guards against theft of the storage"
+   ],
+   "use": "want a stolen disk to be unreadable",
+   "not": [
+    "protects data only while it travels across a network"
+   ],
+   "like": [
+    "encryption in transit"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "encryption in transit",
+   "tier": 2,
+   "says": [
+    "protects data while it moves between systems",
+    "guards against interception"
+   ],
+   "use": "want data sent across a network to be unreadable to anyone listening",
+   "not": [
+    "protects data only while it sits on a disk"
+   ],
+   "like": [
+    "encryption at rest"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "data loss prevention",
+   "tier": 3,
+   "says": [
+    "detects and blocks sensitive data from leaving the organisation",
+    "can scan email, uploads and devices"
+   ],
+   "use": "want to stop employees emailing customer lists to personal accounts",
+   "not": [
+    "is the process of restoring deleted files"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "data sharing agreement",
+   "tier": 3,
+   "says": [
+    "is a document that sets out how data will be shared between parties",
+    "covers purpose, safeguards and responsibilities"
+   ],
+   "use": "are about to pass customer data to a partner organisation",
+   "not": [
+    "is a licence to use software"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "data clean room",
+   "tier": 5,
+   "says": [
+    "lets parties analyse combined data without seeing each other's raw records",
+    "returns only agreed, aggregated results"
+   ],
+   "use": "want two companies to measure shared customers without exchanging their customer lists",
+   "not": [
+    "is a room with controlled air quality for servers"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "row-level security",
+   "tier": 4,
+   "says": [
+    "limits which rows of a table each user can see",
+    "applies the same rule inside the data layer"
+   ],
+   "use": "want regional managers to see only their own region's records in one shared table",
+   "not": [
+    "encrypts the whole database file"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "differential privacy",
+   "tier": 5,
+   "says": [
+    "adds carefully measured noise so individuals cannot be picked out of results",
+    "protects people while keeping group patterns"
+   ],
+   "use": "want to publish statistics and make sure no single person can be identified",
+   "not": [
+    "removes all personal data from the original database"
+   ]
+  },
+  {
+   "group": "dsec",
+   "subject": "synthetic data",
+   "tier": 4,
+   "says": [
+    "is artificially generated data that mimics the patterns of real data",
+    "can reduce use of real personal data"
+   ],
+   "use": "need realistic data for testing without using real customers",
+   "not": [
+    "is real data copied to a second server"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "chief data officer",
+   "tier": 3,
+   "says": [
+    "is the executive accountable for how an organisation manages and uses its data",
+    "sets data strategy and standards"
+   ],
+   "use": "want a single executive voice for data across the business",
+   "not": [
+    "runs the daily operation of the servers"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "data scientist",
+   "tier": 2,
+   "says": [
+    "builds statistical and machine learning models to answer questions and make predictions",
+    "explores data to find insight"
+   ],
+   "use": "need a specialist to build a model that predicts customer churn",
+   "not": [
+    "mainly builds and maintains the production pipelines"
+   ],
+   "like": [
+    "data engineer"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "data engineer",
+   "tier": 2,
+   "says": [
+    "builds and maintains the pipelines and platforms that deliver data",
+    "makes data reliable and available"
+   ],
+   "use": "need someone to make sure data arrives clean and on time",
+   "not": [
+    "mainly builds models to make predictions"
+   ],
+   "like": [
+    "data scientist"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "analytics engineer",
+   "tier": 4,
+   "says": [
+    "turns raw data into clean, tested models that analysts use",
+    "sits between data engineering and analysis"
+   ],
+   "use": "want well-defined, tested tables for analysts to build reports on",
+   "not": [
+    "is the person who designs servers in a data centre"
+   ],
+   "like": [
+    "data engineer"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "ML engineer",
+   "tier": 3,
+   "says": [
+    "builds the systems that run machine learning models in production",
+    "focuses on reliability and scale"
+   ],
+   "use": "need a model to run reliably for thousands of users",
+   "not": [
+    "is a person who only chooses the training examples"
+   ],
+   "like": [
+    "data scientist"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "AI strategy",
+   "tier": 3,
+   "says": [
+    "sets how an organisation will use AI to create value and manage risk",
+    "chooses where AI is and is not appropriate"
+   ],
+   "use": "are asked where the company should and should not use AI",
+   "not": [
+    "is a list of the AI tools staff have installed"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "use case prioritisation",
+   "tier": 4,
+   "says": [
+    "ranks possible AI or data projects by value, feasibility and risk",
+    "decides what is worth building first"
+   ],
+   "use": "have thirty AI ideas and budget for three",
+   "not": [
+    "is the order in which servers are installed"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "pilot purgatory",
+   "tier": 5,
+   "says": [
+    "is when many pilots run but few ever reach production",
+    "wastes effort without delivering value"
+   ],
+   "use": "find that many AI experiments are launched but none reach real users",
+   "not": [
+    "is a place where finished models are stored"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "data maturity model",
+   "tier": 4,
+   "says": [
+    "describes stages by which an organisation's data capability grows",
+    "helps set a roadmap of improvements"
+   ],
+   "use": "want to see how the organisation's data practice compares with a path to better",
+   "not": [
+    "is a scoring of the age of a company's databases"
+   ]
+  },
+  {
+   "group": "dorg",
+   "subject": "AI literacy",
+   "tier": 2,
+   "says": [
+    "is understanding what AI can and cannot do and how to use it responsibly",
+    "can be built across an organisation"
+   ],
+   "use": "want staff to understand the limits of AI tools before relying on them",
+   "not": [
+    "is the ability to write code for a model"
+   ]
+  },
+  {
+   "group": "ml",
+   "subject": "classification",
+   "tier": 2,
+   "says": [
+    "predicts which category an item belongs to",
+    "gives answers such as spam or not spam"
+   ],
+   "use": "want a model to decide whether each email is spam",
+   "not": [
+    "predicts a number on a continuous scale"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Analysts say they cannot tell which dataset to trust. What helps first?",
+   "right": "A data catalogue with owners and descriptions",
+   "wrong": [
+    "A bigger warehouse",
+    "More dashboards",
+    "A new reporting tool"
+   ],
+   "tier": 2,
+   "why": "A catalogue shows what data exists, who owns it and what it means."
+  },
+  {
+   "q": "Which role approves access to a payroll dataset?",
+   "right": "The data owner",
+   "wrong": [
+    "The data engineer",
+    "A data scientist",
+    "An intern"
+   ],
+   "tier": 2,
+   "why": "The owner is accountable for decisions about use."
+  },
+  {
+   "q": "What is inference in machine learning?",
+   "right": "Using a trained model to make predictions on new data",
+   "wrong": [
+    "Collecting labelled examples",
+    "Cleaning the training set",
+    "Choosing which features to use"
+   ],
+   "tier": 2,
+   "why": "Inference is the use of a finished model."
+  },
+  {
+   "q": "You want to compare two web page designs on real visitors. What do you run?",
+   "right": "An A/B test",
+   "wrong": [
+    "A cohort analysis",
+    "A data lineage review",
+    "A batch job"
+   ],
+   "tier": 2,
+   "why": "Each version is shown to a similar group."
+  },
+  {
+   "q": "What does a data pipeline do?",
+   "right": "Moves and prepares data automatically",
+   "wrong": [
+    "Stores a copy of the screen",
+    "Encrypts passwords",
+    "Draws a chart"
+   ],
+   "tier": 2,
+   "why": "A pipeline automates the movement of data."
+  },
+  {
+   "q": "A team pastes customer data into a public chatbot. Which document should have prevented it?",
+   "right": "An AI usage policy",
+   "wrong": [
+    "A data catalogue",
+    "A feature store",
+    "A model card"
+   ],
+   "tier": 2,
+   "why": "The policy states what staff may do with AI tools."
+  },
+  {
+   "q": "Two dashboards show different totals for revenue. What fixes this in the long term?",
+   "right": "A semantic layer that defines revenue once",
+   "wrong": [
+    "More dashboards",
+    "A longer retention period",
+    "A bigger server"
+   ],
+   "tier": 3,
+   "why": "A shared definition keeps every tool consistent."
+  },
+  {
+   "q": "A board figure differs from last month's and nobody can say why. What helps trace it?",
+   "right": "Data lineage",
+   "wrong": [
+    "Data masking",
+    "Reinforcement learning",
+    "A confidence interval"
+   ],
+   "tier": 3,
+   "why": "Lineage shows where data came from and what changed."
+  },
+  {
+   "q": "A model scores well on its training data and poorly in real use. What is the likely cause?",
+   "right": "Overfitting",
+   "wrong": [
+    "Underfitting",
+    "Data masking",
+    "Shadow deployment"
+   ],
+   "tier": 3,
+   "why": "It learned noise in the training set."
+  },
+  {
+   "q": "You want a model to answer only from your approved policy documents. Which technique helps?",
+   "right": "Grounding the answers in those documents",
+   "wrong": [
+    "Making the prompt longer",
+    "Training on more internet data",
+    "Raising the temperature"
+   ],
+   "tier": 3,
+   "why": "Grounding ties answers to trusted sources."
+  },
+  {
+   "q": "A model has been live for months and its accuracy has quietly fallen. What should have caught this?",
+   "right": "Model monitoring",
+   "wrong": [
+    "A bigger test set",
+    "Feature engineering",
+    "A model card"
+   ],
+   "tier": 3,
+   "why": "Monitoring tracks live behaviour and alerts on changes."
+  },
+  {
+   "q": "Staff must know what a model is for and where it should not be used. What do you write?",
+   "right": "A model card",
+   "wrong": [
+    "A feature store",
+    "A batch job",
+    "A data mart"
+   ],
+   "tier": 3,
+   "why": "A model card documents purpose, data and limits."
+  },
+  {
+   "q": "A customer asks for a copy of every piece of data you hold on them. What is this?",
+   "right": "A data subject access request",
+   "wrong": [
+    "A data sharing agreement",
+    "A consent form",
+    "A lineage report"
+   ],
+   "tier": 3,
+   "why": "People may ask to see their personal data."
+  },
+  {
+   "q": "You are about to add an optional birth date field that nothing will use. Which principle applies?",
+   "right": "Data minimisation",
+   "wrong": [
+    "Data retention",
+    "Schema on read",
+    "Tokenisation"
+   ],
+   "tier": 3,
+   "why": "Collect only what is needed for the purpose."
+  },
+  {
+   "q": "You need to load raw data fast and reshape it later in the warehouse. Which approach?",
+   "right": "ELT",
+   "wrong": [
+    "ETL",
+    "Batch masking",
+    "Reinforcement learning"
+   ],
+   "tier": 3,
+   "why": "ELT loads first and transforms inside the target."
+  },
+  {
+   "q": "A card payment must be flagged within seconds. Which processing fits?",
+   "right": "Stream processing",
+   "wrong": [
+    "Batch processing",
+    "Schema on read",
+    "Data masking"
+   ],
+   "tier": 3,
+   "why": "Streaming handles events as they arrive."
+  },
+  {
+   "q": "A correlation between two measures is shown to the board as proof of cause. What do you say?",
+   "right": "Correlation does not show cause without controlled evidence",
+   "wrong": [
+    "Correlation always proves cause",
+    "The sample must be bigger",
+    "The metric must be dropped"
+   ],
+   "tier": 3,
+   "why": "Things can move together for other reasons."
+  },
+  {
+   "q": "A central data team is a bottleneck for every business area. Which approach gives domains ownership?",
+   "right": "A data mesh",
+   "wrong": [
+    "A single bigger warehouse",
+    "A longer queue",
+    "More dashboards"
+   ],
+   "tier": 4,
+   "why": "A mesh makes domains owners of their data products."
+  },
+  {
+   "q": "A tiny difference in an A/B test with a huge sample is statistically significant. What should you conclude?",
+   "right": "It is unlikely to be chance, but it may not matter in practice",
+   "wrong": [
+    "The change is worth a large investment",
+    "The sample is too big to trust",
+    "The test must be rerun with a smaller sample"
+   ],
+   "tier": 4,
+   "why": "Significance is not the same as importance."
+  },
+  {
+   "q": "A survey only reaches customers who contact support. What is the risk?",
+   "right": "Sampling bias",
+   "wrong": [
+    "Data drift",
+    "Overfitting",
+    "Underfitting"
+   ],
+   "tier": 4,
+   "why": "The sample does not represent all customers."
+  },
+  {
+   "q": "You want to test a new model on live requests without any customer seeing its output. What do you use?",
+   "right": "A shadow deployment",
+   "wrong": [
+    "A champion-challenger swap",
+    "A full release",
+    "A retrain"
+   ],
+   "tier": 4,
+   "why": "Its output is recorded but not acted upon."
+  },
+  {
+   "q": "Analysts can work on records without seeing names, yet you can link them back. What is this?",
+   "right": "Pseudonymisation",
+   "wrong": [
+    "Anonymisation",
+    "Tokenised hashing of the names",
+    "Row-level security"
+   ],
+   "tier": 4,
+   "why": "The key is held separately, so the data is still personal."
+  },
+  {
+   "q": "You want to publish statistics that can never be traced to anyone. What is the aim?",
+   "right": "Anonymisation",
+   "wrong": [
+    "Pseudonymisation",
+    "Data retention",
+    "A data sharing agreement"
+   ],
+   "tier": 4,
+   "why": "Properly anonymised data cannot identify people."
+  },
+  {
+   "q": "A fraud model should miss as little fraud as possible, accepting more false alarms. Which measure does this favour?",
+   "right": "High recall",
+   "wrong": [
+    "High precision only",
+    "High latency",
+    "High retention"
+   ],
+   "tier": 4,
+   "why": "Recall measures how many true cases are found."
+  },
+  {
+   "q": "A model's inputs have shifted away from the data it was trained on. What is this?",
+   "right": "Data drift",
+   "wrong": [
+    "Overfitting",
+    "Lineage",
+    "A feature store"
+   ],
+   "tier": 4,
+   "why": "The live data no longer resembles the training data."
+  },
+  {
+   "q": "You must explain to a customer why a model declined their application. Which property is needed?",
+   "right": "Explainability",
+   "wrong": [
+    "Latency",
+    "Scalability",
+    "Recall"
+   ],
+   "tier": 4,
+   "why": "People need understandable reasons."
+  },
+  {
+   "q": "Regional managers should only see their own region's rows in one shared table. What do you use?",
+   "right": "Row-level security",
+   "wrong": [
+    "Data masking",
+    "Tokenisation",
+    "Data lineage"
+   ],
+   "tier": 4,
+   "why": "The data layer restricts rows by user."
+  },
+  {
+   "q": "You want realistic test data without any real customers. Which approaches fit?",
+   "right": "Synthetic data or masked data",
+   "wrong": [
+    "A copy of the live database",
+    "A public dataset of other firms' customers",
+    "No test data"
+   ],
+   "tier": 4,
+   "why": "Both avoid exposing real personal data."
+  },
+  {
+   "q": "You have thirty AI ideas and budget for three. Which activity decides?",
+   "right": "Use case prioritisation by value, feasibility and risk",
+   "wrong": [
+    "Training a bigger model",
+    "A data maturity score",
+    "Retraining the models"
+   ],
+   "tier": 4,
+   "why": "Ranking decides the order."
+  },
+  {
+   "q": "A hiring model gives one group lower scores for no good reason. What is this?",
+   "right": "Algorithmic bias",
+   "wrong": [
+    "Data drift",
+    "Underfitting",
+    "Sampling error"
+   ],
+   "tier": 4,
+   "why": "The results are systematically unfair to a group."
+  },
+  {
+   "q": "Many AI pilots start but none reach real users. What is the problem?",
+   "right": "Pilot purgatory",
+   "wrong": [
+    "Data drift",
+    "Overfitting",
+    "Technical debt"
+   ],
+   "tier": 5,
+   "why": "Experiments never become production services."
+  },
+  {
+   "q": "Two companies want to measure shared customers without swapping customer lists. What fits?",
+   "right": "A data clean room",
+   "wrong": [
+    "A data mart",
+    "Tokenisation of the whole list",
+    "A public API"
+   ],
+   "tier": 5,
+   "why": "Only agreed, aggregated results are returned."
+  },
+  {
+   "q": "You want to publish figures while ensuring no individual can be picked out. Which technique adds noise to protect people?",
+   "right": "Differential privacy",
+   "wrong": [
+    "Data masking",
+    "Schema on read",
+    "Encryption at rest"
+   ],
+   "tier": 5,
+   "why": "Measured noise protects individuals while keeping patterns."
+  },
+  {
+   "q": "You want a controlled contest between the live model and a new candidate on the same task. What do you set up?",
+   "right": "A champion-challenger test",
+   "wrong": [
+    "A shadow deployment only",
+    "A retrain",
+    "A new data mart"
+   ],
+   "tier": 5,
+   "why": "The challenger replaces the champion only if it does better."
+  },
+  {
+   "q": "A bank is told two fairness measures cannot both be satisfied at once. What is your best response?",
+   "right": "Choose which fairness measure matters and record why",
+   "wrong": [
+    "Ignore the one that fails",
+    "Drop the model without review",
+    "Add more data and hope"
+   ],
+   "tier": 5,
+   "why": "Different fairness measures can conflict, so a documented decision is needed."
+  },
+  {
+   "q": "An executive asks you to deploy an AI model that makes loan decisions with no person involved. What should you check first?",
+   "right": "Legal limits on automated decision-making and the need for human oversight",
+   "wrong": [
+    "How many tokens the model uses",
+    "Whether the dashboard looks good",
+    "Which cloud region to use"
+   ],
+   "tier": 5,
+   "why": "Such decisions about people can have specific legal limits."
+  },
+  {
+   "q": "A model must be tested for harmful outputs before release. Which practice is this?",
+   "right": "AI red teaming",
+   "wrong": [
+    "Shadow deployment",
+    "Feature engineering",
+    "Data lineage review"
+   ],
+   "tier": 5,
+   "why": "Testers deliberately try to make it misbehave."
+  },
+  {
+   "q": "You want a set of gates that proves a new AI system is safe, lawful and valuable before launch. What do you create?",
+   "right": "An AI impact assessment and approval process",
+   "wrong": [
+    "A prompt library",
+    "A larger context window",
+    "A data lake"
+   ],
+   "tier": 5,
+   "why": "An assessment looks at harms and benefits before use."
+  },
+  {
+   "q": "A company holds the same customer in sales, billing and support under different spellings. What should you build?",
+   "right": "A master data record for customers",
+   "wrong": [
+    "A new dashboard",
+    "A larger warehouse",
+    "A new model"
+   ],
+   "tier": 5,
+   "why": "Master data management keeps one agreed record."
+  },
+  {
+   "q": "You want models to be reproducible and traceable from data to release. Which combination helps?",
+   "right": "A model registry and data lineage",
+   "wrong": [
+    "A longer retention period",
+    "More GPUs",
+    "A bigger test set"
+   ],
+   "tier": 5,
+   "why": "They record which data and version produced each release."
+  }
+ ],
+ "termBank": {
+  "name": "Data and AI leadership",
+  "description": "Data strategy, platforms, analytics, machine learning, generative AI, governance and privacy for technology leaders.",
+  "roles": "cto,cio",
+  "order": 13,
+  "headings": {
+   "dstrat": "Data strategy and ownership",
+   "dplat": "Data platforms and pipelines",
+   "anal": "Analytics and insight",
+   "ml": "Machine learning basics",
+   "mlops": "Machine learning in production",
+   "gen": "Generative AI",
+   "aigov": "AI governance and ethics",
+   "priv": "Privacy and data protection",
+   "dsec": "Data security and sharing",
+   "dorg": "Data and AI organisation"
+  }
+ }
+}
