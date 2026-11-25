@@ -1,7 +1,7 @@
-import { and, asc, eq, inArray } from "drizzle-orm";
-import { careerLevels, db, termProgress, termStudyRoles, terms, users } from "@/lib/db";
+import { and, asc, eq, inArray, isNotNull } from "drizzle-orm";
+import { careerLevels, db, termExams, termProgress, termStudyRoles, terms, users } from "@/lib/db";
 import { allBanks, bankFitsRole, latestResults, sharedTerms, startCheck, type StartResult } from "@/lib/terms";
-import { MIN_TIER_TESTED, nextReview, rankForRung, rankFromStats, studyState, type StudyState, type TierStats } from "@/lib/termsCore";
+import { MIN_TIER_TESTED, TERM_PASS, nextReview, rankForRung, rankFromStats, studyState, type StudyState, type TierStats } from "@/lib/termsCore";
 
 type Person = typeof users.$inferSelect;
 type TermRow = typeof terms.$inferSelect;
@@ -150,19 +150,61 @@ export const removeStudyRole = (userId: number, role: string) =>
 export const myStudyRoles = (userId: number) =>
   db.select().from(termStudyRoles).where(eq(termStudyRoles.userId, userId)).orderBy(asc(termStudyRoles.createdAt), asc(termStudyRoles.id)).all();
 
-// ---- a quick check straight from a list
+// ---- checks made straight from a list
 
 const CHECK_SIZE = 20;
+export const EXAM_SIZE = 20;
 
-/** A 20-term check on a role's list, claiming the highest rank the list reaches with enough terms to judge it. Terms not yet known or tested come first. */
+/** Picks `n` terms spread across the groups (so one topic cannot take over), the ones least known or tested first, shuffled within that. */
+function spread(list: TermRow[], n: number, userId: number): TermRow[] {
+  const prog = progressFor(userId, list.map((t) => t.id)), latest = latestResults(userId);
+  const score = (t: TermRow) => (latest.get(t.id)?.right ? 2 : 0) + (studyState(prog.get(t.id)?.box) === "known" ? 1 : 0) + Math.random();
+  const groups = new Map<string, TermRow[]>();
+  for (const t of list) groups.set(t.groupName, [...(groups.get(t.groupName) ?? []), t]);
+  const queues = [...groups.values()].map((g) => g.sort((a, b) => score(a) - score(b))).sort(() => Math.random() - 0.5);
+  const out: TermRow[] = [];
+  for (let round = 0; out.length < n && queues.some((q) => q.length > round); round++) for (const q of queues) if (q[round] && out.length < n) out.push(q[round]);
+  return out;
+}
+
+/** A 20-term sample of a role's list, tried at the highest rank the list reaches with enough terms to judge it. Terms not yet known or tested come first. */
 export function startRoleCheck(user: Person, role: string, level: number): StartResult {
   const list = roleList(role, level);
   if (!list) return { error: "That role and level are not available." };
-  const prog = progressFor(user.id, list.terms.map((t) => t.id)), latest = latestResults(user.id);
-  const score = (t: TermRow) => (latest.get(t.id)?.right ? 2 : 0) + (studyState(prog.get(t.id)?.box) === "known" ? 1 : 0) + Math.random(); // unknown first, shuffled within
   let claim = list.ceiling;
   while (claim > 1 && list.terms.filter((t) => t.tier === claim).length < MIN_TIER_TESTED) claim--;
-  const atClaim = list.terms.filter((t) => t.tier === claim).sort((a, b) => score(a) - score(b)).slice(0, Math.min(8, MIN_TIER_TESTED + 5));
-  const rest = list.terms.filter((t) => !atClaim.includes(t)).sort((a, b) => score(a) - score(b)).slice(0, CHECK_SIZE - atClaim.length);
-  return startCheck(user, claim, [...atClaim, ...rest].map((t) => t.id));
+  const atClaim = spread(list.terms.filter((t) => t.tier === claim), Math.min(8, MIN_TIER_TESTED + 5), user.id);
+  const rest = spread(list.terms.filter((t) => !atClaim.includes(t)), CHECK_SIZE - atClaim.length, user.id);
+  return startCheck(user, claim, [...atClaim, ...rest].map((t) => t.id), { kind: "quick", role: list.role, level });
+}
+
+export type RankExam = { rank: number; atRank: number; eligible: number; best: { id: number; score: number; passed: boolean } | null };
+
+/** The rank exams a role level offers: one for each rank up to the level's ceiling that has enough terms to be judged, with the person's best result so far. */
+export function rankExams(userId: number, list: RoleList): RankExam[] {
+  const done = db.select().from(termExams).where(and(eq(termExams.userId, userId), eq(termExams.kind, "premade"), eq(termExams.role, list.role), eq(termExams.level, list.level), isNotNull(termExams.finishedAt))).all();
+  const out: RankExam[] = [];
+  for (let rank = 1; rank <= list.ceiling; rank++) {
+    const atRank = list.terms.filter((t) => t.tier === rank).length;
+    if (atRank < MIN_TIER_TESTED) continue;
+    const mine = done.filter((e) => e.claimedTier === rank).sort((a, b) => (b.score ?? 0) - (a.score ?? 0))[0];
+    out.push({ rank, atRank, eligible: list.terms.filter((t) => t.tier <= rank).length, best: mine ? { id: mine.id, score: mine.score ?? 0, passed: (mine.score ?? 0) >= TERM_PASS } : null });
+  }
+  return out;
+}
+
+/**
+ * A rank exam for a role level: `EXAM_SIZE` terms from the list's terms at that rank and below, about half at the rank itself, spread across the groups, the least known first.
+ * The questions go as deep as the rank, so the Titan exam asks harder things about the same words than the Initiate exam does. Taken again, it asks different questions.
+ */
+export function startRankExam(user: Person, role: string, level: number, rank: number): StartResult {
+  const list = roleList(role, level);
+  if (!list) return { error: "That role and level are not available." };
+  if (!Number.isInteger(rank) || rank < 1 || rank > list.ceiling) return { error: "This level has no exam at that rank." };
+  const at = list.terms.filter((t) => t.tier === rank), below = list.terms.filter((t) => t.tier < rank);
+  if (at.length < MIN_TIER_TESTED) return { error: "There are not enough terms at that rank to examine yet." };
+  const nAt = Math.min(at.length, Math.max(MIN_TIER_TESTED, Math.round(EXAM_SIZE * (below.length ? 0.5 : 1))));
+  const first = spread(at, nAt, user.id);
+  const rest = below.length ? spread(below, EXAM_SIZE - first.length, user.id) : [];
+  return startCheck(user, rank, [...first, ...rest].map((t) => t.id), { kind: "premade", role: list.role, level });
 }

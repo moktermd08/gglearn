@@ -1636,7 +1636,10 @@ export const terms = sqliteTable("terms", {
 export const termExams = sqliteTable("term_exams", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").notNull().references(() => users.id),
-  claimedTier: integer("claimed_tier").notNull(), // 1..5
+  claimedTier: integer("claimed_tier").notNull(), // 1..5: the rank being tried, which is also how deep the questions go
+  kind: text("kind").notNull().default("custom"), // "custom" (terms the person picked), "quick" (a sample of a role list) or "premade" (a rank exam for a role and level)
+  role: text("role").notNull().default(""), // for quick and premade checks: the role whose list it was drawn from
+  level: integer("level").notNull().default(0), // and the level on that role's ladder
   score: real("score"), // 0..1, null until finished
   startedAt: integer("started_at").notNull().default(now),
   finishedAt: integer("finished_at"),
@@ -1649,6 +1652,8 @@ export const termExamAnswers = sqliteTable("term_exam_answers", {
   termId: integer("term_id").notNull().references(() => terms.id),
   tier: integer("tier").notNull(), // the term's tier when it was asked, so a later edit does not rewrite the result
   prompt: text("prompt").notNull(),
+  form: text("form").notNull().default(""), // which kind of question it was (lib/termQuestions.ts), so a later check can ask differently
+  key: text("key").notNull().default(""), // and which fact or version of it, with form: what is avoided next time
   options: text("options").notNull(), // JSON array of strings
   correct: integer("correct").notNull(), // index into options
   chosen: integer("chosen"), // null until answered

@@ -1,6 +1,7 @@
 import { and, asc, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { careerGoals, careerLevels, db, termBanks, termExamAnswers, termExams, terms, users } from "@/lib/db";
-import { MAX_PICK, MIN_PICK, MIN_TIER_TESTED, buildCheck, rankForRung, rankFromStats, pooledShare, untested, verdict, type TermLite, type TierStats } from "@/lib/termsCore";
+import { MAX_PICK, MIN_PICK, MIN_TIER_TESTED, rankForRung, rankFromStats, pooledShare, untested, verdict, type TermLite, type TierStats } from "@/lib/termsCore";
+import { buildCheck } from "@/lib/termQuestions";
 
 type Person = typeof users.$inferSelect;
 type TermRow = typeof terms.$inferSelect;
@@ -12,6 +13,7 @@ const parseList = (s: string): string[] => {
 const lite = (r: TermRow): TermLite => ({
   id: r.id, term: r.term, meaning: r.meaning, tier: r.tier, group: r.groupName, bankId: r.bankId,
   source: r.ownerUserId == null ? "shared" : "mine", similar: parseList(r.similar),
+  facts: parseList(r.facts), useWhen: r.useWhen, mistakes: parseList(r.mistakes),
 });
 
 /** Are the term bank tables there? They arrive with `npm run db:push`; until then the pages stay quiet instead of failing. */
@@ -43,9 +45,30 @@ export function banksForRole(jobRole: string) {
 // ---- starting a check
 
 export type StartResult = { id: number } | { error: string };
+export type ExamMeta = { kind: "custom" | "quick" | "premade"; role: string; level: number };
 
-/** Makes a term check from the terms a person picked (shared ones and their own), at the rank they say they are at. */
-export function startCheck(user: Person, claimedTier: number, termIds: number[]): StartResult {
+const RECENT_PER_TERM = 6;
+
+/** What each of these terms was recently asked ("form:key"), so a new check can ask something else about them. Only the person's own latest few questions count. */
+export function recentQuestions(userId: number, termIds: number[]): Map<number, Set<string>> {
+  const out = new Map<number, Set<string>>();
+  if (!termIds.length) return out;
+  const rows = db.select({ termId: termExamAnswers.termId, form: termExamAnswers.form, key: termExamAnswers.key })
+    .from(termExamAnswers).innerJoin(termExams, eq(termExams.id, termExamAnswers.examId))
+    .where(and(eq(termExams.userId, userId), inArray(termExamAnswers.termId, termIds), sql`${termExamAnswers.form} <> ''`))
+    .orderBy(desc(termExamAnswers.id)).limit(Math.max(200, termIds.length * RECENT_PER_TERM)).all();
+  const count = new Map<number, number>();
+  for (const r of rows) {
+    const n = count.get(r.termId) ?? 0;
+    if (n >= RECENT_PER_TERM) continue;
+    count.set(r.termId, n + 1);
+    (out.get(r.termId) ?? out.set(r.termId, new Set()).get(r.termId)!).add(`${r.form}:${r.key}`);
+  }
+  return out;
+}
+
+/** Makes a term check from the terms a person picked (shared ones and their own). The questions go as deep as the rank being tried, and avoid what the person was recently asked about these terms. */
+export function startCheck(user: Person, claimedTier: number, termIds: number[], meta: ExamMeta = { kind: "custom", role: "", level: 0 }): StartResult {
   if (!Number.isInteger(claimedTier) || claimedTier < 1 || claimedTier > 5) return { error: "Choose the rank you think you are at." };
   const ids = [...new Set(termIds.filter((n) => Number.isInteger(n) && n > 0))];
   if (ids.length < MIN_PICK) return { error: `Pick at least ${MIN_PICK} terms.` };
@@ -59,12 +82,12 @@ export function startCheck(user: Person, claimedTier: number, termIds: number[])
   const atClaim = picked.filter((t) => t.tier === claimedTier).length;
   if (atClaim < MIN_TIER_TESTED) return { error: `Pick at least ${MIN_TIER_TESTED} terms at ${rankLabel(claimedTier)} level, so the check can show whether you are really there.` };
 
-  const qs = buildCheck(picked, pool);
+  const qs = buildCheck(picked, pool, claimedTier, Math.random, recentQuestions(user.id, picked.map((t) => t.id)));
   if (qs.length < MIN_PICK) return { error: "There are not enough different terms to make fair questions from. Pick more terms, or add meanings that differ." };
 
   const id = db.transaction((tx) => {
-    const exam = tx.insert(termExams).values({ userId: user.id, claimedTier }).returning({ id: termExams.id }).get();
-    for (const q of qs) tx.insert(termExamAnswers).values({ examId: exam.id, termId: q.termId, tier: q.tier, prompt: q.prompt, options: JSON.stringify(q.options), correct: q.correct }).run();
+    const exam = tx.insert(termExams).values({ userId: user.id, claimedTier, kind: meta.kind, role: meta.role, level: meta.level }).returning({ id: termExams.id }).get();
+    for (const q of qs) tx.insert(termExamAnswers).values({ examId: exam.id, termId: q.termId, tier: q.tier, form: q.form, key: q.key, prompt: q.prompt, options: JSON.stringify(q.options), correct: q.correct }).run();
     return exam.id;
   });
   return { id };
