@@ -45,7 +45,7 @@ export function banksForRole(jobRole: string) {
 // ---- starting a check
 
 export type StartResult = { id: number } | { error: string };
-export type ExamMeta = { kind: "custom" | "quick" | "premade"; role: string; level: number };
+export type ExamMeta = { kind: "custom" | "quick" | "premade" | "placement"; role: string; level: number };
 
 const RECENT_PER_TERM = 6;
 

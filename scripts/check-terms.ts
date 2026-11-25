@@ -9,9 +9,9 @@ if (!process.env.DATABASE_FILE) { console.error("Set DATABASE_FILE to a scratch 
 
 (async () => {
 const core = await import("../lib/termsCore");
-const { db, terms, termExamAnswers, users } = await import("../lib/db");
+const { db, terms, termExamAnswers, termExams, users } = await import("../lib/db");
 const lib = await import("../lib/terms");
-const { eq } = await import("drizzle-orm");
+const { eq, desc } = await import("drizzle-orm");
 
 let n = 0;
 const ok = (name: string, fn: () => void) => { fn(); n++; console.log("ok  " + name); };
@@ -24,6 +24,9 @@ ok("rank needs 80 per cent and enough terms at every tier asked", () => {
   assert.equal(core.rankFromStats({ 1: { tested: 2, right: 2 } }), 0, "two answers are not enough");
   assert.equal(core.rankFromStats({ 1: { tested: 5, right: 5 }, 2: { tested: 5, right: 5 }, 3: { tested: 5, right: 2 }, 4: { tested: 5, right: 5 } }), 2, "a failed tier stops the climb");
   assert.equal(core.rankFromStats({ 4: { tested: 5, right: 5 } }), 4, "a tier that was never asked below does not block");
+  assert.equal(core.rankFromStats({ 1: { tested: 5, right: 5 }, 2: { tested: 4, right: 3 }, 3: { tested: 11, right: 9 } }), 3, "three of four at one rank is too little to hold someone back");
+  assert.equal(core.rankFromStats({ 1: { tested: 5, right: 5 }, 2: { tested: 4, right: 2 }, 3: { tested: 11, right: 9 } }), 1, "but two of four does stop the climb");
+  assert.equal(core.rankFromStats({ 1: { tested: 5, right: 5 }, 2: { tested: 5, right: 3 }, 3: { tested: 11, right: 11 } }), 1, "five answers are enough to fail a rank");
 });
 ok("a goal rung maps across the five ranks", () => {
   assert.equal(core.rankForRung(1, 5), 2);
@@ -304,6 +307,112 @@ ok("sitting the same exam again asks different questions", () => {
   const repeats = (x: Set<string>, y: Set<string>) => [...y].filter((k) => x.has(k)).length / y.size;
   assert.ok(repeats(p1, p2) < 0.25, `second sitting repeated ${Math.round(repeats(p1, p2) * 100)}% of the first`);
   assert.ok(repeats(p2, p3) < 0.25 && repeats(p1, p3) < 0.5, "and so did the third");
+});
+
+// ---- the journey: from knowing nothing to the level aimed at
+const jr = await import("../lib/termJourney");
+const { careerGoals } = await import("../lib/db");
+const newcomer = db.insert(users).values({ email: "journey-" + email, name: "Journey" }).returning().get();
+const answer = (id: number, who: typeof newcomer, how: "all" | "none") => {
+  const c = lib.loadCheck(who, id)!, pick: Record<number, number> = {};
+  c.answers.forEach((a) => { pick[a.id] = how === "all" ? a.correct : (a.correct + 1) % a.options.length; });
+  lib.markCheck(who, id, pick);
+  return lib.loadCheck(who, id)!;
+};
+
+ok("a person with nothing chosen is sent to the start screen", () => {
+  assert.equal(jr.nextStep(newcomer.id).kind, "start");
+});
+ok("the basics for any office job are a list on their own, with all five ranks", () => {
+  const l = study.roleList("everyone", 1)!;
+  assert.ok(l && l.ceiling === 5 && l.terms.length > 150);
+  assert.ok(study.roleOptions().some((o) => o.role === "everyone"));
+  assert.equal(study.roleLabel("everyone"), "Any office job");
+});
+ok("starting from the beginning saves the role and sets a goal only for a role with a ladder, and only once", () => {
+  assert.deepEqual(jr.beginJourney(newcomer.id, "everyone", 1, true), { ok: true });
+  assert.equal(db.select().from(careerGoals).where(eq(careerGoals.userId, newcomer.id)).all().length, 0, "no goal for the basics");
+  assert.ok("error" in jr.beginJourney(newcomer.id, "nobody", 1, true));
+  assert.deepEqual(jr.beginJourney(newcomer.id, "cto", 2, true), { ok: true });
+  assert.deepEqual(jr.beginJourney(newcomer.id, "gardener", 1, true), { ok: true });
+  const goals = db.select().from(careerGoals).where(eq(careerGoals.userId, newcomer.id)).all();
+  assert.deepEqual(goals.map((g) => [g.targetRole, g.targetLevel]), [["cto", 2]], "the first goal stays");
+  study.removeStudyRole(newcomer.id, "gardener");
+  study.removeStudyRole(newcomer.id, "cto");
+});
+ok("placement asks one rank at a time, ten terms of that rank, as deeply as the rank", () => {
+  const list = study.roleList("everyone", 1)!;
+  assert.deepEqual(study.placementStages(list), [1, 2, 3, 4, 5]);
+  const r = study.startPlacementStage(newcomer, "everyone", 1, 1) as { id: number };
+  const c = lib.loadCheck(newcomer, r.id)!;
+  assert.equal(c.exam.kind, "placement");
+  assert.equal(c.exam.claimedTier, 1);
+  assert.ok(c.answers.length >= 8 && c.answers.length <= 10, String(c.answers.length));
+  assert.ok(c.answers.every((a) => a.tier === 1));
+  assert.ok("error" in study.startPlacementStage(newcomer, "everyone", 1, 9));
+  lib.markCheck(newcomer, r.id, {}); // leave it unanswered so the next test starts clean
+  db.delete(termExamAnswers).where(eq(termExamAnswers.examId, r.id)).run();
+  db.delete(termExams).where(eq(termExams.id, r.id)).run();
+});
+ok("someone who knows nothing stops at the first rank, with a next step that is to study and try again", () => {
+  jr.beginJourney(newcomer.id, "everyone", 1, false);
+  assert.equal(jr.nextStep(newcomer.id).kind, "place");
+  const r = study.startPlacementStage(newcomer, "everyone", 1, 1) as { id: number };
+  answer(r.id, newcomer, "none");
+  const list = study.roleList("everyone", 1)!;
+  const st = jr.placementState(newcomer.id, list);
+  assert.deepEqual([st.placed, st.done, st.next], [0, true, null]);
+  assert.deepEqual(st.stages.map((x) => x.state), ["failed", "todo", "todo", "todo", "todo"]);
+  const step = jr.nextStep(newcomer.id);
+  assert.equal(step.kind, "climb");
+  if (step.kind === "climb") assert.ok(step.stage === 1 && step.toLearn > 0 && step.studyHref.includes("everyone"));
+});
+ok("the terms missed in a check can be studied straight away", () => {
+  const last = db.select().from(termExams).where(eq(termExams.userId, newcomer.id)).orderBy(desc(termExams.id)).get()!;
+  const c = lib.loadCheck(newcomer, last.id)!;
+  const cards = study.studyCardsFor(newcomer.id, c.answers.filter((a) => !a.right).map((a) => a.termId));
+  assert.equal(cards.length, c.answers.filter((a) => !a.right).length);
+  assert.ok(cards.every((k) => k.fresh && k.meaning));
+  assert.deepEqual(study.studyCardsFor(other.id, db.select().from(terms).where(eq(terms.ownerUserId, me.id)).all().map((t) => t.id)), [], "somebody's private term is not offered to another person");
+});
+ok("someone who knows a lot climbs rank by rank and stops where they stop passing", () => {
+  const who = db.insert(users).values({ email: "climber-" + email, name: "Climber" }).returning().get();
+  jr.beginJourney(who.id, "everyone", 1, false);
+  const list = study.roleList("everyone", 1)!;
+  for (const rank of [1, 2, 3]) {
+    const r = study.startPlacementStage(who, "everyone", 1, rank) as { id: number };
+    answer(r.id, who, "all");
+    const s = jr.placementState(who.id, list);
+    assert.equal(s.placed, rank);
+    assert.equal(s.next, rank + 1);
+    assert.equal(jr.nextStep(who.id).kind, "continue");
+  }
+  const r4 = study.startPlacementStage(who, "everyone", 1, 4) as { id: number };
+  answer(r4.id, who, "none");
+  const s = jr.placementState(who.id, list);
+  assert.deepEqual([s.placed, s.done, s.next], [3, true, null]);
+  const step = jr.nextStep(who.id);
+  assert.ok(step.kind === "climb" && step.placed === 3 && step.stage === 4 && step.target === 5);
+  // learn and pass the rank again: the latest try counts and the climb goes on
+  const again = study.startPlacementStage(who, "everyone", 1, 4) as { id: number };
+  answer(again.id, who, "all");
+  const s2 = jr.placementState(who.id, list);
+  assert.deepEqual([s2.placed, s2.next], [4, 5]);
+});
+ok("passing every rank reaches the goal", () => {
+  const who = db.insert(users).values({ email: "top-" + email, name: "Top" }).returning().get();
+  jr.beginJourney(who.id, "everyone", 1, false);
+  for (const rank of [1, 2, 3, 4, 5]) answer((study.startPlacementStage(who, "everyone", 1, rank) as { id: number }).id, who, "all");
+  const step = jr.nextStep(who.id);
+  assert.ok(step.kind === "there" && step.placed === 5);
+});
+ok("a goal asks for fewer ranks than the whole list, so the path ends sooner", () => {
+  const who = db.insert(users).values({ email: "goal-" + email, name: "Goal" }).returning().get();
+  jr.beginJourney(who.id, "cto", 1, true); // the first level reaches Adept
+  const list = study.roleList("cto", 1)!;
+  for (const rank of study.placementStages(list)) answer((study.startPlacementStage(who, "cto", 1, rank) as { id: number }).id, who, "all");
+  const step = jr.nextStep(who.id);
+  assert.ok(step.kind === "there" && step.target === 2 && step.placed === 2, JSON.stringify([step.kind]));
 });
 
 console.log(`\n${n} checks passed`);

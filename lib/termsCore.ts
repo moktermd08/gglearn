@@ -15,6 +15,10 @@ export const TERM_PASS = 0.8;
 export const MIN_TIER_TESTED = 3;
 export const MIN_PICK = 5;
 export const MAX_PICK = 40;
+/** A placement stage asks this many terms at one rank, so a pass (8 of 10) is real evidence and one slip does not decide it. */
+export const PLACEMENT_SIZE = 10;
+/** Fewer than this many answers at a rank cannot fail it, only (with enough right) pass it: four answers are too few to hold someone back. */
+export const MIN_TIER_TO_FAIL = 5;
 
 export type TermLite = {
   id: number;
@@ -36,14 +40,18 @@ export type TermLite = {
 
 export type TierStats = Record<number, { tested: number; right: number }>;
 
-/** The highest rank (0 to 5) a set of results supports: every tier asked at least MIN_TIER_TESTED terms must be at TERM_PASS, and the rank is the top such tier below the first one that is not. */
+/**
+ * The highest rank (0 to 5) a set of results supports. A tier asked at least MIN_TIER_TESTED times and at TERM_PASS is reached. A tier below TERM_PASS stops the climb
+ * only when there is enough to say so: MIN_TIER_TO_FAIL answers, or three or four answers with half or fewer right. Three right out of four is too few to hold anyone back.
+ */
 export function rankFromStats(stats: TierStats): number {
   let rank = 0;
   for (let t = 1; t <= RANKS.length; t++) {
     const s = stats[t];
     if (!s || s.tested < MIN_TIER_TESTED) continue; // not tested enough to say either way
-    if (s.right / s.tested < TERM_PASS) break;
-    rank = t;
+    const share = s.right / s.tested;
+    if (share >= TERM_PASS) { rank = t; continue; }
+    if (s.tested >= MIN_TIER_TO_FAIL || share <= 0.5) break;
   }
   return rank;
 }

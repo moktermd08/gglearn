@@ -9,6 +9,8 @@ import { myStudyRoles, roleLabel, roleList, roleOptions, roleSlug, roleSummary }
 import { allBanks, bankFitsRole, goalNeed, myTerms, recentChecks, sharedTerms, standingFor, termsAvailable, type BankStanding } from "@/lib/terms";
 import { MIN_TIER_TESTED, RANKS, rankName } from "@/lib/termsCore";
 import { removeOwnTermAction, removeStudyRoleAction } from "@/app/terms-actions";
+import { TermNextStep } from "@/components/TermNextStep";
+import { nextStep } from "@/lib/termJourney";
 
 export const metadata = { title: "Terms — gglearn" };
 
@@ -73,6 +75,8 @@ export default async function Terms() {
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       <PageHero Icon={BookOpen} tone="violet" title="Terms" sub="The words people in your kind of work need to know, at five ranks from Initiate to Titan. Choose a role to get its list, study the terms, then test yourself, or pick your own terms and see where you really stand." />
+
+      <TermNextStep step={nextStep(user.id)} />
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Learn the terms for a role</h2>

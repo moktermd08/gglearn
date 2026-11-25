@@ -90,12 +90,14 @@ export default async function Home() {
         <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-[#fff] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-indigo-300"><GraduationCap size={14} />Training academy</p>
           <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl">Learn what your role needs. <span className="gradient-text">Prove it. Move up.</span></h1>
-          <p className="mt-4 max-w-xl text-lg text-slate-300">
+          <p className="mt-4 max-w-xl text-lg font-semibold text-slate-200">Start from nothing or from years of experience. Learn the words your job expects, find your level, and climb five ranks from Initiate to Titan.</p>
+          <p className="mt-3 max-w-xl text-base text-slate-300">
             Learn on your own, race your friends, or train a whole team or customer base. Pass level exams, earn certificates,
             and climb {LEVELS.length} levels from Novice to Titan, with a daily rival to keep you showing up. Want a race? Join one of {camps.length} public campaigns.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href={viewer ? "/dashboard" : "/signup"} className="btn">{viewer ? "Go to my path" : "Start free"}<ArrowRight size={16} /></Link>
+            <Link href={viewer ? "/terms/start" : "/signup"} className="btn">{viewer ? "Learn the words of my job" : "Start free: learn the words of your job"}<ArrowRight size={16} /></Link>
+            {viewer && <Link href="/dashboard" className="btn btn-ghost">Go to my path</Link>}
             {!viewer && <Link href="/try" className="btn btn-ghost"><Zap size={16} className="text-amber-500" />Try 3 questions, no sign-up</Link>}
             {!viewer && <Link href="/login" className="btn btn-ghost">Sign in</Link>}
             <Link href="/campaigns" className="btn btn-ghost"><Flame size={16} className="text-pink-300" />Browse {camps.length} campaigns</Link>

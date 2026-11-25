@@ -6,7 +6,8 @@ import { db, terms } from "@/lib/db";
 import { actingUser, logViewAsUse } from "@/lib/auth";
 import { markCheck, parseTermInput, sameTerm, startCheck, myTerms } from "@/lib/terms";
 import { removeTerm } from "@/lib/termsAdmin";
-import { recordStudy, removeStudyRole, roleSlug, saveStudyRole, startRankExam, startRoleCheck } from "@/lib/termStudy";
+import { recordStudy, removeStudyRole, roleSlug, saveStudyRole, startPlacementStage, startRankExam, startRoleCheck } from "@/lib/termStudy";
+import { beginJourney } from "@/lib/termJourney";
 import type { SetupState } from "@/lib/setup";
 
 /** What a candidate does with the term bank: add their own terms, make a check from the terms they picked, and answer it. All as themselves. */
@@ -109,4 +110,30 @@ export async function startRankExamAction(fd: FormData) {
   if ("error" in r) redirect(roleUrl(role, level, `&error=${encodeURIComponent(r.error)}`));
   await logViewAsUse(who.viewedBy, who.me, `started a rank ${rank} term exam for ${role}`);
   redirect(`/terms/check/${r.id}`);
+}
+
+/** One rank of the climb that finds where someone stands. */
+export async function startPlacementAction(fd: FormData) {
+  const who = await actingUser();
+  if (!who) return;
+  const role = String(fd.get("role") ?? ""), level = Number(fd.get("level")), stage = Number(fd.get("stage"));
+  const r = startPlacementStage(who.me, role, level, stage);
+  if ("error" in r) redirect(roleUrl(role, level, `&error=${encodeURIComponent(r.error)}`));
+  await logViewAsUse(who.viewedBy, who.me, `started placement rank ${stage} for ${role}`);
+  redirect(`/terms/check/${r.id}`);
+}
+
+/** The start screen: choose what to learn and how much is known already. Someone new starts studying; someone who knows some is placed from the first rank. */
+export async function beginAction(fd: FormData) {
+  const who = await actingUser();
+  if (!who) return;
+  const role = String(fd.get("role") ?? ""), level = Number(fd.get("level")), how = String(fd.get("how") ?? "some");
+  const r = beginJourney(who.me.id, role, level, fd.get("goal") === "on");
+  if ("error" in r) redirect("/terms/start?error=" + encodeURIComponent(r.error));
+  revalidatePath("/terms");
+  if (how === "new") redirect(`/terms/study?role=${roleSlug(role.trim().toLowerCase())}&level=${level}`);
+  const p = startPlacementStage(who.me, role, level, 1);
+  if ("error" in p) redirect(roleUrl(role, level, `&error=${encodeURIComponent(p.error)}`));
+  await logViewAsUse(who.viewedBy, who.me, `began placement for ${role}`);
+  redirect(`/terms/check/${p.id}`);
 }

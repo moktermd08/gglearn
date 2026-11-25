@@ -1,7 +1,7 @@
 import { and, asc, eq, inArray, isNotNull } from "drizzle-orm";
 import { careerLevels, db, termExams, termProgress, termStudyRoles, terms, users } from "@/lib/db";
 import { allBanks, bankFitsRole, latestResults, sharedTerms, startCheck, type StartResult } from "@/lib/terms";
-import { MIN_TIER_TESTED, TERM_PASS, nextReview, rankForRung, rankFromStats, studyState, type StudyState, type TierStats } from "@/lib/termsCore";
+import { MIN_PICK, MIN_TIER_TESTED, PLACEMENT_SIZE, TERM_PASS, nextReview, rankForRung, rankFromStats, studyState, type StudyState, type TierStats } from "@/lib/termsCore";
 
 type Person = typeof users.$inferSelect;
 type TermRow = typeof terms.$inferSelect;
@@ -16,6 +16,10 @@ export const roleSlug = (role: string) => encodeURIComponent(role);
 
 export type RoleOption = { role: string; levels: { level: number; title: string }[]; hasTerms: boolean };
 
+/** The role for someone who has no job in mind: only the terms everyone needs, one level, all five ranks. It has no career ladder, so it is made here. */
+export const EVERYONE = "everyone";
+const EVERYONE_LEVEL = { level: 1, title: "The basics for any office" };
+
 /** Every role that has a career ladder, with its levels, and whether any bank is made for it (as opposed to only the terms for everyone). */
 export function roleOptions(): RoleOption[] {
   const rows = db.select().from(careerLevels).orderBy(asc(careerLevels.jobRole), asc(careerLevels.level)).all();
@@ -26,12 +30,12 @@ export function roleOptions(): RoleOption[] {
     o.levels.push({ level: r.level, title: r.title });
     byRole.set(r.jobRole, o);
   }
-  return [...byRole.values()];
+  return [{ role: EVERYONE, levels: [EVERYONE_LEVEL], hasTerms: true }, ...byRole.values()];
 }
 
 const ACRONYMS = new Set(["cto", "ceo", "cfo", "cio", "coo", "cmo", "cpo", "ciso", "hr", "it", "ai", "bi", "pmo", "ml", "bi", "l&d"]);
 /** "full stack developer" -> "Full Stack Developer", and "cto" -> "CTO". */
-export const roleLabel = (role: string) => role.split(" ").map((w) => (ACRONYMS.has(w) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1))).join(" ");
+export const roleLabel = (role: string) => role === EVERYONE ? "Any office job" : role.split(" ").map((w) => (ACRONYMS.has(w) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1))).join(" ");
 
 // ---- the list a role and level adds up to
 
@@ -49,7 +53,7 @@ export type RoleList = {
  */
 export function roleList(role: string, level: number): RoleList | null {
   const key = role.trim().toLowerCase();
-  const ladder = db.select().from(careerLevels).where(eq(careerLevels.jobRole, key)).orderBy(asc(careerLevels.level)).all();
+  const ladder = key === EVERYONE ? [{ level: EVERYONE_LEVEL.level, title: EVERYONE_LEVEL.title }] : db.select().from(careerLevels).where(eq(careerLevels.jobRole, key)).orderBy(asc(careerLevels.level)).all();
   const idx = ladder.findIndex((l) => l.level === level);
   if (idx < 0) return null;
   const ceiling = rankForRung(idx + 1, ladder.length);
@@ -110,6 +114,11 @@ export function roleSummary(userId: number, list: RoleList, nowSec = Math.floor(
   return { total: list.terms.length, counts, due, byRank, tested: { rank: rankFromStats(stats), asked, stats } };
 }
 
+const cardOf = (t: TermRow, isNew: boolean): StudyCard => ({
+  id: t.id, term: t.term, meaning: t.meaning, tier: t.tier, group: t.groupName,
+  facts: parseList(t.facts), useWhen: t.useWhen, mistakes: parseList(t.mistakes), similar: parseList(t.similar), fresh: isNew,
+});
+
 export type StudyCard = { id: number; term: string; meaning: string; tier: number; group: string; facts: string[]; useWhen: string; mistakes: string[]; similar: string[]; fresh: boolean };
 
 /** What to study next: terms that are due again first (soonest first), then terms never met, lowest rank first. */
@@ -117,11 +126,16 @@ export function studyQueue(userId: number, list: RoleList, limit = 10, nowSec = 
   const prog = progressFor(userId, list.terms.map((t) => t.id));
   const dueNow = list.terms.filter((t) => { const p = prog.get(t.id); return p && p.dueAt <= nowSec; }).sort((a, b) => prog.get(a.id)!.dueAt - prog.get(b.id)!.dueAt);
   const fresh = list.terms.filter((t) => !prog.has(t.id));
-  const card = (t: TermRow, isNew: boolean): StudyCard => ({
-    id: t.id, term: t.term, meaning: t.meaning, tier: t.tier, group: t.groupName,
-    facts: parseList(t.facts), useWhen: t.useWhen, mistakes: parseList(t.mistakes), similar: parseList(t.similar), fresh: isNew,
-  });
-  return [...dueNow.map((t) => card(t, false)), ...fresh.map((t) => card(t, true))].slice(0, limit);
+  return [...dueNow.map((t) => cardOf(t, false)), ...fresh.map((t) => cardOf(t, true))].slice(0, limit);
+}
+
+/** Study cards for chosen terms (for example the ones missed in a check), only those the person may see. */
+export function studyCardsFor(userId: number, termIds: number[]): StudyCard[] {
+  const ids = [...new Set(termIds)];
+  if (!ids.length) return [];
+  const prog = progressFor(userId, ids);
+  return db.select().from(terms).where(and(inArray(terms.id, ids), eq(terms.status, "active"))).all()
+    .filter((t) => t.ownerUserId == null || t.ownerUserId === userId).map((t) => cardOf(t, !prog.has(t.id)));
 }
 
 /** Records one answer in a study sitting: knew it, or did not. Only a term on a list the person can see can be recorded. */
@@ -207,4 +221,22 @@ export function startRankExam(user: Person, role: string, level: number, rank: n
   const first = spread(at, nAt, user.id);
   const rest = below.length ? spread(below, EXAM_SIZE - first.length, user.id) : [];
   return startCheck(user, rank, [...first, ...rest].map((t) => t.id), { kind: "premade", role: list.role, level });
+}
+
+// ---- placement: finding where someone stands, one rank at a time
+
+/** The ranks a list can be placed on: those with enough terms to ask a whole stage. */
+export function placementStages(list: RoleList): number[] {
+  const out: number[] = [];
+  for (let rank = 1; rank <= list.ceiling; rank++) if (list.terms.filter((t) => t.tier === rank).length >= Math.max(MIN_PICK, MIN_TIER_TESTED)) out.push(rank);
+  return out;
+}
+
+/** One placement stage: up to PLACEMENT_SIZE terms of a single rank, asked as deeply as that rank, the least known first. Passing it is what opens the next rank. */
+export function startPlacementStage(user: Person, role: string, level: number, stage: number): StartResult {
+  const list = roleList(role, level);
+  if (!list) return { error: "That role and level are not available." };
+  if (!placementStages(list).includes(stage)) return { error: "There is no placement stage at that rank." };
+  const picked = spread(list.terms.filter((t) => t.tier === stage), PLACEMENT_SIZE, user.id);
+  return startCheck(user, stage, picked.map((t) => t.id), { kind: "placement", role: list.role, level });
 }
