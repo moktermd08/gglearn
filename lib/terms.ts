@@ -86,7 +86,7 @@ export function startCheck(user: Person, claimedTier: number, termIds: number[],
   if (qs.length < MIN_PICK) return { error: "There are not enough different terms to make fair questions from. Pick more terms, or add meanings that differ." };
 
   const id = db.transaction((tx) => {
-    const exam = tx.insert(termExams).values({ userId: user.id, claimedTier, kind: meta.kind, role: meta.role, level: meta.level }).returning({ id: termExams.id }).get();
+    const exam = tx.insert(termExams).values({ userId: user.id, claimedTier, kind: meta.kind, role: meta.role, level: meta.level > 0 ? meta.level : null }).returning({ id: termExams.id }).get();
     for (const q of qs) tx.insert(termExamAnswers).values({ examId: exam.id, termId: q.termId, tier: q.tier, form: q.form, key: q.key, prompt: q.prompt, options: JSON.stringify(q.options), correct: q.correct }).run();
     return exam.id;
   });

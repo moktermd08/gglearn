@@ -1639,7 +1639,8 @@ export const termExams = sqliteTable("term_exams", {
   claimedTier: integer("claimed_tier").notNull(), // 1..5: the rank being tried, which is also how deep the questions go
   kind: text("kind").notNull().default("custom"), // "custom" (terms the person picked), "quick" (a sample of a role list) or "premade" (a rank exam for a role and level)
   role: text("role").notNull().default(""), // for quick and premade checks: the role whose list it was drawn from
-  level: integer("level").notNull().default(0), // and the level on that role's ladder
+  // and the level on that role's ladder. Null for a check not tied to a role. Not "notNull().default(0)": drizzle-kit reads a numeric default of 0 as no default and refuses to add the column to a table that has rows.
+  level: integer("level"),
   score: real("score"), // 0..1, null until finished
   startedAt: integer("started_at").notNull().default(now),
   finishedAt: integer("finished_at"),
