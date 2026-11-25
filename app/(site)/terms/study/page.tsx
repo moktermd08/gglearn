@@ -38,7 +38,7 @@ export default async function Study({ searchParams }: { searchParams: Promise<{ 
     <div className="mx-auto max-w-2xl space-y-5">
       <PageHero Icon={BookOpen} tone="violet" title={`Study · ${roleLabel(role)}`} sub={`${list.title}. ${sum.counts.known} of ${sum.total} terms known. Terms you have forgotten or not met come first; ones you know come back later.`} />
       {cards.length ? <StudySession cards={cards} listHref={listHref} againHref={`/terms/study?role=${roleSlug(role)}&level=${level}`} />
-        : <div className="card space-y-3 p-6 text-center"><h2 className="text-xl font-bold">Nothing to study right now</h2><p className="text-sm text-slate-600">Every term on this list has been met and none is due to see again. Come back later, or test yourself.</p><Link href={listHref} className="btn">Back to the list</Link></div>}
+        : <div className="card space-y-3 p-6 text-center"><h2 className="text-xl font-bold">Nothing to study right now</h2><p className="text-sm text-slate-300">Every term on this list has been met and none is due to see again. Come back later, or test yourself.</p><Link href={listHref} className="btn">Back to the list</Link></div>}
     </div>
   );
 }

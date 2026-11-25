@@ -43,7 +43,7 @@ export function TermPicker({ banks, defaultClaim }: { banks: PickBank[]; default
               const ids = g.terms.map((t) => t.id), all = ids.every((id) => picked.has(id));
               return (
                 <fieldset key={g.name} className="rounded-lg border border-black/10 p-3">
-                  <legend className="px-1 text-xs font-semibold text-slate-600">{g.name}</legend>
+                  <legend className="px-1 text-xs font-semibold text-slate-300">{g.name}</legend>
                   <button type="button" className="mb-2 text-xs underline" onClick={() => toggle(ids, !all)}>{all ? "Clear this group" : "Pick this group"}</button>
                   <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
                     {g.terms.map((t) => (

@@ -10,7 +10,7 @@ import { chooseRoleAction, startRankExamAction, startRoleCheckAction } from "@/a
 
 export const metadata = { title: "Terms for a role — gglearn" };
 
-const CHIP = { new: "bg-slate-100 text-slate-600", learning: "bg-amber-100 text-amber-800", known: "bg-emerald-100 text-emerald-800" } as const;
+const CHIP = { new: "bg-slate-100 text-slate-300", learning: "bg-amber-100 text-amber-800", known: "bg-emerald-100 text-emerald-800" } as const;
 
 export default async function RoleTerms({ params, searchParams }: { params: Promise<{ role: string }>; searchParams: Promise<{ level?: string; error?: string }> }) {
   const [{ role: raw }, { level: lv, error }] = await Promise.all([params, searchParams]);
@@ -53,7 +53,7 @@ export default async function RoleTerms({ params, searchParams }: { params: Prom
         <div className="h-3 overflow-hidden rounded-full bg-slate-100" role="img" aria-label={`${sum.counts.known} known, ${sum.counts.learning} learning, ${sum.counts.new} not started`}>
           <div className="flex h-full"><div className="bg-emerald-500" style={{ width: `${pct(sum.counts.known)}%` }} /><div className="bg-amber-400" style={{ width: `${pct(sum.counts.learning)}%` }} /></div>
         </div>
-        <p className="text-sm text-slate-600"><b className="text-emerald-700">{sum.counts.known} known</b> · <b className="text-amber-700">{sum.counts.learning} learning</b> · {sum.counts.new} not started{sum.due ? <> · <b>{sum.due} due to see again</b></> : null}</p>
+        <p className="text-sm text-slate-300"><b className="text-emerald-700">{sum.counts.known} known</b> · <b className="text-amber-700">{sum.counts.learning} learning</b> · {sum.counts.new} not started{sum.due ? <> · <b>{sum.due} due to see again</b></> : null}</p>
         <p className="text-xs text-slate-500">A term counts as known once you have recalled it correctly four times, spread over days. Until then it is learning.</p>
         <div className="grid grid-cols-5 gap-2 text-center text-xs">
           {RANKS.map((r, i) => {
@@ -61,7 +61,7 @@ export default async function RoleTerms({ params, searchParams }: { params: Prom
             return <div key={r} className={`rounded border p-2 ${i + 1 > list.ceiling ? "border-dashed border-black/10 text-slate-300" : "border-black/10"}`}><div className="text-slate-500">{r}</div><div className="font-semibold">{b ? `${b.known}/${b.total}` : "–"}</div></div>;
           })}
         </div>
-        <p className="text-sm text-slate-600">{sum.tested.asked ? <>Checks so far say you are at <b>{sum.tested.rank ? rankName(sum.tested.rank) : "no rank yet"}</b> on this list ({sum.tested.asked} of {sum.total} terms asked).</> : "You have not been tested on this list yet."}</p>
+        <p className="text-sm text-slate-300">{sum.tested.asked ? <>Checks so far say you are at <b>{sum.tested.rank ? rankName(sum.tested.rank) : "no rank yet"}</b> on this list ({sum.tested.asked} of {sum.total} terms asked).</> : "You have not been tested on this list yet."}</p>
         <div className="flex flex-wrap gap-3">
           <Link href={base} className="btn"><BookOpen size={15} />Study{sum.due ? ` (${sum.due} due)` : ""}</Link>
           <form action={startRoleCheckAction}><input type="hidden" name="role" value={role} /><input type="hidden" name="level" value={level} /><button className="btn btn-ghost"><ClipboardCheck size={15} />Test me on this list</button></form>
@@ -71,7 +71,7 @@ export default async function RoleTerms({ params, searchParams }: { params: Prom
 
       <section className="card space-y-3 p-4">
         <h2 className="text-lg font-semibold">Exams for this level</h2>
-        <p className="text-sm text-slate-600">One exam for each rank this level reaches. Each draws {EXAM_SIZE} terms from the list at that rank and below, and asks about them as deeply as the rank: an Initiate exam asks what a term means, a Master exam asks you to judge, a Titan exam asks how close terms differ. Sit one again and you get different questions. Pass mark 80%.</p>
+        <p className="text-sm text-slate-300">One exam for each rank this level reaches. Each draws {EXAM_SIZE} terms from the list at that rank and below, and asks about them as deeply as the rank: an Initiate exam asks what a term means, a Master exam asks you to judge, a Titan exam asks how close terms differ. Sit one again and you get different questions. Pass mark 80%.</p>
         <div className="grid gap-2 sm:grid-cols-2">
           {exams.map((e) => (
             <form key={e.rank} action={startRankExamAction} className="flex items-center gap-3 rounded-lg border border-black/10 p-3 text-sm">
@@ -99,7 +99,7 @@ export default async function RoleTerms({ params, searchParams }: { params: Prom
                     <li key={t.id} className="flex flex-wrap items-baseline gap-2 py-2">
                       <b>{t.term}</b><span className="text-xs text-slate-500">{rankName(t.tier)}</span>
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${CHIP[st]}`}>{st === "new" ? "not started" : st}</span>
-                      <span className="w-full text-slate-600">{t.meaning}</span>
+                      <span className="w-full text-slate-300">{t.meaning}</span>
                     </li>
                   );
                 })}

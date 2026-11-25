@@ -74,7 +74,7 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
             );
           })}
         </div>
-        {goal && <p className="text-sm text-slate-600">Your goal, <b>{goal.title}</b>, asks for <b>{rankName(goal.rank)}</b>. {check.reached >= goal.rank ? "This check supports that." : "This check does not yet support that: keep working through the terms you missed."}</p>}
+        {goal && <p className="text-sm text-slate-300">Your goal, <b>{goal.title}</b>, asks for <b>{rankName(goal.rank)}</b>. {check.reached >= goal.rank ? "This check supports that." : "This check does not yet support that: keep working through the terms you missed."}</p>}
       </section>
 
       {missed.length > 0 && (
@@ -84,7 +84,7 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
             {missed.map((a) => (
               <div key={a.id} className="space-y-1 p-3">
                 <p><b>{a.term}</b> <span className="text-xs text-slate-500">{rankName(a.tier)}</span></p>
-                <p className="text-slate-600">{a.meaning}</p>
+                <p className="text-slate-300">{a.meaning}</p>
                 <p className="flex items-center gap-1 text-rose-600"><X size={13} />You chose: {a.chosen == null ? "no answer" : a.options[a.chosen]}</p>
                 <p className="flex items-center gap-1 text-emerald-700"><Check size={13} />Right answer: {a.options[a.correct]}</p>
               </div>

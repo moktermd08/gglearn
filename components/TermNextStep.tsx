@@ -10,7 +10,7 @@ function Climb({ s }: { s: StepBody }) {
   return (
     <div className="mt-3 flex flex-wrap gap-1.5" aria-label="Ranks on the way">
       {s.placement.stages.map((g) => (
-        <span key={g.rank} className={`rounded-full px-2.5 py-1 text-xs font-semibold ${g.state === "passed" ? "bg-emerald-100 text-emerald-800" : g.state === "failed" ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-600"}`}>
+        <span key={g.rank} className={`rounded-full px-2.5 py-1 text-xs font-semibold ${g.state === "passed" ? "bg-emerald-100 text-emerald-800" : g.state === "failed" ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-300"}`}>
           {rankName(g.rank)}{g.state === "passed" ? " ✓" : g.state === "failed" ? ` ${Math.round((g.score ?? 0) * 100)}%` : ""}
         </span>
       ))}
@@ -34,7 +34,7 @@ export function TermNextStep({ step }: { step: Step }) {
       <section className="card flex flex-wrap items-center justify-between gap-4 border-indigo-300 p-5">
         <div className="max-w-xl">
           <h2 className="flex items-center gap-2 text-lg font-bold"><Compass size={18} className="text-indigo-600" />Start with the words of your work</h2>
-          <p className="mt-1 text-sm text-slate-600">Say what you want to learn and how much you know. You can start from nothing or find your level in a few minutes, and the next step is always shown here.</p>
+          <p className="mt-1 text-sm text-slate-300">Say what you want to learn and how much you know. You can start from nothing or find your level in a few minutes, and the next step is always shown here.</p>
         </div>
         <Link href="/terms/start" className="btn">Get started<ArrowRight size={16} /></Link>
       </section>
@@ -46,22 +46,22 @@ export function TermNextStep({ step }: { step: Step }) {
       <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-indigo-600"><Flag size={13} />Your words · next step · {goalWords}</p>
       {step.kind === "place" && <>
         <h2 className="text-lg font-bold">Find where you stand</h2>
-        <p className="text-sm text-slate-600">We start at <b>{rank(step.stage)}</b> and climb one rank at a time, only while you keep passing. Each rank is {10} questions and you need {TERM_PASS * 100}% to pass. If you are new to this, study first.</p>
+        <p className="text-sm text-slate-300">We start at <b>{rank(step.stage)}</b> and climb one rank at a time, only while you keep passing. Each rank is {10} questions and you need {TERM_PASS * 100}% to pass. If you are new to this, study first.</p>
       </>}
       {step.kind === "continue" && <>
         <h2 className="text-lg font-bold">You passed {rank(step.placed)}. Next: {rank(step.stage)}</h2>
-        <p className="text-sm text-slate-600">Keep climbing. The questions get deeper at each rank, and the climb stops where you stop passing.</p>
+        <p className="text-sm text-slate-300">Keep climbing. The questions get deeper at each rank, and the climb stops where you stop passing.</p>
       </>}
       {step.kind === "climb" && <>
         <h2 className="text-lg font-bold">{step.placed ? `You are at ${rank(step.placed)}.` : "You are at the start."} Next: {rank(step.stage)}</h2>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-300">
           {step.toLearn ? <>Study the <b>{step.toLearn}</b> {rank(step.stage)} term{step.toLearn === 1 ? "" : "s"} you do not know yet, then try the {rank(step.stage)} questions again.</> : <>You have met every {rank(step.stage)} term. Try the {rank(step.stage)} questions again.</>}
           {" "}{step.hasGoal ? <>Your goal asks for <b>{rank(step.target)}</b>.</> : <>This list goes up to <b>{rank(step.target)}</b>.</>}
         </p>
       </>}
       {step.kind === "there" && <>
         <h2 className="text-lg font-bold">You are at {rank(step.placed)}: that is what {step.title} asks for</h2>
-        <p className="text-sm text-slate-600">Prove it with a full rank exam from the list, or aim higher.</p>
+        <p className="text-sm text-slate-300">Prove it with a full rank exam from the list, or aim higher.</p>
       </>}
       <Climb s={step} />
       <div className="flex flex-wrap items-center gap-3">
