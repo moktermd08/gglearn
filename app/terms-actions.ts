@@ -6,7 +6,7 @@ import { db, terms } from "@/lib/db";
 import { actingUser, logViewAsUse } from "@/lib/auth";
 import { markCheck, parseTermInput, sameTerm, startCheck, myTerms } from "@/lib/terms";
 import { removeTerm } from "@/lib/termsAdmin";
-import { recordStudy, removeStudyRole, roleSlug, saveStudyRole, startRoleCheck } from "@/lib/termStudy";
+import { recordStudy, removeStudyRole, roleSlug, saveStudyRole, startRankExam, startRoleCheck } from "@/lib/termStudy";
 import type { SetupState } from "@/lib/setup";
 
 /** What a candidate does with the term bank: add their own terms, make a check from the terms they picked, and answer it. All as themselves. */
@@ -97,5 +97,16 @@ export async function startRoleCheckAction(fd: FormData) {
   const r = startRoleCheck(who.me, role, level);
   if ("error" in r) redirect(roleUrl(role, level, `&error=${encodeURIComponent(r.error)}`));
   await logViewAsUse(who.viewedBy, who.me, `started a term check for ${role}`);
+  redirect(`/terms/check/${r.id}`);
+}
+
+/** A rank exam for a role level: the same list, asked as deeply as the rank. */
+export async function startRankExamAction(fd: FormData) {
+  const who = await actingUser();
+  if (!who) return;
+  const role = String(fd.get("role") ?? ""), level = Number(fd.get("level")), rank = Number(fd.get("rank"));
+  const r = startRankExam(who.me, role, level, rank);
+  if ("error" in r) redirect(roleUrl(role, level, `&error=${encodeURIComponent(r.error)}`));
+  await logViewAsUse(who.viewedBy, who.me, `started a rank ${rank} term exam for ${role}`);
   redirect(`/terms/check/${r.id}`);
 }

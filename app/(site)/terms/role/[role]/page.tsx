@@ -5,8 +5,8 @@ import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { termsAvailable } from "@/lib/terms";
 import { RANKS, rankName, studyState } from "@/lib/termsCore";
-import { myStudyRoles, progressFor, roleLabel, roleList, roleSlug, roleSummary } from "@/lib/termStudy";
-import { chooseRoleAction, startRoleCheckAction } from "@/app/terms-actions";
+import { EXAM_SIZE, myStudyRoles, progressFor, rankExams, roleLabel, roleList, roleSlug, roleSummary } from "@/lib/termStudy";
+import { chooseRoleAction, startRankExamAction, startRoleCheckAction } from "@/app/terms-actions";
 
 export const metadata = { title: "Terms for a role — gglearn" };
 
@@ -32,6 +32,7 @@ export default async function RoleTerms({ params, searchParams }: { params: Prom
     const key = `${bank} · ${t.groupName || "General"}`;
     groups.set(key, [...(groups.get(key) ?? []), t]);
   }
+  const exams = rankExams(user.id, list);
   const pct = (n: number) => (sum.total ? Math.round((n / sum.total) * 100) : 0);
   const base = `/terms/study?role=${roleSlug(role)}&level=${level}`;
 
@@ -66,6 +67,22 @@ export default async function RoleTerms({ params, searchParams }: { params: Prom
           <form action={startRoleCheckAction}><input type="hidden" name="role" value={role} /><input type="hidden" name="level" value={level} /><button className="btn btn-ghost"><ClipboardCheck size={15} />Test me on this list</button></form>
           {!saved && <form action={chooseRoleAction}><input type="hidden" name="role" value={role} /><input type="hidden" name="level" value={level} /><button className="btn btn-ghost"><Plus size={15} />Add to my roles</button></form>}
         </div>
+      </section>
+
+      <section className="card space-y-3 p-4">
+        <h2 className="text-lg font-semibold">Exams for this level</h2>
+        <p className="text-sm text-slate-600">One exam for each rank this level reaches. Each draws {EXAM_SIZE} terms from the list at that rank and below, and asks about them as deeply as the rank: an Initiate exam asks what a term means, a Master exam asks you to judge, a Titan exam asks how close terms differ. Sit one again and you get different questions. Pass mark 80%.</p>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {exams.map((e) => (
+            <form key={e.rank} action={startRankExamAction} className="flex items-center gap-3 rounded-lg border border-black/10 p-3 text-sm">
+              <input type="hidden" name="role" value={role} /><input type="hidden" name="level" value={level} /><input type="hidden" name="rank" value={e.rank} />
+              <div className="min-w-0 flex-1"><b>{rankName(e.rank)} exam</b><div className="text-xs text-slate-500">{e.eligible} terms to draw from{e.best ? ` · best ${Math.round(e.best.score * 100)}%` : " · not taken yet"}</div></div>
+              {e.best?.passed && <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">Passed</span>}
+              <button className="btn btn-ghost">{e.best ? "Again" : "Start"}</button>
+            </form>
+          ))}
+        </div>
+        <p className="text-sm"><Link href={`/terms/build?role=${roleSlug(role)}&level=${level}`} className="underline">Build your own exam from this list</Link></p>
       </section>
 
       <section className="space-y-3">

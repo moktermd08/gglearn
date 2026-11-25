@@ -17,9 +17,6 @@ let n = 0;
 const ok = (name: string, fn: () => void) => { fn(); n++; console.log("ok  " + name); };
 
 // ---- the pure rules
-const T = (id: number, term: string, tier: number, group = "g", extra: Partial<TermLite> = {}): TermLite =>
-  ({ id, term, meaning: `It means ${term} thing ${id}`, tier, group, bankId: 1, source: "shared", similar: [], ...extra });
-
 ok("rank needs 80 per cent and enough terms at every tier asked", () => {
   assert.equal(core.rankFromStats({}), 0);
   assert.equal(core.rankFromStats({ 1: { tested: 5, right: 4 } }), 1);
@@ -37,26 +34,79 @@ ok("a goal rung maps across the five ranks", () => {
   assert.equal(core.rankForRung(6, 6), 5);
   assert.equal(core.rankForRung(1, 1), 5, "a role with one level takes in every rank");
 });
-ok("wrong answers are never repeats or easily confused terms", () => {
-  const pool = [T(1, "cookie", 1, "a", { similar: ["header"] }), T(2, "header", 1, "a"), ...Array.from({ length: 8 }, (_, i) => T(10 + i, `other${i}`, 2, "a"))];
-  for (let i = 0; i < 40; i++) {
-    const q = core.buildQuestion(pool[0], pool, Math.random, "term")!;
-    assert.ok(q, "a question is built");
-    assert.equal(q.options.length, 4);
-    assert.equal(new Set(q.options).size, 4);
-    assert.equal(q.options[q.correct], "cookie");
-    assert.ok(!q.options.includes("header"), "a confusable term is not offered");
+// ---- the question generator, on the real cards
+const gen = await import("../lib/termQuestions");
+const fsm = await import("node:fs");
+const cardsDir = new URL("../content/cards/", import.meta.url).pathname;
+const corpus: TermLite[] = [];
+for (const slug of ["office-core", "civil-service-core", "full-stack-core", "cto-core", "finance-admin-core", "security-core"]) {
+  const spec = JSON.parse(fsm.readFileSync(cardsDir + slug + ".json", "utf8"));
+  for (const c of spec.cards) corpus.push({ id: corpus.length + 1, term: c.subject, meaning: "It " + c.says[0], tier: c.tier, group: slug + c.group, bankId: 1, source: "shared", similar: c.like ?? [], facts: c.says.slice(1), useWhen: c.use ?? "", mistakes: c.not ?? [] });
+}
+const ctx = gen.makeCtx(corpus);
+const sig = (q: { prompt: string; options: string[] }) => q.prompt + "|" + [...q.options].sort().join("|");
+const lc = (x: string) => x.toLowerCase();
+
+ok("every card gets a sound question at every rank, whatever form it takes", () => {
+  let made = 0, none = 0;
+  const bad: string[] = [];
+  for (const t of corpus) for (let rank = 1; rank <= 5; rank++) {
+    const q = gen.buildQuestion(t, ctx, rank);
+    if (!q) { none++; continue; }
+    made++;
+    const o = q.options, right = o[q.correct], tr = gen.truths(t).map(lc), fa = gen.falsehoods(t).map(lc);
+    const fail = (why: string) => bad.push(`${q.form} ${t.term} r${rank}: ${why}`);
+    if (new Set(o.map(lc)).size !== o.length) fail("repeated options");
+    if (!(q.correct >= 0 && q.correct < o.length)) fail("no right answer");
+    switch (q.form) {
+      case "term-from-meaning": case "cloze": case "scenario": if (right !== t.term || o.length !== 4) fail("wrong right answer"); break;
+      case "meaning-from-term": if (right !== t.meaning || o.length !== 4) fail("wrong meaning"); break;
+      case "true-false": {
+        const said = lc(q.prompt.replace(/^True or false: /, "").replace(lc(t.term) === lc(q.prompt.slice(15, 15 + t.term.length)) ? t.term + " " : "", "").replace(/\.$/, ""));
+        const isTrue = right === "True";
+        if (isTrue !== tr.includes(said)) fail("true/false does not match the statement");
+        break;
+      }
+      case "contrast": {
+        const named = [t, ...t.similar.map((n) => ctx.byName.get(lc(n)))].find((c) => c && c.term === right)!; // the pair, not any term that shares the words
+        const pred = q.prompt.replace(/^Between .* and .*?, which /, "").replace(/\?$/, "");
+        if (![t.term, ...t.similar].includes(right)) fail("answer is not one of the pair");
+        if (!gen.truths(named).map(lc).includes(lc(pred))) fail("statement is not true of the answer");
+        break;
+      }
+      case "true-statement": if (!tr.includes(lc(right.replace(/^It /, ""))) || o.filter((x) => tr.includes(lc(x.replace(/^It /, "")))).length !== 1) fail("not exactly one true statement"); break;
+      case "not-true": if (o.length < 3 || !fa.includes(lc(right.replace(/^It /, ""))) || o.filter((x) => tr.includes(lc(x.replace(/^It /, "")))).length !== o.length - 1) fail("not exactly one false statement"); break;
+      case "difference": if (!right.startsWith(t.term + " ") || !right.includes(", while ")) fail("wrong shape"); break;
+    }
   }
+  assert.deepEqual(bad.slice(0, 5), []);
+  assert.ok(none / (made + none) < 0.02, `${none} of ${made + none} cards had no question`);
 });
-ok("too few different terms gives no question rather than a bad one", () => {
-  const pool = [T(1, "a", 1), T(2, "b", 1), T(3, "c", 1)];
-  assert.equal(core.buildQuestion(pool[0], pool, Math.random, "term"), null);
+ok("the same word is asked differently at each rank", () => {
+  const forms = (rank: number) => { const m = new Map<string, number>(); for (let i = 0; i < 400; i++) { const q = gen.buildQuestion(corpus[i % corpus.length], ctx, rank)!; m.set(q.form, (m.get(q.form) ?? 0) + 1); } return m; };
+  const r1 = forms(1), r5 = forms(5);
+  for (const f of ["difference", "not-true", "scenario", "contrast", "cloze"]) assert.equal(r1.get(f) ?? 0, 0, `Initiate never asks ${f}`);
+  const deep = (r5.get("difference") ?? 0) + (r5.get("not-true") ?? 0) + (r5.get("scenario") ?? 0);
+  assert.ok(deep > 400 * 0.4, `Titan mostly asks the deeper forms (${deep}/400)`);
+  assert.ok((r5.get("meaning-from-term") ?? 0) < 400 * 0.1, "Titan rarely asks the plain recognition forms");
 });
-ok("meanings are only offered as wrong answers within the same kind", () => {
-  const pool = [T(1, "mine1", 1, "g", { source: "mine" }), ...Array.from({ length: 6 }, (_, i) => T(10 + i, `shared${i}`, 1))];
-  const q = core.buildQuestion(pool[0], pool, Math.random, "meaning")!;
-  assert.ok(q.prompt.startsWith("Which term fits"), "falls back to the term direction when no same-kind meanings exist");
+ok("asking again gives different questions", () => {
+  const t = corpus.find((c) => c.term === "cookie" || c.useWhen)!;
+  const seen = new Set<string>();
+  for (let i = 0; i < 40; i++) seen.add(sig(gen.buildQuestion(t, ctx, 3)!));
+  assert.ok(seen.size >= 10, `${seen.size} different questions out of 40`);
+  // and a term's recent questions are avoided when something else can be made
+  const avoid = new Set<string>(); const keys = new Set<string>();
+  for (let i = 0; i < 10; i++) { const q = gen.buildQuestion(t, ctx, 3, Math.random, avoid)!; keys.add(q.form + ":" + q.key); avoid.add(q.form + ":" + q.key); }
+  assert.ok(keys.size >= 6, `${keys.size} different forms and facts in 10 tries`);
 });
+ok("a person's own terms get the plain forms only, and too few terms give no question", () => {
+  const mine = corpus.slice(0, 8).map((t, i) => ({ ...t, id: 5000 + i, source: "mine" as const, meaning: "a thing number " + i + " that is quite different", facts: [], mistakes: [], useWhen: "", similar: [] }));
+  const mctx = gen.makeCtx([...mine, ...corpus]);
+  for (let rank = 1; rank <= 5; rank++) for (const t of mine) { const q = gen.buildQuestion(t, mctx, rank)!; assert.ok(q && ["term-from-meaning", "meaning-from-term"].includes(q.form), q?.form); }
+  assert.equal(gen.buildQuestion(mine[0], gen.makeCtx(mine.slice(0, 3)), 1), null);
+});
+
 ok("a claim is confirmed only when its own tier was asked enough", () => {
   assert.equal(core.verdict(3, 3, true), "confirmed");
   assert.equal(core.verdict(3, 2, true), "below");
@@ -108,7 +158,8 @@ ok("a check is made, marked and stored as asked", () => {
   assert.equal(c.answers.length, 20);
   assert.equal(lib.loadCheck(other, examId), null, "somebody else cannot open it");
   const chosen: Record<number, number> = {};
-  c.answers.forEach((a, i) => { chosen[a.id] = i < 18 ? a.correct : (a.correct + 1) % a.options.length; }); // 18 of 20 right
+  let slips = 0;
+  c.answers.forEach((a) => { const slip = a.tier === 1 && slips < 2; if (slip) slips++; chosen[a.id] = slip ? (a.correct + 1) % a.options.length : a.correct; }); // 18 of 20 right, both slips on the easiest rank
   assert.deepEqual(lib.markCheck(other, examId, chosen), { error: "That check was not found." });
   assert.deepEqual(lib.markCheck(me, examId, chosen), { ok: true });
   assert.ok("error" in lib.markCheck(me, examId, chosen), "marked once only");
@@ -201,6 +252,55 @@ ok("a quick check from a list asks about the list's own terms and its top rank",
   assert.ok(c.answers.length >= 5 && c.answers.length <= 20);
   assert.ok(c.answers.every((a) => listIds.has(a.termId)));
   assert.equal(c.exam.claimedTier, 5);
+});
+
+ok("a check records how each question was made and where it came from", () => {
+  const u = db.select().from(users).where(eq(users.id, stuId)).get()!;
+  const r = study.startRoleCheck(u, "cto", 4) as { id: number };
+  const c = lib.loadCheck(u, r.id)!;
+  assert.equal(c.exam.kind, "quick");
+  assert.deepEqual([c.exam.role, c.exam.level], ["cto", 4]);
+  const rows = db.select().from(termExamAnswers).where(eq(termExamAnswers.examId, r.id)).all();
+  assert.ok(rows.length > 0 && rows.every((x) => x.form !== ""));
+});
+
+let rankExamId = 0;
+ok("a rank exam draws from the list at that rank and below, and only where the level reaches", () => {
+  const u = db.select().from(users).where(eq(users.id, stuId)).get()!;
+  const list = study.roleList("cto", 4)!;
+  const offered = study.rankExams(u.id, list);
+  assert.deepEqual(offered.map((e) => e.rank), [1, 2, 3, 4, 5]);
+  assert.ok("error" in study.startRankExam(u, "cto", 1, 3), "the first level reaches Adept, so there is no Expert exam");
+  assert.ok("error" in study.startRankExam(u, "cto", 4, 9));
+  const r = study.startRankExam(u, "cto", 4, 3);
+  assert.ok("id" in r, JSON.stringify(r));
+  rankExamId = (r as { id: number }).id;
+  const c = lib.loadCheck(u, rankExamId)!;
+  const allowed = new Set(list.terms.filter((t) => t.tier <= 3).map((t) => t.id));
+  assert.equal(c.exam.kind, "premade");
+  assert.equal(c.exam.claimedTier, 3);
+  assert.ok(c.answers.length >= 15 && c.answers.length <= 20, String(c.answers.length));
+  assert.ok(c.answers.every((a) => allowed.has(a.termId)));
+  assert.ok(c.answers.filter((a) => a.tier === 3).length >= 3);
+});
+ok("a passed rank exam is remembered as the best result", () => {
+  const u = db.select().from(users).where(eq(users.id, stuId)).get()!;
+  const c = lib.loadCheck(u, rankExamId)!;
+  const right: Record<number, number> = {};
+  c.answers.forEach((a) => { right[a.id] = a.correct; });
+  assert.deepEqual(lib.markCheck(u, rankExamId, right), { ok: true });
+  const e = study.rankExams(u.id, study.roleList("cto", 4)!).find((x) => x.rank === 3)!;
+  assert.deepEqual([e.best?.passed, e.best?.score], [true, 1]);
+});
+ok("sitting the same exam again asks different questions", () => {
+  const u = db.select().from(users).where(eq(users.id, stuId)).get()!;
+  const ids = study.roleList("cto", 4)!.terms.filter((t) => t.tier <= 3).slice(0, 24).map((t) => t.id);
+  const pairs = (id: number) => new Set(db.select().from(termExamAnswers).where(eq(termExamAnswers.examId, id)).all().map((x) => x.termId + "|" + x.form + ":" + x.key));
+  const one = lib.startCheck(u, 3, ids) as { id: number }, two = lib.startCheck(u, 3, ids) as { id: number }, three = lib.startCheck(u, 3, ids) as { id: number };
+  const p1 = pairs(one.id), p2 = pairs(two.id), p3 = pairs(three.id);
+  const repeats = (x: Set<string>, y: Set<string>) => [...y].filter((k) => x.has(k)).length / y.size;
+  assert.ok(repeats(p1, p2) < 0.25, `second sitting repeated ${Math.round(repeats(p1, p2) * 100)}% of the first`);
+  assert.ok(repeats(p2, p3) < 0.25 && repeats(p1, p3) < 0.5, "and so did the third");
 });
 
 console.log(`\n${n} checks passed`);

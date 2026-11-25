@@ -4,6 +4,7 @@ import { BookOpen, Check, X } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { goalNeed, loadCheck, termsAvailable } from "@/lib/terms";
+import { roleLabel } from "@/lib/termStudy";
 import { RANKS, TERM_PASS, rankName } from "@/lib/termsCore";
 import { submitCheckAction } from "@/app/terms-actions";
 
@@ -27,7 +28,7 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
   if (exam.finishedAt == null) {
     return (
       <div className="mx-auto max-w-3xl space-y-6">
-        <PageHero Icon={BookOpen} tone="violet" title="Term check" sub={`${answers.length} questions. You said you are at ${rankName(exam.claimedTier)}. Answer them all, then see where you stand.`} />
+        <PageHero Icon={BookOpen} tone="violet" title="Term check" sub={`${answers.length} questions, asked as deeply as ${rankName(exam.claimedTier)} level.${exam.kind === "premade" ? ` The ${rankName(exam.claimedTier)} exam for ${roleLabel(exam.role)}.` : ""} Answer them all, then see where you stand.`} />
         <form action={submitCheckAction} className="space-y-4">
           <input type="hidden" name="exam" value={exam.id} />
           {answers.map((a, n) => (
