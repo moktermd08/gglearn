@@ -1,6 +1,11 @@
 /**
- * Loads the vocabulary card files (content/cards/<slug>.json) into the term bank, so a super admin can edit them in the app.
+ * Loads the vocabulary card files into the term bank, so a super admin can edit them in the app.
  *   npm run import:terms
+ *
+ * A card file becomes a term bank by carrying a "termBank" block:
+ *   "termBank": { "name": "Office core", "description": "...", "roles": "cto,cio", "order": 3, "headings": { "<group key>": "Heading" } }
+ * `roles` is a comma separated list of lower case job roles (empty = everyone); `headings` names each of the file's groups as people see it; `order` sorts the banks.
+ * Card files without a "termBank" block are other tracks and are left alone. Adding a bank is adding a file: nothing here changes.
  *
  * Safe to run again: a bank or a term that already exists is left exactly as it is (an admin may have edited it); only missing ones are added.
  * Each card becomes one term: the subject, its first "says" line as the meaning ("It ..."), its other "says" lines as facts, its "use" and "not" lines, its tier,
@@ -13,33 +18,25 @@ import { and, eq, isNull, sql } from "drizzle-orm";
 import { db, termBanks, terms } from "@/lib/db";
 
 type Card = { group: string; subject: string; tier: number; says: string[]; use?: string; not?: string[]; like?: string[] };
-type Spec = { slug: string; cards: Card[] };
+type BankMeta = { name: string; description: string; roles: string; order?: number; headings: Record<string, string> };
+type Spec = { slug: string; cards: Card[]; termBank?: BankMeta };
 
-const BANKS: { slug: string; name: string; description: string; roles: string; headings: Record<string, string> }[] = [
-  { slug: "office-core", name: "Office core", description: "The everyday workplace words anyone in any office role should know.", roles: "",
-    headings: { com: "Communication", meet: "Meetings", proj: "Projects and planning", rep: "Reporting and information", ppl: "People and teams", work: "Working patterns", money: "Money and admin", cust: "Customers, products and services", tool: "Tools and files", rule: "Rules, risk and quality" } },
-  { slug: "civil-service-core", name: "Civil Service core", description: "What a civil servant needs to know, from the first day to the Senior Civil Service.", roles: "civil service,policy advisor,casework officer",
-    headings: { cs: "Civil Service basics", grade: "Grades and careers", min: "Working with ministers", parl: "Parliament", pol: "Policy making", money: "Public money", legal: "Legal and accountability", del: "Delivery and digital", info: "Information and security", lead: "Senior leadership and structure" } },
-  { slug: "full-stack-core", name: "Full stack developer core", description: "The terms a full stack developer needs, from the web basics to architecture and reliability.", roles: "full stack developer,developer,backend developer,frontend developer",
-    headings: { web: "Web fundamentals", front: "Front end", api: "Back end and APIs", data: "Databases", sec: "Web security", vc: "Version control and teamwork", test: "Testing and code quality", ship: "Build and deployment", run: "Reliability and performance", arch: "Delivery and architecture" } },
-  { slug: "cto-core", name: "CTO core", description: "The terms a technology leader needs, from engineering manager to CTO.", roles: "cto,cio",
-    headings: { strat: "Technology strategy", arch: "Architecture", org: "Delivery and organisation", ppl: "People leadership", fin: "Finance for technology leaders", risk: "Risk and resilience", gov: "Governance and legal", ven: "Vendors and commercial", data: "Data and AI", exec: "Board and executive" } },
-  { slug: "finance-admin-core", name: "Financial admin core", description: "The terms a finance or accounts team member needs, from accounts assistant to head of finance.", roles: "accounting,bookkeeper,cfo,financial analyst,payroll specialist",
-    headings: { book: "Bookkeeping", arap: "Receivables and payables", bank: "Banking and cash", tax: "Tax and payroll", stmt: "Financial statements", close: "Month-end and year-end", mgmt: "Budgeting and management accounting", ctl: "Financial control and audit", sys: "Finance systems and compliance", lead: "Finance leadership" } },
-  { slug: "security-core", name: "Security core", description: "The terms a security professional needs, from junior analyst to CISO.", roles: "security analyst,ciso,security",
-    headings: { fund: "Security fundamentals", iam: "Identity and access", net: "Network security", app: "Application security", crypto: "Cryptography", atk: "Attacks and threats", ops: "Security operations", ir: "Incident response", grc: "Governance, risk and compliance", assure: "Security assurance" } },
-];
+const dir = path.join(process.cwd(), "content", "cards");
+const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json") && !f.startsWith("_")).sort();
+const found: { slug: string; spec: Spec; meta: BankMeta }[] = [];
+for (const f of files) {
+  const spec: Spec = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8"));
+  if (spec.termBank) found.push({ slug: f.slice(0, -5), spec, meta: spec.termBank });
+}
+found.sort((a, b) => (a.meta.order ?? 1000) - (b.meta.order ?? 1000) || a.slug.localeCompare(b.slug));
 
+const list = (s: string) => s.split(",").map((r) => r.trim().toLowerCase()).filter(Boolean);
 let banks = 0, added = 0, kept = 0, filled = 0, widened = 0;
-BANKS.forEach((b, i) => {
-  const file = path.join(process.cwd(), "content", "cards", `${b.slug}.json`);
-  if (!fs.existsSync(file)) { console.log(`skip ${b.slug}: no card file`); return; }
-  const spec: Spec = JSON.parse(fs.readFileSync(file, "utf8"));
-  let bank = db.select().from(termBanks).where(eq(termBanks.slug, b.slug)).get();
-  if (!bank) { bank = db.insert(termBanks).values({ slug: b.slug, name: b.name, description: b.description, roles: b.roles, sortOrder: i }).returning().get(); banks++; }
+found.forEach(({ slug, spec, meta }, i) => {
+  let bank = db.select().from(termBanks).where(eq(termBanks.slug, slug)).get();
+  if (!bank) { bank = db.insert(termBanks).values({ slug, name: meta.name, description: meta.description, roles: list(meta.roles).join(","), sortOrder: meta.order ?? 100 + i }).returning().get(); banks++; }
   else {
-    const have = bank.roles.split(",").map((r) => r.trim()).filter(Boolean);
-    const want = b.roles.split(",").map((r) => r.trim()).filter(Boolean);
+    const have = list(bank.roles), want = list(meta.roles);
     const missing = want.filter((r) => !have.includes(r));
     if (have.length && missing.length) { db.update(termBanks).set({ roles: [...have, ...missing].join(",") }).where(eq(termBanks.id, bank.id)).run(); widened++; }
   }
@@ -56,9 +53,9 @@ BANKS.forEach((b, i) => {
       if (Object.keys(set).length) { db.update(terms).set(set).where(eq(terms.id, cur.id)).run(); filled++; }
       return;
     }
-    db.insert(terms).values({ bankId: bank!.id, groupName: b.headings[c.group] ?? c.group, term: c.subject, meaning: `It ${c.says[0]}`, tier: c.tier, similar: JSON.stringify(c.like ?? []), facts, useWhen, mistakes, sortOrder: n }).run();
+    db.insert(terms).values({ bankId: bank!.id, groupName: meta.headings[c.group] ?? c.group, term: c.subject, meaning: `It ${c.says[0]}`, tier: c.tier, similar: JSON.stringify(c.like ?? []), facts, useWhen, mistakes, sortOrder: n }).run();
     added++;
   });
 });
 const total = db.select({ n: sql<number>`count(*)` }).from(terms).get()!.n;
-console.log(`Banks added: ${banks}. Terms added: ${added}. Already there: ${kept} (${filled} filled in with facts, use or mistakes). Banks given more roles: ${widened}. Terms in all: ${total}.`);
+console.log(`Banks in the card files: ${found.length}. Banks added: ${banks}. Terms added: ${added}. Already there: ${kept} (${filled} filled in with facts, use or mistakes). Banks given more roles: ${widened}. Terms in all: ${total}.`);

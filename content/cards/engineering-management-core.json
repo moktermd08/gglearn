@@ -1,0 +1,1950 @@
+{
+ "slug": "engineering-management-core",
+ "name": "Engineering management vocabulary",
+ "description": "The 100 terms a technology leader needs for running teams, delivery and engineering organisations.",
+ "roles": "cto",
+ "kind": "subject",
+ "brand": "foundations",
+ "audience": "staff",
+ "tier": "role",
+ "scope": "company",
+ "groups": {
+  "team": "team practice term",
+  "hire": "hiring and growing people term",
+  "perf": "performance and feedback term",
+  "cult": "engineering culture term",
+  "deliv": "delivery management term",
+  "rel": "reliability management term",
+  "metr": "engineering measure",
+  "org": "organisation and stakeholder term",
+  "bud": "budget and supplier term",
+  "gov": "technology governance term"
+ },
+ "cards": [
+  {
+   "group": "team",
+   "subject": "retrospective",
+   "tier": 1,
+   "says": [
+    "is a regular meeting where a team looks back at how it worked and agrees what to change",
+    "focuses on the way of working rather than on the product"
+   ],
+   "use": "want a team to improve how it works after a period of work",
+   "not": [
+    "is a meeting that plans the work for the next period"
+   ],
+   "like": [
+    "sprint planning"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "sprint planning",
+   "tier": 1,
+   "says": [
+    "is the meeting where a team chooses what it will take on in the next period",
+    "turns the top of the backlog into a commitment the team believes it can meet"
+   ],
+   "use": "need to agree what the team will work on over the next two weeks",
+   "not": [
+    "is a review of how the team worked in the last period"
+   ],
+   "like": [
+    "retrospective"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "capacity planning",
+   "tier": 2,
+   "says": [
+    "works out how much work a team can take on given its people and their time",
+    "allows for leave, meetings and support work"
+   ],
+   "use": "need to know how much a team can really deliver next month",
+   "not": [
+    "lists everything the team might ever do"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "work-in-progress limit",
+   "tier": 2,
+   "says": [
+    "caps how many items may be in progress at once",
+    "makes a team finish work before it starts more"
+   ],
+   "use": "see too many tasks half-done at the same time",
+   "not": [
+    "sets the maximum number of people on a team"
+   ],
+   "like": [
+    "Kanban"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "Kanban",
+   "tier": 2,
+   "says": [
+    "shows work on a board with a column for each stage",
+    "pulls new work in only when there is capacity"
+   ],
+   "use": "want to see where work is stuck and limit what is started",
+   "not": [
+    "fixes the work for a set period at the start"
+   ],
+   "like": [
+    "work-in-progress limit",
+    "sprint planning"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "story point",
+   "tier": 2,
+   "says": [
+    "is a relative measure of the effort and complexity of a piece of work",
+    "is used by a team to compare items rather than to measure time"
+   ],
+   "use": "need a team to size work without promising hours",
+   "not": [
+    "is a fixed number of hours"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "definition of ready",
+   "tier": 3,
+   "says": [
+    "is the checklist an item must meet before a team starts on it",
+    "covers things like clear acceptance criteria and known dependencies"
+   ],
+   "use": "find that the team keeps starting work that is not well enough understood",
+   "not": [
+    "is the checklist that says work is finished"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "working agreement",
+   "tier": 2,
+   "says": [
+    "is a short set of rules a team agrees for how it works together",
+    "covers things such as meeting times and how reviews are done"
+   ],
+   "use": "need a team to agree how it will behave day to day",
+   "not": [
+    "is the legal contract between the company and a supplier"
+   ],
+   "like": [
+    "team charter"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "team charter",
+   "tier": 3,
+   "says": [
+    "states a team's purpose, scope, members and how it makes decisions",
+    "is agreed when a team is formed or reshaped"
+   ],
+   "use": "are forming a new team and need to state what it is for",
+   "not": [
+    "is a list of the tasks in a sprint"
+   ],
+   "like": [
+    "working agreement"
+   ]
+  },
+  {
+   "group": "team",
+   "subject": "spike",
+   "tier": 3,
+   "says": [
+    "is a short, time-boxed piece of work to answer a question or reduce uncertainty",
+    "produces knowledge rather than a finished feature"
+   ],
+   "use": "need to find out whether an approach is feasible before committing",
+   "not": [
+    "is a feature released to every user at once"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "structured interview",
+   "tier": 2,
+   "says": [
+    "asks every candidate the same questions in the same order",
+    "scores answers against agreed criteria"
+   ],
+   "use": "want hiring decisions that compare candidates fairly",
+   "not": [
+    "is a free conversation with no set questions"
+   ],
+   "like": [
+    "interview scorecard"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "interview scorecard",
+   "tier": 3,
+   "says": [
+    "lists the qualities a role needs and a rating scale for each",
+    "helps interviewers record evidence against the same criteria"
+   ],
+   "use": "need interviewers to rate candidates on the same criteria",
+   "not": [
+    "is the final offer letter"
+   ],
+   "like": [
+    "structured interview"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "30-60-90 plan",
+   "tier": 2,
+   "says": [
+    "sets out what a new starter will learn and deliver in their first 30, 60 and 90 days",
+    "gives a new hire and their manager shared early expectations"
+   ],
+   "use": "have a new engineer starting and want clear early goals",
+   "not": [
+    "is a plan for a 90-day project"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "mentoring",
+   "tier": 2,
+   "says": [
+    "pairs a person with a more experienced colleague who shares advice and experience",
+    "is led by the person being mentored"
+   ],
+   "use": "want a junior to learn from someone who has done the job",
+   "not": [
+    "tells a person exactly what to do and checks that they do it"
+   ],
+   "like": [
+    "coaching",
+    "sponsorship"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "coaching",
+   "tier": 3,
+   "says": [
+    "helps a person work out their own answers through questions",
+    "focuses on their goals and how they will reach them"
+   ],
+   "use": "want someone to find their own solution rather than be told",
+   "not": [
+    "passes on the coach's own experience as instructions"
+   ],
+   "like": [
+    "mentoring"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "sponsorship",
+   "tier": 4,
+   "says": [
+    "is a senior person using their influence to open opportunities for someone",
+    "goes beyond advice by putting that person's name forward"
+   ],
+   "use": "want to put a talented person forward for a stretching role",
+   "not": [
+    "is the same as giving career advice over coffee"
+   ],
+   "like": [
+    "mentoring"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "calibration",
+   "tier": 4,
+   "says": [
+    "is a meeting where managers compare their ratings to keep them consistent",
+    "guards against one manager rating much more harshly or generously than another"
+   ],
+   "use": "need performance ratings to mean the same across teams",
+   "not": [
+    "is a test of how accurate a machine is"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "promotion packet",
+   "tier": 4,
+   "says": [
+    "is the written case for promoting someone, with evidence against the level's expectations",
+    "is reviewed by people beyond the person's manager"
+   ],
+   "use": "need to make the case that someone is working at the next level",
+   "not": [
+    "is a summary of someone's pay history"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "talent review",
+   "tier": 4,
+   "says": [
+    "is a leadership discussion of the strengths, potential and development of the people in a group",
+    "feeds succession planning"
+   ],
+   "use": "need leaders to discuss who is ready for bigger roles",
+   "not": [
+    "is a recruitment event for outside candidates"
+   ],
+   "like": [
+    "nine-box grid"
+   ]
+  },
+  {
+   "group": "hire",
+   "subject": "nine-box grid",
+   "tier": 5,
+   "says": [
+    "plots people by current performance and potential on a three-by-three grid",
+    "is used to guide development and succession discussions"
+   ],
+   "use": "want a simple picture of performance against potential across a group",
+   "not": [
+    "is a nine-step hiring process"
+   ],
+   "like": [
+    "talent review"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "situation-behaviour-impact feedback",
+   "tier": 2,
+   "says": [
+    "describes the situation, the person's behaviour and its impact",
+    "keeps feedback specific and about observable actions"
+   ],
+   "use": "need to give feedback that is specific rather than a judgement of the person",
+   "not": [
+    "tells a person how they compare with their peers"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "performance review",
+   "tier": 2,
+   "says": [
+    "is a formal assessment of how well someone has done against their goals",
+    "usually happens at set points in the year"
+   ],
+   "use": "reach the point of the year for a formal assessment",
+   "not": [
+    "is a daily check on whether work is done"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "objective setting",
+   "tier": 2,
+   "says": [
+    "agrees what a person is expected to achieve over a period",
+    "links individual work to team and company goals"
+   ],
+   "use": "need to agree what someone will deliver this half",
+   "not": [
+    "measures how well someone did last year"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "underperformance",
+   "tier": 3,
+   "says": [
+    "is when someone's work falls below the standard the role needs",
+    "should be addressed early, clearly and with support"
+   ],
+   "use": "see that someone's work has been below the expected level for weeks",
+   "not": [
+    "is a one-off mistake that was quickly fixed"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "development plan",
+   "tier": 2,
+   "says": [
+    "sets out the skills a person wants to build and how they will build them",
+    "is agreed between the person and their manager"
+   ],
+   "use": "want to plan how someone will grow over the next year",
+   "not": [
+    "is a plan to build a new product"
+   ],
+   "like": [
+    "career conversation"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "stretch assignment",
+   "tier": 3,
+   "says": [
+    "is a task slightly beyond a person's current level, given to help them grow",
+    "comes with support so that they can succeed"
+   ],
+   "use": "want to give someone a chance to take on bigger responsibility",
+   "not": [
+    "is extra unpaid work added to a heavy load"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "recognition",
+   "tier": 2,
+   "says": [
+    "tells people that their work was valued",
+    "works best when it is specific and timely"
+   ],
+   "use": "want people to know that a particular piece of work mattered",
+   "not": [
+    "is a pay rise given once a year"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "radical candour",
+   "tier": 4,
+   "says": [
+    "is giving direct feedback while showing that you care about the person",
+    "sits between being harsh and being too nice to be honest"
+   ],
+   "use": "want to be honest with someone without damaging the relationship",
+   "not": [
+    "means saying whatever you think with no regard for the person"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "burnout",
+   "tier": 3,
+   "says": [
+    "is exhaustion from prolonged stress that reduces a person's energy and effectiveness",
+    "is made more likely by sustained overload and lack of control"
+   ],
+   "use": "see a strong engineer becoming withdrawn and tired after months of overload",
+   "not": [
+    "is a short tiredness that goes after a good night's sleep"
+   ]
+  },
+  {
+   "group": "perf",
+   "subject": "career conversation",
+   "tier": 3,
+   "says": [
+    "is a talk about where a person wants their career to go",
+    "looks beyond the current role"
+   ],
+   "use": "want to understand what someone hopes to do next",
+   "not": [
+    "is a conversation about this week's tasks"
+   ],
+   "like": [
+    "development plan"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "engineering culture",
+   "tier": 3,
+   "says": [
+    "is the shared habits and values that shape how engineers work",
+    "shows in what is rewarded, tolerated and discussed"
+   ],
+   "use": "need to describe how engineers in the organisation really behave",
+   "not": [
+    "is the office layout and perks"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "blameless culture",
+   "tier": 3,
+   "says": [
+    "looks for the causes of failures in systems and decisions rather than in individuals",
+    "encourages people to report problems early"
+   ],
+   "use": "want people to speak up about mistakes without fear",
+   "not": [
+    "means nobody is ever held accountable for anything"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "inner source",
+   "tier": 5,
+   "says": [
+    "applies open-source ways of working to code shared inside a company",
+    "lets teams contribute to each other's code through reviewed changes"
+   ],
+   "use": "want teams to improve shared code without waiting for its owners",
+   "not": [
+    "publishes the company's code for the whole world to use"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "guild",
+   "tier": 4,
+   "says": [
+    "is a group of people across teams who share a craft and learn together",
+    "has no formal reporting line"
+   ],
+   "use": "want people with the same craft in different teams to share practice",
+   "not": [
+    "is a team that owns one product"
+   ],
+   "like": [
+    "community of practice"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "community of practice",
+   "tier": 4,
+   "says": [
+    "is a group of people who share a field and learn from one another",
+    "meets regularly to share what works"
+   ],
+   "use": "want people who share a profession to learn from each other across the organisation",
+   "not": [
+    "is a group of customers who help each other"
+   ],
+   "like": [
+    "guild"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "documentation culture",
+   "tier": 3,
+   "says": [
+    "treats writing things down as part of the work",
+    "reduces dependence on what individuals remember"
+   ],
+   "use": "see knowledge locked in a few people's heads",
+   "not": [
+    "means writing a long document for every task"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "RFC process",
+   "tier": 4,
+   "says": [
+    "asks an author to write a proposal and invite comments before a major change",
+    "records the options considered and the decision taken"
+   ],
+   "use": "want a significant change reviewed by the people it affects before work starts",
+   "not": [
+    "is a legal request for payment"
+   ],
+   "like": [
+    "design review"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "design review",
+   "tier": 3,
+   "says": [
+    "is a meeting where peers examine a proposed design before it is built",
+    "looks for risks and alternatives early"
+   ],
+   "use": "want a design challenged before the team builds it",
+   "not": [
+    "is a review of how a built feature looks to users"
+   ],
+   "like": [
+    "RFC process"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "decision log",
+   "tier": 3,
+   "says": [
+    "records important decisions with their date, reasons and owner",
+    "lets people see why something was decided"
+   ],
+   "use": "want to remember why a choice was made six months ago",
+   "not": [
+    "lists tasks waiting to be done"
+   ]
+  },
+  {
+   "group": "cult",
+   "subject": "disagree and commit",
+   "tier": 4,
+   "says": [
+    "is accepting a decision after you have argued your case, and then backing it fully",
+    "avoids work being held up by endless debate"
+   ],
+   "use": "have lost an argument but the team needs to move forward",
+   "not": [
+    "means refusing to take part in a decision you opposed"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "critical path",
+   "tier": 3,
+   "says": [
+    "is the longest chain of dependent tasks in a project",
+    "decides the earliest date the project can finish"
+   ],
+   "use": "need to know which delays would delay the whole project",
+   "not": [
+    "is the shortest route to deliver a feature"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "cone of uncertainty",
+   "tier": 4,
+   "says": [
+    "shows that estimates are widest at the start of a project and narrow as work proceeds",
+    "reminds teams that early estimates carry large error"
+   ],
+   "use": "are asked for a firm date for a project that has barely started",
+   "not": [
+    "shows that estimates grow more uncertain as a project nears the end"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "Brooks's law",
+   "tier": 4,
+   "says": [
+    "says that adding people to a late software project makes it later",
+    "arises because new people need time to learn and communication grows"
+   ],
+   "use": "are tempted to add engineers to a project that is behind",
+   "not": [
+    "says a team should always grow as a project progresses"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "release train",
+   "tier": 4,
+   "says": [
+    "ships on a fixed timetable, with whatever is ready going out on each departure",
+    "makes delivery predictable by fixing the date rather than the content"
+   ],
+   "use": "want regular, predictable releases",
+   "not": [
+    "delays every release until all planned features are finished"
+   ],
+   "like": [
+    "release management"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "code freeze",
+   "tier": 3,
+   "says": [
+    "is a period when no new changes are merged, apart from urgent fixes",
+    "is used to stabilise a release or protect a busy period"
+   ],
+   "use": "need to protect a release or a peak trading period from late changes",
+   "not": [
+    "is the deletion of old code"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "release management",
+   "tier": 3,
+   "says": [
+    "plans, coordinates and controls how software is released",
+    "covers scheduling, approvals and communication"
+   ],
+   "use": "need someone to coordinate what goes live and when",
+   "not": [
+    "is the writing of the code that is released"
+   ],
+   "like": [
+    "release train"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "scope creep",
+   "tier": 2,
+   "says": [
+    "is the gradual growth of what a project must deliver without matching time or budget",
+    "comes from many small additions that each seem harmless"
+   ],
+   "use": "see requests being added to a project one by one",
+   "not": [
+    "is a project finishing earlier than planned"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "burn-up chart",
+   "tier": 3,
+   "says": [
+    "plots completed work against the total scope over time",
+    "shows both progress and changes in scope"
+   ],
+   "use": "want to see how much is done and how much the scope has grown",
+   "not": [
+    "shows only the work remaining, falling to zero"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "throughput forecasting",
+   "tier": 4,
+   "says": [
+    "predicts delivery dates from how many items a team has finished in past periods",
+    "uses real history instead of estimates for each item"
+   ],
+   "use": "want a forecast based on what the team has actually delivered",
+   "not": [
+    "adds up the estimates for every item"
+   ]
+  },
+  {
+   "group": "deliv",
+   "subject": "dependency mapping",
+   "tier": 3,
+   "says": [
+    "shows which teams and systems a piece of work relies on",
+    "helps spot delays and conflicts before they happen"
+   ],
+   "use": "need to see which other teams could block a project",
+   "not": [
+    "lists the libraries imported by one program"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "service level indicator",
+   "tier": 3,
+   "says": [
+    "is a measurement of how a service is performing, such as the share of successful requests",
+    "is what a service level objective is checked against"
+   ],
+   "use": "need a number that shows how well a service is working",
+   "not": [
+    "is the target that the service promises to meet"
+   ],
+   "like": [
+    "error budget"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "error budget",
+   "tier": 4,
+   "says": [
+    "is the amount of unreliability a service may have before it breaks its objective",
+    "lets a team balance new features against stability"
+   ],
+   "use": "need to decide whether the team can keep releasing or must fix reliability",
+   "not": [
+    "is the money set aside for fixing bugs"
+   ],
+   "like": [
+    "service level indicator"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "incident commander",
+   "tier": 3,
+   "says": [
+    "is the person who leads the response to a live incident",
+    "coordinates people and decisions rather than fixing the fault personally"
+   ],
+   "use": "need one person to coordinate the response to a major outage",
+   "not": [
+    "is the engineer who fixes the fault"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "on-call fatigue",
+   "tier": 3,
+   "says": [
+    "is the exhaustion from frequent out-of-hours alerts and interrupted sleep",
+    "leads to mistakes and to people leaving"
+   ],
+   "use": "see on-call engineers worn out by constant pages",
+   "not": [
+    "is the tiredness after a long meeting"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "runbook",
+   "tier": 2,
+   "says": [
+    "is a documented set of steps for handling a known operational task or alert",
+    "lets a tired engineer follow a proven procedure"
+   ],
+   "use": "need steps to follow when a particular alert fires",
+   "not": [
+    "is a plan for the whole year's releases"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "toil",
+   "tier": 3,
+   "says": [
+    "is repetitive manual operational work that could be automated and grows with the service",
+    "produces no lasting improvement"
+   ],
+   "use": "see engineers spending their time on routine manual tasks",
+   "not": [
+    "is skilled design work that improves the system"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "chaos engineering",
+   "tier": 5,
+   "says": [
+    "deliberately injects failures into a system to see how it copes",
+    "aims to find weaknesses before real outages do"
+   ],
+   "use": "want to test whether the system survives the loss of a component",
+   "not": [
+    "means working without any planning"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "reliability review",
+   "tier": 4,
+   "says": [
+    "is a regular look at how a service has performed against its objectives",
+    "decides where to invest to make it more dependable"
+   ],
+   "use": "need to decide what reliability work to do next quarter",
+   "not": [
+    "is a performance appraisal of the on-call team"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "production readiness review",
+   "tier": 4,
+   "says": [
+    "checks that a service is ready to run in production before launch",
+    "covers monitoring, runbooks, capacity and recovery"
+   ],
+   "use": "need to confirm that a new service can be safely operated before it goes live",
+   "not": [
+    "is a test that the interface looks finished"
+   ]
+  },
+  {
+   "group": "rel",
+   "subject": "incident severity level",
+   "tier": 3,
+   "says": [
+    "classifies an incident by how much harm it does",
+    "decides how fast people must respond and who is told"
+   ],
+   "use": "need to decide how urgently to respond to a fault",
+   "not": [
+    "is the number of people affected over a year"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "SPACE framework",
+   "tier": 5,
+   "says": [
+    "measures developer productivity across satisfaction, performance, activity, communication and efficiency",
+    "warns against judging productivity by a single number"
+   ],
+   "use": "need a balanced way to think about how productive engineers are",
+   "not": [
+    "counts the lines of code written each week"
+   ],
+   "like": [
+    "developer experience"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "developer experience",
+   "tier": 3,
+   "says": [
+    "is how easy and pleasant it is for engineers to do their work",
+    "covers tools, builds, documentation and processes"
+   ],
+   "use": "see engineers slowed by poor tools and slow builds",
+   "not": [
+    "is the number of years an engineer has worked"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "cognitive load",
+   "tier": 4,
+   "says": [
+    "is the amount of mental effort a person must hold to do their work",
+    "grows when a team owns too many things"
+   ],
+   "use": "see a team struggling because it is responsible for too much",
+   "not": [
+    "is how many tasks a computer can run at once"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "flow efficiency",
+   "tier": 4,
+   "says": [
+    "is the share of a work item's elapsed time in which it is actually being worked on",
+    "is low when items spend most of their time waiting"
+   ],
+   "use": "want to know how much of a delivery's time is spent waiting",
+   "not": [
+    "is how many hours an engineer works per day"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "rework rate",
+   "tier": 4,
+   "says": [
+    "is the share of work that has to be redone or fixed after it was thought finished",
+    "signals problems with quality or unclear requirements"
+   ],
+   "use": "see a lot of finished work coming back to be fixed",
+   "not": [
+    "is the speed at which new work is started"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "escaped defect",
+   "tier": 3,
+   "says": [
+    "is a bug found by users after release rather than by the team before it",
+    "shows what testing missed"
+   ],
+   "use": "need to count bugs that reached customers",
+   "not": [
+    "is a bug found and fixed during development"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "leading indicator",
+   "tier": 3,
+   "says": [
+    "is a measure that changes before the outcome you care about",
+    "gives an early warning that a result is likely to move"
+   ],
+   "use": "want an early signal that delivery is about to slip",
+   "not": [
+    "is a measure that reports what has already happened"
+   ],
+   "like": [
+    "lagging indicator"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "lagging indicator",
+   "tier": 3,
+   "says": [
+    "is a measure that reports an outcome after it has happened",
+    "confirms results but arrives too late to change them"
+   ],
+   "use": "need to report last quarter's results",
+   "not": [
+    "is a measure that changes before the outcome"
+   ],
+   "like": [
+    "leading indicator"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "guardrail metric",
+   "tier": 4,
+   "says": [
+    "is a measure that must not get worse while a team pursues a goal",
+    "protects against gaining one result at the cost of another"
+   ],
+   "use": "want to make sure a push for speed does not harm quality",
+   "not": [
+    "is the main target the team is trying to hit"
+   ]
+  },
+  {
+   "group": "metr",
+   "subject": "vanity metric",
+   "tier": 3,
+   "says": [
+    "is a number that looks impressive but does not guide decisions",
+    "goes up whatever the team does"
+   ],
+   "use": "see a chart that looks good but tells you nothing to act on",
+   "not": [
+    "is a measure tied directly to a decision"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "matrix organisation",
+   "tier": 3,
+   "says": [
+    "has people report to a functional manager while working on projects led by others",
+    "creates two lines of accountability"
+   ],
+   "use": "see an engineer who reports to one manager but takes direction from a project lead",
+   "not": [
+    "has every person report to exactly one boss with no project work"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "product trio",
+   "tier": 4,
+   "says": [
+    "is a product manager, a designer and an engineer who make product decisions together",
+    "keeps discovery work close to delivery"
+   ],
+   "use": "want product decisions made with design and engineering input from the start",
+   "not": [
+    "is a group of three executives"
+   ],
+   "like": [
+    "dual-track agile"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "dual-track agile",
+   "tier": 4,
+   "says": [
+    "runs discovery of what to build alongside delivery of what is already decided",
+    "keeps a team from building unvalidated ideas"
+   ],
+   "use": "want to test ideas with users while the team keeps delivering",
+   "not": [
+    "means two teams doing exactly the same work"
+   ],
+   "like": [
+    "product trio"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "stakeholder map",
+   "tier": 2,
+   "says": [
+    "shows who is affected by or can influence a project and how much",
+    "helps decide how to engage each person"
+   ],
+   "use": "need to see who must be kept informed or consulted",
+   "not": [
+    "is a diagram of a computer network"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "service catalogue",
+   "tier": 3,
+   "says": [
+    "lists the services a team or function offers and how to request them",
+    "makes clear what is on offer and what it costs"
+   ],
+   "use": "want other teams to know what your team provides and how to ask",
+   "not": [
+    "is a list of customers"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "internal customer",
+   "tier": 3,
+   "says": [
+    "is a colleague or team that uses what another team provides",
+    "should be treated with the care given to a paying customer"
+   ],
+   "use": "need to think of another department as the people you serve",
+   "not": [
+    "is a paying member of the public"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "shared service",
+   "tier": 4,
+   "says": [
+    "is a function, such as IT support, provided once and used by many parts of the organisation",
+    "aims for consistency and lower cost"
+   ],
+   "use": "need one team to provide something that many parts of the business use",
+   "not": [
+    "is a service that each department builds for itself"
+   ],
+   "like": [
+    "centre of excellence"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "centre of excellence",
+   "tier": 4,
+   "says": [
+    "is a team that holds deep expertise and spreads good practice",
+    "advises other teams rather than doing all the work itself"
+   ],
+   "use": "want a group that sets standards and helps others adopt them",
+   "not": [
+    "is the company's head office building"
+   ],
+   "like": [
+    "shared service"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "operating cadence",
+   "tier": 4,
+   "says": [
+    "is the regular rhythm of meetings and reviews that runs an organisation",
+    "makes planning, reporting and decisions predictable"
+   ],
+   "use": "want a predictable rhythm of planning and review across teams",
+   "not": [
+    "is the speed of a team's typing"
+   ]
+  },
+  {
+   "group": "org",
+   "subject": "team API",
+   "tier": 5,
+   "says": [
+    "is how a team expects other teams to work with it, such as its services, documentation and requests",
+    "reduces unplanned interruptions"
+   ],
+   "use": "want other teams to know how to work with yours without ad hoc interruptions",
+   "not": [
+    "is a programming interface exposed by a web service"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "run versus change",
+   "tier": 3,
+   "says": [
+    "separates the cost of keeping systems running from the cost of changing them",
+    "shows how much of the budget is left for new work"
+   ],
+   "use": "need to show how much spend goes on maintenance rather than new development",
+   "not": [
+    "separates cloud costs from office costs"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "fully loaded cost",
+   "tier": 3,
+   "says": [
+    "is the total cost of employing someone, including salary, benefits, tax and overheads",
+    "is higher than their pay alone"
+   ],
+   "use": "need to know what an engineer really costs the company",
+   "not": [
+    "is the salary on their contract"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "contractor",
+   "tier": 2,
+   "says": [
+    "is someone engaged for a period or a project and paid by the day or hour",
+    "is usually not an employee and has different rights"
+   ],
+   "use": "need extra capacity for a defined project without hiring",
+   "not": [
+    "is a permanent employee on the payroll"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "capacity versus demand",
+   "tier": 3,
+   "says": [
+    "compares how much work a team can do with how much is being asked of it",
+    "shows where the team is overloaded"
+   ],
+   "use": "need to show leaders that requests exceed what the team can deliver",
+   "not": [
+    "compares last year's budget with this year's"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "vendor scorecard",
+   "tier": 4,
+   "says": [
+    "rates a supplier against agreed measures such as quality, delivery and responsiveness",
+    "gives evidence for contract reviews"
+   ],
+   "use": "need to judge how well a supplier is performing over time",
+   "not": [
+    "is a supplier's price list"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "cloud commitment",
+   "tier": 4,
+   "says": [
+    "is an agreement to spend a set amount with a cloud provider in return for a lower rate",
+    "carries a risk of paying for capacity that is not used"
+   ],
+   "use": "want a cheaper cloud rate in exchange for committing to spend",
+   "not": [
+    "is a promise to move every system to the cloud"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "unit cost",
+   "tier": 4,
+   "says": [
+    "is the cost to deliver one unit of something, such as one transaction or one customer",
+    "shows whether efficiency is improving as volume grows"
+   ],
+   "use": "want to know the cost of serving one more user",
+   "not": [
+    "is the total cost of a department"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "showback",
+   "tier": 4,
+   "says": [
+    "reports to each team what its technology use costs, without charging it",
+    "raises awareness of cost"
+   ],
+   "use": "want teams to see what they spend without moving money between budgets",
+   "not": [
+    "moves money from each team's budget to the central one"
+   ],
+   "like": [
+    "chargeback"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "chargeback",
+   "tier": 5,
+   "says": [
+    "bills each team for the technology it uses, moving money between budgets",
+    "makes teams directly accountable for what they consume"
+   ],
+   "use": "want teams to pay for what they use out of their own budgets",
+   "not": [
+    "reports costs without moving any money"
+   ],
+   "like": [
+    "showback"
+   ]
+  },
+  {
+   "group": "bud",
+   "subject": "cost allocation tag",
+   "tier": 5,
+   "says": [
+    "is a label attached to a cloud resource to show which team or product owns its cost",
+    "makes it possible to split a shared bill"
+   ],
+   "use": "need to work out which team is responsible for each cloud cost",
+   "not": [
+    "is a security label for sensitive data"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "golden path",
+   "tier": 4,
+   "says": [
+    "is the recommended, well-supported way to build and run something in the organisation",
+    "makes the right thing the easy thing"
+   ],
+   "use": "want teams to choose a supported default rather than invent their own",
+   "not": [
+    "is a mandatory process that no team may depart from for any reason"
+   ],
+   "like": [
+    "paved road"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "paved road",
+   "tier": 4,
+   "says": [
+    "is a set of supported tools and platforms that teams are encouraged to use",
+    "reduces the need for each team to solve the same problem"
+   ],
+   "use": "want to offer a well-supported route that most teams will choose",
+   "not": [
+    "is a rule that forbids using any other tool"
+   ],
+   "like": [
+    "golden path"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "technology standard",
+   "tier": 3,
+   "says": [
+    "is an agreed choice or rule for how technology is used across the organisation",
+    "keeps systems consistent and supportable"
+   ],
+   "use": "need everyone to use the same approach to a common problem",
+   "not": [
+    "is a suggestion that nobody has to follow"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "exception process",
+   "tier": 4,
+   "says": [
+    "lets a team ask to depart from a standard, with reasons and approval",
+    "keeps departures visible and time-limited"
+   ],
+   "use": "need a team to be allowed to depart from a standard with agreement",
+   "not": [
+    "removes the standard for everyone"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "deprecation policy",
+   "tier": 4,
+   "says": [
+    "sets how and when something will be retired, with warning to its users",
+    "gives users time to move"
+   ],
+   "use": "need to retire an old service without surprising its users",
+   "not": [
+    "deletes a feature with no notice"
+   ],
+   "like": [
+    "end of life"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "end of life",
+   "tier": 3,
+   "says": [
+    "is the date after which a product or version is no longer supported",
+    "means no more fixes, including security fixes"
+   ],
+   "use": "find that software your system runs on will stop receiving security updates",
+   "not": [
+    "is the date a product is first released"
+   ],
+   "like": [
+    "deprecation policy"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "open source policy",
+   "tier": 4,
+   "says": [
+    "sets rules for using and contributing to open-source software",
+    "covers licences, security and who may approve use"
+   ],
+   "use": "need rules on which open-source components teams may use",
+   "not": [
+    "is a rule that all code must be published openly"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "architecture principle",
+   "tier": 4,
+   "says": [
+    "is a short statement of a rule that guides design decisions",
+    "is chosen to reflect what the organisation values"
+   ],
+   "use": "need to guide many teams towards consistent design choices",
+   "not": [
+    "is a diagram of a particular system"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "technical design authority",
+   "tier": 5,
+   "says": [
+    "is a group that reviews and approves significant technical decisions",
+    "balances team freedom with consistency"
+   ],
+   "use": "need a body that approves major technical choices across teams",
+   "not": [
+    "is the supplier that wrote the system"
+   ]
+  },
+  {
+   "group": "gov",
+   "subject": "technology adoption curve",
+   "tier": 5,
+   "says": [
+    "describes how a new technology spreads from early adopters to the majority",
+    "shows when a technology is proven enough for wider use"
+   ],
+   "use": "need to judge whether a new technology is mature enough to adopt",
+   "not": [
+    "is a graph of a company's revenue over time"
+   ]
+  }
+ ],
+ "qa": [
+  {
+   "q": "Which meeting looks back at how a team worked and agrees what to change?",
+   "right": "A retrospective",
+   "wrong": [
+    "Sprint planning",
+    "A design review",
+    "A stand-up"
+   ],
+   "tier": 1,
+   "why": "A retrospective reviews the way of working."
+  },
+  {
+   "q": "Which meeting decides what the team will take on in the next two weeks?",
+   "right": "Sprint planning",
+   "wrong": [
+    "A retrospective",
+    "A calibration meeting",
+    "A talent review"
+   ],
+   "tier": 1,
+   "why": "Sprint planning chooses the next period's work."
+  },
+  {
+   "q": "A team has too many tasks half-done at once. What helps?",
+   "right": "A work-in-progress limit",
+   "wrong": [
+    "A longer sprint",
+    "A bigger backlog",
+    "A code freeze"
+   ],
+   "tier": 2,
+   "why": "A limit makes the team finish before starting more."
+  },
+  {
+   "q": "What are story points?",
+   "right": "A relative measure of effort and complexity, not a number of hours",
+   "wrong": [
+    "A fixed number of hours per task",
+    "A score for how happy the team is",
+    "The number of bugs found"
+   ],
+   "tier": 2,
+   "why": "Points compare items rather than promise time."
+  },
+  {
+   "q": "A client keeps adding small requests to a project one by one. What is this?",
+   "right": "Scope creep",
+   "wrong": [
+    "Dependency mapping",
+    "A spike",
+    "Throughput forecasting"
+   ],
+   "tier": 2,
+   "why": "Scope grows without matching time or budget."
+  },
+  {
+   "q": "A junior engineer wants advice from someone who has done the job. What fits?",
+   "right": "Mentoring",
+   "wrong": [
+    "Calibration",
+    "A promotion packet",
+    "Sponsorship"
+   ],
+   "tier": 2,
+   "why": "Mentoring shares experience and advice."
+  },
+  {
+   "q": "You want to compare candidates fairly. Which interview approach helps?",
+   "right": "A structured interview with the same questions for everyone",
+   "wrong": [
+    "A free conversation",
+    "Asking each candidate a different question",
+    "Choosing the most confident person"
+   ],
+   "tier": 2,
+   "why": "Structured interviews score answers against agreed criteria."
+  },
+  {
+   "q": "An alert fires at 3am and the on-call engineer is not sure what to do. What helps most?",
+   "right": "A runbook with the steps for that alert",
+   "wrong": [
+    "A longer sprint",
+    "A retrospective",
+    "A guild meeting"
+   ],
+   "tier": 2,
+   "why": "A runbook documents a proven procedure."
+  },
+  {
+   "q": "Which feedback is specific and about behaviour?",
+   "right": "I noticed that in Tuesday's review you interrupted Sam three times, and it meant the team stopped sharing ideas",
+   "wrong": [
+    "You are not a team player",
+    "You need to be better",
+    "Everyone thinks you are difficult"
+   ],
+   "tier": 2,
+   "why": "Situation, behaviour and impact keep feedback specific."
+  },
+  {
+   "q": "You need to see who must be kept informed about a project. What do you draw up?",
+   "right": "A stakeholder map",
+   "wrong": [
+    "A critical path",
+    "A burn-up chart",
+    "A runbook"
+   ],
+   "tier": 2,
+   "why": "A stakeholder map shows who is affected or can influence."
+  },
+  {
+   "q": "A task on the critical path slips by a week. What is the likely effect?",
+   "right": "The project finishes a week later unless time is made up elsewhere",
+   "wrong": [
+    "Nothing, as the other tasks are unaffected",
+    "The project finishes a week earlier",
+    "The task is dropped from the plan"
+   ],
+   "tier": 3,
+   "why": "The critical path decides the finish date."
+  },
+  {
+   "q": "A late project looks set to miss its date and a manager wants to add five engineers. Which law warns against this?",
+   "right": "Brooks's law",
+   "wrong": [
+    "The cone of uncertainty",
+    "The error budget",
+    "Conway's law"
+   ],
+   "tier": 3,
+   "why": "Adding people to a late project can make it later."
+  },
+  {
+   "q": "Which chart shows both progress and growth in scope?",
+   "right": "A burn-up chart",
+   "wrong": [
+    "A burn-down chart that shows only remaining work",
+    "A runbook",
+    "A stakeholder map"
+   ],
+   "tier": 3,
+   "why": "A burn-up plots completed work against total scope."
+  },
+  {
+   "q": "The team needs a short piece of work to find out whether an approach is feasible. What is it?",
+   "right": "A spike",
+   "wrong": [
+    "A release train",
+    "A code freeze",
+    "A guild"
+   ],
+   "tier": 3,
+   "why": "A spike answers a question rather than delivering a feature."
+  },
+  {
+   "q": "After an outage, how does a blameless culture approach the review?",
+   "right": "It looks for causes in systems and decisions, not individuals",
+   "wrong": [
+    "It names the engineer who caused it",
+    "It avoids discussing the outage",
+    "It decides who should be disciplined"
+   ],
+   "tier": 3,
+   "why": "Blameless reviews find system causes and encourage reporting."
+  },
+  {
+   "q": "Engineers spend each week restarting the same servers by hand. What is this called?",
+   "right": "Toil",
+   "wrong": [
+    "A spike",
+    "A guardrail metric",
+    "Scope creep"
+   ],
+   "tier": 3,
+   "why": "Toil is repetitive manual work that could be automated."
+  },
+  {
+   "q": "Who coordinates the response to a major live incident?",
+   "right": "The incident commander",
+   "wrong": [
+    "The product owner",
+    "The CEO",
+    "The newest engineer"
+   ],
+   "tier": 3,
+   "why": "The commander leads the response rather than fixing the fault."
+  },
+  {
+   "q": "Which is a leading indicator that delivery may slip?",
+   "right": "Pull requests waiting longer and longer for review",
+   "wrong": [
+    "Last quarter's revenue",
+    "The number of bugs fixed last year",
+    "The total lines of code written"
+   ],
+   "tier": 3,
+   "why": "A leading indicator changes before the outcome."
+  },
+  {
+   "q": "What does an engineer really cost the company?",
+   "right": "Their salary plus benefits, tax and overheads",
+   "wrong": [
+    "Only the salary on the contract",
+    "Only their benefits",
+    "Only the recruitment fee"
+   ],
+   "tier": 3,
+   "why": "Fully loaded cost is higher than pay alone."
+  },
+  {
+   "q": "A database version your system runs on stops receiving security updates next month. What has been reached?",
+   "right": "End of life",
+   "wrong": [
+    "A code freeze",
+    "A spike",
+    "A release train"
+   ],
+   "tier": 3,
+   "why": "After end of life there are no more fixes."
+  },
+  {
+   "q": "An engineer's work has been below the expected standard for several weeks. What should you do first?",
+   "right": "Talk to them early and clearly, and offer support",
+   "wrong": [
+    "Wait until the annual review",
+    "Tell the rest of the team",
+    "Move their tasks to someone else without telling them"
+   ],
+   "tier": 3,
+   "why": "Underperformance should be addressed early, clearly and with support."
+  },
+  {
+   "q": "A strong engineer has become withdrawn and tired after months of overload. What is the likely problem, and what helps?",
+   "right": "Burnout; reduce the load and talk to them",
+   "wrong": [
+    "A skills gap; send them on a course",
+    "Scope creep; cancel the project",
+    "A false positive; do nothing"
+   ],
+   "tier": 3,
+   "why": "Sustained overload leads to burnout."
+  },
+  {
+   "q": "Before building a major feature, you want peers to challenge the design. What do you hold?",
+   "right": "A design review",
+   "wrong": [
+    "A retrospective",
+    "A calibration meeting",
+    "A talent review"
+   ],
+   "tier": 3,
+   "why": "A design review examines a design before it is built."
+  },
+  {
+   "q": "A service has used up its error budget. What should the team do?",
+   "right": "Slow feature releases and focus on reliability",
+   "wrong": [
+    "Release faster to make up for it",
+    "Ignore the budget until next year",
+    "Raise the service's target"
+   ],
+   "tier": 4,
+   "why": "An exhausted error budget shifts work to stability."
+  },
+  {
+   "q": "A CEO asks for an exact date at the very start of a large project. Which idea explains why that is unreliable?",
+   "right": "The cone of uncertainty",
+   "wrong": [
+    "Brooks's law",
+    "The critical path",
+    "Radical candour"
+   ],
+   "tier": 4,
+   "why": "Early estimates carry the widest error."
+  },
+  {
+   "q": "Releases leave on a fixed timetable with whatever is ready. What is this?",
+   "right": "A release train",
+   "wrong": [
+    "A code freeze",
+    "A spike",
+    "A runbook"
+   ],
+   "tier": 4,
+   "why": "A release train fixes the date, not the content."
+  },
+  {
+   "q": "A senior leader uses their influence to put a talented engineer forward for a leadership role. What is this?",
+   "right": "Sponsorship",
+   "wrong": [
+    "Mentoring",
+    "Coaching",
+    "Calibration"
+   ],
+   "tier": 4,
+   "why": "Sponsorship opens opportunities, not only advice."
+  },
+  {
+   "q": "Managers meet to make sure ratings mean the same across teams. What is this?",
+   "right": "Calibration",
+   "wrong": [
+    "A retrospective",
+    "A design review",
+    "A tabletop exercise"
+   ],
+   "tier": 4,
+   "why": "Calibration keeps ratings consistent."
+  },
+  {
+   "q": "A leader wants to judge engineers by commits per week. Why is that a weak measure?",
+   "right": "One activity measure ignores quality, satisfaction and collaboration",
+   "wrong": [
+    "Commits are impossible to count",
+    "Commits always rise with seniority",
+    "Engineers do not make commits"
+   ],
+   "tier": 4,
+   "why": "The SPACE framework warns against a single number."
+  },
+  {
+   "q": "A team is pushing for faster releases. Which measure should it watch to make sure quality does not suffer?",
+   "right": "A guardrail metric",
+   "wrong": [
+    "A vanity metric",
+    "A story point",
+    "A stakeholder map"
+   ],
+   "tier": 4,
+   "why": "A guardrail must not get worse while pursuing a goal."
+  },
+  {
+   "q": "A team owns twelve services and keeps missing its work. Which concept describes the problem?",
+   "right": "Cognitive load",
+   "wrong": [
+    "Scope creep",
+    "Flow efficiency",
+    "A spike"
+   ],
+   "tier": 4,
+   "why": "Too much to hold in mind slows a team."
+  },
+  {
+   "q": "You want teams to choose a well-supported default rather than invent their own. What do you provide?",
+   "right": "A golden path",
+   "wrong": [
+    "A code freeze",
+    "A guild",
+    "A calibration"
+   ],
+   "tier": 4,
+   "why": "A golden path makes the right thing the easy thing."
+  },
+  {
+   "q": "Committing to spend a set amount with a cloud provider for a lower rate carries what risk?",
+   "right": "Paying for capacity that goes unused",
+   "wrong": [
+    "Having to move everything to the cloud",
+    "A higher rate",
+    "Losing the right to cancel any service"
+   ],
+   "tier": 4,
+   "why": "A commitment is paid whether or not it is used."
+  },
+  {
+   "q": "Teams are told what their technology costs but are not charged for it. What is this?",
+   "right": "Showback",
+   "wrong": [
+    "Chargeback",
+    "A cost allocation tag",
+    "A commitment"
+   ],
+   "tier": 4,
+   "why": "Showback reports cost without moving money."
+  },
+  {
+   "q": "A significant change should be reviewed by the people it affects before work starts. Which process fits?",
+   "right": "An RFC process",
+   "wrong": [
+    "A code freeze",
+    "A stand-up",
+    "A retrospective"
+   ],
+   "tier": 4,
+   "why": "An RFC invites comment before the change."
+  },
+  {
+   "q": "You lost the argument but the team needs to move on. What do you do?",
+   "right": "Disagree and commit: back the decision fully",
+   "wrong": [
+    "Work against the decision quietly",
+    "Refuse to take part",
+    "Reopen the debate every week"
+   ],
+   "tier": 4,
+   "why": "It avoids endless debate."
+  },
+  {
+   "q": "A team needs to depart from a technology standard with agreement. Which process lets it?",
+   "right": "An exception process",
+   "wrong": [
+    "A deprecation policy",
+    "A code freeze",
+    "An operating cadence"
+   ],
+   "tier": 4,
+   "why": "An exception is requested with reasons and approval."
+  },
+  {
+   "q": "You want to find weaknesses by deliberately injecting failures into a system. What is this?",
+   "right": "Chaos engineering",
+   "wrong": [
+    "A tabletop exercise only",
+    "Toil",
+    "A spike"
+   ],
+   "tier": 5,
+   "why": "It tests how the system copes with failure."
+  },
+  {
+   "q": "A new service is about to launch. Which review confirms it can be safely operated?",
+   "right": "A production readiness review",
+   "wrong": [
+    "A retrospective",
+    "A promotion packet",
+    "A guild meeting"
+   ],
+   "tier": 5,
+   "why": "It checks monitoring, runbooks, capacity and recovery."
+  },
+  {
+   "q": "Teams want to improve a shared library without waiting for its owners. Which approach fits?",
+   "right": "Inner source",
+   "wrong": [
+    "Open-sourcing the code to the public",
+    "A code freeze",
+    "Chargeback"
+   ],
+   "tier": 5,
+   "why": "Inner source uses open-source habits inside the company."
+  },
+  {
+   "q": "Each team is billed for the technology it uses, with money moving between budgets. What is this?",
+   "right": "Chargeback",
+   "wrong": [
+    "Showback",
+    "A cloud commitment",
+    "A cost allocation tag"
+   ],
+   "tier": 5,
+   "why": "Chargeback moves money; showback only reports."
+  },
+  {
+   "q": "Leaders plot people by performance and potential on a three-by-three grid. What is it?",
+   "right": "A nine-box grid",
+   "wrong": [
+    "A critical path",
+    "A burn-up chart",
+    "A stakeholder map"
+   ],
+   "tier": 5,
+   "why": "It guides development and succession discussions."
+  },
+  {
+   "q": "A body approves significant technical decisions across teams, balancing freedom and consistency. What is it?",
+   "right": "A technical design authority",
+   "wrong": [
+    "A guild",
+    "A shared service",
+    "A product trio"
+   ],
+   "tier": 5,
+   "why": "It reviews and approves major technical choices."
+  },
+  {
+   "q": "You want other teams to know how to work with yours without ad hoc interruptions. What do you define?",
+   "right": "A team API",
+   "wrong": [
+    "A service level indicator",
+    "A runbook",
+    "A web API"
+   ],
+   "tier": 5,
+   "why": "A team API sets expectations for working with a team."
+  },
+  {
+   "q": "You need to judge whether a new technology is proven enough for wider use. Which idea helps?",
+   "right": "The technology adoption curve",
+   "wrong": [
+    "The cone of uncertainty",
+    "The critical path",
+    "The error budget"
+   ],
+   "tier": 5,
+   "why": "It shows how a technology spreads towards the majority."
+  }
+ ],
+ "termBank": {
+  "name": "Engineering management",
+  "description": "Running teams, delivery and engineering organisations: from engineering manager to CTO.",
+  "roles": "cto,cio",
+  "order": 10,
+  "headings": {
+   "team": "Running a team",
+   "hire": "Hiring and growing people",
+   "perf": "Performance and feedback",
+   "cult": "Engineering culture",
+   "deliv": "Delivery management",
+   "rel": "Reliability management",
+   "metr": "Engineering measures",
+   "org": "Organisation and stakeholders",
+   "bud": "Budgets and suppliers",
+   "gov": "Technology governance"
+  }
+ }
+}
