@@ -121,7 +121,7 @@ export function recentChecks(userId: number, limit = 8) {
 // ---- where a person stands
 
 /** The latest result for every term the person has been asked, whichever check it came from. */
-function latestResults(userId: number) {
+export function latestResults(userId: number) {
   const rows = db.select({ termId: termExamAnswers.termId, tier: termExamAnswers.tier, right: termExamAnswers.right, id: termExamAnswers.id })
     .from(termExamAnswers).innerJoin(termExams, eq(termExams.id, termExamAnswers.examId))
     .where(and(eq(termExams.userId, userId), sql`${termExams.finishedAt} is not null`)).orderBy(asc(termExamAnswers.id)).all();

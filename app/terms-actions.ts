@@ -6,6 +6,7 @@ import { db, terms } from "@/lib/db";
 import { actingUser, logViewAsUse } from "@/lib/auth";
 import { markCheck, parseTermInput, sameTerm, startCheck, myTerms } from "@/lib/terms";
 import { removeTerm } from "@/lib/termsAdmin";
+import { recordStudy, removeStudyRole, roleSlug, saveStudyRole, startRoleCheck } from "@/lib/termStudy";
 import type { SetupState } from "@/lib/setup";
 
 /** What a candidate does with the term bank: add their own terms, make a check from the terms they picked, and answer it. All as themselves. */
@@ -59,4 +60,42 @@ export async function submitCheckAction(fd: FormData) {
   await logViewAsUse(who.viewedBy, who.me, `finished term check ${examId}`);
   revalidatePath("/terms");
   redirect(`/terms/check/${examId}`);
+}
+
+// ---- learning a role's terms
+
+const roleUrl = (role: string, level: number, extra = "") => `/terms/role/${roleSlug(role.trim().toLowerCase())}?level=${level}${extra}`;
+
+export async function chooseRoleAction(fd: FormData) {
+  const who = await actingUser();
+  if (!who) return;
+  const role = String(fd.get("role") ?? ""), level = Number(fd.get("level"));
+  const r = saveStudyRole(who.me.id, role, level);
+  if ("error" in r) redirect("/terms");
+  revalidatePath("/terms");
+  redirect(roleUrl(role, level));
+}
+
+export async function removeStudyRoleAction(fd: FormData) {
+  const who = await actingUser();
+  if (!who) return;
+  removeStudyRole(who.me.id, String(fd.get("role") ?? ""));
+  revalidatePath("/terms");
+}
+
+/** One answer in a study sitting. Returns whether it was saved, so the card can say so if it was not. */
+export async function studyAnswerAction(termId: number, knew: boolean): Promise<boolean> {
+  const who = await actingUser();
+  if (!who || !Number.isInteger(termId)) return false;
+  return "ok" in recordStudy(who.me.id, termId, knew);
+}
+
+export async function startRoleCheckAction(fd: FormData) {
+  const who = await actingUser();
+  if (!who) return;
+  const role = String(fd.get("role") ?? ""), level = Number(fd.get("level"));
+  const r = startRoleCheck(who.me, role, level);
+  if ("error" in r) redirect(roleUrl(role, level, `&error=${encodeURIComponent(r.error)}`));
+  await logViewAsUse(who.viewedBy, who.me, `started a term check for ${role}`);
+  redirect(`/terms/check/${r.id}`);
 }

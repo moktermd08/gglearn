@@ -29,10 +29,13 @@ ok("rank needs 80 per cent and enough terms at every tier asked", () => {
   assert.equal(core.rankFromStats({ 4: { tested: 5, right: 5 } }), 4, "a tier that was never asked below does not block");
 });
 ok("a goal rung maps across the five ranks", () => {
-  assert.equal(core.rankForRung(1, 5), 1);
+  assert.equal(core.rankForRung(1, 5), 2);
   assert.equal(core.rankForRung(5, 5), 5);
   assert.equal(core.rankForRung(4, 4), 5);
-  assert.equal(core.rankForRung(1, 1), 1);
+  assert.equal(core.rankForRung(1, 4), 2);
+  assert.equal(core.rankForRung(1, 6), 2);
+  assert.equal(core.rankForRung(6, 6), 5);
+  assert.equal(core.rankForRung(1, 1), 5, "a role with one level takes in every rank");
 });
 ok("wrong answers are never repeats or easily confused terms", () => {
   const pool = [T(1, "cookie", 1, "a", { similar: ["header"] }), T(2, "header", 1, "a"), ...Array.from({ length: 8 }, (_, i) => T(10 + i, `other${i}`, 2, "a"))];
@@ -59,6 +62,19 @@ ok("a claim is confirmed only when its own tier was asked enough", () => {
   assert.equal(core.verdict(3, 2, true), "below");
   assert.equal(core.verdict(3, 4, true), "above");
   assert.equal(core.verdict(3, 0, false), "unproven");
+});
+
+ok("a term moves up a box when known, back to the start when forgotten", () => {
+  const t0 = 1_000_000;
+  const a = core.nextReview(null, true, t0);
+  assert.deepEqual([a.box, a.dueAt - t0], [1, 86400]);
+  const b = core.nextReview(3, true, t0);
+  assert.deepEqual([b.box, b.dueAt - t0], [4, 14 * 86400]);
+  assert.equal(core.nextReview(5, true, t0).box, 5, "the top box is the top");
+  const f = core.nextReview(4, false, t0);
+  assert.deepEqual([f.box, f.dueAt - t0, f.lapse], [1, 600, true]);
+  assert.equal(core.nextReview(2, false, t0).lapse, false, "forgetting something not yet known is not a lapse");
+  assert.deepEqual([core.studyState(null), core.studyState(2), core.studyState(4)], ["new", "learning", "known"]);
 });
 
 // ---- the database flow
@@ -117,6 +133,74 @@ ok("standing counts the latest result for each term", () => {
   const b2 = after.banks.find((b) => b.bank.slug === bank.bank.slug)!;
   assert.ok(b2.known < bank.known, "terms answered wrongly last time are no longer counted as known");
   assert.ok(row.id > 0);
+});
+
+// ---- roles, lists and study
+const study = await import("../lib/termStudy");
+const { careerLevels } = await import("../lib/db");
+["Engineering Manager", "Head of Engineering", "VP Engineering", "CTO"].forEach((title, i) => db.insert(careerLevels).values({ jobRole: "cto", level: i + 1, title }).run());
+["Junior", "Senior"].forEach((title, i) => db.insert(careerLevels).values({ jobRole: "gardener", level: i + 1, title }).run());
+
+ok("a role's list is its own banks plus everyone's, up to the ranks its level reaches", () => {
+  const l1 = study.roleList("cto", 1)!, l4 = study.roleList("CTO", 4)!;
+  assert.equal(l1.ceiling, 2);
+  assert.ok(l1.terms.every((t) => t.tier <= 2));
+  const names = (l: typeof l1) => l.banks.map((b) => b.name);
+  assert.ok(names(l1).includes("CTO core") && names(l1).includes("Office core"));
+  assert.ok(!names(l1).includes("Security core"), "a bank for another role is left out");
+  assert.ok(l4.terms.length > l1.terms.length, "the list grows with the level");
+  assert.equal(l4.ceiling, 5);
+  assert.equal(l1.banks[0].forRole, true, "what is made for the role comes first");
+  assert.ok(study.roleList("cto", 9) === null && study.roleList("nobody", 1) === null);
+  const g = study.roleList("gardener", 2)!;
+  assert.deepEqual(g.banks.map((b) => b.name), ["Office core"], "a role with no bank of its own gets the terms for everyone");
+});
+
+let stuId = 0;
+ok("a study round: new terms first, a known term goes away, a forgotten one comes back", () => {
+  const u = db.insert(users).values({ email: "study-" + email, name: "Study" }).returning().get();
+  stuId = u.id;
+  const list = study.roleList("cto", 4)!;
+  const q = study.studyQueue(u.id, list, 10);
+  assert.equal(q.length, 10);
+  assert.ok(q.every((c) => c.fresh));
+  const now = Math.floor(Date.now() / 1000);
+  assert.deepEqual(study.recordStudy(u.id, q[0].id, true), { ok: true });
+  assert.deepEqual(study.recordStudy(u.id, q[1].id, false), { ok: true });
+  const after = study.studyQueue(u.id, list, 10, now + 5);
+  assert.ok(!after.some((c) => c.id === q[0].id), "known: not due for a day");
+  assert.ok(!after.some((c) => c.id === q[1].id), "forgotten: not due for ten minutes");
+  const later = study.studyQueue(u.id, list, 10, now + 700);
+  assert.equal(later[0].id, q[1].id, "forgotten: back, ahead of new terms");
+  assert.equal(later[0].fresh, false);
+  const s = study.roleSummary(u.id, list);
+  assert.deepEqual([s.counts.new, s.counts.learning, s.counts.known], [list.terms.length - 2, 2, 0]);
+  assert.ok(typeof (study.studyQueue(u.id, list, 3, now + 2 * 86400)[0].id) === "number");
+});
+ok("a person cannot record a study answer for someone else's private term", () => {
+  const own = lib.myTerms(me.id)[0];
+  assert.ok("error" in study.recordStudy(stuId, own.id, true));
+  assert.ok("error" in study.recordStudy(stuId, 99999999, true));
+});
+ok("roles to learn are saved once each and can be removed", () => {
+  assert.deepEqual(study.saveStudyRole(stuId, "CTO", 2), { ok: true });
+  assert.deepEqual(study.saveStudyRole(stuId, "cto", 3), { ok: true });
+  assert.ok("error" in study.saveStudyRole(stuId, "cto", 99));
+  const mine = study.myStudyRoles(stuId);
+  assert.equal(mine.length, 1);
+  assert.equal(mine[0].level, 3);
+  study.removeStudyRole(stuId, "cto");
+  assert.equal(study.myStudyRoles(stuId).length, 0);
+});
+ok("a quick check from a list asks about the list's own terms and its top rank", () => {
+  const u = db.select().from(users).where(eq(users.id, stuId)).get()!;
+  const r = study.startRoleCheck(u, "cto", 4);
+  assert.ok("id" in r, JSON.stringify(r));
+  const c = lib.loadCheck(u, (r as { id: number }).id)!;
+  const listIds = new Set(study.roleList("cto", 4)!.terms.map((t) => t.id));
+  assert.ok(c.answers.length >= 5 && c.answers.length <= 20);
+  assert.ok(c.answers.every((a) => listIds.has(a.termId)));
+  assert.equal(c.exam.claimedTier, 5);
 });
 
 console.log(`\n${n} checks passed`);

@@ -13,6 +13,7 @@ const num = (fd: FormData, k: string) => Number(fd.get(k));
 const slugOf = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
 const rolesOf = (s: string) => [...new Set(s.split(",").map((r) => r.trim().toLowerCase()).filter(Boolean))].join(",");
 const similarOf = (s: string) => JSON.stringify([...new Set(s.split(/[;,]/).map((x) => x.trim()).filter(Boolean))].slice(0, 12));
+const linesOf = (s: string) => JSON.stringify([...new Set(s.split(/\r?\n/).map((x) => x.trim().replace(/\s+/g, " ")).filter((x) => x.length >= 4 && x.length <= 300))].slice(0, 8));
 const now = () => Math.floor(Date.now() / 1000);
 
 /** A bank's name, what it is for, and the job roles it suits (comma separated; empty means everyone). A new bank also gets its address from its name. */
@@ -48,16 +49,17 @@ export function saveTerm(fd: FormData): SetupState {
   if (!db.select({ id: termBanks.id }).from(termBanks).where(eq(termBanks.id, bankId)).get()) return { error: "Choose a bank." };
   const similar = similarOf(text(fd, "similar"));
   const status = text(fd, "status") === "hidden" ? "hidden" : "active";
+  const facts = linesOf(text(fd, "facts")), mistakes = linesOf(text(fd, "mistakes")), useWhen = text(fd, "useWhen").replace(/\s+/g, " ").slice(0, 200);
   if (Number.isInteger(id) && id > 0) {
     const cur = db.select().from(terms).where(eq(terms.id, id)).get();
     if (!cur || cur.ownerUserId != null) return { error: "That term no longer exists." };
     if (duplicate(bankId, null, p.ok.term, id)) return { error: "That bank already has a term with those words." };
-    db.update(terms).set({ bankId, term: p.ok.term, meaning: p.ok.meaning, tier: p.ok.tier, groupName: p.ok.groupName, similar, status, updatedAt: now() }).where(eq(terms.id, id)).run();
+    db.update(terms).set({ bankId, term: p.ok.term, meaning: p.ok.meaning, tier: p.ok.tier, groupName: p.ok.groupName, similar, facts, useWhen, mistakes, status, updatedAt: now() }).where(eq(terms.id, id)).run();
     return { done: `“${p.ok.term}” saved.` };
   }
   if (duplicate(bankId, null, p.ok.term)) return { error: "That bank already has a term with those words." };
   const order = (db.select({ m: sql<number>`coalesce(max(${terms.sortOrder}), 0)` }).from(terms).where(eq(terms.bankId, bankId)).get()?.m ?? 0) + 1;
-  db.insert(terms).values({ bankId, term: p.ok.term, meaning: p.ok.meaning, tier: p.ok.tier, groupName: p.ok.groupName, similar, status, sortOrder: order }).run();
+  db.insert(terms).values({ bankId, term: p.ok.term, meaning: p.ok.meaning, tier: p.ok.tier, groupName: p.ok.groupName, similar, facts, useWhen, mistakes, status, sortOrder: order }).run();
   return { done: `“${p.ok.term}” added.` };
 }
 

@@ -72,7 +72,7 @@ export default async function AdminTerms({ searchParams }: { searchParams: Promi
               <details key={g} className="card p-3" open={groups.size === 1}>
                 <summary className="cursor-pointer text-sm font-semibold">{g} <span className="font-normal text-slate-500">({list.length})</span></summary>
                 <div className="mt-2">
-                  {list.map((t) => <TermForm key={t.id} banks={bankOptions} bankId={current.id} term={{ id: t.id, bankId: current.id, term: t.term, meaning: t.meaning, groupName: t.groupName, tier: t.tier, similar: t.similar, status: t.status } satisfies TermRow} />)}
+                  {list.map((t) => <TermForm key={t.id} banks={bankOptions} bankId={current.id} term={{ id: t.id, bankId: current.id, term: t.term, meaning: t.meaning, groupName: t.groupName, tier: t.tier, similar: t.similar, facts: t.facts, useWhen: t.useWhen, mistakes: t.mistakes, status: t.status } satisfies TermRow} />)}
                 </div>
               </details>
             ))}

@@ -57,11 +57,28 @@ export function pooledShare(stats: TierStats): number {
   return tested ? right / tested : 0;
 }
 
-/** The rank a role's ladder asks for at a given rung, spread across the five ranks: the first rung is the lowest rank and the top rung is Titan. */
+/**
+ * The highest rank of terms a level of a role covers, spread across the five ranks: the first rung stops at Adept and the top rung takes in everything up to
+ * Titan. A role with no ladder (or one level) takes in all five. This is both the list ceiling for a level and the rank a goal at that level asks for.
+ */
 export function rankForRung(rung: number, rungs: number): number {
-  if (rungs <= 1) return 1;
-  const r = Math.round((Math.min(Math.max(rung, 1), rungs) / rungs) * RANKS.length);
-  return Math.min(RANKS.length, Math.max(1, r));
+  if (rungs <= 1) return RANKS.length;
+  const r = Math.min(Math.max(rung, 1), rungs);
+  return Math.min(RANKS.length, 1 + Math.ceil((r * (RANKS.length - 1)) / rungs));
+}
+
+// ---- Study: a Leitner box per term. Meeting a term puts it in box 1; knowing it moves it up a box and pushes its next sight further away; forgetting sends it back.
+export const BOX_DAYS = [0, 1, 3, 7, 14, 30]; // index = box
+export const KNOWN_BOX = 4;
+export const RETRY_SECONDS = 600; // a term you did not know comes back later in the same sitting
+
+export type StudyState = "new" | "learning" | "known";
+export const studyState = (box: number | null | undefined): StudyState => (box == null ? "new" : box >= KNOWN_BOX ? "known" : "learning");
+
+export function nextReview(box: number | null, knew: boolean, nowSec: number): { box: number; dueAt: number; lapse: boolean } {
+  if (!knew) return { box: 1, dueAt: nowSec + RETRY_SECONDS, lapse: (box ?? 0) >= KNOWN_BOX };
+  const next = Math.min(BOX_DAYS.length - 1, (box ?? 0) + 1);
+  return { box: next, dueAt: nowSec + BOX_DAYS[next] * 86400, lapse: false };
 }
 
 function shuffle<T>(xs: T[], rng: () => number): T[] {
