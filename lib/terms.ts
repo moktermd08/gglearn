@@ -1,5 +1,6 @@
 import { and, asc, desc, eq, inArray, isNull, sql } from "drizzle-orm";
-import { careerGoals, careerLevels, db, termBanks, termExamAnswers, termExams, terms, users } from "@/lib/db";
+import { careerGoals, careerLevels, db, termBanks, termExamAnswers, termExams, termPlaces, terms, users } from "@/lib/db";
+import { inBank, visibleTo, withPlaces, type PlacedTerm } from "@/lib/termPlaces";
 import { MAX_PICK, MIN_PICK, MIN_TIER_TESTED, rankForRung, rankFromStats, pooledShare, untested, verdict, type TermLite, type TierStats } from "@/lib/termsCore";
 import { buildCheck } from "@/lib/termQuestions";
 
@@ -16,16 +17,18 @@ const lite = (r: TermRow): TermLite => ({
   facts: parseList(r.facts), useWhen: r.useWhen, mistakes: parseList(r.mistakes),
 });
 
-/** Are the term bank tables there? They arrive with `npm run db:push`; until then the pages stay quiet instead of failing. */
+/** Are the term tables and columns there? They arrive with `npm run db:push`; until then the pages stay quiet instead of failing. */
 export function termsAvailable(): boolean {
-  try { db.select({ id: termBanks.id }).from(termBanks).limit(1).all(); return true; } catch (err) {
-    if (/no such table/i.test(String((err as { message?: unknown }).message ?? ""))) return false;
+  try { db.select({ id: termBanks.id }).from(termBanks).limit(1).all(); db.select({ id: termPlaces.id }).from(termPlaces).limit(1).all(); db.select({ slug: terms.slug }).from(terms).limit(1).all(); return true; } catch (err) {
+    if (/no such (table|column)/i.test(String((err as { message?: unknown }).message ?? ""))) return false;
     throw err;
   }
 }
 
-export const sharedTerms = (): TermRow[] =>
-  db.select().from(terms).where(and(isNull(terms.ownerUserId), eq(terms.status, "active"))).orderBy(asc(terms.bankId), asc(terms.sortOrder), asc(terms.id)).all();
+/** The public terms learners may see, each with every place it sits, in the order of their home places. */
+export const sharedTerms = (): PlacedTerm[] =>
+  withPlaces(db.select().from(terms).where(and(isNull(terms.ownerUserId), eq(terms.status, "active"))).all().filter((t) => visibleTo(t, null)))
+    .sort((a, b) => (a.bankId ?? 0) - (b.bankId ?? 0) || a.sortOrder - b.sortOrder || a.id - b.id);
 
 export const myTerms = (userId: number): TermRow[] =>
   db.select().from(terms).where(and(eq(terms.ownerUserId, userId), eq(terms.status, "active"))).orderBy(asc(terms.tier), asc(terms.term)).all();
@@ -172,7 +175,7 @@ export function standingFor(userId: number): { banks: BankStanding[]; mine: Bank
     }
     return { bank, total: list.length, asked, known, stats, rank: rankFromStats(stats), untested: untested(stats) };
   };
-  const banks = allBanks().map((b) => make({ id: b.id, slug: b.slug, name: b.name }, shared.filter((t) => t.bankId === b.id)));
+  const banks = allBanks().map((b) => make({ id: b.id, slug: b.slug, name: b.name }, inBank(shared, b.id)));
   return { banks, mine: make({ id: null, slug: "mine", name: "My own terms" }, mine) };
 }
 

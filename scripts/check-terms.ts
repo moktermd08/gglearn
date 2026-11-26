@@ -11,7 +11,7 @@ if (!process.env.DATABASE_FILE) { console.error("Set DATABASE_FILE to a scratch 
 const core = await import("../lib/termsCore");
 const { db, terms, termExamAnswers, termExams, users } = await import("../lib/db");
 const lib = await import("../lib/terms");
-const { eq, desc } = await import("drizzle-orm");
+const { eq, desc, and } = await import("drizzle-orm");
 
 let n = 0;
 const ok = (name: string, fn: () => void) => { fn(); n++; console.log("ok  " + name); };
@@ -491,6 +491,76 @@ ok("older and unfinished addresses are sent to the readable one, and unknown one
   assert.equal(to(["no-such-role"]), null);
   assert.equal(to(["cto", "cto", "extra"]), null);
   assert.equal(to(["%E0%A4%A"]), null, "a broken address is not an error");
+});
+
+// ---- the atom library: one term, any number of places
+const atoms = await import("../lib/termPlaces");
+const adminLib = await import("../lib/termsAdmin");
+const { termPlaces, termLinks, termBanks } = await import("../lib/db");
+const form = (v: Record<string, string>) => { const f = new FormData(); for (const [k, x] of Object.entries(v)) f.set(k, x); return f; };
+const bankBy = (slug: string) => db.select().from(termBanks).where(eq(termBanks.slug, slug)).get()!;
+
+ok("every shared term has a public name and a place, look-alikes are links, and filling in again adds nothing", () => {
+  atoms.backfillAtoms();
+  const again = atoms.backfillAtoms();
+  assert.deepEqual([again.slugs, again.places, again.links], [0, 0, 0]);
+  const shared = db.select().from(terms).all().filter((t) => t.ownerUserId == null);
+  assert.ok(shared.every((t) => t.slug) && new Set(shared.map((t) => t.slug)).size === shared.length);
+  const placed = new Set(db.select().from(termPlaces).all().map((p) => p.termId));
+  assert.ok(shared.every((t) => t.bankId == null || placed.has(t.id)));
+  assert.ok(db.select().from(termLinks).all().length > 500);
+  assert.ok(db.select().from(terms).where(eq(terms.ownerUserId, me.id)).all().every((t) => t.slug === null && !placed.has(t.id)), "a person's own terms stay out of the library");
+});
+ok("a term placed in a second bank is learned there too, and is listed once for a role that has both banks", () => {
+  const core = bankBy("office-core"), cto = bankBy("cto-core");
+  const term = atoms.everyInBank(core.id).find((t) => t.tier === 1)!;
+  const before = study.roleList("cto", 4)!, gardener = study.roleList("gardener", 2)!;
+  const standingBefore = lib.standingFor(me.id).banks.find((b) => b.bank.id === cto.id)!.total;
+  atoms.movePlace(term.id, null, { bankId: cto.id, groupName: "Borrowed words", sortOrder: 999 });
+  const after = study.roleList("cto", 4)!;
+  assert.equal(after.terms.length, before.terms.length, "the same atom is not counted twice");
+  assert.equal(after.terms.filter((t) => t.id === term.id).length, 1);
+  assert.deepEqual(after.terms.filter((t) => t.id === term.id).map((t) => [t.bankId, t.groupName]), [[cto.id, "Borrowed words"]], "shown where the role's own bank puts it");
+  assert.equal(study.roleList("gardener", 2)!.terms.length, gardener.terms.length);
+  assert.equal(study.roleList("gardener", 2)!.terms.find((t) => t.id === term.id)!.bankId, core.id, "and in its home bank for a role without that one");
+  assert.equal(lib.standingFor(me.id).banks.find((b) => b.bank.id === cto.id)!.total, standingBefore + 1);
+  assert.ok(atoms.everyInBank(cto.id).some((t) => t.id === term.id) && atoms.everyInBank(core.id).some((t) => t.id === term.id));
+  const shownIn = study.studyCardsFor(me.id, [term.id]).map((c) => ({ ...c, group: "Borrowed words" }));
+  const [card] = det.withDetails(me.id, shownIn);
+  assert.equal(card.detail.bank, cto.name);
+  assert.ok(card.detail.group.some((g) => g.id === term.id));
+  db.delete(termPlaces).where(and(eq(termPlaces.termId, term.id), eq(termPlaces.bankId, cto.id))).run();
+});
+ok("what the admin writes keeps the places and links right, and a deleted term leaves nothing behind", () => {
+  const core = bankBy("office-core"), cto = bankBy("cto-core");
+  const other = atoms.everyInBank(core.id)[0];
+  const saved = adminLib.saveTerm(form({ bankId: String(core.id), term: "Atom test word", meaning: "a word made only to test the library", tier: "1", groupName: "Testing", similar: other.term }));
+  assert.ok(saved && "done" in saved, JSON.stringify(saved));
+  const made = db.select().from(terms).where(eq(terms.term, "Atom test word")).get()!;
+  assert.equal(made.slug, "atom-test-word");
+  assert.deepEqual(db.select().from(termPlaces).where(eq(termPlaces.termId, made.id)).all().map((p) => p.bankId), [core.id]);
+  assert.deepEqual(db.select().from(termLinks).where(eq(termLinks.fromId, made.id)).all().map((l) => l.toId), [other.id]);
+  assert.ok("error" in adminLib.saveTerm(form({ bankId: String(core.id), term: "atom TEST word", meaning: "the same words again, differently cased", tier: "1", groupName: "Testing" }))!);
+  assert.ok("done" in adminLib.saveTerm(form({ id: String(made.id), bankId: String(cto.id), term: "Atom test word", meaning: "a word made only to test the library", tier: "2", groupName: "Moved" }))!);
+  assert.deepEqual(db.select().from(termPlaces).where(eq(termPlaces.termId, made.id)).all().map((p) => [p.bankId, p.groupName]), [[cto.id, "Moved"]]);
+  assert.equal(db.select().from(termLinks).where(eq(termLinks.fromId, made.id)).all().length, 0);
+  assert.ok("done" in adminLib.removeTerm(made.id)!);
+  assert.equal(db.select().from(termPlaces).where(eq(termPlaces.termId, made.id)).all().length, 0);
+});
+ok("draft, rejected and company terms are not shown to learners", () => {
+  const core = bankBy("office-core");
+  const [a, b, c] = atoms.everyInBank(core.id).filter((t) => t.tier === 1);
+  const count = lib.sharedTerms().length;
+  db.update(terms).set({ review: "draft" }).where(eq(terms.id, a.id)).run();
+  db.update(terms).set({ review: "rejected" }).where(eq(terms.id, b.id)).run();
+  db.update(terms).set({ companyId: 1 }).where(eq(terms.id, c.id)).run();
+  assert.equal(lib.sharedTerms().length, count - 3);
+  assert.ok(!study.roleList("everyone", 1)!.terms.some((t) => [a.id, b.id, c.id].includes(t.id)));
+  assert.deepEqual(study.studyCardsFor(me.id, [a.id, b.id, c.id]), []);
+  assert.ok("error" in study.recordStudy(me.id, a.id, true));
+  assert.equal(atoms.everyInBank(core.id).filter((t) => [a.id, b.id, c.id].includes(t.id)).length, 3, "an admin still sees them");
+  for (const t of [a, b, c]) db.update(terms).set({ review: "unreviewed", companyId: null }).where(eq(terms.id, t.id)).run();
+  assert.equal(lib.sharedTerms().length, count);
 });
 
 console.log(`\n${n} checks passed`);

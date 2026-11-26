@@ -1,6 +1,7 @@
 import { and, asc, eq, inArray, isNotNull } from "drizzle-orm";
-import { db, termExamAnswers, termExams, termProgress, terms } from "@/lib/db";
-import { allBanks } from "@/lib/terms";
+import { db, termExamAnswers, termExams, termProgress } from "@/lib/db";
+import { allBanks, myTerms, sharedTerms } from "@/lib/terms";
+import { inBank, withPlaces } from "@/lib/termPlaces";
 import { listOf, type StudyCard } from "@/lib/termStudy";
 import { studyState, type StudyState } from "@/lib/termsCore";
 
@@ -22,7 +23,8 @@ const MAX_COMPARE = 3, MAX_HISTORY = 8;
 export function withDetails(userId: number, cards: StudyCard[], nowSec = Math.floor(Date.now() / 1000)): RichCard[] {
   if (!cards.length) return [];
   // only what this person may see: shared terms and their own
-  const visible = db.select().from(terms).where(eq(terms.status, "active")).all().filter((t) => t.ownerUserId == null || t.ownerUserId === userId);
+  const shared = sharedTerms();
+  const visible = [...shared, ...withPlaces(myTerms(userId))].sort((a, b) => a.id - b.id);
   const byId = new Map(visible.map((t) => [t.id, t]));
   const bankName = new Map(allBanks().map((b) => [b.id, b.name]));
   const progress = new Map(db.select().from(termProgress).where(eq(termProgress.userId, userId)).all().map((p) => [p.termId, p]));
@@ -33,8 +35,11 @@ export function withDetails(userId: number, cards: StudyCard[], nowSec = Math.fl
 
   return cards.map((card) => {
     const row = byId.get(card.id);
-    const same = visible.filter((t) => row && t.bankId === row.bankId && t.groupName === row.groupName);
-    const bankMates = visible.filter((t) => row && t.bankId === row.bankId && t.id !== card.id);
+    // the place the card is being shown in: where its heading is the card's, or else its home
+    const place = row?.places.find((p) => p.groupName === card.group) ?? row?.places[0];
+    const mates = !row ? [] : place ? inBank(shared, place.bankId).sort((a, b) => a.id - b.id) : visible.filter((t) => t.bankId == null);
+    const same = mates.filter((t) => t.groupName === (place ? place.groupName : row?.groupName));
+    const bankMates = mates.filter((t) => t.id !== card.id);
     const wanted = new Set(card.similar.map(name));
     const named = [...wanted].map((n) => bankMates.find((t) => name(t.term) === n) ?? visible.find((t) => t.id !== card.id && name(t.term) === n)).filter((t) => t !== undefined);
     const namingUs = bankMates.filter((t) => listOf(t.similar).some((s) => name(s) === name(card.term)));
@@ -43,7 +48,7 @@ export function withDetails(userId: number, cards: StudyCard[], nowSec = Math.fl
     return {
       ...card,
       detail: {
-        bank: row?.bankId != null ? (bankName.get(row.bankId) ?? "") : "My own terms",
+        bank: place ? (bankName.get(place.bankId) ?? "") : "My own terms",
         group: same.sort((a, b) => a.tier - b.tier || a.sortOrder - b.sortOrder || a.id - b.id).map((t) => ({ id: t.id, term: t.term, tier: t.tier, state: studyState(progress.get(t.id)?.box) })),
         compare: compare.map((t) => ({ id: t.id, term: t.term, meaning: t.meaning, tier: t.tier })),
         memory: { box: p?.box ?? 0, seen: p?.seen ?? 0, lapses: p?.lapses ?? 0, dueInDays: p ? Math.max(0, Math.ceil((p.dueAt - nowSec) / 86400)) : null },

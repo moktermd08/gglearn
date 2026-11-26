@@ -14,8 +14,9 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { db, termBanks, terms } from "@/lib/db";
+import { backfillAtoms, everyInBank, movePlace } from "@/lib/termPlaces";
 
 type Card = { group: string; subject: string; tier: number; says: string[]; use?: string; not?: string[]; like?: string[] };
 type BankMeta = { name: string; description: string; roles: string; order?: number; headings: Record<string, string> };
@@ -40,7 +41,7 @@ found.forEach(({ slug, spec, meta }, i) => {
     const missing = want.filter((r) => !have.includes(r));
     if (have.length && missing.length) { db.update(termBanks).set({ roles: [...have, ...missing].join(",") }).where(eq(termBanks.id, bank.id)).run(); widened++; }
   }
-  const existing = new Map(db.select().from(terms).where(and(eq(terms.bankId, bank.id), isNull(terms.ownerUserId))).all().map((r) => [r.term.toLowerCase(), r]));
+  const existing = new Map(everyInBank(bank.id).map((r) => [r.term.toLowerCase(), r]));
   spec.cards.forEach((c, n) => {
     const facts = JSON.stringify(c.says.slice(1)), useWhen = c.use ?? "", mistakes = JSON.stringify(c.not ?? []);
     const cur = existing.get(c.subject.toLowerCase());
@@ -51,11 +52,15 @@ found.forEach(({ slug, spec, meta }, i) => {
       if (cur.useWhen === "" && useWhen) set.useWhen = useWhen;
       if (cur.mistakes === "[]" && mistakes !== "[]") set.mistakes = mistakes;
       if (Object.keys(set).length) { db.update(terms).set(set).where(eq(terms.id, cur.id)).run(); filled++; }
+      if (!cur.source) db.update(terms).set({ source: slug }).where(eq(terms.id, cur.id)).run(); // where it came from is noted, not counted as a change to the term
       return;
     }
-    db.insert(terms).values({ bankId: bank!.id, groupName: meta.headings[c.group] ?? c.group, term: c.subject, meaning: `It ${c.says[0]}`, tier: c.tier, similar: JSON.stringify(c.like ?? []), facts, useWhen, mistakes, sortOrder: n }).run();
+    const groupName = meta.headings[c.group] ?? c.group;
+    const made = db.insert(terms).values({ bankId: bank!.id, groupName, term: c.subject, meaning: `It ${c.says[0]}`, tier: c.tier, similar: JSON.stringify(c.like ?? []), facts, useWhen, mistakes, sortOrder: n, source: slug }).returning({ id: terms.id }).get();
+    movePlace(made.id, null, { bankId: bank!.id, groupName, sortOrder: n });
     added++;
   });
 });
+backfillAtoms(); // public names and links, once every term the links might name is there
 const total = db.select({ n: sql<number>`count(*)` }).from(terms).get()!.n;
 console.log(`Banks in the card files: ${found.length}. Banks added: ${banks}. Terms added: ${added}. Already there: ${kept} (${filled} filled in with facts, use or mistakes). Banks given more roles: ${widened}. Terms in all: ${total}.`);

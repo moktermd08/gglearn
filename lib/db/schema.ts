@@ -1614,9 +1614,10 @@ export const termBanks = sqliteTable("term_banks", {
   createdAt: integer("created_at").notNull().default(now),
 });
 
+// A term is one atom: defined once, and placed in any number of banks (term_places).
 export const terms = sqliteTable("terms", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  bankId: integer("bank_id").references(() => termBanks.id), // null for a personal term that has not been promoted
+  bankId: integer("bank_id").references(() => termBanks.id), // the term's home place; null for a personal term that has not been promoted. Every place, this one included, is in term_places
   ownerUserId: integer("owner_user_id").references(() => users.id), // null for a shared term
   groupName: text("group_name").notNull().default(""), // the heading the term sits under inside its bank
   term: text("term").notNull(),
@@ -1630,7 +1631,38 @@ export const terms = sqliteTable("terms", {
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: integer("created_at").notNull().default(now),
   updatedAt: integer("updated_at").notNull().default(now),
-}, (t) => [index("terms_bank").on(t.bankId, t.status), index("terms_owner").on(t.ownerUserId)]);
+  // The columns below are added to a table that has rows, so each is either nullable or has a default drizzle-kit does not read as "none" (see term_exams.level).
+  slug: text("slug"), // the public name of the atom in addresses and imports; null for a personal term
+  sense: text("sense"), // only when one word means two things: "AI" for agent (AI). Null means the word has one meaning here
+  companyId: integer("company_id"), // a company's own term: hidden from everyone until company libraries are built. Null means public. Not a foreign key, which SQLite cannot add to a table in place
+  review: text("review", { enum: ["unreviewed", "reviewed", "draft", "rejected"] }).notNull().default("unreviewed"), // draft and rejected terms are not shown to learners
+  reviewedAt: integer("reviewed_at"),
+  source: text("source"), // where the definition came from: the card file's name
+}, (t) => [index("terms_bank").on(t.bankId, t.status), index("terms_owner").on(t.ownerUserId), uniqueIndex("terms_slug_unique").on(t.slug)]);
+
+// Where a term sits: a bank, and the heading it is under there. One term can sit in many banks. The place matching terms.bank_id is its home.
+export const termPlaces = sqliteTable("term_places", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  termId: integer("term_id").notNull().references(() => terms.id),
+  bankId: integer("bank_id").notNull().references(() => termBanks.id),
+  groupName: text("group_name").notNull().default(""),
+  sortOrder: integer("sort_order").notNull().default(0),
+}, (t) => [uniqueIndex("term_places_unique").on(t.termId, t.bankId), index("term_places_bank").on(t.bankId)]);
+
+// Other names for the same atom ("KPI" and "key performance indicator").
+export const termAliases = sqliteTable("term_aliases", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  termId: integer("term_id").notNull().references(() => terms.id),
+  alias: text("alias").notNull(),
+}, (t) => [uniqueIndex("term_aliases_unique").on(t.termId, t.alias)]);
+
+// How one atom relates to another. "confused-with" is filled from a term's look-alike list; the other kinds are written during review.
+export const termLinks = sqliteTable("term_links", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  fromId: integer("from_id").notNull().references(() => terms.id),
+  toId: integer("to_id").notNull().references(() => terms.id),
+  kind: text("kind", { enum: ["confused-with", "part-of", "kind-of", "requires", "related"] }).notNull(),
+}, (t) => [uniqueIndex("term_links_unique").on(t.fromId, t.toId, t.kind), index("term_links_to").on(t.toId)]);
 
 // A person's own term check: the terms they picked, the rank they think they are at, and how it went.
 export const termExams = sqliteTable("term_exams", {

@@ -1,5 +1,6 @@
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { db, termBanks, termExamAnswers, terms } from "@/lib/db";
+import { deleteAtom, everyInBank, movePlace, settleAtom } from "@/lib/termPlaces";
 import { parseTermInput, sameTerm } from "@/lib/terms";
 import type { SetupState } from "@/lib/setup";
 
@@ -34,12 +35,8 @@ export function saveBank(fd: FormData): SetupState {
   return { done: `Bank “${name}” created.` };
 }
 
-const duplicate = (bankId: number | null, ownerUserId: number | null, term: string, exceptId = 0) => {
-  const rows = bankId != null
-    ? db.select({ id: terms.id, term: terms.term }).from(terms).where(and(eq(terms.bankId, bankId), isNull(terms.ownerUserId))).all()
-    : db.select({ id: terms.id, term: terms.term }).from(terms).where(and(isNull(terms.bankId), eq(terms.ownerUserId, ownerUserId ?? -1))).all();
-  return rows.some((r) => r.id !== exceptId && sameTerm(r.term, term));
-};
+const duplicate = (bankId: number, term: string, exceptId = 0) => everyInBank(bankId).some((r) => r.id !== exceptId && sameTerm(r.term, term));
+const lastIn = (bankId: number) => everyInBank(bankId).reduce((m, t) => Math.max(m, t.sortOrder), 0);
 
 /** Adds a term to a bank, or changes one (when `id` is sent): its words, meaning, group, rank, look-alikes, bank and whether it is shown. */
 export function saveTerm(fd: FormData): SetupState {
@@ -53,13 +50,15 @@ export function saveTerm(fd: FormData): SetupState {
   if (Number.isInteger(id) && id > 0) {
     const cur = db.select().from(terms).where(eq(terms.id, id)).get();
     if (!cur || cur.ownerUserId != null) return { error: "That term no longer exists." };
-    if (duplicate(bankId, null, p.ok.term, id)) return { error: "That bank already has a term with those words." };
+    if (duplicate(bankId, p.ok.term, id)) return { error: "That bank already has a term with those words." };
     db.update(terms).set({ bankId, term: p.ok.term, meaning: p.ok.meaning, tier: p.ok.tier, groupName: p.ok.groupName, similar, facts, useWhen, mistakes, status, updatedAt: now() }).where(eq(terms.id, id)).run();
+    movePlace(id, cur.bankId, { bankId, groupName: p.ok.groupName, sortOrder: cur.sortOrder });
+    settleAtom(id);
     return { done: `“${p.ok.term}” saved.` };
   }
-  if (duplicate(bankId, null, p.ok.term)) return { error: "That bank already has a term with those words." };
-  const order = (db.select({ m: sql<number>`coalesce(max(${terms.sortOrder}), 0)` }).from(terms).where(eq(terms.bankId, bankId)).get()?.m ?? 0) + 1;
-  db.insert(terms).values({ bankId, term: p.ok.term, meaning: p.ok.meaning, tier: p.ok.tier, groupName: p.ok.groupName, similar, facts, useWhen, mistakes, status, sortOrder: order }).run();
+  if (duplicate(bankId, p.ok.term)) return { error: "That bank already has a term with those words." };
+  const made = db.insert(terms).values({ bankId, term: p.ok.term, meaning: p.ok.meaning, tier: p.ok.tier, groupName: p.ok.groupName, similar, facts, useWhen, mistakes, status, sortOrder: lastIn(bankId) + 1 }).returning({ id: terms.id }).get();
+  settleAtom(made.id);
   return { done: `“${p.ok.term}” added.` };
 }
 
@@ -69,7 +68,7 @@ export function removeTerm(id: number): SetupState {
   if (!cur) return { error: "That term no longer exists." };
   const asked = db.select({ n: sql<number>`count(*)` }).from(termExamAnswers).where(eq(termExamAnswers.termId, id)).get()?.n ?? 0;
   if (asked > 0) { db.update(terms).set({ status: "hidden", updatedAt: now() }).where(eq(terms.id, id)).run(); return { done: `“${cur.term}” hidden: it has been asked in checks, so it is kept.` }; }
-  db.delete(terms).where(eq(terms.id, id)).run();
+  deleteAtom(id);
   return { done: `“${cur.term}” deleted.` };
 }
 
@@ -78,11 +77,11 @@ export function promoteTerm(id: number, bankId: number, groupName: string): Setu
   const cur = db.select().from(terms).where(eq(terms.id, id)).get();
   if (!cur || cur.ownerUserId == null) return { error: "That is not a candidate's own term." };
   if (!db.select({ id: termBanks.id }).from(termBanks).where(eq(termBanks.id, bankId)).get()) return { error: "Choose a bank to add it to." };
-  if (duplicate(bankId, null, cur.term)) {
+  if (duplicate(bankId, cur.term)) {
     db.update(terms).set({ status: "hidden", updatedAt: now() }).where(eq(terms.id, id)).run();
     return { done: `That bank already has “${cur.term}”, so the candidate's copy was hidden.` };
   }
-  const order = (db.select({ m: sql<number>`coalesce(max(${terms.sortOrder}), 0)` }).from(terms).where(eq(terms.bankId, bankId)).get()?.m ?? 0) + 1;
-  db.update(terms).set({ bankId, ownerUserId: null, groupName: groupName.trim().slice(0, 60) || cur.groupName, sortOrder: order, updatedAt: now() }).where(eq(terms.id, id)).run();
+  db.update(terms).set({ bankId, ownerUserId: null, groupName: groupName.trim().slice(0, 60) || cur.groupName, sortOrder: lastIn(bankId) + 1, updatedAt: now() }).where(eq(terms.id, id)).run();
+  settleAtom(id);
   return { done: `“${cur.term}” is now in the shared bank, and everyone can be tested on it.` };
 }
