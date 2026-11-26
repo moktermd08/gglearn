@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { and, asc, eq, isNotNull, sql } from "drizzle-orm";
+import { and, asc, eq, isNotNull } from "drizzle-orm";
 import { BookOpen } from "lucide-react";
 import { db, terms, users } from "@/lib/db";
 import { realUser, requireManager, viewAsState } from "@/lib/auth";
 import { isSuperAdmin } from "@/lib/superAdmin";
 import { allBanks, termsAvailable } from "@/lib/terms";
+import { everyShared, inBank } from "@/lib/termPlaces";
 import { RANKS } from "@/lib/termsCore";
 import { PageHero } from "@/components/charts";
 import { BankForm, PromoteForm, TermForm, type TermRow } from "./forms";
@@ -25,9 +26,10 @@ export default async function AdminTerms({ searchParams }: { searchParams: Promi
   const current = banks.find((b) => b.slug === slug) ?? banks[0] ?? null;
   const bankOptions = banks.map((b) => ({ id: b.id, name: b.name }));
 
-  const counts = new Map(db.select({ bankId: terms.bankId, n: sql<number>`count(*)` }).from(terms).where(and(isNotNull(terms.bankId), sql`${terms.ownerUserId} is null`)).groupBy(terms.bankId).all().map((r) => [r.bankId, r.n]));
+  const every = everyShared();
+  const counts = new Map(banks.map((b) => [b.id, inBank(every, b.id).length]));
   const rows = current
-    ? db.select().from(terms).where(and(eq(terms.bankId, current.id), sql`${terms.ownerUserId} is null`)).orderBy(asc(terms.sortOrder), asc(terms.id)).all()
+    ? inBank(every, current.id).sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id)
     : [];
   const groups = new Map<string, typeof rows>();
   for (const r of rows) { const g = r.groupName || "No group"; groups.set(g, [...(groups.get(g) ?? []), r]); }

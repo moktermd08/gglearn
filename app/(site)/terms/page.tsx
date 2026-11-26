@@ -9,6 +9,7 @@ import { RolePicker } from "@/components/RolePicker";
 import { Tabs, type Tab } from "@/components/Tabs";
 import { Pips, RANK_COLOR, TopicIcon, topicHue } from "@/components/TermVisuals";
 import { TermNextStep } from "@/components/TermNextStep";
+import { inBank } from "@/lib/termPlaces";
 import { myStudyRoles, roleLabel, roleList, roleOptions, roleSummary, studyTotals } from "@/lib/termStudy";
 import { termUrl } from "@/lib/termUrls";
 import { allBanks, bankFitsRole, goalNeed, myTerms, recentChecks, sharedTerms, standingFor, termsAvailable, type BankStanding } from "@/lib/terms";
@@ -71,7 +72,7 @@ export default async function Terms() {
   const order = [...bankRows].sort((a, b) => Number(relevant.has(b.id)) - Number(relevant.has(a.id)) || a.sortOrder - b.sortOrder);
   const pickBanks: PickBank[] = order.map((b, i) => {
     const groups = new Map<string, { id: number; term: string; tier: number }[]>();
-    for (const t of shared.filter((t) => t.bankId === b.id)) groups.set(t.groupName || "Other", [...(groups.get(t.groupName || "Other") ?? []), { id: t.id, term: t.term, tier: t.tier }]);
+    for (const t of inBank(shared, b.id)) groups.set(t.groupName || "Other", [...(groups.get(t.groupName || "Other") ?? []), { id: t.id, term: t.term, tier: t.tier }]);
     return { key: `b${b.id}`, name: b.name, groups: [...groups].map(([name, terms]) => ({ name, terms })), open: i === 0 };
   }).filter((b) => b.groups.length);
   if (own.length) pickBanks.push({ key: "mine", name: "My own terms", groups: [{ name: "Added by me", terms: own.map((t) => ({ id: t.id, term: t.term, tier: t.tier })) }], open: false });

@@ -1,5 +1,6 @@
 import { and, asc, eq, inArray, isNotNull } from "drizzle-orm";
 import { careerLevels, db, termExams, termProgress, termStudyRoles, terms, users } from "@/lib/db";
+import { inBank, visibleTo } from "@/lib/termPlaces";
 import { allBanks, bankFitsRole, latestResults, sharedTerms, startCheck, type StartResult } from "@/lib/terms";
 import { MIN_PICK, MIN_TIER_TESTED, PLACEMENT_SIZE, TERM_PASS, nextReview, rankForRung, rankFromStats, studyState, type StudyState, type TierStats } from "@/lib/termsCore";
 
@@ -60,7 +61,11 @@ export function roleList(role: string, level: number): RoleList | null {
   const forRole = new Set(fitting.filter((b) => b.roles.trim() !== "").map((b) => b.id));
   const banks = [...fitting].sort((x, y) => Number(!forRole.has(x.id)) - Number(!forRole.has(y.id))); // stable: the made-for-role banks first, each group in its own order
   const order = new Map(banks.map((b, i) => [b.id, i]));
-  const list = sharedTerms().filter((t) => t.bankId != null && order.has(t.bankId) && t.tier <= ceiling)
+  // a term in several of these banks is listed once, as it appears in the first of them
+  const seen = new Set<number>();
+  const shared = sharedTerms();
+  const list = banks.flatMap((b) => inBank(shared, b.id).filter((t) => !seen.has(t.id) && seen.add(t.id)))
+    .filter((t) => t.tier <= ceiling)
     .sort((a, b) => (order.get(a.bankId!)! - order.get(b.bankId!)!) || a.tier - b.tier || a.sortOrder - b.sortOrder || a.id - b.id);
   return {
     role: key, level, title: ladder[idx].title, rung: idx + 1, rungs: ladder.length, ceiling,
@@ -133,14 +138,14 @@ export function studyCardsFor(userId: number, termIds: number[]): StudyCard[] {
   const ids = [...new Set(termIds)];
   if (!ids.length) return [];
   const prog = progressFor(userId, ids);
-  return db.select().from(terms).where(and(inArray(terms.id, ids), eq(terms.status, "active"))).all()
-    .filter((t) => t.ownerUserId == null || t.ownerUserId === userId).map((t) => cardOf(t, !prog.has(t.id)));
+  return db.select().from(terms).where(inArray(terms.id, ids)).all()
+    .filter((t) => visibleTo(t, userId)).map((t) => cardOf(t, !prog.has(t.id)));
 }
 
 /** Records one answer in a study sitting: knew it, or did not. Only a term on a list the person can see can be recorded. */
 export function recordStudy(userId: number, termId: number, knew: boolean, nowSec = Math.floor(Date.now() / 1000)): { error: string } | { ok: true } {
-  const t = db.select({ id: terms.id, owner: terms.ownerUserId, status: terms.status }).from(terms).where(eq(terms.id, termId)).get();
-  if (!t || t.status !== "active" || (t.owner != null && t.owner !== userId)) return { error: "That term is not available." };
+  const t = db.select().from(terms).where(eq(terms.id, termId)).get();
+  if (!t || !visibleTo(t, userId)) return { error: "That term is not available." };
   const cur = db.select().from(termProgress).where(and(eq(termProgress.userId, userId), eq(termProgress.termId, termId))).get();
   const n = nextReview(cur?.box ?? null, knew, nowSec);
   if (cur) db.update(termProgress).set({ box: n.box, dueAt: n.dueAt, seen: cur.seen + 1, lapses: cur.lapses + (n.lapse ? 1 : 0), updatedAt: nowSec }).where(eq(termProgress.id, cur.id)).run();
