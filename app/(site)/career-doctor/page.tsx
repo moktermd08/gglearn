@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, Compass, Gauge, ListChecks, Stethoscope, Target } from "lucide-react";
@@ -30,7 +31,7 @@ function fields() {
 export default async function CareerDoctorInfo() {
   const me = await currentUser();
   const all = fields();
-  const start = me ? "/doctor/taster" : `/signup?next=${encodeURIComponent("/doctor/taster")}`;
+  const start = me ? "/doctor/taster" : `/signup?next=${queryPath("/doctor/taster")}`;
   return (
     <div className="mx-auto max-w-4xl space-y-10">
       <section className="card pop space-y-4 p-6 text-center sm:p-10" style={{ background: "linear-gradient(135deg, rgba(139,92,246,.16), #fff 70%)" }}>
@@ -39,7 +40,7 @@ export default async function CareerDoctorInfo() {
         <p className="mx-auto max-w-2xl text-slate-600">The Career doctor reads what you can already do and shows which fields and roles fit you, from coding to management, marketing and sales, then what to do next.</p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link href={start} className="btn !px-8 !py-3 text-base">{me ? "Take the career taster" : "Create an account and take the taster"}<ArrowRight size={18} /></Link>
-          {me ? <Link href="/doctor" className="font-semibold underline">Open my Career doctor</Link> : <Link href="/login?next=%2Fdoctor" className="font-semibold underline">I have an account</Link>}
+          {me ? <Link href="/doctor" className="font-semibold underline">Open my Career doctor</Link> : <Link href="/login?next=/doctor" className="font-semibold underline">I have an account</Link>}
         </div>
       </section>
 

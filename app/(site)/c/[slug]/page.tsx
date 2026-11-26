@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -55,7 +56,7 @@ export default async function EntryPage({ params }: { params: Promise<{ slug: st
             <div className="space-y-3">
               <h2 className="text-lg font-extrabold">Create your free account</h2>
               <EntryForm slug={slug} cta="Start learning" />
-              <p className="text-center text-sm text-slate-400">Already have one? <Link href={`/login?next=${encodeURIComponent(`/c/${slug}`)}`} className="font-semibold underline">Sign in</Link></p>
+              <p className="text-center text-sm text-slate-400">Already have one? <Link href={`/login?next=${queryPath(`/c/${slug}`)}`} className="font-semibold underline">Sign in</Link></p>
             </div>
           )}
         </div>

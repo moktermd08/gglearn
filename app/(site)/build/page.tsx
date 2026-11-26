@@ -1,3 +1,4 @@
+import { readFlash } from "@/lib/flash";
 import Link from "next/link";
 import { ArrowRight, GitBranch, Hammer, LogIn, Rocket } from "lucide-react";
 import { currentUser } from "@/lib/auth";
@@ -11,9 +12,9 @@ export const metadata = { title: "Build & launch — gglearn", description: "Tak
 
 const input = "w-full rounded-xl border border-black/15 bg-[#fff] px-3 py-2.5 focus:border-indigo-400 focus:outline-none";
 
-export default async function BuildIndex({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+export default async function BuildIndex() {
   const me = await currentUser();
-  const { error } = await searchParams;
+  const error = await readFlash();
   const mine = me ? projectsFor(me.id) : [];
 
   return (
@@ -60,7 +61,7 @@ export default async function BuildIndex({ searchParams }: { searchParams: Promi
         {!me ? (
           <div className="card flex flex-wrap items-center gap-4 p-5">
             <p className="min-w-0 flex-1 text-sm">Sign in to start a project and keep your progress.</p>
-            <Link href="/login?next=%2Fbuild" className="btn"><LogIn size={16} />Sign in</Link>
+            <Link href="/login?next=/build" className="btn"><LogIn size={16} />Sign in</Link>
           </div>
         ) : (
           <form action={startProject} className="space-y-4">

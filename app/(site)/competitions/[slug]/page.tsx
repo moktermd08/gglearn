@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -315,7 +316,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
       )}
 
       <section className="flex flex-wrap items-start gap-4">
-        {!user && c.visibility === "public" && !over && <p className="card p-4 text-sm"><Link href={`/signup?ref=${referralCode(c.createdBy)}&next=${encodeURIComponent(`/competitions/${c.slug}`)}`} className="btn !py-1.5">Create a free account to join</Link> <span className="ml-2">Already have one? <Link href={`/login?next=${encodeURIComponent(`/competitions/${c.slug}`)}`} className="underline">Sign in</Link></span></p>}
+        {!user && c.visibility === "public" && !over && <p className="card p-4 text-sm"><Link href={`/signup?ref=${referralCode(c.createdBy)}&next=${queryPath(`/competitions/${c.slug}`)}`} className="btn !py-1.5">Create a free account to join</Link> <span className="ml-2">Already have one? <Link href={`/login?next=${queryPath(`/competitions/${c.slug}`)}`} className="underline">Sign in</Link></span></p>}
 
         {mine?.status === "joined" && state !== "canceled" && <div className="card flex flex-wrap items-center gap-3 p-4"><ShareButton kind="race" refKey={c.slug} label={state === "finished" ? "Share my result" : state === "live" ? "Share my progress" : "Share that I joined"} prominent /></div>}
         {mine?.status === "joined" && !over && (

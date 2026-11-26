@@ -5,7 +5,8 @@ import { EmptyState, PageHero } from "@/components/charts";
 import { TermPicker, type PickBank } from "@/components/TermPicker";
 import { AddTermForm } from "@/components/AddTermForm";
 import { RolePicker } from "@/components/RolePicker";
-import { myStudyRoles, roleLabel, roleList, roleOptions, roleSlug, roleSummary } from "@/lib/termStudy";
+import { myStudyRoles, roleLabel, roleList, roleOptions, roleSummary } from "@/lib/termStudy";
+import { termUrl } from "@/lib/termUrls";
 import { allBanks, bankFitsRole, goalNeed, myTerms, recentChecks, sharedTerms, standingFor, termsAvailable, type BankStanding } from "@/lib/terms";
 import { MIN_TIER_TESTED, RANKS, rankName } from "@/lib/termsCore";
 import { removeOwnTermAction, removeStudyRoleAction } from "@/app/terms-actions";
@@ -90,8 +91,8 @@ export default async function Terms() {
                 <div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full bg-emerald-500" style={{ width: `${sum.total ? Math.round((sum.counts.known / sum.total) * 100) : 0}%` }} /></div>
                 <p className="text-xs text-slate-300">{sum.counts.known} of {sum.total} known{sum.due ? ` · ${sum.due} due to see again` : ""}</p>
                 <div className="flex flex-wrap items-center gap-3 text-sm">
-                  <Link href={`/terms/study?role=${roleSlug(r.role)}&level=${r.level}`} className="btn">Study</Link>
-                  <Link href={`/terms/role/${roleSlug(r.role)}?level=${r.level}`} className="underline">Open the list</Link>
+                  <Link href={termUrl("study", r.role, r.level)} className="btn">Study</Link>
+                  <Link href={termUrl("role", r.role, r.level)} className="underline">Open the list</Link>
                   <form action={removeStudyRoleAction} className="ml-auto"><input type="hidden" name="role" value={r.role} /><button className="text-xs text-rose-600 underline" aria-label={`Stop learning ${roleLabel(r.role)}`}>Remove</button></form>
                 </div>
               </div>

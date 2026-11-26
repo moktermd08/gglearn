@@ -93,7 +93,7 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
         </section>
       )}
       <p className="flex flex-wrap gap-4 text-sm">
-        {missed.length > 0 && <Link href={`/terms/study?check=${exam.id}`} className="btn">Study the {missed.length} term{missed.length === 1 ? "" : "s"} I missed</Link>}
+        {missed.length > 0 && <Link href={`/terms/study/missed/${exam.id}`} className="btn">Study the {missed.length} term{missed.length === 1 ? "" : "s"} I missed</Link>}
         <Link href="/terms" className="underline self-center">Back to Terms</Link>
       </p>
     </div>

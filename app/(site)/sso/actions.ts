@@ -1,5 +1,6 @@
 "use server";
 
+import { queryPath } from "@/lib/urlText";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { allowed, clientIp, hit, MINUTE } from "@/lib/rate-limit";
@@ -16,5 +17,5 @@ export async function startCompanySso(_: string | null, fd: FormData): Promise<s
   const c = companyForEmail(email.data);
   if (!c) return "There is no company sign-in for that address. Use your password or ask your admin.";
   const next = safeNext(String(fd.get("next") ?? ""));
-  redirect(`/sso/go/${c.slug}${next ? `?next=${encodeURIComponent(next)}` : ""}`);
+  redirect(`/sso/go/${c.slug}${next ? `?next=${queryPath(next)}` : ""}`);
 }

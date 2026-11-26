@@ -1,3 +1,4 @@
+import { slugify } from "@/lib/urlText";
 import Link from "next/link";
 import { ArrowRight, Compass, Gauge } from "lucide-react";
 import type { Diagnosis, FamilyFit, RoleFit } from "@/lib/careerDoctor";
@@ -67,8 +68,8 @@ function RoleCard({ r, mine, reader }: { r: RoleFit; mine: boolean; reader: Read
       </p>
       {reader.kind === "self" && (
         <div className="flex flex-wrap gap-2 pt-1 text-sm">
-          <Link href={`/route/role?role=${encodeURIComponent(r.role)}`} className="inline-flex items-center gap-1 font-semibold text-indigo-700 hover:underline"><Compass size={14} />See the route</Link>
-          <Link href={`/goal?role=${encodeURIComponent(r.role)}`} className="inline-flex items-center gap-1 font-semibold text-indigo-700 hover:underline"><Gauge size={14} />Set it as my goal</Link>
+          <Link href={`/route/role/${slugify(r.role)}`} className="inline-flex items-center gap-1 font-semibold text-indigo-700 hover:underline"><Compass size={14} />See the route</Link>
+          <Link href={`/goal?role=${slugify(r.role)}`} className="inline-flex items-center gap-1 font-semibold text-indigo-700 hover:underline"><Gauge size={14} />Set it as my goal</Link>
         </div>
       )}
     </li>

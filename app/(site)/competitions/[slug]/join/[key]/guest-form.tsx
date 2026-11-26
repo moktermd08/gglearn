@@ -1,4 +1,5 @@
 "use client";
+import { queryPath } from "@/lib/urlText";
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, KeyRound, Mail, Swords, TriangleAlert, User } from "lucide-react";
@@ -34,7 +35,7 @@ export function GuestJoinForm({ slug, k, path }: { slug: string; k: string; path
       {error && <p role="alert" className="slide-in flex items-start gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} className="mt-0.5 shrink-0" />{error}</p>}
       <button disabled={pending} className="btn disabled:opacity-50"><Swords size={16} />{pending ? "Creating your account…" : "Create my account and join"}</button>
       <p className="text-xs text-slate-400">A free gglearn account, just for learning and racing. Your email is your sign-in.</p>
-      <p className="text-sm text-slate-300">Already have an account? <Link href={`/login?next=${encodeURIComponent(path)}`} className="font-semibold text-indigo-300 underline">Sign in to join</Link></p>
+      <p className="text-sm text-slate-300">Already have an account? <Link href={`/login?next=${queryPath(path)}`} className="font-semibold text-indigo-300 underline">Sign in to join</Link></p>
     </form>
   );
 }

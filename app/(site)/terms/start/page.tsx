@@ -8,11 +8,12 @@ import { goalNeed, termsAvailable } from "@/lib/terms";
 import { EVERYONE, roleLabel, roleOptions } from "@/lib/termStudy";
 import { nextStep } from "@/lib/termJourney";
 import { targetsFor } from "@/lib/journey";
+import { readFlash } from "@/lib/flash";
 
 export const metadata = { title: "Start with terms — gglearn" };
 
-export default async function Start({ searchParams }: { searchParams: Promise<{ first?: string; error?: string }> }) {
-  const { first, error } = await searchParams;
+export default async function Start({ searchParams }: { searchParams: Promise<{ first?: string }> }) {
+  const [{ first }, error] = await Promise.all([searchParams, readFlash()]);
   const user = await requireUser();
   if (!termsAvailable()) notFound();
   const goal = goalNeed(user.id);

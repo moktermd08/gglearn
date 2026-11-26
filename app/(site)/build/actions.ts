@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
+import { setFlash } from "@/lib/flash";
 import { MINUTE, allowed, hit } from "@/lib/rate-limit";
 import { templateBySlug } from "@/content/build/projects";
 import { GithubError, parseRepo, parseSite } from "@/lib/build/github";
@@ -13,6 +14,12 @@ export type BuildState = { error?: string; message?: string } | null;
 
 const MAX_PROJECTS = 10;
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
+
+/** Back to the list of projects with a message about what did not work. */
+async function sendBack(message: string): Promise<never> {
+  await setFlash("/build", message);
+  redirect("/build");
+}
 
 const startSchema = z.object({
   template: z.string().refine((s) => !!templateBySlug(s), "Choose a project to start from."),
@@ -25,10 +32,10 @@ const startSchema = z.object({
 export async function startProject(fd: FormData) {
   const me = await requireUser();
   const p = startSchema.safeParse({ template: str(fd.get("template")), name: str(fd.get("name")), pitch: str(fd.get("pitch")), customer: str(fd.get("customer")) });
-  if (!p.success) redirect(`/build?error=${encodeURIComponent(p.error.issues[0].message)}`);
-  if (p.data.template === "custom" && p.data.pitch.length < 10) redirect(`/build?error=${encodeURIComponent("For your own idea, say in a sentence what it does and who for.")}`);
-  if (projectsFor(me.id).length >= MAX_PROJECTS) redirect(`/build?error=${encodeURIComponent(`You can have ${MAX_PROJECTS} projects at once. Finish or delete one first.`)}`);
-  if (!allowed(`build-new:${me.id}`, 10)) redirect(`/build?error=${encodeURIComponent("You have started a lot of projects just now. Try again later.")}`);
+  if (!p.success) return sendBack(p.error.issues[0].message);
+  if (p.data.template === "custom" && p.data.pitch.length < 10) return sendBack("For your own idea, say in a sentence what it does and who for.");
+  if (projectsFor(me.id).length >= MAX_PROJECTS) return sendBack(`You can have ${MAX_PROJECTS} projects at once. Finish or delete one first.`);
+  if (!allowed(`build-new:${me.id}`, 10)) return sendBack("You have started a lot of projects just now. Try again later.");
   hit(`build-new:${me.id}`, 60 * MINUTE);
   const t = templateBySlug(p.data.template)!;
   const made = createProject(me.id, { templateSlug: t.slug, name: p.data.name, pitch: p.data.pitch || t.pitch, customer: p.data.customer || t.customer });

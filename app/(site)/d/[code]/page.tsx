@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -36,8 +37,8 @@ export default async function DuelPage({ params }: { params: Promise<{ code: str
         {!open ? <p className="text-sm text-amber-500">This duel has already started or is no longer open.</p>
           : me ? <JoinButton code={code} />
           : (<div className="flex flex-wrap justify-center gap-2">
-              <Link href={`/signup?ref=${referralCode(d.hostId)}&next=${encodeURIComponent(here)}`} className="btn">Create a free account to play</Link>
-              <Link href={`/login?next=${encodeURIComponent(here)}`} className="btn btn-ghost">I have an account</Link>
+              <Link href={`/signup?ref=${referralCode(d.hostId)}&next=${queryPath(here)}`} className="btn">Create a free account to play</Link>
+              <Link href={`/login?next=${queryPath(here)}`} className="btn btn-ghost">I have an account</Link>
             </div>)}
       </div>
     </div>

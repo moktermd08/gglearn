@@ -1,5 +1,6 @@
 "use server";
 
+import { queryPath } from "@/lib/urlText";
 import { and, eq, inArray, isNull, like, notInArray, or, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -235,7 +236,7 @@ export async function requestSignInLink(_: string | null, fd: FormData): Promise
   hit(addrKey, 60 * MINUTE);
   const r = ssoRequired(email.data) ? null : startLoginLink(email.data);
   if (r && mailConfigured()) {
-    const next = safeNext(str(fd.get("next"))), q = next ? `?next=${encodeURIComponent(next)}` : "";
+    const next = safeNext(str(fd.get("next"))), q = next ? `?next=${queryPath(next)}` : "";
     void sendMail(signInLinkMail(r.email, `${await siteUrl()}/signin/${r.token}${q}`, LOGIN_LINK_TTL_SEC / 60, lookFor(r.userId).name), { key: `signin-${hashToken(r.token).slice(0, 32)}` });
   }
   return "ok";

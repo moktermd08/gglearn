@@ -1,3 +1,4 @@
+import { slugify } from "@/lib/urlText";
 import { Chain, EmptyState, Initials, PageHero, PALETTE, StatTile } from "@/components/charts";
 import { Ring } from "@/components/Ring";
 import { SubjectArt } from "@/components/SubjectArt";
@@ -39,7 +40,7 @@ function Evidence({ p, c, cat }: { p: typeof users.$inferSelect; c: NonNullable<
 }
 
 export default async function Careers({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
-  const openRole = ((await searchParams).role ?? "").toLowerCase(); // only the ladder being looked at is drawn in full: all 28 at once was a 7 MB page
+  const openRole = slugify((await searchParams).role ?? ""); // the role as written in the address; older links carried the name itself // only the ladder being looked at is drawn in full: all 28 at once was a 7 MB page
   const me = await requireManager();
   const reach = (await adminScopeOf(me)).reach, mine = usersInReach(reach);
   const isAdmin = me.role === "admin" && isGlobal(reach); // ladders are shared by every company
@@ -117,9 +118,9 @@ export default async function Careers({ searchParams }: { searchParams: Promise<
         {roles.map((role) => {
           const ladder = ladderFor(role, cat);
           const stairs = ladder.length;
-          const isOpen = role.toLowerCase() === openRole;
+          const isOpen = slugify(role) === openRole;
           if (!isOpen) return (
-            <Link key={role} href={`/admin/careers?role=${encodeURIComponent(role)}#ladder-${encodeURIComponent(role)}`} scroll className="card card-hover flex flex-wrap items-center gap-4 p-4" aria-label={`Open the ${role} ladder`}>
+            <Link key={role} href={`/admin/careers?role=${slugify(role)}#ladder-${slugify(role)}`} scroll className="card card-hover flex flex-wrap items-center gap-4 p-4" aria-label={`Open the ${role} ladder`}>
               <div className="min-w-0 flex-1 space-y-1.5">
                 <div className="flex items-center gap-2"><span className="text-lg font-bold capitalize">{role}</span><span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-[11px] font-bold text-violet-300">{stairs} levels</span></div>
                 <div className="font-normal normal-case"><Chain steps={ladder.map((r) => r.title)} /></div>
@@ -128,7 +129,7 @@ export default async function Careers({ searchParams }: { searchParams: Promise<
             </Link>
           );
           return (
-            <details key={role} id={`ladder-${role}`} open className="card group scroll-mt-24 p-4 open:shadow-md">
+            <details key={role} id={`ladder-${slugify(role)}`} open className="card group scroll-mt-24 p-4 open:shadow-md">
               <summary className="flex cursor-pointer list-none flex-wrap items-center gap-4 [&::-webkit-details-marker]:hidden">
                 <svg viewBox="0 0 64 40" width="56" height="35" aria-hidden className="shrink-0">
                   {ladder.map((_, i) => { const w = 60 / stairs, h = 8 + ((i + 1) / stairs) * 28; return <rect key={i} x={2 + i * w} y={38 - h} width={Math.max(3, w - 2)} height={h} rx="2" fill={`hsl(${265 + i * (50 / Math.max(1, stairs))} 70% ${62 - i * 3}%)`} />; })}

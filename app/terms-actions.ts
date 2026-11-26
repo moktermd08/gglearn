@@ -6,9 +6,11 @@ import { db, terms } from "@/lib/db";
 import { actingUser, logViewAsUse } from "@/lib/auth";
 import { markCheck, parseTermInput, sameTerm, startCheck, myTerms } from "@/lib/terms";
 import { removeTerm } from "@/lib/termsAdmin";
-import { recordStudy, removeStudyRole, roleSlug, saveStudyRole, startPlacementStage, startRankExam, startRoleCheck, studyCardsFor } from "@/lib/termStudy";
+import { recordStudy, removeStudyRole, saveStudyRole, startPlacementStage, startRankExam, startRoleCheck, studyCardsFor } from "@/lib/termStudy";
 import { withDetails, type RichCard } from "@/lib/termDetails";
 import { beginJourney } from "@/lib/termJourney";
+import { termUrl } from "@/lib/termUrls";
+import { setFlash } from "@/lib/flash";
 import type { SetupState } from "@/lib/setup";
 
 /** What a candidate does with the term bank: add their own terms, make a check from the terms they picked, and answer it. All as themselves. */
@@ -66,7 +68,13 @@ export async function submitCheckAction(fd: FormData) {
 
 // ---- learning a role's terms
 
-const roleUrl = (role: string, level: number, extra = "") => `/terms/role/${roleSlug(role.trim().toLowerCase())}?level=${level}${extra}`;
+const roleUrl = (role: string, level: number) => termUrl("role", role, level);
+
+/** Sends a person to a page with a message about what did not work. */
+async function sendBack(path: string, message: string): Promise<never> {
+  await setFlash(path, message);
+  redirect(path);
+}
 
 export async function chooseRoleAction(fd: FormData) {
   const who = await actingUser();
@@ -97,7 +105,7 @@ export async function startRoleCheckAction(fd: FormData) {
   if (!who) return;
   const role = String(fd.get("role") ?? ""), level = Number(fd.get("level"));
   const r = startRoleCheck(who.me, role, level);
-  if ("error" in r) redirect(roleUrl(role, level, `&error=${encodeURIComponent(r.error)}`));
+  if ("error" in r) return sendBack(roleUrl(role, level), r.error);
   await logViewAsUse(who.viewedBy, who.me, `started a term check for ${role}`);
   redirect(`/terms/check/${r.id}`);
 }
@@ -108,7 +116,7 @@ export async function startRankExamAction(fd: FormData) {
   if (!who) return;
   const role = String(fd.get("role") ?? ""), level = Number(fd.get("level")), rank = Number(fd.get("rank"));
   const r = startRankExam(who.me, role, level, rank);
-  if ("error" in r) redirect(roleUrl(role, level, `&error=${encodeURIComponent(r.error)}`));
+  if ("error" in r) return sendBack(roleUrl(role, level), r.error);
   await logViewAsUse(who.viewedBy, who.me, `started a rank ${rank} term exam for ${role}`);
   redirect(`/terms/check/${r.id}`);
 }
@@ -119,7 +127,7 @@ export async function startPlacementAction(fd: FormData) {
   if (!who) return;
   const role = String(fd.get("role") ?? ""), level = Number(fd.get("level")), stage = Number(fd.get("stage"));
   const r = startPlacementStage(who.me, role, level, stage);
-  if ("error" in r) redirect(roleUrl(role, level, `&error=${encodeURIComponent(r.error)}`));
+  if ("error" in r) return sendBack(roleUrl(role, level), r.error);
   await logViewAsUse(who.viewedBy, who.me, `started placement rank ${stage} for ${role}`);
   redirect(`/terms/check/${r.id}`);
 }
@@ -130,11 +138,11 @@ export async function beginAction(fd: FormData) {
   if (!who) return;
   const role = String(fd.get("role") ?? ""), level = Number(fd.get("level")), how = String(fd.get("how") ?? "some");
   const r = beginJourney(who.me, role, level, fd.get("goal") === "on");
-  if ("error" in r) redirect("/terms/start?error=" + encodeURIComponent(r.error));
+  if ("error" in r) return sendBack("/terms/start", r.error);
   revalidatePath("/terms");
-  if (how === "new") redirect(`/terms/study?role=${roleSlug(role.trim().toLowerCase())}&level=${level}`);
+  if (how === "new") redirect(termUrl("study", role, level));
   const p = startPlacementStage(who.me, role, level, 1);
-  if ("error" in p) redirect(roleUrl(role, level, `&error=${encodeURIComponent(p.error)}`));
+  if ("error" in p) return sendBack(roleUrl(role, level), p.error);
   await logViewAsUse(who.viewedBy, who.me, `began placement for ${role}`);
   redirect(`/terms/check/${p.id}`);
 }

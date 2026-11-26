@@ -1,4 +1,5 @@
 "use client";
+import { queryPath } from "@/lib/urlText";
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, KeyRound, Mail, Rocket, TriangleAlert, User } from "lucide-react";
@@ -9,7 +10,7 @@ export default function SignUpForm({ next = "", refCode = "", tried = "", social
   const [error, run, pending] = useActionState(signUp, null);
   const [show, setShow] = useState(false);
   const input = "w-full rounded-lg border border-white/15 bg-[#fff] px-3 py-2";
-  const signIn = next ? `/login?next=${encodeURIComponent(next)}` : "/login";
+  const signIn = next ? `/login?next=${queryPath(next)}` : "/login";
   return (
     <AuthShell modal={!!onMode} title="Start your climb." lead="Free. Pick a subject, find your level and race a rival in under a minute.">
       {social}

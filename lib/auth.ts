@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -79,7 +80,7 @@ export async function requireUser() {
   if (!u) {
     // send them back to the page they asked for once they have signed in (set by proxy.ts, and only ever a path inside this site)
     const back = safeNext((await headers()).get("x-return-to"));
-    redirect(back && !back.startsWith("/login") ? `/login?next=${encodeURIComponent(back)}` : "/login");
+    redirect(back && !back.startsWith("/login") ? `/login?next=${queryPath(back)}` : "/login");
   }
   return u;
 }

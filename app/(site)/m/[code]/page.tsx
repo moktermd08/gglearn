@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
@@ -35,8 +36,8 @@ export default async function MentorLink({ params }: { params: Promise<{ code: s
           : me && isMentor(me.id, owner) ? <Link href="/mentoring" className="btn">You already mentor them<ArrowRight size={16} /></Link>
           : me ? <AcceptMentee code={code} />
           : (<div className="flex flex-wrap justify-center gap-2">
-              <Link href={`/signup?ref=${encodeURIComponent(code)}&next=${encodeURIComponent(here)}`} className="btn">Create a free account to mentor</Link>
-              <Link href={`/login?next=${encodeURIComponent(here)}`} className="btn btn-ghost">I have an account</Link>
+              <Link href={`/signup?ref=${encodeURIComponent(code)}&next=${queryPath(here)}`} className="btn">Create a free account to mentor</Link>
+              <Link href={`/login?next=${queryPath(here)}`} className="btn btn-ghost">I have an account</Link>
             </div>)}
       </div>
     </div>
