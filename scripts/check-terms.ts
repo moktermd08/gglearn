@@ -162,6 +162,7 @@ ok("a check is made, marked and stored as asked", () => {
   const c = lib.loadCheck(me, examId)!;
   assert.equal(c.answers.length, 20);
   assert.equal(lib.loadCheck(other, examId), null, "somebody else cannot open it");
+  assert.ok(c.answers.every((x) => x.form && typeof x.group === "string"), "each question knows its kind and its topic");
   const chosen: Record<number, number> = {};
   let slips = 0;
   c.answers.forEach((a) => { const slip = a.tier === 1 && slips < 2; if (slip) slips++; chosen[a.id] = slip ? (a.correct + 1) % a.options.length : a.correct; }); // 18 of 20 right, both slips on the easiest rank
