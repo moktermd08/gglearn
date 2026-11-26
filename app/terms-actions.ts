@@ -128,7 +128,7 @@ export async function beginAction(fd: FormData) {
   const who = await actingUser();
   if (!who) return;
   const role = String(fd.get("role") ?? ""), level = Number(fd.get("level")), how = String(fd.get("how") ?? "some");
-  const r = beginJourney(who.me.id, role, level, fd.get("goal") === "on");
+  const r = beginJourney(who.me, role, level, fd.get("goal") === "on");
   if ("error" in r) redirect("/terms/start?error=" + encodeURIComponent(r.error));
   revalidatePath("/terms");
   if (how === "new") redirect(`/terms/study?role=${roleSlug(role.trim().toLowerCase())}&level=${level}`);

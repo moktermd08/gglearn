@@ -53,7 +53,7 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
   const missed = answers.filter((a) => !a.right);
   const placement = exam.kind === "placement";
   const passed = (exam.score ?? 0) >= TERM_PASS;
-  const step = nextStep(user.id);
+  const step = nextStep(user.id, exam.role ? { role: exam.role, level: exam.level ?? 1 } : undefined);
   const title = placement ? `${Math.round((exam.score ?? 0) * 100)}% · ${passed ? `You passed ${claimed}` : `Not yet at ${claimed}`}` : `${Math.round((exam.score ?? 0) * 100)}% · ${check.reached ? reached : "Not yet at Initiate"}`;
   const sub = placement ? (passed ? `You knew ${TERM_PASS * 100}% or more of the ${claimed} terms asked. The next rank is open.` : `Fewer than ${TERM_PASS * 100}% of the ${claimed} terms were right, so this is where the climb stops for now. That is a start, not a failure: the terms you missed are below.`) : msg;
   return (

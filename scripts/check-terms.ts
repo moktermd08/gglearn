@@ -329,12 +329,20 @@ ok("the basics for any office job are a list on their own, with all five ranks",
   assert.ok(study.roleOptions().some((o) => o.role === "everyone"));
   assert.equal(study.roleLabel("everyone"), "Any office job");
 });
-ok("starting from the beginning saves the role and sets a goal only for a role with a ladder, and only once", () => {
-  assert.deepEqual(jr.beginJourney(newcomer.id, "everyone", 1, true), { ok: true });
+ok("starting from the beginning saves the role and sets a goal only where the person's career path leads, and only once", () => {
+  assert.deepEqual(jr.beginJourney(newcomer, "everyone", 1, true), { ok: true });
   assert.equal(db.select().from(careerGoals).where(eq(careerGoals.userId, newcomer.id)).all().length, 0, "no goal for the basics");
-  assert.ok("error" in jr.beginJourney(newcomer.id, "nobody", 1, true));
-  assert.deepEqual(jr.beginJourney(newcomer.id, "cto", 2, true), { ok: true });
-  assert.deepEqual(jr.beginJourney(newcomer.id, "gardener", 1, true), { ok: true });
+  assert.ok("error" in jr.beginJourney(newcomer, "nobody", 1, true));
+  const goalsOf = () => db.select().from(careerGoals).where(eq(careerGoals.userId, newcomer.id)).all();
+  assert.deepEqual(jr.beginJourney(newcomer, "cto", 2, true), { ok: true });
+  assert.equal(goalsOf().length, 0, "no career path of their own, so nothing a goal could be measured from");
+  db.update(users).set({ jobRole: "cto" }).where(eq(users.id, newcomer.id)).run();
+  newcomer.jobRole = "cto";
+  assert.deepEqual(jr.beginJourney(newcomer, "gardener", 2, true), { ok: true });
+  assert.equal(goalsOf().length, 0, "a role their path does not lead to is learned, not made a goal");
+  assert.equal(study.myStudyRoles(newcomer.id).some((r) => r.role === "gardener"), true);
+  assert.deepEqual(jr.beginJourney(newcomer, "cto", 2, true), { ok: true });
+  assert.deepEqual(jr.beginJourney(newcomer, "gardener", 1, true), { ok: true });
   const goals = db.select().from(careerGoals).where(eq(careerGoals.userId, newcomer.id)).all();
   assert.deepEqual(goals.map((g) => [g.targetRole, g.targetLevel]), [["cto", 2]], "the first goal stays");
   study.removeStudyRole(newcomer.id, "gardener");
@@ -355,7 +363,7 @@ ok("placement asks one rank at a time, ten terms of that rank, as deeply as the 
   db.delete(termExams).where(eq(termExams.id, r.id)).run();
 });
 ok("someone who knows nothing stops at the first rank, with a next step that is to study and try again", () => {
-  jr.beginJourney(newcomer.id, "everyone", 1, false);
+  jr.beginJourney(newcomer, "everyone", 1, false);
   assert.equal(jr.nextStep(newcomer.id).kind, "place");
   const r = study.startPlacementStage(newcomer, "everyone", 1, 1) as { id: number };
   answer(r.id, newcomer, "none");
@@ -377,7 +385,7 @@ ok("the terms missed in a check can be studied straight away", () => {
 });
 ok("someone who knows a lot climbs rank by rank and stops where they stop passing", () => {
   const who = db.insert(users).values({ email: "climber-" + email, name: "Climber" }).returning().get();
-  jr.beginJourney(who.id, "everyone", 1, false);
+  jr.beginJourney(who, "everyone", 1, false);
   const list = study.roleList("everyone", 1)!;
   for (const rank of [1, 2, 3]) {
     const r = study.startPlacementStage(who, "everyone", 1, rank) as { id: number };
@@ -401,18 +409,29 @@ ok("someone who knows a lot climbs rank by rank and stops where they stop passin
 });
 ok("passing every rank reaches the goal", () => {
   const who = db.insert(users).values({ email: "top-" + email, name: "Top" }).returning().get();
-  jr.beginJourney(who.id, "everyone", 1, false);
+  jr.beginJourney(who, "everyone", 1, false);
   for (const rank of [1, 2, 3, 4, 5]) answer((study.startPlacementStage(who, "everyone", 1, rank) as { id: number }).id, who, "all");
   const step = jr.nextStep(who.id);
   assert.ok(step.kind === "there" && step.placed === 5);
 });
 ok("a goal asks for fewer ranks than the whole list, so the path ends sooner", () => {
-  const who = db.insert(users).values({ email: "goal-" + email, name: "Goal" }).returning().get();
-  jr.beginJourney(who.id, "cto", 1, true); // the first level reaches Adept
+  const who = db.insert(users).values({ email: "goal-" + email, name: "Goal", jobRole: "cto" }).returning().get();
+  jr.beginJourney(who, "cto", 2, true);
+  db.update(careerGoals).set({ targetLevel: 1 }).where(eq(careerGoals.userId, who.id)).run(); // a goal of the first level, which reaches Adept
+  jr.beginJourney(who, "cto", 1, false);
   const list = study.roleList("cto", 1)!;
   for (const rank of study.placementStages(list)) answer((study.startPlacementStage(who, "cto", 1, rank) as { id: number }).id, who, "all");
   const step = jr.nextStep(who.id);
   assert.ok(step.kind === "there" && step.target === 2 && step.placed === 2, JSON.stringify([step.kind]));
+});
+
+ok("a result talks about the list the check was on, even when the person also has a goal elsewhere", () => {
+  const who = db.insert(users).values({ email: "two-" + email, name: "Two", jobRole: "cto" }).returning().get();
+  jr.beginJourney(who, "cto", 2, true);
+  jr.beginJourney(who, "everyone", 1, false);
+  const main = jr.nextStep(who.id), aside = jr.nextStep(who.id, { role: "everyone", level: 1 });
+  assert.ok(main.kind !== "start" && main.role === "cto");
+  assert.ok(aside.kind !== "start" && aside.role === "everyone" && !aside.hasGoal);
 });
 
 console.log(`\n${n} checks passed`);

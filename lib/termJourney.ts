@@ -1,5 +1,6 @@
 import { and, asc, eq, isNotNull } from "drizzle-orm";
-import { careerGoals, db, termExams } from "@/lib/db";
+import { careerGoals, db, termExams, users } from "@/lib/db";
+import { canReach } from "@/lib/journey";
 import { goalNeed } from "@/lib/terms";
 import { TERM_PASS, KNOWN_BOX, rankName } from "@/lib/termsCore";
 import { myStudyRoles, placementStages, progressFor, roleLabel, roleList, roleSlug, saveStudyRole, EVERYONE, type RoleList } from "@/lib/termStudy";
@@ -65,12 +66,15 @@ const goalRoleList = (userId: number) => {
   return g ? roleList(g.role, g.level) : null;
 };
 
-/** What this person should do next, from where they stand. The same answer is shown on the Terms page, the dashboard, the goal page and after a check. */
-export function nextStep(userId: number): Step {
+/**
+ * What this person should do next, from where they stand. The same answer is shown on the Terms page, the dashboard, the goal page and after a check.
+ * `about` names the list in hand (the one a check was on), so a result talks about that list and not about another one the person is also learning.
+ */
+export function nextStep(userId: number, about?: { role: string; level: number }): Step {
   const goal = goalNeed(userId);
   const chosen = myStudyRoles(userId);
   const pick = chosen.find((r) => goal && r.role === goal.role) ?? chosen[chosen.length - 1];
-  const list = pick ? roleList(pick.role, pick.level) : goalRoleList(userId);
+  const list = (about && roleList(about.role, about.level)) || (pick ? roleList(pick.role, pick.level) : goalRoleList(userId));
   if (!list) return { kind: "start" };
   const placement = placementState(userId, list);
   const target = goal && goal.role === list.role ? Math.min(goal.rank, list.ceiling) : list.ceiling;
@@ -89,12 +93,16 @@ export function nextStep(userId: number): Step {
 
 export const stepRank = (n: number | null) => (n ? rankName(n) : "the basics");
 
-/** How the start screen's choices become a saved role, an optional goal, and the first thing to do. A goal is only set when the person has none and the role has a career ladder. */
-export function beginJourney(userId: number, role: string, level: number, setGoal: boolean): { error: string } | { ok: true } {
+/**
+ * How the start screen's choices become a saved role and an optional goal. Any role can be learned; a career goal is only set when the person has none and their
+ * career path leads to that role and level (the same rule the goal page uses), because a goal the path cannot reach breaks the goal page.
+ */
+export function beginJourney(person: typeof users.$inferSelect, role: string, level: number, setGoal: boolean): { error: string } | { ok: true } {
+  const userId = person.id;
   const r = saveStudyRole(userId, role, level);
   if ("error" in r) return r;
   const key = role.trim().toLowerCase();
-  if (setGoal && key !== EVERYONE && !db.select({ id: careerGoals.id }).from(careerGoals).where(eq(careerGoals.userId, userId)).get()) {
+  if (setGoal && key !== EVERYONE && canReach(person, key, level) && !db.select({ id: careerGoals.id }).from(careerGoals).where(eq(careerGoals.userId, userId)).get()) {
     db.insert(careerGoals).values({ userId, targetRole: key, targetLevel: level, targetDate: Math.floor(Date.now() / 1000) + 365 * 86400 }).run();
   }
   return { ok: true };
