@@ -122,7 +122,7 @@ export async function signUp(_: string | null, fd: FormData): Promise<string | n
     return "We could not create an account with those details. If you already have one, sign in instead.";
   }
   await startSession(userId);
-  redirect(safeNext(str(fd.get("next"))) ?? "/try?first=1"); // a first win in a minute, before any set-up
+  redirect(safeNext(str(fd.get("next"))) ?? "/terms/start?first=1"); // say what you want to learn and how much you know, before anything else
 }
 
 export async function login(_: string | null, fd: FormData): Promise<string | null> {

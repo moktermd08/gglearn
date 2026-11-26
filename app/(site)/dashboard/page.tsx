@@ -37,6 +37,9 @@ import { TierGem } from "@/components/TierGem";
 import { WhereYouBelong } from "@/components/WhereYouBelong";
 import { setEmailNudges } from "@/app/(site)/profile/actions";
 import { topicLabel } from "@/lib/topicName";
+import { TermNextStep } from "@/components/TermNextStep";
+import { nextStep } from "@/lib/termJourney";
+import { termsAvailable } from "@/lib/terms";
 import { Snowflake, BookOpen, CircleCheck, Zap, AlertTriangle, ArrowUpRight, BellRing, Compass, CheckCircle2, CircleDashed, TrendingUp as Climb, CheckSquare, ClipboardList, Flame, ShieldCheck, Square, Sparkles, Swords, Target, TrendingDown, TrendingUp, Trophy, Medal, Equal, Mountain, Activity, Radar as RadarIcon, Rocket } from "lucide-react";
 
 export default async function Dashboard() {
@@ -190,6 +193,8 @@ export default async function Dashboard() {
         </div>
         {questsTotal > 0 && <div className="relative text-center"><Ring pct={goalDone / questsTotal} label={`${goalDone}/${questsTotal}`} sub="daily goal" size={104} color={goalDone === questsTotal ? "#34d399" : "#38bdf8"} /></div>}
       </header>
+
+      {termsAvailable() && <TermNextStep step={nextStep(user.id)} />}
 
       <section aria-label="Your next step" className={`card pop relative overflow-hidden p-5 sm:p-6 ${nextUrgent ? "border-2 border-rose-300/70" : "border-2 border-indigo-300/60"}`} style={{ background: nextUrgent ? "linear-gradient(120deg, rgba(244,63,94,.12), #fff 65%)" : "linear-gradient(120deg, rgba(99,102,241,.16), #fff 65%)" }}>
         <div className="flex flex-wrap items-center gap-4">

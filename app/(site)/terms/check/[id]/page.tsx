@@ -5,6 +5,8 @@ import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
 import { goalNeed, loadCheck, termsAvailable } from "@/lib/terms";
 import { roleLabel } from "@/lib/termStudy";
+import { TermNextStep } from "@/components/TermNextStep";
+import { nextStep } from "@/lib/termJourney";
 import { RANKS, TERM_PASS, rankName } from "@/lib/termsCore";
 import { submitCheckAction } from "@/app/terms-actions";
 
@@ -28,7 +30,7 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
   if (exam.finishedAt == null) {
     return (
       <div className="mx-auto max-w-3xl space-y-6">
-        <PageHero Icon={BookOpen} tone="violet" title="Term check" sub={`${answers.length} questions, asked as deeply as ${rankName(exam.claimedTier)} level.${exam.kind === "premade" ? ` The ${rankName(exam.claimedTier)} exam for ${roleLabel(exam.role)}.` : ""} Answer them all, then see where you stand.`} />
+        <PageHero Icon={BookOpen} tone="violet" title="Term check" sub={`${answers.length} questions, asked as deeply as ${rankName(exam.claimedTier)} level.${exam.kind === "premade" ? ` The ${rankName(exam.claimedTier)} exam for ${roleLabel(exam.role)}.` : ""}${exam.kind === "placement" ? ` Finding your level for ${roleLabel(exam.role)}: this is the ${rankName(exam.claimedTier)} step.` : ""} Answer them all, then see where you stand.`} />
         <form action={submitCheckAction} className="space-y-4">
           <input type="hidden" name="exam" value={exam.id} />
           {answers.map((a, n) => (
@@ -49,9 +51,15 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
   const goal = goalNeed(user.id);
   const msg = check.verdict === "confirmed" ? SAY.confirmed(claimed) : check.verdict === "above" ? SAY.above(claimed, reached) : check.verdict === "below" ? SAY.below(claimed, reached) : SAY.unproven(claimed);
   const missed = answers.filter((a) => !a.right);
+  const placement = exam.kind === "placement";
+  const passed = (exam.score ?? 0) >= TERM_PASS;
+  const step = nextStep(user.id, exam.role ? { role: exam.role, level: exam.level ?? 1 } : undefined);
+  const title = placement ? `${Math.round((exam.score ?? 0) * 100)}% · ${passed ? `You passed ${claimed}` : `Not yet at ${claimed}`}` : `${Math.round((exam.score ?? 0) * 100)}% · ${check.reached ? reached : "Not yet at Initiate"}`;
+  const sub = placement ? (passed ? `You knew ${TERM_PASS * 100}% or more of the ${claimed} terms asked. The next rank is open.` : `Fewer than ${TERM_PASS * 100}% of the ${claimed} terms were right, so this is where the climb stops for now. That is a start, not a failure: the terms you missed are below.`) : msg;
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <PageHero Icon={BookOpen} tone="violet" title={`${Math.round((exam.score ?? 0) * 100)}% · ${check.reached ? reached : "Not yet at Initiate"}`} sub={msg} />
+      <PageHero Icon={BookOpen} tone="violet" title={title} sub={sub} />
+      {step.kind !== "start" && <TermNextStep step={step} />}
 
       <section className="card space-y-3 p-4">
         <h2 className="font-semibold">By rank</h2>
@@ -66,7 +74,7 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
             );
           })}
         </div>
-        {goal && <p className="text-sm text-slate-600">Your goal, <b>{goal.title}</b>, asks for <b>{rankName(goal.rank)}</b>. {check.reached >= goal.rank ? "This check supports that." : "This check does not yet support that: keep working through the terms you missed."}</p>}
+        {goal && <p className="text-sm text-slate-300">Your goal, <b>{goal.title}</b>, asks for <b>{rankName(goal.rank)}</b>. {check.reached >= goal.rank ? "This check supports that." : "This check does not yet support that: keep working through the terms you missed."}</p>}
       </section>
 
       {missed.length > 0 && (
@@ -76,7 +84,7 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
             {missed.map((a) => (
               <div key={a.id} className="space-y-1 p-3">
                 <p><b>{a.term}</b> <span className="text-xs text-slate-500">{rankName(a.tier)}</span></p>
-                <p className="text-slate-600">{a.meaning}</p>
+                <p className="text-slate-300">{a.meaning}</p>
                 <p className="flex items-center gap-1 text-rose-600"><X size={13} />You chose: {a.chosen == null ? "no answer" : a.options[a.chosen]}</p>
                 <p className="flex items-center gap-1 text-emerald-700"><Check size={13} />Right answer: {a.options[a.correct]}</p>
               </div>
@@ -84,7 +92,10 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
           </div>
         </section>
       )}
-      <p className="text-sm"><Link href="/terms" className="underline">Back to Terms</Link></p>
+      <p className="flex flex-wrap gap-4 text-sm">
+        {missed.length > 0 && <Link href={`/terms/study?check=${exam.id}`} className="btn">Study the {missed.length} term{missed.length === 1 ? "" : "s"} I missed</Link>}
+        <Link href="/terms" className="underline self-center">Back to Terms</Link>
+      </p>
     </div>
   );
 }

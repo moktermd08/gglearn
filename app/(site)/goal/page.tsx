@@ -13,6 +13,9 @@ import { journeyFor, levelCode, roleLabel, targetsFor, type Leg } from "@/lib/jo
 import { assessmentFor } from "@/lib/route";
 import { roleRouteSlug, roleTarget } from "@/lib/routeRole";
 import { clearCareerGoal, enroll } from "@/app/actions";
+import { TermNextStep } from "@/components/TermNextStep";
+import { nextStep } from "@/lib/termJourney";
+import { termsAvailable } from "@/lib/terms";
 
 export const metadata = { title: "Goal assessment — gglearn" };
 
@@ -44,12 +47,14 @@ export default async function GoalAssessment({ searchParams }: { searchParams: P
   const { role: wanted = "" } = await searchParams;
   const user = await requireUser();
   const j = journeyFor(user);
+  const termsStep = termsAvailable() ? <TermNextStep step={nextStep(user.id)} /> : null; // the same next step as on the Terms page: the words come first
   const enrolled = new Set(db.select({ t: enrollments.trackId }).from(enrollments).where(eq(enrollments.userId, user.id)).all().map((e) => e.t));
 
   if (j.state === "no-ladder") {
     return (
       <div className="mx-auto max-w-2xl space-y-4">
         <PageHero Icon={Gauge} tone="violet" title="Goal assessment" sub="Where you stand against the role you want, and what closes the gap." />
+        {termsStep}
         <EmptyState Icon={Mountain} tone="violet" title="No path to assess yet">
           There is no career path for {user.audience === "customer" ? "customer accounts" : <>the role <b>{user.jobRole}</b></>} yet.
         </EmptyState>
@@ -60,6 +65,7 @@ export default async function GoalAssessment({ searchParams }: { searchParams: P
     return (
       <div className="mx-auto max-w-2xl space-y-3">
         <PageHero Icon={Gauge} tone="violet" title="Goal assessment" sub="Where you stand against the role you want, and what closes the gap." />
+        {termsStep}
         <p role="alert" className="card p-4 text-amber-300">The route to {roleLabel(j.goal.targetRole)} (level {j.goal.targetLevel}) no longer exists from where you are. Pick another goal.</p>
         <form action={clearCareerGoal}><button className="btn btn-ghost">Remove this goal</button></form>
       </div>
@@ -79,6 +85,7 @@ export default async function GoalAssessment({ searchParams }: { searchParams: P
     return (
       <div className="mx-auto max-w-3xl space-y-6">
         <PageHero Icon={Gauge} tone="violet" title="Goal assessment" sub="Choose the role you want. We measure where you stand against it and what closes the gap." />
+        {termsStep}
         {st && <StandingCard st={st} goalTitle="" slug={null} state="none" />}
         <section className="card space-y-3 p-5">
           <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-pink-500/15 text-pink-300"><Target size={17} /></span>Set your goal</h2>
@@ -100,6 +107,7 @@ export default async function GoalAssessment({ searchParams }: { searchParams: P
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <PageHero Icon={Gauge} tone="violet" title="Goal assessment" sub={`${here.title} to ${j.target.title}: how far you are, and what closes the gap.`} />
+        {termsStep}
 
       <section className="card flex flex-wrap items-center gap-5 p-5" aria-label="Verdict">
         {!reached && <Ring pct={j.counted ? j.met / j.counted : 0} label={`${j.counted ? Math.round((j.met / j.counted) * 100) : 0}%`} sub="of steps" size={104} color={pace && (pace.status === "behind" || pace.status === "past-date") ? "#f59e0b" : "#10b981"} />}

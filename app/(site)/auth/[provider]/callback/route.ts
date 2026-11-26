@@ -23,5 +23,5 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
   const u = db.select().from(users).where(eq(users.id, r.userId)).get();
   if (u) syncRequired(u);
   await startSession(r.userId);
-  return done(safeNext(r.next) ?? (r.created ? "/try?first=1" : "/dashboard")); // a new account gets a first win in a minute, as sign-up does
+  return done(safeNext(r.next) ?? (r.created ? "/terms/start?first=1" : "/dashboard")); // a new account says what it wants to learn first, as sign-up does
 }

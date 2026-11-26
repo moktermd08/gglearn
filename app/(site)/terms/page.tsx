@@ -9,6 +9,8 @@ import { myStudyRoles, roleLabel, roleList, roleOptions, roleSlug, roleSummary }
 import { allBanks, bankFitsRole, goalNeed, myTerms, recentChecks, sharedTerms, standingFor, termsAvailable, type BankStanding } from "@/lib/terms";
 import { MIN_TIER_TESTED, RANKS, rankName } from "@/lib/termsCore";
 import { removeOwnTermAction, removeStudyRoleAction } from "@/app/terms-actions";
+import { TermNextStep } from "@/components/TermNextStep";
+import { nextStep } from "@/lib/termJourney";
 
 export const metadata = { title: "Terms — gglearn" };
 
@@ -35,7 +37,7 @@ function Standing({ s, need }: { s: BankStanding; need: number | null }) {
         })}
       </div>
       {need != null && (
-        <p className={`flex items-center gap-1.5 text-xs ${there ? "text-emerald-700" : "text-slate-600"}`}>
+        <p className={`flex items-center gap-1.5 text-xs ${there ? "text-emerald-700" : "text-slate-300"}`}>
           <Flag size={12} />Your goal needs <b>{rankName(need)}</b>: {!s.asked ? "not tested yet" : there ? "you are there" : `${need - reached} rank${need - reached === 1 ? "" : "s"} to go`}.
         </p>
       )}
@@ -74,9 +76,11 @@ export default async function Terms() {
     <div className="mx-auto max-w-4xl space-y-8">
       <PageHero Icon={BookOpen} tone="violet" title="Terms" sub="The words people in your kind of work need to know, at five ranks from Initiate to Titan. Choose a role to get its list, study the terms, then test yourself, or pick your own terms and see where you really stand." />
 
+      <TermNextStep step={nextStep(user.id)} />
+
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Learn the terms for a role</h2>
-        <p className="text-sm text-slate-600">Choose a role and the level you are aiming at. You get the list of terms you must know to do that job, to study and then be tested on.</p>
+        <p className="text-sm text-slate-300">Choose a role and the level you are aiming at. You get the list of terms you must know to do that job, to study and then be tested on.</p>
         <RolePicker roles={pickRoles} defaultRole={startRole} defaultLevel={goal?.role === startRole ? goal.level : 1} />
         {studying.length > 0 && (
           <div className="grid gap-3 md:grid-cols-2">
@@ -84,7 +88,7 @@ export default async function Terms() {
               <div key={r.id} className="card space-y-2 p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-2"><h3 className="font-semibold">{roleLabel(r.role)}</h3><span className="text-xs text-slate-500">{list.title}</span></div>
                 <div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full bg-emerald-500" style={{ width: `${sum.total ? Math.round((sum.counts.known / sum.total) * 100) : 0}%` }} /></div>
-                <p className="text-xs text-slate-600">{sum.counts.known} of {sum.total} known{sum.due ? ` · ${sum.due} due to see again` : ""}</p>
+                <p className="text-xs text-slate-300">{sum.counts.known} of {sum.total} known{sum.due ? ` · ${sum.due} due to see again` : ""}</p>
                 <div className="flex flex-wrap items-center gap-3 text-sm">
                   <Link href={`/terms/study?role=${roleSlug(r.role)}&level=${r.level}`} className="btn">Study</Link>
                   <Link href={`/terms/role/${roleSlug(r.role)}?level=${r.level}`} className="underline">Open the list</Link>
@@ -98,8 +102,8 @@ export default async function Terms() {
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Where you stand</h2>
-        {goal ? <p className="text-sm text-slate-600">Your goal is <b>{goal.title}</b>, which asks for <b>{rankName(goal.rank)}</b> terms. <Link href="/goal" className="underline">Change goal</Link></p>
-          : <p className="text-sm text-slate-600">No career goal yet, so there is nothing to compare with. <Link href="/goal" className="underline">Set one</Link> to see how far you are from it.</p>}
+        {goal ? <p className="text-sm text-slate-300">Your goal is <b>{goal.title}</b>, which asks for <b>{rankName(goal.rank)}</b> terms. <Link href="/goal" className="underline">Change goal</Link></p>
+          : <p className="text-sm text-slate-300">No career goal yet, so there is nothing to compare with. <Link href="/goal" className="underline">Set one</Link> to see how far you are from it.</p>}
         <div className="grid gap-3 md:grid-cols-2">
           {banks.filter((s) => relevant.has(s.bank.id!)).map((s) => <Standing key={s.bank.slug} s={s} need={goal ? goal.rank : null} />)}
           {own.length > 0 && <Standing s={mine} need={null} />}
@@ -119,14 +123,14 @@ export default async function Terms() {
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Add a term of your own</h2>
-        <p className="text-sm text-slate-600">Add words from your own work. They are private to you and you can be tested on them. A super admin may add a good one to a shared bank.</p>
+        <p className="text-sm text-slate-300">Add words from your own work. They are private to you and you can be tested on them. A super admin may add a good one to a shared bank.</p>
         <AddTermForm />
         {own.length > 0 && (
           <ul className="card divide-y divide-black/10 text-sm">
             {own.map((t) => (
               <li key={t.id} className="flex flex-wrap items-center gap-2 p-3">
                 <b>{t.term}</b><span className="text-xs text-slate-500">{rankName(t.tier)}</span>
-                <span className="min-w-0 flex-1 text-slate-600">{t.meaning}</span>
+                <span className="min-w-0 flex-1 text-slate-300">{t.meaning}</span>
                 <form action={removeOwnTermAction}><input type="hidden" name="id" value={t.id} /><button className="inline-flex items-center gap-1 text-xs text-rose-600 underline" aria-label={`Remove ${t.term}`}><Trash2 size={12} />Remove</button></form>
               </li>
             ))}

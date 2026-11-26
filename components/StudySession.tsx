@@ -31,7 +31,7 @@ export function StudySession({ cards, listHref, againHref }: { cards: Card[]; li
     return (
       <div className="card space-y-3 p-6 text-center">
         <h2 className="text-xl font-bold">That is this round</h2>
-        <p className="text-sm text-slate-600">{cards.length} terms: <b className="text-emerald-700">{knew} knew</b> · <b className="text-amber-700">{again} to see again</b>. Terms you knew come back later; the others come back soon.</p>
+        <p className="text-sm text-slate-300">{cards.length} terms: <b className="text-emerald-700">{knew} knew</b> · <b className="text-amber-700">{again} to see again</b>. Terms you knew come back later; the others come back soon.</p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link href={againHref} className="btn">Another round</Link>
           <Link href={listHref} className="btn btn-ghost">Back to the list</Link>
@@ -48,7 +48,7 @@ export function StudySession({ cards, listHref, againHref }: { cards: Card[]; li
         <h2 className="text-2xl font-extrabold">{card.term}</h2>
         {!shown ? (
           <>
-            <p className="text-sm text-slate-600">What does it mean? Say it to yourself, then check.</p>
+            <p className="text-sm text-slate-300">What does it mean? Say it to yourself, then check.</p>
             <button className="btn" onClick={() => setShown(true)}>Show the answer</button>
           </>
         ) : (
