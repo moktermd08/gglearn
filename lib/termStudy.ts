@@ -148,6 +148,14 @@ export function recordStudy(userId: number, termId: number, knew: boolean, nowSe
   return { ok: true };
 }
 
+/** Everything the person has studied, across all lists: how many terms they know, are learning, and have due to see again. */
+export function studyTotals(userId: number, nowSec = Math.floor(Date.now() / 1000)) {
+  const rows = db.select({ box: termProgress.box, dueAt: termProgress.dueAt }).from(termProgress).innerJoin(terms, eq(terms.id, termProgress.termId))
+    .where(and(eq(termProgress.userId, userId), eq(terms.status, "active"))).all();
+  const known = rows.filter((r) => studyState(r.box) === "known").length;
+  return { known, learning: rows.length - known, due: rows.filter((r) => r.dueAt <= nowSec).length };
+}
+
 // ---- the roles a person is learning
 
 export function saveStudyRole(userId: number, role: string, level: number): { error: string } | { ok: true } {

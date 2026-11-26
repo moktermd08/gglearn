@@ -453,6 +453,7 @@ ok("a study card carries its topic, look-alikes, memory and test results, and ne
   lib.markCheck(who, exam.id, pick);
   const [after] = det.withDetails(who.id, study.studyCardsFor(who.id, [asked.answers[0].termId]));
   assert.deepEqual(after.detail.history.map((h) => h.right), [true]);
+  assert.deepEqual(study.studyTotals(who.id), { known: 0, learning: 1, due: 0 });
   const [studied] = det.withDetails(who.id, study.studyCardsFor(who.id, [target.id]));
   assert.deepEqual([studied.detail.memory.box, studied.detail.memory.seen, studied.detail.memory.dueInDays], [1, 1, 1]);
   const theirs = db.select().from(terms).where(eq(terms.ownerUserId, me.id)).all();
