@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { ArrowRight, CalendarClock, CheckCircle2, Flag, Gauge, MapPin, Mountain, Repeat, Target } from "lucide-react";
 import { db, enrollments } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
-import { EmptyState, PageHero } from "@/components/charts";
+import { PageHero } from "@/components/charts";
 import { Ring } from "@/components/Ring";
 import { SubjectArt } from "@/components/SubjectArt";
 import { StandingCard } from "@/components/StandingCard";
@@ -16,6 +16,7 @@ import { assessmentFor } from "@/lib/route";
 import { roleRouteSlug, roleTarget } from "@/lib/routeRole";
 import { clearCareerGoal, enroll } from "@/app/actions";
 import { TermNextStep } from "@/components/TermNextStep";
+import { CareerStart } from "@/components/CareerStart";
 import { nextStep } from "@/lib/termJourney";
 import { termsAvailable } from "@/lib/terms";
 
@@ -54,12 +55,9 @@ export default async function GoalAssessment({ searchParams }: { searchParams: P
 
   if (j.state === "no-ladder") {
     return (
-      <div className="mx-auto max-w-2xl space-y-4">
+      <div className="mx-auto max-w-3xl space-y-5">
         <PageHero Icon={Gauge} tone="violet" title="Goal assessment" sub="Where you stand against the role you want, and what closes the gap." />
-        {termsStep}
-        <EmptyState Icon={Mountain} tone="violet" title="No path to assess yet">
-          There is no career path for {user.audience === "customer" ? "customer accounts" : <>the role <b>{user.jobRole}</b></>} yet.
-        </EmptyState>
+        <CareerStart user={user} />
       </div>
     );
   }
