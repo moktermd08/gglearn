@@ -121,7 +121,7 @@ Starting levels lift where someone starts and unlock what comes next (`levelsPas
 ## Deploy
 Production: https://gglearn.gglink.co.uk — Apache (TLS via certbot) reverse-proxies to a PM2 app `gglearn-web` on 127.0.0.1:3400.
 Server uses Node 20, so avoid Node 21+ APIs (e.g. `Map.groupBy`) and keep `better-sqlite3` on a version with a Linux Node 20 prebuild (12.9.0).
-`deploy/deploy.sh` syncs, installs, builds, pushes the schema and reloads PM2. `deploy/*.conf` is the Apache vhost.
+`deploy/deploy.sh` copies the code to `.build/` inside the live folder and runs `deploy/remote.sh` there: install, schema push and build while the old version keeps serving, then it switches the built files in and restarts PM2, so the site pauses only for the restart. A failed install, push or build changes nothing on the running site (apart from a schema change that had already applied); a new version that does not answer after the restart is swapped back for the previous one and the deploy fails. It needs 2 GB of free disk. `deploy/*.conf` is the Apache vhost.
 
 ### One-time deploy failure on a database that has the old certificate column
 Until the `companies.cert_valid_months` column was made nullable, `drizzle-kit push` failed on every deploy after the first one that added it, with `index companies_slug_unique already exists`. The first deploy that carries the fix still stops at the push (it rebuilds `companies` to the nullable column and keeps every row, then hits the same error); run the Deploy workflow again and it passes, and every push after that is clean. Do not add `--force` to the deploy's push.
