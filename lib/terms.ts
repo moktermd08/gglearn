@@ -121,15 +121,15 @@ export function markCheck(user: Person, examId: number, chosen: Record<number, n
   return { ok: true };
 }
 
-export type CheckAnswer = { id: number; termId: number; term: string; meaning: string; tier: number; prompt: string; options: string[]; correct: number; chosen: number | null; right: boolean | null };
+export type CheckAnswer = { id: number; termId: number; term: string; meaning: string; group: string; tier: number; form: string; prompt: string; options: string[]; correct: number; chosen: number | null; right: boolean | null };
 
 export function loadCheck(user: Person, examId: number) {
   const exam = db.select().from(termExams).where(and(eq(termExams.id, examId), eq(termExams.userId, user.id))).get();
   if (!exam) return null;
-  const rows = db.select({ a: termExamAnswers, term: terms.term, meaning: terms.meaning }).from(termExamAnswers)
+  const rows = db.select({ a: termExamAnswers, term: terms.term, meaning: terms.meaning, group: terms.groupName }).from(termExamAnswers)
     .innerJoin(terms, eq(terms.id, termExamAnswers.termId)).where(eq(termExamAnswers.examId, examId)).orderBy(asc(termExamAnswers.id)).all();
-  const answers: CheckAnswer[] = rows.map(({ a, term, meaning }) => ({
-    id: a.id, termId: a.termId, term, meaning, tier: a.tier, prompt: a.prompt, options: parseList(a.options), correct: a.correct, chosen: a.chosen, right: a.right,
+  const answers: CheckAnswer[] = rows.map(({ a, term, meaning, group }) => ({
+    id: a.id, termId: a.termId, term, meaning, group, tier: a.tier, form: a.form, prompt: a.prompt, options: parseList(a.options), correct: a.correct, chosen: a.chosen, right: a.right,
   }));
   const stats: TierStats = {};
   if (exam.finishedAt != null) for (const a of answers) { const s = (stats[a.tier] ??= { tested: 0, right: 0 }); s.tested++; if (a.right) s.right++; }

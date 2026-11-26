@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BookOpen, Check, X } from "lucide-react";
 import { requireUser } from "@/lib/auth";
-import { PageHero } from "@/components/charts";
+import { ExamRunner } from "@/components/ExamRunner";
+import { ForgetSavedAnswers } from "@/components/ForgetSavedAnswers";
+import { QuestionStrip, RankChart, ResultHead, Review, TopicBars } from "@/components/ExamResult";
 import { goalNeed, loadCheck, termsAvailable } from "@/lib/terms";
 import { roleLabel } from "@/lib/termStudy";
 import { TermNextStep } from "@/components/TermNextStep";
 import { nextStep } from "@/lib/termJourney";
-import { RANKS, TERM_PASS, rankName } from "@/lib/termsCore";
-import { submitCheckAction } from "@/app/terms-actions";
+import { TERM_PASS, rankName } from "@/lib/termsCore";
 
 export const metadata = { title: "Term check — gglearn" };
 
@@ -28,23 +28,10 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
   const { exam, answers } = check;
 
   if (exam.finishedAt == null) {
-    return (
-      <div className="mx-auto max-w-3xl space-y-6">
-        <PageHero Icon={BookOpen} tone="violet" title="Term check" sub={`${answers.length} questions, asked as deeply as ${rankName(exam.claimedTier)} level.${exam.kind === "premade" ? ` The ${rankName(exam.claimedTier)} exam for ${roleLabel(exam.role)}.` : ""}${exam.kind === "placement" ? ` Finding your level for ${roleLabel(exam.role)}: this is the ${rankName(exam.claimedTier)} step.` : ""} Answer them all, then see where you stand.`} />
-        <form action={submitCheckAction} className="space-y-4">
-          <input type="hidden" name="exam" value={exam.id} />
-          {answers.map((a, n) => (
-            <fieldset key={a.id} className="card space-y-2 p-4">
-              <legend className="px-1 text-sm font-semibold">{n + 1}. {a.prompt}</legend>
-              {a.options.map((o, i) => (
-                <label key={i} className="flex items-start gap-2 text-sm"><input type="radio" name={`a_${a.id}`} value={i} className="mt-1" /><span>{o}</span></label>
-              ))}
-            </fieldset>
-          ))}
-          <button className="btn">Finish and see where I stand</button>
-        </form>
-      </div>
-    );
+    const what = exam.kind === "premade" ? `${rankName(exam.claimedTier)} exam · ${roleLabel(exam.role)}` : exam.kind === "placement" ? `Finding your level · ${roleLabel(exam.role)}` : "Term check";
+    // only what is needed to ask: the right answers stay on the server
+    const questions = answers.map((x) => ({ id: x.id, form: x.form, prompt: x.prompt, options: x.options }));
+    return <ExamRunner key={exam.id} examId={exam.id} title={what} sub={`${answers.length} questions, asked as deeply as ${rankName(exam.claimedTier)} level. Pass mark ${TERM_PASS * 100}%.`} startedAt={exam.startedAt} questions={questions} />;
   }
 
   const claimed = rankName(exam.claimedTier), reached = rankName(check.reached);
@@ -56,44 +43,21 @@ export default async function TermCheck({ params }: { params: Promise<{ id: stri
   const step = nextStep(user.id, exam.role ? { role: exam.role, level: exam.level ?? 1 } : undefined);
   const title = placement ? `${Math.round((exam.score ?? 0) * 100)}% · ${passed ? `You passed ${claimed}` : `Not yet at ${claimed}`}` : `${Math.round((exam.score ?? 0) * 100)}% · ${check.reached ? reached : "Not yet at Initiate"}`;
   const sub = placement ? (passed ? `You knew ${TERM_PASS * 100}% or more of the ${claimed} terms asked. The next rank is open.` : `Fewer than ${TERM_PASS * 100}% of the ${claimed} terms were right, so this is where the climb stops for now. That is a start, not a failure: the terms you missed are below.`) : msg;
+  const right = answers.filter((x) => x.right).length, skipped = answers.filter((x) => x.chosen == null).length;
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <PageHero Icon={BookOpen} tone="violet" title={title} sub={sub} />
+    <div className="mx-auto max-w-3xl space-y-5">
+      <ForgetSavedAnswers examId={exam.id} />
+      <ResultHead score={exam.score ?? 0} title={title.replace(/^\d+% · /, "")} sub={sub} right={right} wrong={missed.length - skipped} skipped={skipped} seconds={Math.max(0, exam.finishedAt - exam.startedAt)} />
       {step.kind !== "start" && <TermNextStep step={step} />}
-
-      <section className="card space-y-3 p-4">
-        <h2 className="font-semibold">By rank</h2>
-        <div className="grid grid-cols-5 gap-2 text-center text-sm">
-          {RANKS.map((r, i) => {
-            const t = check.stats[i + 1];
-            return (
-              <div key={r} className={`rounded-lg border p-2 ${i + 1 === exam.claimedTier ? "border-indigo-500" : "border-black/10"}`}>
-                <div className="text-xs text-slate-500">{r}</div>
-                <div className="font-semibold">{t ? `${t.right}/${t.tested}` : "–"}</div>
-              </div>
-            );
-          })}
-        </div>
-        {goal && <p className="text-sm text-slate-300">Your goal, <b>{goal.title}</b>, asks for <b>{rankName(goal.rank)}</b>. {check.reached >= goal.rank ? "This check supports that." : "This check does not yet support that: keep working through the terms you missed."}</p>}
-      </section>
-
-      {missed.length > 0 && (
-        <section className="space-y-2">
-          <h2 className="text-lg font-semibold">Terms to work on ({missed.length})</h2>
-          <div className="card divide-y divide-black/10 text-sm">
-            {missed.map((a) => (
-              <div key={a.id} className="space-y-1 p-3">
-                <p><b>{a.term}</b> <span className="text-xs text-slate-500">{rankName(a.tier)}</span></p>
-                <p className="text-slate-300">{a.meaning}</p>
-                <p className="flex items-center gap-1 text-rose-600"><X size={13} />You chose: {a.chosen == null ? "no answer" : a.options[a.chosen]}</p>
-                <p className="flex items-center gap-1 text-emerald-700"><Check size={13} />Right answer: {a.options[a.correct]}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      <QuestionStrip answers={answers} />
+      <div className="grid items-start gap-4 md:grid-cols-2">
+        <RankChart stats={check.stats} claimed={exam.claimedTier}
+          note={goal && <p className="text-sm text-slate-300">Your goal, <b>{goal.title}</b>, asks for <b>{rankName(goal.rank)}</b>. {check.reached >= goal.rank ? "This check supports that." : "This check does not yet support that: keep working through the terms you missed."}</p>} />
+        <TopicBars answers={answers} />
+      </div>
+      <Review examId={exam.id} answers={answers} />
       <p className="flex flex-wrap gap-4 text-sm">
-        {missed.length > 0 && <Link href={`/terms/study/missed/${exam.id}`} className="btn">Study the {missed.length} term{missed.length === 1 ? "" : "s"} I missed</Link>}
+        <Link href="/terms#test" className="btn btn-ghost">Make another check</Link>
         <Link href="/terms" className="underline self-center">Back to Terms</Link>
       </p>
     </div>
