@@ -373,7 +373,7 @@ ok("someone who knows nothing stops at the first rank, with a next step that is 
   assert.deepEqual(st.stages.map((x) => x.state), ["failed", "todo", "todo", "todo", "todo"]);
   const step = jr.nextStep(newcomer.id);
   assert.equal(step.kind, "climb");
-  if (step.kind === "climb") assert.ok(step.stage === 1 && step.toLearn > 0 && step.studyHref.includes("everyone"));
+  if (step.kind === "climb") assert.ok(step.stage === 1 && step.toLearn > 0 && step.studyHref === "/terms/study/everyone");
 });
 ok("the terms missed in a check can be studied straight away", () => {
   const last = db.select().from(termExams).where(eq(termExams.userId, newcomer.id)).orderBy(desc(termExams.id)).get()!;
@@ -460,6 +460,35 @@ ok("a study card carries its topic, look-alikes, memory and test results, and ne
   const all = det.withDetails(who.id, study.studyCardsFor(who.id, list.terms.slice(0, 40).map((t) => t.id)));
   const shown = new Set(all.flatMap((k) => [...k.detail.group, ...k.detail.compare].map((x) => x.id)));
   assert.ok(theirs.every((t) => !shown.has(t.id)));
+});
+
+// ---- readable addresses
+const urls = await import("../lib/termUrls");
+const { slugify } = await import("../lib/urlText");
+ok("a role and level are written in words, and every address reads back to the same list", () => {
+  assert.equal(urls.termUrl("role", "cto", 2), "/terms/role/cto/head-of-engineering");
+  assert.equal(urls.termUrl("study", "Everyone", 1), "/terms/study/everyone");
+  assert.equal(slugify("L&D / HR  Manager (AO)"), "l-and-d-hr-manager-ao");
+  db.insert(careerLevels).values([{ jobRole: "case work officer", level: 1, title: "Caseworker" }, { jobRole: "case work officer", level: 2, title: "Caseworker" }, { jobRole: "case work officer", level: 3, title: "Team Leader" }]).run();
+  assert.equal(urls.termUrl("role", "case work officer", 3), "/terms/role/case-work-officer/team-leader");
+  assert.equal(urls.termUrl("role", "case work officer", 2), "/terms/role/case-work-officer/2", "two levels with one title are told apart by number");
+  for (const level of [1, 2, 3]) {
+    const url = urls.termUrl("build", "case work officer", level);
+    assert.ok(!/[%?=& ]/.test(url), url);
+    const at = urls.readTermUrl("build", url.split("/").slice(3), {}, () => 1)!;
+    assert.deepEqual([at.role, at.level, at.canonical], ["case work officer", level, null], url);
+  }
+});
+ok("older and unfinished addresses are sent to the readable one, and unknown ones go nowhere", () => {
+  const to = (parts: string[], query: { role?: string; level?: string } = {}, own = 1) => urls.readTermUrl("role", parts, query, () => own);
+  assert.equal(to(["case%20work%20officer"], { level: "3" })!.canonical, "/terms/role/case-work-officer/team-leader");
+  assert.equal(to([], { role: "case work officer", level: "3" })!.canonical, "/terms/role/case-work-officer/team-leader");
+  assert.equal(to(["cto"], {}, 4)!.canonical, "/terms/role/cto/cto", "no level named: the person's own");
+  assert.equal(to(["cto", "a-title-since-renamed"], {}, 2)!.canonical, "/terms/role/cto/head-of-engineering");
+  assert.equal(to(["cto", "2"])!.canonical, "/terms/role/cto/head-of-engineering");
+  assert.equal(to(["no-such-role"]), null);
+  assert.equal(to(["cto", "cto", "extra"]), null);
+  assert.equal(to(["%E0%A4%A"]), null, "a broken address is not an error");
 });
 
 console.log(`\n${n} checks passed`);

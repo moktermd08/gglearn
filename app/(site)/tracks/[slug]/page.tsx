@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import { and, eq, gt, isNull, sql } from "drizzle-orm";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -73,7 +74,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
   const proof = topicProof(track.id); // real counts, shown only when at least five people are behind them
   const user = await currentUser();
   // a stranger only sees topics made for outsiders; anything else asks them to sign in first
-  if (!user && !isPublicTrack(track.id)) redirect(`/login?next=${encodeURIComponent(`/tracks/${slug}`)}`);
+  if (!user && !isPublicTrack(track.id)) redirect(`/login?next=${queryPath(`/tracks/${slug}`)}`);
   if (user && !openTo(user.audience, track.audience)) notFound(); // customers never see staff-only tracks
   const enrolment = user
     ? db.select().from(enrollments).where(and(eq(enrollments.userId, user.id), eq(enrollments.trackId, track.id))).get()
@@ -121,7 +122,7 @@ export default async function TrackPage({ params }: { params: Promise<{ slug: st
           <p className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-300">{[[ListChecks, `${totalQs.toLocaleString("en-GB")} questions`], [Mountain, "20 levels"], [Target, `${PASS_MARK * 100}% to pass`]].map(([Ic, txt]) => { const I = Ic as typeof ListChecks; return <span key={txt as string} className="inline-flex items-center gap-1.5 rounded-full border bg-[#ffffffb3] px-2.5 py-1 backdrop-blur" style={{ borderColor: `${accent}40` }}><I size={13} style={{ color: accent }} />{txt as string}</span>; })}</p>
           <p className="mt-1 text-sm text-slate-400">Your rival: <b className="text-white">{rival.name}</b>, {rival.tagline}.</p>
           {(proof.learners || proof.passedThisMonth) && <p className="mt-1 flex flex-wrap items-center gap-x-3 text-xs font-semibold text-emerald-700">{proof.learners && <span>{proof.learners.toLocaleString("en-GB")} people are learning this</span>}{proof.passedThisMonth && <span>{proof.passedThisMonth.toLocaleString("en-GB")} passed a level in the last 30 days</span>}</p>}
-          {user ? <QuickRaceButtons trackId={track.id} className="mt-3" /> : <Link href={`/signup?next=${encodeURIComponent(`/tracks/${slug}`)}`} className="btn mt-3 !py-2 text-sm"><Zap size={15} />Race this topic, free</Link>}
+          {user ? <QuickRaceButtons trackId={track.id} className="mt-3" /> : <Link href={`/signup?next=${queryPath(`/tracks/${slug}`)}`} className="btn mt-3 !py-2 text-sm"><Zap size={15} />Race this topic, free</Link>}
         </div>
         {s && <Ring pct={passed / 20} label={`${passed}/20`} sub="levels" size={108} color={`hsl(${TIERS[tierOf(passed)].hue} 85% 65%)`} />}
       </div>

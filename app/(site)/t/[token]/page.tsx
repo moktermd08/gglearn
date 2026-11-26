@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { and, eq } from "drizzle-orm";
@@ -40,8 +41,8 @@ export default async function JoinTeam({ params }: { params: Promise<{ token: st
           : state !== "open" ? <p className="text-sm text-amber-500">{state === "full" ? "This team is full." : "This team is not taking new members right now."}</p>
           : me ? <JoinTeamButton token={token} />
           : (<div className="flex flex-wrap justify-center gap-2">
-              <Link href={`/signup?ref=${referralCode(t.ownerId)}&next=${encodeURIComponent(here)}`} className="btn">Create a free account to join</Link>
-              <Link href={`/login?next=${encodeURIComponent(here)}`} className="btn btn-ghost">I have an account</Link>
+              <Link href={`/signup?ref=${referralCode(t.ownerId)}&next=${queryPath(here)}`} className="btn">Create a free account to join</Link>
+              <Link href={`/login?next=${queryPath(here)}`} className="btn btn-ghost">I have an account</Link>
             </div>)}
       </div>
     </div>

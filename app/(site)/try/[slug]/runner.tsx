@@ -1,4 +1,5 @@
 "use client";
+import { queryPath } from "@/lib/urlText";
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Flame, Loader2, RotateCcw, Rocket, Trophy, X } from "lucide-react";
@@ -44,7 +45,7 @@ export default function Runner({ slug, topic, questions, signedIn }: { slug: str
           ) : (
             <div className="space-y-2">
               <p className="text-sm text-slate-400">Make a free account and you start on {topic} straight away: your rival is waiting, and so is a certificate at level 5.</p>
-              <Link href={`/signup?try=${slug}&next=${encodeURIComponent(`/tracks/${slug}`)}`} className="btn !px-8 !py-3 text-base"><Rocket size={18} />Keep going: create a free account</Link>
+              <Link href={`/signup?try=${slug}&next=${queryPath(`/tracks/${slug}`)}`} className="btn !px-8 !py-3 text-base"><Rocket size={18} />Keep going: create a free account</Link>
             </div>
           )}
           <div><Link href="/try" className="inline-flex items-center gap-1 text-sm text-slate-400 underline"><RotateCcw size={13} />Try a different topic</Link></div>

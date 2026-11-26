@@ -1,3 +1,5 @@
+import { slugify } from "@/lib/urlText";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, Compass, Search } from "lucide-react";
 import { PageHero } from "@/components/charts";
@@ -8,10 +10,14 @@ export const metadata = { title: "Choose a role — gglearn" };
 const input = "w-full rounded-xl border border-black/15 bg-[#fff] px-3 py-2.5 focus:border-indigo-400 focus:outline-none";
 
 /** Step 1: find a role. Step 2: pick the level to aim for. Then the same check and plan as any other route. */
-export default async function RoleRoute({ searchParams }: { searchParams: Promise<{ q?: string; role?: string }> }) {
-  const { q = "", role = "" } = await searchParams;
+export default async function RoleRoute({ params, searchParams }: { params: Promise<{ role?: string[] }>; searchParams: Promise<{ q?: string; role?: string }> }) {
+  const [{ role: parts = [] }, { q = "", role: old = "" }] = await Promise.all([params, searchParams]);
+  if (parts.length > 1) notFound();
   const roles = routeRoles();
-  const chosen = roles.find((r) => r.role === role) ?? null;
+  const named = slugify(parts[0] ?? old);
+  const chosen = named ? (roles.find((r) => slugify(r.role) === named) ?? null) : null;
+  if (old && chosen) redirect(`/route/role/${slugify(chosen.role)}`); // an older address carried the name itself
+  if (parts[0] && !chosen) notFound();
   const term = q.trim().toLowerCase();
   const shown = term ? roles.filter((r) => [r.name, r.family, r.blurb, ...r.aliases].some((x) => x.toLowerCase().includes(term))) : roles;
   const families = [...new Set(shown.map((r) => r.family))].sort();
@@ -51,7 +57,7 @@ export default async function RoleRoute({ searchParams }: { searchParams: Promis
           <ul className="grid gap-2 sm:grid-cols-2">
             {shown.filter((r) => r.family === f).map((r) => (
               <li key={r.role}>
-                <Link href={`/route/role?role=${encodeURIComponent(r.role)}`} className="card block p-3 hover:border-black/30">
+                <Link href={`/route/role/${slugify(r.role)}`} className="card block p-3 hover:border-black/30">
                   <b>{r.name}</b>{r.blurb && <span className="block text-xs text-slate-400">{r.blurb}</span>}
                 </Link>
               </li>

@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthShell } from "@/components/AuthShell";
@@ -16,7 +17,7 @@ export default async function Sso({ searchParams }: { searchParams: Promise<{ e?
       <div className="space-y-4">
         <h1 className="text-xl font-extrabold">Company sign-in</h1>
         <SsoForm next={next} problem={problem} />
-        <p className="text-center text-sm text-slate-400"><Link href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"} className="font-semibold text-indigo-300 underline">Use a password instead</Link></p>
+        <p className="text-center text-sm text-slate-400"><Link href={next ? `/login?next=${queryPath(next)}` : "/login"} className="font-semibold text-indigo-300 underline">Use a password instead</Link></p>
       </div>
     </AuthShell>
   );

@@ -1,4 +1,5 @@
 "use client";
+import { queryPath } from "@/lib/urlText";
 import { useActionState } from "react";
 import Link from "next/link";
 import { CircleCheck, Info, Mail, Send, TriangleAlert } from "lucide-react";
@@ -26,7 +27,7 @@ export default function SignInLinkForm({ mailReady, next }: { mailReady: boolean
             <input name="email" type="email" placeholder="Your email" required className={`${input} !pl-9`} autoComplete="email" /></div>
           {res && <p role="alert" className="flex items-center gap-1.5 text-sm text-rose-400"><TriangleAlert size={14} />{res}</p>}
           <button disabled={pending} className="btn disabled:opacity-50"><Send size={16} />{pending ? "Sending…" : "Send me a link"}</button>
-          <p className="text-center text-sm text-slate-400">Prefer a password? <Link href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"} className="font-semibold text-indigo-300 underline">Sign in</Link></p>
+          <p className="text-center text-sm text-slate-400">Prefer a password? <Link href={next ? `/login?next=${queryPath(next)}` : "/login"} className="font-semibold text-indigo-300 underline">Sign in</Link></p>
         </form>
       )}
     </AuthShell>

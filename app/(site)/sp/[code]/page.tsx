@@ -1,3 +1,4 @@
+import { queryPath } from "@/lib/urlText";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
@@ -37,8 +38,8 @@ export default async function SponsorLink({ params }: { params: Promise<{ code: 
           : me?.id === g.learner ? <p className="text-sm text-slate-400">This is your own goal. Send the link to someone who would back you.</p>
           : me ? <BackButton code={code} />
           : (<div className="flex flex-wrap justify-center gap-2">
-              <Link href={`/signup?next=${encodeURIComponent(here)}`} className="btn">Create a free account to back this</Link>
-              <Link href={`/login?next=${encodeURIComponent(here)}`} className="btn btn-ghost">I have an account</Link>
+              <Link href={`/signup?next=${queryPath(here)}`} className="btn">Create a free account to back this</Link>
+              <Link href={`/login?next=${queryPath(here)}`} className="btn btn-ghost">I have an account</Link>
             </div>)}
       </div>
     </div>

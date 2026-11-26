@@ -10,7 +10,6 @@ const parseList = (s: string): string[] => {
   try { const v = JSON.parse(s); return Array.isArray(v) ? v.filter((x) => typeof x === "string") : []; } catch { return []; }
 };
 export const listOf = parseList;
-export const roleSlug = (role: string) => encodeURIComponent(role);
 
 // ---- roles and levels
 

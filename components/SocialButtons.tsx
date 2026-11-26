@@ -15,7 +15,7 @@ export function SocialButtons({ next = "", refCode = "", tried = "", verb = "Con
         if (next) q.set("next", next);
         if (refCode) q.set("ref", refCode);
         if (tried) q.set("try", tried);
-        return <a key={p} href={`/auth/${p}${q.size ? `?${q}` : ""}`} className="btn btn-ghost flex w-full items-center justify-center gap-2 !py-2"><Mark p={p} />{verb} with {LABEL[p]}</a>;
+        return <a key={p} href={`/auth/${p}${q.size ? `?${String(q).replace(/%2F/gi, "/")}` : ""}`} className="btn btn-ghost flex w-full items-center justify-center gap-2 !py-2"><Mark p={p} />{verb} with {LABEL[p]}</a>;
       })}
       <div className="flex items-center gap-2 text-xs text-slate-400"><span className="h-px flex-1 bg-black/10" />or<span className="h-px flex-1 bg-black/10" /></div>
     </div>

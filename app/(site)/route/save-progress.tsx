@@ -1,4 +1,5 @@
 "use client";
+import { queryPath } from "@/lib/urlText";
 import { useActionState } from "react";
 import Link from "next/link";
 import { Save, TriangleAlert } from "lucide-react";
@@ -19,7 +20,7 @@ export default function SaveProgress({ next }: { next: string }) {
         {state?.error && <p role="alert" className="flex items-center gap-1.5 text-sm text-rose-400 sm:col-span-3"><TriangleAlert size={14} />{state.error}</p>}
         <div className="flex flex-wrap items-center gap-3 sm:col-span-3">
           <button disabled={pending} className="btn disabled:opacity-50">{pending ? "Saving…" : "Save my progress"}</button>
-          <Link href={`/login?next=${encodeURIComponent(next)}`} className="text-sm text-slate-400 underline">I already have an account</Link>
+          <Link href={`/login?next=${queryPath(next)}`} className="text-sm text-slate-400 underline">I already have an account</Link>
         </div>
       </form>
     </details>

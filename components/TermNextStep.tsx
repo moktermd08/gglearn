@@ -68,7 +68,7 @@ export function TermNextStep({ step }: { step: Step }) {
         {step.kind === "place" && <><Ask s={step} label="Find my level" /><Link href={step.studyHref} className="btn btn-ghost">Study first</Link></>}
         {step.kind === "continue" && <><Ask s={step} label={`Take the ${rank(step.stage)} questions`} /><Link href={step.studyHref} className="btn btn-ghost">Study</Link></>}
         {step.kind === "climb" && <><Link href={step.studyHref} className="btn">Study<ArrowRight size={16} /></Link><Ask s={step} label={`Try ${rank(step.stage)} again`} primary={false} /></>}
-        {step.kind === "there" && <Link href={`/terms/role/${encodeURIComponent(step.role)}?level=${step.level}`} className="btn">Open the exams<ArrowRight size={16} /></Link>}
+        {step.kind === "there" && <Link href={step.listHref} className="btn">Open the exams<ArrowRight size={16} /></Link>}
         <Link href="/terms/start" className="text-sm underline">Change what I am learning</Link>
       </div>
     </section>

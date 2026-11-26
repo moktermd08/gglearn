@@ -2,8 +2,9 @@ import { and, asc, eq, isNotNull } from "drizzle-orm";
 import { careerGoals, db, termExams, users } from "@/lib/db";
 import { canReach } from "@/lib/journey";
 import { goalNeed } from "@/lib/terms";
+import { termUrl } from "@/lib/termUrls";
 import { TERM_PASS, KNOWN_BOX, rankName } from "@/lib/termsCore";
-import { myStudyRoles, placementStages, progressFor, roleLabel, roleList, roleSlug, saveStudyRole, EVERYONE, type RoleList } from "@/lib/termStudy";
+import { myStudyRoles, placementStages, progressFor, roleLabel, roleList, saveStudyRole, EVERYONE, type RoleList } from "@/lib/termStudy";
 
 /**
  * The path a person walks: choose a role and a level to aim at, find where they stand one rank at a time, then study what they do not know and sit the next rank, until they
@@ -56,6 +57,7 @@ export type StepBody = {
   /** terms at that rank still to be learned */
   toLearn: number;
   studyHref: string;
+  listHref: string;
   placement: Placement;
   /** the target is the person's own career goal, not just the top of the list */
   hasGoal: boolean;
@@ -83,7 +85,7 @@ export function nextStep(userId: number, about?: { role: string; level: number }
   const toLearn = stage == null ? 0 : list.terms.filter((t) => t.tier === stage && (prog.get(t.id)?.box ?? 0) < KNOWN_BOX).length;
   const body: StepBody = {
     role: list.role, roleLabel: roleLabel(list.role), level: list.level, title: list.title, placed: placement.placed, target, stage, toLearn,
-    studyHref: `/terms/study?role=${roleSlug(list.role)}&level=${list.level}`, placement, hasGoal: !!goal && goal.role === list.role,
+    studyHref: termUrl("study", list.role, list.level), listHref: termUrl("role", list.role, list.level), placement, hasGoal: !!goal && goal.role === list.role,
   };
   if (!placement.started) return { kind: "place", ...body };
   if (placement.placed >= target || stage == null) return { kind: "there", ...body };

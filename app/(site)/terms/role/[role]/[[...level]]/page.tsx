@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Award, BookOpen, ClipboardCheck, GraduationCap, Plus } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { PageHero } from "@/components/charts";
@@ -7,18 +7,23 @@ import { Ring } from "@/components/Ring";
 import { TermExplorer } from "@/components/TermExplorer";
 import { termsAvailable } from "@/lib/terms";
 import { rankName, studyState } from "@/lib/termsCore";
-import { EXAM_SIZE, myStudyRoles, progressFor, rankExams, roleLabel, roleList, roleSlug, roleSummary } from "@/lib/termStudy";
+import { EXAM_SIZE, myStudyRoles, progressFor, rankExams, roleLabel, roleList, roleSummary } from "@/lib/termStudy";
+import { readTermUrl, termUrl } from "@/lib/termUrls";
+import { readFlash } from "@/lib/flash";
 import { chooseRoleAction, startRankExamAction, startRoleCheckAction } from "@/app/terms-actions";
 
 export const metadata = { title: "Terms for a role — gglearn" };
 
-export default async function RoleTerms({ params, searchParams }: { params: Promise<{ role: string }>; searchParams: Promise<{ level?: string; error?: string }> }) {
-  const [{ role: raw }, { level: lv, error }] = await Promise.all([params, searchParams]);
+export default async function RoleTerms({ params, searchParams }: { params: Promise<{ role: string; level?: string[] }>; searchParams: Promise<{ level?: string }> }) {
+  const [{ role: raw, level: rest = [] }, { level: lv }, error] = await Promise.all([params, searchParams, readFlash()]);
   const user = await requireUser();
   if (!termsAvailable()) notFound();
-  const role = decodeURIComponent(raw).trim().toLowerCase();
-  const saved = myStudyRoles(user.id).find((r) => r.role === role);
-  const level = Number(lv) || saved?.level || 1;
+  const mine = myStudyRoles(user.id);
+  const at = readTermUrl("role", [raw, ...rest], { level: lv }, (r) => mine.find((x) => x.role === r)?.level ?? 1);
+  if (!at) notFound();
+  if (at.canonical) redirect(at.canonical);
+  const { role, level } = at;
+  const saved = mine.find((r) => r.role === role);
   const list = roleList(role, level);
   if (!list) notFound();
   const sum = roleSummary(user.id, list);
@@ -31,7 +36,7 @@ export default async function RoleTerms({ params, searchParams }: { params: Prom
   const explore = list.terms.map((t) => ({ id: t.id, term: t.term, meaning: t.meaning, tier: t.tier, group: t.groupName, bank: bankName.get(t.bankId!) ?? "Other", state: studyState(prog.get(t.id)?.box) }));
   const most = Math.max(1, ...levels.map((x) => x.l!.terms.length));
   const exams = rankExams(user.id, list);
-  const base = `/terms/study?role=${roleSlug(role)}&level=${level}`;
+  const base = termUrl("study", role, level);
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -46,7 +51,7 @@ export default async function RoleTerms({ params, searchParams }: { params: Prom
           <ol className="mt-3 flex items-end gap-2">
             {levels.map(({ n, l }) => (
               <li key={n} className="min-w-0 flex-1">
-                <Link href={`/terms/role/${roleSlug(role)}?level=${l!.level}`} aria-current={l!.level === level ? "step" : undefined} className="block rounded-lg text-center">
+                <Link href={termUrl("role", role, l!.level)} aria-current={l!.level === level ? "step" : undefined} className="block rounded-lg text-center">
                   <span className={`block text-xs font-bold ${l!.level === level ? "text-indigo-300" : "text-slate-400"}`}>{l!.terms.length}</span>
                   <span className="mt-1 block rounded-t-lg transition-colors" style={{ height: 14 + Math.round((l!.terms.length / most) * 70), background: l!.level === level ? "#4f46e5" : l!.level < level ? "#c7d2fe" : "#ece9e0" }} />
                   <span className={`mt-1 block text-[11px] leading-tight ${l!.level === level ? "font-bold" : "text-slate-400"}`}>{l!.title}</span>
@@ -79,7 +84,7 @@ export default async function RoleTerms({ params, searchParams }: { params: Prom
             </form>
           ))}
         </div>
-        <p className="text-sm"><Link href={`/terms/build?role=${roleSlug(role)}&level=${level}`} className="underline">Build your own exam from this list</Link></p>
+        <p className="text-sm"><Link href={termUrl("build", role, level)} className="underline">Build your own exam from this list</Link></p>
       </section>
       <p className="text-sm"><Link href="/terms" className="underline">Back to Terms</Link></p>
     </div>

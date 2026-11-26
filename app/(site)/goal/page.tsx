@@ -1,3 +1,5 @@
+import { slugify } from "@/lib/urlText";
+import { findRole } from "@/lib/termUrls";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { ArrowRight, CalendarClock, CheckCircle2, Flag, Gauge, MapPin, Mountain, Repeat, Target } from "lucide-react";
@@ -75,10 +77,10 @@ export default async function GoalAssessment({ searchParams }: { searchParams: P
   const { goal, here, legs, pace } = j;
   const targets = targetsFor(user);
   // a role chosen on the Career doctor opens already selected, at the first level that can be reached; if it cannot be reached from here, say so
-  const wantedRole = wanted.trim().toLowerCase();
+  const wantedRole = wanted ? (findRole(wanted) ?? wanted.trim().toLowerCase()) : "";
   const first = wantedRole ? targets.find((t) => t.role === wantedRole)?.levels[0] : undefined;
   const preselect = first ? `${wantedRole}|${first.level}` : undefined;
-  const wantedNote = wantedRole && !first ? <p role="status" className="text-sm text-amber-300">{roleLabel(wantedRole)} cannot be reached from {here.title} yet. <Link href={`/route/role?role=${encodeURIComponent(wantedRole)}`} className="underline">See its route instead</Link>.</p> : null;
+  const wantedNote = wantedRole && !first ? <p role="status" className="text-sm text-amber-300">{roleLabel(wantedRole)} cannot be reached from {here.title} yet. <Link href={`/route/role/${slugify(wantedRole)}`} className="underline">See its route instead</Link>.</p> : null;
   const st = standingFor(user);
 
   if (!goal) {
