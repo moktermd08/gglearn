@@ -33,6 +33,18 @@ const HUES = ["#4f46e5", "#0369a1", "#047857", "#9333ea", "#be123c", "#b45309"];
 /** A steady colour per topic, so the same group always looks the same. */
 export const topicHue = (group: string) => HUES[[...group].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 7) % HUES.length];
 
+/** One colour a rank, from Initiate to Titan. */
+export const RANK_COLOR = ["#0369a1", "#047857", "#4f46e5", "#9333ea", "#b45309"];
+
+/** Five small bars, filled up to the term's rank. */
+export function Pips({ tier }: { tier: number }) {
+  return (
+    <span className="inline-flex items-end gap-0.5" role="img" aria-label={`${RANKS[tier - 1]} rank`}>
+      {RANKS.map((r, i) => <i key={r} className="w-1 rounded-sm" style={{ height: 5 + i * 2, background: i < tier ? RANK_COLOR[tier - 1] : "#e5e2d9" }} />)}
+    </span>
+  );
+}
+
 export function Section({ Icon, title, color = "#4f46e5", children }: { Icon: LucideIcon; title: string; color?: string; children: ReactNode }) {
   return (
     <section className="space-y-2.5 border-t border-black/10 pt-4">

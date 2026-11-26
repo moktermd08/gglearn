@@ -6,7 +6,7 @@ import { studyAnswerAction, termCardAction } from "@/app/terms-actions";
 import { Donut } from "@/components/charts";
 import { Ring } from "@/components/Ring";
 import { TermBack, TermFront } from "@/components/TermCard";
-import { TopicIcon, topicHue } from "@/components/TermVisuals";
+import { Pips, RANK_COLOR, TopicIcon, topicHue } from "@/components/TermVisuals";
 import { RANKS, type StudyState } from "@/lib/termsCore";
 import type { RichCard } from "@/lib/termDetails";
 
@@ -20,19 +20,9 @@ const STATE = {
   learning: { label: "Learning", color: "#d97706", soft: "#fef3c7", ink: "text-amber-800" },
   new: { label: "Not started", color: "#a8a29e", soft: "#f0eee7", ink: "text-slate-300" },
 } as const;
-const RANK_COLOR = ["#0369a1", "#047857", "#4f46e5", "#9333ea", "#b45309"];
 
 const keyOf = (t: ExploreTerm) => `${t.bank} · ${t.group || "General"}`;
 const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
-/** Five small bars, filled up to the term's rank. */
-function Pips({ tier }: { tier: number }) {
-  return (
-    <span className="inline-flex items-end gap-0.5" role="img" aria-label={`${RANKS[tier - 1]} rank`}>
-      {RANKS.map((r, i) => <i key={r} className="w-1 rounded-sm" style={{ height: 5 + i * 2, background: i < tier ? RANK_COLOR[tier - 1] : "#e5e2d9" }} />)}
-    </span>
-  );
-}
 
 function Tile({ t, onOpen }: { t: ExploreTerm; onOpen: () => void }) {
   const hue = topicHue(t.group);
