@@ -1,4 +1,4 @@
-import { EmptyState, PageHero, PALETTE, Radar } from "@/components/charts";
+import { PageHero, PALETTE, Radar } from "@/components/charts";
 import { Ring } from "@/components/Ring";
 import Link from "next/link";
 import { eq } from "drizzle-orm";
@@ -8,6 +8,11 @@ import { DOMAIN_KEYS, domainLabel, mixFor } from "@/lib/blueprint";
 import { ladderFor } from "@/lib/careers";
 import { journeyFor, levelCode, roleLabel, targetsFor, type Leg } from "@/lib/journey";
 import { clearCareerGoal, enroll, startRoleExam } from "@/app/actions";
+import { CareerStart, RoleChooser, UnderWay } from "@/components/CareerStart";
+import { ConnectedWith } from "@/components/ConnectedWith";
+import { mayChooseOwnRole } from "@/lib/ownRole";
+import { readFlash } from "@/lib/flash";
+import { slugify } from "@/lib/urlText";
 import { standingFor } from "@/lib/careerStanding";
 import { StandingCard } from "@/components/StandingCard";
 import { GoalForm } from "@/components/GoalForm";
@@ -82,22 +87,28 @@ export default async function Journey({ searchParams }: { searchParams: Promise<
 
   if (j.state === "no-ladder") {
     return (
-      <div className="mx-auto max-w-2xl space-y-4">
+      <div className="mx-auto max-w-3xl space-y-5">
         <PageHero Icon={Mountain} tone="violet" title="My career journey" sub="Where you are, where you are heading, and what stands in between." />
-        <EmptyState Icon={Mountain} tone="violet" title="No path to climb yet">
-          There is no career path for {user.audience === "customer" ? "customer accounts" : <>the role <b>{user.jobRole}</b></>} yet.
-          {user.audience === "staff" && " Ask an admin to add one at Careers, or to check that your job role matches a ladder."}
-        </EmptyState>
+        <CareerStart user={user} error={await readFlash()} />
       </div>
     );
   }
   if (j.state === "unreachable") {
+    const from = targetsFor(user);
     return (
-      <div className="mx-auto max-w-2xl space-y-3">
-        <h1 className="flex items-center gap-2 text-2xl font-extrabold"><Mountain className="text-violet-300" />My career journey</h1>
-        <p role="alert" className="card flex items-start gap-2 p-4 text-amber-300"><AlertTriangle size={18} className="mt-0.5 shrink-0" />
-          The route to {roleLabel(j.goal.targetRole)} (level {j.goal.targetLevel}) no longer exists from where you are. Ask an admin about the career bridges, or pick another goal.</p>
-        <form action={clearCareerGoal}><button className="btn btn-ghost">Remove this goal</button></form>
+      <div className="mx-auto max-w-3xl space-y-5">
+        <PageHero Icon={Mountain} tone="violet" title="My career journey" sub="Where you are, where you are heading, and what stands in between." />
+        <section className="card space-y-4 p-5">
+          <p role="alert" className="flex items-start gap-2 text-amber-300"><AlertTriangle size={18} className="mt-0.5 shrink-0" />
+            No career path leads from your job to {ladderFor(j.goal.targetRole).find((r) => r.level === j.goal.targetLevel)?.title ?? roleLabel(j.goal.targetRole)}, so this goal cannot be planned here.</p>
+          {from.length > 0 && <><h2 className="font-bold">Choose a goal your path can reach</h2><GoalForm targets={from} goal={null} hereRole={user.jobRole} /></>}
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href={`/route/role/${slugify(j.goal.targetRole)}`} className="btn btn-ghost">Plan a route to {roleLabel(j.goal.targetRole)} anyway<ArrowRight size={15} /></Link>
+            <form action={clearCareerGoal}><button className="text-sm underline">Remove this goal</button></form>
+          </div>
+          {mayChooseOwnRole(user) && <details><summary className="cursor-pointer text-sm underline">My job now is something else</summary><div className="mt-3"><RoleChooser current={user.jobRole} label="Change my job" /></div></details>}
+        </section>
+        <UnderWay user={user} />
       </div>
     );
   }
@@ -155,12 +166,21 @@ export default async function Journey({ searchParams }: { searchParams: Promise<
             <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-pink-300"><Flag size={12} />{goal ? "Your goal" : "Top of your path"}</div>
             <div className="mt-0.5 font-bold">{goal ? j.target.title : legs.length ? legs[legs.length - 1].title : here.title}</div>
             <div className="flex flex-wrap items-center gap-x-2 text-xs text-slate-400">
-              {goal ? <>{roleLabel(j.target.role)} · {levelCode(j.target.level)}<span className="inline-flex items-center gap-1"><CalendarClock size={12} />by {date(goal.targetDate)}</span></> : "Set a goal below to plan the route"}
+              {goal ? <>{roleLabel(j.target.role)} · {levelCode(j.target.level)}<span className="inline-flex items-center gap-1"><CalendarClock size={12} />by {date(goal.targetDate)}</span></> : <a href="#set-goal" className="font-bold underline">Set your goal to plan the route</a>}
               {status && <span className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${status.cls}`}>{status.label}</span>}
             </div>
           </div>
         </div>
       </header>
+
+      {!goal && (
+        <section id="set-goal" className="card scroll-mt-24 space-y-3 border-2 border-indigo-500 p-5" aria-label="Your next step: set your goal">
+          <p className="text-xs font-extrabold uppercase tracking-widest text-indigo-300">Your next step</p>
+          <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-pink-500/15 text-pink-300"><Target size={17} /></span>Set your goal</h2>
+          {targets.length ? <GoalForm targets={targets} goal={goal} hereRole={here.role} /> : <p className="text-sm text-slate-400">You are already at the top of the path for your role, and no other path leads on from here yet.</p>}
+          <p className="text-xs text-slate-500">Examples: from Junior Developer to CTO in 5 years, from Social Media Assistant to Head of Social in 3. Only places you can actually reach from your role are listed.</p>
+        </section>
+      )}
 
       {st && <StandingCard more={goal ? "/goal" : undefined} st={st} goalTitle={j.target.title} slug={slug} state={!asmt ? "none" : asmt.status} />}
 
@@ -218,15 +238,11 @@ export default async function Journey({ searchParams }: { searchParams: Promise<
         </section>
       )}
 
-      {!goal && (
-        <section className="card space-y-3 p-5">
-          <h2 className="flex items-center gap-2.5 text-lg font-bold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-pink-500/15 text-pink-300"><Target size={17} /></span>Set your goal</h2>
-          {targets.length ? <GoalForm targets={targets} goal={goal} hereRole={here.role} /> : <p className="text-sm text-slate-400">You are already at the top of the path for your role, and no other path leads on from here yet.</p>}
-          <p className="text-xs text-slate-500">Examples: from Junior Developer to CTO in 5 years, from Social Media Assistant to Head of Social in 3. Only places you can actually reach from your role are listed.</p>
-        </section>
-      )}
-
       <RoleCheck user={user} unavailable={unavailable} />
+
+      <ConnectedWith role={goal ? j.target.role : here.role} level={goal ? j.target.level : here.level} aiming={!!goal} />
+      <UnderWay user={user} />
+      {mayChooseOwnRole(user) && <details className="card p-4"><summary className="cursor-pointer text-sm font-semibold">My job now is not {here.title}</summary><div className="mt-3"><RoleChooser current={user.jobRole} label="Change my job" /></div></details>}
 
       {next && (
         <section className="card relative overflow-hidden p-5" style={{ background: "linear-gradient(135deg, rgba(139,92,246,.1), #fff 60%)" }}>
