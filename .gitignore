@@ -19,6 +19,10 @@
 
 # production
 /build
+# what deploy/remote.sh keeps on the server; listed so the build does not scan them
+/.build
+/.next-*
+/node_modules-*
 
 # misc
 .DS_Store
