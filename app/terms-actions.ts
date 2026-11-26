@@ -6,7 +6,8 @@ import { db, terms } from "@/lib/db";
 import { actingUser, logViewAsUse } from "@/lib/auth";
 import { markCheck, parseTermInput, sameTerm, startCheck, myTerms } from "@/lib/terms";
 import { removeTerm } from "@/lib/termsAdmin";
-import { recordStudy, removeStudyRole, roleSlug, saveStudyRole, startPlacementStage, startRankExam, startRoleCheck } from "@/lib/termStudy";
+import { recordStudy, removeStudyRole, roleSlug, saveStudyRole, startPlacementStage, startRankExam, startRoleCheck, studyCardsFor } from "@/lib/termStudy";
+import { withDetails, type RichCard } from "@/lib/termDetails";
 import { beginJourney } from "@/lib/termJourney";
 import type { SetupState } from "@/lib/setup";
 
@@ -136,4 +137,11 @@ export async function beginAction(fd: FormData) {
   if ("error" in p) redirect(roleUrl(role, level, `&error=${encodeURIComponent(p.error)}`));
   await logViewAsUse(who.viewedBy, who.me, `began placement for ${role}`);
   redirect(`/terms/check/${p.id}`);
+}
+
+/** The full card for one term, opened from a list. Only a term the person may see; null otherwise. */
+export async function termCardAction(termId: number): Promise<RichCard | null> {
+  const who = await actingUser();
+  if (!who || !Number.isInteger(termId)) return null;
+  return withDetails(who.me.id, studyCardsFor(who.me.id, [termId]))[0] ?? null;
 }
