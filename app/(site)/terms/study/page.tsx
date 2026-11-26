@@ -7,6 +7,7 @@ import { StudySession } from "@/components/StudySession";
 import { termsAvailable } from "@/lib/terms";
 import { roleLabel, roleList, roleSlug, roleSummary, studyCardsFor, studyQueue } from "@/lib/termStudy";
 import { loadCheck } from "@/lib/terms";
+import { withDetails } from "@/lib/termDetails";
 
 export const metadata = { title: "Study terms — gglearn" };
 export const dynamic = "force-dynamic"; // a new round must be drawn each time, not cached
@@ -18,7 +19,7 @@ export default async function Study({ searchParams }: { searchParams: Promise<{ 
   if (check) { // the terms missed in a check, to go over straight away
     const c = loadCheck(user, Number(check));
     if (!c || c.exam.finishedAt == null) notFound();
-    const missed = studyCardsFor(user.id, c.answers.filter((a) => !a.right).map((a) => a.termId));
+    const missed = withDetails(user.id, studyCardsFor(user.id, c.answers.filter((a) => !a.right).map((a) => a.termId)));
     const back = c.exam.role ? `/terms/role/${roleSlug(c.exam.role)}?level=${c.exam.level ?? 1}` : "/terms";
     return (
       <div className="mx-auto max-w-2xl space-y-5">
@@ -31,7 +32,7 @@ export default async function Study({ searchParams }: { searchParams: Promise<{ 
   const role = decodeURIComponent(raw).trim().toLowerCase(), level = Number(lv) || 1;
   const list = roleList(role, level);
   if (!list) notFound();
-  const cards = studyQueue(user.id, list, 10);
+  const cards = withDetails(user.id, studyQueue(user.id, list, 10));
   const sum = roleSummary(user.id, list);
   const listHref = `/terms/role/${roleSlug(role)}?level=${level}`;
   return (

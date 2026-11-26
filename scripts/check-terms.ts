@@ -434,5 +434,33 @@ ok("a result talks about the list the check was on, even when the person also ha
   assert.ok(aside.kind !== "start" && aside.role === "everyone" && !aside.hasGoal);
 });
 
+// ---- what a study card shows
+const det = await import("../lib/termDetails");
+ok("a study card carries its topic, look-alikes, memory and test results, and never another person's term", () => {
+  const who = db.insert(users).values({ email: "card-" + email, name: "Card" }).returning().get();
+  const list = study.roleList("everyone", 1)!;
+  const target = list.terms.find((t) => t.term === "bcc" || (t.similar !== "[]" && t.groupName))!;
+  const [fresh] = det.withDetails(who.id, study.studyCardsFor(who.id, [target.id]));
+  assert.ok(fresh.detail.bank && fresh.detail.group.some((g) => g.id === target.id) && fresh.detail.group.every((g) => g.state === "new"));
+  assert.deepEqual(fresh.detail.memory, { box: 0, seen: 0, lapses: 0, dueInDays: null });
+  assert.deepEqual(fresh.detail.history, []);
+  assert.ok(fresh.detail.compare.length <= 3 && fresh.detail.compare.every((c) => c.id !== target.id && c.meaning));
+  study.recordStudy(who.id, target.id, true);
+  const exam = study.startPlacementStage(who, "everyone", 1, 1) as { id: number };
+  const asked = lib.loadCheck(who, exam.id)!;
+  const pick: Record<number, number> = {};
+  asked.answers.forEach((x) => { pick[x.id] = x.correct; });
+  lib.markCheck(who, exam.id, pick);
+  const [after] = det.withDetails(who.id, study.studyCardsFor(who.id, [asked.answers[0].termId]));
+  assert.deepEqual(after.detail.history.map((h) => h.right), [true]);
+  const [studied] = det.withDetails(who.id, study.studyCardsFor(who.id, [target.id]));
+  assert.deepEqual([studied.detail.memory.box, studied.detail.memory.seen, studied.detail.memory.dueInDays], [1, 1, 1]);
+  const theirs = db.select().from(terms).where(eq(terms.ownerUserId, me.id)).all();
+  assert.ok(theirs.length > 0);
+  const all = det.withDetails(who.id, study.studyCardsFor(who.id, list.terms.slice(0, 40).map((t) => t.id)));
+  const shown = new Set(all.flatMap((k) => [...k.detail.group, ...k.detail.compare].map((x) => x.id)));
+  assert.ok(theirs.every((t) => !shown.has(t.id)));
+});
+
 console.log(`\n${n} checks passed`);
 })();
